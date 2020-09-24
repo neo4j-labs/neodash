@@ -1,0 +1,22 @@
+.modal {
+    width: 85%;
+    height: 85%;
+}
+
+.log-snip {
+    height: 200px;
+    overflow: scroll;
+    background-color: lightgrey;
+    font-size: 12px;
+}
+
+.log {
+    background-color: lightgrey;
+    font-size: 12px;
+}
+
+.badge-strip{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
