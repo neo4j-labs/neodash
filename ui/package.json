@@ -7,15 +7,17 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
     "apollo-boost": "^0.4.4",
+    "d3": "4.5.0",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
+    "jquery": "^3.5.1",
     "materialize-css": "^1.0.0",
+    "axios": "^0.16.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-materialize": "^3.9.2",
-    "jquery": "^3.5.1"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -20,3 +20,113 @@
     right: 0px;
     top: 0px;
 }
+body {
+    background-color: #efefef;
+}
+
+.btn-center-align {
+
+    margin-left: 45%;
+    margin-top: 150px;
+    margin-bottom: 150px;
+}
+.btn-center-align :hover  {
+    opacity: 0.7;
+}
+
+
+.card-content td {
+    padding: 10px 5px;
+}
+
+.card-content th {
+    padding: 10px 5px;
+}
+
+.card-action .pagination a{
+    color: #000 !important;
+    margin-right: 0px !important;
+}
+.card-action .pagination li{
+    width: 40px;
+}
+.card-action .pagination{
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    width: 290px;
+
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+/*.card-content div {*/
+/*    height: 325px;*/
+/*}*/
+
+.paginated-card .card-action{
+    padding-left: 0px;
+    padding-right: 0px;
+    display: block;
+
+
+}
+.input-field {
+    margin-bottom: 0px;
+}
+#Textarea-12 {
+    background: url(linenumbers.png);
+    background-size: 20;
+    background-attachment: local;
+    background-repeat: no-repeat;
+    font-family: monospace;
+    font-size: 14px;
+    border-color:#ccc;
+    width: calc(100% + 30px);
+    display: block;
+    background-size: 26px;
+    white-space: pre;
+    background-position: -10px -11px;
+    margin-left: -15px !important;
+    padding-right: 0px !important;
+    margin-right: -35px !important;
+    margin-top: 0px !important;
+    padding-left: 25px !important;
+    padding-top: 0px !important;
+    margin-bottom: 0px;
+    overflow-x: scroll;
+    overflow-y: scroll !important;
+    height: 190px !important;
+}
+.nav-wrapper .input-field .editable-title{
+    margin-top: 0px !important;
+    border-bottom: 0px !important;
+    font-size: 30px;
+}
+.flag {
+    background: url('https://dl.dropboxusercontent.com/s/yx2q52k9g420tov/flags.png') no-repeat;
+    background-color: #000;
+    position: absolute;
+}
+
+.editable-title {
+    margin-top: -25px !important;
+    border-bottom: 0px !important;
+}
+.card-title .input-field .helper-text {
+    display: none;
+}
+.card-title i {
+    top: 20px;
+    right: 20px;
+    position: absolute;
+}
+.card-reveal .card-title .input-field{
+    display: none !important;
+}
+
+.card-reveal .card-title p{
+    display: inline !important;
+}
+.pagination li.active {
+    background-color: grey;
+}
