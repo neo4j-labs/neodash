@@ -95,7 +95,8 @@ body {
     margin-bottom: 0px;
     overflow-x: scroll;
     overflow-y: scroll !important;
-    height: 190px !important;
+    min-height: 140px;
+    /*height: 200px !important;*/
 }
 .nav-wrapper .input-field .editable-title{
     margin-top: 0px !important;
@@ -113,7 +114,7 @@ body {
     border-bottom: 0px !important;
 }
 .card-title .input-field .helper-text {
-    display: none;
+    display: none !important;
 }
 .card-title i {
     top: 20px;
@@ -128,5 +129,12 @@ body {
     display: inline !important;
 }
 .pagination li.active {
-    background-color: grey;
+    background-color: #ddd;
+}
+.card.huge {
+    height: 800px;
+}
+
+.select-wrapper {
+    width: 140px;
 }

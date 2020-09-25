@@ -1,0 +1,134 @@
+
+{
+  "nodes": [
+    {
+      "id": 1,
+      "name": "A",
+      "icon": "\uf113",
+      "radius": 25,
+      "fill": "darkred",
+      "stroke": "#969696"
+    },
+    {
+      "id": 2,
+      "name": "B",
+      "icon": "\uf092",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 3,
+      "name": "C",
+      "icon": "\uf2a5",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 4,
+      "name": "D",
+      "icon": "\uf085",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 5,
+      "name": "E",
+      "icon": "\uf1e5",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 6,
+      "name": "F",
+      "icon": "\uf0e4",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 7,
+      "name": "G",
+      "icon": "\uf2b6",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 8,
+      "name": "H",
+      "icon": "\uf1eb",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 9,
+      "name": "I",
+      "icon": "\uf127",
+      "radius": 25,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    },
+    {
+      "id": 10,
+      "name": "J",
+      "icon": "\uf007",
+      "radius": 25  ,
+      "fill": "seagreen",
+      "stroke": "#969696"
+    }
+  ],
+  "links": [
+
+    {
+      "source": 1,
+      "target": 2
+    },
+    {
+      "source": 1,
+      "target": 5
+    },
+    {
+      "source": 1,
+      "target": 6
+    },
+
+    {
+      "source": 2,
+      "target": 3
+    },
+    {
+      "source": 2,
+      "target": 7
+    }
+  ,
+
+    {
+      "source": 3,
+      "target": 4
+    },
+    {
+      "source": 8,
+      "target": 3
+    }
+  ,
+    {
+      "source": 4,
+      "target": 5
+    }
+  ,
+
+    {
+      "source": 4,
+      "target": 9
+    },
+    {
+      "source": 5,
+      "target": 10
+    }
+  ]
+}
