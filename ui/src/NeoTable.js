@@ -6,8 +6,10 @@ class NeoTable extends React.Component {
         super(props);
     }
 
+
     render() {
         let data = this.props.data;
+
         if (data == null) {
             return <p>Query returned no data.</p>
         }
@@ -17,18 +19,19 @@ class NeoTable extends React.Component {
                 return <th data-field={item}>{item}</th>
             });
 
-        let rows = data.map((row, index) => {
-            return <tr>
-                <td>{index + 1}</td>
-                {Object.values(row).map(value => <td>{value}</td>)}
-            </tr>
-        });
+        let rows = data.filter((item, index) => index >= (this.props.page - 1) * this.props.rows && index < (this.props.page) * this.props.rows)
+            .map((row, index) => {
+                return <tr>
+                    <td>{index + (this.props.page - 1) * this.props.rows + 1}</td>
+                    {Object.values(row).map(value => <td>{value}</td>)}
+                </tr>
+            });
 
         return (
             <Table>
                 <thead>
                 <tr>
-                    <th/>
+                    <th>&nbsp;</th>
                     {headers}
                 </tr>
                 </thead>

@@ -11,18 +11,20 @@ class NeoGraphViz extends React.Component {
     componentDidMount() {
 
 // chart dimensions
-        var width = 600, height = 300  , radius = 50;
+        var width = -60 + this.props.width * 105, height = -140 + this.props.height * 100, radius = 50;
 
 // set up svg
+        svg = d3.select('.new').attr("transform", null);
+        let zoom = d3.zoom();
+        zoom.transform(svg, d3.zoomIdentity);
         var svg = d3.select('.new')
             .attr("width", width)
             .attr("height", height)
             .attr("class", "chart")
-            .call(d3.zoom().on("zoom", function () {
+            .call(zoom.on("zoom", function () {
                 svg.attr("transform", d3.event.transform)
             }))
             .append("g");
-
         var forceLink = d3.forceLink().id(function (d) {
             return d.id;
         });
@@ -152,10 +154,14 @@ class NeoGraphViz extends React.Component {
 
     }
 
+    componentDidUpdate() {
+        d3.select('.new').select('g').remove();
+        this.componentDidMount();
+    }
+
     render() {
         return (
-
-            <svg className='chart new ' style={{backgroundColor: '#f9f9f9'}}>
+            <svg className={'chart new iteration' + this.props.page} style={{backgroundColor: '#f9f9f9'}}>
             </svg>
 
         );

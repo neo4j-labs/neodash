@@ -1,4 +1,4 @@
-## grandstack-for-dummies
+## graph-based-search-engine
 This project aims to provide a super simple starting point for Grandstack apps.
 Consider this a starting point for those not familiar with React, Apollo or GraphQL. 
 
