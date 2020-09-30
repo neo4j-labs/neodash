@@ -17,6 +17,7 @@ class NeoCardComponent extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(props)
         this.stateChanged = this.stateChanged.bind(this);
         this.state = {
             width: 4,
@@ -30,7 +31,11 @@ class NeoCardComponent extends React.Component {
     }
 
     stateChanged(update) {
-        console.log(update)
+
+        if (update.label == "CardShiftRight" || update.label == "CardShiftLeft" || update.label == "CardDelete"){
+            update.card = this;
+            this.props.onChange(update);
+        }
         if (update.label == "Refresh") {
             this.state.page += 1;
         }

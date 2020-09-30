@@ -35,9 +35,12 @@ class NeoCardSettings extends React.Component {
         return (
             <div>
                 <div style={{"float": "right", "position": "absolute", "left": "18px", "top": "15px"}}>
-                    <NeoButton color='red' key='2' icon='delete'/>
-                    <NeoButton color='black' icon='chevron_left'></NeoButton>
-                    <NeoButton color='black' icon='chevron_right'></NeoButton>
+                    <NeoButton color='red' key='2' icon='delete'
+                               onClick={e => this.stateChanged({event: e, label: "CardDelete"})}/>
+                    <NeoButton color='black' icon='chevron_left'
+                               onClick={e => this.stateChanged({event: e, label: "CardShiftLeft"})}/>
+                    <NeoButton color='black' icon='chevron_right'
+                               onClick={e => this.stateChanged({event: e, label: "CardShiftRight"})}/>
                 </div>
                 <NeoOptionSelect label="Type" onChange={this.stateChanged} options={vizOptions}/>
                 <NeoOptionSelect label="Size" onChange={this.stateChanged} options={sizeOptions}/>
