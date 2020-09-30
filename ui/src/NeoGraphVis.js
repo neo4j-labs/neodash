@@ -11,7 +11,7 @@ class NeoGraphViz extends React.Component {
     componentDidMount() {
 
 // chart dimensions
-        var width = -60 + this.props.width * 105, height = -140 + this.props.height * 100, radius = 50;
+            var width = -60 + this.props.width * 105, height = -145 + this.props.height * 100, radius = 50;
 
 // set up svg
         svg = d3.select('.new').attr("transform", null);

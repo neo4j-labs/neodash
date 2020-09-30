@@ -23,7 +23,7 @@ const Main = () => {
         <ApolloProvider client={client}>
             <Navbar style={{backgroundColor: 'black'}} brand={pagetitle} id="mobile-nav" centerLogo></Navbar>
             <NeoCardContainer/>
-            <Footer style={{backgroundColor: '#ddd'}}></Footer>
+            {/*<Footer style={{backgroundColor: '#ddd'}}></Footer>*/}
         </ApolloProvider>
     );
 };

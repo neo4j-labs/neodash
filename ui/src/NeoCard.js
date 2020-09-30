@@ -11,9 +11,13 @@ import Chip from "react-materialize/lib/Chip";
 import NeoCardSettings from "./NeoCardSettings";
 import NeoButton from "./NeoButton";
 import NeoGraphChip from "./NeoGraphChip";
+import NeoJSONView from "./NeoJSONView";
 
+let tallRowCount = 14;
+let normalRowCount = 5;
 
 class NeoCardComponent extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -51,8 +55,6 @@ class NeoCardComponent extends React.Component {
             this.state.height = Math.ceil(update.value / 12) * 4;
         }
         if (this.state.type == 'table') {
-            let tallRowCount = 14;
-            let normalRowCount = 5;
             this.state.content =
                 <NeoTable rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
                           data={this.state.data}/>
@@ -63,6 +65,11 @@ class NeoCardComponent extends React.Component {
             this.state.content = <NeoGraphViz width={this.state.width} height={this.state.height} page={this.state.page}
                                               data={this.state.data}/>
             this.state.action = <NeoGraphChip onChange={this.stateChanged}/>;
+        }
+        if (this.state.type == 'json') {
+            this.state.content =
+                <NeoJSONView  data={this.state.data}/>
+            this.state.action = <></>
         }
         console.log(this.state);
         this.setState(this.state);
@@ -76,7 +83,7 @@ class NeoCardComponent extends React.Component {
         return <Col l={this.state.width} m={12} s={12}>
             <Card
                 actions={[this.state.action]}
-                className={((this.state.height == 4) ? 'medium' : 'huge') + " medium white darken-5 paginated-card"}
+                className={((this.state.height == 4) ? 'medium' : 'huge') + " neo-card medium white darken-5 paginated-card"}
                 closeIcon={<Icon>save</Icon>}
                 revealIcon={<Icon>more_vert</Icon>}
                 textClassName="black-text"

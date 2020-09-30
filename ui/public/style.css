@@ -34,13 +34,22 @@ body {
     opacity: 0.7;
 }
 
-
+.card {
+    padding-bottom: 55px;
+}
+.card-content {
+    padding-bottom: 0px !important;
+}
 .card-content td {
-    padding: 10px 5px;
+    padding: 10px 4px;
 }
 
 .card-content th {
-    padding: 10px 5px;
+    padding: 4px 4px;
+}
+.card-content th:not(:first-child) {
+
+    min-width:60px;
 }
 
 .card-action .pagination a{
@@ -71,8 +80,12 @@ body {
 
 }
 .input-field {
-    margin-bottom: 0px;
+
+    margin-top: 7px;
+    margin-bottom: 7px;
 }
+
+
 #Textarea-12 {
     background: url(linenumbers.png);
     background-size: 20;
@@ -85,15 +98,17 @@ body {
     display: block;
     background-size: 26px;
     white-space: pre;
-    background-position: -10px -11px;
+    background-position: 0px -11px;
+    /*line-height: 1.2em;*/
     margin-left: -15px !important;
     padding-right: 0px !important;
     margin-right: -35px !important;
     margin-top: 0px !important;
-    padding-left: 25px !important;
+    padding-left: 30px !important;
     padding-top: 0px !important;
-    margin-bottom: 0px;
-    overflow-x: scroll;
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+    overflow-x: scroll !important;
     overflow-y: scroll !important;
     min-height: 140px;
     /*height: 200px !important;*/
@@ -137,4 +152,21 @@ body {
 
 .select-wrapper {
     width: 140px;
+}
+
+.neo-card .card-content{
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#Textarea-12::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#Textarea-12 {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }

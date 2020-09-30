@@ -30,6 +30,7 @@ class NeoCardSettings extends React.Component {
             'graph': 'Graph',
             'plot': 'Plot',
             'bar': 'Bar Chart',
+            'json': 'JSON',
         };
 
         return (
@@ -42,6 +43,7 @@ class NeoCardSettings extends React.Component {
                     <NeoButton color='black' icon='chevron_right'
                                onClick={e => this.stateChanged({event: e, label: "CardShiftRight"})}/>
                 </div>
+                <p> </p>
                 <NeoOptionSelect label="Type" onChange={this.stateChanged} options={vizOptions}/>
                 <NeoOptionSelect label="Size" onChange={this.stateChanged} options={sizeOptions}/>
                 <TextInput style={{width: '140px'}} label={"Cypher Parameters"} placeholder={"{x: '123', y: 5}"}
