@@ -1,7 +1,7 @@
 import React from "react";
 import Pagination from "react-materialize/lib/Pagination";
 import Icon from "react-materialize/lib/Icon";
-import NeoTable from "./NeoTable";
+
 
 class NeoPagination extends React.Component {
     constructor(props) {

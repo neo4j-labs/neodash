@@ -14,6 +14,7 @@
     "jquery": "^3.5.1",
     "materialize-css": "^1.0.0",
     "axios": "^0.16.2",
+    "neo4j-driver": "latest",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-materialize": "^3.9.2",

@@ -3,15 +3,16 @@ import Card from "react-materialize/lib/Card";
 import Icon from "react-materialize/lib/Icon";
 import Textarea from "react-materialize/lib/Textarea";
 import Button from "react-materialize/lib/Button";
-import NeoTable from "./NeoTable";
+import NeoTable from "./reports/NeoTable";
 import NeoPagination from "./NeoPagination";
-import NeoGraphViz from "./NeoGraphVis";
+import NeoGraphViz from "./reports/NeoGraphVis";
 import Col from "react-materialize/lib/Col";
 import Chip from "react-materialize/lib/Chip";
 import NeoCardSettings from "./NeoCardSettings";
 import NeoButton from "./NeoButton";
-import NeoGraphChip from "./NeoGraphChip";
-import NeoJSONView from "./NeoJSONView";
+
+import NeoJSONView from "./reports/NeoJSONView";
+import NeoGraphChips from "./NeoGraphChips";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
@@ -64,7 +65,7 @@ class NeoCardComponent extends React.Component {
             this.state.page += 1;
             this.state.content = <NeoGraphViz width={this.state.width} height={this.state.height} page={this.state.page}
                                               data={this.state.data}/>
-            this.state.action = <NeoGraphChip onChange={this.stateChanged}/>;
+            this.state.action = <NeoGraphChips onChange={this.stateChanged}/>;
         }
         if (this.state.type == 'json') {
             this.state.content =
