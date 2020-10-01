@@ -11,7 +11,7 @@ class NeoPagination extends React.Component {
     render(content) {
         return <Pagination
             activePage={1}
-            items={100}
+            items={1000}
             leftBtn={<Icon>chevron_left</Icon>}
             maxButtons={5}
             rightBtn={<Icon>chevron_right</Icon>}

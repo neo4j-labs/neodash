@@ -85,6 +85,13 @@ body {
     margin-bottom: 7px;
 }
 
+.graph-edge {
+    stroke-width: 2;
+
+    marker-end: url(#arrowhead);
+    /*marker-start: url(#label);*/
+}
+
 
 #Textarea-12 {
     background: url(linenumbers.png);
@@ -110,7 +117,7 @@ body {
     margin-bottom: 0px !important;
     overflow-x: scroll !important;
     overflow-y: scroll !important;
-    min-height: 140px;
+    min-height: 100px;
     /*height: 200px !important;*/
 }
 .nav-wrapper .input-field .editable-title{
@@ -169,4 +176,8 @@ body {
 #Textarea-12 {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+.helper-text {
+    display: none !important;
 }

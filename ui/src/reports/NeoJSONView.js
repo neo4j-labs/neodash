@@ -8,35 +8,29 @@ class NeoJSONView extends NeoReport {
     constructor(props) {
         super(props);
         this.state = {
-            'query': 'MATCH (n)-[rel]-(x) \n RETURN n, n.name, rel, x, x.name LIMIT 100',
+            'query': 'Match (n) WITH n LIMIT 2 MATCH (n)-[e]-(m) RETURN id(n), n,e,m LIMIT 10',
             'params': {},
             'running': true
         };
         this.runQuery();
     }
 
-
     render() {
-        if (this.state.running) {
-            return <p>Running query...</p>
+        let rendered = super.render();
+        if (rendered){
+            return rendered;
         }
-        if (this.state.data == null) {
-            return <p>Query returned no data.</p>
-        }
-
+        let result = JSON.stringify(this.state.data, null, 2);
         return (
-
             <Textarea style={{marginBottom: '100px'}}
                       id="Textarea-12"
                       l={12}
                       m={12}
                       s={12}
-                      value={JSON.stringify(this.state.data, null, 2)}
+                      value={result}
                       xl={12}/>
-
         );
     }
-
 }
 
 export default (NeoJSONView);

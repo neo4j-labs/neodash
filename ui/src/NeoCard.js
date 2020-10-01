@@ -25,8 +25,8 @@ class NeoCardComponent extends React.Component {
         console.log(props)
         this.stateChanged = this.stateChanged.bind(this);
         this.state = {
-            width: 4,
-            height: 4,
+            width: 8,
+            height: 8,
             action: <NeoPagination data={this.props.data} onChange={this.stateChanged}/>,
             type: this.props.type,
             page: 1,

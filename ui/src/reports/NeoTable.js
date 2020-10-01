@@ -3,27 +3,25 @@ import React from "react";
 import NeoReport from "./NeoReport";
 import NeoGraphChips from "../NeoGraphChips";
 import NeoGraphChip from "../NeoGraphChip";
+import Textarea from "react-materialize/lib/Textarea";
 
 class NeoTable extends NeoReport {
     constructor(props) {
         super(props);
         this.state = {
             'running': true,
-            'query': 'MATCH (n)-[rel]-(x) \n RETURN n, n.name, rel, x, x.name, x.year LIMIT 100',
+            'query': 'Match (n) WITH n LIMIT 2 MATCH (n)-[e]-(m) RETURN id(n), n,e,m LIMIT 10',
             'params': {}
         };
         this.runQuery();
     }
 
-
     render() {
+        let rendered = super.render();
+        if (rendered){
+            return rendered;
+        }
         let data = this.state.data;
-        if (this.state.running) {
-            return <p>Running query...</p>
-        }
-        if (data == null) {
-            return <p>Query returned no data.</p>
-        }
 
         let headers =
             Object.keys(data[0]).map((item, index) => {
@@ -35,21 +33,8 @@ class NeoTable extends NeoReport {
                 return <tr>
                     <td>{index + (this.props.page - 1) * this.props.rows + 1}</td>
                     {Object.values(row).map(value => {
-                        if (value == null){
-                            return <td></td>
-                        }
-                        if (value["labels"] && value["identity"] && value["properties"]){
-                            return <td>{value["labels"].map(label => <NeoGraphChip name={label}/>)} </td>
-                        }
-                        if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]){
-                            return <td><NeoGraphChip color="grey" radius={0} name={value["type"]}/> </td>
-                        }
-                        if (value["low"] && value["high"] === 0) {
-                            return <td>{value.low}</td>
-                        }
-                        return <td>{JSON.stringify(value, null, 2)}</td>
+                        return <td>{this.renderExoticValueTypes(value)}</td>
                     })}
-
                 </tr>
             });
 
@@ -66,6 +51,36 @@ class NeoTable extends NeoReport {
                 </tbody>
             </Table>
         );
+    }
+
+    renderExoticValueTypes(value){
+        if (value == null) {
+            return ""
+        }
+        if (Array.isArray(value)){
+            return <p> {
+                value.map((item,index) =>
+                {
+                    return <>
+                    {this.renderExoticValueTypes(item)}
+                    { (index !== value.length -1 && !Array.isArray(item))  ? ', ' : ''  }
+                    </>
+                })
+            }  </p>;
+        }
+        if (value["labels"] && value["identity"] && value["properties"]) {
+            return value["labels"].map(label => <NeoGraphChip name={label}/>)
+        }
+        if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
+            return <NeoGraphChip color="grey" radius={0} name={value["type"]}/>
+        }
+        if (value["low"] && value["high"] === 0) {
+            return value.low
+        }
+        if (value.startsWith("http://") || value.startsWith("https://")){
+            return <a target={"_blank"} href={value}>{value}</a>
+        }
+        return JSON.stringify(value, null, 2)
     }
 }
 

@@ -51,6 +51,7 @@ class NeoCardSettings extends React.Component {
                 <TextInput style={{width: '140px'}} label={"Result Limit"} defaultValue={"100"}
                            id="TextInput-4"/>
                 <NeoTextArea/>
+
             </div>
         );
     }

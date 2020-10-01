@@ -13,12 +13,12 @@ import {Footer} from "react-materialize";
 import NeoCardContainer from "./NeoCardContainer";
 
 let root = document.getElementById("root");
-let pagetitle = <Textarea noLayout={true} className="card-title editable-title"  defaultValue={"neodash.js ⚡"}/>;
+let pagetitle = <Textarea noLayout={true} className="card-title editable-title"  defaultValue={"Neodash ⚡"}/>;
 const client = new ApolloClient({uri: process.env.REACT_APP_GRAPHQL_URI});
 
 
 const Main = () => {
-
+    document.title = "Neodash - Neo4j Dashboard"
     return (
         <ApolloProvider client={client}>
             <Navbar style={{backgroundColor: 'black'}} brand={pagetitle} id="mobile-nav" centerLogo></Navbar>

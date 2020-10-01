@@ -9,8 +9,9 @@ class NeoTextArea extends React.Component {
                 l={12}
                 m={12}
                 s={12}
-                placeholder={"Enter Cypher here..."}
-                xl={12}></Textarea>
+                placeholder={"Enter Cypher here... \n"}
+                xl={12}><p style={{fontSize: 12}}>Limit a query to 1000 result rows for best performance.</p></Textarea>
+
         );
     }
 }
