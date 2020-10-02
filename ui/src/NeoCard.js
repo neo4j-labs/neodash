@@ -22,11 +22,11 @@ class NeoCardComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(props)
         this.stateChanged = this.stateChanged.bind(this);
+        this.updateGraphChips = this.updateGraphChips.bind(this);
         this.state = {
-            width: 8,
-            height: 8,
+            width: 4,
+            height: 4,
             action: <NeoPagination data={this.props.data} onChange={this.stateChanged}/>,
             type: this.props.type,
             page: 1,
@@ -37,7 +37,7 @@ class NeoCardComponent extends React.Component {
 
     stateChanged(update) {
 
-        if (update.label == "CardShiftRight" || update.label == "CardShiftLeft" || update.label == "CardDelete"){
+        if (update.label == "CardShiftRight" || update.label == "CardShiftLeft" || update.label == "CardDelete") {
             update.card = this;
             this.props.onChange(update);
         }
@@ -63,16 +63,23 @@ class NeoCardComponent extends React.Component {
         }
         if (this.state.type == "graph") {
             this.state.page += 1;
-            this.state.content = <NeoGraphViz width={this.state.width} height={this.state.height} page={this.state.page}
+            this.state.content = <NeoGraphViz onNodeLabelUpdate={this.updateGraphChips} width={this.state.width}
+                                              height={this.state.height} page={this.state.page}
                                               data={this.state.data}/>
-            this.state.action = <NeoGraphChips onChange={this.stateChanged}/>;
+            this.state.action = <NeoGraphChips
+                nodeLabels={["test", "test2", "aa", "aas", "asadv", "asas", "asasfa", "asfa", "asf", "saaaaaa", "a", 'asfa', "asda"]}
+                onChange={this.stateChanged}/>;
         }
         if (this.state.type == 'json') {
             this.state.content =
-                <NeoJSONView  data={this.state.data}/>
+                <NeoJSONView data={this.state.data}/>
             this.state.action = <></>
         }
-        console.log(this.state);
+        this.setState(this.state);
+    }
+
+    updateGraphChips(labels) {
+        this.state.action = <NeoGraphChips nodeLabels={labels} onChange={this.stateChanged}/>;
         this.setState(this.state);
     }
 

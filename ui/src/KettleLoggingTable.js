@@ -31,7 +31,6 @@ function KettleLoggingTable() {
 
     if (loading) return <p>Loading ...</p>;
     if (error) {
-        console.log(error)
         return <p>{error.toString()}</p>;
     }
 

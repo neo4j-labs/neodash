@@ -10,7 +10,7 @@ class NeoTable extends NeoReport {
         super(props);
         this.state = {
             'running': true,
-            'query': 'Match (n) WITH n LIMIT 2 MATCH (n)-[e]-(m) RETURN id(n), n,e,m LIMIT 10',
+            'query': 'Match (n) WITH n LIMIT 20 MATCH (n)-[e]-(m) RETURN id(n), n,e,m LIMIT 100',
             'params': {}
         };
         this.runQuery();
@@ -31,7 +31,7 @@ class NeoTable extends NeoReport {
         let rows = data.filter((item, index) => index >= (this.props.page - 1) * this.props.rows && index < (this.props.page) * this.props.rows)
             .map((row, index) => {
                 return <tr>
-                    <td>{index + (this.props.page - 1) * this.props.rows + 1}</td>
+                    <td style={{color: "lightgrey"}}>{index + (this.props.page - 1) * this.props.rows + 1}</td>
                     {Object.values(row).map(value => {
                         return <td>{this.renderExoticValueTypes(value)}</td>
                     })}

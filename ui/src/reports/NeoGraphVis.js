@@ -10,7 +10,7 @@ class NeoGraphViz extends NeoReport {
         super(props);
         this.state = {
             'running': true,
-            'query': 'Match (n) WITH n LIMIT 507 MATCH (n)-[e]-(m) RETURN id(n), n,e,m LIMIT 10',
+            'query': 'Match (n:Artist) WITH n LIMIT 50 MATCH (n)-[e]-(m) RETURN id(n), n,e,m LIMIT 50',
             'params': {},
             'data': []
         };
@@ -22,10 +22,11 @@ class NeoGraphViz extends NeoReport {
 
         // unique nodes
         let nodesMap = {}
+        let nodeLabelsMap = {}
         this.state.data.forEach(row => {
             Object.values(row).forEach(value => {
                 if (value["labels"] && value["identity"] && value["properties"]) {
-                    console.log(value['identity'].low)
+                    value["labels"].forEach(l => nodeLabelsMap[l] = true)
                     nodesMap["" + value['identity']['low']] = {
                         id: value['identity']['low'],
                         fill: 'seagreen',
@@ -54,11 +55,16 @@ class NeoGraphViz extends NeoReport {
             });
         });
         graph.links = Object.values(linksMap)
+        graph.nodeLabels = Object.keys(nodeLabelsMap)
+        this.props.onNodeLabelUpdate(graph.nodeLabels)
         return graph
     }
 
     componentDidMount() {
+        let colors = ["#588c7e","#f2e394","#f2ae72","#d96459","#5b9aa0","#d6d4e0","#b8a9c9","#622569", "#ddd5af","#d9ad7c","#a2836e","#674d3c","grey"]
+
         let graph = this.convertDataToGraph();
+        this.state.nodeLabels = graph.nodeLabels
 
 // chart dimensions
         var width = -60 + this.props.width * 105, height = -145 + this.props.height * 100;
@@ -88,8 +94,8 @@ class NeoGraphViz extends NeoReport {
             .force("collide", d3.forceCollide().strength(1).radius(function (d) {
                 return d.radius * 1.2
             }))
-            .force("collide", d3.forceCollide().strength(0.05).radius(function (d) {
-                return d.radius * 2.1
+            .force("collide", d3.forceCollide().strength(0.1).radius(function (d) {
+                return d.radius * 2.3
             }))
 
         ;
@@ -110,6 +116,7 @@ class NeoGraphViz extends NeoReport {
             .attr('dominant-baseline', 'central')
             .style('font-family', '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif')
             .style('font-size', '10px')
+            .style('fill', 'grey')
             .text(function (d) {
                 return d.type
             })
@@ -127,7 +134,7 @@ class NeoGraphViz extends NeoReport {
                 return d.radius
             })
             .style("fill", function (d) {
-                return d.fill
+                return colors[graph.nodeLabels.indexOf(d.labels[d.labels.length-1]) % colors.length]
             })
             .style("stroke", function (d) {
                 return d.stroke
@@ -194,7 +201,6 @@ class NeoGraphViz extends NeoReport {
             // update type positions
             type
                 .attr("x", function (d) {
-                    console.log(d);
                     return (d.source.x + d.target.x)*0.5;
                 })
                 .attr("y", function (d) {

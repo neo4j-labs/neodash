@@ -21,7 +21,6 @@ class NeoCardContainer extends React.Component {
     }
 
     stateChanged(update) {
-        console.log(this.state.cards.map(card => (card.key)));
         if (update.label === 'newCard') {
             let newCard = <NeoCard id={this.state.key} key={this.state.key} onChange={this.stateChanged}
                                    data={this.data}
