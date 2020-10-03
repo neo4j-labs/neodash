@@ -13,7 +13,7 @@ class NeoCardContainer extends React.Component {
             key: 3,
         }
         this.state.cards =
-            [<NeoCard key={0} id={0} onChange={this.stateChanged} data={this.data} type='graph'/>,
+            [<NeoCard key={0} id={0} query="CALL db.schema.visualization" onChange={this.stateChanged} data={this.data} type='graph'/>,
                 <NeoCard key={1} id={1} onChange={this.stateChanged} data={this.data} type='table'/>,
                 <NeoCard key={2} id={2} onChange={this.stateChanged} data={this.data} type='json'/>,
                 <AddNeoCard key={3} id={3} onClick={this.stateChanged}/>
@@ -53,27 +53,6 @@ class NeoCardContainer extends React.Component {
         }
         this.setState(this.state);
     }
-
-    data =
-        [
-            {'Store': 'LDN', 'date': '9-3-2020', 'Person': 'Jim', 'Food': 'Chicken', 'Price': 5.20},
-            {'Store': 'END', 'Day': '10-3-2020', 'Person': 'Bob', 'Food': 'Ham', 'Price': 2.00},
-            {'Store': 'END', 'Day': '10-3-2020', 'Person': 'Alice', 'Food': 'Noodles', 'Price': 1.50},
-            {'Store': 'LDN', 'Day': '11-3-2020', 'Person': 'Anna', 'Food': 'Noodles', 'Price': 2.50},
-            {'Store': 'END', 'Day': '11-3-2020', 'Person': 'Kenny', 'Food': 'Beer', 'Price': 8.60},
-            {'Store': 'PTH', 'Day': '12-3-2020', 'Person': 'Mike', 'Food': 'Water', 'Price': 8.20},
-            {'Store': 'PTH', 'Day': '12-3-2020', 'Person': 'Fry', 'Food': 'Chicken', 'Price': 5.20},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Coooooooooooooooooooooooooooooooooooooooooooooookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30},
-            {'Store': 'END', 'Day': '12-3-2020', 'Person': 'Steve', 'Food': 'Cookies', 'Price': 1.30}
-        ];
 
 
     render() {

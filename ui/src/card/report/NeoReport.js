@@ -1,6 +1,8 @@
 import React from "react";
 import neo4j from "neo4j-driver";
 import Textarea from "react-materialize/lib/Textarea";
+import Icon from "react-materialize/lib/Icon";
+import Chip from "react-materialize/lib/Chip";
 
 class NeoReport extends React.Component {
 
@@ -10,22 +12,25 @@ class NeoReport extends React.Component {
             'neo4j://localhost',
             neo4j.auth.basic('neo4j', 'neo')
         );
+        this.state = {}
         this.session = driver.session();
     }
 
     runQuery() {
-        if (this.state.query.trim() === ""){
+        this.state.running = true;
+        if (this.props.query.trim() === ""){
+            this.state = {}
             this.state.running = false;
             this.state.data = null;
             return
         }
         this.session
-            .run(this.state.query, this.state.params)
+            .run(this.props.query, this.props.params)
             .then(result => {
 
                 let records = result.records;
                 if (records.length >1000){
-                    alert("A query returned over 1000 rows. Reports may be slow/unresponsive. \n\nYour query: \n" + this.state.query + "\n \nConsider adding a LIMIT clause to the end of your query, e.g: \nRETURN x,y,z LIMIT 100.");
+                    alert("A query returned over 1000 rows. Reports may be slow/unresponsive. \n\nYour query: \n" + this.props.query + "\n \nConsider adding a LIMIT clause to the end of your query, e.g: \nRETURN x,y,z LIMIT 100.");
                 }
                 this.state.data = records.map(record => {
                     var row = {};
@@ -43,18 +48,35 @@ class NeoReport extends React.Component {
             })
             .then(() => {
                 this.state.running = false;
-                this.session.close()
                 this.setState(this.state);
             })
     }
 
     render(){
+
+        if (this.state.prevQuery !== this.props.query){
+            this.state.prevQuery = this.props.query;
+            this.runQuery();
+        }
         let data = this.state.data;
         if (this.state.running) {
             return <p>Running query...</p>
         }
 
-        if (data == null || data.length == 0) {
+        if (data == null){
+            return <div><p>No query specified.</p><p>Use the &nbsp;
+                <Chip
+                    close={false}
+                    closeIcon={<Icon className="close">close</Icon>}
+                    options={null}
+                    style={{height: '24px',lineHeight: '24px'}}
+                >
+                    Settings &nbsp;&nbsp;&nbsp;&nbsp;
+                    <i style={{right: '4px', position: "absolute"}} className="material-icons">more_vert</i>
+                </Chip>
+                 to get started.</p></div>
+        }
+        if (data.length == 0) {
             return <p>Query returned no data.</p>
         }
 
@@ -70,6 +92,7 @@ class NeoReport extends React.Component {
                           xl={12}/>
             );
         }
+
     }
 }
 

@@ -1,24 +1,18 @@
 import Table from "react-materialize/lib/Table";
 import React from "react";
 import NeoReport from "./NeoReport";
-import NeoGraphChips from "../NeoGraphChips";
-import NeoGraphChip from "../NeoGraphChip";
-import Textarea from "react-materialize/lib/Textarea";
+import NeoGraphChip from "../../component/NeoGraphChip";
+
 
 class NeoTable extends NeoReport {
     constructor(props) {
         super(props);
-        this.state = {
-            'running': true,
-            'query': 'Match (n) WITH n LIMIT 20 MATCH (n)-[e]-(m) RETURN id(n), n,e,m LIMIT 100',
-            'params': {}
-        };
         this.runQuery();
     }
 
     render() {
         let rendered = super.render();
-        if (rendered){
+        if (rendered) {
             return rendered;
         }
         let data = this.state.data;
@@ -53,20 +47,27 @@ class NeoTable extends NeoReport {
         );
     }
 
-    renderExoticValueTypes(value){
+    renderExoticValueTypes(value) {
         if (value == null) {
             return ""
         }
-        if (Array.isArray(value)){
+        if (Array.isArray(value)) {
             return <p> {
-                value.map((item,index) =>
-                {
+                value.map((item, index) => {
                     return <>
-                    {this.renderExoticValueTypes(item)}
-                    { (index !== value.length -1 && !Array.isArray(item))  ? ', ' : ''  }
+                        {this.renderExoticValueTypes(item)}
+                        {(index !== value.length - 1 && !Array.isArray(item)) ? ', ' : ''}
                     </>
                 })
             }  </p>;
+        }
+        if (value["start"] && value["end"] && value["segments"] && value["length"]) {
+            // let segment = ;
+            let path = [value.start];
+            value.segments.forEach(segment => {
+                path = path.concat(segment.relationship).concat(segment.end);
+            });
+            return this.renderExoticValueTypes(path);
         }
         if (value["labels"] && value["identity"] && value["properties"]) {
             return value["labels"].map(label => <NeoGraphChip name={label}/>)
@@ -77,7 +78,10 @@ class NeoTable extends NeoReport {
         if (value["low"] && value["high"] === 0) {
             return value.low
         }
-        if (value.startsWith("http://") || value.startsWith("https://")){
+        if (value.constructor === Object) {
+            return JSON.stringify(value, null, 2)
+        }
+        if (value.startsWith("http://") || value.startsWith("https://")) {
             return <a target={"_blank"} href={value}>{value}</a>
         }
         return JSON.stringify(value, null, 2)

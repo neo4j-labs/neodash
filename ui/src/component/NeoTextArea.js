@@ -5,6 +5,7 @@ class NeoTextArea extends React.Component {
     render(content) {
         return (
             <Textarea
+                onChange={e => {this.props.onChange({'label': 'QueryChanged', 'value': e.target.value})}}
                 id="Textarea-12"
                 l={12}
                 m={12}

@@ -3,16 +3,13 @@ import Card from "react-materialize/lib/Card";
 import Icon from "react-materialize/lib/Icon";
 import Textarea from "react-materialize/lib/Textarea";
 import Button from "react-materialize/lib/Button";
-import NeoTable from "./reports/NeoTable";
-import NeoPagination from "./NeoPagination";
-import NeoGraphViz from "./reports/NeoGraphVis";
+import NeoTable from "./report/NeoTable";
+import NeoPagination from "./footer/NeoPagination";
+import NeoGraphViz from "./report/NeoGraphVis";
 import Col from "react-materialize/lib/Col";
-import Chip from "react-materialize/lib/Chip";
 import NeoCardSettings from "./NeoCardSettings";
-import NeoButton from "./NeoButton";
-
-import NeoJSONView from "./reports/NeoJSONView";
-import NeoGraphChips from "./NeoGraphChips";
+import NeoJSONView from "./report/NeoJSONView";
+import NeoGraphChips from "./footer/NeoGraphChips";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
@@ -31,12 +28,17 @@ class NeoCardComponent extends React.Component {
             type: this.props.type,
             page: 1,
             data: this.props.data,
+            query: (this.props.query ? this.props.query : "")
         }
         this.stateChanged({})
     }
 
     stateChanged(update) {
 
+        if (update.label == "QueryChanged") {
+            this.state.query = update.value;
+            return
+        }
         if (update.label == "CardShiftRight" || update.label == "CardShiftLeft" || update.label == "CardDelete") {
             update.card = this;
             this.props.onChange(update);
@@ -56,30 +58,41 @@ class NeoCardComponent extends React.Component {
             this.state.height = Math.ceil(update.value / 12) * 4;
         }
         if (this.state.type == 'table') {
+
             this.state.content =
                 <NeoTable rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
-                          data={this.state.data}/>
+                          query={this.state.query}
+                          params={{}}
+                />
             this.state.action = <NeoPagination data={this.state.data} onChange={this.stateChanged}/>
         }
         if (this.state.type == "graph") {
             this.state.page += 1;
-            this.state.content = <NeoGraphViz onNodeLabelUpdate={this.updateGraphChips} width={this.state.width}
-                                              height={this.state.height} page={this.state.page}
-                                              data={this.state.data}/>
-            this.state.action = <NeoGraphChips
-                nodeLabels={["test", "test2", "aa", "aas", "asadv", "asas", "asasfa", "asfa", "asf", "saaaaaa", "a", 'asfa', "asda"]}
-                onChange={this.stateChanged}/>;
+            this.state.content =
+                <NeoGraphViz
+                    query={this.state.query}
+                    params={{}}
+                    onNodeLabelUpdate={this.updateGraphChips} width={this.state.width}
+                    height={this.state.height} page={this.state.page}
+                    data={this.state.data}/>
         }
         if (this.state.type == 'json') {
             this.state.content =
-                <NeoJSONView data={this.state.data}/>
+                <NeoJSONView query={this.state.query}
+                             params={{}}
+                             data={this.state.data}/>
             this.state.action = <></>
         }
         this.setState(this.state);
     }
 
     updateGraphChips(labels) {
-        this.state.action = <NeoGraphChips nodeLabels={labels} onChange={this.stateChanged}/>;
+        this.state.labels = Object.keys(labels);
+        this.state.properties = Object.values(labels);
+
+        this.state.page += 1;
+        this.state.action = <NeoGraphChips nodeLabels={Object.keys(labels)} properties={Object.values(labels)}
+                                           onChange={this.stateChanged}/>;
         this.setState(this.state);
     }
 
@@ -92,13 +105,20 @@ class NeoCardComponent extends React.Component {
             <Card
                 actions={[this.state.action]}
                 className={((this.state.height == 4) ? 'medium' : 'huge') + " neo-card medium white darken-5 paginated-card"}
-                closeIcon={<Icon>save</Icon>}
+                closeIcon={<div style={{
+                    width: '100%',
+                    height: '60px',
+                    top: '0px',
+                    right: '0px',
+                    position: 'absolute'
+                }}
+                                onClick={e => this.stateChanged({label: 'SettingsSaved'})}><Icon>save</Icon></div>}
                 revealIcon={<Icon>more_vert</Icon>}
                 textClassName="black-text"
                 // <i style={{marginRight: '40px'}} className="material-icons right">refresh</i>
                 title={[revealCardTitle, cardTitle]}
                 reveal={[<NeoCardSettings onChange={this.stateChanged}/>]}
-            >{this.state.content}</Card>
+            >{this.state.content}   </Card>
         </Col>
     }
 }

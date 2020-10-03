@@ -1,8 +1,8 @@
 import React from "react";
 import TextInput from "react-materialize/lib/TextInput";
-import NeoOptionSelect from "./NeoOptionSelect";
-import NeoButton from "./NeoButton";
-import NeoTextArea from "./NeoTextArea";
+import NeoOptionSelect from "../component/NeoOptionSelect";
+import NeoButton from "../component/NeoButton";
+import NeoTextArea from "../component/NeoTextArea";
 
 class NeoCardSettings extends React.Component {
     constructor(props) {
@@ -48,9 +48,9 @@ class NeoCardSettings extends React.Component {
                 <NeoOptionSelect label="Size" onChange={this.stateChanged} options={sizeOptions}/>
                 <TextInput style={{width: '140px'}} label={"Cypher Parameters"} placeholder={"{x: '123', y: 5}"}
                            id="TextInput-4"/>
-                <TextInput style={{width: '140px'}} label={"Result Limit"} defaultValue={"100"}
+                <TextInput style={{width: '140px'}} label={"Refresh rate (sec)"} defaultValue={"100"}
                            id="TextInput-4"/>
-                <NeoTextArea/>
+                <NeoTextArea onChange={this.stateChanged}/>
 
             </div>
         );

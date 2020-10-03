@@ -87,7 +87,7 @@ body {
 
 .graph-edge {
     stroke-width: 2;
-
+    fill: none;
     marker-end: url(#arrowhead);
     /*marker-start: url(#label);*/
 }
@@ -180,4 +180,38 @@ body {
 
 .helper-text {
     display: none !important;
+}
+.chip {
+    position: relative;
+}
+/* Select inside chip */
+.chip .input-field{
+    position: absolute;
+
+    top: 0px;
+    margin: 0px;
+    padding: 0px;
+    left: 0px;
+    width: 100%;
+    color: transparent;
+}
+.chip .input-field .select-wrapper{
+    position: absolute;
+    width: 100%;
+
+    height: 30px;
+}
+.chip .input-field .select-wrapper input{
+    color: transparent;
+    border-bottom: none;
+}
+.chip .input-field .select-wrapper .select-dropdown{
+    position: absolute;
+    width: 200px;
+}
+.chip .input-field label{
+    display: none;
+}
+.chip .input-field .select-wrapper svg{
+    display: none;
 }

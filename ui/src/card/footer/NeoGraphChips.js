@@ -1,11 +1,19 @@
 import React from "react";
 import Chip from "react-materialize/lib/Chip";
 import Icon from "react-materialize/lib/Icon";
-import NeoButton from "./NeoButton";
+import NeoButton from "../../component/NeoButton";
+import NeoOptionSelect from "../../component/NeoOptionSelect";
 
 class NeoGraphChips extends React.Component {
     constructor(props) {
         super(props);
+        this.stateChanged.bind(this);
+        this.state = {}
+        this.state.selectedProperties = ["name", "name"];
+    }
+
+
+    stateChanged(){
 
     }
 
@@ -15,22 +23,30 @@ class NeoGraphChips extends React.Component {
             <div style={{marginLeft: '10px'}}>
                 {this.props.nodeLabels.map((label,index) => {
                     return <Chip
+                        key={index}
                         close={false}
                         closeIcon={<Icon className="close">close</Icon>}
                         options={null}
                         style={{backgroundColor: this.colors[index % this.colors.length], color: 'white'}}
                     >
                         {label}
+                        {this.getNeoOptionSelect(index)}
                     </Chip>
 
                 })}
 
                 <div style={{float: 'right', marginRight: '10px'}}>
+                    {this.props.page}
                     <NeoButton color="grey lighten-2" icon='refresh'
                                onClick={click => this.props.onChange({'label': 'Refresh'})}/>
                 </div>
             </div>
         );
+    }
+
+    getNeoOptionSelect(index) {
+        return <NeoOptionSelect label="property" onChange={this.stateChanged}
+                                options={this.props.properties[index]}/>;
     }
 }
 

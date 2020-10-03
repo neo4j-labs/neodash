@@ -4,16 +4,11 @@ import registerServiceWorker from "./registerServiceWorker";
 import ApolloClient from "apollo-boost";
 import {ApolloProvider} from "@apollo/react-hooks";
 import Navbar from "react-materialize/lib/Navbar";
-import Container from "react-materialize/lib/Container";
-import Section from "react-materialize/lib/Section";
-import Row from "react-materialize/lib/Row";
 import Textarea from "react-materialize/lib/Textarea";
-import {AddNeoCard, NeoCard} from "./NeoCard";
-import {Footer} from "react-materialize";
-import NeoCardContainer from "./NeoCardContainer";
+import NeoCardContainer from "./card/NeoCardContainer";
 
 let root = document.getElementById("root");
-let pagetitle = <Textarea noLayout={true} className="card-title editable-title"  defaultValue={"Neodash ⚡"}/>;
+let pagetitle = <Textarea noLayout={true} className="card-title editable-title" defaultValue={"Neodash ⚡"}/>;
 const client = new ApolloClient({uri: process.env.REACT_APP_GRAPHQL_URI});
 
 
