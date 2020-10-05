@@ -64,7 +64,8 @@ class NeoReport extends React.Component {
         }
 
         if (data == null){
-            return <div><p>No query specified.</p><p>Use the &nbsp;
+            return <><span>No query specified.
+                <br/> Use the &nbsp;
                 <Chip
                     close={false}
                     closeIcon={<Icon className="close">close</Icon>}
@@ -74,7 +75,7 @@ class NeoReport extends React.Component {
                     Settings &nbsp;&nbsp;&nbsp;&nbsp;
                     <i style={{right: '4px', position: "absolute"}} className="material-icons">more_vert</i>
                 </Chip>
-                 to get started.</p></div>
+                 to get started.</span></>
         }
         if (data.length == 0) {
             return <p>Query returned no data.</p>

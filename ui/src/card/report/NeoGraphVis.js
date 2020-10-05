@@ -3,7 +3,7 @@ import React from "react";
 import NeoReport from "./NeoReport";
 
 
-class NeoGraphViz extends NeoReport {
+class NeoGraphVis extends NeoReport {
     constructor(props) {
         super(props);
         this.runQuery();
@@ -211,6 +211,7 @@ class NeoGraphViz extends NeoReport {
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended));
+        let propertiesSelected = this.props.propertiesSelected;
         var label = svg.append("g")
             .attr("class", "labels")
             .selectAll("text")
@@ -221,7 +222,10 @@ class NeoGraphViz extends NeoReport {
             .style('font-family', '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif')
             .style('font-size', '10px')
             .text(function (d) {
-                return d.properties.name
+                if (propertiesSelected.length == 0) {
+                    return d.properties.name
+                }
+                return d.properties[propertiesSelected[graph.nodeLabels.indexOf(d.labels[d.labels.length - 1])]]
             })
 
         simulation
@@ -268,13 +272,12 @@ class NeoGraphViz extends NeoReport {
                     // and ending points of the arc are the same, so kludge it.
                     x2 = x2 + 1;
                     y2 = y2 + 1;
-                    y1 = y1 -25;
-                    x2 = x2 +25;
+                    y1 = y1 - 25;
+                    x2 = x2 + 25;
                     return "M" + x1 + "," + y1 + "A" + drx + "," + dry + " " + xRotation + "," + largeArc + "," + sweep + " " + x2 + "," + y2 + "m -25 5";
                 }
                 return "M" + x1 + "," + y1 + "A" + drx + "," + dry + " " + xRotation + "," + largeArc + "," + sweep + " " + x2 + "," + y2;
             });
-
 
 
             // update node positions
@@ -297,13 +300,13 @@ class NeoGraphViz extends NeoReport {
             // update type positions
             type
                 .attr("x", function (d) {
-                    if (d.source.x == d.target.x && d.source.y == d.target.y){
-                        return d.source.x +5;
+                    if (d.source.x == d.target.x && d.source.y == d.target.y) {
+                        return d.source.x + 5;
                     }
                     return (d.source.x + d.target.x) * 0.5;
                 })
                 .attr("y", function (d) {
-                    if (d.source.x == d.target.x && d.source.y == d.target.y){
+                    if (d.source.x == d.target.x && d.source.y == d.target.y) {
                         return d.source.y - 60;
                     }
                     return (d.source.y + d.target.y) * 0.5;
@@ -317,7 +320,7 @@ class NeoGraphViz extends NeoReport {
         }
 
         function angle(source, target) {
-            if (source.x == target.x && source.y == target.y){
+            if (source.x == target.x && source.y == target.y) {
                 return 45;
             }
             let deltaY = target.y - source.y
@@ -372,5 +375,5 @@ class NeoGraphViz extends NeoReport {
     }
 }
 
-export default (NeoGraphViz);
+export default (NeoGraphVis);
 

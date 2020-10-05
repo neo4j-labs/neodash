@@ -78,6 +78,9 @@ class NeoTable extends NeoReport {
         if (value["low"] && value["high"] === 0) {
             return value.low
         }
+        if (value.constructor === Boolean) {
+            return JSON.stringify(value, null, 2)
+        }
         if (value.constructor === Object) {
             return JSON.stringify(value, null, 2)
         }

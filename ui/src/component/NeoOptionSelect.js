@@ -38,7 +38,7 @@ class NeoOptionSelect extends React.Component {
                     outDuration: 250
                 }
             }}
-            value="medium"
+            value="name"
         >
             {this.generateOptions()}
 

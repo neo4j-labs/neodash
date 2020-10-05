@@ -5,19 +5,25 @@ import ApolloClient from "apollo-boost";
 import {ApolloProvider} from "@apollo/react-hooks";
 import Navbar from "react-materialize/lib/Navbar";
 import Textarea from "react-materialize/lib/Textarea";
-import NeoCardContainer from "./card/NeoCardContainer";
+import NeoDash from "./card/NeoDash";
+import NeoSaveLoadModal from "./component/NeoSaveLoadModal";
+import NeoButton from "./component/NeoButton";
+import Button from "react-materialize/lib/Button";
+import Icon from "react-materialize/lib/Icon";
+import NavItem from "react-materialize/lib/NavItem";
 
 let root = document.getElementById("root");
-let pagetitle = <Textarea noLayout={true} className="card-title editable-title" defaultValue={"Neodash ⚡"}/>;
+
 const client = new ApolloClient({uri: process.env.REACT_APP_GRAPHQL_URI});
 
 
 const Main = () => {
     document.title = "Neodash - Neo4j Dashboard"
+
     return (
+
         <ApolloProvider client={client}>
-            <Navbar style={{backgroundColor: 'black'}} brand={pagetitle} id="mobile-nav" centerLogo></Navbar>
-            <NeoCardContainer/>
+            <NeoDash/>
             {/*<Footer style={{backgroundColor: '#ddd'}}></Footer>*/}
         </ApolloProvider>
     );

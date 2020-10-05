@@ -183,6 +183,7 @@ body {
 }
 .chip {
     position: relative;
+    margin-bottom: 5px;
 }
 /* Select inside chip */
 .chip .input-field{
@@ -214,4 +215,20 @@ body {
 }
 .chip .input-field .select-wrapper svg{
     display: none;
+}
+.nav-wrapper .input-field {
+    position: absolute;
+    margin-left: auto;
+    width: 60%;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+}
+.nav-wrapper ul {
+    z-index: -99;
+}
+.nav-wrapper .input-field textarea{
+    position: absolute;
+
+
 }

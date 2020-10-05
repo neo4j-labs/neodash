@@ -28,13 +28,24 @@ class NeoCardComponent extends React.Component {
             type: this.props.type,
             page: 1,
             data: this.props.data,
-            query: (this.props.query ? this.props.query : "")
+            query: (this.props.query ? this.props.query : ""),
+            labels: [],
+            properties: [],
+            propertiesSelected: [],
+            parameters: {},
+            refresh: 3600,
+            title: ""
         }
+
         this.stateChanged({})
     }
 
     stateChanged(update) {
-
+        if (update.label == "ChangedTitle") {
+            this.state.title = update.value;
+            this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
+            return
+        }
         if (update.label == "QueryChanged") {
             this.state.query = update.value;
             return
@@ -42,6 +53,12 @@ class NeoCardComponent extends React.Component {
         if (update.label == "CardShiftRight" || update.label == "CardShiftLeft" || update.label == "CardDelete") {
             update.card = this;
             this.props.onChange(update);
+        }
+        if (update.label == "propertyChanged") {
+            let index = update.value.split("-")[0]
+            let value = update.value.split("-")[1]
+            this.state.propertiesSelected[index] = value;
+            this.state.page += 1;
         }
         if (update.label == "Refresh") {
             this.state.page += 1;
@@ -72,6 +89,7 @@ class NeoCardComponent extends React.Component {
                 <NeoGraphViz
                     query={this.state.query}
                     params={{}}
+                    propertiesSelected={this.state.propertiesSelected}
                     onNodeLabelUpdate={this.updateGraphChips} width={this.state.width}
                     height={this.state.height} page={this.state.page}
                     data={this.state.data}/>
@@ -83,21 +101,39 @@ class NeoCardComponent extends React.Component {
                              data={this.state.data}/>
             this.state.action = <></>
         }
+
         this.setState(this.state);
+        this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
     }
 
     updateGraphChips(labels) {
-        this.state.labels = Object.keys(labels);
         this.state.properties = Object.values(labels);
+        if (this.state.labels.toString() !== Object.keys(labels).toString()) {
+            this.state.labels = Object.keys(labels);
+            this.state.propertiesSelected = this.state.labels.map(l => {
+                return "name"
+            });
+        }
 
         this.state.page += 1;
-        this.state.action = <NeoGraphChips nodeLabels={Object.keys(labels)} properties={Object.values(labels)}
-                                           onChange={this.stateChanged}/>;
+        this.state.action =
+            <NeoGraphChips nodeLabels={Object.keys(labels)}
+                           properties={Object.values(labels).map((labelChoices, index) => {
+                               let options = {}
+                               labelChoices.forEach(choice =>
+                                   options[(index + "-" + choice)] = choice
+                               )
+                               return options;
+                           })}
+                           onChange={this.stateChanged}/>;
+
         this.setState(this.state);
     }
 
     render() {
-        let cardTitle = <Textarea noLayout={true} className="card-title editable-title"
+        let cardTitle = <Textarea onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
+                                  noLayout={true}
+                                  className="card-title editable-title"
                                   placeholder={"Report name..."}/>;
         let revealCardTitle = <p style={{'padding-left': '150px', 'display': 'none'}}></p>;
 
