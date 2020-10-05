@@ -93,7 +93,8 @@ class NeoDash extends React.Component {
 
         let value = {
             "title": this.state.title,
-            "cards": this.state.cardState.map(q => {
+            "version": "1.0",
+            "reports": this.state.cardState.map(q => {
                 return {
                     title: q.title,
                     width: q.width,
@@ -101,7 +102,7 @@ class NeoDash extends React.Component {
                     type: q.type,
                     query: q.query,
                     page: q.page,
-                    propertiesSelected: q.propertiesSelected,
+                    properties: q.propertiesSelected,
                     parameters: q.parameters,
                     refresh: q.refresh
                 }
@@ -110,9 +111,10 @@ class NeoDash extends React.Component {
         let newJson = JSON.stringify(value, null, 2);
         this.state.json = newJson;
         this.neoSaveLoadModal =
-            <NeoSaveLoadModal header={"Save/Load Dashboard"}
+            <NeoSaveLoadModal header={"Edit/Export Dashboard (Copy me!)"}
                               root={document.getElementById("root")}
                               json={this.state.json}
+                              placeholder={"Paste a dashboard JSON file here..."}
                               actions={[
                                   <Button style={{position: 'absolute', right: '20px', top: '20px'}} modal="close"
                                           node="button"

@@ -27,8 +27,6 @@ class NeoTextInput extends React.Component {
                 this.setState(this.state);
                 this.props.onChange({label: this.props.changeEventLabel, value: e.target.value})
             }
-
-
         }}
                                      value={this.state.value}
                                      style={this.props.style} label={this.props.label}

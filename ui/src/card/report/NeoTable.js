@@ -78,14 +78,10 @@ class NeoTable extends NeoReport {
         if (value["low"] && value["high"] === 0) {
             return value.low
         }
-        if (value.constructor === Boolean) {
-            return JSON.stringify(value, null, 2)
-        }
-        if (value.constructor === Object) {
-            return JSON.stringify(value, null, 2)
-        }
-        if (value.startsWith("http://") || value.startsWith("https://")) {
-            return <a target={"_blank"} href={value}>{value}</a>
+        if (value.constructor === String) {
+            if (value.startsWith("http://") || value.startsWith("https://")) {
+                return <a target={"_blank"} href={value}>{value}</a>
+            }
         }
         return JSON.stringify(value, null, 2)
     }

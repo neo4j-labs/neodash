@@ -36,6 +36,7 @@ class NeoCardSettings extends React.Component {
 
         return (
             <div>
+                <span>&nbsp;</span>
                 <div style={{"float": "right", "position": "absolute", "left": "18px", "top": "15px"}}>
                     <NeoButton color='red' key='2' icon='delete'
                                onClick={e => this.stateChanged({event: e, label: "CardDelete"})}/>

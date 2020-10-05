@@ -348,7 +348,8 @@ class NeoGraphVis extends NeoReport {
 
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
+        super.componentDidUpdate(prevProps);
         d3.select('.new').select('g').remove();
         this.componentDidMount();
     }

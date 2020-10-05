@@ -14,11 +14,35 @@ class NeoReport extends React.Component {
         );
         this.state = {}
         this.session = driver.session();
+        this.runTimer({})
+    }
+
+    componentDidUpdate(prevProps, prevState, ss) {
+        let refresh = this.props.refresh;
+        if (prevProps.refresh !== refresh) {
+            this.runTimer(prevProps);
+        }
+
+    }
+
+    runTimer(prevProps) {
+        let refresh = this.props.refresh;
+        if (prevProps.refresh !== refresh) {
+            clearTimeout(this.timer)
+            if (refresh > 0) {
+                let report = this;
+                this.timer = setInterval(function () {
+                    report.runQuery();
+                    report.setState(report.state);
+                    // alert(refresh)
+                }, refresh * 1000.0);
+            }
+        }
     }
 
     runQuery() {
         this.state.running = true;
-        if (this.props.query.trim() === ""){
+        if (this.props.query.trim() === "") {
             this.state = {}
             this.state.running = false;
             this.state.data = null;
@@ -30,7 +54,7 @@ class NeoReport extends React.Component {
             .then(result => {
 
                 let records = result.records;
-                if (records.length >1000){
+                if (records.length > 1000) {
                     alert("A query returned over 1000 rows. Reports may be slow/unresponsive. \n\nYour query: \n" + this.props.query + "\n \nConsider adding a LIMIT clause to the end of your query, e.g: \nRETURN x,y,z LIMIT 100.");
                 }
                 this.state.data = records.map(record => {
@@ -53,9 +77,9 @@ class NeoReport extends React.Component {
             })
     }
 
-    render(){
+    render() {
 
-        if (this.state.prevQuery !== this.props.query){
+        if (this.state.prevQuery !== this.props.query) {
             this.state.prevQuery = this.props.query;
             this.runQuery();
         }
@@ -64,14 +88,14 @@ class NeoReport extends React.Component {
             return <p>Running query...</p>
         }
 
-        if (data == null){
+        if (data == null) {
             return <><span>No query specified.
                 <br/> Use the &nbsp;
                 <Chip
                     close={false}
                     closeIcon={<Icon className="close">close</Icon>}
                     options={null}
-                    style={{height: '24px',lineHeight: '24px'}}
+                    style={{height: '24px', lineHeight: '24px'}}
                 >
                     Settings &nbsp;&nbsp;&nbsp;&nbsp;
                     <i style={{right: '4px', position: "absolute"}} className="material-icons">more_vert</i>
@@ -90,6 +114,7 @@ class NeoReport extends React.Component {
                           l={12}
                           m={12}
                           s={12}
+                          onChange={e => null}
                           value={result}
                           xl={12}/>
             );

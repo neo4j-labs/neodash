@@ -31,7 +31,7 @@ class NeoGraphChips extends React.Component {
 
                 })}
 
-                <div style={{float: 'right', marginRight: '10px'}}>
+                <div style={{float: "right", marginRight: '10px'}}>
                     {this.props.page}
                     <NeoButton color="grey lighten-2" icon='refresh'
                                onClick={click => this.props.onChange({'label': 'Refresh'})}/>

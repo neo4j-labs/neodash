@@ -3,6 +3,9 @@
     height: 85%;
 }
 
+body{
+    background-color: rgb(176, 176, 176);
+}
 .log-snip {
     height: 200px;
     overflow: scroll;
@@ -20,7 +23,7 @@
     right: 0px;
     top: 0px;
 }
-body {
+#root {
     background-color: #efefef;
 }
 

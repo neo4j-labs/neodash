@@ -16,7 +16,7 @@ class NeoSaveLoadModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.state.json !== this.props.json){
+        if (prevProps.json !== this.props.json) {
             this.state.json = this.props.json;
             this.setState(this.state);
         }
@@ -38,7 +38,7 @@ class NeoSaveLoadModal extends React.Component {
                 id="NeoModal"
                 open={false}
                 options={{
-                    dismissible: true,
+                    dismissible: false,
                     endingTop: '10%',
                     inDuration: 250,
                     onCloseEnd: null,
@@ -61,7 +61,7 @@ class NeoSaveLoadModal extends React.Component {
                     s={12}
                     onChange={this.stateChanged}
                     value={this.state.json}
-                    placeholder={"Paste a dashboard JSON file here..."}
+                    placeholder={this.props.placeholder}
                     xl={12}/>
             </Modal>
         )

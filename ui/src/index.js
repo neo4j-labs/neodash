@@ -11,20 +11,23 @@ import NeoButton from "./component/NeoButton";
 import Button from "react-materialize/lib/Button";
 import Icon from "react-materialize/lib/Icon";
 import NavItem from "react-materialize/lib/NavItem";
+import Footer from "react-materialize/lib/Footer";
 
 let root = document.getElementById("root");
 
 const client = new ApolloClient({uri: process.env.REACT_APP_GRAPHQL_URI});
 
 
+
 const Main = () => {
+
     document.title = "Neodash - Neo4j Dashboard"
 
     return (
 
         <ApolloProvider client={client}>
             <NeoDash/>
-            {/*<Footer style={{backgroundColor: '#ddd'}}></Footer>*/}
+            <Footer copyrights={"NeoDash v1.0"} style={{backgroundColor: '#ddd'}}></Footer>
         </ApolloProvider>
     );
 };

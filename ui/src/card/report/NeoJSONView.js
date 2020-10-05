@@ -21,6 +21,7 @@ class NeoJSONView extends NeoReport {
                       m={12}
                       s={12}
                       value={result}
+                      onChange={e => null}
                       xl={12}/>
         );
     }

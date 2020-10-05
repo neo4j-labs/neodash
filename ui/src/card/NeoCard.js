@@ -34,12 +34,12 @@ class NeoCardComponent extends React.Component {
             propertiesSelected: [],
             parameters: "",
             parsedParameters: {name: "deadmau5"},
-            refresh: 3600,
+            refresh: 0,
             title: ""
         }
-
         this.stateChanged({})
     }
+
 
     stateChanged(update) {
         // Updates
@@ -178,17 +178,15 @@ class NeoCardComponent extends React.Component {
             <Card
                 actions={[this.state.action]}
                 className={((this.state.height == 4) ? 'medium' : 'huge') + " neo-card medium white darken-5 paginated-card"}
-                closeIcon={<div style={{
-                    width: '100%',
-                    height: '60px',
-                    top: '0px',
-                    right: '0px',
-                    position: 'absolute'
-                }}
-                                onClick={e => this.stateChanged({label: 'SettingsSaved'})}><Icon>save</Icon></div>}
+                closeIcon={
+                    <div style={{width: '100%', height: '60px', top: '0px', right: '0px', position: 'absolute'}}
+                         onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
+                        <Icon>save</Icon>
+                    </div>
+                }
                 revealIcon={<Icon>more_vert</Icon>}
                 textClassName="black-text"
-                title={[revealCardTitle, cardTitle]}
+                title={cardTitle}
                 reveal={[<NeoCardSettings onChange={this.stateChanged}/>]}
             >{this.state.content}   </Card>
         </Col>
