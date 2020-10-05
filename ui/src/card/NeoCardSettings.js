@@ -3,6 +3,7 @@ import TextInput from "react-materialize/lib/TextInput";
 import NeoOptionSelect from "../component/NeoOptionSelect";
 import NeoButton from "../component/NeoButton";
 import NeoTextArea from "../component/NeoTextArea";
+import NeoTextInput from "../component/NeoTextInput";
 
 class NeoCardSettings extends React.Component {
     constructor(props) {
@@ -43,14 +44,16 @@ class NeoCardSettings extends React.Component {
                     <NeoButton color='black' icon='chevron_right'
                                onClick={e => this.stateChanged({event: e, label: "CardShiftRight"})}/>
                 </div>
-                <p> </p>
+                <p></p>
                 <NeoOptionSelect label="Type" onChange={this.stateChanged} options={vizOptions}/>
                 <NeoOptionSelect label="Size" onChange={this.stateChanged} options={sizeOptions}/>
-                <TextInput style={{width: '140px'}} label={"Cypher Parameters"} placeholder={"{x: '123', y: 5}"}
-                           id="TextInput-4"/>
-                <TextInput style={{width: '140px'}} label={"Refresh rate (sec)"} defaultValue={"100"}
-                           id="TextInput-4"/>
-                <NeoTextArea onChange={this.stateChanged}/>
+
+                <NeoTextInput onChange={this.stateChanged} changeEventLabel={"CypherParamsChanged"}
+                           style={{width: '140px'}} label={"Cypher Parameters"} placeholder={'{"x": "abc", "y": 5}'}/>
+                <NeoTextInput numeric onChange={this.stateChanged} changeEventLabel={"RefreshRateChanged"}
+                              style={{width: '140px'}} label={"Refresh rate (sec)"} placeholder={"0 (No Refresh)"}/>
+
+                <NeoTextArea name="Query" onChange={this.stateChanged}/>
 
             </div>
         );

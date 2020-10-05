@@ -24,6 +24,7 @@ class NeoReport extends React.Component {
             this.state.data = null;
             return
         }
+
         this.session
             .run(this.props.query, this.props.params)
             .then(result => {

@@ -24,7 +24,7 @@ class NeoCardComponent extends React.Component {
         this.state = {
             width: 4,
             height: 4,
-            action: <NeoPagination data={this.props.data} onChange={this.stateChanged}/>,
+            action: "",
             type: this.props.type,
             page: 1,
             data: this.props.data,
@@ -32,7 +32,8 @@ class NeoCardComponent extends React.Component {
             labels: [],
             properties: [],
             propertiesSelected: [],
-            parameters: {},
+            parameters: "",
+            parsedParameters: {name: "deadmau5"},
             refresh: 3600,
             title: ""
         }
@@ -41,32 +42,63 @@ class NeoCardComponent extends React.Component {
     }
 
     stateChanged(update) {
-        if (update.label == "ChangedTitle") {
+        // Updates
+        if (update.label === "SettingsSaved") {
+            this.state.parsedParameters = (
+                function (parameters) {
+                    try {
+                        let value = JSON.parse(parameters);
+                        if (value.constructor === Object) {
+                            return value;
+                        }
+                        return {};
+                    } catch (err) {
+                        return {};
+                    }
+                })(this.state.parameters);
+
+            // TODO: Force a refresh of the card component in a much cleaner way.
+            this.state.query = this.state.query.endsWith('\n') ? this.state.query.substr(0, this.state.query.length - 1) :
+                this.state.query += "\n";
+
+            this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
+
+        }
+        if (update.label === "ChangedTitle") {
             this.state.title = update.value;
             this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
             return
         }
-        if (update.label == "QueryChanged") {
+        if (update.label === "QueryChanged") {
             this.state.query = update.value;
             return
         }
-        if (update.label == "CardShiftRight" || update.label == "CardShiftLeft" || update.label == "CardDelete") {
+        if (update.label === "CypherParamsChanged") {
+            this.state.parameters = update.value;
+            return
+        }
+        if (update.label === "RefreshRateChanged") {
+            this.state.refresh = update.value;
+            return
+        }
+
+        if (update.label === "CardShiftRight" || update.label === "CardShiftLeft" || update.label === "CardDelete") {
             update.card = this;
             this.props.onChange(update);
         }
-        if (update.label == "propertyChanged") {
+        if (update.label === "propertyChanged") {
             let index = update.value.split("-")[0]
             let value = update.value.split("-")[1]
             this.state.propertiesSelected[index] = value;
             this.state.page += 1;
         }
-        if (update.label == "Refresh") {
+        if (update.label === "Refresh") {
             this.state.page += 1;
         }
-        if (update.label == "PageChanged") {
+        if (update.label === "PageChanged") {
             this.state.page = update.value;
         }
-        if (update.label == "TypeChanged") {
+        if (update.label === "TypeChanged") {
             this.state.page = 1;
             this.state.type = update.value;
         }
@@ -74,31 +106,35 @@ class NeoCardComponent extends React.Component {
             this.state.width = (update.value % 12 == 0) ? 12 : (update.value % 12);
             this.state.height = Math.ceil(update.value / 12) * 4;
         }
-        if (this.state.type == 'table') {
 
+        // different settings for the different report types
+        if (this.state.type === 'table') {
             this.state.content =
                 <NeoTable rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
                           query={this.state.query}
-                          params={{}}
+                          params={this.state.parsedParameters}
+                          refresh={this.state.refresh}
                 />
             this.state.action = <NeoPagination data={this.state.data} onChange={this.stateChanged}/>
         }
-        if (this.state.type == "graph") {
+        if (this.state.type === "graph") {
             this.state.page += 1;
             this.state.content =
                 <NeoGraphViz
                     query={this.state.query}
-                    params={{}}
+                    params={this.state.parsedParameters}
                     propertiesSelected={this.state.propertiesSelected}
                     onNodeLabelUpdate={this.updateGraphChips} width={this.state.width}
                     height={this.state.height} page={this.state.page}
-                    data={this.state.data}/>
+                    data={this.state.data}
+                    refresh={this.state.refresh}/>
         }
-        if (this.state.type == 'json') {
+        if (this.state.type === 'json') {
             this.state.content =
                 <NeoJSONView query={this.state.query}
-                             params={{}}
-                             data={this.state.data}/>
+                             params={this.state.parsedParameters}
+                             data={this.state.data}
+                             refresh={this.state.refresh}/>
             this.state.action = <></>
         }
 
@@ -131,10 +167,11 @@ class NeoCardComponent extends React.Component {
     }
 
     render() {
-        let cardTitle = <Textarea onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
-                                  noLayout={true}
-                                  className="card-title editable-title"
-                                  placeholder={"Report name..."}/>;
+        let cardTitle = <Textarea
+            onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
+            noLayout={true}
+            className="card-title editable-title"
+            placeholder={"Report name..."}/>;
         let revealCardTitle = <p style={{'padding-left': '150px', 'display': 'none'}}></p>;
 
         return <Col l={this.state.width} m={12} s={12}>
@@ -151,7 +188,6 @@ class NeoCardComponent extends React.Component {
                                 onClick={e => this.stateChanged({label: 'SettingsSaved'})}><Icon>save</Icon></div>}
                 revealIcon={<Icon>more_vert</Icon>}
                 textClassName="black-text"
-                // <i style={{marginRight: '40px'}} className="material-icons right">refresh</i>
                 title={[revealCardTitle, cardTitle]}
                 reveal={[<NeoCardSettings onChange={this.stateChanged}/>]}
             >{this.state.content}   </Card>
@@ -160,7 +196,9 @@ class NeoCardComponent extends React.Component {
 }
 
 
-class AddNeoCardComponent extends React.Component {
+class AddNeoCardComponent
+    extends React
+        .Component {
     constructor(props) {
         super(props);
     }

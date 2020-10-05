@@ -100,6 +100,7 @@ body {
     background-repeat: no-repeat;
     font-family: monospace;
     font-size: 14px;
+    line-height: 16px;
     border-color:#ccc;
     width: calc(100% + 30px);
     display: block;
@@ -117,7 +118,7 @@ body {
     margin-bottom: 0px !important;
     overflow-x: scroll !important;
     overflow-y: scroll !important;
-    min-height: 100px;
+    min-height: 80px;
     /*height: 200px !important;*/
 }
 .nav-wrapper .input-field .editable-title{

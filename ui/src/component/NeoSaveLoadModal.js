@@ -16,10 +16,9 @@ class NeoSaveLoadModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-
         if (this.state.json !== this.props.json){
             this.state.json = this.props.json;
-            // this.setState(this.state);
+            this.setState(this.state);
         }
 
     }

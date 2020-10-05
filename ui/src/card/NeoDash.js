@@ -32,6 +32,7 @@ class NeoDash extends React.Component {
     }
 
     stateChanged(update) {
+
         if (update.label === "ReportTitleChanged") {
             this.state.title = update.value;
         }
@@ -118,7 +119,7 @@ class NeoDash extends React.Component {
                                           waves="green">Save</Button>
                               ]}
                               trigger={
-                                  <NavItem href="">Save/Load</NavItem>
+                                  <NavItem href="" onClick={e=>this.stateChanged({})}>Save/Load</NavItem>
 
                               }/>;
 
