@@ -1,11 +1,10 @@
 import React from "react";
 import Textarea from "react-materialize/lib/Textarea";
-import NeoReport from "./NeoReport";
+import NeoReport from "../NeoReport";
 
 class NeoJSONView extends NeoReport {
     constructor(props) {
         super(props);
-        this.runQuery();
     }
 
     render() {

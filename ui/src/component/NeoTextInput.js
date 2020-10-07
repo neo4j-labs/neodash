@@ -1,6 +1,5 @@
 import React from "react";
 import TextInput from "react-materialize/lib/TextInput";
-import {int} from "neo4j-driver";
 
 
 class NeoTextInput extends React.Component {
@@ -9,25 +8,28 @@ class NeoTextInput extends React.Component {
         this.state = {
             value: ''
         }
+        this.onChange = this.onChange.bind(this);
     }
 
-    render(content) {
-        let textInput = <><TextInput onChange={e => {
-            if (this.props.numeric) {
-                if (isNaN(e.target.value)) {
-                    return
-                }else{
-                    this.state.value = e.target.value;
-                    let value = this.state.value.length > 0 ? this.state.value : "0";
-                    this.props.onChange({label: this.props.changeEventLabel, value: Math.max(0, parseFloat(value))})
-                    this.setState(this.state);
-                }
-            }else{
+    onChange(e) {
+        if (this.props.numeric) {
+            if (isNaN(e.target.value)) {
+                return
+            } else {
                 this.state.value = e.target.value;
+                let value = this.state.value.length > 0 ? this.state.value : "0";
+                this.props.onChange({label: this.props.changeEventLabel, value: Math.max(0, parseFloat(value))})
                 this.setState(this.state);
-                this.props.onChange({label: this.props.changeEventLabel, value: e.target.value})
             }
-        }}
+        } else {
+            this.state.value = e.target.value;
+            this.setState(this.state);
+            this.props.onChange({label: this.props.changeEventLabel, value: e.target.value})
+        }
+    }
+
+    render() {
+        let textInput = <><TextInput onChange={this.onChange}
                                      value={this.state.value}
                                      style={this.props.style} label={this.props.label}
                                      placeholder={this.props.placeholder}

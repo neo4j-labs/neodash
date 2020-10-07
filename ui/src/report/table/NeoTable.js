@@ -1,13 +1,12 @@
 import Table from "react-materialize/lib/Table";
 import React from "react";
-import NeoReport from "./NeoReport";
+import NeoReport from "../NeoReport";
 import NeoGraphChip from "../../component/NeoGraphChip";
 
 
 class NeoTable extends NeoReport {
     constructor(props) {
         super(props);
-        this.runQuery();
     }
 
     render() {

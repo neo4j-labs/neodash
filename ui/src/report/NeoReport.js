@@ -17,6 +17,10 @@ class NeoReport extends React.Component {
         this.runTimer({})
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.timer);
+    }
+
     componentDidUpdate(prevProps, prevState, ss) {
         let refresh = this.props.refresh;
         if (prevProps.refresh !== refresh) {
@@ -28,7 +32,7 @@ class NeoReport extends React.Component {
     runTimer(prevProps) {
         let refresh = this.props.refresh;
         if (prevProps.refresh !== refresh) {
-            clearTimeout(this.timer)
+            clearTimeout(this.timer);
             if (refresh > 0) {
                 let report = this;
                 this.timer = setInterval(function () {

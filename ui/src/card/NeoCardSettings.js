@@ -1,5 +1,4 @@
 import React from "react";
-import TextInput from "react-materialize/lib/TextInput";
 import NeoOptionSelect from "../component/NeoOptionSelect";
 import NeoButton from "../component/NeoButton";
 import NeoTextArea from "../component/NeoTextArea";
@@ -9,13 +8,19 @@ class NeoCardSettings extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
+        this.neoTextArea = <NeoTextArea defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+            this.neoTextArea = <NeoTextArea defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
+            this.stateChanged({label: "QueryChanged", value: this.props.query})
     }
 
     stateChanged(data) {
         this.props.onChange(data);
     }
 
-    render(content) {
+    render() {
         let sizeOptions = {
             4: 'Small (4x4)',
             6: 'Medium (6x4)',
@@ -34,6 +39,7 @@ class NeoCardSettings extends React.Component {
             'json': 'JSON',
         };
 
+
         return (
             <div>
                 <span>&nbsp;</span>
@@ -50,12 +56,11 @@ class NeoCardSettings extends React.Component {
                 <NeoOptionSelect label="Size" onChange={this.stateChanged} options={sizeOptions}/>
 
                 <NeoTextInput onChange={this.stateChanged} changeEventLabel={"CypherParamsChanged"}
-                           style={{width: '140px'}} label={"Cypher Parameters"} placeholder={'{"x": "abc", "y": 5}'}/>
+                              style={{width: '140px'}} label={"Cypher Parameters"}
+                              placeholder={'{"x": "abc", "y": 5}'}/>
                 <NeoTextInput numeric onChange={this.stateChanged} changeEventLabel={"RefreshRateChanged"}
                               style={{width: '140px'}} label={"Refresh rate (sec)"} placeholder={"0 (No Refresh)"}/>
-
-                <NeoTextArea name="Query" onChange={this.stateChanged}/>
-
+                {this.neoTextArea}
             </div>
         );
     }

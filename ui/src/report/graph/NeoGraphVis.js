@@ -1,12 +1,11 @@
 import * as d3 from "d3";
 import React from "react";
-import NeoReport from "./NeoReport";
+import NeoReport from "../NeoReport";
 
 
 class NeoGraphVis extends NeoReport {
     constructor(props) {
         super(props);
-        this.runQuery();
     }
 
     convertDataToGraph() {

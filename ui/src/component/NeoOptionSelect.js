@@ -5,7 +5,6 @@ import Select from "react-materialize/lib/Select";
 class NeoOptionSelect extends React.Component {
     constructor(props) {
         super(props);
-
     }
 
     generateOptions() {

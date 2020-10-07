@@ -2,10 +2,10 @@ import React from "react";
 import Section from "react-materialize/lib/Section";
 import Row from "react-materialize/lib/Row";
 import Container from "react-materialize/lib/Container";
-import {AddNeoCard, NeoCard} from "./NeoCard";
+import {AddNeoCard, NeoCard} from "./card/NeoCard";
 import Navbar from "react-materialize/lib/Navbar";
 import Icon from "react-materialize/lib/Icon";
-import NeoSaveLoadModal from "../component/NeoSaveLoadModal";
+import NeoModal from "./component/NeoModal";
 import Textarea from "react-materialize/lib/Textarea";
 import NavItem from "react-materialize/lib/NavItem";
 import Button from "react-materialize/lib/Button";
@@ -15,24 +15,33 @@ class NeoDash extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
+        this.load = this.load.bind(this);
+        this.load();
+    }
+
+    load() {
         this.state = {
             key: 3,
             title: "NeoDash ⚡"
         }
-
         this.state.cards =
-            [<NeoCard key={0} id={0} query="CALL db.schema.visualization" onChange={this.stateChanged} data={this.data}
-                      type='graph'/>,
-                <NeoCard key={1} id={1} onChange={this.stateChanged} data={this.data} type='table'/>,
-                <NeoCard key={2} id={2} onChange={this.stateChanged} data={this.data} type='json'/>,
+            [<NeoCard key={0} id={0} onChange={this.stateChanged} type='graph' query="CALL db.schema.visualization"/>,
+                <NeoCard key={1} id={1} onChange={this.stateChanged} type='table'/>,
+                <NeoCard key={2} id={2} onChange={this.stateChanged} type='json'/>,
                 <AddNeoCard key={9999999} id={9999999} onClick={this.stateChanged}/>
             ]
         this.state.cardState = this.state.cards.map(c => []);
-
+        this.stateChanged({})
     }
 
     stateChanged(update) {
+        this.updateStateObject(update);
+        this.updateSaveModal();
+        this.setState(this.state);
 
+    }
+
+    updateStateObject(update) {
         if (update.label === "ReportTitleChanged") {
             this.state.title = update.value;
         }
@@ -40,9 +49,7 @@ class NeoDash extends React.Component {
             this.state.cardState[this.state.cards.indexOf(this.state.cards.filter(c => c.props.id === update.id)[0])] = update.state;
         }
         if (update.label === 'newCard') {
-            let newCard = <NeoCard id={this.state.key} key={this.state.key} onChange={this.stateChanged}
-                                   data={this.data}
-                                   type='table'/>;
+            let newCard = <NeoCard id={this.state.key} key={this.state.key} onChange={this.stateChanged} type='table'/>;
             this.state.key += 1;
             this.state.cards.splice(this.state.cards.length - 1, 0, newCard);
             this.state.cardState.splice(this.state.cardState.length - 1, 0, {
@@ -90,7 +97,9 @@ class NeoDash extends React.Component {
             this.state.cards.splice(index, 1);
             this.state.cardState.splice(index, 1);
         }
+    }
 
+    updateSaveModal() {
         let value = {
             "title": this.state.title,
             "version": "1.0",
@@ -110,48 +119,51 @@ class NeoDash extends React.Component {
         };
         let newJson = JSON.stringify(value, null, 2);
         this.state.json = newJson;
+        let onClick = this.load;
         this.neoSaveLoadModal =
-            <NeoSaveLoadModal header={"Edit/Export Dashboard (Copy me!)"}
-                              root={document.getElementById("root")}
-                              json={this.state.json}
-                              placeholder={"Paste a dashboard JSON file here..."}
-                              actions={[
-                                  <Button style={{position: 'absolute', right: '20px', top: '20px'}} modal="close"
-                                          node="button"
-                                          waves="green">Save</Button>
-                              ]}
-                              trigger={
-                                  <NavItem href="" onClick={e=>this.stateChanged({})}>Save/Load</NavItem>
-
-                              }/>;
-
-        this.setState(this.state);
-
+            <NeoModal header={"Edit/Export Dashboard (Copy me!)"}
+                      root={document.getElementById("root")}
+                      json={this.state.json}
+                      placeholder={"Paste a dashboard JSON file here..."}
+                      actions={[
+                          <Button style={{position: 'absolute', right: '20px', top: '20px'}} modal="close"
+                                  node="button"
+                                  onClick={onClick}
+                                  waves="green">Save</Button>
+                      ]}
+                      trigger={
+                          <NavItem href="" onClick={e => this.stateChanged({})}>Save/Load</NavItem>
+                      }
+                      componentDidUpdate={function (prevProps) {
+                          if (prevProps.json !== this.props.json) {
+                              this.state.json = this.props.json;
+                              this.setState(this.state);
+                          }
+                      }}
+                      stateChanged={function (e) {
+                          this.setState(this.state);
+                          this.state.json = e.target.value;
+                      }}
+                      content={<Textarea style={{minHeight: '500px'}} id="Textarea-12" l={12} m={12} s={12} xl={12}
+                                         onChange={this.stateChanged} value={this.state.json}
+                                         placeholder={this.props.placeholder}/>}
+            />;
     }
 
-
     render() {
-        let pagetitle = <Textarea defaultValue={this.state.title} noLayout={true} style={{"width": '500px'}}
-                                  className="card-title editable-title"
-                                  onChange={e => this.stateChanged({
-                                      label: "ReportTitleChanged",
-                                      value: e.target.value
-                                  })}/>;
+        let title = <Textarea defaultValue={this.state.title} noLayout={true} style={{"width": '500px'}}
+                              className="card-title editable-title"
+                              onChange={e => this.stateChanged({
+                                  label: "ReportTitleChanged",
+                                  value: e.target.value
+                              })}/>;
 
+        let navbar = <Navbar alignLinks="right" brand={title} centerLogo id="mobile-nav" menuIcon={<Icon>menu</Icon>}
+                             style={{backgroundColor: 'black'}}>{this.neoSaveLoadModal}
+            <NavItem href="">Neo4j Settings</NavItem></Navbar>;
         return (
             <>
-                <Navbar
-                    alignLinks="right"
-                    brand={pagetitle}
-                    centerLogo
-                    id="mobile-nav"
-                    menuIcon={<Icon>menu</Icon>}
-                    style={{backgroundColor: 'black'}}
-                >
-
-                    {this.neoSaveLoadModal}
-                    <NavItem href="">Neo4j Settings</NavItem>
-                </Navbar>
+                {navbar}
                 <Container>
                     <Section>
                         <Row>

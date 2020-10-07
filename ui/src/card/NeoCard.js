@@ -3,43 +3,66 @@ import Card from "react-materialize/lib/Card";
 import Icon from "react-materialize/lib/Icon";
 import Textarea from "react-materialize/lib/Textarea";
 import Button from "react-materialize/lib/Button";
-import NeoTable from "./report/NeoTable";
-import NeoPagination from "./footer/NeoPagination";
-import NeoGraphViz from "./report/NeoGraphVis";
+import NeoTable from "../report/table/NeoTable";
+import NeoPagination from "../report/table/NeoPagination";
+import NeoGraphViz from "../report/graph/NeoGraphVis";
 import Col from "react-materialize/lib/Col";
 import NeoCardSettings from "./NeoCardSettings";
-import NeoJSONView from "./report/NeoJSONView";
-import NeoGraphChips from "./footer/NeoGraphChips";
+import NeoJSONView from "../report/json/NeoJSONView";
+import NeoGraphChips from "../report/graph/NeoGraphChips";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
 
 class NeoCardComponent extends React.Component {
 
+    defaultState = {
+        width: 4,
+        height: 4,
+        action: "",
+        type: this.props.type,
+        page: 1,
+        data: this.props.data,
+        query: (this.props.query ? this.props.query : ""),
+        labels: [],
+        properties: [],
+        propertiesSelected: [],
+        parameters: "",
+        parsedParameters: {},
+        refresh: 0,
+        title: ""
+    };
 
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
         this.updateGraphChips = this.updateGraphChips.bind(this);
-        this.state = {
-            width: 4,
-            height: 4,
-            action: "",
-            type: this.props.type,
-            page: 1,
-            data: this.props.data,
-            query: (this.props.query ? this.props.query : ""),
-            labels: [],
-            properties: [],
-            propertiesSelected: [],
-            parameters: "",
-            parsedParameters: {name: "deadmau5"},
-            refresh: 0,
-            title: ""
-        }
+        this.counter = 0;
+        this.state = this.defaultState;
+        this.neoCardSettings = <NeoCardSettings query={this.props.query} onChange={this.stateChanged}/>;
+        this.card = <Card key={this.counter} actions={[]}
+                          className={"medium grey lighten-2 button add-neo-card"}
+                          closeIcon={<Icon>close</Icon>}
+                          revealIcon={<Icon>more_vert</Icon>}
+                          textClassName="black-text"
+                          title=""
+        >
+            <Button className="btn-floating btn-center-align blue-grey"
+                    onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
+        </Card>;
+
         this.stateChanged({})
     }
 
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps !== this.props) {
+            this.counter += 1;
+            this.state = this.defaultState;
+            this.stateChanged({label: "SettingsSaved"})
+            this.neoCardSettings = <NeoCardSettings key={this.counter} query={this.props.query} onChange={this.stateChanged}/>;
+        }
+    }
 
     stateChanged(update) {
         // Updates
@@ -58,7 +81,8 @@ class NeoCardComponent extends React.Component {
                 })(this.state.parameters);
 
             // TODO: Force a refresh of the card component in a much cleaner way.
-            this.state.query = this.state.query.endsWith('\n') ? this.state.query.substr(0, this.state.query.length - 1) :
+            this.state.query = this.state.query.endsWith('\n') ?
+                this.state.query.substr(0, this.state.query.length - 1) :
                 this.state.query += "\n";
 
             this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
@@ -174,6 +198,7 @@ class NeoCardComponent extends React.Component {
             placeholder={"Report name..."}/>;
         let revealCardTitle = <p style={{'padding-left': '150px', 'display': 'none'}}></p>;
 
+
         return <Col l={this.state.width} m={12} s={12}>
             <Card
                 actions={[this.state.action]}
@@ -187,31 +212,20 @@ class NeoCardComponent extends React.Component {
                 revealIcon={<Icon>more_vert</Icon>}
                 textClassName="black-text"
                 title={cardTitle}
-                reveal={[<NeoCardSettings onChange={this.stateChanged}/>]}
+                reveal={this.neoCardSettings}
             >{this.state.content}   </Card>
         </Col>
     }
 }
 
 
-class AddNeoCardComponent
-    extends React
-        .Component {
+class AddNeoCardComponent extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        return <Col l={4} m={6} s={12}><a><Card actions={[]}
-                                                className={"medium grey lighten-2 button add-neo-card"}
-                                                closeIcon={<Icon>close</Icon>}
-                                                revealIcon={<Icon>more_vert</Icon>}
-                                                textClassName="black-text"
-                                                title=""
-        >
-            <Button className="btn-floating btn-center-align blue-grey"
-                    onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
-        </Card></a></Col>
+        return <Col l={4} m={6} s={12}><a>{this.card}</a></Col>
     }
 
 }

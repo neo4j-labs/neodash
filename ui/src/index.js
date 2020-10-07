@@ -1,33 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import registerServiceWorker from "./registerServiceWorker";
+import registerServiceWorker from "./ServiceWorker";
 import ApolloClient from "apollo-boost";
 import {ApolloProvider} from "@apollo/react-hooks";
-import Navbar from "react-materialize/lib/Navbar";
-import Textarea from "react-materialize/lib/Textarea";
-import NeoDash from "./card/NeoDash";
-import NeoSaveLoadModal from "./component/NeoSaveLoadModal";
-import NeoButton from "./component/NeoButton";
-import Button from "react-materialize/lib/Button";
-import Icon from "react-materialize/lib/Icon";
-import NavItem from "react-materialize/lib/NavItem";
 import Footer from "react-materialize/lib/Footer";
+import NeoDash from "./NeoDash";
 
-let root = document.getElementById("root");
-
+const root = document.getElementById("root");
+const url = "https://github.com/nielsdejong/neodash/";
 const client = new ApolloClient({uri: process.env.REACT_APP_GRAPHQL_URI});
-
-
+const link = <a target={"_blank"} style={{color: 'rgb(180,180,180)'}} href={url}>NeoDash</a>
+const copyrights = <div style={{textAlign: 'center', color: 'rgb(180,180,180)'}}>{link}- Neo4j Dashboard Builder</div>;
+const footer = <Footer style={{backgroundColor: '#ddd'}} copyrights={copyrights}/>
 
 const Main = () => {
-
-    document.title = "Neodash - Neo4j Dashboard"
-
+    document.title = "NeoDash - Neo4j Dashboard"
     return (
-
         <ApolloProvider client={client}>
             <NeoDash/>
-            <Footer copyrights={"NeoDash v1.0"} style={{backgroundColor: '#ddd'}}></Footer>
+            {footer}
         </ApolloProvider>
     );
 };
