@@ -15,19 +15,25 @@ class NeoDash extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
-        this.load = this.load.bind(this);
-        this.load();
+        this.loadJson = this.loadJson.bind(this);
+        this.state = {}
     }
 
-    load() {
+    componentDidMount() {
+        this.loadJson({target:''})
+    }
+
+    loadJson(e) {
+        console.log(e.target.value)
         this.state = {
             key: 3,
             title: "NeoDash ⚡"
         }
         this.state.cards =
-            [<NeoCard key={0} id={0} onChange={this.stateChanged} type='graph' query="CALL db.schema.visualization"/>,
-                <NeoCard key={1} id={1} onChange={this.stateChanged} type='table'/>,
-                <NeoCard key={2} id={2} onChange={this.stateChanged} type='json'/>,
+            [<NeoCard page={1} width={12} height={4} key={0} id={0} onChange={this.stateChanged} type='graph'
+                      query="CALL db.schema.visualization"/>,
+                <NeoCard page={1} width={4} height={4} key={1} id={1} onChange={this.stateChanged} type='table'/>,
+                <NeoCard page={1} width={4} height={4} key={2} id={2} onChange={this.stateChanged} type='json'/>,
                 <AddNeoCard key={9999999} id={9999999} onClick={this.stateChanged}/>
             ]
         this.state.cardState = this.state.cards.map(c => []);
@@ -36,12 +42,17 @@ class NeoDash extends React.Component {
 
     stateChanged(update) {
         this.updateStateObject(update);
-        this.updateSaveModal();
+        if (update.label !== "SaveModalUpdated"){
+            this.updateSaveModal();
+        }
         this.setState(this.state);
-
     }
 
     updateStateObject(update) {
+        console.log(update)
+        if (update.label === "SaveModalUpdated"){
+            this.state.json = update.value;
+        }
         if (update.label === "ReportTitleChanged") {
             this.state.title = update.value;
         }
@@ -119,7 +130,11 @@ class NeoDash extends React.Component {
         };
         let newJson = JSON.stringify(value, null, 2);
         this.state.json = newJson;
-        let onClick = this.load;
+        let onClick = this.loadJson;
+        this.generateNeoModal(onClick);
+    }
+
+    generateNeoModal(onClick) {
         this.neoSaveLoadModal =
             <NeoModal header={"Edit/Export Dashboard (Copy me!)"}
                       root={document.getElementById("root")}
@@ -142,10 +157,13 @@ class NeoDash extends React.Component {
                       }}
                       stateChanged={function (e) {
                           this.setState(this.state);
-                          this.state.json = e.target.value;
                       }}
                       content={<Textarea style={{minHeight: '500px'}} id="Textarea-12" l={12} m={12} s={12} xl={12}
-                                         onChange={this.stateChanged} value={this.state.json}
+                                         onChange={e => {
+                                             this.state.json = e.target.value;
+                                             this.setState(this.state)
+                                             this.generateNeoModal(onClick)
+                                         }} value={this.state.json}
                                          placeholder={this.props.placeholder}/>}
             />;
     }

@@ -17,20 +17,19 @@ let normalRowCount = 5;
 class NeoCardComponent extends React.Component {
 
     defaultState = {
-        width: 4,
-        height: 4,
-        action: "",
+        width: this.props.width,
+        height: this.props.height,
+        action: <div key={0}></div>,
         type: this.props.type,
-        page: 1,
-        data: this.props.data,
+        page: (this.props.page ? this.props.page : 1),
         query: (this.props.query ? this.props.query : ""),
         labels: [],
         properties: [],
-        propertiesSelected: [],
+        propertiesSelected: (this.props.propertiesSelected ? this.props.propertiesSelected : []),
         parameters: "",
         parsedParameters: {},
-        refresh: 0,
-        title: ""
+        refresh: (this.props.refresh ? this.props.refresh : 0),
+        title: (this.props.title ? this.props.title : "")
     };
 
     constructor(props) {
@@ -39,28 +38,35 @@ class NeoCardComponent extends React.Component {
         this.updateGraphChips = this.updateGraphChips.bind(this);
         this.counter = 0;
         this.state = this.defaultState;
+
+    }
+
+    componentDidMount() {
         this.neoCardSettings = <NeoCardSettings query={this.props.query} onChange={this.stateChanged}/>;
-        this.card = <Card key={this.counter} actions={[]}
-                          className={"medium grey lighten-2 button add-neo-card"}
-                          closeIcon={<Icon>close</Icon>}
-                          revealIcon={<Icon>more_vert</Icon>}
-                          textClassName="black-text"
-                          title=""
-        >
-            <Button className="btn-floating btn-center-align blue-grey"
-                    onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
-        </Card>;
+        this.cardTitle = <Textarea
+            onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
+            noLayout={true}
+            defaultValue={this.state.title}
+            key={this.counter}
+            className="card-title editable-title"
+            placeholder={"Report name..."}/>;
 
         this.stateChanged({})
     }
-
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps !== this.props) {
             this.counter += 1;
             this.state = this.defaultState;
             this.stateChanged({label: "SettingsSaved"})
-            this.neoCardSettings = <NeoCardSettings key={this.counter} query={this.props.query} onChange={this.stateChanged}/>;
+            this.neoCardSettings =
+                <NeoCardSettings key={this.counter} query={this.props.query} onChange={this.stateChanged}/>;
+            this.cardTitle = <Textarea
+                key={this.counter}
+                onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
+                noLayout={true}
+                className="card-title editable-title"
+                placeholder={"Report name..."}/>;
         }
     }
 
@@ -139,7 +145,7 @@ class NeoCardComponent extends React.Component {
                           params={this.state.parsedParameters}
                           refresh={this.state.refresh}
                 />
-            this.state.action = <NeoPagination data={this.state.data} onChange={this.stateChanged}/>
+            this.state.action = <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
         }
         if (this.state.type === "graph") {
             this.state.page += 1;
@@ -159,7 +165,7 @@ class NeoCardComponent extends React.Component {
                              params={this.state.parsedParameters}
                              data={this.state.data}
                              refresh={this.state.refresh}/>
-            this.state.action = <></>
+            this.state.action = <div key={0}></div>
         }
 
         this.setState(this.state);
@@ -177,7 +183,7 @@ class NeoCardComponent extends React.Component {
 
         this.state.page += 1;
         this.state.action =
-            <NeoGraphChips nodeLabels={Object.keys(labels)}
+            <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
                            properties={Object.values(labels).map((labelChoices, index) => {
                                let options = {}
                                labelChoices.forEach(choice =>
@@ -191,27 +197,20 @@ class NeoCardComponent extends React.Component {
     }
 
     render() {
-        let cardTitle = <Textarea
-            onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
-            noLayout={true}
-            className="card-title editable-title"
-            placeholder={"Report name..."}/>;
-        let revealCardTitle = <p style={{'padding-left': '150px', 'display': 'none'}}></p>;
-
-
+        let closeIcon = <div style={{'width': '100%', 'height': '60px', 'top': '0px', 'right': '0px', position: 'absolute'}}
+                             onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
+            <Icon>save</Icon>
+        </div>;
         return <Col l={this.state.width} m={12} s={12}>
             <Card
                 actions={[this.state.action]}
                 className={((this.state.height == 4) ? 'medium' : 'huge') + " neo-card medium white darken-5 paginated-card"}
                 closeIcon={
-                    <div style={{width: '100%', height: '60px', top: '0px', right: '0px', position: 'absolute'}}
-                         onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
-                        <Icon>save</Icon>
-                    </div>
+                    closeIcon
                 }
                 revealIcon={<Icon>more_vert</Icon>}
                 textClassName="black-text"
-                title={cardTitle}
+                title={this.cardTitle}
                 reveal={this.neoCardSettings}
             >{this.state.content}   </Card>
         </Col>
@@ -225,7 +224,16 @@ class AddNeoCardComponent extends React.Component {
     }
 
     render() {
-        return <Col l={4} m={6} s={12}><a>{this.card}</a></Col>
+        return <Col l={4} m={6} s={12}><a><Card actions={[]}
+                                                className={"medium grey lighten-2 button add-neo-card"}
+                                                closeIcon={<Icon>close</Icon>}
+                                                revealIcon={<Icon>more_vert</Icon>}
+                                                textClassName="black-text"
+                                                title=""
+        >
+            <Button className="btn-floating btn-center-align blue-grey"
+                    onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
+        </Card></a></Col>
     }
 
 }

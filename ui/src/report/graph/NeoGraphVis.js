@@ -162,10 +162,35 @@ class NeoGraphVis extends NeoReport {
             }))
             .force("collide", d3.forceCollide().strength(0.1).radius(function (d) {
                 return d.radius * 2.3
-            }))
+            }));
 
-        ;
 
+        var prevSelected;
+
+        function handePopUp(d, i) {
+            let circ = svg.selectAll("text").filter(c => d === c);
+            svg.selectAll("tspan").remove();
+            svg.selectAll("text").attr('filter', "none")
+            if (circ !== null && circ.node() === prevSelected) {
+                prevSelected = null;
+                return
+            }
+            circ.node().parentNode.appendChild(circ.node());
+            circ.attr('filter', "url(#solid)")
+
+            circ.append("tspan").attr("x", d.x).attr("dy", -25).text(" ")
+            Object.keys(d.properties).forEach((item, i) => {
+                circ.append("tspan")
+                    .attr("dy", (i === 0) ? 60 : 15)
+                    .attr("x", d.x)
+                    .text(function () {
+                        let string = JSON.stringify(item) + ": " + JSON.stringify(d.properties[item]);
+                        return string.substr(0, Math.min(100, string.length));  // Value of the text
+                    });
+
+            })
+            prevSelected = circ.node();
+        }
 
         var link = svg.append("g")
             .style("stroke", "#aaa")
@@ -195,7 +220,9 @@ class NeoGraphVis extends NeoReport {
             .attr("class", "nodes")
             .selectAll("circle")
             .data(graph.nodes)
+
             .enter().append("circle")
+            .on("click", handePopUp)
             .attr("r", function (d) {
                 return d.radius
             })
@@ -216,6 +243,7 @@ class NeoGraphVis extends NeoReport {
             .selectAll("text")
             .data(graph.nodes)
             .enter().append("text")
+            .on("click", handePopUp)
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'central')
             .style('font-family', '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif')
@@ -295,7 +323,14 @@ class NeoGraphVis extends NeoReport {
                 })
                 .attr("y", function (d) {
                     return d.y;
+                }).selectAll('tspan')
+
+
+                .attr("x", function (d) {
+                    return d.x
                 })
+
+
             // update type positions
             type
                 .attr("x", function (d) {
@@ -315,7 +350,8 @@ class NeoGraphVis extends NeoReport {
                 })
                 .attr("transform", function (d) {
                     return "rotate(" + angle(d.source, d.target) + ",0,0)translate(0,-5)";
-                })
+
+                });
         }
 
         function angle(source, target) {
@@ -363,6 +399,11 @@ class NeoGraphVis extends NeoReport {
                  style={{backgroundColor: '#f9f9f9'}}>
 
                 <defs>
+                    <filter x="0" y="0" width="1" height="1" id="solid">
+                        <feFlood flood-color="rgba(255,255,255,0.85)"/>
+                        <feComposite in="SourceGraphic"/>
+
+                    </filter>
                     <marker id="arrowhead" markerWidth="5" markerHeight="3.5"
                             refX="16" refY="1.75" orient="auto" fill="rgb(170, 170, 170)">
                         <polygon points="0 0, 5 1.75, 0 3"/>
