@@ -233,3 +233,7 @@ body{
 
 
 }
+
+.modal-input-text .input-field.col label{
+    left: 0px;
+}

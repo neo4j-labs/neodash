@@ -71,29 +71,15 @@ class NeoCardComponent extends React.Component {
     }
 
     stateChanged(update) {
+        if (update.label === "CreateError") {
+            this.props.onChange(update);
+            return
+        }
         // Updates
         if (update.label === "SettingsSaved") {
-            this.state.parsedParameters = (
-                function (parameters) {
-                    try {
-                        let value = JSON.parse(parameters);
-                        if (value.constructor === Object) {
-                            return value;
-                        }
-                        return {};
-                    } catch (err) {
-                        return {};
-                    }
-                })(this.state.parameters);
-
-            // TODO: Force a refresh of the card component in a much cleaner way.
-            this.state.query = this.state.query.endsWith('\n') ?
-                this.state.query.substr(0, this.state.query.length - 1) :
-                this.state.query += "\n";
-
-            this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
-
+            this.updateCardSettings(update);
         }
+
         if (update.label === "ChangedTitle") {
             this.state.title = update.value;
             this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
@@ -142,10 +128,12 @@ class NeoCardComponent extends React.Component {
             this.state.content =
                 <NeoTable rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
                           query={this.state.query}
+                          stateChanged={this.stateChanged}
                           params={this.state.parsedParameters}
                           refresh={this.state.refresh}
                 />
-            this.state.action = <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+            this.state.action =
+                <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
         }
         if (this.state.type === "graph") {
             this.state.page += 1;
@@ -156,6 +144,7 @@ class NeoCardComponent extends React.Component {
                     propertiesSelected={this.state.propertiesSelected}
                     onNodeLabelUpdate={this.updateGraphChips} width={this.state.width}
                     height={this.state.height} page={this.state.page}
+                    stateChanged={this.stateChanged}
                     data={this.state.data}
                     refresh={this.state.refresh}/>
         }
@@ -164,12 +153,48 @@ class NeoCardComponent extends React.Component {
                 <NeoJSONView query={this.state.query}
                              params={this.state.parsedParameters}
                              data={this.state.data}
+                             stateChanged={this.stateChanged}
                              refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
 
         this.setState(this.state);
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
+    }
+
+    updateCardSettings(update) {
+            let props = this.props;
+            this.state.parsedParameters = (
+
+                function (parameters) {
+                    try {
+                        if (parameters.trim() === "") {
+                            return {};
+                        }
+
+                        let value = JSON.parse(parameters);
+                        if (value.constructor === Object) {
+                            return value;
+                        }
+                        return {};
+                    } catch (err) {
+
+                        props.onChange({
+                            label: "CreateError",
+                            value: 'Unable to parse Cypher parameters. ' + err.toString()
+                        })
+                        return {};
+                    }
+                })(this.state.parameters);
+
+            // TODO: Force a refresh of the card component in a much cleaner way.
+            this.state.query = this.state.query.endsWith('\n') ?
+                this.state.query.substr(0, this.state.query.length - 1) :
+                this.state.query += "\n";
+
+            this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
+
+
     }
 
     updateGraphChips(labels) {
@@ -197,8 +222,9 @@ class NeoCardComponent extends React.Component {
     }
 
     render() {
-        let closeIcon = <div style={{'width': '100%', 'height': '60px', 'top': '0px', 'right': '0px', position: 'absolute'}}
-                             onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
+        let closeIcon = <div
+            style={{'width': '100%', 'height': '60px', 'top': '0px', 'right': '0px', position: 'absolute'}}
+            onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
             <Icon>save</Icon>
         </div>;
         return <Col l={this.state.width} m={12} s={12}>

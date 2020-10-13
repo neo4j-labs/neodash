@@ -31,6 +31,7 @@ class NeoTextInput extends React.Component {
     render() {
         let textInput = <><TextInput onChange={this.onChange}
                                      value={this.state.value}
+                                     password={this.props.password}
                                      style={this.props.style} label={this.props.label}
                                      placeholder={this.props.placeholder}
                                      id="TextInput-4"/></>;

@@ -23,7 +23,7 @@ class NeoTextArea extends React.Component {
             l={12}
             m={12}
             s={12}
-            placeholder={"Enter Cypher here... \n"}
+            placeholder={(this.props.placeholder) ? this.props.placeholder : "Enter Cypher here... \n"}
             xl={12}><p style={{fontSize: 12}}>{disclaimer}</p></Textarea>;
     }
 }

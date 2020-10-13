@@ -8,11 +8,11 @@ class NeoCardSettings extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
-        this.neoTextArea = <NeoTextArea defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
+        this.neoTextArea = <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-            this.neoTextArea = <NeoTextArea defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
+            this.neoTextArea = <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
             this.stateChanged({label: "QueryChanged", value: this.props.query})
     }
 

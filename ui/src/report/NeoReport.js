@@ -57,9 +57,14 @@ class NeoReport extends React.Component {
             .run(this.props.query, this.props.params)
             .then(result => {
 
+                let error = "A query returned over 1000 rows. Reports may be slow/unresponsive. \n\nYour query: \n \n " + this.props.query + "\n \n Consider adding a LIMIT clause to the end of your query, e.g: \nRETURN x,y,z LIMIT 100.\"";
                 let records = result.records;
-                if (records.length > 1000) {
-                    alert("A query returned over 1000 rows. Reports may be slow/unresponsive. \n\nYour query: \n" + this.props.query + "\n \nConsider adding a LIMIT clause to the end of your query, e.g: \nRETURN x,y,z LIMIT 100.");
+                if (error !== this.prevError && records.length > 1000) {
+                    this.props.stateChanged({
+                        label: "CreateError",
+                        value: error
+                    })
+                    this.prevError = error;
                 }
                 this.state.data = records.map(record => {
                     var row = {};

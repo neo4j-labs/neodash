@@ -9,7 +9,9 @@ class NeoModal extends React.Component {
             json: this.props.json
         }
         this.stateChanged = this.props.stateChanged;
-        this.stateChanged = this.stateChanged.bind(this);
+        if (this.stateChanged){
+            this.stateChanged = this.stateChanged.bind(this);
+        }
         this.componentDidUpdate = this.props.componentDidUpdate;
 
     }
@@ -17,12 +19,13 @@ class NeoModal extends React.Component {
     render() {
         return (
             <Modal
+                style={this.props.style}
                 actions={this.props.actions}
                 bottomSheet={false}
                 fixedFooter={false}
                 header={this.props.header}
                 id="NeoModal"
-                open={false}
+                open={this.props.open}
                 options={{
                     dismissible: false,
                     endingTop: '10%',
