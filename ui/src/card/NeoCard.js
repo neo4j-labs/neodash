@@ -38,7 +38,6 @@ class NeoCardComponent extends React.Component {
         this.updateGraphChips = this.updateGraphChips.bind(this);
         this.counter = 0;
         this.state = this.defaultState;
-
     }
 
     componentDidMount() {
@@ -50,7 +49,7 @@ class NeoCardComponent extends React.Component {
             key={this.counter}
             className="card-title editable-title"
             placeholder={"Report name..."}/>;
-
+        this.counter += 1;
         this.stateChanged({})
     }
 
