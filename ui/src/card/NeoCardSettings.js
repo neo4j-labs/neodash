@@ -8,12 +8,27 @@ class NeoCardSettings extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
-        this.neoTextArea = <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
+        this.setDefaultComponents();
+    }
+
+    setDefaultComponents() {
+        this.neoTextArea =
+            <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query"
+                         onChange={this.stateChanged}/>;
+        this.cypherParamsInput = <NeoTextInput defaultValue={this.props.parameters} onChange={this.stateChanged}
+                                               changeEventLabel={"CypherParamsChanged"}
+                                               style={{width: '140px'}} label={"Cypher Parameters"}
+                                               placeholder={'{"x": "abc", "y": 5}'}/>;
+        this.refreshRateInput = <NeoTextInput numeric defaultValue={this.props.refresh} onChange={this.stateChanged}
+                                              changeEventLabel={"RefreshRateChanged"}
+                                              style={{width: '140px'}} label={"Refresh rate (sec)"}
+                                              placeholder={"0 (No Refresh)"}/>;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-            this.neoTextArea = <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query" onChange={this.stateChanged}/>;
-            this.stateChanged({label: "QueryChanged", value: this.props.query})
+        this.setDefaultComponents();
+        this.stateChanged({label: "QueryChanged", value: this.props.query})
+
     }
 
     stateChanged(data) {
@@ -55,11 +70,8 @@ class NeoCardSettings extends React.Component {
                 <NeoOptionSelect label="Type" onChange={this.stateChanged} options={vizOptions}/>
                 <NeoOptionSelect label="Size" onChange={this.stateChanged} options={sizeOptions}/>
 
-                <NeoTextInput onChange={this.stateChanged} changeEventLabel={"CypherParamsChanged"}
-                              style={{width: '140px'}} label={"Cypher Parameters"}
-                              placeholder={'{"x": "abc", "y": 5}'}/>
-                <NeoTextInput numeric onChange={this.stateChanged} changeEventLabel={"RefreshRateChanged"}
-                              style={{width: '140px'}} label={"Refresh rate (sec)"} placeholder={"0 (No Refresh)"}/>
+                {this.cypherParamsInput}
+                {this.refreshRateInput}
                 {this.neoTextArea}
             </div>
         );

@@ -26,7 +26,7 @@ class NeoCardComponent extends React.Component {
         labels: [],
         properties: [],
         propertiesSelected: (this.props.propertiesSelected ? this.props.propertiesSelected : []),
-        parameters: "",
+        parameters: (this.props.parameters) ? (this.props.parameters): "",
         parsedParameters: {},
         refresh: (this.props.refresh ? this.props.refresh : 0),
         title: (this.props.title ? this.props.title : "")
@@ -41,7 +41,8 @@ class NeoCardComponent extends React.Component {
     }
 
     componentDidMount() {
-        this.neoCardSettings = <NeoCardSettings query={this.props.query} onChange={this.stateChanged}/>;
+        this.parseParameters(this.props);
+        this.neoCardSettings = <NeoCardSettings refresh={this.props.refresh} parameters={this.state.parameters} query={this.props.query} onChange={this.stateChanged}/>;
         this.cardTitle = <Textarea
             onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
             noLayout={true}
@@ -59,7 +60,7 @@ class NeoCardComponent extends React.Component {
             this.state = this.defaultState;
             this.stateChanged({label: "SettingsSaved"})
             this.neoCardSettings =
-                <NeoCardSettings key={this.counter} query={this.props.query} onChange={this.stateChanged}/>;
+                <NeoCardSettings refresh={this.state.refresh} key={this.counter} query={this.props.query} parameters={this.state.parameters} onChange={this.stateChanged}/>;
             this.cardTitle = <Textarea
                 key={this.counter}
                 onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
@@ -162,31 +163,9 @@ class NeoCardComponent extends React.Component {
     }
 
     updateCardSettings(update) {
-            let props = this.props;
-            this.state.parsedParameters = (
+        this.parseParameters(this.props);
 
-                function (parameters) {
-                    try {
-                        if (parameters.trim() === "") {
-                            return {};
-                        }
-
-                        let value = JSON.parse(parameters);
-                        if (value.constructor === Object) {
-                            return value;
-                        }
-                        return {};
-                    } catch (err) {
-
-                        props.onChange({
-                            label: "CreateError",
-                            value: 'Unable to parse Cypher parameters. ' + err.toString()
-                        })
-                        return {};
-                    }
-                })(this.state.parameters);
-
-            // TODO: Force a refresh of the card component in a much cleaner way.
+        // TODO: Force a refresh of the card component in a much cleaner way.
             this.state.query = this.state.query.endsWith('\n') ?
                 this.state.query.substr(0, this.state.query.length - 1) :
                 this.state.query += "\n";
@@ -194,6 +173,31 @@ class NeoCardComponent extends React.Component {
             this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
 
 
+    }
+
+    parseParameters(props) {
+        this.state.parsedParameters = (
+
+            function (parameters) {
+                try {
+                    if (parameters.trim() === "") {
+                        return {};
+                    }
+
+                    let value = JSON.parse(parameters);
+                    if (value.constructor === Object) {
+                        return value;
+                    }
+                    return {};
+                } catch (err) {
+
+                    props.onChange({
+                        label: "CreateError",
+                        value: 'Unable to parse Cypher parameters. ' + err.toString()
+                    })
+                    return {};
+                }
+            })(this.state.parameters);
     }
 
     updateGraphChips(labels) {

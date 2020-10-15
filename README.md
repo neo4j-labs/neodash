@@ -14,5 +14,5 @@ It supports the following features:
 - Customizing your dashboard layout with a variety of report sizes.
 - Saving/loading dashboards as a JSON dump.
 
-### Demo
+## Demo
 A live demo of NeoDash is running at https://nielsdejong.nl/neodash/

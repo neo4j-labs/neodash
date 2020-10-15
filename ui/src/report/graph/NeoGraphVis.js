@@ -250,9 +250,10 @@ class NeoGraphVis extends NeoReport {
             .style('font-size', '10px')
             .text(function (d) {
                 if (propertiesSelected.length == 0) {
-                    return d.properties.name
+                    return (d.properties.name) ? (d.properties.name) : "("+d.labels+")";
                 }
-                return d.properties[propertiesSelected[graph.nodeLabels.indexOf(d.labels[d.labels.length - 1])]]
+                let property = d.properties[propertiesSelected[graph.nodeLabels.indexOf(d.labels[d.labels.length - 1])]];
+                return (property) ? property : "("+d.labels+")";
             })
 
         simulation

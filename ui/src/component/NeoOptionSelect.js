@@ -37,7 +37,7 @@ class NeoOptionSelect extends React.Component {
                     outDuration: 250
                 }
             }}
-            value={Object.keys(this.props.options)[0].split("-")[0] + "-name"}
+            value={(Object.keys(this.props.options).length > 0) ? Object.keys(this.props.options)[0].split("-")[0] + "-name" : ""}
         >
             {this.generateOptions()}
 

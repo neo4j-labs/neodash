@@ -32,12 +32,9 @@ class NeoDash extends React.Component {
     }
 
     loadJson() {
-        console.log(this.state)
         if (this.state.json) {
             try {
                 let loaded = JSON.parse(this.state.json)
-
-
                 if (loaded.version && loaded.version !== this.version) {
                     this.stateChanged({
                         label: "CreateError",
@@ -62,7 +59,7 @@ class NeoDash extends React.Component {
                                                 key={this.state.count + index} id={index}
                                                 onChange={this.stateChanged}
                                                 type={report.type} properties={report.properties} title={report.title}
-                                                query={report.query} params={report.parameters} refresh={report.refresh}/>
+                                                query={report.query} parameters={report.parameters} refresh={report.refresh}/>
                             } else {
                                 return <AddNeoCard key={99999999} id={99999999} onClick={this.stateChanged}/>
                             }
@@ -106,15 +103,6 @@ class NeoDash extends React.Component {
                                         ]}/>
             this.state.count += 1;
         }
-        this.updateStateObject(update);
-        if (update.label !== "SaveModalUpdated") {
-            this.updateSaveModal();
-        }
-        this.setState(this.state);
-    }
-
-    updateStateObject(update) {
-        console.log(update)
         if (update.label === "SaveModalUpdated") {
             this.state.json = update.value;
         }
@@ -173,7 +161,12 @@ class NeoDash extends React.Component {
             this.state.cards.splice(index, 1);
             this.state.cardState.splice(index, 1);
         }
+        if (update.label !== "SaveModalUpdated") {
+            this.updateSaveModal();
+        }
+        this.setState(this.state);
     }
+
 
     updateSaveModal() {
         let value = {

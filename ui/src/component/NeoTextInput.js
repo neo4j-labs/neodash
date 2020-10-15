@@ -6,10 +6,12 @@ class NeoTextInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: ''
+            value: this.props.defaultValue,
         }
         this.onChange = this.onChange.bind(this);
     }
+
+
 
     onChange(e) {
         if (this.props.numeric) {
@@ -29,13 +31,13 @@ class NeoTextInput extends React.Component {
     }
 
     render() {
-        let textInput = <><TextInput onChange={this.onChange}
-                                     value={this.state.value}
-                                     password={this.props.password}
-                                     style={this.props.style} label={this.props.label}
-                                     placeholder={this.props.placeholder}
-                                     id="TextInput-4"/></>;
-        return textInput;
+                return <><TextInput onChange={this.onChange}
+                            value={this.state.value}
+                            defaultValue={this.props.defaultValue}
+                            password={this.props.password}
+                            style={this.props.style} label={this.props.label}
+                            placeholder={this.props.placeholder}
+                            id="TextInput-4"/></>;
     }
 }
 
