@@ -42,41 +42,39 @@ class NeoDash extends React.Component {
                     });
                     return
                 }
-                this.state = {
-                    key: loaded.reports ?  loaded.reports.length : 0,
-                    title:(loaded.title) ? loaded.title : 'NeoDash ⚡',
-                    count: this.state.count + ((this.state.cards) ? this.state.cards.length : 0)
-                };
-
 
                 if (loaded.reports) {
-
+                    this.state.title =  (loaded.title) ? loaded.title : 'NeoDash ⚡';
                     this.state.cardState = loaded.reports.map(c => []);
                     this.state.cards = loaded.reports.map((report, index) => {
                             if (report.type) {
-                                // let page = (report.type === 'graph') ? index + this.state.count : 1;
-                                return <NeoCard page={1} width={report.width} height={report.height}
-                                                key={this.state.count + index} id={index}
+                                return <NeoCard page={report.page} width={report.width} height={report.height}
+                                                kkey={this.state.count + index} key={this.state.count + index} id={index}
                                                 onChange={this.stateChanged}
-                                                type={report.type} properties={report.properties} title={report.title}
-                                                query={report.query} parameters={report.parameters} refresh={report.refresh}/>
+                                                type={report.type} propertiesSelected={report.properties} title={report.title}
+                                                query={report.query} parameters={report.parameters}
+                                                refresh={report.refresh}/>
                             } else {
                                 return <AddNeoCard key={99999999} id={99999999} onClick={this.stateChanged}/>
                             }
                         }
                     );
-                    this.state.count += 1;
+                    this.state.count = this.state.count + ((loaded.reports.length) ? loaded.reports.length : 0) - 1;
                 } else {
+                    this.state = {}
                     this.state.cards =
-                        [<NeoCard page={1} width={12} height={4} key={0} id={0} onChange={this.stateChanged}
+                        [<NeoCard kkey={0} page={1} width={8} height={4} key={0} id={0} onChange={this.stateChanged}
                                   type='graph'
                                   query="CALL db.schema.visualization"/>,
-                            <NeoCard page={1} width={4} height={4} key={1} id={1} onChange={this.stateChanged}
+                            <NeoCard kkey={1} page={1} width={4} height={4} key={1} id={1} onChange={this.stateChanged}
                                      type='table'/>,
-                            <NeoCard page={1} width={4} height={4} key={2} id={2} onChange={this.stateChanged}
+                            <NeoCard kkey={2} page={1} width={4} height={4} key={2} id={2} onChange={this.stateChanged}
                                      type='json'/>,
-                            <AddNeoCard key={9999999} id={9999999} onClick={this.stateChanged}/>
+                            <AddNeoCard kkey={9999999} key={9999999} id={9999999} onClick={this.stateChanged}/>
                         ]
+                    this.state.title =  (loaded.title) ? loaded.title : 'NeoDash ⚡';
+                    this.state.count = ((this.state.cards) ? this.state.cards.length : 0) - 1;
+
                     this.state.cardState = this.state.cards.map(c => []);
                 }
 
@@ -95,6 +93,7 @@ class NeoDash extends React.Component {
                                         trigger={null}
                                         content={<p>{update.value}</p>}
                                         key={this.state.count}
+                                        id={this.state.count}
                                         root={document.getElementById("root")}
                                         actions={[
                                             <Button flat modal="close"
@@ -113,8 +112,9 @@ class NeoDash extends React.Component {
             this.state.cardState[this.state.cards.indexOf(this.state.cards.filter(c => c.props.id === update.id)[0])] = update.state;
         }
         if (update.label === 'newCard') {
-            let newCard = <NeoCard id={this.state.key} key={this.state.key} onChange={this.stateChanged} type='table'/>;
-            this.state.key += 1;
+            let newCard = <NeoCard kkey={this.state.count} width={4} height={4} id={this.state.count} key={this.state.count}
+                                   onChange={this.stateChanged} type='table'/>;
+            this.state.count += 1;
             this.state.cards.splice(this.state.cards.length - 1, 0, newCard);
             this.state.cardState.splice(this.state.cardState.length - 1, 0, {
                 "title": "",
@@ -273,11 +273,12 @@ class NeoDash extends React.Component {
                              style={{backgroundColor: 'black'}}>
             {this.neoSaveLoadModal}
             {this.neoConnectionModal}
-            {(this.errorModal) ? this.errorModal : ""}
+
         </Navbar>;
         return (
             <>
                 {navbar}
+                {(this.errorModal) ? this.errorModal : ""}
                 <Container>
                     <Section>
                         <Row>

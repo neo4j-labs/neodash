@@ -311,10 +311,10 @@ class NeoGraphVis extends NeoReport {
             // update node positions
             // note in this example we bound the positions
             node.attr("cx", function (d) {
-                return d.x = Math.max(d.radius - width * 5, Math.min(width + width * 5 - d.radius, d.x));
+                return d.x = Math.max(d.radius - width * 15, Math.min(width + width * 15 - d.radius, d.x));
             })
                 .attr("cy", function (d) {
-                    return d.y = Math.max(d.radius - height * 5, Math.min(height + height * 5 - d.radius, d.y));
+                    return d.y = Math.max(d.radius - height * 15, Math.min(height + height * 15 - d.radius, d.y));
                 });
 
             // update label positions

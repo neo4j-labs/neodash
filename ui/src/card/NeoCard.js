@@ -10,6 +10,7 @@ import Col from "react-materialize/lib/Col";
 import NeoCardSettings from "./NeoCardSettings";
 import NeoJSONView from "../report/json/NeoJSONView";
 import NeoGraphChips from "../report/graph/NeoGraphChips";
+import NeoPlainTextView from "../report/text/NeoPlainTextView";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
@@ -21,12 +22,12 @@ class NeoCardComponent extends React.Component {
         height: this.props.height,
         action: <div key={0}></div>,
         type: this.props.type,
-        page: (this.props.page ? this.props.page : 1),
+        page: (this.props.page ? Math.min(this.props.page,200) : 1),
         query: (this.props.query ? this.props.query : ""),
         labels: [],
-        properties: [],
+        properties: (this.props.propertiesSelected ? this.props.propertiesSelected : []),
         propertiesSelected: (this.props.propertiesSelected ? this.props.propertiesSelected : []),
-        parameters: (this.props.parameters) ? (this.props.parameters): "",
+        parameters: (this.props.parameters) ? (this.props.parameters) : "",
         parsedParameters: {},
         refresh: (this.props.refresh ? this.props.refresh : 0),
         title: (this.props.title ? this.props.title : "")
@@ -42,7 +43,13 @@ class NeoCardComponent extends React.Component {
 
     componentDidMount() {
         this.parseParameters(this.props);
-        this.neoCardSettings = <NeoCardSettings refresh={this.props.refresh} parameters={this.state.parameters} query={this.props.query} onChange={this.stateChanged}/>;
+        this.neoCardSettings =
+            <NeoCardSettings refresh={this.props.refresh}
+                             size={this.props.width + ((this.props.height - 4) / 4) * 12}
+                             type={this.props.type}
+                             parameters={this.state.parameters}
+                             query={this.props.query}
+                             onChange={this.stateChanged}/>;
         this.cardTitle = <Textarea
             onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
             noLayout={true}
@@ -60,7 +67,9 @@ class NeoCardComponent extends React.Component {
             this.state = this.defaultState;
             this.stateChanged({label: "SettingsSaved"})
             this.neoCardSettings =
-                <NeoCardSettings refresh={this.state.refresh} key={this.counter} query={this.props.query} parameters={this.state.parameters} onChange={this.stateChanged}/>;
+                <NeoCardSettings refresh={this.state.refresh} size={this.props.width} type={this.props.type}
+                                 key={this.counter} query={this.props.query}
+                                 parameters={this.state.parameters} onChange={this.stateChanged}/>;
             this.cardTitle = <Textarea
                 key={this.counter}
                 onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
@@ -157,6 +166,14 @@ class NeoCardComponent extends React.Component {
                              refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
+        if (this.state.type === 'text') {
+            this.state.content =
+                <NeoPlainTextView query={'return true'}
+                                  data={this.state.query}
+                             stateChanged={this.stateChanged}
+                             refresh={this.state.refresh}/>
+            this.state.action =<div key={0}></div>
+        }
 
         this.setState(this.state);
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
@@ -166,11 +183,11 @@ class NeoCardComponent extends React.Component {
         this.parseParameters(this.props);
 
         // TODO: Force a refresh of the card component in a much cleaner way.
-            this.state.query = this.state.query.endsWith('\n') ?
-                this.state.query.substr(0, this.state.query.length - 1) :
-                this.state.query += "\n";
+        this.state.query = this.state.query.endsWith('\n') ?
+            this.state.query.substr(0, this.state.query.length - 1) :
+            this.state.query += "\n";
 
-            this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
+        this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
 
 
     }
@@ -203,10 +220,11 @@ class NeoCardComponent extends React.Component {
     updateGraphChips(labels) {
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
-            this.state.labels = Object.keys(labels);
-            this.state.propertiesSelected = this.state.labels.map(l => {
+            this.state.propertiesSelected = Object.keys(labels).map(l => {
                 return "name"
             });
+
+            this.state.labels = Object.keys(labels);
         }
 
         this.state.page += 1;
@@ -230,10 +248,14 @@ class NeoCardComponent extends React.Component {
             onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
             <Icon>save</Icon>
         </div>;
-        return <Col l={this.state.width} m={12} s={12}>
+    // .card.huge {
+    //         height: 822px; medium: 400px;
+    //     }
+        return <Col l={this.state.width} m={this.state.width} s={12}>
             <Card
                 actions={[this.state.action]}
-                className={((this.state.height == 4) ? 'medium' : 'huge') + " neo-card medium white darken-5 paginated-card"}
+                style={{height: (this.state.height*100 + 22*((this.state.height / 4) -1)) + 'px'}}
+                className={"neo-card medium white darken-5 paginated-card"}
                 closeIcon={
                     closeIcon
                 }
@@ -253,13 +275,15 @@ class AddNeoCardComponent extends React.Component {
     }
 
     render() {
-        return <Col l={4} m={6} s={12}><a><Card actions={[]}
-                                                className={"medium grey lighten-2 button add-neo-card"}
-                                                closeIcon={<Icon>close</Icon>}
-                                                revealIcon={<Icon>more_vert</Icon>}
-                                                textClassName="black-text"
-                                                title=""
+        return <Col l={4} m={6} s={12}><a>
+            <Card actions={[]}
+                                   className={"medium grey lighten-2 button add-neo-card"}
+                                   closeIcon={<Icon>close</Icon>}
+                                   revealIcon={<Icon>more_vert</Icon>}
+                                   textClassName="black-text"
+                                   title=""
         >
+
             <Button className="btn-floating btn-center-align blue-grey"
                     onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
         </Card></a></Col>

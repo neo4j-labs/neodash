@@ -25,7 +25,7 @@ class NeoGraphChips extends React.Component {
                         style={{backgroundColor: this.colors[index % this.colors.length], color: 'white'}}
                     >
                         {label}
-                        <NeoOptionSelect label="property" onChange={this.props.onChange} value={'name'}
+                        <NeoOptionSelect suffix="-name" label="property" onChange={this.props.onChange} value={'name'}
                                          options={this.props.properties[index]}/>
                     </Chip>
 

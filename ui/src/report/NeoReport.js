@@ -37,6 +37,7 @@ class NeoReport extends React.Component {
                 let report = this;
                 this.timer = setInterval(function () {
                     report.runQuery();
+                    report.state.repeat = true;
                     report.setState(report.state);
                     // alert(refresh)
                 }, refresh * 1000.0);
@@ -57,7 +58,7 @@ class NeoReport extends React.Component {
             .run(this.props.query, this.props.params)
             .then(result => {
 
-                let error = "A query returned over 1000 rows. Reports may be slow/unresponsive. \n\nYour query: \n \n " + this.props.query + "\n \n Consider adding a LIMIT clause to the end of your query, e.g: \nRETURN x,y,z LIMIT 100.\"";
+                let error = "A query returned over 1000 rows. Only the first 1000 results have been rendered. \n\nConsider adding a LIMIT clause to the end of your query, e.g: \n \n " + this.props.query + " LIMIT 100\n \n \n\"";
                 let records = result.records;
                 if (error !== this.prevError && records.length > 1000) {
                     this.props.stateChanged({
@@ -66,7 +67,7 @@ class NeoReport extends React.Component {
                     })
                     this.prevError = error;
                 }
-                this.state.data = records.map(record => {
+                this.state.data = records.slice(0,1000).map((record,i) => {
                     var row = {};
                     record["keys"].map((key, index) => {
                         row[key] = record["_fields"][index];
@@ -87,15 +88,19 @@ class NeoReport extends React.Component {
     }
 
     render() {
+        if (this.state.running && !this.state.repeat) {
+            return <p>Running query...</p>
+        }
 
         if (this.state.prevQuery !== this.props.query) {
             this.state.prevQuery = this.props.query;
+            this.state.repeat = false;
             this.runQuery();
+            this.setState(this.state);
         }
+
         let data = this.state.data;
-        if (this.state.running) {
-            return <p>Running query...</p>
-        }
+
 
         if (data == null) {
             return <><span>No query specified.
@@ -109,7 +114,7 @@ class NeoReport extends React.Component {
                     Settings &nbsp;&nbsp;&nbsp;&nbsp;
                     <i style={{right: '4px', position: "absolute"}} className="material-icons">more_vert</i>
                 </Chip>
-                 to get started.</span></>
+                 to get started. </span></>
         }
         if (data.length == 0) {
             return <p>Query returned no data.</p>

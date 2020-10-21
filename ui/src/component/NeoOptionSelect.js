@@ -16,10 +16,14 @@ class NeoOptionSelect extends React.Component {
 
 
     render() {
+        let suffix = this.props.suffix;
+        let options = this.props.options;
+        let defaultValue = this.props.defaultValue;
         return <Select
 
             onChange={e => this.props.onChange({label: this.props.label + "Changed", value: e.target.value})}
             multiple={false}
+
             options={{
                 classes: '',
                 dropdownOptions: {
@@ -37,7 +41,16 @@ class NeoOptionSelect extends React.Component {
                     outDuration: 250
                 }
             }}
-            value={(Object.keys(this.props.options).length > 0) ? Object.keys(this.props.options)[0].split("-")[0] + "-name" : ""}
+
+            value={function () {
+                if (suffix == null) {
+                    return defaultValue
+                } else {
+
+                    return (Object.keys(options).length > 0) ? Object.keys(options)[0].split("-")[0] + suffix : ""
+                }
+            }}
+
         >
             {this.generateOptions()}
 

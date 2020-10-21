@@ -51,9 +51,9 @@ class NeoCardSettings extends React.Component {
             'graph': 'Graph',
             'plot': 'Plot',
             'bar': 'Bar Chart',
-            'json': 'JSON',
+            'json': 'Raw JSON',
+            'text': 'Text',
         };
-
 
         return (
             <div>
@@ -67,8 +67,8 @@ class NeoCardSettings extends React.Component {
                                onClick={e => this.stateChanged({event: e, label: "CardShiftRight"})}/>
                 </div>
                 <p></p>
-                <NeoOptionSelect label="Type" onChange={this.stateChanged} options={vizOptions}/>
-                <NeoOptionSelect label="Size" onChange={this.stateChanged} options={sizeOptions}/>
+                <NeoOptionSelect label="Type" defaultValue={this.props.type} onChange={this.stateChanged} options={vizOptions}/>
+                <NeoOptionSelect label="Size" defaultValue={this.props.size} onChange={this.stateChanged} options={sizeOptions}/>
 
                 {this.cypherParamsInput}
                 {this.refreshRateInput}
