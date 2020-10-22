@@ -22,7 +22,7 @@ class NeoCardComponent extends React.Component {
         height: this.props.height,
         action: <div key={0}></div>,
         type: this.props.type,
-        page: (this.props.page ? Math.min(this.props.page,200) : 1),
+        page: (this.props.page ? Math.min(this.props.page, 200) : 1),
         query: (this.props.query ? this.props.query : ""),
         labels: [],
         properties: (this.props.propertiesSelected ? this.props.propertiesSelected : []),
@@ -135,7 +135,8 @@ class NeoCardComponent extends React.Component {
         // different settings for the different report types
         if (this.state.type === 'table') {
             this.state.content =
-                <NeoTable rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
+                <NeoTable connection={this.props.connection}
+                          rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
                           query={this.state.query}
                           stateChanged={this.stateChanged}
                           params={this.state.parsedParameters}
@@ -148,6 +149,7 @@ class NeoCardComponent extends React.Component {
             this.state.page += 1;
             this.state.content =
                 <NeoGraphViz
+                    connection={this.props.connection}
                     query={this.state.query}
                     params={this.state.parsedParameters}
                     propertiesSelected={this.state.propertiesSelected}
@@ -159,20 +161,24 @@ class NeoCardComponent extends React.Component {
         }
         if (this.state.type === 'json') {
             this.state.content =
-                <NeoJSONView query={this.state.query}
-                             params={this.state.parsedParameters}
-                             data={this.state.data}
-                             stateChanged={this.stateChanged}
-                             refresh={this.state.refresh}/>
+                <NeoJSONView
+                    connection={this.props.connection}
+                    query={this.state.query}
+                    params={this.state.parsedParameters}
+                    data={this.state.data}
+                    stateChanged={this.stateChanged}
+                    refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
         if (this.state.type === 'text') {
             this.state.content =
-                <NeoPlainTextView query={'return true'}
-                                  data={this.state.query}
-                             stateChanged={this.stateChanged}
-                             refresh={this.state.refresh}/>
-            this.state.action =<div key={0}></div>
+                <NeoPlainTextView
+                    connection={this.props.connection}
+                    query={'return true'}
+                    data={this.state.query}
+                    stateChanged={this.stateChanged}
+                    refresh={this.state.refresh}/>
+            this.state.action = <div key={0}></div>
         }
 
         this.setState(this.state);
@@ -248,13 +254,13 @@ class NeoCardComponent extends React.Component {
             onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
             <Icon>save</Icon>
         </div>;
-    // .card.huge {
-    //         height: 822px; medium: 400px;
-    //     }
+        // .card.huge {
+        //         height: 822px; medium: 400px;
+        //     }
         return <Col l={this.state.width} m={this.state.width} s={12}>
             <Card
                 actions={[this.state.action]}
-                style={{height: (this.state.height*100 + 22*((this.state.height / 4) -1)) + 'px'}}
+                style={{height: (this.state.height * 100 + 22 * ((this.state.height / 4) - 1)) + 'px'}}
                 className={"neo-card medium white darken-5 paginated-card"}
                 closeIcon={
                     closeIcon
@@ -277,16 +283,16 @@ class AddNeoCardComponent extends React.Component {
     render() {
         return <Col l={4} m={6} s={12}><a>
             <Card actions={[]}
-                                   className={"medium grey lighten-2 button add-neo-card"}
-                                   closeIcon={<Icon>close</Icon>}
-                                   revealIcon={<Icon>more_vert</Icon>}
-                                   textClassName="black-text"
-                                   title=""
-        >
+                  className={"medium grey lighten-2 button add-neo-card"}
+                  closeIcon={<Icon>close</Icon>}
+                  revealIcon={<Icon>more_vert</Icon>}
+                  textClassName="black-text"
+                  title=""
+            >
 
-            <Button className="btn-floating btn-center-align blue-grey"
-                    onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
-        </Card></a></Col>
+                <Button className="btn-floating btn-center-align blue-grey"
+                        onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
+            </Card></a></Col>
     }
 
 }

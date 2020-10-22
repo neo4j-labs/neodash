@@ -52,7 +52,7 @@ class NeoCardSettings extends React.Component {
             'plot': 'Plot',
             'bar': 'Bar Chart',
             'json': 'Raw JSON',
-            'text': 'Text',
+            'text': 'Plain Text',
         };
 
         return (

@@ -8,13 +8,16 @@ class NeoReport extends React.Component {
 
     constructor(props) {
         super(props);
-        var driver = neo4j.driver(
-            'neo4j://localhost',
-            neo4j.auth.basic('neo4j', 'neo')
-        );
-        this.state = {}
-        this.session = driver.session();
-        this.runTimer({})
+        if (this.props.connection.url){
+            var driver = neo4j.driver(
+                this.props.connection.url,
+                neo4j.auth.basic(this.props.connection.username, this.props.connection.password)
+            );
+            this.state = {}
+            this.session = driver.session({database: this.props.connection.database});
+            this.runTimer({})
+        }
+
     }
 
     componentWillUnmount() {
