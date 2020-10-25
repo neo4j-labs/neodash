@@ -158,6 +158,9 @@ body{
     height: 822px;
 }
 
+textarea:disabled{
+    color: black !important;
+}
 .select-wrapper {
     width: 140px;
 }

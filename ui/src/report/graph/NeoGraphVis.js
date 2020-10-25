@@ -126,7 +126,6 @@ class NeoGraphVis extends NeoReport {
     }
 
     componentDidMount() {
-
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
 
         let graph = this.convertDataToGraph();

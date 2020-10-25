@@ -8,9 +8,13 @@ class NeoReport extends React.Component {
 
     constructor(props) {
         super(props);
-        if (this.props.connection.url){
+        var url = this.props.connection.url;
+        if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))){
+            url = "neo4j://" + url;
+        }
+        if (url){
             var driver = neo4j.driver(
-                this.props.connection.url,
+                url,
                 neo4j.auth.basic(this.props.connection.username, this.props.connection.password)
             );
             this.state = {}

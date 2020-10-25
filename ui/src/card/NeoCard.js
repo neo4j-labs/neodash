@@ -11,6 +11,7 @@ import NeoCardSettings from "./NeoCardSettings";
 import NeoJSONView from "../report/json/NeoJSONView";
 import NeoGraphChips from "../report/graph/NeoGraphChips";
 import NeoPlainTextView from "../report/text/NeoPlainTextView";
+import NeoBarChart from "../report/bar/NeoBarChart";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
@@ -53,6 +54,7 @@ class NeoCardComponent extends React.Component {
         this.cardTitle = <Textarea
             onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
             noLayout={true}
+            disabled={!this.props.editable}
             defaultValue={this.state.title}
             key={this.counter}
             className="card-title editable-title"
@@ -141,6 +143,20 @@ class NeoCardComponent extends React.Component {
                           stateChanged={this.stateChanged}
                           params={this.state.parsedParameters}
                           refresh={this.state.refresh}
+                />
+            this.state.action =
+                <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+        }
+        if (this.state.type === 'bar') {
+            this.state.content =
+                <NeoBarChart connection={this.props.connection}
+                           page={this.state.page}
+                          query={this.state.query}
+                          stateChanged={this.stateChanged}
+                          params={this.state.parsedParameters}
+                          refresh={this.state.refresh}
+                             width={this.state.width}
+                             height={this.state.height}
                 />
             this.state.action =
                 <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
@@ -254,10 +270,7 @@ class NeoCardComponent extends React.Component {
             onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
             <Icon>save</Icon>
         </div>;
-        // .card.huge {
-        //         height: 822px; medium: 400px;
-        //     }
-        return <Col l={this.state.width} m={this.state.width} s={12}>
+        return <Col l={this.state.width} m={12} s={12}>
             <Card
                 actions={[this.state.action]}
                 style={{height: (this.state.height * 100 + 22 * ((this.state.height / 4) - 1)) + 'px'}}
@@ -265,7 +278,7 @@ class NeoCardComponent extends React.Component {
                 closeIcon={
                     closeIcon
                 }
-                revealIcon={<Icon>more_vert</Icon>}
+                revealIcon={(this.props.editable) ?<Icon>more_vert</Icon> : <div></div>}
                 textClassName="black-text"
                 title={this.cardTitle}
                 reveal={this.neoCardSettings}

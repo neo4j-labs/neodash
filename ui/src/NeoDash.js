@@ -19,7 +19,7 @@ class NeoDash extends React.Component {
 
     constructor(props) {
         super(props);
-        this.connection = {database: 'neo4j', url: 'neo4j://localhost', username: 'neo4j', password: ''}
+        this.connection = {database: '', url: 'neo4j://localhost', username: 'neo4j', password: ''}
         this.state = {json: '{}', count: 0}
         if (localStorage.getItem('neodash-dashboard')) {
             this.state.json = localStorage.getItem('neodash-dashboard');
@@ -36,47 +36,37 @@ class NeoDash extends React.Component {
     }
 
     connect(e) {
-        var driver = neo4j.driver(
-            this.connection.url,
-            neo4j.auth.basic(this.connection.username, this.connection.password)
-        );
-
-
-        this.session = driver.session({database: this.connection.database});
-        this.session
-            .run('return true;')
-            .then(result => {
-                this.connected = true
-                this.updateConnectionModal(this.connect, false);
-                this.loadJson()
-            })
-            .catch(error => {
-                this.updateConnectionModal(this.connect, true);
-                this.stateChanged({
-                    label: "CreateError",
-                    value: error['message']
+        try {
+            var url = this.connection.url;
+            if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))){
+                url = "neo4j://" + url;
+            }
+            var driver = neo4j.driver(
+                url,
+                neo4j.auth.basic(this.connection.username, this.connection.password)
+            );
+            this.session = driver.session({database: this.connection.database});
+            this.session
+                .run('return true;')
+                .then(result => {
+                    this.connected = true
+                    this.updateConnectionModal(this.connect, false);
+                    this.loadJson()
+                })
+                .catch(error => {
+                    this.updateConnectionModal(this.connect, true);
+                    this.stateChanged({
+                        label: "CreateError",
+                        value: error['message']
+                    });
                 });
+        }catch(error){
+            this.updateConnectionModal(this.connect, true);
+            this.stateChanged({
+                label: "CreateError",
+                value: error['message']
             });
-        // }catch(e) {
-        //     alert(e)
-        // }
-        //     this.session
-        //         .run('return true;')
-        //         .then(result => {
-        //             if (result) {
-        //                 this.loadJson()
-        //                 this.updateConnectionModal(this.connect, false);
-        //             } else {
-        //
-        //             }
-        //         });
-        // } catch (err) {
-        //     alert(err)
-        //     this.stateChanged({
-        //         label: "CreateError",
-        //         value: "Invalid Credentials."
-        //     });
-        // }
+        }
     }
 
 
@@ -85,7 +75,11 @@ class NeoDash extends React.Component {
             this.state.title = 'NeoDash ⚡';
             return
         }
-        if (this.state.json) {
+        if (this.state.json !== null) {
+            if (this.state.json.trim() == ""){
+                this.setDefaultDashboard();
+                return
+            }
             try {
                 let loaded = JSON.parse(this.state.json)
                 if (loaded.version && loaded.version !== this.version) {
@@ -98,6 +92,7 @@ class NeoDash extends React.Component {
 
                 if (loaded.reports) {
                     this.state.title = (loaded.title) ? loaded.title : 'NeoDash ⚡';
+                    this.state.editable = loaded.editable;
                     this.state.cardState = loaded.reports.map(c => []);
                     this.state.cards = loaded.reports.map((report, index) => {
                             if (report.type) {
@@ -106,6 +101,7 @@ class NeoDash extends React.Component {
                                     page={report.page} width={report.width} height={report.height}
                                     kkey={this.state.count + index} key={this.state.count + index} id={index}
                                     onChange={this.stateChanged}
+                                    editable={this.state.editable}
                                     type={report.type} propertiesSelected={report.properties}
                                     title={report.title}
                                     query={report.query} parameters={report.parameters}
@@ -124,27 +120,25 @@ class NeoDash extends React.Component {
             } catch (e) {
                 if (!this.state.cards) {
                     this.setDefaultDashboard();
+                }else{
+                    this.stateChanged({label: "CreateError", value: e.toString() + ". Dashboard was not loaded."});
                 }
-                this.stateChanged({label: "CreateError", value: e.toString() + ". Dashboard was not loaded."});
             }
         }
     }
 
     setDefaultDashboard() {
-        this.state = {}
-        this.state.cards =
-            [
-                <NeoCard connection={this.connection} type={'text'}
-                         query={'This is your first dashboard! \n \nEdit this report or add a new one to get started.'}
-                         width={4} height={4} kkey={0} key={0} id={0} onChange={this.stateChanged}/>,
-                <NeoCard connection={this.connection} type={'graph'} query={'CALL db.schema.visualization()'}
-                         width={4} height={4} kkey={1} key={1} id={1} onChange={this.stateChanged}/>,
-                <AddNeoCard kkey={9999999} key={9999999} id={9999999} onClick={this.stateChanged}/>
-            ]
-        this.state.title = 'NeoDash ⚡';
-        this.state.count = ((this.state.cards) ? this.state.cards.length : 0) - 1;
+        let state = this.state;
+        fetch("http://localhost:3000/default_dashboard.json")
+            .then(response => response.text())
+            .then((jsonData) => {
+                state.json = jsonData;
+                this.loadJson()
 
-        this.state.cardState = this.state.cards.map(c => []);
+            }).catch((error) => {
+            // handle your errors here
+            alert(error)
+        })
     }
 
     stateChanged(update) {
@@ -188,6 +182,7 @@ class NeoDash extends React.Component {
         if (update.label === 'newCard') {
             let newCard = <NeoCard connection={this.connection} kkey={this.state.count} width={4} height={4}
                                    id={this.state.count}
+                                   editable={this.state.editable}
                                    key={this.state.count}
                                    onChange={this.stateChanged} type='table'/>;
             this.state.count += 1;
@@ -252,6 +247,7 @@ class NeoDash extends React.Component {
         let value = {
             "title": this.state.title,
             "version": "1.0",
+            "editable": this.state.editable,
             "reports": this.state.cardState.map(q => {
                 return {
                     title: q.title,
@@ -329,23 +325,26 @@ class NeoDash extends React.Component {
                 }
                 content={<div class="modal-input-text" style={{margin: '20px'}}>
 
-                        <p>&nbsp;</p>
-                    <form onSubmit={event => {event.preventDefault(); connect()}}>
+                    <p>&nbsp;</p>
+                    <form onSubmit={event => {
+                        event.preventDefault();
+                        connect()
+                    }}>
                         <NeoTextInput onChange={this.stateChanged} changeEventLabel={"ConnectURLChanged"}
                                       style={{'width': '100%'}} label={"Connect URL"}
-                                      defaultValue={'neo4j://localhost:7687'}/>
+                                      defaultValue={this.connection.url}/>
                         <NeoTextInput onChange={this.stateChanged} changeEventLabel={"DatabaseChanged"}
                                       label={"Database"}
-                                      defaultValue={'neo4j'}/>
+                                      placeholder={'neo4j'}/>
                         <NeoTextInput onChange={this.stateChanged} changeEventLabel={"UsernameChanged"}
                                       label={"Username"}
-                                      defaultValue={'neo4j'}/>
+                                      defaultValue={this.connection.username}/>
                         <NeoTextInput onChange={this.stateChanged} changeEventLabel={"PasswordChanged"}
                                       password={true}
                                       label={"Password"}
                                       placeholder={''}/>
-                        <input style={{display: 'none'}} type="submit" /></form>
-                        <p>*your credentials are stored locally in your local browser cache.</p>
+                        <input style={{display: 'none'}} type="submit"/></form>
+                    <p>*your credentials are stored locally in your local browser cache.</p>
                 </div>}
             />;
     }
@@ -360,7 +359,8 @@ class NeoDash extends React.Component {
                                   label: "ReportTitleChanged",
                                   value: e.target.value
                               })}/>;
-        let navbar = <Navbar alignLinks="right" brand={title} centerLogo id="mobile-nav" menuIcon={<Icon>menu</Icon>}
+        let navbar = <Navbar alignLinks="right" brand={title} centerLogo id="mobile-nav"
+                             menuIcon={<Icon>menu</Icon>}
                              style={{backgroundColor: 'black'}}>
             {this.neoSaveLoadModal}
             {this.neoConnectionModal}
