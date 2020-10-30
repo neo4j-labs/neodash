@@ -1,0 +1,59 @@
+{
+  "title": "NeoDash ⚡",
+  "version": "1.0",
+  "editable": true,
+  "reports": [
+    {
+      "title": "Example Query",
+      "width": 6,
+      "height": 4,
+      "type": "graph",
+      "query": "CALL db.schema.visualization()",
+      "page": 38,
+      "properties": [
+        "name",
+        "name",
+        "name",
+        "name",
+        "name",
+        "name"
+      ],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "Energy by year",
+      "width": 6,
+      "height": 4,
+      "type": "bar",
+      "query": "MATCH (t:Track)\nRETURN id(t), t.energy LIMIT 10",
+      "page": 58,
+      "properties": [],
+      "parameters": "{\"color\":\"navy\"}",
+      "refresh": 0
+    },
+    {
+      "title": "",
+      "width": 4,
+      "height": 4,
+      "type": "bar",
+      "query": "MATCH (a)-[:HAS_GENRE]->(g:Genre)\nRETURN g.name, COUNT(a) ORDER BY COUNT(a) DESC LIMIT 15\n",
+      "page": 4,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "",
+      "width": 8,
+      "height": 4,
+      "type": "table",
+      "query": "MATCH p=(a:Track)-->(aa:Album) RETURN p as pattern,a.name as album, aa.release_date as released  LIMIT 5\n",
+      "page": 1,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {}
+  ]
+}

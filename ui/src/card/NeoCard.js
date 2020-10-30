@@ -12,6 +12,7 @@ import NeoJSONView from "../report/json/NeoJSONView";
 import NeoGraphChips from "../report/graph/NeoGraphChips";
 import NeoPlainTextView from "../report/text/NeoPlainTextView";
 import NeoBarChart from "../report/bar/NeoBarChart";
+import NeoPropertySelect from "../report/bar/NeoPropertySelect";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
@@ -38,6 +39,7 @@ class NeoCardComponent extends React.Component {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
         this.updateGraphChips = this.updateGraphChips.bind(this);
+        this.updatePropertySelect = this.updatePropertySelect.bind(this);
         this.counter = 0;
         this.state = this.defaultState;
     }
@@ -150,16 +152,16 @@ class NeoCardComponent extends React.Component {
         if (this.state.type === 'bar') {
             this.state.content =
                 <NeoBarChart connection={this.props.connection}
-                           page={this.state.page}
-                          query={this.state.query}
-                          stateChanged={this.stateChanged}
-                          params={this.state.parsedParameters}
-                          refresh={this.state.refresh}
+                             page={this.state.page}
+                             query={this.state.query}
+                             stateChanged={this.stateChanged}
+                             onNodeLabelUpdate={this.updatePropertySelect}
+                             params={this.state.parsedParameters}
+                             refresh={this.state.refresh}
                              width={this.state.width}
                              height={this.state.height}
                 />
-            this.state.action =
-                <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+
         }
         if (this.state.type === "graph") {
             this.state.page += 1;
@@ -238,7 +240,17 @@ class NeoCardComponent extends React.Component {
                 }
             })(this.state.parameters);
     }
+    updatePropertySelect(labels) {
+        this.state.page += 1;
+        this.state.action =
+            <NeoPropertySelect page={this.state.page} key={0} data={this.state.data}
+                               onChange={this.stateChanged}
+                               categories={["Year",2,3]} values={[" Energy",6,7]}
 
+            />
+
+        this.setState(this.state);
+    }
     updateGraphChips(labels) {
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
@@ -278,7 +290,7 @@ class NeoCardComponent extends React.Component {
                 closeIcon={
                     closeIcon
                 }
-                revealIcon={(this.props.editable) ?<Icon>more_vert</Icon> : <div></div>}
+                revealIcon={(this.props.editable) ? <Icon>more_vert</Icon> : <div></div>}
                 textClassName="black-text"
                 title={this.cardTitle}
                 reveal={this.neoCardSettings}

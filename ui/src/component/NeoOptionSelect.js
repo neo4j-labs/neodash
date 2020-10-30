@@ -20,7 +20,7 @@ class NeoOptionSelect extends React.Component {
         let options = this.props.options;
         let defaultValue = this.props.defaultValue;
         return <Select
-
+            label={this.props.label}
             onChange={e => this.props.onChange({label: this.props.label + "Changed", value: e.target.value})}
             multiple={false}
 

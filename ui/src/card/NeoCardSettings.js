@@ -66,7 +66,7 @@ class NeoCardSettings extends React.Component {
                     <NeoButton color='black' icon='chevron_right'
                                onClick={e => this.stateChanged({event: e, label: "CardShiftRight"})}/>
                 </div>
-                <p></p>
+                <p style={{fontSize: 7}}>&nbsp;</p>
                 <NeoOptionSelect label="Type" defaultValue={this.props.type} onChange={this.stateChanged} options={vizOptions}/>
                 <NeoOptionSelect label="Size" defaultValue={this.props.size} onChange={this.stateChanged} options={sizeOptions}/>
 

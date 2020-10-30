@@ -18,6 +18,9 @@ class NeoBarChart extends NeoReport {
 
     componentDidMount() {
         let data = this.state.data;
+        let parsedParameters = this.props.params;
+        this.props.onNodeLabelUpdate({})
+        console.log(parsedParameters)
         if (!data) {
             return
         }
@@ -26,8 +29,10 @@ class NeoBarChart extends NeoReport {
         })
         console.log(data)
         let yValues = data.map(row => row[1]);
+        let xValues = data.map(row => row[0].toString().length);
         let maxY = Math.max.apply(Math, yValues);
         let minY = Math.min.apply(Math, yValues);
+        let maxX = Math.max.apply(Math, xValues);
 
         if (minY === maxY){
             minY = minY - 1;
@@ -36,9 +41,9 @@ class NeoBarChart extends NeoReport {
         let digits = Math.log10(Math.abs(maxY));
         var xShift = ((digits > 1) ? digits * 7 + 18 : Math.abs(digits) * 7 + 32);
         xShift += (maxY < 0 || minY < 0) ? 10 : 0;
-
-        var width = -90 + this.props.width * 105 - xShift * 0.5, height = -185 + this.props.height * 100;
-        var margin = {top: 0, right: 0, bottom: 40, left: xShift};
+        var yShift = 20 + maxX * 4;
+        var width = -90 + this.props.width * 105 - xShift * 0.5, height = -140 + this.props.height * 100 - yShift;
+        var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
 
         var svg = d3.select(".new")
             .attr("class", "chart")
@@ -84,7 +89,9 @@ class NeoBarChart extends NeoReport {
                 return height - y(d[1]);
             })
             .attr("fill", function (d) {
-                return (d[1]) ? "#69b3a2" : "transparent";
+
+                let color = (parsedParameters && parsedParameters.color) ? (parsedParameters.color) : "#69b3a2";
+                return (d[1]) ? color : "transparent";
             })
     }
 

@@ -240,3 +240,7 @@ textarea:disabled{
 .modal-input-text .input-field.col label{
     left: 0px;
 }
+
+.neo-property-select .input-field .select-wrapper {
+    margin-bottom: -20px;
+}
