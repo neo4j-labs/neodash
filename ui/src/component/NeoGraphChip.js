@@ -29,7 +29,6 @@ class NeoGraphChip extends React.Component {
             >
                 {this.props.name}
             </Chip>
-
         );
     }
 }

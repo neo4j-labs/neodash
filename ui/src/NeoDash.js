@@ -155,15 +155,19 @@ class NeoDash extends React.Component {
             this.connection.password = update.value;
         }
         if (update.label === "CreateError") {
+            let content = update.value;
+            if (content.startsWith("Could not perform discovery. No routing servers available.")){
+                content = "Unable to connect to the specified Neo4j database. " + content;
+            }
             this.errorModal = <NeoModal header={"Error"}
-                                        style={{'maxWidth': '550px'}}
-                                        open={true}
-                                        trigger={null}
-                                        content={<p>{update.value}</p>}
-                                        key={this.state.count}
-                                        id={this.state.count}
-                                        root={document.getElementById("root")}
-                                        actions={[
+                                                                   style={{'maxWidth': '550px'}}
+                                                                   open={true}
+                                                                   trigger={null}
+                                                                   content={<p>{content}</p>}
+                                                                   key={this.state.count}
+                                                                   id={this.state.count}
+                                                                   root={document.getElementById("root")}
+                                                                   actions={[
                                             <Button flat modal="close"
                                                     node="button"
                                                     waves="red">Close</Button>

@@ -46,8 +46,13 @@ class NeoOptionSelect extends React.Component {
                 if (suffix == null) {
                     return defaultValue
                 } else {
-
-                    return (Object.keys(options).length > 0) ? Object.keys(options)[0].split("-")[0] + suffix : ""
+                    if (options.length > 0){
+                        let index = Object.keys(options)[0].split("-")[0];
+                        let propSelected = Object.keys(options)[0].split("-")[1];
+                        return index + "-" + propSelected
+                    }else{
+                        return defaultValue
+                    }
                 }
             }}
 

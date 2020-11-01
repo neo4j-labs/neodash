@@ -19,15 +19,22 @@ class NeoBarChart extends NeoReport {
     componentDidMount() {
         let data = this.state.data;
         let parsedParameters = this.props.params;
-        this.props.onNodeLabelUpdate({})
-        console.log(parsedParameters)
+
+
         if (!data) {
             return
         }
         data = data.map((row, index) => {
             return [this.parseChartValue(Object.values(row)[0]), this.parseChartValue(Object.values(row)[1])]
         })
-        console.log(data)
+        if (data.length > 0) {
+            let labels = {}
+            Object.keys(this.state.data[0]).forEach(
+                i => labels[i] = i
+            )
+            this.props.onNodeLabelUpdate(labels);
+        }
+
         let yValues = data.map(row => row[1]);
         let xValues = data.map(row => row[0].toString().length);
         let maxY = Math.max.apply(Math, yValues);

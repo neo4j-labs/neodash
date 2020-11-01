@@ -400,7 +400,7 @@ class NeoGraphVis extends NeoReport {
 
                 <defs>
                     <filter x="0" y="0" width="1" height="1" id="solid">
-                        <feFlood flood-color="rgba(255,255,255,0.85)"/>
+                        <feFlood floodColor="rgba(255,255,255,0.85)"/>
                         <feComposite in="SourceGraphic"/>
 
                     </filter>

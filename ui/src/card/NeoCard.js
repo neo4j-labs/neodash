@@ -84,22 +84,26 @@ class NeoCardComponent extends React.Component {
     }
 
     stateChanged(update) {
+        if (update.label === "QueryChanged") {
+            this.state.query = update.value;
+            return
+        }
         if (update.label === "CreateError") {
             this.props.onChange(update);
             return
         }
-        // Updates
         if (update.label === "SettingsSaved") {
             this.updateCardSettings(update);
         }
-
+        if (update.label === "CategoryChanged") {
+            this.state.propertiesSelected[0] = update.value;
+        }
+        if (update.label === "ValueChanged") {
+            this.state.propertiesSelected[1] = update.value;
+        }
         if (update.label === "ChangedTitle") {
             this.state.title = update.value;
             this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
-            return
-        }
-        if (update.label === "QueryChanged") {
-            this.state.query = update.value;
             return
         }
         if (update.label === "CypherParamsChanged") {
@@ -137,6 +141,13 @@ class NeoCardComponent extends React.Component {
         }
 
         // different settings for the different report types
+        this.updateReportComponent();
+
+        this.setState(this.state);
+        this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
+    }
+
+    updateReportComponent() {
         if (this.state.type === 'table') {
             this.state.content =
                 <NeoTable connection={this.props.connection}
@@ -155,6 +166,7 @@ class NeoCardComponent extends React.Component {
                              page={this.state.page}
                              query={this.state.query}
                              stateChanged={this.stateChanged}
+                             propertiesSelected={this.state.propertiesSelected}
                              onNodeLabelUpdate={this.updatePropertySelect}
                              params={this.state.parsedParameters}
                              refresh={this.state.refresh}
@@ -171,7 +183,8 @@ class NeoCardComponent extends React.Component {
                     query={this.state.query}
                     params={this.state.parsedParameters}
                     propertiesSelected={this.state.propertiesSelected}
-                    onNodeLabelUpdate={this.updateGraphChips} width={this.state.width}
+                    onNodeLabelUpdate={this.updateGraphChips}
+                    width={this.state.width}
                     height={this.state.height} page={this.state.page}
                     stateChanged={this.stateChanged}
                     data={this.state.data}
@@ -198,9 +211,6 @@ class NeoCardComponent extends React.Component {
                     refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
-
-        this.setState(this.state);
-        this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
     }
 
     updateCardSettings(update) {
@@ -242,15 +252,16 @@ class NeoCardComponent extends React.Component {
     }
     updatePropertySelect(labels) {
         this.state.page += 1;
+
         this.state.action =
             <NeoPropertySelect page={this.state.page} key={0} data={this.state.data}
                                onChange={this.stateChanged}
-                               categories={["Year",2,3]} values={[" Energy",6,7]}
-
+                               categories={labels} values={labels}
             />
 
         this.setState(this.state);
     }
+
     updateGraphChips(labels) {
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
