@@ -9,6 +9,7 @@ class NeoPagination extends React.Component {
     }
 
     render(content) {
+
         return <Pagination
             activePage={(this.props.page ? this.props.page : 1)}
             items={1000}

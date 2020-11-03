@@ -15,6 +15,18 @@ const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={copyrights}/
 
 const Main = () => {
     document.title = "NeoDash - Neo4j Dashboard"
+
+    // hard reset option if dashboards break.
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const reset = params.get('reset');
+    if (reset === "true"){
+        let text = localStorage.getItem("neodash-dashboard");
+        localStorage.removeItem("neodash-dashboard")
+        return <div><p>Cache cleared. Your latest dashboard:</p><code>{text}</code></div>
+    }
+
+    // Else, normal rendering.
     return (
         <ApolloProvider client={client}>
             <NeoDash/>

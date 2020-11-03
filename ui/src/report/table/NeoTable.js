@@ -52,14 +52,13 @@ class NeoTable extends NeoReport {
             return ""
         }
         if (Array.isArray(value)) {
-            return <div> {
+            return <div style={{display: 'inline-block'}}> {
                 value.map((item, index) => {
-                    return <div key={index}>
-                        {this.renderExoticValueTypes(item)}
-                        {(index !== value.length - 1 && !Array.isArray(item)) ? ', ' : ''}
+                    return <div style={{display: 'inline-block'}} key={index}>
+                        {this.renderExoticValueTypes(item)}{(index !== value.length - 1 && !Array.isArray(item)) ? ',' : ''}
                     </div>
                 })
-            }  </div>;
+            } <br/> </div>;
         }
         if (value["start"] && value["end"] && value["segments"] && value["length"]) {
             // let segment = ;
@@ -70,7 +69,7 @@ class NeoTable extends NeoReport {
             return this.renderExoticValueTypes(path);
         }
         if (value["labels"] && value["identity"] && value["properties"]) {
-            return value["labels"].map((label, index) => <div index={index}><NeoGraphChip name={label}/></div>)
+            return value["labels"].map((label, index) => <div style={{display: 'inline-block'}} index={index}><NeoGraphChip name={label}/></div>)
         }
         if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
             return <NeoGraphChip color="grey" radius={0} name={value["type"]}/>

@@ -21,12 +21,18 @@ class NeoBarChart extends NeoReport {
         let parsedParameters = this.props.params;
 
 
-        if (!data) {
+        if (!data || data.length === 0) {
             return
         }
+
+        let index1 = (this.props.propertiesSelected[0]) ? Object.keys(data[0]).indexOf(this.props.propertiesSelected[0]) : 0;
+        let index2 = (this.props.propertiesSelected[1]) ? Object.keys(data[0]).indexOf(this.props.propertiesSelected[1]) : 1;
+
+
         data = data.map((row, index) => {
-            return [this.parseChartValue(Object.values(row)[0]), this.parseChartValue(Object.values(row)[1])]
+            return [this.parseChartValue(Object.values(row)[index1]), this.parseChartValue(Object.values(row)[index2])]
         })
+
         if (data.length > 0) {
             let labels = {}
             Object.keys(this.state.data[0]).forEach(
@@ -34,14 +40,18 @@ class NeoBarChart extends NeoReport {
             )
             this.props.onNodeLabelUpdate(labels);
         }
+        if (typeof (data[0][1]) !== "number") {
+            return
+        }
+
 
         let yValues = data.map(row => row[1]);
-        let xValues = data.map(row => row[0].toString().length);
+        let xValues = data.map(row => (row[0] ? row[0] : "").toString().length);
         let maxY = Math.max.apply(Math, yValues);
         let minY = Math.min.apply(Math, yValues);
         let maxX = Math.max.apply(Math, xValues);
 
-        if (minY === maxY){
+        if (minY === maxY) {
             minY = minY - 1;
             maxY = maxY + 1;
         }
@@ -100,14 +110,28 @@ class NeoBarChart extends NeoReport {
                 let color = (parsedParameters && parsedParameters.color) ? (parsedParameters.color) : "#69b3a2";
                 return (d[1]) ? color : "transparent";
             })
+            .on("mousemove", function(d){
+                d3.select(".chart-tooltip")
+                    .style("left", d3.event.pageX - 50 + "px")
+                    .style("top", d3.event.pageY - 80 + "px")
+                    .style("display", "inline-block")
+                    .html((d[0]) + "<br>" + (d[1]));
+            })
+            .on("mouseout", function(d){ d3.select(".chart-tooltip").style("display", "none")});
+
     }
 
     parseChartValue(value) {
-
-        if (typeof (value) === "object"  && value !== null && value.low !== null){
+        if (typeof (value) === "object" && value !== null && value.low) {
             return value.low;
-        }else{
-            return value
+        } else {
+            if (value["labels"] && value["identity"] && value["properties"]) {
+                return value.labels + "(" + value.identity + ")"
+            }
+            if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
+                return value.type + "(" + value.identity + ")"
+            }
+            return (value) ? value.toString() : "";
         }
     }
 
@@ -116,10 +140,8 @@ class NeoBarChart extends NeoReport {
         if (rendered) {
             return rendered;
         }
-        return (
-            <svg className={'chart new iteration' + this.props.page + " isRunning" + this.state.running}>
-            </svg>
-        );
+        return <svg className={'chart new iteration' + this.props.page + " isRunning" + this.state.running}>
+        </svg>
     }
 
 }

@@ -23,11 +23,11 @@ class NeoGraphVis extends NeoReport {
         this.state.data.forEach(row => {
             Object.values(row).forEach(value => {
                 // single nodes
-                if (value["labels"] && value["identity"] && value["properties"]) {
+                if (value && value["labels"] && value["identity"] && value["properties"]) {
                     this.extractNodeInfo(value, nodeLabelsMap, nodesMap);
                 }
                 // arrays of nodes
-                if (Array.isArray(value)) {
+                if (value && Array.isArray(value)) {
                     value.forEach(item => {
                         if (item["labels"] && item["identity"] && item["properties"]) {
                             this.extractNodeInfo(item, nodeLabelsMap, nodesMap);
@@ -35,7 +35,7 @@ class NeoGraphVis extends NeoReport {
                     })
                 }
                 // paths
-                if (value["start"] && value["end"] && value["segments"] && value["length"]) {
+                if (value && value["start"] && value["end"] && value["segments"] && value["length"]) {
                     this.extractNodeInfo(value.start, nodeLabelsMap, nodesMap);
                     value.segments.forEach(segment => {
                         this.extractNodeInfo(segment.end, nodeLabelsMap, nodesMap);
@@ -47,11 +47,11 @@ class NeoGraphVis extends NeoReport {
         this.state.data.forEach(row => {
             Object.values(row).forEach(value => {
                 // single rel
-                if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
+                if (value && value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
                     this.extractRelInfo(value, nodesMap, linksMap);
                 }
                 // arrays of rel
-                if (Array.isArray(value)) {
+                if (value && Array.isArray(value)) {
                     value.forEach(item => {
                         if (item["type"] && item["start"] && item["end"] && item["identity"] && item["properties"]) {
                             this.extractRelInfo(item, nodesMap, linksMap);
@@ -59,7 +59,7 @@ class NeoGraphVis extends NeoReport {
                     })
                 }
                 // paths
-                if (value["start"] && value["end"] && value["segments"] && value["length"]) {
+                if (value && value["start"] && value["end"] && value["segments"] && value["length"]) {
                     this.extractNodeInfo(value.start, nodeLabelsMap, nodesMap);
                     value.segments.forEach(segment => {
                         this.extractRelInfo(segment.relationship, nodesMap, linksMap);

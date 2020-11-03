@@ -19,7 +19,13 @@ class NeoDash extends React.Component {
 
     constructor(props) {
         super(props);
-        this.connection = {database: '', url: 'neo4j://localhost', username: 'neo4j', password: ''}
+        this.connection = {
+            url: (localStorage.getItem('neodash-url')) ? localStorage.getItem('neodash-url') : 'neo4j://localhost:7687',
+            database: (localStorage.getItem('neodash-database')) ? localStorage.getItem('neodash-database') : '',
+            username: (localStorage.getItem('neodash-username')) ? localStorage.getItem('neodash-username') : 'neo4j',
+            password: (localStorage.getItem('neodash-password')) ? localStorage.getItem('neodash-password') : '',
+        }
+
         this.state = {json: '{}', count: 0}
         if (localStorage.getItem('neodash-dashboard')) {
             this.state.json = localStorage.getItem('neodash-dashboard');
@@ -38,7 +44,7 @@ class NeoDash extends React.Component {
     connect(e) {
         try {
             var url = this.connection.url;
-            if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))){
+            if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
             }
             var driver = neo4j.driver(
@@ -49,7 +55,12 @@ class NeoDash extends React.Component {
             this.session
                 .run('return true;')
                 .then(result => {
-                    this.connected = true
+                    this.connected = true;
+                    localStorage.setItem('neodash-database', this.connection.database);
+                    localStorage.setItem('neodash-url', this.connection.url);
+                    localStorage.setItem('neodash-username', this.connection.username);
+                    localStorage.setItem('neodash-password', this.connection.password.toString());
+
                     this.updateConnectionModal(this.connect, false);
                     this.loadJson()
                 })
@@ -60,7 +71,7 @@ class NeoDash extends React.Component {
                         value: error['message']
                     });
                 });
-        }catch(error){
+        } catch (error) {
             this.updateConnectionModal(this.connect, true);
             this.stateChanged({
                 label: "CreateError",
@@ -76,7 +87,7 @@ class NeoDash extends React.Component {
             return
         }
         if (this.state.json !== null) {
-            if (this.state.json.trim() == ""){
+            if (this.state.json.trim() == "") {
                 this.setDefaultDashboard();
                 return
             }
@@ -120,7 +131,7 @@ class NeoDash extends React.Component {
             } catch (e) {
                 if (!this.state.cards) {
                     this.setDefaultDashboard();
-                }else{
+                } else {
                     this.stateChanged({label: "CreateError", value: e.toString() + ". Dashboard was not loaded."});
                 }
             }
@@ -156,18 +167,18 @@ class NeoDash extends React.Component {
         }
         if (update.label === "CreateError") {
             let content = update.value;
-            if (content.startsWith("Could not perform discovery. No routing servers available.")){
+            if (content.startsWith("Could not perform discovery. No routing servers available.")) {
                 content = "Unable to connect to the specified Neo4j database. " + content;
             }
             this.errorModal = <NeoModal header={"Error"}
-                                                                   style={{'maxWidth': '550px'}}
-                                                                   open={true}
-                                                                   trigger={null}
-                                                                   content={<p>{content}</p>}
-                                                                   key={this.state.count}
-                                                                   id={this.state.count}
-                                                                   root={document.getElementById("root")}
-                                                                   actions={[
+                                        style={{'maxWidth': '550px'}}
+                                        open={true}
+                                        trigger={null}
+                                        content={<p>{content}</p>}
+                                        key={this.state.count}
+                                        id={this.state.count}
+                                        root={document.getElementById("root")}
+                                        actions={[
                                             <Button flat modal="close"
                                                     node="button"
                                                     waves="red">Close</Button>
@@ -339,23 +350,27 @@ class NeoDash extends React.Component {
                                       defaultValue={this.connection.url}/>
                         <NeoTextInput onChange={this.stateChanged} changeEventLabel={"DatabaseChanged"}
                                       label={"Database"}
-                                      placeholder={'neo4j'}/>
+                                      placeholder={'neo4j'}
+                                      defaultValue={this.connection.database}
+                        />
                         <NeoTextInput onChange={this.stateChanged} changeEventLabel={"UsernameChanged"}
                                       label={"Username"}
                                       defaultValue={this.connection.username}/>
                         <NeoTextInput onChange={this.stateChanged} changeEventLabel={"PasswordChanged"}
                                       password={true}
                                       label={"Password"}
+                                      defaultValue={this.connection.password}
                                       placeholder={''}/>
                         <input style={{display: 'none'}} type="submit"/></form>
-                    <p>*your credentials are stored locally in your local browser cache.</p>
+                    <p>*your credentials are only stored in your local browser cache.</p>
                 </div>}
             />;
     }
 
     render() {
         this.generateSaveLoadModal(this.loadJson);
-        let title = <Textarea defaultValue={this.state.title} noLayout={true} style={{"width": '500px'}}
+        let title = <Textarea disabled={!this.state.editable} defaultValue={this.state.title} noLayout={true}
+                              style={{"width": '500px'}}
                               className="card-title editable-title"
                               key={this.state.count}
                               value={this.state.title}
@@ -375,6 +390,7 @@ class NeoDash extends React.Component {
                 {navbar}
                 {(this.errorModal) ? this.errorModal : ""}
                 <Container>
+                    <div class="chart-tooltip"></div>
                     <Section>
                         <Row>
                             {this.state.cards}

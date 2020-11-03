@@ -161,6 +161,7 @@ class NeoCardComponent extends React.Component {
                 <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
         }
         if (this.state.type === 'bar') {
+            console.log(this.state.propertiesSelected)
             this.state.content =
                 <NeoBarChart connection={this.props.connection}
                              page={this.state.page}
@@ -254,7 +255,7 @@ class NeoCardComponent extends React.Component {
         this.state.page += 1;
 
         this.state.action =
-            <NeoPropertySelect page={this.state.page} key={0} data={this.state.data}
+            <NeoPropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0} data={this.state.data}
                                onChange={this.stateChanged}
                                categories={labels} values={labels}
             />

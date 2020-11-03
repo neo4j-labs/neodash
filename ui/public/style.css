@@ -158,8 +158,11 @@ body{
     height: 822px;
 }
 
-textarea:disabled{
+.card-title textarea:disabled{
     color: black !important;
+}
+nav textarea:disabled{
+    color: white !important;
 }
 .select-wrapper {
     width: 140px;
@@ -243,4 +246,16 @@ textarea:disabled{
 
 .neo-property-select .input-field .select-wrapper {
     margin-bottom: -20px;
+}
+
+.chart-tooltip {
+    position: absolute;
+    display: none;
+    min-width: 80px;
+    height: auto;
+    background: none repeat scroll 0 0 #ffffff;
+    border: 1px solid #6F257F;
+    padding: 14px;
+    z-index: 9999;
+    text-align: center;
 }
