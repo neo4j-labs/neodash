@@ -9,7 +9,7 @@ import NeoDash from "./NeoDash";
 const root = document.getElementById("root");
 const url = "https://github.com/nielsdejong/neodash/";
 const client = new ApolloClient({uri: process.env.REACT_APP_GRAPHQL_URI});
-const link = <a target={"_blank"} style={{color: 'rgb(180,180,180)'}} href={url}>NeoDash</a>
+const link = <a style={{color: 'rgb(180,180,180)'}} href={url}>NeoDash</a>
 const copyrights = <div style={{textAlign: 'center', color: 'rgb(180,180,180)'}}>{link}- Neo4j Dashboard Builder</div>;
 const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={copyrights}/>
 

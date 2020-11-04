@@ -32,12 +32,12 @@ class NeoTextInput extends React.Component {
 
     render() {
                 return <><TextInput onChange={this.onChange}
-                            value={this.state.value}
-                            defaultValue={this.props.defaultValue}
+                            value={(this.state.value) ? this.state.value.toString() : ""}
+                            id={null}
                             password={this.props.password}
                             style={this.props.style} label={this.props.label}
                             placeholder={this.props.placeholder}
-                            id="TextInput-4"/></>;
+                            /></>;
     }
 }
 

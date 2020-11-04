@@ -135,10 +135,11 @@ class NeoGraphVis extends NeoReport {
         var width = -60 + this.props.width * 105, height = -145 + this.props.height * 100;
 
         // set up svg
-        svg = d3.select('.new').attr("transform", null);
+        svg = d3.select('.chart'+this.props.id).attr("transform", null);
         let zoom = d3.zoom();
         zoom.transform(svg, d3.zoomIdentity);
-        var svg = d3.select('.new')
+
+        var svg = d3.select('.chart'+this.props.id)
             .attr("width", width)
             .attr("height", height)
             .attr("class", "chart")
@@ -385,7 +386,7 @@ class NeoGraphVis extends NeoReport {
 
     componentDidUpdate(prevProps) {
         super.componentDidUpdate(prevProps);
-        d3.select('.new').select('g').remove();
+        d3.select('.chart'+this.props.id).select('g').remove();
         this.componentDidMount();
     }
 
@@ -395,7 +396,7 @@ class NeoGraphVis extends NeoReport {
             return rendered;
         }
         return (
-            <svg className={'chart new iteration' + this.props.page + " isRunning" + this.state.running}
+            <svg className={'chart chart'+this.props.id+' iteration' + this.props.page + " isRunning" + this.state.running}
                  style={{backgroundColor: '#f9f9f9'}}>
 
                 <defs>

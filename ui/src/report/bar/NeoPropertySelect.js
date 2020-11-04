@@ -1,7 +1,4 @@
 import React from "react";
-import Chip from "react-materialize/lib/Chip";
-import Icon from "react-materialize/lib/Icon";
-import NeoButton from "../../component/NeoButton";
 import NeoOptionSelect from "../../component/NeoOptionSelect";
 
 class NeoPropertySelect extends React.Component {
@@ -11,10 +8,8 @@ class NeoPropertySelect extends React.Component {
     }
 
     render() {
-        console.log( Object.values(this.props.values))
         return (
             <div className="neo-property-select" style={{marginLeft: '20px', marginTop: "-8px"}}>
-
                 <NeoOptionSelect
                     defaultValue={(this.props.propertiesSelected[0]) ? this.props.propertiesSelected[0] : Object.values(this.props.values)[0]}
                     suffix="-name" label="Category"

@@ -117,9 +117,10 @@ class NeoDash extends React.Component {
                                     title={report.title}
                                     query={report.query} parameters={report.parameters}
                                     refresh={report.refresh}/>
-                            } else {
+                            } else if (this.state.editable) {
                                 return <AddNeoCard key={99999999} id={99999999} onClick={this.stateChanged}/>
                             }
+                            return <div></div>
                         }
                     );
                     this.state.count = this.state.count + ((loaded.reports.length) ? loaded.reports.length : 0) - 1;
@@ -322,7 +323,7 @@ class NeoDash extends React.Component {
     updateConnectionModal(connect, open) {
         this.neoConnectionModal =
             <NeoModal
-                header={<div><img style={{height: '38px', float: 'right'}} src={"neo.png"}/>Connect to Neo4j</div>}
+                header={'Connect to Neo4j'}
                 style={{'maxWidth': '520px'}}
                 key={this.state.count}
                 id={this.state.count}
@@ -338,8 +339,8 @@ class NeoDash extends React.Component {
                 trigger={
                     <NavItem href="" onClick={e => this.stateChanged({})}>Neo4j Connection</NavItem>
                 }
-                content={<div class="modal-input-text" style={{margin: '20px'}}>
-
+                content={<div className="modal-input-text" style={{margin: '20px'}}>
+                    <img style={{height: '38px', right: '20px', top: '25px', position: 'absolute'}} src={"neo.png"}/>
                     <p>&nbsp;</p>
                     <form onSubmit={event => {
                         event.preventDefault();
@@ -390,7 +391,7 @@ class NeoDash extends React.Component {
                 {navbar}
                 {(this.errorModal) ? this.errorModal : ""}
                 <Container>
-                    <div class="chart-tooltip"></div>
+                    <div className="chart-tooltip"></div>
                     <Section>
                         <Row>
                             {this.state.cards}

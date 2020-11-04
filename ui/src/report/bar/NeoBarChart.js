@@ -1,14 +1,8 @@
-import Table from "react-materialize/lib/Table";
 import React from "react";
 import NeoReport from "../NeoReport";
-import NeoGraphChip from "../../component/NeoGraphChip";
 import * as d3 from "d3";
 
 class NeoBarChart extends NeoReport {
-    constructor(props) {
-        super(props);
-
-    }
 
     componentDidUpdate(prevProps) {
         super.componentDidUpdate(prevProps);
@@ -18,9 +12,10 @@ class NeoBarChart extends NeoReport {
 
     componentDidMount() {
         let data = this.state.data;
+        let id = this.props.id;
         let parsedParameters = this.props.params;
 
-
+        d3.select(".chart"+id).select('g').remove()
         if (!data || data.length === 0) {
             return
         }
@@ -29,8 +24,8 @@ class NeoBarChart extends NeoReport {
         let index2 = (this.props.propertiesSelected[1]) ? Object.keys(data[0]).indexOf(this.props.propertiesSelected[1]) : 1;
 
 
-        data = data.map((row, index) => {
-            return [this.parseChartValue(Object.values(row)[index1]), this.parseChartValue(Object.values(row)[index2])]
+        data = data.map((row, i) => {
+            return [this.parseChartValue(Object.values(row)[index1], 0, i), this.parseChartValue(Object.values(row)[index2], 1, i)]
         })
 
         if (data.length > 0) {
@@ -40,20 +35,20 @@ class NeoBarChart extends NeoReport {
             )
             this.props.onNodeLabelUpdate(labels);
         }
-        if (typeof (data[0][1]) !== "number") {
-            return
-        }
-
 
         let yValues = data.map(row => row[1]);
-        let xValues = data.map(row => (row[0] ? row[0] : "").toString().length);
-        let maxY = Math.max.apply(Math, yValues);
-        let minY = Math.min.apply(Math, yValues);
-        let maxX = Math.max.apply(Math, xValues);
+        let categoryLengths = data.map(row => (row[0] ? row[0] : "").toString().length);
+        let maxY = Math.max.apply(Math, yValues.filter(y => y !== null));
+        let minY = Math.min.apply(Math, yValues.filter(y => y !== null));
+        let maxX = Math.max.apply(Math, categoryLengths);
 
         if (minY === maxY) {
             minY = minY - 1;
             maxY = maxY + 1;
+        }
+        // to prevent -infinity for maxY = 0
+        if (maxY === 0){
+            maxY = 0.1;
         }
         let digits = Math.log10(Math.abs(maxY));
         var xShift = ((digits > 1) ? digits * 7 + 18 : Math.abs(digits) * 7 + 32);
@@ -62,8 +57,7 @@ class NeoBarChart extends NeoReport {
         var width = -90 + this.props.width * 105 - xShift * 0.5, height = -140 + this.props.height * 100 - yShift;
         var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
 
-        var svg = d3.select(".new")
-            .attr("class", "chart")
+        var svg = d3.select(".chart"+id)
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
@@ -121,18 +115,37 @@ class NeoBarChart extends NeoReport {
 
     }
 
-    parseChartValue(value) {
-        if (typeof (value) === "object" && value !== null && value.low) {
-            return value.low;
-        } else {
-            if (value["labels"] && value["identity"] && value["properties"]) {
-                return value.labels + "(" + value.identity + ")"
+    parseChartValue(value, index, i) {
+        if (!value){
+            if (index === 0){
+                return 'null [' + i + ']'
+            }else{
+                return 0
             }
-            if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
-                return value.type + "(" + value.identity + ")"
-            }
-            return (value) ? value.toString() : "";
         }
+
+        if (!isNaN(value)){
+            return value
+        }
+        if (index === 1){
+            return 0
+        }
+        if (typeof (value) === "object" && value !== null && value.low) {
+
+            return value.low;
+        }
+
+        if (typeof (value) === "string"){
+            return value;
+        }
+
+        if (value["labels"] && value["identity"] && value["properties"]) {
+            return value.labels + "(" + value.identity + ")"
+        }
+        if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
+            return value.type + "(" + value.identity + ")"
+        }
+        return (value) ? value.toString() : "";
     }
 
     render() {
@@ -140,7 +153,7 @@ class NeoBarChart extends NeoReport {
         if (rendered) {
             return rendered;
         }
-        return <svg className={'chart new iteration' + this.props.page + " isRunning" + this.state.running}>
+        return <svg className={'chart chart'+ this.props.id + ' iteration' + this.props.page + " isRunning" + this.state.running}>
         </svg>
     }
 

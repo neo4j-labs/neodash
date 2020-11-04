@@ -12,6 +12,7 @@ class NeoCardSettings extends React.Component {
     }
 
     setDefaultComponents() {
+
         this.neoTextArea =
             <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query"
                          onChange={this.stateChanged}/>;

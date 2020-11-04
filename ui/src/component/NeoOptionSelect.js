@@ -3,14 +3,11 @@ import Select from "react-materialize/lib/Select";
 
 
 class NeoOptionSelect extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     generateOptions() {
         let options = this.props.options;
         let optionsComponent = [];
-        Object.keys(options).forEach(key => optionsComponent.push(<option value={key}>{options[key]}</option>))
+        Object.keys(options).forEach((key,index) => optionsComponent.push(<option key={index} value={key}>{options[key]}</option>))
         return optionsComponent;
     }
 
@@ -41,20 +38,20 @@ class NeoOptionSelect extends React.Component {
                     outDuration: 250
                 }
             }}
-
-            value={function () {
-                if (suffix == null) {
-                    return defaultValue
-                } else {
-                    if (options.length > 0){
-                        let index = Object.keys(options)[0].split("-")[0];
-                        let propSelected = Object.keys(options)[0].split("-")[1];
-                        return index + "-" + propSelected
-                    }else{
-                        return defaultValue
-                    }
-                }
-            }}
+            value={(defaultValue) ? (defaultValue.toString()) : ""}
+            // value={function () {
+            //     if (suffix == null) {
+            //         return (defaultValue) ? (defaultValue.toString()) : "";
+            //     } else {
+            //         if (options.length > 0){
+            //             let index = Object.keys(options)[0].split("-")[0];
+            //             let propSelected = Object.keys(options)[0].split("-")[1];
+            //             return index + "-" + propSelected
+            //         }else{
+            //             return (defaultValue) ? (defaultValue.toString()) : "";
+            //         }
+            //     }
+            // }}
 
         >
             {this.generateOptions()}

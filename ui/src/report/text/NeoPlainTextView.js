@@ -1,12 +1,7 @@
 import React from "react";
-import Textarea from "react-materialize/lib/Textarea";
 import NeoReport from "../NeoReport";
 
 class NeoPlainTextView extends NeoReport {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         let rendered = super.render();
         if (rendered) {

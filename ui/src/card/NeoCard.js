@@ -45,6 +45,7 @@ class NeoCardComponent extends React.Component {
     }
 
     componentDidMount() {
+
         this.parseParameters(this.props);
         this.neoCardSettings =
             <NeoCardSettings refresh={this.props.refresh}
@@ -161,11 +162,11 @@ class NeoCardComponent extends React.Component {
                 <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
         }
         if (this.state.type === 'bar') {
-            console.log(this.state.propertiesSelected)
             this.state.content =
                 <NeoBarChart connection={this.props.connection}
                              page={this.state.page}
                              query={this.state.query}
+                             id={this.props.id}
                              stateChanged={this.stateChanged}
                              propertiesSelected={this.state.propertiesSelected}
                              onNodeLabelUpdate={this.updatePropertySelect}
@@ -186,6 +187,7 @@ class NeoCardComponent extends React.Component {
                     propertiesSelected={this.state.propertiesSelected}
                     onNodeLabelUpdate={this.updateGraphChips}
                     width={this.state.width}
+                    id={this.props.id}
                     height={this.state.height} page={this.state.page}
                     stateChanged={this.stateChanged}
                     data={this.state.data}
