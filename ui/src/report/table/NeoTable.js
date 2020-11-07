@@ -33,7 +33,7 @@ class NeoTable extends NeoReport {
             });
 
         return (
-            <Table>
+            <Table style={{marginTop: "-10px"}}>
                 <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -74,13 +74,14 @@ class NeoTable extends NeoReport {
         if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
             return <NeoGraphChip color="grey" radius={0} name={value["type"]}/>
         }
-        if (value["low"] && value["high"] === 0) {
+        if (value["low"] && (value["high"] === 0 || value["high"] === -1)) {
             return value.low
         }
         if (value.constructor === String) {
             if (value.startsWith("http://") || value.startsWith("https://")) {
                 return <a target={"_blank"} href={value}>{value}</a>
             }
+            return value
         }
         return JSON.stringify(value, null, 2)
     }

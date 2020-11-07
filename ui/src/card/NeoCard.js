@@ -12,7 +12,9 @@ import NeoJSONView from "../report/json/NeoJSONView";
 import NeoGraphChips from "../report/graph/NeoGraphChips";
 import NeoPlainTextView from "../report/text/NeoPlainTextView";
 import NeoBarChart from "../report/bar/NeoBarChart";
-import NeoPropertySelect from "../report/bar/NeoPropertySelect";
+import NeoBarPropertySelect from "../report/bar/NeoBarPropertySelect";
+import NeoLineChart from "../report/line/NeoLineChart";
+import NeoLinePropertySelect from "../report/line/NeoLinePropertySelect";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
@@ -39,7 +41,8 @@ class NeoCardComponent extends React.Component {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
         this.updateGraphChips = this.updateGraphChips.bind(this);
-        this.updatePropertySelect = this.updatePropertySelect.bind(this);
+        this.updateBarPropertySelect = this.updateBarPropertySelect.bind(this);
+        this.updateLinePropertySelect = this.updateLinePropertySelect.bind(this);
         this.counter = 0;
         this.state = this.defaultState;
     }
@@ -96,10 +99,10 @@ class NeoCardComponent extends React.Component {
         if (update.label === "SettingsSaved") {
             this.updateCardSettings(update);
         }
-        if (update.label === "CategoryChanged") {
+        if (update.label === "CategoryChanged" || update.label === "X-AxisChanged") {
             this.state.propertiesSelected[0] = update.value;
         }
-        if (update.label === "ValueChanged") {
+        if (update.label === "ValueChanged" || update.label === "Y-AxisChanged") {
             this.state.propertiesSelected[1] = update.value;
         }
         if (update.label === "ChangedTitle") {
@@ -142,13 +145,13 @@ class NeoCardComponent extends React.Component {
         }
 
         // different settings for the different report types
-        this.updateReportComponent();
+        this.state = this.updateReportComponent(this.state);
 
         this.setState(this.state);
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
     }
 
-    updateReportComponent() {
+    updateReportComponent(state) {
         if (this.state.type === 'table') {
             this.state.content =
                 <NeoTable connection={this.props.connection}
@@ -169,13 +172,27 @@ class NeoCardComponent extends React.Component {
                              id={this.props.id}
                              stateChanged={this.stateChanged}
                              propertiesSelected={this.state.propertiesSelected}
-                             onNodeLabelUpdate={this.updatePropertySelect}
+                             onNodeLabelUpdate={this.updateBarPropertySelect}
                              params={this.state.parsedParameters}
                              refresh={this.state.refresh}
                              width={this.state.width}
                              height={this.state.height}
                 />
-
+        }
+        if (this.state.type === 'line') {
+            this.state.content =
+                <NeoLineChart connection={this.props.connection}
+                             page={this.state.page}
+                             query={this.state.query}
+                             id={this.props.id}
+                             stateChanged={this.stateChanged}
+                             propertiesSelected={this.state.propertiesSelected}
+                             onNodeLabelUpdate={this.updateLinePropertySelect}
+                             params={this.state.parsedParameters}
+                             refresh={this.state.refresh}
+                             width={this.state.width}
+                             height={this.state.height}
+                />
         }
         if (this.state.type === "graph") {
             this.state.page += 1;
@@ -214,6 +231,7 @@ class NeoCardComponent extends React.Component {
                     refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
+        return state
     }
 
     updateCardSettings(update) {
@@ -253,13 +271,24 @@ class NeoCardComponent extends React.Component {
                 }
             })(this.state.parameters);
     }
-    updatePropertySelect(labels) {
-        this.state.page += 1;
 
+    updateBarPropertySelect(labels) {
+        this.state.page += 1;
         this.state.action =
-            <NeoPropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0} data={this.state.data}
+            <NeoBarPropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0} data={this.state.data}
                                onChange={this.stateChanged}
                                categories={labels} values={labels}
+            />
+
+        this.setState(this.state);
+    }
+
+    updateLinePropertySelect(labels) {
+        this.state.page += 1;
+        this.state.action =
+            <NeoLinePropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0} data={this.state.data}
+                                  onChange={this.stateChanged}
+                                  categories={labels} values={labels}
             />
 
         this.setState(this.state);
@@ -292,7 +321,7 @@ class NeoCardComponent extends React.Component {
 
     render() {
         let closeIcon = <div
-            style={{'width': '100%', 'height': '60px', 'top': '0px', 'right': '0px', position: 'absolute'}}
+            style={{'width': '100%', 'height': '60px', 'top': '0px', right: '0px', position: 'absolute'}}
             onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
             <Icon>save</Icon>
         </div>;

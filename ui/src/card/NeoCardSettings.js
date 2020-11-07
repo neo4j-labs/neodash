@@ -50,7 +50,7 @@ class NeoCardSettings extends React.Component {
         let vizOptions = {
             'table': 'Table',
             'graph': 'Graph',
-            'plot': 'Plot',
+            'line': 'Line Chart',
             'bar': 'Bar Chart',
             'json': 'Raw JSON',
             'text': 'Plain Text',
@@ -60,7 +60,7 @@ class NeoCardSettings extends React.Component {
             <div>
                 <span>&nbsp;</span>
                 <div style={{"float": "right", "position": "absolute", "left": "18px", "top": "15px"}}>
-                    <NeoButton color='red' key='2' icon='delete'
+                    <NeoButton color='red' icon='delete'
                                onClick={e => this.stateChanged({event: e, label: "CardDelete"})}/>
                     <NeoButton color='black' icon='chevron_left'
                                onClick={e => this.stateChanged({event: e, label: "CardShiftLeft"})}/>

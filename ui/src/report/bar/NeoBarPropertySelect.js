@@ -1,7 +1,7 @@
 import React from "react";
 import NeoOptionSelect from "../../component/NeoOptionSelect";
 
-class NeoPropertySelect extends React.Component {
+class NeoBarPropertySelect extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -25,4 +25,4 @@ class NeoPropertySelect extends React.Component {
 
 }
 
-export default (NeoPropertySelect);
+export default (NeoBarPropertySelect);

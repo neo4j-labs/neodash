@@ -141,7 +141,7 @@ class NeoDash extends React.Component {
 
     setDefaultDashboard() {
         let state = this.state;
-        fetch("http://localhost:3000/default_dashboard.json")
+        fetch("/default_dashboard.json")
             .then(response => response.text())
             .then((jsonData) => {
                 state.json = jsonData;
@@ -363,14 +363,14 @@ class NeoDash extends React.Component {
                                       defaultValue={this.connection.password}
                                       placeholder={''}/>
                         <input style={{display: 'none'}} type="submit"/></form>
-                    <p>*your credentials are only stored in your local browser cache.</p>
+                    <p>*Credentials are only stored in your local browser cache.</p>
                 </div>}
             />;
     }
 
     render() {
         this.generateSaveLoadModal(this.loadJson);
-        let title = <Textarea disabled={!this.state.editable} defaultValue={this.state.title} noLayout={true}
+        let title = <Textarea disabled={!this.state.editable} noLayout={true}
                               style={{"width": '500px'}}
                               className="card-title editable-title"
                               key={this.state.count}
