@@ -134,10 +134,10 @@ class NeoBarChart extends NeoReport {
 
     parseChartValue(value, index, i) {
         // If there's no data, fill it with some blanks.
-        if (!value){
-            if (index === 0){
+        if (value === null) {
+            if (index === 0) {
                 return 'null [' + i + ']'
-            }else{
+            } else {
                 return NaN
             }
         }
@@ -150,19 +150,18 @@ class NeoBarChart extends NeoReport {
         if (index === 1){
             return NaN
         }
-        if (typeof (value) === "object" && value !== null && value.low) {
-
-            return value.low;
+        if (typeof (value) === "object" && !isNaN(value["low"])) {
+            return value.low
         }
 
         if (typeof (value) === "string"){
             return value;
         }
 
-        if (value["labels"] && value["identity"] && value["properties"]) {
+        if (value && value["labels"] && value["identity"] && value["properties"]) {
             return value.labels + "(" + value.identity + ")"
         }
-        if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
+        if (value && value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
             return value.type + "(" + value.identity + ")"
         }
         return (value) ? value.toString() : "";

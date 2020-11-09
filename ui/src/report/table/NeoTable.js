@@ -33,7 +33,7 @@ class NeoTable extends NeoReport {
             });
 
         return (
-            <Table style={{marginTop: "-10px"}}>
+            <Table class="neotable" style={{marginTop: "-10px"}}>
                 <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -74,7 +74,7 @@ class NeoTable extends NeoReport {
         if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
             return <NeoGraphChip color="grey" radius={0} name={value["type"]}/>
         }
-        if (value["low"] && (value["high"] === 0 || value["high"] === -1)) {
+        if (!isNaN(value["low"])) {
             return value.low
         }
         if (value.constructor === String) {

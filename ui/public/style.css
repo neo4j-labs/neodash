@@ -260,3 +260,8 @@ nav textarea:disabled{
     z-index: 9999;
     text-align: center;
 }
+
+.neotable .chip {
+    margin-right: 0px;
+    margin-left: 2px;
+}

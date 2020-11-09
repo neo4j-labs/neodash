@@ -29,6 +29,7 @@ class NeoLineChart extends NeoReport {
             return [this.parseChartValue(Object.values(row)[index1], 0, i),
                 this.parseChartValue(Object.values(row)[index2], 1, i)]
         })
+        console.log(data)
         data = data.filter(entry => entry[0] !== null && !isNaN(entry[0]) && entry[1] !== null && !isNaN(entry[1]))
 
         if (data.length > 0) {
@@ -80,6 +81,8 @@ class NeoLineChart extends NeoReport {
 
         if (parsedParameters && parsedParameters.curve === true) {
             line.curve(d3.curveMonotoneX)
+        }else if (parsedParameters && parsedParameters.curveLoop === true) {
+            line.curve(d3.curveCardinalClosed)
         }
 
         svg.append("path")
@@ -159,38 +162,20 @@ class NeoLineChart extends NeoReport {
 
     parseChartValue(value, index, i) {
         // If there's no data, fill it with some blanks.
-        if (!value) {
-            if (index === 0) {
-                return 'null [' + i + ']'
-            } else {
-                return NaN
-            }
+        if (value === null) {
+            return NaN
         }
 
         // if it's a number, just return it.
         if (!isNaN(value)) {
             return value
         }
-        // if we are dealing with the y axis, and it's not a number, we obviously want to cancel.
-        if (index === 1) {
-            return NaN
-        }
-        if (typeof (value) === "object" && value !== null && value.low) {
-
-            return value.low;
+        if (typeof (value) === "object" && !isNaN(value["low"])) {
+            return value.low
         }
 
-        if (typeof (value) === "string") {
-            return value;
-        }
-
-        if (value["labels"] && value["identity"] && value["properties"]) {
-            return value.labels + "(" + value.identity + ")"
-        }
-        if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
-            return value.type + "(" + value.identity + ")"
-        }
-        return (value) ? value.toString() : "";
+        // Nothing numeric? just return NaN.
+        return NaN
     }
 
     render() {
