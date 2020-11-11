@@ -11,9 +11,17 @@ class NeoGraphChips extends React.Component {
     }
 
 
-    colors = ["#588c7e", "#f0e192", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
 
     render() {
+        let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
+        let parsedParameters = this.props.params;
+        if (parsedParameters && parsedParameters.nodeColors){
+            if (typeof(parsedParameters.nodeColors) === 'string'){
+                colors = [parsedParameters.nodeColors]
+            }else{
+                colors = parsedParameters.nodeColors
+            }
+        }
         return (
             <div style={{marginLeft: '10px'}}>
                 {this.props.nodeLabels.map((label, index) => {
@@ -22,7 +30,7 @@ class NeoGraphChips extends React.Component {
                         close={false}
                         closeIcon={<Icon className="close">close</Icon>}
                         options={null}
-                        style={{backgroundColor: this.colors[index % this.colors.length], color: 'white'}}
+                        style={{backgroundColor: colors[index % colors.length], color: 'white'}}
                     >
                         {label}
                         <NeoOptionSelect suffix="-name" label="property" onChange={this.props.onChange} value={'name'}

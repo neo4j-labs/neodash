@@ -307,6 +307,7 @@ class NeoCardComponent extends React.Component {
         this.state.page += 1;
         this.state.action =
             <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
+                           params={this.state.parsedParameters}
                            properties={Object.values(labels).map((labelChoices, index) => {
                                let options = {}
                                labelChoices.forEach(choice =>

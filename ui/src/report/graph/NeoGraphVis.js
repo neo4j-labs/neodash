@@ -127,7 +127,14 @@ class NeoGraphVis extends NeoReport {
 
     componentDidMount() {
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
-
+        let parsedParameters = this.props.params;
+        if (parsedParameters && parsedParameters.nodeColors){
+            if (typeof(parsedParameters.nodeColors) === 'string'){
+                colors = [parsedParameters.nodeColors]
+            }else{
+                colors = parsedParameters.nodeColors
+            }
+        }
         let graph = this.convertDataToGraph();
         this.state.nodeLabels = graph.nodeLabels
 

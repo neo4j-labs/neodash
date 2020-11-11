@@ -111,7 +111,7 @@ class NeoReport extends React.Component {
 
         if (data == null) {
             return <><span>No query specified.
-                <br/> Use the &nbsp;
+                <br/> Click the &nbsp;
                 <Chip
                     close={false}
                     closeIcon={<Icon className="close">close</Icon>}

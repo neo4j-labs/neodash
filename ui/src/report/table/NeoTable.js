@@ -27,7 +27,7 @@ class NeoTable extends NeoReport {
                     <td key={-1}
                         style={{color: "lightgrey"}}>{index + (this.props.page - 1) * this.props.rows + 1}</td>
                     {Object.values(row).map((value, index) => {
-                        return <td key={index}>{this.renderExoticValueTypes(value)}</td>
+                        return <td key={index}>{this.renderExoticValueTypes(value, this.props.params)}</td>
                     })}
                 </tr>
             });
@@ -47,7 +47,7 @@ class NeoTable extends NeoReport {
         );
     }
 
-    renderExoticValueTypes(value) {
+    renderExoticValueTypes(value, parsedParameters) {
         if (value == null) {
             return ""
         }
@@ -55,7 +55,7 @@ class NeoTable extends NeoReport {
             return <div style={{display: 'inline-block'}}> {
                 value.map((item, index) => {
                     return <div style={{display: 'inline-block'}} key={index}>
-                        {this.renderExoticValueTypes(item)}{(index !== value.length - 1 && !Array.isArray(item)) ? ',' : ''}
+                        {this.renderExoticValueTypes(item, parsedParameters)}{(index !== value.length - 1 && !Array.isArray(item)) ? ',' : ''}
                     </div>
                 })
             } <br/> </div>;
@@ -66,13 +66,14 @@ class NeoTable extends NeoReport {
             value.segments.forEach(segment => {
                 path = path.concat(segment.relationship).concat(segment.end);
             });
-            return this.renderExoticValueTypes(path);
+            return this.renderExoticValueTypes(path, parsedParameters);
         }
         if (value["labels"] && value["identity"] && value["properties"]) {
-            return value["labels"].map((label, index) => <div style={{display: 'inline-block'}} key={index} index={index}><NeoGraphChip name={label}/></div>)
+            return value["labels"].map((label, index) => <div style={{display: 'inline-block'}} key={index} index={index}>
+                <NeoGraphChip color={(parsedParameters && parsedParameters.nodeColor ? parsedParameters.nodeColor : "seagreen")} name={label}/></div>)
         }
         if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
-            return <NeoGraphChip color="grey" radius={0} name={value["type"]}/>
+            return <NeoGraphChip color={(parsedParameters && parsedParameters.relColor ? parsedParameters.relColor : "grey")} radius={0} name={value["type"]}/>
         }
         if (!isNaN(value["low"])) {
             return value.low
