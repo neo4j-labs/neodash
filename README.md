@@ -1,11 +1,9 @@
 # NeoDash - Neo4j Dashboard Builder
 NeoDash is a lightweight web-based tool to create Neo4j dashboards. 
 Knowing Cypher is all that's required to build your first dashboard in minutes.
-
-(picture)
-
 The web-app uses a free-flowing grid to organize your reports as cards, which can be moved and resized to your liking.
 
+Example usage is documented here: https://nielsdejong.nl/neo4j%20projects/2020/11/13/neodash.html
  
 It supports the following features:
 - Live reporting on a Neo4j database with a table, graph view, bar chart or line chart.
