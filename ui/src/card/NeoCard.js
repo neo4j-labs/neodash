@@ -98,6 +98,7 @@ class NeoCardComponent extends React.Component {
         }
         if (update.label === "SettingsSaved") {
             this.updateCardSettings(update);
+
         }
         if (update.label === "CategoryChanged" || update.label === "X-AxisChanged") {
             this.state.propertiesSelected[0] = update.value;
@@ -146,7 +147,6 @@ class NeoCardComponent extends React.Component {
 
         // different settings for the different report types
         this.state = this.updateReportComponent(this.state);
-
         this.setState(this.state);
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
     }
@@ -237,6 +237,10 @@ class NeoCardComponent extends React.Component {
     updateCardSettings(update) {
         this.parseParameters(this.props);
 
+        if (this.state.type === "bar" || this.state.type === "line"){
+            this.state.propertiesSelected = []
+        }
+
         // TODO: Force a refresh of the card component in a much cleaner way.
         this.state.query = this.state.query.endsWith('\n') ?
             this.state.query.substr(0, this.state.query.length - 1) :
@@ -322,7 +326,7 @@ class NeoCardComponent extends React.Component {
 
     render() {
         let closeIcon = <div
-            style={{'width': '100%', 'height': '60px', 'top': '0px', right: '0px', position: 'absolute'}}
+            style={{'width': '100%', 'height': '60px', 'top': '0px', 'right': '0px', 'position': 'absolute'}}
             onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
             <Icon>save</Icon>
         </div>;

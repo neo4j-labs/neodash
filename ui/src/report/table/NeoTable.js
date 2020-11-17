@@ -33,7 +33,7 @@ class NeoTable extends NeoReport {
             });
 
         return (
-            <Table class="neotable" style={{marginTop: "-10px"}}>
+            <Table className="neotable" style={{marginTop: "-10px"}}>
                 <thead>
                 <tr>
                     <th>&nbsp;</th>

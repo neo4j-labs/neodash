@@ -11,15 +11,17 @@ class NeoBarChart extends NeoReport {
 
     componentDidMount() {
         let data = this.state.data;
-        let id = this.props.id;
-        let parsedParameters = this.props.params;
+        let page = this.state.page;
+        let props = this.props;
+        let id = props.id;
+        let parsedParameters = props.params;
 
-        d3.select(".chart"+id).select('g').remove()
+        d3.select(".chart" + id).select('g').remove()
         if (!data || data.length === 0) {
             return
         }
-        let prop1 = this.props.propertiesSelected[0];
-        let prop2 = this.props.propertiesSelected[1];
+        let prop1 = props.propertiesSelected[0];
+        let prop2 = props.propertiesSelected[1];
         let index1 = prop1 ? Object.keys(data[0]).indexOf(prop1) : 0;
         let index2 = prop2 ? Object.keys(data[0]).indexOf(prop2) : 1;
 
@@ -29,12 +31,12 @@ class NeoBarChart extends NeoReport {
                 this.parseChartValue(Object.values(row)[index2], 1, i)]
         })
 
+        let labels = {}
         if (data.length > 0) {
-            let labels = {}
             Object.keys(this.state.data[0]).forEach(
                 i => labels[i] = i
             )
-            this.props.onNodeLabelUpdate(labels);
+            props.onNodeLabelUpdate(labels);
         }
 
         // Set size
@@ -43,10 +45,10 @@ class NeoBarChart extends NeoReport {
         var xShift = ((digits > 1) ? digits * 7 + 18 : Math.abs(digits) * 7 + 32);
         xShift += (maxY < 0 || minY < 0) ? 10 : 0;
         var yShift = 20 + xTextLength * 4;
-        var width = -90 + this.props.width * 105 - xShift * 0.5, height = -140 + this.props.height * 100 - yShift;
+        var width = -90 + props.width * 105 - xShift * 0.5, height = -140 + props.height * 100 - yShift;
         var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
 
-        var svg = d3.select(".chart"+id)
+        var svg = d3.select(".chart" + id)
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
@@ -82,14 +84,14 @@ class NeoBarChart extends NeoReport {
                 return x(d[0]);
             })
             .attr("y", function (d) {
-                if (isNaN(d[1])){
+                if (isNaN(d[1])) {
                     return 0
                 }
                 return y(d[1]);
             })
             .attr("width", x.bandwidth())
             .attr("height", function (d) {
-                if (isNaN(d[1])){
+                if (isNaN(d[1])) {
                     return 0
                 }
                 return height - y(d[1]);
@@ -99,14 +101,18 @@ class NeoBarChart extends NeoReport {
                 let color = (parsedParameters && parsedParameters.color) ? (parsedParameters.color) : "#69b3a2";
                 return (d[1]) ? color : "transparent";
             })
-            .on("mousemove", function(d){
+            .on("mousemove", function (d) {
+                let prop1 = (props.propertiesSelected[0]) ? props.propertiesSelected[0] : Object.keys(labels)[0];
+                let prop2 = (props.propertiesSelected[1]) ? props.propertiesSelected[1] : Object.keys(labels)[1];
                 d3.select(".chart-tooltip")
                     .style("left", d3.event.pageX - 50 + "px")
                     .style("top", d3.event.pageY - 80 + "px")
                     .style("display", "inline-block")
-                    .html(prop1 + ": "+ d[0] + "<br>" + prop2 +": "+ d[1]);
+                    .html(prop1 + ": " + d[0] + "<br>" + prop2 + ": " + d[1]);
             })
-            .on("mouseout", function(d){ d3.select(".chart-tooltip").style("display", "none")});
+            .on("mouseout", function (d) {
+                d3.select(".chart-tooltip").style("display", "none")
+            });
 
     }
 
@@ -128,7 +134,7 @@ class NeoBarChart extends NeoReport {
         if (maxY === 0) {
             maxY = 0.1;
         }
-        maxX = Math.min.apply(Math,[maxX, 30])
+        maxX = Math.min.apply(Math, [maxX, 30])
         return {maxY, minY, xTextLength: maxX};
     }
 
@@ -143,18 +149,18 @@ class NeoBarChart extends NeoReport {
         }
 
         // if it's a number, just return it.
-        if (!isNaN(value)){
+        if (!isNaN(value)) {
             return value
         }
         // if we are dealing with the y axis, and it's not a number, we obviously want to cancel.
-        if (index === 1){
+        if (index === 1) {
             return NaN
         }
         if (typeof (value) === "object" && !isNaN(value["low"])) {
             return value.low
         }
 
-        if (typeof (value) === "string"){
+        if (typeof (value) === "string") {
             return value;
         }
 
@@ -172,7 +178,8 @@ class NeoBarChart extends NeoReport {
         if (rendered) {
             return rendered;
         }
-        return <svg className={'chart chart'+ this.props.id + ' iteration' + this.props.page + " isRunning" + this.state.running}>
+        return <svg
+            className={'chart chart' + this.props.id + ' iteration' + this.props.page + " isRunning" + this.state.running}>
         </svg>
     }
 

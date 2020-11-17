@@ -11,16 +11,17 @@ class NeoLineChart extends NeoReport {
 
     componentDidMount() {
         let data = this.state.data;
-        let id = this.props.id;
-        let parsedParameters = this.props.params;
+        let page = this.state.page;
+        let props = this.props;
+        let id = props.id;
+        let parsedParameters = props.params;
 
         d3.select(".chart" + id).select('g').remove()
         if (!data || data.length === 0) {
             return
         }
-
-        let prop1 = this.props.propertiesSelected[0];
-        let prop2 = this.props.propertiesSelected[1];
+        let prop1 = props.propertiesSelected[0];
+        let prop2 = props.propertiesSelected[1];
         let index1 = prop1 ? Object.keys(data[0]).indexOf(prop1) : 0;
         let index2 = prop2 ? Object.keys(data[0]).indexOf(prop2) : 1;
 
@@ -29,21 +30,23 @@ class NeoLineChart extends NeoReport {
             return [this.parseChartValue(Object.values(row)[index1], 0, i),
                 this.parseChartValue(Object.values(row)[index2], 1, i)]
         })
-        console.log(data)
-        data = data.filter(entry => entry[0] !== null && !isNaN(entry[0]) && entry[1] !== null && !isNaN(entry[1]))
 
+
+        let labels = {}
         if (data.length > 0) {
-            let labels = {}
             Object.keys(this.state.data[0]).forEach(
                 i => labels[i] = i
             )
-            this.props.onNodeLabelUpdate(labels);
+            props.onNodeLabelUpdate(labels);
         }
+
+        data = data.filter(entry => entry[0] !== null && !isNaN(entry[0]) && entry[1] !== null && !isNaN(entry[1]))
+
         // Set size
         let {maxY, minY, maxX, minX} = this.getDataLimits(data);
         var xShift = 40;
         var yShift = 30;
-        var width = -90 + this.props.width * 105 - xShift * 0.5, height = -140 + this.props.height * 100 - yShift;
+        var width = -90 + props.width * 105 - xShift * 0.5, height = -140 + props.height * 100 - yShift;
         var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
 
 
@@ -81,7 +84,7 @@ class NeoLineChart extends NeoReport {
 
         if (parsedParameters && parsedParameters.curve === true) {
             line.curve(d3.curveMonotoneX)
-        }else if (parsedParameters && parsedParameters.curveLoop === true) {
+        } else if (parsedParameters && parsedParameters.curveLoop === true) {
             line.curve(d3.curveCardinalClosed)
         }
 
@@ -115,6 +118,8 @@ class NeoLineChart extends NeoReport {
                 return (parsedParameters && parsedParameters.radius) ? (parsedParameters.radius) : 3;
             })
             .on("mousemove", function (d) {
+                let prop1 = (props.propertiesSelected[0]) ? props.propertiesSelected[0] : Object.keys(labels)[0];
+                let prop2 = (props.propertiesSelected[1]) ? props.propertiesSelected[1] : Object.keys(labels)[1];
                 d3.select(".chart-tooltip")
                     .style("left", d3.event.pageX - 50 + "px")
                     .style("top", d3.event.pageY - 80 + "px")
