@@ -13,9 +13,14 @@ class NeoReport extends React.Component {
             url = "neo4j://" + url;
         }
         if (url){
+            let config = {
+                encrypted: (this.props.connection.encryption === "on") ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF'
+            };
+
             var driver = neo4j.driver(
                 url,
-                neo4j.auth.basic(this.props.connection.username, this.props.connection.password)
+                neo4j.auth.basic(this.props.connection.username, this.props.connection.password),
+                config
             );
             this.state = {}
             this.session = driver.session({database: this.props.connection.database});

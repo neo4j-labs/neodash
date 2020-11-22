@@ -12,6 +12,8 @@ import Button from "react-materialize/lib/Button";
 import Col from "react-materialize/lib/Col";
 import NeoTextInput from "./component/NeoTextInput";
 import neo4j from "neo4j-driver";
+import {Checkbox} from "react-materialize";
+import NeoCheckBox from "./component/NeoCheckBox";
 
 
 class NeoDash extends React.Component {
@@ -24,6 +26,7 @@ class NeoDash extends React.Component {
             database: (localStorage.getItem('neodash-database')) ? localStorage.getItem('neodash-database') : '',
             username: (localStorage.getItem('neodash-username')) ? localStorage.getItem('neodash-username') : 'neo4j',
             password: (localStorage.getItem('neodash-password')) ? localStorage.getItem('neodash-password') : '',
+            encryption: (localStorage.getItem('neodash-encryption')) ? localStorage.getItem('neodash-encryption') : 'off',
         }
 
         this.state = {json: '{}', count: 0}
@@ -43,29 +46,38 @@ class NeoDash extends React.Component {
 
     connect(e) {
         try {
+
             var url = this.connection.url;
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
             }
+            let config = {
+                encrypted: (this.connection.encryption === "on") ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF'
+            };
+
             var driver = neo4j.driver(
                 url,
-                neo4j.auth.basic(this.connection.username, this.connection.password)
-            );
+                neo4j.auth.basic(this.connection.username, this.connection.password), config)
+            ;
             this.session = driver.session({database: this.connection.database});
             this.session
                 .run('return true;')
                 .then(result => {
                     this.connected = true;
+
+
+                    this.updateConnectionModal(this.connect, false);
+                    this.loadJson()
+
                     localStorage.setItem('neodash-database', this.connection.database);
                     localStorage.setItem('neodash-url', this.connection.url);
                     localStorage.setItem('neodash-username', this.connection.username);
                     localStorage.setItem('neodash-password', this.connection.password.toString());
-
-                    this.updateConnectionModal(this.connect, false);
-                    this.loadJson()
+                    localStorage.setItem('neodash-encryption', this.connection.encryption);
                 })
                 .catch(error => {
                     this.updateConnectionModal(this.connect, true);
+                    this.connection.encryption = false;
                     this.stateChanged({
                         label: "CreateError",
                         value: error['message']
@@ -73,6 +85,7 @@ class NeoDash extends React.Component {
                 });
         } catch (error) {
             this.updateConnectionModal(this.connect, true);
+            this.connection.encryption = false;
             this.stateChanged({
                 label: "CreateError",
                 value: error['message']
@@ -159,6 +172,9 @@ class NeoDash extends React.Component {
         }
         if (update.label === "DatabaseChanged") {
             this.connection.database = update.value;
+        }
+        if (update.label === "EncryptionChanged") {
+            this.connection.encryption = update.value;
         }
         if (update.label === "UsernameChanged") {
             this.connection.username = update.value;
@@ -321,6 +337,7 @@ class NeoDash extends React.Component {
     }
 
     updateConnectionModal(connect, open) {
+
         this.neoConnectionModal =
             <NeoModal
                 header={'Connect to Neo4j'}
@@ -362,6 +379,11 @@ class NeoDash extends React.Component {
                                       label={"Password"}
                                       defaultValue={this.connection.password}
                                       placeholder={''}/>
+                        <NeoCheckBox onChange={this.stateChanged} changeEventLabel={"EncryptionChanged"}
+                                     label={"Encrypted Connection"}>
+                                     defaultValue={this.connection.encryption}
+
+                        </NeoCheckBox>
                         <input style={{display: 'none'}} type="submit"/></form>
                     <p>*Credentials are only stored in your local browser cache.</p>
                 </div>}
