@@ -30,7 +30,7 @@ class NeoGraphChips extends React.Component {
                         close={false}
                         closeIcon={<Icon className="close">close</Icon>}
                         options={null}
-                        style={{backgroundColor: colors[index % colors.length], color: 'white'}}
+                        style={{backgroundColor: colors[index % colors.length], display: (index < this.props.width*3.5 || this.props.width == 12) ? "inline-block" : "none", color: 'white'}}
                     >
                         {label}
                         <NeoOptionSelect suffix="-name" label="property" onChange={this.props.onChange} value={'name'}

@@ -52,6 +52,9 @@ body{
     min-width:60px;
 }
 
+.card-action {
+    max-height: 200px;
+}
 .card-action .pagination a{
     color: #000 !important;
     margin-right: 0px !important;
