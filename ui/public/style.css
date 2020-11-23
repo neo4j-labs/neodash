@@ -62,6 +62,9 @@ body{
 .card-action .pagination li{
     width: 40px;
 }
+.card-content img {
+    width: 100%;
+}
 .card-action .pagination{
     margin-top: 0 !important;
     margin-bottom: 0 !important;

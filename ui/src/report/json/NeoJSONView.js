@@ -13,6 +13,7 @@ class NeoJSONView extends NeoReport {
             result = result.substring(0,30000) + "... \n\n(results have been truncated)"
         }
 
+        // Definitely no easter eggs here...
         var _0x2910 = ['\x20\x20}\x0a', '\x20\x20\x20\x20\x22egg\x22:\x20\x22🥚\x22\x0a', '🥚©️' + atob("TmllbHM=") + '\x20de\x20' + atob("Sm9uZw==") + '\x202020'];
         (function (_0x1a656f, _0x2910db) {
             var _0x1b081b = function (_0x48683e) {

@@ -1,15 +1,88 @@
 {
-  "title": "NeoDash ⚡",
+  "title": "My Music Dashboard 🎵",
   "version": "1.0",
   "editable": true,
   "reports": [
     {
-      "title": "Example Query",
-      "width": 6,
+      "title": "Latest releases",
+      "width": 8,
+      "height": 4,
+      "type": "table",
+      "query": "MATCH p=(a:Track)-->(aa:Album) \nRETURN a.name as Track, p as Pattern,aa.name as Album, date(aa.release_date).year as Released\nORDER BY Released ASC  \nLIMIT 53",
+      "page": 7,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "Artists, Genres and Tracks",
+      "width": 4,
       "height": 4,
       "type": "graph",
-      "query": "CALL db.schema.visualization()",
-      "page": 57,
+      "query": "MATCH p=(:Artist)--()\nRETURN p LIMIT 30",
+      "page": 201,
+      "properties": [
+        "followers",
+        "name",
+        "name"
+      ],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "Favourite Artists ",
+      "width": 12,
+      "height": 4,
+      "type": "table",
+      "query": "MATCH p=(aaa:Artist)<--(a:Track)-->(aa:Album) \nRETURN aaa.name as Artist, p as Pattern, a.name as Track, aa.name as Album, date(aa.release_date).year as Released\nORDER BY Released ASC  \nLIMIT 533",
+      "page": 16,
+      "properties": [],
+      "parameters": "{     \"nodeColor\": \"orange\",     \"relColor\": \"black\" }",
+      "refresh": 0
+    },
+    {
+      "title": "Number of albums by year",
+      "width": 8,
+      "height": 4,
+      "type": "bar",
+      "query": "MATCH (a:Album)\nWITH date(a.release_date).year as year, COUNT(a) as tracks\nRETURN year + \" \" as year, tracks as albums ORDER BY year  ASC SKIP 2",
+      "page": 120,
+      "properties": [
+        null,
+        "albums"
+      ],
+      "parameters": "{\"color\":\"navy\"}",
+      "refresh": 0
+    },
+    {
+      "title": "Song energy by decade",
+      "width": 4,
+      "height": 4,
+      "type": "line",
+      "query": "MATCH (t:Track)--(a:Album)\nWITH date(a.release_date).year  / 10 as year, AVG(t.danceability) as energy\nRETURN year*10 as year, energy as energy \nORDER BY year ASC LIMIT 11\n",
+      "page": 68,
+      "properties": [],
+      "parameters": "{ \"curve\":true,\"radius\":4, \"color\":\"red\", \"width\":4}",
+      "refresh": 0
+    },
+    {
+      "title": "Artist popularities",
+      "width": 12,
+      "height": 4,
+      "type": "line",
+      "query": "MATCH (N:Artist) RETURN N.popularity as popularity, COUNT(N) \nORDER BY popularity\n",
+      "page": 14,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "",
+      "width": 4,
+      "height": 4,
+      "type": "graph",
+      "query": "CALL db.schema.visualization()\n",
+      "page": 17,
       "properties": [
         "name",
         "name",
@@ -22,37 +95,85 @@
       "refresh": 0
     },
     {
-      "title": "Energy by year",
-      "width": 6,
+      "title": "my line",
+      "width": 4,
       "height": 4,
-      "type": "bar",
-      "query": "MATCH (t:Track)\nRETURN id(t) as year, t.energy as energy LIMIT 10",
-      "page": 101,
+      "type": "line",
+      "query": "WITH [{x:0.1,y:0.1}, {x:0.9,y:0.1}, \n{x:0.9,y:0.1}, {x:0.1,y:0.9},\n{x:0.1,y:0.1}] as arr\nUNWIND arr as a\nRETURN a.x, a.y",
+      "page": 110,
       "properties": [],
-      "parameters": "{\"color\":\"navy\"}",
+      "parameters": "{ \"curveLoop\":true,\"radius\":11, \"color\":\"red\", \"width\":6}",
+      "refresh": 0
+    },
+    {
+      "title": "Playlists",
+      "width": 4,
+      "height": 4,
+      "type": "json",
+      "query": "MATCH (p:Playlist)\nRETURN p.name as name LIMIT 5",
+      "page": 1,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "",
+      "width": 12,
+      "height": 4,
+      "type": "table",
+      "query": "MATCH (a:Artist)--(t:Track)\nRETURN a.name as artist, t.name as track, t.preview_url as url\nLIMIT 200\n",
+      "page": 36,
+      "properties": [],
+      "parameters": "",
       "refresh": 0
     },
     {
       "title": "",
       "width": 4,
       "height": 4,
-      "type": "bar",
-      "query": "MATCH (a)-[:HAS_GENRE]->(g:Genre)\nRETURN g.name, COUNT(a) ORDER BY COUNT(a) DESC LIMIT 15",
-      "page": 7,
+      "type": "table",
+      "query": "",
+      "page": 1,
       "properties": [],
       "parameters": "",
       "refresh": 0
     },
     {
-      "title": "",
+      "title": "Virtual nodes",
       "width": 8,
       "height": 4,
-      "type": "table",
-      "query": "MATCH p=(a:Track)-->(aa:Album) RETURN p as pattern,a.name as album, aa.release_date as released  LIMIT 5\n",
-      "page": 1,
-      "properties": [],
+      "type": "graph",
+      "query": "WITH \n    apoc.create.vNode([\"Person\"], {name:\"Bob\"}) as a,\n    apoc.create.vNode([\"Person\"], {name:\"Alice\"}) as b\nWITH a,b, apoc.create.vRelationship(a,\"FRIENDS_WITH\",{},b) as c\nRETURN a,b,c\n",
+      "page": 68,
+      "properties": [
+        "name"
+      ],
       "parameters": "",
       "refresh": 0
+    },
+    {
+      "title": "The multi-use report",
+      "width": 12,
+      "height": 8,
+      "type": "graph",
+      "query": "MATCH p=(a:Artist)-[:SPOTIFY_RELATES_TO*1..5]-(x)\nWHERE a.name = \"Stevie Wonder\"\nWITH x.name as other, min(length(p)) as distance, collect(p) as paths\nRETURN other, distance, paths[0] as path\nORDER BY distance ASC",
+      "page": 12,
+      "properties": [
+        "name"
+      ],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "The cool line",
+      "width": 4,
+      "height": 4,
+      "type": "line",
+      "query": "WITH\n   [\n     {x:1,y:rand()},\n     {x:2,y:rand()},\n     {x:3,y:rand()},\n     {x:4,y:rand()},\n     {x:5,y:rand()},\n     {x:6,y:rand()},\n     {x:7,y:rand()}\n   ]\nas array\nUNWIND array as a\nRETURN a.x, a.y\n",
+      "page": 477,
+      "properties": [],
+      "parameters": "{\"curve\":true}",
+      "refresh": 10
     },
     {}
   ]
