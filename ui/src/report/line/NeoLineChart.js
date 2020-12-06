@@ -46,7 +46,9 @@ class NeoLineChart extends NeoReport {
         let {maxY, minY, maxX, minX} = this.getDataLimits(data);
         var xShift = 40;
         var yShift = 30;
-        var width = -90 + props.width * 105 - xShift * 0.5, height = -140 + props.height * 100 - yShift;
+
+        var width = props.clientWidth - 100; //-90 + props.width * 105 - xShift * 0.5;
+        var height = -140 + props.height * 100 - yShift;
         var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
 
 

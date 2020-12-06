@@ -45,7 +45,8 @@ class NeoBarChart extends NeoReport {
         var xShift = ((digits > 1) ? digits * 7 + 18 : Math.abs(digits) * 7 + 32);
         xShift += (maxY < 0 || minY < 0) ? 10 : 0;
         var yShift = 20 + xTextLength * 4;
-        var width = -90 + props.width * 105 - xShift * 0.5, height = -140 + props.height * 100 - yShift;
+        var width = props.clientWidth - 100; //-90 + props.width * 105 - xShift * 0.5;
+        var height = -140 + props.height * 100 - yShift;
         var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
 
         var svg = d3.select(".chart" + id)

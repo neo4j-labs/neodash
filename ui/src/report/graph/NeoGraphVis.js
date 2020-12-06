@@ -139,7 +139,8 @@ class NeoGraphVis extends NeoReport {
         this.state.nodeLabels = graph.nodeLabels
 
         // chart dimensions
-        var width = -60 + this.props.width * 105, height = -145 + this.props.height * 100;
+        var width = this.props.clientWidth - 50; //-90 + props.width * 105 - xShift * 0.5;
+        var height = -145 + this.props.height * 100;
 
         // set up svg
         svg = d3.select('.chart'+this.props.id).attr("transform", null);

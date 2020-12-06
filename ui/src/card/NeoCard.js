@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import Card from "react-materialize/lib/Card";
 import Icon from "react-materialize/lib/Icon";
 import Textarea from "react-materialize/lib/Textarea";
@@ -19,7 +19,9 @@ import NeoLinePropertySelect from "../report/line/NeoLinePropertySelect";
 let tallRowCount = 14;
 let normalRowCount = 5;
 
+
 class NeoCardComponent extends React.Component {
+    resize = () => this.stateChanged({"label": "resize"})
 
     defaultState = {
         width: this.props.width,
@@ -45,10 +47,15 @@ class NeoCardComponent extends React.Component {
         this.updateLinePropertySelect = this.updateLinePropertySelect.bind(this);
         this.counter = 0;
         this.state = this.defaultState;
+        this.myRef = React.createRef();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resize)
     }
 
     componentDidMount() {
-
+        window.addEventListener('resize', this.resize)
         this.parseParameters(this.props);
         this.neoCardSettings =
             <NeoCardSettings refresh={this.props.refresh}
@@ -169,6 +176,7 @@ class NeoCardComponent extends React.Component {
                 <NeoBarChart connection={this.props.connection}
                              page={this.state.page}
                              query={this.state.query}
+                             clientWidth={this.myRef.current.clientWidth}
                              id={this.props.id}
                              stateChanged={this.stateChanged}
                              propertiesSelected={this.state.propertiesSelected}
@@ -182,16 +190,17 @@ class NeoCardComponent extends React.Component {
         if (this.state.type === 'line') {
             this.state.content =
                 <NeoLineChart connection={this.props.connection}
-                             page={this.state.page}
-                             query={this.state.query}
-                             id={this.props.id}
-                             stateChanged={this.stateChanged}
-                             propertiesSelected={this.state.propertiesSelected}
-                             onNodeLabelUpdate={this.updateLinePropertySelect}
-                             params={this.state.parsedParameters}
-                             refresh={this.state.refresh}
-                             width={this.state.width}
-                             height={this.state.height}
+                              page={this.state.page}
+                              query={this.state.query}
+                              clientWidth={this.myRef.current.clientWidth}
+                              id={this.props.id}
+                              stateChanged={this.stateChanged}
+                              propertiesSelected={this.state.propertiesSelected}
+                              onNodeLabelUpdate={this.updateLinePropertySelect}
+                              params={this.state.parsedParameters}
+                              refresh={this.state.refresh}
+                              width={this.state.width}
+                              height={this.state.height}
                 />
         }
         if (this.state.type === "graph") {
@@ -201,6 +210,7 @@ class NeoCardComponent extends React.Component {
                     connection={this.props.connection}
                     query={this.state.query}
                     params={this.state.parsedParameters}
+                    clientWidth={this.myRef.current.clientWidth}
                     propertiesSelected={this.state.propertiesSelected}
                     onNodeLabelUpdate={this.updateGraphChips}
                     width={this.state.width}
@@ -237,7 +247,7 @@ class NeoCardComponent extends React.Component {
     updateCardSettings(update) {
         this.parseParameters(this.props);
 
-        if (this.state.type === "bar" || this.state.type === "line"){
+        if (this.state.type === "bar" || this.state.type === "line") {
             this.state.propertiesSelected = []
         }
 
@@ -279,9 +289,10 @@ class NeoCardComponent extends React.Component {
     updateBarPropertySelect(labels) {
         this.state.page += 1;
         this.state.action =
-            <NeoBarPropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0} data={this.state.data}
-                               onChange={this.stateChanged}
-                               categories={labels} values={labels}
+            <NeoBarPropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
+                                  data={this.state.data}
+                                  onChange={this.stateChanged}
+                                  categories={labels} values={labels}
             />
 
         this.setState(this.state);
@@ -290,9 +301,10 @@ class NeoCardComponent extends React.Component {
     updateLinePropertySelect(labels) {
         this.state.page += 1;
         this.state.action =
-            <NeoLinePropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0} data={this.state.data}
-                                  onChange={this.stateChanged}
-                                  categories={labels} values={labels}
+            <NeoLinePropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
+                                   data={this.state.data}
+                                   onChange={this.stateChanged}
+                                   categories={labels} values={labels}
             />
 
         this.setState(this.state);
@@ -332,18 +344,20 @@ class NeoCardComponent extends React.Component {
             <Icon>save</Icon>
         </div>;
         return <Col l={this.state.width} m={12} s={12}>
-            <Card
-                actions={[this.state.action]}
-                style={{height: (this.state.height * 100 + 22 * ((this.state.height / 4) - 1)) + 'px'}}
-                className={"neo-card medium white darken-5 paginated-card"}
-                closeIcon={
-                    closeIcon
-                }
-                revealIcon={(this.props.editable) ? <Icon>more_vert</Icon> : <div></div>}
-                textClassName="black-text"
-                title={this.cardTitle}
-                reveal={this.neoCardSettings}
-            >{this.state.content}   </Card>
+            <div ref={this.myRef}>
+                <Card
+
+                    actions={[this.state.action]}
+                    style={{height: (this.state.height * 100 + 22 * ((this.state.height / 4) - 1)) + 'px'}}
+                    className={"neo-card medium white darken-5 paginated-card"}
+                    closeIcon={
+                        closeIcon
+                    }
+                    revealIcon={(this.props.editable) ? <Icon>more_vert</Icon> : <div></div>}
+                    textClassName="black-text"
+                    title={this.cardTitle}
+                    reveal={this.neoCardSettings}
+                >{this.state.content}   </Card></div>
         </Col>
     }
 }

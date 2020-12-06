@@ -171,7 +171,7 @@ nav textarea:disabled{
     color: white !important;
 }
 .select-wrapper {
-    width: 140px;
+    width: 120px;
 }
 
 .neo-card .card-content{
@@ -245,7 +245,9 @@ nav textarea:disabled{
 
 
 }
-
+.container {
+    width: 97.5%;
+}
 
 .modal-input-text .input-field.col label{
     left: 0px;

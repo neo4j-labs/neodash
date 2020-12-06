@@ -9,8 +9,10 @@ class NeoPlainTextView extends NeoReport {
         if (rendered) {
             return rendered;
         }
-        // let result = this.props.data.split("\n").map(paragraph => <p>{paragraph}&nbsp;</p>)
-        let markdown = this.props.data.replaceAll("\n\n", "\n\n &nbsp; \n\n").replaceAll("\n \n", "\n\n &nbsp; \n\n");
+        let markdown = "";
+        if (this.props.data){
+            markdown = this.props.data.replace(/\n\n/g, "\n\n &nbsp; \n\n").replace(/\n \n/g, "\n\n &nbsp; \n\n");
+        }
         let result = <ReactMarkdown plugins={[gfm]} children={markdown} />
         return (result);
     }

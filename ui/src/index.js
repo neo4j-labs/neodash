@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import registerServiceWorker from "./ServiceWorker";
 import ApolloClient from "apollo-boost";
 import {ApolloProvider} from "@apollo/react-hooks";
 import Footer from "react-materialize/lib/Footer";
@@ -36,6 +35,3 @@ const Main = () => {
 };
 
 ReactDOM.render(<Main/>, root);
-registerServiceWorker();
-
-
