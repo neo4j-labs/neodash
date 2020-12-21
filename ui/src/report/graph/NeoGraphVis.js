@@ -43,26 +43,26 @@ class NeoGraphVis extends NeoReport {
                 }
             })
         });
-
+        let relsVisited = {}
         this.state.data.forEach(row => {
             Object.values(row).forEach(value => {
                 // single rel
                 if (value && value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
-                    this.extractRelInfo(value, nodesMap, linksMap);
+                    this.extractRelInfo(value, nodesMap, linksMap, relsVisited);
                 }
                 // arrays of rel
                 if (value && Array.isArray(value)) {
                     value.forEach(item => {
                         if (item["type"] && item["start"] && item["end"] && item["identity"] && item["properties"]) {
-                            this.extractRelInfo(item, nodesMap, linksMap);
+                            this.extractRelInfo(item, nodesMap, linksMap, relsVisited);
                         }
                     })
                 }
                 // paths
                 if (value && value["start"] && value["end"] && value["segments"] && value["length"]) {
-                    this.extractNodeInfo(value.start, nodeLabelsMap, nodesMap);
+                    // this.extractNodeInfo(value.start, nodeLabelsMap, nodesMap);
                     value.segments.forEach(segment => {
-                        this.extractRelInfo(segment.relationship, nodesMap, linksMap);
+                        this.extractRelInfo(segment.relationship, nodesMap, linksMap, relsVisited);
                     });
                 }
             });
@@ -96,12 +96,21 @@ class NeoGraphVis extends NeoReport {
         }
     }
 
-    extractRelInfo(value, nodesMap, linksMap) {
+
+    extractRelInfo(value, nodesMap, linksMap, relsVisited) {
+
+        let minIndex = Math.min(value["start"]["low"], value["end"]["low"])
+        let maxIndex = Math.max(value["start"]["low"], value["end"]["low"])
+        if (relsVisited[[minIndex, maxIndex]] == null) {
+            relsVisited[[minIndex, maxIndex]] = 0;
+        } else {
+            relsVisited[[minIndex, maxIndex]] = relsVisited[[minIndex, maxIndex]] + 1;
+        }
         linksMap["" + value['identity']['low']] = {
             source: value["start"]["low"],
             target: value["end"]["low"],
-            type: value["type"]
-            // avgRadius: (nodesMap[value["start"]["low"]].radius + nodesMap[value["end"]["low"]].radius) * 0.5
+            type: value["type"],
+            count: relsVisited[[minIndex, maxIndex]]
         }
         if (!nodesMap["" + value['start']['low']]) {
             nodesMap["" + value['start']['low']] = {
@@ -128,10 +137,10 @@ class NeoGraphVis extends NeoReport {
     componentDidMount() {
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
         let parsedParameters = this.props.params;
-        if (parsedParameters && parsedParameters.nodeColors){
-            if (typeof(parsedParameters.nodeColors) === 'string'){
+        if (parsedParameters && parsedParameters.nodeColors) {
+            if (typeof (parsedParameters.nodeColors) === 'string') {
                 colors = [parsedParameters.nodeColors]
-            }else{
+            } else {
                 colors = parsedParameters.nodeColors
             }
         }
@@ -143,11 +152,11 @@ class NeoGraphVis extends NeoReport {
         var height = -145 + this.props.height * 100;
 
         // set up svg
-        svg = d3.select('.chart'+this.props.id).attr("transform", null);
+        svg = d3.select('.chart' + this.props.id).attr("transform", null);
         let zoom = d3.zoom();
         zoom.transform(svg, d3.zoomIdentity);
 
-        var svg = d3.select('.chart'+this.props.id)
+        var svg = d3.select('.chart' + this.props.id)
             .attr("width", width)
             .attr("height", height)
             .attr("class", "chart")
@@ -169,7 +178,7 @@ class NeoGraphVis extends NeoReport {
                 return d.radius * 1.2
             }))
             .force("collide", d3.forceCollide().strength(0.1).radius(function (d) {
-                return d.radius * 2.3
+                return d.radius * 2.4
             }));
 
 
@@ -258,10 +267,10 @@ class NeoGraphVis extends NeoReport {
             .style('font-size', '10px')
             .text(function (d) {
                 if (propertiesSelected.length == 0) {
-                    return (d.properties.name) ? (d.properties.name) : "("+d.labels+")";
+                    return (d.properties.name) ? (d.properties.name) : "(" + d.labels + ")";
                 }
                 let property = d.properties[propertiesSelected[graph.nodeLabels.indexOf(d.labels[d.labels.length - 1])]];
-                return (property) ? property : "("+d.labels+")";
+                return (property) ? property : "(" + d.labels + ")";
             })
 
         simulation
@@ -273,19 +282,24 @@ class NeoGraphVis extends NeoReport {
 
         function ticked() {
             link.attr("d", function (d) {
-                let x1 = d.source.x,
-                    y1 = d.source.y,
-                    x2 = d.target.x,
-                    y2 = d.target.y,
+                let orientation = d.source.id > d.target.id ? 0 : 1;
+
+                let x1 = d.target.x,
+                    y1 = d.target.y,
+                    x2 = d.source.x,
+                    y2 = d.source.y,
                     dx = x2 - x1,
                     dy = y2 - y1,
 
+                    sideCount = Math.floor((d.count + 1) / 2),
                     // Defaults for normal edge.
-                    drx = 0,
-                    dry = 0,
+                    drx = Math.sqrt(dx * dx + dy * dy) * sideCount,
+                    dry = Math.sqrt(dx * dx + dy * dy) * sideCount,
+                    // drx = 1- 30 * Math.floor((d.count) /2),
+                    // dry = 1-30 * Math.floor((d.count) /2),
                     xRotation = 0, // degrees
                     largeArc = 0, // 1 or 0
-                    sweep = 1; // 1 or 0
+                    sweep = (d.count + 1+ orientation) % 2 //orientation
 
                 // Self edge.
                 if (x1 === x2 && y1 === y2) {
@@ -297,7 +311,7 @@ class NeoGraphVis extends NeoReport {
                     largeArc = 1;
 
                     // Change sweep to change orientation of loop.
-                    //sweep = 0;
+                    sweep = 1;
 
                     // Make drx and dry different to get an ellipse
                     // instead of a circle.
@@ -358,12 +372,19 @@ class NeoGraphVis extends NeoReport {
                     return "" + (d.source.x + d.target.x) * 0.5 + " " + (d.source.y + d.target.y) * 0.5;
                 })
                 .attr("transform", function (d) {
-                    return "rotate(" + angle(d.source, d.target) + ",0,0)translate(0,-5)";
-
+                    let distance = Math.sqrt((d.source.x - d.target.x) * (d.source.x - d.target.x) + (d.source.y - d.target.y) * (d.source.y - d.target.y))
+                    let axis = isRotatedAngle(d.source, d.target)
+                    let sideCount = Math.floor((d.count + 1) / 2);
+                    if (sideCount == 0){
+                        return "rotate(" + relationshipTextAngle(d.source, d.target) + ",0,0)translate(0,-5)";
+                    }else{
+                        let yTransform = distance * 0.125 * axis / sideCount ;
+                        return "rotate(" + relationshipTextAngle(d.source, d.target) + ",0,0)translate(0,"+ (-5) + ")translate(0," + yTransform + ")";
+                    }
                 });
         }
 
-        function angle(source, target) {
+        function relationshipTextAngle(source, target) {
             if (source.x == target.x && source.y == target.y) {
                 return 45;
             }
@@ -371,6 +392,16 @@ class NeoGraphVis extends NeoReport {
             let deltaX = target.x - source.x
             let angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
             return (angle > -90 && angle < 90) ? angle : angle - 180;
+        }
+
+        function isRotatedAngle(source, target) {
+            if (source.x == target.x && source.y == target.y) {
+                return 45;
+            }
+            let deltaY = target.y - source.y
+            let deltaX = target.x - source.x
+            let angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+            return (angle > -90 && angle < 90) ? 1 : -1;
         }
 
         function dragstarted(d) {
@@ -394,7 +425,7 @@ class NeoGraphVis extends NeoReport {
 
     componentDidUpdate(prevProps) {
         super.componentDidUpdate(prevProps);
-        d3.select('.chart'+this.props.id).select('g').remove();
+        d3.select('.chart' + this.props.id).select('g').remove();
         this.componentDidMount();
     }
 
@@ -404,8 +435,9 @@ class NeoGraphVis extends NeoReport {
             return rendered;
         }
         return (
-            <svg className={'chart chart'+this.props.id+' iteration' + this.props.page + " isRunning" + this.state.running}
-                 style={{backgroundColor: '#f9f9f9'}}>
+            <svg
+                className={'chart chart' + this.props.id + ' iteration' + this.props.page + " isRunning" + this.state.running}
+                style={{backgroundColor: '#f9f9f9'}}>
 
                 <defs>
                     <filter x="0" y="0" width="1" height="1" id="solid">

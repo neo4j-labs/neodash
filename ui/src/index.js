@@ -1,25 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ApolloClient from "apollo-boost";
-import {ApolloProvider} from "@apollo/react-hooks";
 import Footer from "react-materialize/lib/Footer";
 import NeoDash from "./NeoDash";
+import appLogo from './logo.png'
 
 const root = document.getElementById("root");
 const url = "https://github.com/nielsdejong/neodash/";
-const client = new ApolloClient({uri: process.env.REACT_APP_GRAPHQL_URI});
-const link = <a style={{color: 'rgb(180,180,180)'}} href={url}>NeoDash</a>
-const copyrights = <div style={{textAlign: 'center', color: 'rgb(180,180,180)'}}>{link}- Neo4j Dashboard Builder</div>;
-const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={copyrights}/>
+const link = <u><a href={"https://github.com/nielsdejong/neodash/blob/master/README.md"} style={{color: "dimgrey"}} target={"_blank"}>NeoDash - Neo4j Dashboard Builder</a></u>
+const copyrights = <div style={{textAlign: 'center', color: 'dimgrey'}}>{link}</div>;
+const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={copyrights}></Footer>
+const logo = () => {
+    return (<div className="logo"><img src={appLogo} alt="logo"/></div>)
+}
 
 const Main = () => {
+
     document.title = "NeoDash - Neo4j Dashboard"
 
-    // hard reset option if dashboards break.
+    // hard reset option - append a '?reset=true' to the URL if dashboards break.
     const search = window.location.search;
     const params = new URLSearchParams(search);
     const reset = params.get('reset');
-    if (reset === "true"){
+    if (reset === "true") {
         let text = localStorage.getItem("neodash-dashboard");
         localStorage.removeItem("neodash-dashboard")
         return <div><p>Cache cleared. Your latest dashboard:</p><code>{text}</code></div>
@@ -27,10 +29,7 @@ const Main = () => {
 
     // Else, normal rendering.
     return (
-        <ApolloProvider client={client}>
-            <NeoDash/>
-            {footer}
-        </ApolloProvider>
+        <><NeoDash/>{footer}</>
     );
 };
 

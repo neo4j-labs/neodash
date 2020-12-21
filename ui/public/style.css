@@ -171,12 +171,36 @@ nav textarea:disabled{
     color: white !important;
 }
 .select-wrapper {
+    width: 140px;
+}
+.card-action .select-wrapper {
     width: 120px;
+}
+
+.fixed-icon {
+    position: fixed;
+}
+.wide-button {
+    width: 120px;
+    padding-left: 0px;
+}
+.neo-color {
+    /*background-color: #008cc1;*/
+    background-color: white;
+    color: grey;
 }
 
 .neo-card .card-content{
     overflow-y: auto !important;
     overflow-x: auto !important;
+}
+#modal-dark-footer .modal-footer {
+    background-color: #555;
+    color: lightgrey;
+    height: auto;
+    text-align: left;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 

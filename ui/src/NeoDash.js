@@ -14,6 +14,7 @@ import NeoTextInput from "./component/NeoTextInput";
 import neo4j from "neo4j-driver";
 import {Checkbox} from "react-materialize";
 import NeoCheckBox from "./component/NeoCheckBox";
+import NeoTextButton from "./component/NeoTextButton";
 
 
 class NeoDash extends React.Component {
@@ -76,16 +77,12 @@ class NeoDash extends React.Component {
                     localStorage.setItem('neodash-encryption', this.connection.encryption);
                 })
                 .catch(error => {
-                    this.updateConnectionModal(this.connect, true);
-                    this.connection.encryption = false;
                     this.stateChanged({
                         label: "CreateError",
                         value: error['message']
                     });
                 });
         } catch (error) {
-            this.updateConnectionModal(this.connect, true);
-            this.connection.encryption = false;
             this.stateChanged({
                 label: "CreateError",
                 value: error['message']
@@ -175,6 +172,7 @@ class NeoDash extends React.Component {
         }
         if (update.label === "EncryptionChanged") {
             this.connection.encryption = update.value;
+            console.log(this.connection.encryption)
         }
         if (update.label === "UsernameChanged") {
             this.connection.username = update.value;
@@ -185,7 +183,10 @@ class NeoDash extends React.Component {
         if (update.label === "CreateError") {
             let content = update.value;
             if (content.startsWith("Could not perform discovery. No routing servers available.")) {
-                content = "Unable to connect to the specified Neo4j database. " + content;
+                let encryption = this.connection.encryption;
+                content = "Unable to connect to the specified Neo4j database. " +
+                    "The database might be unreachable, or it does not accept " + ((    encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
+
             }
             this.errorModal = <NeoModal header={"Error"}
                                         style={{'maxWidth': '550px'}}
@@ -337,21 +338,24 @@ class NeoDash extends React.Component {
     }
 
     updateConnectionModal(connect, open) {
-
         this.neoConnectionModal =
             <NeoModal
                 header={'Connect to Neo4j'}
                 style={{'maxWidth': '520px'}}
                 key={this.state.count}
                 id={this.state.count}
+                footerType={"modal-dark-footer"}
                 open={open}
                 root={document.getElementById("root")}
 
                 actions={[
-                    <Button flat modal="close"
-                            node="button"
-                            onClick={connect}
-                            waves="green">Connect</Button>
+                    <p>
+                        NeoDash is a tool for prototyping Neo4j dashboards.
+                        Building a production-grade front-end instead? <u><a style={{color: "white"}}
+                                                                             href={"mailto:niels.dejong@neo4j.com"}
+                                                                             target={"_blank"}>Get in touch</a></u>!
+                    </p>
+
                 ]}
                 trigger={
                     <NavItem href="" onClick={e => this.stateChanged({})}>Neo4j Connection</NavItem>
@@ -379,13 +383,25 @@ class NeoDash extends React.Component {
                                       label={"Password"}
                                       defaultValue={this.connection.password}
                                       placeholder={''}/>
-                        <NeoCheckBox onChange={this.stateChanged} changeEventLabel={"EncryptionChanged"}
-                                     label={"Encrypted Connection"}>
-                                     defaultValue={this.connection.encryption}
+                        <div style={{marginTop: "10px"}}>
 
-                        </NeoCheckBox>
+                            <NeoCheckBox onChange={this.stateChanged} changeEventLabel={"EncryptionChanged"}
+                                         label={"Encrypted Connection"}>
+                                defaultValue={(this.connection.encryption) ? "on" : "off"}
+
+                            </NeoCheckBox>
+                            <NeoTextButton right modal="close"
+                                           color={"neo-color"}
+                                           icon='play_arrow'
+                                           node="button"
+                                           onClick={connect}
+                                           text={"connect"}
+                                           waves="green"></NeoTextButton>
+                        </div>
+
+
                         <input style={{display: 'none'}} type="submit"/></form>
-                    <p>*Credentials are only stored in your local browser cache.</p>
+
                 </div>}
             />;
     }
@@ -406,7 +422,6 @@ class NeoDash extends React.Component {
                              style={{backgroundColor: 'black'}}>
             {this.neoSaveLoadModal}
             {this.neoConnectionModal}
-
         </Navbar>;
         return (
             <>

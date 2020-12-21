@@ -24,7 +24,7 @@ class NeoModal extends React.Component {
                 bottomSheet={false}
                 fixedFooter={false}
                 header={this.props.header}
-                id="NeoModal"
+                id={(this.props.footerType) ? (this.props.footerType) : "NeoModal"}
                 open={this.props.open}
                 options={{
                     dismissible: false,

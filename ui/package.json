@@ -1,7 +1,23 @@
 {
   "name": "neodash",
-  "version": "1.0.0",
-  "private": true,
+  "description": "NeoDash - Neo4j Dashboard Builder",
+  "version": "1.0.1",
+  "neo4jDesktop": {
+    "apiVersion": "^1.2.0"
+  },
+  "license": "Apache-2.0",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "type": "ico"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nielsdejong/neodash/"
+  },
+
+  "private": false,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.2",
     "@testing-library/jest-dom": "^4.2.4",

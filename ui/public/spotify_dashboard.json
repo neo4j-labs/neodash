@@ -1,28 +1,56 @@
 {
-  "title": "My Music Dashboard 🎵",
+  "title": "My Demo Dashboard 🎵",
   "version": "1.0",
   "editable": true,
   "reports": [
     {
-      "title": "Latest releases",
+      "title": "Welcome!",
       "width": 8,
       "height": 4,
-      "type": "table",
-      "query": "MATCH p=(a:Track)-->(aa:Album) \nRETURN a.name as Track, p as Pattern,aa.name as Album, date(aa.release_date).year as Released\nORDER BY Released ASC  \nLIMIT 53",
-      "page": 7,
+      "type": "text",
+      "query": "This is a demo dashboard for *NeoDash*.\nThis dashboard will contain some example reports to show off the features of the dashboard builder.\nThis block is written in **markdown**, so you can add some formatted descriptions.\n\n##### Types of reports:\n1. Table\n2. Graph\n3. Bar Chart\n4. Line Chart\n5. JSON\n6. Markdown",
+      "page": 1,
       "properties": [],
       "parameters": "",
       "refresh": 0
     },
     {
-      "title": "Artists, Genres and Tracks",
+      "title": " Markdown ",
+      "width": 4,
+      "height": 4,
+      "type": "text",
+      "query": "Markdown also allows you to add images!\n![image](https://i.ytimg.com/vi/a6g3QC9-KJI/hqdefault.jpg)\n\nReports will become scrollable if you add too much text.\nCode blocks are also supported:\n```\nMATCH (n)-[e]->(m)\nWITH n.name as name\nRETURN name\n```\n\nYou can also add [hyperlinks](https://p.scdn.co/mp3-preview/f645f6fd2bc040db70d13f0fffc2767411aa47f3?cid=2ed92762388443ba8343683b6452d712.mp3). ",
+      "page": 1,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "Data Model",
       "width": 4,
       "height": 4,
       "type": "graph",
-      "query": "MATCH p=(:Artist)--()\nRETURN p LIMIT 30",
-      "page": 201,
+      "query": "CALL db.schema.visualization()\n",
+      "page": 90,
       "properties": [
-        "followers",
+        "name",
+        "name",
+        "name",
+        "name",
+        "name",
+        "name"
+      ],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "Latest releases",
+      "width": 8,
+      "height": 4,
+      "type": "table",
+      "query": "MATCH p=(t:Track)-->(a:Album) \nRETURN t.name as Track, p as Pattern,a.name as Album, date(a.release_date).year as Released\nORDER BY Released ASC  \nLIMIT 53",
+      "page": 7,
+      "properties": [
         "name",
         "name"
       ],
@@ -34,22 +62,21 @@
       "width": 12,
       "height": 4,
       "type": "table",
-      "query": "MATCH p=(aaa:Artist)<--(a:Track)-->(aa:Album) \nRETURN aaa.name as Artist, p as Pattern, a.name as Track, aa.name as Album, date(aa.release_date).year as Released\nORDER BY Released ASC  \nLIMIT 533",
+      "query": "MATCH p=(aaa:Artist)<--(a:Track)-->(aa:Album) \nRETURN aaa.name as Artist, p as Pattern, a.name as Track, aa.name as Album, date(aa.release_date).year as Released\nORDER BY Released ASC  \nLIMIT 200",
       "page": 16,
       "properties": [],
       "parameters": "{     \"nodeColor\": \"orange\",     \"relColor\": \"black\" }",
       "refresh": 0
     },
     {
-      "title": "Number of albums by year",
+      "title": "Most popular genres",
       "width": 8,
       "height": 4,
       "type": "bar",
-      "query": "MATCH (a:Album)\nWITH date(a.release_date).year as year, COUNT(a) as tracks\nRETURN year + \" \" as year, tracks as albums ORDER BY year  ASC SKIP 2",
-      "page": 120,
+      "query": "MATCH (g:Genre)--(a:Artist)\nRETURN g.name as genre, count(a) as count \nORDER BY count DESC \nLIMIT 20\n",
+      "page": 159,
       "properties": [
-        null,
-        "albums"
+        "genre"
       ],
       "parameters": "{\"color\":\"navy\"}",
       "refresh": 0
@@ -59,8 +86,8 @@
       "width": 4,
       "height": 4,
       "type": "line",
-      "query": "MATCH (t:Track)--(a:Album)\nWITH date(a.release_date).year  / 10 as year, AVG(t.danceability) as energy\nRETURN year*10 as year, energy as energy \nORDER BY year ASC LIMIT 11\n",
-      "page": 68,
+      "query": "MATCH (t:Track)--(a:Album)\nWITH date(a.release_date).year  / 10 as year, AVG(t.danceability) as danceability\nRETURN year*10 as year, danceability as danceability \nORDER BY year ASC LIMIT 10",
+      "page": 112,
       "properties": [],
       "parameters": "{ \"curve\":true,\"radius\":4, \"color\":\"red\", \"width\":4}",
       "refresh": 0
@@ -70,21 +97,20 @@
       "width": 12,
       "height": 4,
       "type": "line",
-      "query": "MATCH (N:Artist) RETURN N.popularity as popularity, COUNT(N) \nORDER BY popularity\n",
-      "page": 14,
+      "query": "MATCH (N:Artist) \nWITH N.popularity as popularity, COUNT(N) as count\nWHERE popularity <> 0\nRETURN popularity, count\nORDER BY popularity",
+      "page": 30,
       "properties": [],
       "parameters": "",
       "refresh": 0
     },
     {
-      "title": "",
-      "width": 4,
-      "height": 4,
+      "title": "Big Graph Visualization",
+      "width": 8,
+      "height": 8,
       "type": "graph",
-      "query": "CALL db.schema.visualization()\n",
-      "page": 17,
+      "query": "MATCH p=(:Track)--()\nRETURN p LIMIT 50\n",
+      "page": 201,
       "properties": [
-        "name",
         "name",
         "name",
         "name",
@@ -95,14 +121,14 @@
       "refresh": 0
     },
     {
-      "title": "my line",
+      "title": "Drawing paths",
       "width": 4,
       "height": 4,
       "type": "line",
-      "query": "WITH [{x:0.1,y:0.1}, {x:0.9,y:0.1}, \n{x:0.9,y:0.1}, {x:0.1,y:0.9},\n{x:0.1,y:0.1}] as arr\nUNWIND arr as a\nRETURN a.x, a.y",
-      "page": 110,
+      "query": "WITH [{x:0.1,y:0.1}, \n      {x:0.9,y:0.1}, \n      {x:0.5,y:0.9}] as arr\nUNWIND arr as a\nRETURN a.x, a.y\n",
+      "page": 148,
       "properties": [],
-      "parameters": "{ \"curveLoop\":true,\"radius\":11, \"color\":\"red\", \"width\":6}",
+      "parameters": "{ \"curveLoop\":true,\"radius\":11, \"width\":6}",
       "refresh": 0
     },
     {
@@ -121,59 +147,57 @@
       "width": 12,
       "height": 4,
       "type": "table",
-      "query": "MATCH (a:Artist)--(t:Track)\nRETURN a.name as artist, t.name as track, t.preview_url as url\nLIMIT 200\n",
-      "page": 36,
-      "properties": [],
-      "parameters": "",
-      "refresh": 0
-    },
-    {
-      "title": "",
-      "width": 4,
-      "height": 4,
-      "type": "table",
-      "query": "",
+      "query": "MATCH (a:Artist)--(t:Track)\nRETURN a.name as artist, t.name as track, t.preview_url as url\nLIMIT 200",
       "page": 1,
       "properties": [],
       "parameters": "",
       "refresh": 0
     },
     {
-      "title": "Virtual nodes",
-      "width": 8,
-      "height": 4,
-      "type": "graph",
-      "query": "WITH \n    apoc.create.vNode([\"Person\"], {name:\"Bob\"}) as a,\n    apoc.create.vNode([\"Person\"], {name:\"Alice\"}) as b\nWITH a,b, apoc.create.vRelationship(a,\"FRIENDS_WITH\",{},b) as c\nRETURN a,b,c\n",
-      "page": 68,
-      "properties": [
-        "name"
-      ],
-      "parameters": "",
+      "title": "Similar artists to Stevie Wonder",
+      "width": 12,
+      "height": 8,
+      "type": "table",
+      "query": "MATCH p=(a:Artist)-[:SPOTIFY_RELATES_TO*1..5]-(x)\nWHERE a.name = $name\nWITH x.name as other, min(length(p)) as distance, collect(p) as paths\nRETURN other, distance, paths[0] as path\nORDER BY distance ASC\n",
+      "page": 1,
+      "properties": [],
+      "parameters": "{\"name\":\"Stevie Wonder\"}",
       "refresh": 0
     },
     {
-      "title": "The multi-use report",
-      "width": 12,
+      "title": "Virtual nodes",
+      "width": 4,
       "height": 8,
       "type": "graph",
-      "query": "MATCH p=(a:Artist)-[:SPOTIFY_RELATES_TO*1..5]-(x)\nWHERE a.name = \"Stevie Wonder\"\nWITH x.name as other, min(length(p)) as distance, collect(p) as paths\nRETURN other, distance, paths[0] as path\nORDER BY distance ASC",
+      "query": "WITH \n    apoc.create.vNode([\"Person\"], {name:\"Bob\"}) as a,\n    apoc.create.vNode([\"Person\"], {name:\"Alice\"}) as b\nWITH a,b, apoc.create.vRelationship(a,\"FRIENDS_WITH\",{},b) as c\nRETURN a,b,c\n",
       "page": 12,
       "properties": [
         "name"
       ],
-      "parameters": "",
+      "parameters": "{\"nodeColors\":[\"orange\"]}",
       "refresh": 0
     },
     {
-      "title": "The cool line",
-      "width": 4,
+      "title": "Auto-refresh",
+      "width": 8,
       "height": 4,
       "type": "line",
-      "query": "WITH\n   [\n     {x:1,y:rand()},\n     {x:2,y:rand()},\n     {x:3,y:rand()},\n     {x:4,y:rand()},\n     {x:5,y:rand()},\n     {x:6,y:rand()},\n     {x:7,y:rand()}\n   ]\nas array\nUNWIND array as a\nRETURN a.x, a.y\n",
-      "page": 477,
+      "query": "WITH\n   [\n     {x:1,y:rand()},\n     {x:2,y:rand()},\n     {x:3,y:rand()},\n     {x:4,y:rand()},\n     {x:5,y:rand()},\n     {x:6,y:rand()},\n     {x:7,y:rand()}\n   ]\nas array\nUNWIND array as a\nRETURN a.x, a.y",
+      "page": 200,
       "properties": [],
       "parameters": "{\"curve\":true}",
       "refresh": 10
+    },
+    {
+      "title": "Errors",
+      "width": 8,
+      "height": 4,
+      "type": "table",
+      "query": "MATCH (a:Person)\nRETURN b",
+      "page": 1,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
     },
     {}
   ]
