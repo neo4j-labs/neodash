@@ -9,6 +9,9 @@ class NeoGraphVis extends NeoReport {
     }
 
     convertDataToGraph() {
+        /**
+         * Converts Neo4j query results into a graph representation that D3 can work with.
+         */
         let graph = {nodes: [], links: [], nodeLabelsMap: {}}
 
         if (this.state.data == null) {
@@ -44,17 +47,42 @@ class NeoGraphVis extends NeoReport {
             })
         });
         let relsVisited = {}
+        let relsVisitedDirections = {}
         this.state.data.forEach(row => {
             Object.values(row).forEach(value => {
                 // single rel
                 if (value && value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
-                    this.extractRelInfo(value, nodesMap, linksMap, relsVisited);
+                    this.preprocessVisitedRelationships(value, relsVisited, relsVisitedDirections);
                 }
                 // arrays of rel
                 if (value && Array.isArray(value)) {
                     value.forEach(item => {
                         if (item["type"] && item["start"] && item["end"] && item["identity"] && item["properties"]) {
-                            this.extractRelInfo(item, nodesMap, linksMap, relsVisited);
+                            this.preprocessVisitedRelationships(item, relsVisited, relsVisitedDirections);
+                        }
+                    })
+                }
+                // paths
+                if (value && value["start"] && value["end"] && value["segments"] && value["length"]) {
+                    value.segments.forEach(segment => {
+                        this.preprocessVisitedRelationships(segment.relationship, relsVisited, relsVisitedDirections);
+                    });
+                }
+            });
+        })
+
+        // build the graph representation for D3.
+        this.state.data.forEach(row => {
+            Object.values(row).forEach(value => {
+                // single rel
+                if (value && value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
+                    this.extractRelInfo(value, nodesMap, linksMap, relsVisited, relsVisitedDirections);
+                }
+                // arrays of rel
+                if (value && Array.isArray(value)) {
+                    value.forEach(item => {
+                        if (item["type"] && item["start"] && item["end"] && item["identity"] && item["properties"]) {
+                            this.extractRelInfo(item, nodesMap, linksMap, relsVisited, relsVisitedDirections);
                         }
                     })
                 }
@@ -62,11 +90,12 @@ class NeoGraphVis extends NeoReport {
                 if (value && value["start"] && value["end"] && value["segments"] && value["length"]) {
                     // this.extractNodeInfo(value.start, nodeLabelsMap, nodesMap);
                     value.segments.forEach(segment => {
-                        this.extractRelInfo(segment.relationship, nodesMap, linksMap, relsVisited);
+                        this.extractRelInfo(segment.relationship, nodesMap, linksMap, relsVisited, relsVisitedDirections);
                     });
                 }
             });
-        });
+        })
+
         graph.nodes = Object.values(nodesMap)
         graph.links = Object.values(linksMap)
         graph.nodeLabels = Object.keys(nodeLabelsMap)
@@ -96,21 +125,29 @@ class NeoGraphVis extends NeoReport {
         }
     }
 
-
-    extractRelInfo(value, nodesMap, linksMap, relsVisited) {
-
+    preprocessVisitedRelationships(value, relsVisited, relsVisitedDirections) {
         let minIndex = Math.min(value["start"]["low"], value["end"]["low"])
         let maxIndex = Math.max(value["start"]["low"], value["end"]["low"])
         if (relsVisited[[minIndex, maxIndex]] == null) {
-            relsVisited[[minIndex, maxIndex]] = 0;
-        } else {
-            relsVisited[[minIndex, maxIndex]] = relsVisited[[minIndex, maxIndex]] + 1;
+            relsVisited[[minIndex, maxIndex]] = [];
+            relsVisitedDirections[[minIndex, maxIndex]] = [];
         }
+        relsVisited[[minIndex, maxIndex]].push(value['identity']['low']);
+        relsVisitedDirections[[minIndex, maxIndex]].push(value['start']['low'] === minIndex);
+
+    }
+
+    extractRelInfo(value, nodesMap, linksMap, relsVisited, relsVisitedDirections) {
+        let minIndex = Math.min(value["start"]["low"], value["end"]["low"])
+        let maxIndex = Math.max(value["start"]["low"], value["end"]["low"])
+        let isEvenLength = (relsVisited[[minIndex, maxIndex]].length % 2 == 0)
         linksMap["" + value['identity']['low']] = {
             source: value["start"]["low"],
             target: value["end"]["low"],
             type: value["type"],
-            count: relsVisited[[minIndex, maxIndex]]
+            count: relsVisited[[minIndex, maxIndex]].indexOf(value['identity']['low']) + (isEvenLength ? 1 : 0),
+            totalCount: relsVisited[[minIndex, maxIndex]].length + (isEvenLength ? 1 : 0),
+            direction: relsVisitedDirections[[minIndex, maxIndex]][relsVisited[[minIndex, maxIndex]].indexOf(value['identity']['low']) ]
         }
         if (!nodesMap["" + value['start']['low']]) {
             nodesMap["" + value['start']['low']] = {
@@ -168,7 +205,16 @@ class NeoGraphVis extends NeoReport {
         var simulation = d3.forceSimulation()
             .force("center", d3.forceCenter(width / 2, height / 2))
             .force("link", d3.forceLink().strength(function (d) {
-                return 0.1;
+                if (d.count === 0 && d.totalCount % 2 === 0) {
+                    return 0.1;
+                } else if (d.totalCount === 1) {
+                    return 0.1;
+                } else if (d.count === 1 && d.totalCount % 2 === 1) {
+                    return 0.1;
+                } else {
+                    return 0.0;
+                }
+
             }).id(function (d) {
                 return d.id;
             }))
@@ -213,7 +259,13 @@ class NeoGraphVis extends NeoReport {
             .style("stroke", "#aaa")
             .selectAll("line")
             .data(graph.links)
-            .enter().append("path").attr("class", "graph-edge");
+            .enter().append("path").attr("class", function (d) {
+                if (d.direction) {
+                    return "graph-edge"
+                } else {
+                    return "graph-edge-reverse"
+                }
+            });
 
         var type = svg.append("g")
             .attr("class", "types")
@@ -266,7 +318,7 @@ class NeoGraphVis extends NeoReport {
             .style('font-family', '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif')
             .style('font-size', '10px')
             .text(function (d) {
-                if (propertiesSelected.length == 0) {
+                if (propertiesSelected.length === 0) {
                     return (d.properties.name) ? (d.properties.name) : "(" + d.labels + ")";
                 }
                 let property = d.properties[propertiesSelected[graph.nodeLabels.indexOf(d.labels[d.labels.length - 1])]];
@@ -282,25 +334,27 @@ class NeoGraphVis extends NeoReport {
 
         function ticked() {
             link.attr("d", function (d) {
-                let orientation = d.source.id > d.target.id ? 0 : 1;
 
-                let x1 = d.target.x,
-                    y1 = d.target.y,
-                    x2 = d.source.x,
-                    y2 = d.source.y,
+                let orientation = (d.source.id > d.target.id);
+                let x1 = (orientation) ? d.target.x : d.source.x,
+                    y1 = (orientation) ? d.target.y : d.source.y,
+                    x2 = (orientation) ? d.source.x : d.target.x,
+                    y2 = (orientation) ? d.source.y : d.target.y,
                     dx = x2 - x1,
                     dy = y2 - y1,
 
-                    sideCount = Math.floor((d.count + 1) / 2),
-                    // Defaults for normal edge.
-                    drx = Math.sqrt(dx * dx + dy * dy) * sideCount,
-                    dry = Math.sqrt(dx * dx + dy * dy) * sideCount,
-                    // drx = 1- 30 * Math.floor((d.count) /2),
-                    // dry = 1-30 * Math.floor((d.count) /2),
-                    xRotation = 0, // degrees
-                    largeArc = 0, // 1 or 0
-                    sweep = (d.count + 1+ orientation) % 2 //orientation
+                    sweep = (d.count >= d.totalCount * 0.5 ? 1 : 0),  //orientation
+                    sideCount = (sweep === 1) ? d.count - ((d.totalCount - 1) / 2) : d.count,
+                    relativeCount = sideCount / ((d.totalCount - 1) / 2),
+                    drx = Math.sqrt(dx * dx + dy * dy) * (0.5 + relativeCount * relativeCount),
+                    dry = Math.sqrt(dx * dx + dy * dy) * (0.5 + relativeCount * relativeCount),
+                    xRotation = 45, // degrees
+                    largeArc = 0 // 1 or 0
 
+                if (d.count === 0) {
+                    drx = 0
+                    dry = 0
+                }
                 // Self edge.
                 if (x1 === x2 && y1 === y2) {
 
@@ -315,8 +369,15 @@ class NeoGraphVis extends NeoReport {
 
                     // Make drx and dry different to get an ellipse
                     // instead of a circle.
-                    drx = 25;
-                    dry = 25;
+                    let count = (d.totalCount === 1) ? 1 : d.count + (d.totalCount + 1) % 2;
+                    if (count <= 3) {
+                        drx = 30 + count * -5;
+                        dry = 30 + count * -5;
+                    } else {
+                        drx = 10 + count * 5;
+                        dry = 10 + count * 5;
+                    }
+
 
                     // For whatever reason the arc collapses to a point if the beginning
                     // and ending points of the arc are the same, so kludge it.
@@ -354,17 +415,23 @@ class NeoGraphVis extends NeoReport {
                 })
 
 
-            // update type positions
+            /** Update relationship type text positions.
+             *  TODO: The math here is not very sound, especially for multiple relationships between nodes.
+             */
             type
                 .attr("x", function (d) {
+                    // If the type is a self loop, then...
                     if (d.source.x == d.target.x && d.source.y == d.target.y) {
-                        return d.source.x + 5;
+                        return d.source.x + 5
                     }
                     return (d.source.x + d.target.x) * 0.5;
                 })
                 .attr("y", function (d) {
+                    // If the type is a self loop, then...
                     if (d.source.x == d.target.x && d.source.y == d.target.y) {
-                        return d.source.y - 60;
+                        let count = (d.totalCount) === 1 ? 0 : d.count - 1;
+
+                        return (count < 3) ? d.source.y - 60 + 15 * count : d.source.y - 37 - 11 * count;
                     }
                     return (d.source.y + d.target.y) * 0.5;
                 })
@@ -374,12 +441,27 @@ class NeoGraphVis extends NeoReport {
                 .attr("transform", function (d) {
                     let distance = Math.sqrt((d.source.x - d.target.x) * (d.source.x - d.target.x) + (d.source.y - d.target.y) * (d.source.y - d.target.y))
                     let axis = isRotatedAngle(d.source, d.target)
-                    let sideCount = Math.floor((d.count + 1) / 2);
-                    if (sideCount == 0){
+                    let orientation = d.source.id > d.target.id;
+                    let x1 = (orientation) ? d.target.x : d.source.x,
+                        y1 = (orientation) ? d.target.y : d.source.y,
+                        x2 = (orientation) ? d.source.x : d.target.x,
+                        y2 = (orientation) ? d.source.y : d.target.y,
+                        dx = x2 - x1,
+                        dy = y2 - y1,
+
+                        sweep = (d.count >= d.totalCount * 0.5 ? 1 : 0),  //orientation
+                        sideCount = (sweep === 1) ? d.count - ((d.totalCount - 1) / 2) : d.count,
+                        relativeCount = 1.0 - sideCount / ((d.totalCount + 1) / 2)
+
+                    if (sideCount == 0) {
                         return "rotate(" + relationshipTextAngle(d.source, d.target) + ",0,0)translate(0,-5)";
-                    }else{
-                        let yTransform = distance * 0.125 * axis / sideCount ;
-                        return "rotate(" + relationshipTextAngle(d.source, d.target) + ",0,0)translate(0,"+ (-5) + ")translate(0," + yTransform + ")";
+                    } else {
+                        let side = ((sweep === 1) ? 1  : -1) * isRotatedAngle( {x: x2, y: y2}, {x: x1, y: y1});
+                        let drx = Math.sqrt(dx * dx + dy * dy + relativeCount * relativeCount) * relativeCount,
+                            dry = Math.sqrt(dx * dx + dy * dy + relativeCount * relativeCount) * relativeCount * side,
+                            textYshift = (side === 1) ? -8 : 0;
+                        return "rotate(" + relationshipTextAngle(d.source, d.target) + ",0,0)" +
+                            "translate(0," + dry * 0.08 * Math.round(d.totalCount / 2 + 1) + ")translate(0, " + textYshift + ")";
                     }
                 });
         }
@@ -445,11 +527,15 @@ class NeoGraphVis extends NeoReport {
                         <feComposite in="SourceGraphic"/>
 
                     </filter>
-                    <marker id="arrowhead" markerWidth="5" markerHeight="3.5"
-                            refX="16" refY="1.75" orient="auto" fill="rgb(170, 170, 170)">
-                        <polygon points="0 0, 5 1.75, 0 3"/>
+                    <marker id="arrowhead" markerWidth="5" markerHeight="3"
+                            refX="16" refY="1.5" orient="auto" fill="rgb(170, 170, 170)">
+                        <polygon points="0 0, 5 1.5, 0 3"/>
                     </marker>
+                    <marker id="arrowhead-reverse" markerWidth="5" markerHeight="3"
 
+                            refX="-11" refY="1.5" orient="auto" fill="rgb(170, 170, 170)">
+                        <polygon points="5 0, 0 1.5, 5 3"/>
+                    </marker>
                 </defs>
             </svg>
 

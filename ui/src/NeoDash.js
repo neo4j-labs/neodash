@@ -172,7 +172,6 @@ class NeoDash extends React.Component {
         }
         if (update.label === "EncryptionChanged") {
             this.connection.encryption = update.value;
-            console.log(this.connection.encryption)
         }
         if (update.label === "UsernameChanged") {
             this.connection.username = update.value;

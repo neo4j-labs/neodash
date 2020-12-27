@@ -98,6 +98,12 @@ body{
     /*marker-start: url(#label);*/
 }
 
+.graph-edge-reverse {
+    stroke-width: 2;
+    fill: none;
+    marker-start: url(#arrowhead-reverse);
+    /*marker-start: url(#label);*/
+}
 
 #Textarea-12 {
     background: url(linenumbers.png);
