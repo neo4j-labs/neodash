@@ -175,4 +175,4 @@ Running the application in development mode:
 ### Build
 Building the application:
 
-`cd ui && npm build`
+`cd ui && npm run-script build`
