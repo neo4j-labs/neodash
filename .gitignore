@@ -1,9 +1,12 @@
 .idea
 *.iml
+*.pem
+*.cert
+*.passphrase
 node_modules
 package-lock.json
 build
-
+target
 /node_modules
 /.pnp
 .pnp.js

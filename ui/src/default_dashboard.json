@@ -1,0 +1,30 @@
+{
+  "title": "NeoDash ⚡",
+  "version": "1.0",
+  "editable": true,
+  "reports": [
+    {
+      "title": "Hi there \uD83D\uDC4B",
+      "width": 4,
+      "height": 4,
+      "type": "text",
+      "query": "This is your first dashboard! \n \nYou can click (⋮) to edit this report, or add a new report to get started. You can run any Cypher query directly from each report and render data in a variety of formats. \n \nTip: try renaming this report by editing the title text. You can also edit the dashboard header at the top of the screen.",
+      "page": 1,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {
+      "title": "Example Query",
+      "width": 4,
+      "height": 4,
+      "type": "graph",
+      "query": "CALL db.schema.visualization()",
+      "page": 2,
+      "properties": [],
+      "parameters": "",
+      "refresh": 0
+    },
+    {}
+  ]
+}

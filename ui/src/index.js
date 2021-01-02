@@ -15,7 +15,7 @@ const logo = () => {
 
 const Main = () => {
 
-    document.title = "NeoDash - Neo4j Dashboard"
+    document.title = "NeoDash - Neo4j Dashboard Builder"
 
     // hard reset option - append a '?reset=true' to the URL if dashboards break.
     const search = window.location.search;

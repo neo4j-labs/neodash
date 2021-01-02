@@ -2,7 +2,7 @@
   "short_name": "NeoDash",
   "name": "NeoDash - Neo4j Dashboard Builder",
   "homepage": "https://github.com/nielsdejong/neodash/",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
   },
@@ -10,6 +10,10 @@
     {
       "src": "favicon.ico",
       "type": "ico"
+    },
+    {
+      "src": "favicon.png",
+      "type": "png"
     }
   ],
   "start_url": "./index.html",

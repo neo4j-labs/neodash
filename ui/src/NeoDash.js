@@ -15,7 +15,7 @@ import neo4j from "neo4j-driver";
 import {Checkbox} from "react-materialize";
 import NeoCheckBox from "./component/NeoCheckBox";
 import NeoTextButton from "./component/NeoTextButton";
-
+import defaultDashboard from './default_dashboard.json';
 
 class NeoDash extends React.Component {
     version = '1.0';
@@ -149,18 +149,11 @@ class NeoDash extends React.Component {
         }
     }
 
+
     setDefaultDashboard() {
         let state = this.state;
-        fetch("/default_dashboard.json")
-            .then(response => response.text())
-            .then((jsonData) => {
-                state.json = jsonData;
-                this.loadJson()
-
-            }).catch((error) => {
-            // handle your errors here
-            alert(error)
-        })
+        this.state.json = JSON.stringify(defaultDashboard);
+        this.loadJson()
     }
 
     stateChanged(update) {
