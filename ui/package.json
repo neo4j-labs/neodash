@@ -1,5 +1,5 @@
 {
-  "name": "NeoDash",
+  "name": "neodash",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "version": "1.0.2",
   "homepage": "https://nielsdejong.nl/neodash",
@@ -28,7 +28,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "apollo-boost": "^0.4.4",
-    "axios": "^0.18.1",
+    "axios": ">=0.21.1",
     "d3": "4.5.0",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
