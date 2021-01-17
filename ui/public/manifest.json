@@ -1,6 +1,6 @@
 {
   "short_name": "NeoDash",
-  "name": "NeoDash - Neo4j Dashboard Builder",
+  "name": "NeoDash",
   "homepage": "https://github.com/nielsdejong/neodash/",
   "version": "1.0.2",
   "neo4jDesktop": {
