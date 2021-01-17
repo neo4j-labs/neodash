@@ -1,4 +1,4 @@
-PWD=~/IdeaProjects/grandstack-for-dummies-2/ui
+PWD=~/IdeaProjects/neodash/ui
 APPNAME=NeoDash
 
 cd $PWD
@@ -36,5 +36,3 @@ npx @neo4j/code-signer --verify \
   --root-cert ../neo4j_desktop.cert
 
 rm -rf package
-
-# file:///home/niels/IdeaProjects/grandstack-for-dummies-2/target/NeoDash-1.0.2.tgz
