@@ -1,7 +1,7 @@
 {
   "name": "neodash",
   "description": "NeoDash - Neo4j Dashboard Builder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "https://nielsdejong.nl/neodash",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -17,6 +17,9 @@
       "type": "png"
     }
   ],
+  "dist" : {
+    "tarball": "https://neo.jfrog.io/neo/api/npm/npm/neo4j-db-analyzer/-/neo4j-db-analyzer-0.0.8.tgz"
+  }
   "repository": {
     "type": "git",
     "url": "https://github.com/nielsdejong/neodash/"
