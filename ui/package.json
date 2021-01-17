@@ -18,8 +18,8 @@
     }
   ],
   "dist" : {
-    "tarball": "https://neo.jfrog.io/neo/api/npm/npm/neo4j-db-analyzer/-/neo4j-db-analyzer-0.0.8.tgz"
-  }
+    "tarball": "https://github.com/nielsdejong/neodash/releases/download/1.0.3/neodash-1.0.3.tgz"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/nielsdejong/neodash/"
