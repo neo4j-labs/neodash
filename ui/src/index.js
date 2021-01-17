@@ -6,7 +6,8 @@ import appLogo from './logo.png'
 
 const root = document.getElementById("root");
 const url = "https://github.com/nielsdejong/neodash/";
-const link = <u><a href={"https://github.com/nielsdejong/neodash/blob/master/README.md"} style={{color: "dimgrey"}} target={"_blank"}>NeoDash 1.0.2 - Neo4j Dashboard Builder</a></u>
+const link = <u><a href={"https://github.com/nielsdejong/neodash/blob/master/README.md"} style={{color: "dimgrey"}}
+                   target={"_blank"}>NeoDash 1.0.2 - Neo4j Dashboard Builder</a></u>
 const copyrights = <div style={{textAlign: 'center', color: 'dimgrey'}}>{link}</div>;
 const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={copyrights}></Footer>
 const logo = () => {
@@ -26,11 +27,15 @@ const Main = () => {
         localStorage.removeItem("neodash-dashboard")
         return <div><p>Cache cleared. Your latest dashboard:</p><code>{text}</code></div>
     }
+    var neoDash = <NeoDash/>;
 
-    // Else, normal rendering.
+
     return (
-        <><NeoDash/>{footer}</>
+        <>{neoDash}{footer}</>
     );
 };
+
+
+
 
 ReactDOM.render(<Main/>, root);

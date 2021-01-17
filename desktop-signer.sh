@@ -1,4 +1,7 @@
+PWD=~/IdeaProjects/grandstack-for-dummies-2/ui
 APPNAME=NeoDash
+
+cd $PWD
 
 npm run-script build
 npm pack
@@ -13,12 +16,25 @@ cp package/dist/favicon.ico package/favicon.ico
 GRAPH_APP_PASSPHRASE=$( cat ../desktop.passphrase )
 
 # sign the code & verify
-#npx @neo4j/code-signer --app ./package   --private-key ../neo4j-labs-app.pem   --cert ../neo4j-labs-app.cert   --passphrase $GRAPH_APP_PASSPHRASE
-#npx @neo4j/code-signer --verify  --app ./package --root-cert ../neo4j_desktop.cert
+npx @neo4j/code-signer --app ./package   --private-key ../neo4j-labs-app.pem   --cert ../neo4j-labs-app.cert   --passphrase $GRAPH_APP_PASSPHRASE
+npx @neo4j/code-signer --verify  --app ./package --root-cert ../neo4j_desktop.cert
 
 # pack it back up again
 cd package
 npm pack
 mv ${APPNAME}*.tgz ../
+
+# remove the package folder
+cd ../
+rm -rf package
+
+# verify it again
+tar xvf ${APPNAME}*.tgz package
+
+npx @neo4j/code-signer --verify \
+  --app ./package \
+  --root-cert ../neo4j_desktop.cert
+
+rm -rf package
 
 # file:///home/niels/IdeaProjects/grandstack-for-dummies-2/target/NeoDash-1.0.2.tgz

@@ -22,6 +22,35 @@ class NeoDash extends React.Component {
 
     constructor(props) {
         super(props);
+
+        // Neo4j Desktop integration
+        let neo4jDesktopApi = window.neo4jDesktopApi;
+        if (neo4jDesktopApi){
+            let promise = neo4jDesktopApi.getContext();
+            let a = this;
+            promise.then(function (context) {
+                let desktopIntegration = new Neo4jDesktopIntegration(context);
+                let neo4j = desktopIntegration.getActiveDatabase();
+                if (neo4j) {
+
+                    a.connection = {
+                        url: neo4j.connection.configuration.protocols.bolt.url,
+                        database:"",
+                        username: neo4j.connection.configuration.protocols.bolt.username,
+                        password: neo4j.connection.configuration.protocols.bolt.password,
+                        encryption: neo4j.connection.configuration.protocols.bolt.tlsLevel === "REQUIRED"
+                    }
+                    a.connect()
+
+                }else{
+                    a.connect()
+                    a.updateConnectionModal(a.connect, true);
+                }
+            });
+
+        }
+
+        // check the browser cache or use default values.
         this.connection = {
             url: (localStorage.getItem('neodash-url')) ? localStorage.getItem('neodash-url') : 'neo4j://localhost:7687',
             database: (localStorage.getItem('neodash-database')) ? localStorage.getItem('neodash-database') : '',
@@ -38,16 +67,22 @@ class NeoDash extends React.Component {
         this.stateChanged = this.stateChanged.bind(this);
         this.loadJson = this.loadJson.bind(this);
         this.connect = this.connect.bind(this);
-        this.updateConnectionModal(this.connect, true);
+        if(neo4jDesktopApi){
+            // this.updateConnectionModal(this.connect, true);
+            this.stateChanged({label: "CreateError", value: "Connecting to " + this.connection.url + "..."})
+            // this.errorModal = null;
+        }else{
+            this.updateConnectionModal(this.connect, true);
+        }
     }
 
     componentDidMount() {
         this.loadJson()
     }
 
+
     connect(e) {
         try {
-
             var url = this.connection.url;
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
@@ -64,6 +99,7 @@ class NeoDash extends React.Component {
             this.session
                 .run('return true;')
                 .then(result => {
+                    this.errorModal = null;
                     this.connected = true;
 
 
@@ -75,6 +111,8 @@ class NeoDash extends React.Component {
                     localStorage.setItem('neodash-username', this.connection.username);
                     localStorage.setItem('neodash-password', this.connection.password.toString());
                     localStorage.setItem('neodash-encryption', this.connection.encryption);
+
+
                 })
                 .catch(error => {
                     this.stateChanged({
@@ -177,18 +215,19 @@ class NeoDash extends React.Component {
             if (content.startsWith("Could not perform discovery. No routing servers available.")) {
                 let encryption = this.connection.encryption;
                 content = "Unable to connect to the specified Neo4j database. " +
-                    "The database might be unreachable, or it does not accept " + ((    encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
+                    "The database might be unreachable, or it does not accept " + ((encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
 
             }
-            this.errorModal = <NeoModal header={"Error"}
-                                        style={{'maxWidth': '550px'}}
-                                        open={true}
-                                        trigger={null}
-                                        content={<p>{content}</p>}
-                                        key={this.state.count}
-                                        id={this.state.count}
-                                        root={document.getElementById("root")}
-                                        actions={[
+            let header = (content.startsWith("Connecting to")) ? "Connecting..." : "Error";
+            this.errorModal = <NeoModal header={header}
+                                                             style={{'maxWidth': '550px'}}
+                                                             open={true}
+                                                             trigger={null}
+                                                             content={<p>{content}</p>}
+                                                             key={this.state.count}
+                                                             id={this.state.count}
+                                                             root={document.getElementById("root")}
+                                                             actions={[
                                             <Button flat modal="close"
                                                     node="button"
                                                     waves="red">Close</Button>
@@ -432,5 +471,24 @@ class NeoDash extends React.Component {
     }
 }
 
+class Neo4jDesktopIntegration {
+    constructor(context) {
+        this.desktopContext = context;
+    }
+
+    getActiveDatabase() {
+
+        for (let pi = 0; pi < this.desktopContext.projects.length; pi++) {
+            let prj = this.desktopContext.projects[pi];
+            for (let gi = 0; gi < prj.graphs.length; gi++) {
+                let grf = prj.graphs[gi];
+                if (grf.status == 'ACTIVE') {
+                    return grf;
+                }
+            }
+        }
+        return null;
+    }
+}
 
 export default (NeoDash);
