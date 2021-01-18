@@ -1,8 +1,8 @@
 {
   "name": "neodash",
   "description": "NeoDash - Neo4j Dashboard Builder",
-  "version": "1.0.3",
-  "homepage": "https://nielsdejong.nl/neodash",
+  "version": "1.0.4",
+  "homepage": "./",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
   },
