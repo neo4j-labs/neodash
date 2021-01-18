@@ -36,3 +36,6 @@ npx @neo4j/code-signer --verify \
   --root-cert ../neo4j_desktop.cert
 
 rm -rf package
+
+# Publish to npm
+npm publish --access public ${APPNAME}*.tgz
