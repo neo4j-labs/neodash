@@ -26,7 +26,7 @@ The current version of NeoDash supports six types of reports:
  Reports sit in resizable containers -  _cards_.
 A report is always populated by a single Cypher query. An example table report is shown below:
 
-![NeoDash Report](./ui/public/neodash-table.png) 
+![NeoDash Report](./public/neodash-table.png) 
 
 The following rule of thumb holds for reports:
 - one report = one card = one Cypher query 
@@ -44,7 +44,7 @@ In the settings menu, the following can be defined:
 
 An example report settings view is shown below.
 
-![NeoDash Settings](./ui/public/neodash-editor.png) 
+![NeoDash Settings](./public/neodash-editor.png) 
 
 While having the report settings open, the report can be moved around or deleted. To close the settings, click the 'save' icon.
 #### Tables
@@ -114,7 +114,7 @@ Differently sized cards will sit together and try to take up available space in 
 
 
 
-![Grid layout](./ui/public/layout.png) 
+![Grid layout](./public/layout.png) 
 
 The Materialize CSS framework is used to render the cards in a grid layout. For more information on grid layouts in Materialize, check out this link:
 https://materializecss.com/grid.html
@@ -165,14 +165,14 @@ Dependencies are specified in `package.json`.
 ### Install
 NeoDash can be installed using npm:
 
-`cd ui && npm install`
+`npm install`
 
 ### Run in development mode
 Running the application in development mode:
 
-`cd ui && npm start`
+`npm start`
 
 ### Build
 Building the application:
 
-`cd ui && npm run-script build`
+`npm run-script build`
