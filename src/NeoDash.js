@@ -25,26 +25,27 @@ class NeoDash extends React.Component {
 
         // Neo4j Desktop integration
         let neo4jDesktopApi = window.neo4jDesktopApi;
-        if (neo4jDesktopApi){
+        if (neo4jDesktopApi) {
             let promise = neo4jDesktopApi.getContext();
             let a = this;
             promise.then(function (context) {
+
                 let desktopIntegration = new Neo4jDesktopIntegration(context);
                 let neo4j = desktopIntegration.getActiveDatabase();
                 if (neo4j) {
 
                     a.connection = {
                         url: neo4j.connection.configuration.protocols.bolt.url,
-                        database:"",
+                        database: "",
                         username: neo4j.connection.configuration.protocols.bolt.username,
                         password: neo4j.connection.configuration.protocols.bolt.password,
                         encryption: neo4j.connection.configuration.protocols.bolt.tlsLevel === "REQUIRED"
                     }
                     a.connect()
 
-                }else{
-                    a.connect()
+                } else {
                     a.updateConnectionModal(a.connect, true);
+                    a.stateChanged({label:"HideError"})
                 }
             });
 
@@ -67,13 +68,16 @@ class NeoDash extends React.Component {
         this.stateChanged = this.stateChanged.bind(this);
         this.loadJson = this.loadJson.bind(this);
         this.connect = this.connect.bind(this);
-        if(neo4jDesktopApi){
-            // this.updateConnectionModal(this.connect, true);
-            this.stateChanged({label: "CreateError", value: "Connecting to " + this.connection.url + "..."})
-            // this.errorModal = null;
-        }else{
+
+        // If not running from desktop, always ask for connection details
+        if (!neo4jDesktopApi) {
             this.updateConnectionModal(this.connect, true);
+        }else{
+            // If running from desktop, the constructor will set up a connection using the promise.
+            this.stateChanged({label: "CreateError", value: "Trying to connect to your active database..."});
         }
+
+
     }
 
     componentDidMount() {
@@ -210,24 +214,33 @@ class NeoDash extends React.Component {
         if (update.label === "PasswordChanged") {
             this.connection.password = update.value;
         }
+        if (update.label === "HideError"){
+            this.errorModal = null;
+            this.state.count += 1;
+        }
         if (update.label === "CreateError") {
             let content = update.value;
+
             if (content.startsWith("Could not perform discovery. No routing servers available.")) {
                 let encryption = this.connection.encryption;
                 content = "Unable to connect to the specified Neo4j database. " +
                     "The database might be unreachable, or it does not accept " + ((encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
 
             }
-            let header = (content.startsWith("Connecting to")) ? "Connecting..." : "Error";
+            let header = (content.startsWith("Trying to connect")) ? "Connecting..." : "Error";
+            if (content === "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: reach out to Niels at niels.dejong@neo4j.com."){
+                header = "Contact"
+            }
+
             this.errorModal = <NeoModal header={header}
-                                                             style={{'maxWidth': '550px'}}
-                                                             open={true}
-                                                             trigger={null}
-                                                             content={<p>{content}</p>}
-                                                             key={this.state.count}
-                                                             id={this.state.count}
-                                                             root={document.getElementById("root")}
-                                                             actions={[
+                                        style={{'maxWidth': '550px'}}
+                                        open={true}
+                                        trigger={null}
+                                        content={<p>{content}</p>}
+                                        key={this.state.count}
+                                        id={this.state.count}
+                                        root={document.getElementById("root")}
+                                        actions={[
                                             <Button flat modal="close"
                                                     node="button"
                                                     waves="red">Close</Button>
@@ -331,6 +344,12 @@ class NeoDash extends React.Component {
 
     }
 
+    handleGetInTouchClick(neodash) {
+        let contactMessage = "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: reach out to Niels at niels.dejong@neo4j.com.";
+        neodash.stateChanged({label: "CreateError", value: contactMessage})
+    }
+
+
     generateSaveLoadModal(loadJson) {
         let trigger = <NavItem href="" onClick={e => this.stateChanged({})}>Load/Export</NavItem>;
 
@@ -368,6 +387,7 @@ class NeoDash extends React.Component {
             />;
     }
 
+
     updateConnectionModal(connect, open) {
         this.neoConnectionModal =
             <NeoModal
@@ -382,9 +402,9 @@ class NeoDash extends React.Component {
                 actions={[
                     <p>
                         NeoDash is a tool for prototyping Neo4j dashboards.
-                        Building a production-grade front-end instead? <u><a style={{color: "white"}}
-                                                                             href={"mailto:niels.dejong@neo4j.com"}
-                                                                             target={"_blank"}>Get in touch</a></u>!
+                        Building a production-grade front-end instead? &nbsp;
+                        <u><a style={{color: "white"}} href="#"
+                             onClick={e => this.handleGetInTouchClick(this)}>Get in touch</a></u>!
                     </p>
 
                 ]}

@@ -7,7 +7,7 @@ import appLogo from './logo.png'
 const root = document.getElementById("root");
 const url = "https://github.com/nielsdejong/neodash/";
 const link = <u><a href={"https://github.com/nielsdejong/neodash/blob/master/README.md"} style={{color: "dimgrey"}}
-                   target={"_blank"}>NeoDash 1.0.3 - Neo4j Dashboard Builder</a></u>
+                   target={"_blank"}>NeoDash 1.0.4 - Neo4j Dashboard Builder</a></u>
 const copyrights = <div style={{textAlign: 'center', color: 'dimgrey'}}>{link}</div>;
 const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={copyrights}></Footer>
 const logo = () => {
