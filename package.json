@@ -3,7 +3,6 @@
   "description": "NeoDash - Neo4j Dashboard Builder",
   "version": "1.0.4",
   "homepage": "./",
-
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
   },
@@ -18,7 +17,7 @@
       "type": "png"
     }
   ],
-  "dist" : {
+  "dist": {
     "tarball": "https://github.com/nielsdejong/neodash/releases/download/1.0.3/neodash-1.0.3.tgz"
   },
   "repository": {
@@ -34,6 +33,7 @@
     "apollo-boost": "^0.4.4",
     "axios": ">=0.21.1",
     "d3": "4.5.0",
+    "glob": "^7.1.6",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "jquery": "^3.5.1",
@@ -66,7 +66,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-
   },
   "devDependencies": {
     "rimraf": "^3.0.2"
