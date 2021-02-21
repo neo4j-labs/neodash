@@ -11,18 +11,22 @@ class NeoGraphVis extends NeoReport {
     convertDataToGraph() {
         /**
          * Converts Neo4j query results into a graph representation that D3 can work with.
+         * Return type is a dictionary 'graph' with nodes, relationships and labels.
          */
         let graph = {nodes: [], links: [], nodeLabelsMap: {}}
 
         if (this.state.data == null) {
             return graph;
         }
-        // unique nodes
+        // To ensure we do not render duplicates, we build sets of nodes, relationships and labels.
         let nodesMap = {}
         let nodeLabelsMap = {}
         let linksMap = {}
 
-        // unique relationships
+        // First, iterate over the result rows to collect the unique nodes.
+        // We handle different types of return objects in different ways.
+        // These types are single nodes, arrays of nodes and paths.
+        // This also handles finding all unique node labels we have in the entire result set.
         this.state.data.forEach(row => {
             Object.values(row).forEach(value => {
                 // single nodes
@@ -46,6 +50,18 @@ class NeoGraphVis extends NeoReport {
                 }
             })
         });
+
+        // Then, also extract the relationships from the result set.
+        // We store only unique relationships. where uniqueness is defined by the tuple [startNode, endNode, relId].
+
+        // As a preprocessing step, we first sort the relationships in groups that share the same start/end nodes.
+        // This is done by building a dictionary where the key is the tuple [startNodeId, endNodeId], and the value
+        // is the relationship ID.
+
+        // Additionally, preprocess the relationships and sort them such that startNode is always the lowest ID.
+
+        // We also store a seperate dict with [startNodeId, endNodeId] as the key, and directions as values.
+
         let relsVisited = {}
         let relsVisitedDirections = {}
         this.state.data.forEach(row => {
@@ -71,7 +87,8 @@ class NeoGraphVis extends NeoReport {
             });
         })
 
-        // build the graph representation for D3.
+        // Now, we use the preprocessed relationship data as well as the built nodesMap.
+        // With this data, we can build a graph.nodesMap and graph.linksMap object that D3 can work with.
         this.state.data.forEach(row => {
             Object.values(row).forEach(value => {
                 // single rel
@@ -99,6 +116,9 @@ class NeoGraphVis extends NeoReport {
         graph.nodes = Object.values(nodesMap)
         graph.links = Object.values(linksMap)
         graph.nodeLabels = Object.keys(nodeLabelsMap)
+
+
+        // Trigger a refresh of the graph visualization.
         this.props.onNodeLabelUpdate(nodeLabelsMap)
         return graph
     }
@@ -132,8 +152,13 @@ class NeoGraphVis extends NeoReport {
             relsVisited[[minIndex, maxIndex]] = [];
             relsVisitedDirections[[minIndex, maxIndex]] = [];
         }
-        relsVisited[[minIndex, maxIndex]].push(value['identity']['low']);
-        relsVisitedDirections[[minIndex, maxIndex]].push(value['start']['low'] === minIndex);
+        // if this is a new one, append it.
+        // TODO - this is potentially an O(n) operation, checking if a list contains a value.
+        if(!relsVisited[[minIndex, maxIndex]].includes(value['identity']['low'])){
+            relsVisited[[minIndex, maxIndex]].push(value['identity']['low']);
+            relsVisitedDirections[[minIndex, maxIndex]].push(value['start']['low'] === minIndex);
+        }
+
 
     }
 
@@ -172,7 +197,10 @@ class NeoGraphVis extends NeoReport {
     }
 
     componentDidMount() {
+        // Default node colors.
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
+
+        // Handle optional override of node colors in the visualization.
         let parsedParameters = this.props.params;
         if (parsedParameters && parsedParameters.nodeColors) {
             if (typeof (parsedParameters.nodeColors) === 'string') {
@@ -181,18 +209,18 @@ class NeoGraphVis extends NeoReport {
                 colors = parsedParameters.nodeColors
             }
         }
+        // Convert the Cypher query result into a nodesMap, relsMap and nodeLabelsMap on the graph object.
         let graph = this.convertDataToGraph();
         this.state.nodeLabels = graph.nodeLabels
 
-        // chart dimensions
+        // chart dimensions generated based on the size of the current report.
         var width = this.props.clientWidth - 50; //-90 + props.width * 105 - xShift * 0.5;
         var height = -145 + this.props.height * 100;
 
-        // set up svg
+        // set up svg for d3.
         svg = d3.select('.chart' + this.props.id).attr("transform", null);
         let zoom = d3.zoom();
         zoom.transform(svg, d3.zoomIdentity);
-
         var svg = d3.select('.chart' + this.props.id)
             .attr("width", width)
             .attr("height", height)
@@ -202,9 +230,11 @@ class NeoGraphVis extends NeoReport {
             }))
             .append("g");
 
+        // Add force directed graph simulation to SVG.
         var simulation = d3.forceSimulation()
             .force("center", d3.forceCenter(width / 2, height / 2))
             .force("link", d3.forceLink().strength(function (d) {
+                // If two relationships share one or more nodes, add a force of 0.1 between them.
                 if (d.count === 0 && d.totalCount % 2 === 0) {
                     return 0.1;
                 } else if (d.totalCount === 1) {
@@ -221,9 +251,11 @@ class NeoGraphVis extends NeoReport {
 
             .force("charge", d3.forceManyBody().strength(-50))
             .force("collide", d3.forceCollide().strength(1).radius(function (d) {
+                // A strong force pushing away nodes from eachother when they get real close.
                 return d.radius * 1.2
             }))
             .force("collide", d3.forceCollide().strength(0.1).radius(function (d) {
+                // A weak force pushing away nodes from eachother when they are kind of close.
                 return d.radius * 2.4
             }));
 
@@ -231,6 +263,7 @@ class NeoGraphVis extends NeoReport {
         var prevSelected;
 
         function handePopUp(d, i) {
+            // Render a nice pop-up when we click a node.
             let circ = svg.selectAll("text").filter(c => d === c);
             svg.selectAll("tspan").remove();
             svg.selectAll("text").attr('filter', "none")
@@ -248,13 +281,14 @@ class NeoGraphVis extends NeoReport {
                     .attr("x", d.x)
                     .text(function () {
                         let string = JSON.stringify(item) + ": " + JSON.stringify(d.properties[item]);
-                        return string.substr(0, Math.min(100, string.length));  // Value of the text
+                        return string.substr(0, Math.min(100, string.length));
                     });
 
             })
             prevSelected = circ.node();
         }
 
+        // Style properties for the links drawn by the visualization.
         var link = svg.append("g")
             .style("stroke", "#aaa")
             .selectAll("line")
@@ -267,6 +301,7 @@ class NeoGraphVis extends NeoReport {
                 }
             });
 
+        // Draw the type of relationship next to the links.
         var type = svg.append("g")
             .attr("class", "types")
             .selectAll("text")
@@ -285,6 +320,7 @@ class NeoGraphVis extends NeoReport {
                 .on("drag", dragged)
                 .on("end", dragended));
 
+        // Draw the nodes with the colors we've generated.
         var node = svg.append("g")
             .attr("class", "nodes")
             .selectAll("circle")
@@ -306,6 +342,8 @@ class NeoGraphVis extends NeoReport {
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended));
+
+        // Draw the label on top of the nodes. Depending on what property we've selected to drawn.
         let propertiesSelected = this.props.propertiesSelected;
         var label = svg.append("g")
             .attr("class", "labels")
@@ -321,8 +359,10 @@ class NeoGraphVis extends NeoReport {
                 if (propertiesSelected.length === 0) {
                     return (d.properties.name) ? (d.properties.name) : "(" + d.labels + ")";
                 }
-                let property = d.properties[propertiesSelected[graph.nodeLabels.indexOf(d.labels[d.labels.length - 1])]];
-                return (property) ? property : "(" + d.labels + ")";
+                let indexOfPropertyToShow = graph.nodeLabels.indexOf(d.labels[d.labels.length - 1]);
+                let propertyNameToShow = propertiesSelected[indexOfPropertyToShow];
+                let propertyValue = d.properties[propertyNameToShow];
+                return (propertyValue) ? propertyValue : "(" + d.labels + ")";
             })
 
         simulation
@@ -333,9 +373,10 @@ class NeoGraphVis extends NeoReport {
             .links(graph.links);
 
         function ticked() {
+            // Each tick of the simulation, recompute the link positions.
             link.attr("d", function (d) {
-
                 let orientation = (d.source.id > d.target.id);
+
                 let x1 = (orientation) ? d.target.x : d.source.x,
                     y1 = (orientation) ? d.target.y : d.source.y,
                     x2 = (orientation) ? d.source.x : d.target.x,
@@ -392,7 +433,6 @@ class NeoGraphVis extends NeoReport {
 
 
             // update node positions
-            // note in this example we bound the positions
             node.attr("cx", function (d) {
                 return d.x = Math.max(d.radius - width * 15, Math.min(width + width * 15 - d.radius, d.x));
             })
@@ -506,6 +546,7 @@ class NeoGraphVis extends NeoReport {
     }
 
     componentDidUpdate(prevProps) {
+
         super.componentDidUpdate(prevProps);
         d3.select('.chart' + this.props.id).select('g').remove();
         this.componentDidMount();

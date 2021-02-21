@@ -21,9 +21,8 @@ class NeoCheckBox extends React.Component {
     }
 
     render() {
-
         return <><Checkbox onChange={this.onChange}
-                           value={this.state.value}
+                           value={(this.state.value) ? this.state.value : this.props.defaultValue}
                            checked={(this.state.value === "on")}
                            id={null}
                            password={this.props.password}

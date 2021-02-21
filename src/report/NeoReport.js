@@ -89,6 +89,9 @@ class NeoReport extends React.Component {
 
             })
             .catch(error => {
+                this.props.stateChanged({
+                    label: "CypherError"
+                })
                 let newline = '\n'
                 this.state.data = [{error: error['stack']}];
 
@@ -96,6 +99,9 @@ class NeoReport extends React.Component {
             .then(() => {
                 this.state.running = false;
                 this.setState(this.state);
+                this.props.stateChanged({
+                    label: "CypherSuccess"
+                })
             })
     }
 

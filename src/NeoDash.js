@@ -33,13 +33,12 @@ class NeoDash extends React.Component {
                 let desktopIntegration = new Neo4jDesktopIntegration(context);
                 let neo4j = desktopIntegration.getActiveDatabase();
                 if (neo4j) {
-
                     a.connection = {
                         url: neo4j.connection.configuration.protocols.bolt.url,
                         database: "",
                         username: neo4j.connection.configuration.protocols.bolt.username,
                         password: neo4j.connection.configuration.protocols.bolt.password,
-                        encryption: neo4j.connection.configuration.protocols.bolt.tlsLevel === "REQUIRED"
+                        encryption:  neo4j.connection.configuration.protocols.bolt.tlsLevel === "REQUIRED" ? "on" : "off"
                     }
                     a.connect()
 
@@ -436,9 +435,10 @@ class NeoDash extends React.Component {
                                       placeholder={''}/>
                         <div style={{marginTop: "10px"}}>
 
-                            <NeoCheckBox onChange={this.stateChanged} changeEventLabel={"EncryptionChanged"}
-                                         label={"Encrypted Connection"}>
-                                defaultValue={(this.connection.encryption) ? "on" : "off"}
+                            <NeoCheckBox onChange={this.stateChanged}
+                                         changeEventLabel={"EncryptionChanged"}
+                                         label={"Encrypted Connection"}
+                                defaultValue={(this.connection.encryption === "on") ? "on" : "off"}>
 
                             </NeoCheckBox>
                             <NeoTextButton right modal="close"

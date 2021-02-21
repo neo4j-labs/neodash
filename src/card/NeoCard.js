@@ -103,6 +103,13 @@ class NeoCardComponent extends React.Component {
             this.props.onChange(update);
             return
         }
+        if (update.label === "CypherError") {
+            this.state.success = false;
+        }
+        if (update.label === "CypherSuccess") {
+            this.state.success = true;
+            return
+        }
         if (update.label === "SettingsSaved") {
             this.updateCardSettings(update);
 
@@ -241,6 +248,10 @@ class NeoCardComponent extends React.Component {
                     refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
+
+        if (!this.state.success){
+            this.state.action = <div key={0}></div>
+        }
         return state
     }
 
@@ -252,9 +263,12 @@ class NeoCardComponent extends React.Component {
         }
 
         // TODO: Force a refresh of the card component in a much cleaner way.
-        this.state.query = this.state.query.endsWith('\n') ?
-            this.state.query.substr(0, this.state.query.length - 1) :
-            this.state.query += "\n";
+        if (this.state.type !== "graph"){
+            this.state.query = this.state.query.endsWith('\n') ?
+                this.state.query.substr(0, this.state.query.length - 1) :
+                this.state.query += "\n";
+        }
+
 
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
 
@@ -311,30 +325,39 @@ class NeoCardComponent extends React.Component {
     }
 
     updateGraphChips(labels) {
+        console.log(this.state);
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
             this.state.propertiesSelected = Object.keys(labels).map(l => {
-                return "name"
+
+                // If nothing's selected, select the 'name' property. If the name's not available, just pick the first.
+                if (labels[l].includes('name')){
+                    return "name"
+                }else{
+                    return labels[l][0]
+                }
             });
 
             this.state.labels = Object.keys(labels);
+            this.stateChanged({label: "Refresh"})
         }
 
-        this.state.page += 1;
-        this.state.action =
-            <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
-                           width={this.props.width}
-                           params={this.state.parsedParameters}
-                           properties={Object.values(labels).map((labelChoices, index) => {
-                               let options = {}
-                               labelChoices.forEach(choice =>
-                                   options[(index + "-" + choice)] = choice
-                               )
-                               return options;
-                           })}
-                           onChange={this.stateChanged}/>;
-
-        this.setState(this.state);
+        if(this.state.success){
+            this.state.action =
+                <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
+                               width={this.props.width}
+                               params={this.state.parsedParameters}
+                               properties={Object.values(labels).map((labelChoices, index) => {
+                                   let options = {}
+                                   labelChoices.forEach(choice =>
+                                       options[(index + "-" + choice)] = choice
+                                   )
+                                   return options;
+                               })}
+                               onChange={this.stateChanged}/>;
+        }else{
+            this.state.action = <div key={0}></div>
+        }
     }
 
     render() {
@@ -369,7 +392,7 @@ class AddNeoCardComponent extends React.Component {
     }
 
     render() {
-        return <Col l={4} m={6} s={12}><a>
+        return <Col l={4} m={12} s={12}><a>
             <Card actions={[]}
                   className={"medium grey lighten-2 button add-neo-card"}
                   closeIcon={<Icon>close</Icon>}
