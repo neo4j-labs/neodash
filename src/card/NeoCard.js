@@ -15,6 +15,7 @@ import NeoBarChart from "../report/bar/NeoBarChart";
 import NeoBarPropertySelect from "../report/bar/NeoBarPropertySelect";
 import NeoLineChart from "../report/line/NeoLineChart";
 import NeoLinePropertySelect from "../report/line/NeoLinePropertySelect";
+import NeoPropertySelectReport from "../report/select/NeoPropertySelectReport";
 
 let tallRowCount = 14;
 let normalRowCount = 5;
@@ -43,6 +44,7 @@ class NeoCardComponent extends React.Component {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
         this.updateGraphChips = this.updateGraphChips.bind(this);
+        this.onSelectionChange = this.onSelectionChange.bind(this);
         this.updateBarPropertySelect = this.updateBarPropertySelect.bind(this);
         this.updateLinePropertySelect = this.updateLinePropertySelect.bind(this);
         this.counter = 0;
@@ -238,6 +240,18 @@ class NeoCardComponent extends React.Component {
                     refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
+        if (this.state.type === 'select') {
+            this.state.content =
+                <NeoPropertySelectReport
+                    connection={this.props.connection}
+                    query={this.state.query}
+                    params={this.state.parsedParameters}
+                    data={this.state.data}
+                    stateChanged={this.stateChanged}
+                    onSelectionChange={this.onSelectionChange}
+                    refresh={this.state.refresh}/>
+            this.state.action = <div key={0}></div>
+        }
         if (this.state.type === 'text') {
             this.state.content =
                 <NeoPlainTextView
@@ -249,9 +263,9 @@ class NeoCardComponent extends React.Component {
             this.state.action = <div key={0}></div>
         }
 
-        if (!this.state.success){
-            this.state.action = <div key={0}></div>
-        }
+        // if (!this.state.success) {
+        //     this.state.action = <div key={0}></div>
+        // }
         return state
     }
 
@@ -263,7 +277,7 @@ class NeoCardComponent extends React.Component {
         }
 
         // TODO: Force a refresh of the card component in a much cleaner way.
-        if (this.state.type !== "graph"){
+        if (this.state.type !== "graph") {
             this.state.query = this.state.query.endsWith('\n') ?
                 this.state.query.substr(0, this.state.query.length - 1) :
                 this.state.query += "\n";
@@ -273,6 +287,11 @@ class NeoCardComponent extends React.Component {
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
 
 
+    }
+
+    onSelectionChange(label, property, value) {
+        this.state.parsedParameters["neodash_movie_title"] = value;
+        this.stateChanged({label: "Refresh"})
     }
 
     parseParameters(props) {
@@ -325,15 +344,14 @@ class NeoCardComponent extends React.Component {
     }
 
     updateGraphChips(labels) {
-        console.log(this.state);
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
             this.state.propertiesSelected = Object.keys(labels).map(l => {
 
                 // If nothing's selected, select the 'name' property. If the name's not available, just pick the first.
-                if (labels[l].includes('name')){
+                if (labels[l].includes('name')) {
                     return "name"
-                }else{
+                } else {
                     return labels[l][0]
                 }
             });
@@ -342,22 +360,19 @@ class NeoCardComponent extends React.Component {
             this.stateChanged({label: "Refresh"})
         }
 
-        if(this.state.success){
-            this.state.action =
-                <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
-                               width={this.props.width}
-                               params={this.state.parsedParameters}
-                               properties={Object.values(labels).map((labelChoices, index) => {
-                                   let options = {}
-                                   labelChoices.forEach(choice =>
-                                       options[(index + "-" + choice)] = choice
-                                   )
-                                   return options;
-                               })}
-                               onChange={this.stateChanged}/>;
-        }else{
-            this.state.action = <div key={0}></div>
-        }
+
+        this.state.action = <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
+                       width={this.props.width}
+                       params={this.state.parsedParameters}
+                       properties={Object.values(labels).map((labelChoices, index) => {
+                           let options = {}
+                           labelChoices.forEach(choice =>
+                               options[(index + "-" + choice)] = choice
+                           )
+                           return options;
+                       })}
+                       onChange={this.stateChanged}/>;
+
     }
 
     render() {

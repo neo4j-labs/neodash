@@ -8,6 +8,7 @@ class NeoCardSettings extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
+        this.type = this.props.type;
         this.setDefaultComponents();
     }
 
@@ -24,6 +25,20 @@ class NeoCardSettings extends React.Component {
                                               changeEventLabel={"RefreshRateChanged"}
                                               style={{width: '140px'}} label={"Refresh rate (sec)"}
                                               placeholder={"0 (No Refresh)"}/>;
+
+        this.selectionArea = <div style={{ width: "100%"}}>
+
+            <p>Choose a node label and property the user can select. </p>
+            <NeoTextInput defaultValue={this.props.refresh} onChange={this.stateChanged}
+                          changeEventLabel={"..."}
+                          style={{width: '140px'}} label={"Node Label"}
+                          placeholder={""}/>
+            <NeoTextInput defaultValue={this.props.refresh} onChange={this.stateChanged}
+                          changeEventLabel={"..."}
+                          style={{width: '140px'}} label={"Property"}
+                          placeholder={""}/>
+            <p>Then, use parameter <b>$neodash_movie_title</b> in any of your reports.</p>
+        </div>
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -34,6 +49,10 @@ class NeoCardSettings extends React.Component {
 
     stateChanged(data) {
         this.props.onChange(data);
+        if (data["label"] === "TypeChanged"){
+            this.type = data["value"]
+            this.forceUpdate()
+        }
     }
 
     render() {
@@ -53,6 +72,7 @@ class NeoCardSettings extends React.Component {
             'line': 'Line Chart',
             'bar': 'Bar Chart',
             'json': 'Raw JSON',
+            'select': 'Selection',
             'text': 'Markdown',
         };
 
@@ -71,9 +91,10 @@ class NeoCardSettings extends React.Component {
                 <NeoOptionSelect label="Type" defaultValue={this.props.type} onChange={this.stateChanged} options={vizOptions}/>
                 <NeoOptionSelect label="Size" defaultValue={this.props.size} onChange={this.stateChanged} options={sizeOptions}/>
 
-                {this.cypherParamsInput}
-                {this.refreshRateInput}
-                {this.neoTextArea}
+                {(this.type !== "select") ? this.cypherParamsInput : <div></div>}
+                {(this.type !== "select") ?this.refreshRateInput : <div></div>}
+                {(this.type !== "select") ? this.neoTextArea : <div></div>}
+                {(this.type == "select") ? this.selectionArea : <div></div>}
             </div>
         );
     }
