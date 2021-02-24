@@ -160,6 +160,7 @@ class NeoDash extends React.Component {
                             if (report.type) {
                                 return <NeoCard
                                     connection={this.connection}
+                                    globalParameters={this.state.globalParameters}
                                     page={report.page} width={report.width} height={report.height}
                                     kkey={this.state.count + index} key={this.state.count + index} id={index}
                                     onChange={this.stateChanged}
@@ -210,6 +211,25 @@ class NeoDash extends React.Component {
         if (update.label === "UsernameChanged") {
             this.connection.username = update.value;
         }
+
+        /**
+         * propagate the list of updated global parameters to each of the reports.
+         */
+        if (update.label === "GlobalParameterChanged"){
+            if (!this.state.globalParameters){
+                this.state.globalParameters = {}
+            }
+            let newValue = update.value.value;
+            let newKey = update.value.label;
+            let newProperty = update.value.property;
+            let newVar = {"neodash_movie_title": newValue};
+            this.state.globalParameters = {...this.state.globalParameters, ...newVar}
+            this.state.cardState.forEach(card => {
+                if (card.content){
+                    card.content.props.stateChanged({label: "GlobalParametersChanged", value: this.state.globalParameters})
+                }
+            })
+        }
         if (update.label === "PasswordChanged") {
             this.connection.password = update.value;
         }
@@ -256,7 +276,10 @@ class NeoDash extends React.Component {
             this.state.cardState[this.state.cards.indexOf(this.state.cards.filter(c => c.props.id === update.id)[0])] = update.state;
         }
         if (update.label === 'newCard') {
-            let newCard = <NeoCard connection={this.connection} kkey={this.state.count} width={4} height={4}
+            let newCard = <NeoCard connection={this.connection}
+                                   globalParameters={this.state.globalParameters}
+                                   kkey={this.state.count}
+                                   width={4} height={4}
                                    id={this.state.count}
                                    editable={this.state.editable}
                                    key={this.state.count}

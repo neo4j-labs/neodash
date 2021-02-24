@@ -131,6 +131,13 @@ class NeoCardComponent extends React.Component {
             this.state.parameters = update.value;
             return
         }
+        if (update.label === "GlobalParametersChanged") {
+            if(this.state.type !== "select"){
+                this.state.globalParameters = update.value;
+                this.parseParameters(this.props)
+                this.state.query = this.state.query + " ";
+            }
+        }
         if (update.label === "RefreshRateChanged") {
             this.state.refresh = update.value;
             return
@@ -185,7 +192,7 @@ class NeoCardComponent extends React.Component {
                 <NeoBarChart connection={this.props.connection}
                              page={this.state.page}
                              query={this.state.query}
-                             clientWidth={this.myRef.current.clientWidth}
+                             clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
                              id={this.props.id}
                              stateChanged={this.stateChanged}
                              propertiesSelected={this.state.propertiesSelected}
@@ -201,7 +208,7 @@ class NeoCardComponent extends React.Component {
                 <NeoLineChart connection={this.props.connection}
                               page={this.state.page}
                               query={this.state.query}
-                              clientWidth={this.myRef.current.clientWidth}
+                              clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
                               id={this.props.id}
                               stateChanged={this.stateChanged}
                               propertiesSelected={this.state.propertiesSelected}
@@ -219,7 +226,7 @@ class NeoCardComponent extends React.Component {
                     connection={this.props.connection}
                     query={this.state.query}
                     params={this.state.parsedParameters}
-                    clientWidth={this.myRef.current.clientWidth}
+                    clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
                     propertiesSelected={this.state.propertiesSelected}
                     onNodeLabelUpdate={this.updateGraphChips}
                     width={this.state.width}
@@ -289,9 +296,14 @@ class NeoCardComponent extends React.Component {
 
     }
 
+    /**
+     * For selection reports, the selected value has changed.
+     * @param label
+     * @param property
+     * @param value
+     */
     onSelectionChange(label, property, value) {
-        this.state.parsedParameters["neodash_movie_title"] = value;
-        this.stateChanged({label: "Refresh"})
+        this.props.onChange({label: "GlobalParameterChanged", value: {label: label, property: property, value: value}});
     }
 
     parseParameters(props) {
@@ -317,6 +329,10 @@ class NeoCardComponent extends React.Component {
                     return {};
                 }
             })(this.state.parameters);
+
+        if (this.state.globalParameters) {
+            this.state.parsedParameters = {...this.state.parsedParameters, ...this.state.globalParameters}
+        }
     }
 
     updateBarPropertySelect(labels) {
@@ -362,16 +378,16 @@ class NeoCardComponent extends React.Component {
 
 
         this.state.action = <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
-                       width={this.props.width}
-                       params={this.state.parsedParameters}
-                       properties={Object.values(labels).map((labelChoices, index) => {
-                           let options = {}
-                           labelChoices.forEach(choice =>
-                               options[(index + "-" + choice)] = choice
-                           )
-                           return options;
-                       })}
-                       onChange={this.stateChanged}/>;
+                                           width={this.props.width}
+                                           params={this.state.parsedParameters}
+                                           properties={Object.values(labels).map((labelChoices, index) => {
+                                               let options = {}
+                                               labelChoices.forEach(choice =>
+                                                   options[(index + "-" + choice)] = choice
+                                               )
+                                               return options;
+                                           })}
+                                           onChange={this.stateChanged}/>;
 
     }
 
