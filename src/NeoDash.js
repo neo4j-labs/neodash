@@ -314,7 +314,7 @@ class NeoDash extends React.Component {
         let property = update.value.property;
         let propertyId = (update.value.propertyId) ? "_" + update.value.propertyId : "";
         let newGlobalParameter = "neodash_" + this.toLowerCaseSnakeCase(label) + "_" + this.toLowerCaseSnakeCase(property) + propertyId;
-        console.log(newGlobalParameter)
+
         if (newGlobalParameterValue !== "") {
             this.state.globalParameters[newGlobalParameter] = newGlobalParameterValue;
         } else {
