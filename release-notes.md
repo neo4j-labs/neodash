@@ -1,1 +1,1 @@
-Initial release
+Updated NeoDash to latest version
