@@ -10,6 +10,12 @@ body{
     font-size: 12px;
 }
 
+/* force autocomplete inputs to be moved up due to Materialize-react bug */
+.autocomplete-div .input-field label {
+    -webkit-transform: translateY(-18px) scale(0.8);
+    transform: translateY(-18px) scale(0.8);
+}
+
 .log {
     background-color: lightgrey;
     font-size: 12px;

@@ -38,13 +38,13 @@ class NeoDash extends React.Component {
                         database: "",
                         username: neo4j.connection.configuration.protocols.bolt.username,
                         password: neo4j.connection.configuration.protocols.bolt.password,
-                        encryption:  neo4j.connection.configuration.protocols.bolt.tlsLevel === "REQUIRED" ? "on" : "off"
+                        encryption: neo4j.connection.configuration.protocols.bolt.tlsLevel === "REQUIRED" ? "on" : "off"
                     }
                     a.connect()
 
                 } else {
                     a.updateConnectionModal(a.connect, true);
-                    a.stateChanged({label:"HideError"})
+                    a.stateChanged({label: "HideError"})
                 }
             });
 
@@ -71,7 +71,7 @@ class NeoDash extends React.Component {
         // If not running from desktop, always ask for connection details
         if (!neo4jDesktopApi) {
             this.updateConnectionModal(this.connect, true);
-        }else{
+        } else {
             // If running from desktop, the constructor will set up a connection using the promise.
             this.stateChanged({label: "CreateError", value: "Trying to connect to your active database..."});
         }
@@ -163,6 +163,7 @@ class NeoDash extends React.Component {
                                     globalParameters={this.state.globalParameters}
                                     page={report.page} width={report.width} height={report.height}
                                     kkey={this.state.count + index} key={this.state.count + index} id={index}
+                                    session={this.session}
                                     onChange={this.stateChanged}
                                     editable={this.state.editable}
                                     type={report.type} propertiesSelected={report.properties}
@@ -211,59 +212,18 @@ class NeoDash extends React.Component {
         if (update.label === "UsernameChanged") {
             this.connection.username = update.value;
         }
-
-        /**
-         * propagate the list of updated global parameters to each of the reports.
-         */
-        if (update.label === "GlobalParameterChanged"){
-            if (!this.state.globalParameters){
-                this.state.globalParameters = {}
-            }
-            let newValue = update.value.value;
-            let newKey = update.value.label;
-            let newProperty = update.value.property;
-            let newVar = {"neodash_movie_title": newValue};
-            this.state.globalParameters = {...this.state.globalParameters, ...newVar}
-            this.state.cardState.forEach(card => {
-                if (card.content){
-                    card.content.props.stateChanged({label: "GlobalParametersChanged", value: this.state.globalParameters})
-                }
-            })
+        if (update.label === "GlobalParameterChanged") {
+            this.handleGlobalParameterChange(update);
         }
         if (update.label === "PasswordChanged") {
             this.connection.password = update.value;
         }
-        if (update.label === "HideError"){
+        if (update.label === "HideError") {
             this.errorModal = null;
             this.state.count += 1;
         }
         if (update.label === "CreateError") {
-            let content = update.value;
-
-            if (content.startsWith("Could not perform discovery. No routing servers available.")) {
-                let encryption = this.connection.encryption;
-                content = "Unable to connect to the specified Neo4j database. " +
-                    "The database might be unreachable, or it does not accept " + ((encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
-
-            }
-            let header = (content.startsWith("Trying to connect")) ? "Connecting..." : "Error";
-            if (content === "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: reach out to Niels at niels.dejong@neo4j.com."){
-                header = "Contact"
-            }
-
-            this.errorModal = <NeoModal header={header}
-                                        style={{'maxWidth': '550px'}}
-                                        open={true}
-                                        trigger={null}
-                                        content={<p>{content}</p>}
-                                        key={this.state.count}
-                                        id={this.state.count}
-                                        root={document.getElementById("root")}
-                                        actions={[
-                                            <Button flat modal="close"
-                                                    node="button"
-                                                    waves="red">Close</Button>
-                                        ]}/>
+            this.handleError(update.value);
             this.state.count += 1;
         }
         if (update.label === "SaveModalUpdated") {
@@ -276,27 +236,7 @@ class NeoDash extends React.Component {
             this.state.cardState[this.state.cards.indexOf(this.state.cards.filter(c => c.props.id === update.id)[0])] = update.state;
         }
         if (update.label === 'newCard') {
-            let newCard = <NeoCard connection={this.connection}
-                                   globalParameters={this.state.globalParameters}
-                                   kkey={this.state.count}
-                                   width={4} height={4}
-                                   id={this.state.count}
-                                   editable={this.state.editable}
-                                   key={this.state.count}
-                                   onChange={this.stateChanged} type='table'/>;
-            this.state.count += 1;
-            this.state.cards.splice(this.state.cards.length - 1, 0, newCard);
-            this.state.cardState.splice(this.state.cardState.length - 1, 0, {
-                "title": "",
-                "width": 4,
-                "height": 4,
-                "type": "table",
-                "query": "",
-                "page": 1,
-                "propertiesSelected": [],
-                "parameters": {},
-                "refresh": 3600
-            });
+            this.handleNewCardCreate();
         }
 
         if (update.label === 'CardShiftLeft') {
@@ -332,13 +272,99 @@ class NeoDash extends React.Component {
             this.state.cardState.splice(index, 1);
         }
         if (update.label !== "SaveModalUpdated") {
-            this.updateSaveModal();
+            this.handleUpdateSavedJSON();
         }
         this.setState(this.state);
     }
 
+    handleNewCardCreate() {
+        let newCard = <NeoCard connection={this.connection}
+                               globalParameters={this.state.globalParameters}
+                               kkey={this.state.count}
+                               session={this.session}
+                               width={4} height={4}
+                               id={this.state.count}
+                               editable={this.state.editable}
+                               key={this.state.count}
+                               onChange={this.stateChanged} type='table'/>;
+        this.state.count += 1;
+        this.state.cards.splice(this.state.cards.length - 1, 0, newCard);
+        this.state.cardState.splice(this.state.cardState.length - 1, 0, {
+            "title": "",
+            "width": 4,
+            "height": 4,
+            "type": "table",
+            "query": "",
+            "page": 1,
+            "propertiesSelected": [],
+            "parameters": {},
+            "refresh": 3600
+        });
+    }
 
-    updateSaveModal() {
+    /**
+     * propagate the list of updated global parameters to each of the reports.
+     */
+    handleGlobalParameterChange(update) {
+        if (!this.state.globalParameters) {
+            this.state.globalParameters = {}
+        }
+        let newGlobalParameterValue = update.value.value;
+        let label = update.value.label;
+        let property = update.value.property;
+        let propertyId = (update.value.propertyId) ? "_" + update.value.propertyId : "";
+        let newGlobalParameter = "neodash_" + this.toLowerCaseSnakeCase(label) + "_" + this.toLowerCaseSnakeCase(property) + propertyId;
+        console.log(newGlobalParameter)
+        if (newGlobalParameterValue !== "") {
+            this.state.globalParameters[newGlobalParameter] = newGlobalParameterValue;
+        } else {
+            delete this.state.globalParameters[newGlobalParameter];
+        }
+        this.state.cardState.forEach(card => {
+            if (card.content) {
+                card.content.props.stateChanged({
+                    label: "GlobalParametersChanged",
+                    value: this.state.globalParameters
+                })
+            }
+        })
+    }
+
+    /**
+     * Helper function to convert a string with capital letters and spaces to a lowercase snake case verison.
+     */
+    toLowerCaseSnakeCase(value) {
+        return value.toLowerCase().replace(/ /g,"_");
+    }
+
+    handleError(content) {
+        if (content.startsWith("Could not perform discovery. No routing servers available.")) {
+            let encryption = this.connection.encryption;
+            content = "Unable to connect to the specified Neo4j database. " +
+                "The database might be unreachable, or it does not accept " + ((encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
+
+        }
+        let header = (content.startsWith("Trying to connect")) ? "Connecting..." : "Error";
+        if (content === "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: reach out to Niels at niels.dejong@neo4j.com.") {
+            header = "Contact"
+        }
+
+        this.errorModal = <NeoModal header={header}
+                                    style={{'maxWidth': '550px'}}
+                                    open={true}
+                                    trigger={null}
+                                    content={<p>{content}</p>}
+                                    key={this.state.count}
+                                    id={this.state.count}
+                                    root={document.getElementById("root")}
+                                    actions={[
+                                        <Button flat modal="close"
+                                                node="button"
+                                                waves="red">Close</Button>
+                                    ]}/>
+    }
+
+    handleUpdateSavedJSON() {
         if (!this.connected) {
             return
         }
@@ -426,7 +452,7 @@ class NeoDash extends React.Component {
                         NeoDash is a tool for prototyping Neo4j dashboards.
                         Building a production-grade front-end instead? &nbsp;
                         <u><a style={{color: "white"}} href="#"
-                             onClick={e => this.handleGetInTouchClick(this)}>Get in touch</a></u>!
+                              onClick={e => this.handleGetInTouchClick(this)}>Get in touch</a></u>!
                     </p>
 
                 ]}
@@ -461,7 +487,7 @@ class NeoDash extends React.Component {
                             <NeoCheckBox onChange={this.stateChanged}
                                          changeEventLabel={"EncryptionChanged"}
                                          label={"Encrypted Connection"}
-                                defaultValue={(this.connection.encryption === "on") ? "on" : "off"}>
+                                         defaultValue={(this.connection.encryption === "on") ? "on" : "off"}>
 
                             </NeoCheckBox>
                             <NeoTextButton right modal="close"

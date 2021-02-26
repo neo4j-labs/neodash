@@ -3,7 +3,7 @@ import NeoReport from "../NeoReport";
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
 
-class NeoPlainTextView extends NeoReport {
+class NeoMarkdownView extends NeoReport {
     render() {
         let rendered = super.render();
         if (rendered) {
@@ -18,4 +18,4 @@ class NeoPlainTextView extends NeoReport {
     }
 }
 
-export default (NeoPlainTextView);
+export default (NeoMarkdownView);

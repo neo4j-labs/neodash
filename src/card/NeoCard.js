@@ -10,7 +10,7 @@ import Col from "react-materialize/lib/Col";
 import NeoCardSettings from "./NeoCardSettings";
 import NeoJSONView from "../report/json/NeoJSONView";
 import NeoGraphChips from "../report/graph/NeoGraphChips";
-import NeoPlainTextView from "../report/text/NeoPlainTextView";
+import NeoMarkdownView from "../report/text/NeoMarkdownView";
 import NeoBarChart from "../report/bar/NeoBarChart";
 import NeoBarPropertySelect from "../report/bar/NeoBarPropertySelect";
 import NeoLineChart from "../report/line/NeoLineChart";
@@ -35,6 +35,7 @@ class NeoCardComponent extends React.Component {
         properties: (this.props.propertiesSelected ? this.props.propertiesSelected : []),
         propertiesSelected: (this.props.propertiesSelected ? this.props.propertiesSelected : []),
         parameters: (this.props.parameters) ? (this.props.parameters) : "",
+        globalParameters: (this.props.globalParameters) ? (this.props.globalParameters) : {},
         parsedParameters: {},
         refresh: (this.props.refresh ? this.props.refresh : 0),
         title: (this.props.title ? this.props.title : "")
@@ -52,30 +53,16 @@ class NeoCardComponent extends React.Component {
         this.myRef = React.createRef();
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.resize)
-    }
-
     componentDidMount() {
         window.addEventListener('resize', this.resize)
         this.parseParameters(this.props);
-        this.neoCardSettings =
-            <NeoCardSettings refresh={this.props.refresh}
-                             size={this.props.width + ((this.props.height - 4) / 4) * 12}
-                             type={this.props.type}
-                             parameters={this.state.parameters}
-                             query={this.props.query}
-                             onChange={this.stateChanged}/>;
-        this.cardTitle = <Textarea
-            onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
-            noLayout={true}
-            disabled={!this.props.editable}
-            defaultValue={this.state.title}
-            key={this.counter}
-            className="card-title editable-title"
-            placeholder={"Report name..."}/>;
+        this.initializeTitleAndSettings();
         this.counter += 1;
         this.stateChanged({})
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resize)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -83,10 +70,7 @@ class NeoCardComponent extends React.Component {
             this.counter += 1;
             this.state = this.defaultState;
             this.stateChanged({label: "SettingsSaved"})
-            this.neoCardSettings =
-                <NeoCardSettings refresh={this.state.refresh} size={this.props.width} type={this.props.type}
-                                 key={this.counter} query={this.props.query}
-                                 parameters={this.state.parameters} onChange={this.stateChanged}/>;
+            this.updateCardSettings()
             this.cardTitle = <Textarea
                 key={this.counter}
                 onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
@@ -96,6 +80,25 @@ class NeoCardComponent extends React.Component {
         }
     }
 
+    /**
+     * Initializes the title and settings for the card.
+     */
+    initializeTitleAndSettings() {
+        this.updateSettingsComponent();
+        this.cardTitle = <Textarea
+            onChange={e => this.stateChanged({"label": "ChangedTitle", value: e.target.value})}
+            noLayout={true}
+            disabled={!this.props.editable}
+            defaultValue={this.state.title}
+            key={this.counter}
+            className="card-title editable-title"
+            placeholder={"Report name..."}/>;
+    }
+
+    /**
+     * Central place to handle all updates sent to a NeoCard.
+     * @param update - a key value pair with information on the update.
+     */
     stateChanged(update) {
         if (update.label === "QueryChanged") {
             this.state.query = update.value;
@@ -114,13 +117,14 @@ class NeoCardComponent extends React.Component {
         }
         if (update.label === "SettingsSaved") {
             this.updateCardSettings(update);
-
         }
         if (update.label === "CategoryChanged" || update.label === "X-AxisChanged") {
             this.state.propertiesSelected[0] = update.value;
+
         }
         if (update.label === "ValueChanged" || update.label === "Y-AxisChanged") {
             this.state.propertiesSelected[1] = update.value;
+
         }
         if (update.label === "ChangedTitle") {
             this.state.title = update.value;
@@ -131,11 +135,27 @@ class NeoCardComponent extends React.Component {
             this.state.parameters = update.value;
             return
         }
+        if (update.label === "NodeSelectionUpdated") {
+            this.state.propertiesSelected[0] = update.value
+            this.updateSettingsComponent();
+        }
+        if (update.label === "PropertySelectionUpdated") {
+            this.state.propertiesSelected[1] = update.value
+            this.updateSettingsComponent();
+        }
+        if (update.label === "PropertySelectionIdUpdated") {
+            this.state.propertiesSelected[2] = update.value
+            this.updateSettingsComponent();
+        }
         if (update.label === "GlobalParametersChanged") {
-            if(this.state.type !== "select"){
-                this.state.globalParameters = update.value;
-                this.parseParameters(this.props)
-                this.state.query = this.state.query + " ";
+            if (this.state.type !== "select") {
+                if (this.state.query.includes("$neodash_")) {
+                    this.state.globalParameters = update.value;
+                    this.parseParameters(this.props)
+                    this.forceRefreshByQueryChange();
+                } else {
+                    return
+                }
             }
         }
         if (update.label === "RefreshRateChanged") {
@@ -162,6 +182,7 @@ class NeoCardComponent extends React.Component {
         if (update.label === "TypeChanged") {
             this.state.page = 1;
             this.state.type = update.value;
+            this.updateSettingsComponent();
         }
         if (update.label === "SizeChanged") {
             this.state.width = (update.value % 12 == 0) ? 12 : (update.value % 12);
@@ -174,164 +195,214 @@ class NeoCardComponent extends React.Component {
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
     }
 
+    updateSettingsComponent() {
+        this.neoCardSettings =
+            <NeoCardSettings refresh={this.state.refresh}
+                             size={this.props.width + ((this.props.height - 4) / 4) * 12}
+                             type={this.state.type}
+                             key={this.counter}
+                             query={this.state.query}
+                             session={this.props.session}
+                             properties={this.state.propertiesSelected}
+                             parameters={this.state.parameters}
+                             onChange={this.stateChanged}/>;
+    }
+
     updateReportComponent(state) {
         if (this.state.type === 'table') {
-            this.state.content =
-                <NeoTable connection={this.props.connection}
-                          rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
-                          query={this.state.query}
-                          stateChanged={this.stateChanged}
-                          params={this.state.parsedParameters}
-                          refresh={this.state.refresh}
-                />
-            this.state.action =
-                <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+            this.setCardTypeToTableView();
         }
         if (this.state.type === 'bar') {
-            this.state.content =
-                <NeoBarChart connection={this.props.connection}
-                             page={this.state.page}
-                             query={this.state.query}
-                             clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
-                             id={this.props.id}
-                             stateChanged={this.stateChanged}
-                             propertiesSelected={this.state.propertiesSelected}
-                             onNodeLabelUpdate={this.updateBarPropertySelect}
-                             params={this.state.parsedParameters}
-                             refresh={this.state.refresh}
-                             width={this.state.width}
-                             height={this.state.height}
-                />
+            this.setCardTypeToBarChart();
         }
         if (this.state.type === 'line') {
-            this.state.content =
-                <NeoLineChart connection={this.props.connection}
-                              page={this.state.page}
-                              query={this.state.query}
-                              clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
-                              id={this.props.id}
-                              stateChanged={this.stateChanged}
-                              propertiesSelected={this.state.propertiesSelected}
-                              onNodeLabelUpdate={this.updateLinePropertySelect}
-                              params={this.state.parsedParameters}
-                              refresh={this.state.refresh}
-                              width={this.state.width}
-                              height={this.state.height}
-                />
+            this.setCardTypeToLineChart();
         }
         if (this.state.type === "graph") {
-            this.state.page += 1;
-            this.state.content =
-                <NeoGraphViz
-                    connection={this.props.connection}
-                    query={this.state.query}
-                    params={this.state.parsedParameters}
-                    clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
-                    propertiesSelected={this.state.propertiesSelected}
-                    onNodeLabelUpdate={this.updateGraphChips}
-                    width={this.state.width}
-                    id={this.props.id}
-                    height={this.state.height} page={this.state.page}
-                    stateChanged={this.stateChanged}
-                    data={this.state.data}
-                    refresh={this.state.refresh}/>
+            this.setCardTypeToGraph();
         }
         if (this.state.type === 'json') {
-            this.state.content =
-                <NeoJSONView
-                    connection={this.props.connection}
-                    query={this.state.query}
-                    params={this.state.parsedParameters}
-                    data={this.state.data}
-                    stateChanged={this.stateChanged}
-                    refresh={this.state.refresh}/>
-            this.state.action = <div key={0}></div>
+            this.setCardTypeToJSON();
         }
         if (this.state.type === 'select') {
+            this.setCardTypeToPropertySelect();
+        }
+        if (this.state.type === 'text') {
+            this.setCardTypeToMarkdown();
+        }
+        return state
+    }
+
+    /**
+     * Refreshes a report by adding/removing a newline at the end of the query.
+     * TODO: Force a refresh of the card component in a much cleaner way.
+     */
+    forceRefreshByQueryChange() {
+        this.state.query = this.state.query.endsWith('\n') ?
+            this.state.query.substr(0, this.state.query.length - 1) :
+            this.state.query += "\n";
+    }
+
+    setCardTypeToTableView() {
+        this.state.content =
+            <NeoTable connection={this.props.connection}
+                      rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
+                      query={this.state.query}
+                      stateChanged={this.stateChanged}
+                      params={this.state.parsedParameters}
+                      refresh={this.state.refresh}
+            />
+        this.state.action =
+            <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+    }
+
+    setCardTypeToBarChart() {
+        this.state.content =
+            <NeoBarChart connection={this.props.connection}
+                         page={this.state.page}
+                         query={this.state.query}
+                         clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
+                         id={this.props.id}
+                         stateChanged={this.stateChanged}
+                         propertiesSelected={this.state.propertiesSelected}
+                         onNodeLabelUpdate={this.updateBarPropertySelect}
+                         params={this.state.parsedParameters}
+                         refresh={this.state.refresh}
+                         width={this.state.width}
+                         height={this.state.height}
+            />
+    }
+
+    setCardTypeToLineChart() {
+        this.state.content =
+            <NeoLineChart connection={this.props.connection}
+                          page={this.state.page}
+                          query={this.state.query}
+                          clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
+                          id={this.props.id}
+                          stateChanged={this.stateChanged}
+                          propertiesSelected={this.state.propertiesSelected}
+                          onNodeLabelUpdate={this.updateLinePropertySelect}
+                          params={this.state.parsedParameters}
+                          refresh={this.state.refresh}
+                          width={this.state.width}
+                          height={this.state.height}
+            />
+    }
+
+    setCardTypeToGraph() {
+        this.state.page += 1;
+        this.state.content =
+            <NeoGraphViz
+                connection={this.props.connection}
+                query={this.state.query}
+                params={this.state.parsedParameters}
+                clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
+                propertiesSelected={this.state.propertiesSelected}
+                onNodeLabelUpdate={this.updateGraphChips}
+                width={this.state.width}
+                id={this.props.id}
+                height={this.state.height} page={this.state.page}
+                stateChanged={this.stateChanged}
+                data={this.state.data}
+                refresh={this.state.refresh}/>
+    }
+
+    setCardTypeToJSON() {
+        this.state.content =
+            <NeoJSONView
+                connection={this.props.connection}
+                query={this.state.query}
+                params={this.state.parsedParameters}
+                data={this.state.data}
+                stateChanged={this.stateChanged}
+                refresh={this.state.refresh}/>
+        this.state.action = <div key={0}></div>
+    }
+
+    setCardTypeToMarkdown() {
+        this.state.content =
+            <NeoMarkdownView
+                connection={this.props.connection}
+                query={'return true'}
+                data={this.state.query}
+                stateChanged={this.stateChanged}
+                refresh={this.state.refresh}/>
+        this.state.action = <div key={0}></div>
+    }
+
+    setCardTypeToPropertySelect() {
+        // Cypher query to create the autocompletion results.
+        if (this.state.propertiesSelected && this.state.propertiesSelected[0] && this.state.propertiesSelected[1]) {
+            let label = this.state.propertiesSelected[0];
+            let property = this.state.propertiesSelected[1];
+            let propertyId = this.state.propertiesSelected[2];
+
+            // This the query used for autocompletion
+            this.state.query = `MATCH (n:\`` + label + `\`) \nWHERE toLower(toString(n.\`` + property + `\`)) CONTAINS toLower($input) \nRETURN n.\`` + property + `\` as value LIMIT 4`;
             this.state.content =
                 <NeoPropertySelectReport
                     connection={this.props.connection}
                     query={this.state.query}
-                    params={this.state.parsedParameters}
+                    label={label}
+                    property={property}
+                    propertyId={propertyId}
+                    parameters={this.state.parsedParameters}
                     data={this.state.data}
                     stateChanged={this.stateChanged}
                     onSelectionChange={this.onSelectionChange}
                     refresh={this.state.refresh}/>
             this.state.action = <div key={0}></div>
         }
-        if (this.state.type === 'text') {
-            this.state.content =
-                <NeoPlainTextView
-                    connection={this.props.connection}
-                    query={'return true'}
-                    data={this.state.query}
-                    stateChanged={this.stateChanged}
-                    refresh={this.state.refresh}/>
-            this.state.action = <div key={0}></div>
-        }
-
-        // if (!this.state.success) {
-        //     this.state.action = <div key={0}></div>
-        // }
-        return state
     }
 
     updateCardSettings(update) {
         this.parseParameters(this.props);
-
         if (this.state.type === "bar" || this.state.type === "line") {
             this.state.propertiesSelected = []
         }
-
-        // TODO: Force a refresh of the card component in a much cleaner way.
-        if (this.state.type !== "graph") {
-            this.state.query = this.state.query.endsWith('\n') ?
-                this.state.query.substr(0, this.state.query.length - 1) :
-                this.state.query += "\n";
+        if (this.state.type !== "NONE") {
+            this.forceRefreshByQueryChange()
         }
-
-
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
-
-
     }
 
     /**
-     * For selection reports, the selected value has changed.
-     * @param label
-     * @param property
-     * @param value
+     * For selection reports, the selected value has changed. This should be propagated to other reports.
      */
-    onSelectionChange(label, property, value) {
-        this.props.onChange({label: "GlobalParameterChanged", value: {label: label, property: property, value: value}});
+    onSelectionChange(label, property, propertyId, value) {
+        this.props.onChange({
+            label: "GlobalParameterChanged",
+            value: {label: label, property: property, propertyId: propertyId, value: value}
+        });
     }
 
     parseParameters(props) {
-        this.state.parsedParameters = (
+        let parametersAsString = this.state.parameters;
+        let globalParameters = this.state.globalParameters;
 
+        this.state.parsedParameters = (
             function (parameters) {
                 try {
                     if (parameters.trim() === "") {
                         return {};
                     }
-
                     let value = JSON.parse(parameters);
                     if (value.constructor === Object) {
                         return value;
                     }
                     return {};
                 } catch (err) {
-
                     props.onChange({
                         label: "CreateError",
                         value: 'Unable to parse Cypher parameters. ' + err.toString()
                     })
                     return {};
                 }
-            })(this.state.parameters);
+            })(parametersAsString);
 
-        if (this.state.globalParameters) {
-            this.state.parsedParameters = {...this.state.parsedParameters, ...this.state.globalParameters}
+        if (globalParameters) {
+            this.state.parsedParameters = {...this.state.parsedParameters, ...globalParameters}
         }
     }
 
@@ -343,7 +414,6 @@ class NeoCardComponent extends React.Component {
                                   onChange={this.stateChanged}
                                   categories={labels} values={labels}
             />
-
         this.setState(this.state);
     }
 

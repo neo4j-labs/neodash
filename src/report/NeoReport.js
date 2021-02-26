@@ -51,15 +51,15 @@ class NeoReport extends React.Component {
                     report.runQuery();
                     report.state.repeat = true;
                     report.setState(report.state);
-                    // alert(refresh)
                 }, refresh * 1000.0);
             }
         }
     }
 
     runQuery() {
+
         this.state.running = true;
-        if (this.props.query.trim() === "") {
+        if (!this.props.query || this.props.query.trim() === "") {
             this.state = {}
             this.state.running = false;
             this.state.data = null;
@@ -106,6 +106,10 @@ class NeoReport extends React.Component {
     }
 
     render() {
+
+        if (this.state.type == "select"){
+            return;
+        }
         if (this.state.running && !this.state.repeat) {
             return <p>Running query...</p>
         }
@@ -118,7 +122,6 @@ class NeoReport extends React.Component {
         }
 
         let data = this.state.data;
-
 
         if (data == null) {
             return <><span>No query specified.
@@ -140,6 +143,13 @@ class NeoReport extends React.Component {
 
         if (this.state.data.length == 1 && this.state.data[0]['error']) {
             let result = this.state.data[0]['error'];
+
+            if (result.startsWith("Neo4jError: Expected parameter(s):")){
+                let missingParameters = result.split("\n")[0].split(":")[2].split(",");
+                if (missingParameters.every(p => p.startsWith(" neodash_"))){
+                    return <p>Select a parameter to view this report.</p>
+                }
+            }
             return (
                 <Textarea style={{marginBottom: '100px'}}
                           id="Textarea-12"
