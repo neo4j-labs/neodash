@@ -1,4 +1,4 @@
-PWD=~/IdeaProjects/neodash/ui
+PWD=~/IdeaProjects/neodash/
 APPNAME=NeoDash
 
 cd $PWD
