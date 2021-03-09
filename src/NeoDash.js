@@ -2,55 +2,66 @@ import React from "react";
 import Section from "react-materialize/lib/Section";
 import Row from "react-materialize/lib/Row";
 import Container from "react-materialize/lib/Container";
-import {AddNeoCard, NeoCard} from "./card/NeoCard";
+import {AddNeoCard, NeoCardComponent} from "./card/NeoCard";
 import Navbar from "react-materialize/lib/Navbar";
 import Icon from "react-materialize/lib/Icon";
 import NeoModal from "./component/NeoModal";
 import Textarea from "react-materialize/lib/Textarea";
 import NavItem from "react-materialize/lib/NavItem";
 import Button from "react-materialize/lib/Button";
-import Col from "react-materialize/lib/Col";
 import NeoTextInput from "./component/NeoTextInput";
 import neo4j from "neo4j-driver";
-import {Checkbox} from "react-materialize";
 import NeoCheckBox from "./component/NeoCheckBox";
 import NeoTextButton from "./component/NeoTextButton";
-import defaultDashboard from './default_dashboard.json';
+import defaultDashboard from './data/default_dashboard.json';
+import DesktopIntegration from './tools/DesktopIntegration';
 
+
+/**
+ * Main class for the NeoDash dashboard builder component.
+ *
+ * This component handles:
+ * - Connecting to Neo4j (through a Neo4j Desktop integration or manually)
+ * - Loading/storing dashboards as JSON (optionally from the browser cache)
+ * - The creation, ordering and deleting of the NeoCard components.
+ * - Propagating global parameter changes ("Selection" reports) to each of the cards.
+ */
 class NeoDash extends React.Component {
     version = '1.0';
 
     constructor(props) {
         super(props);
+        this.stateChanged = this.stateChanged.bind(this);
+        this.loadCardsFromJSON = this.loadCardsFromJSON.bind(this);
+        this.connect = this.connect.bind(this);
 
-        // Neo4j Desktop integration
-        let neo4jDesktopApi = window.neo4jDesktopApi;
-        if (neo4jDesktopApi) {
-            let promise = neo4jDesktopApi.getContext();
-            let a = this;
-            promise.then(function (context) {
+        // Attempt to load an existing dashboard from the browser cache.
+        this.loadDashboardfromBrowserCache();
 
-                let desktopIntegration = new Neo4jDesktopIntegration(context);
-                let neo4j = desktopIntegration.getActiveDatabase();
-                if (neo4j) {
-                    a.connection = {
-                        url: neo4j.connection.configuration.protocols.bolt.url,
-                        database: "",
-                        username: neo4j.connection.configuration.protocols.bolt.username,
-                        password: neo4j.connection.configuration.protocols.bolt.password,
-                        encryption: neo4j.connection.configuration.protocols.bolt.tlsLevel === "REQUIRED" ? "on" : "off"
-                    }
-                    a.connect()
-
-                } else {
-                    a.updateConnectionModal(a.connect, true);
-                    a.stateChanged({label: "HideError"})
-                }
-            });
-
+        if (window.neo4jDesktopApi) {
+            this.setConnectionDetailsFromDesktopIntegration();
+        } else {
+            // check the browser cache or use default values.
+            this.setConnectionDetailsFromBrowserCache();
         }
 
-        // check the browser cache or use default values.
+    }
+
+    /**
+     * Sets the state of NeoDash based on
+     */
+    loadDashboardfromBrowserCache() {
+        this.state = {json: '{}', count: 0}
+        if (localStorage.getItem('neodash-dashboard')) {
+            this.state.json = localStorage.getItem('neodash-dashboard');
+        }
+    }
+
+    /**
+     * Sets the connection details based on the data in the browser cache (if available).
+     * Else, defaults to localhost:7867.
+     */
+    setConnectionDetailsFromBrowserCache() {
         this.connection = {
             url: (localStorage.getItem('neodash-url')) ? localStorage.getItem('neodash-url') : 'neo4j://localhost:7687',
             database: (localStorage.getItem('neodash-database')) ? localStorage.getItem('neodash-database') : '',
@@ -58,33 +69,41 @@ class NeoDash extends React.Component {
             password: (localStorage.getItem('neodash-password')) ? localStorage.getItem('neodash-password') : '',
             encryption: (localStorage.getItem('neodash-encryption')) ? localStorage.getItem('neodash-encryption') : 'off',
         }
+        this.updateConnectionModal(this.connect, true);
+        this.stateChanged({label: "HideError"})
+    }
 
-        this.state = {json: '{}', count: 0}
-        if (localStorage.getItem('neodash-dashboard')) {
-            this.state.json = localStorage.getItem('neodash-dashboard');
-        }
-
-        this.stateChanged = this.stateChanged.bind(this);
-        this.loadJson = this.loadJson.bind(this);
-        this.connect = this.connect.bind(this);
-
-        // If not running from desktop, always ask for connection details
-        if (!neo4jDesktopApi) {
-            this.updateConnectionModal(this.connect, true);
-        } else {
-            // If running from desktop, the constructor will set up a connection using the promise.
-            this.stateChanged({label: "CreateError", value: "Trying to connect to your active database..."});
-        }
-
-
+    /**
+     * Attempts to set the connection details using the Neo4j Desktop integration.
+     * If NeoDash is running from Desktop, find the first active database and connect to it.
+     * If no databases are active, default to a manually specified connection (possibly from browser cache)
+     */
+    setConnectionDetailsFromDesktopIntegration() {
+        let promise = window.neo4jDesktopApi.getContext();
+        let neodash = this;
+        promise.then(function (context) {
+            let neo4jDesktopIntegration = new DesktopIntegration(context);
+            let connection = neo4jDesktopIntegration.connection;
+            if (connection) {
+                neodash.connection = connection;
+                neodash.stateChanged({label: "CreateError", value: "Trying to connect to your active database..."});
+                neodash.connect();
+            } else {
+                neodash.setConnectionDetailsFromBrowserCache();
+            }
+        });
     }
 
     componentDidMount() {
-        this.loadJson()
+        this.loadCardsFromJSON()
     }
 
 
-    connect(e) {
+    /**
+     * Will try to connect to Neo4j given the specified connection parameters.
+     * On failure, will produce an error message and show it to the user.
+     */
+    connect() {
         try {
             var url = this.connection.url;
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
@@ -104,11 +123,8 @@ class NeoDash extends React.Component {
                 .then(result => {
                     this.errorModal = null;
                     this.connected = true;
-
-
                     this.updateConnectionModal(this.connect, false);
-                    this.loadJson()
-
+                    this.loadCardsFromJSON()
                     localStorage.setItem('neodash-database', this.connection.database);
                     localStorage.setItem('neodash-url', this.connection.url);
                     localStorage.setItem('neodash-username', this.connection.username);
@@ -132,7 +148,7 @@ class NeoDash extends React.Component {
     }
 
 
-    loadJson() {
+    loadCardsFromJSON() {
         if (!this.connected) {
             this.state.title = 'NeoDash ⚡';
             return
@@ -158,22 +174,28 @@ class NeoDash extends React.Component {
                     this.state.cardState = loaded.reports.map(c => []);
                     this.state.cards = loaded.reports.map((report, index) => {
                             if (report.type) {
-                                return <NeoCard
+                                return <NeoCardComponent
                                     connection={this.connection}
                                     globalParameters={this.state.globalParameters}
-                                    page={report.page} width={report.width} height={report.height}
-                                    kkey={this.state.count + index} key={this.state.count + index} id={index}
+                                    page={report.page}
+                                    width={report.width}
+                                    height={report.height}
+                                    kkey={this.state.count + index}
+                                    key={this.state.count + index}
+                                    id={index}
                                     session={this.session}
                                     onChange={this.stateChanged}
                                     editable={this.state.editable}
-                                    type={report.type} propertiesSelected={report.properties}
+                                    type={report.type}
+                                    propertiesSelected={report.properties}
                                     title={report.title}
-                                    query={report.query} parameters={report.parameters}
+                                    query={report.query}
+                                    parameters={report.parameters}
                                     refresh={report.refresh}/>
                             } else if (this.state.editable) {
                                 return <AddNeoCard key={99999999} id={99999999} onClick={this.stateChanged}/>
                             }
-                            return <div></div>
+                            return <div/>
                         }
                     );
                     this.state.count = this.state.count + ((loaded.reports.length) ? loaded.reports.length : 0) - 1;
@@ -194,9 +216,8 @@ class NeoDash extends React.Component {
 
 
     setDefaultDashboard() {
-        let state = this.state;
         this.state.json = JSON.stringify(defaultDashboard);
-        this.loadJson()
+        this.loadCardsFromJSON()
     }
 
     stateChanged(update) {
@@ -272,21 +293,21 @@ class NeoDash extends React.Component {
             this.state.cardState.splice(index, 1);
         }
         if (update.label !== "SaveModalUpdated") {
-            this.handleUpdateSavedJSON();
+            this.buildJSONFromReportsState();
         }
         this.setState(this.state);
     }
 
     handleNewCardCreate() {
-        let newCard = <NeoCard connection={this.connection}
-                               globalParameters={this.state.globalParameters}
-                               kkey={this.state.count}
-                               session={this.session}
-                               width={4} height={4}
-                               id={this.state.count}
-                               editable={this.state.editable}
-                               key={this.state.count}
-                               onChange={this.stateChanged} type='table'/>;
+        let newCard = <NeoCardComponent connection={this.connection}
+                                        globalParameters={this.state.globalParameters}
+                                        kkey={this.state.count}
+                                        session={this.session}
+                                        width={4} height={4}
+                                        id={this.state.count}
+                                        editable={this.state.editable}
+                                        key={this.state.count}
+                                        onChange={this.stateChanged} type='table'/>;
         this.state.count += 1;
         this.state.cards.splice(this.state.cards.length - 1, 0, newCard);
         this.state.cardState.splice(this.state.cardState.length - 1, 0, {
@@ -334,7 +355,7 @@ class NeoDash extends React.Component {
      * Helper function to convert a string with capital letters and spaces to a lowercase snake case verison.
      */
     toLowerCaseSnakeCase(value) {
-        return value.toLowerCase().replace(/ /g,"_");
+        return value.toLowerCase().replace(/ /g, "_");
     }
 
     handleError(content) {
@@ -364,7 +385,7 @@ class NeoDash extends React.Component {
                                     ]}/>
     }
 
-    handleUpdateSavedJSON() {
+    buildJSONFromReportsState() {
         if (!this.connected) {
             return
         }
@@ -441,8 +462,8 @@ class NeoDash extends React.Component {
             <NeoModal
                 header={'Connect to Neo4j'}
                 style={{'maxWidth': '520px'}}
-                key={this.state.count}
-                id={this.state.count}
+                key={(this.state) ? this.state.count : 0}
+                id={(this.state) ? this.state.count : 0}
                 footerType={"modal-dark-footer"}
                 open={open}
                 root={document.getElementById("root")}
@@ -507,7 +528,8 @@ class NeoDash extends React.Component {
     }
 
     render() {
-        this.generateSaveLoadModal(this.loadJson);
+        // This should not be called in render...
+        this.generateSaveLoadModal(this.loadCardsFromJSON);
         let title = <Textarea disabled={!this.state.editable} noLayout={true}
                               style={{"width": '500px'}}
                               className="card-title editable-title"
@@ -540,24 +562,5 @@ class NeoDash extends React.Component {
     }
 }
 
-class Neo4jDesktopIntegration {
-    constructor(context) {
-        this.desktopContext = context;
-    }
-
-    getActiveDatabase() {
-
-        for (let pi = 0; pi < this.desktopContext.projects.length; pi++) {
-            let prj = this.desktopContext.projects[pi];
-            for (let gi = 0; gi < prj.graphs.length; gi++) {
-                let grf = prj.graphs[gi];
-                if (grf.status == 'ACTIVE') {
-                    return grf;
-                }
-            }
-        }
-        return null;
-    }
-}
 
 export default (NeoDash);

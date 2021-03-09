@@ -5,6 +5,10 @@ import NeoTextArea from "../component/NeoTextArea";
 import NeoTextInput from "../component/NeoTextInput";
 import NeoAutoCompleteText from "../component/NeoAutoCompleteText";
 
+/**
+ * A NeoCardSettings component is the settings window that pops up when you edit a card.
+ *
+ */
 class NeoCardSettings extends React.Component {
     vizOptions = {
         'table': 'Table',
@@ -163,7 +167,7 @@ class NeoCardSettings extends React.Component {
                 {(type !== "select") ? this.cypherParamsInput : <div></div>}
                 {(type !== "select") ? this.refreshRateInput : <div></div>}
                 {(type !== "select") ? this.neoTextArea : <div></div>}
-                {(type == "select") ? this.selectionArea : <div></div>}
+                {(type === "select") ? this.selectionArea : <div></div>}
             </div>
         );
     }

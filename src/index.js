@@ -2,40 +2,38 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Footer from "react-materialize/lib/Footer";
 import NeoDash from "./NeoDash";
-import appLogo from './logo.png'
 
-const root = document.getElementById("root");
-const url = "https://github.com/nielsdejong/neodash/";
-const link = <u><a href={"https://github.com/nielsdejong/neodash/blob/master/README.md"} style={{color: "dimgrey"}}
-                   target={"_blank"}>NeoDash 1.0.6 - Neo4j Dashboard Builder</a></u>
-const copyrights = <div style={{textAlign: 'center', color: 'dimgrey'}}>{link}</div>;
-const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={copyrights}></Footer>
-const logo = () => {
-    return (<div className="logo"><img src={appLogo} alt="logo"/></div>)
-}
+// Configurable text for the interface
+const version = "1.0.7"
+const readme = "https://github.com/nielsdejong/neodash/blob/master/README.md";
+const appName = "NeoDash";
+const title = "NeoDash - Neo4j Dashboard Builder";
+const subtitle = "Neo4j Dashboard Builder";
+const cacheClearedMessage = "Cache cleared. Your latest dashboard: ";
 
+// Components for the page footer
+let footerStyle = {color: "dimgrey"};
+const footerLink = <u><a href={readme} style={footerStyle} target={"_blank"}>{appName} {version} - {subtitle}</a></u>
+const footerCopyrights = <div style={{textAlign: 'center', color: 'dimgrey'}}>{footerLink}</div>;
+const footer = <Footer style={{backgroundColor: '#ddd'}} moreLinks={footerCopyrights}/>
+
+
+/**
+ * This is a basic way to embed NeoDash in a webpage.
+ * A minor note here is that this method provides people with a hard reset option,
+ * appending a '?reset=true' to the URL will clear the browser cache if dashboards break.
+ */
 const Main = () => {
+    document.title = title
 
-    document.title = "NeoDash - Neo4j Dashboard Builder"
-
-    // hard reset option - append a '?reset=true' to the URL if dashboards break.
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const reset = params.get('reset');
-    if (reset === "true") {
+    // Check if there's a hard reset, if yes, override everything and dump the latest dashboard JSON.
+    if (new URLSearchParams(window.location.search).get('reset') === "true") {
         let text = localStorage.getItem("neodash-dashboard");
         localStorage.removeItem("neodash-dashboard")
-        return <div><p>Cache cleared. Your latest dashboard:</p><code>{text}</code></div>
+        return <div><p>{cacheClearedMessage}</p><code>{text}</code></div>;
     }
-    var neoDash = <NeoDash/>;
 
-
-    return (
-        <>{neoDash}{footer}</>
-    );
+    return (<><NeoDash/>{footer}</>);
 };
 
-
-
-
-ReactDOM.render(<Main/>, root);
+ReactDOM.render(<Main/>, document.getElementById("root"));

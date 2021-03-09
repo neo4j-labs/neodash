@@ -5,6 +5,9 @@ import NeoGraphChip from "../../component/NeoGraphChip";
 
 
 class NeoTable extends NeoReport {
+    static tallRowCount = 14;
+    static normalRowCount = 5;
+
     constructor(props) {
         super(props);
     }

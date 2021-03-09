@@ -17,17 +17,21 @@ import NeoLineChart from "../report/line/NeoLineChart";
 import NeoLinePropertySelect from "../report/line/NeoLinePropertySelect";
 import NeoPropertySelectReport from "../report/select/NeoPropertySelectReport";
 
-let tallRowCount = 14;
-let normalRowCount = 5;
 
+let emptyAction = <div key={0}></div>;
 
-class NeoCardComponent extends React.Component {
-    resize = () => this.stateChanged({"label": "resize"})
-
+/**
+ * A NeoCard represents a single card in a dashboard.
+ * A card will always have a report and a settings view.
+ */
+class NeoCard extends React.Component {
+    /**
+     * The default state of a NeoCard is set based on the properties it is initialized with.
+     */
     defaultState = {
         width: this.props.width,
         height: this.props.height,
-        action: <div key={0}></div>,
+        action: emptyAction,
         type: this.props.type,
         page: (this.props.page ? Math.min(this.props.page, 200) : 1),
         query: (this.props.query ? this.props.query : ""),
@@ -41,30 +45,44 @@ class NeoCardComponent extends React.Component {
         title: (this.props.title ? this.props.title : "")
     };
 
+    /**
+     * On init, set the default state and bind functions to the component.
+     */
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
         this.updateGraphChips = this.updateGraphChips.bind(this);
         this.onSelectionChange = this.onSelectionChange.bind(this);
+        this.resize = this.resize.bind(this);
         this.updateBarPropertySelect = this.updateBarPropertySelect.bind(this);
         this.updateLinePropertySelect = this.updateLinePropertySelect.bind(this);
         this.counter = 0;
         this.state = this.defaultState;
-        this.myRef = React.createRef();
+        this.cardRef = React.createRef();
     }
 
+    /**
+     * After the component mounts, add listeners and initialize some child components.
+     */
     componentDidMount() {
         window.addEventListener('resize', this.resize)
         this.parseParameters(this.props);
         this.initializeTitleAndSettings();
         this.counter += 1;
         this.stateChanged({})
+
     }
 
+    /**
+     * After the card unmounts, remove any listeners.
+     */
     componentWillUnmount() {
         window.removeEventListener('resize', this.resize)
     }
 
+    /**
+     * If the component updates and the properties have changed, handle updates.
+     */
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps !== this.props) {
             this.counter += 1;
@@ -81,6 +99,13 @@ class NeoCardComponent extends React.Component {
     }
 
     /**
+     * Handle resizing of the browser window.
+     */
+    resize() {
+        this.stateChanged({"label": "resize"})
+    }
+
+    /**
      * Initializes the title and settings for the card.
      */
     initializeTitleAndSettings() {
@@ -93,6 +118,11 @@ class NeoCardComponent extends React.Component {
             key={this.counter}
             className="card-title editable-title"
             placeholder={"Report name..."}/>;
+        this.closeIcon = <div
+            style={{'width': '100%', 'height': '60px', 'top': '0px', 'right': '0px', 'position': 'absolute'}}
+            onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
+            <Icon>save</Icon>
+        </div>;
     }
 
     /**
@@ -185,7 +215,7 @@ class NeoCardComponent extends React.Component {
             this.updateSettingsComponent();
         }
         if (update.label === "SizeChanged") {
-            this.state.width = (update.value % 12 == 0) ? 12 : (update.value % 12);
+            this.state.width = (update.value % 12 === 0) ? 12 : (update.value % 12);
             this.state.height = Math.ceil(update.value / 12) * 4;
         }
 
@@ -195,6 +225,9 @@ class NeoCardComponent extends React.Component {
         this.props.onChange({"label": "CardStateChanged", "id": this.props.id, "state": this.state});
     }
 
+    /**
+     * Update the settings component after the type of card changed.
+     */
     updateSettingsComponent() {
         this.neoCardSettings =
             <NeoCardSettings refresh={this.state.refresh}
@@ -208,6 +241,9 @@ class NeoCardComponent extends React.Component {
                              onChange={this.stateChanged}/>;
     }
 
+    /**
+     * Update the report component of the card after the type of card changed.
+     */
     updateReportComponent(state) {
         if (this.state.type === 'table') {
             this.setCardTypeToTableView();
@@ -235,18 +271,22 @@ class NeoCardComponent extends React.Component {
 
     /**
      * Refreshes a report by adding/removing a newline at the end of the query.
-     * TODO: Force a refresh of the card component in a much cleaner way.
      */
     forceRefreshByQueryChange() {
+        // TODO: Force a refresh of the card component in a much cleaner way.
         this.state.query = this.state.query.endsWith('\n') ?
             this.state.query.substr(0, this.state.query.length - 1) :
             this.state.query += "\n";
     }
 
+    /**
+     * Updates the card's report to a table.
+     */
     setCardTypeToTableView() {
         this.state.content =
             <NeoTable connection={this.props.connection}
-                      rows={this.state.height == 4 ? normalRowCount : tallRowCount} page={this.state.page}
+                      rows={this.state.height == 4 ? NeoTable.normalRowCount : NeoTable.tallRowCount}
+                      page={this.state.page}
                       query={this.state.query}
                       stateChanged={this.stateChanged}
                       params={this.state.parsedParameters}
@@ -256,12 +296,15 @@ class NeoCardComponent extends React.Component {
             <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
     }
 
+    /**
+     * Updates the card's report to a bar chart.
+     */
     setCardTypeToBarChart() {
         this.state.content =
             <NeoBarChart connection={this.props.connection}
                          page={this.state.page}
                          query={this.state.query}
-                         clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
+                         clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
                          id={this.props.id}
                          stateChanged={this.stateChanged}
                          propertiesSelected={this.state.propertiesSelected}
@@ -273,12 +316,15 @@ class NeoCardComponent extends React.Component {
             />
     }
 
+    /**
+     * Updates the card's report to a line chart.
+     */
     setCardTypeToLineChart() {
         this.state.content =
             <NeoLineChart connection={this.props.connection}
                           page={this.state.page}
                           query={this.state.query}
-                          clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
+                          clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
                           id={this.props.id}
                           stateChanged={this.stateChanged}
                           propertiesSelected={this.state.propertiesSelected}
@@ -290,6 +336,9 @@ class NeoCardComponent extends React.Component {
             />
     }
 
+    /**
+     * Updates the card's report to a graph visualization.
+     */
     setCardTypeToGraph() {
         this.state.page += 1;
         this.state.content =
@@ -297,7 +346,7 @@ class NeoCardComponent extends React.Component {
                 connection={this.props.connection}
                 query={this.state.query}
                 params={this.state.parsedParameters}
-                clientWidth={(this.myRef.current) ? this.myRef.current.clientWidth : 0}
+                clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
                 propertiesSelected={this.state.propertiesSelected}
                 onNodeLabelUpdate={this.updateGraphChips}
                 width={this.state.width}
@@ -308,6 +357,9 @@ class NeoCardComponent extends React.Component {
                 refresh={this.state.refresh}/>
     }
 
+    /**
+     * Update the card's report to a JSON view.
+     */
     setCardTypeToJSON() {
         this.state.content =
             <NeoJSONView
@@ -317,9 +369,12 @@ class NeoCardComponent extends React.Component {
                 data={this.state.data}
                 stateChanged={this.stateChanged}
                 refresh={this.state.refresh}/>
-        this.state.action = <div key={0}></div>
+        this.state.action = emptyAction;
     }
 
+    /**
+     * Update the card's report to a Markdown view.
+     */
     setCardTypeToMarkdown() {
         this.state.content =
             <NeoMarkdownView
@@ -328,9 +383,12 @@ class NeoCardComponent extends React.Component {
                 data={this.state.query}
                 stateChanged={this.stateChanged}
                 refresh={this.state.refresh}/>
-        this.state.action = <div key={0}></div>
+        this.state.action = emptyAction;
     }
 
+    /**
+     * Update the card's report to a property selection.
+     */
     setCardTypeToPropertySelect() {
         // Cypher query to create the autocompletion results.
         if (this.state.propertiesSelected && this.state.propertiesSelected[0] && this.state.propertiesSelected[1]) {
@@ -338,8 +396,10 @@ class NeoCardComponent extends React.Component {
             let property = this.state.propertiesSelected[1];
             let propertyId = this.state.propertiesSelected[2];
 
-            // This the query used for autocompletion
-            this.state.query = `MATCH (n:\`` + label + `\`) \nWHERE toLower(toString(n.\`` + property + `\`)) CONTAINS toLower($input) \nRETURN n.\`` + property + `\` as value LIMIT 4`;
+            // Set the query used to one used for autocompletion
+            this.state.query = `MATCH (n:\`${label}\`) 
+                                WHERE toLower(toString(n.\`${property}\`)) CONTAINS toLower($input) 
+                                RETURN n.\`${property}\` as value LIMIT 4`;
             this.state.content =
                 <NeoPropertySelectReport
                     connection={this.props.connection}
@@ -352,10 +412,13 @@ class NeoCardComponent extends React.Component {
                     stateChanged={this.stateChanged}
                     onSelectionChange={this.onSelectionChange}
                     refresh={this.state.refresh}/>
-            this.state.action = <div key={0}></div>
+            this.state.action = emptyAction;
         }
     }
 
+    /**
+     * Update the settings view of the card.
+     */
     updateCardSettings(update) {
         this.parseParameters(this.props);
         if (this.state.type === "bar" || this.state.type === "line") {
@@ -377,6 +440,9 @@ class NeoCardComponent extends React.Component {
         });
     }
 
+    /**
+     * Parse the Cypher parameters (as a String) to a JSON map.
+     */
     parseParameters(props) {
         let parametersAsString = this.state.parameters;
         let globalParameters = this.state.globalParameters;
@@ -406,6 +472,9 @@ class NeoCardComponent extends React.Component {
         }
     }
 
+    /**
+     * For bar charts - update the property selection card footer to show the new query output fields.
+     */
     updateBarPropertySelect(labels) {
         this.state.page += 1;
         this.state.action =
@@ -417,6 +486,9 @@ class NeoCardComponent extends React.Component {
         this.setState(this.state);
     }
 
+    /**
+     * For line charts - update the property selection card footer to show the new query output fields.
+     */
     updateLinePropertySelect(labels) {
         this.state.page += 1;
         this.state.action =
@@ -429,6 +501,9 @@ class NeoCardComponent extends React.Component {
         this.setState(this.state);
     }
 
+    /**
+     * For graph visualizations - update the card footer to show the new nodes.
+     */
     updateGraphChips(labels) {
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
@@ -461,22 +536,17 @@ class NeoCardComponent extends React.Component {
 
     }
 
+    /**
+     * Render the NeoCard component with the currently selected report.
+     */
     render() {
-        let closeIcon = <div
-            style={{'width': '100%', 'height': '60px', 'top': '0px', 'right': '0px', 'position': 'absolute'}}
-            onClick={e => this.stateChanged({label: 'SettingsSaved'})}>
-            <Icon>save</Icon>
-        </div>;
         return <Col l={this.state.width} m={12} s={12}>
-            <div ref={this.myRef}>
+            <div ref={this.cardRef}>
                 <Card
-
                     actions={[this.state.action]}
                     style={{height: (this.state.height * 100 + 22 * ((this.state.height / 4) - 1)) + 'px'}}
                     className={"neo-card medium white darken-5 paginated-card"}
-                    closeIcon={
-                        closeIcon
-                    }
+                    closeIcon={this.closeIcon}
                     revealIcon={(this.props.editable) ? <Icon>more_vert</Icon> : <div></div>}
                     textClassName="black-text"
                     title={this.cardTitle}
@@ -486,7 +556,11 @@ class NeoCardComponent extends React.Component {
     }
 }
 
-
+/**
+ * An "AddNeoCardComponent" is a big button at the end of a dashboard.
+ * This button sits in the same list as regular cards.
+ * After clicking the button, a new card gets added the dashboard.
+ */
 class AddNeoCardComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -501,7 +575,6 @@ class AddNeoCardComponent extends React.Component {
                   textClassName="black-text"
                   title=""
             >
-
                 <Button className="btn-floating btn-center-align blue-grey"
                         onClick={e => this.props.onClick({'label': 'newCard'})}><Icon>add</Icon></Button>
             </Card></a></Col>
@@ -509,5 +582,5 @@ class AddNeoCardComponent extends React.Component {
 
 }
 
-export const NeoCard = NeoCardComponent;
+export const NeoCardComponent = NeoCard;
 export const AddNeoCard = AddNeoCardComponent;
