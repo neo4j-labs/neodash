@@ -1,8 +1,11 @@
 /**
- * Handles Neo4j Desktop integration
+ * Handles Neo4j Desktop integration.
  */
 class DesktopIntegration {
-
+    /**
+     * On init, tries to get the active (running) database from Neo4j desktop.
+     * Sets connection parameter accordingly.
+     */
     constructor(context) {
         let neo4j = this.getActiveDatabase(context);
         if (neo4j) {
@@ -17,7 +20,9 @@ class DesktopIntegration {
         }
     }
 
-
+    /**
+     * Helper function to iterate over databases in Neo4j Desktop and select the first active one.
+     */
     getActiveDatabase(context) {
         for (let pi = 0; pi < context.projects.length; pi++) {
             let prj = context.projects[pi];
@@ -28,6 +33,7 @@ class DesktopIntegration {
                 }
             }
         }
+        // No active database found - ask for manual connection details.
         return null;
     }
 }

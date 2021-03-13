@@ -18,7 +18,7 @@ import NeoLinePropertySelect from "../report/line/NeoLinePropertySelect";
 import NeoPropertySelectReport from "../report/select/NeoPropertySelectReport";
 
 
-let emptyAction = <div key={0}></div>;
+let emptyAction = <div key={0}/>;
 
 /**
  * A NeoCard represents a single card in a dashboard.
@@ -561,7 +561,7 @@ class NeoCard extends React.Component {
  * This button sits in the same list as regular cards.
  * After clicking the button, a new card gets added the dashboard.
  */
-class AddNeoCardComponent extends React.Component {
+class AddNeoCard extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -583,4 +583,4 @@ class AddNeoCardComponent extends React.Component {
 }
 
 export const NeoCardComponent = NeoCard;
-export const AddNeoCard = AddNeoCardComponent;
+export const AddNeoCardComponent = AddNeoCard;

@@ -6,10 +6,11 @@ import NeoTextInput from "../component/NeoTextInput";
 import NeoAutoCompleteText from "../component/NeoAutoCompleteText";
 
 /**
- * A NeoCardSettings component is the settings window that pops up when you edit a card.
- *
+ * A 'NeoCardSettings' component is the settings window that pops up when you edit a card.
+ * These settings will allow the user to modify the type of report, size of report, active query, etc.
  */
 class NeoCardSettings extends React.Component {
+    // A dictionary of available report types.
     vizOptions = {
         'table': 'Table',
         'graph': 'Graph',
@@ -19,6 +20,8 @@ class NeoCardSettings extends React.Component {
         'select': 'Selection',
         'text': 'Markdown',
     };
+
+    // A dictionary of available card sizes.
     sizeOptions = {
         4: 'Small (4x4)',
         6: 'Medium (6x4)',
@@ -30,15 +33,23 @@ class NeoCardSettings extends React.Component {
         24: 'Full (12x8)'
     };
 
+    /**
+     * Initializes the card settings and sets default components.
+     */
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
         this.setDefaultComponents();
     }
 
+    /**
+     * Sets the default components of the card settings window:
+     * - A text area to enter Cypher queries/markdown.
+     * - Input areas for Cypher parameters, refresh rate, card size, etc.
+     * - Buttons to move and resize cards.
+     */
     setDefaultComponents() {
-
-        this.neoTextArea =
+        this.settingsTextArea =
             <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query"
                          onChange={this.stateChanged}/>;
         this.cypherParamsInput = <NeoTextInput defaultValue={this.props.parameters} onChange={this.stateChanged}
@@ -63,17 +74,28 @@ class NeoCardSettings extends React.Component {
 
     }
 
+    setTypeAndSizeSelectionComponents(type) {
+        this.cardTypeSelect = <NeoOptionSelect label="Type" defaultValue={type} onChange={this.stateChanged}
+                                               options={this.vizOptions}/>;
+        this.cardSizeSelect = <NeoOptionSelect label="Size" defaultValue={this.props.size} onChange={this.stateChanged}
+                                               options={this.sizeOptions}/>;
+    }
+
     /**
-     * Helper function to convert a string with capital letters and spaces to a lowercase snake case verison.
+     * Helper function to convert a string with capital letters and spaces to a lowercase snake case version.
      */
     toLowerCaseSnakeCase(value) {
         return value.toLowerCase().replace(/ /g, "_");
     }
 
+    /**
+     * If a 'selection' type is chosen for this card,
+     * build the components for letting a user selection nodes/properties.
+     *
+     * TODO: This is currently (Unnecessarily) called for all types of cards.
+     */
     buildCustomSelectionSettingsWindow() {
-
         var selectionMessage = "Choose a node label to select.";
-
         let nodeSelectedQuery = "CALL db.schema.nodeTypeProperties() YIELD nodeLabels" +
             " UNWIND nodeLabels as nodeLabel WITH DISTINCT nodeLabel as label" +
             " WHERE toLower(label) contains toLower($input)" +
@@ -93,8 +115,8 @@ class NeoCardSettings extends React.Component {
             defaultValue={(this.props.properties[0]) ? this.props.properties[0] : ""}
         />;
 
-        var propertySelectionBox = <div></div>
-        var propertyIdSelectionBox = <div></div>
+        var propertySelectionBox = <div/>
+        var propertyIdSelectionBox = <div/>
         if (this.props.properties && this.props.properties[0]) {
             selectionMessage = "Choose a node property to select.";
             let propertySelectedQuery = "CALL db.schema.nodeTypeProperties() YIELD nodeLabels, propertyName\n" +
@@ -118,10 +140,12 @@ class NeoCardSettings extends React.Component {
 
 
             />;
-            propertyIdSelectionBox = <NeoTextInput numeric defaultValue={this.props.properties[2] ? this.props.properties[2] : ""} onChange={this.stateChanged}
-                                                   changeEventLabel={"PropertySelectionIdUpdated"}
-                                                   style={{width: '80px'}} label={"ID"}
-                                                   placeholder={"(optional)"}/>;
+            propertyIdSelectionBox =
+                <NeoTextInput numeric defaultValue={this.props.properties[2] ? this.props.properties[2] : ""}
+                              onChange={this.stateChanged}
+                              changeEventLabel={"PropertySelectionIdUpdated"}
+                              style={{width: '80px'}} label={"ID"}
+                              placeholder={"(optional)"}/>;
         }
 
         if (this.props.properties && this.props.properties[0] && this.props.properties[1]) {
@@ -133,7 +157,7 @@ class NeoCardSettings extends React.Component {
                 value.</>;
         }
 
-        this.selectionArea = <div style={{width: "100%"}}>
+        this.settingsSelectionArea = <div style={{width: "100%"}}>
             {nodeSelectionBox}
             {propertySelectionBox}
             {propertyIdSelectionBox}
@@ -141,33 +165,35 @@ class NeoCardSettings extends React.Component {
         </div>
     }
 
+    /**
+     * On change, refresh the default components of the settings window.
+     */
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.setDefaultComponents();
     }
 
+    /**
+     * on state change, we possibly re-render the settings component.
+     */
     stateChanged(data) {
-        // if the report type changes, we possibly need to re-render the settings component.
-        if (data["label"] === "TypeChanged") {
-        }
         this.props.onChange(data);
-
     }
 
+    /**
+     * Renders the settings component.
+     */
     render() {
         this.buildCustomSelectionSettingsWindow();
-        let type = this.props.type;
+        this.setTypeAndSizeSelectionComponents(this.props.type);
         return (
             <div>
                 {this.cardMovementControls}
-                <NeoOptionSelect label="Type" defaultValue={type} onChange={this.stateChanged}
-                                 options={this.vizOptions}/>
-                <NeoOptionSelect label="Size" defaultValue={this.props.size} onChange={this.stateChanged}
-                                 options={this.sizeOptions}/>
-
-                {(type !== "select") ? this.cypherParamsInput : <div></div>}
-                {(type !== "select") ? this.refreshRateInput : <div></div>}
-                {(type !== "select") ? this.neoTextArea : <div></div>}
-                {(type === "select") ? this.selectionArea : <div></div>}
+                {this.cardTypeSelect}
+                {this.cardSizeSelect}
+                {(this.props.type !== "select") ? this.cypherParamsInput : <div/>}
+                {(this.props.type !== "select") ? this.refreshRateInput : <div/>}
+                {(this.props.type !== "select") ? this.settingsTextArea : <div/>}
+                {(this.props.type === "select") ? this.settingsSelectionArea : <div/>}
             </div>
         );
     }
