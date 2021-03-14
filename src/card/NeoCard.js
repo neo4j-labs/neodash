@@ -3,19 +3,19 @@ import Card from "react-materialize/lib/Card";
 import Icon from "react-materialize/lib/Icon";
 import Textarea from "react-materialize/lib/Textarea";
 import Button from "react-materialize/lib/Button";
-import NeoTable from "../report/table/NeoTable";
-import NeoPagination from "../report/table/NeoPagination";
-import NeoGraphViz from "../report/graph/NeoGraphVis";
+import NeoTable from "./report/NeoTableReport";
+import NeoPagination from "./footer/NeoTableFooter";
+import NeoGraphViz from "./report/NeoGraphVisReport";
 import Col from "react-materialize/lib/Col";
 import NeoCardSettings from "./NeoCardSettings";
-import NeoJSONView from "../report/json/NeoJSONView";
-import NeoGraphChips from "../report/graph/NeoGraphChips";
-import NeoMarkdownView from "../report/text/NeoMarkdownView";
-import NeoBarChart from "../report/bar/NeoBarChart";
-import NeoBarPropertySelect from "../report/bar/NeoBarPropertySelect";
-import NeoLineChart from "../report/line/NeoLineChart";
-import NeoLinePropertySelect from "../report/line/NeoLinePropertySelect";
-import NeoPropertySelectReport from "../report/select/NeoPropertySelectReport";
+import NeoJSONView from "./report/NeoJSONViewReport";
+import NeoGraphChips from "./footer/NeoGraphVisFooter";
+import NeoMarkdownView from "./report/NeoMarkdownReport";
+import NeoBarChart from "./report/NeoBarChartReport";
+import NeoBarPropertySelect from "./footer/NeoBarChartFooter";
+import NeoLineChart from "./report/NeoLineChartReport";
+import NeoLinePropertySelect from "./footer/NeoLineChartFooter";
+import NeoPropertySelectReport from "./report/NeoPropertySelectReport";
 
 
 let emptyAction = <div key={0}/>;
@@ -24,7 +24,7 @@ let emptyAction = <div key={0}/>;
  * A NeoCard represents a single card in a dashboard.
  * A card will always have a report and a settings view.
  */
-class NeoCard extends React.Component {
+export class NeoCard extends React.Component {
     /**
      * The default state of a NeoCard is set based on the properties it is initialized with.
      */
@@ -561,7 +561,7 @@ class NeoCard extends React.Component {
  * This button sits in the same list as regular cards.
  * After clicking the button, a new card gets added the dashboard.
  */
-class AddNeoCard extends React.Component {
+export class AddNeoCard extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -582,5 +582,3 @@ class AddNeoCard extends React.Component {
 
 }
 
-export const NeoCardComponent = NeoCard;
-export const AddNeoCardComponent = AddNeoCard;

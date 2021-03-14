@@ -1,7 +1,15 @@
 import React from "react";
-import NeoOptionSelect from "../../../component/NeoOptionSelect";
+import NeoOptionSelect from "../../component/NeoOptionSelect";
+import NeoFooter from "./NeoFooter";
 
-class NeoBarPropertySelect extends React.Component {
+/**
+ * A bar chart footer allows the user to select:
+ * - the categories of the plot (x-axis)
+ * - the values of the plot (y-axis)
+ *
+ * On selection of new fields, the report corresponding to the footer will be refreshed.
+ */
+class NeoBarChartFooter extends NeoFooter {
     constructor(props) {
         super(props);
         this.state = {}
@@ -25,4 +33,4 @@ class NeoBarPropertySelect extends React.Component {
 
 }
 
-export default (NeoBarPropertySelect);
+export default (NeoBarChartFooter);

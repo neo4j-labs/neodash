@@ -1,15 +1,17 @@
 import React from "react";
 import Pagination from "react-materialize/lib/Pagination";
 import Icon from "react-materialize/lib/Icon";
+import NeoFooter from "./NeoFooter";
 
-
-class NeoPagination extends React.Component {
+/**
+ * A table report footer can be used to switch pages in the table.
+ */
+class NeoTableFooter extends NeoFooter {
     constructor(props) {
         super(props);
     }
 
-    render(content) {
-
+    render() {
         return <Pagination
             activePage={(this.props.page ? this.props.page : 1)}
             items={1000}
@@ -21,4 +23,4 @@ class NeoPagination extends React.Component {
     }
 }
 
-export default (NeoPagination);
+export default (NeoTableFooter);

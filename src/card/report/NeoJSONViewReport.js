@@ -1,8 +1,8 @@
 import React from "react";
 import Textarea from "react-materialize/lib/Textarea";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 
-class NeoJSONView extends NeoReport {
+class NeoJSONViewReport extends NeoReport {
     constructor(props) {
         super(props);
     }
@@ -45,4 +45,4 @@ class NeoJSONView extends NeoReport {
     }
 }
 
-export default (NeoJSONView);
+export default (NeoJSONViewReport);

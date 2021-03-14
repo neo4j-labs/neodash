@@ -2,7 +2,7 @@ import React from "react";
 import Section from "react-materialize/lib/Section";
 import Row from "react-materialize/lib/Row";
 import Container from "react-materialize/lib/Container";
-import {AddNeoCardComponent, NeoCardComponent} from "./card/NeoCard";
+import {AddNeoCard, NeoCard} from "./card/NeoCard";
 import Navbar from "react-materialize/lib/Navbar";
 import Icon from "react-materialize/lib/Icon";
 import NeoModal from "./component/NeoModal";
@@ -191,7 +191,7 @@ class NeoDash extends React.Component {
                     this.state.cardState = loaded.reports.map(c => []);
                     this.state.cards = loaded.reports.map((report, index) => {
                             if (report.type) {
-                                return <NeoCardComponent
+                                return <NeoCard
                                     connection={this.connection}
                                     globalParameters={this.state.globalParameters}
                                     page={report.page}
@@ -211,7 +211,7 @@ class NeoDash extends React.Component {
                                     refresh={report.refresh}/>
                             } else if (this.state.editable) {
                                 // a loaded report without a type is a "Add new card" button.
-                                return <AddNeoCardComponent key={99999999} id={99999999} onClick={this.stateChanged}/>
+                                return <AddNeoCard key={99999999} id={99999999} onClick={this.stateChanged}/>
                             }
                             return <div/>
                         }
@@ -341,7 +341,7 @@ class NeoDash extends React.Component {
      * Creates a card at the end of the dashboard's card array.
      */
     createCard() {
-        let newCard = <NeoCardComponent connection={this.connection}
+        let newCard = <NeoCard connection={this.connection}
                                         globalParameters={this.state.globalParameters}
                                         kkey={this.state.count}
                                         session={this.session}

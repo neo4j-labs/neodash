@@ -1,9 +1,9 @@
 import * as d3 from "d3";
 import React from "react";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 
 
-class NeoGraphVis extends NeoReport {
+class NeoGraphVisReport extends NeoReport {
     constructor(props) {
         super(props);
     }
@@ -584,5 +584,5 @@ class NeoGraphVis extends NeoReport {
     }
 }
 
-export default (NeoGraphVis);
+export default (NeoGraphVisReport);
 

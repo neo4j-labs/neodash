@@ -1,9 +1,9 @@
 import React from "react";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
 
-class NeoMarkdownView extends NeoReport {
+class NeoMarkdownReport extends NeoReport {
     render() {
         let rendered = super.render();
         if (rendered) {
@@ -19,4 +19,4 @@ class NeoMarkdownView extends NeoReport {
     }
 }
 
-export default (NeoMarkdownView);
+export default (NeoMarkdownReport);

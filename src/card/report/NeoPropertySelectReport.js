@@ -1,9 +1,8 @@
 import React from "react";
-import Textarea from "react-materialize/lib/Textarea";
-import NeoReport from "../NeoReport";
-import NeoOptionSelect from "../../../component/NeoOptionSelect";
-import NeoTextInput from "../../../component/NeoTextInput";
-import NeoAutoCompleteText from "../../../component/NeoAutoCompleteText";
+import NeoReport from "./NeoReport";
+import NeoOptionSelect from "../../component/NeoOptionSelect";
+import NeoTextInput from "../../component/NeoTextInput";
+import NeoAutoCompleteText from "../../component/NeoAutoCompleteText";
 import neo4j from "neo4j-driver";
 
 /**

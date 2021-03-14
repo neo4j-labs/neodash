@@ -1,10 +1,10 @@
 import Table from "react-materialize/lib/Table";
 import React from "react";
-import NeoReport from "../NeoReport";
-import NeoGraphChip from "../../../component/NeoGraphChip";
+import NeoReport from "./NeoReport";
+import NeoGraphChip from "../../component/NeoGraphChip";
 
 
-class NeoTable extends NeoReport {
+class NeoTableReport extends NeoReport {
     static tallRowCount = 14;
     static normalRowCount = 5;
 
@@ -91,4 +91,4 @@ class NeoTable extends NeoReport {
     }
 }
 
-export default (NeoTable);
+export default (NeoTableReport);

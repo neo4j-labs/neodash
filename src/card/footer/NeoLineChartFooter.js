@@ -1,7 +1,15 @@
 import React from "react";
-import NeoOptionSelect from "../../../component/NeoOptionSelect";
+import NeoOptionSelect from "../../component/NeoOptionSelect";
+import NeoFooter from "./NeoFooter";
 
-class NeoLinePropertySelect extends React.Component {
+/**
+ * A line chart footer allows the user to select:
+ * - the x-axis field.
+ * - the y-axis field.
+ *
+ * On selection of new fields, the report corresponding to the footer will be refreshed.
+ */
+class NeoLineChartFooter extends NeoFooter {
     constructor(props) {
         super(props);
         this.state = {}
@@ -25,4 +33,4 @@ class NeoLinePropertySelect extends React.Component {
 
 }
 
-export default (NeoLinePropertySelect);
+export default (NeoLineChartFooter);

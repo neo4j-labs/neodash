@@ -1,8 +1,8 @@
 import React from "react";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 import * as d3 from "d3";
 
-class NeoLineChart extends NeoReport {
+class NeoLineChartReport extends NeoReport {
 
     componentDidUpdate(prevProps) {
         super.componentDidUpdate(prevProps);
@@ -197,4 +197,4 @@ class NeoLineChart extends NeoReport {
 
 }
 
-export default (NeoLineChart);
+export default (NeoLineChartReport);
