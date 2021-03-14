@@ -1,8 +1,8 @@
 import React from "react";
 import Chip from "react-materialize/lib/Chip";
 import Icon from "react-materialize/lib/Icon";
-import NeoButton from "../../component/NeoButton";
-import NeoOptionSelect from "../../component/NeoOptionSelect";
+import NeoButton from "../../../component/NeoButton";
+import NeoOptionSelect from "../../../component/NeoOptionSelect";
 
 class NeoGraphChips extends React.Component {
     constructor(props) {
