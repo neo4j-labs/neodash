@@ -1,14 +1,26 @@
 import Table from "react-materialize/lib/Table";
 import React from "react";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 import NeoGraphChip from "../../component/NeoGraphChip";
 
 
-class NeoTable extends NeoReport {
+/**
+ * A TableReport renders the Neo4j query results in a HTML table.
+ * For special (exotic) Neo4j data types (nodes, relationships, paths), NeoGraphChips are rendered.
+ */
+class NeoTableReport extends NeoReport {
+    // The number of rows in a 'tall' card.
+    static tallRowCount = 14;
+    // The number of rows in a 'regular height' card.
+    static normalRowCount = 5;
+
     constructor(props) {
         super(props);
     }
 
+    /**
+     * Renders the table view of the results.
+     */
     render() {
         let rendered = super.render();
         if (rendered) {
@@ -47,6 +59,10 @@ class NeoTable extends NeoReport {
         );
     }
 
+    /**
+     * Creates HTML elements for a single field in a table row.
+     * Based on the type of result (number, string, node, relationship, etc.), different HTML elements are created.
+     */
     renderExoticValueTypes(value, parsedParameters) {
         if (value == null) {
             return ""
@@ -58,7 +74,7 @@ class NeoTable extends NeoReport {
                         {this.renderExoticValueTypes(item, parsedParameters)}{(index !== value.length - 1 && !Array.isArray(item)) ? ',' : ''}
                     </div>
                 })
-            } <br/> </div>;
+            } <br/></div>;
         }
         if (value["start"] && value["end"] && value["segments"] && value["length"]) {
             // let segment = ;
@@ -69,11 +85,16 @@ class NeoTable extends NeoReport {
             return this.renderExoticValueTypes(path, parsedParameters);
         }
         if (value["labels"] && value["identity"] && value["properties"]) {
-            return value["labels"].map((label, index) => <div style={{display: 'inline-block'}} key={index} index={index}>
-                <NeoGraphChip color={(parsedParameters && parsedParameters.nodeColor ? parsedParameters.nodeColor : "seagreen")} name={label}/></div>)
+            return value["labels"].map((label, index) => <div style={{display: 'inline-block'}} key={index}
+                                                              index={index}>
+                <NeoGraphChip
+                    color={(parsedParameters && parsedParameters.nodeColor ? parsedParameters.nodeColor : "seagreen")}
+                    name={label}/></div>)
         }
         if (value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
-            return <NeoGraphChip color={(parsedParameters && parsedParameters.relColor ? parsedParameters.relColor : "grey")} radius={0} name={value["type"]}/>
+            return <NeoGraphChip
+                color={(parsedParameters && parsedParameters.relColor ? parsedParameters.relColor : "grey")} radius={0}
+                name={value["type"]}/>
         }
         if (!isNaN(value["low"])) {
             return value.low
@@ -88,4 +109,4 @@ class NeoTable extends NeoReport {
     }
 }
 
-export default (NeoTable);
+export default (NeoTableReport);

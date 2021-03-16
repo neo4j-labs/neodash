@@ -1,9 +1,13 @@
 import React from "react";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
 
-class NeoMarkdownView extends NeoReport {
+/**
+ * The markdown report does not run/execute Cypher.
+ * Instead, the user input is compiled from Markdown to HTML and rendered inside the card.
+ */
+class NeoMarkdownReport extends NeoReport {
     render() {
         let rendered = super.render();
         if (rendered) {
@@ -13,9 +17,10 @@ class NeoMarkdownView extends NeoReport {
         if (this.props.data){
             markdown = this.props.data.replace(/\n\n/g, "\n\n &nbsp; \n\n").replace(/\n \n/g, "\n\n &nbsp; \n\n");
         }
+        // TODO - add better markdown support (bullets, nicer code view, etc.
         let result = <ReactMarkdown plugins={[gfm]} children={markdown} />
         return (result);
     }
 }
 
-export default (NeoMarkdownView);
+export default (NeoMarkdownReport);

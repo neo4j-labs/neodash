@@ -1,6 +1,5 @@
 import React from "react";
-import Textarea from "react-materialize/lib/Textarea";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 import NeoOptionSelect from "../../component/NeoOptionSelect";
 import NeoTextInput from "../../component/NeoTextInput";
 import NeoAutoCompleteText from "../../component/NeoAutoCompleteText";
@@ -38,7 +37,7 @@ class NeoPropertySelectReport extends NeoReport {
     }
 
     /**
-     * Render the autocompletion report.
+     * Render the report. (A NeoAutoCompleteText component is used to handle property selection).
      */
     render() {
         // Render the auto completion box.

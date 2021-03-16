@@ -1,14 +1,17 @@
 import React from "react";
-import NeoReport from "../NeoReport";
+import NeoReport from "./NeoReport";
 import * as d3 from "d3";
 
-class NeoLineChart extends NeoReport {
-
-    componentDidUpdate(prevProps) {
-        super.componentDidUpdate(prevProps);
-        this.componentDidMount();
-    }
-
+/**
+ * A bar chart report draws the resulting data from Neo4j as a bar chart.
+ * The x-axis (categories) and the y-axis (values) can be selected from the returned field names.
+ */
+class NeoBarChartReport extends NeoReport {
+    /**
+     * On initialization, generate the visualization with d3.
+     * The drawn axes are generated from the selected properties.
+     * The size and style of the visualization is set based on the provided properties.
+     */
     componentDidMount() {
         let data = this.state.data;
         let page = this.state.page;
@@ -31,7 +34,6 @@ class NeoLineChart extends NeoReport {
                 this.parseChartValue(Object.values(row)[index2], 1, i)]
         })
 
-
         let labels = {}
         if (data.length > 0) {
             Object.keys(this.state.data[0]).forEach(
@@ -40,17 +42,15 @@ class NeoLineChart extends NeoReport {
             props.onNodeLabelUpdate(labels);
         }
 
-        data = data.filter(entry => entry[0] !== null && !isNaN(entry[0]) && entry[1] !== null && !isNaN(entry[1]))
-
         // Set size
-        let {maxY, minY, maxX, minX} = this.getDataLimits(data);
-        var xShift = 40;
-        var yShift = 30;
-
+        let {maxY, minY, xTextLength} = this.getDataLimits(data);
+        let digits = Math.log10(Math.abs(maxY));
+        var xShift = ((digits > 1) ? digits * 7 + 18 : Math.abs(digits) * 7 + 32);
+        xShift += (maxY < 0 || minY < 0) ? 10 : 0;
+        var yShift = 20 + xTextLength * 4;
         var width = props.clientWidth - 100; //-90 + props.width * 105 - xShift * 0.5;
         var height = -140 + props.height * 100 - yShift;
         var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
-
 
         var svg = d3.select(".chart" + id)
             .attr("width", width + margin.left + margin.right)
@@ -59,65 +59,51 @@ class NeoLineChart extends NeoReport {
             .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
 
-        // Add X axis --> it is a date format
-        var x = d3.scaleLinear()
-            .domain([minX - (maxX - minX) * 0.02, maxX + (maxX - minX) * 0.04])
-            .range([0, width]);
+
+        var x = d3.scaleBand()
+            .range([0, width])
+            .domain(data.map(function (d) {
+                return d[0];
+            }))
+            .padding(0.2);
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
 
-        // Add Y axis
         var y = d3.scaleLinear()
             .domain([minY - (maxY - minY) * 0.1, maxY + (maxY - minY) * 0.1])
             .range([height, 0]);
         svg.append("g")
             .call(d3.axisLeft(y));
 
-        // Add the line
-        let line = d3.line()
-            .x(function (d) {
-                return x(d[0])
-            })
-            .y(function (d) {
-                return y(d[1])
-            });
 
-
-        if (parsedParameters && parsedParameters.curve === true) {
-            line.curve(d3.curveMonotoneX)
-        } else if (parsedParameters && parsedParameters.curveLoop === true) {
-            line.curve(d3.curveCardinalClosed)
-        }
-
-        svg.append("path")
-            .datum(data)
-            .attr("fill", "none")
-            .attr("stroke", function (d) {
-                return (parsedParameters && parsedParameters.color) ? (parsedParameters.color) : "steelblue";
-            })
-            .attr("stroke-width", function (d) {
-                return (parsedParameters && parsedParameters.width) ? (parsedParameters.width) : 1.5;
-            })
-
-            .attr("d", line)
-
-        svg.selectAll(".dot")
+        svg.selectAll("mybar")
             .data(data)
-            .enter().append("circle") // Uses the enter().append() method
-            .attr("class", "dot") // Assign a class for styling
-            .attr("cx", function (d) {
-                return x(d[0])
+            .enter()
+            .append("rect")
+            .attr("x", function (d) {
+                return x(d[0]);
             })
-            .attr("cy", function (d) {
-                return y(d[1])
+            .attr("y", function (d) {
+                if (isNaN(d[1])) {
+                    return 0
+                }
+                return y(d[1]);
+            })
+            .attr("width", x.bandwidth())
+            .attr("height", function (d) {
+                if (isNaN(d[1])) {
+                    return 0
+                }
+                return height - y(d[1]);
             })
             .attr("fill", function (d) {
-                return (parsedParameters && parsedParameters.color) ? (parsedParameters.color) : "steelblue";
-            })
 
-            .attr("r", function (d) {
-                return (parsedParameters && parsedParameters.radius) ? (parsedParameters.radius) : 3;
+                let color = (parsedParameters && parsedParameters.color) ? (parsedParameters.color) : "#69b3a2";
+                return (d[1]) ? color : "transparent";
             })
             .on("mousemove", function (d) {
                 let prop1 = (props.propertiesSelected[0]) ? props.propertiesSelected[0] : Object.keys(labels)[0];
@@ -134,57 +120,78 @@ class NeoLineChart extends NeoReport {
 
     }
 
+    /**
+     * Handle updates to the component. Perform a remount on each update.
+     */
+    componentDidUpdate(prevProps) {
+        super.componentDidUpdate(prevProps);
+        this.componentDidMount();
+    }
+
+    /**
+     * Helper function to get the max/min values from the values selected for the plot's axes.
+     */
     getDataLimits(data) {
-        let xValues = data.map(row => row[0]);
         let yValues = data.map(row => row[1]);
+        let categoryLengths = data.map(row => (row[0] ? row[0] : "").toString().length);
         let maxY = Math.max.apply(Math, yValues.filter(y => y !== null && !isNaN(y)));
         let minY = Math.min.apply(Math, yValues.filter(y => y !== null && !isNaN(y)));
-        let maxX = Math.max.apply(Math, xValues.filter(x => x !== null && !isNaN(x)));
-        let minX = Math.min.apply(Math, xValues.filter(x => x !== null && !isNaN(x)));
+        let maxX = Math.max.apply(Math, categoryLengths);
         if (minY === maxY) {
             minY = minY - 1;
             maxY = maxY + 1;
-        }
-        if (minX === maxX) {
-            minX = minX - 1;
-            maxX = maxX + 1;
         }
         if (!isFinite(maxY) || !isFinite((minY))) {
             maxY = 1;
             minY = 0;
         }
-        if (!isFinite(maxX) || !isFinite((minX))) {
-            maxX = 1;
-            minX = 0;
-        }
         // to prevent -infinity for maxY = 0
         if (maxY === 0) {
             maxY = 0.1;
         }
-        if (maxX === 0) {
-            maxX = 0.1;
-        }
-        return {maxY, minY, maxX, minX};
+        maxX = Math.min.apply(Math, [maxX, 30])
+        return {maxY, minY, xTextLength: maxX};
     }
 
+    /**
+     * Attempt to parse a 'drawable' value from what was returned by Neo4j.
+     * Since these may have any type (string, number, node, relationship, path), we need to handle a variety of cases.
+     */
     parseChartValue(value, index, i) {
         // If there's no data, fill it with some blanks.
         if (value === null) {
-            return NaN
+            if (index === 0) {
+                return 'null [' + i + ']'
+            } else {
+                return NaN
+            }
         }
-
         // if it's a number, just return it.
         if (!isNaN(value)) {
             return value
         }
+        // if we are dealing with the y axis, and it's not a number, we obviously want to cancel.
+        if (index === 1) {
+            return NaN
+        }
         if (typeof (value) === "object" && !isNaN(value["low"])) {
             return value.low
         }
-
-        // Nothing numeric? just return NaN.
-        return NaN
+        if (typeof (value) === "string") {
+            return value;
+        }
+        if (value && value["labels"] && value["identity"] && value["properties"]) {
+            return value.labels + "(" + value.identity + ")"
+        }
+        if (value && value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]) {
+            return value.type + "(" + value.identity + ")"
+        }
+        return (value) ? value.toString() : "";
     }
 
+    /**
+     * Draw the report based on the generated visualization.
+     */
     render() {
         let rendered = super.render();
         if (rendered) {
@@ -197,4 +204,4 @@ class NeoLineChart extends NeoReport {
 
 }
 
-export default (NeoLineChart);
+export default (NeoBarChartReport);

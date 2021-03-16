@@ -3,16 +3,28 @@ import Chip from "react-materialize/lib/Chip";
 import Icon from "react-materialize/lib/Icon";
 import NeoButton from "../../component/NeoButton";
 import NeoOptionSelect from "../../component/NeoOptionSelect";
+import NeoFooter from "./NeoFooter";
 
-class NeoGraphChips extends React.Component {
+/**
+ * A graph visualization footer displays the node labels present in the visualization.
+ * When clicking on a label, the rendered property name on the node can be changed.
+ */
+class NeoGraphVisFooter extends NeoFooter {
+    /**
+     * Set default state of the footer.
+     */
     constructor(props) {
         super(props);
         this.state = {}
     }
 
 
+    /**
+     * Draw the footer (with chips) based on selected values.
+     */
     render() {
-        let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
+        let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0",
+            "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
         let parsedParameters = this.props.params;
         if (parsedParameters && parsedParameters.nodeColors) {
             if (typeof (parsedParameters.nodeColors) === 'string') {
@@ -58,4 +70,4 @@ class NeoGraphChips extends React.Component {
 
 }
 
-export default (NeoGraphChips);
+export default (NeoGraphVisFooter);

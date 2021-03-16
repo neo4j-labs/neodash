@@ -2,11 +2,13 @@ import React from "react";
 import TextInput from "react-materialize/lib/TextInput";
 import {Autocomplete} from "react-materialize";
 
-
+/**
+ * An auto-completing text-box component.
+ * The text box will autocomplete and show values based on a configured node property in the database.
+ */
 class NeoAutoCompleteText extends React.Component {
     /**
-     * On init, set up a default state for the autcomplete box.
-     * @param props: properties defined for the component.
+     * On init, set up a default state for the autocomplete textbox.
      */
     constructor(props) {
         super(props);
@@ -17,9 +19,9 @@ class NeoAutoCompleteText extends React.Component {
             running: false,
             data: {}
         }
+        let title = this.props.label + " " + this.props.property;
         this.onChange = this.onChange.bind(this);
         this.onAutoComplete = this.onAutoComplete.bind(this);
-        let title = this.props.label + " " + this.props.property;
         this.autocomplete = <Autocomplete autoComplete={"off"} onChange={this.onChange}
                                           style={this.props.customStyle}
                                           placeholder={this.props.defaultValue}
@@ -27,7 +29,6 @@ class NeoAutoCompleteText extends React.Component {
 
         // Clear the autocompleted field when the component is reset.
         this.onAutoComplete(this.props.defaultValue);
-
     }
 
     /**
@@ -116,7 +117,6 @@ class NeoAutoCompleteText extends React.Component {
 
     /**
      * Draw the autocomplete box.
-     * @returns a HTML component.
      */
     render() {
         return <div className={"autocomplete-div"}>

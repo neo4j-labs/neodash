@@ -1,8 +1,14 @@
 import React from "react";
 import TextInput from "react-materialize/lib/TextInput";
 
-
+/**
+ * A free-text input box (https://materializecss.com/text-inputs.html) component.
+ * Configurable to be numeric only, have custom click handlers and use custom styling.
+ */
 class NeoTextInput extends React.Component {
+    /**
+     * Sets up the default state and binds change handling functions.
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -12,7 +18,9 @@ class NeoTextInput extends React.Component {
     }
 
 
-
+    /**
+     * Handle updates when the input text is changed.
+     */
     onChange(e) {
         if (this.props.numeric) {
             if (isNaN(e.target.value)) {
@@ -30,6 +38,9 @@ class NeoTextInput extends React.Component {
         }
     }
 
+    /**
+     * Draw the text input box.
+     */
     render() {
                 return <><TextInput onChange={this.onChange}
                             value={(this.state.value) ? this.state.value.toString() : ""}
