@@ -2,6 +2,9 @@ import React from "react";
 import Button from "react-materialize/lib/Button";
 import Icon from "react-materialize/lib/Icon";
 
+/**
+ * A generic text-based button component with configurable color and click-handler.
+ */
 class NeoTextButton extends React.Component {
     render() {
         return (

@@ -37,7 +37,7 @@ class NeoPropertySelectReport extends NeoReport {
     }
 
     /**
-     * Render the autocompletion report.
+     * Render the report. (A NeoAutoCompleteText component is used to handle property selection).
      */
     render() {
         // Render the auto completion box.

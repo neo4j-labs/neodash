@@ -2,7 +2,7 @@ import React from "react";
 import Textarea from "react-materialize/lib/Textarea";
 
 /**
- * A NeoTextArea is a multi-line text entry box with page numbers.
+ * A NeoTextArea is a multi-line text entry box with line numbers.
  * NeoTextAreas are used as Cypher-input boxes or to display errors.
  */
 class NeoTextArea extends React.Component {

@@ -2,13 +2,16 @@ import React from "react";
 import NeoReport from "./NeoReport";
 import * as d3 from "d3";
 
+/**
+ * A line chart report draws the resulting data from Neo4j as a line chart.
+ * The x-axis and the y-axis can be selected from the returned field names.
+ */
 class NeoLineChartReport extends NeoReport {
-
-    componentDidUpdate(prevProps) {
-        super.componentDidUpdate(prevProps);
-        this.componentDidMount();
-    }
-
+    /**
+     * On initialization, generate the visualization with d3.
+     * The drawn axes are generated from the selected properties.
+     * The size and style of the visualization is set based on the provided properties.
+     */
     componentDidMount() {
         let data = this.state.data;
         let page = this.state.page;
@@ -134,6 +137,17 @@ class NeoLineChartReport extends NeoReport {
 
     }
 
+    /**
+     * Handle updates to the component. Perform a remount on each update.
+     */
+    componentDidUpdate(prevProps) {
+        super.componentDidUpdate(prevProps);
+        this.componentDidMount();
+    }
+
+    /**
+     * Helper function to get the max/min values from the values selected for the plot's axes.
+     */
     getDataLimits(data) {
         let xValues = data.map(row => row[0]);
         let yValues = data.map(row => row[1]);
@@ -167,6 +181,10 @@ class NeoLineChartReport extends NeoReport {
         return {maxY, minY, maxX, minX};
     }
 
+    /**
+     * Attempt to parse a 'drawable' value from what was returned by Neo4j.
+     * For line charts, we only consider numeric values.
+     */
     parseChartValue(value, index, i) {
         // If there's no data, fill it with some blanks.
         if (value === null) {
@@ -185,6 +203,9 @@ class NeoLineChartReport extends NeoReport {
         return NaN
     }
 
+    /**
+     * Draw the report based on the generated visualization.
+     */
     render() {
         let rendered = super.render();
         if (rendered) {

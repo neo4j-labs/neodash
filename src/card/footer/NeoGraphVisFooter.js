@@ -10,12 +10,18 @@ import NeoFooter from "./NeoFooter";
  * When clicking on a label, the rendered property name on the node can be changed.
  */
 class NeoGraphVisFooter extends NeoFooter {
+    /**
+     * Set default state of the footer.
+     */
     constructor(props) {
         super(props);
         this.state = {}
     }
 
 
+    /**
+     * Draw the footer (with chips) based on selected values.
+     */
     render() {
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0",
             "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]

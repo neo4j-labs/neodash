@@ -1,10 +1,17 @@
 import Modal from "react-materialize/lib/Modal";
 import React from "react";
 
-
+/**
+ * A NeoModal is a modal (https://materializecss.com/modals.html) or pop-up box containing text and/or images.
+ * This object provides a generic way to create modals with configurable content and style.
+ */
 class NeoModal extends React.Component {
+    /**
+     * Set up default state and bind state handling methods.
+     */
     constructor(props) {
         super(props);
+        // TODO - check if this is still used...
         this.state = {
             json: this.props.json
         }
@@ -13,9 +20,11 @@ class NeoModal extends React.Component {
             this.stateChanged = this.stateChanged.bind(this);
         }
         this.componentDidUpdate = this.props.componentDidUpdate;
-
     }
 
+    /**
+     * Draw the modal.
+     */
     render() {
         return (
             <Modal

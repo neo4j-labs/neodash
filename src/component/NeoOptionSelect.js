@@ -1,9 +1,14 @@
 import React from "react";
 import Select from "react-materialize/lib/Select";
 
-
+/**
+ * A NeoOptionSelect is a drop-down Select (https://materializecss.com/select.html) component.
+ * Selectable values are provided as a dictionary (options).
+ */
 class NeoOptionSelect extends React.Component {
-
+    /**
+     * Converts the provided dictionary of options into a list of HTML <option> components.
+     */
     generateOptions() {
         let options = this.props.options;
         let optionsComponent = [];
@@ -11,7 +16,9 @@ class NeoOptionSelect extends React.Component {
         return optionsComponent;
     }
 
-
+    /**
+     * Renders the dropdown.
+     */
     render() {
         let suffix = this.props.suffix;
         let options = this.props.options;
@@ -39,20 +46,6 @@ class NeoOptionSelect extends React.Component {
                 }
             }}
             value={(defaultValue) ? (defaultValue.toString()) : ""}
-            // value={function () {
-            //     if (suffix == null) {
-            //         return (defaultValue) ? (defaultValue.toString()) : "";
-            //     } else {
-            //         if (options.length > 0){
-            //             let index = Object.keys(options)[0].split("-")[0];
-            //             let propSelected = Object.keys(options)[0].split("-")[1];
-            //             return index + "-" + propSelected
-            //         }else{
-            //             return (defaultValue) ? (defaultValue.toString()) : "";
-            //         }
-            //     }
-            // }}
-
         >
             {this.generateOptions()}
 

@@ -15,6 +15,9 @@ class NeoLineChartFooter extends NeoFooter {
         this.state = {}
     }
 
+    /**
+     * Draw the property selection boxes with selected properties.
+     */
     render() {
         return (
             <div className="neo-property-select" style={{marginLeft: '20px', marginTop: "-8px"}}>

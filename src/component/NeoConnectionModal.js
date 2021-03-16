@@ -8,12 +8,18 @@ import NeoTextInput from "./NeoTextInput";
 import NeoCheckBox from "./NeoCheckBox";
 import NeoTextButton from "./NeoTextButton";
 
-
+/**
+ * A Modal (pop-up) component used for setting up a Neo4j connection.
+ * Values in this modal can be prepopulated based on what's active in the browser cache.
+ */
 class NeoConnectionModal extends NeoModal {
     constructor(props) {
         super(props);
     }
 
+    /**
+     * Draw the modal based on the properties provided to the object.
+     */
     render() {
         return (
             <NeoModal
@@ -73,10 +79,7 @@ class NeoConnectionModal extends NeoModal {
                                            text={"connect"}
                                            waves="green"/>
                         </div>
-
-
                         <input style={{display: 'none'}} type="submit"/></form>
-
                 </div>}
             />
         )

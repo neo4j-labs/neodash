@@ -3,18 +3,18 @@ import Card from "react-materialize/lib/Card";
 import Icon from "react-materialize/lib/Icon";
 import Textarea from "react-materialize/lib/Textarea";
 import Button from "react-materialize/lib/Button";
-import NeoTable from "./report/NeoTableReport";
-import NeoPagination from "./footer/NeoTableFooter";
-import NeoGraphViz from "./report/NeoGraphVisReport";
+import NeoTableReport from "./report/NeoTableReport";
+import NeoTableFooter from "./footer/NeoTableFooter";
+import NeoGraphVisReport from "./report/NeoGraphVisReport";
 import Col from "react-materialize/lib/Col";
 import NeoCardSettings from "./NeoCardSettings";
 import NeoJSONView from "./report/NeoJSONViewReport";
-import NeoGraphChips from "./footer/NeoGraphVisFooter";
-import NeoMarkdownView from "./report/NeoMarkdownReport";
-import NeoBarChart from "./report/NeoBarChartReport";
-import NeoBarPropertySelect from "./footer/NeoBarChartFooter";
-import NeoLineChart from "./report/NeoLineChartReport";
-import NeoLinePropertySelect from "./footer/NeoLineChartFooter";
+import NeoGraphVisFooter from "./footer/NeoGraphVisFooter";
+import NeoMarkdownReport from "./report/NeoMarkdownReport";
+import NeoBarChartReport from "./report/NeoBarChartReport";
+import NeoBarChartFooter from "./footer/NeoBarChartFooter";
+import NeoLineChartReport from "./report/NeoLineChartReport";
+import NeoLineChartFooter from "./footer/NeoLineChartFooter";
 import NeoPropertySelectReport from "./report/NeoPropertySelectReport";
 
 
@@ -284,8 +284,8 @@ export class NeoCard extends React.Component {
      */
     setCardTypeToTableView() {
         this.state.content =
-            <NeoTable connection={this.props.connection}
-                      rows={this.state.height == 4 ? NeoTable.normalRowCount : NeoTable.tallRowCount}
+            <NeoTableReport connection={this.props.connection}
+                      rows={this.state.height == 4 ? NeoTableReport.normalRowCount : NeoTableReport.tallRowCount}
                       page={this.state.page}
                       query={this.state.query}
                       stateChanged={this.stateChanged}
@@ -293,7 +293,7 @@ export class NeoCard extends React.Component {
                       refresh={this.state.refresh}
             />
         this.state.action =
-            <NeoPagination page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+            <NeoTableFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
     }
 
     /**
@@ -301,7 +301,7 @@ export class NeoCard extends React.Component {
      */
     setCardTypeToBarChart() {
         this.state.content =
-            <NeoBarChart connection={this.props.connection}
+            <NeoBarChartReport connection={this.props.connection}
                          page={this.state.page}
                          query={this.state.query}
                          clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
@@ -321,7 +321,7 @@ export class NeoCard extends React.Component {
      */
     setCardTypeToLineChart() {
         this.state.content =
-            <NeoLineChart connection={this.props.connection}
+            <NeoLineChartReport connection={this.props.connection}
                           page={this.state.page}
                           query={this.state.query}
                           clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
@@ -342,7 +342,7 @@ export class NeoCard extends React.Component {
     setCardTypeToGraph() {
         this.state.page += 1;
         this.state.content =
-            <NeoGraphViz
+            <NeoGraphVisReport
                 connection={this.props.connection}
                 query={this.state.query}
                 params={this.state.parsedParameters}
@@ -377,7 +377,7 @@ export class NeoCard extends React.Component {
      */
     setCardTypeToMarkdown() {
         this.state.content =
-            <NeoMarkdownView
+            <NeoMarkdownReport
                 connection={this.props.connection}
                 query={'return true'}
                 data={this.state.query}
@@ -478,7 +478,7 @@ export class NeoCard extends React.Component {
     updateBarPropertySelect(labels) {
         this.state.page += 1;
         this.state.action =
-            <NeoBarPropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
+            <NeoBarChartFooter propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
                                   data={this.state.data}
                                   onChange={this.stateChanged}
                                   categories={labels} values={labels}
@@ -492,7 +492,7 @@ export class NeoCard extends React.Component {
     updateLinePropertySelect(labels) {
         this.state.page += 1;
         this.state.action =
-            <NeoLinePropertySelect propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
+            <NeoLineChartFooter propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
                                    data={this.state.data}
                                    onChange={this.stateChanged}
                                    categories={labels} values={labels}
@@ -522,7 +522,7 @@ export class NeoCard extends React.Component {
         }
 
 
-        this.state.action = <NeoGraphChips key={0} nodeLabels={Object.keys(labels)}
+        this.state.action = <NeoGraphVisFooter key={0} nodeLabels={Object.keys(labels)}
                                            width={this.props.width}
                                            params={this.state.parsedParameters}
                                            properties={Object.values(labels).map((labelChoices, index) => {

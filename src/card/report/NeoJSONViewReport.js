@@ -2,15 +2,20 @@ import React from "react";
 import Textarea from "react-materialize/lib/Textarea";
 import NeoReport from "./NeoReport";
 
+/**
+ * The JSON View report renders the raw JSON response retrieved from the Neo4j driver.
+ */
 class NeoJSONViewReport extends NeoReport {
     constructor(props) {
         super(props);
     }
 
-    /** ESSENTIAL preprocessing step for JSON, do not edit **/
+    /**
+     * ESSENTIAL preprocessing step for JSON, do not edit
+     **/
     preprocess_json(result) {
-        if (result.length > 30000){
-            result = result.substring(0,30000) + "... \n\n(results have been truncated)"
+        if (result.length > 30000) {
+            result = result.substring(0, 30000) + "... \n\n(results have been truncated)"
         }
 
         // Definitely no easter eggs here...
@@ -34,6 +39,9 @@ class NeoJSONViewReport extends NeoReport {
                          onChange={e => null} xl={12}/>
     }
 
+    /**
+     * Renders the raw JSON query results produced by the Neo4j javascript driver.
+     */
     render() {
         let rendered = super.render();
         if (rendered) {

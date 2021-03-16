@@ -4,13 +4,17 @@ import Icon from "react-materialize/lib/Icon";
 import NeoFooter from "./NeoFooter";
 
 /**
- * A table report footer can be used to switch pages in the table.
+ * A table footer is a Pagination (https://materializecss.com/pagination.html) component.
+ * The component is used to switch pages in the table report.
  */
 class NeoTableFooter extends NeoFooter {
     constructor(props) {
         super(props);
     }
 
+    /**
+     * Draw the pagination component based on the currently selected page in the table.
+     */
     render() {
         return <Pagination
             activePage={(this.props.page ? this.props.page : 1)}

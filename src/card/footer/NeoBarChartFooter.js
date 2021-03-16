@@ -10,11 +10,17 @@ import NeoFooter from "./NeoFooter";
  * On selection of new fields, the report corresponding to the footer will be refreshed.
  */
 class NeoBarChartFooter extends NeoFooter {
+    /**
+     * Initialize and set default state.
+     */
     constructor(props) {
         super(props);
         this.state = {}
     }
 
+    /**
+     * Draw the two proprety selection boxes.
+     */
     render() {
         return (
             <div className="neo-property-select" style={{marginLeft: '20px', marginTop: "-8px"}}>

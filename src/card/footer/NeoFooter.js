@@ -2,7 +2,7 @@ import React from "react";
 
 /**
  * Parent class for all card footers.
- * Handles logic relevant to all footers. Currently unused.
+ * Handles logic relevant to all footers.
  */
 class NeoFooter extends React.Component {
     constructor(props) {

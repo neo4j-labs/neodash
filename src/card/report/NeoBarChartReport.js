@@ -2,13 +2,16 @@ import React from "react";
 import NeoReport from "./NeoReport";
 import * as d3 from "d3";
 
+/**
+ * A bar chart report draws the resulting data from Neo4j as a bar chart.
+ * The x-axis (categories) and the y-axis (values) can be selected from the returned field names.
+ */
 class NeoBarChartReport extends NeoReport {
-
-    componentDidUpdate(prevProps) {
-        super.componentDidUpdate(prevProps);
-        this.componentDidMount();
-    }
-
+    /**
+     * On initialization, generate the visualization with d3.
+     * The drawn axes are generated from the selected properties.
+     * The size and style of the visualization is set based on the provided properties.
+     */
     componentDidMount() {
         let data = this.state.data;
         let page = this.state.page;
@@ -117,6 +120,17 @@ class NeoBarChartReport extends NeoReport {
 
     }
 
+    /**
+     * Handle updates to the component. Perform a remount on each update.
+     */
+    componentDidUpdate(prevProps) {
+        super.componentDidUpdate(prevProps);
+        this.componentDidMount();
+    }
+
+    /**
+     * Helper function to get the max/min values from the values selected for the plot's axes.
+     */
     getDataLimits(data) {
         let yValues = data.map(row => row[1]);
         let categoryLengths = data.map(row => (row[0] ? row[0] : "").toString().length);
@@ -139,6 +153,10 @@ class NeoBarChartReport extends NeoReport {
         return {maxY, minY, xTextLength: maxX};
     }
 
+    /**
+     * Attempt to parse a 'drawable' value from what was returned by Neo4j.
+     * Since these may have any type (string, number, node, relationship, path), we need to handle a variety of cases.
+     */
     parseChartValue(value, index, i) {
         // If there's no data, fill it with some blanks.
         if (value === null) {
@@ -148,7 +166,6 @@ class NeoBarChartReport extends NeoReport {
                 return NaN
             }
         }
-
         // if it's a number, just return it.
         if (!isNaN(value)) {
             return value
@@ -160,11 +177,9 @@ class NeoBarChartReport extends NeoReport {
         if (typeof (value) === "object" && !isNaN(value["low"])) {
             return value.low
         }
-
         if (typeof (value) === "string") {
             return value;
         }
-
         if (value && value["labels"] && value["identity"] && value["properties"]) {
             return value.labels + "(" + value.identity + ")"
         }
@@ -174,6 +189,9 @@ class NeoBarChartReport extends NeoReport {
         return (value) ? value.toString() : "";
     }
 
+    /**
+     * Draw the report based on the generated visualization.
+     */
     render() {
         let rendered = super.render();
         if (rendered) {

@@ -2,17 +2,19 @@ import * as d3 from "d3";
 import React from "react";
 import NeoReport from "./NeoReport";
 
-
+/**
+ * A NeoGraphVis report will contain a force-directed graph visualization.
+ * This visualization is similar to the one provided by Neo4j browser.
+ */
 class NeoGraphVisReport extends NeoReport {
     constructor(props) {
         super(props);
     }
-
+    /**
+     * Converts Neo4j query results into a graph representation that D3 can work with.
+     * Return type is a dictionary 'graph' with nodes, relationships and labels.
+     */
     convertDataToGraph() {
-        /**
-         * Converts Neo4j query results into a graph representation that D3 can work with.
-         * Return type is a dictionary 'graph' with nodes, relationships and labels.
-         */
         let graph = {nodes: [], links: [], nodeLabelsMap: {}}
 
         if (this.state.data == null) {
@@ -123,6 +125,13 @@ class NeoGraphVisReport extends NeoReport {
         return graph
     }
 
+    /**
+     * Convert a Neo4j node result representation `node` into a format the visualization expects.
+     * The 'visualization-supported' representation will be added to the nodesMap dictionary.
+     * @param value - a Neo4j node representation as produced as a query result by the javascript driver.
+     * @param nodeLabelsMap - a dictionary of currently identified node labels.
+     * @param nodesMap - a (to-be-constructed) dictionary of nodes to visualize.
+     */
     extractNodeInfo(value, nodeLabelsMap, nodesMap) {
         value["labels"].forEach(l => {
             if (!nodeLabelsMap[l]) {
@@ -145,6 +154,14 @@ class NeoGraphVisReport extends NeoReport {
         }
     }
 
+    /**
+     * Identify the unique SET of relationships returned by the query.
+     * In other words, remove all duplicates from the result set and store them in 'relsVisited' and 'relsVisitedDirections'.
+     *
+     * @param value - a relationship query result, as returned by the javascript driver
+     * @param relsVisited - a dictionary of unique relationships in the result set.
+     * @param relsVisitedDirections - a dictionary of unique relationships with directions in the result set.
+     */
     preprocessVisitedRelationships(value, relsVisited, relsVisitedDirections) {
         let minIndex = Math.min(value["start"]["low"], value["end"]["low"])
         let maxIndex = Math.max(value["start"]["low"], value["end"]["low"])
@@ -162,6 +179,10 @@ class NeoGraphVisReport extends NeoReport {
 
     }
 
+    /**
+     * After we've collected the unique set of relationships in 'preprocessVisitedRelationships()'.
+     * Build the graph representation that the visualization supports.
+     */
     extractRelInfo(value, nodesMap, linksMap, relsVisited, relsVisitedDirections) {
         let minIndex = Math.min(value["start"]["low"], value["end"]["low"])
         let maxIndex = Math.max(value["start"]["low"], value["end"]["low"])
@@ -196,6 +217,9 @@ class NeoGraphVisReport extends NeoReport {
         }
     }
 
+    /**
+     * After the component mounts, build the D3 Visualization from the query results provided to the report.
+     */
     componentDidMount() {
         // Default node colors.
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
@@ -506,6 +530,9 @@ class NeoGraphVisReport extends NeoReport {
                 });
         }
 
+        /**
+         * Determine the angle of a relationship type to draw in the visualization.
+         */
         function relationshipTextAngle(source, target) {
             if (source.x == target.x && source.y == target.y) {
                 return 45;
@@ -516,6 +543,9 @@ class NeoGraphVisReport extends NeoReport {
             return (angle > -90 && angle < 90) ? angle : angle - 180;
         }
 
+        /**
+         *  Returns -1 if the angle is negative, 1 if the angle is positive.
+         */
         function isRotatedAngle(source, target) {
             if (source.x == target.x && source.y == target.y) {
                 return 45;
@@ -526,17 +556,24 @@ class NeoGraphVisReport extends NeoReport {
             return (angle > -90 && angle < 90) ? 1 : -1;
         }
 
+        /**
+         * When a user starts dragging a node, update positions and restart the simulation.
+         */
         function dragstarted(d) {
             if (!d3.event.active) simulation.alphaTarget(0.3).restart()
             d.fx = d.x;
             d.fy = d.y;
         }
-
+        /**
+         * Handles dragging of the visualization' nodes by the user.
+         */
         function dragged(d) {
             d.fx = d3.event.x;
             d.fy = d3.event.y;
         }
-
+        /**
+         * When a user stops dragging a node, disable the drag action.
+         */
         function dragended(d) {
             if (!d3.event.active) simulation.alphaTarget(0);
             d.fx = null;
@@ -545,13 +582,18 @@ class NeoGraphVisReport extends NeoReport {
 
     }
 
+    /**
+     * After the component updates, remount and reset the visualization with the newly retrieved data.
+     */
     componentDidUpdate(prevProps) {
-
         super.componentDidUpdate(prevProps);
         d3.select('.chart' + this.props.id).select('g').remove();
         this.componentDidMount();
     }
 
+    /**
+     * Render the visualization SVG.
+     */
     render() {
         let rendered = super.render();
         if (rendered) {
