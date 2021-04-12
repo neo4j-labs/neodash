@@ -158,6 +158,7 @@ class NeoCardSettings extends React.Component {
         }
 
         this.settingsSelectionArea = <div style={{width: "100%"}}>
+            <hr style={{"display":"inline-block","width":"100%", "opacity":"0"}}></hr>
             {nodeSelectionBox}
             {propertySelectionBox}
             {propertyIdSelectionBox}

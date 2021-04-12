@@ -20,7 +20,32 @@ body{
     background-color: lightgrey;
     font-size: 12px;
 }
+.preloader-wrapper{
+    width:25px;
+    height:25px;
+}
+code {
+    background-color: #eee;
+    display: inline-block;
+}
+.autocomplete-content {
+    top: 50px !important;
+}
+.card-content .autocomplete-div ul:not(.browser-default) > li {
+    list-style-type: none;
+    margin-left: 0px;
+    padding-left: 10px;
+}
 
+.card-content pre {
+    background-color: #eee;
+
+}
+.card-content ul:not(.browser-default) > li {
+    list-style-type: disc;
+    margin-left: 40px;
+    padding-left: 0px;
+}
 .badge-strip{
     position: absolute;
     right: 0px;

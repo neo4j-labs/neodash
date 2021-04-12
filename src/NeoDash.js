@@ -37,6 +37,7 @@ class NeoDash extends React.Component {
         this.stateChanged = this.stateChanged.bind(this);
         this.createCardsFromLatestState = this.createCardsFromLatestState.bind(this);
         this.connect = this.connect.bind(this);
+        this.onConnectionHelpClicked = this.onConnectionHelpClicked.bind(this);
 
         // Attempt to load an existing dashboard state from the browser cache.
         this.loadDashboardfromBrowserCache();
@@ -446,6 +447,9 @@ class NeoDash extends React.Component {
         if (content.startsWith("Trying to connect")) {
             header = "Connecting...";
         }
+        if (content.startsWith("To save a dashboard")) {
+            header = "Saving and Loading Dashboards";
+        }
 
         // Special case 2: we're dealing with connection errors.
         if (content.startsWith("Could not perform discovery. No routing servers available.")) {
@@ -516,6 +520,7 @@ class NeoDash extends React.Component {
         return <NeoSaveLoadModal json={this.state.json}
                                  loadJson={loadJson}
                                  trigger={trigger}
+                                 onQuestionMarkClicked={this.onConnectionHelpClicked}
                                  value={this.state.json}
                                  placeholder={this.props.placeholder}
                                  change={e => {
@@ -582,10 +587,22 @@ class NeoDash extends React.Component {
      * Action to take place after 'get in touch' is clicked in the connection modal.
      */
     onGetInTouchClicked() {
+        let value = "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: " +
+            "reach out to Niels at niels.dejong@neo4j.com.";
         return e => this.stateChanged({
             label: "CreateError",
-            value: "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: " +
-                "reach out to Niels at niels.dejong@neo4j.com."
+            value: value
+        });
+    }
+
+    /**
+     * Action to take place after the question mark is clicked in the load/load modal.
+     */
+    onConnectionHelpClicked() {
+        let value = "To save a dashboard, copy the JSON data and store it somewhere on your computer. \n To load a dashboard, clear the textbox and paste in your saved JSON text.";
+        this.stateChanged({
+            label: "CreateError",
+            value: value
         });
     }
 

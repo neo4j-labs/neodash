@@ -1,6 +1,6 @@
 import React from "react";
 import TextInput from "react-materialize/lib/TextInput";
-import {Autocomplete} from "react-materialize";
+import {Autocomplete, Preloader} from "react-materialize";
 
 /**
  * An auto-completing text-box component.

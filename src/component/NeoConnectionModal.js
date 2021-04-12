@@ -72,7 +72,7 @@ class NeoConnectionModal extends NeoModal {
 
                             </NeoCheckBox>
                             <NeoTextButton right modal="close"
-                                           color={"neo-color"}
+                                           color={"neo-color white"}
                                            icon='play_arrow'
                                            node="button"
                                            onClick={this.props.connect}

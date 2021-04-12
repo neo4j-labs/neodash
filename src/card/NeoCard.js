@@ -266,6 +266,9 @@ export class NeoCard extends React.Component {
         if (this.state.type === 'text') {
             this.setCardTypeToMarkdown();
         }
+        if (this.state.success === false || this.state.query === "" || this.state.query === "\n"){
+            this.state.action = emptyAction;
+        }
         return state
     }
 
@@ -292,8 +295,10 @@ export class NeoCard extends React.Component {
                       params={this.state.parsedParameters}
                       refresh={this.state.refresh}
             />
-        this.state.action =
-            <NeoTableFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+
+            this.state.action =
+                <NeoTableFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+
     }
 
     /**
@@ -398,8 +403,8 @@ export class NeoCard extends React.Component {
 
             // Set the query used to one used for autocompletion
             this.state.query = `MATCH (n:\`${label}\`) 
-                                WHERE toLower(toString(n.\`${property}\`)) CONTAINS toLower($input) 
-                                RETURN n.\`${property}\` as value LIMIT 4`;
+WHERE toLower(toString(n.\`${property}\`)) CONTAINS toLower($input) 
+RETURN n.\`${property}\` as value LIMIT 4`;
             this.state.content =
                 <NeoPropertySelectReport
                     connection={this.props.connection}
