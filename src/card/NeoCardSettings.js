@@ -50,7 +50,8 @@ class NeoCardSettings extends React.Component {
      */
     setDefaultComponents() {
         this.settingsTextArea =
-            <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query"
+            <NeoTextArea placeholder={this.props.type == "text" ? "Enter Markdown here..." : this.props.placeholder}
+                         defaultValue={this.props.query} name="Query"
                          onChange={this.stateChanged}/>;
         this.cypherParamsInput = <NeoTextInput defaultValue={this.props.parameters} onChange={this.stateChanged}
                                                changeEventLabel={"CypherParamsChanged"}
@@ -158,7 +159,7 @@ class NeoCardSettings extends React.Component {
         }
 
         this.settingsSelectionArea = <div style={{width: "100%"}}>
-            <hr style={{"display":"inline-block","width":"100%", "opacity":"0"}}></hr>
+            <hr style={{"display": "inline-block", "width": "100%", "opacity": "0"}}></hr>
             {nodeSelectionBox}
             {propertySelectionBox}
             {propertyIdSelectionBox}
@@ -181,9 +182,20 @@ class NeoCardSettings extends React.Component {
     }
 
     /**
+     * Updates the query text box in the settings.
+     */
+    updateQueryTextBox() {
+        this.settingsTextArea =
+            <NeoTextArea placeholder={this.props.type == "text" ? "Enter Markdown here..." : this.props.placeholder}
+                         defaultValue={this.props.query} name="Query"
+                         onChange={this.stateChanged}/>;
+    }
+
+    /**
      * Renders the settings component.
      */
     render() {
+        this.updateQueryTextBox();
         this.buildCustomSelectionSettingsWindow();
         this.setTypeAndSizeSelectionComponents(this.props.type);
         return (

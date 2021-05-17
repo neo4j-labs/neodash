@@ -55,9 +55,6 @@ class NeoPropertySelectReport extends NeoReport {
                 defaultValue={""}>
 
             </NeoAutoCompleteText>
-            <div style={{"marginTop": "40px", "position": "absolute", "left": "300px","top": "55px"}}>
-                <Preloader color="green" size={"small"}/>
-            </div>
         </div>
         return (content);
     }

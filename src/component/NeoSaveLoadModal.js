@@ -50,7 +50,7 @@ class NeoSaveLoadModal extends NeoModal {
                       stateChanged={this.props.stateChanged}
                       content={<div>
                           <p> </p><hr/>
-                          <Textarea style={{minHeight: '500px'}} id="Textarea-12" l={12} m={12}
+                          <Textarea style={{minHeight: '1500px'}} id="Textarea-12" l={12} m={12}
                                     s={12} xl={12}
                                     onChange={this.props.change} value={this.props.value}
                                     placeholder={this.props.placeholder}/>
