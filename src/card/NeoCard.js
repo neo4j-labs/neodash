@@ -16,6 +16,8 @@ import NeoBarChartFooter from "./footer/NeoBarChartFooter";
 import NeoLineChartReport from "./report/NeoLineChartReport";
 import NeoLineChartFooter from "./footer/NeoLineChartFooter";
 import NeoPropertySelectReport from "./report/NeoPropertySelectReport";
+import NeoMapReport from "./report/NeoMapReport";
+import NeoMapFooter from "./footer/NeoMapFooter";
 
 
 let emptyAction = <div key={0}/>;
@@ -266,6 +268,9 @@ export class NeoCard extends React.Component {
         if (this.state.type === 'text') {
             this.setCardTypeToMarkdown();
         }
+        if (this.state.type === 'map') {
+            this.setCardTypeToMap();
+        }
         if (this.state.success === false || this.state.query === "" || this.state.query === "\n"){
             this.state.action = emptyAction;
         }
@@ -356,7 +361,8 @@ export class NeoCard extends React.Component {
                 onNodeLabelUpdate={this.updateGraphChips}
                 width={this.state.width}
                 id={this.props.id}
-                height={this.state.height} page={this.state.page}
+                height={this.state.height}
+                page={this.state.page}
                 stateChanged={this.stateChanged}
                 data={this.state.data}
                 refresh={this.state.refresh}/>
@@ -375,6 +381,25 @@ export class NeoCard extends React.Component {
                 stateChanged={this.stateChanged}
                 refresh={this.state.refresh}/>
         this.state.action = emptyAction;
+    }
+
+    /**
+     * Update the card's report to a Map view.
+     */
+    setCardTypeToMap() {
+        this.state.content =
+            <NeoMapReport
+                connection={this.props.connection}
+                query={this.state.query}
+                width={this.state.width}
+                height={this.state.height}
+                clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
+                params={this.state.parsedParameters}
+                data={this.state.data}
+                stateChanged={this.stateChanged}
+                refresh={this.state.refresh}/>
+        this.state.action = emptyAction;
+            // <NeoMapFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
     }
 
     /**

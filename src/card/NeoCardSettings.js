@@ -17,6 +17,7 @@ class NeoCardSettings extends React.Component {
         'line': 'Line Chart',
         'bar': 'Bar Chart',
         'json': 'Raw JSON',
+        'map': 'Map',
         'select': 'Selection',
         'text': 'Markdown',
     };

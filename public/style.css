@@ -38,7 +38,9 @@ code {
 .autocomplete-content {
     top: 50px !important;
 }
-
+.card .card-reveal {
+    z-index: 1500;
+}
 .card-content .autocomplete-div ul:not(.browser-default) > li {
     list-style-type: none;
     margin-left: 0px;
@@ -232,11 +234,18 @@ code {
 .card-title textarea:disabled {
     color: black !important;
 }
-
+#mobile-nav {
+    z-index: 2000;
+}
+#NeoModal {
+    z-index: 3000 !important;
+}
 nav textarea:disabled {
     color: white !important;
 }
-
+.leaflet-control-attribution{
+    font-size: 8px !important;
+}
 .select-wrapper {
     width: 140px;
 }

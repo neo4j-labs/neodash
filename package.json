@@ -39,11 +39,14 @@
     "jquery": "^3.5.1",
     "materialize-css": "^1.0.0",
     "neo4j-driver": "latest",
+    "leaflet": "latest",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-markdown": "^5.0.3",
     "react-materialize": "^3.9.2",
     "react-scripts": "3.4.1",
+    "react-leaflet": ">=3.1.0 <3.2.0 || ^3.2.1",
+    "@react-leaflet/core": ">=1.0.0 <1.1.0 || ^1.1.1",
     "remark-gfm": "^1.0.0"
   },
   "scripts": {

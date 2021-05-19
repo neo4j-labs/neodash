@@ -14,6 +14,7 @@ import defaultDashboard from './data/default_dashboard.json';
 import DesktopIntegration from './tools/DesktopIntegration';
 import NeoSaveLoadModal from "./component/NeoSaveLoadModal";
 import NeoConnectionModal from "./component/NeoConnectionModal";
+import {Preloader} from "react-materialize";
 
 
 /**
@@ -75,6 +76,7 @@ class NeoDash extends React.Component {
             password: (localStorage.getItem('neodash-password')) ? localStorage.getItem('neodash-password') : '',
             encryption: (localStorage.getItem('neodash-encryption')) ? localStorage.getItem('neodash-encryption') : 'off',
         }
+
         this.createConnectionModal(this.connect, true);
         this.stateChanged({label: "HideError"})
     }
@@ -105,6 +107,13 @@ class NeoDash extends React.Component {
      */
     componentDidMount() {
         this.createCardsFromLatestState()
+        var select = document.getElementById('root');
+
+        // TODO - remove this hack to get rid of duplicate connection modals being shown
+        if (select.childNodes.length == 9){
+            select.removeChild(select.childNodes.item(1));
+            // select.removeChild(select.firstChild);
+        }
     }
 
 
@@ -422,10 +431,11 @@ class NeoDash extends React.Component {
         const data = this.handleSpecialCaseErrors(content, header);
         content = data.content;
         header = data.header;
+        let style = data.style;
 
         // Create the modal object
         this.errorModal = <NeoModal header={header}
-                                    style={{'maxWidth': '550px'}}
+                                    style={style}
                                     open={true}
                                     trigger={null}
                                     content={<p>{content}</p>}
@@ -443,12 +453,14 @@ class NeoDash extends React.Component {
      * Changes the pop-up header and/or content for special types of pop-ups.
      */
     handleSpecialCaseErrors(content, header) {
+        var style = {}
         // Special case 1: we're connecting to a database from Neo4j Desktop.
         if (content.startsWith("Trying to connect")) {
             header = "Connecting...";
         }
         if (content.startsWith("To save a dashboard")) {
             header = "Saving and Loading Dashboards";
+            style = {paddingBottom: "650px"}
         }
 
         // Special case 2: we're dealing with connection errors.
@@ -465,7 +477,7 @@ class NeoDash extends React.Component {
             "reach out to Niels at niels.dejong@neo4j.com.") {
             header = "Contact"
         }
-        return {content, header};
+        return {content, header, style};
     }
 
     /**
@@ -540,16 +552,16 @@ class NeoDash extends React.Component {
      * @param open - whether the modal is open by default.
      */
     createConnectionModal(connect, open) {
-        this.neoConnectionModal = <NeoConnectionModal
-            key={(this.state) ? this.state.count : 0}
-            open={open}
-            connect={connect}
-            connection={this.connection}
-            stateChanged={this.stateChanged}
-            navClicked={e => this.stateChanged({})}
-            onConnect={this.onConnectClicked(connect)}
-            onGetInTouchClicked={this.onGetInTouchClicked()}
-        />
+            this.neoConnectionModal = <NeoConnectionModal
+                key={(this.state) ? this.state.count : 0}
+                open={open}
+                connect={connect}
+                connection={this.connection}
+                stateChanged={this.stateChanged}
+                navClicked={e => this.stateChanged({})}
+                onConnect={this.onConnectClicked(connect)}
+                onGetInTouchClicked={this.onGetInTouchClicked()}
+            />
     }
 
     /**
@@ -567,10 +579,45 @@ class NeoDash extends React.Component {
                               })}/>;
         return <Navbar alignLinks="right" brand={title} centerLogo id="mobile-nav"
                        menuIcon={<Icon>menu</Icon>}
-                       style={{backgroundColor: 'black'}}>
+                       style={{backgroundColor: '#111'}}>
             {saveLoadModal}
-            {this.neoConnectionModal}
+            {(this.neoConnectionModal) ? this.neoConnectionModal : <div></div>
+            }
         </Navbar>;
+
+        // <Navbar
+        //     alignLinks="right"
+        //     brand={<a className="brand-logo" href="#">Logo</a>}
+        //     extendWith={
+            //     <Tabs className="tabs-transparent">
+            //     <Tab className="white-text" options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="test 1">Test 1</Tab>
+            //     <Tab active className="white-text" options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="test 2">Test 2</Tab>
+            //     <Tab className="white-text" disabled options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="disabled tab">Disabled Tab</Tab>
+            //     <Tab className="white-text" options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="test 4">Test 4</Tab>
+            //     </Tabs>
+        //     }
+        //     id="mobile-nav"
+        //     menuIcon={<Icon>menu</Icon>}
+        //     options={{
+        //         draggable: true,
+        //         edge: 'left',
+        //         inDuration: 250,
+        //         onCloseEnd: null,
+        //         onCloseStart: null,
+        //         onOpenEnd: null,
+        //         onOpenStart: null,
+        //         outDuration: 200,
+        //         preventScrolling: true
+        //     }}
+        // >
+        //     <NavItem onClick={function noRefCheck(){}}>
+        //         Getting started
+        //     </NavItem>
+        //     <NavItem href="components.html">
+        //         Components
+        //     </NavItem>
+        // </Navbar>
+
     }
 
     /**
@@ -599,7 +646,9 @@ class NeoDash extends React.Component {
      * Action to take place after the question mark is clicked in the load/load modal.
      */
     onConnectionHelpClicked() {
-        let value = "To save a dashboard, copy the JSON data and store it somewhere on your computer. \n To load a dashboard, clear the textbox and paste in your saved JSON text.";
+        let value = "To save a dashboard, copy the JSON data and store it somewhere on your computer. \n " +
+            "To load a dashboard, clear the textbox and paste in your saved JSON text. \n \n" +
+            "To reset your dashboard, clear the textbox and click the load button.";
         this.stateChanged({
             label: "CreateError",
             value: value
@@ -610,6 +659,9 @@ class NeoDash extends React.Component {
      * Creates the container holding the card components.
      */
     createCardsContainer() {
+        if (this.state.cards == null || this.state.cards.length == 0){
+            return <center><br/><br/><br/><Preloader style="text-align: center;" color="green" size={"large"} /><br/><br/><br/></center>
+        }
         return <Container>
             <div className="chart-tooltip"/>
             <Section>
@@ -630,10 +682,12 @@ class NeoDash extends React.Component {
         let saveLoadModal = this.createSaveLoadModal(this.createCardsFromLatestState);
         let navbar = this.createDashboardNavbar(saveLoadModal);
         let errorModal = (this.errorModal) ? this.errorModal : "";
-        let cardsContainer = this.createCardsContainer();
+        let cardsContainer = this.createCardsContainer()
+        var select = document.getElementById('root');
         return (
             <>{navbar}{errorModal}{cardsContainer}</>
         );
+
     }
 }
 
