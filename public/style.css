@@ -38,9 +38,11 @@ code {
 .autocomplete-content {
     top: 50px !important;
 }
+
 .card .card-reveal {
     z-index: 1500;
 }
+
 .card-content .autocomplete-div ul:not(.browser-default) > li {
     list-style-type: none;
     margin-left: 0px;
@@ -234,18 +236,23 @@ code {
 .card-title textarea:disabled {
     color: black !important;
 }
+
 #mobile-nav {
     z-index: 2000;
 }
+
 #NeoModal {
     z-index: 3000 !important;
 }
+
 nav textarea:disabled {
     color: white !important;
 }
-.leaflet-control-attribution{
+
+.leaflet-control-attribution {
     font-size: 8px !important;
 }
+
 .select-wrapper {
     width: 140px;
 }
@@ -253,9 +260,28 @@ nav textarea:disabled {
 .card-action .select-wrapper {
     width: 120px;
 }
+.tabs .tab a {
+    padding: 0px;
+}
+.editable-page-nav {
+    cursor: pointer;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7) !important;
+    border-bottom: 0px;
+    font-size: 12px;
+    margin-left: 6px;
+}
 
 .fixed-icon {
     position: fixed;
+}
+
+.tabs-grey {
+    background-color: #333 !important;
+    color: white;
+}
+.tabs-grey .row{
+    margin-bottom: 0px;
 }
 
 .wide-button {
