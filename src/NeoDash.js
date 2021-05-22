@@ -15,6 +15,10 @@ import DesktopIntegration from './tools/DesktopIntegration';
 import NeoSaveLoadModal from "./component/NeoSaveLoadModal";
 import NeoConnectionModal from "./component/NeoConnectionModal";
 import {Preloader} from "react-materialize";
+import Tabs from "react-materialize/lib/Tabs";
+import Tab from "react-materialize/lib/Tab";
+import NeoTextInput from "./component/NeoTextInput";
+import TextInput from "react-materialize/lib/TextInput";
 
 
 /**
@@ -27,7 +31,7 @@ import {Preloader} from "react-materialize";
  * - Propagating global parameter changes ("Selection" reports) to each of the cards.
  */
 class NeoDash extends React.Component {
-    version = '1.0';
+    version = '1.1';
 
     /**
      * Set up the NeoDash component.
@@ -36,7 +40,7 @@ class NeoDash extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
-        this.createCardsFromLatestState = this.createCardsFromLatestState.bind(this);
+        this.createCardObjectsFromDashboardState = this.createCardObjectsFromDashboardState.bind(this);
         this.connect = this.connect.bind(this);
         this.onConnectionHelpClicked = this.onConnectionHelpClicked.bind(this);
 
@@ -106,11 +110,11 @@ class NeoDash extends React.Component {
      * After mounting, create the card components based on the latest state.
      */
     componentDidMount() {
-        this.createCardsFromLatestState()
+        this.createCardObjectsFromDashboardState()
         var select = document.getElementById('root');
 
         // TODO - remove this hack to get rid of duplicate connection modals being shown
-        if (select.childNodes.length == 9){
+        if (select.childNodes.length == 9) {
             select.removeChild(select.childNodes.item(1));
             // select.removeChild(select.firstChild);
         }
@@ -142,7 +146,7 @@ class NeoDash extends React.Component {
                     this.errorModal = null;
                     this.connected = true;
                     this.createConnectionModal(this.connect, false);
-                    this.createCardsFromLatestState()
+                    this.createCardObjectsFromDashboardState()
                     localStorage.setItem('neodash-database', this.connection.database);
                     localStorage.setItem('neodash-url', this.connection.url);
                     localStorage.setItem('neodash-username', this.connection.username);
@@ -170,7 +174,7 @@ class NeoDash extends React.Component {
      * Create cards for the dashboard based on the latest state.
      * If no state is available, set the default dashboard.
      */
-    createCardsFromLatestState() {
+    createCardObjectsFromDashboardState() {
         if (!this.connected) {
             // If no connection is available, set the title to 'NeoDash' and do not create cards.
             this.state.title = 'NeoDash ⚡';
@@ -193,44 +197,8 @@ class NeoDash extends React.Component {
                     });
                     return
                 }
-
-                // Create the card components based on the 'reports' array of the JSON object.
-                if (loaded.reports) {
-                    this.state.title = (loaded.title) ? loaded.title : 'NeoDash ⚡';
-                    this.state.editable = loaded.editable;
-                    this.state.cardState = loaded.reports.map(c => []);
-                    this.state.cards = loaded.reports.map((report, index) => {
-                            if (report.type) {
-                                return <NeoCard
-                                    connection={this.connection}
-                                    globalParameters={this.state.globalParameters}
-                                    page={report.page}
-                                    width={report.width}
-                                    height={report.height}
-                                    kkey={this.state.count + index}
-                                    key={this.state.count + index}
-                                    id={index}
-                                    session={this.session}
-                                    onChange={this.stateChanged}
-                                    editable={this.state.editable}
-                                    type={report.type}
-                                    propertiesSelected={report.properties}
-                                    title={report.title}
-                                    query={report.query}
-                                    parameters={report.parameters}
-                                    refresh={report.refresh}/>
-                            } else if (this.state.editable) {
-                                // a loaded report without a type is a "Add new card" button.
-                                return <AddNeoCard key={99999999} id={99999999} onClick={this.stateChanged}/>
-                            }
-                            return <div/>
-                        }
-                    );
-                    // Increment counter to refresh components.
-                    this.state.count = this.state.count + ((loaded.reports.length) ? loaded.reports.length : 0) - 1;
-                } else {
-                    this.setDefaultDashboard();
-                }
+                this.setPageStateFromLoadedJson(loaded);
+                this.generateDashboardCardComponents(loaded);
 
                 this.stateChanged({})
             } catch (e) {
@@ -244,12 +212,85 @@ class NeoDash extends React.Component {
         }
     }
 
+    setPageStateFromLoadedJson(loaded) {
+        this.state.pageTitles = loaded.pages.map((page) => {
+            return page.title
+        });
+
+        this.state.pagenumber = 0; //loaded.pagenumber ? loaded.pagenumber : 0;
+        this.state.pageState = loaded.pages.map((page) => {
+            return page.reports.map((report,index) => {
+                return {
+                    connection: this.connection,
+                    globalParameters: this.state.globalParameters,
+                    page :report.page,
+                    width : report.width,
+                    height : report.height,
+                    kkey : this.state.count + index,
+                    key : this.state.count + index,
+                    id : index,
+                    session : this.session,
+                    onChange : this.stateChanged,
+                    editable : this.state.editable,
+                    type : report.type,
+                    propertiesSelected : report.properties,
+                    title : report.title,
+                    query : report.query,
+                    parameters : report.parameters,
+                    refresh : report.refresh
+                }
+            })
+        })
+    }
+
+    generateDashboardCardComponents(loaded) {
+        let pagenumber = this.state.pagenumber;
+        let reportsForPage = loaded.pages[pagenumber].reports;
+        if (reportsForPage) {
+            this.state.title = (loaded.title) ? loaded.title : 'NeoDash ⚡';
+            this.state.editable = loaded.editable;
+            this.state.cards = reportsForPage.map((report, index) => {
+                    if (report.type) {
+                        return <NeoCard
+                            connection={this.connection}
+                            globalParameters={this.state.globalParameters}
+                            page={report.page}
+                            width={report.width}
+                            height={report.height}
+                            kkey={this.state.count + index}
+                            key={this.state.count + index}
+                            id={index}
+                            session={this.session}
+                            onChange={this.stateChanged}
+                            editable={this.state.editable}
+                            type={report.type}
+                            propertiesSelected={report.properties}
+                            title={report.title}
+                            query={report.query}
+                            parameters={report.parameters}
+                            refresh={report.refresh}/>
+                    } else if (this.state.editable) {
+                        // a loaded report without a type is a "Add new card" button.
+                        return <AddNeoCard key={99999999} id={99999999} onClick={this.stateChanged}/>
+                    }
+                    return <div/>
+                }
+            );
+            this.state.cards = this.state.cards.filter((v, i) => !(v.key === "99999999" && i !== this.state.cards.length - 1));
+            // Increment counter to refresh components.
+            this.state.count = this.state.count + ((reportsForPage.length) ? reportsForPage.length : 0) - 1;
+            this.stateChanged({label: "Refresh"});
+        } else {
+            this.setDefaultDashboard();
+        }
+    }
+
     /**
      * Sets a default dashboard based on a predefined file.
      */
     setDefaultDashboard() {
         this.state.json = JSON.stringify(defaultDashboard);
-        this.createCardsFromLatestState()
+        this.createCardObjectsFromDashboardState()
     }
 
     /**
@@ -258,6 +299,7 @@ class NeoDash extends React.Component {
      * @param update - a JSON dictionary {update, label} describing the change that was made.
      */
     stateChanged(update) {
+        console.log(update)
         if (update.label === "ConnectURLChanged") {
             this.connection.url = update.value;
         }
@@ -272,6 +314,21 @@ class NeoDash extends React.Component {
         }
         if (update.label === "GlobalParameterChanged") {
             this.updateGlobalParametersForAllCards(update);
+        }
+        if (update.label === "PageChanged") {
+            let tabClicked = update.value.parentNode.parentNode.parentNode;
+            let index = Array.from(tabClicked.parentNode.children).indexOf(tabClicked);
+            if (this.state.pagenumber === index){
+                return;
+            }
+            this.state.pagenumber = index;
+            let loaded = JSON.parse(this.state.json)
+            this.generateDashboardCardComponents(loaded);
+        }
+        if (update.label === "PageTitleChanged") {
+            let tabClicked = update.value.parentNode.parentNode.parentNode;
+            let index = Array.from(tabClicked.parentNode.children).indexOf(tabClicked);
+            this.state.pageTitles[index] = update.value.value;
         }
         if (update.label === "PasswordChanged") {
             this.connection.password = update.value;
@@ -291,7 +348,7 @@ class NeoDash extends React.Component {
             this.state.title = update.value;
         }
         if (update.label === "CardStateChanged") {
-            this.state.cardState[this.state.cards.indexOf(this.state.cards.filter(c => c.props.id === update.id)[0])] = update.state;
+            this.state.pageState[this.state.pagenumber][this.state.cards.indexOf(this.state.cards.filter(c => c.props.id === update.id)[0])] = update.state;
         }
         if (update.label === 'newCard') {
             this.createCard();
@@ -322,9 +379,9 @@ class NeoDash extends React.Component {
             let otherCard = this.state.cards[index - 1];
             this.state.cards.splice(index - 1, 2, card, otherCard);
 
-            let cardState = this.state.cardState[index];
-            let otherCardState = this.state.cardState[index - 1];
-            this.state.cardState.splice(index - 1, 2, cardState, otherCardState);
+            let cardState = this.state.pageState[this.state.pagenumber][index];
+            let otherCardState = this.state.pageState[this.state.pagenumber][index - 1];
+            this.state.pageState[this.state.pagenumber].splice(index - 1, 2, cardState, otherCardState);
         }
     }
 
@@ -340,10 +397,10 @@ class NeoDash extends React.Component {
             this.state.cards.splice(index, 2);
             this.state.cards.splice(index, 0, otherCard, card);
 
-            let cardState = this.state.cardState[index];
-            let otherCardState = this.state.cardState[index + 1];
-            this.state.cardState.splice(index, 2);
-            this.state.cardState.splice(index, 0, otherCardState, cardState);
+            let cardState = this.state.pageState[this.state.pagenumber][index];
+            let otherCardState = this.state.pageState[this.state.pagenumber][index + 1];
+            this.state.pageState[this.state.pagenumber].splice(index, 2);
+            this.state.pageState[this.state.pagenumber].splice(index, 0, otherCardState, cardState);
         }
     }
 
@@ -352,17 +409,17 @@ class NeoDash extends React.Component {
      */
     createCard() {
         let newCard = <NeoCard connection={this.connection}
-                                        globalParameters={this.state.globalParameters}
-                                        kkey={this.state.count}
-                                        session={this.session}
-                                        width={4} height={4}
-                                        id={this.state.count}
-                                        editable={this.state.editable}
-                                        key={this.state.count}
-                                        onChange={this.stateChanged} type='table'/>;
+                               globalParameters={this.state.globalParameters}
+                               kkey={this.state.count}
+                               session={this.session}
+                               width={4} height={4}
+                               id={this.state.count}
+                               editable={this.state.editable}
+                               key={this.state.count}
+                               onChange={this.stateChanged} type='table'/>;
         this.state.count += 1;
         this.state.cards.splice(this.state.cards.length - 1, 0, newCard);
-        this.state.cardState.splice(this.state.cardState.length - 1, 0, {
+        this.state.pageState[this.state.pagenumber].splice(this.state.pageState[this.state.pagenumber].length - 1, 0, {
             "title": "",
             "width": 4,
             "height": 4,
@@ -382,7 +439,7 @@ class NeoDash extends React.Component {
         let card = this.state.cards.filter((card) => card.props.id === update.card.props.id)[0]
         let index = this.state.cards.indexOf(card);
         this.state.cards.splice(index, 1);
-        this.state.cardState.splice(index, 1);
+        this.state.pageState[this.state.pagenumber].splice(index, 1);
     }
 
     /**
@@ -406,7 +463,7 @@ class NeoDash extends React.Component {
         } else {
             delete this.state.globalParameters[newGlobalParameter];
         }
-        this.state.cardState.forEach(card => {
+        this.state.pageState[this.state.pagenumber].forEach(card => {
             if (card.content) {
                 card.content.props.stateChanged({
                     label: "GlobalParametersChanged",
@@ -491,19 +548,25 @@ class NeoDash extends React.Component {
 
         let value = {
             "title": this.state.title,
-            "version": "1.0",
+            "version": "1.1",
             "editable": this.state.editable,
-            "reports": this.state.cardState.map(q => {
+            "pagenumber": 0,
+            "pages": this.state.pageState.map((p, pagenumber) => {
                 return {
-                    title: q.title,
-                    width: q.width,
-                    height: q.height,
-                    type: q.type,
-                    query: q.query,
-                    page: q.page,
-                    properties: q.propertiesSelected,
-                    parameters: q.parameters,
-                    refresh: q.refresh
+                    "title": this.state.pageTitles[pagenumber],
+                    "reports": this.state.pageState[pagenumber].map(q => {
+                        return {
+                            title: q.title,
+                            width: q.width,
+                            height: q.height,
+                            type: q.type,
+                            query: q.query,
+                            page: q.page,
+                            properties: q.propertiesSelected,
+                            parameters: q.parameters,
+                            refresh: q.refresh
+                        }
+                    })
                 }
             })
         };
@@ -552,24 +615,24 @@ class NeoDash extends React.Component {
      * @param open - whether the modal is open by default.
      */
     createConnectionModal(connect, open) {
-            this.neoConnectionModal = <NeoConnectionModal
-                key={(this.state) ? this.state.count : 0}
-                open={open}
-                connect={connect}
-                connection={this.connection}
-                stateChanged={this.stateChanged}
-                navClicked={e => this.stateChanged({})}
-                onConnect={this.onConnectClicked(connect)}
-                onGetInTouchClicked={this.onGetInTouchClicked()}
-            />
+        this.neoConnectionModal = <NeoConnectionModal
+            key={(this.state) ? this.state.count : 0}
+            open={open}
+            connect={connect}
+            connection={this.connection}
+            stateChanged={this.stateChanged}
+            navClicked={e => this.stateChanged({})}
+            onConnect={this.onConnectClicked(connect)}
+            onGetInTouchClicked={this.onGetInTouchClicked()}
+        />
     }
+
 
     /**
      * Creates the navigation bar of the dashboard.
      */
     createDashboardNavbar(saveLoadModal) {
         let title = <Textarea disabled={!this.state.editable} noLayout={true}
-                              style={{"width": '500px'}}
                               className="card-title editable-title"
                               key={this.state.count}
                               value={this.state.title}
@@ -577,46 +640,61 @@ class NeoDash extends React.Component {
                                   label: "DashboardTitleChanged",
                                   value: e.target.value
                               })}/>;
+        let tabslist = [
+            <Tab className="white-text" options={{
+                duration: 300,
+                onShow: null,
+                responsiveThreshold: Infinity,
+                swipeable: false
+            }} title={ <TextInput disabled={!this.state.editable} noLayout={true}
+                                  className="card-page-nav editable-page-nav tabs tab"
+                                  key={0}
+                                  value={(this.state.pageTitles) ? this.state.pageTitles[0] : ""}
+                                  onChange={e => this.stateChanged({
+                                      label: "PageTitleChanged",
+                                      value: e.target
+                                  })}/>}>
+            </Tab>,
+            <Tab active className="white-text" options={{
+                duration: 300,
+                responsiveThreshold: Infinity,
+                swipeable: false
+            }} title={<TextInput disabled={!this.state.editable} noLayout={true}
+
+                                 className="card-page-nav editable-page-nav tabs tab"
+                                 key={1}
+                                 value={(this.state.pageTitles) ? this.state.pageTitles[1] : ""}
+                                 onChange={e => this.stateChanged({
+                                     label: "PageTitleChanged",
+                                     value: e.target
+                                 })}/>}>
+
+            </Tab>];
+        let tabs = <Tabs className="tabs-transparent tabs-grey"
+                         onChange={e => this.stateChanged({label: "PageChanged", value: e.target})}>
+            {tabslist}
+        </Tabs>;
         return <Navbar alignLinks="right" brand={title} centerLogo id="mobile-nav"
                        menuIcon={<Icon>menu</Icon>}
+                       options={{
+                           draggable: true,
+                           edge: 'left',
+                           inDuration: 250,
+                           onCloseEnd: null,
+                           onCloseStart: null,
+                           onOpenEnd: null,
+                           onOpenStart: null,
+                           outDuration: 200,
+                           preventScrolling: true
+                       }}
+                       extendWith={
+                           tabs
+                       }
                        style={{backgroundColor: '#111'}}>
             {saveLoadModal}
             {(this.neoConnectionModal) ? this.neoConnectionModal : <div></div>
             }
         </Navbar>;
-
-        // <Navbar
-        //     alignLinks="right"
-        //     brand={<a className="brand-logo" href="#">Logo</a>}
-        //     extendWith={
-            //     <Tabs className="tabs-transparent">
-            //     <Tab className="white-text" options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="test 1">Test 1</Tab>
-            //     <Tab active className="white-text" options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="test 2">Test 2</Tab>
-            //     <Tab className="white-text" disabled options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="disabled tab">Disabled Tab</Tab>
-            //     <Tab className="white-text" options={{duration: 300, onShow: null, responsiveThreshold: Infinity, swipeable: false}} title="test 4">Test 4</Tab>
-            //     </Tabs>
-        //     }
-        //     id="mobile-nav"
-        //     menuIcon={<Icon>menu</Icon>}
-        //     options={{
-        //         draggable: true,
-        //         edge: 'left',
-        //         inDuration: 250,
-        //         onCloseEnd: null,
-        //         onCloseStart: null,
-        //         onOpenEnd: null,
-        //         onOpenStart: null,
-        //         outDuration: 200,
-        //         preventScrolling: true
-        //     }}
-        // >
-        //     <NavItem onClick={function noRefCheck(){}}>
-        //         Getting started
-        //     </NavItem>
-        //     <NavItem href="components.html">
-        //         Components
-        //     </NavItem>
-        // </Navbar>
 
     }
 
@@ -659,8 +737,9 @@ class NeoDash extends React.Component {
      * Creates the container holding the card components.
      */
     createCardsContainer() {
-        if (this.state.cards == null || this.state.cards.length == 0){
-            return <center><br/><br/><br/><Preloader style="text-align: center;" color="green" size={"large"} /><br/><br/><br/></center>
+        if (this.state.cards == null || this.state.cards.length == 0) {
+            return <center><br/><br/><br/><Preloader style="text-align: center;" color="green"
+                                                     size={"large"}/><br/><br/><br/></center>
         }
         return <Container>
             <div className="chart-tooltip"/>
@@ -679,10 +758,10 @@ class NeoDash extends React.Component {
      * - a list of reports.
      */
     render() {
-        let saveLoadModal = this.createSaveLoadModal(this.createCardsFromLatestState);
+        let saveLoadModal = this.createSaveLoadModal(this.createCardObjectsFromDashboardState);
+        let cardsContainer = this.createCardsContainer()
         let navbar = this.createDashboardNavbar(saveLoadModal);
         let errorModal = (this.errorModal) ? this.errorModal : "";
-        let cardsContainer = this.createCardsContainer()
         var select = document.getElementById('root');
         return (
             <>{navbar}{errorModal}{cardsContainer}</>
