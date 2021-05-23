@@ -88,7 +88,7 @@ code {
     background-color: #444;
     opacity: 0.2;
     margin-left: 15px;
-    margin-top: -6px;
+    margin-top: -4px;
     margin-right: 15px;
 }
 
@@ -105,6 +105,10 @@ code {
 }
 .tab {
     width: 250px;
+    -webkit-box-flex: 0 !important;
+    -webkit-flex-grow: 0 !important;
+    -ms-flex-positive: 0 !important;
+    flex-grow: 0 !important;
 }
 .tab a .input-field input {
     width: 200px;
@@ -300,7 +304,7 @@ code {
 }
 
 #mobile-nav {
-    z-index: 2000;
+    z-index: 1001;
 }
 
 #NeoModal {

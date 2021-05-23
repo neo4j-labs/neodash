@@ -287,6 +287,13 @@ class NeoGraphVisReport extends NeoReport {
         var prevSelected;
 
         function handePopUp(d, i) {
+            function prettifyNodePropertyAsString(d, item) {
+                if (d.properties[item]["low"]){
+                    return JSON.stringify(d.properties[item]["low"]);
+                }
+                return JSON.stringify(d.properties[item]);
+            }
+
             // Render a nice pop-up when we click a node.
             let circ = svg.selectAll("text").filter(c => d === c);
             svg.selectAll("tspan").remove();
@@ -304,7 +311,7 @@ class NeoGraphVisReport extends NeoReport {
                     .attr("dy", (i === 0) ? 60 : 15)
                     .attr("x", d.x)
                     .text(function () {
-                        let string = JSON.stringify(item) + ": " + JSON.stringify(d.properties[item]);
+                        let string = JSON.stringify(item) + ": " + prettifyNodePropertyAsString(d, item);
                         return string.substr(0, Math.min(100, string.length));
                     });
 
@@ -581,6 +588,9 @@ class NeoGraphVisReport extends NeoReport {
         }
 
     }
+
+
+
 
     /**
      * After the component updates, remount and reset the visualization with the newly retrieved data.

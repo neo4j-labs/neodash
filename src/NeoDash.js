@@ -192,6 +192,10 @@ class NeoDash extends React.Component {
             // If a JSON string is available, try to parse it and set the state.
             try {
                 let loaded = JSON.parse(this.state.json)
+                // Quietly auto-upgrade to Neodash 1.1...
+                if (this.version === "1.1" && loaded.version === "1.0"){
+                    this.upgradeDashboardJson(loaded);
+                }
                 if (loaded.version && loaded.version !== this.version) {
                     this.stateChanged({
                         label: "CreateError",
@@ -212,6 +216,16 @@ class NeoDash extends React.Component {
                 }
             }
         }
+    }
+
+    upgradeDashboardJson(loaded) {
+        loaded.version = "1.1";
+        loaded.pages = [
+            {
+                title: "Page 1",
+                reports: loaded.reports
+            }
+        ]
     }
 
     setPageStateFromLoadedJson(loaded) {
@@ -301,7 +315,6 @@ class NeoDash extends React.Component {
      * @param update - a JSON dictionary {update, label} describing the change that was made.
      */
     stateChanged(update) {
-        console.log(update)
         if (update.label === "ConnectURLChanged") {
             this.connection.url = update.value;
         }
@@ -348,15 +361,16 @@ class NeoDash extends React.Component {
             this.state.count += 1;
         }
         if (update.label === "PageChanged") {
-            if (update.value.tagName !== "INPUT") {
-                // We should always click an Input element when switching pages
-                return
+            let tabClicked = null;
+            if (update.value.tagName === "INPUT") {
+                tabClicked = update.value.parentNode.parentNode.parentNode;
+
+            } else if (update.value.className === "input-field") {
+                tabClicked = update.value.parentNode.parentNode;
             }
-            console.log(update.value)
-            console.log(update.value.parentNode)
-            console.log(update.value.parentNode.parentNode)
-            console.log(update.value.parentNode.parentNode.parentNode)
-            let tabClicked = update.value.parentNode.parentNode.parentNode;
+            if (tabClicked == null) {
+                return;
+            }
             let index = Array.from(tabClicked.parentNode.children).indexOf(tabClicked);
             if (this.state.pagenumber === index) {
                 return;
@@ -364,6 +378,7 @@ class NeoDash extends React.Component {
             this.state.pagenumber = index;
             let loaded = JSON.parse(this.state.json)
             this.generateDashboardCardComponents(loaded);
+
         }
         if (update.label === "PageTitleChanged") {
             let tabClicked = update.value.parentNode.parentNode.parentNode;

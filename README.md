@@ -10,6 +10,9 @@ Writing Cypher is all that's required to build your first dashboard in minutes. 
 - Customizing your dashboard layout with a variety of report sizes.
 - Saving/loading dashboards as a JSON file.
 
+### Requirements    
+- Neo4j 4.0 or later
+- A modern web-browser / a Neo4j Desktop installation
 ### Documentation
 - For users, see [user-guide.md](./doc/user-guide.md).
 - Extending NeoDash? See [developer-guide.md](./doc/developer-guide.md).
