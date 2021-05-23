@@ -19,6 +19,8 @@ import Tabs from "react-materialize/lib/Tabs";
 import Tab from "react-materialize/lib/Tab";
 import NeoTextInput from "./component/NeoTextInput";
 import TextInput from "react-materialize/lib/TextInput";
+import Card from "react-materialize/lib/Card";
+import NeoTextButton from "./component/NeoTextButton";
 
 
 /**
@@ -217,27 +219,27 @@ class NeoDash extends React.Component {
             return page.title
         });
 
-        this.state.pagenumber = 0; //loaded.pagenumber ? loaded.pagenumber : 0;
+        this.state.pagenumber = loaded.pagenumber ? loaded.pagenumber : 0;
         this.state.pageState = loaded.pages.map((page) => {
-            return page.reports.map((report,index) => {
+            return page.reports.map((report, index) => {
                 return {
                     connection: this.connection,
                     globalParameters: this.state.globalParameters,
-                    page :report.page,
-                    width : report.width,
-                    height : report.height,
-                    kkey : this.state.count + index,
-                    key : this.state.count + index,
-                    id : index,
-                    session : this.session,
-                    onChange : this.stateChanged,
-                    editable : this.state.editable,
-                    type : report.type,
-                    propertiesSelected : report.properties,
-                    title : report.title,
-                    query : report.query,
-                    parameters : report.parameters,
-                    refresh : report.refresh
+                    page: report.page,
+                    width: report.width,
+                    height: report.height,
+                    kkey: this.state.count + index,
+                    key: this.state.count + index,
+                    id: index,
+                    session: this.session,
+                    onChange: this.stateChanged,
+                    editable: this.state.editable,
+                    type: report.type,
+                    propertiesSelected: report.properties,
+                    title: report.title,
+                    query: report.query,
+                    parameters: report.parameters,
+                    refresh: report.refresh
                 }
             })
         })
@@ -315,10 +317,48 @@ class NeoDash extends React.Component {
         if (update.label === "GlobalParameterChanged") {
             this.updateGlobalParametersForAllCards(update);
         }
+        if (update.label === "AddPage") {
+            // Adds a new page & switches to the new page
+            this.state.pageState.push([{}])
+            this.state.pageTitles.push("new page")
+            this.buildJSONFromReportsState();
+
+        }
+        if (update.label === "AskForDeletePage") {
+            this.createPageDeletionPopupModal();
+            this.state.count += 1;
+        }
+        if (update.label === "DeletePage") {
+            if (this.state.pageState.length <= 1) {
+                this.stateChanged({
+                    label: "CreateError",
+                    value: "You cannot delete the only page of a dashboard."
+                })
+                this.state.count += 1;
+                return
+            }
+            this.state.pageState.splice(this.state.pagenumber, 1);
+            this.state.pageTitles.splice(this.state.pagenumber, 1);
+            if (this.state.pagenumber > this.state.pageState.length - 1) {
+                this.state.pagenumber = this.state.pageState.length - 1;
+            }
+            this.buildJSONFromReportsState();
+            let loaded = JSON.parse(this.state.json)
+            this.generateDashboardCardComponents(loaded)
+            this.state.count += 1;
+        }
         if (update.label === "PageChanged") {
+            if (update.value.tagName !== "INPUT") {
+                // We should always click an Input element when switching pages
+                return
+            }
+            console.log(update.value)
+            console.log(update.value.parentNode)
+            console.log(update.value.parentNode.parentNode)
+            console.log(update.value.parentNode.parentNode.parentNode)
             let tabClicked = update.value.parentNode.parentNode.parentNode;
             let index = Array.from(tabClicked.parentNode.children).indexOf(tabClicked);
-            if (this.state.pagenumber === index){
+            if (this.state.pagenumber === index) {
                 return;
             }
             this.state.pagenumber = index;
@@ -483,6 +523,41 @@ class NeoDash extends React.Component {
     /**
      * Creates a pop-up window (Modal). Used for displaying errors and other notifications.
      */
+    createPageDeletionPopupModal() {
+        let header = "Delete Page";
+        let content = "Are you sure you want to delete the current page? This cannot be undone.";
+
+
+        // Create the modal object
+        this.errorModal = <NeoModal header={header}
+                                    open={true}
+                                    trigger={null}
+                                    content={<p>{content}</p>}
+                                    key={this.state.count}
+                                    id={this.state.count}
+                                    root={document.getElementById("root")}
+                                    actions={[
+                                        <Button flat modal="close"
+                                                node="button"
+                                                waves="red">Cancel</Button>,
+                                        <NeoTextButton right modal="close"
+                                                       color={"white-color"}
+                                                       icon='delete'
+                                                       node="button"
+                                                       modal="close"
+                                                       style={{backgroundColor: "red"}}
+                                                       onClick={e => this.stateChanged({
+                                                           label: "DeletePage",
+                                                           value: e.target.value
+                                                       })}
+                                                       text={"delete"}
+                                                       waves="red"/>
+                                    ]}/>
+    }
+
+    /**
+     * Creates a pop-up window (Modal). Used for displaying errors and other notifications.
+     */
     createPopUpModal(content) {
         let header = "Error";
         const data = this.handleSpecialCaseErrors(content, header);
@@ -550,7 +625,7 @@ class NeoDash extends React.Component {
             "title": this.state.title,
             "version": "1.1",
             "editable": this.state.editable,
-            "pagenumber": 0,
+            "pagenumber": (this.state.pagenumber) ? this.state.pagenumber : 0,
             "pages": this.state.pageState.map((p, pagenumber) => {
                 return {
                     "title": this.state.pageTitles[pagenumber],
@@ -632,49 +707,65 @@ class NeoDash extends React.Component {
      * Creates the navigation bar of the dashboard.
      */
     createDashboardNavbar(saveLoadModal) {
-        let title = <Textarea disabled={!this.state.editable} noLayout={true}
-                              className="card-title editable-title"
-                              key={this.state.count}
-                              value={this.state.title}
-                              onChange={e => this.stateChanged({
-                                  label: "DashboardTitleChanged",
-                                  value: e.target.value
-                              })}/>;
-        let tabslist = [
-            <Tab className="white-text" options={{
+        let dashboardTitle = <Textarea disabled={!this.state.editable} noLayout={true}
+                                       className="card-title editable-title"
+                                       key={this.state.count}
+                                       value={this.state.title}
+                                       onChange={e => this.stateChanged({
+                                           label: "DashboardTitleChanged",
+                                           value: e.target.value
+                                       })}/>;
+
+        // if the page titles are loaded, build the list of tabs
+        let tabslist = (this.state.pageTitles) ? this.state.pageTitles.map((t, i) => {
+            let deletePageButton = <Button className="btn-floating btn-remove-tab"
+                                           onClick={e => {
+                                               if (this.state.editable) this.stateChanged({
+                                                   label: "AskForDeletePage",
+                                                   value: "delete"
+                                               })
+                                           }}><Icon>close</Icon></Button>;
+            return <Tab active={this.state.pagenumber === i} className="white-text  tab-page" options={{
                 duration: 300,
                 onShow: null,
                 responsiveThreshold: Infinity,
                 swipeable: false
-            }} title={ <TextInput disabled={!this.state.editable} noLayout={true}
-                                  className="card-page-nav editable-page-nav tabs tab"
-                                  key={0}
-                                  value={(this.state.pageTitles) ? this.state.pageTitles[0] : ""}
-                                  onChange={e => this.stateChanged({
-                                      label: "PageTitleChanged",
-                                      value: e.target
-                                  })}/>}>
-            </Tab>,
-            <Tab active className="white-text" options={{
-                duration: 300,
-                responsiveThreshold: Infinity,
-                swipeable: false
-            }} title={<TextInput disabled={!this.state.editable} noLayout={true}
+            }} title={<><TextInput noLayout={true}
+                                   className="card-page-nav editable-page-nav tabs tab"
+                                   key={i}
+                                   value={t ? t : ""}
+                                   onChange={e => {
+                                       if (this.state.editable) {
+                                           this.stateChanged({
+                                               label: "PageTitleChanged",
+                                               value: e.target
+                                           })
+                                       }
+                                   }}/> {(this.state.pagenumber === i) ? deletePageButton : <></>}</>}>
+            </Tab>
+        }) : [];
 
-                                 className="card-page-nav editable-page-nav tabs tab"
-                                 key={1}
-                                 value={(this.state.pageTitles) ? this.state.pageTitles[1] : ""}
-                                 onChange={e => this.stateChanged({
-                                     label: "PageTitleChanged",
-                                     value: e.target
-                                 })}/>}>
+        let addNewTab = <Tab disabled className="white-text" options={{
+            duration: 300,
+            onShow: null,
+            responsiveThreshold: Infinity,
+            swipeable: false
+        }} title={<Button className="btn-floating btn-add-tab"
+                          onClick={e => this.stateChanged({
+                              label: "AddPage",
+                              value: e.target
+                          })}><Icon>add</Icon></Button>}>
+        </Tab>
 
-            </Tab>];
-        let tabs = <Tabs className="tabs-transparent tabs-grey"
-                         onChange={e => this.stateChanged({label: "PageChanged", value: e.target})}>
-            {tabslist}
-        </Tabs>;
-        return <Navbar alignLinks="right" brand={title} centerLogo id="mobile-nav"
+        let tabs = (this.state.pageTitles) ? <Tabs className="tabs-transparent tabs-grey"
+                                                   onChange={e => this.stateChanged({
+                                                       label: "PageChanged",
+                                                       value: e.target
+                                                   })}>
+            {tabslist}{(this.state.editable) ? addNewTab : <></>}
+        </Tabs> : <></>;
+
+        return <Navbar alignLinks="right" brand={dashboardTitle} centerLogo id="mobile-nav"
                        menuIcon={<Icon>menu</Icon>}
                        options={{
                            draggable: true,

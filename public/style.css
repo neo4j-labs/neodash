@@ -69,7 +69,69 @@ code {
 #root {
     background-color: #efefef;
 }
+.tabs .indicator {
+    display: none;
+}
+.tab a.active {
+    border-bottom: 2px solid white;
+}
+.tabs {
+    overflow-y: auto; !important;
 
+    /*overflow-y: fragments;*/
+    height: auto !important;
+}
+.btn-add-tab {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #444;
+    opacity: 0.2;
+    margin-left: 15px;
+    margin-top: -6px;
+    margin-right: 15px;
+}
+
+.tabs .disabled {
+    width: auto !important;
+}
+.tabs .disabled a .input-field input {
+    width: auto !important;
+    margin-left: auto !important;
+}
+.tab a .input-field input {
+    width: 200px;
+    margin-left: -20px;
+}
+.tab {
+    width: 250px;
+}
+.tab a .input-field input {
+    width: 200px;
+    margin-left: -20px;
+}
+.btn-center-align :hover {
+    background-color: #444 !important;
+    opacity: 0.7;
+}
+.btn-add-tab i {
+    margin-top: -13px;
+}
+.btn-remove-tab {
+
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+
+    background-color: transparent;
+    opacity: 0.2;
+    margin-top: -97.5px;
+    margin-left: 220px;
+}
+
+.btn-remove-tab i {
+    margin-top: -13px;
+}
 .btn-center-align {
 
     margin-left: 45%;
