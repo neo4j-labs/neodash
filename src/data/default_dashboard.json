@@ -23,7 +23,7 @@
           "width": 4,
           "height": 4,
           "type": "graph",
-          "query": "CALL db.schema.visualization()",
+          "query": "MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20",
           "page": 2,
           "properties": [],
           "parameters": "",
