@@ -15,6 +15,10 @@ class NeoTestReport extends NeoReport {
     }
 
 
+    /**
+     * Convert the results of the Cypher query into an object that we can render on a map.
+     * Also uses some nice math to determine the center of the map and zoom level to ensure everything is visible.
+     */
     recomputeMapInformation() {
         this.state.width = this.props.clientWidth - 50; //-90 + props.width * 105 - xShift * 0.5;
         this.state.height = -145 + this.props.height * 100;
@@ -67,21 +71,17 @@ class NeoTestReport extends NeoReport {
     }
 
 
-
-    render() {
-        let rendered = super.render();
-
-        if (rendered) {
-            return rendered;
-        }
-
-        this.recomputeMapInformation();
+    /**
+     * Creates the leaflet visualization to render in the report.
+     */
+    createMapVisualization() {
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
         let markers = (this.state.nodesAndPositions) ?
             this.state.nodesAndPositions.map(i =>
                 <Marker position={i.pos}
                         icon={<div style={{color: colors[0]}}><Icon className="close">place</Icon></div>}>
-                    <Popup><code>{Object.keys(i.node).map(key => <pre>{key + ": "+i.node[key] +"\n"}</pre>)}</code></Popup>
+                    <Popup><code>{Object.keys(i.node).map(key =>
+                        <pre>{key + ": " + i.node[key] + "\n"}</pre>)}</code></Popup>
                 </Marker>) : <div></div>
         let lines = <div></div>// [<Polyline key={0} positions={[this.state.pos1, this.state.pos2]} color={colors[0]}/>];
 
@@ -102,6 +102,17 @@ class NeoTestReport extends NeoReport {
             {markers}
             {lines}
         </MapContainer>;
+    }
+
+    render() {
+        let rendered = super.render();
+        if (rendered) {
+            return rendered;
+        }
+
+        // TODO - do this on component initialization instead of on each render.
+        this.recomputeMapInformation();
+        return this.createMapVisualization();
     }
 }
 
