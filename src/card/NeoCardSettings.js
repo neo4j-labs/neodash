@@ -19,6 +19,7 @@ class NeoCardSettings extends React.Component {
         'json': 'Raw JSON',
         'map': 'Map',
         'select': 'Selection',
+        'iframe': 'iFrame',
         'text': 'Markdown',
     };
 
@@ -51,7 +52,8 @@ class NeoCardSettings extends React.Component {
      */
     setDefaultComponents() {
         this.settingsTextArea =
-            <NeoTextArea placeholder={this.props.type == "text" ? "Enter Markdown here..." : this.props.placeholder}
+            <NeoTextArea placeholder={this.getQueryBoxPlaceholder()}
+                         disclaimer={this.getDisclaimer()}
                          defaultValue={this.props.query} name="Query"
                          onChange={this.stateChanged}/>;
         this.cypherParamsInput = <NeoTextInput defaultValue={this.props.parameters} onChange={this.stateChanged}
@@ -75,6 +77,27 @@ class NeoCardSettings extends React.Component {
             <p style={{fontSize: 7}}>&nbsp;</p></>;
 
     }
+
+    getQueryBoxPlaceholder() {
+        if (this.props.type == "text") {
+            return "Enter Markdown here..."
+        }
+        if(this.props.type == "iframe"){
+            return "Enter URL here..."
+        }
+        return this.props.placeholder;
+    }
+
+    getDisclaimer() {
+        if (this.props.type == "text") {
+            return "Enter your text in the query box above."
+        }
+        if(this.props.type == "iframe"){
+            return "Enter a URL starting with 'http://' or 'https://'."
+        }
+        return this.props.placeholder;
+    }
+
 
     setTypeAndSizeSelectionComponents(type) {
         this.cardTypeSelect = <NeoOptionSelect label="Type" defaultValue={type} onChange={this.stateChanged}
@@ -187,7 +210,8 @@ class NeoCardSettings extends React.Component {
      */
     updateQueryTextBox() {
         this.settingsTextArea =
-            <NeoTextArea placeholder={this.props.type == "text" ? "Enter Markdown here..." : this.props.placeholder}
+            <NeoTextArea placeholder={this.getQueryBoxPlaceholder()}
+                         disclaimer={this.getDisclaimer()}
                          defaultValue={this.props.query} name="Query"
                          onChange={this.stateChanged}/>;
     }

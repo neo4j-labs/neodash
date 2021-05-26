@@ -21,29 +21,52 @@ class NeoTestReport extends NeoReport {
         this.state.height = -145 + this.props.height * 100;
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
 
-        if (width !== this.props.clientWidth - 50 || height !== -145 + this.props.height * 100){
-            const position = [51.4472055, 4.4601085]
-            let position2 = [51.4972055, 4.4801085];
+        if (width !== this.props.clientWidth - 50 || height !== -145 + this.props.height * 100) {
+            let nodesAndPositions = [
+                {
+                    pos: [51.4972055, 4.4801085],
+                    node: {
+                        id: 4
+                    }
+                },
+                {
+                    pos: [51.4472055, 4.4601085],
+                    node: {
+                        id: 6
+                    }
+                }]
+            ;
+            let xPositions = nodesAndPositions.map(i => i.pos[0]);
+            let yPositions = nodesAndPositions.map(i => i.pos[1]);
+            let centerX = xPositions.reduce((a, b) => a + b, 0) / nodesAndPositions.length;
+            let centerY = yPositions.reduce((a, b) => a + b, 0) / nodesAndPositions.length;
+            // let minX = Math.min.apply(null, xPositions);
+            let maxX = Math.max.apply(null, xPositions);
+            // let minY = Math.min.apply(null, yPositions);
+            let maxY = Math.max.apply(null, yPositions);
+            // Build map objects
+            let markers = nodesAndPositions.map(i =>
+                <Marker position={i.pos} icon={<div style={{color: colors[0]}}><Icon className="close">place</Icon></div>}>
+                    <Popup>{JSON.stringify(i.node)}</Popup>
+                </Marker>)
+            let lines = [<Polyline key={0} positions={[[51.4972055, 4.4801085], [51.4472055, 4.4601085]]} color={colors[0]}/>];
+
+            // Set visualization object
             this.state.visualization =
-                <MapContainer key={0} style={{"width": this.state.width + "px", "height": this.state.height + "px"}} center={position} zoom={13}
+                <MapContainer key={0} style={{"width": this.state.width + "px", "height": this.state.height + "px"}}
+                              center={
+                                  [
+                                      centerX,
+                                      centerY
+                                  ]
+                              } zoom={13}
                               scrollWheelZoom={false}>
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={position} icon={<div  style={{color: colors[0]}}><Icon className="close">place</Icon></div>}>
-                        <Popup>
-                            A pretty CSS3 popup. <br/> Easily customizable. With a lot of text wooooooooooooooooh asdjadnas da sdas
-                        </Popup>
-                    </Marker>
-                    <Marker position={position2} icon={<div  style={{color: colors[0]}}><Icon className="close">place</Icon></div>}>
-                        <Popup>
-                            A pretty CSS3 popup. <br/> Easily customizable. With a lot of text wooooooooooooooooh asdjadnas da sdas
-                        </Popup>
-                    </Marker>
-                    <Polyline key={0} positions={[
-                        position, position2,
-                    ]} color={colors[0]} />
+                    {markers}
+                    {lines}
                 </MapContainer>;
             this.forceUpdate();
         }

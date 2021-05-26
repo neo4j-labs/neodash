@@ -113,15 +113,17 @@ class NeoDash extends React.Component {
      */
     componentDidMount() {
         this.createCardObjectsFromDashboardState()
-        var select = document.getElementById('root');
-
         // TODO - remove this hack to get rid of duplicate connection modals being shown
-        if (select.childNodes.length == 9) {
-            select.removeChild(select.childNodes.item(1));
-            // select.removeChild(select.firstChild);
-        }
+        this.removeDuplicateConnectionModal();
     }
 
+
+    removeDuplicateConnectionModal() {
+        var select = document.getElementById('root');
+        if (select.childNodes.length == 9) {
+            select.removeChild(select.childNodes.item(1));
+        }
+    }
 
     /**
      * Will try to connect to Neo4j given the specified connection parameters.
@@ -129,6 +131,7 @@ class NeoDash extends React.Component {
      */
     connect() {
         try {
+            this.connected = false;
             var url = this.connection.url;
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
@@ -168,6 +171,12 @@ class NeoDash extends React.Component {
                 label: "CreateError",
                 value: error['message']
             });
+        } finally {
+
+        }
+        if (!this.connected){
+            this.createConnectionModal(this.connect, true);
+            // TODO - this can produce duplicate connection modals
         }
     }
 
@@ -617,6 +626,7 @@ class NeoDash extends React.Component {
             content = "Unable to connect to the specified Neo4j database. " +
                 "The database might be unreachable, or it does not accept " +
                 ((encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
+            this.state.page +=1;
 
         }
         // Special case 3: we're dealing with someone clicking the 'Get in touch' button.

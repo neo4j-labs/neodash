@@ -147,7 +147,7 @@ class NeoGraphVisReport extends NeoReport {
         nodesMap["" + value['identity']['low']] = {
             id: value['identity']['low'],
             fill: 'seagreen',
-            stroke: "#555",
+            stroke: "#666",
             radius: 25,
             properties: value['properties'],
             labels: value['labels']
@@ -199,7 +199,7 @@ class NeoGraphVisReport extends NeoReport {
             nodesMap["" + value['start']['low']] = {
                 id: value['start']['low'],
                 fill: 'seagreen',
-                stroke: "#555",
+                stroke: "#666",
                 radius: 25,
                 properties: [],
                 labels: []
@@ -209,7 +209,7 @@ class NeoGraphVisReport extends NeoReport {
             nodesMap["" + value['end']['low']] = {
                 id: value['end']['low'],
                 fill: 'seagreen',
-                stroke: "#555",
+                stroke: "#666",
                 radius: 25,
                 properties: [],
                 labels: []

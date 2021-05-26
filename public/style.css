@@ -103,7 +103,7 @@ code {
     margin-left: 33px;
     margin-top: -6px;
     -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: #444;
+    -webkit-text-stroke-color: #666;
 }
 .tabs .disabled {
     width: auto !important;
@@ -159,7 +159,9 @@ code {
 .btn-center-align :hover {
     opacity: 0.7;
 }
-
+.section {
+    padding-top: 0;
+}
 .card {
     padding-bottom: 55px;
 }

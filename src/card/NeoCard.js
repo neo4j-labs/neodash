@@ -18,6 +18,7 @@ import NeoLineChartFooter from "./footer/NeoLineChartFooter";
 import NeoPropertySelectReport from "./report/NeoPropertySelectReport";
 import NeoMapReport from "./report/NeoMapReport";
 import NeoMapFooter from "./footer/NeoMapFooter";
+import NeoIFrameReport from "./report/NeoIFrameReport";
 
 
 let emptyAction = <div key={0}/>;
@@ -268,6 +269,9 @@ export class NeoCard extends React.Component {
         if (this.state.type === 'text') {
             this.setCardTypeToMarkdown();
         }
+        if (this.state.type === 'iframe') {
+            this.setCardTypeToIFrame();
+        }
         if (this.state.type === 'map') {
             this.setCardTypeToMap();
         }
@@ -416,6 +420,21 @@ export class NeoCard extends React.Component {
         this.state.action = emptyAction;
     }
 
+    /**
+     * Update the card's report to a Markdown view.
+     */
+    setCardTypeToIFrame() {
+        this.state.content =
+            <NeoIFrameReport
+                connection={this.props.connection}
+                query={'return true'}
+                height={this.state.height}
+                data={this.state.query}
+                stateChanged={this.stateChanged}
+                refresh={this.state.refresh}/>
+        this.state.action = emptyAction;
+    }
+    
     /**
      * Update the card's report to a property selection.
      */
