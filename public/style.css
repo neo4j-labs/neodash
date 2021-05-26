@@ -16,10 +16,13 @@ body {
     transform: translateY(-18px) scale(0.8);
 }
 
-.select-dropdown {
+.card-reveal .select-dropdown {
     top: 0px !important;
 }
-
+.card-action .select-dropdown {
+    bottom: 0px !important;
+    top: auto !important;
+}
 .log {
     background-color: lightgrey;
     font-size: 12px;
@@ -155,7 +158,10 @@ code {
     margin-top: 150px;
     margin-bottom: 150px;
 }
-
+.card-action {
+    max-height: 150px;
+    overflow-y: scroll;
+}
 .btn-center-align :hover {
     opacity: 0.7;
 }
@@ -183,9 +189,6 @@ code {
     min-width: 60px;
 }
 
-.card-action {
-    max-height: 200px;
-}
 
 .card-action .pagination a {
     color: #000 !important;
@@ -333,7 +336,12 @@ nav textarea:disabled {
 .leaflet-control-attribution {
     font-size: 8px !important;
 }
-
+.leaflet-popup-content {
+    width: auto !important;
+}
+.leaflet-popup-content pre{
+    margin: 0px;
+}
 .select-wrapper {
     width: 140px;
 }

@@ -5,80 +5,68 @@ import Marker from 'react-leaflet-enhanced-marker';
 import Icon from "react-materialize/lib/Icon";
 
 class NeoTestReport extends NeoReport {
+    // Per pixel, scaling factors for the latitude/longitude mapping function.
+    widthScale = 3.35;
+    heightScale = 6.7;
+
     constructor(props) {
         super(props);
         this.state = {}
     }
 
-    /**
-     * After the component mounts, build the D3 Visualization from the query results provided to the report.
-     */
-    componentDidMount() {
-        let width = this.state.width;
-        let height = this.state.height;
 
+    recomputeMapInformation() {
         this.state.width = this.props.clientWidth - 50; //-90 + props.width * 105 - xShift * 0.5;
         this.state.height = -145 + this.props.height * 100;
-        let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
 
-        if (width !== this.props.clientWidth - 50 || height !== -145 + this.props.height * 100) {
-            let nodesAndPositions = [
-                {
-                    pos: [51.4972055, 4.4801085],
-                    node: {
-                        id: 4
+        this.state.nodesAndPositions = []
+        if (this.state.data) {
+            this.state.data.forEach(record => {
+                Object.values(record).forEach(v => {
+                    if (v.identity && v.properties) {
+                        console.log(v)
+                        Object.values(v.properties).forEach(p => {
+                            if (p.srid && p.x && p.y) {
+                                console.log([p.x, p.y])
+                                this.state.nodesAndPositions.push({pos: [p.y, p.x], node: v.properties})
+                            }
+                        })
                     }
-                },
-                {
-                    pos: [51.4472055, 4.4601085],
-                    node: {
-                        id: 6
-                    }
-                }]
-            ;
-            let xPositions = nodesAndPositions.map(i => i.pos[0]);
-            let yPositions = nodesAndPositions.map(i => i.pos[1]);
-            let centerX = xPositions.reduce((a, b) => a + b, 0) / nodesAndPositions.length;
-            let centerY = yPositions.reduce((a, b) => a + b, 0) / nodesAndPositions.length;
-            // let minX = Math.min.apply(null, xPositions);
-            let maxX = Math.max.apply(null, xPositions);
-            // let minY = Math.min.apply(null, yPositions);
-            let maxY = Math.max.apply(null, yPositions);
-            // Build map objects
-            let markers = nodesAndPositions.map(i =>
-                <Marker position={i.pos} icon={<div style={{color: colors[0]}}><Icon className="close">place</Icon></div>}>
-                    <Popup>{JSON.stringify(i.node)}</Popup>
-                </Marker>)
-            let lines = [<Polyline key={0} positions={[[51.4972055, 4.4801085], [51.4472055, 4.4601085]]} color={colors[0]}/>];
+                })
 
-            // Set visualization object
-            this.state.visualization =
-                <MapContainer key={0} style={{"width": this.state.width + "px", "height": this.state.height + "px"}}
-                              center={
-                                  [
-                                      centerX,
-                                      centerY
-                                  ]
-                              } zoom={13}
-                              scrollWheelZoom={false}>
-                    <TileLayer
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    {markers}
-                    {lines}
-                </MapContainer>;
-            this.forceUpdate();
+            })
         }
+
+        // This is where math happens - we try to come up with the optimal zoom to fit all rendered nodes...
+        let longitudePositions = this.state.nodesAndPositions.map(i => i.pos[0] + 180);
+        this.state.centerLongitude = longitudePositions.reduce((a, b) => a + b, 0) / this.state.nodesAndPositions.length;
+        let maxLong = Math.max.apply(null, longitudePositions);
+        if ((maxLong === this.state.centerLongitude)) {
+            maxLong += 0.000000001;
+        }
+        let longHeightScaleFactor = this.state.height / this.heightScale;
+        let longDiff = maxLong - this.state.centerLongitude;
+        let longProjectedHeight = longDiff / longHeightScaleFactor;
+        let longZoomFit = Math.ceil(Math.log2(1.0 / longProjectedHeight));
+
+
+        let latitudePositions = this.state.nodesAndPositions.map(i => i.pos[1] + 90);
+        this.state.centerLatitude = latitudePositions.reduce((a, b) => a + b, 0) / this.state.nodesAndPositions.length;
+        let maxLat = Math.max.apply(null, latitudePositions);
+        if ((maxLat === this.state.centerLatitude)) {
+            maxLat += 0.000000001;
+        }
+        let latWidthScaleFactor = this.state.width / this.widthScale;
+        let latDiff = maxLat - this.state.centerLatitude;
+        let latProjectedWidth = latDiff / latWidthScaleFactor;
+        let latZoomFit = Math.ceil(Math.log2(1.0 / latProjectedWidth));
+
+        // Choose a zoom factor that fits, based on the difference between lat and long.
+        this.state.zoom = Math.min(latZoomFit, longZoomFit);
+
     }
 
-    /**
-     * After the component updates, remount and reset the visualization with the newly retrieved data.
-     */
-    componentDidUpdate(prevProps) {
-        super.componentDidUpdate(prevProps);
-        this.componentDidMount();
-    }
+
 
     render() {
         let rendered = super.render();
@@ -86,8 +74,34 @@ class NeoTestReport extends NeoReport {
         if (rendered) {
             return rendered;
         }
-        return this.state.visualization;
-        // return <p>{JSON.stringify(this.state.data)}</p>;
+
+        this.recomputeMapInformation();
+        let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
+        let markers = (this.state.nodesAndPositions) ?
+            this.state.nodesAndPositions.map(i =>
+                <Marker position={i.pos}
+                        icon={<div style={{color: colors[0]}}><Icon className="close">place</Icon></div>}>
+                    <Popup><code>{Object.keys(i.node).map(key => <pre>{key + ": "+i.node[key] +"\n"}</pre>)}</code></Popup>
+                </Marker>) : <div></div>
+        let lines = <div></div>// [<Polyline key={0} positions={[this.state.pos1, this.state.pos2]} color={colors[0]}/>];
+
+        return <MapContainer key={0} style={{"width": this.state.width + "px", "height": this.state.height + "px"}}
+                             center={
+                                 [
+                                     (this.state.centerLongitude) ? this.state.centerLongitude - 180 : 0,
+                                     (this.state.centerLatitude) ? this.state.centerLatitude - 90 : 0
+                                 ]
+                             }
+                             zoom={(this.state.zoom) ? this.state.zoom : 0}
+                             maxZoom={18}
+                             scrollWheelZoom={false}>
+            <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {markers}
+            {lines}
+        </MapContainer>;
     }
 }
 

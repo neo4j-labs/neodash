@@ -47,7 +47,6 @@ class NeoGraphVisFooter extends NeoFooter {
                         options={null}
                         style={{
                             backgroundColor: colors[index % colors.length],
-                            display: (index < this.props.width * 3.5 || this.props.width == 12) ? "inline-block" : "none",
                             color: 'white'
                         }}
                     >
