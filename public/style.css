@@ -95,6 +95,7 @@ code {
     margin-right: 15px;
 }
 .leaflet-marker-icon {
+    margin-left: -13px !important;
     width: 25px !important;
     height: 30px !important;
 }
@@ -103,7 +104,7 @@ code {
 }
 .leaflet-marker-icon .material-icons {
     font-size: 34px;
-    margin-left: 33px;
+    margin-left: -4px;
     margin-top: -6px;
     -webkit-text-stroke-width: 1.5px;
     -webkit-text-stroke-color: #666;
@@ -159,8 +160,8 @@ code {
     margin-bottom: 150px;
 }
 .card-action {
+    clip: rect(-2000px 2000px 150px 5px);
     max-height: 150px;
-    overflow-y: scroll;
 }
 .btn-center-align :hover {
     opacity: 0.7;
@@ -348,6 +349,7 @@ nav textarea:disabled {
 
 .card-action .select-wrapper {
     width: 120px;
+
 }
 .tabs .tab a {
     padding: 0px;

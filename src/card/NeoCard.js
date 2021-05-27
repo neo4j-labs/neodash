@@ -402,8 +402,7 @@ export class NeoCard extends React.Component {
                 data={this.state.data}
                 stateChanged={this.stateChanged}
                 refresh={this.state.refresh}/>
-        this.state.action = emptyAction;
-            // <NeoMapFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+        this.state.action = <NeoMapFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
     }
 
     /**

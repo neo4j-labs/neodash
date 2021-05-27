@@ -4,7 +4,7 @@ import {MapContainer, Polyline, Popup, TileLayer} from "react-leaflet";
 import Marker from 'react-leaflet-enhanced-marker';
 import Icon from "react-materialize/lib/Icon";
 
-class NeoTestReport extends NeoReport {
+class NeoMapReport extends NeoReport {
     // Per pixel, scaling factors for the latitude/longitude mapping function.
     widthScale = 3.35;
     heightScale = 6.7;
@@ -27,12 +27,25 @@ class NeoTestReport extends NeoReport {
         if (this.state.data) {
             this.state.data.forEach(record => {
                 Object.values(record).forEach(v => {
-                    if (v.identity && v.properties) {
-                        console.log(v)
+                    if (v.identity && v.properties && v.properties.latitude && v.properties.longitude )  {
+                        let lat = parseFloat(v.properties.latitude);
+                        let long = parseFloat(v.properties.longitude);
+                        if (!isNaN(lat) && !isNaN(long)){
+                            this.state.nodesAndPositions.push({pos: [lat, long], node: v})
+                        }
+                    }else if (v.identity && v.properties && v.properties.lat && v.properties.long )  {
+                        let lat = parseFloat(v.properties.lat);
+                        let long = parseFloat(v.properties.long);
+                        if (!isNaN(lat) && !isNaN(long)){
+                            this.state.nodesAndPositions.push({pos: [lat, long], node: v})
+                        }
+                    }else if (v.identity && v.properties) {
                         Object.values(v.properties).forEach(p => {
+                            // We found a property that holds a Neo4j point object
                             if (p.srid && p.x && p.y) {
-                                console.log([p.x, p.y])
-                                this.state.nodesAndPositions.push({pos: [p.y, p.x], node: v.properties})
+                                if (!isNaN(p.x) && !isNaN(p.y)) {
+                                    this.state.nodesAndPositions.push({pos: [p.y, p.x], node: v})
+                                }
                             }
                         })
                     }
@@ -80,8 +93,8 @@ class NeoTestReport extends NeoReport {
             this.state.nodesAndPositions.map(i =>
                 <Marker position={i.pos}
                         icon={<div style={{color: colors[0]}}><Icon className="close">place</Icon></div>}>
-                    <Popup><code>{Object.keys(i.node).map(key =>
-                        <pre>{key + ": " + i.node[key] + "\n"}</pre>)}</code></Popup>
+                    <Popup><h6>{i.node.labels.map(b => b + " ")}</h6><code>{Object.keys(i.node.properties).map(key =>
+                        <pre>{key + ": " + i.node.properties[key] + "\n"}</pre>)}</code></Popup>
                 </Marker>) : <div></div>
         let lines = <div></div>// [<Polyline key={0} positions={[this.state.pos1, this.state.pos2]} color={colors[0]}/>];
 
@@ -116,4 +129,4 @@ class NeoTestReport extends NeoReport {
     }
 }
 
-export default (NeoTestReport);
+export default (NeoMapReport);
