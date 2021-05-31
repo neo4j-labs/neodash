@@ -1,0 +1,100 @@
+{
+  "title": "Beer & Breweries Dashboard 🍻",
+  "version": "1.1",
+  "editable": true,
+  "pagenumber": 1,
+  "pages": [
+    {
+      "title": "main page",
+      "reports": [
+        {
+          "title": "Hi there 👋",
+          "width": 12,
+          "height": 4,
+          "type": "text",
+          "query": "This is an example dashboard that uses the [Beers and Breweries Graphgist](https://neo4j.com/graphgist/beer-amp-breweries-graphgist/).\n\n\n**Check out the second tab of this dashboard (\"Beers by Country\") for some example reports!**\n",
+          "page": 1,
+          "properties": [],
+          "parameters": "",
+          "refresh": 0
+        },
+        {}
+      ]
+    },
+    {
+      "title": "beers by COUNTRY",
+      "reports": [
+        {
+          "title": "Select a country",
+          "width": 4,
+          "height": 4,
+          "type": "select",
+          "query": "MATCH (n:`Brewery`) \nWHERE toLower(toString(n.`country`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`country` as value LIMIT 4",
+          "page": 1,
+          "properties": [
+            "Brewery",
+            "country"
+          ],
+          "parameters": "",
+          "refresh": 0
+        },
+        {
+          "title": "Beers",
+          "width": 8,
+          "height": 4,
+          "type": "table",
+          "query": "MATCH p=(bb:Beer)--(b:Brewery)\nWHERE b.country = $neodash_brewery_country\nRETURN  b.name as Brewery, p as Relationship, collect(bb.name) as Beer",
+          "page": 1,
+          "properties": [],
+          "parameters": "",
+          "refresh": 0
+        },
+        {
+          "title": "Breweries",
+          "width": 8,
+          "height": 4,
+          "type": "map",
+          "query": "MATCH p=(b:Brewery)--(x)\nWHERE b.country = $neodash_brewery_country\nRETURN p",
+          "page": 1,
+          "properties": [],
+          "parameters": "",
+          "refresh": 0
+        },
+        {
+          "title": "Graph View",
+          "width": 4,
+          "height": 4,
+          "type": "graph",
+          "query": "MATCH p=(b:Brewery)--(x)\nWHERE b.country = $neodash_brewery_country\nRETURN p",
+          "page": 8,
+          "properties": [
+            "name",
+            "name",
+            "country",
+            "name"
+          ],
+          "parameters": "",
+          "refresh": 0
+        },
+        {
+          "title": "Beer Strengths",
+          "width": 4,
+          "height": 4,
+          "type": "bar",
+          "query": "MATCH (b:Brewery)--(bb:Beer)\nWHERE b.country = $neodash_brewery_country\nRETURN bb.name as Beer, bb.abv as Strength\nORDER By Strength ASC SKIP 1 LIMIT 10 ",
+          "page": 204,
+          "properties": [],
+          "parameters": "{\"color\":\"#f2e394\"}",
+          "refresh": 0
+        },
+        {}
+      ]
+    },
+    {
+      "title": "BEER CATEGORIES",
+      "reports": [
+        {}
+      ]
+    }
+  ]
+}

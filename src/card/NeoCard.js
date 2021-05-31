@@ -447,7 +447,7 @@ export class NeoCard extends React.Component {
             // Set the query used to one used for autocompletion
             this.state.query = `MATCH (n:\`${label}\`) 
 WHERE toLower(toString(n.\`${property}\`)) CONTAINS toLower($input) 
-RETURN n.\`${property}\` as value LIMIT 4`;
+RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
             this.state.content =
                 <NeoPropertySelectReport
                     connection={this.props.connection}

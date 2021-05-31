@@ -119,6 +119,10 @@ code {
 .tab a .input-field input {
     width: 200px;
     margin-left: -20px;
+    line-height: 10px;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
 }
 .tab {
     width: 250px;
@@ -137,6 +141,12 @@ code {
 }
 .btn-add-tab i {
     margin-top: -13px;
+}
+.leaflet-rel-popup {
+    margin-bottom: 18px !important;
+}
+path.leaflet-interactive{
+    stroke-width: 3.5px;
 }
 .btn-remove-tab {
 
