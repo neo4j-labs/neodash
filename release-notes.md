@@ -1,4 +1,4 @@
-### NeoDash 1.1 - Multi-page & interactive Neo4j dashboard
+### NeoDash 1.1 - Multi-page & interactive Neo4j dashboard builder
 - Added multi-page dashboards with new dashboard file format.
 - Added geographical (Map) visualizations.
 - Added better markdown support for code fragments and lists.
