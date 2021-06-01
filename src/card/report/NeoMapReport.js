@@ -75,7 +75,7 @@ class NeoMapReport extends NeoReport {
                                 rel: recordField
                             }
                     }
-                } else if (recordField["start"] && recordField["end"] && recordField["segments"] && recordField["length"]) {
+                } else if (recordField && recordField["start"] && recordField["end"] && recordField["segments"] && recordField["length"]) {
                     // paths
                     recordField["segments"].forEach(s => {
                         let segment = s["relationship"];
@@ -110,7 +110,7 @@ class NeoMapReport extends NeoReport {
                             this.state.nodesAndPositions[nodeIdandPos[0]] = nodeIdandPos[1];
                         }
                     })
-                } else if (recordField["start"] && recordField["end"] && recordField["segments"] && recordField["length"]) {
+                } else if (recordField && recordField["start"] && recordField["end"] && recordField["segments"] && recordField["length"]) {
                     // Paths
                     let nodeIdandPos = this.extractGeocoordsFromNode(recordField["start"], nodeLabels);
                     if (nodeIdandPos) {
@@ -120,7 +120,7 @@ class NeoMapReport extends NeoReport {
                     if (nodeIdandPos2) {
                         this.state.nodesAndPositions[nodeIdandPos2[0]] = nodeIdandPos2[1];
                     }
-                } else {
+                } else if (recordField){
                     // Single nodes
                     let nodeIdandPos = this.extractGeocoordsFromNode(recordField, nodeLabels);
                     if (nodeIdandPos) {
