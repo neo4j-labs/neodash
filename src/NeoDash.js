@@ -630,8 +630,7 @@ class NeoDash extends React.Component {
 
         }
         // Special case 3: we're dealing with someone clicking the 'Get in touch' button.
-        if (content === "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: " +
-            "reach out to Niels at niels.dejong@neo4j.com.") {
+        if (content.startsWith("If you have questions about NeoDash")) {
             header = "Contact"
         }
         return {content, header, style};
@@ -828,8 +827,8 @@ class NeoDash extends React.Component {
      * Action to take place after 'get in touch' is clicked in the connection modal.
      */
     onGetInTouchClicked() {
-        let value = "If you have questions about NeoDash, or want to build a production grade Neo4j front-end: " +
-            "reach out to Niels at niels.dejong@neo4j.com.";
+        let value = "If you have questions about NeoDash, or need help building a production grade Neo4j front-end: " +
+            "reach out to me at niels.dejong@neo4j.com.";
         return e => this.stateChanged({
             label: "CreateError",
             value: value

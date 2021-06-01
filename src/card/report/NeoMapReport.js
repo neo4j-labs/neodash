@@ -131,6 +131,7 @@ class NeoMapReport extends NeoReport {
         });
 
         this.state.nodeLabels = Object.keys(nodeLabels)
+        this.props.onNodeLabelUpdate(nodeLabels)
     }
 
     extractGeocoordsFromNode(recordField, nodeLabels) {
@@ -184,6 +185,16 @@ class NeoMapReport extends NeoReport {
      */
     createMapVisualization() {
         let colors = ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c", "grey"]
+        let parsedParameters = this.props.params;
+        if (parsedParameters && parsedParameters.nodeColors) {
+            if (typeof (parsedParameters.nodeColors) === 'string') {
+                colors = [parsedParameters.nodeColors]
+            } else {
+                colors = parsedParameters.nodeColors
+            }
+        }
+
+
         let nodesAndPositionsValues = Object.values(this.state.nodesAndPositions);
         let relationshipsAndPositionsValues = Object.values(this.state.relationshipsAndPositions);
         let markers = nodesAndPositionsValues ?
@@ -196,7 +207,7 @@ class NeoMapReport extends NeoReport {
                 </Marker>) : <div></div>
         let lines = (relationshipsAndPositionsValues) ?
             relationshipsAndPositionsValues.map(i =>
-                <Polyline width="5" key={0} positions={[i.start, i.end]} color={"grey"}>
+                <Polyline width="5" key={0} positions={[i.start, i.end]} color={"#999"}>
                     {this.createPopupFromRelProperties(i)}
                 </Polyline>
             ) : <div></div>

@@ -107,7 +107,7 @@ code {
     margin-left: -4px;
     margin-top: -6px;
     -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: #666;
+    -webkit-text-stroke-color: #777;
 }
 .tabs .disabled {
     width: auto !important;

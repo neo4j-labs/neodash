@@ -54,7 +54,8 @@ export class NeoCard extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
-        this.updateGraphChips = this.updateGraphChips.bind(this);
+        this.updateGraphFooter = this.updateGraphFooter.bind(this);
+        this.updateMapFooter = this.updateMapFooter.bind(this);
         this.onSelectionChange = this.onSelectionChange.bind(this);
         this.resize = this.resize.bind(this);
         this.updateBarPropertySelect = this.updateBarPropertySelect.bind(this);
@@ -362,7 +363,7 @@ export class NeoCard extends React.Component {
                 params={this.state.parsedParameters}
                 clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
                 propertiesSelected={this.state.propertiesSelected}
-                onNodeLabelUpdate={this.updateGraphChips}
+                onNodeLabelUpdate={this.updateGraphFooter}
                 width={this.state.width}
                 id={this.props.id}
                 height={this.state.height}
@@ -396,13 +397,13 @@ export class NeoCard extends React.Component {
                 connection={this.props.connection}
                 query={this.state.query}
                 width={this.state.width}
+                onNodeLabelUpdate={this.updateMapFooter}
                 height={this.state.height}
                 clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
                 params={this.state.parsedParameters}
                 data={this.state.data}
                 stateChanged={this.stateChanged}
                 refresh={this.state.refresh}/>
-        this.state.action = <NeoMapFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
     }
 
     /**
@@ -552,7 +553,26 @@ RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
     /**
      * For graph visualizations - update the card footer to show the new nodes.
      */
-    updateGraphChips(labels) {
+    updateMapFooter(labels) {
+        this.state.properties = Object.values(labels);
+        if (this.state.labels.toString() !== Object.keys(labels).toString()) {
+            this.state.labels = Object.keys(labels);
+            this.stateChanged({label: "Refresh"})
+        }
+
+
+        this.state.action = <NeoMapFooter key={0} nodeLabels={Object.keys(labels)}
+                                               width={this.props.width}
+                                               params={this.state.parsedParameters}
+
+                                               onChange={this.stateChanged}/>;
+
+    }
+
+    /**
+     * For graph visualizations - update the card footer to show the new nodes.
+     */
+    updateGraphFooter(labels) {
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
             this.state.propertiesSelected = Object.keys(labels).map(l => {
