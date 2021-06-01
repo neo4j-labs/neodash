@@ -17,7 +17,9 @@ class NeoCardSettings extends React.Component {
         'line': 'Line Chart',
         'bar': 'Bar Chart',
         'json': 'Raw JSON',
+        'map': 'Map',
         'select': 'Selection',
+        'iframe': 'iFrame',
         'text': 'Markdown',
     };
 
@@ -50,7 +52,9 @@ class NeoCardSettings extends React.Component {
      */
     setDefaultComponents() {
         this.settingsTextArea =
-            <NeoTextArea placeholder={this.props.placeholder} defaultValue={this.props.query} name="Query"
+            <NeoTextArea placeholder={this.getQueryBoxPlaceholder()}
+                         disclaimer={this.getDisclaimer()}
+                         defaultValue={this.props.query} name="Query"
                          onChange={this.stateChanged}/>;
         this.cypherParamsInput = <NeoTextInput defaultValue={this.props.parameters} onChange={this.stateChanged}
                                                changeEventLabel={"CypherParamsChanged"}
@@ -73,6 +77,27 @@ class NeoCardSettings extends React.Component {
             <p style={{fontSize: 7}}>&nbsp;</p></>;
 
     }
+
+    getQueryBoxPlaceholder() {
+        if (this.props.type == "text") {
+            return "Enter Markdown here..."
+        }
+        if(this.props.type == "iframe"){
+            return "Enter URL here..."
+        }
+        return this.props.placeholder;
+    }
+
+    getDisclaimer() {
+        if (this.props.type == "text") {
+            return "Enter your text in the query box above."
+        }
+        if(this.props.type == "iframe"){
+            return "Enter a URL starting with 'http://' or 'https://'."
+        }
+        return this.props.placeholder;
+    }
+
 
     setTypeAndSizeSelectionComponents(type) {
         this.cardTypeSelect = <NeoOptionSelect label="Type" defaultValue={type} onChange={this.stateChanged}
@@ -158,6 +183,7 @@ class NeoCardSettings extends React.Component {
         }
 
         this.settingsSelectionArea = <div style={{width: "100%"}}>
+            <hr style={{"display": "inline-block", "width": "100%", "opacity": "0"}}></hr>
             {nodeSelectionBox}
             {propertySelectionBox}
             {propertyIdSelectionBox}
@@ -180,9 +206,21 @@ class NeoCardSettings extends React.Component {
     }
 
     /**
+     * Updates the query text box in the settings.
+     */
+    updateQueryTextBox() {
+        this.settingsTextArea =
+            <NeoTextArea placeholder={this.getQueryBoxPlaceholder()}
+                         disclaimer={this.getDisclaimer()}
+                         defaultValue={this.props.query} name="Query"
+                         onChange={this.stateChanged}/>;
+    }
+
+    /**
      * Renders the settings component.
      */
     render() {
+        this.updateQueryTextBox();
         this.buildCustomSelectionSettingsWindow();
         this.setTypeAndSizeSelectionComponents(this.props.type);
         return (

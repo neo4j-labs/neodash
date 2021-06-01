@@ -17,6 +17,7 @@ class NeoConnectionModal extends NeoModal {
         super(props);
     }
 
+
     /**
      * Draw the modal based on the properties provided to the object.
      */
@@ -44,7 +45,7 @@ class NeoConnectionModal extends NeoModal {
                     <NavItem href="" onClick={this.props.navClicked}>Neo4j Connection</NavItem>
                 }
                 content={<div className="modal-input-text" style={{margin: '20px'}}>
-                    <img style={{height: '38px', right: '20px', top: '25px', position: 'absolute'}} src={"neo.png"}/>
+                    <img style={{height: '38px', right: '20px', top: '25px', position: 'absolute'}} src={"neo4j-icon-color.png"}/>
                     <p>&nbsp;</p>
                     <form onSubmit={this.props.onConnect}>
                         <NeoTextInput onChange={this.props.stateChanged} changeEventLabel={"ConnectURLChanged"}
@@ -72,7 +73,7 @@ class NeoConnectionModal extends NeoModal {
 
                             </NeoCheckBox>
                             <NeoTextButton right modal="close"
-                                           color={"neo-color"}
+                                           color={"neo-color white"}
                                            icon='play_arrow'
                                            node="button"
                                            onClick={this.props.connect}

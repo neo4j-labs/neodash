@@ -6,7 +6,7 @@ import Textarea from "react-materialize/lib/Textarea";
  * NeoTextAreas are used as Cypher-input boxes or to display errors.
  */
 class NeoTextArea extends React.Component {
-    disclaimer = 'Limit a query to 1000 result rows for best performance. Cypher parameter keys & values must be in quotes.';
+    defaultDisclaimer = 'Limit a query to 1000 result rows for best performance. Cypher parameter keys & values must be in quotes.';
     defaultPlaceholder = "Enter Cypher here... \n";
 
     /**
@@ -34,7 +34,7 @@ class NeoTextArea extends React.Component {
             m={12}
             s={12}
             placeholder={(this.props.placeholder) ? this.props.placeholder : this.defaultPlaceholder}
-            xl={12}><p style={{fontSize: 12}}>{this.disclaimer}</p></Textarea>;
+            xl={12}><p style={{fontSize: 12}}>{(this.props.disclaimer) ? this.props.disclaimer : this.defaultDisclaimer}</p></Textarea>;
     }
 }
 

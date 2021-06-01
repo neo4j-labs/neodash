@@ -9,7 +9,7 @@ import NeoFooter from "./NeoFooter";
  * A graph visualization footer displays the node labels present in the visualization.
  * When clicking on a label, the rendered property name on the node can be changed.
  */
-class NeoGraphVisFooter extends NeoFooter {
+class NeoMapFooter extends NeoFooter {
     /**
      * Set default state of the footer.
      */
@@ -36,10 +36,6 @@ class NeoGraphVisFooter extends NeoFooter {
         return (
             <div style={{marginLeft: '10px'}}>
                 {this.props.nodeLabels.map((label, index) => {
-
-                    let defaultValue = (Object.values(this.props.properties[index]).includes('name'))
-                        ? 'name' : Object.keys(this.props.properties[index])[0];
-
                     return <Chip
                         key={index}
                         close={false}
@@ -51,22 +47,14 @@ class NeoGraphVisFooter extends NeoFooter {
                         }}
                     >
                         {label}
-                        <NeoOptionSelect suffix="-name" label="property" onChange={this.props.onChange}
-                                         value={defaultValue}
-                                         options={this.props.properties[index]}/>
                     </Chip>
 
                 })}
-
-                <div style={{float: "right", marginRight: '10px'}}>
-                    {this.props.page}
-                    <NeoButton color="grey lighten-2" icon='refresh'
-                               onClick={click => this.props.onChange({'label': 'Refresh'})}/>
-                </div>
+                
             </div>
         );
     }
 
 }
 
-export default (NeoGraphVisFooter);
+export default (NeoMapFooter);

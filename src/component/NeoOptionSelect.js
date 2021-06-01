@@ -34,6 +34,7 @@ class NeoOptionSelect extends React.Component {
                     alignment: 'left',
                     autoTrigger: true,
                     closeOnClick: true,
+                    container: null,
                     constrainWidth: true,
                     coverTrigger: true,
                     hover: false,

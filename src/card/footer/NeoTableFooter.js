@@ -17,6 +17,7 @@ class NeoTableFooter extends NeoFooter {
      */
     render() {
         return <Pagination
+            count={this.props.counter}
             activePage={(this.props.page ? this.props.page : 1)}
             items={1000}
             leftBtn={<Icon>chevron_left</Icon>}

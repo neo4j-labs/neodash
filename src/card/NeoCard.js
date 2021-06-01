@@ -16,6 +16,9 @@ import NeoBarChartFooter from "./footer/NeoBarChartFooter";
 import NeoLineChartReport from "./report/NeoLineChartReport";
 import NeoLineChartFooter from "./footer/NeoLineChartFooter";
 import NeoPropertySelectReport from "./report/NeoPropertySelectReport";
+import NeoMapReport from "./report/NeoMapReport";
+import NeoMapFooter from "./footer/NeoMapFooter";
+import NeoIFrameReport from "./report/NeoIFrameReport";
 
 
 let emptyAction = <div key={0}/>;
@@ -51,7 +54,8 @@ export class NeoCard extends React.Component {
     constructor(props) {
         super(props);
         this.stateChanged = this.stateChanged.bind(this);
-        this.updateGraphChips = this.updateGraphChips.bind(this);
+        this.updateGraphFooter = this.updateGraphFooter.bind(this);
+        this.updateMapFooter = this.updateMapFooter.bind(this);
         this.onSelectionChange = this.onSelectionChange.bind(this);
         this.resize = this.resize.bind(this);
         this.updateBarPropertySelect = this.updateBarPropertySelect.bind(this);
@@ -266,6 +270,15 @@ export class NeoCard extends React.Component {
         if (this.state.type === 'text') {
             this.setCardTypeToMarkdown();
         }
+        if (this.state.type === 'iframe') {
+            this.setCardTypeToIFrame();
+        }
+        if (this.state.type === 'map') {
+            this.setCardTypeToMap();
+        }
+        if (this.state.success === false || this.state.query === "" || this.state.query === "\n"){
+            this.state.action = emptyAction;
+        }
         return state
     }
 
@@ -292,8 +305,10 @@ export class NeoCard extends React.Component {
                       params={this.state.parsedParameters}
                       refresh={this.state.refresh}
             />
-        this.state.action =
-            <NeoTableFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+
+            this.state.action =
+                <NeoTableFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+
     }
 
     /**
@@ -348,10 +363,11 @@ export class NeoCard extends React.Component {
                 params={this.state.parsedParameters}
                 clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
                 propertiesSelected={this.state.propertiesSelected}
-                onNodeLabelUpdate={this.updateGraphChips}
+                onNodeLabelUpdate={this.updateGraphFooter}
                 width={this.state.width}
                 id={this.props.id}
-                height={this.state.height} page={this.state.page}
+                height={this.state.height}
+                page={this.state.page}
                 stateChanged={this.stateChanged}
                 data={this.state.data}
                 refresh={this.state.refresh}/>
@@ -373,6 +389,24 @@ export class NeoCard extends React.Component {
     }
 
     /**
+     * Update the card's report to a Map view.
+     */
+    setCardTypeToMap() {
+        this.state.content =
+            <NeoMapReport
+                connection={this.props.connection}
+                query={this.state.query}
+                width={this.state.width}
+                onNodeLabelUpdate={this.updateMapFooter}
+                height={this.state.height}
+                clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
+                params={this.state.parsedParameters}
+                data={this.state.data}
+                stateChanged={this.stateChanged}
+                refresh={this.state.refresh}/>
+    }
+
+    /**
      * Update the card's report to a Markdown view.
      */
     setCardTypeToMarkdown() {
@@ -387,6 +421,21 @@ export class NeoCard extends React.Component {
     }
 
     /**
+     * Update the card's report to a Markdown view.
+     */
+    setCardTypeToIFrame() {
+        this.state.content =
+            <NeoIFrameReport
+                connection={this.props.connection}
+                query={'return true'}
+                height={this.state.height}
+                data={this.state.query}
+                stateChanged={this.stateChanged}
+                refresh={this.state.refresh}/>
+        this.state.action = emptyAction;
+    }
+    
+    /**
      * Update the card's report to a property selection.
      */
     setCardTypeToPropertySelect() {
@@ -398,8 +447,8 @@ export class NeoCard extends React.Component {
 
             // Set the query used to one used for autocompletion
             this.state.query = `MATCH (n:\`${label}\`) 
-                                WHERE toLower(toString(n.\`${property}\`)) CONTAINS toLower($input) 
-                                RETURN n.\`${property}\` as value LIMIT 4`;
+WHERE toLower(toString(n.\`${property}\`)) CONTAINS toLower($input) 
+RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
             this.state.content =
                 <NeoPropertySelectReport
                     connection={this.props.connection}
@@ -504,7 +553,26 @@ export class NeoCard extends React.Component {
     /**
      * For graph visualizations - update the card footer to show the new nodes.
      */
-    updateGraphChips(labels) {
+    updateMapFooter(labels) {
+        this.state.properties = Object.values(labels);
+        if (this.state.labels.toString() !== Object.keys(labels).toString()) {
+            this.state.labels = Object.keys(labels);
+            this.stateChanged({label: "Refresh"})
+        }
+
+
+        this.state.action = <NeoMapFooter key={0} nodeLabels={Object.keys(labels)}
+                                               width={this.props.width}
+                                               params={this.state.parsedParameters}
+
+                                               onChange={this.stateChanged}/>;
+
+    }
+
+    /**
+     * For graph visualizations - update the card footer to show the new nodes.
+     */
+    updateGraphFooter(labels) {
         this.state.properties = Object.values(labels);
         if (this.state.labels.toString() !== Object.keys(labels).toString()) {
             this.state.propertiesSelected = Object.keys(labels).map(l => {

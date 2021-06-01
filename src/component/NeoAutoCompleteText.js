@@ -1,6 +1,6 @@
 import React from "react";
 import TextInput from "react-materialize/lib/TextInput";
-import {Autocomplete} from "react-materialize";
+import {Autocomplete, Preloader} from "react-materialize";
 
 /**
  * An auto-completing text-box component.
@@ -10,6 +10,7 @@ class NeoAutoCompleteText extends React.Component {
     /**
      * On init, set up a default state for the autocomplete textbox.
      */
+
     constructor(props) {
         super(props);
         this.state = {
@@ -31,11 +32,13 @@ class NeoAutoCompleteText extends React.Component {
         this.onAutoComplete(this.props.defaultValue);
     }
 
+
+
     /**
      * When the user types in the autocomplete box, run a Cypher query to dynamically create suggestions.
      * @param e: the event containing the new value.
      */
-    onChange(e) {
+    async onChange(e) {
         // No event, cancel the handler.
         if (!e) {
             return;
@@ -49,59 +52,74 @@ class NeoAutoCompleteText extends React.Component {
             this.state.input = "";
             this.onAutoComplete("");
         }
+        this.state.running = true;
+
         // If the event is there, update the newly selected input value
         if (e !== null && e.target !== null) {
             this.state.input = e.target.value;
+            // return
         }
 
         // Optionally submit the value as soon as it's selected (before autocomplete)
         if (this.props.onChange) {
             this.props.onChange(this.props.label, this.props.property, this.props.propertyId, this.state.input)
+            return
         }
         this.retrieveAutocompleteSuggestionsFromDatabase();
+
     }
 
     /**
      * Gets some autocompleted values from the Neo4j database based on user input.
      */
-    retrieveAutocompleteSuggestionsFromDatabase() {
+    async retrieveAutocompleteSuggestionsFromDatabase() {
+
+
+
         if (this.state.input == null) {
             return
         }
-        this.state.running = true;
-        this.props.session
-            .run(this.props.query, {input: this.state.input})
-            .catch(error => {
-                console.error(error);
-                this.state.running = false;
-            })
-            .then(result => {
-                // Create a list of 'choices', e.g. autocompleted values
-                if (result && result.records !== null) {
-                    var choices = {};
-                    var types = {};
-                    result.records.map((record, i) => {
-                        record["_fields"].map((key, index) => {
-                            let value = record["_fields"][index];
-                            let type = !isNaN(value["low"]) || typeof value == "number" ? "number" : "string";
-                            choices[value] = null;
-                            types[value] = type;
-                        });
-                    });
+
+
+            this.props.session
+                .run(this.props.query, {input: this.state.input})
+                .catch(error => {
+                    console.error(error);
                     this.state.running = false;
-                    this.state.data = choices;
-                    this.state.types = types;
-                    let options = {
-                        data: this.state.data, limit: 4, onAutocomplete: this.onAutoComplete
-                    };
-                    let title = this.props.label + " " + this.props.property;
-                    this.autocomplete = <Autocomplete autoComplete={"off"} options={options} onChange={this.onChange}
-                                                      value={this.state.input}
-                                                      placeholder={""} style={this.props.customStyle}
-                                                      title={title}/>;
-                    this.forceUpdate();
-                }
-            })
+                })
+                .then(result => {
+
+                    //do stuff
+                    // Create a list of 'choices', e.g. autocompleted values
+                    if (result && result.records !== null) {
+                        var choices = {};
+                        var types = {};
+                        result.records.map((record, i) => {
+                            record["_fields"].map((key, index) => {
+                                let value = record["_fields"][index];
+                                let type = !isNaN(value["low"]) || typeof value == "number" ? "number" : "string";
+                                choices[value] = null;
+                                types[value] = type;
+                            });
+                        });
+                        this.state.running = false;
+                        this.state.data = choices;
+                        this.state.types = types;
+                        let options = {
+                            data: this.state.data, limit: 4, onAutocomplete: this.onAutoComplete
+                        };
+                        let title = this.props.label + " " + this.props.property;
+                        this.autocomplete = <Autocomplete autoComplete={"off"} options={options} onChange={this.onChange}
+                                                          value={this.state.input}
+                                                          placeholder={""} style={this.props.customStyle}
+                                                          title={title}/>;
+                        this.forceUpdate();
+                    }
+
+
+                })
+
+
     }
 
     /**
@@ -121,6 +139,9 @@ class NeoAutoCompleteText extends React.Component {
     render() {
         return <div className={"autocomplete-div"}>
             {this.autocomplete}
+            {(this.state.running) ?  <div style={{"marginTop": "40px", "position": "absolute", "left": "300px","top": "55px"}}>
+                <Preloader color="green" size={"small"} />
+             </div> : <div></div> }
         </div>;
     }
 }

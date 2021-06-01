@@ -4,6 +4,7 @@ import NeoOptionSelect from "../../component/NeoOptionSelect";
 import NeoTextInput from "../../component/NeoTextInput";
 import NeoAutoCompleteText from "../../component/NeoAutoCompleteText";
 import neo4j from "neo4j-driver";
+import {Preloader} from "react-materialize";
 
 /**
  * The NeoPropertySelectReport allows a user to select a Cypher parameter based on existing node property values.
@@ -51,7 +52,9 @@ class NeoPropertySelectReport extends NeoReport {
                 changeEventLabel={"PropertySelectedChanged"}
                 session={this.state.session}
                 customStyle={{paddingTop: "5px", marginBottom: "200px", width: "100%"}}
-                defaultValue={""}/>
+                defaultValue={""}>
+
+            </NeoAutoCompleteText>
         </div>
         return (content);
     }

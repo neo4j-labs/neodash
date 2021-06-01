@@ -1,7 +1,7 @@
 {
   "name": "neodash",
   "description": "NeoDash - Neo4j Dashboard Builder",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "homepage": "./",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -18,7 +18,7 @@
     }
   ],
   "dist": {
-    "tarball": "https://github.com/nielsdejong/neodash/releases/download/1.0.3/neodash-1.0.3.tgz"
+    "tarball": "https://github.com/nielsdejong/neodash/releases/download/1.1.0/neodash-1.1.0.tgz"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   "private": false,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.2",
+    "@react-leaflet/core": ">=1.0.0 <1.1.0 || ^1.1.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -37,10 +38,13 @@
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "jquery": "^3.5.1",
+    "leaflet": "latest",
     "materialize-css": "^1.0.0",
     "neo4j-driver": "latest",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-leaflet": ">=3.1.0 <3.2.0 || ^3.2.1",
+    "react-leaflet-enhanced-marker": "^1.0.19",
     "react-markdown": "^5.0.3",
     "react-materialize": "^3.9.2",
     "react-scripts": "3.4.1",
