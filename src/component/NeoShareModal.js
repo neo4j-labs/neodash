@@ -14,7 +14,7 @@ import NeoTextInput from "./NeoTextInput";
  * The content of the modal is a large multi-line textbox for specifying a dashboard file as JSON.
  */
 class NeoShareModal extends NeoModal {
-    baseURL = "http://localhost:3000/";
+    baseURL = "https://nielsdejong.nl/neodash/";
 
     constructor(props) {
         super(props);

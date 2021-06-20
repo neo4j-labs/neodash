@@ -155,6 +155,17 @@ class NeoDash extends React.Component {
         try {
             this.connected = false;
             var url = this.connection.url;
+
+            // When specifying an encrypted connection, we don't need the bolt+s / neo4j+s scheme.
+            if (this.connection.encryption === "on" && url.startsWith("bolt+s://")){
+                url = url.replace("bolt+s://", "bolt://")
+                this.connection.url = url;
+            }
+            if (this.connection.encryption === "on" && url.startsWith("neo4j+s://")){
+                url = url.replace("neo4j+s://", "neo4j://")
+                this.connection.url = url;
+            }
+
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
             }
@@ -390,10 +401,12 @@ class NeoDash extends React.Component {
                     // this.createExternalDashboardLoadPopupModal()
                     let parsedJson = this.parseJson(data);
                     this.state.json = data;
+                    this.externalLoaded = true;
                     // this.buildJSONFromReportsState();
                     // console.log(this.state.connectionToLoad)
                     if (this.state.connectionToLoad) {
                         this.connection = this.state.connectionToLoad;
+                        console.log(this.connection)
                         if (this.connection.password) {
                             this.confirmation = true;
                             this.connect();
@@ -407,7 +420,8 @@ class NeoDash extends React.Component {
                     })
                     this.stateChanged({label: "OpenConnectionModal"})
                     var select = document.getElementById('root');
-                    select.removeChild(select.childNodes.item(9));
+                    // TODO - remove duplicate modal
+                    // select.removeChild(select.childNodes.item(9));
 
 
                 }).catch(error => {
