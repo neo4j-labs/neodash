@@ -4,7 +4,7 @@ import Footer from "react-materialize/lib/Footer";
 import NeoDash from "./NeoDash";
 
 // Configurable text for the interface
-const version = "1.1"
+const version = "1.1.1"
 const readme = "https://github.com/nielsdejong/neodash/blob/master/README.md";
 const appName = "NeoDash";
 const title = "NeoDash - Neo4j Dashboard Builder";
@@ -27,7 +27,8 @@ const Main = () => {
     document.title = title
 
     // Check if there's a hard reset, if yes, override everything and dump the latest dashboard JSON.
-    if (new URLSearchParams(window.location.search).get('reset') === "true") {
+    let urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('reset') === "true") {
         let text = localStorage.getItem("neodash-dashboard");
         localStorage.removeItem("neodash-dashboard")
         return <div><p>{cacheClearedMessage}</p><code>{text}</code></div>;

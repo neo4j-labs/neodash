@@ -4,6 +4,7 @@ import Button from "react-materialize/lib/Button";
 import Textarea from "react-materialize/lib/Textarea";
 import NeoModal from "./NeoModal";
 import NeoTextButton from "./NeoTextButton";
+import Icon from "react-materialize/lib/Icon";
 
 /**
  * A modal component used for saving/loading dashboards.
@@ -18,8 +19,9 @@ class NeoSaveLoadModal extends NeoModal {
      * Draws the modal, creating a textbox defaulting to the current active dashboard state.
      */
     render() {
+        console.log(this.props.connection)
         return (
-            <NeoModal header={"Load/Export Dashboard as JSON"}
+            <NeoModal header={"Save/Load Dashboard as JSON"}
                       root={document.getElementById("root")}
                       json={this.props.json}
                       placeholder={"Paste a dashboard JSON file here..."}
@@ -35,9 +37,17 @@ class NeoSaveLoadModal extends NeoModal {
                                          text={"load"}
                                          waves="green"/>,
                           <NeoTextButton right
-                                         color={"black"}
+                                         color={"red"}
                                          node="button"
                                          style={{backgroundColor: "green", fontWeight: "bold", paddingRight: '0px',width:'50px', position: 'absolute', right: '150px', top: '20px'}}
+                                         modal="close"
+                                         onClick={this.props.onCancel}
+                                         text={<Icon>close</Icon>}
+                                         waves="white"/>,
+                          <NeoTextButton right
+                                         color={"grey"}
+                                         node="button"
+                                         style={{backgroundColor: "red", fontWeight: "bold", paddingRight: '0px',width:'50px', position: 'absolute', right: '210px', top: '20px'}}
                                          onClick={this.props.onQuestionMarkClicked}
                                          text={"?"}
                                          waves="white"/>,

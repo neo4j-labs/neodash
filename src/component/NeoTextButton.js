@@ -7,14 +7,16 @@ import Icon from "react-materialize/lib/Icon";
  */
 class NeoTextButton extends React.Component {
     render() {
+        let float = (this.props.float) ? (this.props.float) : "right";
         return (
-            <Button floating={false} className={"btn right wide-button " + this.props.color} key={this.props.key}
+            <Button floating={false} className={"btn " + float + " wide-button " + this.props.color}
+                    key={this.props.key}
                     onClick={this.props.onClick}
                     style={this.props.style}
                     modal={this.props.modal}
                     href="#">{this.props.text}
 
-                    <Icon className={"fixed-icon"}>{this.props.icon}</Icon>
+                <Icon className={"fixed-icon"}>{this.props.icon}</Icon>
             </Button>
         );
     }

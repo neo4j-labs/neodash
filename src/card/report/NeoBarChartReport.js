@@ -49,8 +49,8 @@ class NeoBarChartReport extends NeoReport {
         xShift += (maxY < 0 || minY < 0) ? 10 : 0;
         var yShift = 20 + xTextLength * 4;
         var width = props.clientWidth - 100; //-90 + props.width * 105 - xShift * 0.5;
-        var height = -140 + props.height * 100 - yShift;
-        var margin = {top: 0, right: 0, bottom: yShift, left: xShift};
+        var height = -160 + props.height * 100 - yShift
+        var margin = {top: 10, right: 0, bottom: yShift, left: xShift};
 
         var svg = d3.select(".chart" + id)
             .attr("width", width + margin.left + margin.right)
@@ -74,7 +74,7 @@ class NeoBarChartReport extends NeoReport {
             .style("text-anchor", "end");
 
         var y = d3.scaleLinear()
-            .domain([minY - (maxY - minY) * 0.1, maxY + (maxY - minY) * 0.1])
+            .domain([minY, maxY])
             .range([height, 0]);
         svg.append("g")
             .call(d3.axisLeft(y));

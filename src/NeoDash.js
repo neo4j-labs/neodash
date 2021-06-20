@@ -21,6 +21,8 @@ import NeoTextInput from "./component/NeoTextInput";
 import TextInput from "react-materialize/lib/TextInput";
 import Card from "react-materialize/lib/Card";
 import NeoTextButton from "./component/NeoTextButton";
+import NeoShareModal from "./component/NeoShareModal";
+import {JSONCrush} from "jsoncrush";
 
 
 /**
@@ -31,6 +33,8 @@ import NeoTextButton from "./component/NeoTextButton";
  * - Loading/storing dashboards as JSON (optionally from the browser cache)
  * - The creation, ordering and deleting of the NeoCard components.
  * - Propagating global parameter changes ("Selection" reports) to each of the cards.
+ *
+ * TODO: in many places we're modifying state directly. This is not a good practise, and should be refactored.
  */
 class NeoDash extends React.Component {
     version = '1.1';
@@ -49,11 +53,13 @@ class NeoDash extends React.Component {
         // Attempt to load an existing dashboard state from the browser cache.
         this.loadDashboardfromBrowserCache();
 
+
         if (window.neo4jDesktopApi) {
             // Set the connection details from the Neo4j Desktop integration API.
             this.setConnectionDetailsFromDesktopIntegration();
         } else {
             // check the browser cache or use default connection values.
+
             this.setConnectionDetailsFromBrowserCache();
         }
 
@@ -83,8 +89,23 @@ class NeoDash extends React.Component {
             encryption: (localStorage.getItem('neodash-encryption')) ? localStorage.getItem('neodash-encryption') : 'off',
         }
 
-        this.createConnectionModal(this.connect, true);
-        this.stateChanged({label: "HideError"})
+        let urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("url") !== null) {
+            this.state.jsonToLoad = urlParams.get("url");
+            try {
+                this.state.connectionToLoad = JSON.parse(atob(urlParams.get("connection")));
+            } catch {
+                // Unable to parse encoded JSON, don't set a connection
+                this.state.connectionToLoad = null;
+            }
+            this.createExternalDashboardLoadPopupModal();
+            this.stateChanged({})
+            // String representations of the data to load, as encoded in hte URL.
+
+        } else {
+            this.createConnectionModal(this.connect, true);
+            this.stateChanged({label: "HideError"})
+        }
     }
 
     /**
@@ -120,9 +141,10 @@ class NeoDash extends React.Component {
 
     removeDuplicateConnectionModal() {
         var select = document.getElementById('root');
-        if (select.childNodes.length == 9) {
-            select.removeChild(select.childNodes.item(1));
+        if (select.childNodes.length == 11) {
+            select.removeChild(select.childNodes.item(2));
         }
+
     }
 
     /**
@@ -133,6 +155,17 @@ class NeoDash extends React.Component {
         try {
             this.connected = false;
             var url = this.connection.url;
+
+            // When specifying an encrypted connection, we don't need the bolt+s / neo4j+s scheme.
+            if (this.connection.encryption === "on" && url.startsWith("bolt+s://")){
+                url = url.replace("bolt+s://", "bolt://")
+                this.connection.url = url;
+            }
+            if (this.connection.encryption === "on" && url.startsWith("neo4j+s://")){
+                url = url.replace("neo4j+s://", "neo4j://")
+                this.connection.url = url;
+            }
+
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
             }
@@ -158,6 +191,13 @@ class NeoDash extends React.Component {
                     localStorage.setItem('neodash-password', this.connection.password.toString());
                     localStorage.setItem('neodash-encryption', this.connection.encryption);
 
+                    if (this.confirmation) {
+                        this.confirmation = false;
+                        this.stateChanged({
+                            label: "CreateError",
+                            value: "Dashboard loaded! You are connected to " + this.connection.url + "."
+                        })
+                    }
 
                 })
                 .catch(error => {
@@ -174,7 +214,7 @@ class NeoDash extends React.Component {
         } finally {
 
         }
-        if (!this.connected){
+        if (!this.connected) {
             this.createConnectionModal(this.connect, true);
             // TODO - this can produce duplicate connection modals
         }
@@ -200,11 +240,7 @@ class NeoDash extends React.Component {
             }
             // If a JSON string is available, try to parse it and set the state.
             try {
-                let loaded = JSON.parse(this.state.json)
-                // Quietly auto-upgrade to Neodash 1.1...
-                if (this.version === "1.1" && loaded.version === "1.0"){
-                    this.upgradeDashboardJson(loaded);
-                }
+                let loaded = this.parseJson(this.state.json);
                 if (loaded.version && loaded.version !== this.version) {
                     this.stateChanged({
                         label: "CreateError",
@@ -225,6 +261,15 @@ class NeoDash extends React.Component {
                 }
             }
         }
+    }
+
+    parseJson(text) {
+        let loaded = JSON.parse(text);
+        // Quietly auto-upgrade to Neodash 1.1...
+        if (this.version === "1.1" && loaded.version === "1.0") {
+            this.upgradeDashboardJson(loaded);
+        }
+        return loaded;
     }
 
     upgradeDashboardJson(loaded) {
@@ -324,6 +369,7 @@ class NeoDash extends React.Component {
      * @param update - a JSON dictionary {update, label} describing the change that was made.
      */
     stateChanged(update) {
+        console.log(update.label)
         if (update.label === "ConnectURLChanged") {
             this.connection.url = update.value;
         }
@@ -346,6 +392,48 @@ class NeoDash extends React.Component {
             this.buildJSONFromReportsState();
 
         }
+
+        if (update.label === "LoadExternalDashboard") {
+            fetch(this.state.jsonToLoad)
+                .then(response => response.text())
+                .then((data) => {
+                    // this.stateChanged({label: "HideError"})
+                    // this.createExternalDashboardLoadPopupModal()
+                    let parsedJson = this.parseJson(data);
+                    this.state.json = data;
+                    this.externalLoaded = true;
+                    // this.buildJSONFromReportsState();
+                    // console.log(this.state.connectionToLoad)
+                    if (this.state.connectionToLoad) {
+                        this.connection = this.state.connectionToLoad;
+                        console.log(this.connection)
+                        if (this.connection.password) {
+                            this.confirmation = true;
+                            this.connect();
+                            return;
+                        }
+                    }
+
+                    this.stateChanged({
+                        label: "CreateError",
+                        value: "Dashboard loaded! You can now connect to Neo4j."
+                    })
+                    this.stateChanged({label: "OpenConnectionModal"})
+                    var select = document.getElementById('root');
+                    // TODO - remove duplicate modal
+                    // select.removeChild(select.childNodes.item(9));
+
+
+                }).catch(error => {
+                this.createConnectionModal(this.connect, true)
+                this.stateChanged({label: "CreateError", value: error.toString()})
+
+            })
+        }
+        if (update.label === "OpenConnectionModal") {
+            this.createConnectionModal(this.connect, true)
+        }
+
         if (update.label === "AskForDeletePage") {
             this.createPageDeletionPopupModal();
             this.state.count += 1;
@@ -428,6 +516,27 @@ class NeoDash extends React.Component {
         }
         if (update.label !== "SaveModalUpdated") {
             this.buildJSONFromReportsState();
+        }
+        if (update.label === "ShareLinkURLChanged") {
+            this.state.shareURL = encodeURIComponent(update.value);
+            this.createShareURLConnectionDetails();
+        }
+
+        if (update.label === "ShareLinkCredentialsChanged") {
+            this.saveCredentialsInShareLink = !this.saveCredentialsInShareLink;
+            this.createShareURLConnectionDetails();
+            if (!this.saveCredentialsInShareLink) {
+                this.state.shareURLConnectionDetails = null;
+            }
+        }
+        if (update.label === "ShareLinkPasswordChanged") {
+            this.savePasswordInShareLink = !this.savePasswordInShareLink;
+            this.createShareURLConnectionDetails();
+
+        }
+
+        if (update.label === "ShareLinkGenerated") {
+            this.createShareURLConnectionDetails();
         }
         this.setState(this.state);
     }
@@ -582,6 +691,53 @@ class NeoDash extends React.Component {
     /**
      * Creates a pop-up window (Modal). Used for displaying errors and other notifications.
      */
+    createExternalDashboardLoadPopupModal() {
+        let header = "NeoDash - Loading Dashboard";
+        let displayURL = (this.state.jsonToLoad.length > 100) ?
+            this.state.jsonToLoad.substring(0, 100) + "..." : this.state.jsonToLoad;
+
+        let content = <div>
+            <p>You are loading a dashboard from: </p>
+            <b><a href={this.state.jsonToLoad} target={"_blank"}>{displayURL}</a></b>
+            {(this.state.connectionToLoad) ?
+                <p>You will be connected to <b>{this.state.connectionToLoad.url}</b>.</p> : <></>
+            }
+            <p>This will overwrite your current dashboard (if present). Continue?</p>
+        </div>
+
+
+        // Create the modal object
+        this.errorModal = <NeoModal header={header}
+                                    open={true}
+                                    trigger={null}
+                                    content={content}
+                                    key={this.state.count}
+                                    id={this.state.count}
+                                    root={document.getElementById("root")}
+                                    actions={[
+                                        <Button flat modal="close"
+                                                node="button"
+                                                onClick={e => this.stateChanged({label: "OpenConnectionModal"})}
+                                                waves="red">Cancel</Button>,
+                                        <NeoTextButton right modal="close"
+                                                       color={"white-color"}
+                                                       icon='play_arrow'
+                                                       node="button"
+                                                       modal="close"
+                                                       style={{backgroundColor: "green"}}
+                                                       onClick={e => {
+                                                           this.stateChanged({label: "HideError"})
+                                                           this.stateChanged({label: "LoadExternalDashboard"})
+                                                       }
+                                                       }
+                                                       text={"load"}
+                                                       waves="green"/>
+                                    ]}/>
+    }
+
+    /**
+     * Creates a pop-up window (Modal). Used for displaying errors and other notifications.
+     */
     createPopUpModal(content) {
         let header = "Error";
         const data = this.handleSpecialCaseErrors(content, header);
@@ -610,9 +766,13 @@ class NeoDash extends React.Component {
      */
     handleSpecialCaseErrors(content, header) {
         var style = {}
+
         // Special case 1: we're connecting to a database from Neo4j Desktop.
         if (content.startsWith("Trying to connect")) {
             header = "Connecting...";
+        }
+        if (content.startsWith("Dashboard loaded!")) {
+            header = "Dashboard loaded 🎉";
         }
         if (content.startsWith("To save a dashboard")) {
             header = "Saving and Loading Dashboards";
@@ -626,7 +786,7 @@ class NeoDash extends React.Component {
             content = "Unable to connect to the specified Neo4j database. " +
                 "The database might be unreachable, or it does not accept " +
                 ((encryption === "on") ? "encrypted" : "unencrypted") + " connections. " + content;
-            this.state.page +=1;
+            this.state.page += 1;
 
         }
         // Special case 3: we're dealing with someone clicking the 'Get in touch' button.
@@ -690,11 +850,12 @@ class NeoDash extends React.Component {
      * Create a modal (pop-up) that's used for saving/loading/exporting dashboards as JSON.
      */
     createSaveLoadModal(loadJson) {
-        let trigger = <NavItem href="" onClick={e => this.stateChanged({})}>Load/Export</NavItem>;
+        let trigger = <NavItem href="" onClick={e => this.stateChanged({})}>Save/Load</NavItem>;
         return <NeoSaveLoadModal json={this.state.json}
                                  loadJson={loadJson}
                                  trigger={trigger}
                                  onQuestionMarkClicked={this.onConnectionHelpClicked}
+                                 onCancel={e => this.stateChanged({})}
                                  value={this.state.json}
                                  placeholder={this.props.placeholder}
                                  change={e => {
@@ -709,6 +870,45 @@ class NeoDash extends React.Component {
     }
 
     /**
+     * Create a modal (pop-up) that's used for saving/loading/exporting dashboards as JSON.
+     */
+    createShareModal(loadJson) {
+        let trigger = <NavItem href="#">Share</NavItem>;
+        return <NeoShareModal json={this.props.json}
+                              loadJson={loadJson}
+                              trigger={trigger}
+                              connection={this.saveCredentialsInShareLink}
+                              password={this.savePasswordInShareLink}
+                              onQuestionMarkClicked={this.onConnectionHelpClicked}
+                              onCancel={e => this.stateChanged({})}
+                              value={this.state.shareURL}
+                              connectionValue={this.state.shareURLConnectionDetails}
+                              placeholder={this.props.placeholder}
+                              change={e => {
+                                  this.state.json = e.target.value;
+                                  this.setState(this.state)
+                              }}
+                              stateChanged={this.stateChanged}
+        />;
+    }
+
+
+    createShareURLConnectionDetails() {
+        if (this.saveCredentialsInShareLink) {
+            let password = (this.savePasswordInShareLink) ? this.connection.password : "";
+            let connection =
+                {
+                    url: this.connection.url,
+                    username: this.connection.username,
+                    password: password,
+                    database: this.connection.database,
+                    encryption: this.connection.encryption
+                }
+            this.state.shareURLConnectionDetails = btoa(JSON.stringify(connection));
+        }
+    }
+
+    /**
      *
      * @param connect - method used for opening the connection.
      * @param open - whether the modal is open by default.
@@ -720,7 +920,7 @@ class NeoDash extends React.Component {
             connect={connect}
             connection={this.connection}
             stateChanged={this.stateChanged}
-            navClicked={e => this.stateChanged({})}
+            nfavClicked={e => this.stateChanged({})}
             onConnect={this.onConnectClicked(connect)}
             onGetInTouchClicked={this.onGetInTouchClicked()}
         />
@@ -730,7 +930,7 @@ class NeoDash extends React.Component {
     /**
      * Creates the navigation bar of the dashboard.
      */
-    createDashboardNavbar(saveLoadModal) {
+    createDashboardNavbar(saveLoadModal, shareModal) {
         let dashboardTitle = <Textarea disabled={!this.state.editable} noLayout={true}
                                        className="card-title editable-title"
                                        key={this.state.count}
@@ -806,7 +1006,7 @@ class NeoDash extends React.Component {
                            tabs
                        }
                        style={{backgroundColor: '#111'}}>
-            {saveLoadModal}
+            {saveLoadModal}{shareModal}
             {(this.neoConnectionModal) ? this.neoConnectionModal : <div></div>
             }
         </Navbar>;
@@ -874,8 +1074,9 @@ class NeoDash extends React.Component {
      */
     render() {
         let saveLoadModal = this.createSaveLoadModal(this.createCardObjectsFromDashboardState);
+        let shareModal = this.createShareModal(this.createCardObjectsFromDashboardState);
         let cardsContainer = this.createCardsContainer()
-        let navbar = this.createDashboardNavbar(saveLoadModal);
+        let navbar = this.createDashboardNavbar(saveLoadModal, shareModal);
         let errorModal = (this.errorModal) ? this.errorModal : "";
         var select = document.getElementById('root');
         return (
