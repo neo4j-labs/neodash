@@ -169,9 +169,7 @@ class NeoDash extends React.Component {
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
             }
-            let config = {
-                encrypted: (this.connection.encryption === "on") ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF'
-            };
+            let config = (this.connection.encryption === "on")?  {encrypted: 'ENCRYPTION_ON'} : {}
 
             var driver = neo4j.driver(
                 url,

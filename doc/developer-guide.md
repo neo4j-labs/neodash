@@ -22,7 +22,7 @@ NeoDash will automatically connect to your active database.
 
 ![Graph App Gallery](./img/graphapp.png) 
 #### 2. Online
-The latest version of NeoDash will always be available at https://nielsdejong.nl/neodash.
+The latest version of NeoDash will always be available at https://neodash.graphapp.io.
 Your database credentials will only be cached in your browser.   
 
 #### 3. As a web app in your own hosted environment
