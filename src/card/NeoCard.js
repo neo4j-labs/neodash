@@ -19,6 +19,9 @@ import NeoPropertySelectReport from "./report/NeoPropertySelectReport";
 import NeoMapReport from "./report/NeoMapReport";
 import NeoMapFooter from "./footer/NeoMapFooter";
 import NeoIFrameReport from "./report/NeoIFrameReport";
+import NeoLiveTimeChartReport from "./report/experimental/NeoLiveTimeChartReport";
+import NeoSearchBarReport from "./report/experimental/NeoSearchBarReport";
+import NeoBigNumberReport from "./report/experimental/NeoBigNumberReport";
 
 
 let emptyAction = <div key={0}/>;
@@ -258,6 +261,15 @@ export class NeoCard extends React.Component {
         if (this.state.type === 'line') {
             this.setCardTypeToLineChart();
         }
+        if (this.state.type === 'bignumber') {
+            this.setCardTypeToBigNumberView();
+        }
+        if (this.state.type === 'searchbar') {
+            this.setCardTypeToSearchBar();
+        }
+        if (this.state.type === 'time') {
+            this.setCardTypeToTimeChart();
+        }
         if (this.state.type === "graph") {
             this.setCardTypeToGraph();
         }
@@ -276,7 +288,7 @@ export class NeoCard extends React.Component {
         if (this.state.type === 'map') {
             this.setCardTypeToMap();
         }
-        if (this.state.success === false || this.state.query === "" || this.state.query === "\n"){
+        if (this.state.success === false || this.state.query === "" || this.state.query === "\n") {
             this.state.action = emptyAction;
         }
         return state
@@ -298,18 +310,36 @@ export class NeoCard extends React.Component {
     setCardTypeToTableView() {
         this.state.content =
             <NeoTableReport connection={this.props.connection}
-                      rows={this.state.height == 4 ? NeoTableReport.normalRowCount : NeoTableReport.tallRowCount}
-                      page={this.state.page}
-                      query={this.state.query}
-                      stateChanged={this.stateChanged}
-                      params={this.state.parsedParameters}
-                      refresh={this.state.refresh}
+                            rows={this.state.height == 4 ? NeoTableReport.normalRowCount : NeoTableReport.tallRowCount}
+                            page={this.state.page}
+                            query={this.state.query}
+                            stateChanged={this.stateChanged}
+                            params={this.state.parsedParameters}
+                            refresh={this.state.refresh}
             />
-
+        if (this.state.parsedParameters && !this.state.parsedParameters.hideFooter) {
             this.state.action =
                 <NeoTableFooter page={this.state.page} key={0} data={this.state.data} onChange={this.stateChanged}/>
+        }
 
     }
+
+    /**
+     * Updates the card's report to a table.
+     */
+    setCardTypeToBigNumberView() {
+        this.state.content =
+            <NeoBigNumberReport connection={this.props.connection}
+                                page={this.state.page}
+                                query={this.state.query}
+                                stateChanged={this.stateChanged}
+                                onSelectionChange={this.onSelectionChange}
+                                params={this.state.parsedParameters}
+                                refresh={this.state.refresh}
+            />
+        this.state.action = emptyAction;
+    }
+
 
     /**
      * Updates the card's report to a bar chart.
@@ -317,17 +347,17 @@ export class NeoCard extends React.Component {
     setCardTypeToBarChart() {
         this.state.content =
             <NeoBarChartReport connection={this.props.connection}
-                         page={this.state.page}
-                         query={this.state.query}
-                         clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
-                         id={this.props.id}
-                         stateChanged={this.stateChanged}
-                         propertiesSelected={this.state.propertiesSelected}
-                         onNodeLabelUpdate={this.updateBarPropertySelect}
-                         params={this.state.parsedParameters}
-                         refresh={this.state.refresh}
-                         width={this.state.width}
-                         height={this.state.height}
+                               page={this.state.page}
+                               query={this.state.query}
+                               clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
+                               id={this.props.id}
+                               stateChanged={this.stateChanged}
+                               propertiesSelected={this.state.propertiesSelected}
+                               onNodeLabelUpdate={this.updateBarPropertySelect}
+                               params={this.state.parsedParameters}
+                               refresh={this.state.refresh}
+                               width={this.state.width}
+                               height={this.state.height}
             />
     }
 
@@ -337,18 +367,40 @@ export class NeoCard extends React.Component {
     setCardTypeToLineChart() {
         this.state.content =
             <NeoLineChartReport connection={this.props.connection}
-                          page={this.state.page}
-                          query={this.state.query}
-                          clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
-                          id={this.props.id}
-                          stateChanged={this.stateChanged}
-                          propertiesSelected={this.state.propertiesSelected}
-                          onNodeLabelUpdate={this.updateLinePropertySelect}
-                          params={this.state.parsedParameters}
-                          refresh={this.state.refresh}
-                          width={this.state.width}
-                          height={this.state.height}
+                                page={this.state.page}
+                                query={this.state.query}
+                                clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
+                                id={this.props.id}
+                                stateChanged={this.stateChanged}
+                                propertiesSelected={this.state.propertiesSelected}
+                                onNodeLabelUpdate={this.updateLinePropertySelect}
+                                params={this.state.parsedParameters}
+                                refresh={this.state.refresh}
+                                width={this.state.width}
+                                height={this.state.height}
             />
+    }
+
+    /**
+     * Updates the card's report to a line chart.
+     */
+    setCardTypeToTimeChart() {
+        this.state.content =
+            <NeoLiveTimeChartReport connection={this.props.connection}
+                                    page={this.state.page}
+                                    query={this.state.query}
+                                    clientWidth={(this.cardRef.current) ? this.cardRef.current.clientWidth : 0}
+                                    id={this.props.id}
+                                    stateChanged={this.stateChanged}
+                                    propertiesSelected={this.state.propertiesSelected}
+                                    onNodeLabelUpdate={function () {
+                                    }}
+                                    params={this.state.parsedParameters}
+                                    refresh={this.state.refresh}
+                                    width={this.state.width}
+                                    height={this.state.height}
+            />
+        this.state.action = emptyAction;
     }
 
     /**
@@ -421,6 +473,20 @@ export class NeoCard extends React.Component {
     }
 
     /**
+     * Update the card's report to a search bar view.
+     */
+    setCardTypeToSearchBar() {
+        this.state.content =
+            <NeoSearchBarReport
+                connection={this.props.connection}
+                query={'return true'}
+                data={this.state.query}
+                stateChanged={this.stateChanged}
+                refresh={this.state.refresh}/>
+        this.state.action = emptyAction;
+    }
+
+    /**
      * Update the card's report to a Markdown view.
      */
     setCardTypeToIFrame() {
@@ -434,7 +500,7 @@ export class NeoCard extends React.Component {
                 refresh={this.state.refresh}/>
         this.state.action = emptyAction;
     }
-    
+
     /**
      * Update the card's report to a property selection.
      */
@@ -483,6 +549,7 @@ RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
      * For selection reports, the selected value has changed. This should be propagated to other reports.
      */
     onSelectionChange(label, property, propertyId, value) {
+
         this.props.onChange({
             label: "GlobalParameterChanged",
             value: {label: label, property: property, propertyId: propertyId, value: value}
@@ -528,9 +595,9 @@ RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
         this.state.page += 1;
         this.state.action =
             <NeoBarChartFooter propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
-                                  data={this.state.data}
-                                  onChange={this.stateChanged}
-                                  categories={labels} values={labels}
+                               data={this.state.data}
+                               onChange={this.stateChanged}
+                               categories={labels} values={labels}
             />
         this.setState(this.state);
     }
@@ -542,9 +609,9 @@ RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
         this.state.page += 1;
         this.state.action =
             <NeoLineChartFooter propertiesSelected={this.state.propertiesSelected} page={this.state.page} key={0}
-                                   data={this.state.data}
-                                   onChange={this.stateChanged}
-                                   categories={labels} values={labels}
+                                data={this.state.data}
+                                onChange={this.stateChanged}
+                                categories={labels} values={labels}
             />
 
         this.setState(this.state);
@@ -562,10 +629,10 @@ RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
 
 
         this.state.action = <NeoMapFooter key={0} nodeLabels={Object.keys(labels)}
-                                               width={this.props.width}
-                                               params={this.state.parsedParameters}
+                                          width={this.props.width}
+                                          params={this.state.parsedParameters}
 
-                                               onChange={this.stateChanged}/>;
+                                          onChange={this.stateChanged}/>;
 
     }
 
@@ -591,16 +658,16 @@ RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
 
 
         this.state.action = <NeoGraphVisFooter key={0} nodeLabels={Object.keys(labels)}
-                                           width={this.props.width}
-                                           params={this.state.parsedParameters}
-                                           properties={Object.values(labels).map((labelChoices, index) => {
-                                               let options = {}
-                                               labelChoices.forEach(choice =>
-                                                   options[(index + "-" + choice)] = choice
-                                               )
-                                               return options;
-                                           })}
-                                           onChange={this.stateChanged}/>;
+                                               width={this.props.width}
+                                               params={this.state.parsedParameters}
+                                               properties={Object.values(labels).map((labelChoices, index) => {
+                                                   let options = {}
+                                                   labelChoices.forEach(choice =>
+                                                       options[(index + "-" + choice)] = choice
+                                                   )
+                                                   return options;
+                                               })}
+                                               onChange={this.stateChanged}/>;
 
     }
 
@@ -608,12 +675,16 @@ RETURN DISTINCT n.\`${property}\` as value LIMIT 4`;
      * Render the NeoCard component with the currently selected report.
      */
     render() {
+        let backgroundColor = (this.state.parsedParameters.background) ? this.state.parsedParameters.background + "" : "";
         return <Col l={this.state.width} m={12} s={12}>
             <div ref={this.cardRef}>
                 <Card
                     actions={[this.state.action]}
-                    style={{height: (this.state.height * 100 + 22 * ((this.state.height / 4) - 1)) + 'px'}}
-                    className={"neo-card medium white darken-5 paginated-card"}
+                    style={{
+                        backgroundColor: backgroundColor,
+                        height: (this.state.height * 100 + 22 * ((this.state.height / 4) - 1)) + 'px'
+                    }}
+                    className={"neo-card medium darken-5 paginated-card"}
                     closeIcon={this.closeIcon}
                     revealIcon={(this.props.editable) ? <Icon>more_vert</Icon> : <div></div>}
                     textClassName="black-text"

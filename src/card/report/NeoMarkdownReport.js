@@ -17,7 +17,7 @@ class NeoMarkdownReport extends NeoReport {
         if (this.props.data){
             markdown = this.props.data.replace(/\n\n/g, "\n\n &nbsp; \n\n").replace(/\n \n/g, "\n\n &nbsp; \n\n");
         }
-        // TODO - add better markdown support (bullets, nicer code view, etc.
+
         let result =<div><base target="_blank"/> <ReactMarkdown plugins={[gfm]} children={markdown} /></div>
         return (result);
     }

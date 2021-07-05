@@ -20,11 +20,12 @@ class NeoCardSettings extends React.Component {
         'map': 'Map',
         'select': 'Selection',
         'iframe': 'iFrame',
-        'text': 'Markdown',
+        'text': 'Markdown'
     };
 
     // A dictionary of available card sizes.
     sizeOptions = {
+        // 3: 'Tiny (3x4)',
         4: 'Small (4x4)',
         6: 'Medium (6x4)',
         8: 'Large (8x4)',

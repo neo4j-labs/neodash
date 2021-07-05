@@ -124,6 +124,9 @@ code {
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
 }
+html { scroll-behavior: smooth; }
+
+
 .tab {
     width: 250px;
     -webkit-box-flex: 0 !important;
