@@ -157,11 +157,11 @@ class NeoDash extends React.Component {
             var url = this.connection.url;
 
             // When specifying an encrypted connection, we don't need the bolt+s / neo4j+s scheme.
-            if (this.connection.encryption === "on" && url.startsWith("bolt+s://")){
+            if (this.connection.encryption === "on" && url.startsWith("bolt+s://")) {
                 url = url.replace("bolt+s://", "bolt://")
                 this.connection.url = url;
             }
-            if (this.connection.encryption === "on" && url.startsWith("neo4j+s://")){
+            if (this.connection.encryption === "on" && url.startsWith("neo4j+s://")) {
                 url = url.replace("neo4j+s://", "neo4j://")
                 this.connection.url = url;
             }
@@ -169,9 +169,7 @@ class NeoDash extends React.Component {
             if (!(url.startsWith("bolt://") || url.startsWith("bolt+routing://") || url.startsWith("neo4j://"))) {
                 url = "neo4j://" + url;
             }
-            let config = {
-                encrypted: (this.connection.encryption === "on") ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF'
-            };
+            let config = (this.connection.encryption === "on") ? {encrypted: 'ENCRYPTION_ON'} : {}
 
             var driver = neo4j.driver(
                 url,
@@ -940,6 +938,7 @@ class NeoDash extends React.Component {
                                            value: e.target.value
                                        })}/>;
 
+
         // if the page titles are loaded, build the list of tabs
         let tabslist = (this.state.pageTitles) ? this.state.pageTitles.map((t, i) => {
             let deletePageButton = <Button className="btn-floating btn-remove-tab"
@@ -1006,9 +1005,9 @@ class NeoDash extends React.Component {
                            tabs
                        }
                        style={{backgroundColor: '#111'}}>
+
             {saveLoadModal}{shareModal}
-            {(this.neoConnectionModal) ? this.neoConnectionModal : <div></div>
-            }
+            {(this.neoConnectionModal) ? this.neoConnectionModal : <div></div>}
         </Navbar>;
 
     }

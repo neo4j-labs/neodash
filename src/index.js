@@ -4,7 +4,7 @@ import Footer from "react-materialize/lib/Footer";
 import NeoDash from "./NeoDash";
 
 // Configurable text for the interface
-const version = "1.1.1"
+const version = "1.1.2"
 const readme = "https://github.com/nielsdejong/neodash/blob/master/README.md";
 const appName = "NeoDash";
 const title = "NeoDash - Neo4j Dashboard Builder";
