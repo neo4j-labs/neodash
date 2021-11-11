@@ -1,265 +1,87 @@
 
-body {
-    background-color: rgb(206, 206, 206);
+.MuiDrawer-paper{
+    position: relative !important;
 }
 
-.log-snip {
-    height: 200px;
-    overflow: scroll;
-    background-color: lightgrey;
-    font-size: 12px;
+.blue-grey {
+    background: #607d8b !important;
+    color: white !important;
 }
 
-/* force autocomplete inputs to be moved up due to Materialize-react bug */
-.autocomplete-div .input-field label {
-    -webkit-transform: translateY(-18px) scale(0.8);
-    transform: translateY(-18px) scale(0.8);
+.no-underline .MuiInput-underline::before {
+    border-bottom: none;
 }
 
-.card-reveal .select-dropdown {
-    top: 0px !important;
+.large input {
+    font-size: 20px;
+    margin-top: -6px;
 }
-.card-action .select-dropdown {
-    bottom: 0px !important;
-    top: auto !important;
+.MuiChip-root {
+    border-radius: 16px;
 }
-.log {
-    background-color: lightgrey;
-    font-size: 12px;
-}
-
-.preloader-wrapper {
-    width: 25px;
-    height: 25px;
+.CodeMirror-lint-message-error {
+    background-image: none !important;
 }
 
-code {
-    background-color: #eee;
-    display: inline-block;
+.leaflet-custom-node-popup {
+    margin-left: 1px;
+    margin-bottom: 34px !important;
 }
-
-.autocomplete-content {
-    top: 50px !important;
-}
-
-.card .card-reveal {
-    z-index: 1500;
-}
-
-.card-content .autocomplete-div ul:not(.browser-default) > li {
-    list-style-type: none;
+.leaflet-custom-rel-popup {
     margin-left: 0px;
-    padding-left: 10px;
 }
-
-.card-content pre {
-    background-color: #eee;
-
-}
-
-.card-content ul:not(.browser-default) > li {
-    list-style-type: disc;
-    margin-left: 40px;
-    padding-left: 0px;
-}
-
-.badge-strip {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-}
-
-#root {
-    background-color: #efefef;
-}
-.tabs .indicator {
+.leaflet-control-attribution {
     display: none;
 }
-.tab a.active {
-    border-bottom: 2px solid white;
-}
-.tabs {
-    overflow-y: auto; !important;
+.leaflet-custom-tooltip {
 
-    /*overflow-y: fragments;*/
-    height: auto !important;
-}
-.btn-add-tab {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    background-color: #444;
-    opacity: 0.2;
-    margin-left: 15px;
-    margin-top: -5px;
-    margin-right: 15px;
 }
 .leaflet-marker-icon {
-    margin-left: -13px !important;
-    width: 25px !important;
-    height: 30px !important;
+    width: 50px !important;
+    margin-left: -25px !important;
 }
-.leaflet-popup {
-    margin-bottom: 35px;
+.autosize .ReactCodeMirror .CodeMirror{
+    height: auto;
 }
-.leaflet-marker-icon .material-icons {
-    font-size: 34px;
-    margin-left: -4px;
-    margin-top: -6px;
-    -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: #777;
+/* Hack to make the table header smaller, TODO - clean this up */
+.table-small-header {
+    height: 36px;
 }
-.tabs .disabled {
-    width: auto !important;
+.MuiDataGrid-root {
+    border: none !important;
 }
-.tabs .disabled a .input-field input {
-    width: auto !important;
-    margin-left: auto !important;
+.MuiChip-root:before {
+    border: none !important;
 }
-.tab a .input-field input {
-    width: 200px;
-    margin-left: -20px;
-    line-height: 10px;
-    border-bottom: none !important;
-    box-shadow: none !important;
-    -webkit-box-shadow: none !important;
+.MuiDataGrid-columnsContainer {
+    min-height: 32px !important;
+    max-height: 32px !important;
+    line-height: 32px !important;
+    /* border-top: 1px solid rgba(224, 224, 224, 1); */
 }
-html { scroll-behavior: smooth; }
-
-
-.tab {
-    width: 250px;
-    -webkit-box-flex: 0 !important;
-    -webkit-flex-grow: 0 !important;
-    -ms-flex-positive: 0 !important;
-    flex-grow: 0 !important;
+.MuiDataGrid-columnSeparator{
+    height: 32px;
 }
-.tab a .input-field input {
-    width: 200px;
-    margin-left: -20px;
+.MuiDataGrid-columnHeaderTitleContainer {
+    padding-left: 1px !important;
 }
-.btn-center-align :hover {
-    background-color: #444 !important;
-    opacity: 0.7;
+.MuiDataGrid-window{
+    top: 32px !important;
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
 }
-.btn-add-tab i {
-    margin-top: -13px;
+.MuiTablePagination-root{
+    margin-top: -10px;
 }
-.leaflet-rel-popup {
-    margin-bottom: 18px !important;
+.MuiCardHeader-content .MuiInputBase-root.Mui-disabled {
+    color: inherit !important;
 }
-path.leaflet-interactive{
-    stroke-width: 3.5px;
+.MuiCardHeader-content .MuiInput-underline.Mui-disabled:before {
+    border-bottom-style: none !important;
 }
-.btn-remove-tab {
-
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-
-    background-color: transparent;
-    opacity: 0.2;
-    margin-top: -97.5px;
-    margin-left: 220px;
-}
-
-.btn-remove-tab i {
-    margin-top: -13px;
-}
-.btn-center-align {
-
-    margin-left: 45%;
-    margin-top: 150px;
-    margin-bottom: 150px;
-}
-.card-action {
-    clip: rect(-2000px 2000px 150px 5px);
-    max-height: 150px;
-}
-.btn-center-align :hover {
-    opacity: 0.7;
-}
-.section {
-    padding-top: 0;
-}
-.card {
-    padding-bottom: 55px;
-}
-
-.card-content {
-    padding-bottom: 0px !important;
-}
-
-.card-content td {
-    padding: 10px 4px;
-}
-
-.card-content th {
-    padding: 4px 4px;
-}
-
-.card-content th:not(:first-child) {
-
-    min-width: 60px;
-}
-
-
-.card-action .pagination a {
-    color: #000 !important;
-    margin-right: 0px !important;
-}
-
-.card-action .pagination li {
-    width: 40px;
-}
-
-.card-content img {
-    width: 100%;
-}
-
-.card-action .pagination {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    width: 290px;
-
-    display: block;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-
-/*.card-content div {*/
-/*    height: 325px;*/
-/*}*/
-
-.paginated-card .card-action {
-    padding-left: 0px;
-    padding-right: 0px;
-    display: block;
-
-
-}
-
-.input-field {
-
-    margin-top: 7px;
-    margin-bottom: 7px;
-}
-
-.graph-edge {
-    stroke-width: 2;
-    fill: none;
-    marker-end: url(#arrowhead);
-    /*marker-start: url(#label);*/
-}
-
-.graph-edge-reverse {
-    stroke-width: 2;
-    fill: none;
-    marker-start: url(#arrowhead-reverse);
-    /*marker-start: url(#label);*/
-}
-
-#Textarea-12 {
+.textinput-linenumbers {
+    scrollbar-width: none;
+    resize: none;
     background: url(linenumbers.png);
     background-size: 20;
     background-attachment: local;
@@ -267,254 +89,35 @@ path.leaflet-interactive{
     font-family: monospace;
     font-size: 14px;
     line-height: 16px;
-    border-color: #ccc;
+    border-color: #fff;
     width: calc(100% + 30px);
     display: block;
     background-size: 26px;
     white-space: pre;
     background-position: 0px -11px;
     /*line-height: 1.2em;*/
-    margin-left: -15px !important;
+    /* margin-left: -15px !important; */
     padding-right: 0px !important;
-    margin-right: -35px !important;
+    /* margin-right: -35px !important; */
     margin-top: 0px !important;
-    padding-left: 30px !important;
+    padding-left: 30px;
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     margin-bottom: 0px !important;
     overflow-x: scroll !important;
-    overflow-y: scroll !important;
-    min-height: 80px;
+    overflow-y: scroll;
+    min-height: 116px;
     /*height: 200px !important;*/
 }
 
-.nav-wrapper .input-field .editable-title {
-    margin-top: 0px !important;
-    border-bottom: 0px !important;
-    font-size: 30px;
-}
-
-.flag {
-    background: url('https://dl.dropboxusercontent.com/s/yx2q52k9g420tov/flags.png') no-repeat;
-    background-color: #000;
-    position: absolute;
-}
-
-.editable-title {
-    margin-top: -25px !important;
-    border-bottom: 0px !important;
-}
-
-.card-title .input-field .helper-text {
-    display: none !important;
-}
-
-.card-title i {
-    top: 20px;
-    right: 20px;
-    position: absolute;
-}
-
-.card-reveal .card-title .input-field {
-    display: none !important;
-}
-
-.card-reveal .card-title p {
-    display: inline !important;
-}
-
-.pagination li.active {
-    background-color: #ddd;
-}
-
-.card.huge {
-    height: 822px;
-}
-
-.card-title textarea:disabled {
-    color: black !important;
-}
-
-#mobile-nav {
-    z-index: 1001;
-}
-
-#NeoModal {
-    z-index: 3000 !important;
-}
-
-nav textarea:disabled {
-    color: white !important;
-}
-
-.leaflet-control-attribution {
-    font-size: 8px !important;
-}
-.leaflet-popup-content {
-    width: auto !important;
-}
-.leaflet-popup-content pre{
-    margin: 0px;
-}
-.select-wrapper {
-    width: 140px;
-}
-
-.card-action .select-wrapper {
-    width: 120px;
-
-}
-.tabs .tab a {
-    padding: 0px;
-}
-.editable-page-nav {
-    cursor: pointer;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.7) !important;
-    border-bottom: 0px;
-    font-size: 12px;
-    margin-left: 6px;
-}
-
-.fixed-icon {
-    position: fixed;
-}
-
-.tabs-grey {
-    background-color: #333 !important;
-    color: white;
-}
-.tabs-grey .row{
-    margin-bottom: 0px;
-}
-
-.wide-button {
-    width: 120px;
-    padding-left: 0px;
-}
-
-.neo-color {
-    /*background-color: #008cc1;*/
-    background-color: white;
-    color: grey;
-}
-
-.neo-card .card-content {
-    overflow-y: auto !important;
-    overflow-x: auto !important;
-}
-
-#modal-dark-footer .modal-footer {
-    background-color: #555;
-    color: lightgrey;
-    height: auto;
-    text-align: left;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-#Textarea-12::-webkit-scrollbar {
+.textinput-linenumbers::-webkit-scrollbar {
     display: none;
-}
+  }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-#Textarea-12 {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-}
+  .MuiDrawer-docked .MuiDrawer-paper {
+      overflow-x: hidden;
+  }
 
-.helper-text {
-    display: none !important;
-}
-
-.chip {
-    position: relative;
-    margin-bottom: 5px;
-}
-
-/* Select inside chip */
-.chip .input-field {
-    position: absolute;
-
-    top: 0px;
-    margin: 0px;
-    padding: 0px;
-    left: 0px;
-    width: 100%;
-    color: transparent;
-}
-
-.chip .input-field .select-wrapper {
-    position: absolute;
-    width: 100%;
-
-    height: 30px;
-}
-
-.chip .input-field .select-wrapper input {
-    color: transparent;
-    border-bottom: none;
-}
-
-.chip .input-field .select-wrapper .select-dropdown {
-    position: absolute;
-    width: 200px;
-}
-
-.chip .input-field label {
-    display: none;
-}
-
-.chip .input-field .select-wrapper svg {
-    display: none;
-}
-
-.nav-wrapper .input-field {
-    position: absolute;
-    margin-left: auto;
-    width: 60%;
-    left: 0;
-    right: 0;
-    margin-right: auto;
-}
-
-.nav-wrapper ul {
-    z-index: -99;
-}
-
-.nav-wrapper .input-field textarea {
-    position: absolute;
-
-
-}
-
-.container {
-    width: 97.5%;
-}
-
-.modal-input-text .input-field.col label {
-    left: 0px;
-}
-
-.neo-property-select .input-field .select-wrapper {
-    margin-bottom: -20px;
-}
-
-.chart-tooltip {
-    position: absolute;
-    display: none;
-    min-width: 80px;
-    height: auto;
-    background: none repeat scroll 0 0 #ffffff;
-    border: 1px solid #6F257F;
-    padding: 14px;
-    z-index: 9999;
-    text-align: center;
-}
-
-.neotable .chip {
-    margin-right: 0px;
-    margin-left: 2px;
-}
+  #center-aligned {
+      text-align: center;
+  }

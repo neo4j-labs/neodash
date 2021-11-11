@@ -1,78 +1,81 @@
 {
   "name": "neodash",
+  "version": "2.0.0-preview",
   "description": "NeoDash - Neo4j Dashboard Builder",
-  "version": "1.1.2",
-  "homepage": "./",
-  "neo4jDesktop": {
-    "apiVersion": "^1.2.0"
-  },
-  "license": "Apache-2.0",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "type": "ico"
-    },
-    {
-      "src": "favicon.png",
-      "type": "png"
-    }
-  ],
-  "dist": {
-    "tarball": "https://github.com/nielsdejong/neodash/releases/download/1.1.0/neodash-1.1.0.tgz"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nielsdejong/neodash/"
-  },
-  "private": false,
-  "dependencies": {
-    "@apollo/react-hooks": "^3.1.2",
-    "@react-leaflet/core": ">=1.0.0 <1.1.0 || ^1.1.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "apollo-boost": "^0.4.4",
-    "axios": ">=0.21.1",
-    "d3": "4.5.0",
-    "glob": "^7.1.6",
-    "graphql": "^14.5.8",
-    "graphql-tag": "^2.10.1",
-    "jquery": "^3.5.1",
-    "jsoncrush": "latest",
-    "leaflet": "latest",
-    "materialize-css": "^1.0.0",
-    "neo4j-driver": "latest",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-leaflet": ">=3.1.0 <3.2.0 || ^3.2.1",
-    "react-leaflet-enhanced-marker": "^1.0.19",
-    "react-markdown": "^5.0.3",
-    "react-materialize": "^3.9.2",
-    "react-scripts": "3.4.1",
-    "remark-gfm": "^1.0.0"
-  },
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "rimraf *.tgz && rimraf dist && react-scripts build && mv build dist",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "npx webpack-dev-server --mode development",
+    "build": "npx webpack --mode production && rm -rf build && mkdir build && cp public/* build/ -r && mkdir build/dist &&  mv dist/ build/",
+    "sync": "aws s3 sync --acl public-read build s3://neodash.graphapp.io/preview",
+    "test": "ts-mocha \"src/**/*.test.tsx\" --require @babel/register --recursive"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "rimraf": "^3.0.2"
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-typescript": "^7.14.5",
+    "@babel/register": "^7.14.5",
+    "@graphapps/charts": "github:nielsdejong/charts#62a3a2b88ee816e4e09d90ebcf7bbc44ede092ec",
+    "@types/chai": "^4.2.21",
+    "@types/expect": "^24.3.0",
+    "@types/leaflet": "^1.7.5",
+    "@types/mocha": "^8.2.3",
+    "@types/react-dom": "^17.0.9",
+    "@types/sinon": "^10.0.2",
+    "@types/styled-components": "^5.1.11",
+    "babel-loader": "^8.0.6",
+    "chai": "^4.3.4",
+    "css-loader": "^3.4.2",
+    "fetch-mock": "^9.11.0",
+    "mocha": "^9.0.2",
+    "node-fetch": "^2.6.1",
+    "react-hot-loader": "^4.12.19",
+    "sinon": "^11.1.1",
+    "style-loader": "^1.1.3",
+    "styled-components": "^5.3.0",
+    "ts-loader": "^9.2.3",
+    "ts-mocha": "^8.0.0",
+    "typescript": "^4.3.5",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "3.7.1"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.14.6",
+    "@material-ui/core": "^4.12.1",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@mui/x-data-grid": "^4.0.1",
+    "@react-leaflet/core": "^1.0.2",
+    "codemirror": "^5.63.3",
+    "d3-scale-chromatic": "^3.0.0",
+    "file-loader": "^6.2.0",
+    "graph-app-kit": "https://neo.jfrog.io/neo/api/npm/npm/graph-app-kit/-/graph-app-kit-1.0.4.tgz",
+    "leaflet": "^1.7.1",
+    "loader-utils": "^2.0.0",
+    "neo4j-driver": "^4.3.2",
+    "react": "^16.12.0",
+    "react-cool-dimensions": "^2.0.7",
+    "react-dom": "^16.12.0",
+    "react-force-graph-2d": "^1.23.8",
+    "react-highlight.js": "^1.0.7",
+    "react-leaflet": "^3.1.0",
+    "react-leaflet-enhanced-marker": "^1.0.21",
+    "react-markdown": "^7.1.0",
+    "react-redux": "^7.2.4",
+    "react-use": "^17.2.4",
+    "redux": "^4.1.0",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
+    "remark-gfm": "^3.0.0",
+    "reselect": "^4.0.0",
+    "source-map-loader": "^1.0.0",
+    "use-neo4j": "^0.3.6"
   }
 }
