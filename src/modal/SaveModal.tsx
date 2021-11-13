@@ -18,6 +18,7 @@ import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { getDashboardJson } from './ModalSelectors';
 import { valueIsArray, valueIsObject } from '../report/RecordProcessing';
+import StorageIcon from '@material-ui/icons/Storage';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -97,26 +98,36 @@ export const NeoSaveModal = ({ dashboard }) => {
                         marginRight: "5px",
                         paddingBottom: "5px"
                     }} />
-                    Save Dashboard JSON
-                   
+                    Save Dashboard
+
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >
                             <CloseIcon />
                         </Badge>
                     </IconButton>
-                    <Button onClick={downloadDashboard}
-                        style={{ float: "right", marginRight: "20px", backgroundColor: "white" }}
-                        color="default"
-                        variant="contained"
-                        size="small"
-                        endIcon={<GetAppIcon />}>
-                        Download File
-                    </Button>
                 </DialogTitle>
                 <DialogContent style={{ width: "1000px" }}>
-
-                    <DialogContentText>
-                        Copy the text below to save your dashboard. You can load the dashboard back into NeoDash later.</DialogContentText>
+                    <Button
+                        component="label"
+                        onClick={downloadDashboard}
+                        style={{ backgroundColor: "white" }}
+                        color="default"
+                        variant="contained"
+                        size="medium"
+                        endIcon={<GetAppIcon />}>
+                        Save to File
+                    </Button>
+                    <Button
+                        component="label"
+                        onClick={downloadDashboard}
+                        style={{ backgroundColor: "white", marginLeft: "10px" }}
+                        color="default"
+                        variant="contained"
+                        size="medium"
+                        endIcon={<StorageIcon />}>
+                        Save to Neo4j
+                    </Button>
+                    <br /><br />
                     <TextareaAutosize
                         style={{ minHeight: "500px", width: "100%", border: "1px solid lightgray" }}
                         className={"textinput-linenumbers"}

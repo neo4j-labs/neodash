@@ -32,7 +32,7 @@ const styles = {
 
 
 export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboardTitle,
-     handleDrawerOpen, setDashboardTitle, editable,
+     handleDrawerOpen, setDashboardTitle, editable, connection,
     addPage, removePage, selectPage, setPageTitle, onConnectionModalOpen }) => {
 
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
@@ -48,7 +48,7 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
         if (dashboardTitle !== dashboardTitleText) {
-            setDashboardTitleText(dashboardTitleText);
+            setDashboardTitleText(dashboardTitle);
         }
     }, [dashboardTitle])
 
@@ -100,7 +100,7 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
                         debouncedDashboardTitleUpdate(event.target.value);
                     }}
                 />
-                <Tooltip title="neo4j://localhost:7867" placement="left" aria-label="host">
+                <Tooltip title={connection.protocol + "://" + connection.url + ":" + connection.port} placement="left" aria-label="host">
                     <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={onConnectionModalOpen}>
                         <Badge badgeContent={""} >
                             <img style={{ width: "36px", height: "36px" }} src="neo4j-icon.png" />

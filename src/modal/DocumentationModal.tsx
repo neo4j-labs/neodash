@@ -6,18 +6,16 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import Badge from '@material-ui/core/Badge';
 import { Grid, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import NeoEditableCodeField from '../component/EditableCodeField';
 import NeoReport from '../report/Report';
-import NeoBarChart from '../chart/BarChart';
 import { EXAMPLE_REPORTS } from '../config/ExampleConfig';
 
 
 
-export const NeoDocumentationModal = ({ }) => {
+export const NeoDocumentationModal = ({ database }) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -66,6 +64,7 @@ export const NeoDocumentationModal = ({ }) => {
                                     <div style={{ height: "355px", width: "800px", overflow: "hidden", border: "1px solid lightgrey" }} >
                                         <NeoReport
                                             query={example.syntheticQuery}
+                                            database={database}
                                             disabled={!open}
                                             selection={example.selection}
                                             settings={example.settings}

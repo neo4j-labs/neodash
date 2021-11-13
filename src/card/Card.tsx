@@ -91,6 +91,7 @@ const NeoCard = ({
                     <NeoCardSettings
                         settingsOpen={settingsOpen}
                         query={report.query}
+                        database={database}
                         width={report.width}
                         height={report.height}
                         type={report.type}

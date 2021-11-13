@@ -22,7 +22,7 @@ const generateListItem = (label, option) => {
 
     }
 }
-const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined, inverted = false, onChange }) => {
+const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined, helperText = undefined, inverted = false, onChange }) => {
     switch (type) {
         case SELECTION_TYPES.NUMBER:
             return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
@@ -31,6 +31,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                     key={label}
                     value={value}
                     disabled={disabled}
+                    helperText={helperText}
                     defaultValue={""}
                     placeholder={"" + defaultValue}
                     style={{ width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" }}
@@ -42,6 +43,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                 label={label} 
                 key={label}
                 disabled={disabled}
+                helperText={helperText}
                 value={value}
                 defaultValue={""}
                 placeholder={"" + defaultValue}
@@ -54,6 +56,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                     label={label} 
                     key={label}
                     disabled={disabled}
+                    helperText={helperText}
                     value={JSON.stringify(value)}
                     defaultValue={""}
                     placeholder={"" + JSON.stringify(defaultValue)}
@@ -66,6 +69,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                     select
                     label={label}
                     disabled={disabled}
+                    helperText={helperText}
                     key={label}
                     value={value}
                     defaultValue={defaultValue}

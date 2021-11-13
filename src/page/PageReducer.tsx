@@ -14,7 +14,27 @@ const update = (state, mutations) =>
 
 export const FIRST_PAGE_INITIAL_STATE = {
     "title": "Main Page",
-    "reports": []
+    "reports": [{
+        "title": "Hi there 👋",
+        "query": "**This is your first dashboard!** \n \nYou can click (⋮) to edit this report, or add a new report to get started. You can run any Cypher query directly from each report and render data in a variety of formats. \n \nTip: try _renaming_ this report by editing the title text. You can also edit the dashboard header at the top of the screen.\n\n\n",
+        "width": 3,
+        "type": "text",
+        "height": 3,
+        "selection": {},
+        "settings": {}
+    },
+    {
+        "title": "",
+        "query": "MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n",
+        "width": 3,
+        "type": "graph",
+        "height": 3,
+        "selection": {
+            "Person": "name",
+            "Movie": "title"
+        },
+        "settings": {}
+    }]
 }
 
 export const PAGE_INITIAL_STATE = {
@@ -121,7 +141,7 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
             const { pagenumber } = payload;
             return {
                 ...state,
-                reports: state.reports.map(report => update(report, {fields: report.fields.concat([""])}))
+                reports: state.reports.map(report => update(report, { fields: report.fields.concat([""]) }))
             }
         }
         default: {

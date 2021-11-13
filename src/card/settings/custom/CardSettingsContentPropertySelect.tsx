@@ -17,17 +17,25 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
     );
 
 
-    const [labelInputText, setLabelInputText] = React.useState(undefined);
-    const [labelValue, setLabelValue] = React.useState(undefined);
+    const label = query.split("`")[1] ? query.split("`")[1] : undefined;
+    const property = query.split("`")[3] ? query.split("`")[3] : undefined;
+  
+    const [labelInputText, setLabelInputText] = React.useState(label);
+    const [labelValue, setLabelValue] = React.useState(label);
     const [labelRecords, setLabelRecords] = React.useState([]);
-    const [propertyInputText, setPropertyInputText] = React.useState(undefined);
-    const [propertyValue, setPropertyValue] = React.useState(undefined);
+    const [propertyInputText, setPropertyInputText] = React.useState(property);
+    const [propertyValue, setPropertyValue] = React.useState(property);
     const [parameterName, setParameterName] = React.useState("");
     const [propertyRecords, setPropertyRecords] = React.useState([]);
 
-    const [id, setId] = React.useState("");
+    // Reverse engineer the label, property, ID from the generated query.
+    const approxParam = query.split("\n")[0].split("$")[1];
+    const id = (approxParam && approxParam.split("_").length > 3) ? approxParam.split("_")[approxParam.split("_").length-1] : "";
+    const [idValue, setIdValue] = React.useState(id);
+    if(!parameterName && labelValue && propertyValue){
+        setParameterName("neodash_" + (labelValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase());
+    }
     // Define query callback to allow reports to get extra data on interactions.
-
     const queryCallback = useCallback(
         (query, parameters, setRecords) => {
             debouncedRunCypherQuery(driver, database, query, parameters, {}, [], 10,
@@ -43,11 +51,14 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
 
 
     return <div>
+        <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", border: "1px solid lightgrey", marginTop: "0px" }}>
+            {REPORT_TYPES[type].helperText}
+        </p>
         <Autocomplete
             id="autocomplete-label"
             options={labelRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
             getOptionLabel={(option) => option}
-            style={{ width: 350, marginLeft: "5px",marginTop: "0px" }}
+            style={{ width: 350, marginLeft: "5px", marginTop: "0px" }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
                 setLabelInputText(value);
@@ -58,7 +69,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
                 setLabelValue(newValue);
 
                 if (newValue && propertyValue) {
-                    const new_parameter_name = "neodash_" + (newValue + "_" + propertyValue + (id == "" || id.startsWith("_") ? id : "_"+id)).toLowerCase();
+                    const new_parameter_name = "neodash_" + (newValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase();
                     setParameterName(new_parameter_name);
                     const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + newValue + "`) \nWHERE toLower(toString(n.`" + propertyValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyValue + "` as value LIMIT 5";
                     onQueryUpdate(newQuery);
@@ -66,9 +77,9 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
                     setParameterName(null);
                 }
             }}
-            renderInput={(params) => <TextField {...params} label={"Node Label"} />}
+            renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Node Label"} />}
         />
-        <Autocomplete
+        {labelValue ? <><Autocomplete
             id="autocomplete-property"
             options={propertyRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
             getOptionLabel={(option) => option}
@@ -83,7 +94,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
                 setPropertyValue(newValue);
 
                 if (newValue && labelValue) {
-                    const new_parameter_name = "neodash_" + (labelValue + "_" + newValue + (id == "" || id.startsWith("_") ? id : "_"+id)).toLowerCase();
+                    const new_parameter_name = "neodash_" + (labelValue + "_" + newValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase();
                     setParameterName(new_parameter_name);
                     const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + labelValue + "`) \nWHERE toLower(toString(n.`" + newValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + newValue + "` as value LIMIT 5";
                     onQueryUpdate(newQuery);
@@ -91,27 +102,23 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
                     setParameterName(null);
                 }
             }}
-            renderInput={(params) => <TextField {...params} label={"Property Name"} />}
+            renderInput={(params) => <TextField {...params}  placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Property Name"} />}
         />
-        
         <NeoFieldSelection placeholder='id'
-            label="ID (optional)" numeric={true} value={id}
-            style={{width: "90px", marginTop: "5px", marginLeft: "10px"}}
+            label="ID (optional)" numeric={true} value={idValue}
+            style={{ width: "90px", marginTop: "5px", marginLeft: "10px" }}
             onChange={(value) => {
                 const newValue = value ? "_" + value : "";
-                setId(value);
+                setIdValue(value);
                 if (propertyValue && labelValue) {
                     const new_parameter_name = "neodash_" + (labelValue + "_" + propertyValue + newValue).toLowerCase();
                     setParameterName(new_parameter_name);
                     const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + labelValue + "`) \nWHERE toLower(toString(n.`" + propertyValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyValue + "` as value LIMIT 5";
                     onQueryUpdate(newQuery);
                 }
-            }} />
-        <br/><br/>
-        {parameterName ? <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", border: "1px solid lightgrey", marginTop: "0px" }} >Insert <b>${parameterName}</b> into a Cypher query to use the selected value.</p> : <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", border: "1px solid lightgrey", marginTop: "0px" }}>
-            {REPORT_TYPES[type].helperText}
-        </p>}
-        
+            }} /></> : <></>}
+        {parameterName ? <p>Use <b>${parameterName}</b> in a query to use the parameter.</p> : <></>}
+
     </div>;
 }
 

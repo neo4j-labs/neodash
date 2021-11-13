@@ -13,6 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import PostAddIcon from '@material-ui/icons/PostAdd';
+import StorageIcon from '@material-ui/icons/Storage';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -71,7 +72,7 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                         marginBottom: "-8px",
                         marginRight: "5px",
                         paddingBottom: "5px"
-                    }} />   Load Dashboard JSON
+                    }} />   Load Dashboard
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >
                             <CloseIcon />
@@ -80,12 +81,12 @@ export const NeoLoadModal = ({ loadDashboard }) => {
 
                 </DialogTitle>
                 <DialogContent style={{ width: "1000px" }}>
-                    <DialogContentText> Paste your dashboard file here to load it into NeoDash.</DialogContentText>
+                    {/* <DialogContentText> Paste your dashboard file here to load it into NeoDash.</DialogContentText> */}
                     <div>
                     <Button
                         component="label"
                         // onClick={(e)=>uploadDashboard(e)}
-                        style={{ backgroundColor: "white" }}
+                        style={{ backgroundColor: "white",marginBottom: "10px" }}
                         color="default"
                         variant="contained"
                         size="medium"
@@ -95,10 +96,25 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                             onChange={(e)=>uploadDashboard(e)}
                             hidden
                         />
-                        Choose File
+                        Select File
                     </Button>
-                    <Button onClick={handleCloseAndLoad}
-                        style={{  marginTop: "20px",marginLeft: "10px", marginBottom: "20px", backgroundColor: "white" }}
+                     <Button
+                        component="label"
+                        // onClick={(e)=>uploadDashboard(e)}
+                        style={{  marginLeft: "10px", marginBottom: "10px", backgroundColor: "white" }}
+                        color="default"
+                        variant="contained"
+                        size="medium"
+                        endIcon={<StorageIcon />}>
+                        <input
+                            type="file"
+                            onChange={(e)=>uploadDashboard(e)}
+                            hidden
+                        />
+                        Select From Neo4j
+                    </Button>
+                    <Button onClick={(text.length > 0) ? handleCloseAndLoad : null}
+                        style={{ color: text.length > 0 ? "white" : "lightgrey", float: "right", marginLeft: "10px", marginBottom: "10px", backgroundColor: text.length > 0 ? "green" : "white" }}
                         color="default"
                         variant="contained"
                         size="medium"
@@ -114,7 +130,7 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                         onChange={(e) => setText(e.target.value)}
                         value={text}
                         aria-label=""
-                        placeholder="Paste a dashboard JSON here." />
+                        placeholder="Select a dashboard first, then preview it here..." />
                    
                 </DialogContent>
                 {/* <DialogActions> */}

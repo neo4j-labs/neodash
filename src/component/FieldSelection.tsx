@@ -12,19 +12,24 @@ const NeoFieldSelection = ({ label,
     numeric = false,
     select = false,
     disabled = undefined,
+    helperText = undefined,
     defaultValue = undefined,
     placeholder = "" }) => {
     return (
         <TextField
+            InputLabelProps={{
+                shrink: true,
+            }}
             select={select}
             style={style}
             key={label}
             label={label}
+            helperText={helperText}
             disabled={disabled}
-            value={value != null ? value :defaultValue}
+            value={value != null ? value : defaultValue}
             // defaultValue={defaultValue}
             onChange={(event) => {
-              
+
                 if (!numeric) {
                     onChange(event.target.value);
                 } else if (event.target.value.toString().length == 0 || event.target.value.endsWith(".")) {
@@ -34,7 +39,7 @@ const NeoFieldSelection = ({ label,
                 }
             }}
             placeholder={placeholder}
-            helperText="">
+            >
             {choices}
         </TextField>
     );

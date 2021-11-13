@@ -13,12 +13,14 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     try{
         useEffect(() => {
             debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
-        }, [props.records, inputText]);    
+        }, [inputText, query]);    
     }catch(e){
         console.log(e);
     }
 
-    
+    const settings = (props.settings) ? props.settings : {};
+    const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
+
     const [extraRecords, setExtraRecords] = React.useState([]);
     const [inputText, setInputText] = React.useState("");
     const [value, setValue] = React.useState("");
@@ -36,27 +38,31 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     }
    
     const parameter = query.split("\n")[0].split("$")[1];
-    const label = query.split("`")[1];
-    const property = query.split("`")[3];
+    const label = query.split("`")[1] ? query.split("`")[1] : "";
+    const property = query.split("`")[3] ? query.split("`")[3] : "";
 
-
+    
     return <div>
         <Autocomplete
             id="autocomplete"
             options={extraRecords.map(r => r["_fields"] && r["_fields"][0] !== null ? r["_fields"][0] : "(no data)")}
-            getOptionLabel={(option) => option}
+            getOptionLabel={(option) => option ? option.toString() : ""}
             style={{ width: 300, marginLeft: "15px", marginTop: "5px" }}
             inputValue={inputText}
             onInputChange={(event, value) => {
                 setInputText(value);
-                debouncedQueryCallback(value);
+                debouncedQueryCallback(query, {input: value}, setExtraRecords);
             }}
-            value={value}
+            value={value ? value.toString() : ""}
             onChange={(event, newValue) => {
                 setValue(newValue);
-                props.setGlobalParameter(parameter, newValue);
+                if(newValue == null && clearParameterOnFieldClear){
+                    props.setGlobalParameter(parameter, undefined);
+                }else{
+                    props.setGlobalParameter(parameter, newValue);
+                }
             }}
-            renderInput={(params) => <TextField {...params} label={label + " " + property} variant="outlined" />}
+            renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }} placeholder="Start typing..." label={label + " " + property} variant="outlined" />}
         />
 
     </div>

@@ -3,8 +3,9 @@ import { ReportItemContainer } from '../CardStyle';
 import NeoCardSettingsHeader from './CardSettingsHeader';
 import NeoCardSettingsContent from './CardSettingsContent';
 import NeoCardSettingsFooter from './CardSettingsFooter';
+import { CardContent } from '@material-ui/core';
 
-const NeoCardSettings = ({ settingsOpen, query, refreshRate, cypherParameters, width, height, type, reportSettings, reportSettingsOpen,
+const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherParameters, width, height, type, reportSettings, reportSettingsOpen,
     onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onRemovePressed, onReportSettingUpdate,
     onShiftLeftPressed, onShiftRightPressed, onToggleCardSettings, onTypeUpdate, onToggleReportSettings }) => {
 
@@ -20,6 +21,7 @@ const NeoCardSettings = ({ settingsOpen, query, refreshRate, cypherParameters, w
     // TODO - instead of hiding everything based on settingsopen, only hide the components that slow down render (cypher editor)
     const cardSettingsContent = (settingsOpen) ? <NeoCardSettingsContent
         query={query}
+        database={database}
         refreshRate={refreshRate}
         cypherParameters={cypherParameters}
         width={width}
@@ -29,7 +31,7 @@ const NeoCardSettings = ({ settingsOpen, query, refreshRate, cypherParameters, w
         onSizeUpdate={onSizeUpdate}
         onRefreshRateUpdate={onRefreshRateUpdate}
         onCypherParametersUpdate={onCypherParametersUpdate}
-        onTypeUpdate={onTypeUpdate}></NeoCardSettingsContent> : <div></div>;
+        onTypeUpdate={onTypeUpdate}></NeoCardSettingsContent> : <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}/>;
 
     const cardSettingsFooter = (settingsOpen) ? <NeoCardSettingsFooter
         type={type}

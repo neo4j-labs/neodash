@@ -33,15 +33,17 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
     // Else, build the advanced settings view.
     const advancedDashboardSettings = <div style={{ marginLeft: "-10px" }}>
         {Object.keys(settings).map(setting =>
+            <>
             <ReportSetting key={setting} name={setting}
                 value={dashboardSettings[setting]}
                 type={settings[setting]["type"]}
                 disabled={settings[setting]["disabled"]}
+                helperText={settings[setting]["helperText"]}
                 label={settings[setting]["label"]}
                 defaultValue={settings[setting]["default"]}
                 choices={settings[setting]["values"]}
                 onChange={(e) => updateDashboardSetting(setting, e)}
-            />
+            /> <br/></>
         )}
     </div>
 
@@ -63,9 +65,9 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
                         </Badge>
                     </IconButton>
                 </DialogTitle>
-                <DialogContent style={{ width: "1000px" }}>
+                <DialogContent>
                     <DialogContentText>
-                        You can modify settings for your dashboard here.      
+                        You can modify settings for your entire dashboard here.      
                         <br/><br/>
                         {advancedDashboardSettings}
                     </DialogContentText>

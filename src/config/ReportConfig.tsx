@@ -205,7 +205,7 @@ export const REPORT_TYPES = {
             "legendWidth": {
                 label: "Legend Label Width (px)",
                 type: SELECTION_TYPES.NUMBER,
-                default: 70
+                default: 100
             },
             "hideSelections": {
                 label: "Hide Property Selection",
@@ -405,7 +405,14 @@ export const REPORT_TYPES = {
         disableCypherParameters: true,
         textOnly: true,
         maxRecords: 5,
-        settings: {}
+        settings: {
+            "clearParameterOnFieldClear": {
+                label: "Clear Parameter on Field Reset",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+        }
     },
     "iframe": {
         label: "iFrame",

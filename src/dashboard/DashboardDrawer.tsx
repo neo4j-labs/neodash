@@ -18,7 +18,7 @@ import { getDashboardSettings } from "./DashboardSelectors";
 import { updateDashboardSetting } from "../settings/SettingsActions";
 
 
-export const NeoDrawer = ({ open, dashboardSettings, updateDashboardSetting,
+export const NeoDrawer = ({ open, connection, dashboardSettings, updateDashboardSetting,
     handleDrawerClose, aboutModalOpen, onShareModalOpen, onAboutModalOpen }) => {
 
     const content = (
@@ -87,7 +87,7 @@ export const NeoDrawer = ({ open, dashboardSettings, updateDashboardSetting,
             </List>
             <Divider />
             <List>
-                <NeoDocumentationModal></NeoDocumentationModal>
+                <NeoDocumentationModal database={connection.database}></NeoDocumentationModal>
                 <ListItem button onClick={onAboutModalOpen}>
                     <ListItemIcon>
                         <InfoOutlinedIcon />
@@ -105,7 +105,8 @@ export const NeoDrawer = ({ open, dashboardSettings, updateDashboardSetting,
 
 const mapStateToProps = state => ({
     dashboardSettings: getDashboardSettings(state),
-    aboutModalOpen: applicationHasAboutModalOpen(state)
+    aboutModalOpen: applicationHasAboutModalOpen(state),
+    connection: applicationGetConnection(state)
 });
 
 const mapDispatchToProps = dispatch => ({

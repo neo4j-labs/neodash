@@ -31,7 +31,7 @@ const Dashboard = ({ pagenumber, connection, onConnectionUpdate }) => {
             connection={connection}
             onConnectionUpdate={onConnectionUpdate} />
         <NeoDrawer open={open} handleDrawerClose={handleDrawerClose}></NeoDrawer>
-        <NeoDashboardHeader open={open} handleDrawerOpen={handleDrawerOpen}></NeoDashboardHeader>
+        <NeoDashboardHeader open={open} connection={connection} handleDrawerOpen={handleDrawerOpen}></NeoDashboardHeader>
         <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: "#fafafa" }}>
             <Container maxWidth="xl" style={{ marginTop: "60px" }}>
                 <NeoPage></NeoPage>

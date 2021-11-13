@@ -24,7 +24,7 @@ export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getSta
     try {
         const settings = getState().dashboard.settings;
         const parameters = settings.parameters ? settings.parameters : {};
-        if(value != null){
+        if(value !== undefined){
             parameters[key] = value;
         }else{
             delete parameters[key];
