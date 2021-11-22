@@ -21,9 +21,12 @@ export const applicationGetConnection = (state: any) => {
     return state.application.connection;
 }
 
-
 export const applicationHasConnectionModalOpen = (state: any) => {
     return state.application.connectionModalOpen;
+}
+
+export const applicationGetOldDashboard = (state: any) => {
+    return state.application.oldDashboard;
 }
 
 export const applicationHasAboutModalOpen = (state: any) => {

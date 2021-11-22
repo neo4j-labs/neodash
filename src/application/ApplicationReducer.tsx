@@ -2,7 +2,8 @@
  * Reducers define changes to the application state when a given action
  */
 
-import { CLEAR_NOTIFICATION, CREATE_NOTIFICATION, SET_ABOUT_MODAL_OPEN, SET_CONNECTED, SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES } from "./ApplicationActions";
+import { CLEAR_NOTIFICATION, CREATE_NOTIFICATION, SET_ABOUT_MODAL_OPEN, SET_CONNECTED, 
+    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD } from "./ApplicationActions";
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -54,6 +55,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         case SET_ABOUT_MODAL_OPEN: {
             const { open } = payload;
             state = update(state, { aboutModalOpen: open })
+            return state;
+        }
+        case SET_OLD_DASHBOARD: {
+            const { text } = payload;
+            state = update(state, { oldDashboard: text })
             return state;
         }
         case SET_CONNECTION_PROPERTIES: {

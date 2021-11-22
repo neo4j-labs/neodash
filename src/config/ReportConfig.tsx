@@ -129,92 +129,6 @@ export const REPORT_TYPES = {
             },
         }
     },
-    "line": {
-        label: "Line Chart",
-        component: NeoLineChart,
-        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value.</div>,
-        selection: {
-            "x": {
-                label: "X-value",
-                type: SELECTION_TYPES.NUMBER
-            },
-            "value": {
-                label: "Y-value",
-                type: SELECTION_TYPES.NUMBER,
-                key: true,
-                multiple: true
-            },
-        },
-        maxRecords: 100,
-        useRecordMapper: true,
-        settings: {
-            "legend": {
-                label: "Show Legend",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
-            "colors": {
-                label: "Color Scheme",
-                type: SELECTION_TYPES.LIST,
-                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
-                default: "set2"
-            },
-            "curve": {
-                label: "Line Smoothing",
-                type: SELECTION_TYPES.LIST,
-                values: ["linear", "basis", "cardinal", "step"],
-                default: "linear"
-            },
-            "showGrid": {
-                label: "Show Grid",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
-            "pointSize": {
-                label: "Point Radius (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 10
-            },
-            "lineWidth": {
-                label: "Line Width (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 2
-            },
-            "marginLeft": {
-                label: "Margin Left (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 50
-            },
-            "marginRight": {
-                label: "Margin Right (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginTop": {
-                label: "Margin Top (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginBottom": {
-                label: "Margin Bottom (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 40
-            },
-            "legendWidth": {
-                label: "Legend Label Width (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 100
-            },
-            "hideSelections": {
-                label: "Hide Property Selection",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: false
-            },
-        }
-    },
     "bar": {
         label: "Bar Chart",
         component: NeoBarChart,
@@ -310,6 +224,92 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             }
+        }
+    },
+    "line": {
+        label: "Line Chart",
+        component: NeoLineChart,
+        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value.</div>,
+        selection: {
+            "x": {
+                label: "X-value",
+                type: SELECTION_TYPES.NUMBER
+            },
+            "value": {
+                label: "Y-value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true,
+                multiple: true
+            },
+        },
+        maxRecords: 100,
+        useRecordMapper: true,
+        settings: {
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "curve": {
+                label: "Line Smoothing",
+                type: SELECTION_TYPES.LIST,
+                values: ["linear", "basis", "cardinal", "step"],
+                default: "linear"
+            },
+            "showGrid": {
+                label: "Show Grid",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "pointSize": {
+                label: "Point Radius (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 10
+            },
+            "lineWidth": {
+                label: "Line Width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 2
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 50
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "legendWidth": {
+                label: "Legend Label Width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 100
+            },
+            "hideSelections": {
+                label: "Hide Property Selection",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
         }
     },
     "map": {

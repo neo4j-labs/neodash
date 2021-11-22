@@ -36,3 +36,10 @@ export const setConnectionProperties = (protocol: string, url: string, port: str
         type: SET_CONNECTION_PROPERTIES,
         payload: { protocol, url, port, database, username, password },
     });
+
+// Legacy pre-v2 dashboard that can be optionally upgraded.
+export const SET_OLD_DASHBOARD = 'APPLICATION/SET_OLD_DASHBOARD';
+export const setOldDashboard = (text: string) => ({
+    type: SET_OLD_DASHBOARD,
+    payload: { text },
+});

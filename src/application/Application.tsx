@@ -10,20 +10,22 @@ import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { removeReportRequest } from '../page/PageThunks';
 import { connect } from 'react-redux';
-import { applicationGetConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected } from '../application/ApplicationSelectors';
+import { applicationGetConnection, applicationGetOldDashboard, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected } from '../application/ApplicationSelectors';
 import { createConnectionThunk } from '../application/ApplicationThunks';
-import { clearNotification, setAboutModalOpen, setConnected, setConnectionModalOpen } from '../application/ApplicationActions';
+import { clearNotification, createNotification, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
 import Dashboard from '../dashboard/Dashboard';
 import { CircularProgress, Typography } from '@material-ui/core';
 import NeoAboutModal from '../modal/AboutModal';
+import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 
 /**
  * 
  */
-const Application = ({ connection, connected, hasCachedDashboard, connectionModalOpen, aboutModalOpen,
+const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, clearOldDashboard,
+    connectionModalOpen, aboutModalOpen,
     createConnection, initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose,
     onConnectionModalOpen, onConnectionModalClose }) => {
 
@@ -32,6 +34,7 @@ const Application = ({ connection, connected, hasCachedDashboard, connectionModa
     if (!initialized) {
         initializeApplication();
         setInitialized(true);
+
     }
 
     // Only render the dashboard component if we have an active Neo4j connection.
@@ -39,7 +42,7 @@ const Application = ({ connection, connected, hasCachedDashboard, connectionModa
         <div style={{ display: 'flex' }}>
             <CssBaseline />
             <NeoDashboardPlaceholder connected={false}></NeoDashboardPlaceholder>
-            {(connected) ? <Dashboard></Dashboard>:  <></>}
+            {(connected) ? <Dashboard></Dashboard> : <></>}
 
             <NeoNotificationModal></NeoNotificationModal>
             <NeoAboutModal
@@ -56,6 +59,11 @@ const Application = ({ connection, connected, hasCachedDashboard, connectionModa
                 onConnectionModalOpen={onConnectionModalOpen}
                 onAboutModalOpen={onAboutModalOpen}
                 resetDashboard={resetDashboard}></NeoWelcomeScreenModal>
+            <NeoUpgradeOldDashboardModal
+                open={oldDashboard}
+                text={oldDashboard}
+                clearOldDashboard={clearOldDashboard}>
+            </NeoUpgradeOldDashboardModal>
         </div>
     );
 }
@@ -63,6 +71,7 @@ const Application = ({ connection, connected, hasCachedDashboard, connectionModa
 const mapStateToProps = state => ({
     connected: applicationIsConnected(state),
     connection: applicationGetConnection(state),
+    oldDashboard: applicationGetOldDashboard(state),
     connectionModalOpen: applicationHasConnectionModalOpen(state),
     aboutModalOpen: applicationHasAboutModalOpen(state),
     hasCachedDashboard: applicationHasCachedDashboard(state),
@@ -74,10 +83,14 @@ const mapDispatchToProps = dispatch => ({
         dispatch(createConnectionThunk(protocol, url, port, database, username, password));
     },
     resetDashboard: _ => dispatch(resetDashboardState()),
+    clearOldDashboard: _ => dispatch(setOldDashboard(null)),
     initializeApplication: _ => {
+        const old = localStorage.getItem('neodash-dashboard');
+        dispatch(setOldDashboard(old));
         dispatch(setConnected(false));
         dispatch(clearNotification());
         dispatch(setConnectionModalOpen(false));
+       
     },
     onConnectionModalOpen: _ => dispatch(setConnectionModalOpen(true)),
     onConnectionModalClose: _ => dispatch(setConnectionModalOpen(false)),
