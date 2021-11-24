@@ -8,7 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { TextareaAutosize } from '@material-ui/core';
 
 
-export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard }) => {
+export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loadDashboard }) => {
     return (
         <div>
             <Dialog maxWidth={"lg"} open={open} aria-labelledby="form-dialog-title">
@@ -32,7 +32,9 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard }) =
                         Delete Old Dashboard
                     </Button>
                     <Button onClick={() => {
-                        alert("OH")
+                        localStorage.removeItem("neodash-dashboard");
+                        loadDashboard(text);
+                        clearOldDashboard();
                     }}
                         style={{ marginTop: "20px", marginRight: "6px", marginBottom: "20px", backgroundColor: "white" }}
                         color="default"

@@ -34,7 +34,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const query = records[0]["input"];
  
     if (!query) {
-        return <div>No selection specified, refresh this report.</div>
+        return <p style={{margin: "15px"}}>No selection specified. Open up the report settings and choose a node label and property.</p>
     }
    
     const parameter = query.split("\n")[0].split("$")[1];

@@ -40,6 +40,7 @@ export const NeoLoadModal = ({ loadDashboard }) => {
     const handleCloseAndLoad = () => {
         setOpen(false);
         loadDashboard(text);
+        setText("");
     };
 
     const reader = new FileReader();
@@ -83,46 +84,46 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                 <DialogContent style={{ width: "1000px" }}>
                     {/* <DialogContentText> Paste your dashboard file here to load it into NeoDash.</DialogContentText> */}
                     <div>
-                    <Button
-                        component="label"
-                        // onClick={(e)=>uploadDashboard(e)}
-                        style={{ backgroundColor: "white",marginBottom: "10px" }}
-                        color="default"
-                        variant="contained"
-                        size="medium"
-                        endIcon={<PostAddIcon />}>
-                        <input
-                            type="file"
-                            onChange={(e)=>uploadDashboard(e)}
-                            hidden
-                        />
-                        Select File
-                    </Button>
-                     <Button
-                        component="label"
-                        // onClick={(e)=>uploadDashboard(e)}
-                        style={{  marginLeft: "10px", marginBottom: "10px", backgroundColor: "white" }}
-                        color="default"
-                        variant="contained"
-                        size="medium"
-                        endIcon={<StorageIcon />}>
-                        <input
-                            type="file"
-                            onChange={(e)=>uploadDashboard(e)}
-                            hidden
-                        />
-                        Select From Neo4j
-                    </Button>
-                    <Button onClick={(text.length > 0) ? handleCloseAndLoad : null}
-                        style={{ color: text.length > 0 ? "white" : "lightgrey", float: "right", marginLeft: "10px", marginBottom: "10px", backgroundColor: text.length > 0 ? "green" : "white" }}
-                        color="default"
-                        variant="contained"
-                        size="medium"
-                        endIcon={<PlayArrow />}>
-                        Load Dashboard
-                    </Button>
+                        <Button
+                            component="label"
+                            // onClick={(e)=>uploadDashboard(e)}
+                            style={{ backgroundColor: "white", marginBottom: "10px" }}
+                            color="default"
+                            variant="contained"
+                            size="medium"
+                            endIcon={<PostAddIcon />}>
+                            <input
+                                type="file"
+                                onChange={(e) => uploadDashboard(e)}
+                                hidden
+                            />
+                            Select File
+                        </Button>
+                        <Button
+                            component="label"
+                            // onClick={(e)=>uploadDashboard(e)}
+                            style={{ marginLeft: "10px", marginBottom: "10px", backgroundColor: "white" }}
+                            color="default"
+                            variant="contained"
+                            size="medium"
+                            endIcon={<StorageIcon />}>
+                            <input
+                                type="file"
+                                onChange={(e) => uploadDashboard(e)}
+                                hidden
+                            />
+                            Select From Neo4j
+                        </Button>
+                        <Button onClick={(text.length > 0) ? handleCloseAndLoad : null}
+                            style={{ color: text.length > 0 ? "white" : "lightgrey", float: "right", marginLeft: "10px", marginBottom: "10px", backgroundColor: text.length > 0 ? "green" : "white" }}
+                            color="default"
+                            variant="contained"
+                            size="medium"
+                            endIcon={<PlayArrow />}>
+                            Load Dashboard
+                        </Button>
                     </div>
-                   
+
 
                     <TextareaAutosize
                         style={{ minHeight: "500px", width: "100%", border: "1px solid lightgray" }}
@@ -131,7 +132,7 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                         value={text}
                         aria-label=""
                         placeholder="Select a dashboard first, then preview it here..." />
-                   
+
                 </DialogContent>
                 {/* <DialogActions> */}
                 {/* </DialogActions> */}

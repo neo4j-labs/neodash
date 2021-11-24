@@ -41,6 +41,50 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
         }
         const dashboard = JSON.parse(text);
      
+        // Attempt upgrade
+        if(dashboard["version"] == "1.1"){
+            const upgradedDashboard = {};
+            upgradedDashboard["title"] = dashboard["title"];
+            upgradedDashboard["version"] = "2.0";
+            upgradedDashboard["settings"] = {
+                pagenumber: dashboard["pagenumber"],
+                editable: dashboard["editable"]
+            };
+            const upgradedDashboardPages = [];
+            dashboard["pages"].forEach(p => {
+                const newPage = {};
+                newPage["title"] = p["title"];
+                const newPageReports = [];
+                p["reports"].forEach(r => {
+                    // only migrate value report types.
+                    if(["table", "graph", "bar", "line", "map", "value", "json", "select", "iframe", "text"].indexOf(r["type"]) == -1){
+                        return
+                    }
+                    if(r["type"] == "select"){
+                        r["query"] = "";
+                    }
+                    const newPageReport = {
+                        title: r["title"],
+                        width: r["width"],
+                        height: r["height"] * 0.75,
+                        type: r["type"],
+                        parameters: r["parameters"],
+                        query: r["query"],
+                        selection: {},
+                        settings: {} 
+                    }
+                   
+                    newPageReports.push(newPageReport);
+                })
+                newPage["reports"] = newPageReports;
+                upgradedDashboardPages.push(newPage);
+            })
+            upgradedDashboard["pages"] = upgradedDashboardPages;
+
+            dispatch(setDashboard(upgradedDashboard))
+            dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.0. You might need to refresh this page."));
+            return 
+        }
         if(dashboard["version"] != "2.0"){
             throw ("Invalid dashboard version: "+dashboard.version);
         }

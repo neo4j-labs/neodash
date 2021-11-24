@@ -31,13 +31,24 @@ export const setAboutModalOpen = (open: boolean) => ({
 });
 
 export const SET_CONNECTION_PROPERTIES = 'APPLICATION/SET_CONNECTION_PROPERTIES';
-export const setConnectionProperties = (protocol: string, url: string, port: string,
-    database: string, username: string, password: string) => ({
-        type: SET_CONNECTION_PROPERTIES,
-        payload: { protocol, url, port, database, username, password },
-    });
+export const setConnectionProperties = (protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
+    type: SET_CONNECTION_PROPERTIES,
+    payload: { protocol, url, port, database, username, password },
+});
 
-// Legacy pre-v2 dashboard that can be optionally upgraded.
+export const SET_DESKTOP_CONNECTION_PROPERTIES = 'APPLICATION/SET_DESKTOP_CONNECTION_PROPERTIES';
+export const setDesktopConnectionProperties = (protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
+    type: SET_DESKTOP_CONNECTION_PROPERTIES,
+    payload: { protocol, url, port, database, username, password },
+});
+
+export const CLEAR_DESKTOP_CONNECTION_PROPERTIES = 'APPLICATION/CLEAR_DESKTOP_CONNECTION_PROPERTIES';
+export const clearDesktopConnectionProperties = () => ({
+    type: CLEAR_DESKTOP_CONNECTION_PROPERTIES,
+    payload: {},
+});
+
+// Legacy pre1-v2 dashboard that can be optionally upgraded.
 export const SET_OLD_DASHBOARD = 'APPLICATION/SET_OLD_DASHBOARD';
 export const setOldDashboard = (text: string) => ({
     type: SET_OLD_DASHBOARD,

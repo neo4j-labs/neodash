@@ -2,7 +2,25 @@
   "name": "neodash",
   "version": "2.0.0-preview",
   "description": "NeoDash - Neo4j Dashboard Builder",
+  "neo4jDesktop": {
+    "apiVersion": "^1.2.0"
+  },
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nielsdejong/neodash/"
+  },
+  "license": "Apache-2.0",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "type": "ico"
+    },
+    {
+      "src": "favicon.png",
+      "type": "png"
+    }
+  ],
   "scripts": {
     "dev": "npx webpack-dev-server --mode development",
     "build": "npx webpack --mode production && rm -rf build && mkdir build && cp public/* build/ -r && mkdir build/dist &&  mv dist/ build/",
@@ -10,8 +28,7 @@
     "test": "ts-mocha \"src/**/*.test.tsx\" --require @babel/register --recursive"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Niels de Jong",
   "devDependencies": {
     "@babel/cli": "^7.8.3",
     "@babel/core": "^7.8.3",

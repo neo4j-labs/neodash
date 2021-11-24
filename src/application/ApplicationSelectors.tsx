@@ -21,6 +21,10 @@ export const applicationGetConnection = (state: any) => {
     return state.application.connection;
 }
 
+export const applicationHasNeo4jDesktopConnection = (state: any) => {
+    return state.application.desktopConnection != null;
+}
+
 export const applicationHasConnectionModalOpen = (state: any) => {
     return state.application.connectionModalOpen;
 }

@@ -11,7 +11,7 @@ import { Tooltip } from '@material-ui/core';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export const NeoWelcomeScreenModal = ({ hasCachedDashboard, resetDashboard, onConnectionModalOpen, onAboutModalOpen }) => {
+export const NeoWelcomeScreenModal = ({ hasCachedDashboard, hasNeo4jDesktopConnection, createConnectionFromDesktopIntegration, resetDashboard, onConnectionModalOpen, onAboutModalOpen }) => {
     const [open, setOpen] = React.useState(true);
     const [promptOpen, setPromptOpen] = React.useState(false);
     const handleOpen = () => {
@@ -37,7 +37,7 @@ export const NeoWelcomeScreenModal = ({ hasCachedDashboard, resetDashboard, onCo
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    
+
                     <Tooltip title="Connect to Neo4j and create a new dashboard." aria-label="">
                         <Button onClick={() => {
                             if (hasCachedDashboard) {
@@ -67,27 +67,44 @@ export const NeoWelcomeScreenModal = ({ hasCachedDashboard, resetDashboard, onCo
                                 color="default"
                                 variant="contained"
                                 size="large">
-                                 Existing Dashboard
+                                Existing Dashboard
                             </Button>
                         }
                     </Tooltip>
-                    {/* <Tooltip title="Connect to Neo4j Desktop, if running as a graph app." aria-label=""> */}
-                        <Button disabled onClick={handleClose}
-                            style={{ marginTop: "10px", color: "grey", width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
-                            color="default"
-                            variant="contained"
-                            size="large">
-                            Connect to Neo4j Desktop
-                        </Button>
-                    {/* </Tooltip> */}
-
-                    <Tooltip title="Show information about this application." aria-label="">
-                        <Button  onClick={onAboutModalOpen}
+                    {hasNeo4jDesktopConnection ?
+                        <Tooltip title="Connect to an active database in Neo4j Desktop." aria-label="">
+                            <Button onClick={(e) => { handleClose(); createConnectionFromDesktopIntegration(); }}
+                                style={{ marginTop: "10px", width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
+                                color="default"
+                                variant="contained"
+                                size="large">
+                                Connect to Neo4j Desktop
+                            </Button>
+                        </Tooltip> : <Button disabled onClick={handleClose}
                             style={{ marginTop: "10px", width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
                             color="default"
                             variant="contained"
                             size="large">
-                        {/**/}
+                            Connect to Neo4j Desktop
+                        </Button>}
+
+                    <Tooltip title="Try a demo dashboard with a public Neo4j database." aria-label="">
+                        <Button onClick={handleClose}
+                            style={{ marginTop: "10px", width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
+                            color="default"
+                            variant="contained"
+                            size="large">
+                            Try a Demo
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Show information about this application." aria-label="">
+                        <Button onClick={onAboutModalOpen}
+                            style={{ marginTop: "10px", width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
+                            color="default"
+                            variant="contained"
+                            size="large">
+                            {/**/}
                             About
                         </Button>
                     </Tooltip>
@@ -96,14 +113,14 @@ export const NeoWelcomeScreenModal = ({ hasCachedDashboard, resetDashboard, onCo
                     <br />
                     <IconButton aria-label="delete">
                     </IconButton>
-                  
+
 
 
                 </DialogContent>
                 <DialogActions style={{ background: "#555" }}>
                     <DialogContent>
                         <DialogContentText style={{ color: "lightgrey" }}>
-                        NeoDash is a tool for building ad-hoc Neo4j dashboards. Need help building an integrated solution? <a style={{color:"white"}} href="mailto:niels.dejong@neo4j.com">Get in touch</a>!
+                            NeoDash is a tool for building ad-hoc Neo4j dashboards. Need help building an integrated solution? <a style={{ color: "white" }} href="mailto:niels.dejong@neo4j.com">Get in touch</a>!
                         </DialogContentText>
                     </DialogContent>
                 </DialogActions>

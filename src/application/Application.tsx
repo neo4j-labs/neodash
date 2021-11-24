@@ -10,9 +10,9 @@ import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { removeReportRequest } from '../page/PageThunks';
 import { connect } from 'react-redux';
-import { applicationGetConnection, applicationGetOldDashboard, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected } from '../application/ApplicationSelectors';
-import { createConnectionThunk } from '../application/ApplicationThunks';
-import { clearNotification, createNotification, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard } from '../application/ApplicationActions';
+import { applicationGetConnection, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected } from '../application/ApplicationSelectors';
+import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, setDatabaseFromNeo4jDesktopIntegrationThunk } from '../application/ApplicationThunks';
+import { clearDesktopConnectionProperties, clearNotification, createNotification, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
@@ -20,13 +20,15 @@ import Dashboard from '../dashboard/Dashboard';
 import { CircularProgress, Typography } from '@material-ui/core';
 import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
+import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 
 /**
  * 
  */
 const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, clearOldDashboard,
-    connectionModalOpen, aboutModalOpen,
-    createConnection, initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose,
+    connectionModalOpen, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection,
+    createConnection, createConnectionFromDesktopIntegration,
+    initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose,
     onConnectionModalOpen, onConnectionModalClose }) => {
 
     const [initialized, setInitialized] = React.useState(false);
@@ -56,12 +58,15 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
                 onConnectionModalClose={onConnectionModalClose} ></NeoConnectionModal>
             <NeoWelcomeScreenModal
                 hasCachedDashboard={hasCachedDashboard}
+                hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
                 onConnectionModalOpen={onConnectionModalOpen}
+                createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
                 onAboutModalOpen={onAboutModalOpen}
                 resetDashboard={resetDashboard}></NeoWelcomeScreenModal>
             <NeoUpgradeOldDashboardModal
                 open={oldDashboard}
                 text={oldDashboard}
+                loadDashboard={loadDashboard}
                 clearOldDashboard={clearOldDashboard}>
             </NeoUpgradeOldDashboardModal>
         </div>
@@ -75,6 +80,7 @@ const mapStateToProps = state => ({
     connectionModalOpen: applicationHasConnectionModalOpen(state),
     aboutModalOpen: applicationHasAboutModalOpen(state),
     hasCachedDashboard: applicationHasCachedDashboard(state),
+    hasNeo4jDesktopConnection: applicationHasNeo4jDesktopConnection(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -82,9 +88,20 @@ const mapDispatchToProps = dispatch => ({
         dispatch(setConnected(false));
         dispatch(createConnectionThunk(protocol, url, port, database, username, password));
     },
+    createConnectionFromDesktopIntegration: () => {
+        dispatch(setConnected(false));
+        dispatch(createConnectionFromDesktopIntegrationThunk());
+    },
+    loadDashboard: text => {
+        dispatch(clearNotification());
+        dispatch(loadDashboardThunk(text));
+
+    },
     resetDashboard: _ => dispatch(resetDashboardState()),
     clearOldDashboard: _ => dispatch(setOldDashboard(null)),
     initializeApplication: _ => {
+        dispatch(clearDesktopConnectionProperties());
+        dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
         const old = localStorage.getItem('neodash-dashboard');
         dispatch(setOldDashboard(old));
         dispatch(setConnected(false));

@@ -2,8 +2,8 @@
  * Reducers define changes to the application state when a given action
  */
 
-import { CLEAR_NOTIFICATION, CREATE_NOTIFICATION, SET_ABOUT_MODAL_OPEN, SET_CONNECTED, 
-    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD } from "./ApplicationActions";
+import { CLEAR_DESKTOP_CONNECTION_PROPERTIES, CLEAR_NOTIFICATION, CREATE_NOTIFICATION, SET_ABOUT_MODAL_OPEN, SET_CONNECTED, 
+    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD } from "./ApplicationActions";
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -22,6 +22,7 @@ const initialState =
         username: "neo4j",
         password: ""
     },
+    desktopConnection: null,
     connected: false
 }
 export const applicationReducer = (state = initialState, action: { type: any; payload: any; }) => {
@@ -66,6 +67,20 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
             const { protocol, url, port, database, username, password } = payload;
             state = update(state, {
                 connection: {
+                    protocol: protocol, url: url, port: port,
+                    database: database, username: username, password: password
+                }
+            })
+            return state;
+        }
+        case CLEAR_DESKTOP_CONNECTION_PROPERTIES: {
+            state = update(state, { desktopConnection: null })
+            return state;
+        }
+        case SET_DESKTOP_CONNECTION_PROPERTIES: {
+            const { protocol, url, port, database, username, password } = payload;
+            state = update(state, {
+                desktopConnection: {
                     protocol: protocol, url: url, port: port,
                     database: database, username: username, password: password
                 }
