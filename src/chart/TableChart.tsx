@@ -27,7 +27,12 @@ function RenderTableValue(value, key = 0) {
         return "";
     }
     if (valueIsArray(value)) {
-        const mapped = value.map((v, i) => RenderTableValue(v));
+        const mapped = value.map((v, i) => {
+            return <div>
+                {RenderTableValue(v)}
+                {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
+            </div>
+        });
         return mapped;
     } else if (valueIsNode(value)) {
         return <HtmlTooltip key={key + "-" + value.identity} arrow title={<div><b> {value.labels.length > 0 ? value.labels.join(", ") : "Node"}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{value.properties[k].toString()}</td></tr>)}</tbody></table></div>}>
@@ -37,7 +42,7 @@ function RenderTableValue(value, key = 0) {
         return <HtmlTooltip key={key + "-" + value.identity} arrow title={<div><b> {value.type}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{value.properties[k].toString()}</td></tr>)}</tbody></table></div>}>
             <Chip style={{ borderRadius: 0, clipPath: (value.direction == undefined) ? "none" : ((value.direction) ? rightRelationship : leftRelationship) }} label={value.type} />
         </HtmlTooltip>
-    } else if (valueIsPath(value))  {
+    } else if (valueIsPath(value)) {
         return value.segments.map((segment, i) => {
             return RenderTableValue((i < value.segments.length - 1) ?
                 [segment.start, addDirection(segment.relationship, segment.start)] :
@@ -49,7 +54,7 @@ function RenderTableValue(value, key = 0) {
     return value.toString();
 }
 const NeoTableChart = (props: ChartProps) => {
-    if (props.records == null || props.records.length == 0 || props.records[0].keys == null){
+    if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
 

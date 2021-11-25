@@ -22,7 +22,7 @@ To run the application in development mode:
 - open a terminal and navigate to the directory you just cloned.
 - execute `npm install` to install the necessary dependencies.
 - execute `npm run dev` to run the app in development mode.
-- the application should be available at http://localhost:3001.
+- the application should be available at http://localhost:3000.
 
 
 To build the app for production:
