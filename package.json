@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "dev": "npx webpack-dev-server --mode development",
-    "build": "npx webpack --mode production && rm -rf build && mkdir build && cp public/* build/ -r && mkdir build/dist &&  mv dist/ build/",
+    "build": "npx webpack --mode production && rm -rf build && mkdir build && cp -r public/* build/ && mkdir build/dist &&  mv dist/ build/",
     "sync": "aws s3 sync --acl public-read build s3://neodash.graphapp.io/preview",
     "test": "ts-mocha \"src/**/*.test.tsx\" --require @babel/register --recursive"
   },
