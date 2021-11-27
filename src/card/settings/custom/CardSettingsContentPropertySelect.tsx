@@ -83,7 +83,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
             id="autocomplete-property"
             options={propertyRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
             getOptionLabel={(option) => option}
-            style={{ display: "inline-block", width: 250, marginLeft: "5px", marginTop: "5px" }}
+            style={{ display: "inline-block", width: 200, marginLeft: "5px", marginTop: "5px" }}
             inputValue={propertyInputText}
             onInputChange={(event, value) => {
                 setPropertyInputText(value);
@@ -104,9 +104,9 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
             }}
             renderInput={(params) => <TextField {...params}  placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Property Name"} />}
         />
-        <NeoFieldSelection placeholder='id'
-            label="ID (optional)" numeric={true} value={idValue}
-            style={{ width: "90px", marginTop: "5px", marginLeft: "10px" }}
+        <NeoFieldSelection placeholder='number'
+            label="Number (optional)" numeric={true} value={idValue}
+            style={{ width: "140px", marginTop: "5px", marginLeft: "10px" }}
             onChange={(value) => {
                 const newValue = value ? "_" + value : "";
                 setIdValue(value);

@@ -265,7 +265,7 @@ export const REPORT_TYPES = {
                 label: "Show Legend",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
-                default: true
+                default: false
             },
             "colors": {
                 label: "Color Scheme",

@@ -1,6 +1,18 @@
 import { createNotificationThunk } from "../page/PageThunks";
-import { setPageNumber, updateDashboardSetting } from "../settings/SettingsActions";
+import { updateDashboardSetting } from "../settings/SettingsActions";
 import { addPage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
+import { runCypherQuery } from "../report/CypherQueryRunner";
+
+
+function createUUID() {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (dt + Math.random() * 16) % 16 | 0;
+        dt = Math.floor(dt / 16);
+        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+}
 
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
@@ -93,5 +105,28 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
 
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard", e));
+    }
+}
+
+export const saveDashboardToNeo4jThunk = (dashboard, date, user) => (dispatch: any, getState: any) => {
+    try {
+        const uuid = createUUID();
+        const title = dashboard.title;
+        // const user = user;
+        // const date = date;
+        const version = dashboard.version;
+        const content = dashboard;
+        console.log(uuid);
+        dispatch(createNotificationThunk("Unable to save dashboard to Neo4j", ""));
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to save dashboard to Neo4j", e));
+    }
+}
+
+export const loadDashboardFromNeo4jThunk = (driver, uuid, callback) => (dispatch: any, getState: any) => {
+    try {
+        runCypherQuery(driver, getState().application.connection.database, "RETURN $uuid as dashboard", {uuid: uuid}, {}, ["dashboard"], 1, () => { return }, (records) => callback(records[0]['_fields'][0]))
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
     }
 }

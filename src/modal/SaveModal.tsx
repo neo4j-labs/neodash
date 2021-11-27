@@ -19,6 +19,8 @@ import { connect } from "react-redux";
 import { getDashboardJson } from './ModalSelectors';
 import { valueIsArray, valueIsObject } from '../report/RecordProcessing';
 import StorageIcon from '@material-ui/icons/Storage';
+import { applicationGetConnection } from '../application/ApplicationSelectors';
+import { saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -45,7 +47,6 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
     if (valueIsObject(value)) {
         const newValue = {};
         Object.keys(value).forEach(k => {
-
             if (removedKeys.indexOf(k) != -1) {
                 newValue[k] = undefined;
             } else {
@@ -56,15 +57,19 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
     }
     return value;
 }
-export const NeoSaveModal = ({ dashboard }) => {
-    const [open, setOpen] = React.useState(false);
+
+
+
+export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j}) => {
+    const [saveModalOpen, setSaveModalOpen] = React.useState(false);
+    const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setSaveModalOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        setSaveModalOpen(false);
     };
 
     const filteredDashboard = filterNestedDict(dashboard, ["fields", "settingsOpen", "advancedSettingsOpen", "collapseTimeout"]);
@@ -89,7 +94,7 @@ export const NeoSaveModal = ({ dashboard }) => {
                 <ListItemText primary="Save" />
             </ListItem>
 
-            <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={saveModalOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     <SaveIcon style={{
                         height: "30px",
@@ -119,7 +124,7 @@ export const NeoSaveModal = ({ dashboard }) => {
                     </Button>
                     <Button
                         component="label"
-                        onClick={downloadDashboard}
+                        onClick={(e) => { setSaveToNeo4jModalOpen(true) }}
                         style={{ backgroundColor: "white", marginLeft: "10px" }}
                         color="default"
                         variant="contained"
@@ -139,16 +144,69 @@ export const NeoSaveModal = ({ dashboard }) => {
 
                 </DialogActions>
             </Dialog>
+
+            <Dialog maxWidth={"lg"} open={saveToNeo4jModalOpen} onClose={(e) => { setSaveToNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">
+                   
+                    Save to Neo4j
+
+                    <IconButton onClick={(e) => { setSaveToNeo4jModalOpen(false) }} style={{ padding: "3px", float: "right" }}>
+                        <Badge badgeContent={""} >
+                            <CloseIcon />
+                        </Badge>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent style={{ width: "800px" }}>
+                    <DialogContentText>This will save your current dashboard as a node to your active Neo4j database.
+                        <br />Ensure you have write permissions to the database to use this feature.
+                    </DialogContentText>
+                    
+                    <TextareaAutosize
+                        style={{ width: "100%", border: "1px solid lightgray" }}
+                        className={"textinput-linenumbers"}
+                        value={"{\n    title: '" + dashboard.title + "',\n" +
+                            "    date: '" + new Date().toString() + "',\n" +
+                            "    user: '" + connection.username + "',\n" +
+                            "    content: " + "{...}"+ "\n}" }
+                        aria-label=""
+                        placeholder="" />
+                    <Button
+                        component="label"
+                        onClick={e => {saveDashboardToNeo4j(dashboard, new Date().toString(), connection.username)}}
+                        style={{ backgroundColor: "white",marginTop: "20px",  float: "right" }}
+                        color="default"
+                        variant="contained"
+                        endIcon={<SaveIcon />}
+                        size="medium">
+                        Save
+                    </Button>
+                    <Button
+                        component="label"
+                        onClick={(e) => { setSaveToNeo4jModalOpen(false) }}
+                        style={{ float: "right", marginTop: "20px", marginRight: "10px", ackgroundColor: "white" }}
+                        color="default"
+                        variant="contained"
+                        size="medium">
+                        Cancel
+                    </Button>
+                </DialogContent>
+                <DialogActions>
+
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
 
 const mapStateToProps = state => ({
-    dashboard: getDashboardJson(state)
+    dashboard: getDashboardJson(state),
+    connection: applicationGetConnection(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-
+    saveDashboardToNeo4j: (dashboard: any, date: any, user: any) => {
+        dispatch(saveDashboardToNeo4jThunk(dashboard, date, user))
+    }, 
 });
 
 //  

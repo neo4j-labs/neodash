@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -14,7 +14,10 @@ import { connect } from "react-redux";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import StorageIcon from '@material-ui/icons/Storage';
-import { loadDashboardThunk } from '../dashboard/DashboardThunks';
+import { loadDashboardFromNeo4jThunk, loadDashboardThunk } from '../dashboard/DashboardThunks';
+import { DataGrid } from '@mui/x-data-grid';
+import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
+
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
@@ -24,24 +27,36 @@ const styles = {
 
 };
 
-export const NeoLoadModal = ({ loadDashboard }) => {
-    const [open, setOpen] = React.useState(false);
+export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, connection }) => {
+    const [loadModalOpen, setLoadModalOpen] = React.useState(false);
+    const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
     const [text, setText] = React.useState("");
+    const [rows, setRows] = React.useState([]);
+    const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setLoadModalOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        setLoadModalOpen(false);
     };
 
 
     const handleCloseAndLoad = () => {
-        setOpen(false);
+        setLoadModalOpen(false);
         loadDashboard(text);
         setText("");
     };
+
+    function handleDashboardLoadedFromNeo4j(result){
+        setText(result);
+        setLoadFromNeo4jModalOpen(false);
+    }
+
+    function handleGetDashboardListLoadedFromNeo4j(result){
+        setRows(result);
+    }
 
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -51,8 +66,28 @@ export const NeoLoadModal = ({ loadDashboard }) => {
     const uploadDashboard = async (e) => {
         e.preventDefault();
         reader.readAsText(e.target.files[0]);
-
     }
+
+    const columns = [
+        { field: 'id', hide: true, headerName: 'ID', width: 150 },
+        { field: 'date', headerName: 'Date', width: 200 },
+        { field: 'title', headerName: 'Title', width: 270 },
+        { field: 'author', headerName: 'Author', width: 160 },
+        {
+            field: 'load', headerName: ' ', renderCell: (c) => {
+                return <Button onClick={(e) => { loadDashboardFromNeo4j(driver, c.id, handleDashboardLoadedFromNeo4j) }} style={{ float: "right" }} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
+            }, width: 120
+        },
+    ]
+
+    // const rows = [
+    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e0', title: 'My Covid Dashboard Name', date: 'Nov 27 2021 21:08:09', author: 'neo4j', load: <b>Load</b> },
+    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e1', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
+    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e2', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
+    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e3', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
+    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e4', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
+    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e5', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
+    // ];
 
     return (
         <div>
@@ -65,7 +100,7 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                 <ListItemText primary="Load" />
             </ListItem>
 
-            <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={loadModalOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     <SystemUpdateAltIcon style={{
                         height: "30px",
@@ -101,17 +136,13 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                         </Button>
                         <Button
                             component="label"
-                            // onClick={(e)=>uploadDashboard(e)}
+                            onClick={(e) => setLoadFromNeo4jModalOpen(true)}
                             style={{ marginLeft: "10px", marginBottom: "10px", backgroundColor: "white" }}
                             color="default"
                             variant="contained"
                             size="medium"
                             endIcon={<StorageIcon />}>
-                            <input
-                                type="file"
-                                onChange={(e) => uploadDashboard(e)}
-                                hidden
-                            />
+
                             Select From Neo4j
                         </Button>
                         <Button onClick={(text.length > 0) ? handleCloseAndLoad : null}
@@ -137,16 +168,45 @@ export const NeoLoadModal = ({ loadDashboard }) => {
                 {/* <DialogActions> */}
                 {/* </DialogActions> */}
             </Dialog>
+            <Dialog maxWidth={"lg"} open={loadFromNeo4jModalOpen} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">
+                    Load From Neo4j
+                    <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ padding: "3px", float: "right" }}>
+                        <Badge badgeContent={""} >
+                            <CloseIcon />
+                        </Badge>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent style={{ width: "800px" }}>
+                    <DialogContentText>If dashboards are saved in your current database, choose a dashboard below.
+                    </DialogContentText>
+
+                    <div style={{ height: "360px" }}>
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            disableSelectionOnClick
+                            components={{
+                                ColumnSortedDescendingIcon: () => <></>,
+                                ColumnSortedAscendingIcon: () => <></>,
+                            }}
+                        /></div>
+
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
 
 const mapStateToProps = state => ({
-
 });
 
 const mapDispatchToProps = dispatch => ({
     loadDashboard: text => dispatch(loadDashboardThunk(text)),
+    loadDashboardFromNeo4j: (driver, uuid, callback) => dispatch(loadDashboardFromNeo4jThunk(driver, uuid, callback)),
+    loadDashboardListFromNeo4j: (driver, callback) => dispatch(loadDashboardListFromNeo4jThunk(driver, callback)),
 });
 
 //  
