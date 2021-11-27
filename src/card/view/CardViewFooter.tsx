@@ -20,6 +20,8 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
         <CardActions style={{ paddingLeft: "15px", marginTop: "-5px", overflowX: "scroll" }} disableSpacing>
             {selectables.map((selectable, index) => {
                 const selectionIsMandatory = (selectableFields[selectable]['optional']) ? false : true;
+
+                // Creates the component for node property selections.
                 if (selectableFields[selectable].type == SELECTION_TYPES.NODE_PROPERTIES) {
                     // Only show optional selections if we explicitly allow it.
                     if (showOptionalSelections || selectionIsMandatory) {
@@ -49,34 +51,40 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
                         return fieldSelections;
                     }
                 }
+                // Creates the selection for all other types of components
                 if (selectableFields[selectable].type == SELECTION_TYPES.LIST ||
                     selectableFields[selectable].type == SELECTION_TYPES.NUMBER ||
                     selectableFields[selectable].type == SELECTION_TYPES.TEXT) {
-                    return <FormControl key={index}>
-                        <InputLabel id={selectable}>{selectableFields[selectable].label}</InputLabel>
-                        <Select labelId={selectable}
-                            id={selectable}
-                            multiple={selectableFields[selectable].multiple}
-                            style={{ minWidth: 120, marginRight: 20 }}
-                            onChange={e => onSelectionUpdate(selectable, e.target.value)}
-                            renderValue={(selected) => Array.isArray(selected) ? selected.join(', ') : selected}
-                            value={(selection && selection[selectable]) ?
-                                (selectableFields[selectable].multiple && !Array.isArray(selection[selectable])) ? [selection[selectable]] : selection[selectable]
-                                : (selectableFields[selectable].multiple) ? ["(no data)"] : "(no data)"}>
+                    if (selectionIsMandatory || showOptionalSelections) {
 
-                            {/* Render choices */}
-                            {fields.map((field, index) => {
-                                return <MenuItem key={field} value={field}>
-                                    {selectableFields[selectable].multiple && Array.isArray(selection[selectable]) ?
-                                        <Checkbox checked={selection[selectable].indexOf(field) > -1} /> :
-                                        <></>
-                                    }
-                                    {field}
-                                    {/* <ListItemText primary={field} /> */}
-                                </MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
+
+                        const fieldsToRender = (selectionIsMandatory ? fields : fields.concat(["(none)"]));
+                        return <FormControl key={index}>
+                            <InputLabel id={selectable}>{selectableFields[selectable].label}</InputLabel>
+                            <Select labelId={selectable}
+                                id={selectable}
+                                multiple={selectableFields[selectable].multiple}
+                                style={{ minWidth: 120, marginRight: 20 }}
+                                onChange={e => onSelectionUpdate(selectable, e.target.value)}
+                                renderValue={(selected) => Array.isArray(selected) ? selected.join(', ') : selected}
+                                value={(selection && selection[selectable]) ?
+                                    (selectableFields[selectable].multiple && !Array.isArray(selection[selectable])) ? [selection[selectable]] : selection[selectable]
+                                    : (selectableFields[selectable].multiple) ? ["(no data)"] : "(no data)"}>
+
+                                {/* Render choices */}
+                                {fieldsToRender.map((field) => {
+                                    return <MenuItem key={field} value={field}>
+                                        {selectableFields[selectable].multiple && Array.isArray(selection[selectable]) ?
+                                            <Checkbox checked={selection[selectable].indexOf(field) > -1} /> :
+                                            <></>
+                                        }
+                                        {field}
+                                        {/* <ListItemText primary={field} /> */}
+                                    </MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    }
                 }
 
             })

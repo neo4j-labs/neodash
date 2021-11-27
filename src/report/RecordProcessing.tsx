@@ -186,7 +186,7 @@ export function extractNodePropertiesFromRecords(records: any) {
     const fields = Object.keys(fieldsDict).map(label => {
         return [label].concat(Object.values(fieldsDict[label]));
     })
-    return fields.length > 0 ? fields : [["Error"]];
+    return fields.length > 0 ? fields : [];
 }
 
 export function saveNodePropertiesToDictionary(field, fieldsDict) {

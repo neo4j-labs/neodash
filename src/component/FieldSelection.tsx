@@ -32,7 +32,7 @@ const NeoFieldSelection = ({ label,
 
                 if (!numeric) {
                     onChange(event.target.value);
-                } else if (event.target.value.toString().length == 0 || event.target.value.endsWith(".")) {
+                } else if (event.target.value.toString().length == 0 || event.target.value.endsWith(".") || event.target.value.startsWith("-")) {
                     onChange(event.target.value);
                 } else if (!isNaN(event.target.value)) {
                     onChange(Number(event.target.value));

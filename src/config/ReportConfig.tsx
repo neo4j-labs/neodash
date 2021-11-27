@@ -164,6 +164,22 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "valueScale": {
+                label: "Value Scale",
+                type: SELECTION_TYPES.LIST,
+                values: ["linear", "symlog"],
+                default: "linear"
+            },
+            "minValue": {
+                label: "Min Value",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
+            },
+            "maxValue": {
+                label: "Max Value",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
+            },
             "groupMode": {
                 label: "Group Mode",
                 type: SELECTION_TYPES.LIST,
@@ -256,6 +272,38 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
                 default: "set2"
+            },
+            "xScale": {
+                label: "X Scale",
+                type: SELECTION_TYPES.LIST,
+                values: ["linear", "log"],
+                default: "linear"
+            },
+            "yScale": {
+                label: "Y Scale",
+                type: SELECTION_TYPES.LIST,
+                values: ["linear", "log"],
+                default: "linear"
+            },
+            "minXValue": {
+                label: "Min X Value",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
+            },
+            "maxXValue": {
+                label: "Max X Value",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
+            },
+            "minYValue": {
+                label: "Min Y Value",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
+            },
+            "maxYValue": {
+                label: "Max Y Value",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
             },
             "curve": {
                 label: "Line Smoothing",
