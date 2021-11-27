@@ -228,7 +228,7 @@ const NeoMapChart = (props: ChartProps) => {
         if (selectedProp == "(no label)") {
             return "";
         }
-        return node.properties[selectedProp].toString();
+        return node.properties[selectedProp] ? node.properties[selectedProp].toString() : "";
     }
 
     var markerMarginTop = "6px";

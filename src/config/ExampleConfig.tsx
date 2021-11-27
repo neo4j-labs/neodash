@@ -1,6 +1,7 @@
 import NeoBarChart from "../chart/BarChart";
 import NeoGraphChart from "../chart/GraphChart";
 import NeoLineChart from "../chart/LineChart";
+import NeoMapChart from "../chart/MapChart";
 import NeoTableChart from "../chart/TableChart";
 
 export const EXAMPLE_REPORTS = [
@@ -160,50 +161,25 @@ export const EXAMPLE_REPORTS = [
     {
         title: "Map",
         description: "A map report visualizes nodes and relationships with spatial (geographical) properties.",
-        exampleQuery: "// Find all routes between cinemas.\n // Each cinema node has longitude and latitude properties.\nMATCH (c:Cinema)-[r:ROUTE_TO]->(c2:Cinema)\nRETURN c, r, c2",
+        exampleQuery: "// Find all routes between cinemas.\n // Each cinema node has a point property.\nMATCH (c:Cinema),\n      (c)-[r:ROUTE_TO]->(c2:Cinema)\nRETURN c, r, c2",
         syntheticQuery: `
-        WITH [
-            {
-                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 11, identity: 10001, properties: {rating: 4.5}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Jim", movie: "The Matrix", rating: 4.5
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 11, identity: 10002, properties: {rating: 3.8}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Mike", movie: "The Matrix", rating: 3.8
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 11, identity: 10003, properties: {rating: 5.0}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix", rating: 5.0
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 12, identity: 10004, properties: {rating: 3.5}}, end: {labels: ["Movie"], identity: 12, properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Jim", movie: "The Matrix - Reloaded", rating: 3.5
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 12, identity: 10005, properties: {rating: 2.7}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Sarah", movie: "The Matrix - Reloaded", rating: 2.7
-            },
-            {
-                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 12, identity: 10006, properties: {rating: 4.1}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Reloaded", rating: 4.1
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 13, identity: 10007, properties: {rating: 4.9}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Jim", movie: "The Matrix - Revolutions", rating: 4.9
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 13, identity: 10008, properties: {rating: 4.8}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Mike", movie: "The Matrix - Revolutions", rating: 4.8
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 13, identity: 10009, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix - Revolutions", rating: 4.0
-            },
-            {
-                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 13, identity: 10010, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Revolutions", rating: 4.0
-            }
-          ] as data
-          UNWIND data as row
-          RETURN row.path as Path
+        UNWIND [{id: "Tilburg", label: "Cinema", point: point({latitude:51.59444886664065 , longitude:5.088862976119185})},
+{id: "Antwerp", label: "Cinema", point: point({latitude:51.22065200961528  , longitude:4.414094044161085})},
+{id: "Brussels", label: "Cinema", point: point({latitude:50.854284724408664, longitude:4.344177490986771})},
+{id: "Cologne", label: "Cinema", point: point({latitude:50.94247712506476  , longitude:6.9699327434361855 })},
+{id: "Nijmegen", label: "Cinema", point: point({latitude:51.81283449474347 , longitude:5.866804797140869})},
+{start: "Tilburg", end: "Antwerp", type: "ROUTE_TO", distance: "125km", id: 100},
+{start: "Antwerp", end: "Brussels", type: "ROUTE_TO", distance: "70km", id: 101},
+{start: "Brussels", end: "Cologne", type: "ROUTE_TO", distance: "259km", id: 102},
+{start: "Cologne", end: "Nijmegen", type: "ROUTE_TO", distance: "180km", id: 103},
+{start: "Nijmegen", end: "Tilburg", type: "ROUTE_TO", distance: "92km", id: 104}
+] as value
+RETURN value
         `,
         settings: {},
         fields: [],
-        selection: {
-            "Person": "name",
-            "Movie": "title"
-        },
-        type: "graph",
-        chartType: NeoGraphChart
+        selection: {},
+        type: "map",
+        chartType: NeoMapChart
     }
 ]

@@ -80,7 +80,6 @@ export const NeoDocumentationModal = ({ database }) => {
                             <hr></hr>
                         </>
                     })}
-                <code>More examples will be added soon...</code>
                 </DialogContent>
                 </div>
             </Dialog> : <></>}
