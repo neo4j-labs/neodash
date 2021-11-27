@@ -37,7 +37,7 @@
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.14.5",
     "@babel/register": "^7.14.5",
-    "@graphapps/charts": "github:nielsdejong/charts#a5ad15a28a5529db1c912738b1d5a1d687f87cb3",
+    "@graphapps/charts": "github:nielsdejong/charts#c88bc2aeae77c3541578c0455d05f2a6f9edc4f4",
     "@types/chai": "^4.2.21",
     "@types/expect": "^24.3.0",
     "@types/leaflet": "^1.7.5",

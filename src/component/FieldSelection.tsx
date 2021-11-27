@@ -29,7 +29,6 @@ const NeoFieldSelection = ({ label,
             value={value != null ? value : defaultValue}
             // defaultValue={defaultValue}
             onChange={(event) => {
-
                 if (!numeric) {
                     onChange(event.target.value);
                 } else if (event.target.value.toString().length == 0 || event.target.value.endsWith(".") || event.target.value.startsWith("-")) {

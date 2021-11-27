@@ -62,8 +62,8 @@ const NeoMapChart = (props: ChartProps) => {
         if (valueIsArray(value)) {
             value.forEach((v, i) => extractGraphEntitiesFromField(v));
         } else if (valueIsObject(value)) {
-            // const id = JSON.stringify(value).replaceAll('"',"");
-            if(value["label"] && value["id"]){
+            if (value["label"] && value["id"]) {
+                // Override for adding point nodes using a manually constructed dict.
                 nodeLabels[value["label"]] = true;
                 nodes[value["id"]] = {
                     id: value["id"],
@@ -72,8 +72,22 @@ const NeoMapChart = (props: ChartProps) => {
                     properties: value,
                     firstLabel: value["label"]
                 };
+            } else if (value["type"] && value["id"] && value["start"] && value["end"]) {
+                // Override for adding relationships using a manually constructed dict.
+                if (links[value["start"] + "," + value["end"]] == undefined) {
+                    links[value["start"] + "," + value["end"]] = [];
+                }
+                const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
+                addItem(links[value["start"] + "," + value["end"]], {
+                    id: value["id"],
+                    source: value["start"],
+                    target: value["end"],
+                    type: value["type"],
+                    width: value[relWidthProp] ? value[relWidthProp] : defaultRelWidth,
+                    color: value[relColorProp] ? value[relColorProp] : defaultRelColor,
+                    properties: value
+                });
             }
-           
         } else if (valueIsNode(value)) {
             value.labels.forEach(l => nodeLabels[l] = true)
             nodes[value.identity.low] = {
@@ -108,7 +122,7 @@ const NeoMapChart = (props: ChartProps) => {
     }
 
     function buildVisualizationDictionaryFromRecords(records) {
-        
+
 
         // Extract graph objects from result set.
         records.forEach((record, rownumber) => {
@@ -143,8 +157,8 @@ const NeoMapChart = (props: ChartProps) => {
 
             const assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
                 categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.firstLabel) % totalColors];
-           
-            const assignedPos = assignPosition(node);   
+
+            const assignedPos = assignPosition(node);
             return update(node, { pos: node.pos ? node.pos : assignedPos, color: assignedColor ? assignedColor : defaultNodeColor });
 
         });
@@ -161,7 +175,7 @@ const NeoMapChart = (props: ChartProps) => {
         // Calculate center latitude and center longitude:
 
         const latitudes = nodesList.reduce((a, b) => {
-            if (b["pos"] == undefined)  {
+            if (b["pos"] == undefined) {
                 return a;
             }
             a.push(b["pos"][0])
@@ -233,7 +247,7 @@ const NeoMapChart = (props: ChartProps) => {
         // Create markers to plot on the map
 
         return data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
-            <Marker position={node.pos} key={i} 
+            <Marker position={node.pos} key={i}
                 icon={<div style={{ color: node.color, textAlign: "center", marginTop: markerMarginTop }}>
                     <LocationOnIcon fontSize={node.size}></LocationOnIcon>
                 </div>}>
@@ -284,8 +298,8 @@ const NeoMapChart = (props: ChartProps) => {
     const markers = createMarkers();
     const lines = createLines();
     // Draw the component.
-    return <MapContainer /*ref={observe}*/ key={data.centerLatitude+","+data.centerLongitude} style={{ width: "100%", height: "100%" }}
-        center={[data.centerLatitude ? data.centerLatitude : 0 , data.centerLongitude ? data.centerLongitude : 0]}
+    return <MapContainer /*ref={observe}*/ key={data.centerLatitude + "," + data.centerLongitude} style={{ width: "100%", height: "100%" }}
+        center={[data.centerLatitude ? data.centerLatitude : 0, data.centerLongitude ? data.centerLongitude : 0]}
         zoom={data.zoom ? data.zoom : 0}
         maxZoom={18}
         scrollWheelZoom={false}>
