@@ -10,9 +10,9 @@ import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { removeReportRequest } from '../page/PageThunks';
 import { connect } from 'react-redux';
-import { applicationGetConnection, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected } from '../application/ApplicationSelectors';
-import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, setDatabaseFromNeo4jDesktopIntegrationThunk } from '../application/ApplicationThunks';
-import { clearDesktopConnectionProperties, clearNotification, createNotification, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard } from '../application/ApplicationActions';
+import { applicationGetConnection, applicationGetShareDetails, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected } from '../application/ApplicationSelectors';
+import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, setDatabaseFromNeo4jDesktopIntegrationThunk, handleSharedDashboardsThunk } from '../application/ApplicationThunks';
+import { clearDesktopConnectionProperties, clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
@@ -21,13 +21,14 @@ import { CircularProgress, Typography } from '@material-ui/core';
 import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
+import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 
 /**
  * 
  */
 const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, clearOldDashboard,
-    connectionModalOpen, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection,
-    createConnection, createConnectionFromDesktopIntegration,
+    connectionModalOpen, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection, shareDetails,
+    createConnection, createConnectionFromDesktopIntegration, onResetShareDetails,
     initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose,
     onConnectionModalOpen, onConnectionModalClose }) => {
 
@@ -45,8 +46,6 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
             <CssBaseline />
             <NeoDashboardPlaceholder connected={false}></NeoDashboardPlaceholder>
             {(connected) ? <Dashboard></Dashboard> : <></>}
-
-            <NeoNotificationModal></NeoNotificationModal>
             <NeoAboutModal
                 open={aboutModalOpen}
                 handleClose={onAboutModalClose}>
@@ -69,6 +68,11 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
                 loadDashboard={loadDashboard}
                 clearOldDashboard={clearOldDashboard}>
             </NeoUpgradeOldDashboardModal>
+            <NeoLoadSharedDashboardModal
+                shareDetails={shareDetails}
+                onResetShareDetails={onResetShareDetails}>
+            </NeoLoadSharedDashboardModal>
+            <NeoNotificationModal></NeoNotificationModal>
         </div>
     );
 }
@@ -76,6 +80,7 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
 const mapStateToProps = state => ({
     connected: applicationIsConnected(state),
     connection: applicationGetConnection(state),
+    shareDetails: applicationGetShareDetails(state),
     oldDashboard: applicationGetOldDashboard(state),
     connectionModalOpen: applicationHasConnectionModalOpen(state),
     aboutModalOpen: applicationHasAboutModalOpen(state),
@@ -106,9 +111,10 @@ const mapDispatchToProps = dispatch => ({
         dispatch(setOldDashboard(old));
         dispatch(setConnected(false));
         dispatch(clearNotification());
+        dispatch(handleSharedDashboardsThunk());
         dispatch(setConnectionModalOpen(false));
-       
     },
+    onResetShareDetails: _ => dispatch(resetShareDetails()),
     onConnectionModalOpen: _ => dispatch(setConnectionModalOpen(true)),
     onConnectionModalClose: _ => dispatch(setConnectionModalOpen(false)),
     onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),

@@ -71,7 +71,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
         { field: 'author', headerName: 'Author', width: 160 },
         {
             field: 'load', headerName: ' ', renderCell: (c) => {
-                return <Button onClick={(e) => { loadDashboardFromNeo4j(driver, c.id, handleDashboardLoadedFromNeo4j) }} style={{ float: "right" }} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
+                return <Button onClick={(e) => { loadDashboardFromNeo4j(driver, c.id, handleDashboardLoadedFromNeo4j) }} style={{ float: "right", backgroundColor: "white"}} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
             }, width: 120
         },
     ]

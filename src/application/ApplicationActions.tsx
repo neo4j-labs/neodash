@@ -54,3 +54,16 @@ export const setOldDashboard = (text: string) => ({
     type: SET_OLD_DASHBOARD,
     payload: { text },
 });
+
+// Legacy pre1-v2 dashboard that can be optionally upgraded.
+export const RESET_SHARE_DETAILS = 'APPLICATION/RESET_SHARE_DETAILS';
+export const resetShareDetails = () => ({
+    type: RESET_SHARE_DETAILS,
+    payload: { },
+});
+
+export const SET_SHARE_DETAILS_FROM_URL = 'APPLICATION/SET_SHARE_DETAILS_FROM_URL';
+export const setShareDetailsFromUrl = (type: string, id: string, standalone: boolean, protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
+    type: SET_SHARE_DETAILS_FROM_URL,
+    payload: { type, id, standalone, protocol, url, port, database, username, password },
+});

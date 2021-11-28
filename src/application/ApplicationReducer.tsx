@@ -2,8 +2,10 @@
  * Reducers define changes to the application state when a given action
  */
 
-import { CLEAR_DESKTOP_CONNECTION_PROPERTIES, CLEAR_NOTIFICATION, CREATE_NOTIFICATION, SET_ABOUT_MODAL_OPEN, SET_CONNECTED, 
-    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD } from "./ApplicationActions";
+import {
+    CLEAR_DESKTOP_CONNECTION_PROPERTIES, CLEAR_NOTIFICATION, CREATE_NOTIFICATION, RESET_SHARE_DETAILS, SET_ABOUT_MODAL_OPEN, SET_CONNECTED,
+    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, SET_SHARE_DETAILS_FROM_URL
+} from "./ApplicationActions";
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -22,13 +24,14 @@ const initialState =
         username: "neo4j",
         password: ""
     },
+    shareDetails: undefined,
     desktopConnection: null,
     connected: false
 }
 export const applicationReducer = (state = initialState, action: { type: any; payload: any; }) => {
     const { type, payload } = action;
 
-    if (!action.type.startsWith('APPLICATION/')){
+    if (!action.type.startsWith('APPLICATION/')) {
         return state;
     }
 
@@ -83,6 +86,27 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
                 desktopConnection: {
                     protocol: protocol, url: url, port: port,
                     database: database, username: username, password: password
+                }
+            })
+            return state;
+        }
+        case RESET_SHARE_DETAILS: {
+            state = update(state, { shareDetails: undefined });
+            return state;
+        }
+        case SET_SHARE_DETAILS_FROM_URL: {
+            const { type, id, standalone, protocol, url, port, database, username, password } = payload;
+            state = update(state, {
+                shareDetails: {
+                    type: type,
+                    id: id,
+                    standalone: standalone,
+                    protocol: protocol,
+                    url: url,
+                    port: port,
+                    database: database,
+                    username: username,
+                    password: password
                 }
             })
             return state;

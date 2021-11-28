@@ -21,7 +21,8 @@ import ReportSetting from '../component/ReportSetting';
 import { loadDashboardListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 
-const shareBaseURL = "http://neodash.graphapp.io";
+const shareBaseURL = "http://localhost:3000";
+// const shareBaseURL = "http://neodash.graphapp.io";
 const styles = {
 
 };
@@ -65,7 +66,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
                     setShareName(c.row.title);
                     setShareType("database");
                     setLoadFromNeo4jModalOpen(false)
-                }} style={{ float: "right" }} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
+                }} style={{ float: "right", backgroundColor: "white" }} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
             }, width: 120
         },
     ]
@@ -174,7 +175,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
                             onClick={(e) => {
                                 setShareLink((shareBaseURL + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) +
                                     (shareConnectionDetails == "Yes" ? "&credentials=" + encodeURIComponent(connection.protocol + "://"
-                                        + connection.username + ":" + connection.password + "@" + connection.url + ":" + connection.port) : "")
+                                        + connection.username + ":" + connection.password + "@" + connection.database +":" + connection.url + ":" + connection.port) : "")
                                     + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")).toLowerCase());
                             }}
                             style={{ marginBottom: "10px", backgroundColor: "white" }}

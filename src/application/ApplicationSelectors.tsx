@@ -21,6 +21,10 @@ export const applicationGetConnection = (state: any) => {
     return state.application.connection;
 }
 
+export const applicationGetShareDetails = (state: any) => {
+    return state.application.shareDetails;
+}
+
 export const applicationHasNeo4jDesktopConnection = (state: any) => {
     return state.application.desktopConnection != null;
 }
@@ -40,7 +44,7 @@ export const applicationHasAboutModalOpen = (state: any) => {
 
 export const applicationHasCachedDashboard = (state: any) => {
     // Avoid this expensive check when the application is connected, as it's only for the welcome screen.
-    if (state.application.connected){
+    if (state.application.connected) {
         return false;
     }
     return !_.isEqual(state.dashboard, initialState);

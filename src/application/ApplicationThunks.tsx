@@ -1,7 +1,7 @@
 import { createDriver } from "use-neo4j";
 import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/CypherQueryRunner";
-import { setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties } from "./ApplicationActions";
+import { setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties, resetShareDetails, setShareDetailsFromUrl } from "./ApplicationActions";
 
 
 export const createConnectionThunk = (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
@@ -28,7 +28,7 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
 }
 
 export const createConnectionFromDesktopIntegrationThunk = () => (dispatch: any, getState: any) => {
-    try{
+    try {
         const desktopConnectionDetails = getState().application.desktopConnection;
         const protocol = desktopConnectionDetails.protocol;
         const url = desktopConnectionDetails.url;
@@ -37,7 +37,7 @@ export const createConnectionFromDesktopIntegrationThunk = () => (dispatch: any,
         const username = desktopConnectionDetails.username;
         const password = desktopConnectionDetails.password;
         dispatch(createConnectionThunk(protocol, url, port, database, username, password));
-    }catch (e) {
+    } catch (e) {
         dispatch(createNotificationThunk("Unable to establish connection to Neo4j Desktop", e));
     }
 }
@@ -58,7 +58,7 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any,
     }
 
     let promise = window.neo4jDesktopApi && window.neo4jDesktopApi.getContext();
-    
+
     if (promise) {
         promise.then(function (context) {
             let neo4j = getActiveDatabase(context);
@@ -72,5 +72,34 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any,
                     neo4j.connection.configuration.protocols.bolt.password));
             }
         });
+    }
+}
+
+export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) => {
+    try {
+        dispatch(resetShareDetails());
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (urlParams.get("share") !== null) {
+            const id = decodeURIComponent(urlParams.get("id"));
+            const type = urlParams.get("type");
+            const standalone = urlParams.get("standalone") == "yes";
+            if(urlParams.get("credentials")){
+                const connection = decodeURIComponent(urlParams.get("credentials"));
+                const protocol = connection.split("://")[0];
+                const username = connection.split("://")[1].split(":")[0];
+                const password = connection.split("://")[1].split(":")[1].split("@")[0];
+                const database = connection.split("@")[1].split(":")[0];
+                const url = connection.split("@")[1].split(":")[1];
+                const port = connection.split("@")[1].split(":")[2];
+                dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password));
+            }else{
+                dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
+            }
+          
+        }
+
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to load shared dashboard", "You have specified an invalid/incomplete share URL. Try regenerating the URL from the sharing window."));
     }
 }
