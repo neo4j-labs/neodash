@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import StorageIcon from '@material-ui/icons/Storage';
-import { loadDashboardFromNeo4jThunk, loadDashboardThunk } from '../dashboard/DashboardThunks';
+import { loadDashboardFromNeo4jThunk, loadDashboardListFromNeo4jThunk, loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 
@@ -27,7 +27,7 @@ const styles = {
 
 };
 
-export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, connection }) => {
+export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashboardListFromNeo4j }) => {
     const [loadModalOpen, setLoadModalOpen] = React.useState(false);
     const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
     const [text, setText] = React.useState("");
@@ -49,13 +49,9 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, connection
         setText("");
     };
 
-    function handleDashboardLoadedFromNeo4j(result){
+    function handleDashboardLoadedFromNeo4j(result) {
         setText(result);
         setLoadFromNeo4jModalOpen(false);
-    }
-
-    function handleGetDashboardListLoadedFromNeo4j(result){
-        setRows(result);
     }
 
     const reader = new FileReader();
@@ -80,14 +76,6 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, connection
         },
     ]
 
-    // const rows = [
-    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e0', title: 'My Covid Dashboard Name', date: 'Nov 27 2021 21:08:09', author: 'neo4j', load: <b>Load</b> },
-    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e1', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
-    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e2', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
-    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e3', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
-    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e4', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
-    //     { id: '6c7a822c-243b-4ed5-ac2d-1ab9d84ae8e5', title: 'Mark', date: 'Nov 27 2021 21:07:09', author: 'neo4j', load: <b>Load</b> },
-    // ];
 
     return (
         <div>
@@ -136,7 +124,10 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, connection
                         </Button>
                         <Button
                             component="label"
-                            onClick={(e) => setLoadFromNeo4jModalOpen(true)}
+                            onClick={(e) => {
+                                loadDashboardListFromNeo4j(driver, (result) => {setRows(result)});
+                                setLoadFromNeo4jModalOpen(true);
+                            }}
                             style={{ marginLeft: "10px", marginBottom: "10px", backgroundColor: "white" }}
                             color="default"
                             variant="contained"
@@ -170,7 +161,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, connection
             </Dialog>
             <Dialog maxWidth={"lg"} open={loadFromNeo4jModalOpen} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    Load From Neo4j
+                    Select From Neo4j
                     <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >
                             <CloseIcon />

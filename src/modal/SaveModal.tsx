@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -21,6 +20,7 @@ import { valueIsArray, valueIsObject } from '../report/RecordProcessing';
 import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
+import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -63,6 +63,7 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
 export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j}) => {
     const [saveModalOpen, setSaveModalOpen] = React.useState(false);
     const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
+    const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
     const handleClickOpen = () => {
         setSaveModalOpen(true);
@@ -165,14 +166,18 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j}) => 
                         style={{ width: "100%", border: "1px solid lightgray" }}
                         className={"textinput-linenumbers"}
                         value={"{\n    title: '" + dashboard.title + "',\n" +
-                            "    date: '" + new Date().toString() + "',\n" +
+                            "    date: '" + new Date().toISOString() + "',\n" +
                             "    user: '" + connection.username + "',\n" +
                             "    content: " + "{...}"+ "\n}" }
                         aria-label=""
                         placeholder="" />
                     <Button
                         component="label"
-                        onClick={e => {saveDashboardToNeo4j(dashboard, new Date().toString(), connection.username)}}
+                        onClick={e => {
+                            saveDashboardToNeo4j(driver, dashboard, new Date().toISOString(), connection.username);
+                            setSaveToNeo4jModalOpen(false);
+                            setSaveModalOpen(false);
+                        }}
                         style={{ backgroundColor: "white",marginTop: "20px",  float: "right" }}
                         color="default"
                         variant="contained"
@@ -183,7 +188,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j}) => 
                     <Button
                         component="label"
                         onClick={(e) => { setSaveToNeo4jModalOpen(false) }}
-                        style={{ float: "right", marginTop: "20px", marginRight: "10px", ackgroundColor: "white" }}
+                        style={{ float: "right", marginTop: "20px", marginRight: "10px", backgroundColor: "white" }}
                         color="default"
                         variant="contained"
                         size="medium">
@@ -204,8 +209,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    saveDashboardToNeo4j: (dashboard: any, date: any, user: any) => {
-        dispatch(saveDashboardToNeo4jThunk(dashboard, date, user))
+    saveDashboardToNeo4j: (driver: any, dashboard: any, date: any, user: any) => {
+        dispatch(saveDashboardToNeo4jThunk(driver, dashboard, date, user))
     }, 
 });
 

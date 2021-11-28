@@ -44,17 +44,17 @@ export const addPageThunk = () => (dispatch: any, getState: any) => {
 
 export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
     try {
-        if(text.length == 0){
-            throw("No dashboard file specified. Did you select a file?")
+        if (text.length == 0) {
+            throw ("No dashboard file specified. Did you select a file?")
         }
-        if(text.trim() == "{}"){
+        if (text.trim() == "{}") {
             dispatch(resetDashboardState());
-            return 
+            return
         }
         const dashboard = JSON.parse(text);
-     
+
         // Attempt upgrade
-        if(dashboard["version"] == "1.1"){
+        if (dashboard["version"] == "1.1") {
             const upgradedDashboard = {};
             upgradedDashboard["title"] = dashboard["title"];
             upgradedDashboard["version"] = "2.0";
@@ -69,10 +69,10 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
                 const newPageReports = [];
                 p["reports"].forEach(r => {
                     // only migrate value report types.
-                    if(["table", "graph", "bar", "line", "map", "value", "json", "select", "iframe", "text"].indexOf(r["type"]) == -1){
+                    if (["table", "graph", "bar", "line", "map", "value", "json", "select", "iframe", "text"].indexOf(r["type"]) == -1) {
                         return
                     }
-                    if(r["type"] == "select"){
+                    if (r["type"] == "select") {
                         r["query"] = "";
                     }
                     const newPageReport = {
@@ -83,9 +83,9 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
                         parameters: r["parameters"],
                         query: r["query"],
                         selection: {},
-                        settings: {} 
+                        settings: {}
                     }
-                   
+
                     newPageReports.push(newPageReport);
                 })
                 newPage["reports"] = newPageReports;
@@ -95,12 +95,12 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
 
             dispatch(setDashboard(upgradedDashboard))
             dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.0. You might need to refresh this page."));
-            return 
+            return
         }
-        if(dashboard["version"] != "2.0"){
-            throw ("Invalid dashboard version: "+dashboard.version);
+        if (dashboard["version"] != "2.0") {
+            throw ("Invalid dashboard version: " + dashboard.version);
         }
-      
+
         dispatch(setDashboard(dashboard))
 
     } catch (e) {
@@ -108,7 +108,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
     }
 }
 
-export const saveDashboardToNeo4jThunk = (dashboard, date, user) => (dispatch: any, getState: any) => {
+export const saveDashboardToNeo4jThunk = (driver, dashboard, date, user) => (dispatch: any, getState: any) => {
     try {
         const uuid = createUUID();
         const title = dashboard.title;
@@ -116,8 +116,14 @@ export const saveDashboardToNeo4jThunk = (dashboard, date, user) => (dispatch: a
         // const date = date;
         const version = dashboard.version;
         const content = dashboard;
-        console.log(uuid);
-        dispatch(createNotificationThunk("Unable to save dashboard to Neo4j", ""));
+        runCypherQuery(driver, getState().application.connection.database,
+            "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid",
+            { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },
+            {}, ["uuid"], 1, () => { return }, (records) => {
+                console.log(records);
+                dispatch(createNotificationThunk("🎉 Success!", "Your current dashboard was saved to Neo4j."))
+            });
+
     } catch (e) {
         dispatch(createNotificationThunk("Unable to save dashboard to Neo4j", e));
     }
@@ -125,8 +131,24 @@ export const saveDashboardToNeo4jThunk = (dashboard, date, user) => (dispatch: a
 
 export const loadDashboardFromNeo4jThunk = (driver, uuid, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, getState().application.connection.database, "RETURN $uuid as dashboard", {uuid: uuid}, {}, ["dashboard"], 1, () => { return }, (records) => callback(records[0]['_fields'][0]))
+        runCypherQuery(driver, getState().application.connection.database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => callback(records[0]['_fields'][0]))
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
     }
 }
+
+export const loadDashboardListFromNeo4jThunk = (driver, callback) => (dispatch: any, getState: any) => {
+    try {
+        runCypherQuery(driver, getState().application.connection.database,
+            "MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date, n.user as author ORDER BY date DESC",
+            {}, {}, ["id, title, date, user"], 1000, () => { return }, (records) => {
+                const result = records.map(r => {
+                    return { id: r["_fields"][0], title: r["_fields"][1], date: r["_fields"][2], author: r["_fields"][3] };
+                });
+                callback(result);
+            })
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to load dashboard list from Neo4j", e));
+    }
+}
+

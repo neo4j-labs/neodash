@@ -32,7 +32,7 @@ const styles = {
 
 
 export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboardTitle,
-     handleDrawerOpen, setDashboardTitle, editable, connection,
+    handleDrawerOpen, setDashboardTitle, editable, connection,
     addPage, removePage, selectPage, setPageTitle, onConnectionModalOpen }) => {
 
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
@@ -96,8 +96,10 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
                     maxRows={4}
                     value={dashboardTitleText}
                     onChange={(event) => {
-                        setDashboardTitleText(event.target.value);
-                        debouncedDashboardTitleUpdate(event.target.value);
+                        if (editable) {
+                            setDashboardTitleText(event.target.value);
+                            debouncedDashboardTitleUpdate(event.target.value);
+                        }
                     }}
                 />
                 <Tooltip title={connection.protocol + "://" + connection.url + ":" + connection.port} placement="left" aria-label="host">
@@ -115,7 +117,7 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
                     boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
                     borderBottom: "1px solid lightgrey"
                 }}>
-                    {pages.map((page, i) => 
+                    {pages.map((page, i) =>
                         <NeoPageButton index={i} title={page.title} selected={pagenumber == i}
                             disabled={!editable}
                             onSelect={() => selectPage(i)}
