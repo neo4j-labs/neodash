@@ -1,12 +1,12 @@
 import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List } from "@material-ui/core";
 import React from "react";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ShareIcon from '@material-ui/icons/Share';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import NeoSaveModal from "../modal/SaveModal";
 import NeoLoadModal from "../modal/LoadModal";
+import NeoShareModal from "../modal/ShareModal";
 import { NeoAboutModal } from "../modal/AboutModal";
 import { NeoDocumentationModal } from "../modal/DocumentationModal";
 import { applicationGetConnection, applicationHasAboutModalOpen } from '../application/ApplicationSelectors';
@@ -72,17 +72,10 @@ export const NeoDrawer = ({ open, connection, dashboardSettings, updateDashboard
             <Divider />
             <List>
                 <div>
-                    <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting}>
-
-                    </NeoSettingsModal>
+                    <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting}></NeoSettingsModal>
                     <NeoSaveModal></NeoSaveModal>
                     <NeoLoadModal></NeoLoadModal>
-                    <ListItem button onClick={onShareModalOpen}>
-                        <ListItemIcon>
-                            <ShareIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Share" />
-                    </ListItem>
+                    <NeoShareModal></NeoShareModal>
                 </div>
             </List>
             <Divider />
@@ -96,7 +89,6 @@ export const NeoDrawer = ({ open, connection, dashboardSettings, updateDashboard
                 </ListItem>
             </List>
             <Divider />
-            {/* <List>{secondaryListItems}</List> */}
         </Drawer>
 
     );
@@ -110,7 +102,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onShareModalOpen: _ => dispatch(createNotificationThunk("Unable to share dashboard", "Sharing is disabled for this preview release.")),
     onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),
     updateDashboardSetting: (setting, value) => dispatch(updateDashboardSetting(setting, value))
 });

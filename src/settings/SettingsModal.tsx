@@ -58,6 +58,13 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
 
             <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
+                <SettingsIcon style={{
+                        height: "30px",
+                        paddingTop: "4px",
+                        marginBottom: "-8px",
+                        marginRight: "5px",
+                        paddingBottom: "5px"
+                    }} />  
                     Dashboard Settings
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >

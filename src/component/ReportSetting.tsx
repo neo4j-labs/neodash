@@ -22,7 +22,9 @@ const generateListItem = (label, option) => {
 
     }
 }
-const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined, helperText = undefined, inverted = false, onChange }) => {
+const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined, 
+    helperText = undefined, inverted = false, onChange,
+style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" } }) => {
     switch (type) {
         case SELECTION_TYPES.NUMBER:
             return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
@@ -34,7 +36,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                     helperText={helperText}
                     defaultValue={""}
                     placeholder={"" + defaultValue}
-                    style={{ width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" }}
+                    style={style}
                     onChange={(val) => onChange(val)} />
             </div>;
         case SELECTION_TYPES.TEXT:
@@ -47,7 +49,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                 value={value}
                 defaultValue={""}
                 placeholder={"" + defaultValue}
-                style={{ width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" }}
+                style={style}
                 onChange={(val) => onChange(val)} />
         </div>;
          case SELECTION_TYPES.DICTIONARY:
@@ -60,7 +62,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                     value={JSON.stringify(value)}
                     defaultValue={""}
                     placeholder={"" + JSON.stringify(defaultValue)}
-                    style={{ width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" }}
+                    style={style}
                     onChange={(val) => onChange(val)} />
             </div>;
         case SELECTION_TYPES.LIST:
@@ -73,7 +75,7 @@ const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabl
                     key={label}
                     value={value}
                     defaultValue={defaultValue}
-                    style={{ width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" }}
+                    style={style}
                     choices={choices.map((option) => (
                         <MenuItem key={option} value={option}>
                             {generateListItem(label, option)}

@@ -107,10 +107,24 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
                 <DialogContent style={{ width: "1000px" }}>
                     {/* <DialogContentText> Paste your dashboard file here to load it into NeoDash.</DialogContentText> */}
                     <div>
+                    <Button
+                            component="label"
+                            onClick={(e) => {
+                                loadDashboardListFromNeo4j(driver, (result) => {setRows(result)});
+                                setLoadFromNeo4jModalOpen(true);
+                            }}
+                            style={{marginBottom: "10px", backgroundColor: "white" }}
+                            color="default"
+                            variant="contained"
+                            size="medium"
+                            endIcon={<StorageIcon />}>
+
+                            Select From Neo4j
+                        </Button>
                         <Button
                             component="label"
                             // onClick={(e)=>uploadDashboard(e)}
-                            style={{ backgroundColor: "white", marginBottom: "10px" }}
+                            style={{  marginLeft: "10px",  backgroundColor: "white", marginBottom: "10px" }}
                             color="default"
                             variant="contained"
                             size="medium"
@@ -120,22 +134,9 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
                                 onChange={(e) => uploadDashboard(e)}
                                 hidden
                             />
-                            Select File
+                            Select From File
                         </Button>
-                        <Button
-                            component="label"
-                            onClick={(e) => {
-                                loadDashboardListFromNeo4j(driver, (result) => {setRows(result)});
-                                setLoadFromNeo4jModalOpen(true);
-                            }}
-                            style={{ marginLeft: "10px", marginBottom: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium"
-                            endIcon={<StorageIcon />}>
-
-                            Select From Neo4j
-                        </Button>
+                       
                         <Button onClick={(text.length > 0) ? handleCloseAndLoad : null}
                             style={{ color: text.length > 0 ? "white" : "lightgrey", float: "right", marginLeft: "10px", marginBottom: "10px", backgroundColor: text.length > 0 ? "green" : "white" }}
                             color="default"
@@ -200,7 +201,6 @@ const mapDispatchToProps = dispatch => ({
     loadDashboardListFromNeo4j: (driver, callback) => dispatch(loadDashboardListFromNeo4jThunk(driver, callback)),
 });
 
-//  
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadModal));
 
 

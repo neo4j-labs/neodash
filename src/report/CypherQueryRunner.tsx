@@ -77,7 +77,7 @@ export async function runCypherQuery(driver,
             // TODO - check query summary to ensure that no writes are made in safe-mode.
             if (records.length == 0) {
                 setStatus(QueryStatus.NO_DATA)
-                console.log("TODO remove this - QUERY RETURNED NO DATA!")
+                // console.log("TODO remove this - QUERY RETURNED NO DATA!")
                 transaction.commit();
                 return
             }
@@ -87,7 +87,7 @@ export async function runCypherQuery(driver,
                 if (!_.isEqual(newFields, fields)) {
                     setFields(newFields);
                     // TODO - only do this for reports that care about selections.
-                    console.log("TODO remove this - QUERY WAS ROLLED BACK!")
+                    // console.log("TODO remove this - QUERY WAS ROLLED BACK!")
                     transaction.commit();
                     return
                 }
@@ -103,19 +103,19 @@ export async function runCypherQuery(driver,
             }
             if (records == null) {
                 setStatus(QueryStatus.NO_DRAWABLE_DATA)
-                console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
+                // console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
                 transaction.commit();
                 return
             } else if (records.length > rowLimit) {
                 setRecords(records.slice(0, rowLimit));
                 setStatus(QueryStatus.COMPLETE_TRUNCATED);
-                console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
+                // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
                 transaction.commit();
                 return
             } else {
                 setStatus(QueryStatus.COMPLETE);
                 setRecords(records);
-                console.log("TODO remove this - QUERY WAS EXECUTED SUCCESFULLY!")
+                // console.log("TODO remove this - QUERY WAS EXECUTED SUCCESFULLY!")
             }
 
             transaction.commit();

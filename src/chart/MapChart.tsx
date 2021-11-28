@@ -130,7 +130,7 @@ const NeoMapChart = (props: ChartProps) => {
                 extractGraphEntitiesFromField(field);
             })
         });
-        console.log(nodes)
+       
         // Assign proper colors & coordinates to nodes.
         const totalColors = categoricalColorSchemes[nodeColorScheme].length;
         const nodeLabelsList = Object.keys(nodeLabels);
@@ -146,7 +146,6 @@ const NeoMapChart = (props: ChartProps) => {
                 }
                 Object.values(node.properties).forEach(p => {
                     if (p.srid != null && p.x != null && p.y != null) {
-                        console.log(p);
                         if (!isNaN(p.x) && !isNaN(p.y)) {
                             nodes[node.id].pos = [p.y, p.x];
                             return [p.y, p.x];
@@ -162,7 +161,7 @@ const NeoMapChart = (props: ChartProps) => {
             return update(node, { pos: node.pos ? node.pos : assignedPos, color: assignedColor ? assignedColor : defaultNodeColor });
 
         });
-        console.log(nodesList)
+     
         // Assign proper curvatures to relationships.
         const linksList = Object.values(links).map(nodePair => {
             return nodePair.map((link, i) => {
