@@ -38,6 +38,10 @@ To build the app for production:
 All NeoDash charts implement the interface defined in `src/charts/Chart.tsx`. A custom chart must do the same. the following parameter as passed to your chart from the application:
 - `records`: a list of Neo4j Records. This is the raw data returned from the Neo4j driver. 
 - `settings`: a dictionary of settings as defined under "advanced report settings" for each report. You can use these values to customize your visualization based on user input.
+- `selection`: a dictionary with the selection made in the report footer.
+- `dimensions`: an array with the dimensions of the report (mostly not needed, charts automatically fill up space).
+- `queryCallback`: a way for the report to read more data from Neo4j, on interactions.
+- `setGlobalParameter`: a way for the report to set globally available Cypher parameters, on interactions.
 
 Make sure that your component renders a React component. your component will be automatically scaled to the size of the report. See the other charts in `src/charts/` for examples. 
 
@@ -45,12 +49,17 @@ Make sure that your component renders a React component. your component will be 
 
 To let users choose your visualization, you must add it to the app's report configuration. This config is located in `src/config/ReportConfig.tsx`, and defined by the dictionary `REPORT_TYPES`.
 
-To add your visualization to the config, add a new entry to the `REPORT_TYPES` dictionary with a unique name. The entry's value is an object which can contain the following fields:
-- type: the React component you created. Mandatory.
-- name: a display name for the visualization. Mandatory.
-- `TODO - add more details here...`
+To add your visualization to the config, add a new key to the `REPORT_TYPES` dictionary with a unique name. The entry's value is an object which can contain the following fields:
+- `label`: a display name for the visualization. Mandatory.
+- `component`: the React component that renders the visualization. Mandatory.
+- `helperText`: a string that is show under the query box in the report settings. Mandatory.
+- `selection`: a list that contains each of the selection boxes present in the report footer. Optional.
+- `settings`: a list of selection boxes that shows under the advanced settings. Optional.
+- `maxRecords`: a hard limit on the number of records the visualization can handle. Mandatory.
+- `useRecordMapper`: whether to use the in-built record mapper to fix your results in a specific format. Optional.
+- `useNodePropsAsFields`: whether to use the node property selector as a report footer override. Optional.
 
-If all works, please consider contributing your code to this repository. The more visualizations, the better!
+If all works, please consider contributing your code to this repository.
 
 ## Questions / Suggestions
 If you have any questions about NeoDash, please reach out. For feature requests, consider opening an issue(link) on GitHub.
