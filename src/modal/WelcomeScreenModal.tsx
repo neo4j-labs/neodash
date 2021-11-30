@@ -65,7 +65,7 @@ export const NeoWelcomeScreenModal = ({ welcomeScreenOpen, setWelcomeScreenOpen,
                                 size="large">
                                 Existing Dashboard
                             </Button> : <Button disabled
-                                style={{ marginTop: "10px", color: "grey", width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
+                                style={{ marginTop: "10px",  width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
                                 color="default"
                                 variant="contained"
                                 size="large">
