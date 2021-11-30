@@ -10,7 +10,6 @@ import {
 
 export const createConnectionThunk = (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
-        console.log(protocol, url, port, database, username, password);
         const driver = createDriver(protocol, url, port, username, password)
         console.log("Attempting to connect...")
         const validateConnection = (records) => {
