@@ -245,7 +245,7 @@ export const REPORT_TYPES = {
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
-        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value.</div>,
+        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. Values are automatically selected from your query results.</div>,
         selection: {
             "x": {
                 label: "X-value",
@@ -433,7 +433,18 @@ export const REPORT_TYPES = {
                 label: "Color",
                 type: SELECTION_TYPES.TEXT,
                 default: "rgba(0, 0, 0, 0.87)"
-            }
+            },
+            "textAlign": {
+                label: "Text Align",
+                type: SELECTION_TYPES.LIST,
+                values: ["left", "center", "right"],
+                default: "left"
+            },
+            "marginTop": {
+                label: "Margin Top (px)", 
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
         }
     },
     "json": {

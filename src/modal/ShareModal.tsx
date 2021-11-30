@@ -21,8 +21,8 @@ import ReportSetting from '../component/ReportSetting';
 import { loadDashboardListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 
-const shareBaseURL = "http://localhost:3000";
-// const shareBaseURL = "http://neodash.graphapp.io";
+// const shareBaseURL = "http://localhost:3000";
+const shareBaseURL = "http://neodash.graphapp.io";
 const styles = {
 
 };

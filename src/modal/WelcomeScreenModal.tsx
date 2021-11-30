@@ -11,14 +11,16 @@ import { Tooltip } from '@material-ui/core';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export const NeoWelcomeScreenModal = ({ hasCachedDashboard, hasNeo4jDesktopConnection, createConnectionFromDesktopIntegration, resetDashboard, onConnectionModalOpen, onAboutModalOpen }) => {
-    const [open, setOpen] = React.useState(true);
+export const NeoWelcomeScreenModal = ({ welcomeScreenOpen, setWelcomeScreenOpen,
+    hasCachedDashboard, hasNeo4jDesktopConnection, createConnectionFromDesktopIntegration, resetDashboard, 
+    onConnectionModalOpen, onAboutModalOpen }) => {
+
     const [promptOpen, setPromptOpen] = React.useState(false);
     const handleOpen = () => {
-        setOpen(true);
+        setWelcomeScreenOpen(true);
     };
     const handleClose = () => {
-        setOpen(false);
+        setWelcomeScreenOpen(false);
     };
     const handlePromptOpen = () => {
         setPromptOpen(true);
@@ -30,7 +32,7 @@ export const NeoWelcomeScreenModal = ({ hasCachedDashboard, hasNeo4jDesktopConne
 
     return (
         <div>
-            <Dialog maxWidth="xs" open={open} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth="xs" open={welcomeScreenOpen} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">NeoDash - Neo4j Dashboard Builder
                     <IconButton disabled style={{ color: "white", padding: "5px", float: "right" }}>
                         ⚡

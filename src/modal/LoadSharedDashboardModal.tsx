@@ -25,7 +25,7 @@ const styles = {
 
 };
 
-export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails }) => {
+export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails, onConfirmLoadSharedDashboard }) => {
 
     const handleClose = () => {
         onResetShareDetails();
@@ -62,7 +62,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails 
                         <Button
                             component="label"
                             onClick={e => {
-
+                                onConfirmLoadSharedDashboard();
                             }}
                             style={{ backgroundColor: "white", marginTop: "20px", float: "right" }}
                             color="default"

@@ -9,7 +9,7 @@ import NeoLoadModal from "../modal/LoadModal";
 import NeoShareModal from "../modal/ShareModal";
 import { NeoAboutModal } from "../modal/AboutModal";
 import { NeoDocumentationModal } from "../modal/DocumentationModal";
-import { applicationGetConnection, applicationHasAboutModalOpen } from '../application/ApplicationSelectors';
+import { applicationGetConnection, applicationHasAboutModalOpen, applicationIsStandalone } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import { setAboutModalOpen } from '../application/ApplicationActions';
 import NeoSettingsModal from "../settings/SettingsModal";
@@ -18,8 +18,13 @@ import { getDashboardSettings } from "./DashboardSelectors";
 import { updateDashboardSetting } from "../settings/SettingsActions";
 
 
-export const NeoDrawer = ({ open, connection, dashboardSettings, updateDashboardSetting,
+export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
     handleDrawerClose, aboutModalOpen, onShareModalOpen, onAboutModalOpen }) => {
+
+    // Override to hide the drawer when the application is in standalone mode.
+    if (hidden) {
+        return <></>;
+    }
 
     const content = (
         <Drawer
@@ -97,6 +102,7 @@ export const NeoDrawer = ({ open, connection, dashboardSettings, updateDashboard
 
 const mapStateToProps = state => ({
     dashboardSettings: getDashboardSettings(state),
+    hidden: applicationIsStandalone(state),
     aboutModalOpen: applicationHasAboutModalOpen(state),
     connection: applicationGetConnection(state)
 });

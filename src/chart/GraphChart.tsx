@@ -158,7 +158,7 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const generateTooltip = (value) => {
-        const tooltip = <div><b> {value.labels ? (value.labels.length > 0 ? value.labels.join(", ") : "Node") : value.type}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{value.properties[k].toString()}</td></tr>)}</tbody></table></div>;
+        const tooltip = <div><b> {value.labels ? (value.labels.length > 0 ? value.labels.join(", ") : "Node") : value.type}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{(value.properties[k].toString().length <= 30) ? value.properties[k].toString() : value.properties[k].toString().substring(0,40) +"..."}</td></tr>)}</tbody></table></div>;
         return ReactDOMServer.renderToString(tooltip);
     }
 

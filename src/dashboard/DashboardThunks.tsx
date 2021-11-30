@@ -2,6 +2,7 @@ import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "../settings/SettingsActions";
 import { addPage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
 import { runCypherQuery } from "../report/CypherQueryRunner";
+import { setWelcomeScreenOpen } from "../application/ApplicationActions";
 
 
 function createUUID() {
@@ -94,6 +95,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
             upgradedDashboard["pages"] = upgradedDashboardPages;
 
             dispatch(setDashboard(upgradedDashboard))
+            dispatch(setWelcomeScreenOpen(false))
             dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.0. You might need to refresh this page."));
             return
         }

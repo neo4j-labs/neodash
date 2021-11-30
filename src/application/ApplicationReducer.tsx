@@ -4,7 +4,7 @@
 
 import {
     CLEAR_DESKTOP_CONNECTION_PROPERTIES, CLEAR_NOTIFICATION, CREATE_NOTIFICATION, RESET_SHARE_DETAILS, SET_ABOUT_MODAL_OPEN, SET_CONNECTED,
-    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, SET_SHARE_DETAILS_FROM_URL
+    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, SET_SHARE_DETAILS_FROM_URL, SET_STANDALONE_MODE, SET_WELCOME_SCREEN_OPEN
 } from "./ApplicationActions";
 
 const update = (state, mutations) =>
@@ -15,6 +15,7 @@ const initialState =
     notificationTitle: null,
     notificationMessage: null,
     connectionModalOpen: false,
+    welcomeScreenOpen: true,
     aboutModalOpen: false,
     connection: {
         protocol: "neo4j",
@@ -26,7 +27,9 @@ const initialState =
     },
     shareDetails: undefined,
     desktopConnection: null,
-    connected: false
+    connected: false,
+    dashboardToLoadAfterConnecting: null,
+    standalone: false
 }
 export const applicationReducer = (state = initialState, action: { type: any; payload: any; }) => {
     const { type, payload } = action;
@@ -61,9 +64,24 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
             state = update(state, { aboutModalOpen: open })
             return state;
         }
+        case SET_WELCOME_SCREEN_OPEN: {
+            const { open } = payload;
+            state = update(state, { welcomeScreenOpen: open })
+            return state;
+        }
+        case SET_STANDALONE_MODE: {
+            const { standalone } = payload;
+            state = update(state, { standalone: standalone })
+            return state;
+        }
         case SET_OLD_DASHBOARD: {
             const { text } = payload;
             state = update(state, { oldDashboard: text })
+            return state;
+        }
+        case SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING: {
+            const { id } = payload;
+            state = update(state, { dashboardToLoadAfterConnecting: id })
             return state;
         }
         case SET_CONNECTION_PROPERTIES: {

@@ -14,6 +14,7 @@ import { addPageThunk, removePageThunk } from "./DashboardThunks";
 import { setConnectionModalOpen } from "../application/ApplicationActions";
 import { setPageNumberThunk } from "../settings/SettingsThunks";
 import { getDashboardIsEditable, getPageNumber } from "../settings/SettingsSelectors";
+import { applicationIsStandalone } from "../application/ApplicationSelectors";
 
 const drawerWidth = 240;
 
@@ -31,7 +32,7 @@ const styles = {
 };
 
 
-export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboardTitle,
+export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, pages, dashboardTitle,
     handleDrawerOpen, setDashboardTitle, editable, connection,
     addPage, removePage, selectPage, setPageTitle, onConnectionModalOpen }) => {
 
@@ -68,7 +69,7 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
             }
         }>
             <Toolbar key={1} style={{ paddingRight: 24, minHeight: "64px", background: '#0B297D', zIndex: 1201 }}>
-                <IconButton
+                {!standalone ? <IconButton
                     edge="start"
                     color="inherit"
                     aria-label="open drawer"
@@ -83,7 +84,7 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
                     }
                 >
                     <MenuIcon />
-                </IconButton>
+                </IconButton> : <></>}
                 <InputBase
                     id="center-aligned"
                     className={classes.root}
@@ -103,7 +104,11 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
                     }}
                 />
                 <Tooltip title={connection.protocol + "://" + connection.url + ":" + connection.port} placement="left" aria-label="host">
-                    <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={onConnectionModalOpen}>
+                    <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={(e) => {
+                        if (!standalone) {
+                            onConnectionModalOpen();
+                        }
+                    }}>
                         <Badge badgeContent={""} >
                             <img style={{ width: "36px", height: "36px" }} src="neo4j-icon.png" />
                         </Badge>
@@ -111,7 +116,8 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
                 </Tooltip>
             </Toolbar>
             <Toolbar key={2} style={{ zIndex: 1001, minHeight: "50px", paddingLeft: "0px", paddingRight: "0px", background: "white" }}>
-                <div style={{ width: open ? "0px" : "57px", zIndex: open ? 999 : 999, transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms", height: "0px", background: "white" }}> </div>
+                {!standalone ? <div style={{ width: open ? "0px" : "57px", zIndex: open ? 999 : 999, transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms", height: "0px", background: "white" }}> </div> : <></>}
+
                 <div style={{
                     width: '100%', zIndex: -112, height: "48px", overflowX: "hidden", overflowY: "auto", background: "rgba(240,240,240)",
                     boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
@@ -136,6 +142,7 @@ export const NeoDashboardHeader = ({ classes, open, pagenumber, pages, dashboard
 
 const mapStateToProps = state => ({
     dashboardTitle: getDashboardTitle(state),
+    standalone: applicationIsStandalone(state),
     pages: getPages(state),
     editable: getDashboardIsEditable(state),
     pagenumber: getPageNumber(state)

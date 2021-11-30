@@ -10,9 +10,9 @@ import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { removeReportRequest } from '../page/PageThunks';
 import { connect } from 'react-redux';
-import { applicationGetConnection, applicationGetShareDetails, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected } from '../application/ApplicationSelectors';
-import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, setDatabaseFromNeo4jDesktopIntegrationThunk, handleSharedDashboardsThunk } from '../application/ApplicationThunks';
-import { clearDesktopConnectionProperties, clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard } from '../application/ApplicationActions';
+import { applicationGetConnection, applicationGetShareDetails, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected, applicationHasWelcomeScreenOpen } from '../application/ApplicationSelectors';
+import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, setDatabaseFromNeo4jDesktopIntegrationThunk, handleSharedDashboardsThunk, onConfirmLoadSharedDashboardThunk } from '../application/ApplicationThunks';
+import { clearDesktopConnectionProperties, clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setDashboardToLoadAfterConnecting, setOldDashboard, setStandAloneMode, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
@@ -28,9 +28,9 @@ import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
  */
 const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, clearOldDashboard,
     connectionModalOpen, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection, shareDetails,
-    createConnection, createConnectionFromDesktopIntegration, onResetShareDetails,
+    createConnection, createConnectionFromDesktopIntegration, onResetShareDetails, onConfirmLoadSharedDashboard,
     initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose,
-    onConnectionModalOpen, onConnectionModalClose }) => {
+    welcomeScreenOpen, setWelcomeScreenOpen, onConnectionModalOpen, onConnectionModalClose }) => {
 
     const [initialized, setInitialized] = React.useState(false);
 
@@ -56,6 +56,8 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
                 createConnection={createConnection}
                 onConnectionModalClose={onConnectionModalClose} ></NeoConnectionModal>
             <NeoWelcomeScreenModal
+                welcomeScreenOpen={welcomeScreenOpen}
+                setWelcomeScreenOpen={setWelcomeScreenOpen}
                 hasCachedDashboard={hasCachedDashboard}
                 hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
                 onConnectionModalOpen={onConnectionModalOpen}
@@ -70,7 +72,8 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
             </NeoUpgradeOldDashboardModal>
             <NeoLoadSharedDashboardModal
                 shareDetails={shareDetails}
-                onResetShareDetails={onResetShareDetails}>
+                onResetShareDetails={onResetShareDetails}
+                onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}>
             </NeoLoadSharedDashboardModal>
             <NeoNotificationModal></NeoNotificationModal>
         </div>
@@ -84,6 +87,7 @@ const mapStateToProps = state => ({
     oldDashboard: applicationGetOldDashboard(state),
     connectionModalOpen: applicationHasConnectionModalOpen(state),
     aboutModalOpen: applicationHasAboutModalOpen(state),
+    welcomeScreenOpen: applicationHasWelcomeScreenOpen(state),
     hasCachedDashboard: applicationHasCachedDashboard(state),
     hasNeo4jDesktopConnection: applicationHasNeo4jDesktopConnection(state),
 });
@@ -100,7 +104,6 @@ const mapDispatchToProps = dispatch => ({
     loadDashboard: text => {
         dispatch(clearNotification());
         dispatch(loadDashboardThunk(text));
-
     },
     resetDashboard: _ => dispatch(resetDashboardState()),
     clearOldDashboard: _ => dispatch(setOldDashboard(null)),
@@ -110,14 +113,22 @@ const mapDispatchToProps = dispatch => ({
         const old = localStorage.getItem('neodash-dashboard');
         dispatch(setOldDashboard(old));
         dispatch(setConnected(false));
+        dispatch(setDashboardToLoadAfterConnecting(null));
+        dispatch(setStandAloneMode(false));
+        dispatch(setWelcomeScreenOpen(true));
         dispatch(clearNotification());
         dispatch(handleSharedDashboardsThunk());
         dispatch(setConnectionModalOpen(false));
     },
-    onResetShareDetails: _ => dispatch(resetShareDetails()),
+    onResetShareDetails: _ => {
+        dispatch(setWelcomeScreenOpen(true));
+        dispatch(resetShareDetails());
+    },
+    onConfirmLoadSharedDashboard: _ => dispatch(onConfirmLoadSharedDashboardThunk()),
     onConnectionModalOpen: _ => dispatch(setConnectionModalOpen(true)),
     onConnectionModalClose: _ => dispatch(setConnectionModalOpen(false)),
     onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),
+    setWelcomeScreenOpen: open => dispatch(setWelcomeScreenOpen(open)),
     onAboutModalClose: _ => dispatch(setAboutModalOpen(false)),
 });
 

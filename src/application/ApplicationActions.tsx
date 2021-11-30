@@ -30,6 +30,11 @@ export const setAboutModalOpen = (open: boolean) => ({
     payload: { open },
 });
 
+export const SET_WELCOME_SCREEN_OPEN = 'APPLICATION/SET_WELCOME_SCREEN_OPEN';
+export const setWelcomeScreenOpen = (open: boolean) => ({
+    type: SET_WELCOME_SCREEN_OPEN,
+    payload: { open },
+});
 export const SET_CONNECTION_PROPERTIES = 'APPLICATION/SET_CONNECTION_PROPERTIES';
 export const setConnectionProperties = (protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
     type: SET_CONNECTION_PROPERTIES,
@@ -66,4 +71,16 @@ export const SET_SHARE_DETAILS_FROM_URL = 'APPLICATION/SET_SHARE_DETAILS_FROM_UR
 export const setShareDetailsFromUrl = (type: string, id: string, standalone: boolean, protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
     type: SET_SHARE_DETAILS_FROM_URL,
     payload: { type, id, standalone, protocol, url, port, database, username, password },
+});
+
+export const SET_STANDALONE_MODE = 'APPLICATION/SET_STANDALONE_MODE';
+export const setStandAloneMode = (standalone: boolean) => ({
+    type: SET_STANDALONE_MODE,
+    payload: { standalone },
+});
+
+export const SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING';
+export const setDashboardToLoadAfterConnecting = (id: any) => ({
+    type: SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING,
+    payload: { id },
 });

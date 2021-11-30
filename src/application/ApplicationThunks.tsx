@@ -1,11 +1,16 @@
 import { createDriver } from "use-neo4j";
+import { loadDashboardFromNeo4jThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/CypherQueryRunner";
-import { setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties, resetShareDetails, setShareDetailsFromUrl } from "./ApplicationActions";
+import {
+    setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
+    resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setStandAloneMode, setDashboardToLoadAfterConnecting
+} from "./ApplicationActions";
 
 
 export const createConnectionThunk = (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
+        console.log(protocol, url, port, database, username, password);
         const driver = createDriver(protocol, url, port, username, password)
         console.log("Attempting to connect...")
         const validateConnection = (records) => {
@@ -17,6 +22,22 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
                 dispatch(setConnectionProperties(protocol, url, port, database, username, password));
                 dispatch(setConnectionModalOpen(false));
                 dispatch(setConnected(true));
+
+                // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
+                const application = getState().application;
+                if (application.dashboardToLoadAfterConnecting && application.dashboardToLoadAfterConnecting.startsWith("http")) {     
+                    fetch(application.dashboardToLoadAfterConnecting)
+                    .then(response => response.text())
+                    .then(data =>  dispatch(loadDashboardThunk(data)));
+                    dispatch(setDashboardToLoadAfterConnecting(null));
+                } else if (application.dashboardToLoadAfterConnecting) {
+                    const setDashboardAfterLoadingFromDatabase = (value) => {
+                        dispatch(loadDashboardThunk(value));
+                    }
+                    dispatch(loadDashboardFromNeo4jThunk(driver, application.dashboardToLoadAfterConnecting, setDashboardAfterLoadingFromDatabase));
+                    dispatch(setDashboardToLoadAfterConnecting(null));
+                }
+
             } else {
                 dispatch(createNotificationThunk("Unknown Connection Error", "Check the browser console."));
             }
@@ -84,7 +105,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
             const id = decodeURIComponent(urlParams.get("id"));
             const type = urlParams.get("type");
             const standalone = urlParams.get("standalone") == "yes";
-            if(urlParams.get("credentials")){
+            if (urlParams.get("credentials")) {
                 const connection = decodeURIComponent(urlParams.get("credentials"));
                 const protocol = connection.split("://")[0];
                 const username = connection.split("://")[1].split(":")[0];
@@ -93,13 +114,34 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
                 const url = connection.split("@")[1].split(":")[1];
                 const port = connection.split("@")[1].split(":")[2];
                 dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password));
-            }else{
+            } else {
                 dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
             }
-          
+
         }
 
     } catch (e) {
-        dispatch(createNotificationThunk("Unable to load shared dashboard", "You have specified an invalid/incomplete share URL. Try regenerating the URL from the sharing window."));
+        dispatch(createNotificationThunk("Unable to load shared dashboard", "You have specified an invalid/incomplete share URL. Try regenerating the share URL from the sharing window."));
+    }
+}
+
+
+export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState: any) => {
+    try {
+        const state = getState();
+        const shareDetails = state.application.shareDetails;
+        dispatch(setWelcomeScreenOpen(false));
+        dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
+        if (shareDetails.url) {
+            dispatch(createConnectionThunk(shareDetails.protocol, shareDetails.url, shareDetails.port, shareDetails.database, shareDetails.username, shareDetails.password));
+        } else {
+            dispatch(setConnectionModalOpen(true));
+        }
+        if (shareDetails.standalone == true) {
+            dispatch(setStandAloneMode(true));
+        }
+        dispatch(resetShareDetails());
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to load shared dashboard", "The provided connection or dashboard identifiers are invalid. Try regenerating the share URL from the sharing window."));
     }
 }
