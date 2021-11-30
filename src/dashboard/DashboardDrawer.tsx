@@ -1,0 +1,116 @@
+import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List } from "@material-ui/core";
+import React from "react";
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import SettingsIcon from '@material-ui/icons/Settings';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import NeoSaveModal from "../modal/SaveModal";
+import NeoLoadModal from "../modal/LoadModal";
+import NeoShareModal from "../modal/ShareModal";
+import { NeoAboutModal } from "../modal/AboutModal";
+import { NeoDocumentationModal } from "../modal/DocumentationModal";
+import { applicationGetConnection, applicationHasAboutModalOpen, applicationIsStandalone } from '../application/ApplicationSelectors';
+import { connect } from 'react-redux';
+import { setAboutModalOpen } from '../application/ApplicationActions';
+import NeoSettingsModal from "../settings/SettingsModal";
+import { createNotificationThunk } from "../page/PageThunks";
+import { getDashboardSettings } from "./DashboardSelectors";
+import { updateDashboardSetting } from "../settings/SettingsActions";
+
+
+export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
+    handleDrawerClose, aboutModalOpen, onShareModalOpen, onAboutModalOpen }) => {
+
+    // Override to hide the drawer when the application is in standalone mode.
+    if (hidden) {
+        return <></>;
+    }
+
+    const content = (
+        <Drawer
+            variant="permanent"
+            style={
+                (open) ? {
+                    position: 'relative',
+                    overflowX: 'hidden',
+                    width: '240px',
+                    transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
+                    boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
+
+                } : {
+                    position: 'relative',
+                    overflowX: 'hidden',
+                    boxShadow: " 2px 1px 10px 0px rgb(0 0 0 / 12%)",
+
+                    transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
+                    width: "56px"
+                }
+            }
+            open={open}
+        >
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                overflowX: 'hidden',
+                justifyContent: 'flex-end',
+                padding: '0 8px',
+                minHeight: '64px',
+
+            }}>
+                <ListItem>
+                    <b>NeoDash</b>
+                </ListItem>
+
+
+                <IconButton onClick={handleDrawerClose}>
+                    <ChevronLeftIcon />
+                </IconButton>
+            </div>
+            <Divider />
+            <div >
+                <ListItem style={{ background: "white", height: "47px" }} >
+                    <ListItemIcon>
+                    </ListItemIcon>
+                    <ListItemText primary="" />
+                </ListItem>
+            </div>
+            <Divider />
+            <List>
+                <div>
+                    <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting}></NeoSettingsModal>
+                    <NeoSaveModal></NeoSaveModal>
+                    <NeoLoadModal></NeoLoadModal>
+                    <NeoShareModal></NeoShareModal>
+                </div>
+            </List>
+            <Divider />
+            <List>
+                <NeoDocumentationModal database={connection.database}></NeoDocumentationModal>
+                <ListItem button onClick={onAboutModalOpen}>
+                    <ListItemIcon>
+                        <InfoOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="About" />
+                </ListItem>
+            </List>
+            <Divider />
+        </Drawer>
+
+    );
+    return content;
+}
+
+const mapStateToProps = state => ({
+    dashboardSettings: getDashboardSettings(state),
+    hidden: applicationIsStandalone(state),
+    aboutModalOpen: applicationHasAboutModalOpen(state),
+    connection: applicationGetConnection(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+    onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),
+    updateDashboardSetting: (setting, value) => dispatch(updateDashboardSetting(setting, value))
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoDrawer);

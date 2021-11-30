@@ -1,0 +1,189 @@
+import { CardContent, Chip, IconButton, Tooltip } from "@material-ui/core";
+import React, { useState, useEffect } from 'react';
+import WarningIcon from '@material-ui/icons/Warning';
+import { QueryStatus, runCypherQuery } from "./CypherQueryRunner";
+import debounce from 'lodash/debounce';
+import { useCallback } from 'react';
+import { Typography, Fab } from '@material-ui/core';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import NeoStaticCodeField from "../component/StaticCodeField";
+import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, QUERY_MAX_TIME_MS, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
+import { MoreVert } from "@material-ui/icons";
+import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
+import { useContext } from "react";
+import NeoTableChart from "../chart/TableChart";
+
+export const NeoReport = ({
+    database = "neo4j", // The Neo4j database to run queries onto.
+    query = "", // The Cypher query used to populate the report.
+    stringParameters = "", // A string, to be parsed as JSON, which contains cypher parameters.
+    mapParameters = {}, // A dictionary of parameters to pass into the query.
+    disabled = false, // Whether to disable query execution.
+    selection = {}, // A selection of return fields to send to the report.
+    fields = [], // A list of the return data fields that the query produces.
+    settings = {}, // An optional dictionary of customization settings to pass to the report.  
+    setFields = (f) => { fields = f }, // The callback to update the set of query fields after query execution. 
+    setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
+    refreshRate = 0, // Optionally refresh the report every X seconds.
+    dimensions = { width: 3, height: 3 }, // Size of the report.
+    rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
+    type = "table", // The type of report as a string.
+    ChartType = NeoTableChart, // The report component to render with the query results.
+}) => {
+    const [records, setRecords] = useState(null);
+    const [timer, setTimer] = useState(null);
+    const [status, setStatus] = useState(QueryStatus.NO_QUERY);
+    const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+    if (!driver) throw new Error('`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?')
+
+    const debouncedRunCypherQuery = useCallback(
+        debounce(runCypherQuery, RUN_QUERY_DELAY_MS),
+        [],
+    );
+
+    const populateReport = (debounced = true) => {
+        // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
+        if (REPORT_TYPES[type].textOnly) {
+            setStatus(QueryStatus.COMPLETE);
+            setRecords([{ input: query }]);
+            return;
+        }
+
+        // Reset the report records before we run the query.
+        setRecords([]);
+
+        // Try and parse the provided query parameters.
+        var parsedParameters = {};
+        try {
+            parsedParameters = JSON.parse(stringParameters != "" ? stringParameters : "{}")
+        } catch (e) {
+            const message = "Unable to parse Cypher parameters: \""
+                + stringParameters + "\"\n" + e.message + '.\n\n' +
+                "Ensure you specify parameters in a valid JSON format."
+            // @ts-ignore
+            setRecords([{ "error": message }]);
+            setStatus(QueryStatus.ERROR)
+            return
+        }
+        const parameters = Object.assign({}, parsedParameters, mapParameters);
+
+        // Determine the set of fields from the configurations.
+        var numericFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.NUMBER && !REPORT_TYPES[type].selection[field].multiple) : [];
+        var textFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.TEXT && !REPORT_TYPES[type].selection[field].multiple) : [];
+        var optionalFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].optional == true) : [];
+
+        // Take care of multi select fields, they need to be added to the numeric fields too.
+        if (REPORT_TYPES[type].selection) {
+            Object.keys(REPORT_TYPES[type].selection).forEach((field, i) => {
+                if (REPORT_TYPES[type].selection[field].multiple && selection[field]) {
+                    selection[field].forEach((f, i) => numericFields.push(field + "(" + f + ")"))
+                }
+            });
+        }
+
+        const defaultKeyField = (REPORT_TYPES[type].selection) ? Object.keys(REPORT_TYPES[type].selection).find(field => REPORT_TYPES[type].selection[field].key == true) : undefined;
+        const useRecordMapper = REPORT_TYPES[type].useRecordMapper == true;
+        const useNodePropsAsFields = REPORT_TYPES[type].useNodePropsAsFields == true;
+
+        if (debounced) {
+            setStatus(QueryStatus.RUNNING)
+            debouncedRunCypherQuery(driver, database, query, parameters, selection, fields,
+                rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
+                numericFields, textFields, optionalFields, defaultKeyField);
+        } else {
+            runCypherQuery(driver, database, query, parameters, selection, fields,
+                rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
+                numericFields, textFields, optionalFields, defaultKeyField);
+        }
+    };
+
+    // When report parameters are changed, re-run the report.
+    useEffect(() => {
+ 
+        if (timer) {
+            // @ts-ignore
+            clearInterval(timer);
+        }
+        if (!disabled) {
+            if (query.trim() == "") {
+                setStatus(QueryStatus.NO_QUERY);
+            }
+            populateReport();
+            // If a refresh rate was specified, set up an interval for re-running the report. (max 24 hrs)
+            if (refreshRate && refreshRate > 0) {
+                // @ts-ignore
+                setTimer(setInterval(function () {
+                    populateReport(false);
+                }, Math.min(refreshRate, 86400) * 1000.0));
+            }
+        }
+    }, REPORT_TYPES[type].useRecordMapper == true ?
+        [disabled, query, JSON.stringify(mapParameters), fields ? fields : [], JSON.stringify(selection)] :
+        [disabled, query, JSON.stringify(mapParameters), null, null])
+
+    // Define query callback to allow reports to get extra data on interactions.
+    const queryCallback = useCallback(
+        (query, parameters, setRecords) => {
+            runCypherQuery(driver, database, query, parameters, selection, fields, rowLimit, 
+                (status) => { status == QueryStatus.NO_DATA ? setRecords([]) : null}, 
+                (result => setRecords(result)), 
+                () => { return}, HARD_ROW_LIMITING,
+                REPORT_TYPES[type].useRecordMapper == true, false,
+                [], [], [], null);
+        },
+        [],
+    );
+
+    // Draw the report based on the query status.
+    if (disabled) {
+        return <div></div>;
+    } else if (status == QueryStatus.NO_QUERY) {
+        return (<div style={{ padding: 15 }}>No query specified. <br /> Use the <Chip size="small" icon={<MoreVert />} label="Report Settings" /> button get started. </div>);
+    } else if (status == QueryStatus.RUNNING) {
+        return (<Typography variant="h2" color="textSecondary" style={{ paddingTop: "100px", textAlign: "center" }}>
+            <CircularProgress color="inherit" />
+        </Typography>);
+    } else if (status == QueryStatus.NO_DATA) {
+        return <NeoStaticCodeField value={"Query returned no data."} />
+    } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
+        return <NeoStaticCodeField value={"Data was returned, but it can't be visualized.\n\n" +
+            "This could have the following causes:\n" +
+            "- a numeric value field was selected, but no numeric values were returned. \n" +
+            "- a numeric value field was selected, but only zero's were returned.\n" +
+            "- Your visualization expects nodes/relationships, but none were returned."
+        } />
+    } else if (status == QueryStatus.COMPLETE) {
+        if (records == null || records.length == 0) {
+            return <div>Loading...</div>
+        }
+        {/* @ts-ignore */ }
+        return (<div style={{ height: "100%", marginTop: "0px", overflow: REPORT_TYPES[type].allowScrolling ? "auto" : "hidden" }}>
+            <ChartType records={records} selection={selection} settings={settings} dimensions={dimensions} queryCallback={queryCallback} setGlobalParameter={setGlobalParameter} />
+        </div>);
+    } else if (status == QueryStatus.COMPLETE_TRUNCATED) {
+        if (records == null || records.length == 0) {
+            return <div>Loading...</div>
+        }
+        {/* Results have been truncated */ }
+        return (<div style={{ height: "100%", marginTop: "0px", overflow: REPORT_TYPES[type].allowScrolling ? "auto" : "hidden" }}>
+            <div style={{ marginBottom: "-31px" }}>
+                <div style={{ display: "flex" }} >
+                    <Tooltip title={"Over " + rowLimit + " row(s) were returned, results have been truncated."} placement="left" aria-label="host">
+                        <WarningIcon style={{ zIndex: 999, marginTop: "2px", marginRight: "20px", marginLeft: "auto", color: "orange" }} />
+                    </Tooltip>
+                </div>
+            </div>
+            <ChartType records={records} selection={selection} settings={settings} dimensions={dimensions} queryCallback={queryCallback} setGlobalParameter={setGlobalParameter} />
+        </div>);
+    } else if (status == QueryStatus.TIMED_OUT) {
+        return <NeoStaticCodeField value={"Query was aborted - it took longer than " + QUERY_MAX_TIME_MS + "ms to run. \n"
+            + "Consider limiting your returned query rows,\nor increase the maximum query time."} />
+    }
+    {/* @ts-ignore */ }
+
+    return <NeoStaticCodeField value={records && records[0] && records[0].error && records[0].error}
+        placeholder={"Unknown query error, check the browser console."} />
+
+}
+
+export default NeoReport;
