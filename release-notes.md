@@ -1,30 +1,45 @@
-## NeoDash 2.0 (Stable)
+## NeoDash 2.0 (stable)
 
+**New & Improved Dashboard Editor**
 - Added new Cypher editor with syntax highlighting / live syntax validation.
 - Redesigned Cypher query runner to be 2x more performant.
 - Easy custom styling of reports with the "advanced report settings" window.
-- New table view with post-query sorting and filtering, and highlighting of native Neo4j types.
-- Updated graph visualization library to a canvas-based renderer, handling 4x larger graphs.
-- Added custom node/relationship styling with custom colors, width, and font-size.
-- New bar/line chart visualizations based on @adam.cowley Charts.
-- Added support for multi-line charts, stacked/grouped bar charts.
-- Added custom styling options to map visualizations.
-- Added single value report.
-- Improved property selection report.
 - Added in-built documentation with example queries and visualizations.
 - Updated dashboard layout to better use screen real estate.
-- Added setting to turn entire dashboard into 'Presentation mode'.
+
+**Visualizations**
+- Table View
+    - New table view with post-query sorting and filtering, and highlighting of native Neo4j types.
+    - Fixed array property display in table reports.
+    - Added automatic link generation from URL properties in the table report.
+- Graph View
+    - Updated graph visualization library to a canvas-based renderer, handling 4x larger graphs.
+    - Added custom node/relationship styling with custom colors, width, and font-size.
+    - Better property display on graph visualization hover.
+- Bar/Line Chart
+    - New bar/line chart visualizations based on the Charts graph app.
+    - Added support for multi-line charts, stacked/grouped bar charts.
+    - Added log scale + explicit limit setting to bar/line charts.
+    - Line chart hover values are no longer rounded and incorrectly stacked.
+- Map View
+    - Added custom styling options to map visualizations.
+    - Added dictionary-based point property rendering on maps.
+    - Stability improvement of map views for offline deployments.
+- Single Value Report
+    - Improved single value report.
+    - Custom styling (text alignment) of single value reports.
+- Property Selection:
+    - Improved property selection documentation.
+    - Added optional "clear parameter" setting to parameter selection report.
+    - property selector now uses the filter to gather more results.
+
+**Saving, loading and sharing**
+- Added setting to turn entire dashboard into 'Standalone mode' from a share link.
 - Added option to save/load dashboards from both files and text.
 - New "Try a demo" button on the welcome screen.
-- Added "Share as standalone dashboard" feature to share window.
-- Added more examples to the documentation modal.
 - added save/load to Neo4j database feature.
-- Added log scale + explicit limit setting to bar/line charts.
-- Added optional "clear parameter" setting to parameter selection report.
 - Auto-convert older versions of NeoDash on load.
-- Added dictionary-based point property rendering on maps.
-- Added Dashboard sharing feature.
-- Custom styling (text alignment) of single value reports.
-- property selector now uses the filter to gather more results.
-- Fixed array display in table reports.
-- Better property display on graph visualization hover.
+
+
+
+
