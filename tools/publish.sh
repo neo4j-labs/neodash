@@ -1,4 +1,4 @@
-PWD=~/IdeaProjects/neodash/
+PWD=~/PycharmProjects/neodash/
 APPNAME=NeoDash
 
 cd $PWD
@@ -11,7 +11,7 @@ mv *.tgz target/
 cd target/
 tar -xvf *.tgz
 rm -f *.tgz
-# cp -r package/build package/dist
+mv package/build package/dist
 cp package/dist/favicon.ico package/favicon.ico
 
 # Remove certificates and keys

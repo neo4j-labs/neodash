@@ -51,7 +51,11 @@ function RenderTableValue(value, key = 0) {
     } else if (valueIsObject(value)) {
         return JSON.stringify(value);
     }
-    return value.toString();
+    const str = value.toString();
+    if (str.startsWith("http") || str.startsWith("https")){
+        return <a target="_blank" href={str}>{str}</a>;
+    }
+    return str;
 }
 const NeoTableChart = (props: ChartProps) => {
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {

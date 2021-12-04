@@ -33,10 +33,19 @@ export const NeoPageButton = ({ title, index, disabled = false, selected = false
                     <InputBase
                         value={titleText}
                         onChange={(event) => {
+                            if(disabled){
+                                return;
+                            }
                             onTitleUpdate(event);
                             setTitleText(event.target.value);
                         }}
-                        disabled={disabled}
+                        onFocus={(e) => {
+                            if(disabled){
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                        }}
+                        readonly={disabled}
                         inputProps={{ style: { textTransform: 'none', cursor: 'pointer', fontWeight: 'normal' } }}
                         style={{ height: "36px", width: "185px", paddingLeft: "10px", color: selected ? 'black' : '#888', textAlign: "center", textTransform: "uppercase" }}
                         placeholder="Page name..."
