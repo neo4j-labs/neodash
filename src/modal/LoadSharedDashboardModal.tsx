@@ -51,11 +51,12 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {/* You are loading a shared Neo4j dashboard: <b>My First Dashboard</b>.<br/> */}
+                        {shareDetails !== undefined ? <>
                         You are loading a Neo4j dashboard.<br />
                         {shareDetails && shareDetails.url ? <>You will be connected to <b>{shareDetails && shareDetails.url}</b>.</> : <>You will still need to specify a connection manually.</>}
                         <br /> <br />
                         This will override your current dashboard (if any). Continue?
+                        </> : <><br/><br/><br/></>}
                         <br/>
                        
                         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />

@@ -1,0 +1,30 @@
+## NeoDash 2.0 (Stable)
+
+- Added new Cypher editor with syntax highlighting / live syntax validation.
+- Redesigned Cypher query runner to be 2x more performant.
+- Easy custom styling of reports with the "advanced report settings" window.
+- New table view with post-query sorting and filtering, and highlighting of native Neo4j types.
+- Updated graph visualization library to a canvas-based renderer, handling 4x larger graphs.
+- Added custom node/relationship styling with custom colors, width, and font-size.
+- New bar/line chart visualizations based on @adam.cowley Charts.
+- Added support for multi-line charts, stacked/grouped bar charts.
+- Added custom styling options to map visualizations.
+- Added single value report.
+- Improved property selection report.
+- Added in-built documentation with example queries and visualizations.
+- Updated dashboard layout to better use screen real estate.
+- Added setting to turn entire dashboard into 'Presentation mode'.
+- Added option to save/load dashboards from both files and text.
+- New "Try a demo" button on the welcome screen.
+- Added "Share as standalone dashboard" feature to share window.
+- Added more examples to the documentation modal.
+- added save/load to Neo4j database feature.
+- Added log scale + explicit limit setting to bar/line charts.
+- Added optional "clear parameter" setting to parameter selection report.
+- Auto-convert older versions of NeoDash on load.
+- Added dictionary-based point property rendering on maps.
+- Added Dashboard sharing feature.
+- Custom styling (text alignment) of single value reports.
+- property selector now uses the filter to gather more results.
+- Fixed array display in table reports.
+- Better property display on graph visualization hover.
