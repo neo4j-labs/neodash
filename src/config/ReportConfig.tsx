@@ -14,6 +14,7 @@ import NeoTableChart from '../chart/TableChart';
 
 export enum SELECTION_TYPES {
     NUMBER,
+    NUMBER_OR_DATETIME,
     LIST,
     TEXT,
     DICTIONARY,
@@ -39,7 +40,14 @@ export const REPORT_TYPES = {
         helperText: "A table will contain all returned data.",
         component: NeoTableChart,
         maxRecords: 1000,
-        settings: {}
+      
+        settings: {
+            "columnWidths": {
+                label: "Relative Column Sizes",
+                type: SELECTION_TYPES.TEXT,
+                default: "[1, 1, 1, ...]"
+            }
+        }
     },
     "graph": {
         label: "Graph",

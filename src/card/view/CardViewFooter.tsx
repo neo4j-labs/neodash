@@ -54,6 +54,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
                 // Creates the selection for all other types of components
                 if (selectableFields[selectable].type == SELECTION_TYPES.LIST ||
                     selectableFields[selectable].type == SELECTION_TYPES.NUMBER ||
+                    selectableFields[selectable].type == SELECTION_TYPES.NUMBER_OR_DATETIME ||
                     selectableFields[selectable].type == SELECTION_TYPES.TEXT) {
                     if (selectionIsMandatory || showOptionalSelections) {
 

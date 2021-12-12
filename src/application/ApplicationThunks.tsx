@@ -97,7 +97,6 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any,
 
 export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) => {
     try {
-        dispatch(resetShareDetails());
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         if (urlParams.get("share") !== null) {
@@ -113,10 +112,13 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
                 const url = connection.split("@")[1].split(":")[1];
                 const port = connection.split("@")[1].split(":")[2];
                 dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password));
+                window.history.pushState({}, document.title, "/" );
             } else {
                 dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
+                window.history.pushState({}, document.title, "/" );
             }
-
+        }else{
+            // dispatch(resetShareDetails());
         }
 
     } catch (e) {

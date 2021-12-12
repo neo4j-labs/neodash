@@ -69,6 +69,7 @@ export const NeoReport = ({
 
         // Determine the set of fields from the configurations.
         var numericFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.NUMBER && !REPORT_TYPES[type].selection[field].multiple) : [];
+        var numericOrDatetimeFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.NUMBER_OR_DATETIME && !REPORT_TYPES[type].selection[field].multiple) : [];
         var textFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.TEXT && !REPORT_TYPES[type].selection[field].multiple) : [];
         var optionalFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].optional == true) : [];
 
@@ -89,11 +90,11 @@ export const NeoReport = ({
             setStatus(QueryStatus.RUNNING)
             debouncedRunCypherQuery(driver, database, query, parameters, selection, fields,
                 rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
-                numericFields, textFields, optionalFields, defaultKeyField);
+                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField);
         } else {
             runCypherQuery(driver, database, query, parameters, selection, fields,
                 rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
-                numericFields, textFields, optionalFields, defaultKeyField);
+                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField);
         }
     };
 
@@ -129,7 +130,7 @@ export const NeoReport = ({
                 (result => setRecords(result)), 
                 () => { return}, HARD_ROW_LIMITING,
                 REPORT_TYPES[type].useRecordMapper == true, false,
-                [], [], [], null);
+                [], [], [], [], null);
         },
         [],
     );

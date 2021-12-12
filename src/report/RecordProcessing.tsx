@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { DateTime } from 'neo4j-driver';
 
 const OPTIONAL_FIELD_UNAVAILABLE_IDENTIFIER = "(none)";
 
@@ -9,7 +10,8 @@ const OPTIONAL_FIELD_UNAVAILABLE_IDENTIFIER = "(none)";
  * @param selection : a dictionary of record field name mappings.
  * @returns records : the same set of records, but with cleaned up and renamed records that the visualization needs.
  */
-export function mapRecords(records: any, selection: any, textFields: any, numericFields: any, optionalFields: any, defaultKeyField: str) {
+export function mapRecords(records: any, selection: any, textFields: any, numericFields: any, numericOrDatetimeFields: any,
+    optionalFields: any, defaultKeyField: string) {
 
     // if: We have null records, or, an empty result set, or, no specified selection, we return the original record set.
     if (!records || records.length == 0 || Object.keys(selection).length == 0) {
@@ -17,11 +19,11 @@ export function mapRecords(records: any, selection: any, textFields: any, numeri
     }
 
     // Use the first row + the selection dict to create a mapping from the actual --> expected fields.
-    const fieldLookup = createMappedFieldLookup(records[0], selection, optionalFields)
+    const fieldLookup = createMappedFieldLookup(records[0], selection, optionalFields, numericOrDatetimeFields)
     const keys = Object.keys(fieldLookup)
     const defaultKey = selection[defaultKeyField] ? selection[defaultKeyField] : "";
     const mappedRecords = records
-        .map(r => mapSingleRecord(r, fieldLookup, keys, defaultKey, textFields, numericFields, optionalFields))
+        .map(r => mapSingleRecord(r, fieldLookup, keys, defaultKey, textFields, numericFields, numericOrDatetimeFields, optionalFields))
         .filter(r => r != null);
 
     // Check if we have non-zero records for all of the numeric fields, if not, we can't visualize anything.
@@ -50,7 +52,7 @@ export function mapRecords(records: any, selection: any, textFields: any, numeri
  * Output:
  * - (fieldlookup={x=0, y1=1, y2=2}
  */
-export function createMappedFieldLookup(record: any, selection: any, optionalFieldNames: any) {
+export function createMappedFieldLookup(record: any, selection: any, optionalFieldNames: any, numericOrDateTimeFieldNames) {
     const newFieldLookup = {}
     Object.keys(selection).forEach(expectedFieldName => {
         const actualFieldName = selection[expectedFieldName];
@@ -87,7 +89,9 @@ export function createMappedFieldLookup(record: any, selection: any, optionalFie
  * @param defaultKey : if the record is missing a 'key' field, a default value for the field.
  * @returns the mapped record.
  */
-export function mapSingleRecord(record, fieldLookup, keys, defaultKey, textFieldNames, numericFieldNames, optionalFieldNames) {
+export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
+    textFieldNames, numericFieldNames, numericOrDatetimeFieldNames, optionalFieldNames) {
+
     record._fieldLookup = fieldLookup;
     record.keys = keys;
 
@@ -103,6 +107,15 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey, textField
     if (numericFieldNames.some(numericFieldName => (isNaN(record._fields[record._fieldLookup[numericFieldName]])))) {
         return null;
     }
+  
+    numericOrDatetimeFieldNames.forEach(numericOrDatetimeFieldName => {
+        const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
+        const className = value.__proto__.constructor.name;
+        if (className == "DateTime"){
+            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] =new Date(value.toString());
+            
+        }
+    })
 
     textFieldNames.forEach(textFieldName => {
         record._fields[record._fieldLookup[textFieldName]] =
@@ -189,15 +202,17 @@ export function extractNodePropertiesFromRecords(records: any) {
     return fields.length > 0 ? fields : [];
 }
 
+
 export function saveNodePropertiesToDictionary(field, fieldsDict) {
+    // TODO - instead of doing this discovery ad-hoc, we could also use CALL db.schema.nodeTypeProperties().
     if (field == undefined) {
         return
     }
     if (valueIsArray(field)) {
         field.forEach((v, i) => saveNodePropertiesToDictionary(v, fieldsDict));
-    } else if(valueIsNode(field)) {
+    } else if (valueIsNode(field)) {
         field.labels.forEach(l => {
-            fieldsDict[l] = (fieldsDict[l]) ? _.merge(fieldsDict[l], Object.keys(field.properties)) : Object.keys(field.properties)
+            fieldsDict[l] = (fieldsDict[l]) ? [...new Set(fieldsDict[l].concat(Object.keys(field.properties)))] : Object.keys(field.properties)
         });
     } else if (valueIsPath(field)) {
         field.segments.forEach((segment, i) => {
