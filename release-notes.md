@@ -1,4 +1,18 @@
-## NeoDash 2.0 (stable)
+## NeoDash 2.0.3
+UX improvements + bug fixes.
+- Parameter selection report:
+    - fixed bug to allow for selecting properties from nodes with >5 distinct properties.
+    - Added support for nodes and properties with spaces in their name.
+- Sharing:
+    - Removed persisted URL in share links to avoid getting stuck on shared dashboards
+- Table:
+    - Added option to specify relative column sizes
+- Graph:
+    - Changed node styling to use the last (most specific label) for applying customizations
+    - Fixed error where incorrect properties were extracted from graphs with multi-labeled nodes
+    - Fixed node display to hide "undefined" when a non-existing property is selected for that node.
+    
+## NeoDash 2.0.0, 2.0.1 & 2.0.2
 
 **New & Improved Dashboard Editor**
 - Added new Cypher editor with syntax highlighting / live syntax validation.

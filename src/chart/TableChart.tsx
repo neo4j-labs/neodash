@@ -52,7 +52,7 @@ function RenderTableValue(value, key = 0) {
         return JSON.stringify(value);
     }
     const str = value.toString();
-    if (str.startsWith("http") || str.startsWith("https")){
+    if (str.startsWith("http") || str.startsWith("https")) {
         return <a target="_blank" href={str}>{str}</a>;
     }
     return str;
@@ -62,14 +62,23 @@ const NeoTableChart = (props: ChartProps) => {
         return <>No data, re-run the report.</>
     }
 
-    const columns = props.records[0].keys.map(key => {
+    var columnWidths = null;
+    try {
+        columnWidths = props.settings && props.settings.columnWidths && JSON.parse(props.settings.columnWidths);
+    } catch (e) {
+        // do nothing
+    } finally {
+        // do nothing
+    }
+
+    const columns = props.records[0].keys.map((key, i) => {
         return {
             field: key,
             headerName: key,
             headerClassName: 'table-small-header',
             renderCell: (c) => RenderTableValue(c.value),
             disableColumnSelector: true,
-            flex: 1,
+            flex: columnWidths ? columnWidths[i] % columnWidths.length : 1,
             disableClickEventBubbling: true
         }
     })

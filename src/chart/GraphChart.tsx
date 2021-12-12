@@ -72,7 +72,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 labels: value.labels,
                 size: value.properties[nodeSizeProp] ? value.properties[nodeSizeProp] : defaultNodeSize,
                 properties: value.properties,
-                firstLabel: value.labels[0]
+                lastLabel: value.labels[value.labels.length - 1]
             };
         } else if (valueIsRelationship(value)) {
             if (links[value.start.low + "," + value.end.low] == undefined) {
@@ -147,7 +147,7 @@ const NeoGraphChart = (props: ChartProps) => {
         const nodeLabelsList = Object.keys(nodeLabels);
         const nodesList = Object.values(nodes).map(node => {
             const assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
-                categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.firstLabel) % totalColors];
+                categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors];
             return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });
         });
 
@@ -163,7 +163,7 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const renderNodeLabel = (node) => {
-        const selectedProp = props.selection[node.firstLabel];
+        const selectedProp = props.selection[node.lastLabel];
         if (selectedProp == "(id)") {
             return node.id;
         }
@@ -173,7 +173,7 @@ const NeoGraphChart = (props: ChartProps) => {
         if (selectedProp == "(no label)") {
             return "";
         }
-        return node.properties[selectedProp]
+        return node.properties[selectedProp] ? node.properties[selectedProp] : "";
     }
 
     const handleExpand = useCallback(node => {
@@ -205,7 +205,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 onNodeRightClick={handleExpand}
                 nodeCanvasObjectMode={() => "after"}
                 nodeCanvasObject={(node, ctx, globalScale) => {
-                    const label = (props.selection && props.selection[node.firstLabel]) ? renderNodeLabel(node) : "";
+                    const label = (props.selection && props.selection[node.lastLabel]) ? renderNodeLabel(node) : "";
                     const fontSize = nodeLabelFontSize;
                     ctx.font = `${fontSize}px Sans-Serif`;
                     ctx.fillStyle = nodeLabelColor;

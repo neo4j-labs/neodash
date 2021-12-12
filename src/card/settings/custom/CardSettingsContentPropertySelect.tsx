@@ -27,13 +27,13 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
     const [propertyValue, setPropertyValue] = React.useState(property);
     const [parameterName, setParameterName] = React.useState("");
     const [propertyRecords, setPropertyRecords] = React.useState([]);
-
+   
     // Reverse engineer the label, property, ID from the generated query.
     const approxParam = query.split("\n")[0].split("$")[1];
-    const id = (approxParam && approxParam.split("_").length > 3) ? approxParam.split("_")[approxParam.split("_").length-1] : "";
+    const id = (approxParam && approxParam.split("_").length > 3) && !isNaN(parseInt(approxParam.split("_")[approxParam.split("_").length-1])) ? approxParam.split("_")[approxParam.split("_").length-1] : "";
     const [idValue, setIdValue] = React.useState(id);
     if(!parameterName && labelValue && propertyValue){
-        setParameterName("neodash_" + (labelValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase());
+        setParameterName("neodash_" + (labelValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase().replaceAll(" ","_").replaceAll("-", "_"));
     }
     // Define query callback to allow reports to get extra data on interactions.
     const queryCallback = useCallback(
@@ -43,7 +43,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
                 (result => setRecords(result)),
                 () => { return }, false,
                 false, false,
-                [], [], [], null);
+                [], [], [], [], null);
         },
         [],
     );
@@ -67,14 +67,15 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
             value={labelValue}
             onChange={(event, newValue) => {
                 setLabelValue(newValue);
-
+                setPropertyValue(undefined);
+                setParameterName("");
                 if (newValue && propertyValue) {
-                    const new_parameter_name = "neodash_" + (newValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase();
-                    setParameterName(new_parameter_name);
+                    const new_parameter_name = "neodash_" + (newValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase().replaceAll(" ","_").replaceAll("-", "_");
+                    // setParameterName(new_parameter_name);
                     const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + newValue + "`) \nWHERE toLower(toString(n.`" + propertyValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyValue + "` as value LIMIT 5";
                     onQueryUpdate(newQuery);
                 } else {
-                    setParameterName(null);
+                    setParameterName("");
                 }
             }}
             renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Node Label"} />}
@@ -87,14 +88,14 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
             inputValue={propertyInputText}
             onInputChange={(event, value) => {
                 setPropertyInputText(value);
-                queryCallback("CALL db.schema.nodeTypeProperties() YIELD nodeLabels, propertyName WITH * WHERE $label IN nodeLabels RETURN DISTINCT propertyName LIMIT 5", { label: labelValue }, setPropertyRecords);
+                queryCallback("CALL db.schema.nodeTypeProperties() YIELD nodeLabels, propertyName WITH * WHERE $label IN nodeLabels AND toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5", { label: labelValue, input: value }, setPropertyRecords);
             }}
             value={propertyValue}
             onChange={(event, newValue) => {
                 setPropertyValue(newValue);
 
                 if (newValue && labelValue) {
-                    const new_parameter_name = "neodash_" + (labelValue + "_" + newValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase();
+                    const new_parameter_name = "neodash_" + (labelValue + "_" + newValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase().replaceAll(" ","_").replaceAll("-", "_");
                     setParameterName(new_parameter_name);
                     const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + labelValue + "`) \nWHERE toLower(toString(n.`" + newValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + newValue + "` as value LIMIT 5";
                     onQueryUpdate(newQuery);
@@ -111,7 +112,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, query, onQueryUp
                 const newValue = value ? "_" + value : "";
                 setIdValue(value);
                 if (propertyValue && labelValue) {
-                    const new_parameter_name = "neodash_" + (labelValue + "_" + propertyValue + newValue).toLowerCase();
+                    const new_parameter_name = "neodash_" + (labelValue + "_" + propertyValue + newValue).toLowerCase().replaceAll(" ","_").replaceAll("-", "_");
                     setParameterName(new_parameter_name);
                     const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + labelValue + "`) \nWHERE toLower(toString(n.`" + propertyValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyValue + "` as value LIMIT 5";
                     onQueryUpdate(newQuery);

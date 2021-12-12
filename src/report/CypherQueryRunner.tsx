@@ -31,7 +31,7 @@ export enum QueryStatus {
  */
 export async function runCypherQuery(driver,
     database = undefined,
-    query,
+    query = "",
     parameters = {},
     selection = {},
     fields = [],
@@ -43,6 +43,7 @@ export async function runCypherQuery(driver,
     useRecordMapper = false,
     useNodePropsAsFields = false,
     numericFields = [],
+    numericOrDatetimeFields = [],
     textFields = [],
     optionalFields = [],
     defaultKeyField = ""
@@ -99,7 +100,7 @@ export async function runCypherQuery(driver,
            
             // Set the records for the visualization, if an explicit field name mapping is provided.
             if (useRecordMapper) {
-                records = mapRecords(records, selection, textFields, numericFields, optionalFields, defaultKeyField)
+                records = mapRecords(records, selection, textFields, numericFields, numericOrDatetimeFields, optionalFields, defaultKeyField)
             }
             if (records == null) {
                 setStatus(QueryStatus.NO_DRAWABLE_DATA)
