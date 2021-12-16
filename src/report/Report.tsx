@@ -24,6 +24,7 @@ export const NeoReport = ({
     settings = {}, // An optional dictionary of customization settings to pass to the report.  
     setFields = (f) => { fields = f }, // The callback to update the set of query fields after query execution. 
     setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
+    getGlobalParameter = () => {}, // function to get global (dashboard) parameters.
     refreshRate = 0, // Optionally refresh the report every X seconds.
     dimensions = { width: 3, height: 3 }, // Size of the report.
     rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
@@ -159,7 +160,7 @@ export const NeoReport = ({
         }
         {/* @ts-ignore */ }
         return (<div style={{ height: "100%", marginTop: "0px", overflow: REPORT_TYPES[type].allowScrolling ? "auto" : "hidden" }}>
-            <ChartType records={records} selection={selection} settings={settings} dimensions={dimensions} queryCallback={queryCallback} setGlobalParameter={setGlobalParameter} />
+            <ChartType records={records} selection={selection} settings={settings} dimensions={dimensions} queryCallback={queryCallback} setGlobalParameter={setGlobalParameter} getGlobalParameter={getGlobalParameter} />
         </div>);
     } else if (status == QueryStatus.COMPLETE_TRUNCATED) {
         if (records == null || records.length == 0) {
@@ -174,7 +175,7 @@ export const NeoReport = ({
                     </Tooltip>
                 </div>
             </div>
-            <ChartType records={records} selection={selection} settings={settings} dimensions={dimensions} queryCallback={queryCallback} setGlobalParameter={setGlobalParameter} />
+            <ChartType records={records} selection={selection} settings={settings} dimensions={dimensions} queryCallback={queryCallback} setGlobalParameter={setGlobalParameter} getGlobalParameter={getGlobalParameter} />
         </div>);
     } else if (status == QueryStatus.TIMED_OUT) {
         return <NeoStaticCodeField value={"Query was aborted - it took longer than " + QUERY_MAX_TIME_MS + "ms to run. \n"

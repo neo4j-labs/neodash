@@ -41,6 +41,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const label = query.split("`")[1] ? query.split("`")[1] : "";
     const property = query.split("`")[3] ? query.split("`")[3] : "";
 
+    const currentValue = props.getGlobalParameter(parameter) || "";
     
     return <div>
         <Autocomplete
@@ -53,7 +54,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                 setInputText(value);
                 debouncedQueryCallback(query, {input: value}, setExtraRecords);
             }}
-            value={value ? value.toString() : ""}
+            value={value ? value.toString() : currentValue}
             onChange={(event, newValue) => {
                 setValue(newValue);
                 if(newValue == null && clearParameterOnFieldClear){

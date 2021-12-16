@@ -43,6 +43,10 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
     
     const withoutFooter = !REPORT_TYPES[type].selection || (settings && settings.hideSelections);
 
+    const getGlobalParameter = (key : string ) : any => {
+        return globalParameters[key];
+    }
+    
     return (
         <div className={`card-view ${expanded ? "expanded" : ""}`}>
             {reportHeader}
@@ -67,6 +71,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                         type={type}
                         ChartType={REPORT_TYPES[type].component}
                         setGlobalParameter={onGlobalParameterUpdate}
+                        getGlobalParameter={getGlobalParameter}
                         setFields={onFieldsUpdate} />
                 </CardContent>
                 {reportFooter}
