@@ -18,30 +18,31 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
         
     }
 
+    const records = props.records;
+    const query = records[0]["input"];
+
+    if(query){
+        var parameter = query.split("\n")[0].split("$")[1];
+        var label = query.split("`")[1] ? query.split("`")[1] : "";
+        var property = query.split("`")[3] ? query.split("`")[3] : "";
+    
+        var currentValue = props.getGlobalParameter(parameter) || "";
+    }
+
     const settings = (props.settings) ? props.settings : {};
     const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
 
     const [extraRecords, setExtraRecords] = React.useState([]);
-    const [inputText, setInputText] = React.useState("");
-    const [value, setValue] = React.useState("");
+    const [inputText, setInputText] = React.useState(currentValue);
+    const [value, setValue] = React.useState(currentValue);
     const debouncedQueryCallback = useCallback(
         debounce(props.queryCallback, 250),
         [],
     );
-
-    
-    const records = props.records;
-    const query = records[0]["input"];
  
     if (!query) {
         return <p style={{margin: "15px"}}>No selection specified. Open up the report settings and choose a node label and property.</p>
     }
-   
-    const parameter = query.split("\n")[0].split("$")[1];
-    const label = query.split("`")[1] ? query.split("`")[1] : "";
-    const property = query.split("`")[3] ? query.split("`")[3] : "";
-
-    const currentValue = props.getGlobalParameter(parameter) || "";
     
     return <div>
         <Autocomplete
