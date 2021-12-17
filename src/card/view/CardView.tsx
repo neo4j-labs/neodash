@@ -13,9 +13,9 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate, onFieldsUpdate }) => {
     const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
     const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
-    
+
     const [expanded, setExpanded] = useState(false);
-    
+
     const onToggleCardExpand = () => {
         setExpanded(!expanded);
     }
@@ -28,7 +28,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         onToggleCardSettings={onToggleCardSettings}
         onToggleCardExpand={onToggleCardExpand}
         expanded={expanded}
-        >
+    >
     </NeoCardViewHeader>;
 
     // @ts-ignore
@@ -40,13 +40,13 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         onSelectionUpdate={onSelectionUpdate}
         showOptionalSelections={(settings["showOptionalSelections"])} >
     </NeoCardViewFooter>;
-    
+
     const withoutFooter = !REPORT_TYPES[type].selection || (settings && settings.hideSelections);
 
-    const getGlobalParameter = (key : string ) : any => {
+    const getGlobalParameter = (key: string): any => {
         return globalParameters[key];
     }
-    
+
     return (
         <div className={`card-view ${expanded ? "expanded" : ""}`}>
             {reportHeader}
