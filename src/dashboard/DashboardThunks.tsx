@@ -103,6 +103,17 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
             throw ("Invalid dashboard version: " + dashboard.version);
         }
 
+        // Reverse engineer the minimal set of fields from the selection loaded.
+        dashboard.pages.forEach(p => {
+            p.reports.forEach(r => {
+                if(r.selection){
+                    r["fields"] = []
+                    Object.keys(r.selection).forEach(f => {
+                        r["fields"].push([f, r.selection[f]])
+                    })
+                }
+            })
+        })
         dispatch(setDashboard(dashboard))
 
     } catch (e) {

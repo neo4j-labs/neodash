@@ -193,7 +193,7 @@ RETURN {id: a.name, label: "Person", point: l1.point},
         syntheticQuery: `
         UNWIND [{id: "Dwight", label: "Person", point: point({latitude:41.45954418871592, longitude:-75.75265878192192})},
 {id: "Jim", label: "Person", point: point({latitude:41.41492119160039,longitude: -75.6470002887925})},
-{start: "Dwight", end: "Jim", type: "KNOWS", id: 100}
+{start: "Dwight", end: "Jim", type: "KNOWS", id: 1}
 ] as value
 RETURN value
         `,
