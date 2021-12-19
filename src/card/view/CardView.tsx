@@ -4,12 +4,12 @@ import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
 import { CardContent } from '@material-ui/core';
-import { REPORT_TYPES, SELECTION_TYPES } from '../../config/ReportConfig';
+import { REPORT_TYPES } from '../../config/ReportConfig';
 
 const CARD_FOOTER_HEIGHT = 64;
 
 const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, width, height, fields,
-    type, selection, settings, settingsOpen, refreshRate, editable,
+    type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate, onFieldsUpdate }) => {
     const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
     const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
@@ -24,6 +24,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
     const reportHeader = <NeoCardViewHeader
         title={title}
         editable={editable}
+        fullscreenEnabled={dashboardSettings.fullscreenEnabled}
         onTitleUpdate={onTitleUpdate}
         onToggleCardSettings={onToggleCardSettings}
         onToggleCardExpand={onToggleCardExpand}
@@ -61,6 +62,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                         selection={selection}
                         fields={fields}
                         settings={settings}
+                        expanded={expanded}
                         rowLimit={REPORT_TYPES[type].maxRecords}
                         refreshRate={refreshRate}
                         dimensions={{ width: width, height: height }}

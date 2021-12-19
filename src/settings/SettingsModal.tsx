@@ -43,7 +43,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
                 defaultValue={settings[setting]["default"]}
                 choices={settings[setting]["values"]}
                 onChange={(e) => updateDashboardSetting(setting, e)}
-            /> <br/></>
+            /><br/></>
         )}
     </div>
 

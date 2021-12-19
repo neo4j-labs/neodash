@@ -58,6 +58,8 @@ function RenderTableValue(value, key = 0) {
     return str;
 }
 const NeoTableChart = (props: ChartProps) => {
+    const fullscreen = props.fullscreen ? props.fullscreen : false;
+
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
@@ -92,8 +94,8 @@ const NeoTableChart = (props: ChartProps) => {
             <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={(props.dimensions && props.dimensions.height == 3) ? 5 : 13}
-                rowsPerPageOptions={[(props.dimensions && props.dimensions.height == 3) ? 5 : 13]}
+                pageSize={fullscreen ? 15 : (props.dimensions && props.dimensions.height == 3) ? 5 : 13}
+                rowsPerPageOptions={[fullscreen ? 15 : (props.dimensions && props.dimensions.height == 3) ? 5 : 13]}
                 disableSelectionOnClick
                 components={{
                     ColumnSortedDescendingIcon: () => <></>,

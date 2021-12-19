@@ -19,6 +19,13 @@ export const DASHBOARD_SETTINGS = {
         values: [true, false],
         default: true,
         helperText: "This controls whether users can edit your dashboard. Disable this to turn the dashboard into presentation mode."
+    },
+    "fullscreenEnabled": {
+        label: "Enable Fullscreen Report Views",
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        helperText: "Enables a 'fullscreen view' button for each report, letting users expand a visualization."
     }
    
 }
