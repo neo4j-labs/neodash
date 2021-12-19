@@ -114,7 +114,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
                 }
             })
         })
-        dispatch(setDashboard(dashboard))
+        dispatch(setDashboard(dashboard));
 
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard", e));

@@ -1,8 +1,8 @@
-import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List } from "@material-ui/core";
+import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List, Button } from "@material-ui/core";
 import React from "react";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import SettingsIcon from '@material-ui/icons/Settings';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import NeoSaveModal from "../modal/SaveModal";
 import NeoLoadModal from "../modal/LoadModal";
@@ -11,7 +11,7 @@ import { NeoAboutModal } from "../modal/AboutModal";
 import { NeoDocumentationModal } from "../modal/DocumentationModal";
 import { applicationGetConnection, applicationHasAboutModalOpen, applicationIsStandalone } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
-import { setAboutModalOpen } from '../application/ApplicationActions';
+import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import NeoSettingsModal from "../settings/SettingsModal";
 import { createNotificationThunk } from "../page/PageThunks";
 import { getDashboardSettings } from "./DashboardSelectors";
@@ -19,7 +19,7 @@ import { updateDashboardSetting } from "../settings/SettingsActions";
 
 
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
-    handleDrawerClose, aboutModalOpen, onShareModalOpen, onAboutModalOpen }) => {
+    handleDrawerClose, aboutModalOpen, onShareModalOpen, onAboutModalOpen, resetApplication }) => {
 
     // Override to hide the drawer when the application is in standalone mode.
     if (hidden) {
@@ -58,7 +58,16 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
 
             }}>
                 <ListItem>
-                    <b>NeoDash</b>
+                <Button
+                        component="label"
+                        onClick={resetApplication}
+                        style={{ backgroundColor: "white", marginLeft: "-8px"}}
+                        color="default"
+                        variant="outlined"
+                        size="small"
+                        startIcon={<ExitToAppIcon />}>
+                        Menu
+                    </Button>
                 </ListItem>
 
 
@@ -109,7 +118,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),
-    updateDashboardSetting: (setting, value) => dispatch(updateDashboardSetting(setting, value))
+    updateDashboardSetting: (setting, value) => dispatch(updateDashboardSetting(setting, value)),
+    resetApplication: _ => {
+        dispatch(setWelcomeScreenOpen(true));
+        dispatch(setConnected(false));
+    }
 });
 
 
