@@ -21,16 +21,15 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const records = props.records;
     const query = records[0]["input"];
 
-    if (!query) {
-        return <p style={{margin: "15px"}}>No selection specified. Open up the report settings and choose a node label and property.</p>
+    if(query){
+        var parameter = query.split("\n")[0].split("$")[1];
+        var label = query.split("`")[1] ? query.split("`")[1] : "";
+        var property = query.split("`")[3] ? query.split("`")[3] : "";
+        var currentValue = props.getGlobalParameter(parameter) || "";
+    } else {
+        // Don't return here...
+        // Will cause the application to crash.
     }
-
-
-    const parameter = query.split("\n")[0].split("$")[1];
-    const label = query.split("`")[1] ? query.split("`")[1] : "";
-    const property = query.split("`")[3] ? query.split("`")[3] : "";
-    const currentValue = props.getGlobalParameter && props.getGlobalParameter(parameter) || "";
-    
 
     const settings = (props.settings) ? props.settings : {};
     const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
@@ -43,7 +42,12 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
         [],
     );
  
-  
+    if (!query) {
+        // For some reason can't return early in the else statement above, or application will crash.
+        // Crash seems related to useState.
+        // So instead just return here...
+        return <p style={{margin: "15px"}}>No selection specified. Open up the report settings and choose a node label and property.</p>
+    }
     
     return <div>
         <Autocomplete
