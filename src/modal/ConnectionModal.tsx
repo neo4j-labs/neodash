@@ -26,7 +26,7 @@ export default function NeoConnectionModal({ open, connection, dismissable = fal
 
     return (
         <div>
-            <Dialog maxWidth="xs" open={open} onClose={() => { dismissable ? onConnectionModalClose : null }} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth="xs" open={open} onClose={() => { dismissable ? onConnectionModalClose() : null }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Connect to Neo4j
                     <IconButton style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >

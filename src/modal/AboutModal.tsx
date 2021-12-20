@@ -12,7 +12,7 @@ import Badge from '@material-ui/core/Badge';
 export const NeoAboutModal = ({ open, handleClose }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
     const email = "niels.dejong@neo4j.com";
-    const version = "2.0.3";
+    const version = "2.0.4";
 
     return (
         <div>

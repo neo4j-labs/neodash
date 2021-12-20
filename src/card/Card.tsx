@@ -21,6 +21,7 @@ const NeoCard = ({
     editable, // whether the card is editable.
     database, // the neo4j database that the card is running against.
     globalParameters, // Query parameters that are globally set for the entire dashboard.
+    dashboardSettings, // Dictionary of settings for the entire dashboard.
     onRemovePressed, // action to take when the card is removed. (passed from parent)
     onShiftLeftPressed, // action to take when the card is shifted left.
     onShiftRightPressed, // action to take when the card is shifted right.
@@ -62,6 +63,7 @@ const NeoCard = ({
                     <NeoCardView
                         settingsOpen={settingsOpen}
                         editable={editable}
+                        dashboardSettings={dashboardSettings}
                         settings={report.settings ? report.settings : {}}
                         type={report.type}
                         database={database}

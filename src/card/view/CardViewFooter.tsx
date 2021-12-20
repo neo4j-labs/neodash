@@ -40,7 +40,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
                                     onChange={e => onSelectionUpdate(nodeLabel, e.target.value)}
                                     value={(selection && selection[nodeLabel]) ? selection[nodeLabel] : ""}>
                                     {/* Render choices */}
-                                    {properties.length && properties.map((field, index) => {
+                                    {properties.length && properties.map && properties.map((field, index) => {
                                         return <MenuItem key={field} value={field}>
                                             {field}
                                         </MenuItem>
