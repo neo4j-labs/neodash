@@ -46,7 +46,7 @@ export const NeoReport = ({
         // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
         if (REPORT_TYPES[type].textOnly) {
             setStatus(QueryStatus.COMPLETE);
-            setRecords([{ input: query }]);
+            setRecords([{ input: query, mapParameters: mapParameters }]);
             return;
         }
 

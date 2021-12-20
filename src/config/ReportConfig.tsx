@@ -489,7 +489,13 @@ export const REPORT_TYPES = {
         inputMode: "url",
         maxRecords: 1,
         allowScrolling: true,
-        settings: {}
+        settings: {
+            "hashParameter": {
+                label: "Parameter Select Property (without $ in front) to pass to iframe via hash parameter",
+                type: SELECTION_TYPES.TEXT,
+                default: undefined
+            }
+        }
     },
     "text": {
         label: "Markdown",
