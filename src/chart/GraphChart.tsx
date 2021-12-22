@@ -7,7 +7,7 @@ import { schemeCategory10, schemeAccent, schemeDark2, schemePaired, schemePastel
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/RecordProcessing';
-
+import { NeoGraphModal } from '../modal/GraphModal';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -18,6 +18,17 @@ const NeoGraphChart = (props: ChartProps) => {
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
+
+    const [open, setOpen] = React.useState(false);
+    const [modalItem, setModalItem] = React.useState({});
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     // Retrieve config from advanced settings
     const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : "#fafafa";
@@ -177,11 +188,16 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const handleExpand = useCallback(node => {
-        if(rightClickToExpandNodes){
+        if (rightClickToExpandNodes) {
             props.queryCallback && props.queryCallback("MATCH (n)-[e]-(m) WHERE id(n) =" + node.id + " RETURN e,m", {}, setExtraRecords);
         }
     }, []);
 
+    const showPopup = useCallback(item => {
+        console.log(item);
+        setModalItem(item);
+        handleOpen();
+    }, []);
 
     // If the set of extra records gets updated (e.g. on relationship expand), rebuild the graph.
     useEffect(() => {
@@ -202,6 +218,8 @@ const NeoGraphChart = (props: ChartProps) => {
                 linkLabel={link => `<div>${generateTooltip(link)}</div>`}
                 nodeLabel={node => `<div>${generateTooltip(node)}</div>`}
                 nodeVal={node => node.size}
+                onNodeClick={showPopup}
+                onLinkClick={showPopup}
                 onNodeRightClick={handleExpand}
                 nodeCanvasObjectMode={() => "after"}
                 nodeCanvasObject={(node, ctx, globalScale) => {
@@ -246,6 +264,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 }}
                 graphData={width ? data : { nodes: [], links: [] }}
             />
+            <NeoGraphModal open={open} handleClose={handleClose} title={modalItem.lastLabel || modalItem.type} object={modalItem.properties}></NeoGraphModal>
         </div>
     );
 }
