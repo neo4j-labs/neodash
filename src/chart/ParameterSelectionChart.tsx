@@ -30,10 +30,11 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     
     // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
     if(query && value != currentValue && currentValue != inputText ){
+    
         setValue(currentValue);
         setInputText(currentValue);
+        setExtraRecords([]);
     }
-
     if (!query || query.trim().length == 0) {
         return <p style={{ margin: "15px" }}>No selection specified. Open up the report settings and choose a node label and property.</p>
     }
