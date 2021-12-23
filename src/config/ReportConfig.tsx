@@ -490,10 +490,11 @@ export const REPORT_TYPES = {
         maxRecords: 1,
         allowScrolling: true,
         settings: {
-            "hashParameter": {
-                label: "Parameter Select Property (without $ in front) to pass to iframe via hash parameter",
-                type: SELECTION_TYPES.TEXT,
-                default: undefined
+            "passGlobalParameters": {
+                label: "Pass global variables to iframe via hash parameter. For example: http://example.com#neodash_person_name=Niels&neodash_company_name=Neo4j.",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
             }
         }
     },
