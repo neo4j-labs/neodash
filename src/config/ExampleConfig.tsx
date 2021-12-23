@@ -181,5 +181,26 @@ RETURN value
         selection: {},
         type: "map",
         chartType: NeoMapChart
+    },
+    {
+        title: "Map (from properties)",
+        description: "Use dictionaries to visualize entities that are not real nodes and relationships.",
+        exampleQuery: `// Plot an artificial relationship.\nMATCH (l1:Location)<--(a:Person),\n      (a:Person)-[:KNOWS]-(b:Person),\n      (b:Person)-->(l2:Location)
+RETURN {id: a.name, label: "Person", point: l1.point},
+       {id: b.name, label: "Person", point: l2.point},
+       {start: a.name, end: b.name, type: "KNOWS", id: 1}
+`,
+        syntheticQuery: `
+        UNWIND [{id: "Dwight", label: "Person", point: point({latitude:41.45954418871592, longitude:-75.75265878192192})},
+{id: "Jim", label: "Person", point: point({latitude:41.41492119160039,longitude: -75.6470002887925})},
+{start: "Dwight", end: "Jim", type: "KNOWS", id: 1}
+] as value
+RETURN value
+        `,
+        settings: {},
+        fields: [],
+        selection: {},
+        type: "map",
+        chartType: NeoMapChart
     }
 ]

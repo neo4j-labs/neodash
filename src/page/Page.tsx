@@ -6,6 +6,7 @@ import { getReports } from './PageSelectors';
 import { removeReportRequest, shiftReportLeftRequest, shiftReportRightRequest } from './PageThunks';
 import Grid from '@material-ui/core/Grid';
 import { getDashboardIsEditable } from '../settings/SettingsSelectors';
+import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 
 
 /**
@@ -14,6 +15,7 @@ import { getDashboardIsEditable } from '../settings/SettingsSelectors';
 export const NeoPage = (
     {
         editable = true, // Whether the page is editable.
+        dashboardSettings, // global settings for the entire dashboard.
         reports = [], // list of reports as defined in the dashboard state.
         onRemovePressed = (index) => { }, // action to take when a report gets removed.
         onShiftLeftPressed = (index) => { }, // action to take when a report gets shifted left.
@@ -32,6 +34,7 @@ export const NeoPage = (
                     return <Grid style={{ paddingTop: "16px", paddingBottom: "0px" }}
                         key={index} item xs={Math.min(width * 4, 12)} sm={Math.min(width * 2, 12)} md={Math.min(width * 2, 12)} lg={Math.min(width, 12)} xl={Math.min(width, 12)}>
                         <NeoCard index={index}
+                            dashboardSettings={dashboardSettings}
                             onShiftLeftPressed={onShiftLeftPressed}
                             onShiftRightPressed={onShiftRightPressed}
                             onRemovePressed={onRemovePressed} />
@@ -50,6 +53,7 @@ export const NeoPage = (
 const mapStateToProps = state => ({
     isLoaded: true,
     editable: getDashboardIsEditable(state),
+    dashboardSettings: getDashboardSettings(state),
     reports: getReports(state),
 });
 

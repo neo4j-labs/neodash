@@ -27,7 +27,6 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const [extraRecords, setExtraRecords] = React.useState([]);
     const [inputText, setInputText] = React.useState(currentValue);
     const [value, setValue] = React.useState(currentValue);
-    // console.log(value, currentValue, inputText)
     
     if(value != currentValue && currentValue != inputText ){
         setValue(currentValue);
