@@ -44,7 +44,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
     const withoutFooter = !REPORT_TYPES[type].selection || (settings && settings.hideSelections);
 
     const getGlobalParameter = (key: string): any => {
-        return globalParameters[key];
+        return globalParameters ? globalParameters[key] : undefined;
     }
 
     return (
