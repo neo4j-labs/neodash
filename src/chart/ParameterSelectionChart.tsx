@@ -28,16 +28,19 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const [inputText, setInputText] = React.useState(currentValue);
     const [value, setValue] = React.useState(currentValue);
     
-    if(value != currentValue && currentValue != inputText ){
+    // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
+    if(query && value != currentValue && currentValue != inputText ){
         setValue(currentValue);
         setInputText(currentValue);
     }
-    if (!query) {
+
+    if (!query || query.trim().length == 0) {
         return <p style={{ margin: "15px" }}>No selection specified. Open up the report settings and choose a node label and property.</p>
     }
 
     const label = query.split("`")[1] ? query.split("`")[1] : "";
     const property = query.split("`")[3] ? query.split("`")[3] : "";
+    
     const settings = (props.settings) ? props.settings : {};
     const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
 
