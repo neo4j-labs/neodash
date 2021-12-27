@@ -11,39 +11,36 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
  */
 const NeoParameterSelectionChart = (props: ChartProps) => {
 
-    useEffect(() => {
-        debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
-    }, [inputText, query]);
+    try{
+        useEffect(() => {
+            debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
+        }, [inputText, query]);    
+    }catch(e){
 
+    }
+
+    const settings = (props.settings) ? props.settings : {};
+    const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
+
+    const [extraRecords, setExtraRecords] = React.useState([]);
+    const [inputText, setInputText] = React.useState("");
+    const [value, setValue] = React.useState("");
     const debouncedQueryCallback = useCallback(
         debounce(props.queryCallback, 250),
         [],
     );
+
+
     const records = props.records;
-    const query = records[0]["input"] ? records[0]["input"] : undefined;
-    const parameter = query ? query.split("\n")[0].split("$")[1] : "$";
-    
-    const currentValue = (props.getGlobalParameter && props.getGlobalParameter(parameter)) ? props.getGlobalParameter(parameter) : "";
-    const [extraRecords, setExtraRecords] = React.useState([]);
-    const [inputText, setInputText] = React.useState(currentValue);
-    const [value, setValue] = React.useState(currentValue);
-    
-    // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
-    if(query && value != currentValue && currentValue != inputText ){
-    
-        setValue(currentValue);
-        setInputText(currentValue);
-        setExtraRecords([]);
-    }
-    if (!query || query.trim().length == 0) {
-        return <p style={{ margin: "15px" }}>No selection specified. Open up the report settings and choose a node label and property.</p>
+    const query = records[0]["input"];
+
+    if (!query) {
+        return <p style={{margin: "15px"}}>No selection specified. Open up the report settings and choose a node label and property.</p>
     }
 
+    const parameter = query.split("\n")[0].split("$")[1];
     const label = query.split("`")[1] ? query.split("`")[1] : "";
     const property = query.split("`")[3] ? query.split("`")[3] : "";
-    
-    const settings = (props.settings) ? props.settings : {};
-    const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
 
     return <div>
         <Autocomplete
@@ -54,14 +51,14 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             inputValue={inputText}
             onInputChange={(event, value) => {
                 setInputText(value);
-                debouncedQueryCallback(query, { input: value }, setExtraRecords);
+                debouncedQueryCallback(query, {input: value}, setExtraRecords);
             }}
-            value={value ? value.toString() : currentValue}
+            value={value ? value.toString() : ""}
             onChange={(event, newValue) => {
                 setValue(newValue);
-                if (newValue == null && clearParameterOnFieldClear) {
+                if(newValue == null && clearParameterOnFieldClear){
                     props.setGlobalParameter(parameter, undefined);
-                } else {
+                }else{
                     props.setGlobalParameter(parameter, newValue);
                 }
             }}
