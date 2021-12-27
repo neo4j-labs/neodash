@@ -489,7 +489,14 @@ export const REPORT_TYPES = {
         inputMode: "url",
         maxRecords: 1,
         allowScrolling: true,
-        settings: {}
+        settings: {
+            "passGlobalParameters": {
+                label: "Pass global variables to iFrame URL",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            }
+        }
     },
     "text": {
         label: "Markdown",
