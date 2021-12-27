@@ -30,6 +30,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     
     // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
     if(query && value != currentValue && currentValue != inputText ){
+    
         setValue(currentValue);
         setInputText(currentValue);
         setExtraRecords([]);
