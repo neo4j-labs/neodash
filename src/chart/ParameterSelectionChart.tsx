@@ -15,7 +15,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
         }, [inputText, query]);    
     }catch(e){
-
+        
     }
 
     const settings = (props.settings) ? props.settings : {};
