@@ -1,5 +1,7 @@
 import NeoBarChart from "../chart/BarChart";
 import NeoGraphChart from "../chart/GraphChart";
+import NeoIFrameChart from "../chart/IFrameChart";
+import NeoJSONChart from "../chart/JSONChart";
 import NeoLineChart from "../chart/LineChart";
 import NeoMapChart from "../chart/MapChart";
 import NeoTableChart from "../chart/TableChart";
@@ -202,5 +204,17 @@ RETURN value
         selection: {},
         type: "map",
         chartType: NeoMapChart
+    },
+    {
+        title: "iFrame",
+        description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
+        exampleQuery: `http://neodash.graphapp.io/embed-test.html`,
+        syntheticQuery: `http://localhost:3000/embed-test.html`,
+        settings: {"passGlobalParameters": true},
+        fields: [],
+        globalParameters: {"neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix"},
+        selection: {},
+        type: "iframe",
+        chartType: NeoIFrameChart
     }
 ]

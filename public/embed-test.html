@@ -6,21 +6,27 @@
 </head>
 
 <body>
-    <p>The page won't reload when passing global parameters via the url hash. You can verify this by playing the embedded YouTube video, then changing global parameters.</p>
+    <p>I am an iFrame of the page located at <a href="http://neodash.graphapp.io/embed-test.html" target="_blank">http://neodash.graphapp.io/embed-test.html</a></p> 
+    <p>I'm embedded directly into a dashboard, and dynamically passed the user-made parameter selections.</p>
+    <p>I will not refresh when selections are updated, but, I can see variables change.</p>
+    <p>You can use me to embed external visualizations that are updated together with other charts.</p>
+    <b>Your dashboard variables:</b>
     <pre></pre>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/y9trGgqFu_k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</body>
+    <p>
+ </body>
 
 <script>
     var pre = document.querySelector('pre');
     
     var applyHash = function() {
         const hashValue = window.location.hash.substr(1);
-        pre.textContent = hashValue;
+        var output = "";
+
         searchParams = new URLSearchParams(hashValue);
         searchParams.forEach(function(value, key) {
-            console.log(key, value);
+            output += key + ": " + value + "\n"
         });
+        pre.textContent = output;
     }
 
     window.onhashchange = applyHash;
