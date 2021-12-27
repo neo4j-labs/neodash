@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect } from 'react';
 import { ChartProps } from './Chart';
 import { debounce, TextareaAutosize, TextField } from '@material-ui/core';
