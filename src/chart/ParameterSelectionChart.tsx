@@ -15,7 +15,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
         }, [inputText, query]);    
     }catch(e){
-        
+
     }
 
     const settings = (props.settings) ? props.settings : {};
@@ -41,7 +41,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const label = query.split("`")[1] ? query.split("`")[1] : "";
     const property = query.split("`")[3] ? query.split("`")[3] : "";
 
-
+    
     return <div>
         <Autocomplete
             id="autocomplete"
