@@ -1,18 +1,6 @@
 import { SELECTION_TYPES } from "./ReportConfig";
 
 export const DASHBOARD_SETTINGS = {
-    "pagenumber": {
-        label: "Page Number",
-        type: SELECTION_TYPES.NUMBER,
-        disabled: true,
-        helperText: "This is the number of the currently selected page."
-    },
-    "parameters": {
-        label: "Global Parameters",
-        type: SELECTION_TYPES.DICTIONARY,
-        disabled: true,
-        helperText: "These are the query parameters shared across all reports. You can set these using a 'property select' report."
-    },
     "editable": {
         label: "Editable",
         type: SELECTION_TYPES.LIST,
@@ -26,6 +14,17 @@ export const DASHBOARD_SETTINGS = {
         values: [true, false],
         default: false,
         helperText: "Enables a 'fullscreen view' button for each report, letting users expand a visualization."
+    },
+    "pagenumber": {
+        label: "Page Number",
+        type: SELECTION_TYPES.NUMBER,
+        disabled: true,
+        helperText: "This is the number of the currently selected page."
+    },
+    "parameters": {
+        label: "Global Parameters",
+        type: SELECTION_TYPES.DICTIONARY,
+        disabled: true,
+        helperText: "These are the query parameters shared across all reports. You can set these using a 'property select' report."
     }
-   
 }
