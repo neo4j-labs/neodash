@@ -209,7 +209,7 @@ RETURN value
         title: "iFrame",
         description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
         exampleQuery: `http://neodash.graphapp.io/embed-test.html`,
-        syntheticQuery: `http://localhost:3000/embed-test.html`,
+        syntheticQuery: `http://neodash.graphapp.io/embed-test.html`,
         settings: {"passGlobalParameters": true},
         fields: [],
         globalParameters: {"neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix"},

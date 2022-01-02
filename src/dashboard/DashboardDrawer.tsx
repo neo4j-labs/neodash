@@ -65,8 +65,7 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
                         color="default"
                         variant="outlined"
                         size="small"
-                        startIcon={<ExitToAppIcon />}>
-                        Menu
+                        startIcon={<ExitToAppIcon />}>NeoDash
                     </Button>
                 </ListItem>
 
