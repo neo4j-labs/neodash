@@ -1,3 +1,19 @@
+## NeoDash 2.0.4
+New features:
+- Added option dashboard setting to let users view reports in a fullscreen pop-up.
+- Added inspection pop-up for graph visualizations.
+- Added option to manually specify node labels/property names in parameter selection reports (for large databases).
+- Added example of how to user map visualizations from derived properties.
+- Added button to return to the welcome screen.
+- iFrames can now take live parameter selections in the hash-part of the URL.
+
+Bug fixes:
+- Dashboards will now remember the active selection(s) made in parameter select reports.
+- Graph visualizations will no longer draw overlapping lines when a pair of nodes shares bidirectional relationships.
+- connection screen is now dismissable if an existing connection exists.
+    
+Special thanks to @JipSogeti for their contributions to this release.
+
 ## NeoDash 2.0.3
 UX improvements + bug fixes.
 - Parameter selection report:
