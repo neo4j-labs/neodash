@@ -491,6 +491,12 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "manualPropertyNameSpecification": {
+                label: "Enable Manual Label/Property Name Specification",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
         }
     },
     "iframe": {
