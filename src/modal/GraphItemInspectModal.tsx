@@ -19,13 +19,13 @@ const formatProperty = (property) => {
     return property;
 }
 
-export const NeoGraphModal = ({ open, handleClose, title, object }) => {
+export const NeoGraphItemInspectModal = ({ open, handleClose, title, object }) => {
     return (
         <div>
             <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    {title}
-                    <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
+                    {title} 
+                    <IconButton onClick={handleClose} style={{ padding: "3px", marginLeft: "20px", float: "right" }}>
                         <Badge badgeContent={""} >
                             <CloseIcon />
                         </Badge>
@@ -54,6 +54,6 @@ export const NeoGraphModal = ({ open, handleClose, title, object }) => {
     );
 }
 
-export default (NeoGraphModal);
+export default (NeoGraphItemInspectModal);
 
 

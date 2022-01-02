@@ -129,6 +129,18 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "#fafafa"
             },
+            "showPropertiesOnHover": {
+                label: "Show pop-up on Hover",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "showPropertiesOnClick": {
+                label: "Show properties on Click",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "hideSelections": {
                 label: "Hide Property Selection",
                 type: SELECTION_TYPES.LIST,

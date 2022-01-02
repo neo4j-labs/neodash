@@ -7,7 +7,7 @@ import { schemeCategory10, schemeAccent, schemeDark2, schemePaired, schemePastel
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/RecordProcessing';
-import { NeoGraphModal } from '../modal/GraphModal';
+import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -20,7 +20,7 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const [open, setOpen] = React.useState(false);
-    const [modalItem, setModalItem] = React.useState({});
+    const [inspectItem, setInspectItem] = React.useState({});
 
     const handleOpen = () => {
         setOpen(true);
@@ -44,6 +44,8 @@ const NeoGraphChart = (props: ChartProps) => {
     const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
     const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#909090";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
+    const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
+    const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
     const selfLoopRotationDegrees = 45;
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
@@ -194,9 +196,10 @@ const NeoGraphChart = (props: ChartProps) => {
     }, []);
 
     const showPopup = useCallback(item => {
-        console.log(item);
-        setModalItem(item);
-        handleOpen();
+        if(showPropertiesOnClick){
+            setInspectItem(item);
+            handleOpen();
+        }
     }, []);
 
     // If the set of extra records gets updated (e.g. on relationship expand), rebuild the graph.
@@ -215,8 +218,8 @@ const NeoGraphChart = (props: ChartProps) => {
                 linkDirectionalArrowLength={3}
                 linkDirectionalArrowRelPos={1}
                 linkWidth={link => link.width}
-                linkLabel={link => `<div>${generateTooltip(link)}</div>`}
-                nodeLabel={node => `<div>${generateTooltip(node)}</div>`}
+                linkLabel={link => showPropertiesOnHover ? `<div>${generateTooltip(link)}</div>` : ""}
+                nodeLabel={node => showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : ""}
                 nodeVal={node => node.size}
                 onNodeClick={showPopup}
                 onLinkClick={showPopup}
@@ -264,7 +267,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 }}
                 graphData={width ? data : { nodes: [], links: [] }}
             />
-            <NeoGraphModal open={open} handleClose={handleClose} title={modalItem.lastLabel || modalItem.type} object={modalItem.properties}></NeoGraphModal>
+            <NeoGraphItemInspectModal open={open} handleClose={handleClose} title={(inspectItem.labels && inspectItem.labels.join(", ")) || inspectItem.type} object={inspectItem.properties}></NeoGraphItemInspectModal>
         </div>
     );
 }
