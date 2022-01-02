@@ -9,7 +9,7 @@ import NeoCodeField from '../../component/EditableCodeField';
 import { CARD_SIZES } from '../../config/CardConfig';
 
 
-const NeoCardSettingsContent = ({ query, database, refreshRate, cypherParameters, width, height, type,
+const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, cypherParameters, width, height, type,
     onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onTypeUpdate }) => {
 
 
@@ -54,7 +54,7 @@ const NeoCardSettingsContent = ({ query, database, refreshRate, cypherParameters
 
 
     const SettingsComponent = REPORT_TYPES[type].settingsComponent;
-    const settings = REPORT_TYPES[type]["settingsComponent"] ? <SettingsComponent type={type} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
+    const settings = REPORT_TYPES[type]["settingsComponent"] ? <SettingsComponent type={type} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
     <>
         <NeoCodeField value={queryText}
             language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}

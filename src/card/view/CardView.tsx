@@ -1,25 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
 import { CardContent } from '@material-ui/core';
-import { REPORT_TYPES, SELECTION_TYPES } from '../../config/ReportConfig';
+import { REPORT_TYPES } from '../../config/ReportConfig';
 
 const CARD_FOOTER_HEIGHT = 64;
 
 const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, width, height, fields,
-    type, selection, settings, settingsOpen, refreshRate, editable,
+    type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate, onFieldsUpdate }) => {
     const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
     const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
+
+    const [expanded, setExpanded] = useState(false);
+
+    const onToggleCardExpand = () => {
+        setExpanded(!expanded);
+    }
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
         title={title}
         editable={editable}
+        fullscreenEnabled={dashboardSettings.fullscreenEnabled}
         onTitleUpdate={onTitleUpdate}
-        onToggleCardSettings={onToggleCardSettings}>
+        onToggleCardSettings={onToggleCardSettings}
+        onToggleCardExpand={onToggleCardExpand}
+        expanded={expanded}
+    >
     </NeoCardViewHeader>;
 
     // @ts-ignore
@@ -32,14 +42,21 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         showOptionalSelections={(settings["showOptionalSelections"])} >
     </NeoCardViewFooter>;
 
+    const withoutFooter = !REPORT_TYPES[type].selection || (settings && settings.hideSelections);
+
+    const getGlobalParameter = (key: string): any => {
+        return globalParameters ? globalParameters[key] : undefined;
+    }
+
     return (
-        <div>
+        <div className={`card-view ${expanded ? "expanded" : ""}`}>
             {reportHeader}
             {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
-            <ReportItemContainer style={{ height: cardHeight }}>
+            <ReportItemContainer style={{ height: expanded ? (withoutFooter ? "calc(100% - 69px)" : "calc(100% - 79px)") : cardHeight }}>
                 <CardContent style={{
                     paddingBottom: "0px", paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px", width: "100%", marginTop: "-3px",
-                    height: (!REPORT_TYPES[type].selection || (settings && settings.hideSelections)) ?  reportHeight + CARD_FOOTER_HEIGHT + "px" : reportHeight + "px", overflow: "auto", overflowY: "auto", overflowX: "auto"
+                    height: expanded ? (withoutFooter ? "100%" : `calc(100% - ${CARD_FOOTER_HEIGHT}px)`) : ((withoutFooter) ? reportHeight + CARD_FOOTER_HEIGHT + "px" : reportHeight + "px"),
+                    overflow: "auto", overflowY: "auto", overflowX: "auto"
                 }}>
                     <NeoReport query={query}
                         database={database}
@@ -49,12 +66,14 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                         selection={selection}
                         fields={fields}
                         settings={settings}
+                        expanded={expanded}
                         rowLimit={REPORT_TYPES[type].maxRecords}
                         refreshRate={refreshRate}
                         dimensions={{ width: width, height: height }}
                         type={type}
                         ChartType={REPORT_TYPES[type].component}
                         setGlobalParameter={onGlobalParameterUpdate}
+                        getGlobalParameter={getGlobalParameter}
                         setFields={onFieldsUpdate} />
                 </CardContent>
                 {reportFooter}

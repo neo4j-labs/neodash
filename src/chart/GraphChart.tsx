@@ -7,7 +7,7 @@ import { schemeCategory10, schemeAccent, schemeDark2, schemePaired, schemePastel
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/RecordProcessing';
-
+import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -18,6 +18,17 @@ const NeoGraphChart = (props: ChartProps) => {
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
+
+    const [open, setOpen] = React.useState(false);
+    const [inspectItem, setInspectItem] = React.useState({});
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     // Retrieve config from advanced settings
     const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : "#fafafa";
@@ -33,6 +44,8 @@ const NeoGraphChart = (props: ChartProps) => {
     const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
     const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#909090";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
+    const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
+    const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
     const selfLoopRotationDegrees = 45;
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
@@ -132,12 +145,22 @@ const NeoGraphChart = (props: ChartProps) => {
             })
         });
         // Assign proper curvatures to relationships.
+        // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
         const linksList = Object.values(links).map(nodePair => {
             return nodePair.map((link, i) => {
                 if (link.source == link.target) {
+                    // Self-loop
                     return update(link, { curvature: 0.4 + (i) / 8 });
                 } else {
-                    return update(link, { curvature: getCurvature(i, nodePair.length) });
+                    // If we also have edges from the target to the source, adjust curvatures accordingly.
+                    const mirroredNodePair = links[link.target + "," + link.source];
+                    if (!mirroredNodePair){
+                        return update(link, { curvature: getCurvature(i, nodePair.length) });
+                    }else{
+                        return update(link, { curvature: (link.source > link.target ? 1 : -1) * 
+                            getCurvature(link.source > link.target ? i : i + mirroredNodePair.length, 
+                                nodePair.length + mirroredNodePair.length) });
+                    }
                 }
             });
         });
@@ -177,11 +200,17 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const handleExpand = useCallback(node => {
-        if(rightClickToExpandNodes){
+        if (rightClickToExpandNodes) {
             props.queryCallback && props.queryCallback("MATCH (n)-[e]-(m) WHERE id(n) =" + node.id + " RETURN e,m", {}, setExtraRecords);
         }
     }, []);
 
+    const showPopup = useCallback(item => {
+        if(showPropertiesOnClick){
+            setInspectItem(item);
+            handleOpen();
+        }
+    }, []);
 
     // If the set of extra records gets updated (e.g. on relationship expand), rebuild the graph.
     useEffect(() => {
@@ -199,9 +228,11 @@ const NeoGraphChart = (props: ChartProps) => {
                 linkDirectionalArrowLength={3}
                 linkDirectionalArrowRelPos={1}
                 linkWidth={link => link.width}
-                linkLabel={link => `<div>${generateTooltip(link)}</div>`}
-                nodeLabel={node => `<div>${generateTooltip(node)}</div>`}
+                linkLabel={link => showPropertiesOnHover ? `<div>${generateTooltip(link)}</div>` : ""}
+                nodeLabel={node => showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : ""}
                 nodeVal={node => node.size}
+                onNodeClick={showPopup}
+                onLinkClick={showPopup}
                 onNodeRightClick={handleExpand}
                 nodeCanvasObjectMode={() => "after"}
                 nodeCanvasObject={(node, ctx, globalScale) => {
@@ -228,9 +259,11 @@ const NeoGraphChart = (props: ChartProps) => {
                         ctx.save();
                         ctx.translate(posX, posY);
                         ctx.rotate(angle);
+                        // Mirrors the curvatures when the label is upside down.
+                        const mirror = (link.source.x > link.target.x) ? 1 : -1;
                         ctx.textAlign = "center";
                         if (link.curvature) {
-                            ctx.fillText(label, 0, length * link.curvature * 0.5);
+                            ctx.fillText(label, 0, mirror * length * link.curvature * 0.5);
                         } else {
                             ctx.fillText(label, 0, 0);
                         }
@@ -246,6 +279,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 }}
                 graphData={width ? data : { nodes: [], links: [] }}
             />
+            <NeoGraphItemInspectModal open={open} handleClose={handleClose} title={(inspectItem.labels && inspectItem.labels.join(", ")) || inspectItem.type} object={inspectItem.properties}></NeoGraphItemInspectModal>
         </div>
     );
 }

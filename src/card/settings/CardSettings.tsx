@@ -23,6 +23,7 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         query={query}
         database={database}
         refreshRate={refreshRate}
+        reportSettings={reportSettings}
         cypherParameters={cypherParameters}
         width={width}
         height={height}

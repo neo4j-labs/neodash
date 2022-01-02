@@ -45,42 +45,47 @@ export const NeoDocumentationModal = ({ database }) => {
                     </IconButton>
                 </DialogTitle>
                 <div>
-                <DialogContent >
-                    <hr></hr>
-                    {EXAMPLE_REPORTS.map(example => {
-                        return <>
-                            <h3>{example.title}</h3>
-                            <DialogContentText>{example.description}
-                            <br/>
-                            <br/>
-                            <Grid container spacing={4}>
-                                <Grid item xs={4}>
-                                    <div style={{  width: "400px", border: "0px solid lightgrey" }} >
-                                        <NeoEditableCodeField editable={false} placeholder="" value={example.exampleQuery}></NeoEditableCodeField>
-                                    </div>
-                                </Grid>
+                    <DialogContent >
+                        <hr></hr>
+                        {EXAMPLE_REPORTS.map(example => {
+                            return <>
+                                <h3>{example.title}</h3>
+                                <DialogContentText>{example.description}
+                                    <br />
+                                    <br />
+                                    <Grid container spacing={4}>
+                                        <Grid item xs={4}>
+                                            <div style={{ width: "400px", border: "0px solid lightgrey" }} >
+                                                <NeoEditableCodeField editable={false}
+                                                    placeholder=""
+                                                    value={example.exampleQuery}
+                                                    language={example.type == "iframe" ? "url" : "cypher"}
+                                                ></NeoEditableCodeField>
+                                            </div>
+                                        </Grid>
 
-                                <Grid item xs={8}>
-                                    <div style={{ height: "355px", width: "800px", overflow: "hidden", border: "1px solid lightgrey" }} >
-                                        <NeoReport
-                                            query={example.syntheticQuery}
-                                            database={database}
-                                            disabled={!open}
-                                            selection={example.selection}
-                                            settings={example.settings}
-                                            fields={example.fields}
-                                            dimensions={example.dimensions}
-                                            ChartType={example.chartType}
-                                            type = {example.type}
-                                        />
-                                    </div>
-                                </Grid>
-                            </Grid>
-                            </DialogContentText>
-                            <hr></hr>
-                        </>
-                    })}
-                </DialogContent>
+                                        <Grid item xs={8}>
+                                            <div style={{ height: "355px", width: "800px", overflow: "hidden", border: "1px solid lightgrey" }} >
+                                                <NeoReport
+                                                    query={example.syntheticQuery}
+                                                    database={database}
+                                                    disabled={!open}
+                                                    selection={example.selection}
+                                                    mapParameters={example.globalParameters}
+                                                    settings={example.settings}
+                                                    fields={example.fields}
+                                                    dimensions={example.dimensions}
+                                                    ChartType={example.chartType}
+                                                    type={example.type}
+                                                />
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                                </DialogContentText>
+                                <hr></hr>
+                            </>
+                        })}
+                    </DialogContent>
                 </div>
             </Dialog> : <></>}
         </div>

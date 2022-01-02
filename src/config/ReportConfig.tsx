@@ -129,6 +129,18 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "#fafafa"
             },
+            "showPropertiesOnHover": {
+                label: "Show pop-up on Hover",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "showPropertiesOnClick": {
+                label: "Show properties on Click",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "hideSelections": {
                 label: "Hide Property Selection",
                 type: SELECTION_TYPES.LIST,
@@ -479,6 +491,12 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "manualPropertyNameSpecification": {
+                label: "Enable Manual Label/Property Name Specification",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
         }
     },
     "iframe": {
@@ -489,7 +507,14 @@ export const REPORT_TYPES = {
         inputMode: "url",
         maxRecords: 1,
         allowScrolling: true,
-        settings: {}
+        settings: {
+            "passGlobalParameters": {
+                label: "Pass global variables to iFrame URL",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            }
+        }
     },
     "text": {
         label: "Markdown",

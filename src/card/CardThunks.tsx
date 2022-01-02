@@ -96,18 +96,21 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
                     }
 
                 } else {
-                  
                     if (fields.length > 0) {
                         // For multi selections, select the Nth item of the result fields as a single item array.
-                        if (selectableFields[selection].multiple) {
-                            dispatch(updateSelection(pagenumber, index, selection, [fields[Math.min(i, fields.length - 1)]]));
+                        if (selectableFields[selection].multiple) { 
+                            // only update if the old selection no longer covers the new set of fields...
+                            if(!oldSelection[selection].every(v => fields.includes(v))){
+                                dispatch(updateSelection(pagenumber, index, selection, [fields[Math.min(i, fields.length - 1)]]));
+                            }
+
                         } else if (selectableFields[selection].type == SELECTION_TYPES.NODE_PROPERTIES) {
                             // For node property selections, select the most obvious properties of the node to display.
                             const selection = {};
                             fields.forEach(nodeLabelAndProperties => {
                                 const label = nodeLabelAndProperties[0];
                                 const properties = nodeLabelAndProperties.slice(1);
-                                var selectedProp = undefined;
+                                var selectedProp = oldSelection[label] ? oldSelection[label] : undefined;
                                 if(autoAssignSelectedProperties){
                                     DEFAULT_NODE_LABELS.forEach(prop => {
                                         if(properties.indexOf(prop) !== -1){

@@ -52,6 +52,7 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
             </NeoAboutModal>
             <NeoConnectionModal
                 open={connectionModalOpen}
+                dismissable={connected}
                 connection={connection}
                 createConnection={createConnection}
                 onConnectionModalClose={onConnectionModalClose} ></NeoConnectionModal>

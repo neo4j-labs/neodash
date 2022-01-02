@@ -1,5 +1,7 @@
 import NeoBarChart from "../chart/BarChart";
 import NeoGraphChart from "../chart/GraphChart";
+import NeoIFrameChart from "../chart/IFrameChart";
+import NeoJSONChart from "../chart/JSONChart";
 import NeoLineChart from "../chart/LineChart";
 import NeoMapChart from "../chart/MapChart";
 import NeoTableChart from "../chart/TableChart";
@@ -181,5 +183,38 @@ RETURN value
         selection: {},
         type: "map",
         chartType: NeoMapChart
+    },
+    {
+        title: "Map (from properties)",
+        description: "Use dictionaries to visualize entities that are not real nodes and relationships.",
+        exampleQuery: `// Plot an artificial relationship.\nMATCH (l1:Location)<--(a:Person),\n      (a:Person)-[:KNOWS]-(b:Person),\n      (b:Person)-->(l2:Location)
+RETURN {id: a.name, label: "Person", point: l1.point},
+       {id: b.name, label: "Person", point: l2.point},
+       {start: a.name, end: b.name, type: "KNOWS", id: 1}
+`,
+        syntheticQuery: `
+        UNWIND [{id: "Dwight", label: "Person", point: point({latitude:41.45954418871592, longitude:-75.75265878192192})},
+{id: "Jim", label: "Person", point: point({latitude:41.41492119160039,longitude: -75.6470002887925})},
+{start: "Dwight", end: "Jim", type: "KNOWS", id: 1}
+] as value
+RETURN value
+        `,
+        settings: {},
+        fields: [],
+        selection: {},
+        type: "map",
+        chartType: NeoMapChart
+    },
+    {
+        title: "iFrame",
+        description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
+        exampleQuery: `http://neodash.graphapp.io/embed-test.html`,
+        syntheticQuery: `http://neodash.graphapp.io/embed-test.html`,
+        settings: {"passGlobalParameters": true},
+        fields: [],
+        globalParameters: {"neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix"},
+        selection: {},
+        type: "iframe",
+        chartType: NeoIFrameChart
     }
 ]

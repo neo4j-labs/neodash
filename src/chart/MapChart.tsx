@@ -296,8 +296,10 @@ const NeoMapChart = (props: ChartProps) => {
 
     const markers = createMarkers();
     const lines = createLines();
+    const fullscreen = props.fullscreen ? props.fullscreen : false;
+
     // Draw the component.
-    return <MapContainer /*ref={observe}*/ key={data.centerLatitude + "," + data.centerLongitude} style={{ width: "100%", height: "100%" }}
+    return <MapContainer /*ref={observe}*/ key={data.centerLatitude + "," + data.centerLongitude + "," + fullscreen} style={{ width: "100%", height: "100%" }}
         center={[data.centerLatitude ? data.centerLatitude : 0, data.centerLongitude ? data.centerLongitude : 0]}
         zoom={data.zoom ? data.zoom : 0}
         maxZoom={18}

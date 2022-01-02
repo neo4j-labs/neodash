@@ -1,5 +1,3 @@
-import { updateReportSize, UPDATE_REPORT_SIZE } from '../card/CardActions';
-import cardReducer from '../card/CardReducer';
 import { UPDATE_DASHBOARD_SETTING } from './SettingsActions';
 
 const update = (state, mutations) =>
@@ -9,6 +7,7 @@ const update = (state, mutations) =>
 export const SETTINGS_INITIAL_STATE = {
     pagenumber: 0,
     editable: true,
+    fullscreenEnabled: false
 }
 
 
