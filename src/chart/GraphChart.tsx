@@ -145,12 +145,22 @@ const NeoGraphChart = (props: ChartProps) => {
             })
         });
         // Assign proper curvatures to relationships.
+        // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
         const linksList = Object.values(links).map(nodePair => {
             return nodePair.map((link, i) => {
                 if (link.source == link.target) {
+                    // Self-loop
                     return update(link, { curvature: 0.4 + (i) / 8 });
                 } else {
-                    return update(link, { curvature: getCurvature(i, nodePair.length) });
+                    // If we also have edges from the target to the source, adjust curvatures accordingly.
+                    const mirroredNodePair = links[link.target + "," + link.source];
+                    if (!mirroredNodePair){
+                        return update(link, { curvature: getCurvature(i, nodePair.length) });
+                    }else{
+                        return update(link, { curvature: (link.source > link.target ? 1 : -1) * 
+                            getCurvature(link.source > link.target ? i : i + mirroredNodePair.length, 
+                                nodePair.length + mirroredNodePair.length) });
+                    }
                 }
             });
         });
@@ -249,9 +259,11 @@ const NeoGraphChart = (props: ChartProps) => {
                         ctx.save();
                         ctx.translate(posX, posY);
                         ctx.rotate(angle);
+                        // Mirrors the curvatures when the label is upside down.
+                        const mirror = (link.source.x > link.target.x) ? 1 : -1;
                         ctx.textAlign = "center";
                         if (link.curvature) {
-                            ctx.fillText(label, 0, length * link.curvature * 0.5);
+                            ctx.fillText(label, 0, mirror * length * link.curvature * 0.5);
                         } else {
                             ctx.fillText(label, 0, 0);
                         }
