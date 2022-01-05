@@ -113,8 +113,13 @@ function RenderSubValue(value, key = 0) {
 
     const type = getRecordType(value);
     const columnProperties = customColumnProperties[type];
-    if (columnProperties?.renderCell) {
-        return columnProperties.renderCell({ value: value });
+
+    if (columnProperties) {
+        if (columnProperties.renderCell) {
+            return columnProperties.renderCell({ value: value });
+        } else if (columnProperties.valueGetter) {
+            return columnProperties.valueGetter({ value: value });
+        }
     }
 
     return RenderString(value);
