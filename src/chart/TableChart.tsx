@@ -92,6 +92,7 @@ const NeoTableChart = (props: ChartProps) => {
     return (
         <div style={{ height: "100%", width: '100%' }}>
             <DataGrid
+                headerHeight={32}
                 rows={rows}
                 columns={columns}
                 pageSize={fullscreen ? 15 : (props.dimensions && props.dimensions.height == 3) ? 5 : 13}
