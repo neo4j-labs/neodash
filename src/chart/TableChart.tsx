@@ -137,7 +137,7 @@ const NeoTableChart = (props: ChartProps) => {
             headerName: key,
             headerClassName: 'table-small-header',
             disableColumnSelector: true,
-            flex: columnWidths ? columnWidths[i] % columnWidths.length : 1,
+            flex: (columnWidths && i < columnWidths.length) ? columnWidths[i] : 1,
             disableClickEventBubbling: true
         }, value)
     })
@@ -149,6 +149,7 @@ const NeoTableChart = (props: ChartProps) => {
     return (
         <div style={{ height: "100%", width: '100%' }}>
             <DataGrid
+                headerHeight={32}
                 rows={rows}
                 columns={columns}
                 pageSize={fullscreen ? 15 : (props.dimensions && props.dimensions.height == 3) ? 5 : 13}

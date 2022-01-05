@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -64,13 +64,16 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.14.6",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.4",
     "@material-ui/system": "^4.12.1",
     "@material-ui/utils": "^4.11.2",
-    "@mui/x-data-grid": "^4.0.1",
+    "@mui/material": "^5.2.7",
+    "@mui/x-data-grid": "^5.2.1",
     "@react-leaflet/core": "1.0.2",
     "codemirror": "^5.63.3",
     "cypher-codemirror": "^1.1.7",

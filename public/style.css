@@ -53,12 +53,12 @@
 .MuiChip-root:before {
     border: none !important;
 }
-.MuiDataGrid-columnsContainer {
+/* .MuiDataGrid-columnHeaders {
     min-height: 32px !important;
     max-height: 32px !important;
     line-height: 32px !important;
-    /* border-top: 1px solid rgba(224, 224, 224, 1); */
 }
+
 .MuiDataGrid-columnSeparator{
     height: 32px;
 }
@@ -70,6 +70,9 @@
     overflow-y: hidden !important;
     overflow-x: hidden !important;
 }
+.MuiTablePagination-root{
+    margin-top: -10px;
+} */
 .MuiTablePagination-root{
     margin-top: -10px;
 }
