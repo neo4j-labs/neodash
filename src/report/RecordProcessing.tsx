@@ -260,6 +260,10 @@ export function getRecordType(value) {
 
     if (value === true || value === false) {
         return 'boolean';
+    } else if (value === undefined) {
+        return 'undefined';
+    } else if (value === null) {
+        return 'null';
     } else if (value.__isInteger__) {
         return 'number';
     } else if (value.__isDate__) {

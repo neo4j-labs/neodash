@@ -85,6 +85,12 @@ const customColumnProperties: any = {
     "string": {
         type: 'string',
         renderCell: (c) => RenderString(c.value),
+    },
+    "null": {
+        type: 'string'
+    },
+    "undefined": {
+        type: 'string'
     }
 };
 
