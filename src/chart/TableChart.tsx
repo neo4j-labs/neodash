@@ -80,7 +80,7 @@ const NeoTableChart = (props: ChartProps) => {
             headerClassName: 'table-small-header',
             renderCell: (c) => RenderTableValue(c.value),
             disableColumnSelector: true,
-            flex: columnWidths ? columnWidths[i] % columnWidths.length : 1,
+            flex: (columnWidths && i < columnWidths.length) ? columnWidths[i] : 1,
             disableClickEventBubbling: true
         }
     })
