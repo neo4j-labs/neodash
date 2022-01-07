@@ -107,13 +107,13 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
     if (numericFieldNames.some(numericFieldName => (isNaN(record._fields[record._fieldLookup[numericFieldName]])))) {
         return null;
     }
-  
+
     numericOrDatetimeFieldNames.forEach(numericOrDatetimeFieldName => {
         const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
         const className = value.__proto__.constructor.name;
-        if (className == "DateTime"){
-            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] =new Date(value.toString());
-            
+        if (className == "DateTime") {
+            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = new Date(value.toString());
+
         }
     })
 
@@ -250,4 +250,38 @@ export function valueIsPath(value) {
 export function valueIsObject(value) {
     const className = value.__proto__.constructor.name;
     return className == "Object";
+}
+
+export function getRecordType(value) {
+    // mui data-grid native column types are: 'string' (default),
+    // 'number', 'date', 'dateTime', 'boolean' and 'singleSelect'
+    // https://v4.mui.com/components/data-grid/columns/#column-types
+    // Type singleSelect is not implemented here
+
+    if (value === true || value === false) {
+        return 'boolean';
+    } else if (value === undefined) {
+        return 'undefined';
+    } else if (value === null) {
+        return 'null';
+    } else if (value.__isInteger__) {
+        return 'number';
+    } else if (value.__isDate__) {
+        return 'date';
+    } else  if (value.__isDateTime__) {
+        return 'dateTime';
+    } else if (valueIsNode(value)) {
+        return 'node';
+    } else if (valueIsRelationship(value)) {
+        return 'relationship';
+    } else if (valueIsPath(value)) {
+        return 'path';
+    } else if (valueIsArray(value)) {
+        return 'array';
+    } else if (valueIsObject(value)) {
+        return 'object';
+    }
+
+    // Use string as default type
+    return 'string';
 }
