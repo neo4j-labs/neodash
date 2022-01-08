@@ -8,6 +8,10 @@ import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/RecordProcessing';
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
+import LockIcon from '@material-ui/icons/Lock';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
+import { Tooltip } from '@material-ui/core';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -46,11 +50,14 @@ const NeoGraphChart = (props: ChartProps) => {
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
     const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
+    const fixNodeAfterDrag = props.settings && props.settings.fixNodeAfterDrag !== undefined ? props.settings.fixNodeAfterDrag : true;
     const selfLoopRotationDegrees = 45;
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
 
     const [data, setData] = React.useState({ nodes: [], links: [] });
+    var nodePositions = props.settings ? props.settings.nodePositions : {};
+    const [frozen, setFrozen] = React.useState(props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false);
     const [extraRecords, setExtraRecords] = React.useState([]);
 
     useEffect(() => {
@@ -87,6 +94,10 @@ const NeoGraphChart = (props: ChartProps) => {
                 properties: value.properties,
                 lastLabel: value.labels[value.labels.length - 1]
             };
+            if (frozen && nodePositions && nodePositions[value.identity.low]) {
+                nodes[value.identity.low]["fx"] = nodePositions[value.identity.low][0];
+                nodes[value.identity.low]["fy"] = nodePositions[value.identity.low][1];
+            }
         } else if (valueIsRelationship(value)) {
             if (links[value.start.low + "," + value.end.low] == undefined) {
                 links[value.start.low + "," + value.end.low] = [];
@@ -154,12 +165,14 @@ const NeoGraphChart = (props: ChartProps) => {
                 } else {
                     // If we also have edges from the target to the source, adjust curvatures accordingly.
                     const mirroredNodePair = links[link.target + "," + link.source];
-                    if (!mirroredNodePair){
+                    if (!mirroredNodePair) {
                         return update(link, { curvature: getCurvature(i, nodePair.length) });
-                    }else{
-                        return update(link, { curvature: (link.source > link.target ? 1 : -1) * 
-                            getCurvature(link.source > link.target ? i : i + mirroredNodePair.length, 
-                                nodePair.length + mirroredNodePair.length) });
+                    } else {
+                        return update(link, {
+                            curvature: (link.source > link.target ? 1 : -1) *
+                                getCurvature(link.source > link.target ? i : i + mirroredNodePair.length,
+                                    nodePair.length + mirroredNodePair.length)
+                        });
                     }
                 }
             });
@@ -181,7 +194,7 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const generateTooltip = (value) => {
-        const tooltip = <div><b> {value.labels ? (value.labels.length > 0 ? value.labels.join(", ") : "Node") : value.type}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{(value.properties[k].toString().length <= 30) ? value.properties[k].toString() : value.properties[k].toString().substring(0,40) +"..."}</td></tr>)}</tbody></table></div>;
+        const tooltip = <div><b> {value.labels ? (value.labels.length > 0 ? value.labels.join(", ") : "Node") : value.type}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{(value.properties[k].toString().length <= 30) ? value.properties[k].toString() : value.properties[k].toString().substring(0, 40) + "..."}</td></tr>)}</tbody></table></div>;
         return ReactDOMServer.renderToString(tooltip);
     }
 
@@ -206,7 +219,7 @@ const NeoGraphChart = (props: ChartProps) => {
     }, []);
 
     const showPopup = useCallback(item => {
-        if(showPropertiesOnClick){
+        if (showPropertiesOnClick) {
             setInspectItem(item);
             handleOpen();
         }
@@ -219,68 +232,110 @@ const NeoGraphChart = (props: ChartProps) => {
 
 
     return (
-        <div ref={observe} style={{ paddingLeft: "10px", overflow: "hidden", width: "100%", height: "100%" }}>
-            <ForceGraph2D
-                width={width ? width - 10 : 0}
-                height={height ? height - 10 : 0}
-                linkCurvature="curvature"
-                backgroundColor={backgroundColor}
-                linkDirectionalArrowLength={3}
-                linkDirectionalArrowRelPos={1}
-                linkWidth={link => link.width}
-                linkLabel={link => showPropertiesOnHover ? `<div>${generateTooltip(link)}</div>` : ""}
-                nodeLabel={node => showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : ""}
-                nodeVal={node => node.size}
-                onNodeClick={showPopup}
-                onLinkClick={showPopup}
-                onNodeRightClick={handleExpand}
-                nodeCanvasObjectMode={() => "after"}
-                nodeCanvasObject={(node, ctx, globalScale) => {
-                    const label = (props.selection && props.selection[node.lastLabel]) ? renderNodeLabel(node) : "";
-                    const fontSize = nodeLabelFontSize;
-                    ctx.font = `${fontSize}px Sans-Serif`;
-                    ctx.fillStyle = nodeLabelColor;
-                    ctx.textAlign = "center";
-                    ctx.fillText(label, node.x, node.y + 1);
-                }}
-                linkCanvasObjectMode={() => "after"}
-                linkCanvasObject={(link, ctx, globalScale) => {
-                    const label = link.properties.name || link.type || link.id;
-                    const fontSize = relLabelFontSize;
-                    ctx.font = `${fontSize}px Sans-Serif`;
-                    ctx.fillStyle = relLabelColor;
-                    if (link.target != link.source) {
-                        const lenX = (link.target.x - link.source.x);
-                        const lenY = (link.target.y - link.source.y);
-                        const posX = link.target.x - lenX / 2;
-                        const posY = link.target.y - lenY / 2;
-                        const length = Math.sqrt(lenX * lenX + lenY * lenY)
-                        const angle = Math.atan(lenY / lenX)
-                        ctx.save();
-                        ctx.translate(posX, posY);
-                        ctx.rotate(angle);
-                        // Mirrors the curvatures when the label is upside down.
-                        const mirror = (link.source.x > link.target.x) ? 1 : -1;
-                        ctx.textAlign = "center";
-                        if (link.curvature) {
-                            ctx.fillText(label, 0, mirror * length * link.curvature * 0.5);
-                        } else {
-                            ctx.fillText(label, 0, 0);
+        <>
+            <div ref={observe} style={{ paddingLeft: "10px", position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>
+                {frozen ?
+                    <Tooltip title="Toggle dynamic graph layout." aria-label="">
+                        <LockIcon onClick={(e) => {
+                            setFrozen(false);
+                            if (props.settings) {
+                                props.settings.frozen = false;
+                            }
+                        }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small "></LockIcon>
+                    </Tooltip>
+                    :
+                    <Tooltip title="Toggle fixed graph layout." aria-label="">
+                        <LockOpenIcon onClick={(e) => {
+                            setFrozen(true);
+                            if (props.settings) {
+                                props.settings.frozen = true;
+                            }
+                        }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small "></LockOpenIcon>
+                    </Tooltip>
+                }
+                <ForceGraph2D
+                    width={width ? width - 10 : 0}
+                    height={height ? height - 10 : 0}
+                    linkCurvature="curvature"
+                    backgroundColor={backgroundColor}
+                    linkDirectionalArrowLength={3}
+                    linkDirectionalArrowRelPos={1}
+                    linkWidth={link => link.width}
+                    linkLabel={link => showPropertiesOnHover ? `<div>${generateTooltip(link)}</div>` : ""}
+                    nodeLabel={node => showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : ""}
+                    nodeVal={node => node.size}
+                    onNodeClick={showPopup}
+                    onLinkClick={showPopup}
+                    onNodeRightClick={handleExpand}
+                    onNodeDragEnd={node => {
+                        if (fixNodeAfterDrag) {
+                            node.fx = node.x;
+                            node.fy = node.y;
                         }
-                        ctx.restore();
-                    } else {
-                        ctx.save();
-                        ctx.translate(link.source.x, link.source.y);
-                        ctx.rotate(Math.PI * selfLoopRotationDegrees / 180);
+                        if (frozen) {
+                            nodePositions["" + node.id] = [node.x, node.y];
+                        }
+                    }}
+                    nodeCanvasObjectMode={() => "after"}
+                    nodeCanvasObject={(node, ctx, globalScale) => {
+                        const label = (props.selection && props.selection[node.lastLabel]) ? renderNodeLabel(node) : "";
+                        const fontSize = nodeLabelFontSize;
+                        ctx.font = `${fontSize}px Sans-Serif`;
+                        ctx.fillStyle = nodeLabelColor;
                         ctx.textAlign = "center";
-                        ctx.fillText(label, 0, -18.7 + -37.1 * (link.curvature - 0.5));
-                        ctx.restore();
-                    }
-                }}
-                graphData={width ? data : { nodes: [], links: [] }}
-            />
-            <NeoGraphItemInspectModal open={open} handleClose={handleClose} title={(inspectItem.labels && inspectItem.labels.join(", ")) || inspectItem.type} object={inspectItem.properties}></NeoGraphItemInspectModal>
-        </div>
+                        ctx.fillText(label, node.x, node.y + 1);
+                        if (frozen && !node.fx && !node.fy) {
+                            node.fx = node.x;
+                            node.fy = node.y;
+                            nodePositions["" + node.id] = [node.x, node.y];
+                        }
+                        if (!frozen && node.fx && node.fy && nodePositions[node.id]) {
+                            nodePositions[node.id] = undefined;
+                            node.fx = undefined;
+                            node.fy = undefined;
+                        }
+
+                    }}
+                    linkCanvasObjectMode={() => "after"}
+                    linkCanvasObject={(link, ctx, globalScale) => {
+                        const label = link.properties.name || link.type || link.id;
+                        const fontSize = relLabelFontSize;
+                        ctx.font = `${fontSize}px Sans-Serif`;
+                        ctx.fillStyle = relLabelColor;
+                        if (link.target != link.source) {
+                            const lenX = (link.target.x - link.source.x);
+                            const lenY = (link.target.y - link.source.y);
+                            const posX = link.target.x - lenX / 2;
+                            const posY = link.target.y - lenY / 2;
+                            const length = Math.sqrt(lenX * lenX + lenY * lenY)
+                            const angle = Math.atan(lenY / lenX)
+                            ctx.save();
+                            ctx.translate(posX, posY);
+                            ctx.rotate(angle);
+                            // Mirrors the curvatures when the label is upside down.
+                            const mirror = (link.source.x > link.target.x) ? 1 : -1;
+                            ctx.textAlign = "center";
+                            if (link.curvature) {
+                                ctx.fillText(label, 0, mirror * length * link.curvature * 0.5);
+                            } else {
+                                ctx.fillText(label, 0, 0);
+                            }
+                            ctx.restore();
+                        } else {
+                            ctx.save();
+                            ctx.translate(link.source.x, link.source.y);
+                            ctx.rotate(Math.PI * selfLoopRotationDegrees / 180);
+                            ctx.textAlign = "center";
+                            ctx.fillText(label, 0, -18.7 + -37.1 * (link.curvature - 0.5));
+                            ctx.restore();
+                        }
+                    }}
+                    graphData={width ? data : { nodes: [], links: [] }}
+                />
+
+                <NeoGraphItemInspectModal open={open} handleClose={handleClose} title={(inspectItem.labels && inspectItem.labels.join(", ")) || inspectItem.type} object={inspectItem.properties}></NeoGraphItemInspectModal>
+            </div>
+        </>
     );
 }
 

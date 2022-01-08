@@ -141,6 +141,12 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "fixNodeAfterDrag": {
+                label: "Fix node positions after Drag",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "hideSelections": {
                 label: "Hide Property Selection",
                 type: SELECTION_TYPES.LIST,
