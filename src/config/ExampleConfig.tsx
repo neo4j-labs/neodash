@@ -93,7 +93,7 @@ export const EXAMPLE_REPORTS = [
           UNWIND data as row
           RETURN row.path as Path
         `,
-        settings: {},
+        settings: {lockable: false},
         fields: [],
         selection: {
             "Person": "name",

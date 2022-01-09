@@ -129,6 +129,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "#fafafa"
             },
+            "layout": {
+                label: "Graph Layout (experimental)",
+                type: SELECTION_TYPES.LIST,
+                values: ["force-directed", "tree", "radial"],
+                default: "force-directed"
+            },
             "showPropertiesOnHover": {
                 label: "Show pop-up on Hover",
                 type: SELECTION_TYPES.LIST,

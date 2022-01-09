@@ -91,7 +91,7 @@ export const NeoWelcomeScreenModal = ({ welcomeScreenOpen, setWelcomeScreenOpen,
                         </Button>}
 
                     <Tooltip title="Try a demo dashboard with a public Neo4j database." aria-label="">
-                        <a style={{textDecoration: "none"}} href="http://neodash.graphapp.io/?share&type=file&id=https%3a%2f%2fgist.githubusercontent.com%2fnielsdejong%2ff983b6b6e06e4e10a1f31ae693de6600%2fraw%2f8230a024ee847982d46e198790fcb15fc3c1d06b%2fexample.json&credentials=neo4j%2bs%3a%2f%2ffincen%3afincen%40fincen%3ademo.neo4jlabs.com%3a7687">
+                        <a style={{textDecoration: "none"}} target="_blank" href="http://neodash.graphapp.io/?share&type=file&id=https%3a%2f%2fgist.githubusercontent.com%2fnielsdejong%2ff983b6b6e06e4e10a1f31ae693de6600%2fraw%2f8230a024ee847982d46e198790fcb15fc3c1d06b%2fexample.json&credentials=neo4j%2bs%3a%2f%2ffincen%3afincen%40fincen%3ademo.neo4jlabs.com%3a7687">
                             <Button
                                 style={{ marginTop: "10px", width: "100%", backgroundColor: "white", boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)" }}
                                 color="default"

@@ -16,6 +16,11 @@ import { Tooltip } from '@material-ui/core';
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
 
+const layouts = {
+    "force-directed": undefined,
+    "tree": "td",
+    "radial": "radialout"
+};
 
 const NeoGraphChart = (props: ChartProps) => {
     // TODO force graph on page switch
@@ -51,12 +56,17 @@ const NeoGraphChart = (props: ChartProps) => {
     const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
     const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
     const fixNodeAfterDrag = props.settings && props.settings.fixNodeAfterDrag !== undefined ? props.settings.fixNodeAfterDrag : true;
+    const layout = props.settings && props.settings.layout !== undefined ? props.settings.layout : "force-directed";
+    const lockable = props.settings && props.settings.lockable !== undefined ? props.settings.lockable : true;
     const selfLoopRotationDegrees = 45;
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
 
     const [data, setData] = React.useState({ nodes: [], links: [] });
-    var nodePositions = props.settings ? props.settings.nodePositions : {};
+    if(props.settings.nodePositions == undefined){
+        props.settings.nodePositions = {};
+    }
+    var nodePositions = props.settings && props.settings.nodePositions;
     const [frozen, setFrozen] = React.useState(props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false);
     const [extraRecords, setExtraRecords] = React.useState([]);
 
@@ -234,25 +244,28 @@ const NeoGraphChart = (props: ChartProps) => {
     return (
         <>
             <div ref={observe} style={{ paddingLeft: "10px", position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>
-                {frozen ?
+                {lockable ? (frozen ?
                     <Tooltip title="Toggle dynamic graph layout." aria-label="">
                         <LockIcon onClick={(e) => {
                             setFrozen(false);
                             if (props.settings) {
                                 props.settings.frozen = false;
                             }
-                        }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small "></LockIcon>
+                        }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small"></LockIcon>
                     </Tooltip>
                     :
                     <Tooltip title="Toggle fixed graph layout." aria-label="">
                         <LockOpenIcon onClick={(e) => {
+                            if (nodePositions == undefined) {
+                                nodePositions = {};
+                            }
                             setFrozen(true);
                             if (props.settings) {
                                 props.settings.frozen = true;
                             }
-                        }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small "></LockOpenIcon>
+                        }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small"></LockOpenIcon>
                     </Tooltip>
-                }
+                ) : <></>}
                 <ForceGraph2D
                     width={width ? width - 10 : 0}
                     height={height ? height - 10 : 0}
@@ -260,6 +273,7 @@ const NeoGraphChart = (props: ChartProps) => {
                     backgroundColor={backgroundColor}
                     linkDirectionalArrowLength={3}
                     linkDirectionalArrowRelPos={1}
+                    dagMode={layouts[layout]}
                     linkWidth={link => link.width}
                     linkLabel={link => showPropertiesOnHover ? `<div>${generateTooltip(link)}</div>` : ""}
                     nodeLabel={node => showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : ""}
@@ -273,6 +287,9 @@ const NeoGraphChart = (props: ChartProps) => {
                             node.fy = node.y;
                         }
                         if (frozen) {
+                            if (nodePositions == undefined) {
+                                nodePositions = {};
+                            }
                             nodePositions["" + node.id] = [node.x, node.y];
                         }
                     }}
@@ -284,12 +301,12 @@ const NeoGraphChart = (props: ChartProps) => {
                         ctx.fillStyle = nodeLabelColor;
                         ctx.textAlign = "center";
                         ctx.fillText(label, node.x, node.y + 1);
-                        if (frozen && !node.fx && !node.fy) {
+                        if (frozen && !node.fx && !node.fy && nodePositions) {
                             node.fx = node.x;
                             node.fy = node.y;
                             nodePositions["" + node.id] = [node.x, node.y];
                         }
-                        if (!frozen && node.fx && node.fy && nodePositions[node.id]) {
+                        if (!frozen && node.fx && node.fy && nodePositions && nodePositions[node.id]) {
                             nodePositions[node.id] = undefined;
                             node.fx = undefined;
                             node.fy = undefined;
