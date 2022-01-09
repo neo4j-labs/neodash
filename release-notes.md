@@ -1,3 +1,4 @@
+
 ## NeoDash 2.0.5
 Graph report:
 - Fixed node position after dragging nodes.
@@ -13,6 +14,7 @@ Parameter select:
 
 Editor:
 - Added button to create a debug file from the 'About' screen.
+
 
 ## NeoDash 2.0.4
 New features:

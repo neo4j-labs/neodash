@@ -93,4 +93,3 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
 
 export default (NeoAboutModal);
 
-
