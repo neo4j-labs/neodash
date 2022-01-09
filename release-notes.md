@@ -1,3 +1,21 @@
+
+## NeoDash 2.0.5
+Graph report:
+- Fixed node position after dragging nodes.
+- Added option to 'lock' graph views, storing the current positions of the nodes in the graph.
+- Added experimental graph layouts.
+
+Table:
+- Fixed bug where the report freezes for very wide tables.
+- Added support for rendering native/custom Neo4j types in the table.
+
+Parameter select:
+- Fixed issue where the dashboard crashes for slow connections.
+
+Editor:
+- Added button to create a debug file from the 'About' screen.
+
+
 ## NeoDash 2.0.4
 New features:
 - Added option dashboard setting to let users view reports in a fullscreen pop-up.

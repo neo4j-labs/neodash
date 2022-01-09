@@ -7,12 +7,24 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import Badge from '@material-ui/core/Badge';
+import { Button } from '@material-ui/core';
+import BugReportIcon from '@material-ui/icons/BugReport';
 
-
-export const NeoAboutModal = ({ open, handleClose }) => {
+export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
     const email = "niels.dejong@neo4j.com";
-    const version = "2.0.4";
+    const version = "2.0.5";
+
+    const downloadDebugFile = () => {
+        const element = document.createElement("a");
+        const state = getDebugState();
+        state["version"] = version;
+        const file = new Blob([JSON.stringify(state, null, 2)], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        element.download = "neodash-debug-state.json";
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+    }
 
     return (
         <div>
@@ -45,7 +57,7 @@ export const NeoAboutModal = ({ open, handleClose }) => {
                         <hr></hr>
                         <h3 style={{ marginBottom: "5px" }}>Extending NeoDash</h3>
                         NeoDash is built with React and <a target="_blank" href="https://github.com/adam-cowley/use-neo4j">use-neo4j</a>,
-                        It uses <a target="_blank" href="https://github.com/neo4j-labs/charts">charts</a> to power some of the visualizations. <br />
+                        It uses <a target="_blank" href="https://github.com/neo4j-labs/charts">charts</a> to power some of the visualizations, and openstreetmap for the map view.<br />
                         You can also extend NeoDash with your own visualizations. Check out the developer guide in the <a target="_blank" href="https://github.com/nielsdejong/neodash/"> project repository</a>.
                         <hr></hr>
                         <h3 style={{ marginBottom: "5px" }}>Contact</h3>
@@ -53,7 +65,26 @@ export const NeoAboutModal = ({ open, handleClose }) => {
                         or by e-mail at <a href={"mailto:" + email}>{email}</a>.
                         <br />
                         <hr></hr>
-                        <i style={{ float: "right", fontSize: "11px" }}>v{version}</i>
+                        <br />
+                        <table style={{width: "100%"}}>
+                            <tr>
+                                <td>
+                                    <Button
+                                        component="label"
+                                        onClick={downloadDebugFile}
+                                        style={{ backgroundColor: "white" }}
+                                        color="default"
+                                        variant="contained"
+                                        size="small"
+                                        endIcon={<BugReportIcon />}>
+                                        Debug Report
+                                    </Button>
+                                </td>
+                                <td>
+                                    <i style={{ float: "right", fontSize: "11px" }}>v{version}</i>
+                                </td>
+                            </tr>
+                        </table>
                     </div></DialogContent>
             </Dialog>
         </div >
@@ -61,5 +92,4 @@ export const NeoAboutModal = ({ open, handleClose }) => {
 }
 
 export default (NeoAboutModal);
-
 

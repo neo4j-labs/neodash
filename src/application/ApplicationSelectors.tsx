@@ -56,3 +56,15 @@ export const applicationHasCachedDashboard = (state: any) => {
     }
     return !_.isEqual(state.dashboard, initialState);
 }
+
+/**
+ * Deep-copy the current state, and remove the password.
+ */
+export const applicationGetDebugState = (state: any) => {
+    const copy = JSON.parse(JSON.stringify(state));
+    copy.application.connection.password = "************";
+    if(copy.application.desktopConnection){
+        copy.application.desktopConnection.password = "************";
+    }
+    return copy;
+}

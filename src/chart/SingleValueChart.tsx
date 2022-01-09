@@ -11,7 +11,7 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const color = props.settings && props.settings.color ? props.settings.color : "rgba(0, 0, 0, 0.87)";
     const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : "left";
 
-    const value = (records && records[0] && records[0]["_fields"]) ? records[0]["_fields"][0].toString() : "";
+    const value = (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0]) ? records[0]["_fields"][0].toString() : "";
     return <div style={{marginTop: marginTop, textAlign: textAlign, marginLeft: "15px", marginRight: "15px"}}>
         <span style={{fontSize: fontSize, color: color}}>{value}</span>
     </div >;

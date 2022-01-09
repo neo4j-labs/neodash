@@ -47,7 +47,7 @@ export const EXAMPLE_REPORTS = [
           UNWIND data as row
           RETURN row.path as Path, row.person as Person, row.rating as Rating, row.movie as Movie
         `,
-        settings: {},
+        settings: {columnWidths: "[2,1,1,1]"},
         fields: [],
         selection: {},
         type: "table",
@@ -93,7 +93,7 @@ export const EXAMPLE_REPORTS = [
           UNWIND data as row
           RETURN row.path as Path
         `,
-        settings: {},
+        settings: {lockable: false},
         fields: [],
         selection: {
             "Person": "name",
@@ -208,8 +208,8 @@ RETURN value
     {
         title: "iFrame",
         description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
-        exampleQuery: `http://neodash.graphapp.io/embed-test.html`,
-        syntheticQuery: `http://neodash.graphapp.io/embed-test.html`,
+        exampleQuery: `https://neodash.graphapp.io/embed-test.html`,
+        syntheticQuery: `https://neodash.graphapp.io/embed-test.html`,
         settings: {"passGlobalParameters": true},
         fields: [],
         globalParameters: {"neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix"},
