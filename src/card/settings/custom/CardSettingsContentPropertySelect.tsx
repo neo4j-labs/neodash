@@ -3,11 +3,11 @@ import React, { useCallback, useContext } from 'react';
 import { REPORT_TYPES, RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import { QueryStatus, runCypherQuery } from '../../../report/CypherQueryRunner';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
-import { debounce, TextField } from '@material-ui/core';
+import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import NeoFieldSelection from '../../../component/FieldSelection';
 
-const NeoCardSettingsContentPropertySelect = ({ type, database, settings, query, onQueryUpdate }) => {
+const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onReportSettingUpdate, query, onQueryUpdate }) => {
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
     if (!driver) throw new Error('`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?')
 
@@ -74,22 +74,38 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, query,
         }
     }
 
+    const parameterSelectTypes = ["Node Property", "Relationship Property", "Free Text"]
+    if(settings["type"] == undefined){
+        settings["type"] = "Node Property";
+        onReportSettingUpdate("type", "Node Property");
+    }
+
     return <div>
         <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", border: "1px solid lightgrey", marginTop: "0px" }}>
             {REPORT_TYPES[type].helperText}
         </p>
+        <TextField select={true} autoFocus  id="type" value={settings["type"]}
+            onChange={(e) => onReportSettingUpdate("type", e.target.value)} style={{ width: "25%" }} label="Selection Type"
+            type="text" 
+            style={{ width: 335, marginLeft: "5px", marginTop: "0px" }}>
+            {parameterSelectTypes.map((option) => (
+                <MenuItem key={option} value={option}>
+                    {option}
+                </MenuItem>
+            ))}
+        </TextField>
         <Autocomplete
             id="autocomplete-label"
             options={manualPropertyNameSpecification ? [labelValue] : labelRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
             getOptionLabel={(option) => option ? option : ""}
-            style={{ width: 350, marginLeft: "5px", marginTop: "0px" }}
+            style={{ width: 335, marginLeft: "5px", marginTop: "5px" }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
                 setLabelInputText(value);
                 if (manualPropertyNameSpecification) {
                     handleNodeLabelSelectionUpdate(value);
                 } else {
-                    queryCallback("CALL db.schema.nodeTypeProperties() YIELD nodeLabels UNWIND nodeLabels as nodeLabel WITH nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5", { input: value }, setLabelRecords);
+                    queryCallback("CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5", { input: value }, setLabelRecords);
                 }
             }}
             value={labelValue}
@@ -100,14 +116,14 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, query,
             id="autocomplete-property"
             options={manualPropertyNameSpecification ? [propertyValue] : propertyRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
             getOptionLabel={(option) => option ? option : ""}
-            style={{ display: "inline-block", width: 200, marginLeft: "5px", marginTop: "5px" }}
+            style={{ display: "inline-block", width: 185, marginLeft: "5px", marginTop: "5px" }}
             inputValue={propertyInputText}
             onInputChange={(event, value) => {
                 setPropertyInputText(value);
                 if (manualPropertyNameSpecification) {
                     handlePropertyNameSelectionUpdate(value);
                 } else {
-                    queryCallback("CALL db.schema.nodeTypeProperties() YIELD nodeLabels, propertyName WITH * WHERE $label IN nodeLabels AND toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5", { label: labelValue, input: value }, setPropertyRecords);
+                    queryCallback("CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5", { input: value }, setPropertyRecords);
                 }
             }}
             value={propertyValue}
@@ -116,7 +132,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, query,
         />
             <NeoFieldSelection placeholder='number'
                 label="Number (optional)" numeric={true} value={idValue}
-                style={{ width: "140px", marginTop: "5px", marginLeft: "10px" }}
+                style={{ width: "135px", marginTop: "5px", marginLeft: "10px" }}
                 onChange={(value) => {
                     const newValue = value ? "_" + value : "";
                     setIdValue(value);

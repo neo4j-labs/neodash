@@ -24,9 +24,6 @@ export enum SELECTION_TYPES {
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
 
-// Maximum time before a query gets cancelled.
-export const QUERY_MAX_TIME_MS = 20000;
-
 // A small delay (for UX reasons) between when to run the query after saving a report.
 export const RUN_QUERY_DELAY_MS = 300;
 
@@ -489,7 +486,7 @@ export const REPORT_TYPES = {
     },
     "select": {
         label: "Parameter Select",
-        helperText: "This report will let users interactively select Cypher parameters that are available globally, in all reports. Choose a node label and a property name, and users can select one of the possible values using an autocomplete textbox.",
+        helperText: "This report will let users interactively select Cypher parameters that are available globally, in all reports.",
         component: NeoParameterSelectionChart,
         settingsComponent: NeoCardSettingsContentPropertySelect,
         disableRefreshRate: true,

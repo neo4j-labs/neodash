@@ -15,6 +15,12 @@ export const DASHBOARD_SETTINGS = {
         default: false,
         helperText: "Enables a 'fullscreen view' button for each report, letting users expand a visualization."
     },
+    "queryTimeLimit": {
+        label: "Maximum Query Time (seconds)",
+        type: SELECTION_TYPES.NUMBER,
+        default: 20,
+        helperText: "The maximum time a report is allowed to run before automatically aborted."
+    },
     "pagenumber": {
         label: "Page Number",
         type: SELECTION_TYPES.NUMBER,

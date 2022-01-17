@@ -22,8 +22,12 @@ const layouts = {
     "radial": "radialout"
 };
 
+/**
+ * Draws graph data using a force-directed-graph visualization.
+ * This visualization is powered by `react-force-graph`. 
+ * See https://github.com/vasturiano/react-force-graph for examples on customization.
+ */
 const NeoGraphChart = (props: ChartProps) => {
-    // TODO force graph on page switch
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
@@ -63,13 +67,20 @@ const NeoGraphChart = (props: ChartProps) => {
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
 
     const [data, setData] = React.useState({ nodes: [], links: [] });
+
+    // Create the dictionary used for storing the memory of dragged node positions.
     if(props.settings.nodePositions == undefined){
         props.settings.nodePositions = {};
     }
     var nodePositions = props.settings && props.settings.nodePositions;
-    const [frozen, setFrozen] = React.useState(props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false);
-    const [extraRecords, setExtraRecords] = React.useState([]);
 
+    // 'frozen' indicates that the graph visualization engine is paused, node positions and stored and only dragging is possible.
+    const [frozen, setFrozen] = React.useState(props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false);
+    
+    // Currently unused, but dynamic graph exploration could be done with these records.
+    const [extraRecords, setExtraRecords] = React.useState([]);
+    
+    // When data is refreshed, rebuild the visualization data.
     useEffect(() => {
         buildVisualizationDictionaryFromRecords(props.records);
     }, [])
@@ -222,6 +233,7 @@ const NeoGraphChart = (props: ChartProps) => {
         return node.properties[selectedProp] ? node.properties[selectedProp] : "";
     }
 
+    // TODO - implement this.
     const handleExpand = useCallback(node => {
         if (rightClickToExpandNodes) {
             props.queryCallback && props.queryCallback("MATCH (n)-[e]-(m) WHERE id(n) =" + node.id + " RETURN e,m", {}, setExtraRecords);

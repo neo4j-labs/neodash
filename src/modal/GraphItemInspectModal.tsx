@@ -19,7 +19,7 @@ const formatProperty = (property) => {
     return property;
 }
 
-export const NeoGraphItemInspectModal = ({ open, handleClose, title, object }) => {
+export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, textAlign = "left" }) => {
     return (
         <div>
             <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -41,7 +41,7 @@ export const NeoGraphItemInspectModal = ({ open, handleClose, title, object }) =
                                             <TableCell component="th" scope="row">
                                                 {key}
                                             </TableCell>
-                                            <TableCell align="right">{formatProperty(object[key].toString())}</TableCell>
+                                            <TableCell align={textAlign}>{formatProperty(object[key].toString())}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import NeoStaticCodeField from "../component/StaticCodeField";
-import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, QUERY_MAX_TIME_MS, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
+import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { useContext } from "react";
@@ -28,6 +28,7 @@ export const NeoReport = ({
     refreshRate = 0, // Optionally refresh the report every X seconds.
     dimensions = { width: 3, height: 3 }, // Size of the report.
     rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
+    queryTimeLimit = 20, // Time limit for queries before automatically aborted.
     type = "table", // The type of report as a string.
     expanded = false, // whether the report is visualized in a fullscreen view.
     ChartType = NeoTableChart, // The report component to render with the query results.
@@ -92,11 +93,11 @@ export const NeoReport = ({
             setStatus(QueryStatus.RUNNING)
             debouncedRunCypherQuery(driver, database, query, parameters, selection, fields,
                 rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
-                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField);
+                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField, queryTimeLimit);
         } else {
             runCypherQuery(driver, database, query, parameters, selection, fields,
                 rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
-                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField);
+                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField, queryTimeLimit);
         }
     };
 
@@ -132,7 +133,7 @@ export const NeoReport = ({
                 (result => setRecords(result)),
                 () => { return }, HARD_ROW_LIMITING,
                 REPORT_TYPES[type].useRecordMapper == true, false,
-                [], [], [], [], null);
+                [], [], [], [], null, queryTimeLimit);
         },
         [],
     );
@@ -194,7 +195,7 @@ export const NeoReport = ({
                 getGlobalParameter={getGlobalParameter} />
         </div>);
     } else if (status == QueryStatus.TIMED_OUT) {
-        return <NeoStaticCodeField value={"Query was aborted - it took longer than " + QUERY_MAX_TIME_MS + "ms to run. \n"
+        return <NeoStaticCodeField value={"Query was aborted - it took longer than " + queryTimeLimit + "s to run. \n"
             + "Consider limiting your returned query rows,\nor increase the maximum query time."} />
     }
     {/* @ts-ignore */ }

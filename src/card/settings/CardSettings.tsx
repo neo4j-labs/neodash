@@ -30,6 +30,7 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         type={type}
         onQueryUpdate={onQueryUpdate}
         onSizeUpdate={onSizeUpdate}
+        onReportSettingUpdate={onReportSettingUpdate}
         onRefreshRateUpdate={onRefreshRateUpdate}
         onCypherParametersUpdate={onCypherParametersUpdate}
         onTypeUpdate={onTypeUpdate}></NeoCardSettingsContent> : <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}/>;

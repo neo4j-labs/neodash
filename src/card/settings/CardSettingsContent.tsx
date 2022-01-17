@@ -10,7 +10,7 @@ import { CARD_SIZES } from '../../config/CardConfig';
 
 
 const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, cypherParameters, width, height, type,
-    onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onTypeUpdate }) => {
+    onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onReportSettingUpdate, onCypherParametersUpdate, onTypeUpdate }) => {
 
 
     // Ensure that we only trigger a text update event after the user has stopped typing.
@@ -54,7 +54,7 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
 
 
     const SettingsComponent = REPORT_TYPES[type].settingsComponent;
-    const settings = REPORT_TYPES[type]["settingsComponent"] ? <SettingsComponent type={type} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
+    const settings = REPORT_TYPES[type]["settingsComponent"] ? <SettingsComponent type={type} onReportSettingUpdate={onReportSettingUpdate} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
     <>
         <NeoCodeField value={queryText}
             language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}
