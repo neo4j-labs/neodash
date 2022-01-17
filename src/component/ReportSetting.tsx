@@ -61,7 +61,7 @@ style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: 
                     helperText={helperText}
                     value={JSON.stringify(value)}
                     defaultValue={""}
-                    placeholder={"" + JSON.stringify(defaultValue)}
+                    placeholder={defaultValue ? "" + JSON.stringify(defaultValue) : "{}"}
                     style={style}
                     onChange={(val) => onChange(val)} />
             </div>;

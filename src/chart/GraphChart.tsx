@@ -3,14 +3,12 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import ForceGraph2D from 'react-force-graph-2d';
 import ReactDOMServer from 'react-dom/server';
 import useDimensions from "react-cool-dimensions";
-import { schemeCategory10, schemeAccent, schemeDark2, schemePaired, schemePastel1, schemePastel2, schemeSet1, schemeSet2, schemeSet3 } from 'd3-scale-chromatic';
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/RecordProcessing';
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
-import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
 import { Tooltip } from '@material-ui/core';
 
 const update = (state, mutations) =>
@@ -94,6 +92,7 @@ const NeoGraphChart = (props: ChartProps) => {
     });
 
 
+    // Dictionaries to populate based on query results.
     var nodes = {};
     var nodeLabels = {};
     var links = {};
@@ -208,6 +207,7 @@ const NeoGraphChart = (props: ChartProps) => {
             return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });
         });
 
+        // Set the data dictionary that is read by the visualization.
         setData({
             nodes: nodesList,
             links: linksList.flat()
@@ -253,6 +253,7 @@ const NeoGraphChart = (props: ChartProps) => {
     }, [extraRecords])
 
 
+    // Return the actual graph visualization component with the parsed data and selected customizations.
     return (
         <>
             <div ref={observe} style={{ paddingLeft: "10px", position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>

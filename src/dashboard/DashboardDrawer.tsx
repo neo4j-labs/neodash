@@ -118,7 +118,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),
     updateDashboardSetting: (setting, value) => {
-        console.log(setting, value);
         dispatch(updateDashboardSetting(setting, value));
     },
     resetApplication: _ => {

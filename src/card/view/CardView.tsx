@@ -74,6 +74,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                         ChartType={REPORT_TYPES[type].component}
                         setGlobalParameter={onGlobalParameterUpdate}
                         getGlobalParameter={getGlobalParameter}
+                        queryTimeLimit={dashboardSettings['queryTimeLimit'] ? dashboardSettings['queryTimeLimit'] : 20}
                         setFields={onFieldsUpdate} />
                 </CardContent>
                 {reportFooter}
