@@ -33,6 +33,14 @@ To build the app for production:
 - execute `npm run build`. This will create a `build` folder in your project directory.
 - deploy the contents of the build folder to a web server. You should then be able to run the web app.
 
+### Build and run Docker image
+Make sure you have a recent version of `docker` installed.
+Use the script under `./tools/neodash-build-run.bash` to build the multi-stage NeoDash image & access it with nginx:
+```
+$ cd tools/
+$ ./neodash-build-run.bash 
+```
+Then go to http://localhost:8080/ in your browser.
 
  ## Extending NeoDash
  As of v2.0, NeoDash is easy to extend with your own visualizations. There are two steps to take to plug in your own charts:
