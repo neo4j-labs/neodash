@@ -16,7 +16,7 @@ while [ $# -ge 1 ]; do
                         shift
                         ;;
                 -h)
-                        echo "Display some help"
+                        echo "Run this script with a '--port 8080' argument to run NeoDash on http://localhost:8080."
                         exit 0
                         ;;
         esac

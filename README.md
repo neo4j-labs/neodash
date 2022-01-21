@@ -38,14 +38,16 @@ Make sure you have a recent version of `docker` installed.
 On Unix-like system you can run  `./tools/neodash-build-run_unix.bash` to build the multi-stage NeoDash image & access it with nginx:
 ```
 $ cd tools/
-$ ./neodash-build-run_unix.bash  --port=$YOUR_PORT
+$ ./neodash-build-run_unix.bash --port=$YOUR_PORT
 ```
-If you use Windows, you should have installed WSL. In WSL system you can run the script as follow:
+If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
 ```
 $ cd tools/
-$ ./neodash-build-run_windows.bash  --port=$YOUR_PORT
+$ ./neodash-build-run_windows.bash --port=$YOUR_PORT
 ```
-Then go to localhost in the port you choose in your browser.
+Then visit localhost with the chosen port in your browser.
+
+A pre-built Docker image is available [https://hub.docker.com/r/nielsdejong/neodash](on DockerHub). 
 
  ## Extending NeoDash
  As of v2.0, NeoDash is easy to extend with your own visualizations. There are two steps to take to plug in your own charts:
