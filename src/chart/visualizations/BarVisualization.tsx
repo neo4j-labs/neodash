@@ -7,7 +7,7 @@ export default function BarVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
 
     if (!first) {
-        return <p>Loading...</p>
+        return <p>Loading data...</p>
     }
 
     const error = checkResultKeys(first, ['index', 'key', 'value'])
