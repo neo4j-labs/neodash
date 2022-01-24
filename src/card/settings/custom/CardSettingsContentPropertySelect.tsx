@@ -16,25 +16,19 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
         [],
     );
 
-
     const manualPropertyNameSpecification = settings['manualPropertyNameSpecification'];
-    const label = query.split("`")[1] ? query.split("`")[1] : undefined;
-    const property = query.split("`")[3] ? query.split("`")[3] : undefined;
-
-    const [labelInputText, setLabelInputText] = React.useState(label);
-    const [labelValue, setLabelValue] = React.useState(label);
+    const [labelInputText, setLabelInputText] = React.useState(settings['entityType']);
     const [labelRecords, setLabelRecords] = React.useState([]);
-    const [propertyInputText, setPropertyInputText] = React.useState(property);
-    const [propertyValue, setPropertyValue] = React.useState(property);
-    const [parameterName, setParameterName] = React.useState("");
+    const [propertyInputText, setPropertyInputText] = React.useState(settings['propertyType']);
     const [propertyRecords, setPropertyRecords] = React.useState([]);
+    var parameterName = settings['parameterName'];
 
-    // Reverse engineer the label, property, ID from the generated query.
-    const approxParam = query.split("\n")[0].split("$")[1];
-    const id = (approxParam && approxParam.split("_").length > 3) && !isNaN(parseInt(approxParam.split("_")[approxParam.split("_").length - 1])) ? approxParam.split("_")[approxParam.split("_").length - 1] : "";
-    const [idValue, setIdValue] = React.useState(id);
-    if (!parameterName && labelValue && propertyValue) {
-        setParameterName("neodash_" + (labelValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_"));
+    if (settings["type"] == undefined) {
+        onReportSettingUpdate("type", "Node Property");
+    }
+    if (!parameterName && settings['entityType'] && settings['propertyType']) {
+        const id = settings['id'] ? settings['id'] : "";
+        onReportSettingUpdate("parameterName", "neodash_" + (settings['entityType'] + "_" + settings['propertyType'] + (id == "" || id.startsWith("_") ? id : "_" + id)).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_"));
     }
     // Define query callback to allow reports to get extra data on interactions.
     const queryCallback = useCallback(
@@ -49,44 +43,78 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
         [],
     );
 
+    function handleParameterTypeUpdate(newValue) {
+        onReportSettingUpdate('entityType', undefined);
+        onReportSettingUpdate('propertyType', undefined);
+        onReportSettingUpdate('id', undefined);
+        onReportSettingUpdate('parameterName', undefined);
+        onReportSettingUpdate("type", newValue);
+    }
+
     function handleNodeLabelSelectionUpdate(newValue) {
-        setLabelValue(newValue);
-        setPropertyValue(undefined);
-        setParameterName("");
-        if (newValue && propertyValue) {
-            const new_parameter_name = "neodash_" + (newValue + "_" + propertyValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
-            const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + newValue + "`) \nWHERE toLower(toString(n.`" + propertyValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyValue + "` as value LIMIT 5";
-            onQueryUpdate(newQuery);
+        setPropertyInputText("");
+        onReportSettingUpdate('entityType', newValue);
+        onReportSettingUpdate('propertyType', undefined);
+        onReportSettingUpdate('parameterName', undefined);
+    }
+
+    function handleFreeTextNameSelectionUpdate(newValue) {
+        if (newValue) {
+            const new_parameter_name = ("neodash_" +  newValue).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
+            handleReportQueryUpdate(new_parameter_name, newValue, undefined);
         } else {
-            setParameterName("");
+            onReportSettingUpdate('parameterName', undefined);
         }
     }
 
     function handlePropertyNameSelectionUpdate(newValue) {
-        setPropertyValue(newValue);
-        if (newValue && labelValue) {
-            const new_parameter_name = "neodash_" + (labelValue + "_" + newValue + (idValue == "" || idValue.startsWith("_") ? idValue : "_" + idValue)).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
-            setParameterName(new_parameter_name);
-            const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + labelValue + "`) \nWHERE toLower(toString(n.`" + newValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + newValue + "` as value LIMIT 5";
+        onReportSettingUpdate('propertyType', newValue);
+        if (newValue && settings['entityType']) {
+            const id = settings['id'] ? settings['id'] : "";
+            const new_parameter_name = "neodash_" + (settings['entityType'] + "_" + newValue + (id == "" || id.startsWith("_") ? id : "_" + id)).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
+            handleReportQueryUpdate(new_parameter_name, settings['entityType'], newValue);
+        } else {
+            onReportSettingUpdate('parameterName', undefined);
+        }
+    }
+
+    function handleIdSelectionUpdate(value) {
+        const newValue = value ? value : "";
+        onReportSettingUpdate('id', "" + newValue);
+        if (settings['propertyType'] && settings['entityType']) {
+            const id = value ? "_" + value : "";
+            const new_parameter_name = "neodash_" + (settings['entityType'] + "_" + settings['propertyType'] + (id == "" || id.startsWith("_") ? id : "_" + id)).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
+            handleReportQueryUpdate(new_parameter_name, settings['entityType'], settings['propertyType']);
+        }
+    }
+
+    function handleReportQueryUpdate(new_parameter_name, entityType, propertyType) {
+        // Set query based on whether we are selecting a node or relationship property.
+        onReportSettingUpdate('parameterName', new_parameter_name);
+        if (settings['type'] == "Node Property") {
+            const newQuery = "MATCH (n:`" + entityType + "`) \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value LIMIT 5";
+            onQueryUpdate(newQuery);
+        } else if (settings['type'] == "Relationship Property"){
+            const newQuery = "MATCH ()-[n:`" + entityType + "`]->() \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value LIMIT 5";
             onQueryUpdate(newQuery);
         } else {
-            setParameterName(null);
+            const newQuery = "RETURN true";
+            onQueryUpdate(newQuery);
         }
     }
 
     const parameterSelectTypes = ["Node Property", "Relationship Property", "Free Text"]
-    if(settings["type"] == undefined){
-        settings["type"] = "Node Property";
-        onReportSettingUpdate("type", "Node Property");
-    }
 
     return <div>
         <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", border: "1px solid lightgrey", marginTop: "0px" }}>
             {REPORT_TYPES[type].helperText}
         </p>
-        <TextField select={true} autoFocus  id="type" value={settings["type"]}
-            onChange={(e) => onReportSettingUpdate("type", e.target.value)} style={{ width: "25%" }} label="Selection Type"
-            type="text" 
+        <TextField select={true} autoFocus id="type" value={settings["type"] ? settings["type"] : "Node Property"}
+            onChange={(e) => {
+                handleParameterTypeUpdate(e.target.value);
+            }}
+            style={{ width: "25%" }} label="Selection Type"
+            type="text"
             style={{ width: 335, marginLeft: "5px", marginTop: "0px" }}>
             {parameterSelectTypes.map((option) => (
                 <MenuItem key={option} value={option}>
@@ -94,57 +122,75 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
                 </MenuItem>
             ))}
         </TextField>
-        <Autocomplete
-            id="autocomplete-label"
-            options={manualPropertyNameSpecification ? [labelValue] : labelRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
-            getOptionLabel={(option) => option ? option : ""}
-            style={{ width: 335, marginLeft: "5px", marginTop: "5px" }}
-            inputValue={labelInputText}
-            onInputChange={(event, value) => {
-                setLabelInputText(value);
-                if (manualPropertyNameSpecification) {
-                    handleNodeLabelSelectionUpdate(value);
-                } else {
-                    queryCallback("CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5", { input: value }, setLabelRecords);
-                }
-            }}
-            value={labelValue}
-            onChange={(event, newValue) => handleNodeLabelSelectionUpdate(newValue)}
-            renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Node Label"} />}
-        />
-        {labelValue ? <><Autocomplete
-            id="autocomplete-property"
-            options={manualPropertyNameSpecification ? [propertyValue] : propertyRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
-            getOptionLabel={(option) => option ? option : ""}
-            style={{ display: "inline-block", width: 185, marginLeft: "5px", marginTop: "5px" }}
-            inputValue={propertyInputText}
-            onInputChange={(event, value) => {
-                setPropertyInputText(value);
-                if (manualPropertyNameSpecification) {
-                    handlePropertyNameSelectionUpdate(value);
-                } else {
-                    queryCallback("CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5", { input: value }, setPropertyRecords);
-                }
-            }}
-            value={propertyValue}
-            onChange={(event, newValue) => handlePropertyNameSelectionUpdate(newValue)}
-            renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Property Name"} />}
-        />
-            <NeoFieldSelection placeholder='number'
-                label="Number (optional)" numeric={true} value={idValue}
-                style={{ width: "135px", marginTop: "5px", marginLeft: "10px" }}
-                onChange={(value) => {
-                    const newValue = value ? "_" + value : "";
-                    setIdValue(value);
-                    if (propertyValue && labelValue) {
-                        const new_parameter_name = "neodash_" + (labelValue + "_" + propertyValue + newValue).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
-                        setParameterName(new_parameter_name);
-                        const newQuery = "// $" + new_parameter_name + "\nMATCH (n:`" + labelValue + "`) \nWHERE toLower(toString(n.`" + propertyValue + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyValue + "` as value LIMIT 5";
-                        onQueryUpdate(newQuery);
-                    }
-                }} /></> : <></>}
-        {parameterName ? <p>Use <b>${parameterName}</b> in a query to use the parameter.</p> : <></>}
 
+        {settings.type == "Free Text" ?
+          <NeoFieldSelection
+            label={"Name"} 
+            key={"freetext"}
+            value={settings["entityType"] ? settings["entityType"] : ""}
+            defaultValue={""}
+            placeholder={"Enter a parameter name here..."}
+            style={{ width: 335, marginLeft: "5px", marginTop: "0px" }}
+            onChange={(value) => {
+                setLabelInputText(value);
+                handleNodeLabelSelectionUpdate(value);
+                handleFreeTextNameSelectionUpdate(value);
+            }}
+            />
+            :
+            <>
+                <Autocomplete
+                    id="autocomplete-label-type"
+                    options={manualPropertyNameSpecification ? [settings['entityType']] : labelRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
+                    getOptionLabel={(option) => option ? option : ""}
+                    style={{ width: 335, marginLeft: "5px", marginTop: "5px" }}
+                    inputValue={labelInputText}
+                    onInputChange={(event, value) => {
+                        setLabelInputText(value);
+                        if (manualPropertyNameSpecification) {
+                            handleNodeLabelSelectionUpdate(value);
+                        } else {
+                            if (settings["type"] == "Node Property") {
+                                queryCallback("CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5", { input: value }, setLabelRecords);
+                            } else {
+                                queryCallback("CALL db.relationshipTypes() YIELD relationshipType WITH relationshipType as relType WHERE toLower(relType) CONTAINS toLower($input) RETURN DISTINCT relType LIMIT 5", { input: value }, setLabelRecords);
+                            }
+                        }
+                    }}
+                    value={settings['entityType'] ? settings['entityType'] : undefined}
+                    onChange={(event, newValue) => handleNodeLabelSelectionUpdate(newValue)}
+                    renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={settings["type"] == "Node Property" ? "Node Label" : "Relationship Type"} />}
+                />
+                {/* Draw the property name & id selectors only after a label/type has been selected. */}
+                {settings['entityType'] ?
+                    <>
+                        <Autocomplete
+                            id="autocomplete-property"
+                            options={manualPropertyNameSpecification ? [settings['propertyType']] : propertyRecords.map(r => r["_fields"] ? r["_fields"][0] : "(no data)")}
+                            getOptionLabel={(option) => option ? option : ""}
+                            style={{ display: "inline-block", width: 185, marginLeft: "5px", marginTop: "5px" }}
+                            inputValue={propertyInputText}
+                            onInputChange={(event, value) => {
+                                setPropertyInputText(value);
+                                if (manualPropertyNameSpecification) {
+                                    handlePropertyNameSelectionUpdate(value);
+                                } else {
+                                    queryCallback("CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5", { input: value }, setPropertyRecords);
+                                }
+                            }}
+                            value={settings['propertyType']}
+                            onChange={(event, newValue) => handlePropertyNameSelectionUpdate(newValue)}
+                            renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Property Name"} />}
+                        />
+                        <NeoFieldSelection placeholder='number'
+                            label="Number (optional)" disabled={!settings['propertyType']} value={settings['id']}
+                            style={{ width: "135px", marginTop: "5px", marginLeft: "10px" }}
+                            onChange={(value) => {
+                                handleIdSelectionUpdate(value);
+                            }} />
+                    </> : <></>}
+            </>}
+        {parameterName ? <p>Use <b>${parameterName}</b> in a query to use the parameter.</p> : <></>}
     </div>;
 }
 

@@ -12,6 +12,7 @@ const NeoFieldSelection = ({ label,
     numeric = false,
     select = false,
     disabled = undefined,
+    variant= undefined,
     helperText = undefined,
     defaultValue = undefined,
     placeholder = "" }) => {
@@ -23,6 +24,7 @@ const NeoFieldSelection = ({ label,
             select={select}
             style={style}
             key={label}
+            variant={variant}
             label={label}
             helperText={helperText}
             disabled={disabled}

@@ -121,6 +121,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "width"
             },
+            "relationshipParticles": {
+                label: "Animated particles on Relationships",
+                type: SELECTION_TYPES.LIST,
+                default: false,
+                values: [false, true]
+            },
             "backgroundColor": {
                 label: "Background Color",
                 type: SELECTION_TYPES.TEXT,
@@ -486,7 +492,7 @@ export const REPORT_TYPES = {
     },
     "select": {
         label: "Parameter Select",
-        helperText: "This report will let users interactively select Cypher parameters that are available globally, in all reports.",
+        helperText: "This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.",
         component: NeoParameterSelectionChart,
         settingsComponent: NeoCardSettingsContentPropertySelect,
         disableRefreshRate: true,
@@ -505,6 +511,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "helperText": {
+                label: "Helper Text (Override)",
+                type: SELECTION_TYPES.TEXT,
+                default: "Enter a custom helper text here..."
             },
         }
     },

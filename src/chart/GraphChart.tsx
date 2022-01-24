@@ -63,6 +63,8 @@ const NeoGraphChart = (props: ChartProps) => {
     const selfLoopRotationDegrees = 45;
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
+    const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
+    const linkDirectionalParticleSpeed = 0.005; // Speed of particles on relationships.
 
     const [data, setData] = React.useState({ nodes: [], links: [] });
 
@@ -294,6 +296,8 @@ const NeoGraphChart = (props: ChartProps) => {
                     onNodeClick={showPopup}
                     onLinkClick={showPopup}
                     onNodeRightClick={handleExpand}
+                    linkDirectionalParticles={linkDirectionalParticles}
+                    linkDirectionalParticleSpeed={d => linkDirectionalParticleSpeed}
                     onNodeDragEnd={node => {
                         if (fixNodeAfterDrag) {
                             node.fx = node.x;
