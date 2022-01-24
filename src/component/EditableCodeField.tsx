@@ -2,11 +2,11 @@ import { TextareaAutosize } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
 
-import { CypherEditor } from "graph-app-kit/components/Editor";
 import "codemirror/lib/codemirror.css";
 import "codemirror/addon/lint/lint.css";
 import "codemirror/addon/hint/show-hint.css";
-import "cypher-codemirror/dist/cypher-codemirror-syntax.css";
+import CypherEditor from './CypherEditor';
+// import "cypher-codemirror/dist/cypher-codemirror-syntax.css";
 
 
 
