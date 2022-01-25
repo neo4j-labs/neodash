@@ -137,3 +137,8 @@
     background: white;
     z-index: 1299;
 }
+
+.force-graph-container .graph-tooltip {
+    color: black !important;
+    background: none !important;
+}
