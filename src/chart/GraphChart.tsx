@@ -69,13 +69,6 @@ const NeoGraphChart = (props: ChartProps) => {
 
     const [data, setData] = React.useState({ nodes: [], links: [] });
 
-    if(props.settings.nodePositions == undefined){
-        props.settings.nodePositions = {};
-    }
-    var nodePositions = props.settings && props.settings.nodePositions;
-    const [frozen, setFrozen] = React.useState(props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false);
-    const [extraRecords, setExtraRecords] = React.useState([]);
-
     // Create the dictionary used for storing the memory of dragged node positions.
     if(props.settings.nodePositions == undefined){
         props.settings.nodePositions = {};
