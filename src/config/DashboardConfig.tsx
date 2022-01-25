@@ -12,7 +12,7 @@ export const DASHBOARD_SETTINGS = {
         label: "Enable Fullscreen Report Views",
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: false,
+        default: true,
         helperText: "Enables a 'fullscreen view' button for each report, letting users expand a visualization."
     },
     "queryTimeLimit": {

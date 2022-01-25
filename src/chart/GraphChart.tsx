@@ -9,7 +9,7 @@ import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
-import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
+import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
 import { Tooltip } from '@material-ui/core';
 
 const update = (state, mutations) =>
@@ -32,6 +32,7 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const [open, setOpen] = React.useState(false);
+    const [firstRun, setFirstRun] = React.useState(true);
     const [inspectItem, setInspectItem] = React.useState({});
 
     const handleOpen = () => {
@@ -70,17 +71,17 @@ const NeoGraphChart = (props: ChartProps) => {
     const [data, setData] = React.useState({ nodes: [], links: [] });
 
     // Create the dictionary used for storing the memory of dragged node positions.
-    if(props.settings.nodePositions == undefined){
+    if (props.settings.nodePositions == undefined) {
         props.settings.nodePositions = {};
     }
     var nodePositions = props.settings && props.settings.nodePositions;
 
     // 'frozen' indicates that the graph visualization engine is paused, node positions and stored and only dragging is possible.
     const [frozen, setFrozen] = React.useState(props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false);
-    
+
     // Currently unused, but dynamic graph exploration could be done with these records.
     const [extraRecords, setExtraRecords] = React.useState([]);
-    
+
     // When data is refreshed, rebuild the visualization data.
     useEffect(() => {
         buildVisualizationDictionaryFromRecords(props.records);
@@ -255,11 +256,17 @@ const NeoGraphChart = (props: ChartProps) => {
         buildVisualizationDictionaryFromRecords(props.records.concat(extraRecords));
     }, [extraRecords])
 
+    const { useRef } = React;
 
     // Return the actual graph visualization component with the parsed data and selected customizations.
-    return (
-        <>
+        const fgRef = useRef();
+        return <>
             <div ref={observe} style={{ paddingLeft: "10px", position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>
+                <Tooltip title="Fit graph to view." aria-label="">
+                    <SettingsOverscanIcon onClick={(e) => {
+                        fgRef.current.zoomToFit(400)
+                    }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 11, right: 34, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small"></SettingsOverscanIcon>
+                </Tooltip>
                 {lockable ? (frozen ?
                     <Tooltip title="Toggle dynamic graph layout." aria-label="">
                         <LockIcon onClick={(e) => {
@@ -283,6 +290,7 @@ const NeoGraphChart = (props: ChartProps) => {
                     </Tooltip>
                 ) : <></>}
                 <ForceGraph2D
+                    ref={fgRef}
                     width={width ? width - 10 : 0}
                     height={height ? height - 10 : 0}
                     linkCurvature="curvature"
@@ -299,6 +307,13 @@ const NeoGraphChart = (props: ChartProps) => {
                     onNodeRightClick={handleExpand}
                     linkDirectionalParticles={linkDirectionalParticles}
                     linkDirectionalParticleSpeed={d => linkDirectionalParticleSpeed}
+                    cooldownTicks={100}
+                    onEngineStop={() => {
+                        if(firstRun){
+                            fgRef.current.zoomToFit(400);
+                            setFirstRun(false);
+                        }
+                    }}
                     onNodeDragEnd={node => {
                         if (fixNodeAfterDrag) {
                             node.fx = node.x;
@@ -371,7 +386,6 @@ const NeoGraphChart = (props: ChartProps) => {
                 <NeoGraphItemInspectModal open={open} handleClose={handleClose} title={(inspectItem.labels && inspectItem.labels.join(", ")) || inspectItem.type} object={inspectItem.properties}></NeoGraphItemInspectModal>
             </div>
         </>
-    );
 }
 
 export default NeoGraphChart;

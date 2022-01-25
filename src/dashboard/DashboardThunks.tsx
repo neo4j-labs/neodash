@@ -133,7 +133,12 @@ export const saveDashboardToNeo4jThunk = (driver, dashboard, date, user) => (dis
             "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid",
             { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },
             {}, ["uuid"], 1, () => { return }, (records) => {
-                dispatch(createNotificationThunk("🎉 Success!", "Your current dashboard was saved to Neo4j."))
+                if (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0] && records[0]["_fields"][0] == uuid){
+                    dispatch(createNotificationThunk("🎉 Success!", "Your current dashboard was saved to Neo4j."));
+                }else{
+                    dispatch(createNotificationThunk("Unable to save dashboard", "Do you have write access to the '"+getState().application.connection.database+"' database?"));
+                }
+                
             });
 
     } catch (e) {
