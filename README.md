@@ -18,11 +18,7 @@ There are three ways to run the application:
 ## Run & Build
 NeoDash is built with React. You'll need `npm` installed to run the web app.
 
-<<<<<<< HEAD
 > Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.3.1 & node v17.4.0.
-=======
-> Note - node V12 is currently required to build the application.
->>>>>>> master
 
 To run the application in development mode:
 - clone this repository.
