@@ -9,6 +9,7 @@ import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
 import { Tooltip } from '@material-ui/core';
 
 const update = (state, mutations) =>
@@ -67,6 +68,13 @@ const NeoGraphChart = (props: ChartProps) => {
     const linkDirectionalParticleSpeed = 0.005; // Speed of particles on relationships.
 
     const [data, setData] = React.useState({ nodes: [], links: [] });
+
+    if(props.settings.nodePositions == undefined){
+        props.settings.nodePositions = {};
+    }
+    var nodePositions = props.settings && props.settings.nodePositions;
+    const [frozen, setFrozen] = React.useState(props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false);
+    const [extraRecords, setExtraRecords] = React.useState([]);
 
     // Create the dictionary used for storing the memory of dragged node positions.
     if(props.settings.nodePositions == undefined){

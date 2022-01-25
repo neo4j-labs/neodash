@@ -18,7 +18,11 @@ There are three ways to run the application:
 ## Run & Build
 NeoDash is built with React. You'll need `npm` installed to run the web app.
 
+<<<<<<< HEAD
 > Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.3.1 & node v17.4.0.
+=======
+> Note - node V12 is currently required to build the application.
+>>>>>>> master
 
 To run the application in development mode:
 - clone this repository.
@@ -33,6 +37,21 @@ To build the app for production:
 - execute `npm run build`. This will create a `build` folder in your project directory.
 - deploy the contents of the build folder to a web server. You should then be able to run the web app.
 
+### Build and run Docker image
+Make sure you have a recent version of `docker` installed.
+On Unix-like system you can run  `./tools/neodash-build-run_unix.bash` to build the multi-stage NeoDash image & access it with nginx:
+```
+$ cd tools/
+$ ./neodash-build-run_unix.bash --port=$YOUR_PORT
+```
+If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
+```
+$ cd tools/
+$ ./neodash-build-run_windows.bash --port=$YOUR_PORT
+```
+Then visit localhost with the chosen port in your browser.
+
+A pre-built Docker image is available [https://hub.docker.com/r/nielsdejong/neodash](on DockerHub). 
 
  ## Extending NeoDash
  As of v2.0, NeoDash is easy to extend with your own visualizations. There are two steps to take to plug in your own charts:
