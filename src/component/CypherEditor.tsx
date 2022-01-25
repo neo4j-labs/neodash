@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import classNames from "classnames";
 import * as PropTypes from "prop-types";
-
 import "codemirror/addon/lint/lint";
 import "codemirror/addon/hint/show-hint";
 import "codemirror/addon/hint/show-hint.css";
@@ -160,7 +159,7 @@ CypherEditor.defaultProps = {
     theme: "cypher"
   },
   autoCompleteSchema: undefined,
-  onValueChange: () => {},
+  onValueChange: () => { },
   value: ""
 };
 
