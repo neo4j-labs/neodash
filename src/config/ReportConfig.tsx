@@ -39,11 +39,18 @@ export const REPORT_TYPES = {
         maxRecords: 1000,
       
         settings: {
+            "transposed": {
+                label: "Transpose Rows & Columns",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
             "columnWidths": {
                 label: "Relative Column Sizes",
                 type: SELECTION_TYPES.TEXT,
                 default: "[1, 1, 1, ...]"
             }
+
         }
     },
     "graph": {
