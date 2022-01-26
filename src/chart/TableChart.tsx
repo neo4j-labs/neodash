@@ -124,7 +124,7 @@ function RenderSubValue(value, key = 0) {
 }
 
 const NeoTableChart = (props: ChartProps) => {
-    const fullscreen = props.fullscreen ? props.fullscreen : true;
+    const fullscreen = props.fullscreen ? props.fullscreen : false;
     const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
 
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
