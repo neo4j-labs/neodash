@@ -1,3 +1,27 @@
+## NeoDash 2.0.6
+Major version updates to all internal dependencies. 
+NeoDash 2.0.6 uses Node 17+, react 17+ and recent versions of all visualization libraries.
+
+Visualizations:
+- Added pie charts (Including examples and new demo dashboard).
+- Added setting to transpose table rows and columns.
+- Improved styling on graph pop-up windows.
+- Graph visualizations now auto-fit to the report size.
+- Added button to reset the zoom on a graph report.
+
+Parameter selection:
+- Added relationship property / free text selection options.
+
+Editor:
+- Improved performance of inbuilt Cypher editor.
+- Added button to maximize cards while in edit-mode.
+- All reports are now maximizable by default.
+- Added tiny report sizes.
+- Added option to override the default query timeout of twenty seconds.
+
+Other:
+- Updated docker image build scripts.
+- Fixed share link geneneration incorrectly removing capitals from usernames/passwords.
 
 ## NeoDash 2.0.5
 Graph report:
