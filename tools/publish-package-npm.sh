@@ -1,4 +1,4 @@
-PWD=~/PycharmProjects/neodash/
+PWD=~/Desktop/Code/neodash/
 APPNAME=NeoDash
 
 cd $PWD
