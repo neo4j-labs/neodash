@@ -35,15 +35,15 @@ To build the app for production:
 
 ### Build and run Docker image
 Make sure you have a recent version of `docker` installed.
-On Unix-like system you can run  `./tools/neodash-build-run_unix.bash` to build the multi-stage NeoDash image & access it with nginx:
+On a Unix-like system you can run  `./tools/docker-build-run_unix.bash` to build the multi-stage NeoDash image & access it with nginx:
 ```
 $ cd tools/
-$ ./neodash-build-run_unix.bash --port=$YOUR_PORT
+$ ./docker-build-run_unix.bash --port=$YOUR_PORT
 ```
 If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
 ```
 $ cd tools/
-$ ./neodash-build-run_windows.bash --port=$YOUR_PORT
+$ ./docker-build-run_windows.bash --port=$YOUR_PORT
 ```
 Then visit localhost with the chosen port in your browser.
 
