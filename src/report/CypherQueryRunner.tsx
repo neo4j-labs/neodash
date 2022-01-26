@@ -1,6 +1,5 @@
 import { extractNodePropertiesFromRecords, mapRecords } from "./RecordProcessing";
 import _ from 'lodash';
-import { QUERY_MAX_TIME_MS } from "../config/ReportConfig";
 
 
 export enum QueryStatus {
@@ -27,6 +26,7 @@ export enum QueryStatus {
  * @param setStatus - callback to retrieve query status.
  * @param setRecords  - callback to retrieve query records.
  * @param setFields - callback to set list of returned query fields.
+ * @param queryTimeLimit - maximum query time in seconds.
  * @returns 
  */
 export async function runCypherQuery(driver,
@@ -46,7 +46,8 @@ export async function runCypherQuery(driver,
     numericOrDatetimeFields = [],
     textFields = [],
     optionalFields = [],
-    defaultKeyField = ""
+    defaultKeyField = "",
+    queryTimeLimit = 20,
 ) {
 
   
@@ -58,7 +59,7 @@ export async function runCypherQuery(driver,
     }
 
     const session = (database) ? driver.session({ database: database }) : driver.session();
-    const transaction = session.beginTransaction({ timeout: QUERY_MAX_TIME_MS, connectionTimeout: 2000 })
+    const transaction = session.beginTransaction({ timeout: queryTimeLimit * 1000, connectionTimeout: 2000 })
 
   
     // For usuability reasons, we can set a hard cap on the query result size by wrapping it a subquery (Neo4j 4.0 and later).

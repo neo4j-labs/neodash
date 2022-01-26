@@ -53,7 +53,7 @@ function RenderArray(value) {
 }
 
 function RenderString(value) {
-    const str = value.toString();
+    const str = value ? value.toString() : "";
     if (str.startsWith("http") || str.startsWith("https")) {
         return <a target="_blank" href={str}>{str}</a>;
     }
@@ -106,11 +106,9 @@ function ApplyColumnType(column, value) {
 }
 
 function RenderSubValue(value, key = 0) {
-
     if (value == undefined) {
         return "";
     }
-
     const type = getRecordType(value);
     const columnProperties = customColumnProperties[type];
 
@@ -127,6 +125,7 @@ function RenderSubValue(value, key = 0) {
 
 const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;
+    const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
 
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
@@ -141,8 +140,10 @@ const NeoTableChart = (props: ChartProps) => {
         // do nothing
     }
 
-    const columns = props.records[0].keys.map((key, i) => {
-        const value = props.records[0].get(key);
+    const records = props.records;
+
+    const columns = (transposed) ? ["Field"].concat(records.map((r, j) => "Value" + (j == 0 ? "" : " " + (j + 1).toString()))).map((key, i) => {
+        const value = key;
         return ApplyColumnType({
             field: key,
             headerName: key,
@@ -151,9 +152,21 @@ const NeoTableChart = (props: ChartProps) => {
             flex: (columnWidths && i < columnWidths.length) ? columnWidths[i] : 1,
             disableClickEventBubbling: true
         }, value)
-    })
+    }) : records[0].keys.map((key, i) => {
+        const value = records[0].get(key);
+        return ApplyColumnType({
+            field: key,
+            headerName: key,
+            headerClassName: 'table-small-header',
+            disableColumnSelector: true,
+            flex: (columnWidths && i < columnWidths.length) ? columnWidths[i] : 1,
+            disableClickEventBubbling: true
+        }, value)
+    });
 
-    const rows = props.records.map((record, rownumber) => {
+    const rows = (transposed) ? records[0].keys.map((key, i) => {
+        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: r._fields[i] })));
+    }) : records.map((record, rownumber) => {
         return Object.assign({ id: rownumber }, ...record._fields.map((field, i) => ({ [record.keys[i]]: field })));
     });
 

@@ -176,7 +176,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
                                 setShareLink((shareBaseURL + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) +
                                     (shareConnectionDetails == "Yes" ? "&credentials=" + encodeURIComponent(connection.protocol + "://"
                                         + connection.username + ":" + connection.password + "@" + connection.database +":" + connection.url + ":" + connection.port) : "")
-                                    + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")).toLowerCase());
+                                    + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")));
                             }}
                             style={{ marginBottom: "10px", backgroundColor: "white" }}
                             color="default"

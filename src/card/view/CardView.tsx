@@ -10,15 +10,10 @@ const CARD_FOOTER_HEIGHT = 64;
 
 const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, width, height, fields,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
-    onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate, onFieldsUpdate }) => {
+    onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
+     onFieldsUpdate, expanded, onToggleCardExpand }) => {
     const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
     const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
-
-    const [expanded, setExpanded] = useState(false);
-
-    const onToggleCardExpand = () => {
-        setExpanded(!expanded);
-    }
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
@@ -41,7 +36,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         onSelectionUpdate={onSelectionUpdate}
         showOptionalSelections={(settings["showOptionalSelections"])} >
     </NeoCardViewFooter>;
-
+    
     const withoutFooter = !REPORT_TYPES[type].selection || (settings && settings.hideSelections);
 
     const getGlobalParameter = (key: string): any => {
@@ -74,6 +69,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                         ChartType={REPORT_TYPES[type].component}
                         setGlobalParameter={onGlobalParameterUpdate}
                         getGlobalParameter={getGlobalParameter}
+                        queryTimeLimit={dashboardSettings['queryTimeLimit'] ? dashboardSettings['queryTimeLimit'] : 20}
                         setFields={onFieldsUpdate} />
                 </CardContent>
                 {reportFooter}

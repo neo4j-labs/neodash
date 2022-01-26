@@ -3,6 +3,10 @@
 // A dictionary of available card sizes.
 export const CARD_SIZES = [
     {
+        label: 'Tiny (3x1.5)',
+        value: "3,1.25",
+    },
+    {
         label: 'Small (3x3)',
         value: "3,3",
     },

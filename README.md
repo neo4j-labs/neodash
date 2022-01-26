@@ -15,10 +15,18 @@ There are three ways to run the application:
 
 
 # Developer Guide
-## Run & Build
+## Run locally with Docker
+Pull the latest image from Docker Hub to run the application locally:
+```
+# Run the application on http://localhost:8080
+docker pull nielsdejong/neodash:latest
+docker run -it --rm -p 8080:80 nielsdejong/neodash
+```
+
+## Run & Build using npm
 NeoDash is built with React. You'll need `npm` installed to run the web app.
 
-> Note - node V12 is currently required to build the application.
+> Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.3.1 & node v17.4.0.
 
 To run the application in development mode:
 - clone this repository.
@@ -33,17 +41,18 @@ To build the app for production:
 - execute `npm run build`. This will create a `build` folder in your project directory.
 - deploy the contents of the build folder to a web server. You should then be able to run the web app.
 
-### Build and run Docker image
+
+### Build Docker image
 Make sure you have a recent version of `docker` installed.
-On Unix-like system you can run  `./tools/neodash-build-run_unix.bash` to build the multi-stage NeoDash image & access it with nginx:
+On a Unix-like system you can run  `./tools/docker-build-run_unix.bash` to build the multi-stage NeoDash image & access it with nginx:
 ```
 $ cd tools/
-$ ./neodash-build-run_unix.bash --port=$YOUR_PORT
+$ ./docker-build-run_unix.bash --port=$YOUR_PORT
 ```
 If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
 ```
 $ cd tools/
-$ ./neodash-build-run_windows.bash --port=$YOUR_PORT
+$ ./docker-build-run_windows.bash --port=$YOUR_PORT
 ```
 Then visit localhost with the chosen port in your browser.
 

@@ -9,6 +9,7 @@ import NeoLineChart from '../chart/LineChart';
 import NeoMapChart from '../chart/MapChart';
 import NeoMarkdownChart from '../chart/MarkdownChart';
 import NeoParameterSelectionChart from '../chart/ParameterSelectionChart';
+import NeoPieChart from '../chart/PieChart';
 import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
 
@@ -23,9 +24,6 @@ export enum SELECTION_TYPES {
 
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
-
-// Maximum time before a query gets cancelled.
-export const QUERY_MAX_TIME_MS = 20000;
 
 // A small delay (for UX reasons) between when to run the query after saving a report.
 export const RUN_QUERY_DELAY_MS = 300;
@@ -42,6 +40,12 @@ export const REPORT_TYPES = {
         maxRecords: 1000,
       
         settings: {
+            "transposed": {
+                label: "Transpose Rows & Columns",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
             "columnWidths": {
                 label: "Relative Column Sizes",
                 type: SELECTION_TYPES.TEXT,
@@ -123,6 +127,12 @@ export const REPORT_TYPES = {
                 label: "Relationship Width Property",
                 type: SELECTION_TYPES.TEXT,
                 default: "width"
+            },
+            "relationshipParticles": {
+                label: "Animated particles on Relationships",
+                type: SELECTION_TYPES.LIST,
+                default: false,
+                values: [false, true]
             },
             "backgroundColor": {
                 label: "Background Color",
@@ -244,7 +254,7 @@ export const REPORT_TYPES = {
             "marginLeft": {
                 label: "Margin Left (px)",
                 type: SELECTION_TYPES.NUMBER,
-                default: 36
+                default: 50
             },
             "marginRight": {
                 label: "Margin Right (px)",
@@ -271,6 +281,102 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            }
+        }
+    },
+    "pie": {
+        label: "Pie Chart",
+        component: NeoPieChart,
+        helperText: <div>A pie chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        selection: {
+            "index": {
+                label: "Category",
+                type: SELECTION_TYPES.TEXT
+            },
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "Group",
+                type: SELECTION_TYPES.TEXT,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 100,
+        settings: {
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "sortByValue": {
+                label: "Auto-sort slices by value",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "enableArcLabels": {
+                label: "Show Values in slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "enableArcLinkLabels": {
+                label: "Show categories next to slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "innerRadius": {
+                label: "Pie Inner Radius (between 0 and 1)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "padAngle": {
+                label: "Slice padding angle (degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "borderWidth": {
+                label: "Slice border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
             }
         }
     },
@@ -489,7 +595,7 @@ export const REPORT_TYPES = {
     },
     "select": {
         label: "Parameter Select",
-        helperText: "This report will let users interactively select Cypher parameters that are available globally, in all reports. Choose a node label and a property name, and users can select one of the possible values using an autocomplete textbox.",
+        helperText: "This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.",
         component: NeoParameterSelectionChart,
         settingsComponent: NeoCardSettingsContentPropertySelect,
         disableRefreshRate: true,
@@ -508,6 +614,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "helperText": {
+                label: "Helper Text (Override)",
+                type: SELECTION_TYPES.TEXT,
+                default: "Enter a custom helper text here..."
             },
         }
     },

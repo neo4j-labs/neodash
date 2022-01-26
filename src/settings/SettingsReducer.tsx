@@ -7,7 +7,7 @@ const update = (state, mutations) =>
 export const SETTINGS_INITIAL_STATE = {
     pagenumber: 0,
     editable: true,
-    fullscreenEnabled: false
+    fullscreenEnabled: true
 }
 
 
@@ -31,8 +31,9 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, action: { type: 
 
             // Javascript is amazing, so "" == 0. Instead we check if the string length is zero...
             if (value.toString().length == 0) {
-                delete settings[setting];
-                return update(state, { settings: settings });
+                const entry = {}
+                entry[setting] = undefined;
+                return update(settings, entry);
             }
 
             const entry = {}

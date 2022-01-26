@@ -2,7 +2,7 @@ import TextField from '@material-ui/core/TextField';
 import React from 'react';
 
 
-const textFieldStyle = { width: "160px", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" };
+const textFieldStyle = { width: "155px", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" };
 
 const NeoFieldSelection = ({ label,
     value,
@@ -12,6 +12,7 @@ const NeoFieldSelection = ({ label,
     numeric = false,
     select = false,
     disabled = undefined,
+    variant= undefined,
     helperText = undefined,
     defaultValue = undefined,
     placeholder = "" }) => {
@@ -23,6 +24,7 @@ const NeoFieldSelection = ({ label,
             select={select}
             style={style}
             key={label}
+            variant={variant}
             label={label}
             helperText={helperText}
             disabled={disabled}

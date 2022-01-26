@@ -24,4 +24,9 @@ while [ $# -ge 1 ]; do
         shift
 done
 
-docker build . -t neodash && docker run -it --rm -p $port:80 neodash
+port=${port:-'8080'}
+docker build . -t neodash 
+echo "-----------------------------------------------"
+echo "neodash is available at http://localhost:$port."
+echo "-----------------------------------------------"
+docker run -it --rm -p $port:80 neodash

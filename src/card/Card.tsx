@@ -1,6 +1,6 @@
 import Card from '@material-ui/core/Card';
 import Collapse from '@material-ui/core/Collapse';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import NeoCardSettings from './settings/CardSettings';
 import NeoCardView from './view/CardView';
 import { connect } from 'react-redux';
@@ -46,6 +46,11 @@ const NeoCard = ({
     );
     const [collapseTimeout, setCollapseTimeout] = React.useState(report.collapseTimeout);
 
+    const [expanded, setExpanded] = useState(false);
+    const onToggleCardExpand = () => {
+        setExpanded(!expanded);
+    }
+    
     useEffect(() => {
         setSettingsOpen(report.settingsOpen);
     }, [report.settingsOpen])
@@ -76,6 +81,8 @@ const NeoCard = ({
                         width={report.width}
                         height={report.height}
                         title={report.title}
+                        expanded={expanded}
+                        onToggleCardExpand={onToggleCardExpand}
                         onGlobalParameterUpdate={onGlobalParameterUpdate}
                         onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
                         onTitleUpdate={(title) => onTitleUpdate(index, title)}
@@ -99,6 +106,9 @@ const NeoCard = ({
                         type={report.type}
                         refreshRate={report.refreshRate}
                         cypherParameters={report.parameters}
+                        expanded={expanded}
+                        dashboardSettings={dashboardSettings}
+                        onToggleCardExpand={onToggleCardExpand}
                         reportSettings={report.settings}
                         reportSettingsOpen={report.advancedSettingsOpen}
                         onQueryUpdate={(query) => onQueryUpdate(index, query)}

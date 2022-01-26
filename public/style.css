@@ -11,7 +11,10 @@
 .no-underline .MuiInput-underline::before {
     border-bottom: none;
 }
-
+.MuiContainer-root{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
 .large input {
     font-size: 20px;
     margin-top: -6px;
@@ -133,4 +136,9 @@
     bottom: 0;
     background: white;
     z-index: 1299;
+}
+
+.force-graph-container .graph-tooltip {
+    color: black !important;
+    background: none !important;
 }
