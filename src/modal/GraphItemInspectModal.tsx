@@ -24,7 +24,7 @@ export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, tex
         <div>
             <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    {title} 
+                    {title}
                     <IconButton onClick={handleClose} style={{ padding: "3px", marginLeft: "20px", float: "right" }}>
                         <Badge badgeContent={""} >
                             <CloseIcon />
@@ -36,14 +36,16 @@ export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, tex
                         <TableContainer>
                             <Table size="small">
                                 <TableBody>
-                                    {Object.keys(object).map((key) => (
-                                        <TableRow key={key}>
-                                            <TableCell component="th" scope="row">
-                                                {key}
-                                            </TableCell>
-                                            <TableCell align={textAlign}>{formatProperty(object[key].toString())}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {Object.keys(object).length == 0 ?
+                                        <i>(No properties)</i> :
+                                        Object.keys(object).map((key) => (
+                                            <TableRow key={key}>
+                                                <TableCell component="th" scope="row">
+                                                    {key}
+                                                </TableCell>
+                                                <TableCell align={textAlign}>{formatProperty(object[key].toString())}</TableCell>
+                                            </TableRow>
+                                        ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>

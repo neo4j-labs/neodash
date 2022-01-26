@@ -4,6 +4,7 @@ import NeoIFrameChart from "../chart/IFrameChart";
 import NeoJSONChart from "../chart/JSONChart";
 import NeoLineChart from "../chart/LineChart";
 import NeoMapChart from "../chart/MapChart";
+import NeoPieChart from "../chart/PieChart";
 import NeoTableChart from "../chart/TableChart";
 
 export const EXAMPLE_REPORTS = [
@@ -123,6 +124,17 @@ export const EXAMPLE_REPORTS = [
         fields: ["Genre", "Movies", "Year"],
         type: "bar",
         chartType: NeoBarChart
+    },
+    {
+        title: "Pie Charts",
+        description: "Pie charts can be used to visualize categories and numeric values.",
+        exampleQuery: "// How much fruit is in stock?" + "\n" + "MATCH (p:Product) \nRETURN p.name as Product,\n       p.quantity as Quantity",
+        syntheticQuery: 'WITH [["Apple",10], ["Banana",20], ["Coconut",20], ["Pear",40] ] as array UNWIND array as row RETURN row[0] as Product, row[1] as Quantity',
+        settings: { },
+        selection: { index: "Product", value: "Quantity", key: "Product"},
+        fields: ["Product","Quantity"],
+        type: "pie",
+        chartType: NeoPieChart
     },
     {
         title: "Line Chart",
