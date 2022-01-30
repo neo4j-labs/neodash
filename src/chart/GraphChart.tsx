@@ -56,11 +56,11 @@ const NeoGraphChart = (props: ChartProps) => {
     const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : "width";
     const relColorProp = props.settings && props.settings.relColorProp ? props.settings.relColorProp : "color";
     const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : 1;
-    const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#909090";
+    const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#a0a0a0";
     const nodeLabelColor = props.settings && props.settings.nodeLabelColor ? props.settings.nodeLabelColor : "black";
     const nodeLabelFontSize = props.settings && props.settings.nodeLabelFontSize ? props.settings.nodeLabelFontSize : 3.5;
     const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
-    const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#909090";
+    const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#a0a0a0";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
     const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;

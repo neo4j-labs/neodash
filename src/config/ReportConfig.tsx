@@ -101,7 +101,7 @@ export const REPORT_TYPES = {
             "defaultRelColor": {
                 label: "Relationship Color",
                 type: SELECTION_TYPES.TEXT,
-                default: "#909090"
+                default: "#a0a0a0"
             },
             "defaultRelWidth": {
                 label: "Relationship Width",
@@ -111,7 +111,7 @@ export const REPORT_TYPES = {
             "relLabelColor": {
                 label: "Relationship Label Color",
                 type: SELECTION_TYPES.TEXT,
-                default: "#909090"
+                default: "#a0a0a0"
             },
             "relLabelFontSize": {
                 label: "Relationship Label Font Size",
@@ -307,12 +307,6 @@ export const REPORT_TYPES = {
         useRecordMapper: true,
         maxRecords: 100,
         settings: {
-            "legend": {
-                label: "Show Legend",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: false
-            },
             "sortByValue": {
                 label: "Auto-sort slices by value",
                 type: SELECTION_TYPES.LIST,
@@ -330,6 +324,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "legend": {
+                label: "Show legend under visualization",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
             },
             "interactive": {
                 label: "Enable interactivity",
@@ -364,7 +364,7 @@ export const REPORT_TYPES = {
                 default: 24
             },
             "marginRight": {
-                label: "Margin Right (px)",
+                label: "Margin Right (px)", 
                 type: SELECTION_TYPES.NUMBER,
                 default: 24
             },
@@ -387,7 +387,7 @@ export const REPORT_TYPES = {
         selection: {
             "x": {
                 label: "X-value",
-                type: SELECTION_TYPES.NUMBER
+                type: SELECTION_TYPES.NUMBER_OR_DATETIME
             },
             "value": {
                 label: "Y-value",
@@ -442,6 +442,21 @@ export const REPORT_TYPES = {
                 label: "Max Y Value",
                 type: SELECTION_TYPES.NUMBER,
                 default: "auto"
+            },
+            "xTickValues": {
+                label: "X-axis Tick Count (Approximate)",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
+            },
+            "xAxisTimeFormat": {
+                label: "X-axis Format (Time chart)",
+                type: SELECTION_TYPES.TEXT,
+                default: "%Y-%m-%dT%H:%M:%SZ"
+            },
+            "xTickTimeValues": {
+                label: "X-axis Tick Size (Time chart)",
+                type: SELECTION_TYPES.TEXT,
+                default: "every 1 year"
             },
             "curve": {
                 label: "Line Smoothing",

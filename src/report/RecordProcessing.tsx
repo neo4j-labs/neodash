@@ -110,9 +110,9 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
 
     numericOrDatetimeFieldNames.forEach(numericOrDatetimeFieldName => {
         const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
-        const className = value.__proto__.constructor.name;
+        const className = value && value.__proto__.constructor.name;
         if (className == "DateTime") {
-            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = new Date(value.toString());
+            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString();
 
         }
     })
