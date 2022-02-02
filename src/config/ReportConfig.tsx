@@ -50,6 +50,12 @@ export const REPORT_TYPES = {
                 label: "Relative Column Sizes",
                 type: SELECTION_TYPES.TEXT,
                 default: "[1, 1, 1, ...]"
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -169,6 +175,12 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
         }
     },
     "bar": {
@@ -281,6 +293,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -377,6 +395,12 @@ export const REPORT_TYPES = {
                 label: "Margin Bottom (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 40
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -511,6 +535,12 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
         }
     },
     "map": {
@@ -568,6 +598,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -598,6 +634,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
             },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
         }
     },
     "json": {
@@ -606,7 +648,14 @@ export const REPORT_TYPES = {
         component: NeoJSONChart,
         allowScrolling: true,
         maxRecords: 500,
-        settings: {}
+        settings: {
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
     },
     "select": {
         label: "Parameter Select",
@@ -634,7 +683,7 @@ export const REPORT_TYPES = {
                 label: "Helper Text (Override)",
                 type: SELECTION_TYPES.TEXT,
                 default: "Enter a custom helper text here..."
-            },
+            }
         }
     },
     "iframe": {

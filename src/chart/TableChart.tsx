@@ -78,6 +78,10 @@ const customColumnProperties: any = {
         // valueGetter enables sorting and filtering on string values inside the object
         valueGetter: (c) => { return JSON.stringify(c.value) },
     },
+    "number": {
+        type: 'string',
+        valueGetter: (c) => {return ""+c.value},
+    },
     "array": {
         type: 'string',
         renderCell: (c) => RenderArray(c.value),

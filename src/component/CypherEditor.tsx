@@ -24,6 +24,7 @@ export class CypherEditor extends Component {
       theme: "cypher",
       gutters: ["cypher-hints"],
       lineWrapping: true,
+      readOnly: props.readOnly,
       autofocus: true,
       smartIndent: false,
       lineNumberFormatter: this.lineNumberFormatter,

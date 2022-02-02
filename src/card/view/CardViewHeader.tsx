@@ -57,7 +57,6 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
 
     return <CardHeader style={{ height: "72px" }}
         action={<>
-        {fullscreenEnabled}
             {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
             {(editable && !expanded) ? settingsButton : <></>}
         </>}

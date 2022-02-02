@@ -11,7 +11,6 @@ mv *.tgz target/
 cd target/
 tar -xvf *.tgz
 rm -f *.tgz
-mv package/build package/dist
 cp package/dist/favicon.ico package/favicon.ico
 
 # Remove certificates and keys

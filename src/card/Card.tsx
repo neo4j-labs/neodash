@@ -51,6 +51,9 @@ const NeoCard = ({
         setExpanded(!expanded);
     }
     
+
+    const [active, setActive] = React.useState(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
+
     useEffect(() => {
         setSettingsOpen(report.settingsOpen);
     }, [report.settingsOpen])
@@ -72,6 +75,8 @@ const NeoCard = ({
                         settings={report.settings ? report.settings : {}}
                         type={report.type}
                         database={database}
+                        active={active}
+                        setActive={setActive}
                         query={report.query}
                         cypherParameters={report.parameters}
                         globalParameters={globalParameters}
@@ -109,6 +114,7 @@ const NeoCard = ({
                         expanded={expanded}
                         dashboardSettings={dashboardSettings}
                         onToggleCardExpand={onToggleCardExpand}
+                        setActive={setActive}
                         reportSettings={report.settings}
                         reportSettingsOpen={report.advancedSettingsOpen}
                         onQueryUpdate={(query) => onQueryUpdate(index, query)}

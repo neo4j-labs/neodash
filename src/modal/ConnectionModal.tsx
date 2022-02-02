@@ -9,17 +9,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import PlayArrow from '@material-ui/icons/PlayArrow';
-import { MenuItem, Tooltip } from '@material-ui/core';
-import WarningIcon from '@material-ui/icons/Warning';
+import { FormControlLabel, MenuItem, Switch, Tooltip } from '@material-ui/core';
 import SecurityIcon from '@material-ui/icons/Security';
 
-const SSO_ENABLED = false;
-
+const toggleSsoEnabled = true;
+const standalone = false;
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
 export default function NeoConnectionModal({ open, connection, dismissable = false, createConnection, onConnectionModalClose }) {
     const protocols = ["neo4j", "neo4j+s", "neo4j+ssc", "bolt", "bolt+s", "bolt+ssc"]
+    const [ssoEnabled, setSsoEnabled] = React.useState(true);
     const [protocol, setProtocol] = React.useState(connection.protocol);
     const [url, setUrl] = React.useState(connection.url);
     const [port, setPort] = React.useState(connection.port);
@@ -38,7 +38,7 @@ export default function NeoConnectionModal({ open, connection, dismissable = fal
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <TextField select={true} autoFocus margin="dense" id="protocol" value={protocol}
+                    <TextField select={true} autoFocus margin="dense" id="protocol" value={protocol} disabled={standalone}
                         onChange={(e) => setProtocol(e.target.value)} style={{ width: "25%" }} label="Protocol"
                         placeholder="neo4j://" type="text" >
                         {protocols.map((option) => (
@@ -47,7 +47,7 @@ export default function NeoConnectionModal({ open, connection, dismissable = fal
                             </MenuItem>
                         ))}
                     </TextField>
-                    <TextField type="text" autoFocus margin="dense" id="url" value={url} onChange={(e) => {
+                    <TextField type="text" autoFocus margin="dense" id="url" value={url} disabled={standalone} onChange={(e) => {
                         // Help the user here a bit by extracting the hostname if they copy paste things in
                         const input = e.target.value;
                         const splitted = input.split("://")
@@ -56,7 +56,7 @@ export default function NeoConnectionModal({ open, connection, dismissable = fal
                     }}
                         label="Hostname" style={{ marginLeft: "2.5%", width: "60%", marginRight: "2.5%" }}
                         placeholder="localhost" type="text" />
-                    <TextField autoFocus margin="dense" id="port" value={port} onChange={(event) => {
+                    <TextField autoFocus margin="dense" id="port" value={port} disabled={standalone} onChange={(event) => {
                         if (event.target.value.toString().length == 0) {
                             setPort(event.target.value);
                         } else if (!isNaN(event.target.value)) {
@@ -79,25 +79,31 @@ export default function NeoConnectionModal({ open, connection, dismissable = fal
                             A local host with an encrypted connection will likely not work - try an unencrypted protocol instead.
                         </div> : <div></div>
                     }
-                    <TextField autoFocus margin="dense" id="database" value={database} onChange={(e) => setDatabase(e.target.value)} label="Database (optional)" placeholder="neo4j" type="text" fullWidth />
-                    <TextField autoFocus margin="dense" id="dbusername" value={username} onChange={(e) => setUsername(e.target.value)} label="Username" placeholder="neo4j" type="text" fullWidth />
+                    <TextField autoFocus margin="dense" id="database" value={database} disabled={standalone} onChange={(e) => setDatabase(e.target.value)} label="Database (optional)" placeholder="neo4j" type="text" fullWidth />
+                    
+                    {!ssoEnabled ? <TextField autoFocus margin="dense" id="dbusername" value={username} onChange={(e) => setUsername(e.target.value)} label="Username" placeholder="neo4j" type="text" fullWidth /> : <></>}
 
                     <form onSubmit={(e) => {
                         e.preventDefault();
                         onConnectionModalClose();
                         createConnection(protocol, url, port, database, username, password);
                     }}>
-                     
-                        <TextField autoFocus margin="dense" id="dbpassword" value={password} onChange={(e) => setPassword(e.target.value)} label="Password" type="password" fullWidth />
-                        {SSO_ENABLED ? <Button style={{ float: "left", marginTop: "20px", marginBottom: "20px", backgroundColor: "white" }}
+                        {!ssoEnabled ? <TextField autoFocus margin="dense" id="dbpassword" value={password} onChange={(e) => setPassword(e.target.value)} label="Password" type="password" fullWidth /> : <></>}
+                        {toggleSsoEnabled ? <FormControlLabel style={{marginTop: "25px"}} control={
+                            <Switch
+                                checked={ssoEnabled}
+                                onChange={(e) => setSsoEnabled(!ssoEnabled)}
+                                name="checked"
+                                color="primary"
+                            />}
+                            label="Use SSO"></FormControlLabel> : <></>}
+                        {ssoEnabled ? <Button style={{ float: "right", marginTop: "20px", marginBottom: "20px", backgroundColor: "white" }}
                             color="default"
                             variant="contained"
-                            size="large"
+                            size= "large"
                             endIcon={<SecurityIcon />}>
-                            Single Sign-On
-                        </Button> : <></>}
-
-                        <Button type="submit" onClick={(e) => {
+                            Connect
+                        </Button> : <Button type="submit" onClick={(e) => {
                             e.preventDefault();
                             onConnectionModalClose();
                             createConnection(protocol, url, port, database, username, password);
@@ -108,7 +114,9 @@ export default function NeoConnectionModal({ open, connection, dismissable = fal
                             size="large"
                             endIcon={<PlayArrow />}>
                             Connect
-                        </Button>
+                        </Button>}
+
+
                     </form>
                 </DialogContent>
                 <DialogActions style={{ background: "#555" }}>

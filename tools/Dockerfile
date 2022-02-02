@@ -7,7 +7,7 @@ RUN dnf module list nodejs && dnf module enable -y nodejs:16
 RUN dnf install -y nodejs
 
 # Clone repo and install npm required packages
-RUN git clone -b develop https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
+RUN git clone -b master https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
 RUN npm install -g typescript jest 
 
 # Install and build application

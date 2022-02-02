@@ -7,7 +7,7 @@ import { CardContent } from '@material-ui/core';
 
 const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherParameters, width, height, type, reportSettings, reportSettingsOpen,
     onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onRemovePressed, onReportSettingUpdate,
-    onShiftLeftPressed, onShiftRightPressed, onToggleCardSettings, onTypeUpdate,
+    onShiftLeftPressed, onShiftRightPressed, onToggleCardSettings, onTypeUpdate, setActive,
      onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand }) => {
 
    
@@ -20,7 +20,7 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         onShiftLeftPressed={onShiftLeftPressed}
         onShiftRightPressed={onShiftRightPressed}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
-        onToggleCardSettings={onToggleCardSettings} />
+        onToggleCardSettings={(e) => { setActive(reportSettings.autorun !== undefined ? reportSettings.autorun : true); onToggleCardSettings(e) }} />
 
     // TODO - instead of hiding everything based on settingsopen, only hide the components that slow down render (cypher editor)
     const cardSettingsContent = (settingsOpen) ? <NeoCardSettingsContent

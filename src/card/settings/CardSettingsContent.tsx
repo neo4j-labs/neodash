@@ -57,6 +57,7 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
     const settings = REPORT_TYPES[type]["settingsComponent"] ? <SettingsComponent type={type} onReportSettingUpdate={onReportSettingUpdate} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
     <>
         <NeoCodeField value={queryText}
+             editable={true}
             language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}
             onChange={(value) => {
                 setQueryText(value);

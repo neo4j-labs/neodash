@@ -26,6 +26,7 @@ const NeoEditableCodeField = ({ value, onChange = (e) => { }, placeholder,
     const editor = (language == "cypher") ? <CypherEditor
         options={options}
         aria-label=""
+        readOnly={!editable}
         value={value}
         onValueChange={(val) => {
             if (editable) {
@@ -34,6 +35,7 @@ const NeoEditableCodeField = ({ value, onChange = (e) => { }, placeholder,
         }}
         placeholder={placeholder} /> : <div><CypherEditor
         options={options}
+        readOnly={!editable}
         aria-label=""
         value={value}
         onValueChange={(val) => {

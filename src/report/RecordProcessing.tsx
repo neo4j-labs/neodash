@@ -257,14 +257,13 @@ export function getRecordType(value) {
     // 'number', 'date', 'dateTime', 'boolean' and 'singleSelect'
     // https://v4.mui.com/components/data-grid/columns/#column-types
     // Type singleSelect is not implemented here
-
     if (value === true || value === false) {
         return 'boolean';
     } else if (value === undefined) {
         return 'undefined';
     } else if (value === null) {
         return 'null';
-    } else if (value.__isInteger__) {
+    } else if (value.__isInteger__ || Number(value) == value) {
         return 'number';
     } else if (value.__isDate__) {
         return 'date';
