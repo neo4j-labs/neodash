@@ -1,10 +1,4 @@
-FROM centos:centos8.3.2011 AS builder
-
-## Set up dependencies
-RUN yum install -y epel-release; yum check-update; pwd
-RUN yum install -y rsync git
-RUN dnf module list nodejs && dnf module enable -y nodejs:16
-RUN dnf install -y nodejs
+FROM node:latest AS builder
 
 # Clone repo and install npm required packages
 RUN git clone -b master https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
