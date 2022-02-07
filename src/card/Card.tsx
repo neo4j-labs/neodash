@@ -50,9 +50,16 @@ const NeoCard = ({
     const onToggleCardExpand = () => {
         setExpanded(!expanded);
     }
-    
+
 
     const [active, setActive] = React.useState(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
+
+    useEffect(() => {
+        if (!report.settingsOpen) {
+            setActive(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
+        }
+    }, [report.query])
+
 
     useEffect(() => {
         setSettingsOpen(report.settingsOpen);

@@ -169,7 +169,7 @@ const NeoTableChart = (props: ChartProps) => {
     });
 
     const rows = (transposed) ? records[0].keys.map((key, i) => {
-        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: r._fields[i] })));
+        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: RenderSubValue(r._fields[i])  })));
     }) : records.map((record, rownumber) => {
         return Object.assign({ id: rownumber }, ...record._fields.map((field, i) => ({ [record.keys[i]]: field })));
     });
