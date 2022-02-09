@@ -8,10 +8,10 @@ standalone=true
 ssoEnabled=false
 ssoDiscoveryUrl='https://example.com'
 standaloneProtocol='neo4j+s'
-standaloneHost='9001cedf.databases.neo4j.io'
+standaloneHost='example.databases.neo4j.io'
 standalonePort=7687
 standaloneDatabase='neo4j'
-standaloneDashboardName='My Dashboard'
+standaloneDashboardName='My Dashboard' # this is case-sensitive, and will load the latest version of a dashboard with the exact name.
 standaloneDashboardDatabase='neo4j'
 
 echo "-----------------------------------------------"
