@@ -1,32 +1,20 @@
 #!/bin/bash
+docker build . -t neodash
 
-args=$(getopt -l "port:" -o "p:h" -- "$@")
+# Set the environment variables to be picked up by the React app at runtime
+port=8080
+standalone=false
+ssoEnabled=false
+ssoDiscoveryUrl='https://example.com'
+standaloneProtocol='neo4j+s'
+standaloneHost='test.databases.neo4j.io'
+standalonePort=7687
+standaloneDatabase='neo4j'
+standaloneDashboardName='My Dashboard'
+standaloneDashboardDatabase='neo4j'
 
-eval set -- "$args"
 
-while [ $# -ge 1 ]; do
-        case "$1" in
-                --)
-                    # No more options left.
-                    shift
-                    break
-                   ;;
-                -p|--port|port)
-                        port="$2"
-                        shift
-                        ;;
-                -h)
-                        echo "Run this script with a '--port 8080' argument to run NeoDash on http://localhost:8080."
-                        exit 0
-                        ;;
-        esac
-
-        shift
-done
-
-port=${port:-'8080'}
-docker build . -t neodash 
 echo "-----------------------------------------------"
 echo "neodash is available at http://localhost:$port."
 echo "-----------------------------------------------"
-winpty docker run -it --rm -p $port:80 neodash
+winpty docker run -it --rm --env standalone=$standalone ssoEnabled=$ssoEnabled ssoDiscoveryUrl=$ssoDiscoveryUrl standaloneProtocol=$standaloneProtocol standaloneHost=$standaloneHost standalonePort=$standalonePort standaloneDatabase=$standaloneDatabase standaloneDashboardName=$standaloneDashboardName standaloneDashboardDatabase=$standaloneDashboardDatabase -p $port:80 neodash 

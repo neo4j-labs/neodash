@@ -41,6 +41,12 @@ export const setConnectionProperties = (protocol: string, url: string, port: str
     payload: { protocol, url, port, database, username, password },
 });
 
+export const SET_BASIC_CONNECTION_PROPERTIES = 'APPLICATION/SET_BASIC_CONNECTION_PROPERTIES';
+export const setBasicConnectionProperties = (protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
+    type: SET_CONNECTION_PROPERTIES,
+    payload: { protocol, url, port, database, username, password },
+});
+
 export const SET_DESKTOP_CONNECTION_PROPERTIES = 'APPLICATION/SET_DESKTOP_CONNECTION_PROPERTIES';
 export const setDesktopConnectionProperties = (protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
     type: SET_DESKTOP_CONNECTION_PROPERTIES,
@@ -73,10 +79,22 @@ export const setShareDetailsFromUrl = (type: string, id: string, standalone: boo
     payload: { type, id, standalone, protocol, url, port, database, username, password },
 });
 
+export const SET_STANDALONE_ENABLED = 'APPLICATION/SET_STANDALONE_ENABLED';
+export const setStandaloneEnabled = (standalone: boolean, standaloneProtocol: string, standaloneHost: string, standalonePort: string, standaloneDatabase: string, standaloneDashboardName: string, standaloneDashboardDatabase: string ) => ({
+    type: SET_STANDALONE_ENABLED,
+    payload: { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase },
+});
+
 export const SET_STANDALONE_MODE = 'APPLICATION/SET_STANDALONE_MODE';
-export const setStandAloneMode = (standalone: boolean) => ({
-    type: SET_STANDALONE_MODE,
+export const setStandaloneMode = (standalone: boolean ) => ({
+    type: SET_STANDALONE_ENABLED,
     payload: { standalone },
+});
+
+export const SET_SSO_ENABLED = 'APPLICATION/SET_SSO_ENABLED';
+export const setSSOEnabled = (enabled: boolean, discoveryUrl: string) => ({
+    type: SET_SSO_ENABLED,
+    payload: { enabled, discoveryUrl },
 });
 
 export const SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING';

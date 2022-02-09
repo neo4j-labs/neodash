@@ -106,7 +106,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
         // Reverse engineer the minimal set of fields from the selection loaded.
         dashboard.pages.forEach(p => {
             p.reports.forEach(r => {
-                if(r.selection){
+                if (r.selection) {
                     r["fields"] = []
                     Object.keys(r.selection).forEach(f => {
                         r["fields"].push([f, r.selection[f]])
@@ -133,12 +133,12 @@ export const saveDashboardToNeo4jThunk = (driver, dashboard, date, user) => (dis
             "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid",
             { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },
             {}, ["uuid"], 1, () => { return }, (records) => {
-                if (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0] && records[0]["_fields"][0] == uuid){
+                if (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0] && records[0]["_fields"][0] == uuid) {
                     dispatch(createNotificationThunk("🎉 Success!", "Your current dashboard was saved to Neo4j."));
-                }else{
-                    dispatch(createNotificationThunk("Unable to save dashboard", "Do you have write access to the '"+getState().application.connection.database+"' database?"));
+                } else {
+                    dispatch(createNotificationThunk("Unable to save dashboard", "Do you have write access to the '" + getState().application.connection.database + "' database?"));
                 }
-                
+
             });
 
     } catch (e) {
@@ -146,9 +146,29 @@ export const saveDashboardToNeo4jThunk = (driver, dashboard, date, user) => (dis
     }
 }
 
-export const loadDashboardFromNeo4jThunk = (driver, uuid, callback) => (dispatch: any, getState: any) => {
+export const loadDashboardFromNeo4jByUUIDThunk = (driver, uuid, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, getState().application.connection.database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => callback(records[0]['_fields'][0]))
+        runCypherQuery(driver, getState().application.connection.database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => {
+            if(records.length == 0){
+                dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
+            }
+            callback(records[0]['_fields'][0])
+        }
+        )
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
+    }
+}
+
+export const loadDashboardFromNeo4jByNameThunk = (driver, name, callback) => (dispatch: any, getState: any) => {
+    try {
+        runCypherQuery(driver, getState().application.connection.database, "MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1", { name: name }, {}, ["dashboard"], 1, () => { return }, (records) => {
+            console.log(records)
+            if (records.length == 0) {
+                dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided name could not be found."));
+            }
+            callback(records[0]['_fields'][0])
+        })
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
     }

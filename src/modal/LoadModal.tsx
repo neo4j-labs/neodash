@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import StorageIcon from '@material-ui/icons/Storage';
-import { loadDashboardFromNeo4jThunk, loadDashboardListFromNeo4jThunk, loadDashboardThunk } from '../dashboard/DashboardThunks';
+import { loadDashboardFromNeo4jByUUIDThunk, loadDashboardListFromNeo4jThunk, loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 
@@ -197,7 +197,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     loadDashboard: text => dispatch(loadDashboardThunk(text)),
-    loadDashboardFromNeo4j: (driver, uuid, callback) => dispatch(loadDashboardFromNeo4jThunk(driver, uuid, callback)),
+    loadDashboardFromNeo4j: (driver, uuid, callback) => dispatch(loadDashboardFromNeo4jByUUIDThunk(driver, uuid, callback)),
     loadDashboardListFromNeo4j: (driver, callback) => dispatch(loadDashboardListFromNeo4jThunk(driver, callback)),
 });
 
