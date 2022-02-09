@@ -17,4 +17,4 @@ standaloneDashboardDatabase='neo4j'
 echo "-----------------------------------------------"
 echo "neodash is available at http://localhost:$port."
 echo "-----------------------------------------------"
-winpty docker run -it --rm --env standalone=$standalone ssoEnabled=$ssoEnabled ssoDiscoveryUrl=$ssoDiscoveryUrl standaloneProtocol=$standaloneProtocol standaloneHost=$standaloneHost standalonePort=$standalonePort standaloneDatabase=$standaloneDatabase standaloneDashboardName=$standaloneDashboardName standaloneDashboardDatabase=$standaloneDashboardDatabase -p $port:80 neodash 
+winpty docker run -it --rm --env standalone=$standalone --env ssoEnabled=$ssoEnabled --env ssoDiscoveryUrl=$ssoDiscoveryUrl --env standaloneProtocol=$standaloneProtocol --env standaloneHost=$standaloneHost --env standalonePort=$standalonePort --env standaloneDatabase=$standaloneDatabase --env standaloneDashboardName="${standaloneDashboardName}" --env standaloneDashboardDatabase=$standaloneDashboardDatabase -p $port:80 neodash 
