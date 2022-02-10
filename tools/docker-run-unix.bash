@@ -4,7 +4,7 @@ docker build . -t neodash
 
 # Set the environment variables to be picked up by the React app at runtime
 port=8080
-standalone=true
+standalone=false
 ssoEnabled=false
 ssoDiscoveryUrl='https://example.com'
 standaloneProtocol='neo4j+s'

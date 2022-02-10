@@ -59,9 +59,11 @@ Then visit localhost with the chosen port in your browser.
 A pre-built Docker image is available [https://hub.docker.com/r/nielsdejong/neodash](on DockerHub). 
 
  ## Extending NeoDash
+
+ ### Custom Reports
  As of v2.0, NeoDash is easy to extend with your own visualizations. There are two steps to take to plug in your own charts:
  
-###  1. Create the React component
+####  1. Create the React component
 All NeoDash charts implement the interface defined in `src/charts/Chart.tsx`. A custom chart must do the same. the following parameter as passed to your chart from the application:
 - `records`: a list of Neo4j Records. This is the raw data returned from the Neo4j driver. 
 - `settings`: a dictionary of settings as defined under "advanced report settings" for each report. You can use these values to customize your visualization based on user input.
@@ -72,7 +74,7 @@ All NeoDash charts implement the interface defined in `src/charts/Chart.tsx`. A 
 
 Make sure that your component renders a React component. your component will be automatically scaled to the size of the report. See the other charts in `src/charts/` for examples. 
 
-### 2. Extend the config to make your component selectable
+#### 2. Extend the config to make your component selectable
 
 To let users choose your visualization, you must add it to the app's report configuration. This config is located in `src/config/ReportConfig.tsx`, and defined by the dictionary `REPORT_TYPES`.
 
@@ -88,6 +90,32 @@ To add your visualization to the config, add a new key to the `REPORT_TYPES` dic
 
 If all works, please consider contributing your code to this repository.
 
+### Core Dashboard Functionality
+To extend the core functionality of the app, it helps to be familiar with the following concepts:
+- ReactJS
+- Redux (State management for React)
+- Redux Selectors
+- Redux Thunks
+
+The image below contains a high-level overview of the component hierarchy within the application. The following conceptual building blocks are used to create the interface:
+- The Application
+- The Dashboard
+- Modals 
+- Drawer
+- Dashboard Header
+- Pages
+- Cards
+- Card Views
+- Card Settings
+- Card View Header
+- Report
+- Card View Footer
+- Card Settings Header
+- Card Settings Content
+- Card Settings Footer
+- Charts
+
+![](doc/component-hierarchy.png)
 ## Questions / Suggestions
 If you have any questions about NeoDash, please reach out. For feature requests, consider opening an issue(link) on GitHub.
 
