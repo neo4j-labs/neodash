@@ -2,7 +2,7 @@
 import React from 'react';
 import { ChartProps } from './Chart';
 
-import { getRecordType } from '../report/RecordProcessing';
+import { getRecordType, getRendererForValue, renderValueByType } from '../report/RecordProcessing';
 /**
  * Renders Neo4j records as their JSON representation.
  */
@@ -14,10 +14,7 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : "left";
 
     const value = (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0]) ? records[0]["_fields"][0] : "";
-    console.log("value : " + value.toString());
-    // Parse display from the value - e.g. integer with thousand separators
-    const displayValue = getRecordType(value) == "number" ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") : value.toString();
-    console.log("displayValue" + displayValue);
+    const displayValue = renderValueByType(value);
     return <div style={{marginTop: marginTop, textAlign: textAlign, marginLeft: "15px", marginRight: "15px"}}>
         <span style={{fontSize: fontSize, color: color}}>{displayValue}</span>
     </div >;

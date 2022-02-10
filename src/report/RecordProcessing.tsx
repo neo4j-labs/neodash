@@ -346,7 +346,8 @@ function RenderString(value) {
 }
 
 function RenderNumber(value) {
-    const number = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const thousandsSeperator=" ";
+    const number = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g,thousandsSeperator);
     return number;
 }
 
@@ -409,4 +410,9 @@ const rendererForType: any = {
 export function getRendererForValue(value) {
     const type = getRecordType(value);
     return rendererForType[type];
+}
+
+export function renderValueByType(value){
+    const renderer = getRendererForValue(value);
+    renderer.renderValue({value:value});
 }
