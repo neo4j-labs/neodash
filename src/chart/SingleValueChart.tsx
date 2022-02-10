@@ -2,7 +2,7 @@
 import React from 'react';
 import { ChartProps } from './Chart';
 
-import { getRecordType, getRendererForValue, renderValueByType } from '../report/RecordProcessing';
+import { renderValueByType } from '../report/RecordProcessing';
 /**
  * Renders Neo4j records as their JSON representation.
  */

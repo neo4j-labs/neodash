@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
-import { getRecordType, getRendererForValue } from '../report/RecordProcessing';
+import { getRendererForValue } from '../report/RecordProcessing';
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
