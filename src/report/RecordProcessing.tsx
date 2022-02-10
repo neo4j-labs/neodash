@@ -348,8 +348,6 @@ function RenderString(value) {
 }
 
 function RenderInteger(value) {
-    const thousandsSeperator=" ";
-    // const number = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g,thousandsSeperator);
     const integer = value.toInt().toLocaleString();
     return integer;
 }
