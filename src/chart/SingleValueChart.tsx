@@ -12,8 +12,10 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : "left";
 
     const value = (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0]) ? records[0]["_fields"][0].toString() : "";
+    // Parse display from the value - e.g. integer with thousand separators
+    const displayValue = isNaN(parseInt(value, 10)) ? value : value.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     return <div style={{marginTop: marginTop, textAlign: textAlign, marginLeft: "15px", marginRight: "15px"}}>
-        <span style={{fontSize: fontSize, color: color}}>{value}</span>
+        <span style={{fontSize: fontSize, color: color}}>{displayValue}</span>
     </div >;
 }
 
