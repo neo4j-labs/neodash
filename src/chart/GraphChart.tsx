@@ -10,12 +10,13 @@ import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
-import { Card, CardContent, CardHeader, Tooltip } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Fab, Tooltip } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
+import SearchIcon from '@material-ui/icons/Search';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -67,6 +68,7 @@ const NeoGraphChart = (props: ChartProps) => {
     const fixNodeAfterDrag = props.settings && props.settings.fixNodeAfterDrag !== undefined ? props.settings.fixNodeAfterDrag : true;
     const layout = props.settings && props.settings.layout !== undefined ? props.settings.layout : "force-directed";
     const lockable = props.settings && props.settings.lockable !== undefined ? props.settings.lockable : true;
+    const drilldownLink = props.settings && props.settings.drilldownLink !== undefined ? props.settings.drilldownLink : "";
     const selfLoopRotationDegrees = 45;
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
@@ -224,35 +226,35 @@ const NeoGraphChart = (props: ChartProps) => {
     }
 
     const generateTooltip = (value) => {
-        const tooltip =  <Card>
-            
-            <b style={{padding: "10px"}}>
+        const tooltip = <Card>
 
-            {value.labels ? (value.labels.length > 0 ? value.labels.join(", ") : "Node") : value.type}
+            <b style={{ padding: "10px" }}>
+
+                {value.labels ? (value.labels.length > 0 ? value.labels.join(", ") : "Node") : value.type}
             </b>
 
             {Object.keys(value.properties).length == 0 ?
-                        <i><br/>(No properties)</i> : 
-            <TableContainer>
-                <Table size="small">
-                    <TableBody>
-                        {Object.keys(value.properties).map((key) => (
-                            <TableRow key={key}>
-                                <TableCell component="th" scope="row"  style={{padding: "3px", paddingLeft: "8px"}}>
-                                    {key}
-                                </TableCell>
-                                <TableCell align={"left"}  style={{padding: "3px", paddingLeft: "8px"}}>
-                                    {(value.properties[key].toString().length <= 30) ?
-                                        value.properties[key].toString() :
-                                        value.properties[key].toString().substring(0, 40) + "..."}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer> }
-    
-           
+                <i><br />(No properties)</i> :
+                <TableContainer>
+                    <Table size="small">
+                        <TableBody>
+                            {Object.keys(value.properties).map((key) => (
+                                <TableRow key={key}>
+                                    <TableCell component="th" scope="row" style={{ padding: "3px", paddingLeft: "8px" }}>
+                                        {key}
+                                    </TableCell>
+                                    <TableCell align={"left"} style={{ padding: "3px", paddingLeft: "8px" }}>
+                                        {(value.properties[key].toString().length <= 30) ?
+                                            value.properties[key].toString() :
+                                            value.properties[key].toString().substring(0, 40) + "..."}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>}
+
+
         </Card>;
         return ReactDOMServer.renderToString(tooltip);
     }
@@ -323,6 +325,15 @@ const NeoGraphChart = (props: ChartProps) => {
                     }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small"></LockOpenIcon>
                 </Tooltip>
             ) : <></>}
+            {drilldownLink !== "" ?
+            <a href={drilldownLink} target="_blank">
+            <Fab style={{ position: "absolute", backgroundColor: "steelblue", right: "15px", zIndex: 50, top: "5px" }} color="primary" size="small" aria-label="search">
+                <Tooltip title="Investigate" aria-label="">
+                    <SearchIcon />
+                </Tooltip>
+            </Fab>
+            </a> : <></>}
+
             <ForceGraph2D
                 ref={fgRef}
                 width={width ? width - 10 : 0}

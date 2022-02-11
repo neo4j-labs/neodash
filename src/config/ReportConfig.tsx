@@ -169,6 +169,11 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "drilldownLink": {
+                label: "Drilldown Icon Link",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
+            },
             "hideSelections": {
                 label: "Hide Property Selection",
                 type: SELECTION_TYPES.LIST,
