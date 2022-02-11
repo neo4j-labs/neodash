@@ -56,7 +56,7 @@ $ ./docker-build-run_windows.bash --port=$YOUR_PORT
 ```
 Then visit localhost with the chosen port in your browser.
 
-A pre-built Docker image is available [https://hub.docker.com/r/nielsdejong/neodash](on DockerHub). 
+A pre-built Docker image is available [on DockerHub](https://hub.docker.com/r/nielsdejong/neodash). 
 
  ## Extending NeoDash
 

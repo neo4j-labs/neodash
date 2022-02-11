@@ -11,7 +11,7 @@ import Badge from '@material-ui/core/Badge';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import { FormControlLabel, MenuItem, Switch, Tooltip } from '@material-ui/core';
 import SecurityIcon from '@material-ui/icons/Security';
-
+import WarningIcon from '@material-ui/icons/Warning';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -102,7 +102,6 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                     <TextField autoFocus margin="dense" id="database" value={database} disabled={standalone} onChange={(e) => setDatabase(e.target.value)} label="Database (optional)" placeholder="neo4j" type="text" fullWidth />
                     
                     {!ssoVisible ? <TextField autoFocus margin="dense" id="dbusername" value={username} onChange={(e) => setUsername(e.target.value)} label="Username" placeholder="neo4j" type="text" fullWidth /> : <></>}
-
                     <form onSubmit={(e) => {
                         e.preventDefault();
                         onConnectionModalClose();

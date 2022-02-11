@@ -15,9 +15,9 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
+
     const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
     const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
-
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader

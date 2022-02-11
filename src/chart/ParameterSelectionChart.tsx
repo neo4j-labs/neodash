@@ -90,6 +90,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                 onChange={(event, newValue) => {
                     setValue(newValue);
                     setInputText("" + newValue);
+
                     if (newValue && newValue["low"]) {
                         newValue = newValue["low"];
                     }

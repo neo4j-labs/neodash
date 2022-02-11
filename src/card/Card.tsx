@@ -51,7 +51,6 @@ const NeoCard = ({
         setExpanded(!expanded);
     }
 
-
     const [active, setActive] = React.useState(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
 
     useEffect(() => {

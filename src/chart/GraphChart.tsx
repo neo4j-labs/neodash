@@ -10,7 +10,7 @@ import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
-import { Card, CardContent, CardHeader, Fab, Tooltip } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Tooltip } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -253,8 +253,6 @@ const NeoGraphChart = (props: ChartProps) => {
                         </TableBody>
                     </Table>
                 </TableContainer>}
-
-
         </Card>;
         return ReactDOMServer.renderToString(tooltip);
     }

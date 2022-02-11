@@ -409,6 +409,102 @@ export const REPORT_TYPES = {
             }
         }
     },
+    "pie": {
+        label: "Pie Chart",
+        component: NeoPieChart,
+        helperText: <div>A pie chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        selection: {
+            "index": {
+                label: "Category",
+                type: SELECTION_TYPES.TEXT
+            },
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "Group",
+                type: SELECTION_TYPES.TEXT,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 100,
+        settings: {
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "sortByValue": {
+                label: "Auto-sort slices by value",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "enableArcLabels": {
+                label: "Show Values in slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "enableArcLinkLabels": {
+                label: "Show categories next to slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "innerRadius": {
+                label: "Pie Inner Radius (between 0 and 1)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "padAngle": {
+                label: "Slice padding angle (degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "borderWidth": {
+                label: "Slice border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            }
+        }
+    },
     "line": {
         label: "Line Chart",
         component: NeoLineChart,

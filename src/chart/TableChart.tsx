@@ -1,10 +1,8 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Chip } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
 import { ChartProps } from './Chart';
-import { valueIsNode, valueIsRelationship, getRecordType } from '../report/RecordProcessing';
+import { getRecordType, getRendererForValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
+import { Tooltip, withStyles } from '@material-ui/core';
 
 function addDirection(relationship, start) {
     relationship.direction = (relationship.start.low == start.identity.low);
@@ -98,9 +96,10 @@ const customColumnProperties: any = {
     }
 };
 
+
 function ApplyColumnType(column, value) {
-    column.type = getRecordType(value);
-    const columnProperties = customColumnProperties[column.type];
+    const renderer = getRendererForValue(value);
+    const columnProperties = {type: renderer.type, renderCell: renderer.renderValue};
 
     if (columnProperties) {
         column = { ...column, ...columnProperties }
@@ -123,7 +122,6 @@ function RenderSubValue(value, key = 0) {
             return columnProperties.valueGetter({ value: value });
         }
     }
-
     return RenderString(value);
 }
 

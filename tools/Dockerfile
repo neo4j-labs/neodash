@@ -7,7 +7,6 @@ WORKDIR /usr/local/src/neodash
 RUN npm install
 RUN npm run build
 
-
 # production stage
 FROM nginx:alpine AS neodash
 RUN apk upgrade
