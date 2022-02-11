@@ -197,6 +197,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                             style={{ width: "150px" }}
                             value={dashboardDatabase}
                             onChange={(e) => {
+                                setRows([]);
                                 setDashboardDatabase(e.target.value);
                                 loadDashboardListFromNeo4j(driver, e.target.value, (result) => {  setRows(result); });
                             }}

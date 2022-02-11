@@ -7,7 +7,7 @@ import {
     RESET_SHARE_DETAILS, SET_ABOUT_MODAL_OPEN, SET_CONNECTED,
     SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES,
     SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, 
-    SET_SHARE_DETAILS_FROM_URL, SET_SSO_ENABLED, SET_STANDALONE_ENABLED, SET_STANDALONE_MODE, SET_WELCOME_SCREEN_OPEN
+    SET_SHARE_DETAILS_FROM_URL, SET_SSO_ENABLED, SET_STANDALONE_DASHBOARD_DATEBASE, SET_STANDALONE_ENABLED, SET_STANDALONE_MODE, SET_WELCOME_SCREEN_OPEN
 } from "./ApplicationActions";
 
 const update = (state, mutations) =>
@@ -70,6 +70,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         case SET_WELCOME_SCREEN_OPEN: {
             const { open } = payload;
             state = update(state, { welcomeScreenOpen: open })
+            return state;
+        }
+        case SET_STANDALONE_DASHBOARD_DATEBASE : {
+            const { dashboardDatabase } = payload;
+            state = update(state, { standaloneDashboardDatabase: dashboardDatabase });
             return state;
         }
         case SET_STANDALONE_MODE: {

@@ -149,7 +149,7 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
 export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {
     try {
         runCypherQuery(driver, database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => {
-            if(records.length == 0){
+            if (records.length == 0) {
                 dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
             }
             callback(records[0]['_fields'][0])
@@ -160,9 +160,9 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
     }
 }
 
-export const loadDashboardFromNeo4jByNameThunk = (driver, name, callback) => (dispatch: any, getState: any) => {
+export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, getState().application.connection.database, "MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1", { name: name }, {}, ["dashboard"], 1, () => { return }, (records) => {
+        runCypherQuery(driver, database, "MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1", { name: name }, {}, ["dashboard"], 1, () => { return }, (records) => {
             if (records.length == 0) {
                 dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided name could not be found."));
             }
@@ -178,7 +178,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
         runCypherQuery(driver, database,
             "MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date, n.user as author ORDER BY date DESC",
             {}, {}, ["id, title, date, user"], 1000, () => { return }, (records) => {
-                if(!records || !records[0] || !records[0]["_fields"]){
+                if (!records || !records[0] || !records[0]["_fields"]) {
                     callback([]);
                     return
                 }

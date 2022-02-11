@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import PlayArrow from '@material-ui/icons/PlayArrow';
-import { DialogContentText, Divider, ListItem, ListItemIcon, ListItemText, TextareaAutosize } from '@material-ui/core';
+import { DialogContentText, Divider, FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
@@ -18,7 +18,7 @@ import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import ShareIcon from '@material-ui/icons/Share';
 import { SELECTION_TYPES } from '../config/ReportConfig';
 import ReportSetting from '../component/ReportSetting';
-import { loadDashboardListFromNeo4jThunk } from '../dashboard/DashboardThunks';
+import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 
 // const shareBaseURL = "http://localhost:3000";
@@ -27,7 +27,7 @@ const styles = {
 
 };
 
-export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
+export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j }) => {
 
     const [shareModalOpen, setShareModalOpen] = React.useState(false);
     const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
@@ -44,15 +44,21 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
     const [shareStandalone, setShareStandalone] = React.useState("No");
     const [shareLink, setShareLink] = React.useState(null);
 
+
+    const [dashboardDatabase, setDashboardDatabase] = React.useState("neo4j");
+    const [databases, setDatabases] = React.useState(["neo4j"]);
+
     const handleClickOpen = () => {
         setShareID(null);
         setShareLink(null);
         setShareModalOpen(true);
+        loadDatabaseListFromNeo4j(driver, (result) => { setDatabases(result )});
     };
 
     const handleClose = () => {
         setShareModalOpen(false);
     };
+
 
     const columns = [
         { field: 'id', hide: true, headerName: 'ID', width: 150 },
@@ -106,7 +112,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
                         <Button
                             component="label"
                             onClick={(e) => {
-                                loadDashboardListFromNeo4j(driver, (result) => { setShareLink(null); setRows(result) });
+                                loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setShareLink(null); setRows(result) });
                                 setLoadFromNeo4jModalOpen(true);
                             }}
                             style={{  marginBottom: "10px", backgroundColor: "white" }}
@@ -173,7 +179,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
                         <Button
                             component="label"
                             onClick={(e) => {
-                                setShareLink((shareBaseURL + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) +
+                                setShareLink((shareBaseURL + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) + "&dashboardDatabase=" + encodeURIComponent(dashboardDatabase) +
                                     (shareConnectionDetails == "Yes" ? "&credentials=" + encodeURIComponent(connection.protocol + "://"
                                         + connection.username + ":" + connection.password + "@" + connection.database +":" + connection.url + ":" + connection.port) : "")
                                     + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")));
@@ -207,7 +213,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
                     <DialogContentText>Choose a dashboard to share below.
                     </DialogContentText>
 
-                    <div style={{ height: "360px" }}>
+                    <div style={{ height: "380px" }}>
                         <DataGrid
                             rows={rows}
                             columns={columns}
@@ -219,6 +225,24 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j }) => {
                                 ColumnSortedAscendingIcon: () => <></>,
                             }}
                         /></div>
+                        <FormControl style={{ marginTop: "-58px", marginLeft: "10px" }}>
+                        <InputLabel id="demo-simple-select-label">Database</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            style={{ width: "150px" }}
+                            value={dashboardDatabase}
+                            onChange={(e) => {
+                                setRows([]);
+                                setDashboardDatabase(e.target.value);
+                                loadDashboardListFromNeo4j(driver, e.target.value, (result) => {  setRows(result); });
+                            }}
+                        >
+                            {databases.map(database => {
+                                return <MenuItem value={database}>{database}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
 
                 </DialogContent>
             </Dialog>
@@ -279,7 +303,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    loadDashboardListFromNeo4j: (driver, callback) => dispatch(loadDashboardListFromNeo4jThunk(driver, callback))
+    loadDashboardListFromNeo4j: (driver, database, callback) => dispatch(loadDashboardListFromNeo4jThunk(driver, database, callback)),
+    loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback))
 });
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoShareModal));

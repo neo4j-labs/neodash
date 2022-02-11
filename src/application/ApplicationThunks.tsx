@@ -6,7 +6,7 @@ import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
     setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled,
-    setAboutModalOpen, setStandaloneMode
+    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase
 } from "./ApplicationActions";
 
 /**
@@ -39,11 +39,12 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
                     const setDashboardAfterLoadingFromDatabase = (value) => {
                         dispatch(loadDashboardThunk(value));
                     }
+
                     // If we specify a dashboard by name, load the latest version of it
                     if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
-                        dispatch(loadDashboardFromNeo4jByNameThunk(driver, application.dashboardToLoadAfterConnecting.substring(5), setDashboardAfterLoadingFromDatabase));
+                        dispatch(loadDashboardFromNeo4jByNameThunk(driver, application.standaloneDashboardDatabase, application.dashboardToLoadAfterConnecting.substring(5), setDashboardAfterLoadingFromDatabase));
                     } else {
-                        dispatch(loadDashboardFromNeo4jByUUIDThunk(driver, application.dashboardToLoadAfterConnecting, setDashboardAfterLoadingFromDatabase));
+                        dispatch(loadDashboardFromNeo4jByUUIDThunk(driver, application.standaloneDashboardDatabase, application.dashboardToLoadAfterConnecting, setDashboardAfterLoadingFromDatabase));
                     }
                     dispatch(setDashboardToLoadAfterConnecting(null));
                 }
@@ -143,6 +144,11 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
         const shareDetails = state.application.shareDetails;
         dispatch(setWelcomeScreenOpen(false));
         dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
+        if(shareDetails.dashboardDatabase){
+            dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
+ 
+            dispatch(setStandaloneDashboardDatabase(shareDetails.database));
+        }
         if (shareDetails.url) {
             dispatch(createConnectionThunk(shareDetails.protocol, shareDetails.url, shareDetails.port, shareDetails.database, shareDetails.username, shareDetails.password));
         } else {

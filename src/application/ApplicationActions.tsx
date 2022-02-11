@@ -93,6 +93,11 @@ export const setStandaloneMode = (standalone: boolean ) => ({
     type: SET_STANDALONE_ENABLED,
     payload: { standalone },
 });
+export const SET_STANDALONE_DASHBOARD_DATEBASE = 'APPLICATION/SET_STANDALONE_DASHBOARD_DATEBASE';
+export const setStandaloneDashboardDatabase = (dashboardDatabase: string) => ({
+    type: SET_STANDALONE_DASHBOARD_DATEBASE,
+    payload: { dashboardDatabase }
+});
 
 export const SET_SSO_ENABLED = 'APPLICATION/SET_SSO_ENABLED';
 export const setSSOEnabled = (enabled: boolean, discoveryUrl: string) => ({
