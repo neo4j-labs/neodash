@@ -146,9 +146,9 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
     }
 }
 
-export const loadDashboardFromNeo4jByUUIDThunk = (driver, uuid, callback) => (dispatch: any, getState: any) => {
+export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, getState().application.connection.database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => {
+        runCypherQuery(driver, database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => {
             if(records.length == 0){
                 dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
             }
@@ -173,11 +173,15 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, name, callback) => (di
     }
 }
 
-export const loadDashboardListFromNeo4jThunk = (driver, callback) => (dispatch: any, getState: any) => {
+export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, getState().application.connection.database,
+        runCypherQuery(driver, database,
             "MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date, n.user as author ORDER BY date DESC",
             {}, {}, ["id, title, date, user"], 1000, () => { return }, (records) => {
+                if(!records || !records[0] || !records[0]["_fields"]){
+                    callback([]);
+                    return
+                }
                 const result = records.map(r => {
                     return { id: r["_fields"][0], title: r["_fields"][1], date: r["_fields"][2], author: r["_fields"][3] };
                 });
