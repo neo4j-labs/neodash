@@ -1,19 +1,6 @@
-import { AppBar, Toolbar, IconButton, Typography, Badge, TextField, InputBase, CircularProgress } from "@material-ui/core";
-import React, { useCallback, useEffect } from "react";
-import NeoPageButton from "./DashboardHeaderPageButton";
-import NeoPageAddButton from "./DashboardHeaderPageAddButton";
+import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from "@material-ui/core";
+import React, {  } from "react";
 import MenuIcon from '@material-ui/icons/Menu';
-import ConnectionModal from '../modal/ConnectionModal';
-import { withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { setDashboardTitle, addPage, removePage } from "./DashboardActions";
-import { getDashboardTitle, getPages, getPageNumber } from "./DashboardSelectors";
-import debounce from 'lodash/debounce';
-import { setPageTitle } from "../page/PageActions";
-import { addPageThunk, removePageThunk } from "./DashboardThunks";
-
-
-
 
 export const NeoDashboardPlaceholder = ({connected}) => {
     const content = (

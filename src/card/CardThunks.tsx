@@ -100,7 +100,7 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
                         // For multi selections, select the Nth item of the result fields as a single item array.
                         if (selectableFields[selection].multiple) { 
                             // only update if the old selection no longer covers the new set of fields...
-                            if(!oldSelection[selection].every(v => fields.includes(v))){
+                            if(!oldSelection[selection] || !oldSelection[selection].every(v => fields.includes(v))){
                                 dispatch(updateSelection(pagenumber, index, selection, [fields[Math.min(i, fields.length - 1)]]));
                             }
 

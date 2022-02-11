@@ -1,6 +1,10 @@
 import { initialState } from "../dashboard/DashboardReducer";
 import _ from 'lodash';
 
+/**
+ * Selectors define a way to retrieve parts of the global application state for a sub-component.
+ */
+
 export const applicationHasNotification = (state: any) => {
     return state.application.notificationMessage != null;
 }

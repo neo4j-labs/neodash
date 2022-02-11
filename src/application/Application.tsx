@@ -24,7 +24,13 @@ import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 
 /**
+ * This is the main application component for NeoDash.
+ * It contains:
+ * - The Dashboard component
+ * - A number of modals (pop-up windows) that handle connections, loading/saving dashboards, etc.
  * 
+ * Parts of the application state are retrieved here and passed to the relevant compoenents.
+ * State-changing actions are also dispatched from here. See `ApplicationThunks.tsx`, `ApplicationActions.tsx` and `ApplicationSelectors.tsx` for more info.
  */
 const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, clearOldDashboard,
     connectionModalOpen, ssoSettings, standaloneSettings, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection, shareDetails,

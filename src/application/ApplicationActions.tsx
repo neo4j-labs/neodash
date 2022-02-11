@@ -1,3 +1,6 @@
+/**
+ * This file contains all state-changing actions relevant for the main application.
+ */
 
 export const CLEAR_NOTIFICATION = 'APPLICATION/CLEAR_NOTIFICATION';
 export const clearNotification = () => ({

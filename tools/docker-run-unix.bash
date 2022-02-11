@@ -1,7 +1,3 @@
-#!/bin/bash
-#  docker build --no-cache . -t neodash
-docker build . -t neodash
-
 # Set the environment variables to be picked up by the React app at runtime
 port=8080
 standalone=false

@@ -7,12 +7,8 @@ import {
 } from "./PageActions";
 
 
-export const createNotificationUndismissableThunk = (title:any, message: any) => (dispatch: any) => {
-    dispatch(createNotification(title, message, false));
-};
-
 export const createNotificationThunk = (title:any, message: any) => (dispatch: any) => {
-    dispatch(createNotification(title, message, true));
+    dispatch(createNotification(title, message));
 };
 
 export const addReportRequest = (text: any) => (dispatch: any, getState: any) => {

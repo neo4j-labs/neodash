@@ -70,7 +70,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
                                 renderValue={(selected) => Array.isArray(selected) ? selected.join(', ') : selected}
                                 value={(selection && selection[selectable]) ?
                                     (selectableFields[selectable].multiple && !Array.isArray(selection[selectable])) ? [selection[selectable]] : selection[selectable]
-                                    : (selectableFields[selectable].multiple) ? ["(no data)"] : "(no data)"}>
+                                    : (selectableFields[selectable].multiple) ? (selection[selectable] && selection[selectable].length > 0 ? selection[selectable][0] : []): "(no data)"}>
 
                                 {/* Render choices */}
                                 {fieldsToRender.map((field) => {

@@ -108,18 +108,20 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
         return null;
     }
 
+
+    textFieldNames.forEach(textFieldName => {
+        record._fields[record._fieldLookup[textFieldName]] =
+            convertRecordObjectToString(record._fields[record._fieldLookup[textFieldName]]);
+    })
+
     numericOrDatetimeFieldNames.forEach(numericOrDatetimeFieldName => {
         const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
         const className = value && value.__proto__.constructor.name;
         if (className == "DateTime") {
             record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString();
-
+        }else if (className !== "Integer" && className !== "Number"){
+            record = null;
         }
-    })
-
-    textFieldNames.forEach(textFieldName => {
-        record._fields[record._fieldLookup[textFieldName]] =
-            convertRecordObjectToString(record._fields[record._fieldLookup[textFieldName]]);
     })
 
     return record;

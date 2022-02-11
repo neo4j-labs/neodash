@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import SaveIcon from '@material-ui/icons/Save';
-import { ListItem, ListItemIcon, ListItemText, TextareaAutosize, Tooltip } from '@material-ui/core';
+import { FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize, Tooltip } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -19,7 +19,7 @@ import { getDashboardJson } from './ModalSelectors';
 import { valueIsArray, valueIsObject } from '../report/RecordProcessing';
 import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
-import { saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
+import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 
 /**
@@ -60,11 +60,19 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
 
 
 
-export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j }) => {
+export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
     const [saveModalOpen, setSaveModalOpen] = React.useState(false);
     const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
+    const [dashboardDatabase, setDashboardDatabase] = React.useState("neo4j");
+    const [databases, setDatabases] = React.useState(["neo4j"]);
+
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
+    useEffect(() => {
+        loadDatabaseListFromNeo4j(driver, (result) => { setDatabases(result )});
+    }, [])
+
+    
     const handleClickOpen = () => {
         setSaveModalOpen(true);
     };
@@ -171,10 +179,26 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j }) =>
                             "    content: " + "{...}" + "\n}"}
                         aria-label=""
                         placeholder="" />
+
+                    <FormControl style={{marginTop: "10px"}}>
+                        <InputLabel id="demo-simple-select-label">Save to Database</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            style={{width: "150px"}}
+                            value={dashboardDatabase}
+                            onChange={(e) => setDashboardDatabase(e.target.value)}
+                        >
+                            {databases.map(database => {
+                                return <MenuItem value={database}>{database}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
+
                     <Button
                         component="label"
                         onClick={e => {
-                            saveDashboardToNeo4j(driver, dashboard, new Date().toISOString(), connection.username);
+                            saveDashboardToNeo4j(driver, dashboardDatabase, dashboard, new Date().toISOString(), connection.username);
                             setSaveToNeo4jModalOpen(false);
                             setSaveModalOpen(false);
                         }}
@@ -209,12 +233,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    saveDashboardToNeo4j: (driver: any, dashboard: any, date: any, user: any) => {
-        dispatch(saveDashboardToNeo4jThunk(driver, dashboard, date, user))
+    saveDashboardToNeo4j: (driver: any, database: string, dashboard: any, date: any, user: any) => {
+        dispatch(saveDashboardToNeo4jThunk(driver, database, dashboard, date, user))
     },
+    loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoSaveModal));
-
 
 

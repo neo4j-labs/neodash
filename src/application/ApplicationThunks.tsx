@@ -1,12 +1,18 @@
 import { createDriver } from "use-neo4j";
 import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
-import { createNotificationThunk, createNotificationUndismissableThunk } from "../page/PageThunks";
+import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/CypherQueryRunner";
 import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
-    resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting, setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled, setAboutModalOpen, setStandaloneMode
+    resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
+    setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled,
+    setAboutModalOpen, setStandaloneMode
 } from "./ApplicationActions";
 
+/**
+ * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
+ * Several actions/other thunks may be dispatched from here.
+ */
 
 export const createConnectionThunk = (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
@@ -14,30 +20,29 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
         console.log("Attempting to connect...")
         const validateConnection = (records) => {
             console.log("Confirming connection was established...")
-            console.log(protocol, url, port, database, username, password)
             if (records && records[0] && records[0]["error"]) {
                 dispatch(createNotificationThunk("Unable to establish connection", records[0]["error"]));
             } else if (records && records[0] && records[0].keys[0] == "connected") {
-                
+
                 dispatch(setConnectionProperties(protocol, url, port, database, username, password));
                 dispatch(setConnectionModalOpen(false));
                 dispatch(setConnected(true));
 
                 // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
                 const application = getState().application;
-                if (application.dashboardToLoadAfterConnecting && application.dashboardToLoadAfterConnecting.startsWith("http")) {     
+                if (application.dashboardToLoadAfterConnecting && application.dashboardToLoadAfterConnecting.startsWith("http")) {
                     fetch(application.dashboardToLoadAfterConnecting)
-                    .then(response => response.text())
-                    .then(data =>  dispatch(loadDashboardThunk(data)));
+                        .then(response => response.text())
+                        .then(data => dispatch(loadDashboardThunk(data)));
                     dispatch(setDashboardToLoadAfterConnecting(null));
                 } else if (application.dashboardToLoadAfterConnecting) {
                     const setDashboardAfterLoadingFromDatabase = (value) => {
                         dispatch(loadDashboardThunk(value));
                     }
                     // If we specify a dashboard by name, load the latest version of it
-                    if(application.dashboardToLoadAfterConnecting.startsWith('name:')){
+                    if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
                         dispatch(loadDashboardFromNeo4jByNameThunk(driver, application.dashboardToLoadAfterConnecting.substring(5), setDashboardAfterLoadingFromDatabase));
-                    }else{
+                    } else {
                         dispatch(loadDashboardFromNeo4jByUUIDThunk(driver, application.dashboardToLoadAfterConnecting, setDashboardAfterLoadingFromDatabase));
                     }
                     dispatch(setDashboardToLoadAfterConnecting(null));
@@ -117,12 +122,12 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
                 const url = connection.split("@")[1].split(":")[1];
                 const port = connection.split("@")[1].split(":")[2];
                 dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password));
-                window.history.pushState({}, document.title, "/" );
+                window.history.pushState({}, document.title, "/");
             } else {
                 dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
-                window.history.pushState({}, document.title, "/" );
+                window.history.pushState({}, document.title, "/");
             }
-        }else{
+        } else {
             // dispatch(resetShareDetails());
         }
 
@@ -156,26 +161,26 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
     try {
         const config = await (await fetch("/config.json")).json();
-          dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
-          const state = getState();
-          const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
-          dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
-          if(standalone){
-            dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], state.application.connection.username ,state.application.connection.password));
+        dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
+        const state = getState();
+        const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
+        dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
+        if (standalone) {
+            dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], state.application.connection.username, state.application.connection.password));
             dispatch(setConnectionModalOpen(true));
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
-            dispatch(setDashboardToLoadAfterConnecting("name:"+config['standaloneDashboardName']));
+            dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
             dispatch(clearNotification());
-        }else{
+        } else {
             dispatch(clearDesktopConnectionProperties());
             dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
             const old = localStorage.getItem('neodash-dashboard');
             dispatch(setOldDashboard(old));
             dispatch(setConnected(false));
             dispatch(setDashboardToLoadAfterConnecting(null));
-            dispatch(setWelcomeScreenOpen(true));   
+            dispatch(setWelcomeScreenOpen(true));
             dispatch(clearNotification());
             dispatch(handleSharedDashboardsThunk());
             dispatch(setConnectionModalOpen(false));
