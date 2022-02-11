@@ -621,7 +621,7 @@ export const REPORT_TYPES = {
             "fontSize": {
                 label: "Font Size",
                 type: SELECTION_TYPES.NUMBER,
-                default: 32
+                default: 64
             },
             "color": {
                 label: "Color",
