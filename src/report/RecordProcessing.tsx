@@ -269,6 +269,8 @@ export function getRecordType(value) {
     } else if (value === null) {
         return 'null';
     } else if (value.__isInteger__) {
+        return 'integer';
+    } else if (typeof(value) == "number") {
         return 'number';
     } else if (value.__isDate__) {
         return 'date';
@@ -345,9 +347,13 @@ function RenderString(value) {
     return str;
 }
 
+function RenderInteger(value) {
+    const integer = value.toInt().toLocaleString();
+    return integer;
+}
+
 function RenderNumber(value) {
-    const thousandsSeperator=" ";
-    const number = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g,thousandsSeperator);
+    const number = value.toLocaleString();
     return number;
 }
 
@@ -395,6 +401,10 @@ const rendererForType: any = {
         type: 'string',
         renderValue: (c) => RenderString(c.value),
     },
+    "integer": {
+        type: 'number',
+        renderValue: (c) => RenderInteger(c.value)
+    },
     "number": {
         type: 'number',
         renderValue: (c) => RenderNumber(c.value)
@@ -414,5 +424,5 @@ export function getRendererForValue(value) {
 
 export function renderValueByType(value){
     const renderer = getRendererForValue(value);
-    renderer.renderValue({value:value});
+    return renderer.renderValue({value:value});
 }
