@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
-import { getRecordType, getRendererForValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
+import { getRecordType, getRendererForValue, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
 import { Chip, Tooltip, withStyles } from '@material-ui/core';
 
 function addDirection(relationship, start) {

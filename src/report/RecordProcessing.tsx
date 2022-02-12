@@ -358,7 +358,7 @@ function RenderNumber(value) {
     return number;
 }
 
-function RenderSubValue(value, key = 0) {
+export function RenderSubValue(value, key = 0) {
     if (value == undefined) {
         return "";
     }
