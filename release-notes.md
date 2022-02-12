@@ -1,3 +1,6 @@
+## NeoDash 2.0.8
+Hotfix for missing config file in Neo4j Desktop causing startup issue.
+
 ## NeoDash 2.0.7
 Application functionality:
 - Added standalone 'dashboard viewer' mode.

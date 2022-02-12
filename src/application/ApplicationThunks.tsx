@@ -165,8 +165,24 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 
 
 export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
+    var config = {
+        ssoEnabled: false,
+        ssoDiscoveryUrl: "http://example.com",
+        standalone: false,
+        standaloneProtocol: "neo4j",
+        standaloneHost: "localhost",
+        standalonePort: "7687",
+        standaloneDatabase: "neo4j", 
+        standaloneDashboardName: "My Dashboard",
+        standaloneDashboardDatabase: "dashboards" 
+    }
     try {
-        const config = await (await fetch("/config.json")).json();
+        config = await (await fetch("/config.json")).json();
+    }catch (e){
+        // Config may not be found, for example when we are in Neo4j Desktop.
+        console.log("No config file detected. Setting to safe defaults.")
+    }
+    try {
         dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
         const state = getState();
         const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
@@ -194,6 +210,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
     } catch (e) {
         dispatch(setWelcomeScreenOpen(false));
-        dispatch(createNotificationUndismissableThunk("Unable to load application configuration", "Do you have a valid config.json deployed with your application?"));
+        dispatch(createNotificationThunk("Unable to load application configuration", "Do you have a valid config.json deployed with your application?"));
     }
 }
