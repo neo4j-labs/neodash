@@ -1,3 +1,23 @@
+## NeoDash 2.0.7
+Application functionality:
+- Added standalone 'dashboard viewer' mode.
+- Added option to save/load dashboards from other Neo4j databases.
+
+Reports/Visualizations:
+- Fixed bug in creating line charts.
+- Added support for datetime axis in line charts.
+- Added auto-locale formatting to number values in single value / table reports.
+- Added unified renderer for value types.
+- Updated default font size for single value reports.
+- Added optional deep-link button for graph visualizations.
+- Added option to disable auto-running a report, to let users explore the query first.
+- Minor styling tweaks to the graph views.
+
+For Developers:
+- Added more documentation on extending the app.
+- New security-vetted docker image available on Docker hub.
+
+
 ## NeoDash 2.0.6
 Major version updates to all internal dependencies. 
 NeoDash 2.0.6 uses Node 17+, react 17+ and recent versions of all visualization libraries.
