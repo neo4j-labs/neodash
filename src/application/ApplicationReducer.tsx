@@ -1,10 +1,13 @@
 /**
- * Reducers define changes to the application state when a given action
+ * Reducers define changes to the application state when a given action is taken.
  */
 
 import {
-    CLEAR_DESKTOP_CONNECTION_PROPERTIES, CLEAR_NOTIFICATION, CREATE_NOTIFICATION, RESET_SHARE_DETAILS, SET_ABOUT_MODAL_OPEN, SET_CONNECTED,
-    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES, SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, SET_SHARE_DETAILS_FROM_URL, SET_STANDALONE_MODE, SET_WELCOME_SCREEN_OPEN
+    CLEAR_DESKTOP_CONNECTION_PROPERTIES, CLEAR_NOTIFICATION, CREATE_NOTIFICATION, 
+    RESET_SHARE_DETAILS, SET_ABOUT_MODAL_OPEN, SET_CONNECTED,
+    SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES,
+    SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, 
+    SET_SHARE_DETAILS_FROM_URL, SET_SSO_ENABLED, SET_STANDALONE_DASHBOARD_DATEBASE, SET_STANDALONE_ENABLED, SET_STANDALONE_MODE, SET_WELCOME_SCREEN_OPEN
 } from "./ApplicationActions";
 
 const update = (state, mutations) =>
@@ -46,7 +49,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
             return state;
         }
         case CLEAR_NOTIFICATION: {
-            state = update(state, { notificationTitle: null, notificationMessage: null })
+            state = update(state, { notificationTitle: null, notificationMessage: null, notificationIsDismissable: null })
             return state;
         }
         case SET_CONNECTED: {
@@ -69,9 +72,32 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
             state = update(state, { welcomeScreenOpen: open })
             return state;
         }
+        case SET_STANDALONE_DASHBOARD_DATEBASE : {
+            const { dashboardDatabase } = payload;
+            state = update(state, { standaloneDashboardDatabase: dashboardDatabase });
+            return state;
+        }
         case SET_STANDALONE_MODE: {
             const { standalone } = payload;
             state = update(state, { standalone: standalone })
+            return state;
+        }
+        case SET_SSO_ENABLED: {
+            const { enabled, discoveryUrl } = payload;
+            state = update(state, { ssoEnabled: enabled, ssoDiscoveryUrl: discoveryUrl })
+            return state;
+        }
+        case SET_STANDALONE_ENABLED: {
+            const { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase } = payload;
+            state = update(state, {
+                standalone: standalone,
+                standaloneProtocol: standaloneProtocol,
+                standaloneHost: standaloneHost,
+                standalonePort: standalonePort,
+                standaloneDatabase: standaloneDatabase,
+                standaloneDashboardName: standaloneDashboardName, 
+                standaloneDashboardDatabase: standaloneDashboardDatabase
+            })
             return state;
         }
         case SET_OLD_DASHBOARD: {

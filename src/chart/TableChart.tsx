@@ -1,12 +1,29 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
+import { getRecordType, getRendererForValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
+import { Chip, Tooltip, withStyles } from '@material-ui/core';
 
-import { getRendererForValue } from '../report/RecordProcessing';
+function addDirection(relationship, start) {
+    relationship.direction = (relationship.start.low == start.identity.low);
+    return relationship;
+}
+
+const rightRelationship = "polygon(10px 0%, calc(100% - 10px) 0%, 100% 50%, 100% calc(100% - 50%), calc(100% - 10px) 100%, 0px 100%, 0% calc(100% - 0px), 0% 0px)"
+const leftRelationship = "polygon(10px 0%, calc(100% - 0%) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 0%) 100%, 10px 100%, 0% calc(100% - 50%), 0% 50%)"
+
+const HtmlTooltip = withStyles((theme) => ({
+    tooltip: {
+        color: 'white',
+        fontSize: theme.typography.pxToRem(12),
+        border: '1px solid #fcfffa',
+    },
+}))(Tooltip);
+
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
-    const columnProperties = {type: renderer.type, renderCell: renderer.renderValue};
+    const columnProperties = (renderer ? {type:renderer.type, renderCell: renderer.renderValue} : customColumnProperties["string"]);
 
     if (columnProperties) {
         column = { ...column, ...columnProperties }
@@ -14,6 +31,7 @@ function ApplyColumnType(column, value) {
 
     return column;
 }
+
 
 const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;
@@ -57,7 +75,7 @@ const NeoTableChart = (props: ChartProps) => {
     });
 
     const rows = (transposed) ? records[0].keys.map((key, i) => {
-        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: r._fields[i] })));
+        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: RenderSubValue(r._fields[i])  })));
     }) : records.map((record, rownumber) => {
         return Object.assign({ id: rownumber }, ...record._fields.map((field, i) => ({ [record.keys[i]]: field })));
     });

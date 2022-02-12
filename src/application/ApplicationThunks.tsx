@@ -1,12 +1,18 @@
 import { createDriver } from "use-neo4j";
-import { loadDashboardFromNeo4jThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
+import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/CypherQueryRunner";
 import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
-    resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setStandAloneMode, setDashboardToLoadAfterConnecting
+    resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
+    setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled,
+    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase
 } from "./ApplicationActions";
 
+/**
+ * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
+ * Several actions/other thunks may be dispatched from here.
+ */
 
 export const createConnectionThunk = (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
@@ -24,19 +30,24 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
 
                 // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
                 const application = getState().application;
-                if (application.dashboardToLoadAfterConnecting && application.dashboardToLoadAfterConnecting.startsWith("http")) {     
+                if (application.dashboardToLoadAfterConnecting && application.dashboardToLoadAfterConnecting.startsWith("http")) {
                     fetch(application.dashboardToLoadAfterConnecting)
-                    .then(response => response.text())
-                    .then(data =>  dispatch(loadDashboardThunk(data)));
+                        .then(response => response.text())
+                        .then(data => dispatch(loadDashboardThunk(data)));
                     dispatch(setDashboardToLoadAfterConnecting(null));
                 } else if (application.dashboardToLoadAfterConnecting) {
                     const setDashboardAfterLoadingFromDatabase = (value) => {
                         dispatch(loadDashboardThunk(value));
                     }
-                    dispatch(loadDashboardFromNeo4jThunk(driver, application.dashboardToLoadAfterConnecting, setDashboardAfterLoadingFromDatabase));
+
+                    // If we specify a dashboard by name, load the latest version of it
+                    if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
+                        dispatch(loadDashboardFromNeo4jByNameThunk(driver, application.standaloneDashboardDatabase, application.dashboardToLoadAfterConnecting.substring(5), setDashboardAfterLoadingFromDatabase));
+                    } else {
+                        dispatch(loadDashboardFromNeo4jByUUIDThunk(driver, application.standaloneDashboardDatabase, application.dashboardToLoadAfterConnecting, setDashboardAfterLoadingFromDatabase));
+                    }
                     dispatch(setDashboardToLoadAfterConnecting(null));
                 }
-
             } else {
                 dispatch(createNotificationThunk("Unknown Connection Error", "Check the browser console."));
             }
@@ -102,7 +113,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
         if (urlParams.get("share") !== null) {
             const id = decodeURIComponent(urlParams.get("id"));
             const type = urlParams.get("type");
-            const standalone = urlParams.get("standalone") == "yes";
+            const standalone = urlParams.get("standalone") == "Yes";
             if (urlParams.get("credentials")) {
                 const connection = decodeURIComponent(urlParams.get("credentials"));
                 const protocol = connection.split("://")[0];
@@ -112,12 +123,12 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
                 const url = connection.split("@")[1].split(":")[1];
                 const port = connection.split("@")[1].split(":")[2];
                 dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password));
-                window.history.pushState({}, document.title, "/" );
+                window.history.pushState({}, document.title, "/");
             } else {
                 dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
-                window.history.pushState({}, document.title, "/" );
+                window.history.pushState({}, document.title, "/");
             }
-        }else{
+        } else {
             // dispatch(resetShareDetails());
         }
 
@@ -133,16 +144,56 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
         const shareDetails = state.application.shareDetails;
         dispatch(setWelcomeScreenOpen(false));
         dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
+        if(shareDetails.dashboardDatabase){
+            dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
+ 
+            dispatch(setStandaloneDashboardDatabase(shareDetails.database));
+        }
         if (shareDetails.url) {
             dispatch(createConnectionThunk(shareDetails.protocol, shareDetails.url, shareDetails.port, shareDetails.database, shareDetails.username, shareDetails.password));
         } else {
             dispatch(setConnectionModalOpen(true));
         }
         if (shareDetails.standalone == true) {
-            dispatch(setStandAloneMode(true));
+            dispatch(setStandaloneMode(true));
         }
         dispatch(resetShareDetails());
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load shared dashboard", "The provided connection or dashboard identifiers are invalid. Try regenerating the share URL from the sharing window."));
+    }
+}
+
+
+export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
+    try {
+        const config = await (await fetch("/config.json")).json();
+        dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
+        const state = getState();
+        const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
+        dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
+        if (standalone) {
+            dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], state.application.connection.username, state.application.connection.password));
+            dispatch(setConnectionModalOpen(true));
+            dispatch(setAboutModalOpen(false));
+            dispatch(setConnected(false));
+            dispatch(setWelcomeScreenOpen(false));
+            dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+            dispatch(clearNotification());
+        } else {
+            dispatch(clearDesktopConnectionProperties());
+            dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
+            const old = localStorage.getItem('neodash-dashboard');
+            dispatch(setOldDashboard(old));
+            dispatch(setConnected(false));
+            dispatch(setDashboardToLoadAfterConnecting(null));
+            dispatch(setWelcomeScreenOpen(true));
+            dispatch(clearNotification());
+            dispatch(handleSharedDashboardsThunk());
+            dispatch(setConnectionModalOpen(false));
+            dispatch(setAboutModalOpen(false))
+        }
+    } catch (e) {
+        dispatch(setWelcomeScreenOpen(false));
+        dispatch(createNotificationUndismissableThunk("Unable to load application configuration", "Do you have a valid config.json deployed with your application?"));
     }
 }

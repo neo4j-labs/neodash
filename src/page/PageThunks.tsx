@@ -7,7 +7,6 @@ import {
 } from "./PageActions";
 
 
-
 export const createNotificationThunk = (title:any, message: any) => (dispatch: any) => {
     dispatch(createNotification(title, message));
 };

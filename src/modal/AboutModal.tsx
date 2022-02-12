@@ -13,7 +13,7 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
     const email = "niels.dejong@neo4j.com";
-    const version = "2.0.6";
+    const version = "2.0.7";
 
     const downloadDebugFile = () => {
         const element = document.createElement("a");

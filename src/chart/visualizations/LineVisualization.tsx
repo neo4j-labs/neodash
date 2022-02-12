@@ -8,7 +8,7 @@ interface LineChartData {
     data: Record<any, any>[]
 }
 
-export default function LineReport(props: ExtendedChartReportProps) {
+export default function LineVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
 
     const label = first!.keys[0] as string
@@ -36,6 +36,10 @@ export default function LineReport(props: ExtendedChartReportProps) {
     const lineWidth = (settings["lineWidth"]) ? settings["lineWidth"] : 2;
     const pointSize = (settings["pointSize"]) ? settings["pointSize"] : 10;
     const showGrid = (settings["showGrid"] != undefined) ? settings["showGrid"] : true;
+    const xTickValues = (settings["xTickValues"] != undefined) ? settings["xTickValues"] : undefined;
+    const xTickTimeValues = (settings["xTickTimeValues"] != undefined) ? settings["xTickTimeValues"] : "every 1 years";
+    const xAxisTimeFormat = (settings["xAxisTimeFormat"] != undefined) ? settings["xAxisTimeFormat"] : "%Y-%m-%dT%H:%M:%SZ";
+    const xAxisFormat = (settings["xAxisFormat"] != undefined) ? settings["xAxisFormat"] : undefined;
 
     if (!keys.length) {
         return <p>No data.</p>
@@ -56,73 +60,101 @@ export default function LineReport(props: ExtendedChartReportProps) {
         })
     })
 
-    return (
-        <div className="h-full w-full overflow-hidden" style={{ height: "100%" }}>
-
-            <ResponsiveLine
-                data={data}
-                margin={{ top: marginTop, right: marginRight, bottom: marginBottom, left: marginLeft }}
-                xScale={xScale == 'linear' ?
+    const isTimeChart = isNaN(data[0].data[0]['x']);
+    const validateXTickTimeValues = xTickTimeValues.split(" ");
+    if (validateXTickTimeValues.length != 3 ||
+        validateXTickTimeValues[0] != "every" ||
+        !Number.isInteger(parseFloat(validateXTickTimeValues[1])) ||
+        parseFloat(validateXTickTimeValues[1]) <= 0 ||
+        (validateXTickTimeValues[2] != "years" &&
+            validateXTickTimeValues[2] != "months" && 
+            validateXTickTimeValues[2] != "weeks" && 
+            validateXTickTimeValues[2] != "days" && 
+            validateXTickTimeValues[2] != "hours" && 
+            validateXTickTimeValues[2] != "minutes" && 
+            validateXTickTimeValues[2] != "seconds" &&
+            validateXTickTimeValues[2] != "milliseconds"
+            )) {
+        return <code style={{margin: "10px"}}>Invalid tick size specification for time chart. Parameter value must be set to "every [number] ['years', 'months', 'weeks', 'days', 'hours', 'seconds', 'milliseconds']".</code>;
+    }
+    const lineViz = <div className="h-full w-full overflow-hidden" style={{ height: "100%" }}>
+        <ResponsiveLine
+            data={data}
+            xScale={isTimeChart ?
+                { format: "%Y-%m-%dT%H:%M:%SZ", type: "time" } :
+                xScale == 'linear' ?
                     { type: xScale, min: minXValue, max: maxXValue } :
                     { type: xScale, min: minXValue, max: maxXValue, constant: xScaleLogBase, base: xScaleLogBase }
-                }
-                yScale={yScale == 'linear' ?
-                    { type: yScale, min: minYValue, max: maxYValue, stacked: false, reverse: false } :
-                    { type: yScale, min: minYValue, max: maxYValue,  constant: xScaleLogBase, base: yScaleLogBase }}
-                curve={curve}
-                enableGridX={showGrid}
-                enableGridY={showGrid}
-                axisTop={null}
-                axisRight={null}
-                axisBottom={{
-                    orient: 'bottom',
-                    tickSize: 6,
-                    tickPadding: 12,
-                    tickRotation: 0,
-                }}
-                axisLeft={{
-                    tickSize: 6,
-                    tickPadding: 12,
-                    tickRotation: 0,
-                }}
-                pointSize={pointSize}
-                lineWidth={lineWidth}
-                pointColor="white"
-
-                colors={{ scheme: colorScheme }}
-                pointBorderWidth={2}
-                pointBorderColor={{ from: 'serieColor' }}
-                pointLabelYOffset={-12}
-                useMesh={true}
-                legends={(legend) ? [
-                    {
-                        anchor: 'top-right',
-                        direction: 'row',
-                        justify: false,
-                        translateX: -10,
-                        translateY: -35,
-                        itemsSpacing: 0,
-                        itemDirection: 'right-to-left',
-                        itemWidth: legendWidth,
-                        itemHeight: 20,
-                        itemOpacity: 0.75,
-                        symbolSize: 6,
-                        symbolShape: 'circle',
-                        symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                        effects: [
-                            {
-                                on: 'hover',
-                                style: {
-                                    itemBackground: 'rgba(0, 0, 0, .03)',
-                                    itemOpacity: 1
-                                }
+            }
+            xFormat={isTimeChart ? "time:" + xAxisTimeFormat : xAxisFormat}
+            margin={{ top: marginTop, right: marginRight, bottom: marginBottom, left: marginLeft }}
+            yScale={yScale == 'linear' ?
+                { type: yScale, min: minYValue, max: maxYValue, stacked: false, reverse: false } :
+                { type: yScale, min: minYValue, max: maxYValue, constant: xScaleLogBase, base: yScaleLogBase }}
+            curve={curve}
+            enableGridX={showGrid}
+            enableGridY={showGrid}
+            axisTop={null}
+            axisRight={null}
+            axisBottom={isTimeChart ? {
+                tickValues: xTickTimeValues,
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                format: xAxisTimeFormat,
+                legend: "Time",
+                legendOffset: 36,
+                legendPosition: "middle"
+            } : {
+                orient: 'bottom',
+                tickSize: 6,
+                tickValues: xTickValues,
+                format: xAxisFormat,
+                tickPadding: 12,
+                tickRotation: 0,
+            }
+            }
+            axisLeft={{
+                tickSize: 6,
+                tickPadding: 12,
+                tickRotation: 0,
+            }}
+            pointSize={pointSize}
+            lineWidth={lineWidth}
+            pointColor="white"
+            colors={{ scheme: colorScheme }}
+            pointBorderWidth={2}
+            pointBorderColor={{ from: 'serieColor' }}
+            pointLabelYOffset={-12}
+            useMesh={true}
+            legends={(legend) ? [
+                {
+                    anchor: 'top-right',
+                    direction: 'row',
+                    justify: false,
+                    translateX: -10,
+                    translateY: -35,
+                    itemsSpacing: 0,
+                    itemDirection: 'right-to-left',
+                    itemWidth: legendWidth,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 6,
+                    symbolShape: 'circle',
+                    symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                    effects: [
+                        {
+                            on: 'hover',
+                            style: {
+                                itemBackground: 'rgba(0, 0, 0, .03)',
+                                itemOpacity: 1
                             }
-                        ]
-                    }
-                ] : []}
-
-                {...props.config}
-            />
-        </div>
-    )
+                        }
+                    ]
+                }
+            ] : []}
+            {...props.config}
+        />
+    </div>;
+    return lineViz;
 }

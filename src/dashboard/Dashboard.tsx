@@ -11,6 +11,7 @@ import NeoDashboardConnectionUpdateHandler from './DashboardConnectionUpdateHand
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotification } from '../application/ApplicationActions';
+import { createNotificationThunk } from '../page/PageThunks';
 
 
 
@@ -48,7 +49,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onConnectionUpdate: pagenumber => {
-        dispatch(createNotification("Connection Updated", "You have updated your Neo4j connection, your reports have been reloaded."))
+        dispatch(createNotificationThunk("Connection Updated", "You have updated your Neo4j connection, your reports have been reloaded."))
         dispatch(forceRefreshPage(pagenumber))
     }
 });

@@ -106,7 +106,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
         // Reverse engineer the minimal set of fields from the selection loaded.
         dashboard.pages.forEach(p => {
             p.reports.forEach(r => {
-                if(r.selection){
+                if (r.selection) {
                     r["fields"] = []
                     Object.keys(r.selection).forEach(f => {
                         r["fields"].push([f, r.selection[f]])
@@ -121,7 +121,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
     }
 }
 
-export const saveDashboardToNeo4jThunk = (driver, dashboard, date, user) => (dispatch: any, getState: any) => {
+export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, user) => (dispatch: any, getState: any) => {
     try {
         const uuid = createUUID();
         const title = dashboard.title;
@@ -129,16 +129,16 @@ export const saveDashboardToNeo4jThunk = (driver, dashboard, date, user) => (dis
         // const date = date;
         const version = dashboard.version;
         const content = dashboard;
-        runCypherQuery(driver, getState().application.connection.database,
+        runCypherQuery(driver, database,
             "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid",
             { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },
             {}, ["uuid"], 1, () => { return }, (records) => {
-                if (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0] && records[0]["_fields"][0] == uuid){
+                if (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0] && records[0]["_fields"][0] == uuid) {
                     dispatch(createNotificationThunk("🎉 Success!", "Your current dashboard was saved to Neo4j."));
-                }else{
-                    dispatch(createNotificationThunk("Unable to save dashboard", "Do you have write access to the '"+getState().application.connection.database+"' database?"));
+                } else {
+                    dispatch(createNotificationThunk("Unable to save dashboard", "Do you have write access to the '" + database + "' database?"));
                 }
-                
+
             });
 
     } catch (e) {
@@ -146,19 +146,42 @@ export const saveDashboardToNeo4jThunk = (driver, dashboard, date, user) => (dis
     }
 }
 
-export const loadDashboardFromNeo4jThunk = (driver, uuid, callback) => (dispatch: any, getState: any) => {
+export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, getState().application.connection.database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => callback(records[0]['_fields'][0]))
+        runCypherQuery(driver, database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => {
+            if (records.length == 0) {
+                dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
+            }
+            callback(records[0]['_fields'][0])
+        }
+        )
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
     }
 }
 
-export const loadDashboardListFromNeo4jThunk = (driver, callback) => (dispatch: any, getState: any) => {
+export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, getState().application.connection.database,
+        runCypherQuery(driver, database, "MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1", { name: name }, {}, ["dashboard"], 1, () => { return }, (records) => {
+            if (records.length == 0) {
+                dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided name could not be found."));
+            }
+            callback(records[0]['_fields'][0])
+        })
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
+    }
+}
+
+export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (dispatch: any, getState: any) => {
+    try {
+        runCypherQuery(driver, database,
             "MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date, n.user as author ORDER BY date DESC",
             {}, {}, ["id, title, date, user"], 1000, () => { return }, (records) => {
+                if (!records || !records[0] || !records[0]["_fields"]) {
+                    callback([]);
+                    return
+                }
                 const result = records.map(r => {
                     return { id: r["_fields"][0], title: r["_fields"][1], date: r["_fields"][2], author: r["_fields"][3] };
                 });
@@ -166,6 +189,21 @@ export const loadDashboardListFromNeo4jThunk = (driver, callback) => (dispatch: 
             })
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard list from Neo4j", e));
+    }
+}
+
+export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: any, getState: any) => {
+    try {
+        runCypherQuery(driver, "system",
+            "SHOW DATABASES yield name RETURN name",
+            {}, {}, ["name"], 1000, () => { return }, (records) => {
+                const result = records.map(r => {
+                    return r["_fields"][0];
+                });
+                callback(result);
+            })
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to list databases from Neo4j", e));
     }
 }
 

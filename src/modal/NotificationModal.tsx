@@ -6,7 +6,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import { connect } from "react-redux";
-import { applicationHasNotification, applicationIsConnected, getNotification, getNotificationTitle } from '../application/ApplicationSelectors';
+import { applicationHasNotification, applicationHasWelcomeScreenOpen, applicationIsConnected, getNotification, getNotificationIsDismissable, getNotificationTitle } from '../application/ApplicationSelectors';
 import { clearNotification, setConnectionModalOpen } from '../application/ApplicationActions';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
@@ -16,30 +16,36 @@ import CloseIcon from '@material-ui/icons/Close';
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
  */
-export const NeoNotificationModal = ({ open, title, text,
+export const NeoNotificationModal = ({ open, title, text, dismissable,
     openConnectionModalOnClose, setConnectionModalOpen, onNotificationClose }) => {
 
     return (
         <div>
             <Dialog maxWidth={"lg"} open={open} onClose={(e) => {
-                onNotificationClose();
-                if (openConnectionModalOnClose) {
-                    setConnectionModalOpen();
+                if(dismissable){
+                    onNotificationClose();
+                    if (openConnectionModalOnClose) {
+                        setConnectionModalOpen();
+                    }
                 }
+                
             }}
                 aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     {title}
                     <IconButton onClick={(e) => {
-                        onNotificationClose();
-                        if (openConnectionModalOnClose) {
-                            setConnectionModalOpen();
+                        if(dismissable){
+                            onNotificationClose();
+                            if (openConnectionModalOnClose) {
+                                setConnectionModalOpen();
+                            }
                         }
+                       
                     }}
                         style={{ marginLeft: "40px", padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
+                        {dismissable ? <Badge badgeContent={""} >
                             <CloseIcon />
-                        </Badge>
+                        </Badge> : <></>}
                     </IconButton>
                 </DialogTitle>
 
@@ -54,9 +60,10 @@ export const NeoNotificationModal = ({ open, title, text,
 
 const mapStateToProps = state => ({
     open: applicationHasNotification(state),
-    openConnectionModalOnClose: !applicationIsConnected(state),
+    openConnectionModalOnClose: !applicationIsConnected(state) && !applicationHasWelcomeScreenOpen(state),
     title: getNotificationTitle(state),
     text: getNotification(state),
+    dismissable: getNotificationIsDismissable(state)
 });
 
 const mapDispatchToProps = dispatch => ({

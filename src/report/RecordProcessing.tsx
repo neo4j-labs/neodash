@@ -112,18 +112,20 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
         return null;
     }
 
-    numericOrDatetimeFieldNames.forEach(numericOrDatetimeFieldName => {
-        const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
-        const className = value.__proto__.constructor.name;
-        if (className == "DateTime") {
-            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = new Date(value.toString());
-
-        }
-    })
 
     textFieldNames.forEach(textFieldName => {
         record._fields[record._fieldLookup[textFieldName]] =
             convertRecordObjectToString(record._fields[record._fieldLookup[textFieldName]]);
+    })
+
+    numericOrDatetimeFieldNames.forEach(numericOrDatetimeFieldName => {
+        const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
+        const className = value && value.__proto__.constructor.name;
+        if (className == "DateTime") {
+            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString();
+        }else if (className !== "Integer" && className !== "Number"){
+            record = null;
+        }
     })
 
     return record;
@@ -261,7 +263,6 @@ export function getRecordType(value) {
     // 'number', 'date', 'dateTime', 'boolean' and 'singleSelect'
     // https://v4.mui.com/components/data-grid/columns/#column-types
     // Type singleSelect is not implemented here
-
     if (value === true || value === false) {
         return 'boolean';
     } else if (value === undefined) {
@@ -363,10 +364,9 @@ function RenderSubValue(value, key = 0) {
     }
     const type = getRecordType(value);
     const columnProperties = rendererForType[type];
-
     if (columnProperties) {
-        if (columnProperties.renderCell) {
-            return columnProperties.renderCell({ value: value });
+        if (columnProperties.renderValue) {
+            return columnProperties.renderValue({ value: value });
         } else if (columnProperties.valueGetter) {
             return columnProperties.valueGetter({ value: value });
         }

@@ -7,14 +7,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import PlayArrow from '@material-ui/icons/PlayArrow';
-import { ListItem, ListItemIcon, ListItemText, TextareaAutosize } from '@material-ui/core';
+import { FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import StorageIcon from '@material-ui/icons/Storage';
-import { loadDashboardFromNeo4jThunk, loadDashboardListFromNeo4jThunk, loadDashboardThunk } from '../dashboard/DashboardThunks';
+import { loadDashboardFromNeo4jByUUIDThunk, loadDashboardListFromNeo4jThunk, loadDashboardThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 
@@ -27,12 +27,14 @@ const styles = {
 
 };
 
-export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashboardListFromNeo4j }) => {
+export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDashboardFromNeo4j, loadDashboardListFromNeo4j }) => {
     const [loadModalOpen, setLoadModalOpen] = React.useState(false);
     const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
     const [text, setText] = React.useState("");
     const [rows, setRows] = React.useState([]);
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+    const [dashboardDatabase, setDashboardDatabase] = React.useState("neo4j");
+    const [databases, setDatabases] = React.useState(["neo4j"]);
 
     const handleClickOpen = () => {
         setLoadModalOpen(true);
@@ -71,7 +73,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
         { field: 'author', headerName: 'Author', width: 160 },
         {
             field: 'load', headerName: ' ', renderCell: (c) => {
-                return <Button onClick={(e) => { loadDashboardFromNeo4j(driver, c.id, handleDashboardLoadedFromNeo4j) }} style={{ float: "right", backgroundColor: "white"}} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
+                return <Button onClick={(e) => { loadDashboardFromNeo4j(driver, dashboardDatabase, c.id, handleDashboardLoadedFromNeo4j) }} style={{ float: "right", backgroundColor: "white" }} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
             }, width: 120
         },
     ]
@@ -107,13 +109,14 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
                 <DialogContent style={{ width: "1000px" }}>
                     {/* <DialogContentText> Paste your dashboard file here to load it into NeoDash.</DialogContentText> */}
                     <div>
-                    <Button
+                        <Button
                             component="label"
                             onClick={(e) => {
-                                loadDashboardListFromNeo4j(driver, (result) => {setRows(result)});
+                                loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setRows(result) });
                                 setLoadFromNeo4jModalOpen(true);
+                                loadDatabaseListFromNeo4j(driver, (result) => { setDatabases(result) });
                             }}
-                            style={{marginBottom: "10px", backgroundColor: "white" }}
+                            style={{ marginBottom: "10px", backgroundColor: "white" }}
                             color="default"
                             variant="contained"
                             size="medium"
@@ -124,7 +127,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
                         <Button
                             component="label"
                             // onClick={(e)=>uploadDashboard(e)}
-                            style={{  marginLeft: "10px",  backgroundColor: "white", marginBottom: "10px" }}
+                            style={{ marginLeft: "10px", backgroundColor: "white", marginBottom: "10px" }}
                             color="default"
                             variant="contained"
                             size="medium"
@@ -136,7 +139,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
                             />
                             Select From File
                         </Button>
-                       
+
                         <Button onClick={(text.length > 0) ? handleCloseAndLoad : null}
                             style={{ color: text.length > 0 ? "white" : "lightgrey", float: "right", marginLeft: "10px", marginBottom: "10px", backgroundColor: text.length > 0 ? "green" : "white" }}
                             color="default"
@@ -173,10 +176,11 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
                     <DialogContentText>If dashboards are saved in your current database, choose a dashboard below.
                     </DialogContentText>
 
-                    <div style={{ height: "360px" }}>
+                    <div style={{ height: "380px", borderBottom: "1px solid lightgrey" }}>
                         <DataGrid
                             rows={rows}
                             columns={columns}
+
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                             disableSelectionOnClick
@@ -185,7 +189,24 @@ export const NeoLoadModal = ({ loadDashboard, loadDashboardFromNeo4j, loadDashbo
                                 ColumnSortedAscendingIcon: () => <></>,
                             }}
                         /></div>
-
+                    <FormControl style={{ marginTop: "-58px", marginLeft: "10px" }}>
+                        <InputLabel id="demo-simple-select-label">Database</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            style={{ width: "150px" }}
+                            value={dashboardDatabase}
+                            onChange={(e) => {
+                                setRows([]);
+                                setDashboardDatabase(e.target.value);
+                                loadDashboardListFromNeo4j(driver, e.target.value, (result) => {  setRows(result); });
+                            }}
+                        >
+                            {databases.map(database => {
+                                return <MenuItem value={database}>{database}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
                 </DialogContent>
             </Dialog>
         </div>
@@ -197,8 +218,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     loadDashboard: text => dispatch(loadDashboardThunk(text)),
-    loadDashboardFromNeo4j: (driver, uuid, callback) => dispatch(loadDashboardFromNeo4jThunk(driver, uuid, callback)),
-    loadDashboardListFromNeo4j: (driver, callback) => dispatch(loadDashboardListFromNeo4jThunk(driver, callback)),
+    loadDashboardFromNeo4j: (driver, database, uuid, callback) => dispatch(loadDashboardFromNeo4jByUUIDThunk(driver, database, uuid, callback)),
+    loadDashboardListFromNeo4j: (driver, database, callback) => dispatch(loadDashboardListFromNeo4jThunk(driver, database, callback)),
+    loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback))
 });
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadModal));

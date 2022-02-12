@@ -50,6 +50,12 @@ export const REPORT_TYPES = {
                 label: "Relative Column Sizes",
                 type: SELECTION_TYPES.TEXT,
                 default: "[1, 1, 1, ...]"
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -101,7 +107,7 @@ export const REPORT_TYPES = {
             "defaultRelColor": {
                 label: "Relationship Color",
                 type: SELECTION_TYPES.TEXT,
-                default: "#909090"
+                default: "#a0a0a0"
             },
             "defaultRelWidth": {
                 label: "Relationship Width",
@@ -111,7 +117,7 @@ export const REPORT_TYPES = {
             "relLabelColor": {
                 label: "Relationship Label Color",
                 type: SELECTION_TYPES.TEXT,
-                default: "#909090"
+                default: "#a0a0a0"
             },
             "relLabelFontSize": {
                 label: "Relationship Label Font Size",
@@ -163,12 +169,23 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "drilldownLink": {
+                label: "Drilldown Icon Link",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
+            },
             "hideSelections": {
                 label: "Hide Property Selection",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
             },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
         }
     },
     "bar": {
@@ -281,6 +298,114 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
+    "pie": {
+        label: "Pie Chart",
+        component: NeoPieChart,
+        helperText: <div>A pie chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        selection: {
+            "index": {
+                label: "Category",
+                type: SELECTION_TYPES.TEXT
+            },
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "Group",
+                type: SELECTION_TYPES.TEXT,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 100,
+        settings: {
+            "sortByValue": {
+                label: "Auto-sort slices by value",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "enableArcLabels": {
+                label: "Show Values in slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "enableArcLinkLabels": {
+                label: "Show categories next to slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "legend": {
+                label: "Show legend under visualization",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "innerRadius": {
+                label: "Pie Inner Radius (between 0 and 1)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "padAngle": {
+                label: "Slice padding angle (degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "borderWidth": {
+                label: "Slice border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)", 
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -387,7 +512,7 @@ export const REPORT_TYPES = {
         selection: {
             "x": {
                 label: "X-value",
-                type: SELECTION_TYPES.NUMBER
+                type: SELECTION_TYPES.NUMBER_OR_DATETIME
             },
             "value": {
                 label: "Y-value",
@@ -443,6 +568,21 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.NUMBER,
                 default: "auto"
             },
+            "xTickValues": {
+                label: "X-axis Tick Count (Approximate)",
+                type: SELECTION_TYPES.NUMBER,
+                default: "auto"
+            },
+            "xAxisTimeFormat": {
+                label: "X-axis Format (Time chart)",
+                type: SELECTION_TYPES.TEXT,
+                default: "%Y-%m-%dT%H:%M:%SZ"
+            },
+            "xTickTimeValues": {
+                label: "X-axis Tick Size (Time chart)",
+                type: SELECTION_TYPES.TEXT,
+                default: "every 1 year"
+            },
             "curve": {
                 label: "Line Smoothing",
                 type: SELECTION_TYPES.LIST,
@@ -496,6 +636,12 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
         }
     },
     "map": {
@@ -553,6 +699,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -565,7 +717,7 @@ export const REPORT_TYPES = {
             "fontSize": {
                 label: "Font Size",
                 type: SELECTION_TYPES.NUMBER,
-                default: 32
+                default: 64
             },
             "color": {
                 label: "Color",
@@ -583,6 +735,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
             },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
         }
     },
     "json": {
@@ -591,7 +749,14 @@ export const REPORT_TYPES = {
         component: NeoJSONChart,
         allowScrolling: true,
         maxRecords: 500,
-        settings: {}
+        settings: {
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
     },
     "select": {
         label: "Parameter Select",
@@ -619,7 +784,7 @@ export const REPORT_TYPES = {
                 label: "Helper Text (Override)",
                 type: SELECTION_TYPES.TEXT,
                 default: "Enter a custom helper text here..."
-            },
+            }
         }
     },
     "iframe": {

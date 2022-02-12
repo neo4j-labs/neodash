@@ -1,12 +1,20 @@
 import { initialState } from "../dashboard/DashboardReducer";
 import _ from 'lodash';
 
+/**
+ * Selectors define a way to retrieve parts of the global application state for a sub-component.
+ */
+
 export const applicationHasNotification = (state: any) => {
     return state.application.notificationMessage != null;
 }
 
 export const getNotification = (state: any) => {
     return state.application.notificationMessage;
+}
+
+export const getNotificationIsDismissable = (state: any) => {
+    return state.application.notificationTitle !== "Unable to load application configuration";
 }
 
 export const getNotificationTitle = (state: any) => {
@@ -45,6 +53,25 @@ export const applicationHasAboutModalOpen = (state: any) => {
     return state.application.aboutModalOpen;
 }
 
+export const applicationGetSsoSettings = (state: any) => {
+    return {
+        'ssoEnabled': state.application.ssoEnabled,
+        'ssoDiscoveryUrl': state.application.ssoDiscoveryUrl
+    };
+}
+
+export const applicationGetStandaloneSettings = (state: any) => {
+    return {
+        "standalone": state.application.standalone,
+        "standaloneProtocol": state.application.standaloneProtocol,
+        "standaloneHost": state.application.standaloneHost,
+        "standalonePort": state.application.standalonePort,
+        "standaloneDatabase": state.application.standaloneDatabase,
+        "standaloneDashboardName": state.application.standaloneDashboardName,
+        "standaloneDashboardDatabase": state.application.standaloneDashboardDatabase
+    }
+}
+
 export const applicationHasWelcomeScreenOpen = (state: any) => {
     return state.application.welcomeScreenOpen;
 }
@@ -63,7 +90,7 @@ export const applicationHasCachedDashboard = (state: any) => {
 export const applicationGetDebugState = (state: any) => {
     const copy = JSON.parse(JSON.stringify(state));
     copy.application.connection.password = "************";
-    if(copy.application.desktopConnection){
+    if (copy.application.desktopConnection) {
         copy.application.desktopConnection.password = "************";
     }
     return copy;

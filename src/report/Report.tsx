@@ -142,7 +142,7 @@ export const NeoReport = ({
     if (disabled) {
         return <div></div>;
     } else if (status == QueryStatus.NO_QUERY) {
-        return (<div style={{ padding: 15 }}>No query specified. <br /> Use the <Chip size="small" icon={<MoreVert />} label="Report Settings" /> button get started. </div>);
+        return (<div style={{ padding: 15 }}>No query specified. <br /> Use the <Chip style={{backgroundColor: "#efefef"}}size="small" icon={<MoreVert />} label="Report Settings" /> button to get started. </div>);
     } else if (status == QueryStatus.RUNNING) {
         return (<Typography variant="h2" color="textSecondary" style={{ paddingTop: "100px", textAlign: "center" }}>
             <CircularProgress color="inherit" />

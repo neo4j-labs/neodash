@@ -42,26 +42,75 @@ To build the app for production:
 - deploy the contents of the build folder to a web server. You should then be able to run the web app.
 
 
-### Build Docker image
+## Build Docker image
 Make sure you have a recent version of `docker` installed.
-On a Unix-like system you can run  `./tools/docker-build-run_unix.bash` to build the multi-stage NeoDash image & access it with nginx:
+On a Unix-like system you can run  `./tools/docker-build.bash` to build the multi-stage NeoDash image.
+
+After this, you can run Neo4j in a container. On Unix (Mac/Linux) systems:
 ```
 $ cd tools/
-$ ./docker-build-run_unix.bash --port=$YOUR_PORT
+$ ./docker-run-unix.bash 
 ```
+
 If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
 ```
 $ cd tools/
-$ ./docker-build-run_windows.bash --port=$YOUR_PORT
+$ ./docker-run-windows.bash
 ```
-Then visit localhost with the chosen port in your browser.
+Then visit `http://localhost:8080` with the chosen port in your browser.
 
 A pre-built Docker image is available [on DockerHub](https://hub.docker.com/r/nielsdejong/neodash). 
 
+## Run in standalone mode
+NeoDash can be deployed in a 'standalone mode' for dashboard viewers. This mode will:
+- Disable all editing options
+- Have a hardcoded Neo4j URL and database name
+- Load a dashboard from Neo4j with a fixed name.
+
+The diagram below illustrates how NeoDash standalone mode can be deployed next to a standard 'Editor Mode' instance:
+
+![](doc/standalone-architecture.png)
+
+You can configure an instance to run as standalone by changing the variables in `tools/docker-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build a docker image.
+
  ## Extending NeoDash
+There are two categories of extensions to NeoDash you can build:
+- Core Dashboard Functionality
+- Custom Reports
+
+The first will require some knowledge about React, Redux, and app internals. Some advanced level knowledge is therefore highly recommended. The second is much simpler, and you should be able to plug in your own visualizations with minimal JS knowledge.
+
+### Core Dashboard Functionality
+To extend the core functionality of the app, it helps to be familiar with the following concepts:
+- ReactJS
+- Redux (State management for React)
+- Redux Selectors
+- Redux Thunks
+
+The image below contains a high-level overview of the component hierarchy within the application. The following conceptual building blocks are used to create the interface:
+- The Application
+- The Dashboard
+- Modals 
+- Drawer
+- Dashboard Header
+- Pages
+- Cards
+- Card Views
+- Card Settings
+- Card View Header
+- Report
+- Card View Footer
+- Card Settings Header
+- Card Settings Content
+- Card Settings Footer
+- Charts
+
+![](doc/component-hierarchy.png)
+
+ ### Custom Reports
  As of v2.0, NeoDash is easy to extend with your own visualizations. There are two steps to take to plug in your own charts:
  
-###  1. Create the React component
+####  1. Create the React component
 All NeoDash charts implement the interface defined in `src/charts/Chart.tsx`. A custom chart must do the same. the following parameter as passed to your chart from the application:
 - `records`: a list of Neo4j Records. This is the raw data returned from the Neo4j driver. 
 - `settings`: a dictionary of settings as defined under "advanced report settings" for each report. You can use these values to customize your visualization based on user input.
@@ -72,7 +121,7 @@ All NeoDash charts implement the interface defined in `src/charts/Chart.tsx`. A 
 
 Make sure that your component renders a React component. your component will be automatically scaled to the size of the report. See the other charts in `src/charts/` for examples. 
 
-### 2. Extend the config to make your component selectable
+#### 2. Extend the config to make your component selectable
 
 To let users choose your visualization, you must add it to the app's report configuration. This config is located in `src/config/ReportConfig.tsx`, and defined by the dictionary `REPORT_TYPES`.
 

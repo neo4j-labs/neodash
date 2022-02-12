@@ -20,7 +20,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     );
 
     const debouncedSetGlobalParameter = useCallback(
-        debounce(props.setGlobalParameter, 500),
+        debounce(props.setGlobalParameter, 750),
         [],
     );
 
@@ -62,10 +62,12 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                     placeholder={"Enter text here..."}
                     style={{ width: 300, marginLeft: "15px", marginTop: "5px" }}
                     onChange={(newValue) => {
-                        setValue(newValue);
+                        // TODO: i want this to be a proper wait instead of triggering on the first character.
                         if (newValue == null && clearParameterOnFieldClear) {
+                            setValue("");
                             debouncedSetGlobalParameter(parameter, undefined);
                         } else {
+                            setValue(newValue);
                             debouncedSetGlobalParameter(parameter, newValue);
                         }
                     }}
@@ -87,6 +89,8 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                 value={value ? value.toString() : "" + currentValue}
                 onChange={(event, newValue) => {
                     setValue(newValue);
+                    setInputText("" + newValue);
+
                     if (newValue && newValue["low"]) {
                         newValue = newValue["low"];
                     }
