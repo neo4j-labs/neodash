@@ -120,10 +120,10 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
 
     numericOrDatetimeFieldNames.forEach(numericOrDatetimeFieldName => {
         const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
-        const className = value && value.__proto__.constructor.name;
-        if (className == "DateTime") {
+        const className = getRecordType(value);
+        if (className == "dateTime") {
             record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString();
-        }else if (className !== "Integer" && className !== "Number"){
+        }else if (className !== "integer" && className !== "number"){
             record = null;
         }
     })
@@ -254,6 +254,7 @@ export function valueIsPath(value) {
 }
 
 export function valueIsObject(value) {
+    // TODO - this will not work in production builds. Need alternative.
     const className = value.__proto__.constructor.name;
     return className == "Object";
 }
@@ -375,7 +376,7 @@ export function RenderSubValue(value, key = 0) {
     return RenderString(value);
 }
 
-const rendererForType: any = {
+export const rendererForType: any = {
     "node": {
         type: 'string',
         renderValue: (c) => RenderNode(c.value),

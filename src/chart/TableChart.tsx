@@ -1,29 +1,12 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
-import { getRecordType, getRendererForValue, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
-import { Chip, Tooltip, withStyles } from '@material-ui/core';
-
-function addDirection(relationship, start) {
-    relationship.direction = (relationship.start.low == start.identity.low);
-    return relationship;
-}
-
-const rightRelationship = "polygon(10px 0%, calc(100% - 10px) 0%, 100% 50%, 100% calc(100% - 50%), calc(100% - 10px) 100%, 0px 100%, 0% calc(100% - 0px), 0% 0px)"
-const leftRelationship = "polygon(10px 0%, calc(100% - 0%) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 0%) 100%, 10px 100%, 0% calc(100% - 50%), 0% 50%)"
-
-const HtmlTooltip = withStyles((theme) => ({
-    tooltip: {
-        color: 'white',
-        fontSize: theme.typography.pxToRem(12),
-        border: '1px solid #fcfffa',
-    },
-}))(Tooltip);
+import { getRecordType, getRendererForValue, rendererForType, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
 
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
-    const columnProperties = (renderer ? {type:renderer.type, renderCell: renderer.renderValue} : customColumnProperties["string"]);
+    const columnProperties = (renderer ? {type:renderer.type, renderCell: renderer.renderValue} : rendererForType["string"]);
 
     if (columnProperties) {
         column = { ...column, ...columnProperties }
