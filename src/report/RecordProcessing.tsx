@@ -364,10 +364,9 @@ function RenderSubValue(value, key = 0) {
     }
     const type = getRecordType(value);
     const columnProperties = rendererForType[type];
-
     if (columnProperties) {
-        if (columnProperties.renderCell) {
-            return columnProperties.renderCell({ value: value });
+        if (columnProperties.renderValue) {
+            return columnProperties.renderValue({ value: value });
         } else if (columnProperties.valueGetter) {
             return columnProperties.valueGetter({ value: value });
         }

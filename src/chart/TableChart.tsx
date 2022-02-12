@@ -2,7 +2,7 @@ import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
 import { getRecordType, getRendererForValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
-import { Tooltip, withStyles } from '@material-ui/core';
+import { Chip, Tooltip, withStyles } from '@material-ui/core';
 
 function addDirection(relationship, start) {
     relationship.direction = (relationship.start.low == start.identity.low);
@@ -20,86 +20,10 @@ const HtmlTooltip = withStyles((theme) => ({
     },
 }))(Tooltip);
 
-function RenderNode(value, key = 0) {
-    return <HtmlTooltip key={key + "-" + value.identity} arrow title={<div><b> {value.labels.length > 0 ? value.labels.join(", ") : "Node"}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{value.properties[k].toString()}</td></tr>)}</tbody></table></div>}>
-        <Chip label={value.labels.length > 0 ? value.labels.join(", ") : "Node"} />
-    </HtmlTooltip>
-}
-
-function RenderRelationship(value, key = 0) {
-    return <HtmlTooltip key={key + "-" + value.identity} arrow title={<div><b> {value.type}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{value.properties[k].toString()}</td></tr>)}</tbody></table></div>}>
-        <Chip style={{ borderRadius: 0, clipPath: (value.direction == undefined) ? "none" : ((value.direction) ? rightRelationship : leftRelationship) }} label={value.type} />
-    </HtmlTooltip>
-}
-
-function RenderPath(value) {
-    return value.segments.map((segment, i) => {
-        return RenderSubValue((i < value.segments.length - 1) ?
-            [segment.start, addDirection(segment.relationship, segment.start)] :
-            [segment.start, addDirection(segment.relationship, segment.start), segment.end], i)
-    });
-}
-
-function RenderArray(value) {
-    const mapped = value.map((v, i) => {
-        return <div>
-            {RenderSubValue(v)}
-            {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
-        </div>
-    });
-    return mapped;
-}
-
-function RenderString(value) {
-    const str = value ? value.toString() : "";
-    if (str.startsWith("http") || str.startsWith("https")) {
-        return <a target="_blank" href={str}>{str}</a>;
-    }
-    return str;
-}
-
-const customColumnProperties: any = {
-    "node": {
-        type: 'string',
-        renderCell: (c) => RenderNode(c.value),
-    },
-    "relationship": {
-        type: 'string',
-        renderCell: (c) => RenderRelationship(c.value),
-    },
-    "path": {
-        type: 'string',
-        renderCell: (c) => RenderPath(c.value),
-    },
-    "object": {
-        type: 'string',
-        // valueGetter enables sorting and filtering on string values inside the object
-        valueGetter: (c) => { return JSON.stringify(c.value) },
-    },
-    "number": {
-        type: 'string',
-        valueGetter: (c) => {return ""+c.value},
-    },
-    "array": {
-        type: 'string',
-        renderCell: (c) => RenderArray(c.value),
-    },
-    "string": {
-        type: 'string',
-        renderCell: (c) => RenderString(c.value),
-    },
-    "null": {
-        type: 'string'
-    },
-    "undefined": {
-        type: 'string'
-    }
-};
-
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
-    const columnProperties = {type: renderer.type, renderCell: renderer.renderValue};
+    const columnProperties = (renderer ? {type:renderer.type, renderCell: renderer.renderValue} : customColumnProperties["string"]);
 
     if (columnProperties) {
         column = { ...column, ...columnProperties }
@@ -108,22 +32,6 @@ function ApplyColumnType(column, value) {
     return column;
 }
 
-function RenderSubValue(value, key = 0) {
-    if (value == undefined) {
-        return "";
-    }
-    const type = getRecordType(value);
-    const columnProperties = customColumnProperties[type];
-
-    if (columnProperties) {
-        if (columnProperties.renderCell) {
-            return columnProperties.renderCell({ value: value });
-        } else if (columnProperties.valueGetter) {
-            return columnProperties.valueGetter({ value: value });
-        }
-    }
-    return RenderString(value);
-}
 
 const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;

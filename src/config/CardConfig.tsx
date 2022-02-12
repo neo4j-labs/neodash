@@ -7,6 +7,14 @@ export const CARD_SIZES = [
         value: "3,1.25",
     },
     {
+        label: 'Little (4x1.5)',
+        value: "4,1.25",
+    },
+    {
+        label: 'Compact (6x1.5)',
+        value: "6,1.25",
+    },
+    {
         label: 'Small (3x3)',
         value: "3,3",
     },
