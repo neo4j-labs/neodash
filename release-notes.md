@@ -1,6 +1,8 @@
-## NeoDash 2.0.8 / 2.0.9
+## NeoDash 2.0.8 / 2.0.9 / 2.0.10
+Fixed to supplement 2.0.7:
 - Hotfix for missing config file in Neo4j Desktop causing startup issue.
 - Hotfix for application crashes caused by rendering custom data types in transposed table views.
+- Hotfix for object rendering in tables & line-chart type detection.
 
 ## NeoDash 2.0.7
 Application functionality:
