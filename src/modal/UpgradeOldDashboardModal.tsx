@@ -11,7 +11,7 @@ import { TextareaAutosize } from '@material-ui/core';
 export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loadDashboard }) => {
     return (
         <div>
-            <Dialog maxWidth={"lg"} open={open} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={open == true} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     Old Dashboard Found
                 </DialogTitle>

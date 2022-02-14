@@ -46,7 +46,7 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
                     width: "56px"
                 }
             }
-            open={open}
+            open={open == true} 
         >
             <div style={{
                 display: 'flex',

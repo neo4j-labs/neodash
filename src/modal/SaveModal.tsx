@@ -103,7 +103,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                 <ListItemText primary="Save" />
             </ListItem>
 
-            <Dialog maxWidth={"lg"} open={saveModalOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={saveModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     <SaveIcon style={{
                         height: "30px",
@@ -154,7 +154,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                 </DialogActions>
             </Dialog>
 
-            <Dialog maxWidth={"lg"} open={saveToNeo4jModalOpen} onClose={(e) => { setSaveToNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={saveToNeo4jModalOpen == true} onClose={(e) => { setSaveToNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
 
                     Save to Neo4j

@@ -69,8 +69,8 @@ export default function BarVisualization(props: ExtendedChartReportProps) {
         keys={keys}
         indexBy="index"
         margin={{ top: marginTop, right: (legend) ? legendWidth + marginRight : marginRight, bottom: marginBottom, left: marginLeft }}
+        valueScale={{ type: valueScale }}
         padding={0.3}
-        // valueScale={{ type: valueScale }}
         minValue={minValue}
         maxValue={maxValue}
         colors={{ scheme: colorScheme }}

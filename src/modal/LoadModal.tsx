@@ -90,7 +90,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                 <ListItemText primary="Load" />
             </ListItem>
 
-            <Dialog maxWidth={"lg"} open={loadModalOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={loadModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     <SystemUpdateAltIcon style={{
                         height: "30px",
@@ -163,7 +163,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                 {/* <DialogActions> */}
                 {/* </DialogActions> */}
             </Dialog>
-            <Dialog maxWidth={"lg"} open={loadFromNeo4jModalOpen} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={loadFromNeo4jModalOpen == true} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     Select From Neo4j
                     <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ padding: "3px", float: "right" }}>

@@ -22,7 +22,7 @@ const formatProperty = (property) => {
 export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, textAlign = "left" }) => {
     return (
         <div>
-            <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     {title}
                     <IconButton onClick={handleClose} style={{ padding: "3px", marginLeft: "20px", float: "right" }}>
