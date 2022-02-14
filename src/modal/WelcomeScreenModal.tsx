@@ -32,7 +32,7 @@ export const NeoWelcomeScreenModal = ({ welcomeScreenOpen, setWelcomeScreenOpen,
 
     return (
         <div>
-            <Dialog maxWidth="xs" open={welcomeScreenOpen} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth="xs" open={welcomeScreenOpen == true} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">NeoDash - Neo4j Dashboard Builder
                     <IconButton disabled style={{ color: "white", padding: "5px", float: "right" }}>
                         ⚡
@@ -131,7 +131,7 @@ export const NeoWelcomeScreenModal = ({ welcomeScreenOpen, setWelcomeScreenOpen,
             </Dialog>
 
             {/* Prompt when creating new dashboard with existing cache */}
-            <Dialog maxWidth="xs" open={promptOpen} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth="xs" open={promptOpen == true} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Create new dashboard
                     <IconButton disabled style={{ color: "white", padding: "5px", float: "right" }}>
                         ⚠️

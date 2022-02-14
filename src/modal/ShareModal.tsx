@@ -88,7 +88,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 <ListItemText primary="Share" />
             </ListItem>
 
-            <Dialog maxWidth={"lg"} open={shareModalOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog key={1} maxWidth={"lg"} open={shareModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     <ShareIcon style={{
                         height: "30px",
@@ -200,7 +200,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                     </DialogContentText> : <></>}
                 </DialogContent>
             </Dialog>
-            <Dialog maxWidth={"lg"} open={loadFromNeo4jModalOpen} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+            <Dialog key={2} maxWidth={"lg"} open={loadFromNeo4jModalOpen == true} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     Select From Neo4j
                     <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ padding: "3px", float: "right" }}>
@@ -246,7 +246,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
 
                 </DialogContent>
             </Dialog>
-            <Dialog maxWidth={"lg"} open={loadFromFileModalOpen} onClose={(e) => { setLoadFromFileModalOpen(false) }} aria-labelledby="form-dialog-title">
+            <Dialog key={3} maxWidth={"lg"} open={loadFromFileModalOpen == true} onClose={(e) => { setLoadFromFileModalOpen(false) }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     Select from URL
                     <IconButton onClick={(e) => { setLoadFromFileModalOpen(false) }} style={{ padding: "3px", float: "right" }}>

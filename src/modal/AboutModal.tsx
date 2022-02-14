@@ -13,7 +13,7 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
     const email = "niels.dejong@neo4j.com";
-    const version = "2.0.10";
+    const version = "2.0.11";
 
     const downloadDebugFile = () => {
         const element = document.createElement("a");
@@ -28,7 +28,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
 
     return (
         <div>
-            <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog maxWidth={"lg"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     About NeoDash
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>

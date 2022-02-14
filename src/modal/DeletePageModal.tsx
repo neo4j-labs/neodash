@@ -17,7 +17,7 @@ import { Tooltip } from '@material-ui/core';
 export const NeoDeletePageModal = ({modalOpen, onRemove, handleClose}) => {
 
     return (
-        <Dialog maxWidth={"lg"} open={modalOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <Dialog maxWidth={"lg"} open={modalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">
                 Delete page?
             </DialogTitle>

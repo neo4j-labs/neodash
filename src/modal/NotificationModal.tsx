@@ -21,7 +21,7 @@ export const NeoNotificationModal = ({ open, title, text, dismissable,
 
     return (
         <div>
-            <Dialog maxWidth={"lg"} open={open} onClose={(e) => {
+            <Dialog maxWidth={"lg"} open={open == true} onClose={(e) => {
                 if(dismissable){
                     onNotificationClose();
                     if (openConnectionModalOnClose) {

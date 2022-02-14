@@ -350,6 +350,10 @@ function RenderString(value) {
 }
 
 function RenderInteger(value) {
+    // if we cannot cast to integer, use the generic number renderer.
+    if(!value.toInt){
+        return RenderNumber(value);
+    }
     const integer = value.toInt().toLocaleString();
     return integer;
 }
@@ -393,6 +397,7 @@ export const rendererForType: any = {
         type: 'string',
         // valueGetter enables sorting and filtering on string values inside the object
         valueGetter: (c) => { return JSON.stringify(c.value) },
+        renderValue: (c) => { return JSON.stringify(c.value) }
     },
     "array": {
         type: 'string',
@@ -425,5 +430,10 @@ export function getRendererForValue(value) {
 
 export function renderValueByType(value){
     const renderer = getRendererForValue(value);
-    return renderer.renderValue({value:value});
+    if(renderer){
+        return renderer.renderValue({value:value});
+    }else{
+        return value.toString();
+    }
+   
 }

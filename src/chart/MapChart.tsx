@@ -19,7 +19,6 @@ const update = (state, mutations) =>
  * Renders Neo4j records as their JSON representation.
  */
 const NeoMapChart = (props: ChartProps) => {
-    const records = props.records;
 
     // Retrieve config from advanced settings
     const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : "color";
@@ -36,6 +35,11 @@ const NeoMapChart = (props: ChartProps) => {
     // Per pixel, scaling factors for the latitude/longitude mapping function.
     const widthScale = 8.55;
     const heightScale = 6.7;
+
+    var key = data.centerLatitude + "," + data.centerLongitude + "," + props.fullscreen;
+    useEffect(() => {
+        data.centerLatitude + "," + data.centerLongitude + "," + props.fullscreen;
+    }, [props.fullscreen])
 
     useEffect(() => {
         buildVisualizationDictionaryFromRecords(props.records);
@@ -130,7 +134,7 @@ const NeoMapChart = (props: ChartProps) => {
                 extractGraphEntitiesFromField(field);
             })
         });
-       
+
         // Assign proper colors & coordinates to nodes.
         const totalColors = categoricalColorSchemes[nodeColorScheme].length;
         const nodeLabelsList = Object.keys(nodeLabels);
@@ -161,7 +165,7 @@ const NeoMapChart = (props: ChartProps) => {
             return update(node, { pos: node.pos ? node.pos : assignedPos, color: assignedColor ? assignedColor : defaultNodeColor });
 
         });
-     
+
         // Assign proper curvatures to relationships.
         const linksList = Object.values(links).map(nodePair => {
             return nodePair.map((link, i) => {
@@ -299,7 +303,7 @@ const NeoMapChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : true;
 
     // Draw the component.
-    return <MapContainer /*ref={observe}*/ key={data.centerLatitude + "," + data.centerLongitude + "," + fullscreen} style={{ width: "100%", height: "100%" }}
+    return <MapContainer /*ref={observe}*/ key={key} style={{ width: "100%", height: "100%" }}
         center={[data.centerLatitude ? data.centerLatitude : 0, data.centerLongitude ? data.centerLongitude : 0]}
         zoom={data.zoom ? data.zoom : 0}
         maxZoom={18}

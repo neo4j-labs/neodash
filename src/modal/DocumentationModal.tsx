@@ -35,7 +35,7 @@ export const NeoDocumentationModal = ({ database }) => {
                 <ListItemText primary="Documentation" />
             </ListItem>
 
-            {open ? <Dialog maxWidth={"xl"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            {open ? <Dialog maxWidth={"xl"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     Documentation - Example Usage
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>

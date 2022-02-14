@@ -12,7 +12,6 @@ FROM nginx:alpine AS neodash
 RUN apk upgrade
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
 
-
 # Set default config options
 ENV standalone=false
 
