@@ -188,7 +188,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
         dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
         if (standalone) {
-            dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], state.application.connection.username, state.application.connection.password));
+            dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], state.application.connection.username, config['standalonePassword']));
             dispatch(setConnectionModalOpen(true));
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
