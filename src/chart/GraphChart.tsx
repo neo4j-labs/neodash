@@ -210,11 +210,11 @@ const NeoGraphChart = (props: ChartProps) => {
         });
 
         // Assign proper colors to nodes.
-        const totalColors = categoricalColorSchemes[nodeColorScheme].length;
+        const totalColors = categoricalColorSchemes[nodeColorScheme] ? categoricalColorSchemes[nodeColorScheme].length : 0;
         const nodeLabelsList = Object.keys(nodeLabels);
         const nodesList = Object.values(nodes).map(node => {
             const assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
-                categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors];
+               (totalColors > 0 ? categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors] : "grey");
             return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });
         });
 

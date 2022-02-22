@@ -23,6 +23,8 @@ export enum SELECTION_TYPES {
     NODE_PROPERTIES
 };
 
+export const CUSTOMIZATION_OPTION_TEXT = "⚙️ Customized";
+
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
 
@@ -77,7 +79,9 @@ export const REPORT_TYPES = {
             "nodeColorScheme": {
                 label: "Node Color Scheme",
                 type: SELECTION_TYPES.LIST,
-                values: ["neodash", "nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                customizable: true,
+                customization: "rule-based color",
+                values: ["neodash", "nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3", CUSTOMIZATION_OPTION_TEXT],
                 default: "neodash"
             },
             "nodeLabelColor": {

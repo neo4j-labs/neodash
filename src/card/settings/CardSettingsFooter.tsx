@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { REPORT_TYPES } from '../../config/ReportConfig'
+import { CUSTOMIZATION_OPTION_TEXT, REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { FormControlLabel, FormGroup, Switch } from '@material-ui/core';
@@ -11,7 +11,7 @@ const update = (state, mutations) =>
 
 
 
-const NeoCardSettingsFooter = ({ type, reportSettings, reportSettingsOpen, onToggleReportSettings, onReportSettingUpdate }) => {
+const NeoCardSettingsFooter = ({ type, reportSettings, reportSettingsOpen, onToggleReportSettings, onCreateNotification, onReportSettingUpdate }) => {
 
     const [reportSettingsText, setReportSettingsText] = React.useState(reportSettings);
     const debouncedReportSettingUpdate = useCallback(
@@ -21,6 +21,9 @@ const NeoCardSettingsFooter = ({ type, reportSettings, reportSettingsOpen, onTog
 
     const updateSpecificReportSetting = (field: string, value: any) => {
         const entry = {}
+        if (settings[field]["customizable"] && settings[field]["customization"] == "rule-based color" && value == CUSTOMIZATION_OPTION_TEXT) {
+            onCreateNotification("Error", "Rule-based color customization is not yet implemented.")
+        }
         entry[field] = value;
         setReportSettingsText(update(reportSettingsText, entry));
         debouncedReportSettingUpdate(field, value);

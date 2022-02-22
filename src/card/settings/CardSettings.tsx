@@ -8,7 +8,7 @@ import { CardContent } from '@material-ui/core';
 const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherParameters, width, height, type, reportSettings, reportSettingsOpen,
     onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onRemovePressed, onReportSettingUpdate,
     onShiftLeftPressed, onShiftRightPressed, onToggleCardSettings, onTypeUpdate, setActive,
-     onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand }) => {
+     onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand, onCreateNotification }) => {
 
    
     const cardHeight = 10 + (120 * height) + (78 * Math.floor((height - 1) / 3)) + "px";
@@ -44,6 +44,7 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         reportSettings={reportSettings}
         reportSettingsOpen={reportSettingsOpen}
         onToggleReportSettings={onToggleReportSettings}
+        onCreateNotification={onCreateNotification}
         onReportSettingUpdate={onReportSettingUpdate}></NeoCardSettingsFooter> : <div></div>;
 
     return (
