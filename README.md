@@ -43,23 +43,26 @@ To build the app for production:
 
 
 ## Build Docker image
-Make sure you have a recent version of `docker` installed.
-On a Unix-like system you can run  `./tools/docker-build.bash` to build the multi-stage NeoDash image.
+A pre-built Docker image is available [on DockerHub](https://hub.docker.com/r/nielsdejong/neodash). 
+This image is built using the default configuration (running in editor mode, without SSO).
 
-After this, you can run Neo4j in a container. On Unix (Mac/Linux) systems:
+### To build the image yourself:
+
+Make sure you have a recent version of `docker` installed to build the multi-stage NeoDash image and run it.
+
+On Unix (Mac/Linux) systems:
 ```
 $ cd tools/
-$ ./docker-run-unix.bash 
+$ ./docker-build-run-unix.bash 
 ```
 
 If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
 ```
 $ cd tools/
-$ ./docker-run-windows.bash
+$ ./docker-build-run-windows.bash
 ```
-Then visit `http://localhost:8080` with the chosen port in your browser.
+Then visit `http://localhost:8080` in your browser.
 
-A pre-built Docker image is available [on DockerHub](https://hub.docker.com/r/nielsdejong/neodash). 
 
 ## Run in standalone mode
 NeoDash can be deployed in a 'standalone mode' for dashboard viewers. This mode will:
@@ -71,7 +74,7 @@ The diagram below illustrates how NeoDash standalone mode can be deployed next t
 
 ![](doc/standalone-architecture.png)
 
-You can configure an instance to run as standalone by changing the variables in `tools/docker-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build a docker image.
+You can configure an instance to run as standalone by changing the variables in `tools/docker-build-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build the React application, just the image.
 
  ## Extending NeoDash
 There are two categories of extensions to NeoDash you can build:
