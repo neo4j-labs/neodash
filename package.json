@@ -46,6 +46,7 @@
     "cypher-codemirror": "github:nielsdejong/cypher-editor#c0eff97fc97f22355e60b57fb6f8dc26b16f9a5f",
     "d3-scale-chromatic": "^3.0.0",
     "leaflet": "^1.7.1",
+    "neo4j-client-sso": "^1.2.2",
     "react": "^17.0.2",
     "react-cool-dimensions": "^2.0.7",
     "react-dom": "^17.0.2",

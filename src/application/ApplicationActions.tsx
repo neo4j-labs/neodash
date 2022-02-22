@@ -93,6 +93,7 @@ export const setStandaloneMode = (standalone: boolean ) => ({
     type: SET_STANDALONE_ENABLED,
     payload: { standalone },
 });
+
 export const SET_STANDALONE_DASHBOARD_DATEBASE = 'APPLICATION/SET_STANDALONE_DASHBOARD_DATEBASE';
 export const setStandaloneDashboardDatabase = (dashboardDatabase: string) => ({
     type: SET_STANDALONE_DASHBOARD_DATEBASE,
@@ -104,6 +105,13 @@ export const setSSOEnabled = (enabled: boolean, discoveryUrl: string) => ({
     type: SET_SSO_ENABLED,
     payload: { enabled, discoveryUrl },
 });
+
+export const SET_WAIT_FOR_SSO = 'APPLICATION/SET_WAIT_FOR_SSO';
+export const setWaitForSSO = (wait: boolean ) => ({
+    type: SET_WAIT_FOR_SSO,
+    payload: { wait },
+});
+
 
 export const SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING';
 export const setDashboardToLoadAfterConnecting = (id: any) => ({

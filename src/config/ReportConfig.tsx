@@ -412,7 +412,7 @@ export const REPORT_TYPES = {
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
-        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. Values are automatically selected from your query results.</div>,
+        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.</div>,
         selection: {
             "x": {
                 label: "X-value",
