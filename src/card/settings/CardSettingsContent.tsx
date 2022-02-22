@@ -4,14 +4,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import NeoFieldSelection from '../../component/FieldSelection';
-import NeoCodeField from '../../component/EditableCodeField';
+import NeoField from '../../component/field/Field';
+import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { CARD_SIZES } from '../../config/CardConfig';
 
 
 const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, cypherParameters, width, height, type,
     onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onReportSettingUpdate, onCypherParametersUpdate, onTypeUpdate }) => {
-
 
     // Ensure that we only trigger a text update event after the user has stopped typing.
     const [queryText, setQueryText] = React.useState(query);
@@ -56,7 +55,7 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
     const SettingsComponent = REPORT_TYPES[type].settingsComponent;
     const settings = REPORT_TYPES[type]["settingsComponent"] ? <SettingsComponent type={type} onReportSettingUpdate={onReportSettingUpdate} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
     <>
-        <NeoCodeField value={queryText}
+        <NeoCodeEditorComponent value={queryText}
              editable={true}
             language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}
             onChange={(value) => {
@@ -68,27 +67,27 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
         <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", borderBottom: "1px solid lightgrey", borderLeft: "1px solid lightgrey", borderRight: "1px solid lightgrey", marginTop: "0px" }}>{REPORT_TYPES[type].helperText}</p>
     </>;
     return <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}>
-        <NeoFieldSelection select label={"Type"} value={type}
+        <NeoField select label={"Type"} value={type}
             onChange={(value) => onTypeUpdate(value)}
             choices={Object.keys(REPORT_TYPES).map((option) => (
                 <MenuItem key={option} value={option}>
                     {REPORT_TYPES[option].label}
                 </MenuItem>
             ))} />
-        <NeoFieldSelection select label={"Size"} value={[width, height]}
+        <NeoField select label={"Size"} value={[width, height]}
             onChange={(value) => onSizeUpdate(value.split(","))}
             choices={CARD_SIZES.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                     {option.label}
                 </MenuItem>
             ))} />
-        {REPORT_TYPES[type]["disableCypherParameters"] == undefined ? <NeoFieldSelection label={"Cypher Parameters"} placeholder='{"x": "abc", "y": 5}'
+        {REPORT_TYPES[type]["disableCypherParameters"] == undefined ? <NeoField label={"Cypher Parameters"} placeholder='{"x": "abc", "y": 5}'
             onChange={(value) => {
                 setCypherParametersText(value);
                 debouncedCypherParametersUpdate(value);
             }}
             value={cypherParametersText} /> : <></>}
-        {REPORT_TYPES[type]["disableRefreshRate"] == undefined ? <NeoFieldSelection placeholder='0 (No Refresh)'
+        {REPORT_TYPES[type]["disableRefreshRate"] == undefined ? <NeoField placeholder='0 (No Refresh)'
             label="Refresh Rate (sec)" numeric={true} value={refreshRateText}
             onChange={(value) => {
                 setRefreshRateText(value);

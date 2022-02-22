@@ -14,7 +14,6 @@ export const hardResetCardSettings = (pagenumber: any, index: any) => ({
     payload: { pagenumber, index },
 });
 
-
 export const UPDATE_REPORT_TITLE = 'PAGE/CARD/UPDATE_REPORT_TITLE';
 export const updateReportTitle = (pagenumber: number, index: number, title: any) => ({
     type: UPDATE_REPORT_TITLE,

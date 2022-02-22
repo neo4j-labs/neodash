@@ -4,7 +4,7 @@ import React from 'react';
 
 const textFieldStyle = { width: "155px", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" };
 
-const NeoFieldSelection = ({ label,
+const NeoField = ({ label,
     value,
     style = textFieldStyle,
     choices = [<div key={0}></div>],
@@ -47,4 +47,4 @@ const NeoFieldSelection = ({ label,
 };
 
 
-export default NeoFieldSelection;
+export default NeoField;

@@ -1,8 +1,9 @@
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
-import { SELECTION_TYPES } from '../config/ReportConfig';
-import NeoFieldSelection from './FieldSelection';
-import { categoricalColorSchemes } from '../config/ColorConfig';
+import { SELECTION_TYPES } from '../../config/ReportConfig';
+import NeoField from './Field';
+import { categoricalColorSchemes } from '../../config/ColorConfig';
+import NeoColorPicker from './ColorPicker';
 
 const generateListItem = (label, option) => {
     if ('boolean' === typeof option) {
@@ -22,13 +23,17 @@ const generateListItem = (label, option) => {
 
     }
 }
-const ReportSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined, 
+
+/**
+ * A setting is a generic React component that is rendered dynamically based on the 'type'.
+ */
+const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined,
     helperText = undefined, inverted = false, onChange,
-style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" } }) => {
+    style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" } }) => {
     switch (type) {
         case SELECTION_TYPES.NUMBER:
             return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
-                <NeoFieldSelection
+                <NeoField
                     label={label} numeric={true}
                     key={label}
                     value={value}
@@ -40,22 +45,22 @@ style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: 
                     onChange={(val) => onChange(val)} />
             </div>;
         case SELECTION_TYPES.TEXT:
-        return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
-            <NeoFieldSelection
-                label={label} 
-                key={label}
-                disabled={disabled}
-                helperText={helperText}
-                value={value}
-                defaultValue={""}
-                placeholder={"" + defaultValue}
-                style={style}
-                onChange={(val) => onChange(val)} />
-        </div>;
-         case SELECTION_TYPES.DICTIONARY:
             return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
-                <NeoFieldSelection
-                    label={label} 
+                <NeoField
+                    label={label}
+                    key={label}
+                    disabled={disabled}
+                    helperText={helperText}
+                    value={value}
+                    defaultValue={""}
+                    placeholder={"" + defaultValue}
+                    style={style}
+                    onChange={(val) => onChange(val)} />
+            </div>;
+        case SELECTION_TYPES.DICTIONARY:
+            return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
+                <NeoField
+                    label={label}
                     key={label}
                     disabled={disabled}
                     helperText={helperText}
@@ -67,7 +72,7 @@ style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: 
             </div>;
         case SELECTION_TYPES.LIST:
             return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
-                <NeoFieldSelection
+                <NeoField
                     select
                     label={label}
                     disabled={disabled}
@@ -83,9 +88,19 @@ style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: 
                     ))}
                     onChange={(val) => onChange(val)} />
             </div>
+        case SELECTION_TYPES.COLOR:
+            return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
+                <NeoColorPicker
+                    label={label}
+                    key={label}
+                    defaultValue={defaultValue}
+                    value={value}
+                    onChange={(val) => onChange(val)} 
+                    style={style}></NeoColorPicker>
+            </div>
     }
     return <div key={label}></div>;
 
 };
 
-export default ReportSetting;
+export default NeoSetting;

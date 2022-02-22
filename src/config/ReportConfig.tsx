@@ -19,6 +19,7 @@ export enum SELECTION_TYPES {
     LIST,
     TEXT,
     DICTIONARY,
+    COLOR,
     NODE_PROPERTIES
 };
 
@@ -81,7 +82,7 @@ export const REPORT_TYPES = {
             },
             "nodeLabelColor": {
                 label: "Node Label Color",
-                type: SELECTION_TYPES.TEXT,
+                type: SELECTION_TYPES.COLOR,
                 default: "black"
             },
             "nodeLabelFontSize": {

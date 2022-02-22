@@ -5,7 +5,7 @@ import { QueryStatus, runCypherQuery } from '../../../report/CypherQueryRunner';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import NeoFieldSelection from '../../../component/FieldSelection';
+import NeoField from '../../../component/field/Field';
 
 const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onReportSettingUpdate, query, onQueryUpdate }) => {
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -124,7 +124,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
         </TextField>
 
         {settings.type == "Free Text" ?
-          <NeoFieldSelection
+          <NeoField
             label={"Name"} 
             key={"freetext"}
             value={settings["entityType"] ? settings["entityType"] : ""}
@@ -182,7 +182,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
                             onChange={(event, newValue) => handlePropertyNameSelectionUpdate(newValue)}
                             renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Property Name"} />}
                         />
-                        <NeoFieldSelection placeholder='number'
+                        <NeoField placeholder='number'
                             label="Number (optional)" disabled={!settings['propertyType']} value={settings['id']}
                             style={{ width: "135px", marginTop: "5px", marginLeft: "10px" }}
                             onChange={(value) => {

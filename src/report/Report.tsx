@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import NeoStaticCodeField from "../component/StaticCodeField";
+import NeoCodeViewerComponent from "../component/editor/CodeViewerComponent";
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
@@ -148,9 +148,9 @@ export const NeoReport = ({
             <CircularProgress color="inherit" />
         </Typography>);
     } else if (status == QueryStatus.NO_DATA) {
-        return <NeoStaticCodeField value={"Query returned no data."} />
+        return <NeoCodeViewerComponent value={"Query returned no data."} />
     } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
-        return <NeoStaticCodeField value={"Data was returned, but it can't be visualized.\n\n" +
+        return <NeoCodeViewerComponent value={"Data was returned, but it can't be visualized.\n\n" +
             "This could have the following causes:\n" +
             "- a numeric value field was selected, but no numeric values were returned. \n" +
             "- a numeric value field was selected, but only zero's were returned.\n" +
@@ -195,12 +195,12 @@ export const NeoReport = ({
                 getGlobalParameter={getGlobalParameter} />
         </div>);
     } else if (status == QueryStatus.TIMED_OUT) {
-        return <NeoStaticCodeField value={"Query was aborted - it took longer than " + queryTimeLimit + "s to run. \n"
+        return <NeoCodeViewerComponent value={"Query was aborted - it took longer than " + queryTimeLimit + "s to run. \n"
             + "Consider limiting your returned query rows,\nor increase the maximum query time."} />
     }
     {/* @ts-ignore */ }
 
-    return <NeoStaticCodeField value={records && records[0] && records[0].error && records[0].error}
+    return <NeoCodeViewerComponent value={records && records[0] && records[0].error && records[0].error}
         placeholder={"Unknown query error, check the browser console."} />
 
 }

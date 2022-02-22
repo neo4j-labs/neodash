@@ -3,7 +3,7 @@ import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { FormControlLabel, FormGroup, Switch } from '@material-ui/core';
-import ReportSetting from '../../component/ReportSetting';
+import NeoSetting from '../../component/field/Setting';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -41,7 +41,7 @@ const NeoCardSettingsFooter = ({ type, reportSettings, reportSettingsOpen, onTog
     // Else, build the advanced settings view.
     const advancedReportSettings = <div style={{ marginLeft: "5px" }}>
         {Object.keys(settings).map(setting =>
-            <ReportSetting key={setting} name={setting}
+            <NeoSetting key={setting} name={setting}
                 value={reportSettingsText[setting]}
                 type={settings[setting]["type"]}
                 label={settings[setting]["label"]}

@@ -5,7 +5,7 @@ import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
 import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
-import NeoCodeField from '../../component/EditableCodeField';
+import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import debounce from 'lodash/debounce';
 
@@ -81,7 +81,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                             <IconButton style={{ float: "right", padding: "4px", marginRight: "12px" }} aria-label="run" onClick={(e) => { setActive(true) }}>
                                 <PlayCircleFilledIcon />
                             </IconButton>
-                            <NeoCodeField value={query} language={"cypher"}
+                            <NeoCodeEditorComponent value={query} language={"cypher"}
                                 editable={false} style={{ border: "1px solid lightgray", borderRight: "35px solid #eee", marginTop: "0px", marginLeft: "10px", marginRight: "10px" }}
                                 onChange={(value) => { }}
                                 placeholder={"No query specified..."}

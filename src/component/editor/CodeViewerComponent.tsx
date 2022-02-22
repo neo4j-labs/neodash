@@ -6,7 +6,7 @@ import React from 'react';
 /**
  * Returns a static code block, without line numbers.
  */
-const NeoStaticCodeField = ({ value = "", placeholder = "" }) => {
+const NeoCodeViewerComponent = ({ value = "", placeholder = "" }) => {
     return (
         <div style={{ overflowY: "auto", marginLeft: "10px", marginRight: "10px", height: "100%" }}>
             <TextareaAutosize
@@ -19,4 +19,4 @@ const NeoStaticCodeField = ({ value = "", placeholder = "" }) => {
     );
 };
 
-export default NeoStaticCodeField;
+export default NeoCodeViewerComponent;
