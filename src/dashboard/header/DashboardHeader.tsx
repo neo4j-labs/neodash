@@ -3,18 +3,17 @@ import React, { useCallback, useEffect } from "react";
 import NeoPageButton from "./DashboardHeaderPageButton";
 import NeoPageAddButton from "./DashboardHeaderPageAddButton";
 import MenuIcon from '@material-ui/icons/Menu';
-import ConnectionModal from '../modal/ConnectionModal';
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { setDashboardTitle, addPage, removePage } from "./DashboardActions";
-import { getDashboardTitle, getPages } from "./DashboardSelectors";
+import { setDashboardTitle, addPage, removePage } from "../DashboardActions";
+import { getDashboardTitle, getPages } from "../DashboardSelectors";
 import debounce from 'lodash/debounce';
-import { setPageTitle } from "../page/PageActions";
-import { addPageThunk, removePageThunk } from "./DashboardThunks";
-import { setConnectionModalOpen } from "../application/ApplicationActions";
-import { setPageNumberThunk } from "../settings/SettingsThunks";
-import { getDashboardIsEditable, getPageNumber } from "../settings/SettingsSelectors";
-import { applicationIsStandalone } from "../application/ApplicationSelectors";
+import { setPageTitle } from "../../page/PageActions";
+import { addPageThunk, removePageThunk } from "../DashboardThunks";
+import { setConnectionModalOpen } from "../../application/ApplicationActions";
+import { setPageNumberThunk } from "../../settings/SettingsThunks";
+import { getDashboardIsEditable, getPageNumber } from "../../settings/SettingsSelectors";
+import { applicationIsStandalone } from "../../application/ApplicationSelectors";
 
 const drawerWidth = 240;
 

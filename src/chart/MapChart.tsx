@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { ChartProps } from './Chart';
 import { Icon, TextareaAutosize } from '@material-ui/core';
 import { categoricalColorSchemes } from '../config/ColorConfig';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../report/RecordProcessing';
+import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../report/ReportRecordProcessing';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
 import useDimensions from "react-cool-dimensions";
 import Marker from 'react-leaflet-enhanced-marker';

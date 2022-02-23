@@ -3,6 +3,9 @@ import { ResponsiveBar } from '@nivo/bar'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
 import { checkResultKeys, recordToNative } from './Utils'
 
+/**
+ * This visualization was extracted from https://github.com/neo4j-labs/charts.
+ */
 export default function BarVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
 

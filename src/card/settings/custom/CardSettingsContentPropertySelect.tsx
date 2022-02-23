@@ -1,7 +1,7 @@
 
 import React, { useCallback, useContext } from 'react';
 import { REPORT_TYPES, RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
-import { QueryStatus, runCypherQuery } from '../../../report/CypherQueryRunner';
+import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';

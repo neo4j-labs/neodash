@@ -8,6 +8,9 @@ interface LineChartData {
     data: Record<any, any>[]
 }
 
+/**
+ * This visualization was extracted from https://github.com/neo4j-labs/charts.
+ */
 export default function LineVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
 

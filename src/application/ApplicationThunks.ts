@@ -2,7 +2,7 @@ import { createDriver } from "use-neo4j";
 import { initializeSSO } from "../component/sso/SSOUtils";
 import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
-import { QueryStatus, runCypherQuery } from "../report/CypherQueryRunner";
+import { QueryStatus, runCypherQuery } from "../report/ReportQueryRunner";
 import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,

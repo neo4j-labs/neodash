@@ -4,18 +4,18 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import NeoSaveModal from "../modal/SaveModal";
-import NeoLoadModal from "../modal/LoadModal";
-import NeoShareModal from "../modal/ShareModal";
-import { NeoAboutModal } from "../modal/AboutModal";
-import { NeoDocumentationModal } from "../modal/DocumentationModal";
-import { applicationGetConnection, applicationHasAboutModalOpen, applicationIsStandalone } from '../application/ApplicationSelectors';
+import NeoSaveModal from "../../modal/SaveModal";
+import NeoLoadModal from "../../modal/LoadModal";
+import NeoShareModal from "../../modal/ShareModal";
+import { NeoAboutModal } from "../../modal/AboutModal";
+import { NeoDocumentationModal } from "../../modal/DocumentationModal";
+import { applicationGetConnection, applicationHasAboutModalOpen, applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { connect } from 'react-redux';
-import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../application/ApplicationActions';
-import NeoSettingsModal from "../settings/SettingsModal";
-import { createNotificationThunk } from "../page/PageThunks";
-import { getDashboardSettings } from "./DashboardSelectors";
-import { updateDashboardSetting } from "../settings/SettingsActions";
+import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
+import NeoSettingsModal from "../../settings/SettingsModal";
+import { createNotificationThunk } from "../../page/PageThunks";
+import { getDashboardSettings } from "../DashboardSelectors";
+import { updateDashboardSetting } from "../../settings/SettingsActions";
 
 
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,

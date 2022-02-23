@@ -1,7 +1,7 @@
 import { CardContent, Chip, IconButton, Tooltip } from "@material-ui/core";
 import React, { useState, useEffect } from 'react';
 import WarningIcon from '@material-ui/icons/Warning';
-import { QueryStatus, runCypherQuery } from "./CypherQueryRunner";
+import { QueryStatus, runCypherQuery } from "./ReportQueryRunner";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';

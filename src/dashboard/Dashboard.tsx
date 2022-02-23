@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import NeoPage from '../page/Page';
 import Container from '@material-ui/core/Container';
-import NeoDrawer from './DashboardDrawer';
-import NeoDashboardHeader from './DashboardHeader';
+import NeoDrawer from './drawer/DashboardDrawer';
+import NeoDashboardHeader from './header/DashboardHeader';
 import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
 import { applicationGetConnection, applicationHasAboutModalOpen } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import NeoDashboardConnectionUpdateHandler from './DashboardConnectionUpdateHandler';
+import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotification } from '../application/ApplicationActions';

@@ -177,7 +177,7 @@ export const REPORT_TYPES = {
             "drilldownLink": {
                 label: "Drilldown Icon Link",
                 type: SELECTION_TYPES.TEXT,
-                default: ""
+                default: "http://bloom.neo4j.io"
             },
             "hideSelections": {
                 label: "Hide Property Selection",

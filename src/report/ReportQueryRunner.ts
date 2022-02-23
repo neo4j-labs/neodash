@@ -1,4 +1,4 @@
-import { extractNodePropertiesFromRecords, mapRecords } from "./RecordProcessing";
+import { extractNodePropertiesFromRecords, mapRecords } from "./ReportRecordProcessing";
 import _ from 'lodash';
 
 

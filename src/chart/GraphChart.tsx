@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import useDimensions from "react-cool-dimensions";
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/RecordProcessing';
+import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/ReportRecordProcessing';
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';

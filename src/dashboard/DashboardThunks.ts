@@ -1,7 +1,7 @@
 import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "../settings/SettingsActions";
 import { addPage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
-import { runCypherQuery } from "../report/CypherQueryRunner";
+import { runCypherQuery } from "../report/ReportQueryRunner";
 import { setWelcomeScreenOpen } from "../application/ApplicationActions";
 
 

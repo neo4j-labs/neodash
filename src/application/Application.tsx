@@ -8,7 +8,7 @@ import { applicationGetConnection, applicationGetShareDetails, applicationGetOld
 import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, onConfirmLoadSharedDashboardThunk, loadApplicationConfigThunk } from '../application/ApplicationThunks';
 import { clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard, setWaitForSSO, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
-import { NeoDashboardPlaceholder } from '../dashboard/DashboardPlaceholder';
+import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
 import Dashboard from '../dashboard/Dashboard';
 import NeoAboutModal from '../modal/AboutModal';
