@@ -1,5 +1,4 @@
 # build stage
-LABEL version="2.0.11"
 FROM node:lts-alpine AS build-stage
 RUN apk add --no-cache git
 RUN git clone https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
@@ -36,6 +35,8 @@ ARG standalonePort=7687
 ARG standaloneDatabase='neo4j'
 ARG standaloneDashboardName='My Dashboard'
 ARG standaloneDashboardDatabase='neo4j'
+
+LABEL version="2.0.11"
 
 # Dynamically set app config on container startup.
 RUN echo " \
