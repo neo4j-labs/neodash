@@ -1,4 +1,5 @@
 # build stage
+LABEL version="2.0.11"
 FROM node:lts-alpine AS build-stage
 RUN apk add --no-cache git
 RUN git clone https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
