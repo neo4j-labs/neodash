@@ -12,7 +12,7 @@ RUN npm run build
 FROM nginx:alpine AS neodash
 RUN apk upgrade
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
-COPY --from=build-stage /usr/local/src/neodash/conf/conf.d /etc/nginx/conf.d
+COPY ./conf/conf.d /etc/nginx/conf.d
 
 RUN chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
@@ -38,7 +38,7 @@ ARG standaloneDatabase='neo4j'
 ARG standaloneDashboardName='My Dashboard'
 ARG standaloneDashboardDatabase='neo4j'
 
-LABEL version="2.0.11"
+LABEL version="2.0.12"
 
 # Dynamically set app config on container startup.
 RUN echo " \
