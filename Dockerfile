@@ -2,9 +2,9 @@
 FROM node:lts-alpine AS build-stage
 RUN apk add --no-cache git
 RUN git clone https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
-RUN git checkout develop
 RUN npm install -g typescript jest 
 WORKDIR /usr/local/src/neodash
+RUN git checkout develop
 RUN npm install
 RUN npm run build
 
