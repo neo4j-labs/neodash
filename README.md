@@ -52,14 +52,12 @@ Make sure you have a recent version of `docker` installed to build the multi-sta
 
 On Unix (Mac/Linux) systems:
 ```
-$ cd tools/
-$ ./docker-build-run-unix.bash 
+$ ./scripts/docker-build-run-unix.bash 
 ```
 
 If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
 ```
-$ cd tools/
-$ ./docker-build-run-windows.bash
+$ ./scripts/docker-build-run-windows.bash
 ```
 Then visit `http://localhost:8080` in your browser.
 
@@ -74,7 +72,7 @@ The diagram below illustrates how NeoDash standalone mode can be deployed next t
 
 ![](doc/standalone-architecture.png)
 
-You can configure an instance to run as standalone by changing the variables in `tools/docker-build-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build the React application, just the image.
+You can configure an instance to run as standalone by changing the variables in `scripts/docker-build-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build the React application, just the image.
 
  ## Extending NeoDash
 There are two categories of extensions to NeoDash you can build:

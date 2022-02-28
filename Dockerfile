@@ -2,6 +2,7 @@
 FROM node:lts-alpine AS build-stage
 RUN apk add --no-cache git
 RUN git clone https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
+RUN git checkout develop
 RUN npm install -g typescript jest 
 WORKDIR /usr/local/src/neodash
 RUN npm install
@@ -11,6 +12,7 @@ RUN npm run build
 FROM nginx:alpine AS neodash
 RUN apk upgrade
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
+COPY --from=build-stage ./conf/conf.d /etc/nginx/conf.d
 
 RUN chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
