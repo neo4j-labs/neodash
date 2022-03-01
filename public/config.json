@@ -4,6 +4,7 @@
     "standalone": false,
     "standaloneProtocol": "neo4j",
     "standaloneHost": "localhost",
+    "standalonePassword":"test123",
     "standalonePort": "7687",
     "standaloneDatabase": "neo4j", 
     "standaloneDashboardName": "My Dashboard",
