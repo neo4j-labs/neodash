@@ -146,7 +146,6 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
         dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
         if (shareDetails.dashboardDatabase) {
             dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
-
             dispatch(setStandaloneDashboardDatabase(shareDetails.database));
         }
         if (shareDetails.url) {
@@ -197,8 +196,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
                 config['standaloneUsername'] ? config['standaloneUsername'] : state.application.connection.username,
                 config['standalonePassword'] ? config['standalonePassword'] : state.application.connection.password));
 
-          
-          
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
