@@ -9,6 +9,7 @@ const OPTIONAL_FIELD_UNAVAILABLE_IDENTIFIER = "(none)";
 
 
 /**
+ * @deprecated - the record mapper is due to be removed in 2.1.
  * Renames records based on a configured property selection.
  * @param records : a list of Neo4j records.
  * @param selection : a dictionary of record field name mappings.

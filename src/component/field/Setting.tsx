@@ -12,7 +12,6 @@ const generateListItem = (label, option) => {
         if (label == "Color Scheme" || label == "Node Color Scheme") {
             const colors = categoricalColorSchemes[option];
             return (<div>
-                
                 {Array.isArray(colors) ? colors.map(element => {
                     return <span key={element} style={{ display: "inline-block", background: element, width: "18px", height: "18px" }}></span>
                 }) : ""+option
@@ -29,7 +28,7 @@ const generateListItem = (label, option) => {
  * A setting is a generic React component that is rendered dynamically based on the 'type'.
  */
 const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined,
-    helperText = undefined, inverted = false, onChange,
+    helperText = undefined, inverted = false, onChange, onClick=(val)=>{},
     style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" } }) => {
     switch (type) {
         case SELECTION_TYPES.NUMBER:
@@ -43,6 +42,7 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                     defaultValue={""}
                     placeholder={"" + defaultValue}
                     style={style}
+                    onClick={(val) => onClick(val)}
                     onChange={(val) => onChange(val)} />
             </div>;
         case SELECTION_TYPES.TEXT:
@@ -56,6 +56,7 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                     defaultValue={""}
                     placeholder={"" + defaultValue}
                     style={style}
+                    onClick={(val) => onClick(val)}
                     onChange={(val) => onChange(val)} />
             </div>;
         case SELECTION_TYPES.DICTIONARY:
@@ -69,6 +70,7 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                     defaultValue={""}
                     placeholder={defaultValue ? "" + JSON.stringify(defaultValue) : "{}"}
                     style={style}
+                    onClick={(val) => onClick(val)}
                     onChange={(val) => onChange(val)} />
             </div>;
         case SELECTION_TYPES.LIST:
@@ -87,6 +89,7 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                             {generateListItem(label, option)}
                         </MenuItem>
                     ))}
+                    onClick={(val) => onClick(val)}
                     onChange={(val) => onChange(val)} />
             </div>
         case SELECTION_TYPES.COLOR:
@@ -96,6 +99,7 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                     key={label}
                     defaultValue={defaultValue}
                     value={value}
+                    onClick={(val) => onClick(val)}
                     onChange={(val) => onChange(val)} 
                     style={style}></NeoColorPicker>
             </div>

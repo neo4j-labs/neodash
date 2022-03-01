@@ -61,6 +61,7 @@ const NeoGraphChart = (props: ChartProps) => {
     const nodeLabelColor = props.settings && props.settings.nodeLabelColor ? props.settings.nodeLabelColor : "black";
     const nodeLabelFontSize = props.settings && props.settings.nodeLabelFontSize ? props.settings.nodeLabelFontSize : 3.5;
     const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
+    const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
     const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#a0a0a0";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;

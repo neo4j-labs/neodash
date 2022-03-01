@@ -9,6 +9,7 @@ const NeoField = ({ label,
     style = textFieldStyle,
     choices = [<div key={0}></div>],
     onChange,
+    onClick = (val)=>{},
     numeric = false,
     select = false,
     disabled = undefined,
@@ -30,6 +31,7 @@ const NeoField = ({ label,
             disabled={disabled}
             value={value != null ? value : defaultValue}
             // defaultValue={defaultValue}
+            onClick={(e) => {onClick(e.target.textContent)}}
             onChange={(event) => {
                 if (!numeric) {
                     onChange(event.target.value);

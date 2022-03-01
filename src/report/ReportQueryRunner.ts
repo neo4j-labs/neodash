@@ -88,8 +88,6 @@ export async function runCypherQuery(driver,
                 const newFields = (records && records[0] && records[0].keys) ? records[0].keys.slice() : [];
                 if (!_.isEqual(newFields, fields)) {
                     setFields(newFields);
-                    // TODO - only do this for reports that care about selections.
-                    // console.log("TODO remove this - QUERY WAS ROLLED BACK!")
                     transaction.commit();
                     return
                 }
