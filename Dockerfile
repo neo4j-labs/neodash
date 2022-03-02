@@ -12,7 +12,8 @@ RUN npm run build
 FROM nginx:alpine AS neodash
 RUN apk upgrade
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
-COPY ./conf/conf.d /etc/nginx/conf.d
+
+COPY ./conf/default.conf /etc/nginx/conf.d/
 
 RUN chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
@@ -56,4 +57,4 @@ RUN echo " \
     
 CMD ["nginx", "-g", "daemon off;"]
 
-# neodash will be available at http://localhost:8080 by default.
+# neodash will be available at http://localhost:80 inside the container. See `scripts/docker-build-run-unix.bash` on how to map ports.
