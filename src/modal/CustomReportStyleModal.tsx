@@ -60,7 +60,7 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
             value: 'node color',
             label: 'Node Color'
         }
-    ],
+    ], 
     "bar": [
         {
             value: 'bar color',

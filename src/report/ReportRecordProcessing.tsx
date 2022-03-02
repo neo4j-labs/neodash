@@ -352,7 +352,7 @@ function RenderString(value) {
 
 function RenderInteger(value) {
     // if we cannot cast to integer, use the generic number renderer.
-    if(!value.toInt){
+    if(!value || !value.toInt){
         return RenderNumber(value);
     }
     const integer = value.toInt().toLocaleString();
@@ -360,6 +360,9 @@ function RenderInteger(value) {
 }
 
 function RenderNumber(value) {
+    if(!value || !value.toLocaleString){
+        return "null";
+    }
     const number = value.toLocaleString();
     return number;
 }
@@ -417,7 +420,8 @@ export const rendererForType: any = {
         renderValue: (c) => RenderNumber(c.value)
     },
     "null": {
-        type: 'string'
+        type: 'string',
+        renderValue: (c) => "null"
     },
     "undefined": {
         type: 'string'
