@@ -3,13 +3,14 @@ import ColorPicker from 'material-ui-color-picker';
 
 
 
-const NeoColorPicker = ({ label, style, value, onChange, key, defaultValue }) => {
+const NeoColorPicker = ({ label, style, value, onChange, key, defaultValue, placeholder="" }) => {
     return (
         <ColorPicker
             floatingLabelText={label}
             name={label}
             style={style}
             key={key}
+            placeholder={placeholder}
             defaultValue={defaultValue}
             internalValue={value}
             InputProps={{

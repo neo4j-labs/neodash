@@ -17,7 +17,7 @@ import { createNotificationThunk } from '../page/PageThunks';
 
 
 const NeoCard = ({
-    index,  // index of the card. 
+    index, // index of the card. 
     report, // state of the card, retrieved based on card index.
     editable, // whether the card is editable.
     database, // the neo4j database that the card is running against.
@@ -116,6 +116,7 @@ const NeoCard = ({
                         database={database}
                         width={report.width}
                         height={report.height}
+                        fields={report.fields}
                         type={report.type}
                         refreshRate={report.refreshRate}
                         cypherParameters={report.parameters}
