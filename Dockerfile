@@ -57,4 +57,4 @@ RUN echo " \
     
 CMD ["nginx", "-g", "daemon off;"]
 
-# neodash will be available at http://localhost:8080 by default.
+# neodash will be available at http://localhost:5005 by default.
