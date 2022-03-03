@@ -89,22 +89,22 @@ To extend the core functionality of the app, it helps to be familiar with the fo
 - Redux Thunks
 
 The image below contains a high-level overview of the component hierarchy within the application. The following conceptual building blocks are used to create the interface:
-- The Application
-- The Dashboard
-- Modals 
-- Drawer
-- Dashboard Header
-- Pages
-- Cards
-- Card Views
-- Card Settings
-- Card View Header
-- Report
-- Card View Footer
-- Card Settings Header
-- Card Settings Content
-- Card Settings Footer
-- Charts
+- The Application - highest level in the component structure. Handles all application-level logic (e.g. initalizing the app).
+- Modals - all pop-up windows used by the tool. (Connection modal, save-dashboard modal, errors/warnings, etc.) 
+- Drawer - the sidebar on the left side of the screen. Contains buttons to perform application-level actions. 
+- The Dashboard - Main dashboard component. Renders components dynamically based on the current state.
+- Dashboard Header - the textbox at the top of the screen that lets you set a title for the dashboard, plus the page selector.
+- Pages - a dashboard has one or more pages, each of which can have a list of cards.
+- Cards - a 'block' inside a dashboard. Each card contains a 'view' window, and a 'settings' window.
+- Card View - the front of the card containing the selected report.
+- Card Settings - the back of the card, containing the cypher editor and advanced settings for the report.
+- Card View Header - the header of the card, containing a text box that acts as the name of the report.
+- Report - the component inside the card view that handles query execution and result parsing. Contains a single chart (visualization)
+- Card View Footer - The footer of the card view. Depending on the type, contains several 'selectors' that modify the visualization.
+- Card Settings Header - Header of the card settings, used for moving/deleting the card.
+- Card Settings Content - the component containing the main content of the report. This is most often the Cypher query editor.
+- Card Settings Footer - the 'footer' of the card. This contains the 'advanced settings' window for reports.
+- Charts - the different visualizations used by the application: bar charts, tables, graphs, etc.
 
 ![](doc/component-hierarchy.png)
 
