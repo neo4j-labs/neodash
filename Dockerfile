@@ -12,7 +12,8 @@ FROM nginx:alpine AS neodash
 RUN apk upgrade
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
 
-COPY ./conf/default.conf /etc/nginx/conf.d/
+# Set default config options
+ENV standalone=false
 
 RUN chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
@@ -26,22 +27,21 @@ USER nginx
 EXPOSE 5005
 HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
 
-# Set the defaults for the build arguments. When the image is created, these variables can be changed with --build-arg
-# Such as --build-arg ssoEnabled=true
-ARG standalone=false
-ARG ssoEnabled=false
-ARG ssoDiscoveryUrl='https://example.com'
-ARG standaloneProtocol='neo4j+s'
-ARG standaloneHost='test.databases.neo4j.io'
-ARG standalonePort=7687
-ARG standaloneDatabase='neo4j'
-ARG standaloneDashboardName='My Dashboard'
-ARG standaloneDashboardDatabase='neo4j'
+# Set the defaults for the environment variables. These can be changed at runtime by modifying the docker arguments, avoiding container rebuilds.
+ENV standalone=false
+ENV ssoEnabled=false
+ENV ssoDiscoveryUrl='https://example.com'
+ENV standaloneProtocol='neo4j+s'
+ENV standaloneHost='test.databases.neo4j.io'
+ENV standalonePort=7687
+ENV standaloneDatabase='neo4j'
+ENV standaloneDashboardName='My Dashboard'
+ENV standaloneDashboardDatabase='neo4j'
 
-LABEL version="2.0.12"
+LABEL version = "2.0.12"
 
 # Dynamically set app config on container startup.
-RUN echo " \
+ENTRYPOINT echo " \
     { \
     \"ssoEnabled\": ${ssoEnabled}, \
     \"ssoDiscoveryUrl\": \"${ssoDiscoveryUrl}\",  \
@@ -52,8 +52,7 @@ RUN echo " \
     \"standaloneDatabase\": \"${standaloneDatabase}\",  \
     \"standaloneDashboardName\": \"${standaloneDashboardName}\", \
     \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase}\"  \
-    }" > /usr/share/nginx/html/config.json
-    
-CMD ["nginx", "-g", "daemon off;"]
+    }" > /usr/share/nginx/html/config.json && \
+    nginx -g 'daemon off;'
 
-# neodash will be available at http://localhost:80 inside the container. See `scripts/docker-build-run-unix.bash` on how to map ports.
+# neodash will be available at http://localhost:8080 by default.
