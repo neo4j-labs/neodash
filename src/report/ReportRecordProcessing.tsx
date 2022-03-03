@@ -88,6 +88,7 @@ export function createMappedFieldLookup(record: any, selection: any, optionalFie
 
 /**
  * Maps a single record from original query output to visualization expected output.
+ * @deprecated
  * @param record : a single neo4j data record.
  * @param fieldLookup : an (overridden) fieldlookup property for the record.
  * @param keys : an (overridden) keys property for the record.

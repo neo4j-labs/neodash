@@ -13,4 +13,5 @@ export interface ChartReportProps extends ReportProps {
 // NeoDash Extension
 export interface ExtendedChartReportProps extends ChartReportProps {
     settings?: {};
+    selection?: {};
 }

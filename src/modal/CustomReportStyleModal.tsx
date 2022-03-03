@@ -57,8 +57,8 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
     ],
     "map": [
         {
-            value: 'node color',
-            label: 'Node Color'
+            value: 'marker color',
+            label: 'Marker color'
         }
     ], 
     "bar": [
@@ -69,8 +69,8 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
     ],
     "line": [
         {
-            value: 'marker color',
-            label: 'Marker Color'
+            value: 'line color',
+            label: 'Line Color'
         }
     ],
     "pie": [
@@ -205,7 +205,7 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                     <div>
                         <DialogContent style={{ overflow: "inherit" }}>
                             <p>You can define rule-based styling for the report here. <br />
-                                Style rules are checked in-order and override the default behaviour - if no rules are valid, default style is applied.<br />
+                                Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is applied.<br />
                                 {(type == "graph" || type == "map") ? <p>For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>, for example: <code>Person.age</code>. This is case-sensentive.</p> : <></>}
                                 {(type == "line" || type == "value" || type == "bar" || type == "pie" || type == "table") ? <p>For <b>{type}</b> reports, the field name should be the exact name of the returned field. <br />For example, if your query is <code>MATCH (n:Movie) RETURN n.rating as Rating</code>, your field name is <code>Rating</code>.</p> : <></>}
                             </p>
@@ -217,7 +217,10 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                                     {rules.map((rule, index) => {
                                         return <>
                                             <tr>
-                                                <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}>IF</span></td>
+
+                                       
+                                            <td style={{ paddingLeft: "2px", paddingRight: "2px" }}><span style={{ color: "black", width: "50px" }}>{index+1}.</span></td>
+                                                <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}> IF</span></td>
                                                 <div style={{ border: "2px dashed grey" }}>
                                                     <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
                                                         <Autocomplete

@@ -31,6 +31,22 @@ export const evaluateRulesOnNeo4jRecord = (record, customization, defaultValue, 
 }
 
 /**
+ * @deprecated - to be removed together with record mapper.
+ * We translate the 'mapped' record back into its original using the mapping specified by the user.
+ */
+ export const evaluateRulesOnMappedNeo4jRecord = (record, mapping, customization, defaultValue, rules) => {
+    var tempRecord = {}; 
+
+    tempRecord['_fields'] = record['_fields'];
+    tempRecord['_fieldLookup'] = {};
+    tempRecord['_fieldLookup'][mapping['index']] = record._fieldLookup['index']
+    tempRecord['_fieldLookup'][mapping['value']] = record._fieldLookup['value']
+    tempRecord['_fieldLookup'][mapping['key']] = record._fieldLookup['key']
+    tempRecord['keys'] = Object.values(mapping);
+    return evaluateRulesOnNeo4jRecord(tempRecord, customization, defaultValue, rules);
+}
+
+/**
  * Evaluates the specified rule set on a dictionary of key/value pairs. 
  * Returns the `index` of the rule that is satisfied.
  * 
@@ -69,6 +85,25 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
 * @returns a user-defined value if a rule is met, or the default value if none are. 
  */
 export const evaluateRulesOnNode = (node, customization, defaultValue, rules) => {
+    if (!node || !customization || !rules) {
+        return defaultValue;
+    }
+    for (let [index, rule] of rules.entries()) {
+           // Only look at rules relevant to the target customization.
+           if (rule['customization'] == customization) {
+            // if the row contains the specified field...
+            const label = rule['field'].split(".")[0];
+            const property =  rule['field'].split(".")[1];
+            if (node.labels.includes(label)) {
+   
+                const realValue = node.properties[property] ? node.properties[property] : "";
+                const ruleValue = rule['value']
+                if (evaluateCondition(realValue, rule['condition'], ruleValue)) {
+                    return rule['customizationValue'];
+                }
+            }
+        }
+    }
     return defaultValue;
 }
 

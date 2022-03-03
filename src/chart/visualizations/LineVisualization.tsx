@@ -2,6 +2,7 @@ import React from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps';
 import { recordToNative } from './Utils';
+import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 
 interface LineChartData {
     id: string;
@@ -11,7 +12,7 @@ interface LineChartData {
 /**
  * This visualization was extracted from https://github.com/neo4j-labs/charts.
  */
-export default function LineVisualization(props: ExtendedChartReportProps) {
+export default function  (props: ExtendedChartReportProps) {
     const { records, first } = props
 
     const label = first!.keys[0] as string
@@ -43,6 +44,26 @@ export default function LineVisualization(props: ExtendedChartReportProps) {
     const xTickTimeValues = (settings["xTickTimeValues"] != undefined) ? settings["xTickTimeValues"] : "every 1 years";
     const xAxisTimeFormat = (settings["xAxisTimeFormat"] != undefined) ? settings["xAxisTimeFormat"] : "%Y-%m-%dT%H:%M:%SZ";
     const xAxisFormat = (settings["xAxisFormat"] != undefined) ? settings["xAxisFormat"] : undefined;
+    const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+
+    // Compute line color based on rules - overrides default color scheme completely. 
+    // For line charts, the line color is overridden if at least one value meets the criteria.
+    const getLineColors = (line) => {
+        const xFieldName = props.selection && props.selection.x;
+        const yFieldName = line.id && line.id.split("(")[1] && line.id.split("(")[1].split(")")[0];
+        var color = "black";
+        line.data.forEach((entry) => {
+            const data = {};
+            data[xFieldName] = entry['x'];
+            data[yFieldName] = entry['y'];
+            const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['line color']);
+            if (validRuleIndex !== -1) {
+                color = styleRules[validRuleIndex]['customizationValue'];
+                return
+            }
+        });
+        return color;
+    }
 
     if (!keys.length) {
         return <p>No data.</p>
@@ -70,15 +91,15 @@ export default function LineVisualization(props: ExtendedChartReportProps) {
         !Number.isInteger(parseFloat(validateXTickTimeValues[1])) ||
         parseFloat(validateXTickTimeValues[1]) <= 0 ||
         (validateXTickTimeValues[2] != "years" &&
-            validateXTickTimeValues[2] != "months" && 
-            validateXTickTimeValues[2] != "weeks" && 
-            validateXTickTimeValues[2] != "days" && 
-            validateXTickTimeValues[2] != "hours" && 
-            validateXTickTimeValues[2] != "minutes" && 
+            validateXTickTimeValues[2] != "months" &&
+            validateXTickTimeValues[2] != "weeks" &&
+            validateXTickTimeValues[2] != "days" &&
+            validateXTickTimeValues[2] != "hours" &&
+            validateXTickTimeValues[2] != "minutes" &&
             validateXTickTimeValues[2] != "seconds" &&
             validateXTickTimeValues[2] != "milliseconds"
-            )) {
-        return <code style={{margin: "10px"}}>Invalid tick size specification for time chart. Parameter value must be set to "every [number] ['years', 'months', 'weeks', 'days', 'hours', 'seconds', 'milliseconds']".</code>;
+        )) {
+        return <code style={{ margin: "10px" }}>Invalid tick size specification for time chart. Parameter value must be set to "every [number] ['years', 'months', 'weeks', 'days', 'hours', 'seconds', 'milliseconds']".</code>;
     }
     const lineViz = <div className="h-full w-full overflow-hidden" style={{ height: "100%" }}>
         <ResponsiveLine
@@ -97,6 +118,7 @@ export default function LineVisualization(props: ExtendedChartReportProps) {
             curve={curve}
             enableGridX={showGrid}
             enableGridY={showGrid}
+
             axisTop={null}
             axisRight={null}
             axisBottom={isTimeChart ? {
@@ -124,8 +146,9 @@ export default function LineVisualization(props: ExtendedChartReportProps) {
             }}
             pointSize={pointSize}
             lineWidth={lineWidth}
+            lineColor="black"
             pointColor="white"
-            colors={{ scheme: colorScheme }}
+            colors={styleRules.length >= 1 ? getLineColors : { scheme: colorScheme }}
             pointBorderWidth={2}
             pointBorderColor={{ from: 'serieColor' }}
             pointLabelYOffset={-12}
