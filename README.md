@@ -43,23 +43,24 @@ To build the app for production:
 
 
 ## Build Docker image
-Make sure you have a recent version of `docker` installed.
-On a Unix-like system you can run  `./tools/docker-build.bash` to build the multi-stage NeoDash image.
+A pre-built Docker image is available [on DockerHub](https://hub.docker.com/r/nielsdejong/neodash). 
+This image is built using the default configuration (running in editor mode, without SSO).
 
-After this, you can run Neo4j in a container. On Unix (Mac/Linux) systems:
+### To build the image yourself:
+
+Make sure you have a recent version of `docker` installed to build the multi-stage NeoDash image and run it.
+
+On Unix (Mac/Linux) systems:
 ```
-$ cd tools/
-$ ./docker-run-unix.bash 
+$ ./scripts/docker-build-run-unix.bash 
 ```
 
 If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
 ```
-$ cd tools/
-$ ./docker-run-windows.bash
+$ ./scripts/docker-build-run-windows.bash
 ```
-Then visit `http://localhost:8080` with the chosen port in your browser.
+Then visit `http://localhost:8080` in your browser.
 
-A pre-built Docker image is available [on DockerHub](https://hub.docker.com/r/nielsdejong/neodash). 
 
 ## Run in standalone mode
 NeoDash can be deployed in a 'standalone mode' for dashboard viewers. This mode will:
@@ -71,7 +72,7 @@ The diagram below illustrates how NeoDash standalone mode can be deployed next t
 
 ![](doc/standalone-architecture.png)
 
-You can configure an instance to run as standalone by changing the variables in `tools/docker-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build a docker image.
+You can configure an instance to run as standalone by changing the variables in `scripts/docker-build-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build the React application, just the image.
 
  ## Extending NeoDash
 There are two categories of extensions to NeoDash you can build:
@@ -88,22 +89,22 @@ To extend the core functionality of the app, it helps to be familiar with the fo
 - Redux Thunks
 
 The image below contains a high-level overview of the component hierarchy within the application. The following conceptual building blocks are used to create the interface:
-- The Application
-- The Dashboard
-- Modals 
-- Drawer
-- Dashboard Header
-- Pages
-- Cards
-- Card Views
-- Card Settings
-- Card View Header
-- Report
-- Card View Footer
-- Card Settings Header
-- Card Settings Content
-- Card Settings Footer
-- Charts
+- **The Application** - highest level in the component structure. Handles all application-level logic (e.g. initalizing the app).
+- **Modals** - all pop-up windows used by the tool. (Connection modal, save-dashboard modal, errors/warnings, etc.) 
+- **Drawer** - the sidebar on the left side of the screen. Contains buttons to perform application-level actions. 
+- **The Dashboard** - Main dashboard component. Renders components dynamically based on the current state.
+- **Dashboard Header** - the textbox at the top of the screen that lets you set a title for the dashboard, plus the page selector.
+- **Pages** - a dashboard has one or more pages, each of which can have a list of cards.
+- **Cards** - a 'block' inside a dashboard. Each card contains a 'view' window, and a 'settings' window.
+- **Card View** - the front of the card containing the selected report.
+- **Card Settings** - the back of the card, containing the cypher editor and advanced settings for the report.
+- **Card View Header** - the header of the card, containing a text box that acts as the name of the report.
+- **Report** - the component inside the card view that handles query execution and result parsing. Contains a single chart (visualization)
+- **Card View Footer** - The footer of the card view. Depending on the type, contains several 'selectors' that modify the visualization.
+- **Card Settings Header** - Header of the card settings, used for moving/deleting the card.
+- **Card Settings Content** - the component containing the main content of the report. This is most often the Cypher query editor.
+- **Card Settings Footer** - the 'footer' of the card. This contains the 'advanced settings' window for reports.
+- **Charts** - the different visualizations used by the application: bar charts, tables, graphs, etc.
 
 ![](doc/component-hierarchy.png)
 

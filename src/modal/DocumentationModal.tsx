@@ -9,7 +9,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import Badge from '@material-ui/core/Badge';
 import { Grid, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import NeoEditableCodeField from '../component/EditableCodeField';
+import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { EXAMPLE_REPORTS } from '../config/ExampleConfig';
 
@@ -56,11 +56,11 @@ export const NeoDocumentationModal = ({ database }) => {
                                     <Grid container spacing={4}>
                                         <Grid item xs={4}>
                                             <div style={{ width: "400px", border: "0px solid lightgrey" }} >
-                                                <NeoEditableCodeField editable={false}
+                                                <NeoCodeEditorComponent editable={false}
                                                     placeholder=""
                                                     value={example.exampleQuery}
                                                     language={example.type == "iframe" ? "url" : "cypher"}
-                                                ></NeoEditableCodeField>
+                                                ></NeoCodeEditorComponent>
                                             </div>
                                         </Grid>
 

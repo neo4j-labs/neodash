@@ -8,10 +8,13 @@ import BarVisualization from './visualizations/BarVisualization';
  * Embeds a BarReport (from Charts) into NeoDash.
  */
 const NeoBarChart = (props: ChartProps) => {
+    
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
-    return <BarVisualization records={props.records} settings={props.settings}
+    return <BarVisualization records={props.records} 
+        settings={props.settings}
+        selection={props.selection}
         first={(props.records) ? props.records[0] : null}
         layout={(props.settings && props.settings.layout) ?
             props.settings.layout : "vertical"}

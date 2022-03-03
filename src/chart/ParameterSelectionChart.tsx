@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { ChartProps } from './Chart';
 import { CircularProgress, debounce, TextareaAutosize, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import NeoFieldSelection from '../component/FieldSelection';
+import NeoField from '../component/field/Field';
 
 /**
  * Renders Neo4j records as their JSON representation.
@@ -53,7 +53,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     return <div>
         {type == "Free Text" ?
             <>
-                <NeoFieldSelection
+                <NeoField
                     key={"freetext"}
                     label={helperText ? helperText : label + " " + property}
                     defaultValue={""}

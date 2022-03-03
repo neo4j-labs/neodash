@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import useDimensions from "react-cool-dimensions";
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/RecordProcessing';
+import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/ReportRecordProcessing';
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
@@ -17,6 +17,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
+import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -61,6 +62,7 @@ const NeoGraphChart = (props: ChartProps) => {
     const nodeLabelColor = props.settings && props.settings.nodeLabelColor ? props.settings.nodeLabelColor : "black";
     const nodeLabelFontSize = props.settings && props.settings.nodeLabelFontSize ? props.settings.nodeLabelFontSize : 3.5;
     const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
+    const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
     const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#a0a0a0";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
@@ -210,11 +212,14 @@ const NeoGraphChart = (props: ChartProps) => {
         });
 
         // Assign proper colors to nodes.
-        const totalColors = categoricalColorSchemes[nodeColorScheme].length;
+        const totalColors = categoricalColorSchemes[nodeColorScheme] ? categoricalColorSchemes[nodeColorScheme].length : 0;
         const nodeLabelsList = Object.keys(nodeLabels);
         const nodesList = Object.values(nodes).map(node => {
-            const assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
-                categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors];
+            // First try to assign a node a color if it has a property specifying the color.
+            var assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
+               (totalColors > 0 ? categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors] : "grey");
+            // Next, evaluate the custom styling rules to see if there's a rule-based override
+            assignedColor = evaluateRulesOnNode(node, 'node color', assignedColor, styleRules);
             return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });
         });
 
@@ -374,7 +379,7 @@ const NeoGraphChart = (props: ChartProps) => {
                     const label = (props.selection && props.selection[node.lastLabel]) ? renderNodeLabel(node) : "";
                     const fontSize = nodeLabelFontSize;
                     ctx.font = `${fontSize}px Sans-Serif`;
-                    ctx.fillStyle = nodeLabelColor;
+                    ctx.fillStyle = evaluateRulesOnNode(node, "node label color", nodeLabelColor, styleRules);
                     ctx.textAlign = "center";
                     ctx.fillText(label, node.x, node.y + 1);
                     if (frozen && !node.fx && !node.fy && nodePositions) {

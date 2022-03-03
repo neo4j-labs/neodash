@@ -9,6 +9,7 @@ const OPTIONAL_FIELD_UNAVAILABLE_IDENTIFIER = "(none)";
 
 
 /**
+ * @deprecated - the record mapper is due to be removed in 2.1.
  * Renames records based on a configured property selection.
  * @param records : a list of Neo4j records.
  * @param selection : a dictionary of record field name mappings.
@@ -87,6 +88,7 @@ export function createMappedFieldLookup(record: any, selection: any, optionalFie
 
 /**
  * Maps a single record from original query output to visualization expected output.
+ * @deprecated
  * @param record : a single neo4j data record.
  * @param fieldLookup : an (overridden) fieldlookup property for the record.
  * @param keys : an (overridden) keys property for the record.
@@ -351,7 +353,7 @@ function RenderString(value) {
 
 function RenderInteger(value) {
     // if we cannot cast to integer, use the generic number renderer.
-    if(!value.toInt){
+    if(!value || !value.toInt){
         return RenderNumber(value);
     }
     const integer = value.toInt().toLocaleString();
@@ -359,6 +361,9 @@ function RenderInteger(value) {
 }
 
 function RenderNumber(value) {
+    if(!value || !value.toLocaleString){
+        return "null";
+    }
     const number = value.toLocaleString();
     return number;
 }
@@ -416,7 +421,8 @@ export const rendererForType: any = {
         renderValue: (c) => RenderNumber(c.value)
     },
     "null": {
-        type: 'string'
+        type: 'string',
+        renderValue: (c) => "null"
     },
     "undefined": {
         type: 'string'

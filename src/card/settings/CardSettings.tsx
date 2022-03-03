@@ -5,10 +5,11 @@ import NeoCardSettingsContent from './CardSettingsContent';
 import NeoCardSettingsFooter from './CardSettingsFooter';
 import { CardContent } from '@material-ui/core';
 
-const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherParameters, width, height, type, reportSettings, reportSettingsOpen,
+const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherParameters, width, height, type, 
+    reportSettings, reportSettingsOpen, fields,
     onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onRemovePressed, onReportSettingUpdate,
     onShiftLeftPressed, onShiftRightPressed, onToggleCardSettings, onTypeUpdate, setActive,
-     onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand }) => {
+     onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand, onCreateNotification }) => {
 
    
     const cardHeight = 10 + (120 * height) + (78 * Math.floor((height - 1) / 3)) + "px";
@@ -41,9 +42,11 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
 
     const cardSettingsFooter = (settingsOpen) ? <NeoCardSettingsFooter
         type={type}
+        fields={fields}
         reportSettings={reportSettings}
         reportSettingsOpen={reportSettingsOpen}
         onToggleReportSettings={onToggleReportSettings}
+        onCreateNotification={onCreateNotification}
         onReportSettingUpdate={onReportSettingUpdate}></NeoCardSettingsFooter> : <div></div>;
 
     return (

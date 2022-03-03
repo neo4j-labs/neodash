@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { IconButton, TextField, InputBase, DialogTitle, Dialog, DialogContent, DialogContentText, Button } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { PlayArrow } from '@material-ui/icons';
-import { NeoDeletePageModal } from '../modal/DeletePageModal';
+import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import debounce from 'lodash/debounce';
 
 export const NeoPageButton = ({ title, index, disabled = false, selected = false, onSelect, onRemove, onTitleUpdate }) => {

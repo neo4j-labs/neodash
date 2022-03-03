@@ -1,12 +1,13 @@
 import { createDriver } from "use-neo4j";
+import { initializeSSO } from "../component/sso/SSOUtils";
 import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
-import { QueryStatus, runCypherQuery } from "../report/CypherQueryRunner";
+import { QueryStatus, runCypherQuery } from "../report/ReportQueryRunner";
 import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
     setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled,
-    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase
+    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase, setWaitForSSO
 } from "./ApplicationActions";
 
 /**
@@ -176,16 +177,43 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         standaloneDashboardDatabase: "dashboards"
     }
     try {
-        config = await (await fetch("/config.json")).json();
-    } catch (e) {
+        config = await (await fetch("config.json")).json();
+    }catch (e){
         // Config may not be found, for example when we are in Neo4j Desktop.
         console.log("No config file detected. Setting to safe defaults.")
     }
+
     try {
+        const clearNotificationAfterLoad = true;
         dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
         const state = getState();
         const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
         dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
+        dispatch(setConnectionModalOpen(false));
+        if(state.application.waitForSSO){
+            // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
+           
+            dispatch(setAboutModalOpen(false));
+            dispatch(setConnected(false));
+            dispatch(setWelcomeScreenOpen(false));
+            const success = await initializeSSO(config["ssoDiscoveryUrl"], (credentials)=>{
+                if(standalone){
+                    dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
+                    dispatch(createConnectionThunk(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
+                    dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+                }
+                // alert(JSON.stringify(credentials))
+                // alert(JSON.stringify(state.application.connection))   
+            });
+            dispatch(setWaitForSSO(false));
+            if(!success){
+                alert("Unable to connect using SSO");
+                dispatch(createNotificationThunk("Unable to connect using SSO", "Something went wrong. Most likely your credentials are incorrect..."));
+            }else{
+                return;
+            }
+        }
+        
         if (standalone) {
             // If we are running in standalone mode, auto-set the connection details that are configured.
             dispatch(setConnectionProperties(
@@ -200,7 +228,11 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
             dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
-            dispatch(clearNotification());
+
+            if(clearNotificationAfterLoad){
+                dispatch(clearNotification());
+            }     
+
             // Override for when username and password are specified in the config - automatically connect to the specified URL.
             if (config['standaloneUsername'] && config['standalonePassword']) {
                 dispatch(createConnectionThunk(config['standaloneProtocol'],
@@ -220,7 +252,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setConnected(false));
             dispatch(setDashboardToLoadAfterConnecting(null));
             dispatch(setWelcomeScreenOpen(true));
-            dispatch(clearNotification());
+            if(clearNotificationAfterLoad){
+                dispatch(clearNotification());
+            }
             dispatch(handleSharedDashboardsThunk());
             dispatch(setConnectionModalOpen(false));
             dispatch(setAboutModalOpen(false))

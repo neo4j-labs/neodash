@@ -12,11 +12,14 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import { FormControlLabel, MenuItem, Switch, Tooltip } from '@material-ui/core';
 import SecurityIcon from '@material-ui/icons/Security';
 import WarningIcon from '@material-ui/icons/Warning';
+import { SSOLoginButton } from '../component/sso/SSOLoginButton';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export default function NeoConnectionModal({ open, standalone, standaloneSettings, ssoSettings, connection, dismissable = false, createConnection, onConnectionModalClose }) {
+export default function NeoConnectionModal({ open, standalone, standaloneSettings, ssoSettings, connection, 
+    dismissable = false, createConnection, onConnectionModalClose, onSSOAttempt }) {
+
     const protocols = ["neo4j", "neo4j+s", "neo4j+ssc", "bolt", "bolt+s", "bolt+ssc"]
     const [ssoVisible, setSsoVisible] = React.useState(ssoSettings['ssoEnabled']);
     const [protocol, setProtocol] = React.useState(connection.protocol);
@@ -40,8 +43,8 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
         setSsoVisible(ssoSettings['ssoEnabled'])
     }, [JSON.stringify(ssoSettings)])
 
-
-
+    const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl; 
+   
     return (
         <div>
            
@@ -116,20 +119,12 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                                 color="primary"
                             />}
                             label="Use SSO"></FormControlLabel> : <></>}
-                        {ssoVisible ? <Button style={{ float: "right", marginTop: "20px", marginBottom: "20px", backgroundColor: "white" }} onClick={(e) => {
-                            e.preventDefault();
-                            alert("Not yet implemented.")
-                        }}
-                            color="default"
-                            variant="contained"
-                            size= "large"
-                            endIcon={<SecurityIcon />}>
-                            Connect
-                        </Button> : <Button type="submit" onClick={(e) => {
+                        {ssoVisible ? <SSOLoginButton discoveryAPIUrl={discoveryAPIUrl} onSSOAttempt={onSSOAttempt} /> 
+                        : <Button type="submit" onClick={(e) => {
                             e.preventDefault();
                             onConnectionModalClose();
                             createConnection(protocol, url, port, database, username, password);
-                        }}
+                        }} 
                             style={{ float: "right", marginTop: "20px", marginBottom: "20px", backgroundColor: "white" }}
                             color="default"
                             variant="contained"
