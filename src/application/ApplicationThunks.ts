@@ -145,9 +145,8 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
         const shareDetails = state.application.shareDetails;
         dispatch(setWelcomeScreenOpen(false));
         dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
-        if(shareDetails.dashboardDatabase){
+        if (shareDetails.dashboardDatabase) {
             dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
- 
             dispatch(setStandaloneDashboardDatabase(shareDetails.database));
         }
         if (shareDetails.url) {
@@ -173,9 +172,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         standaloneProtocol: "neo4j",
         standaloneHost: "localhost",
         standalonePort: "7687",
-        standaloneDatabase: "neo4j", 
+        standaloneDatabase: "neo4j",
         standaloneDashboardName: "My Dashboard",
-        standaloneDashboardDatabase: "dashboards" 
+        standaloneDashboardDatabase: "dashboards"
     }
     try {
         config = await (await fetch("config.json")).json();
@@ -216,16 +215,35 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
         
         if (standalone) {
-            dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], state.application.connection.username, state.application.connection.password));
-            dispatch(setConnectionModalOpen(true));
+            // If we are running in standalone mode, auto-set the connection details that are configured.
+            dispatch(setConnectionProperties(
+                config['standaloneProtocol'],
+                config['standaloneHost'],
+                config['standalonePort'],
+                config['standaloneDatabase'],
+                config['standaloneUsername'] ? config['standaloneUsername'] : state.application.connection.username,
+                config['standalonePassword'] ? config['standalonePassword'] : state.application.connection.password));
+
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
             dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+
             if(clearNotificationAfterLoad){
                 dispatch(clearNotification());
+            }     
+
+            // Override for when username and password are specified in the config - automatically connect to the specified URL.
+            if (config['standaloneUsername'] && config['standalonePassword']) {
+                dispatch(createConnectionThunk(config['standaloneProtocol'],
+                    config['standaloneHost'],
+                    config['standalonePort'],
+                    config['standaloneDatabase'],
+                    config['standaloneUsername'],
+                    config['standalonePassword']));
+            }else{
+                dispatch(setConnectionModalOpen(true));
             }
-          
         } else {
             dispatch(clearDesktopConnectionProperties());
             dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
