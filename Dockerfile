@@ -56,4 +56,5 @@ RUN echo " \
     
 CMD ["nginx", "-g", "daemon off;"]
 
-# neodash will be available at http://localhost:80 inside the container. See `scripts/docker-build-run-unix.bash` on how to map ports.
+# neodash will be available at http://localhost:5005 inside the container. See `scripts/docker-build-run-unix.bash` on how to map ports.
+

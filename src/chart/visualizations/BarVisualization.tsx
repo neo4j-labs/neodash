@@ -1,9 +1,9 @@
 import React from 'react'
 import { ResponsiveBar } from '@nivo/bar'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
-import { checkResultKeys, recordToNative } from './Utils'
-import { evaluateRulesOnDict, evaluateRulesOnMappedNeo4jRecord, evaluateRulesOnNeo4jRecord } from '../../report/ReportRuleEvaluator'
+import { checkResultKeys, recordToNative } from './Utils';
 import { green, grey } from '@material-ui/core/colors'
+import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 
 /**
  * This visualization was extracted from https://github.com/neo4j-labs/charts.

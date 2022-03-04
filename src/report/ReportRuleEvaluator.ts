@@ -18,7 +18,8 @@ export const evaluateRulesOnNeo4jRecord = (record, customization, defaultValue, 
         if (rule['customization'] == customization) {
             // if the row contains the specified field...
             if (record._fieldLookup[rule['field']] !== undefined) {
-                const realValue = record._fields[record._fieldLookup[rule['field']]]
+                const val = record._fields[record._fieldLookup[rule['field']]]
+                const realValue = val['low'] ? val['low'] : val;
                 const ruleValue = rule['value']
                 if (evaluateCondition(realValue, rule['condition'], ruleValue)) {
                     return rule['customizationValue'];
@@ -64,7 +65,7 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
         if (customizations.includes(rule['customization'])) {
             // if the row contains the specified field...
             if (dict[rule['field']] !== undefined) {
-                const realValue = dict[rule['field']]
+                const realValue = dict[rule['field']]['low'] ? dict[rule['field']]['low'] : dict[rule['field']];
                 const ruleValue = rule['value']
                 if (evaluateCondition(realValue, rule['condition'], ruleValue)) {
                     return index;
@@ -117,6 +118,9 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
     if (!ruleValue || !condition || !realValue) {
         // If something is null, rules are never met.
         return false;
+    }
+    if(!isNaN(parseFloat(ruleValue))){
+        ruleValue = parseFloat(ruleValue);
     }
     if (condition == "=") {
         return realValue == ruleValue;
