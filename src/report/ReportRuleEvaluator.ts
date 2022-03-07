@@ -19,7 +19,7 @@ export const evaluateRulesOnNeo4jRecord = (record, customization, defaultValue, 
             // if the row contains the specified field...
             if (record._fieldLookup[rule['field']] !== undefined) {
                 const val = record._fields[record._fieldLookup[rule['field']]]
-                const realValue = val['low'] ? val['low'] : val;
+                const realValue = val && val['low'] ? val['low'] : val;
                 const ruleValue = rule['value']
                 if (evaluateCondition(realValue, rule['condition'], ruleValue)) {
                     return rule['customizationValue'];
@@ -64,7 +64,7 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
         // Only check customizations that are specified
         if (customizations.includes(rule['customization'])) {
             // if the row contains the specified field...
-            if (dict[rule['field']] !== undefined) {
+            if (dict[rule['field']] !== undefined && dict[rule['field']] !== null) {
                 const realValue = dict[rule['field']]['low'] ? dict[rule['field']]['low'] : dict[rule['field']];
                 const ruleValue = rule['value']
                 if (evaluateCondition(realValue, rule['condition'], ruleValue)) {
