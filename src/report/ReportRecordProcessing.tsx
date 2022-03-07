@@ -361,7 +361,8 @@ function RenderInteger(value) {
 }
 
 function RenderNumber(value) {
-    if(!value || !value.toLocaleString){
+
+    if(value === null || !value.toLocaleString){
         return "null";
     }
     const number = value.toLocaleString();
