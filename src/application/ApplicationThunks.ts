@@ -188,7 +188,7 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 
 
 /**
- * Initialized the NeoDash application.
+ * Initializes the NeoDash application.
  * 
  * This is a multi step process, starting with loading the runtime configuration.
  * This is present in the file located at /config.json on the URL where NeoDash is deployed.
@@ -222,7 +222,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(setConnectionModalOpen(false));
         if (state.application.waitForSSO) {
             // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
-
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
