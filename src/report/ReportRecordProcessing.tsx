@@ -255,6 +255,11 @@ export function valueIsPath(value) {
     return (value && value["start"] && value["end"] && value["segments"] && value["length"]);
 }
 
+export function valueisPoint(value) {
+    // Look at the properties and identify the type.
+    return (value && value["x"] && value["y"] && value["srid"]);
+ }
+
 export function valueIsObject(value) {
     // TODO - this will not work in production builds. Need alternative.
     const className = value.__proto__.constructor.name;
@@ -351,6 +356,16 @@ function RenderString(value) {
     return str;
 }
 
+function RenderPoint(value, key = 0) {
+    return <HtmlTooltip key={value.toString()} 
+    title={<div>
+        <b> Point x={value.x} y={value.y}  </b>
+    </div>}>
+        <Chip label={"📍"} />
+    </HtmlTooltip>
+ }
+
+ 
 function RenderInteger(value) {
     // if we cannot cast to integer, use the generic number renderer.
     if(!value || !value.toInt){
@@ -399,6 +414,10 @@ export const rendererForType: any = {
         type: 'string',
         renderValue: (c) => RenderPath(c.value),
     },
+    "point": {
+        type: 'string',
+        renderValue: (c) => RenderPoint(c.value),
+    }, 
     "object": {
         type: 'string',
         // valueGetter enables sorting and filtering on string values inside the object
@@ -442,5 +461,4 @@ export function renderValueByType(value){
     }else{
         return value.toString();
     }
-   
 }

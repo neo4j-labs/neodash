@@ -125,10 +125,18 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
     try {
         const uuid = createUUID();
         const title = dashboard.title;
-        // const user = user;
-        // const date = date;
         const version = dashboard.version;
         const content = dashboard;
+        // TODO - instead of creating the dashboard, match on a dashboard with the 
+        // same name and override the properties.
+
+        // Maybe this should be optional?
+        // overwriteDashboard should be a checkbox in the "Save to Neo4j modal".
+        // if (overwriteDashboard){
+        //     cypherQuery = "MERGE (n)..."
+        // }else{
+        //     cypherQuery = "CREATE (n)..."
+        // }
         runCypherQuery(driver, database,
             "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid",
             { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },

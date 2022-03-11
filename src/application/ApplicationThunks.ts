@@ -205,12 +205,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         standaloneDatabase: "neo4j",
         standaloneDashboardName: "My Dashboard",
         standaloneDashboardDatabase: "dashboards"
-    }
+    };
     try {
         config = await (await fetch("config.json")).json();
     } catch (e) {
         // Config may not be found, for example when we are in Neo4j Desktop.
-        console.log("No config file detected. Setting to safe defaults.")
+        console.log("No config file detected. Setting to safe defaults.");
     }
 
     try {
@@ -284,7 +284,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             }
             dispatch(handleSharedDashboardsThunk());
             dispatch(setConnectionModalOpen(false));
-            dispatch(setAboutModalOpen(false))
+            dispatch(setAboutModalOpen(false));
         }
     } catch (e) {
         dispatch(setWelcomeScreenOpen(false));
