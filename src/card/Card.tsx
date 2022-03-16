@@ -14,6 +14,7 @@ import { debounce } from '@material-ui/core';
 import { getDashboardIsEditable, getDatabase, getGlobalParameters } from '../settings/SettingsSelectors';
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
 import { createNotificationThunk } from '../page/PageThunks';
+import useDimensions from 'react-cool-dimensions';
 
 
 const NeoCard = ({
@@ -48,6 +49,14 @@ const NeoCard = ({
     );
     const [collapseTimeout, setCollapseTimeout] = React.useState(report.collapseTimeout);
 
+    const { observe, unobserve, width, height, entry } = useDimensions({
+        onResize: ({ observe, unobserve, width, height, entry }) => {
+            // Triggered whenever the size of the target is changed...
+            unobserve(); // To stop observing the current target element
+            observe(); // To re-start observing the current target element
+        },
+    });
+
     const [expanded, setExpanded] = useState(false);
     const onToggleCardExpand = () => {
         setExpanded(!expanded);
@@ -72,10 +81,10 @@ const NeoCard = ({
 
     // TODO - get rid of some of the props-drilling here...
     return (
-        <div>
+        <div style={{height: "100%"}} ref={observe}>
             {/* The front of the card, referred to as the 'view' */}
-            <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout}>
-                <Card>
+            <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{height: "100%"}}>
+                <Card style={{height: "100%"}}>
                     <NeoCardView
                         settingsOpen={settingsOpen}
                         editable={editable}
@@ -91,8 +100,10 @@ const NeoCard = ({
                         fields={report.fields ? report.fields : []}
                         refreshRate={report.refreshRate}
                         selection={report.selection}
-                        width={report.width}
-                        height={report.height}
+                        gridWidth={report.width}
+                        gridHeight={report.height}
+                        widthPx={width}
+                        heightPx={height}
                         title={report.title}
                         expanded={expanded}
                         onToggleCardExpand={onToggleCardExpand}

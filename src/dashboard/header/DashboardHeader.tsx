@@ -14,6 +14,7 @@ import { setConnectionModalOpen } from "../../application/ApplicationActions";
 import { setPageNumberThunk } from "../../settings/SettingsThunks";
 import { getDashboardIsEditable, getPageNumber } from "../../settings/SettingsSelectors";
 import { applicationIsStandalone } from "../../application/ApplicationSelectors";
+import GridLayout from "react-grid-layout";
 
 const drawerWidth = 240;
 
@@ -117,22 +118,31 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
             <Toolbar key={2} style={{ zIndex: 1001, minHeight: "50px", paddingLeft: "0px", paddingRight: "0px", background: "white" }}>
                 {!standalone ? <div style={{ width: open ? "0px" : "57px", zIndex: open ? 999 : 999, transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms", height: "0px", background: "white" }}> </div> : <></>}
 
-                <div style={{
-                    width: '100%', zIndex: -112, height: "48px", overflowX: "hidden", overflowY: "auto", background: "rgba(240,240,240)",
-                    boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
-                    borderBottom: "1px solid lightgrey"
-                }}>
+                {/* <div > */}
+                <GridLayout
+                    className="layout"
+                    style={{
+                        width: '100%', zIndex: -112, height: "48px", overflowX: "hidden", overflowY: "auto", background: "rgba(240,240,240)",
+                        boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
+                        borderBottom: "1px solid lightgrey"
+                    }}
+                    rowHeight={60}
+                    isBounded={true}
+                    compactType={"horizontal"}
+                >
                     {pages.map((page, i) =>
-                        <NeoPageButton index={i} title={page.title} selected={pagenumber == i}
-                            disabled={!editable}
-                            onSelect={() => selectPage(i)}
-                            onRemove={() => removePage(i)}
-                            onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)
-                            }
-                        />)
-                    }
+                            <NeoPageButton key={i} index={i} title={page.title} selected={pagenumber == i}
+                                dataGrid={{ x: i, y: 0, w: 1, h: 1, minW: 1, maxW: 1  }}
+                                disabled={!editable}
+                                onSelect={() => selectPage(i)}
+                                onRemove={() => removePage(i)}
+                                onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)
+                                }
+                            />)
+                        } }
                     {editable ? <NeoPageAddButton onClick={addPage}></NeoPageAddButton> : <></>}
-                </div>
+                </GridLayout>
+                
             </Toolbar>
         </AppBar>
     );

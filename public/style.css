@@ -56,6 +56,20 @@
 .MuiChip-root:before {
     border: none !important;
 }
+.react-resizable-handle {
+    bottom: 1px !important;
+    color: grey;
+}
+
+.react-grid-item > .react-resizable-handle.react-resizable-handle-se {
+    cursor: nwse-resize !important;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+    border-right: 2px solid rgba(0, 0, 0, 0.1) !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+}
+
 /* .MuiDataGrid-columnHeaders {
     min-height: 32px !important;
     max-height: 32px !important;
@@ -82,6 +96,9 @@
 }
 .MuiTablePagination-root{
     margin-top: -10px;
+}
+.MuiDataGrid-virtualScroller {
+    overflow-y: hidden !important;
 }
 .MuiCardHeader-content .MuiInputBase-root.Mui-disabled {
     color: inherit !important;

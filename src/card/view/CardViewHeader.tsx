@@ -8,7 +8,8 @@ import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { TextField } from "@material-ui/core";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+import DragHandleIcon from '@material-ui/icons/DragHandle';
 const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, onToggleCardSettings, onToggleCardExpand, expanded }) => {
     const [text, setText] = React.useState(title);
 
@@ -25,20 +26,30 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
         }
     }, [title])
 
-    const cardTitle = <TextField
-        id="standard-outlined"
-        className={"no-underline large"}
-        label=""
-        disabled={!editable}
-        placeholder="Report name..."
-        fullWidth
-        maxRows={4}
-        value={text}
-        onChange={(event) => {
-            setText(event.target.value);
-            debouncedTitleUpdate(event.target.value);
-        }}
-    />
+    const cardTitle = <>
+        <table>
+            <tr>
+                <td>
+                    <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginLeft: "-10px", marginRight: "10px" }}></DragIndicatorIcon></td>
+                <td style={{width: "100%"}}>
+                    <TextField
+                        id="standard-outlined"
+                        className={"no-underline large"}
+                        label=""
+                        disabled={!editable}
+                        placeholder="Report name..."
+                        fullWidth
+                        maxRows={4}
+                        value={text}
+                        onChange={(event) => {
+                            setText(event.target.value);
+                            debouncedTitleUpdate(event.target.value);
+                        }}
+                    />
+                </td>
+            </tr>
+        </table>
+    </>
 
     const settingsButton = <IconButton aria-label="settings"
         onClick={onToggleCardSettings}>
@@ -57,7 +68,7 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
 
     return <CardHeader style={{ height: "72px" }}
         action={<>
-        {fullscreenEnabled}
+            {fullscreenEnabled}
             {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
             {(editable && !expanded) ? settingsButton : <></>}
         </>}

@@ -7,7 +7,10 @@ import { removeReportRequest, shiftReportLeftRequest, shiftReportRightRequest } 
 import Grid from '@material-ui/core/Grid';
 import { getDashboardIsEditable } from '../settings/SettingsSelectors';
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
+import { Responsive, WidthProvider } from "react-grid-layout";
+import { GRID_COMPACTION_TYPE } from '../config/PageConfig';
 
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 /**
  * A component responsible for rendering the page, a collection of reports.
@@ -24,14 +27,26 @@ export const NeoPage = (
     }) => {
 
     const loadingMessage = <div>Loading card...</div>;
+
     const content = (
-        <div style={{ flexGrow: 1, paddingTop: "52px" }}>
-            <Grid container spacing={2}>
+        <div style={{ paddingTop: "52px" }}>
+
+            <ResponsiveGridLayout
+                draggableHandle=".drag-handle"
+                className="layout"
+                breakpoints={{  lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                rowHeight={210}
+                isBounded={true}
+                compactType={GRID_COMPACTION_TYPE}
+            >
+              
                 {reports.map((report, index) => {
                     // @ts-ignore
-                    const width = report.width;
+                    // const width = report.width;
+                    const width = 12;
                     // @ts-ignore
-                    return <Grid style={{ paddingTop: "16px", paddingBottom: "0px" }}
+                    return <Grid style={{ paddingBottom: "6px" }} data-grid={{ x: index*3, y: 0, w: 3, h: 2, minW: 2, maxW: 12 }}
                         key={index} item xs={Math.min(width * 4, 12)} sm={Math.min(width * 2, 12)} md={Math.min(width * 2, 12)} lg={Math.min(width, 12)} xl={Math.min(width, 12)}>
                         <NeoCard index={index}
                             dashboardSettings={dashboardSettings}
@@ -40,11 +55,12 @@ export const NeoPage = (
                             onRemovePressed={onRemovePressed} />
                     </Grid>
                 })}
-                {editable ? <Grid  style={{ paddingTop: "16px", paddingBottom: "0px" }}
-                    key={reports.length + 1} item xs={12} sm={6} md={6} lg={3} xl={3}>
+                {editable ? <Grid style={{ paddingBottom: "6px" }} 
+                    data-grid={{ x:12, y: 2, w: 3, h: 2, isResizable: false, static: false }} 
+                    key={reports.length + 1} item  xs={12} sm={6} md={6} lg={3} xl={3}>
                     <NeoAddCard />
                 </Grid> : <></>}
-            </Grid>
+            </ResponsiveGridLayout>
         </div>
     );
     return !isLoaded ? loadingMessage : content;

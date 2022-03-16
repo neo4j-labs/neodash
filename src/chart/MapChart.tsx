@@ -31,6 +31,7 @@ const NeoMapChart = (props: ChartProps) => {
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
     const defaultNodeColor = "grey"; // Color of nodes without labels
+    const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
 
     const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
@@ -38,7 +39,7 @@ const NeoMapChart = (props: ChartProps) => {
     const widthScale = 8.55;
     const heightScale = 6.7;
 
-    var key = data.centerLatitude + "," + data.centerLongitude + "," + props.fullscreen;
+    var key = dimensions.width + "," + dimensions.height + ","+ data.centerLatitude + "," + data.centerLongitude + "," + props.fullscreen;
     useEffect(() => {
         data.centerLatitude + "," + data.centerLongitude + "," + props.fullscreen;
     }, [props.fullscreen])
@@ -46,14 +47,6 @@ const NeoMapChart = (props: ChartProps) => {
     useEffect(() => {
         buildVisualizationDictionaryFromRecords(props.records);
     }, [])
-
-    const { observe, unobserve, width, height, entry } = useDimensions({
-        onResize: ({ observe, unobserve, width, height, entry }) => {
-            // Triggered whenever the size of the target is changed...
-            unobserve(); // To stop observing the current target element
-            observe(); // To re-start observing the current target element
-        },
-    });
 
     var nodes = {};
     var nodeLabels = {};
@@ -198,8 +191,7 @@ const NeoMapChart = (props: ChartProps) => {
         const minLat = Math.min(...latitudes);
         const avgLat = maxLat - (maxLat - minLat) / 2.0;
 
-        // TODO - this doesn't appear to be using the actual width somehow...
-        let latWidthScaleFactor = (width ? width : 300) / widthScale;
+        let latWidthScaleFactor = (dimensions.width ? dimensions.width : 300) / widthScale;
         let latDiff = maxLat - avgLat;
         let latProjectedWidth = latDiff / latWidthScaleFactor;
         let latZoomFit = Math.ceil(Math.log2(1.0 / latProjectedWidth));
@@ -208,7 +200,7 @@ const NeoMapChart = (props: ChartProps) => {
         const minLong = Math.min(...longitudes);
         const avgLong = maxLong - (maxLong - minLong) / 2.0;
 
-        let longHeightScaleFactor = (height ? height : 300) / heightScale;
+        let longHeightScaleFactor = (dimensions.height ? dimensions.height : 300) / heightScale;
         let longDiff = maxLong - avgLong;
         let longProjectedHeight = longDiff / longHeightScaleFactor;
         let longZoomFit = Math.ceil(Math.log2(1.0 / longProjectedHeight));
@@ -306,7 +298,7 @@ const NeoMapChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : true;
 
     // Draw the component.
-    return <MapContainer /*ref={observe}*/ key={key} style={{ width: "100%", height: "100%" }}
+    return <MapContainer key={key} style={{ width: "100%", height: "100%" }}
         center={[data.centerLatitude ? data.centerLatitude : 0, data.centerLongitude ? data.centerLongitude : 0]}
         zoom={data.zoom ? data.zoom : 0}
         maxZoom={18}

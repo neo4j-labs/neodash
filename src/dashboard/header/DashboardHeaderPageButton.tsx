@@ -6,7 +6,7 @@ import { PlayArrow } from '@material-ui/icons';
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import debounce from 'lodash/debounce';
 
-export const NeoPageButton = ({ title, index, disabled = false, selected = false, onSelect, onRemove, onTitleUpdate }) => {
+export const NeoPageButton = ({ title, index, disabled = false, selected = false, onSelect, onRemove, dataGrid, onTitleUpdate }) => {
 
     // TODO - debounce page title update
     const [modalOpen, setModalOpen] = React.useState(false);
@@ -24,7 +24,7 @@ export const NeoPageButton = ({ title, index, disabled = false, selected = false
     }, [title])
 
     const content = (
-        <div key={index} style={{
+        <div key={index} data-grid={dataGrid} style={{
             padding: "5px", backgroundColor: selected ? 'white' : 'inherit', cursor: 'pointer',
             display: "inline-block", height: "100%", borderRight: "1px solid #ddd", borderLeft: "1px solid #ddd"
         }}>
