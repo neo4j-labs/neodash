@@ -84,7 +84,7 @@ export default function  (props: ExtendedChartReportProps) {
         })
     })
 
-    const isTimeChart = isNaN(data[0].data[0]['x']);
+    const isTimeChart = data[0] !== undefined && data[0].data[0] !== undefined && data[0].data[0]['x'] !== undefined && isNaN(data[0].data[0]['x']);
     const validateXTickTimeValues = xTickTimeValues.split(" ");
     if (validateXTickTimeValues.length != 3 ||
         validateXTickTimeValues[0] != "every" ||

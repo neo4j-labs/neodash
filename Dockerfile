@@ -38,7 +38,7 @@ ARG standaloneDatabase='neo4j'
 ARG standaloneDashboardName='My Dashboard'
 ARG standaloneDashboardDatabase='neo4j'
 
-LABEL version="2.0.12"
+LABEL version="2.0.13"
 
 # Dynamically set app config on container startup.
 RUN echo " \
@@ -54,10 +54,10 @@ RUN echo " \
     \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase}\"  \
     }" > /usr/share/nginx/html/config.json
     
-CMD echo '----------------------------------------------------------------------------------------|' && \
+CMD echo '-----------------------------------------------------------------------------------------' && \
     echo '| NeoDash is available on http://localhost:5005 by default.                             |' && \  
     echo '| Make sure your ports are mapped correctly (-p 5005:5005) when starting the container. |' && \
-    echo '----------------------------------------------------------------------------------------|' && \
+    echo '-----------------------------------------------------------------------------------------' && \
     /usr/sbin/nginx -g 'daemon off;'
 
 # neodash will be available at http://localhost:5005 inside the container. See `scripts/docker-build-run-unix.bash` on how to map ports.

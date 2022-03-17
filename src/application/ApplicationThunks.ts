@@ -15,6 +15,15 @@ import {
  * Several actions/other thunks may be dispatched from here.
  */
 
+/**
+ * Establish a connection to Neo4j with the specified credentials. Open/close the relevant windows when connection is made (un)successfully.
+ * @param protocol - the neo4j protocol (e.g. bolt, bolt+s, neo4j+s, ...)
+ * @param url - URL of the host.
+ * @param port - port on which Neo4j is running.
+ * @param database - the Neo4j database to connect to.
+ * @param username - Neo4j username.
+ * @param password - Neo4j password.
+ */
 export const createConnectionThunk = (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
         const driver = createDriver(protocol, url, port, username, password)
@@ -59,6 +68,9 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
     }
 }
 
+/**
+ * Establish a connection directly from the Neo4j Desktop integration (if running inside Neo4j Desktop)
+ */
 export const createConnectionFromDesktopIntegrationThunk = () => (dispatch: any, getState: any) => {
     try {
         const desktopConnectionDetails = getState().application.desktopConnection;
@@ -74,6 +86,10 @@ export const createConnectionFromDesktopIntegrationThunk = () => (dispatch: any,
     }
 }
 
+/**
+ * Find the active database from Neo4j Desktop.
+ * Set global state values to remember the values retrieved from the integration so that we can connect later if possible.
+ */
 export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any, getState: any) => {
     const getActiveDatabase = (context) => {
         for (let pi = 0; pi < context.projects.length; pi++) {
@@ -107,6 +123,10 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any,
     }
 }
 
+/**
+ * On application startup, check the URL to see if we are loading a shared dashboard.
+ * If yes, decode the URL parameters and set the application state accordingly, so that it can be loaded later.
+ */
 export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) => {
     try {
         const queryString = window.location.search;
@@ -139,6 +159,9 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
 }
 
 
+/**
+ * Confirm that we load a shared dashboard. This requires that the state was previously set in `handleSharedDashboardsThunk()`.
+ */
 export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState: any) => {
     try {
         const state = getState();
@@ -164,6 +187,13 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 }
 
 
+/**
+ * Initializes the NeoDash application.
+ * 
+ * This is a multi step process, starting with loading the runtime configuration.
+ * This is present in the file located at /config.json on the URL where NeoDash is deployed.
+ * Note: this does not work in Neo4j Desktop, so we revert to defaults.
+ */
 export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
     var config = {
         ssoEnabled: false,
@@ -175,12 +205,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         standaloneDatabase: "neo4j",
         standaloneDashboardName: "My Dashboard",
         standaloneDashboardDatabase: "dashboards"
-    }
+    };
     try {
         config = await (await fetch("config.json")).json();
-    }catch (e){
+    } catch (e) {
         // Config may not be found, for example when we are in Neo4j Desktop.
-        console.log("No config file detected. Setting to safe defaults.")
+        console.log("No config file detected. Setting to safe defaults.");
     }
 
     try {
@@ -190,30 +220,27 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
         dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
         dispatch(setConnectionModalOpen(false));
-        if(state.application.waitForSSO){
+        if (state.application.waitForSSO) {
             // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
-           
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
-            const success = await initializeSSO(config["ssoDiscoveryUrl"], (credentials)=>{
-                if(standalone){
+            const success = await initializeSSO(config["ssoDiscoveryUrl"], (credentials) => {
+                if (standalone) {
                     dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
                     dispatch(createConnectionThunk(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
                     dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
                 }
-                // alert(JSON.stringify(credentials))
-                // alert(JSON.stringify(state.application.connection))   
             });
             dispatch(setWaitForSSO(false));
-            if(!success){
+            if (!success) {
                 alert("Unable to connect using SSO");
                 dispatch(createNotificationThunk("Unable to connect using SSO", "Something went wrong. Most likely your credentials are incorrect..."));
-            }else{
+            } else {
                 return;
             }
         }
-        
+
         if (standalone) {
             // If we are running in standalone mode, auto-set the connection details that are configured.
             dispatch(setConnectionProperties(
@@ -229,9 +256,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setWelcomeScreenOpen(false));
             dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
 
-            if(clearNotificationAfterLoad){
+            if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
-            }     
+            }
 
             // Override for when username and password are specified in the config - automatically connect to the specified URL.
             if (config['standaloneUsername'] && config['standalonePassword']) {
@@ -241,7 +268,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
                     config['standaloneDatabase'],
                     config['standaloneUsername'],
                     config['standalonePassword']));
-            }else{
+            } else {
                 dispatch(setConnectionModalOpen(true));
             }
         } else {
@@ -252,12 +279,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setConnected(false));
             dispatch(setDashboardToLoadAfterConnecting(null));
             dispatch(setWelcomeScreenOpen(true));
-            if(clearNotificationAfterLoad){
+            if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
             }
             dispatch(handleSharedDashboardsThunk());
             dispatch(setConnectionModalOpen(false));
-            dispatch(setAboutModalOpen(false))
+            dispatch(setAboutModalOpen(false));
         }
     } catch (e) {
         dispatch(setWelcomeScreenOpen(false));

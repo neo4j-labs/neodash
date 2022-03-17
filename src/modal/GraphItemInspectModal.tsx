@@ -38,7 +38,7 @@ export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, tex
                                 <TableBody>
                                     {Object.keys(object).length == 0 ?
                                         <i>(No properties)</i> :
-                                        Object.keys(object).map((key) => (
+                                        Object.keys(object).sort().map((key) => (
                                             <TableRow key={key}>
                                                 <TableCell component="th" scope="row">
                                                     {key}

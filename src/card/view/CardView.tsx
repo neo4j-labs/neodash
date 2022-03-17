@@ -9,7 +9,7 @@ import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import debounce from 'lodash/debounce';
 
-const CARD_FOOTER_HEIGHT = 64;
+export const CARD_FOOTER_HEIGHT = 64;
 
 const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, width, height, fields, active, setActive,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,

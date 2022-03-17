@@ -631,15 +631,16 @@ export const REPORT_TYPES = {
                 default: "rgba(0, 0, 0, 0.87)"
             },
             "textAlign": {
-                label: "Text Align",
+                label: "Horizontal Align",
                 type: SELECTION_TYPES.LIST,
                 values: ["left", "center", "right"],
                 default: "left"
             },
-            "marginTop": {
-                label: "Margin Top (px)", 
-                type: SELECTION_TYPES.NUMBER,
-                default: 0
+            "verticalAlign": {
+                label: "Vertical Align",
+                type: SELECTION_TYPES.LIST,
+                values: ["bottom", "middle", "top"],
+                default: "top"
             },
             "autorun": {
                 label: "Auto-run query",

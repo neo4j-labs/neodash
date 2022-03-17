@@ -72,6 +72,9 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
     try {
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
+        if(!state.dashboard.pages[pagenumber].reports[index]){
+            return
+        }
         const oldFields = state.dashboard.pages[pagenumber].reports[index].fields;
         const reportType = state.dashboard.pages[pagenumber].reports[index].type;
         const oldSelection = state.dashboard.pages[pagenumber].reports[index].selection;

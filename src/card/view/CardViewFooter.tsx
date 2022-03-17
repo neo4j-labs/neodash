@@ -28,7 +28,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
                         const fieldSelections = fields.map((field, i) => {
                             const nodeLabel = field[0];
                             const discoveredProperties = field.slice(1);
-                            const properties = (discoveredProperties ? discoveredProperties : []).concat(["(label)", "(id)", "(no label)"]);
+                            const properties = (discoveredProperties ? [...discoveredProperties].sort() : []).concat(["(label)", "(id)", "(no label)"]);
                             const totalColors = categoricalColorSchemes[nodeColorScheme] ? categoricalColorSchemes[nodeColorScheme].length : 0;
                             const color = totalColors > 0 ? categoricalColorSchemes[nodeColorScheme][i % totalColors] : "grey";
                             return <FormControl key={nodeLabel}>
@@ -57,9 +57,9 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
                     selectableFields[selectable].type == SELECTION_TYPES.NUMBER_OR_DATETIME ||
                     selectableFields[selectable].type == SELECTION_TYPES.TEXT) {
                     if (selectionIsMandatory || showOptionalSelections) {
+                        const sortedFields = fields ? [...fields].sort() : [];
 
-
-                        const fieldsToRender = (selectionIsMandatory ? fields : fields.concat(["(none)"]));
+                        const fieldsToRender = (selectionIsMandatory ? sortedFields : sortedFields.concat(["(none)"]));
                         return <FormControl key={index}>
                             <InputLabel id={selectable}>{selectableFields[selectable].label}</InputLabel>
                             <Select labelId={selectable}
