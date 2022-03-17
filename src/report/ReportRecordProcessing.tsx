@@ -125,7 +125,7 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
         const className = getRecordType(value);
         if (className == "dateTime") {
             record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString();
-        }else if (className !== "integer" && className !== "number"){
+        } else if (className !== "integer" && className !== "number") {
             record = null;
         }
     })
@@ -258,7 +258,7 @@ export function valueIsPath(value) {
 export function valueisPoint(value) {
     // Look at the properties and identify the type.
     return (value && value["x"] && value["y"] && value["srid"]);
- }
+}
 
 export function valueIsObject(value) {
     // TODO - this will not work in production builds. Need alternative.
@@ -279,11 +279,11 @@ export function getRecordType(value) {
         return 'null';
     } else if (value.__isInteger__) {
         return 'integer';
-    } else if (typeof(value) == "number") {
+    } else if (typeof (value) == "number") {
         return 'number';
     } else if (value.__isDate__) {
         return 'date';
-    } else  if (value.__isDateTime__) {
+    } else if (value.__isDateTime__) {
         return 'dateTime';
     } else if (valueIsNode(value)) {
         return 'node';
@@ -319,13 +319,40 @@ const rightRelationship = "polygon(10px 0%, calc(100% - 10px) 0%, 100% 50%, 100%
 const leftRelationship = "polygon(10px 0%, calc(100% - 0%) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 0%) 100%, 10px 100%, 0% calc(100% - 50%), 0% 50%)"
 
 function RenderNode(value, key = 0) {
-    return <HtmlTooltip key={key + "-" + value.identity} arrow title={<div><b> {value.labels.length > 0 ? value.labels.join(", ") : "Node"}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{value.properties[k].toString()}</td></tr>)}</tbody></table></div>}>
+    return <HtmlTooltip key={key + "-" + value.identity} arrow title={
+        <div>
+            <b> {value.labels.length > 0 ? value.labels.join(", ") : "Node"}</b>
+            <table>
+                <tbody>
+                    {Object.keys(value.properties).length == 0 ?
+                        <tr><td>(No properties)</td></tr> :
+                        Object.keys(value.properties).sort().map((k, i) =>
+                            <tr key={i}>
+                                <td key={0}>{k.toString()}:</td>
+                                <td key={1}>{value.properties[k].toString()}</td>
+                            </tr>)}
+                </tbody>
+            </table>
+        </div>}>
         <Chip label={value.labels.length > 0 ? value.labels.join(", ") : "Node"} />
     </HtmlTooltip>
 }
 
 function RenderRelationship(value, key = 0) {
-    return <HtmlTooltip key={key + "-" + value.identity} arrow title={<div><b> {value.type}</b><table><tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => <tr key={i}><td key={0}>{k.toString()}:</td><td key={1}>{value.properties[k].toString()}</td></tr>)}</tbody></table></div>}>
+    return <HtmlTooltip key={key + "-" + value.identity} arrow title={
+        <div>
+            <b> {value.type}</b>
+            <table>
+                <tbody>{Object.keys(value.properties).length == 0 ?
+                    <tr><td>(No properties)</td></tr> :
+                    Object.keys(value.properties).sort().map((k, i) =>
+                        <tr key={i}>
+                            <td key={0}>{k.toString()}:</td>
+                            <td key={1}>{value.properties[k].toString()}</td>
+                        </tr>)}
+                </tbody>
+            </table>
+        </div>}>
         <Chip style={{ borderRadius: 0, clipPath: (value.direction == undefined) ? "none" : ((value.direction) ? rightRelationship : leftRelationship) }} label={value.type} />
     </HtmlTooltip>
 }
@@ -357,18 +384,18 @@ function RenderString(value) {
 }
 
 function RenderPoint(value, key = 0) {
-    return <HtmlTooltip key={value.toString()} 
-    title={<div>
-        <b> Point x={value.x} y={value.y}  </b>
-    </div>}>
+    return <HtmlTooltip key={value.toString()}
+        title={<div>
+            <b> Point x={value.x} y={value.y}  </b>
+        </div>}>
         <Chip label={"📍"} />
     </HtmlTooltip>
- }
+}
 
- 
+
 function RenderInteger(value) {
     // if we cannot cast to integer, use the generic number renderer.
-    if(!value || !value.toInt){
+    if (!value || !value.toInt) {
         return RenderNumber(value);
     }
     const integer = value.toInt().toLocaleString();
@@ -377,7 +404,7 @@ function RenderInteger(value) {
 
 function RenderNumber(value) {
 
-    if(value === null || !value.toLocaleString){
+    if (value === null || !value.toLocaleString) {
         return "null";
     }
     const number = value.toLocaleString();
@@ -417,7 +444,7 @@ export const rendererForType: any = {
     "point": {
         type: 'string',
         renderValue: (c) => RenderPoint(c.value),
-    }, 
+    },
     "object": {
         type: 'string',
         // valueGetter enables sorting and filtering on string values inside the object
@@ -454,11 +481,11 @@ export function getRendererForValue(value) {
     return rendererForType[type];
 }
 
-export function renderValueByType(value){
+export function renderValueByType(value) {
     const renderer = getRendererForValue(value);
-    if(renderer){
-        return renderer.renderValue({value:value});
-    }else{
+    if (renderer) {
+        return renderer.renderValue({ value: value });
+    } else {
         return value.toString();
     }
 }

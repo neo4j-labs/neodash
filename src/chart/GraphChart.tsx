@@ -234,7 +234,6 @@ const NeoGraphChart = (props: ChartProps) => {
         const tooltip = <Card>
 
             <b style={{ padding: "10px" }}>
-
                 {value.labels ? (value.labels.length > 0 ? value.labels.join(", ") : "Node") : value.type}
             </b>
 
@@ -243,7 +242,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 <TableContainer>
                     <Table size="small">
                         <TableBody>
-                            {Object.keys(value.properties).map((key) => (
+                            {Object.keys(value.properties).sort().map((key) => (
                                 <TableRow key={key}>
                                     <TableCell component="th" scope="row" style={{ padding: "3px", paddingLeft: "8px" }}>
                                         {key}
