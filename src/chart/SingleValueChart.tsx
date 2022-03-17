@@ -21,7 +21,6 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const value = (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0]) ? records[0]["_fields"][0] : "";
     const displayValue = renderValueByType(value);
     return <div style={{
-        display: "inline-block",
         height: reportHeight + CARD_FOOTER_HEIGHT,
         lineHeight: (reportHeight + CARD_FOOTER_HEIGHT) + "px",
         position: "relative",
