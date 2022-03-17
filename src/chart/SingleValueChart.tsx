@@ -11,7 +11,6 @@ import { CARD_FOOTER_HEIGHT } from '../card/view/CardView';
 const NeoSingleValueChart = (props: ChartProps) => {
     const records = props.records;
     const fontSize = props.settings && props.settings.fontSize ? props.settings.fontSize : 64;
-    const marginTop = props.settings && props.settings.marginTop ? props.settings.marginTop : 0;
     const color = props.settings && props.settings.color ? props.settings.color : "rgba(0, 0, 0, 0.87)";
     const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : "left";
     const verticalAlign = props.settings && props.settings.verticalAlign ? props.settings.verticalAlign : "top";
@@ -22,7 +21,6 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const value = (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0]) ? records[0]["_fields"][0] : "";
     const displayValue = renderValueByType(value);
     return <div style={{
-        marginTop: marginTop,
         display: "inline-block",
         height: reportHeight + CARD_FOOTER_HEIGHT,
         lineHeight: (reportHeight + CARD_FOOTER_HEIGHT) + "px",
