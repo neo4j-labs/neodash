@@ -12,7 +12,7 @@ const NeoAddNewCard = ({ onCreatePressed }) => {
     return (
         <div>
             <Card style={{ background: "#e0e0e0" }}>
-                <CardContent style={{ height: '422px' }}>
+                <CardContent style={{ height: '429px' }}>
                     <Typography variant="h2" color="textSecondary" style={{ paddingTop: "155px", textAlign: "center" }}>
                         <Fab size="medium" className={"blue-grey"} aria-label="add"
                             onClick={() => {

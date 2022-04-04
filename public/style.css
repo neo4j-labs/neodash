@@ -58,7 +58,11 @@
 }
 .react-resizable-handle {
     bottom: 1px !important;
-    color: grey;
+    color: rgb(199, 199, 199);
+}
+
+.neodash-card-editable-false .react-resizable-handle {
+    display: none;
 }
 
 .react-grid-item > .react-resizable-handle.react-resizable-handle-se {

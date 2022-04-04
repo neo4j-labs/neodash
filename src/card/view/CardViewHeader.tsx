@@ -29,9 +29,10 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
     const cardTitle = <>
         <table>
             <tr>
-                <td>
-                    <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginLeft: "-10px", marginRight: "10px" }}></DragIndicatorIcon></td>
-                <td style={{width: "100%"}}>
+                {editable ? <td>
+                    <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginLeft: "-10px", marginRight: "10px" }}></DragIndicatorIcon>
+                </td> : <></> }
+                <td style={{ width: "100%" }}>
                     <TextField
                         id="standard-outlined"
                         className={"no-underline large"}
@@ -70,7 +71,7 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
         action={<>
             {fullscreenEnabled}
             {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-            {(editable && !expanded) ? settingsButton : <></>}
+            {settingsButton}
         </>}
         title={cardTitle} />
 }

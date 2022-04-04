@@ -68,27 +68,17 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
     </>;
     return <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}>
         <NeoField select label={"Type"} value={type}
+            style={{marginLeft: "0px", marginRight: "10px", width: "47%", maxWidth: "200px"}}
             onChange={(value) => onTypeUpdate(value)}
             choices={Object.keys(REPORT_TYPES).map((option) => (
                 <MenuItem key={option} value={option}>
                     {REPORT_TYPES[option].label}
                 </MenuItem>
             ))} />
-        <NeoField select label={"Size"} value={[width, height]}
-            onChange={(value) => onSizeUpdate(value.split(","))}
-            choices={CARD_SIZES.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                </MenuItem>
-            ))} />
-        {REPORT_TYPES[type]["disableCypherParameters"] == undefined ? <NeoField label={"Cypher Parameters"} placeholder='{"x": "abc", "y": 5}'
-            onChange={(value) => {
-                setCypherParametersText(value);
-                debouncedCypherParametersUpdate(value);
-            }}
-            value={cypherParametersText} /> : <></>}
+    
         {REPORT_TYPES[type]["disableRefreshRate"] == undefined ? <NeoField placeholder='0 (No Refresh)'
             label="Refresh Rate (sec)" numeric={true} value={refreshRateText}
+            style={{ width: "47%", maxWidth: "200px"}}
             onChange={(value) => {
                 setRefreshRateText(value);
                 debouncedRefreshRateUpdate(value);

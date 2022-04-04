@@ -10,7 +10,7 @@ import {
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
-import { debounce } from '@material-ui/core';
+import { debounce, Dialog, DialogContent } from '@material-ui/core';
 import { getDashboardIsEditable, getDatabase, getGlobalParameters } from '../settings/SettingsSelectors';
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
 import { createNotificationThunk } from '../page/PageThunks';
@@ -80,83 +80,94 @@ const NeoCard = ({
     }, [report.collapseTimeout])
 
     // TODO - get rid of some of the props-drilling here...
-    return (
-        <div style={{height: "100%"}} ref={observe}>
-            {/* The front of the card, referred to as the 'view' */}
-            <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{height: "100%"}}>
-                <Card style={{height: "100%"}}>
-                    <NeoCardView
-                        settingsOpen={settingsOpen}
-                        editable={editable}
-                        dashboardSettings={dashboardSettings}
-                        settings={report.settings ? report.settings : {}}
-                        type={report.type}
-                        database={database}
-                        active={active}
-                        setActive={setActive}
-                        query={report.query}
-                        cypherParameters={report.parameters}
-                        globalParameters={globalParameters}
-                        fields={report.fields ? report.fields : []}
-                        refreshRate={report.refreshRate}
-                        selection={report.selection}
-                        gridWidth={report.width}
-                        gridHeight={report.height}
-                        widthPx={width}
-                        heightPx={height}
-                        title={report.title}
-                        expanded={expanded}
-                        onToggleCardExpand={onToggleCardExpand}
-                        onGlobalParameterUpdate={onGlobalParameterUpdate}
-                        onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
-                        onTitleUpdate={(title) => onTitleUpdate(index, title)}
-                        onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
-                        onToggleCardSettings={() => {
-                            setSettingsOpen(true);
-                            setCollapseTimeout("auto");
-                            debouncedOnToggleCardSettings(index, true)
-                        }} />
-                </Card>
-            </Collapse>
-            {/* The back of the card, referred to as the 'settings' */}
-            <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout} >
-                <Card>
-                    <NeoCardSettings
-                        settingsOpen={settingsOpen}
-                        query={report.query}
-                        database={database}
-                        width={report.width}
-                        height={report.height}
-                        fields={report.fields}
-                        type={report.type}
-                        refreshRate={report.refreshRate}
-                        cypherParameters={report.parameters}
-                        expanded={expanded}
-                        dashboardSettings={dashboardSettings}
-                        onToggleCardExpand={onToggleCardExpand}
-                        setActive={setActive}
-                        reportSettings={report.settings}
-                        reportSettingsOpen={report.advancedSettingsOpen}
-                        onQueryUpdate={(query) => onQueryUpdate(index, query)}
-                        onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
-                        onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
-                        onTypeUpdate={(type) => onTypeUpdate(index, type)}
-                        onCypherParametersUpdate={(parameters) => onCypherParametersUpdate(index, parameters)}
-                        onSizeUpdate={(size) => onSizeUpdate(index, size[0], size[1])}
-                        onRemovePressed={() => onRemovePressed(index)}
-                        onShiftLeftPressed={() => onShiftLeftPressed(index)}
-                        onShiftRightPressed={() => onShiftRightPressed(index)}
-                        onCreateNotification={(title, message) => onCreateNotification(title, message)}
-                        onToggleCardSettings={() => {
-                            setSettingsOpen(false);
-                            setCollapseTimeout("auto");
-                            debouncedOnToggleCardSettings(index, false);
-                        }}
-                        onToggleReportSettings={() => onToggleReportSettings(index)} />
-                </Card>
-            </Collapse>
-        </div>
-    );
+    const component = <div style={{ height: "100%" }} ref={observe}>
+        {/* The front of the card, referred to as the 'view' */}
+        <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{ height: "100%" }}>
+            <Card style={{ height: "100%" }}>
+                <NeoCardView
+                    settingsOpen={settingsOpen}
+                    editable={editable}
+                    dashboardSettings={dashboardSettings}
+                    settings={report.settings ? report.settings : {}}
+                    type={report.type}
+                    database={database}
+                    active={active}
+                    setActive={setActive}
+                    query={report.query}
+                    cypherParameters={report.parameters}
+                    globalParameters={globalParameters}
+                    fields={report.fields ? report.fields : []}
+                    refreshRate={report.refreshRate}
+                    selection={report.selection}
+                    gridWidth={report.width}
+                    gridHeight={report.height}
+                    widthPx={width}
+                    heightPx={height}
+                    title={report.title}
+                    expanded={expanded}
+                    onToggleCardExpand={onToggleCardExpand}
+                    onGlobalParameterUpdate={onGlobalParameterUpdate}
+                    onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
+                    onTitleUpdate={(title) => onTitleUpdate(index, title)}
+                    onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
+                    onToggleCardSettings={() => {
+                        setSettingsOpen(true);
+                        setCollapseTimeout("auto");
+                        debouncedOnToggleCardSettings(index, true)
+                    }} />
+            </Card>
+        </Collapse>
+        {/* The back of the card, referred to as the 'settings' */}
+        <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout} >
+            <Card style={{ height: "100%" }}>
+                <NeoCardSettings
+                    settingsOpen={settingsOpen}
+                    query={report.query}
+                    database={database}
+                    width={report.width}
+                    height={report.height}
+                    widthPx={width}
+                    heightPx={height}
+                    fields={report.fields}
+                    type={report.type}
+                    refreshRate={report.refreshRate}
+                    cypherParameters={report.parameters}
+                    expanded={expanded}
+                    dashboardSettings={dashboardSettings}
+                    onToggleCardExpand={onToggleCardExpand}
+                    setActive={setActive}
+                    reportSettings={report.settings}
+                    reportSettingsOpen={report.advancedSettingsOpen}
+                    onQueryUpdate={(query) => onQueryUpdate(index, query)}
+                    onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
+                    onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
+                    onTypeUpdate={(type) => onTypeUpdate(index, type)}
+                    onCypherParametersUpdate={(parameters) => onCypherParametersUpdate(index, parameters)}
+                    onSizeUpdate={(size) => onSizeUpdate(index, size[0], size[1])}
+                    onRemovePressed={() => onRemovePressed(index)}
+                    onShiftLeftPressed={() => onShiftLeftPressed(index)}
+                    onShiftRightPressed={() => onShiftRightPressed(index)}
+                    onCreateNotification={(title, message) => onCreateNotification(title, message)}
+                    onToggleCardSettings={() => {
+                        setSettingsOpen(false);
+                        setCollapseTimeout("auto");
+                        debouncedOnToggleCardSettings(index, false);
+                    }}
+                    onToggleReportSettings={() => onToggleReportSettings(index)} />
+            </Card>
+        </Collapse>
+    </div>;
+
+    // If the card is viewed in fullscreen, wrap it in a dialog.
+    if (expanded) {
+        return <Dialog maxWidth={"xl"} open={expanded} aria-labelledby="form-dialog-title">
+            <DialogContent style={{ width: document.documentElement.clientWidth - 64, height: document.documentElement.clientHeight }} >
+                {component}
+            </DialogContent>
+
+        </Dialog>
+    }
+    return component;
 };
 
 const mapStateToProps = (state, ownProps) => ({
