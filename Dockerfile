@@ -38,7 +38,7 @@ ARG standaloneDatabase='neo4j'
 ARG standaloneDashboardName='My Dashboard'
 ARG standaloneDashboardDatabase='neo4j'
 
-LABEL version="2.0.12"
+LABEL version="2.1.0"
 
 # Dynamically set app config on container startup.
 RUN echo " \

@@ -14,16 +14,6 @@ export const updateReportTitleThunk = (index, title) => (dispatch: any, getState
     }
 }
 
-export const updateReportSizeThunk = (index, width, height) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateReportSize(pagenumber, index, width, height))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot set report size", e));
-    }
-}
-
 export const updateReportQueryThunk = (index, query) => (dispatch: any, getState: any) => {
     try {
         const state = getState();

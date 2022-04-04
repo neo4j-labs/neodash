@@ -6,10 +6,10 @@ import NeoCardSettingsFooter from './CardSettingsFooter';
 import { CardContent } from '@material-ui/core';
 import { CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 
-const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherParameters, width, height, type, 
+const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, width, height, type, 
     reportSettings, reportSettingsOpen, fields, widthPx, heightPx,
-    onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onRemovePressed, onReportSettingUpdate,
-    onShiftLeftPressed, onShiftRightPressed, onToggleCardSettings, onTypeUpdate, setActive,
+    onQueryUpdate, onRefreshRateUpdate, onRemovePressed, onReportSettingUpdate,
+    onToggleCardSettings, onTypeUpdate, setActive,
      onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand, onCreateNotification }) => {
 
     const reportHeight = heightPx - CARD_HEADER_HEIGHT + 24;
@@ -18,8 +18,6 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         expanded={expanded}
         onToggleCardExpand={onToggleCardExpand}
         onRemovePressed={onRemovePressed}
-        onShiftLeftPressed={onShiftLeftPressed}
-        onShiftRightPressed={onShiftRightPressed}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
         onToggleCardSettings={(e) => { setActive(reportSettings.autorun !== undefined ? reportSettings.autorun : true); onToggleCardSettings(e) }} />
 
@@ -29,15 +27,12 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         database={database}
         refreshRate={refreshRate}
         reportSettings={reportSettings}
-        cypherParameters={cypherParameters}
         width={width}
         height={height}
         type={type}
         onQueryUpdate={onQueryUpdate}
-        onSizeUpdate={onSizeUpdate}
         onReportSettingUpdate={onReportSettingUpdate}
         onRefreshRateUpdate={onRefreshRateUpdate}
-        onCypherParametersUpdate={onCypherParametersUpdate}
         onTypeUpdate={onTypeUpdate}></NeoCardSettingsContent> : <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}/>;
 
     const cardSettingsFooter = (settingsOpen) ? <NeoCardSettingsFooter

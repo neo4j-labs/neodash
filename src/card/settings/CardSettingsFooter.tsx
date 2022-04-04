@@ -11,7 +11,8 @@ const update = (state, mutations) =>
     Object.assign({}, state, mutations)
 
 
-const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpen, onToggleReportSettings, onCreateNotification, onReportSettingUpdate }) => {
+const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpen, onToggleReportSettings,
+     onCreateNotification, onReportSettingUpdate }) => {
 
     const [reportSettingsText, setReportSettingsText] = React.useState(reportSettings);
 

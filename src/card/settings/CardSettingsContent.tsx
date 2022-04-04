@@ -9,8 +9,8 @@ import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { CARD_SIZES } from '../../config/CardConfig';
 
 
-const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, cypherParameters, width, height, type,
-    onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onReportSettingUpdate, onCypherParametersUpdate, onTypeUpdate }) => {
+const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, type,
+    onQueryUpdate, onRefreshRateUpdate, onReportSettingUpdate, onTypeUpdate }) => {
 
     // Ensure that we only trigger a text update event after the user has stopped typing.
     const [queryText, setQueryText] = React.useState(query);
@@ -24,25 +24,12 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
         [],
     );
 
-    const [cypherParametersText, setCypherParametersText] = React.useState(cypherParameters);
-    const debouncedCypherParametersUpdate = useCallback(
-        debounce(onCypherParametersUpdate, 250),
-        [],
-    );
-
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
         if (query !== queryText) {
             setQueryText(query);
         }
     }, [query])
-
-    useEffect(() => {
-        // Reset text to the dashboard state when the page gets reorganized.
-        if (cypherParameters !== cypherParametersText) {
-            setCypherParametersText((cypherParameters !== undefined) ? cypherParameters : "");
-        }
-    }, [cypherParameters])
 
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.

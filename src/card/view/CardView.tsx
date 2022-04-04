@@ -10,7 +10,8 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 
-const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, gridWidth, gridHeight, widthPx, heightPx, fields, active, setActive,
+const NeoCardView = ({ title, database, query, globalParameters, 
+    widthPx, heightPx, fields, active, setActive,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
@@ -60,7 +61,6 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                     {active ?
                         <NeoReport query={query}
                             database={database}
-                            stringParameters={cypherParameters}
                             mapParameters={globalParameters}
                             disabled={settingsOpen}
                             selection={selection}

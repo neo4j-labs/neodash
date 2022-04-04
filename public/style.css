@@ -58,6 +58,7 @@
 }
 .react-resizable-handle {
     bottom: 1px !important;
+    opacity: 0.5;
     color: rgb(199, 199, 199);
 }
 

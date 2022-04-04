@@ -14,9 +14,13 @@ import { setConnectionModalOpen } from "../../application/ApplicationActions";
 import { setPageNumberThunk } from "../../settings/SettingsThunks";
 import { getDashboardIsEditable, getPageNumber } from "../../settings/SettingsSelectors";
 import { applicationIsStandalone } from "../../application/ApplicationSelectors";
-import GridLayout from "react-grid-layout";
+
+import RGL, { WidthProvider } from "react-grid-layout";
+
+const ReactGridLayout = WidthProvider(RGL);
 
 const drawerWidth = 240;
+
 
 const styles = {
     root: {
@@ -46,12 +50,25 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
         [],
     );
 
+    const [layout, setLayout] = React.useState([]);
+
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
         if (dashboardTitle !== dashboardTitleText) {
             setDashboardTitleText(dashboardTitle);
         }
     }, [dashboardTitle])
+
+
+    useEffect(() => {
+        console.log("Layout recompute")
+        console.log(layout);
+        // Reset text to the dashboard state when the page gets reorganized.
+        setLayout([...pages.map((page, index) => {
+            return { x: index, y: 0, i: index, w: Math.min(2.0, 11.3 / pages.length), h: 1 }
+        }), { x: pages.length, y: 0, i: pages.length, w: 0.5, h: 1, isDraggable: false }]);
+    }, [pages])
+
 
 
     const content = (
@@ -117,32 +134,55 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
             </Toolbar>
             <Toolbar key={2} style={{ zIndex: 1001, minHeight: "50px", paddingLeft: "0px", paddingRight: "0px", background: "white" }}>
                 {!standalone ? <div style={{ width: open ? "0px" : "57px", zIndex: open ? 999 : 999, transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms", height: "0px", background: "white" }}> </div> : <></>}
-
-                {/* <div > */}
-                <GridLayout
+                <ReactGridLayout
                     className="layout"
+                    layout={layout}
+                    isResizable={false}
                     style={{
-                        width: '100%', zIndex: -112, height: "48px", overflowX: "hidden", overflowY: "auto", background: "rgba(240,240,240)",
+                        width: '100%',
+                        height: "47px",
+                        zIndex: -112, overflowY: "hidden", overflowX: "hidden",
+                        background: "rgba(240,240,240)",
+                        padding: 0, margin: 0,
                         boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
                         borderBottom: "1px solid lightgrey"
                     }}
-                    rowHeight={60}
+                    margin={[0, 0]}
+                    maxRows={1}
+                    rowHeight={47}
                     isBounded={true}
                     compactType={"horizontal"}
                 >
                     {pages.map((page, i) =>
-                            <NeoPageButton key={i} index={i} title={page.title} selected={pagenumber == i}
-                                dataGrid={{ x: i, y: 0, w: 1, h: 1, minW: 1, maxW: 1  }}
+                        <div key={i} data-grid={layout[i]}
+                            style={{
+                                background: "grey",
+                                backgroundColor: (pagenumber == i) ? 'white' : 'inherit',
+                                display: "inline-block",
+                                height: "100%",
+                                padding: 0, margin: 0,
+                                borderRight: "1px solid #ddd", borderLeft: "1px solid #ddd"
+                            }}>
+                            <NeoPageButton title={page.title} selected={pagenumber == i}
                                 disabled={!editable}
                                 onSelect={() => selectPage(i)}
                                 onRemove={() => removePage(i)}
-                                onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)
-                                }
-                            />)
-                        } }
-                    {editable ? <NeoPageAddButton onClick={addPage}></NeoPageAddButton> : <></>}
-                </GridLayout>
-                
+                                onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)}
+                            />
+                        </div>
+                    )}
+                    {editable ?
+                        <div key={pages.length} index={pages.length}  data-grid={layout[pages.length]}
+                            style={{
+                                background: "inherit",
+                                display: "inline-block",
+                                padding: 0, margin: 0,
+                                height: "100%",
+                               
+                            }}>   <NeoPageAddButton onClick={addPage}></NeoPageAddButton>
+                        </div> : <></>}
+                </ReactGridLayout>
+
             </Toolbar>
         </AppBar>
     );

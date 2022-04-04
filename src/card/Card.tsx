@@ -6,7 +6,7 @@ import NeoCardView from './view/CardView';
 import { connect } from 'react-redux';
 import {
     updateCypherParametersThunk, updateFieldsThunk, updateSelectionThunk, updateReportQueryThunk, toggleCardSettingsThunk,
-    updateReportRefreshRateThunk, updateReportSettingThunk, updateReportSizeThunk, updateReportTitleThunk, updateReportTypeThunk
+    updateReportRefreshRateThunk, updateReportSettingThunk, updateReportTitleThunk, updateReportTypeThunk
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
@@ -94,13 +94,10 @@ const NeoCard = ({
                     active={active}
                     setActive={setActive}
                     query={report.query}
-                    cypherParameters={report.parameters}
                     globalParameters={globalParameters}
                     fields={report.fields ? report.fields : []}
                     refreshRate={report.refreshRate}
                     selection={report.selection}
-                    gridWidth={report.width}
-                    gridHeight={report.height}
                     widthPx={width}
                     heightPx={height}
                     title={report.title}
@@ -131,7 +128,6 @@ const NeoCard = ({
                     fields={report.fields}
                     type={report.type}
                     refreshRate={report.refreshRate}
-                    cypherParameters={report.parameters}
                     expanded={expanded}
                     dashboardSettings={dashboardSettings}
                     onToggleCardExpand={onToggleCardExpand}
@@ -142,11 +138,7 @@ const NeoCard = ({
                     onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
                     onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
                     onTypeUpdate={(type) => onTypeUpdate(index, type)}
-                    onCypherParametersUpdate={(parameters) => onCypherParametersUpdate(index, parameters)}
-                    onSizeUpdate={(size) => onSizeUpdate(index, size[0], size[1])}
                     onRemovePressed={() => onRemovePressed(index)}
-                    onShiftLeftPressed={() => onShiftLeftPressed(index)}
-                    onShiftRightPressed={() => onShiftRightPressed(index)}
                     onCreateNotification={(title, message) => onCreateNotification(title, message)}
                     onToggleCardSettings={() => {
                         setSettingsOpen(false);
@@ -161,7 +153,7 @@ const NeoCard = ({
     // If the card is viewed in fullscreen, wrap it in a dialog.
     if (expanded) {
         return <Dialog maxWidth={"xl"} open={expanded} aria-labelledby="form-dialog-title">
-            <DialogContent style={{ width: document.documentElement.clientWidth - 64, height: document.documentElement.clientHeight }} >
+            <DialogContent style={{ width: Math.min(1920, document.documentElement.clientWidth - 64), height: document.documentElement.clientHeight }} >
                 {component}
             </DialogContent>
 
@@ -184,9 +176,6 @@ const mapDispatchToProps = dispatch => ({
     onQueryUpdate: (index: any, query: any) => {
         dispatch(updateReportQueryThunk(index, query))
     },
-    onSizeUpdate: (index: any, width: any, height: any) => {
-        dispatch(updateReportSizeThunk(index, width, height))
-    },
     onRefreshRateUpdate: (index: any, rate: any) => {
         dispatch(updateReportRefreshRateThunk(index, rate))
     },
@@ -195,9 +184,6 @@ const mapDispatchToProps = dispatch => ({
     },
     onReportSettingUpdate: (index: any, setting: any, value: any) => {
         dispatch(updateReportSettingThunk(index, setting, value))
-    },
-    onCypherParametersUpdate: (index: any, parameters: any) => {
-        dispatch(updateCypherParametersThunk(index, parameters))
     },
     onFieldsUpdate: (index: any, fields: any) => {
         dispatch(updateFieldsThunk(index, fields))

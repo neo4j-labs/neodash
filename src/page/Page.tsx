@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import NeoAddCard from '../card/CardAddButton';
 import NeoCard from '../card/Card';
 import { getReports } from './PageSelectors';
-import { removeReportRequest, shiftReportLeftRequest, shiftReportRightRequest } from './PageThunks';
+import { removeReportRequest } from './PageThunks';
 import Grid from '@material-ui/core/Grid';
 import { getDashboardIsEditable } from '../settings/SettingsSelectors';
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
