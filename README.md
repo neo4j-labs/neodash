@@ -18,9 +18,9 @@ There are three ways to run the application:
 ## Run locally with Docker
 Pull the latest image from Docker Hub to run the application locally:
 ```
-# Run the application on http://localhost:8080
+# Run the application on http://localhost:5005
 docker pull nielsdejong/neodash:latest
-docker run -it --rm -p 8080:80 nielsdejong/neodash
+docker run -it --rm -p 5005:5005 nielsdejong/neodash
 ```
 
 ## Run & Build using npm
@@ -59,7 +59,7 @@ If you use Windows, you should have installed WSL. In WSL, you can run the scrip
 ```
 $ ./scripts/docker-build-run-windows.bash
 ```
-Then visit `http://localhost:8080` in your browser.
+Then visit `http://localhost:5005` in your browser.
 
 
 ## Run in standalone mode
