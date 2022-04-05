@@ -1,19 +1,24 @@
 import React, { useEffect } from 'react';
-import { REPORT_TYPES } from '../../config/ReportConfig'
+import {  REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { FormControlLabel, FormGroup, Switch } from '@material-ui/core';
-import ReportSetting from '../../component/ReportSetting';
+import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
+import NeoSetting from '../../component/field/Setting';
+import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../modal/CustomReportStyleModal';
+import TuneIcon from '@material-ui/icons/Tune';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
 
 
-
-
-const NeoCardSettingsFooter = ({ type, reportSettings, reportSettingsOpen, onToggleReportSettings, onReportSettingUpdate }) => {
+const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpen, onToggleReportSettings, onCreateNotification, onReportSettingUpdate }) => {
 
     const [reportSettingsText, setReportSettingsText] = React.useState(reportSettings);
+
+    // Variables related to customizing report settings
+    const [customReportStyleModalOpen, setCustomReportStyleModalOpen] = React.useState(false);
+    const settingToCustomize = "styleRules";
+
     const debouncedReportSettingUpdate = useCallback(
         debounce(onReportSettingUpdate, 250),
         [],
@@ -41,7 +46,7 @@ const NeoCardSettingsFooter = ({ type, reportSettings, reportSettingsOpen, onTog
     // Else, build the advanced settings view.
     const advancedReportSettings = <div style={{ marginLeft: "5px" }}>
         {Object.keys(settings).map(setting =>
-            <ReportSetting key={setting} name={setting}
+            <NeoSetting key={setting} name={setting}
                 value={reportSettingsText[setting]}
                 type={settings[setting]["type"]}
                 label={settings[setting]["label"]}
@@ -52,15 +57,45 @@ const NeoCardSettingsFooter = ({ type, reportSettings, reportSettingsOpen, onTog
         )}
     </div>
 
-    return <FormGroup style={{ borderTop: "1px dashed lightgrey", background: reportSettingsOpen ? "#f6f6f6" : "inherit", maxWidth: "100%" }}>
-        <FormControlLabel style={{ marginLeft: "5px", marginBottom: "10px" }}
-            control={<Switch
-                checked={reportSettingsOpen} onChange={onToggleReportSettings} color="default" />}
-            labelPlacement="end"
-            label={<div style={{ fontSize: "12px", color: "grey" }}>Show advanced settings</div>} />
-        {reportSettingsOpen ? advancedReportSettings : <div></div>}
-    </FormGroup>
-
+    return <div>
+        <NeoCustomReportStyleModal
+            settingName={settingToCustomize}
+            settingValue={reportSettings[settingToCustomize]}
+            type={type}
+            fields={fields}
+            customReportStyleModalOpen={customReportStyleModalOpen}
+            setCustomReportStyleModalOpen={setCustomReportStyleModalOpen}
+            onReportSettingUpdate={onReportSettingUpdate}
+        ></NeoCustomReportStyleModal>
+        <table style={{ borderTop: "1px dashed lightgrey", background: reportSettingsOpen ? "#f6f6f6" : "inherit", width: "100%" }}>
+            <tr>
+                <td>
+                    <FormGroup >
+                        <FormControlLabel style={{ marginLeft: "5px", marginBottom: "10px" }}
+                            control={<Switch
+                                checked={reportSettingsOpen} onChange={onToggleReportSettings} color="default" />}
+                            labelPlacement="end"
+                            label={<div style={{ fontSize: "12px", color: "grey" }}>Advanced settings</div>} />
+                    </FormGroup>
+                </td>
+                {RULE_BASED_REPORT_CUSTOMIZATIONS[type] ? <td>
+                    <Tooltip title="Set rule-based styling" aria-label="">
+                        <IconButton size="small" style={{ float: "right", marginRight: "10px" }} aria-label="custom styling"
+                            onClick={(e) => {
+                                setCustomReportStyleModalOpen(true); // Open the modal.
+                            }}>
+                            <TuneIcon></TuneIcon>
+                        </IconButton>
+                    </Tooltip>
+                </td> : <></>}
+            </tr>
+            <tr>
+                <td colSpan={2} style={{ maxWidth: "100%" }}>
+                    {reportSettingsOpen ? advancedReportSettings : <div></div>}
+                </td>
+            </tr>
+        </table>
+    </div>
 };
 
 export default NeoCardSettingsFooter;

@@ -13,12 +13,14 @@ import NeoPieChart from '../chart/PieChart';
 import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
 
+
 export enum SELECTION_TYPES {
     NUMBER,
     NUMBER_OR_DATETIME,
     LIST,
     TEXT,
     DICTIONARY,
+    COLOR,
     NODE_PROPERTIES
 };
 
@@ -81,7 +83,7 @@ export const REPORT_TYPES = {
             },
             "nodeLabelColor": {
                 label: "Node Label Color",
-                type: SELECTION_TYPES.TEXT,
+                type: SELECTION_TYPES.COLOR,
                 default: "black"
             },
             "nodeLabelFontSize": {
@@ -172,7 +174,7 @@ export const REPORT_TYPES = {
             "drilldownLink": {
                 label: "Drilldown Icon Link",
                 type: SELECTION_TYPES.TEXT,
-                default: ""
+                default: "http://bloom.neo4j.io"
             },
             "hideSelections": {
                 label: "Hide Property Selection",
@@ -412,7 +414,7 @@ export const REPORT_TYPES = {
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
-        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. Values are automatically selected from your query results.</div>,
+        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.</div>,
         selection: {
             "x": {
                 label: "X-value",
@@ -629,15 +631,16 @@ export const REPORT_TYPES = {
                 default: "rgba(0, 0, 0, 0.87)"
             },
             "textAlign": {
-                label: "Text Align",
+                label: "Horizontal Align",
                 type: SELECTION_TYPES.LIST,
                 values: ["left", "center", "right"],
                 default: "left"
             },
-            "marginTop": {
-                label: "Margin Top (px)", 
-                type: SELECTION_TYPES.NUMBER,
-                default: 0
+            "verticalAlign": {
+                label: "Vertical Align",
+                type: SELECTION_TYPES.LIST,
+                values: ["bottom", "middle", "top"],
+                default: "top"
             },
             "autorun": {
                 label: "Auto-run query",

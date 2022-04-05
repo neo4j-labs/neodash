@@ -1,8 +1,13 @@
 import React from 'react'
 import { ResponsiveBar } from '@nivo/bar'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
-import { checkResultKeys, recordToNative } from './Utils'
+import { checkResultKeys, recordToNative } from './Utils';
+import { green, grey } from '@material-ui/core/colors'
+import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 
+/**
+ * This visualization was extracted from https://github.com/neo4j-labs/charts.
+ */
 export default function BarVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
 
@@ -61,6 +66,23 @@ export default function BarVisualization(props: ExtendedChartReportProps) {
     const valueScale = (settings["valueScale"]) ? settings["valueScale"] : 'linear';
     const minValue = (settings["minValue"]) ? settings["minValue"] : 'auto';
     const maxValue = (settings["maxValue"]) ? settings["maxValue"] : 'auto';
+    const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+
+    // Compute bar color based on rules - overrides default color scheme completely.
+    const getBarColor = (bar) => {
+        const data = {}
+        if(!props.selection){
+            return "grey";
+        }
+        data[props.selection['index']] = bar.indexValue;
+        data[props.selection['value']] = bar.value;
+        data[props.selection['key']] = bar.id;
+        const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['bar color']);
+        if(validRuleIndex !== -1){
+            return styleRules[validRuleIndex]['customizationValue'];
+        }
+        return "grey"
+    }
 
     return <ResponsiveBar
         layout={props.layout}
@@ -73,7 +95,7 @@ export default function BarVisualization(props: ExtendedChartReportProps) {
         padding={0.3}
         minValue={minValue}
         maxValue={maxValue}
-        colors={{ scheme: colorScheme }}
+        colors={styleRules.length >= 1 ? getBarColor : { scheme: colorScheme }}
         axisTop={null}
         axisRight={null}
         axisBottom={{

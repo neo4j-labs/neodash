@@ -1,3 +1,24 @@
+## NeoDash 2.0.13
+This is a bug fix/minor usability update.
+
+Changes:
+- Resolved error where the float value 0.0 was rendered as 'null' in tables.
+- Added alphabetical sorting to all node/relationship inspection pop-ups & parameter select reports.
+- Resolved bug where switching pages quickly resulting in an error message.
+- Resolved bug where rule-based styling would break on null values.
+- Replaced margin-based styling on single value reports with a vertical alignment option.
+
+## NeoDash 2.0.12
+Added **rule-based styling**:
+- Use the card settings to specify styling rules for tables, graphs, bar/pie/line charts and single values.
+- Conditional rules are evaluated on each report render in order of priority.
+- Rules can customize colors in tables, node colors & dynamically set the colors of components in your chart.
+
+Minor improvements:
+- Better handling of null values in tables.
+- Tweaking/reorganization of the Docker file and deployment scripts.
+- Renaming/restructuring of source code.
+
 ## NeoDash 2.0.8 / 2.0.9 / 2.0.10 / 2.0.11
 Stability fixes to supplement 2.0.7:
 - Hotfix for missing config file in Neo4j Desktop causing startup issue.

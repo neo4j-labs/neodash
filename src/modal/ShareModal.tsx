@@ -17,7 +17,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import ShareIcon from '@material-ui/icons/Share';
 import { SELECTION_TYPES } from '../config/ReportConfig';
-import ReportSetting from '../component/ReportSetting';
+import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 
@@ -144,7 +144,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                         Step 2: Configure sharing settings.
                         <br />
                         <br />
-                        <ReportSetting key={"credentials"} name={"credentials"}
+                        <NeoSetting key={"credentials"} name={"credentials"}
                             value={shareConnectionDetails}
                             type={SELECTION_TYPES.LIST}
                             style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
@@ -160,7 +160,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                 setShareConnectionDetails(e)
                             }}
                         />
-                        <ReportSetting key={"standalone"} name={"standalone"}
+                        <NeoSetting key={"standalone"} name={"standalone"}
                             value={shareStandalone}
                             style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
                             type={SELECTION_TYPES.LIST}
@@ -259,14 +259,13 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                     <DialogContentText>
                         To share a dashboard file directly, make it accessible <a target="_blank" href="https://gist.github.com/">online</a>.
                         Then, paste the direct link here:
-                        <ReportSetting key={"url"} name={"url"}
+                        <NeoSetting key={"url"} name={"url"}
                             value={shareFileURL}
                             style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
                             type={SELECTION_TYPES.TEXT}
                             helperText={"Make sure the URL starts with http:// or https://."}
                             label={""}
                             defaultValue="https://gist.githubusercontent.com/username/0a78d80567f23072f06e03005cf53bce/raw/f97cc..."
-
                             onChange={(e) => {
                                 setShareFileURL(e);
                             }}

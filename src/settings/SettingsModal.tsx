@@ -6,13 +6,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Badge from '@material-ui/core/Badge';
 import { Grid, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import NeoReport from '../report/Report';
-import NeoBarChart from '../chart/BarChart';
-import ReportSetting from '../component/ReportSetting';
+import NeoSetting from '../component/field/Setting';
 import { DASHBOARD_SETTINGS } from '../config/DashboardConfig';
 
 
@@ -34,7 +31,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
     const advancedDashboardSettings = <div style={{ marginLeft: "-10px" }}>
         {Object.keys(settings).map(setting =>
             <>
-            <ReportSetting key={setting} name={setting}
+            <NeoSetting key={setting} name={setting}
                 value={dashboardSettings[setting]}
                 type={settings[setting]["type"]}
                 disabled={settings[setting]["disabled"]}

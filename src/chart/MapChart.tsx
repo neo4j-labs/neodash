@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { ChartProps } from './Chart';
 import { Icon, TextareaAutosize } from '@material-ui/core';
 import { categoricalColorSchemes } from '../config/ColorConfig';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../report/RecordProcessing';
+import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../report/ReportRecordProcessing';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
 import useDimensions from "react-cool-dimensions";
 import Marker from 'react-leaflet-enhanced-marker';
@@ -11,6 +11,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LocationOnTwoToneIcon from '@material-ui/icons/LocationOnTwoTone';
 
 import 'leaflet/dist/leaflet.css';
+import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -28,6 +29,7 @@ const NeoMapChart = (props: ChartProps) => {
     const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : 3.5;
     const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#666";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
+    const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
     const defaultNodeColor = "grey"; // Color of nodes without labels
 
     const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
@@ -158,9 +160,10 @@ const NeoMapChart = (props: ChartProps) => {
                 })
             }
 
-            const assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
+            var assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
                 categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.firstLabel) % totalColors];
-
+           
+            assignedColor = evaluateRulesOnNode(node, 'marker color', assignedColor, styleRules);
             const assignedPos = assignPosition(node);
             return update(node, { pos: node.pos ? node.pos : assignedPos, color: assignedColor ? assignedColor : defaultNodeColor });
 

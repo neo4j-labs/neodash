@@ -13,10 +13,11 @@ import { getReportState } from './CardSelectors';
 import { debounce } from '@material-ui/core';
 import { getDashboardIsEditable, getDatabase, getGlobalParameters } from '../settings/SettingsSelectors';
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
+import { createNotificationThunk } from '../page/PageThunks';
 
 
 const NeoCard = ({
-    index,  // index of the card. 
+    index, // index of the card. 
     report, // state of the card, retrieved based on card index.
     editable, // whether the card is editable.
     database, // the neo4j database that the card is running against.
@@ -36,7 +37,8 @@ const NeoCard = ({
     onSelectionUpdate, // action to take when the selected visualization fields are updated.
     onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
     onToggleCardSettings, // action to take when the card settings button is clicked.
-    onToggleReportSettings // action to take when the report settings (advanced settings) button is clicked.
+    onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
+    onCreateNotification // action to take when an (error) notification is created.
 }) => {
 
     const [settingsOpen, setSettingsOpen] = React.useState(report.settingsOpen);
@@ -114,6 +116,7 @@ const NeoCard = ({
                         database={database}
                         width={report.width}
                         height={report.height}
+                        fields={report.fields}
                         type={report.type}
                         refreshRate={report.refreshRate}
                         cypherParameters={report.parameters}
@@ -132,6 +135,7 @@ const NeoCard = ({
                         onRemovePressed={() => onRemovePressed(index)}
                         onShiftLeftPressed={() => onShiftLeftPressed(index)}
                         onShiftRightPressed={() => onShiftRightPressed(index)}
+                        onCreateNotification={(title, message) => onCreateNotification(title, message)}
                         onToggleCardSettings={() => {
                             setSettingsOpen(false);
                             setCollapseTimeout("auto");
@@ -187,6 +191,9 @@ const mapDispatchToProps = dispatch => ({
     },
     onToggleReportSettings: (index: any) => {
         dispatch(toggleReportSettings(index))
+    },
+    onCreateNotification: (title: any, message: any) => {
+        dispatch(createNotificationThunk(title, message))
     }
 });
 

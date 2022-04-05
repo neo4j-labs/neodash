@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { ChartProps } from './Chart';
 import { CircularProgress, debounce, TextareaAutosize, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import NeoFieldSelection from '../component/FieldSelection';
+import NeoField from '../component/field/Field';
 
 /**
  * Renders Neo4j records as their JSON representation.
@@ -53,7 +53,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     return <div>
         {type == "Free Text" ?
             <>
-                <NeoFieldSelection
+                <NeoField
                     key={"freetext"}
                     label={helperText ? helperText : label + " " + property}
                     defaultValue={""}
@@ -77,7 +77,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             :
             <Autocomplete
                 id="autocomplete"
-                options={extraRecords.map(r => r["_fields"] && r["_fields"][0] !== null ? r["_fields"][0] : "(no data)")}
+                options={extraRecords.map(r => r["_fields"] && r["_fields"][0] !== null ? r["_fields"][0] : "(no data)").sort()}
                 getOptionLabel={(option) => option ? option.toString() : ""}
                 style={{ width: 300, marginLeft: "15px", marginTop: "5px" }}
                 inputValue={inputText}
@@ -100,7 +100,9 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                         props.setGlobalParameter(parameter, newValue);
                     }
                 }}
-                renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }} placeholder="Start typing..." label={helperText ? helperText : label + " " + property} variant="outlined" />}
+                renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }} 
+                placeholder="Start typing..." 
+                label={helperText ? helperText : label + " " + property} variant="outlined" />}
             />
         }
     </div>

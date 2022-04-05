@@ -1,23 +1,16 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-import NeoPage from '../page/Page';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
-import NeoDrawer from '../dashboard/DashboardDrawer';
-import NeoDashboardHeader from '../dashboard/DashboardHeader';
-import { createDriver, Neo4jProvider } from 'use-neo4j';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
-import { removeReportRequest } from '../page/PageThunks';
 import { connect } from 'react-redux';
 import { applicationGetConnection, applicationGetShareDetails, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected, applicationHasWelcomeScreenOpen, applicationGetDebugState, applicationGetStandaloneSettings, applicationGetSsoSettings } from '../application/ApplicationSelectors';
-import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, setDatabaseFromNeo4jDesktopIntegrationThunk, handleSharedDashboardsThunk, onConfirmLoadSharedDashboardThunk, loadApplicationConfigThunk } from '../application/ApplicationThunks';
-import { clearDesktopConnectionProperties, clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setDashboardToLoadAfterConnecting, setOldDashboard, setStandAloneMode, setWelcomeScreenOpen } from '../application/ApplicationActions';
+import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, onConfirmLoadSharedDashboardThunk, loadApplicationConfigThunk } from '../application/ApplicationThunks';
+import { clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard, setWaitForSSO, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
-import { NeoDashboardPlaceholder } from '../dashboard/DashboardPlaceholder';
+import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
 import Dashboard from '../dashboard/Dashboard';
-import { CircularProgress, Typography } from '@material-ui/core';
 import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
@@ -36,7 +29,7 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
     connectionModalOpen, ssoSettings, standaloneSettings, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection, shareDetails,
     createConnection, createConnectionFromDesktopIntegration, onResetShareDetails, onConfirmLoadSharedDashboard,
     initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose, getDebugState,
-    welcomeScreenOpen, setWelcomeScreenOpen, onConnectionModalOpen, onConnectionModalClose }) => {
+    welcomeScreenOpen, setWelcomeScreenOpen, onConnectionModalOpen, onConnectionModalClose, onSSOAttempt }) => {
 
     const [initialized, setInitialized] = React.useState(false);
     if (!initialized) {
@@ -63,6 +56,7 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
                 standalone={standaloneSettings.standalone}
                 standaloneSettings={standaloneSettings}
                 createConnection={createConnection}
+                onSSOAttempt={onSSOAttempt}
                 onConnectionModalClose={onConnectionModalClose} ></NeoConnectionModal>
             <NeoWelcomeScreenModal
                 welcomeScreenOpen={welcomeScreenOpen}
@@ -120,11 +114,17 @@ const mapDispatchToProps = dispatch => ({
     resetDashboard: _ => dispatch(resetDashboardState()),
     clearOldDashboard: _ => dispatch(setOldDashboard(null)),
     initializeApplication: (initialized) => {
-        dispatch(loadApplicationConfigThunk());
+        if(!initialized){
+            dispatch(loadApplicationConfigThunk());
+        }
+        
     },
     onResetShareDetails: _ => {
         dispatch(setWelcomeScreenOpen(true));
         dispatch(resetShareDetails());
+    },
+    onSSOAttempt: _ => {
+        dispatch(setWaitForSSO(true));
     },
     onConfirmLoadSharedDashboard: _ => dispatch(onConfirmLoadSharedDashboardThunk()),
     onConnectionModalOpen: _ => dispatch(setConnectionModalOpen(true)),

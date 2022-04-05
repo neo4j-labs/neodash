@@ -1,24 +1,29 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
-import { getRecordType, getRendererForValue, rendererForType, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/RecordProcessing';
+import { getRecordType, getRendererForValue, rendererForType, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/ReportRecordProcessing';
+import { makeStyles } from '@material-ui/styles';
+import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../report/ReportRuleEvaluator';
 
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
-    const columnProperties = (renderer ? {type:renderer.type, renderCell: renderer.renderValue} : rendererForType["string"]);
-
+    const columnProperties = (renderer ? { type: renderer.type, renderCell: renderer.renderValue } : rendererForType["string"]);
     if (columnProperties) {
         column = { ...column, ...columnProperties }
     }
-
     return column;
 }
+
 
 
 const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;
     const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
+    const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+
+    const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
+    const classes = useStyles();
 
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
@@ -58,13 +63,13 @@ const NeoTableChart = (props: ChartProps) => {
     });
 
     const rows = (transposed) ? records[0].keys.map((key, i) => {
-        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: RenderSubValue(r._fields[i])  })));
+        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: RenderSubValue(r._fields[i]) })));
     }) : records.map((record, rownumber) => {
         return Object.assign({ id: rownumber }, ...record._fields.map((field, i) => ({ [record.keys[i]]: field })));
     });
 
     return (
-        <div style={{ height: "100%", width: '100%' }}>
+        <div className={classes.root} style={{ height: "100%", width: '100%' }}>
             <DataGrid
                 headerHeight={32}
                 rows={rows}
@@ -75,6 +80,12 @@ const NeoTableChart = (props: ChartProps) => {
                 components={{
                     ColumnSortedDescendingIcon: () => <></>,
                     ColumnSortedAscendingIcon: () => <></>,
+                }}
+                getRowClassName={(params) => {
+                    return "rule"+evaluateRulesOnDict(params.row, styleRules, ['row color','row text color']);
+                }}
+                getCellClassName={(params) => {
+                    return "rule"+evaluateRulesOnDict({[params.field]: params.value}, styleRules, ['cell color','cell text color']);
                 }}
             />
         </div>

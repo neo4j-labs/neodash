@@ -2,6 +2,7 @@ import React from 'react'
 import { ResponsivePie } from '@nivo/pie'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
 import { checkResultKeys, recordToNative } from './Utils'
+import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
 
 export default function PieVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
@@ -62,6 +63,22 @@ export default function PieVisualization(props: ExtendedChartReportProps) {
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
     const legend = (settings["legend"]) ? settings["legend"] : false;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'set2';
+    const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+
+    // Compute slice color based on rules - overrides default color scheme completely.
+    const getSliceColor = (slice) => {
+        const data = {}
+        if(!props.selection){
+            return "grey";
+        }
+        data[props.selection['value']] = slice.value;
+        data[props.selection['index']] = slice.id;
+        const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['slice color']);
+        if(validRuleIndex !== -1){
+            return styleRules[validRuleIndex]['customizationValue'];
+        }
+        return "grey"
+    }
 
     return <ResponsivePie
         data={data}
@@ -73,7 +90,7 @@ export default function PieVisualization(props: ExtendedChartReportProps) {
         padAngle={padAngle}
         borderWidth={borderWidth}
         margin={{ top: marginTop, right: marginRight, bottom: (legend) ? legendHeight + marginBottom : marginBottom, left: marginLeft }}
-        colors={{ scheme: colorScheme }}
+        colors={styleRules.length >= 1 ? getSliceColor : { scheme: colorScheme }}
         legends={(legend) ? [
             {
                 anchor: 'bottom',
