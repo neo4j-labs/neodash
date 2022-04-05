@@ -49,11 +49,7 @@
     "d3-scale-chromatic": "^3.0.0",
     "html2canvas": "^1.4.1",
     "leaflet": "^1.7.1",
-<<<<<<< HEAD
     "material-ui-color-picker": "github:nielsdejong/material-ui-color-picker#c1bae552c1daf81952bf0478d7f71c1a416527d3",
-=======
-    "material-ui-color-picker": "github:nielsdejong/material-ui-color-picker#be90ea819f30c177a78549a091635da26d40ee57",
->>>>>>> 6af332a (Fixed import for react-color-picker, clean up Dockerfile)
     "neo4j-client-sso": "^1.2.2",
     "react": "^17.0.2",
     "react-cool-dimensions": "^2.0.7",
