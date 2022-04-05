@@ -49,12 +49,10 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
     }
 
     const getLocalParameters = (): any => {
-        var re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables : string[] = [];
-        //const localQueryVariables = query.match(/(?:^|\W)\$neodash(\w+)/g);
+        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables : string[] = [];
         while (match = re.exec(query)) {
             localQueryVariables.push(match[1]);
         }
-        console.log(localQueryVariables);
         return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local) ));
     }
 
