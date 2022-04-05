@@ -7,5 +7,6 @@
     "standalonePort": "7687",
     "standaloneDatabase": "neo4j",
     "standaloneDashboardName": "My Dashboard",
-    "standaloneDashboardDatabase": "dashboards"
+    "standaloneDashboardDatabase": "dashboards",
+    "standaloneDashboardURL": ""
 }

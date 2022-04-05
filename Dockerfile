@@ -2,6 +2,7 @@
 FROM node:lts-alpine AS build-stage
 RUN apk add --no-cache git
 RUN git clone https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
+# RUN git checkout develop
 RUN npm install -g typescript jest 
 WORKDIR /usr/local/src/neodash
 RUN npm install
@@ -28,15 +29,16 @@ HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
 
 # Set the defaults for the build arguments. When the image is created, these variables can be changed with --build-arg
 # Such as --build-arg ssoEnabled=true
-ARG standalone=false
 ARG ssoEnabled=false
 ARG ssoDiscoveryUrl='https://example.com'
+ARG standalone=false
 ARG standaloneProtocol='neo4j+s'
 ARG standaloneHost='test.databases.neo4j.io'
 ARG standalonePort=7687
 ARG standaloneDatabase='neo4j'
 ARG standaloneDashboardName='My Dashboard'
 ARG standaloneDashboardDatabase='neo4j'
+ARG standaloneDashboardURL='' # set this variable to load a standalone dashboard from a URL instead of a database.
 
 LABEL version="2.0.13"
 
@@ -51,7 +53,8 @@ RUN echo " \
     \"standalonePort\": ${standalonePort}, \
     \"standaloneDatabase\": \"${standaloneDatabase}\",  \
     \"standaloneDashboardName\": \"${standaloneDashboardName}\", \
-    \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase}\"  \
+    \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase}\",  \
+    \"standaloneDashboardURL\": \"${standaloneDashboardURL}\"  \
     }" > /usr/share/nginx/html/config.json
     
 CMD echo '-----------------------------------------------------------------------------------------' && \
