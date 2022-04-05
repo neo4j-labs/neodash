@@ -2,6 +2,8 @@ import React from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
@@ -36,7 +38,7 @@ const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggle
             </div>}
             action={<>
                 {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-                <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton> 
+                <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><MoreVertIcon /></IconButton> 
             </>}
             title=""
             subheader="" />
