@@ -1,6 +1,7 @@
 {
   "name": "neodash",
   "version": "2.0.13",
+  "homepage": "",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -47,7 +48,7 @@
     "cypher-codemirror": "github:nielsdejong/cypher-editor#c0eff97fc97f22355e60b57fb6f8dc26b16f9a5f",
     "d3-scale-chromatic": "^3.0.0",
     "leaflet": "^1.7.1",
-    "material-ui-color-picker": "github:nielsdejong/material-ui-color-picker#fd4766cc4e8e38966417fbdbf62ebe628dd699ec",
+    "material-ui-color-picker": "github:nielsdejong/material-ui-color-picker#be90ea819f30c177a78549a091635da26d40ee57",
     "neo4j-client-sso": "^1.2.2",
     "react": "^17.0.2",
     "react-cool-dimensions": "^2.0.7",
