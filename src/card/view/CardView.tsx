@@ -7,7 +7,6 @@ import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-import debounce from 'lodash/debounce';
 
 export const CARD_FOOTER_HEIGHT = 64;
 
