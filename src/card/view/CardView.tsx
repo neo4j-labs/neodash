@@ -52,6 +52,9 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         while (match = re.exec(query)) {
             localQueryVariables.push(match[1]);
         }
+        if(!globalParameters){
+            return {};
+        }
         return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local) ));
     }
 
