@@ -47,6 +47,14 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         return globalParameters ? globalParameters[key] : undefined;
     }
 
+    const getLocalParameters = (): any => {
+        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables : string[] = [];
+        while (match = re.exec(query)) {
+            localQueryVariables.push(match[1]);
+        }
+        return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local) ));
+    }
+
     return (
         <div className={`card-view ${expanded ? "expanded" : ""}`}>
             {reportHeader}
@@ -61,7 +69,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                         <NeoReport query={query}
                             database={database}
                             stringParameters={cypherParameters}
-                            mapParameters={globalParameters}
+                            mapParameters={getLocalParameters()}
                             disabled={settingsOpen}
                             selection={selection}
                             fields={fields}
