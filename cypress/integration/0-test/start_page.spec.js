@@ -15,8 +15,8 @@ describe('The Start Page', () => {
         cy.get('button').contains('Connect').click()
 
         // Check the starter cards
-        cy.get('.card-view:eq(0)').contains("This is your first dashboard!")
-        cy.get('.card-view:eq(1)').get('svg').should('be.visible')
+        cy.get('main .MuiGrid-item:eq(0)').should('contain', "This is your first dashboard!")
+        cy.get('main .MuiGrid-item:eq(1) .force-graph-container canvas').should('be.visible')
         cy.get('main .MuiGrid-item:eq(2) button').should('have.attr', 'aria-label', 'add')
     })
   })
