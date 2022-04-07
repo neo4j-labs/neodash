@@ -682,7 +682,7 @@ export const REPORT_TYPES = {
                 default: false
             },
             "manualPropertyNameSpecification": {
-                label: "Enable Manual Label/Property Name Specification",
+                label: "Manual Label/Property Name Specification",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
@@ -691,6 +691,16 @@ export const REPORT_TYPES = {
                 label: "Helper Text (Override)",
                 type: SELECTION_TYPES.TEXT,
                 default: "Enter a custom helper text here..."
+            },
+            "suggestionsUpdateTimeout": {
+                label: "Timeout for value suggestions (ms)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 250,
+            },
+            "setParameterTimeout": {
+                label: "Timeout for value updates (ms)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 1000
             }
         }
     },
