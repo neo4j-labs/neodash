@@ -21,6 +21,13 @@ export const DASHBOARD_SETTINGS = {
         default: 20,
         helperText: "The maximum time a report is allowed to run before automatically aborted."
     },
+    "disableRowLimiting": {
+        label: "Disable Row Limiting ⚠️",
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        helperText: "This disables the automatic row limiting feature. When disabled, always ensure your queries are not returning too many rows."
+    },
     "pagenumber": {
         label: "Page Number",
         type: SELECTION_TYPES.NUMBER,

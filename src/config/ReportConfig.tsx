@@ -211,7 +211,7 @@ export const REPORT_TYPES = {
             }
         },
         useRecordMapper: true,
-        maxRecords: 100,
+        maxRecords: 250,
         settings: {
             "legend": {
                 label: "Show Legend",
@@ -330,7 +330,7 @@ export const REPORT_TYPES = {
             }
         },
         useRecordMapper: true,
-        maxRecords: 100,
+        maxRecords: 250,
         settings: {
             "legend": {
                 label: "Show Legend",
@@ -427,7 +427,7 @@ export const REPORT_TYPES = {
                 multiple: true
             },
         },
-        maxRecords: 100,
+        maxRecords: 250,
         useRecordMapper: true,
         settings: {
             "legend": {
