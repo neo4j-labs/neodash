@@ -166,7 +166,7 @@ export const initializeSSO = async (ssoDiscoveryUrl, _setCredentials) => {
     alert("hmmmmm")
     return false;
 }
-
+ 
 /**
  * Neo4j Bloom uses so called deep links and the arguments (URL paramenters)
  * needed to be temporarly stored due to the redirect to the identity provider.

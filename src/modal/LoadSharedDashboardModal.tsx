@@ -57,9 +57,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
                         <br /> <br />
                         This will override your current dashboard (if any). Continue?
                         </> : <><br/><br/><br/></>}
-                        <br/>
-                       
-                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                        <br/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                         <Button
                             component="label"
                             onClick={e => {

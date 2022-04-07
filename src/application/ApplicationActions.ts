@@ -112,9 +112,14 @@ export const setWaitForSSO = (wait: boolean ) => ({
     payload: { wait },
 });
 
-
 export const SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING';
 export const setDashboardToLoadAfterConnecting = (id: any) => ({
     type: SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING,
     payload: { id },
+});
+
+export const SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING';
+export const setParametersToLoadAfterConnecting = (parameters: any) => ({
+    type: SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING,
+    payload: { parameters },
 });

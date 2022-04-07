@@ -2,7 +2,8 @@ import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "../settings/SettingsActions";
 import { addPage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
 import { runCypherQuery } from "../report/ReportQueryRunner";
-import { setWelcomeScreenOpen } from "../application/ApplicationActions";
+import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from "../application/ApplicationActions";
+import { updateGlobalParametersThunk } from "../settings/SettingsThunks";
 
 
 function createUUID() {
@@ -115,6 +116,9 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
             })
         })
         dispatch(setDashboard(dashboard));
+        const application = getState().application;
+        dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
+        dispatch(setParametersToLoadAfterConnecting(null))
 
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard", e));
