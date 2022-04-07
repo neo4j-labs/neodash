@@ -53,6 +53,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "[1, 1, 1, ...]"
             },
+            "allowDownload": {
+                label: "Enable CSV Download",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "autorun": {
                 label: "Auto-run query",
                 type: SELECTION_TYPES.LIST,
