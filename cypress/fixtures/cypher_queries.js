@@ -1,0 +1,1 @@
+export const defaultCypherQuery = "MATCH (n) RETURN n LIMIT 25";
