@@ -57,7 +57,7 @@ export const REPORT_TYPES = {
                 label: "Enable CSV Download",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
-                default: true
+                default: false
             },
             "autorun": {
                 label: "Auto-run query",

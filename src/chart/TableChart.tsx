@@ -48,12 +48,11 @@ const downloadCSV = (rows) => {
 const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;
     const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
-    const allowDownload = props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : true;
+    const allowDownload = props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
 
     const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
     const classes = useStyles();
-
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }

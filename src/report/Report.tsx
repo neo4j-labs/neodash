@@ -88,7 +88,7 @@ export const NeoReport = ({
         const defaultKeyField = (REPORT_TYPES[type].selection) ? Object.keys(REPORT_TYPES[type].selection).find(field => REPORT_TYPES[type].selection[field].key == true) : undefined;
         const useRecordMapper = REPORT_TYPES[type].useRecordMapper == true;
         const useNodePropsAsFields = REPORT_TYPES[type].useNodePropsAsFields == true;
-                
+
         if (debounced) {
             setStatus(QueryStatus.RUNNING)
             debouncedRunCypherQuery(driver, database, query, parameters, selection, fields,
@@ -167,6 +167,7 @@ export const NeoReport = ({
                 settings={settings}
                 fullscreen={expanded}
                 dimensions={dimensions}
+                parameters={mapParameters}
                 queryCallback={queryCallback}
                 setGlobalParameter={setGlobalParameter}
                 getGlobalParameter={getGlobalParameter} />
@@ -190,6 +191,7 @@ export const NeoReport = ({
                 settings={settings}
                 fullscreen={expanded}
                 dimensions={dimensions}
+                parameters={mapParameters}
                 queryCallback={queryCallback}
                 setGlobalParameter={setGlobalParameter}
                 getGlobalParameter={getGlobalParameter} />
