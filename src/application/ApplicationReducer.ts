@@ -97,7 +97,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         }
 
         case SET_STANDALONE_ENABLED: {
-            const { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase } = payload;
+            const { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase, standaloneDashboardURL } = payload;
             state = update(state, {
                 standalone: standalone,
                 standaloneProtocol: standaloneProtocol,
@@ -105,7 +105,8 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
                 standalonePort: standalonePort,
                 standaloneDatabase: standaloneDatabase,
                 standaloneDashboardName: standaloneDashboardName, 
-                standaloneDashboardDatabase: standaloneDashboardDatabase
+                standaloneDashboardDatabase: standaloneDashboardDatabase,
+                standaloneDashboardURL: standaloneDashboardURL
             })
             return state;
         }

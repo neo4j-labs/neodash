@@ -177,7 +177,7 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callba
             callback(records[0]['_fields'][0])
         })
     } catch (e) {
-        dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
+        dispatch(createNotificationThunk("Unable to load dashboard from Neo4j", e));
     }
 }
 

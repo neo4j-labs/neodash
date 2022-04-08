@@ -46,7 +46,7 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
                         .then(response => response.text())
                         .then(data => dispatch(loadDashboardThunk(data))); 
                     dispatch(setDashboardToLoadAfterConnecting(null));
-                } else if (application.dashboardToLoadAfterConnecting) {
+                } else if (application.dashboardToLoadAfterConnecting) {            
                     const setDashboardAfterLoadingFromDatabase = (value) => {
                         dispatch(loadDashboardThunk(value));
                     }
@@ -220,7 +220,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         standalonePort: "7687",
         standaloneDatabase: "neo4j",
         standaloneDashboardName: "My Dashboard",
-        standaloneDashboardDatabase: "dashboards"
+        standaloneDashboardDatabase: "dashboards",
+        standaloneDashboardURL: ""
     };
     try {
         config = await (await fetch("config.json")).json();
@@ -244,8 +245,10 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
         const state = getState();
         const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
-        dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
+        dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase'], config["standaloneDashboardURL"]))
         dispatch(setConnectionModalOpen(false));
+
+        // SSO - specific case starts here.
         if (state.application.waitForSSO) {
             // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
             dispatch(setAboutModalOpen(false));
@@ -255,7 +258,11 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
                 if (standalone) {
                     dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
                     dispatch(createConnectionThunk(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
-                    dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+                    if(config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
+                        dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
+                    }else{
+                        dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+                    }
                     dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
                 }
             });
@@ -281,7 +288,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
-            dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+            if(config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
+                dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
+            }else{
+                dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+            }
+           
             dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
             
             if (clearNotificationAfterLoad) {
