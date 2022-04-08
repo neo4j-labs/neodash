@@ -26,7 +26,7 @@ docker run -it --rm -p 5005:5005 nielsdejong/neodash
 ## Run & Build using npm
 NeoDash is built with React. You'll need `npm` installed to run the web app.
 
-> Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.3.1 & node v17.4.0.
+> Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.6 & node v17.4.0.
 
 To run the application in development mode:
 - clone this repository.
