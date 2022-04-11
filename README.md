@@ -139,5 +139,5 @@ To add your visualization to the config, add a new key to the `REPORT_TYPES` dic
 If all works, please consider contributing your code to this repository.
 
 ## Questions / Suggestions
-If you have any questions about NeoDash, please reach out. For feature requests, consider opening an issue(link) on GitHub.
+If you have any questions about NeoDash, please reach out. For feature requests, consider opening an issue on GitHub.
 
