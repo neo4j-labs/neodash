@@ -14,10 +14,12 @@ standaloneDatabase='neo4j'
 standaloneDashboardName='My Dashboard'
 # If `standalone=true`, the database name that the "to be loaded" dashboard is stored in. 
 standaloneDashboardDatabase='neo4j'
+# If `standalone=true`, set this variable to load a dashboard from a URL instead of from a database.
+standaloneDashboardURL=''
 
 # SSO settings. Experimental.
 ssoEnabled=false 
 ssoDiscoveryUrl='https://example.com'
 
-docker build --build-arg standalone=$standalone --build-arg ssoEnabled=$ssoEnabled --build-arg ssoDiscoveryUrl=$ssoDiscoveryUrl --build-arg standaloneProtocol=$standaloneProtocol --build-arg standaloneHost=$standaloneHost --build-arg standalonePort=$standalonePort --build-arg standaloneDatabase=$standaloneDatabase --build-arg standaloneDashboardName="${standaloneDashboardName}" --build-arg standaloneDashboardDatabase=$standaloneDashboardDatabase -t neodash .
+docker build --no-cache --build-arg standalone=$standalone --build-arg ssoEnabled=$ssoEnabled --build-arg ssoDiscoveryUrl=$ssoDiscoveryUrl --build-arg standaloneProtocol=$standaloneProtocol --build-arg standaloneHost=$standaloneHost --build-arg standalonePort=$standalonePort --build-arg standaloneDatabase=$standaloneDatabase --build-arg standaloneDashboardName="${standaloneDashboardName}" --build-arg standaloneDashboardDatabase=$standaloneDashboardDatabase --build-arg standaloneDashboardURL="${standaloneDashboardURL}" -t neodash .
 docker run -it --rm -p $port:5005 neodash

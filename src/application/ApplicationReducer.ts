@@ -7,6 +7,7 @@ import {
     RESET_SHARE_DETAILS, SET_ABOUT_MODAL_OPEN, SET_CONNECTED,
     SET_CONNECTION_MODAL_OPEN, SET_CONNECTION_PROPERTIES,
     SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, 
+    SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING, 
     SET_SHARE_DETAILS_FROM_URL, SET_SSO_ENABLED, SET_STANDALONE_DASHBOARD_DATEBASE, SET_STANDALONE_ENABLED, 
     SET_STANDALONE_MODE, SET_WAIT_FOR_SSO, SET_WELCOME_SCREEN_OPEN
 } from "./ApplicationActions";
@@ -96,7 +97,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         }
 
         case SET_STANDALONE_ENABLED: {
-            const { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase } = payload;
+            const { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase, standaloneDashboardURL } = payload;
             state = update(state, {
                 standalone: standalone,
                 standaloneProtocol: standaloneProtocol,
@@ -104,7 +105,8 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
                 standalonePort: standalonePort,
                 standaloneDatabase: standaloneDatabase,
                 standaloneDashboardName: standaloneDashboardName, 
-                standaloneDashboardDatabase: standaloneDashboardDatabase
+                standaloneDashboardDatabase: standaloneDashboardDatabase,
+                standaloneDashboardURL: standaloneDashboardURL
             })
             return state;
         }
@@ -116,6 +118,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         case SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING: {
             const { id } = payload;
             state = update(state, { dashboardToLoadAfterConnecting: id })
+            return state;
+        }
+        case SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING: {
+            const { parameters } = payload;
+            state = update(state, { parametersToLoadAfterConnecting: parameters })
             return state;
         }
         case SET_CONNECTION_PROPERTIES: {

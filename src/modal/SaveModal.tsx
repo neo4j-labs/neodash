@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import SaveIcon from '@material-ui/icons/Save';
-import { FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize, Tooltip } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize, Tooltip } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -63,16 +63,17 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
 export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
     const [saveModalOpen, setSaveModalOpen] = React.useState(false);
     const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
+    const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(true);
     const [dashboardDatabase, setDashboardDatabase] = React.useState("neo4j");
     const [databases, setDatabases] = React.useState(["neo4j"]);
 
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
     useEffect(() => {
-        loadDatabaseListFromNeo4j(driver, (result) => { setDatabases(result )});
+        loadDatabaseListFromNeo4j(driver, (result) => { setDatabases(result) });
     }, [])
 
-    
+
     const handleClickOpen = () => {
         setSaveModalOpen(true);
     };
@@ -180,12 +181,14 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                         aria-label=""
                         placeholder="" />
 
-                    <FormControl style={{marginTop: "10px"}}>
+                    <FormControl style={{ marginTop: "10px" }}>
                         <InputLabel id="demo-simple-select-label">Save to Database</InputLabel>
+
+
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            style={{width: "150px"}}
+                            style={{ width: "150px" }}
                             value={dashboardDatabase}
                             onChange={(e) => setDashboardDatabase(e.target.value)}
                         >
@@ -193,12 +196,22 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                                 return <MenuItem value={database}>{database}</MenuItem>
                             })}
                         </Select>
+
+                    </FormControl>
+
+                    <FormControl style={{ marginTop: "20px", marginLeft: "10px" }}>
+                        <Tooltip title="Overwrite dashboard(s) with the same name." aria-label="">
+                            <FormControlLabel
+                                control={<Checkbox style={{ fontSize: "small", color: "grey" }} checked={overwriteExistingDashboard} onChange={e => setOverwriteExistingDashboard(!overwriteExistingDashboard)} name="overwrite" />}
+                                label="Overwrite"
+                            />
+                        </Tooltip>
                     </FormControl>
 
                     <Button
                         component="label"
                         onClick={e => {
-                            saveDashboardToNeo4j(driver, dashboardDatabase, dashboard, new Date().toISOString(), connection.username);
+                            saveDashboardToNeo4j(driver, dashboardDatabase, dashboard, new Date().toISOString(), connection.username, overwriteExistingDashboard);
                             setSaveToNeo4jModalOpen(false);
                             setSaveModalOpen(false);
                         }}
@@ -233,8 +246,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    saveDashboardToNeo4j: (driver: any, database: string, dashboard: any, date: any, user: any) => {
-        dispatch(saveDashboardToNeo4jThunk(driver, database, dashboard, date, user))
+    saveDashboardToNeo4j: (driver: any, database: string, dashboard: any, date: any, user: any, overwrite: boolean) => {
+        dispatch(saveDashboardToNeo4jThunk(driver, database, dashboard, date, user, overwrite))
     },
     loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });

@@ -7,7 +7,6 @@ import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-import debounce from 'lodash/debounce';
 
 export const CARD_FOOTER_HEIGHT = 64;
 
@@ -48,6 +47,17 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         return globalParameters ? globalParameters[key] : undefined;
     }
 
+    const getLocalParameters = (): any => {
+        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables : string[] = [];
+        while (match = re.exec(query)) {
+            localQueryVariables.push(match[1]);
+        }
+        if(!globalParameters){
+            return {};
+        }
+        return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local) ));
+    }
+
     return (
         <div className={`card-view ${expanded ? "expanded" : ""}`}>
             {reportHeader}
@@ -62,13 +72,13 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                         <NeoReport query={query}
                             database={database}
                             stringParameters={cypherParameters}
-                            mapParameters={globalParameters}
+                            mapParameters={getLocalParameters()}
                             disabled={settingsOpen}
                             selection={selection}
                             fields={fields}
                             settings={settings}
                             expanded={expanded}
-                            rowLimit={REPORT_TYPES[type].maxRecords}
+                            rowLimit={dashboardSettings['disableRowLimiting'] ? 1000000 : REPORT_TYPES[type].maxRecords}
                             refreshRate={refreshRate}
                             dimensions={{ width: width, height: height }}
                             type={type}
