@@ -1,3 +1,22 @@
+## NeoDash 2.0.14
+Report features:
+- Added optional "Download as CSV" button to table reports.
+- Dashboard parameters can now be used in iFrames/Graph drilldown links, and they are automatically replaced when parameters get updated.
+- Updating a dashboard parameter now only refreshes the reports that use the parameter.
+
+Standalone mode:
+- Enabled deploying standalone dashboards with a direct URL to the dashboard.
+- Added functionality to deep link into a NeoDash dashboard with dashboard parameters (use ?neodash_variable_name=value in the URL).
+
+
+Miscellaneous Bug fixes and improvements:
+- Resolved crash caused by invalid geospatial properties in a Map visualization.
+- Saving a dashboard now lets users override an existing dashboard with the same name (enabled by default).
+- Increased the default row limits for line/bar/pie charts to 250. Added option to override the row limiter in the dashboard settings.
+- Updated project README file to refer to the correct port number on Docker deployments.
+- Enabled a configurable timeout for parameter selection reports, both a timeout for the suggestion retrieval and a timeout for updating the parameters.
+- Fixed dependency issues when installing the application on Windows systems. Bumped suggested npm version to 8.6.
+
 ## NeoDash 2.0.13
 This is a bug fix/minor usability update.
 
