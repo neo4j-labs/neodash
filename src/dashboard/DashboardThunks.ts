@@ -1,8 +1,9 @@
 import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "../settings/SettingsActions";
-import { addPage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
+import { addPage, movePage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
 import { runCypherQuery } from "../report/ReportQueryRunner";
 import { setWelcomeScreenOpen } from "../application/ApplicationActions";
+import { setPageNumberThunk } from "../settings/SettingsThunks";
 
 
 function createUUID() {
@@ -40,6 +41,18 @@ export const addPageThunk = () => (dispatch: any, getState: any) => {
         dispatch(updateDashboardSetting("pagenumber", numberOfPages))
     } catch (e) {
         dispatch(createNotificationThunk("Unable to create page", e));
+    }
+}
+
+export const movePageThunk = (oldIndex: number, newIndex: number ) => (dispatch: any, getState: any) => {
+    try {
+        if(getState().dashboard.settings.pagenumber == oldIndex) {
+            dispatch(updateDashboardSetting("pagenumber", newIndex));
+        }
+        dispatch(movePage(oldIndex, newIndex))
+       
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to move page", e));
     }
 }
 

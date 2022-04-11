@@ -26,7 +26,9 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, action: { type: 
     // Else, deal with page-level operations.
     switch (type) {
         case UPDATE_DASHBOARD_SETTING: {
+        
             const { dashboard, setting, value } = payload;
+            console.log(setting, value)
             const settings = (state.settings) ? (state.settings) : {};
 
             // Javascript is amazing, so "" == 0. Instead we check if the string length is zero...

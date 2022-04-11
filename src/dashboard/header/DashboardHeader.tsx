@@ -9,18 +9,14 @@ import { setDashboardTitle, addPage, removePage } from "../DashboardActions";
 import { getDashboardTitle, getPages } from "../DashboardSelectors";
 import debounce from 'lodash/debounce';
 import { setPageTitle } from "../../page/PageActions";
-import { addPageThunk, removePageThunk } from "../DashboardThunks";
+import { addPageThunk, movePageThunk, removePageThunk } from "../DashboardThunks";
 import { setConnectionModalOpen } from "../../application/ApplicationActions";
 import { setPageNumberThunk } from "../../settings/SettingsThunks";
 import { getDashboardIsEditable, getPageNumber } from "../../settings/SettingsSelectors";
 import { applicationIsStandalone } from "../../application/ApplicationSelectors";
-
 import RGL, { WidthProvider } from "react-grid-layout";
-
 const ReactGridLayout = WidthProvider(RGL);
-
 const drawerWidth = 240;
-
 
 const styles = {
     root: {
@@ -38,7 +34,7 @@ const styles = {
 
 export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, pages, dashboardTitle,
     handleDrawerOpen, setDashboardTitle, editable, connection,
-    addPage, removePage, selectPage, setPageTitle, onConnectionModalOpen }) => {
+    addPage, movePage, removePage, selectPage, setPageTitle, onConnectionModalOpen }) => {
 
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
     const debouncedDashboardTitleUpdate = useCallback(
@@ -51,6 +47,9 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
     );
 
     const [layout, setLayout] = React.useState([]);
+    const [isDragging, setIsDragging] = React.useState(false);
+    const [pageCount, setPageCount] = React.useState(pages.length);
+    const [lastElement, setLastElement] = React.useState(<></>);
 
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
@@ -61,15 +60,27 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
 
 
     useEffect(() => {
-        console.log("Layout recompute")
-        console.log(layout);
         // Reset text to the dashboard state when the page gets reorganized.
-        setLayout([...pages.map((page, index) => {
-            return { x: index, y: 0, i: index, w: Math.min(2.0, 11.3 / pages.length), h: 1 }
-        }), { x: pages.length, y: 0, i: pages.length, w: 0.5, h: 1, isDraggable: false }]);
+        reComputeLayout();
     }, [pages])
 
+    function reComputeLayout() {
+        const timestamp = Date.now();
 
+        setLayout([...pages.map((page, index) => {
+            return { x: index, y: 0, i: "" + index, w: Math.min(2.0, 11.3 / pages.length), h: 1 }
+        }), { x: pages.length, y: 0, i: "" + timestamp, w: 0.0001, h: 1, isDraggable: false }]);
+
+        setLastElement(<div key={timestamp} index={timestamp}
+            style={{
+                background: "inherit",
+                display: "inline-block",
+                padding: 0, margin: 0,
+                height: "100%",
+            }}>
+            <NeoPageAddButton onClick={addPage}></NeoPageAddButton>
+        </div>);
+    }
 
     const content = (
         <AppBar position="absolute" style={
@@ -138,6 +149,22 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                     className="layout"
                     layout={layout}
                     isResizable={false}
+                    onDrag={() => {
+                        if (!isDragging) {
+                            setIsDragging(true);
+                        }
+                    }}
+                    onDragStop={(newLayout, oldPosition, newPosition, x) => {
+                        // Calculate the old and new index of the page that was just dropped.
+                        const newXPositions = newLayout.map(page => page.x);
+                        const oldIndex = oldPosition["i"];
+                        const newIndex = Math.min(newXPositions.length - 2, newXPositions.sort().indexOf(newPosition["x"]));
+                        if (oldIndex !== newIndex) {
+                            movePage(oldIndex, newIndex);
+                        }
+                        setIsDragging(false);
+                        reComputeLayout();
+                    }}
                     style={{
                         width: '100%',
                         height: "47px",
@@ -154,7 +181,7 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                     compactType={"horizontal"}
                 >
                     {pages.map((page, i) =>
-                        <div key={i} data-grid={layout[i]}
+                        <div key={i} index={i}
                             style={{
                                 background: "grey",
                                 backgroundColor: (pagenumber == i) ? 'white' : 'inherit',
@@ -171,16 +198,7 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                             />
                         </div>
                     )}
-                    {editable ?
-                        <div key={pages.length} index={pages.length}  data-grid={layout[pages.length]}
-                            style={{
-                                background: "inherit",
-                                display: "inline-block",
-                                padding: 0, margin: 0,
-                                height: "100%",
-                               
-                            }}>   <NeoPageAddButton onClick={addPage}></NeoPageAddButton>
-                        </div> : <></>}
+                    {editable && !isDragging ? lastElement : <></>}
                 </ReactGridLayout>
 
             </Toolbar>
@@ -212,6 +230,9 @@ const mapDispatchToProps = dispatch => ({
     },
     removePage: (index: any) => {
         dispatch(removePageThunk(index));
+    },
+    movePage: (oldIndex: number, newIndex: number) => {
+        dispatch(movePageThunk(oldIndex, newIndex));
     },
     onConnectionModalOpen: () => {
         dispatch(setConnectionModalOpen(true));
