@@ -24,14 +24,14 @@ export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getSta
     try {
         const settings = getState().dashboard.settings;
         const parameters = settings.parameters ? settings.parameters : {};
-        if(value !== undefined){
+        if (value !== undefined) {
             parameters[key] = value;
-        }else{
+        } else {
             delete parameters[key];
         }
-       
-        dispatch(updateDashboardSetting("parameters", {...parameters}))
-       
+
+        dispatch(updateDashboardSetting("parameters", { ...parameters }))
+
     } catch (e) {
         dispatch(createNotificationThunk("Unable to update global parameter", e));
     }
@@ -43,15 +43,20 @@ export const updateGlobalParametersThunk = (newParameters) => (dispatch: any, ge
     try {
         const settings = getState().dashboard.settings;
         const parameters = settings.parameters ? settings.parameters : {};
-        // iterate over the key value pairs in parameters
-        Object.keys(newParameters).forEach(function(key) {
-            if(newParameters[key] !== undefined){
-                parameters[key] = newParameters[key];
-            }else{
-                delete parameters[key];
-            }
-        });
-        dispatch(updateDashboardSetting("parameters", {...parameters}))
+
+        // if new parameters are set...
+        if (newParameters) {
+            // iterate over the key value pairs in parameters
+            Object.keys(newParameters).forEach(function (key) {
+                if (newParameters[key] !== undefined) {
+                    parameters[key] = newParameters[key];
+                } else {
+                    delete parameters[key];
+                }
+            });
+            dispatch(updateDashboardSetting("parameters", { ...parameters }))
+        }
+
     } catch (e) {
         dispatch(createNotificationThunk("Unable to update global parameters", e));
     }
