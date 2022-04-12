@@ -41,7 +41,7 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
 
                 // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
                 const application = getState().application;
-                if (application.dashboardToLoadAfterConnecting && application.dashboardToLoadAfterConnecting.startsWith("http")) {
+                if (application.dashboardToLoadAfterConnecting && (application.dashboardToLoadAfterConnecting.startsWith("http") || application.dashboardToLoadAfterConnecting.startsWith("./") || application.dashboardToLoadAfterConnecting.startsWith("/"))) {
                     fetch(application.dashboardToLoadAfterConnecting)
                         .then(response => response.text())
                         .then(data => dispatch(loadDashboardThunk(data))); 
