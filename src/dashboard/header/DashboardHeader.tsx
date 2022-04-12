@@ -36,7 +36,22 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
     handleDrawerOpen, setDashboardTitle, editable, connection,
     addPage, movePage, removePage, selectPage, setPageTitle, onConnectionModalOpen }) => {
 
+    // Local state for the dashboard header.
+    // This includes:
+    // - The title of the dashboard
+    // - Several objects to keep track of the state of the drag-and-drop page buttons.
+
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
+    const [layout, setLayout] = React.useState([]);
+    const [isDragging, setIsDragging] = React.useState(false);
+    const [canSwitchPages, setCanSwitchPages] = React.useState(true);
+    const [lastElement, setLastElement] = React.useState(<></>);
+
+    // We debounce several state changes to improve user experience.
+    const debouncedSetCanSwitchPages = useCallback(
+        debounce(setCanSwitchPages, 50),
+        [],
+    );
     const debouncedDashboardTitleUpdate = useCallback(
         debounce(setDashboardTitle, 250),
         [],
@@ -46,10 +61,6 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
         [],
     );
 
-    const [layout, setLayout] = React.useState([]);
-    const [isDragging, setIsDragging] = React.useState(false);
-    const [pageCount, setPageCount] = React.useState(pages.length);
-    const [lastElement, setLastElement] = React.useState(<></>);
 
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
@@ -64,9 +75,12 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
         reComputeLayout();
     }, [pages])
 
+    /**
+     * Recompute the layout of the page buttons.
+     * This is called whenever the pages get reorganized.
+     */
     function reComputeLayout() {
         const timestamp = Date.now();
-
         setLayout([...pages.map((page, index) => {
             return { x: index, y: 0, i: "" + index, w: Math.min(2.0, 11.3 / pages.length), h: 1 }
         }), { x: pages.length, y: 0, i: "" + timestamp, w: 0.0001, h: 1, isDraggable: false }]);
@@ -149,21 +163,25 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                     className="layout"
                     layout={layout}
                     isResizable={false}
+                    isDraggable={editable}
                     onDrag={() => {
                         if (!isDragging) {
+                            setCanSwitchPages(false);
                             setIsDragging(true);
                         }
                     }}
-                    onDragStop={(newLayout, oldPosition, newPosition, x) => {
+                    onDragStop={(newLayout, oldPosition, newPosition) => {
                         // Calculate the old and new index of the page that was just dropped.
                         const newXPositions = newLayout.map(page => page.x);
                         const oldIndex = oldPosition["i"];
                         const newIndex = Math.min(newXPositions.length - 2, newXPositions.sort().indexOf(newPosition["x"]));
                         if (oldIndex !== newIndex) {
                             movePage(oldIndex, newIndex);
+                            reComputeLayout();
                         }
                         setIsDragging(false);
-                        reComputeLayout();
+                        debouncedSetCanSwitchPages(true);
+                     
                     }}
                     style={{
                         width: '100%',
@@ -192,7 +210,7 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                             }}>
                             <NeoPageButton title={page.title} selected={pagenumber == i}
                                 disabled={!editable}
-                                onSelect={() => selectPage(i)}
+                                onSelect={() => canSwitchPages ? selectPage(i) : null}
                                 onRemove={() => removePage(i)}
                                 onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)}
                             />
@@ -200,7 +218,6 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                     )}
                     {editable && !isDragging ? lastElement : <></>}
                 </ReactGridLayout>
-
             </Toolbar>
         </AppBar>
     );
