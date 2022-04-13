@@ -2,25 +2,7 @@ import { Toolbar, IconButton, Badge, InputBase, Tooltip } from "@material-ui/cor
 import React, { useCallback, useEffect } from "react";
 import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from "react-redux";
-import { getDashboardTitle } from "../DashboardSelectors";
 import debounce from 'lodash/debounce';
-import { setConnectionModalOpen } from "../../application/ApplicationActions";
-import { applicationIsStandalone } from "../../application/ApplicationSelectors";
-import { getDashboardIsEditable } from "../../settings/SettingsSelectors";
-import { setDashboardTitle } from "../DashboardActions";
-
-// const styles = {
-//     root: {
-//         background: "transparent",
-//         marginLeft: "30px",
-//         marginRight: "30px",
-
-//     },
-//     input: {
-//         color: "white",
-//         fontSize: 20
-//     }
-// };
 
 
 export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, setDashboardTitle, connection, editable, standalone, handleDrawerOpen, onConnectionModalOpen }) => {

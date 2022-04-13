@@ -1,5 +1,5 @@
 import { AppBar } from "@material-ui/core";
-import React, {  } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { setConnectionModalOpen } from "../../application/ApplicationActions";
 import { applicationIsStandalone } from "../../application/ApplicationSelectors";
@@ -13,7 +13,6 @@ const drawerWidth = 240;
 
 
 export const NeoDashboardHeader = ({ open, editable, standalone, dashboardTitle, setDashboardTitle, handleDrawerOpen,connection, onConnectionModalOpen }) => {
-
     const content = (
         <AppBar position="absolute" style={
             (open) ? {

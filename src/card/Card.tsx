@@ -25,15 +25,11 @@ const NeoCard = ({
     globalParameters, // Query parameters that are globally set for the entire dashboard.
     dashboardSettings, // Dictionary of settings for the entire dashboard.
     onRemovePressed, // action to take when the card is removed. (passed from parent)
-    onShiftLeftPressed, // action to take when the card is shifted left.
-    onShiftRightPressed, // action to take when the card is shifted right.
     onTitleUpdate, // action to take when the card title is updated.
-    onSizeUpdate, // action to take when the card size is updated.
     onTypeUpdate, // action to take when the card report type is updated.
     onFieldsUpdate, // action to take when the set of returned query fields is updated.
     onQueryUpdate, // action to take when the card query is updated.
     onRefreshRateUpdate, // action to take when the card refresh rate is updated.
-    onCypherParametersUpdate, // action to take when the query parameters are updated.
     onReportSettingUpdate, // action to take when an advanced report setting is updated.
     onSelectionUpdate, // action to take when the selected visualization fields are updated.
     onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.

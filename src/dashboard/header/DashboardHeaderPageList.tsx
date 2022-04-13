@@ -38,7 +38,7 @@ export const NeoDashboardHeaderPageList = ({ open, standalone, editable, pages, 
     /**
      * Recompute the layout of the page buttons.This is called whenever the pages get reorganized.
      */
-    function reComputeLayout() {
+    function recomputeLayout() {
         const timestamp = Date.now();
         // @ts-ignore
         setLayout([...pages.map((page, index) => {
@@ -57,9 +57,10 @@ export const NeoDashboardHeaderPageList = ({ open, standalone, editable, pages, 
     }
 
     useEffect(() => {
-        reComputeLayout();
+        recomputeLayout();
     }, [pages])
     
+    console.log(layout);
     const content = (
         <Toolbar key={2} style={{ zIndex: 1001, minHeight: "50px", paddingLeft: "0px", paddingRight: "0px", background: "white" }}>
             {!standalone ? <div style={{ width: open ? "0px" : "57px", zIndex: open ? 999 : 999, transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms", height: "0px", background: "white" }}> </div> : <></>}
@@ -81,7 +82,7 @@ export const NeoDashboardHeaderPageList = ({ open, standalone, editable, pages, 
                     const newIndex = Math.min(newXPositions.length - 2, newXPositions.sort().indexOf(newPosition["x"]));
                     if (oldIndex !== newIndex) {
                         movePage(oldIndex, newIndex);
-                        reComputeLayout();
+                        recomputeLayout();
                     }
                     setIsDragging(false);
                     debouncedSetCanSwitchPages(true);
