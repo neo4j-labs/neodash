@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { addReportRequest } from '../page/PageThunks';
+import { addReportThunk } from '../page/PageThunks';
 import { getReports } from '../page/PageSelectors';
 import { Card, CardContent, Typography, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -32,7 +32,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onCreatePressed: text => dispatch(addReportRequest(text)),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoAddNewCard);
