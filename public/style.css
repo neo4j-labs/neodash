@@ -72,6 +72,9 @@
     color: rgb(199, 199, 199);
 }
 
+.MuiDataGrid-footerContainer {
+    border: none !important;
+}
 .neodash-card-editable-false .react-resizable-handle {
     display: none;
 }

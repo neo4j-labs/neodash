@@ -38,7 +38,7 @@ const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggle
             </div>}
             action={<>
                 {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-                <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><MoreVertIcon /></IconButton> 
+                <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton> 
             </>}
             title=""
             subheader="" />
