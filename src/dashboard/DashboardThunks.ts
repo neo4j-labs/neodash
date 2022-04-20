@@ -190,7 +190,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
             "SHOW DATABASES yield name RETURN name",
             {}, {}, ["name"], 1000, () => { return }, (records) => {
                 const result = records.map(r => {
-                    return r["_fields"][0];
+                    return r["_fields"] && r["_fields"][0];
                 });
                 callback(result);
             })

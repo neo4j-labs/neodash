@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {  REPORT_TYPES } from '../../config/ReportConfig'
+import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
@@ -12,7 +12,7 @@ const update = (state, mutations) =>
 
 
 const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpen, onToggleReportSettings,
-     onCreateNotification, onReportSettingUpdate }) => {
+    onCreateNotification, onReportSettingUpdate }) => {
 
     const [reportSettingsText, setReportSettingsText] = React.useState(reportSettings);
 
@@ -69,32 +69,34 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
             onReportSettingUpdate={onReportSettingUpdate}
         ></NeoCustomReportStyleModal>
         <table style={{ borderTop: "1px dashed lightgrey", background: reportSettingsOpen ? "#f6f6f6" : "inherit", width: "100%" }}>
-            <tr>
-                <td>
-                    <FormGroup >
-                        <FormControlLabel style={{ marginLeft: "5px", marginBottom: "10px" }}
-                            control={<Switch
-                                checked={reportSettingsOpen} onChange={onToggleReportSettings} color="default" />}
-                            labelPlacement="end"
-                            label={<div style={{ fontSize: "12px", color: "grey" }}>Advanced settings</div>} />
-                    </FormGroup>
-                </td>
-                {RULE_BASED_REPORT_CUSTOMIZATIONS[type] ? <td>
-                    <Tooltip title="Set rule-based styling" aria-label="">
-                        <IconButton size="small" style={{ float: "right", marginRight: "10px" }} aria-label="custom styling"
-                            onClick={(e) => {
-                                setCustomReportStyleModalOpen(true); // Open the modal.
-                            }}>
-                            <TuneIcon></TuneIcon>
-                        </IconButton>
-                    </Tooltip>
-                </td> : <></>}
-            </tr>
-            <tr>
-                <td colSpan={2} style={{ maxWidth: "100%" }}>
-                    {reportSettingsOpen ? advancedReportSettings : <div></div>}
-                </td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td>
+                        <FormGroup >
+                            <FormControlLabel style={{ marginLeft: "5px", marginBottom: "10px" }}
+                                control={<Switch
+                                    checked={reportSettingsOpen} onChange={onToggleReportSettings} color="default" />}
+                                labelPlacement="end"
+                                label={<div style={{ fontSize: "12px", color: "grey" }}>Advanced settings</div>} />
+                        </FormGroup>
+                    </td>
+                    {RULE_BASED_REPORT_CUSTOMIZATIONS[type] ? <td>
+                        <Tooltip title="Set rule-based styling" aria-label="">
+                            <IconButton size="small" style={{ float: "right", marginRight: "10px" }} aria-label="custom styling"
+                                onClick={(e) => {
+                                    setCustomReportStyleModalOpen(true); // Open the modal.
+                                }}>
+                                <TuneIcon></TuneIcon>
+                            </IconButton>
+                        </Tooltip>
+                    </td> : <></>}
+                </tr>
+                <tr>
+                    <td colSpan={2} style={{ maxWidth: "100%" }}>
+                        {reportSettingsOpen ? advancedReportSettings : <div></div>}
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 };

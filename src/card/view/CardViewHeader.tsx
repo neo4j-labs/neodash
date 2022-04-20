@@ -28,27 +28,29 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
 
     const cardTitle = <>
         <table>
-            <tr>
-                {editable ? <td>
-                    <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginLeft: "-10px", marginRight: "10px" }}></DragIndicatorIcon>
-                </td> : <></> }
-                <td style={{ width: "100%" }}>
-                    <TextField
-                        id="standard-outlined"
-                        className={"no-underline large"}
-                        label=""
-                        disabled={!editable}
-                        placeholder="Report name..."
-                        fullWidth
-                        maxRows={4}
-                        value={text}
-                        onChange={(event) => {
-                            setText(event.target.value);
-                            debouncedTitleUpdate(event.target.value);
-                        }}
-                    />
-                </td>
-            </tr>
+            <tbody>
+                <tr>
+                    {editable ? <td>
+                        <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginLeft: "-10px", marginRight: "10px" }}></DragIndicatorIcon>
+                    </td> : <></>}
+                    <td style={{ width: "100%" }}>
+                        <TextField
+                            id="standard-outlined"
+                            className={"no-underline large"}
+                            label=""
+                            disabled={!editable}
+                            placeholder="Report name..."
+                            fullWidth
+                            maxRows={4}
+                            value={text}
+                            onChange={(event) => {
+                                setText(event.target.value);
+                                debouncedTitleUpdate(event.target.value);
+                            }}
+                        />
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </>
 

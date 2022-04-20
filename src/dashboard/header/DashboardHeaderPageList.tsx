@@ -60,7 +60,6 @@ export const NeoDashboardHeaderPageList = ({ open, standalone, editable, pages, 
         recomputeLayout();
     }, [pages])
     
-    console.log(layout);
     const content = (
         <Toolbar key={2} style={{ zIndex: 1001, minHeight: "50px", paddingLeft: "0px", paddingRight: "0px", background: "white" }}>
             {!standalone ? <div style={{ width: open ? "0px" : "57px", zIndex: open ? 999 : 999, transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms", height: "0px", background: "white" }}> </div> : <></>}
@@ -79,8 +78,9 @@ export const NeoDashboardHeaderPageList = ({ open, standalone, editable, pages, 
                     // Calculate the old and new index of the page that was just dropped.
                     const newXPositions = newLayout.map(page => page.x);
                     const oldIndex = oldPosition["i"];
-                    const newIndex = Math.min(newXPositions.length - 2, newXPositions.sort().indexOf(newPosition["x"]));
+                    const newIndex = Math.min(newXPositions.length - 2, newXPositions.sort((a,b) => a- b).indexOf(newPosition["x"]));
                     if (oldIndex !== newIndex) {
+                        console.log(oldIndex, newIndex);
                         movePage(oldIndex, newIndex);
                         recomputeLayout();
                     }

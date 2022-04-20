@@ -28,7 +28,7 @@ export const NeoDashboardHeader = ({ open, editable, standalone, dashboardTitle,
             }
         }>
             <NeoDashboardHeaderTitleBar 
-            dashboardTitle={dashboardTitle} setDashboardTitle={setDashboardTitle} editable={editable} standalone={standalone}
+            dashboardTitle={dashboardTitle} setDashboardTitle={setDashboardTitle} editable={editable} standalone={standalone} open={open}
                 onConnectionModalOpen={onConnectionModalOpen} handleDrawerOpen={handleDrawerOpen} connection={connection}></NeoDashboardHeaderTitleBar>
             <NeoDashboardHeaderPageList open={open}></NeoDashboardHeaderPageList>
         </AppBar>

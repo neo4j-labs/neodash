@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import debounce from 'lodash/debounce';
 
 
-export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, setDashboardTitle, connection, editable, standalone, handleDrawerOpen, onConnectionModalOpen }) => {
+export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, open, setDashboardTitle, connection, editable, standalone, handleDrawerOpen, onConnectionModalOpen }) => {
 
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
     const debouncedDashboardTitleUpdate = useCallback(

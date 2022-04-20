@@ -17,8 +17,10 @@ export const FIRST_PAGE_INITIAL_STATE = {
         "title": "Hi there 👋",
         "query": "**This is your first dashboard!** \n \nYou can click (⋮) to edit this report, or add a new report to get started. You can run any Cypher query directly from each report and render data in a variety of formats. \n \nTip: try _renaming_ this report by editing the title text. You can also edit the dashboard header at the top of the screen.\n\n\n",
         "width": 3,
+        "height": 2,
+        "x": 0,
+        "y": 0,
         "type": "text",
-        "height": 3,
         "selection": {},
         "settings": {}
     },
@@ -26,8 +28,10 @@ export const FIRST_PAGE_INITIAL_STATE = {
         "title": "",
         "query": "MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n",
         "width": 3,
+        "height": 2,
+        "x": 3,
+        "y": 0,
         "type": "graph",
-        "height": 3,
         "selection": {
             "Person": "name",
             "Movie": "title"
