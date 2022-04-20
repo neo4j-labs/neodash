@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../report/ReportRuleEvaluator';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { IconButton, Tooltip } from '@material-ui/core';
+import { downloadCSV } from './util/ChartUtils';
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
@@ -15,34 +16,7 @@ function ApplyColumnType(column, value) {
     }
     return column;
 }
-/**
- * Basic function to convert a table row output to a CSV file, and download it.
- * TODO: Make this more robust. Probably the commas should be escaped to ensure the CSV is always valid.
- */
-const downloadCSV = (rows) => {
-    const element = document.createElement("a");
-    let csv = "";
-    const headers = Object.keys(rows[0]);
-    csv += headers.join(", ") + "\n";
-    rows.forEach(row => {
-        headers.forEach((header) => {
-            // Parse value
-            var value = row[header];
-            if (value && value["low"]) {
-                value = value["low"];
-            }
-            csv += JSON.stringify(value).replaceAll(",",";");
-            csv += (headers.indexOf(header) < headers.length - 1) ? ", " : "";
-        });
-        csv += "\n";
-    });
-   
-    const file = new Blob([csv], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = "table.csv";
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-}
+
 
 
 const NeoTableChart = (props: ChartProps) => {

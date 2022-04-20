@@ -43,7 +43,7 @@ ARG standaloneDashboardName='My Dashboard'
 ARG standaloneDashboardDatabase='neo4j'
 ARG standaloneDashboardURL='' # set this variable to load a standalone dashboard from a URL instead of a database.
 
-LABEL version="2.0.14"
+LABEL version="2.0.15"
 
 # Dynamically set app config on container startup.
 RUN echo " \

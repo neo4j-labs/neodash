@@ -1,4 +1,4 @@
-## NeoDash 2.0.14
+## NeoDash 2.0.15
 Report features:
 - Added optional "Download as CSV" button to table reports.
 - Dashboard parameters can now be used in iFrames/Graph drilldown links, and they are automatically replaced when parameters get updated.
