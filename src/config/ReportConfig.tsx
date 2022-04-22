@@ -10,6 +10,9 @@ import NeoMapChart from '../chart/MapChart';
 import NeoMarkdownChart from '../chart/MarkdownChart';
 import NeoParameterSelectionChart from '../chart/ParameterSelectionChart';
 import NeoPieChart from '../chart/PieChart';
+import SunburstChart from '../chart/SunburstChart';
+import CirclePackagingChart from '../chart/CirclePackagingChart';
+import TreeMapChart from '../chart/TreeMapChart';
 import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
 
@@ -356,6 +359,11 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "arcLabelsSkipAngle": {
+                label: "Skip label if corresponding arc's angle is lower than provided value",
+                type: SELECTION_TYPES.NUMBER,
+                default: 10
+            },
             "enableArcLinkLabels": {
                 label: "Show categories next to slices",
                 type: SELECTION_TYPES.LIST,
@@ -383,6 +391,258 @@ export const REPORT_TYPES = {
                 label: "Slice padding angle (degrees)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
+            },
+            "borderWidth": {
+                label: "Slice border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "activeOuterRadiusOffset": {
+                label: "Extends active slice outer radius",
+                type: SELECTION_TYPES.NUMBER,
+                default: 8
+            },
+            "arcLinkLabelsOffset": {
+                label: "Link offset from pie outer radius, useful to have links overlapping pie slices",
+                type: SELECTION_TYPES.NUMBER,
+                default: 15
+            },
+            "arcLinkLabelsSkipAngle": {
+                label: "Skip label if corresponding slice's angle is lower than provided value",
+                type: SELECTION_TYPES.NUMBER,
+                default: 1
+            },
+            "cornerRadius": {
+                label: "Rounded slices",
+                type: SELECTION_TYPES.NUMBER,
+                default: 1
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
+    "sunburst": {
+        label: "Sunburst Chart",
+        component: SunburstChart,
+        helperText: <div>A pie chart with drill down expects two fields: a <code>PATH</code> and a <code>VALUE</code>.</div>,
+        selection: {
+            "index": {
+                label: "PATH",
+                type: SELECTION_TYPES.LIST
+            },
+            "value": {
+                label: "VALUE",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "inline",
+                type: SELECTION_TYPES.LIST,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 3000,
+        settings: {
+            "enableArcLabels": {
+                label: "Show Values in slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "borderWidth": {
+                label: "Slice border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "arcLabelsSkipAngle": {
+                label: "Skip label if corresponding arc's angle is lower than provided value",
+                type: SELECTION_TYPES.NUMBER,
+                default: 10
+            },
+            "cornerRadius": {
+                label: "Rounded slices",
+                type: SELECTION_TYPES.NUMBER,
+                default: 3
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
+    "circlePacking": {
+        label: "CirclePacking Chart",
+        component: CirclePackagingChart,
+        helperText: <div>A circle packaging chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        selection: {
+            "index": {
+                label: "PATH",
+                type: SELECTION_TYPES.LIST
+            },
+            "value": {
+                label: "VALUE",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "inline",
+                type: SELECTION_TYPES.LIST,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 3000,
+        settings: {
+            "enableArcLabels": {
+                label: "Show Values in slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "borderWidth": {
+                label: "Slice border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
+    "treeMap": {
+        label: "TreeMap Chart",
+        component: TreeMapChart,
+        helperText: <div>A Tree Map chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        selection: {
+            "index": {
+                label: "PATH",
+                type: SELECTION_TYPES.LIST
+            },
+            "value": {
+                label: "VALUE",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "inline",
+                type: SELECTION_TYPES.LIST,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 3000,
+        settings: {
+            "enableArcLabels": {
+                label: "Show Values in slices",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
             },
             "borderWidth": {
                 label: "Slice border width (px)",
