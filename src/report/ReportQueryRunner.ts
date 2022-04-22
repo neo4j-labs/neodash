@@ -72,6 +72,7 @@ export async function runCypherQuery(driver,
             query = "CALL { " + query + "} RETURN * LIMIT " + (rowLimit + 1)
         }
     }
+    console.log(query);
     transaction.run(query, parameters)
         .then(res => {
             // @ts-ignore
@@ -83,6 +84,7 @@ export async function runCypherQuery(driver,
                 transaction.commit();
                 return
             }
+            console.log("Runner");
             if (useRecordMapper == true) {
                 // Send a deep copy of the returned record keys as the set of fields.
                 const newFields = (records && records[0] && records[0].keys) ? records[0].keys.slice() : [];
@@ -96,11 +98,11 @@ export async function runCypherQuery(driver,
                 const nodePropsAsFields = extractNodePropertiesFromRecords(records);
                 setFields(nodePropsAsFields);
             }
-           
             // Set the records for the visualization, if an explicit field name mapping is provided.
             if (useRecordMapper) {
                 records = mapRecords(records, selection, textFields, numericFields, numericOrDatetimeFields, optionalFields, defaultKeyField)
             }
+
             if (records == null) {
                 setStatus(QueryStatus.NO_DRAWABLE_DATA)
                 // console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
