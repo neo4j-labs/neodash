@@ -13,7 +13,14 @@ export const DASHBOARD_SETTINGS = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
-        helperText: "Enables a 'fullscreen view' button for each report, letting users expand a visualization."
+        helperText: "Show a 'fullscreen view' button for each report, letting users expand a visualization."
+    },
+    "downloadImageEnabled": {
+        label: "Enable Image Download",
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        helperText: "Enables a 'download image' button for each report, letting users download a visualization as an image."
     },
     "queryTimeLimit": {
         label: "Maximum Query Time (seconds)",

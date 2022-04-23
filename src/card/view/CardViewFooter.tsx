@@ -3,7 +3,6 @@ import { CardActions, Checkbox, FormControl, InputLabel, ListItemText, MenuItem,
 import { REPORT_TYPES, SELECTION_TYPES } from "../../config/ReportConfig";
 import { categoricalColorSchemes } from "../../config/ColorConfig";
 
-
 const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSelections, onSelectionUpdate }) => {
     /**
      * For each selectable field in the visualization, give the user an option to select them from the query output fields.
@@ -17,7 +16,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
         return <div></div>
     }
     return (
-        <CardActions style={{ paddingLeft: "15px", marginTop: "-5px", overflowX: "scroll" }} disableSpacing>
+        <CardActions style={{ position: "relative", paddingLeft: "15px", marginTop: "-5px", overflowX: "scroll" }} disableSpacing>
             {selectables.map((selectable, index) => {
                 const selectionIsMandatory = (selectableFields[selectable]['optional']) ? false : true;
 
@@ -100,7 +99,6 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
             })
             }
         </CardActions >
-
     );
 }
 

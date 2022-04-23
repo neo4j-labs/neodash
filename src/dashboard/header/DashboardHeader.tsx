@@ -102,6 +102,14 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                         }
                     }}
                 />
+                   {/* <Tooltip title={"Download Dashboard as Image"}>
+                    <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={(e) => alert(e)}>
+                        <Badge badgeContent={""} >
+                            <img style={{ width: "36px", height: "36px" }} src="neo4j-icon.png" />
+                        </Badge>
+                    </IconButton>
+                </Tooltip> */}
+
                 <Tooltip title={connection.protocol + "://" + connection.url + ":" + connection.port} placement="left" aria-label="host">
                     <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={(e) => {
                         if (!standalone) {

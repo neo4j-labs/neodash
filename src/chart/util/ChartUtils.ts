@@ -1,3 +1,5 @@
+import html2canvas from 'html2canvas';
+
 /**
  * Basic function to convert a table row output to a CSV file, and download it.
  * TODO: Make this more robust. Probably the commas should be escaped to ensure the CSV is always valid.
@@ -39,3 +41,26 @@ export function replaceDashboardParameters(str, parameters) {
     });
     return str;
 }
+
+/**
+ * Downloads a screenshot of the element reference passed to it.
+ * @param ref The reference to the element to download as an image.
+ */
+export const downloadComponentAsImage = async (ref) => {
+    const element = ref.current;
+    const canvas = await html2canvas(element);
+
+    const data = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+
+    if (typeof link.download === 'string') {
+      link.href = data;
+      link.download = 'image.png';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      window.open(data);
+    }
+  };

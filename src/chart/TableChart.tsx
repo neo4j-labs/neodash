@@ -7,6 +7,7 @@ import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../re
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from './util/ChartUtils';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
@@ -73,11 +74,11 @@ const NeoTableChart = (props: ChartProps) => {
     return (
         <div className={classes.root} style={{ height: "100%", width: '100%', position: "relative" }}>
            {(allowDownload && rows && rows.length > 0) ? <Tooltip title="Download CSV" aria-label="">
-                <IconButton aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute"}}>
-                    <GetAppIcon onClick={(e) => {
+                <IconButton onClick={(e) => {
                         downloadCSV(rows);
-                    }} style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
-                    </GetAppIcon>
+                    }} aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute"}}>
+                    <SaveAltIcon style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
+                    </SaveAltIcon>
                 </IconButton>
             </Tooltip> : <></>}
             <DataGrid

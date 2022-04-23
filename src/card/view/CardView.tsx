@@ -7,24 +7,30 @@ import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import { downloadComponentAsImage } from '../../chart/util/ChartUtils';
 
 export const CARD_FOOTER_HEIGHT = 64;
 
-const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, width, height, fields, active, setActive,
+const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, 
+    width, height, fields, active, setActive,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
 
     const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
     const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
+    const ref = React.useRef();
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
         title={title}
         editable={editable}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
+        downloadImageEnabled={dashboardSettings.downloadImageEnabled}
         onTitleUpdate={onTitleUpdate}
         onToggleCardSettings={onToggleCardSettings}
+        settings={settings}
+        onDownloadImage={()=> downloadComponentAsImage(ref)}
         onToggleCardExpand={onToggleCardExpand}
         expanded={expanded}
     >
@@ -63,7 +69,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
             {reportHeader}
             {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
             <ReportItemContainer style={{ height: expanded ? (withoutFooter ? "calc(100% - 69px)" : "calc(100% - 79px)") : cardHeight }}>
-                <CardContent style={{
+                <CardContent ref={ref}  style={{
                     paddingBottom: "0px", paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px", width: "100%", marginTop: "-3px",
                     height: expanded ? (withoutFooter ? "100%" : `calc(100% - ${CARD_FOOTER_HEIGHT}px)`) : ((withoutFooter) ? reportHeight + CARD_FOOTER_HEIGHT + "px" : reportHeight + "px"),
                     overflow: "auto", overflowY: "auto", overflowX: "auto"
