@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const publicUrl = process.env.PUBLIC_URL;
+
 module.exports = {
     entry: './src/index.tsx',
     mode: 'development',
@@ -34,7 +36,8 @@ module.exports = {
     },
     devServer: {
         port: 3000,
-        hot: true
+        hot: true,
+        publicPath: publicUrl
     },
     plugins: [new webpack.HotModuleReplacementPlugin()]
 };
