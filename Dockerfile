@@ -4,6 +4,7 @@ RUN apk add --no-cache git
 RUN git clone https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
 RUN npm install -g typescript jest 
 WORKDIR /usr/local/src/neodash
+COPY ./package.json /usr/local/src/neodash/package.json
 # RUN git checkout develop
 RUN npm install
 COPY ./ /usr/local/src/neodash
