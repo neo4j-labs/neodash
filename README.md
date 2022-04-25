@@ -72,9 +72,46 @@ The diagram below illustrates how NeoDash standalone mode can be deployed next t
 
 ![](doc/standalone-architecture.png)
 
-You can configure an instance to run as standalone by changing the variables in `scripts/docker-build-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build the React application, just the image.
+You can configure NeoDash by setting env variables at run time:
 
- ## Extending NeoDash
+Docker run:
+```
+docker run --rm -d \
+    --name myNeoDash \
+    --hostname myNeoDash \
+    -e essoEnabled=false \
+    -e essoDiscoveryUrl="https://example.com" \
+    -e estandalone=false \
+    -e estandaloneProtocol="neo4j" \
+    -e estandaloneHost="localhost" \
+    -e estandalonePort="7687" \
+    -e estandaloneDatabase="neo4j" \
+    -e estandaloneDashboardName="My Dashboard" \
+    -e estandaloneDashboardDatabase="dashboards" \
+    myDockerImage
+```
+(or setting env variables from docker compose/kubernetes deployment)
+
+If you're not using docker, modifyiy `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build the React application, just the image.
+
+## Auth Provider (SSO)
+
+To set up NeoDash to use an external identiy provider, you can add a /auth_provider resource to nginx (in `/conf/default.conf`)
+
+```
+location /auth_provider {
+        default_type application/json;
+        return 200 '{
+                        "auth_config" : {
+                            "oidc_providers" : [ ... ]
+                        }
+                    }';
+    }
+```
+
+Or route requests to /auth_provider to the https port of the neo4j database.
+
+## Extending NeoDash
 There are two categories of extensions to NeoDash you can build:
 - Core Dashboard Functionality
 - Custom Reports
