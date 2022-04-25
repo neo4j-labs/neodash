@@ -41,7 +41,7 @@ ARG standalonePort=7687
 ARG standaloneDatabase='neo4j'
 ARG standaloneDashboardName='My Dashboard'
 ARG standaloneDashboardDatabase='neo4j'
-ARG standaloneDashboardURL='' # set this variable to load a standalone dashboard from a URL instead of a database.
+ARG standaloneDashboardURL=''
 
 LABEL version="2.0.14"
 
