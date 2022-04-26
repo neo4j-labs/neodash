@@ -78,6 +78,7 @@
     "@emotion/styled": "^11.6.0",
     "babel-loader": "^8.2.3",
     "css-loader": "^3.6.0",
+    "cypress": "^9.5.3",
     "file-loader": "^6.2.0",
     "react-hot-loader": "^4.13.0",
     "source-map-loader": "^1.1.3",
