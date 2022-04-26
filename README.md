@@ -87,12 +87,7 @@ The other variables inside `config.json` should also be configured to match the 
 As `config.json` gets picked up at runtime by the application, users viewing the application will now access the dashboard in standalone mode. 
 
 ### Option 2 - Docker Deployment
-Start by building the Docker image:
-```
-docker build . -t neodash        
-```
-
-After the image is built, you can configure the app to run in standalone by passing environment variables to Docker:
+You can configure the app to run in standalone by passing environment variables to Docker:
 ```
 docker run  -it --rm -p 5005:5005 \
     -e ssoEnabled=false \
@@ -104,7 +99,7 @@ docker run  -it --rm -p 5005:5005 \
     -e standaloneDatabase="neo4j" \
     -e standaloneDashboardName="My Dashboard" \
     -e standaloneDashboardDatabase="dashboards" \
-    neodash
+    nielsdejong/neodash
 ```
 
 
