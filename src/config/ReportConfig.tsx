@@ -719,8 +719,14 @@ export const REPORT_TYPES = {
         maxRecords: 1,
         allowScrolling: true,
         settings: {
+            "replaceGlobalParameters": {
+                label: "Replace global parameters in URL",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "passGlobalParameters": {
-                label: "Pass global variables to iFrame URL",
+                label: "Append global parameters to iFrame URL",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
@@ -735,7 +741,14 @@ export const REPORT_TYPES = {
         textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
         maxRecords: 1,
         allowScrolling: true,
-        settings: {}
+        settings: {
+            "replaceGlobalParameters": {
+                label: "Replace global parameters in Markdown",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+        }
     }
 }
 

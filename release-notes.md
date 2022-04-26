@@ -1,3 +1,14 @@
+## NeoDash 2.0.15
+This is the final minor update before the 2.1 release.
+
+Changes:
+- Several stability improvements before the 2.1 release.
+- Updated Dockerfile to make better use of caching, and pick up environment variables at run time.
+- Added option to replace dashboard parameters in Markdown/iFrames to make them dynamic.
+- Removed unneeded index column from the CSV download for tables.
+- Added optional dashboard setting to enable image downloads for reports/the entire dashboard.
+
+
 ## NeoDash 2.0.14
 Report features:
 - Added optional "Download as CSV" button to table reports.

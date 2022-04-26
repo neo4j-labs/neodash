@@ -2,14 +2,17 @@ import React, { useEffect } from "react";
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import UnfoldMore from '@material-ui/icons/UnfoldMore';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { TextField } from "@material-ui/core";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
+import { Tooltip } from '@material-ui/core';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import ImageIcon from '@material-ui/icons/Image';
 
-const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, onToggleCardSettings, onToggleCardExpand, expanded }) => {
+const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, downloadImageEnabled,
+    onToggleCardSettings, onDownloadImage, onToggleCardExpand, expanded }) => {
     const [text, setText] = React.useState(title);
 
     // Ensure that we only trigger a text update event after the user has stopped typing.
@@ -40,24 +43,35 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
         }}
     />
 
-    const settingsButton = <IconButton aria-label="settings"
-        onClick={onToggleCardSettings}>
-        <MoreVertIcon />
-    </IconButton>
+    const settingsButton = <Tooltip title="Settings" aria-label="settings">
+        <IconButton aria-label="settings"
+            onClick={onToggleCardSettings}>
+            <MoreVertIcon />
+        </IconButton>
+    </Tooltip>
 
-    const maximizeButton = <IconButton aria-label="maximize"
-        onClick={onToggleCardExpand}>
-        <FullscreenIcon />
-    </IconButton>
+    const maximizeButton = <Tooltip title="Maximize" aria-label="maximize">
+        <IconButton aria-label="maximize"
+            onClick={onToggleCardExpand}>
+            <FullscreenIcon />
+        </IconButton>
+    </Tooltip>
 
     const unMaximizeButton = <IconButton aria-label="un-maximize"
         onClick={onToggleCardExpand}>
         <FullscreenExit />
     </IconButton>
 
+    const downloadImageButton = <Tooltip title="Download as Image" aria-label="download">
+        <IconButton onClick={onDownloadImage} aria-label="download csv">
+            <ImageIcon style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
+            </ImageIcon>
+        </IconButton>
+    </Tooltip>
+
     return <CardHeader style={{ height: "72px" }}
         action={<>
-        {fullscreenEnabled}
+            {(downloadImageEnabled) ? downloadImageButton : <></>}
             {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
             {(editable && !expanded) ? settingsButton : <></>}
         </>}

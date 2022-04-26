@@ -6,6 +6,8 @@ import { makeStyles } from '@material-ui/styles';
 import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../report/ReportRuleEvaluator';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { IconButton, Tooltip } from '@material-ui/core';
+import { downloadCSV } from './util/ChartUtils';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
@@ -15,34 +17,7 @@ function ApplyColumnType(column, value) {
     }
     return column;
 }
-/**
- * Basic function to convert a table row output to a CSV file, and download it.
- * TODO: Make this more robust. Probably the commas should be escaped to ensure the CSV is always valid.
- */
-const downloadCSV = (rows) => {
-    const element = document.createElement("a");
-    let csv = "";
-    const headers = Object.keys(rows[0]);
-    csv += headers.join(", ") + "\n";
-    rows.forEach(row => {
-        headers.forEach((header) => {
-            // Parse value
-            var value = row[header];
-            if (value && value["low"]) {
-                value = value["low"];
-            }
-            csv += JSON.stringify(value).replaceAll(",",";");
-            csv += (headers.indexOf(header) < headers.length - 1) ? ", " : "";
-        });
-        csv += "\n";
-    });
-   
-    const file = new Blob([csv], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = "table.csv";
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-}
+
 
 
 const NeoTableChart = (props: ChartProps) => {
@@ -99,11 +74,11 @@ const NeoTableChart = (props: ChartProps) => {
     return (
         <div className={classes.root} style={{ height: "100%", width: '100%', position: "relative" }}>
            {(allowDownload && rows && rows.length > 0) ? <Tooltip title="Download CSV" aria-label="">
-                <IconButton aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute"}}>
-                    <GetAppIcon onClick={(e) => {
+                <IconButton onClick={(e) => {
                         downloadCSV(rows);
-                    }} style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
-                    </GetAppIcon>
+                    }} aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute"}}>
+                    <SaveAltIcon style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
+                    </SaveAltIcon>
                 </IconButton>
             </Tooltip> : <></>}
             <DataGrid
