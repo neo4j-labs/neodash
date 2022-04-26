@@ -15,6 +15,7 @@ import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
+import { downloadComponentAsImage } from '../chart/util/ChartUtils';
 
 /**
  * This is the main application component for NeoDash.
@@ -37,12 +38,14 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
         initializeApplication(initialized);
     }
 
+    const ref = React.useRef();
+
     // Only render the dashboard component if we have an active Neo4j connection.
     return (
-        <div style={{ display: 'flex' }}>
+        <div ref={ref} style={{ display: 'flex' }}>
             <CssBaseline />
-            <NeoDashboardPlaceholder connected={false}></NeoDashboardPlaceholder>
-            {(connected) ? <Dashboard></Dashboard> : <></>}
+            <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
+            {(connected) ? <Dashboard onDownloadDashboardAsImage={(e)=>downloadComponentAsImage(ref)}></Dashboard> : <></>}
             <NeoAboutModal
                 open={aboutModalOpen}
                 handleClose={onAboutModalClose}

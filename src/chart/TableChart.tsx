@@ -4,7 +4,10 @@ import { ChartProps } from './Chart';
 import { getRecordType, getRendererForValue, rendererForType, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/ReportRecordProcessing';
 import { makeStyles } from '@material-ui/styles';
 import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../report/ReportRuleEvaluator';
-
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { downloadCSV } from './util/ChartUtils';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
@@ -20,11 +23,11 @@ function ApplyColumnType(column, value) {
 const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;
     const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
+    const allowDownload = props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
 
     const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
     const classes = useStyles();
-
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
@@ -69,7 +72,15 @@ const NeoTableChart = (props: ChartProps) => {
     });
 
     return (
-        <div className={classes.root} style={{ height: "100%", width: '100%' }}>
+        <div className={classes.root} style={{ height: "100%", width: '100%', position: "relative" }}>
+           {(allowDownload && rows && rows.length > 0) ? <Tooltip title="Download CSV" aria-label="">
+                <IconButton onClick={(e) => {
+                        downloadCSV(rows);
+                    }} aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute"}}>
+                    <SaveAltIcon style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
+                    </SaveAltIcon>
+                </IconButton>
+            </Tooltip> : <></>}
             <DataGrid
                 headerHeight={32}
                 rows={rows}
@@ -82,12 +93,13 @@ const NeoTableChart = (props: ChartProps) => {
                     ColumnSortedAscendingIcon: () => <></>,
                 }}
                 getRowClassName={(params) => {
-                    return "rule"+evaluateRulesOnDict(params.row, styleRules, ['row color','row text color']);
+                    return "rule" + evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color']);
                 }}
                 getCellClassName={(params) => {
-                    return "rule"+evaluateRulesOnDict({[params.field]: params.value}, styleRules, ['cell color','cell text color']);
+                    return "rule" + evaluateRulesOnDict({ [params.field]: params.value }, styleRules, ['cell color', 'cell text color']);
                 }}
             />
+
         </div>
     );
 }

@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { ChartProps } from './Chart';
+import { replaceDashboardParameters } from './util/ChartUtils';
 
 /**
- * Renders an iFrame provided by the user.
+ * Renders an iFrame of the URL provided by the user.
  */
 const NeoIFrameChart = (props: ChartProps) => {
-    const [extraRecords, setExtraRecords] = React.useState([]);
     // Records are overridden to be a single element array with a field called 'input'.
     const records = props.records;
-    const passGlobalParameters = props?.settings?.passGlobalParameters
+    const parameters = props.parameters ? props.parameters : {};
+    const passGlobalParameters = props.settings && props.settings.passGlobalParameters ? props.settings.passGlobalParameters : false;
+    const replaceGlobalParameters = props.settings && props.settings.replaceGlobalParameters !== undefined ? props.settings.replaceGlobalParameters : true;
     const url = records[0]["input"];
 
     if (!url || !(url.startsWith("http://") || url.startsWith("https://"))) {
@@ -18,7 +20,8 @@ const NeoIFrameChart = (props: ChartProps) => {
 
     const mapParameters = records[0]["mapParameters"] || {};
     const queryString = Object.keys(mapParameters).map(key => key + '=' + mapParameters[key]).join('&');
-    return <iframe style={{ width: "100%", border: "none", marginBottom: "-5px", height: "100%", overflow: "hidden" }} src={url + (passGlobalParameters ? "#" + queryString : "")} />;
+    const modifiedUrl = (replaceGlobalParameters ? replaceDashboardParameters(url, parameters) : url) + (passGlobalParameters ? "#" + queryString : "");
+    return <iframe style={{ width: "100%", border: "none", marginBottom: "-5px", height: "100%", overflow: "hidden" }} src={modifiedUrl} />;
 }
 
 export default NeoIFrameChart;

@@ -1,0 +1,21 @@
+{
+    "ssoEnabled": false,
+    "ssoDiscoveryUrl": "https://example.com",
+    "standalone": false,
+    "standaloneProtocol": "neo4j",
+    "standaloneHost": "localhost",
+    "standalonePort": "7687",
+    "standaloneDatabase": "neo4j",
+    "standaloneDashboardName": "My Dashboard",
+    "standaloneDashboardDatabase": "dashboards",
+    "standaloneDashboardURL": ""
+}
+
+
+Example for running NeoDash on two environments:
+1. npm run build (this makes a dist folder)
+2. copy dist to dist2
+3. copy config-dev.json to dist/config.json (config-dev.json has standalone set to true, and the standaloneHost set to the dev environment)
+4. copy config-prod.json to dist2/config.json n (config-prod.json has standalone set to true, and the standaloneHost set to the prod environment)
+5. copy dist to blah.basf.com/neodash-dev/
+6. copy dist2 to blah.basf.com/neodash-prod/

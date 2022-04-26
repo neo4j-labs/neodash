@@ -14,21 +14,24 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
         debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
     }, [inputText, query]);
 
-    const debouncedQueryCallback = useCallback(
-        debounce(props.queryCallback, 250),
-        [],
-    );
-
-    const debouncedSetGlobalParameter = useCallback(
-        debounce(props.setGlobalParameter, 750),
-        [],
-    );
-
     const records = props.records;
     const query = records[0]["input"] ? records[0]["input"] : undefined;
     const parameter = props.settings && props.settings["parameterName"] ? props.settings["parameterName"] : undefined;
     const type = props.settings && props.settings["type"] ? props.settings["type"] : undefined;
+    const suggestionsUpdateTimeout = props.settings && props.settings["suggestionsUpdateTimeout"] ? props.settings["suggestionsUpdateTimeout"] : 250;
+    const setParameterTimeout = props.settings && props.settings["setParameterTimeout"] ? props.settings["setParameterTimeout"] : 1000;
+    
+    const debouncedQueryCallback = useCallback(
+        debounce(props.queryCallback, suggestionsUpdateTimeout),
+        [],
+    );
 
+    const debouncedSetGlobalParameter = useCallback(
+        debounce(props.setGlobalParameter, setParameterTimeout),
+        [],
+    );
+
+   
     const currentValue = (props.getGlobalParameter && props.getGlobalParameter(parameter)) ? props.getGlobalParameter(parameter) : "";
     const [extraRecords, setExtraRecords] = React.useState([]);
     const [inputText, setInputText] = React.useState(currentValue);

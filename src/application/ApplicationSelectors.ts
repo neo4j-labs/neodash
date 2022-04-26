@@ -68,7 +68,8 @@ export const applicationGetStandaloneSettings = (state: any) => {
         "standalonePort": state.application.standalonePort,
         "standaloneDatabase": state.application.standaloneDatabase,
         "standaloneDashboardName": state.application.standaloneDashboardName,
-        "standaloneDashboardDatabase": state.application.standaloneDashboardDatabase
+        "standaloneDashboardDatabase": state.application.standaloneDashboardDatabase,
+        "standaloneDashboardURL": state.application.standaloneDashboardURL
     }
 }
 

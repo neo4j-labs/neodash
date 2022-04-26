@@ -2,7 +2,8 @@ import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "../settings/SettingsActions";
 import { addPage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
 import { runCypherQuery } from "../report/ReportQueryRunner";
-import { setWelcomeScreenOpen } from "../application/ApplicationActions";
+import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from "../application/ApplicationActions";
+import { updateGlobalParametersThunk } from "../settings/SettingsThunks";
 
 
 function createUUID() {
@@ -115,30 +116,29 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
             })
         })
         dispatch(setDashboard(dashboard));
+        const application = getState().application;
+        dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
+        dispatch(setParametersToLoadAfterConnecting(null))
 
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard", e));
     }
 }
 
-export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, user) => (dispatch: any, getState: any) => {
+export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, user, overwrite = false) => (dispatch: any, getState: any) => {
     try {
         const uuid = createUUID();
         const title = dashboard.title;
         const version = dashboard.version;
         const content = dashboard;
-        // TODO - instead of creating the dashboard, match on a dashboard with the 
-        // same name and override the properties.
 
-        // Maybe this should be optional?
-        // overwriteDashboard should be a checkbox in the "Save to Neo4j modal".
-        // if (overwriteDashboard){
-        //     cypherQuery = "MERGE (n)..."
-        // }else{
-        //     cypherQuery = "CREATE (n)..."
-        // }
+
+        // Generate a cypher query to save the dashboard.
+        const query = (overwrite) ?
+            "OPTIONAL MATCH (n:_Neodash_Dashboard{title:$title}) DELETE n WITH 1 as X LIMIT 1 CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid" :
+            "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid";
         runCypherQuery(driver, database,
-            "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid",
+            query,
             { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },
             {}, ["uuid"], 1, () => { return }, (records) => {
                 if (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0] && records[0]["_fields"][0] == uuid) {
@@ -177,7 +177,7 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callba
             callback(records[0]['_fields'][0])
         })
     } catch (e) {
-        dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
+        dispatch(createNotificationThunk("Unable to load dashboard from Neo4j", e));
     }
 }
 

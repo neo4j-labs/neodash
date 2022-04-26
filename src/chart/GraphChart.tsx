@@ -77,6 +77,9 @@ const NeoGraphChart = (props: ChartProps) => {
     const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
     const linkDirectionalParticleSpeed = 0.005; // Speed of particles on relationships.
 
+    // get dashboard parameters.
+    const parameters = props.parameters ? props.parameters : {};
+
     const [data, setData] = React.useState({ nodes: [], links: [] });
 
     // Create the dictionary used for storing the memory of dragged node positions.
@@ -230,6 +233,16 @@ const NeoGraphChart = (props: ChartProps) => {
         });
     }
 
+    // Replaces all global dashboard parameters inside a string with their values.
+    function replaceDashboardParameters(str) {
+        Object.keys(parameters).forEach(key => {
+            str = str.replaceAll("$"+key, parameters[key]);
+        });
+        return str;
+    }
+
+
+    // Generates tooltips when hovering on nodes/relationships.
     const generateTooltip = (value) => {
         const tooltip = <Card>
 
@@ -328,7 +341,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 </Tooltip>
             ) : <></>}
             {drilldownLink !== "" ?
-            <a href={drilldownLink} target="_blank">
+            <a href={replaceDashboardParameters(drilldownLink)} target="_blank">
             <Fab style={{ position: "absolute", backgroundColor: "steelblue", right: "15px", zIndex: 50, top: "5px" }} color="primary" size="small" aria-label="search">
                 <Tooltip title="Investigate" aria-label="">
                     <SearchIcon />
