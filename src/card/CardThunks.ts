@@ -62,7 +62,6 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
     try {
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
-<<<<<<< HEAD
         const oldReport = state.dashboard.pages[pagenumber].reports[index];
         if(!oldReport){
             return;
@@ -70,14 +69,6 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
         const oldFields = oldReport.fields;
         const reportType =oldReport.type;
         const oldSelection = oldReport.selection;
-=======
-        if(!state.dashboard.pages[pagenumber].reports[index]){
-            return
-        }
-        const oldFields = state.dashboard.pages[pagenumber].reports[index].fields;
-        const reportType = state.dashboard.pages[pagenumber].reports[index].type;
-        const oldSelection = state.dashboard.pages[pagenumber].reports[index].selection;
->>>>>>> master
         const selectableFields = REPORT_TYPES[reportType].selection; // The dictionary of selectable fields as defined in the config.
         const autoAssignSelectedProperties = REPORT_TYPES[reportType].autoAssignSelectedProperties;
         const selectables = (selectableFields) ? Object.keys(selectableFields) : [];

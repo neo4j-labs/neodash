@@ -75,10 +75,6 @@ const NeoTableChart = (props: ChartProps) => {
     });
 
     return (
-<<<<<<< HEAD
-        <div className={classes.root} style={{ height: "100%", width: '100%' }}>
-        
-=======
         <div className={classes.root} style={{ height: "100%", width: '100%', position: "relative" }}>
            {(allowDownload && rows && rows.length > 0) ? <Tooltip title="Download CSV" aria-label="">
                 <IconButton onClick={(e) => {
@@ -88,7 +84,6 @@ const NeoTableChart = (props: ChartProps) => {
                     </SaveAltIcon>
                 </IconButton>
             </Tooltip> : <></>}
->>>>>>> master
             <DataGrid
                 headerHeight={32}
                 rows={rows}

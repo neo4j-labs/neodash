@@ -2,13 +2,9 @@ import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "../settings/SettingsActions";
 import { addPage, movePage, removePage, resetDashboardState, setDashboard } from "./DashboardActions";
 import { runCypherQuery } from "../report/ReportQueryRunner";
-<<<<<<< HEAD
-import { setWelcomeScreenOpen } from "../application/ApplicationActions";
 import { setPageNumberThunk } from "../settings/SettingsThunks";
-=======
 import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from "../application/ApplicationActions";
 import { updateGlobalParametersThunk } from "../settings/SettingsThunks";
->>>>>>> master
 
 
 function createUUID() {
@@ -119,25 +115,12 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
         const title = dashboard.title;
         const version = dashboard.version;
         const content = dashboard;
-<<<<<<< HEAD
-        // TODO - instead of creating the dashboard, match on a dashboard with the 
-        // same name and override the properties.
-
-        // Maybe this should be optional?
-        // overwriteDashboard should be a checkbox in the "Save to Neo4j modal".
-        // if (overwriteDashboard){
-        //     cypherQuery = "MERGE (n)..."
-        // }else{
-        //     cypherQuery = "CREATE (n)..."
-        // }
-=======
 
 
         // Generate a cypher query to save the dashboard.
         const query = (overwrite) ?
             "OPTIONAL MATCH (n:_Neodash_Dashboard{title:$title}) DELETE n WITH 1 as X LIMIT 1 CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid" :
             "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid";
->>>>>>> master
         runCypherQuery(driver, database,
             query,
             { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },

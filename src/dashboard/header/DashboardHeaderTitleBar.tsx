@@ -3,9 +3,9 @@ import React, { useCallback, useEffect } from "react";
 import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from "react-redux";
 import debounce from 'lodash/debounce';
+import ImageIcon from '@material-ui/icons/Image';
 
-
-export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, open, setDashboardTitle, connection, editable, standalone, handleDrawerOpen, onConnectionModalOpen }) => {
+export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, downloadImageEnabled, onDownloadImage, open, setDashboardTitle, connection, editable, standalone, handleDrawerOpen, onConnectionModalOpen }) => {
 
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
     const debouncedDashboardTitleUpdate = useCallback(
@@ -52,6 +52,13 @@ export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, open, setDashboardT
                 }
             }}
         />
+        {downloadImageEnabled ? <Tooltip title={"Download Dashboard as Image"}>
+    <IconButton style={{background: "#ffffff22", padding: "3px", marginRight: "3px"}} onClick={(e) => onDownloadImage()}>
+        <ImageIcon style={{ padding: 6, color: "#ffffffdd", width: "36px", height: "36px", fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
+        </ImageIcon>
+    </IconButton>
+</Tooltip> : <></>}
+
         <Tooltip title={connection.protocol + "://" + connection.url + ":" + connection.port} placement="left" aria-label="host">
             <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={(e) => {
                 if (!standalone) {

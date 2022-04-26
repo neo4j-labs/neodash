@@ -7,32 +7,20 @@ import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-<<<<<<< HEAD
+
 import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-
-const NeoCardView = ({ title, database, query, globalParameters, 
-    widthPx, heightPx, fields, active, setActive,
-=======
 import { downloadComponentAsImage } from '../../chart/util/ChartUtils';
 
-export const CARD_FOOTER_HEIGHT = 64;
-
 const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, 
-    width, height, fields, active, setActive,
->>>>>>> master
+    widthPx, heightPx, fields, active, setActive,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
 
-<<<<<<< HEAD
     const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
     const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
-=======
-    const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
-    const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
     const ref = React.useRef();
->>>>>>> master
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
@@ -90,12 +78,8 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                     {active ?
                         <NeoReport query={query}
                             database={database}
-<<<<<<< HEAD
-                            mapParameters={globalParameters}
-=======
                             stringParameters={cypherParameters}
                             mapParameters={getLocalParameters()}
->>>>>>> master
                             disabled={settingsOpen}
                             selection={selection}
                             fields={fields}

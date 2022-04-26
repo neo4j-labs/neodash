@@ -220,12 +220,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         standalonePort: "7687",
         standaloneDatabase: "neo4j",
         standaloneDashboardName: "My Dashboard",
-<<<<<<< HEAD
-        standaloneDashboardDatabase: "dashboards"
-=======
         standaloneDashboardDatabase: "dashboards",
         standaloneDashboardURL: ""
->>>>>>> master
     };
     try {
         config = await (await fetch("config.json")).json();
@@ -251,11 +247,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
         dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase'], config["standaloneDashboardURL"]))
         dispatch(setConnectionModalOpen(false));
-<<<<<<< HEAD
-=======
 
         // SSO - specific case starts here.
->>>>>>> master
         if (state.application.waitForSSO) {
             // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
             dispatch(setAboutModalOpen(false));
@@ -295,10 +288,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
-<<<<<<< HEAD
-            dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
-
-=======
             if(config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
                 dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
             }else{
@@ -307,7 +296,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
            
             dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
             
->>>>>>> master
             if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
             }
@@ -336,10 +324,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             }
 
             dispatch(setWelcomeScreenOpen(true));
-<<<<<<< HEAD
-=======
             
->>>>>>> master
             if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
             }

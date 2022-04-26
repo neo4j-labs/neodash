@@ -7,18 +7,15 @@ import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { TextField } from "@material-ui/core";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-<<<<<<< HEAD
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
-const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, onToggleCardSettings, onToggleCardExpand, expanded }) => {
-=======
 import { Tooltip } from '@material-ui/core';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import ImageIcon from '@material-ui/icons/Image';
 
 const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, downloadImageEnabled,
     onToggleCardSettings, onDownloadImage, onToggleCardExpand, expanded }) => {
->>>>>>> master
+
     const [text, setText] = React.useState(title);
 
     // Ensure that we only trigger a text update event after the user has stopped typing.
@@ -90,11 +87,7 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
 
     return <CardHeader style={{ height: "72px" }}
         action={<>
-<<<<<<< HEAD
-            {fullscreenEnabled}
-=======
             {(downloadImageEnabled) ? downloadImageButton : <></>}
->>>>>>> master
             {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
             {settingsButton}
         </>}

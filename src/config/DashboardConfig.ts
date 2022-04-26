@@ -12,10 +12,6 @@ export const DASHBOARD_SETTINGS = {
         label: "Enable Fullscreen Report Views",
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-<<<<<<< HEAD
-        default: false,
-        helperText: "Enables a 'fullscreen view' button for each report, letting users expand a visualization."
-=======
         default: true,
         helperText: "Show a 'fullscreen view' button for each report, letting users expand a visualization."
     },
@@ -25,7 +21,6 @@ export const DASHBOARD_SETTINGS = {
         values: [true, false],
         default: false,
         helperText: "Enables a 'download image' button for each report, letting users download a visualization as an image."
->>>>>>> master
     },
     "queryTimeLimit": {
         label: "Maximum Query Time (seconds)",
