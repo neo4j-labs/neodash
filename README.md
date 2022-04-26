@@ -18,15 +18,18 @@ There are three ways to run the application:
 ## Run locally with Docker
 Pull the latest image from Docker Hub to run the application locally:
 ```
-# Run the application on http://localhost:8080
+# Run the application on http://localhost:5005
 docker pull nielsdejong/neodash:latest
-docker run -it --rm -p 8080:80 nielsdejong/neodash
+docker run -it --rm -p 5005:5005 nielsdejong/neodash
 ```
+
+> Windows users may need to prefix the `docker run` command with `winpty`.
+
 
 ## Run & Build using npm
 NeoDash is built with React. You'll need `npm` installed to run the web app.
 
-> Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.3.1 & node v17.4.0.
+> Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.6 & node v17.4.0.
 
 To run the application in development mode:
 - clone this repository.
@@ -52,15 +55,18 @@ Make sure you have a recent version of `docker` installed to build the multi-sta
 
 On Unix (Mac/Linux) systems:
 ```
-$ ./scripts/docker-build-run-unix.bash 
+docker build . -t neodash
 ```
 
-If you use Windows, you should have installed WSL. In WSL, you can run the script as follows:
+If you use Windows, you might need to prefix the command with `winpty`:
 ```
-$ ./scripts/docker-build-run-windows.bash
+winpty docker build . -t neodash
 ```
-Then visit `http://localhost:8080` in your browser.
 
+After building, you can run the image with:
+```
+docker run  -it --rm -p 5005:5005 neodash
+```
 
 ## Run in standalone mode
 NeoDash can be deployed in a 'standalone mode' for dashboard viewers. This mode will:
@@ -72,9 +78,52 @@ The diagram below illustrates how NeoDash standalone mode can be deployed next t
 
 ![](doc/standalone-architecture.png)
 
-You can configure an instance to run as standalone by changing the variables in `scripts/docker-build-run-unix.bash`, or, if you're not using docker, directly modifying `public/config.json`. Note that the editor mode is determined at runtime by the React app, and *not* at build time. You therefore do not need to (re-)build the React application, just the image.
+### Option 1 - Standard Deployment (Non-Docker)
+First, build NeoDash as described above. Then, you'll have a `dist` directory that you can deploy to a web server.
 
- ## Extending NeoDash
+To configure the app to run in standalone mode, you'll need to edit `dist/config.json` and change the `standalone` property to `true`.
+The other variables inside `config.json` should also be configured to match the hostname, port and database name of your Neo4j instance.
+
+As `config.json` gets picked up at runtime by the application, users viewing the application will now access the dashboard in standalone mode. 
+
+### Option 2 - Docker Deployment
+You can configure the app to run in standalone by passing environment variables to Docker:
+```
+docker run  -it --rm -p 5005:5005 \
+    -e ssoEnabled=false \
+    -e ssoDiscoveryUrl="https://example.com" \
+    -e standalone=true \
+    -e standaloneProtocol="neo4j" \
+    -e standaloneHost="localhost" \
+    -e standalonePort="7687" \
+    -e standaloneDatabase="neo4j" \
+    -e standaloneDashboardName="My Dashboard" \
+    -e standaloneDashboardDatabase="dashboards" \
+    nielsdejong/neodash
+```
+
+
+> Alternatively, environment variables from docker compose or a kubernetes deployment can also be used.
+
+
+## Auth Provider (SSO)
+
+To set up NeoDash to use an external identiy provider, you can add a /auth_provider resource to nginx (in `/conf/default.conf`):
+
+```
+location /auth_provider {
+        default_type application/json;
+        return 200 '{
+                        "auth_config" : {
+                            "oidc_providers" : [ ... ]
+                        }
+                    }';
+    }
+```
+
+For basic deployments it might suffice to route requests to `/auth_provider` on the https port of the neo4j database.
+
+## Extending NeoDash
 There are two categories of extensions to NeoDash you can build:
 - Core Dashboard Functionality
 - Custom Reports
@@ -139,5 +188,5 @@ To add your visualization to the config, add a new key to the `REPORT_TYPES` dic
 If all works, please consider contributing your code to this repository.
 
 ## Questions / Suggestions
-If you have any questions about NeoDash, please reach out. For feature requests, consider opening an issue(link) on GitHub.
+If you have any questions about NeoDash, please reach out. For feature requests, consider opening an issue on GitHub.
 

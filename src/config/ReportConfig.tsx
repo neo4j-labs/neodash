@@ -53,6 +53,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "[1, 1, 1, ...]"
             },
+            "allowDownload": {
+                label: "Enable CSV Download",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
             "autorun": {
                 label: "Auto-run query",
                 type: SELECTION_TYPES.LIST,
@@ -211,7 +217,7 @@ export const REPORT_TYPES = {
             }
         },
         useRecordMapper: true,
-        maxRecords: 100,
+        maxRecords: 250,
         settings: {
             "legend": {
                 label: "Show Legend",
@@ -330,7 +336,7 @@ export const REPORT_TYPES = {
             }
         },
         useRecordMapper: true,
-        maxRecords: 100,
+        maxRecords: 250,
         settings: {
             "legend": {
                 label: "Show Legend",
@@ -427,7 +433,7 @@ export const REPORT_TYPES = {
                 multiple: true
             },
         },
-        maxRecords: 100,
+        maxRecords: 250,
         useRecordMapper: true,
         settings: {
             "legend": {
@@ -631,15 +637,16 @@ export const REPORT_TYPES = {
                 default: "rgba(0, 0, 0, 0.87)"
             },
             "textAlign": {
-                label: "Text Align",
+                label: "Horizontal Align",
                 type: SELECTION_TYPES.LIST,
                 values: ["left", "center", "right"],
                 default: "left"
             },
-            "marginTop": {
-                label: "Margin Top (px)", 
-                type: SELECTION_TYPES.NUMBER,
-                default: 0
+            "verticalAlign": {
+                label: "Vertical Align",
+                type: SELECTION_TYPES.LIST,
+                values: ["bottom", "middle", "top"],
+                default: "top"
             },
             "autorun": {
                 label: "Auto-run query",
@@ -681,7 +688,7 @@ export const REPORT_TYPES = {
                 default: false
             },
             "manualPropertyNameSpecification": {
-                label: "Enable Manual Label/Property Name Specification",
+                label: "Manual Label/Property Name Specification",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
@@ -690,6 +697,16 @@ export const REPORT_TYPES = {
                 label: "Helper Text (Override)",
                 type: SELECTION_TYPES.TEXT,
                 default: "Enter a custom helper text here..."
+            },
+            "suggestionsUpdateTimeout": {
+                label: "Timeout for value suggestions (ms)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 250,
+            },
+            "setParameterTimeout": {
+                label: "Timeout for value updates (ms)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 1000
             }
         }
     },
@@ -702,8 +719,14 @@ export const REPORT_TYPES = {
         maxRecords: 1,
         allowScrolling: true,
         settings: {
+            "replaceGlobalParameters": {
+                label: "Replace global parameters in URL",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "passGlobalParameters": {
-                label: "Pass global variables to iFrame URL",
+                label: "Append global parameters to iFrame URL",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
@@ -718,7 +741,14 @@ export const REPORT_TYPES = {
         textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
         maxRecords: 1,
         allowScrolling: true,
-        settings: {}
+        settings: {
+            "replaceGlobalParameters": {
+                label: "Replace global parameters in Markdown",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+        }
     }
 }
 

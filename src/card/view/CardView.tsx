@@ -7,25 +7,43 @@ import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+<<<<<<< HEAD
 import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 
 const NeoCardView = ({ title, database, query, globalParameters, 
     widthPx, heightPx, fields, active, setActive,
+=======
+import { downloadComponentAsImage } from '../../chart/util/ChartUtils';
+
+export const CARD_FOOTER_HEIGHT = 64;
+
+const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, 
+    width, height, fields, active, setActive,
+>>>>>>> master
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
 
+<<<<<<< HEAD
     const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
     const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
+=======
+    const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
+    const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
+    const ref = React.useRef();
+>>>>>>> master
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
         title={title}
         editable={editable}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
+        downloadImageEnabled={dashboardSettings.downloadImageEnabled}
         onTitleUpdate={onTitleUpdate}
         onToggleCardSettings={onToggleCardSettings}
+        settings={settings}
+        onDownloadImage={()=> downloadComponentAsImage(ref)}
         onToggleCardExpand={onToggleCardExpand}
         expanded={expanded}
     >
@@ -48,12 +66,23 @@ const NeoCardView = ({ title, database, query, globalParameters,
         return globalParameters ? globalParameters[key] : undefined;
     }
 
+    const getLocalParameters = (): any => {
+        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables : string[] = [];
+        while (match = re.exec(query)) {
+            localQueryVariables.push(match[1]);
+        }
+        if(!globalParameters){
+            return {};
+        }
+        return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local) ));
+    }
+
     return (
         <div className={`card-view ${expanded ? "expanded" : ""}`}>
             {reportHeader}
             {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
             <ReportItemContainer style={{ height: expanded ? (withoutFooter ? "calc(100% - 69px)" : "calc(100% - 79px)") : cardHeight }}>
-                <CardContent style={{
+                <CardContent ref={ref}  style={{
                     paddingBottom: "0px", paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px", width: "100%", marginTop: "-3px",
                     height: expanded ? (withoutFooter ? "100%" : `calc(100% - ${CARD_FOOTER_HEIGHT}px)`) : ((withoutFooter) ? reportHeight + CARD_FOOTER_HEIGHT + "px" : reportHeight + "px"),
                     overflow: "auto", overflowY: "auto", overflowX: "auto"
@@ -61,13 +90,18 @@ const NeoCardView = ({ title, database, query, globalParameters,
                     {active ?
                         <NeoReport query={query}
                             database={database}
+<<<<<<< HEAD
                             mapParameters={globalParameters}
+=======
+                            stringParameters={cypherParameters}
+                            mapParameters={getLocalParameters()}
+>>>>>>> master
                             disabled={settingsOpen}
                             selection={selection}
                             fields={fields}
                             settings={settings}
                             expanded={expanded}
-                            rowLimit={REPORT_TYPES[type].maxRecords}
+                            rowLimit={dashboardSettings['disableRowLimiting'] ? 1000000 : REPORT_TYPES[type].maxRecords}
                             refreshRate={refreshRate}
                             dimensions={{ width: widthPx, height: heightPx }}
                             type={type}

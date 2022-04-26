@@ -3,11 +3,12 @@ import { initializeSSO } from "../component/sso/SSOUtils";
 import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/ReportQueryRunner";
+import { updateGlobalParametersThunk, updateGlobalParameterThunk } from "../settings/SettingsThunks";
 import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
     setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled,
-    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase, setWaitForSSO
+    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase, setWaitForSSO, setParametersToLoadAfterConnecting
 } from "./ApplicationActions";
 
 /**
@@ -40,17 +41,18 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
 
                 // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
                 const application = getState().application;
-                if (application.dashboardToLoadAfterConnecting && application.dashboardToLoadAfterConnecting.startsWith("http")) {
+                if (application.dashboardToLoadAfterConnecting && (application.dashboardToLoadAfterConnecting.startsWith("http") || application.dashboardToLoadAfterConnecting.startsWith("./") || application.dashboardToLoadAfterConnecting.startsWith("/"))) {
                     fetch(application.dashboardToLoadAfterConnecting)
                         .then(response => response.text())
-                        .then(data => dispatch(loadDashboardThunk(data)));
+                        .then(data => dispatch(loadDashboardThunk(data))); 
                     dispatch(setDashboardToLoadAfterConnecting(null));
-                } else if (application.dashboardToLoadAfterConnecting) {
+                } else if (application.dashboardToLoadAfterConnecting) {            
                     const setDashboardAfterLoadingFromDatabase = (value) => {
                         dispatch(loadDashboardThunk(value));
                     }
 
-                    // If we specify a dashboard by name, load the latest version of it
+                    // If we specify a dashboard by name, load the latest version of it.
+                    // If we specify a dashboard by UUID, load it directly.
                     if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
                         dispatch(loadDashboardFromNeo4jByNameThunk(driver, application.standaloneDashboardDatabase, application.dashboardToLoadAfterConnecting.substring(5), setDashboardAfterLoadingFromDatabase));
                     } else {
@@ -131,6 +133,18 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
     try {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
+
+        //  Parse the URL parameters to see if there's any deep linking of parameters.
+        const paramsToSetAfterConnecting = {}
+        Array.from(urlParams.entries()).forEach(([key, value]) => {
+           if (key.startsWith("neodash_")){
+               paramsToSetAfterConnecting[key] = value;
+           } 
+        });
+        if(Object.keys(paramsToSetAfterConnecting).length > 0){
+            dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
+        }
+
         if (urlParams.get("share") !== null) {
             const id = decodeURIComponent(urlParams.get("id"));
             const type = urlParams.get("type");
@@ -168,6 +182,8 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
         const shareDetails = state.application.shareDetails;
         dispatch(setWelcomeScreenOpen(false));
         dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
+
+       
         if (shareDetails.dashboardDatabase) {
             dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
             dispatch(setStandaloneDashboardDatabase(shareDetails.database));
@@ -204,7 +220,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         standalonePort: "7687",
         standaloneDatabase: "neo4j",
         standaloneDashboardName: "My Dashboard",
+<<<<<<< HEAD
         standaloneDashboardDatabase: "dashboards"
+=======
+        standaloneDashboardDatabase: "dashboards",
+        standaloneDashboardURL: ""
+>>>>>>> master
     };
     try {
         config = await (await fetch("config.json")).json();
@@ -214,12 +235,27 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     }
 
     try {
+        // Parse the URL parameters to see if there's any deep linking of parameters.
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const paramsToSetAfterConnecting = {}
+        Array.from(urlParams.entries()).forEach(([key, value]) => {
+           if (key.startsWith("neodash_")){
+               paramsToSetAfterConnecting[key] = value;
+           } 
+        });
+
         const clearNotificationAfterLoad = true;
         dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
         const state = getState();
         const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
-        dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase']))
+        dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase'], config["standaloneDashboardURL"]))
         dispatch(setConnectionModalOpen(false));
+<<<<<<< HEAD
+=======
+
+        // SSO - specific case starts here.
+>>>>>>> master
         if (state.application.waitForSSO) {
             // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
             dispatch(setAboutModalOpen(false));
@@ -229,7 +265,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
                 if (standalone) {
                     dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
                     dispatch(createConnectionThunk(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
-                    dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+                    if(config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
+                        dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
+                    }else{
+                        dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+                    }
+                    dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
                 }
             });
             dispatch(setWaitForSSO(false));
@@ -254,8 +295,19 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
+<<<<<<< HEAD
             dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
 
+=======
+            if(config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
+                dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
+            }else{
+                dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+            }
+           
+            dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
+            
+>>>>>>> master
             if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
             }
@@ -278,7 +330,16 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setOldDashboard(old));
             dispatch(setConnected(false));
             dispatch(setDashboardToLoadAfterConnecting(null));
+            dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
+            if(Object.keys(paramsToSetAfterConnecting).length > 0) {
+                dispatch(setParametersToLoadAfterConnecting(null));
+            }
+
             dispatch(setWelcomeScreenOpen(true));
+<<<<<<< HEAD
+=======
+            
+>>>>>>> master
             if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
             }

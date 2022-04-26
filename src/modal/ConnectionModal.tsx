@@ -140,8 +140,10 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                     <DialogContent>
                         {standalone ? 
                         <DialogContentText style={{ color: "lightgrey" }}>
-                        Sign in to continue. You will be connected to Neo4j, and load a dashboard called <b>{standaloneSettings['standaloneDashboardName']}</b>.
-                    </DialogContentText> 
+                            {standaloneSettings['standaloneDashboardURL'] === "" ? 
+                            <>  Sign in to continue. You will be connected to Neo4j, and load a dashboard called <b>{standaloneSettings['standaloneDashboardName']}</b>.</> :
+                            <>  Sign in to continue. You will be connected to Neo4j, and load a dashboard.</>}
+                    </DialogContentText>
                         : <DialogContentText style={{ color: "lightgrey" }}>
                             
                             Enter your Neo4j database credentials to start.

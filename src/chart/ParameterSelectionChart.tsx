@@ -14,21 +14,24 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
         debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
     }, [inputText, query]);
 
-    const debouncedQueryCallback = useCallback(
-        debounce(props.queryCallback, 250),
-        [],
-    );
-
-    const debouncedSetGlobalParameter = useCallback(
-        debounce(props.setGlobalParameter, 750),
-        [],
-    );
-
     const records = props.records;
     const query = records[0]["input"] ? records[0]["input"] : undefined;
     const parameter = props.settings && props.settings["parameterName"] ? props.settings["parameterName"] : undefined;
     const type = props.settings && props.settings["type"] ? props.settings["type"] : undefined;
+    const suggestionsUpdateTimeout = props.settings && props.settings["suggestionsUpdateTimeout"] ? props.settings["suggestionsUpdateTimeout"] : 250;
+    const setParameterTimeout = props.settings && props.settings["setParameterTimeout"] ? props.settings["setParameterTimeout"] : 1000;
+    
+    const debouncedQueryCallback = useCallback(
+        debounce(props.queryCallback, suggestionsUpdateTimeout),
+        [],
+    );
 
+    const debouncedSetGlobalParameter = useCallback(
+        debounce(props.setGlobalParameter, setParameterTimeout),
+        [],
+    );
+
+   
     const currentValue = (props.getGlobalParameter && props.getGlobalParameter(parameter)) ? props.getGlobalParameter(parameter) : "";
     const [extraRecords, setExtraRecords] = React.useState([]);
     const [inputText, setInputText] = React.useState(currentValue);
@@ -77,7 +80,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             :
             <Autocomplete
                 id="autocomplete"
-                options={extraRecords.map(r => r["_fields"] && r["_fields"][0] !== null ? r["_fields"][0] : "(no data)")}
+                options={extraRecords.map(r => r["_fields"] && r["_fields"][0] !== null ? r["_fields"][0] : "(no data)").sort()}
                 getOptionLabel={(option) => option ? option.toString() : ""}
                 style={{ maxWidth: "calc(100% - 30px)", width: 300, marginLeft: "15px", marginTop: "5px" }}
                 inputValue={inputText}
@@ -100,7 +103,9 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                         props.setGlobalParameter(parameter, newValue);
                     }
                 }}
-                renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }} placeholder="Start typing..." label={helperText ? helperText : label + " " + property} variant="outlined" />}
+                renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }} 
+                placeholder="Start typing..." 
+                label={helperText ? helperText : label + " " + property} variant="outlined" />}
             />
         }
     </div>

@@ -12,14 +12,33 @@ export const DASHBOARD_SETTINGS = {
         label: "Enable Fullscreen Report Views",
         type: SELECTION_TYPES.LIST,
         values: [true, false],
+<<<<<<< HEAD
         default: false,
         helperText: "Enables a 'fullscreen view' button for each report, letting users expand a visualization."
+=======
+        default: true,
+        helperText: "Show a 'fullscreen view' button for each report, letting users expand a visualization."
+    },
+    "downloadImageEnabled": {
+        label: "Enable Image Download",
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        helperText: "Enables a 'download image' button for each report, letting users download a visualization as an image."
+>>>>>>> master
     },
     "queryTimeLimit": {
         label: "Maximum Query Time (seconds)",
         type: SELECTION_TYPES.NUMBER,
         default: 20,
         helperText: "The maximum time a report is allowed to run before automatically aborted."
+    },
+    "disableRowLimiting": {
+        label: "Disable Row Limiting ⚠️",
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        helperText: "This disables the automatic row limiting feature. When disabled, always ensure your queries are not returning too many rows."
     },
     "pagenumber": {
         label: "Page Number",

@@ -144,7 +144,7 @@ const NeoMapChart = (props: ChartProps) => {
                     return nodes[node.id].pos;
                 }
                 Object.values(node.properties).forEach(p => {
-                    if (p.srid != null && p.x != null && p.y != null) {
+                    if (p != null && p.srid != null && p.x != null && p.y != null) {
                         if (!isNaN(p.x) && !isNaN(p.y)) {
                             nodes[node.id].pos = [p.y, p.x];
                             return [p.y, p.x];
