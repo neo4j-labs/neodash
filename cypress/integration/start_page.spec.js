@@ -1,4 +1,4 @@
-import {defaultCypherQuery, tableCypherQuery} from "../fixtures/cypher_queries"
+import {tableCypherQuery, barChartCypherQuery} from "../fixtures/cypher_queries"
 
 describe('The Dashboard Page', () => {
     beforeEach(() => {
@@ -9,6 +9,10 @@ describe('The Dashboard Page', () => {
         // Create new dashboard
         cy.contains('New Dashboard').click()
         cy.wait(300)
+
+        if(cy.contains("Create new dashboard")) {
+            cy.contains('Yes').click()
+        }
         cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j')
 
         // Connect to Neo4j database
@@ -46,6 +50,20 @@ describe('The Dashboard Page', () => {
         cy.get('main .MuiGrid-item:eq(2) .MuiDataGrid-footerContainer button[aria-label="Go to next page"]').click()
         cy.get('main .MuiGrid-item:eq(2) .MuiDataGrid-virtualScroller .MuiDataGrid-row').should('have.length', 3)
         cy.get('main .MuiGrid-item:eq(2) .MuiDataGrid-footerContainer').should('contain', '6–8 of 8')
+    })
+
+    it('creates a bar chart report', () => {
+        cy.get('main .MuiGrid-item:eq(2) button').click()
+        cy.get('main .MuiGrid-item:eq(2) button[aria-label="settings"]').click()
+        cy.get('main .MuiGrid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
+        cy.contains('Bar Chart').click()
+        cy.get('main .MuiGrid-item:eq(2) .ReactCodeMirror').type(barChartCypherQuery)
+        cy.get('main .MuiGrid-item:eq(2) button[aria-label="save"]').click()
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Category').next()
+                                                                                   .should('contain', 'released')
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
+                                                                                   .should('contain', 'count')
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 8)
     })
 
     // Test card deletion
