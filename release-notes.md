@@ -2,6 +2,7 @@
 This is the final minor update before the 2.1 release.
 
 Changes:
+- Several stability improvements before the 2.1 release.
 - Updated Dockerfile to make better use of caching, and pick up environment variables at run time.
 - Added option to replace dashboard parameters in Markdown/iFrames to make them dynamic.
 - Removed unneeded index column from the CSV download for tables.
