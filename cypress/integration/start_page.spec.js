@@ -53,17 +53,22 @@ describe('The Dashboard Page', () => {
     })
 
     it('creates a bar chart report', () => {
-        cy.get('main .MuiGrid-item:eq(2) button').click()
-        cy.get('main .MuiGrid-item:eq(2) button[aria-label="settings"]').click()
-        cy.get('main .MuiGrid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
-        cy.contains('Bar Chart').click()
-        cy.get('main .MuiGrid-item:eq(2) .ReactCodeMirror').type(barChartCypherQuery)
-        cy.get('main .MuiGrid-item:eq(2) button[aria-label="save"]').click()
+        createReportOfType('Bar Chart', barChartCypherQuery)
         cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Category').next()
                                                                                    .should('contain', 'released')
         cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
                                                                                    .should('contain', 'count')
         cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 8)
+    })
+
+    it('creates a pie chart report', () => {
+        createReportOfType('Pie Chart', barChartCypherQuery)
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Category').next()
+                                                                                   .should('contain', 'released')
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
+                                                                                   .should('contain', 'count')
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 3)
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > path').should('have.length', 5)
     })
 
     // Test card deletion
@@ -75,3 +80,12 @@ describe('The Dashboard Page', () => {
 
     // Test opening existing dashboard ?
   })
+
+function createReportOfType(type, query) {
+    cy.get('main .MuiGrid-item:eq(2) button').click()
+    cy.get('main .MuiGrid-item:eq(2) button[aria-label="settings"]').click()
+    cy.get('main .MuiGrid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
+    cy.contains(type).click()
+    cy.get('main .MuiGrid-item:eq(2) .ReactCodeMirror').type(query)
+    cy.get('main .MuiGrid-item:eq(2) button[aria-label="save"]').click()
+}
