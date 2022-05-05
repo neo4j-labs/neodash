@@ -45,38 +45,30 @@ export const NeoPage = (
 
 
     /**
-     * Based on the current layout, determine where the 'add report' button should be placed.
+     * Based on the current layout, determine where the 'add report' card should be placed.
+     * The position here is the 'first available (2x2) spot' on a row, starting from the top.
      * @returns the position (x,y) of the add card button.
      */
     const getAddCardButtonPosition = () => {
         // Find all reports that touch on a specific y-level.
-        const reportsByYLevel = {}
-        reports.forEach(report => {
-            if(!report || !report.y || !report.height) {
-                return;
-            }
-            for (let y = report.y; y <= report.y + report.height - 1; y++) {
-                if (!reportsByYLevel[y]) {
-                    reportsByYLevel[y] = [];
-                }
-                reportsByYLevel[y].push(report);
-            }
-        });
-        console.log(reportsByYLevel)
-
-        // for each y
-        //     get maxX+width
-        //   if maxX+width < 9
-        // check for y+1 if maxX + width < 9
-        //   else
-        //      continue
-
         if (reports.length == 0) {
             return { x: 0, y: 0 };
         }
-        const maxY = Math.max(...reports.map(report => report.y + report.height));
-        const maxX = Math.max(...reports.filter(report => report.y + report.height == maxY).map(report => report.x + report.width));
-        return { x: maxX, y: maxY };
+
+        const maxY = Math.max.apply(Math, reports.map(function (o) { return o.y + o.height; }))
+        const maxXbyYLevel = {} // The max x value for each y-level.
+        for (let i = 0; i < maxY; i++) {
+            maxXbyYLevel[i] = Math.max(0, Math.max.apply(Math, reports
+                .filter(report => report.y + report.height > i && report.y <= i)
+                .map(function (o) { return o.x + o.width; })));
+        };
+
+        for (let level = 0; level < maxY; level++) {
+            if (maxXbyYLevel[level] <= 9 && (maxXbyYLevel[level + 1] === undefined || maxXbyYLevel[level + 1] <= 9)) {
+                return { x: maxXbyYLevel[level] !== undefined ? maxXbyYLevel[level] : 0, y: level }
+            }
+        }
+        return { x: 0, y: maxY }
     }
     /**
     * Recompute the layout of the page buttons.This is called whenever the pages get reorganized.
@@ -103,7 +95,8 @@ export const NeoPage = (
                 h: 2,
                 minW: 3,
                 minH: 2,
-                isDraggable: false
+                isDraggable: false,
+                isResizable: false
             }]
         });
         setLastElement(<Grid style={{ paddingBottom: "6px" }} key={pagenumber + ":" + 999999}>
@@ -144,11 +137,13 @@ export const NeoPage = (
                     }
                 }}
                 onResize={() => {
+                    setIsDragging(true);
                     if (!animated) {
                         setAnimated(true);
                     }
                 }}
                 onResizeStop={(newLayout) => {
+                    setIsDragging(false);
                     onPageLayoutUpdate(newLayout);
                 }}>
                 {reports.map((report, index) => {

@@ -37,8 +37,8 @@ const NeoCard = ({
     onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
     onCreateNotification // action to take when an (error) notification is created.
 }) => {
-
-    const [settingsOpen, setSettingsOpen] = React.useState(report.settingsOpen);
+   
+    const [settingsOpen, setSettingsOpen] = React.useState(false);
     const debouncedOnToggleCardSettings = useCallback(
         debounce(onToggleCardSettings, 500),
         [],
@@ -147,12 +147,13 @@ const NeoCard = ({
     </div>;
 
     // If the card is viewed in fullscreen, wrap it in a dialog.
+    // TODO - this causes a re-render (and therefore, a re-run of the report)
+    // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
     if (expanded) {
         return <Dialog maxWidth={"xl"} open={expanded} aria-labelledby="form-dialog-title">
             <DialogContent style={{ width: Math.min(1920, document.documentElement.clientWidth - 64), height: document.documentElement.clientHeight }} >
                 {component}
             </DialogContent>
-
         </Dialog>
     }
     return component;

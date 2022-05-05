@@ -12,7 +12,7 @@ import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { downloadComponentAsImage } from '../../chart/util/ChartUtils';
 
-const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, 
+const NeoCardView = ({ title, database, query, globalParameters, 
     widthPx, heightPx, fields, active, setActive,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
@@ -78,7 +78,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                     {active ?
                         <NeoReport query={query}
                             database={database}
-                            stringParameters={cypherParameters}
+                            stringParameters={""}
                             mapParameters={getLocalParameters()}
                             disabled={settingsOpen}
                             selection={selection}
