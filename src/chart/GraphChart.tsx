@@ -1,6 +1,8 @@
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import ForceGraph2D from 'react-force-graph-2d';
+import  ForceGraph2D from 'react-force-graph-2d';
+import * as THREE from 'three'
+import  ForceGraph3D from 'react-force-graph-3d';
 import ReactDOMServer from 'react-dom/server';
 import useDimensions from "react-cool-dimensions";
 import { categoricalColorSchemes } from '../config/ColorConfig';
@@ -18,6 +20,27 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
 import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
+
+const  drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
+    var img = new Image;
+    let prop = defaultNodeSize * 6;
+    /*img.onload = function(){
+        canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
+    }*/
+
+    img.src = strDataURI;
+    canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
+
+}
+
+const nodeTree = (node) => {
+    const imgTexture = new THREE.TextureLoader().load(`https://img.icons8.com/external-flaticons-lineal-color-flat-icons/344/external-url-gdpr-flaticons-lineal-color-flat-icons.png`);
+    const material = new THREE.SpriteMaterial({ map: imgTexture });
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(12, 12);
+    return sprite;
+}
+
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -76,6 +99,15 @@ const NeoGraphChart = (props: ChartProps) => {
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
     const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
     const linkDirectionalParticleSpeed = 0.005; // Speed of particles on relationships.
+
+    const iconStyle = props.settings && props.settings.iconStyle !== undefined ? props.settings.iconStyle : "";
+    let iconObject = undefined;
+    try {
+        iconObject = iconStyle ? JSON.parse(iconStyle) : undefined;
+    } catch (error) {
+        console.error(error);
+    }
+
 
     // get dashboard parameters.
     const parameters = props.parameters ? props.parameters : {};
@@ -220,7 +252,7 @@ const NeoGraphChart = (props: ChartProps) => {
         const nodesList = Object.values(nodes).map(node => {
             // First try to assign a node a color if it has a property specifying the color.
             var assignedColor = node.properties[nodeColorProp] ? node.properties[nodeColorProp] :
-               (totalColors > 0 ? categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors] : "grey");
+                (totalColors > 0 ? categoricalColorSchemes[nodeColorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors] : "grey");
             // Next, evaluate the custom styling rules to see if there's a rule-based override
             assignedColor = evaluateRulesOnNode(node, 'node color', assignedColor, styleRules);
             return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });
@@ -291,11 +323,19 @@ const NeoGraphChart = (props: ChartProps) => {
     // TODO - implement this.
     const handleExpand = useCallback(node => {
         if (rightClickToExpandNodes) {
+            console.log(node);
             props.queryCallback && props.queryCallback("MATCH (n)-[e]-(m) WHERE id(n) =" + node.id + " RETURN e,m", {}, setExtraRecords);
         }
     }, []);
 
     const showPopup = useCallback(item => {
+        if (showPropertiesOnClick) {
+            setInspectItem(item);
+            handleOpen();
+        }
+    }, []);
+
+    const showPopup2 = useCallback(item => {
         if (showPropertiesOnClick) {
             setInspectItem(item);
             handleOpen();
@@ -363,6 +403,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 nodeLabel={node => showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : ""}
                 nodeVal={node => node.size}
                 onNodeClick={showPopup}
+                nodeThreeObject = {nodeTree}
                 onLinkClick={showPopup}
                 onNodeRightClick={handleExpand}
                 linkDirectionalParticles={linkDirectionalParticles}
@@ -388,23 +429,26 @@ const NeoGraphChart = (props: ChartProps) => {
                 }}
                 nodeCanvasObjectMode={() => "after"}
                 nodeCanvasObject={(node, ctx, globalScale) => {
-                    const label = (props.selection && props.selection[node.lastLabel]) ? renderNodeLabel(node) : "";
-                    const fontSize = nodeLabelFontSize;
-                    ctx.font = `${fontSize}px Sans-Serif`;
-                    ctx.fillStyle = evaluateRulesOnNode(node, "node label color", nodeLabelColor, styleRules);
-                    ctx.textAlign = "center";
-                    ctx.fillText(label, node.x, node.y + 1);
-                    if (frozen && !node.fx && !node.fy && nodePositions) {
-                        node.fx = node.x;
-                        node.fy = node.y;
-                        nodePositions["" + node.id] = [node.x, node.y];
+                    if (iconObject && iconObject[node.lastLabel])
+                        drawDataURIOnCanvas(node, iconObject[node.lastLabel],ctx, defaultNodeSize);
+                    else {
+                        const label = (props.selection && props.selection[node.lastLabel]) ? renderNodeLabel(node) : "";
+                        const fontSize = nodeLabelFontSize;
+                        ctx.font = `${fontSize}px Sans-Serif`;
+                        ctx.fillStyle = evaluateRulesOnNode(node, "node label color", nodeLabelColor, styleRules);
+                        ctx.textAlign = "center";
+                        ctx.fillText(label, node.x, node.y + 1);
+                        if (frozen && !node.fx && !node.fy && nodePositions) {
+                            node.fx = node.x;
+                            node.fy = node.y;
+                            nodePositions["" + node.id] = [node.x, node.y];
+                        }
+                        if (!frozen && node.fx && node.fy && nodePositions && nodePositions[node.id]) {
+                            nodePositions[node.id] = undefined;
+                            node.fx = undefined;
+                            node.fy = undefined;
+                        }
                     }
-                    if (!frozen && node.fx && node.fy && nodePositions && nodePositions[node.id]) {
-                        nodePositions[node.id] = undefined;
-                        node.fx = undefined;
-                        node.fy = undefined;
-                    }
-
                 }}
                 linkCanvasObjectMode={() => "after"}
                 linkCanvasObject={(link, ctx, globalScale) => {

@@ -71,6 +71,7 @@ export const flatten = data =>
 export const hierarchyProcessor = (records : Record<string, any>[]) => {
     return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
 
+        try {
         const index = recordToNative(row.get('index'));
         const key = recordToNative(row.get('key'));
         const value = recordToNative(row.get('value'));
@@ -95,6 +96,10 @@ export const hierarchyProcessor = (records : Record<string, any>[]) => {
         }
         holder.loc = value;
         return data
+        } catch(e) {
+            console.error(e);
+            return [];
+        }
     }, []);
 }
 

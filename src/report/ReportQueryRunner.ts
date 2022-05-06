@@ -72,7 +72,6 @@ export async function runCypherQuery(driver,
             query = "CALL { " + query + "} RETURN * LIMIT " + (rowLimit + 1)
         }
     }
-    console.log(query);
     transaction.run(query, parameters)
         .then(res => {
             // @ts-ignore
@@ -84,7 +83,6 @@ export async function runCypherQuery(driver,
                 transaction.commit();
                 return
             }
-            console.log("Runner");
             if (useRecordMapper == true) {
                 // Send a deep copy of the returned record keys as the set of fields.
                 const newFields = (records && records[0] && records[0].keys) ? records[0].keys.slice() : [];

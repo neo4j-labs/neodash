@@ -6,7 +6,7 @@ import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
 import { useState } from 'react'
 
 
-export default function CirclePackagingVisualization(props: ExtendedChartReportProps) {
+export default function CirclePackingVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
 
     if (!first) {
@@ -33,8 +33,7 @@ export default function CirclePackagingVisualization(props: ExtendedChartReportP
     const interactive = (settings["interactive"]) ? settings["interactive"] : true;
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
     const legend = (settings["legend"]) ? settings["legend"] : false;
-
-    const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+    const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
 
     return (
         <>
@@ -59,6 +58,7 @@ export default function CirclePackagingVisualization(props: ExtendedChartReportP
                     left: marginLeft
                 }}
                 animate={true}
-                colors={{scheme: 'nivo'}}/></>)
+                colors={{ scheme: colorScheme }}
+                /></>)
 
 }

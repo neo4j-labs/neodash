@@ -11,10 +11,10 @@ import NeoMarkdownChart from '../chart/MarkdownChart';
 import NeoParameterSelectionChart from '../chart/ParameterSelectionChart';
 import NeoPieChart from '../chart/PieChart';
 import SunburstChart from '../chart/SunburstChart';
-import CirclePackagingChart from '../chart/CirclePackagingChart';
 import TreeMapChart from '../chart/TreeMapChart';
 import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
+import CirclePackingChart from "../chart/CirclePackingChart";
 
 
 export enum SELECTION_TYPES {
@@ -196,6 +196,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "iconStyle": {
+                label: "Icon Style on format { label : url}",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
             }
         }
     },
@@ -448,7 +453,7 @@ export const REPORT_TYPES = {
     "sunburst": {
         label: "Sunburst Chart",
         component: SunburstChart,
-        helperText: <div>A pie chart with drill down expects two fields: a <code>PATH</code> and a <code>VALUE</code>.</div>,
+        helperText: <div>A Sunburst chart with drill down expects two fields: a <code>PATH</code> and a <code>VALUE</code>.</div>,
         selection: {
             "index": {
                 label: "PATH",
@@ -531,7 +536,7 @@ export const REPORT_TYPES = {
     },
     "circlePacking": {
         label: "CirclePacking Chart",
-        component: CirclePackagingChart,
+        component: CirclePackingChart,
         helperText: <div>A circle packaging chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
         selection: {
             "index": {

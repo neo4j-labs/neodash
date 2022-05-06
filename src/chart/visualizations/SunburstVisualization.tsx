@@ -36,8 +36,7 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
     const legend = (settings["legend"]) ? settings["legend"] : false;
     const arcLabelsSkipAngle = (settings["arcLabelsSkipAngle"]) ? settings["arcLabelsSkipAngle"] : 10;
     const cornerRadius = (settings["cornerRadius"]) ? settings["cornerRadius"] : 3;
-
-    const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+    const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
 
     return (
         <>
@@ -48,6 +47,7 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
                 value="loc"
                 data={data}
                 transitionMode={"pushIn"}
+                isInteractive={interactive}
                 onClick={clickedData => {
                     const foundObject = findObject(flatten(data.children), clickedData.id)
                     if (foundObject && foundObject.children) {
@@ -65,6 +65,7 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
                 }}
                 animate={true}
                 arcLabelsSkipAngle={arcLabelsSkipAngle}
-                colors={{scheme: 'nivo'}}/></>)
+                colors={{ scheme: colorScheme }}
+            /></>)
 
 }

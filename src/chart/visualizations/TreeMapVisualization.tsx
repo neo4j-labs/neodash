@@ -33,8 +33,7 @@ export default function TreeMapVisualization(props: ExtendedChartReportProps) {
     const interactive = (settings["interactive"]) ? settings["interactive"] : true;
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
     const legend = (settings["legend"]) ? settings["legend"] : false;
-
-    const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+    const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
 
     return (
         <>
@@ -59,6 +58,7 @@ export default function TreeMapVisualization(props: ExtendedChartReportProps) {
                     left: marginLeft
                 }}
                 animate={true}
-                colors={{scheme: 'nivo'}}/></>)
+                colors={{ scheme: colorScheme }}
+            /></>)
 
 }
