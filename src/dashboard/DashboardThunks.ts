@@ -27,7 +27,7 @@ export const removePageThunk = (number) => (dispatch: any, getState: any) => {
             return
         }
         if (number >= numberOfPages - 1) {
-            dispatch(updateDashboardSetting("pagenumber", Math.max(0,numberOfPages - 2) ))
+            dispatch(updateDashboardSetting("pagenumber", Math.max(0, numberOfPages - 2)))
         }
         dispatch(removePage(number))
     } catch (e) {
@@ -45,13 +45,13 @@ export const addPageThunk = () => (dispatch: any, getState: any) => {
     }
 }
 
-export const movePageThunk = (oldIndex: number, newIndex: number ) => (dispatch: any, getState: any) => {
+export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: any, getState: any) => {
     try {
-        if(getState().dashboard.settings.pagenumber == oldIndex) {
+        if (getState().dashboard.settings.pagenumber == oldIndex) {
             dispatch(updateDashboardSetting("pagenumber", newIndex));
         }
         dispatch(movePage(oldIndex, newIndex))
-       
+
     } catch (e) {
         dispatch(createNotificationThunk("Unable to move page", e));
     }
@@ -68,24 +68,23 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
         }
         const dashboard = JSON.parse(text);
 
-        // Attempt upgrade
+        // Attempt upgrade if dashboard version is outdated.
         if (dashboard["version"] == "1.1") {
-            const upgradedDashboard = upgradeDashboardFrom1Xto2X(dashboard);
+            const upgradedDashboard = upgradeDashboardVersion(dashboard, "1.1", "2.0");
             dispatch(setDashboard(upgradedDashboard))
             dispatch(setWelcomeScreenOpen(false))
-            dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.1. You might need to refresh this page."));
+            dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.0. You might need to refresh this page."));
             return
         }
-         // Attempt upgrade
-         if (dashboard["version"] == "2.0") {
-            const upgradedDashboard = upgradeDashboardFrom20to21(dashboard);
+        if (dashboard["version"] == "2.0") {
+            const upgradedDashboard = upgradeDashboardVersion(dashboard, "2.0", "2.1");
             dispatch(setDashboard(upgradedDashboard))
             dispatch(setWelcomeScreenOpen(false))
             dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.1. You might need to refresh this page."));
             return
         }
         if (dashboard["version"] != "2.1") {
-            throw ("Invalid dashboard version: " + dashboard.version);
+            throw ("Invalid dashboard version: " + dashboard.version + ". Try restarting the application, or retrieve your cached dashboard using a debug report.");
         }
 
         // Reverse engineer the minimal set of fields from the selection loaded.
@@ -199,55 +198,73 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     }
 }
 
-function upgradeDashboardFrom1Xto2X(dashboard: any) {
-    const upgradedDashboard = {};
-    upgradedDashboard["title"] = dashboard["title"];
-    upgradedDashboard["version"] = "2.1";
-    upgradedDashboard["settings"] = {
-        pagenumber: dashboard["pagenumber"],
-        editable: dashboard["editable"]
-    };
-    const upgradedDashboardPages = [];
-    dashboard["pages"].forEach(p => {
-        const newPage = {};
-        newPage["title"] = p["title"];
-        const newPageReports = [];
-        p["reports"].forEach(r => {
-            // only migrate value report types.
-            if (["table", "graph", "bar", "line", "map", "value", "json", "select", "iframe", "text"].indexOf(r["type"]) == -1) {
-                return;
-            }
-            if (r["type"] == "select") {
-                r["query"] = "";
-            }
-            const newPageReport = {
-                title: r["title"],
-                x: 0,
-                y: 0,
-                width: r["width"],
-                height: r["height"] * 0.75,
-                type: r["type"],
-                parameters: r["parameters"],
-                query: r["query"],
-                selection: {},
-                settings: {}
-            };
+function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
 
-            newPageReports.push(newPageReport);
-        });
-        newPage["reports"] = newPageReports;
-        upgradedDashboardPages.push(newPage);
-    });
-    upgradedDashboard["pages"] = upgradedDashboardPages;
-    return upgradedDashboard;
-}
+    if (origin == "2.0" && target == "2.1") {
+        dashboard["pages"].forEach((p, i) => {
+            // From v2.1 onwards, reports will have their x,y positions explicitly specified.
+            // v2.0 dashboards do not have this, therefore we must assign them.
+            // Additionally we divide the old report height by 1.5 (adjusted vertical scaling factor).
 
-function upgradeDashboardFrom20to21(dashboard: any){
-    dashboard["pages"].forEach((p,i) => {
-        p["reports"].forEach((r,j) => {
-            dashboard["pages"][i]["reports"][j] = {x:0, y:0, ...dashboard["pages"][i]["reports"][j]}
+            var xPos = 0;
+            var yPos = 0;
+            var rowHeight = 1;
+            p["reports"].forEach((r, j) => {
+                const reportWidth = parseInt(r["width"]);
+                const reportHeight = parseInt(r["height"]);
+                dashboard["pages"][i]["reports"][j] = { x: xPos, y: yPos, ...dashboard["pages"][i]["reports"][j] };
+                dashboard["pages"][i]["reports"][j]['height'] = reportHeight / 1.5;
+                xPos += reportWidth;
+                rowHeight = Math.max(reportHeight /1.5, rowHeight);
+                if (xPos >= 12) {
+                    xPos = 0;
+                    yPos += rowHeight;
+                    rowHeight = 1;
+                }
+            });
         });
-    });
-    dashboard["version"] = "2.1";
-    return dashboard;
+        dashboard["version"] = "2.1";
+        return dashboard;
+    }
+    if (origin == "1.1" && target == "2.0") {
+        const upgradedDashboard = {};
+        upgradedDashboard["title"] = dashboard["title"];
+        upgradedDashboard["version"] = "2.0";
+        upgradedDashboard["settings"] = {
+            pagenumber: dashboard["pagenumber"],
+            editable: dashboard["editable"]
+        };
+        const upgradedDashboardPages = [];
+        dashboard["pages"].forEach(p => {
+            const newPage = {};
+            newPage["title"] = p["title"];
+            const newPageReports = [];
+            p["reports"].forEach(r => {
+                // only migrate value report types.
+                if (["table", "graph", "bar", "line", "map", "value", "json", "select", "iframe", "text"].indexOf(r["type"]) == -1) {
+                    return;
+                }
+                if (r["type"] == "select") {
+                    r["query"] = "";
+                }
+                const newPageReport = {
+                    title: r["title"],
+                    width: r["width"],
+                    height: r["height"] * 0.75,
+                    type: r["type"],
+                    parameters: r["parameters"],
+                    query: r["query"],
+                    selection: {},
+                    settings: {}
+                };
+
+                newPageReports.push(newPageReport);
+            });
+            newPage["reports"] = newPageReports;
+            upgradedDashboardPages.push(newPage);
+        });
+        upgradedDashboard["pages"] = upgradedDashboardPages;
+        return upgradedDashboard;
+    }
+    throw new Error("Invalid upgrade path: " + origin + " --> " + target);
 }
