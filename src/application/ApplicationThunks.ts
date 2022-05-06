@@ -8,7 +8,7 @@ import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
     setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled,
-    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase, setWaitForSSO, setParametersToLoadAfterConnecting
+    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase, setWaitForSSO, setParametersToLoadAfterConnecting, setReportHelpModalOpen
 } from "./ApplicationActions";
 
 /**
@@ -330,6 +330,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             }
             dispatch(handleSharedDashboardsThunk());
             dispatch(setConnectionModalOpen(false));
+            dispatch(setReportHelpModalOpen(false));
             dispatch(setAboutModalOpen(false));
         }
     } catch (e) {

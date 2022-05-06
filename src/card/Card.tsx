@@ -15,6 +15,7 @@ import { getDashboardIsEditable, getDatabase, getGlobalParameters } from '../set
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
 import { createNotificationThunk } from '../page/PageThunks';
 import useDimensions from 'react-cool-dimensions';
+import { setReportHelpModalOpen } from '../application/ApplicationActions';
 
 
 const NeoCard = ({
@@ -25,6 +26,7 @@ const NeoCard = ({
     globalParameters, // Query parameters that are globally set for the entire dashboard.
     dashboardSettings, // Dictionary of settings for the entire dashboard.
     onRemovePressed, // action to take when the card is removed. (passed from parent)
+    onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
     onTitleUpdate, // action to take when the card title is updated.
     onTypeUpdate, // action to take when the card report type is updated.
     onFieldsUpdate, // action to take when the set of returned query fields is updated.
@@ -134,6 +136,7 @@ const NeoCard = ({
                     onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
                     onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
                     onTypeUpdate={(type) => onTypeUpdate(index, type)}
+                    onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
                     onRemovePressed={() => onRemovePressed(index)}
                     onCreateNotification={(title, message) => onCreateNotification(title, message)}
                     onToggleCardSettings={() => {
@@ -193,6 +196,9 @@ const mapDispatchToProps = dispatch => ({
     },
     onToggleCardSettings: (index: any, open: any) => {
         dispatch(toggleCardSettingsThunk(index, open))
+    },
+    onReportHelpButtonPressed: () => {
+        dispatch(setReportHelpModalOpen(true))
     },
     onToggleReportSettings: (index: any) => {
         dispatch(toggleReportSettings(index))

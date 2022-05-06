@@ -9,7 +9,7 @@ import { CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, width, height, type, 
     reportSettings, reportSettingsOpen, fields, widthPx, heightPx,
     onQueryUpdate, onRefreshRateUpdate, onRemovePressed, onReportSettingUpdate,
-    onToggleCardSettings, onTypeUpdate, setActive,
+    onToggleCardSettings, onTypeUpdate, setActive, onReportHelpButtonPressed,
      onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand, onCreateNotification }) => {
 
     const reportHeight = heightPx - CARD_HEADER_HEIGHT + 24;
@@ -18,6 +18,7 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, width, he
         expanded={expanded}
         onToggleCardExpand={onToggleCardExpand}
         onRemovePressed={onRemovePressed}
+        onReportHelpButtonPressed={onReportHelpButtonPressed}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
         onToggleCardSettings={(e) => { setActive(reportSettings.autorun !== undefined ? reportSettings.autorun : true); onToggleCardSettings(e) }} />
 

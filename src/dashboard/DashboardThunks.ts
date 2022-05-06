@@ -167,14 +167,14 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callba
 export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (dispatch: any, getState: any) => {
     try {
         runCypherQuery(driver, database,
-            "MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date, n.user as author ORDER BY date DESC",
-            {}, {}, ["id, title, date, user"], 1000, () => { return }, (records) => {
+            "MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC",
+            {}, {}, ["id, title, date, user, version"], 1000, () => { return }, (records) => {
                 if (!records || !records[0] || !records[0]["_fields"]) {
                     callback([]);
                     return
                 }
                 const result = records.map(r => {
-                    return { id: r["_fields"][0], title: r["_fields"][1], date: r["_fields"][2], author: r["_fields"][3] };
+                    return { id: r["_fields"][0], title: r["_fields"][1], date: r["_fields"][2], author: r["_fields"][3], version: r["_fields"][4] };
                 });
                 callback(result);
             })

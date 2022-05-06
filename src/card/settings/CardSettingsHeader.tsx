@@ -9,8 +9,10 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { FullscreenExit } from '@material-ui/icons';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+import { Tooltip } from '@material-ui/core';
 
-const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggleCardExpand, expanded, fullscreenEnabled }) => {
+const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggleCardExpand, 
+    expanded, fullscreenEnabled, onReportHelpButtonPressed }) => {
     const maximizeButton = <IconButton aria-label="maximize"
         onClick={onToggleCardExpand}>
         <FullscreenIcon />
@@ -26,19 +28,24 @@ const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggle
             avatar={<div style={{ marginTop: "-8px" }}>
 
                 <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginTop: "8px", marginLeft: "-7px", marginRight: "10px" }}></DragIndicatorIcon>
-                <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px" }} aria-label="help"
-                    onClick={(e) => alert("help!")}>
-                    <HelpOutlineIcon />
-                </IconButton>
-                <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "red"}} aria-label="remove"
-                    onClick={onRemovePressed} >
-                    <DeleteOutlineIcon />
-                </IconButton>
-              
+                <Tooltip title="Help" aria-label="help">
+                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px" }} aria-label="help"
+                        onClick={onReportHelpButtonPressed}>
+                        <HelpOutlineIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete" aria-label="delete">
+                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "red" }} aria-label="remove"
+                        onClick={onRemovePressed} >
+                        <DeleteOutlineIcon />
+                    </IconButton>
+                </Tooltip>
             </div>}
             action={<>
                 {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-                <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton> 
+                <Tooltip title="Save" aria-label="save">
+                    <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton>
+                </Tooltip >
             </>}
             title=""
             subheader="" />

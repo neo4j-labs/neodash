@@ -26,10 +26,15 @@ export const setConnectionModalOpen = (open: boolean) => ({
     payload: { open },
 });
 
-
 export const SET_ABOUT_MODAL_OPEN = 'APPLICATION/SET_ABOUT_MODAL_OPEN';
 export const setAboutModalOpen = (open: boolean) => ({
     type: SET_ABOUT_MODAL_OPEN,
+    payload: { open },
+});
+
+export const SET_REPORT_HELP_MODAL_OPEN = 'APPLICATION/SET_REPORT_HELP_MODAL_OPEN';
+export const setReportHelpModalOpen = (open: boolean) => ({
+    type: SET_REPORT_HELP_MODAL_OPEN,
     payload: { open },
 });
 
