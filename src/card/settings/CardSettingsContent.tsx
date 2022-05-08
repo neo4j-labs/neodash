@@ -33,39 +33,27 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
 
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
-        if (refreshRate != refreshRateText) {
+        if (refreshRate !== refreshRateText) {
             setRefreshRateText((refreshRate !== undefined) ? refreshRate : "");
         }
     }, [refreshRate])
 
 
     const SettingsComponent = REPORT_TYPES[type].settingsComponent;
-    const settings = REPORT_TYPES[type]["settingsComponent"] ? <SettingsComponent type={type} onReportSettingUpdate={onReportSettingUpdate} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
-    <>
-        <NeoCodeEditorComponent value={queryText}
-             editable={true}
-            language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}
-            onChange={(value) => {
-                setQueryText(value);
-                debouncedQueryUpdate(value);
-            }}
-            placeholder={"Enter Cypher here..."}
-        />
-        <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", borderBottom: "1px solid lightgrey", borderLeft: "1px solid lightgrey", borderRight: "1px solid lightgrey", marginTop: "0px" }}>{REPORT_TYPES[type].helperText}</p>
-    </>;
+
     return <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}>
         <NeoField select label={"Type"} value={type}
-            style={{marginLeft: "0px", marginRight: "10px", width: "47%", maxWidth: "200px"}}
+            style={{ marginLeft: "0px", marginRight: "10px", width: "47%", maxWidth: "200px" }}
             onChange={(value) => onTypeUpdate(value)}
             choices={Object.keys(REPORT_TYPES).map((option) => (
                 <MenuItem key={option} value={option}>
                     {REPORT_TYPES[option].label}
                 </MenuItem>
             ))} />
-    
+
         {REPORT_TYPES[type]["disableRefreshRate"] == undefined ? <NeoField placeholder='0 (No Refresh)'
             label="Refresh Rate (sec)" numeric={true} value={refreshRateText}
-            style={{ width: "47%", maxWidth: "200px"}}
+            style={{ width: "47%", maxWidth: "200px" }}
             onChange={(value) => {
                 setRefreshRateText(value);
                 debouncedRefreshRateUpdate(value);
@@ -73,7 +61,22 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
 
         <br /><br />
         {/* Allow for overriding the code box with a custom component */}
-        {settings}
+        {REPORT_TYPES[type]["settingsComponent"] ?
+            <SettingsComponent type={type} onReportSettingUpdate={onReportSettingUpdate} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
+            <div>
+                <NeoCodeEditorComponent
+                    key={0}
+                    value={queryText}
+                    editable={true}
+                    language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}
+                    onChange={(value) => {
+                        debouncedQueryUpdate(value);
+                        setQueryText(value);
+                    }}
+                    placeholder={"Enter Cypher here..."}
+                />
+                <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", borderBottom: "1px solid lightgrey", borderLeft: "1px solid lightgrey", borderRight: "1px solid lightgrey", marginTop: "0px" }}>{REPORT_TYPES[type].helperText}</p>
+            </div>}
 
     </CardContent>
 };
