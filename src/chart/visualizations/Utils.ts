@@ -103,7 +103,8 @@ export const hierarchyProcessor = (records : Record<string, any>[]) => {
     }, []);
 }
 
-export const dataTestHierarcy =  {
+// TODO: Delete this test data for hierarchical reports.
+export const hierarchicalTestData =  {
     "name": "nivo",
     "children": [
         {

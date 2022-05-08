@@ -21,6 +21,9 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
     const dataPre = hierarchyProcessor(records);
     dataPre.forEach(currentNode => mutateName(currentNode));
 
+    // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.
+    // Where a user give us just the tree starting one hop away from the root. 
+    // as Nivo needs a common root, so in that case, we create it for them.
     const commonProperties = { data : dataPre.length == 1 ? dataPre[0] : {name : "Total", children : dataPre}};
 
     const [data, setData] = useState(commonProperties.data)
