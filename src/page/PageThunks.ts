@@ -5,7 +5,6 @@ import { createReport, removeReport, updateAllCardPositionsInPage } from "./Page
 
 export const createNotificationThunk = (title: any, message: any) => (dispatch: any) => {
     dispatch(createNotification(title, message));
-    console.log(title, message);
 };
 
 export const addReportThunk = (x: number, y: number, width: number, height: number) => (dispatch: any, getState: any) => {

@@ -80,7 +80,6 @@ export const NeoDashboardHeaderPageList = ({ open, standalone, editable, pages, 
                     const oldIndex = oldPosition["i"];
                     const newIndex = Math.min(newXPositions.length - 2, newXPositions.sort((a,b) => a- b).indexOf(newPosition["x"]));
                     if (oldIndex !== newIndex) {
-                        console.log(oldIndex, newIndex);
                         movePage(oldIndex, newIndex);
                         recomputeLayout();
                     }

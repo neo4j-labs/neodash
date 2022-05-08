@@ -133,7 +133,6 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
         }
     } catch (e) {
         dispatch(createNotificationThunk("Cannot update report fields", e));
-        console.log(e)
     }
 }
 
