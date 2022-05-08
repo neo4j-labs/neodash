@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { setDashboardTitle, addPage, removePage } from "../DashboardActions";
-import { getDashboardTitle, getPages } from "../DashboardSelectors";
+import { getDashboardSettings, getDashboardTitle, getPages } from "../DashboardSelectors";
 import debounce from 'lodash/debounce';
 import { setPageTitle } from "../../page/PageActions";
 import { addPageThunk, removePageThunk } from "../DashboardThunks";
@@ -14,6 +14,7 @@ import { setConnectionModalOpen } from "../../application/ApplicationActions";
 import { setPageNumberThunk } from "../../settings/SettingsThunks";
 import { getDashboardIsEditable, getPageNumber } from "../../settings/SettingsSelectors";
 import { applicationIsStandalone } from "../../application/ApplicationSelectors";
+import ImageIcon from '@material-ui/icons/Image';
 
 const drawerWidth = 240;
 
@@ -32,9 +33,10 @@ const styles = {
 
 
 export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, pages, dashboardTitle,
-    handleDrawerOpen, setDashboardTitle, editable, connection,
-    addPage, removePage, selectPage, setPageTitle, onConnectionModalOpen }) => {
+    handleDrawerOpen, setDashboardTitle, editable, connection, settings,
+    addPage, removePage, selectPage, setPageTitle, onConnectionModalOpen, onDownloadImage }) => {
 
+    const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
     const debouncedDashboardTitleUpdate = useCallback(
         debounce(setDashboardTitle, 250),
@@ -102,13 +104,12 @@ export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, page
                         }
                     }}
                 />
-                   {/* <Tooltip title={"Download Dashboard as Image"}>
-                    <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={(e) => alert(e)}>
-                        <Badge badgeContent={""} >
-                            <img style={{ width: "36px", height: "36px" }} src="neo4j-icon.png" />
-                        </Badge>
+                {downloadImageEnabled ? <Tooltip title={"Download Dashboard as Image"}>
+                    <IconButton style={{background: "#ffffff22", padding: "3px", marginRight: "3px"}} onClick={(e) => onDownloadImage()}>
+                        <ImageIcon style={{ padding: 6, color: "#ffffffdd", width: "36px", height: "36px", fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
+                        </ImageIcon>
                     </IconButton>
-                </Tooltip> */}
+                </Tooltip> : <></>}
 
                 <Tooltip title={connection.protocol + "://" + connection.url + ":" + connection.port} placement="left" aria-label="host">
                     <IconButton style={{ background: "#ffffff22", padding: "3px" }} onClick={(e) => {
@@ -151,6 +152,7 @@ const mapStateToProps = state => ({
     dashboardTitle: getDashboardTitle(state),
     standalone: applicationIsStandalone(state),
     pages: getPages(state),
+    settings: getDashboardSettings(state),
     editable: getDashboardIsEditable(state),
     pagenumber: getPageNumber(state)
 });

@@ -12,12 +12,14 @@ import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotification } from '../application/ApplicationActions';
 import { createNotificationThunk } from '../page/PageThunks';
+import { downloadComponentAsImage } from '../chart/util/ChartUtils';
 
 
 
-const Dashboard = ({ pagenumber, connection, onConnectionUpdate }) => {
+const Dashboard = ({ pagenumber, connection, onConnectionUpdate, onDownloadDashboardAsImage }) => {
     const [open, setOpen] = React.useState(false);
     const driver = createDriver(connection.protocol, connection.url, connection.port, connection.username, connection.password);
+
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -32,7 +34,7 @@ const Dashboard = ({ pagenumber, connection, onConnectionUpdate }) => {
             connection={connection}
             onConnectionUpdate={onConnectionUpdate} />
         <NeoDrawer open={open} handleDrawerClose={handleDrawerClose}></NeoDrawer>
-        <NeoDashboardHeader open={open} connection={connection} handleDrawerOpen={handleDrawerOpen}></NeoDashboardHeader>
+        <NeoDashboardHeader open={open} connection={connection} onDownloadImage={onDownloadDashboardAsImage} handleDrawerOpen={handleDrawerOpen}></NeoDashboardHeader>
         <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: "#fafafa" }}>
             <Container maxWidth="xl" style={{ marginTop: "60px" }}>
                 <NeoPage></NeoPage>
