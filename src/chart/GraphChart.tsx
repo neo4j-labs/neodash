@@ -321,7 +321,6 @@ const NeoGraphChart = (props: ChartProps) => {
     // TODO - implement this.
     const handleExpand = useCallback(node => {
         if (rightClickToExpandNodes) {
-            console.log(node);
             props.queryCallback && props.queryCallback("MATCH (n)-[e]-(m) WHERE id(n) =" + node.id + " RETURN e,m", {}, setExtraRecords);
         }
     }, []);
