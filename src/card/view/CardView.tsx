@@ -59,6 +59,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
         while (match = re.exec(query)) {
             localQueryVariables.push(match[1]);
         }
+
         if(!globalParameters){
             return {};
         }

@@ -96,11 +96,11 @@ export async function runCypherQuery(driver,
                 const nodePropsAsFields = extractNodePropertiesFromRecords(records);
                 setFields(nodePropsAsFields);
             }
-           
             // Set the records for the visualization, if an explicit field name mapping is provided.
             if (useRecordMapper) {
                 records = mapRecords(records, selection, textFields, numericFields, numericOrDatetimeFields, optionalFields, defaultKeyField)
             }
+
             if (records == null) {
                 setStatus(QueryStatus.NO_DRAWABLE_DATA)
                 // console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
