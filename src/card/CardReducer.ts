@@ -13,8 +13,10 @@ export const CARD_INITIAL_STATE = {
     settingsOpen: false,
     advancedSettingsOpen: false,
     width: 3,
-    type: "table",
     height: 3,
+    x: 0,
+    y: 0,
+    type: "table",
     fields: [],
     selection: {},
     settings: {},
@@ -78,9 +80,10 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
 
             const entry = {}
             entry[selectable] = field;
-            state = update(state, { selection: update(selection, entry) })
+            state = update(state, { selection: update(selection, entry) });
             return state;
         }
+
         case UPDATE_ALL_SELECTIONS: {
             const { pagenumber, index, selections } = payload;
             state = update(state, { selection: selections })

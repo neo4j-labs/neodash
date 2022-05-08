@@ -66,7 +66,7 @@ export const updateSelection = (pagenumber: number, index: number, selectable: a
 export const UPDATE_ALL_SELECTIONS = 'PAGE/CARD/UPDATE_ALL_SELECTIONS';
 export const updateAllSelections = (pagenumber: number, index: number, selections: any) => ({
     type: UPDATE_ALL_SELECTIONS,
-    payload: { pagenumber, index, selections},
+    payload: { pagenumber, index, selections },
 });
 
 export const CLEAR_SELECTION = 'PAGE/CARD/CLEAR_SELECTION';

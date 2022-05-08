@@ -25,6 +25,7 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
         readOnly={!editable}
         value={value}
         onValueChange={(val) => {
+            // TODO: there's a bug here that causes this event to be fired twice when text gets copy pasted into the editor.
             if (editable) {
                 onChange(val);
             }

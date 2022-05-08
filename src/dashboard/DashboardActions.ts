@@ -30,3 +30,9 @@ export const removePage = (number: any) => ({
     type: REMOVE_PAGE,
     payload: { number },
 });
+
+export const MOVE_PAGE = 'DASHBOARD/MOVE_PAGE';
+export const movePage = (oldIndex: any, newIndex:any) => ({
+    type: MOVE_PAGE,
+    payload: { oldIndex, newIndex },
+});

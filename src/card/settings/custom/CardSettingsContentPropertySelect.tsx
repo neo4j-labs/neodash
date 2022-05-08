@@ -7,7 +7,7 @@ import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import NeoField from '../../../component/field/Field';
 
-const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onReportSettingUpdate, query, onQueryUpdate }) => {
+const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
     if (!driver) throw new Error('`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?')
 
