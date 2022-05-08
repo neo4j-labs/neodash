@@ -24,6 +24,7 @@
   ],
   "scripts": {
     "dev": "npx webpack-dev-server --mode development",
+    "debug": "npx --node-options='--inspect' webpack-dev-server --mode development",
     "build": "npx webpack --mode production && cp -r public/* dist/",
     "sync": "aws s3 sync --acl public-read build s3://neodash.graphapp.io/preview",
     "test": "ts-mocha \"src/**/*.test.tsx\" --require @babel/register --recursive"
@@ -39,9 +40,12 @@
     "@mui/material": "^5.3.0",
     "@mui/x-data-grid": "^5.2.2",
     "@nivo/bar": "^0.79.1",
+    "@nivo/circle-packing": "^0.79.1",
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "@nivo/pie": "^0.79.1",
+    "@nivo/sunburst": "^0.79.1",
+    "@nivo/treemap": "^0.79.1",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.3.1",
     "codemirror": "^5.65.1",

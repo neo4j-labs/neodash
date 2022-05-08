@@ -10,6 +10,7 @@ WORKDIR /usr/local/src/neodash
 
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
+
 RUN npm install
 COPY ./ /usr/local/src/neodash
 RUN npm run build
