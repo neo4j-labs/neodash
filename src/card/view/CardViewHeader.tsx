@@ -89,7 +89,7 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
         action={<>
             {(downloadImageEnabled) ? downloadImageButton : <></>}
             {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-            {settingsButton}
+            {editable ? settingsButton : <></>}
         </>}
         title={cardTitle} />
 }
