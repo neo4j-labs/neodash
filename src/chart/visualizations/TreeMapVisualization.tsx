@@ -1,7 +1,7 @@
 import React from 'react'
 import { ResponsiveTreeMap  } from '@nivo/treeMap'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
-import { checkResultKeys,  mutateName, hierarchyProcessor, findObject, flatten } from './Utils'
+import { checkResultKeys,  mutateName, processHierarchyFromRecords, findObject, flatten } from './Utils'
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
 import { useState } from 'react'
 
@@ -18,7 +18,7 @@ export default function TreeMapVisualization(props: ExtendedChartReportProps) {
         return <p>{error.message}</p>
     }
 
-    const dataPre = hierarchyProcessor(records);
+    const dataPre = processHierarchyFromRecords(records);
     dataPre.forEach(currentNode => mutateName(currentNode));
 
     // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.

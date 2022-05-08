@@ -74,22 +74,20 @@ export default function PieVisualization(props: ExtendedChartReportProps) {
     // Compute slice color based on rules - overrides default color scheme completely.
     const getSliceColor = (slice) => {
         const data = {}
-        if(!props.selection){
+        if (!props.selection) {
             return "grey";
         }
         data[props.selection['value']] = slice.value;
         data[props.selection['index']] = slice.id;
         const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['slice color']);
-        if(validRuleIndex !== -1){
+        if (validRuleIndex !== -1) {
             return styleRules[validRuleIndex]['customizationValue'];
         }
         return "grey"
     }
 
-    const arcLabel = d => {
-
-        return (d.arc.angleDeg*100/360).toFixed(2).toString() +  '%';
-
+    const getArcLabel = item => {
+        return (item.arc.angleDeg * 100 / 360).toFixed(2).toString() + '%';
     }
 
     return <ResponsivePie
@@ -103,9 +101,9 @@ export default function PieVisualization(props: ExtendedChartReportProps) {
         borderWidth={borderWidth}
         activeOuterRadiusOffset={activeOuterRadiusOffset}
         cornerRadius={cornerRadius}
-        arcLinkLabelsSkipAngle = {arcLinkLabelsSkipAngle}
-        arcLinkLabelsOffset = {arcLinkLabelsOffset}
-        arcLabelsSkipAngle = {arcLabelsSkipAngle}
+        arcLinkLabelsSkipAngle={arcLinkLabelsSkipAngle}
+        arcLinkLabelsOffset={arcLinkLabelsOffset}
+        arcLabelsSkipAngle={arcLabelsSkipAngle}
         margin={{ top: marginTop, right: marginRight, bottom: (legend) ? legendHeight + marginBottom : marginBottom, left: marginLeft }}
         colors={styleRules.length >= 1 ? getSliceColor : { scheme: colorScheme }}
         legends={(legend) ? [
@@ -135,7 +133,7 @@ export default function PieVisualization(props: ExtendedChartReportProps) {
         ] : []}
         animate={true}
         //TODO : Needs to be set dynamic (default true on percentage)
-        arcLabel = {arcLabel}
+        arcLabel={getArcLabel}
         {...props.config}
     />
 

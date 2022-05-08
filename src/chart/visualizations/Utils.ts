@@ -37,6 +37,10 @@ export function checkResultKeys(first: Neo4jRecord, keys: string[]) {
     return false
 }
 
+/**
+ * For hierarchical data structures, recursively search for a key property that must have a given value.
+ * If none can be found, return null.
+ */
 export const search = (tree, value, key = 'id', reverse = false) => {
     if (tree.length == 0) return null;
     const stack = Array.isArray(tree) ? [...tree] : [tree]
@@ -49,6 +53,10 @@ export const search = (tree, value, key = 'id', reverse = false) => {
 };
 
 
+/**
+ * For hierarchical data, we remove all intermediate node prefixes generate by `processHierarchyFromRecords`.
+ * This ensures that the visualization itself shows the 'real' names, and not the intermediate ones.
+ */
 export const mutateName = (currentNode) => {
     if (currentNode.name){
         let s = currentNode.name.split('_');
@@ -68,7 +76,10 @@ export const flatten = data =>
         return [...acc, item]
     }, []);
 
-export const hierarchyProcessor = (records : Record<string, any>[]) => {
+/**
+ * Converts a list of Neo4j records into a hierarchy structure for hierarchical data visualizations.
+ */
+export const processHierarchyFromRecords = (records : Record<string, any>[]) => {
     return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
 
         try {
@@ -78,6 +89,7 @@ export const hierarchyProcessor = (records : Record<string, any>[]) => {
 
         let holder = data;
         for (let [idx, val] of index.entries()) {
+            // Add a level prefix to each item to avoid duplicates
             val = "lvl"+idx+"_"+val;
             let obj = search(holder, val, 'name');
             let entry = { name: val };

@@ -1,8 +1,6 @@
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import  ForceGraph2D from 'react-force-graph-2d';
-import * as THREE from 'three'
-import  ForceGraph3D from 'react-force-graph-3d';
 import ReactDOMServer from 'react-dom/server';
 import useDimensions from "react-cool-dimensions";
 import { categoricalColorSchemes } from '../config/ColorConfig';
@@ -32,14 +30,14 @@ const  drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
     canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
 
 }
-
-const nodeTree = (node) => {
-    const imgTexture = new THREE.TextureLoader().load(`https://img.icons8.com/external-flaticons-lineal-color-flat-icons/344/external-url-gdpr-flaticons-lineal-color-flat-icons.png`);
-    const material = new THREE.SpriteMaterial({ map: imgTexture });
-    const sprite = new THREE.Sprite(material);
-    sprite.scale.set(12, 12);
-    return sprite;
-}
+    // TODO: Fix experimental 3D graph visualization.
+    // const nodeTree = (node) => {
+    //     const imgTexture = new THREE.TextureLoader().load(`https://img.icons8.com/external-flaticons-lineal-color-flat-icons/344/external-url-gdpr-flaticons-lineal-color-flat-icons.png`);
+    //     const material = new THREE.SpriteMaterial({ map: imgTexture });
+    //     const sprite = new THREE.Sprite(material);
+    //     sprite.scale.set(12, 12);
+    //     return sprite;
+    // }
 
 
 const update = (state, mutations) =>
@@ -403,7 +401,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 nodeLabel={node => showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : ""}
                 nodeVal={node => node.size}
                 onNodeClick={showPopup}
-                nodeThreeObject = {nodeTree}
+                // nodeThreeObject = {nodeTree}
                 onLinkClick={showPopup}
                 onNodeRightClick={handleExpand}
                 linkDirectionalParticles={linkDirectionalParticles}
