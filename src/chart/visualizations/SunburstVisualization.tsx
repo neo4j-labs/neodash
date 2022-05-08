@@ -4,6 +4,8 @@ import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps
 import { checkResultKeys,  mutateName, processHierarchyFromRecords, findObject, flatten } from './Utils'
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
 import { useState } from 'react'
+import { Tooltip } from '@material-ui/core'
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 export default function SunburstVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
@@ -43,7 +45,9 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
 
     return (
         <>
-            <button onClick={() => setData(commonProperties.data)}>Reset</button>
+            <Tooltip title="Reset" aria-label="reset">
+                <RefreshIcon onClick={() => setData(commonProperties.data)} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 76, right: 12, position: "absolute", borderRadius: "12px", zIndex: 5, background: "#eee" }} color="disabled" fontSize="small"></RefreshIcon>
+            </Tooltip>
             <ResponsiveSunburst
                 {...commonProperties}
                 id="name"

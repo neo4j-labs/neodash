@@ -692,19 +692,19 @@ export const REPORT_TYPES = {
     "sunburst": {
         label: "Sunburst Chart",
         component: NeoSunburstChart,
-        helperText: <div>A Sunburst chart expects two fields: a <code>path</code> and a <code>value</code>.</div>,
+        helperText: <div>A Sunburst chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
-                label: "PATH",
+                label: "Path",
                 type: SELECTION_TYPES.LIST
             },
             "value": {
-                label: "VALUE",
+                label: "Value",
                 type: SELECTION_TYPES.NUMBER,
                 key: true
             },
             "key": {
-                label: "inline",
+                label: "Inline",
                 type: SELECTION_TYPES.LIST,
                 optional: true
             }
@@ -776,19 +776,19 @@ export const REPORT_TYPES = {
     "circlePacking": {
         label: "Circle Packing",
         component: NeoCirclePackingChart,
-        helperText: <div>A circle packing chart expects two fields: a <code>path</code> and a <code>value</code>.</div>,
+        helperText: <div>A circle packing chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
-                label: "PATH",
+                label: "Path",
                 type: SELECTION_TYPES.LIST
             },
             "value": {
-                label: "VALUE",
+                label: "Value",
                 type: SELECTION_TYPES.NUMBER,
                 key: true
             },
             "key": {
-                label: "inline",
+                label: "Inline",
                 type: SELECTION_TYPES.LIST,
                 optional: true
             }
@@ -850,19 +850,19 @@ export const REPORT_TYPES = {
     "treeMap": {
         label: "Treemap",
         component: NeoTreeMapChart,
-        helperText: <div>A Tree Map chart expects two fields: a <code>path</code> and a <code>value</code>.</div>,
+        helperText: <div>A Tree Map chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
-                label: "PATH",
+                label: "Path",
                 type: SELECTION_TYPES.LIST
             },
             "value": {
-                label: "VALUE",
+                label: "Value",
                 type: SELECTION_TYPES.NUMBER,
                 key: true
             },
             "key": {
-                label: "inline",
+                label: "Inline",
                 type: SELECTION_TYPES.LIST,
                 optional: true
             }

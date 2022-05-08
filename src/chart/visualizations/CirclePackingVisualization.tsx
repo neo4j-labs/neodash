@@ -1,10 +1,11 @@
 import React from 'react'
-import { ResponsiveCirclePacking   } from '@nivo/circle-packing'
+import { ResponsiveCirclePacking } from '@nivo/circle-packing'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
-import { checkResultKeys,  mutateName, processHierarchyFromRecords, findObject, flatten } from './Utils'
+import { checkResultKeys, mutateName, processHierarchyFromRecords, findObject, flatten } from './Utils'
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
 import { useState } from 'react'
-
+import { Tooltip } from '@material-ui/core'
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 export default function CirclePackingVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
@@ -24,7 +25,7 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
     // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.
     // Where a user give us just the tree starting one hop away from the root. 
     // as Nivo needs a common root, so in that case, we create it for them.
-    const commonProperties = { data : dataPre.length == 1 ? dataPre[0] : {name : "Total", children : dataPre}};
+    const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: "Total", children: dataPre } };
 
     const [data, setData] = useState(commonProperties.data)
     const settings = (props.settings) ? props.settings : {};
@@ -40,7 +41,9 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
 
     return (
         <>
-            <button onClick={() => setData(commonProperties.data)}>Reset</button>
+            <Tooltip title="Reset" aria-label="reset">
+                <RefreshIcon onClick={() => setData(commonProperties.data)} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 76, right: 12, position: "absolute", borderRadius: "12px", zIndex: 5, background: "#eee" }} color="disabled" fontSize="small"></RefreshIcon>
+            </Tooltip>
             <ResponsiveCirclePacking
                 {...commonProperties}
                 id="name"
@@ -62,6 +65,6 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
                 }}
                 animate={true}
                 colors={{ scheme: colorScheme }}
-                /></>)
+            /></>)
 
 }
