@@ -8,7 +8,7 @@ import NeoSaveModal from "../../modal/SaveModal";
 import NeoLoadModal from "../../modal/LoadModal";
 import NeoShareModal from "../../modal/ShareModal";
 import { NeoAboutModal } from "../../modal/AboutModal";
-import { NeoDocumentationModal } from "../../modal/DocumentationModal";
+import { NeoReportExamplesModal } from "../../modal/ReportExamplesModal";
 import { applicationGetConnection, applicationHasAboutModalOpen, applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
@@ -16,8 +16,10 @@ import NeoSettingsModal from "../../settings/SettingsModal";
 import { createNotificationThunk } from "../../page/PageThunks";
 import { getDashboardSettings } from "../DashboardSelectors";
 import { updateDashboardSetting } from "../../settings/SettingsActions";
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import CategoryIcon from '@material-ui/icons/Category';
 
-
+// The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
     handleDrawerClose, aboutModalOpen, onShareModalOpen, onAboutModalOpen, resetApplication }) => {
 
@@ -46,7 +48,7 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
                     width: "56px"
                 }
             }
-            open={open == true} 
+            open={open == true}
         >
             <div style={{
                 display: 'flex',
@@ -58,14 +60,14 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
 
             }}>
                 <ListItem>
-                <Button
+                    <Button
                         component="label"
                         onClick={resetApplication}
-                        style={{ backgroundColor: "white", marginLeft: "-8px"}}
+                        style={{ backgroundColor: "white", marginLeft: "-8px" }}
                         color="default"
                         variant="outlined"
                         size="small"
-                        startIcon={<ExitToAppIcon />}>NeoDash
+                        startIcon={<ExitToAppIcon />}>Menu
                     </Button>
                 </ListItem>
 
@@ -93,7 +95,13 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
             </List>
             <Divider />
             <List>
-                <NeoDocumentationModal database={connection.database}></NeoDocumentationModal>
+                <ListItem button onClick={(e) => window.open("https://github.com/nielsdejong/neodash/wiki/User-Guide", "_blank")}>
+                    <ListItemIcon>
+                        <LibraryBooksIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Documentation" />
+                </ListItem>
+                <NeoReportExamplesModal database={connection.database}></NeoReportExamplesModal>
                 <ListItem button onClick={onAboutModalOpen}>
                     <ListItemIcon>
                         <InfoOutlinedIcon />

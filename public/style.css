@@ -1,5 +1,4 @@
-
-.MuiDrawer-paper{
+.MuiDrawer-paper {
     position: relative !important;
 }
 
@@ -11,17 +10,21 @@
 .no-underline .MuiInput-underline::before {
     border-bottom: none;
 }
-.MuiContainer-root{
+
+.MuiContainer-root {
     padding-left: 10px !important;
     padding-right: 10px !important;
 }
+
 .large input {
     font-size: 20px;
     margin-top: -6px;
 }
+
 .MuiChip-root {
     border-radius: 16px;
 }
+
 .CodeMirror-lint-message-error {
     background-image: none !important;
 }
@@ -30,32 +33,61 @@
     margin-left: 1px;
     margin-bottom: 34px !important;
 }
+
 .leaflet-custom-rel-popup {
     margin-left: 0px;
 }
+
 .leaflet-control-attribution {
     display: none;
 }
-.leaflet-custom-tooltip {
 
-}
+.leaflet-custom-tooltip {}
+
 .leaflet-marker-icon {
     width: 50px !important;
     margin-left: -25px !important;
 }
-.autosize .ReactCodeMirror .CodeMirror{
+
+.autosize .ReactCodeMirror .CodeMirror {
     height: auto;
 }
+
 /* Hack to make the table header smaller, TODO - clean this up */
 .table-small-header {
     height: 36px;
 }
+
 .MuiDataGrid-root {
     border: none !important;
 }
+
 .MuiChip-root:before {
     border: none !important;
 }
+
+.react-resizable-handle {
+    bottom: 1px !important;
+    opacity: 0.5;
+    color: rgb(199, 199, 199);
+}
+
+.MuiDataGrid-footerContainer {
+    border: none !important;
+}
+.neodash-card-editable-false .react-resizable-handle {
+    display: none;
+}
+
+.react-grid-item>.react-resizable-handle.react-resizable-handle-se {
+    cursor: nwse-resize !important;
+}
+
+.react-grid-item>.react-resizable-handle::after {
+    border-right: 2px solid rgba(0, 0, 0, 0.1) !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+}
+
 /* .MuiDataGrid-columnHeaders {
     min-height: 32px !important;
     max-height: 32px !important;
@@ -83,15 +115,23 @@
     margin-top: -285px;
     margin-left: 10px;
 }
-.MuiTablePagination-root{
+
+.MuiTablePagination-root {
     margin-top: -10px;
 }
+
+.MuiDataGrid-virtualScroller {
+    overflow-y: hidden !important;
+}
+
 .MuiCardHeader-content .MuiInputBase-root.Mui-disabled {
     color: inherit !important;
 }
+
 .MuiCardHeader-content .MuiInput-underline.Mui-disabled:before {
     border-bottom-style: none !important;
 }
+
 .textinput-linenumbers {
     scrollbar-width: none;
     resize: none;
@@ -125,15 +165,15 @@
 
 .textinput-linenumbers::-webkit-scrollbar {
     display: none;
-  }
+}
 
-  .MuiDrawer-docked .MuiDrawer-paper {
-      overflow-x: hidden;
-  }
+.MuiDrawer-docked .MuiDrawer-paper {
+    overflow-x: hidden;
+}
 
-  #center-aligned {
-      text-align: center;
-  }
+#center-aligned {
+    text-align: center;
+}
 
 .card-view.expanded {
     position: absolute;
@@ -148,4 +188,8 @@
 .force-graph-container .graph-tooltip {
     color: black !important;
     background: none !important;
+}
+
+.not-animated .react-grid-item.cssTransforms {
+    transition-property: none !important;
 }

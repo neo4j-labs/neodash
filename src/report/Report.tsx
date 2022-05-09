@@ -26,7 +26,7 @@ export const NeoReport = ({
     setGlobalParameter = () => { }, // callback to update global (dashboard) parameters.
     getGlobalParameter = (key) => {return ""}, // function to get global (cypher) parameters.
     refreshRate = 0, // Optionally refresh the report every X seconds.
-    dimensions = { width: 3, height: 3 }, // Size of the report.
+    dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
     rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
     queryTimeLimit = 20, // Time limit for queries before automatically aborted.
     type = "table", // The type of report as a string.

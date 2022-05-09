@@ -2,12 +2,15 @@ import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
 import { getRecordType, getRendererForValue, rendererForType, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/ReportRecordProcessing';
-import { makeStyles } from '@material-ui/styles';
 import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../report/ReportRuleEvaluator';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from './util/ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
+
+const TABLE_HEADER_HEIGHT = 32;
+const TABLE_FOOTER_HEIGHT = 52;
+const TABLE_ROW_HEIGHT = 52;
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
@@ -85,8 +88,7 @@ const NeoTableChart = (props: ChartProps) => {
                 headerHeight={32}
                 rows={rows}
                 columns={columns}
-                pageSize={fullscreen ? 15 : (props.dimensions && props.dimensions.height == 3) ? 5 : 13}
-                rowsPerPageOptions={[fullscreen ? 15 : (props.dimensions && props.dimensions.height == 3) ? 5 : 13]}
+                pageSize={Math.floor((props.dimensions.height-TABLE_HEADER_HEIGHT-TABLE_FOOTER_HEIGHT) / TABLE_ROW_HEIGHT)-1}
                 disableSelectionOnClick
                 components={{
                     ColumnSortedDescendingIcon: () => <></>,

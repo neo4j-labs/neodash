@@ -4,9 +4,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { connect } from 'react-redux';
-import { applicationGetConnection, applicationGetShareDetails, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected, applicationHasWelcomeScreenOpen, applicationGetDebugState, applicationGetStandaloneSettings, applicationGetSsoSettings } from '../application/ApplicationSelectors';
+import { applicationGetConnection, applicationGetShareDetails, applicationGetOldDashboard, applicationHasNeo4jDesktopConnection, applicationHasAboutModalOpen, applicationHasCachedDashboard, applicationHasConnectionModalOpen, applicationIsConnected, applicationHasWelcomeScreenOpen, applicationGetDebugState, applicationGetStandaloneSettings, applicationGetSsoSettings, applicationHasReportHelpModalOpen } from '../application/ApplicationSelectors';
 import { createConnectionThunk, createConnectionFromDesktopIntegrationThunk, onConfirmLoadSharedDashboardThunk, loadApplicationConfigThunk } from '../application/ApplicationThunks';
-import { clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard, setWaitForSSO, setWelcomeScreenOpen } from '../application/ApplicationActions';
+import { clearNotification, resetShareDetails, setAboutModalOpen, setConnected, setConnectionModalOpen, setOldDashboard, setReportHelpModalOpen, setWaitForSSO, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
@@ -16,6 +16,7 @@ import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/util/ChartUtils';
+import NeoReportHelpModal from '../modal/ReportHelpModal';
 
 /**
  * This is the main application component for NeoDash.
@@ -27,9 +28,9 @@ import { downloadComponentAsImage } from '../chart/util/ChartUtils';
  * State-changing actions are also dispatched from here. See `ApplicationThunks.tsx`, `ApplicationActions.tsx` and `ApplicationSelectors.tsx` for more info.
  */
 const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, clearOldDashboard,
-    connectionModalOpen, ssoSettings, standaloneSettings, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection, shareDetails,
+    connectionModalOpen, reportHelpModalOpen, ssoSettings, standaloneSettings, aboutModalOpen, loadDashboard, hasNeo4jDesktopConnection, shareDetails,
     createConnection, createConnectionFromDesktopIntegration, onResetShareDetails, onConfirmLoadSharedDashboard,
-    initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose, getDebugState,
+    initializeApplication, resetDashboard, onAboutModalOpen, onAboutModalClose, getDebugState, onReportHelpModalClose,
     welcomeScreenOpen, setWelcomeScreenOpen, onConnectionModalOpen, onConnectionModalClose, onSSOAttempt }) => {
 
     const [initialized, setInitialized] = React.useState(false);
@@ -45,7 +46,7 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
         <div ref={ref} style={{ display: 'flex' }}>
             <CssBaseline />
             <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
-            {(connected) ? <Dashboard onDownloadDashboardAsImage={(e)=>downloadComponentAsImage(ref)}></Dashboard> : <></>}
+            {(connected) ? <Dashboard onDownloadDashboardAsImage={(e) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
             <NeoAboutModal
                 open={aboutModalOpen}
                 handleClose={onAboutModalClose}
@@ -81,6 +82,9 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
                 onResetShareDetails={onResetShareDetails}
                 onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}>
             </NeoLoadSharedDashboardModal>
+            <NeoReportHelpModal
+                open={reportHelpModalOpen}
+                handleClose={onReportHelpModalClose}/>
             <NeoNotificationModal></NeoNotificationModal>
         </div>
     );
@@ -95,9 +99,10 @@ const mapStateToProps = state => ({
     standaloneSettings: applicationGetStandaloneSettings(state),
     connectionModalOpen: applicationHasConnectionModalOpen(state),
     aboutModalOpen: applicationHasAboutModalOpen(state),
+    reportHelpModalOpen: applicationHasReportHelpModalOpen(state),
     welcomeScreenOpen: applicationHasWelcomeScreenOpen(state),
     hasCachedDashboard: applicationHasCachedDashboard(state),
-    getDebugState: () => {return applicationGetDebugState(state)},
+    getDebugState: () => { return applicationGetDebugState(state) },
     hasNeo4jDesktopConnection: applicationHasNeo4jDesktopConnection(state),
 });
 
@@ -117,10 +122,10 @@ const mapDispatchToProps = dispatch => ({
     resetDashboard: _ => dispatch(resetDashboardState()),
     clearOldDashboard: _ => dispatch(setOldDashboard(null)),
     initializeApplication: (initialized) => {
-        if(!initialized){
+        if (!initialized) {
             dispatch(loadApplicationConfigThunk());
         }
-        
+
     },
     onResetShareDetails: _ => {
         dispatch(setWelcomeScreenOpen(true));
@@ -132,6 +137,7 @@ const mapDispatchToProps = dispatch => ({
     onConfirmLoadSharedDashboard: _ => dispatch(onConfirmLoadSharedDashboardThunk()),
     onConnectionModalOpen: _ => dispatch(setConnectionModalOpen(true)),
     onConnectionModalClose: _ => dispatch(setConnectionModalOpen(false)),
+    onReportHelpModalClose: _ => dispatch(setReportHelpModalOpen(false)),
     onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),
     setWelcomeScreenOpen: open => dispatch(setWelcomeScreenOpen(open)),
     onAboutModalClose: _ => dispatch(setAboutModalOpen(false)),

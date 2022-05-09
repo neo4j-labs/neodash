@@ -7,18 +7,19 @@ import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+
+import debounce from 'lodash/debounce';
+import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { downloadComponentAsImage } from '../../chart/util/ChartUtils';
 
-export const CARD_FOOTER_HEIGHT = 64;
-
-const NeoCardView = ({ title, database, query, cypherParameters, globalParameters, 
-    width, height, fields, active, setActive,
+const NeoCardView = ({ title, database, query, globalParameters, 
+    widthPx, heightPx, fields, active, setActive,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
 
-    const reportHeight = (97 * height) + (148 * Math.floor((height - 1) / 3));
-    const cardHeight = (120 * height) + (78 * Math.floor((height - 1) / 3)) - 7;
+    const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
+    const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
     const ref = React.useRef();
 
     // @ts-ignore
@@ -58,6 +59,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
         while (match = re.exec(query)) {
             localQueryVariables.push(match[1]);
         }
+
         if(!globalParameters){
             return {};
         }
@@ -77,7 +79,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                     {active ?
                         <NeoReport query={query}
                             database={database}
-                            stringParameters={cypherParameters}
+                            stringParameters={""}
                             mapParameters={getLocalParameters()}
                             disabled={settingsOpen}
                             selection={selection}
@@ -86,7 +88,7 @@ const NeoCardView = ({ title, database, query, cypherParameters, globalParameter
                             expanded={expanded}
                             rowLimit={dashboardSettings['disableRowLimiting'] ? 1000000 : REPORT_TYPES[type].maxRecords}
                             refreshRate={refreshRate}
-                            dimensions={{ width: width, height: height }}
+                            dimensions={{ width: widthPx, height: heightPx }}
                             type={type}
                             ChartType={REPORT_TYPES[type].component}
                             setGlobalParameter={onGlobalParameterUpdate}

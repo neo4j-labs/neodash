@@ -1,19 +1,15 @@
 import { createNotification } from "../application/ApplicationActions";
-import { toggleReportSettings } from "../card/CardActions";
 import { CARD_INITIAL_STATE } from "../card/CardReducer";
-import { updateReportSizeThunk } from "../card/CardThunks";
-import {
-    createReport, removeReport, shiftReportLeft, shiftReportRight
-} from "./PageActions";
+import { createReport, removeReport, updateAllCardPositionsInPage } from "./PageActions";
 
 
-export const createNotificationThunk = (title:any, message: any) => (dispatch: any) => {
+export const createNotificationThunk = (title: any, message: any) => (dispatch: any) => {
     dispatch(createNotification(title, message));
 };
 
-export const addReportRequest = (text: any) => (dispatch: any, getState: any) => {
+export const addReportThunk = (x: number, y: number, width: number, height: number) => (dispatch: any, getState: any) => {
     try {
-        const report = CARD_INITIAL_STATE;
+        const report = {...CARD_INITIAL_STATE, x: x, y: y, width: width, height: height};
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
         dispatch(createReport(pagenumber, report));
@@ -22,7 +18,7 @@ export const addReportRequest = (text: any) => (dispatch: any, getState: any) =>
     }
 }
 
-export const removeReportRequest = (index: number) => (dispatch: any, getState: any) => {
+export const removeReportThunk = (index: number) => (dispatch: any, getState: any) => {
     try {
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
@@ -32,57 +28,12 @@ export const removeReportRequest = (index: number) => (dispatch: any, getState: 
     }
 }
 
-export const shiftReportLeftRequest = (index: number) => (dispatch: any, getState: any) => {
+export const updatePageLayoutThunk = (layout: any) => (dispatch: any, getState: any) => {
     try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        const reports = state.dashboard.pages[pagenumber].reports;
-
-        if (index == 0){
-            return
-        }
-        const selectedCard = reports[index];
-        const otherCard = reports[index-1];
-
-        dispatch(shiftReportLeft(pagenumber, index));
-        // We ensure the size of the cards is updated right away, to avoid rendering issues.
-        dispatch(updateReportSizeThunk(index, otherCard.width, otherCard.height))
-        dispatch(updateReportSizeThunk(index-1, selectedCard.width, selectedCard.height))
-        if(selectedCard.advancedSettingsOpen == true){
-            dispatch(toggleReportSettings(index))
-        }
-        if(otherCard.advancedSettingsOpen == true){
-            dispatch(toggleReportSettings(index-1))
-        }
+        const pagenumber = getState().dashboard.settings.pagenumber;
+        const cardPositions = layout.slice(0, layout.length - 1);
+        dispatch(updateAllCardPositionsInPage(pagenumber, cardPositions));
     } catch (e) {
-        dispatch(createNotificationThunk("Error", e));
-    }
-}
-
-
-export const shiftReportRightRequest = (index: number) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        const reports = state.dashboard.pages[pagenumber].reports;
-
-        if (index >= reports.length - 1){
-            return
-        }
-        const selectedCard = reports[index];
-        const otherCard = reports[index+1];
-
-        dispatch(shiftReportRight(pagenumber, index));
-        // We ensure the size of the cards is updated right away, to avoid rendering issues.
-        dispatch(updateReportSizeThunk(index, otherCard.width, otherCard.height))
-        dispatch(updateReportSizeThunk(index+1, selectedCard.width, selectedCard.height))
-        if(selectedCard.advancedSettingsOpen == true){
-            dispatch(toggleReportSettings(index))
-        }
-        if(otherCard.advancedSettingsOpen == true){
-            dispatch(toggleReportSettings(index+1))
-        }
-    } catch (e) {
-        dispatch(createNotificationThunk("Error", e));
+        dispatch(createNotificationThunk("Cannot update page layout", e));
     }
 }

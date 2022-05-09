@@ -6,14 +6,16 @@ import NeoCardView from './view/CardView';
 import { connect } from 'react-redux';
 import {
     updateCypherParametersThunk, updateFieldsThunk, updateSelectionThunk, updateReportQueryThunk, toggleCardSettingsThunk,
-    updateReportRefreshRateThunk, updateReportSettingThunk, updateReportSizeThunk, updateReportTitleThunk, updateReportTypeThunk
+    updateReportRefreshRateThunk, updateReportSettingThunk, updateReportTitleThunk, updateReportTypeThunk
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
-import { debounce } from '@material-ui/core';
+import { debounce, Dialog, DialogContent } from '@material-ui/core';
 import { getDashboardIsEditable, getDatabase, getGlobalParameters } from '../settings/SettingsSelectors';
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
 import { createNotificationThunk } from '../page/PageThunks';
+import useDimensions from 'react-cool-dimensions';
+import { setReportHelpModalOpen } from '../application/ApplicationActions';
 
 
 const NeoCard = ({
@@ -24,15 +26,12 @@ const NeoCard = ({
     globalParameters, // Query parameters that are globally set for the entire dashboard.
     dashboardSettings, // Dictionary of settings for the entire dashboard.
     onRemovePressed, // action to take when the card is removed. (passed from parent)
-    onShiftLeftPressed, // action to take when the card is shifted left.
-    onShiftRightPressed, // action to take when the card is shifted right.
+    onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
     onTitleUpdate, // action to take when the card title is updated.
-    onSizeUpdate, // action to take when the card size is updated.
     onTypeUpdate, // action to take when the card report type is updated.
     onFieldsUpdate, // action to take when the set of returned query fields is updated.
     onQueryUpdate, // action to take when the card query is updated.
     onRefreshRateUpdate, // action to take when the card refresh rate is updated.
-    onCypherParametersUpdate, // action to take when the query parameters are updated.
     onReportSettingUpdate, // action to take when an advanced report setting is updated.
     onSelectionUpdate, // action to take when the selected visualization fields are updated.
     onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
@@ -40,13 +39,21 @@ const NeoCard = ({
     onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
     onCreateNotification // action to take when an (error) notification is created.
 }) => {
-
-    const [settingsOpen, setSettingsOpen] = React.useState(report.settingsOpen);
+   
+    const [settingsOpen, setSettingsOpen] = React.useState(false);
     const debouncedOnToggleCardSettings = useCallback(
         debounce(onToggleCardSettings, 500),
         [],
     );
     const [collapseTimeout, setCollapseTimeout] = React.useState(report.collapseTimeout);
+
+    const { observe, unobserve, width, height, entry } = useDimensions({
+        onResize: ({ observe, unobserve, width, height, entry }) => {
+            // Triggered whenever the size of the target is changed...
+            unobserve(); // To stop observing the current target element
+            observe(); // To re-start observing the current target element
+        },
+    });
 
     const [expanded, setExpanded] = useState(false);
     const onToggleCardExpand = () => {
@@ -71,81 +78,88 @@ const NeoCard = ({
     }, [report.collapseTimeout])
 
     // TODO - get rid of some of the props-drilling here...
-    return (
-        <div>
-            {/* The front of the card, referred to as the 'view' */}
-            <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout}>
-                <Card>
-                    <NeoCardView
-                        settingsOpen={settingsOpen}
-                        editable={editable}
-                        dashboardSettings={dashboardSettings}
-                        settings={report.settings ? report.settings : {}}
-                        type={report.type}
-                        database={database}
-                        active={active}
-                        setActive={setActive}
-                        query={report.query}
-                        cypherParameters={report.parameters}
-                        globalParameters={globalParameters}
-                        fields={report.fields ? report.fields : []}
-                        refreshRate={report.refreshRate}
-                        selection={report.selection}
-                        width={report.width}
-                        height={report.height}
-                        title={report.title}
-                        expanded={expanded}
-                        onToggleCardExpand={onToggleCardExpand}
-                        onGlobalParameterUpdate={onGlobalParameterUpdate}
-                        onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
-                        onTitleUpdate={(title) => onTitleUpdate(index, title)}
-                        onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
-                        onToggleCardSettings={() => {
-                            setSettingsOpen(true);
-                            setCollapseTimeout("auto");
-                            debouncedOnToggleCardSettings(index, true)
-                        }} />
-                </Card>
-            </Collapse>
-            {/* The back of the card, referred to as the 'settings' */}
-            <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout} >
-                <Card>
-                    <NeoCardSettings
-                        settingsOpen={settingsOpen}
-                        query={report.query}
-                        database={database}
-                        width={report.width}
-                        height={report.height}
-                        fields={report.fields}
-                        type={report.type}
-                        refreshRate={report.refreshRate}
-                        cypherParameters={report.parameters}
-                        expanded={expanded}
-                        dashboardSettings={dashboardSettings}
-                        onToggleCardExpand={onToggleCardExpand}
-                        setActive={setActive}
-                        reportSettings={report.settings}
-                        reportSettingsOpen={report.advancedSettingsOpen}
-                        onQueryUpdate={(query) => onQueryUpdate(index, query)}
-                        onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
-                        onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
-                        onTypeUpdate={(type) => onTypeUpdate(index, type)}
-                        onCypherParametersUpdate={(parameters) => onCypherParametersUpdate(index, parameters)}
-                        onSizeUpdate={(size) => onSizeUpdate(index, size[0], size[1])}
-                        onRemovePressed={() => onRemovePressed(index)}
-                        onShiftLeftPressed={() => onShiftLeftPressed(index)}
-                        onShiftRightPressed={() => onShiftRightPressed(index)}
-                        onCreateNotification={(title, message) => onCreateNotification(title, message)}
-                        onToggleCardSettings={() => {
-                            setSettingsOpen(false);
-                            setCollapseTimeout("auto");
-                            debouncedOnToggleCardSettings(index, false);
-                        }}
-                        onToggleReportSettings={() => onToggleReportSettings(index)} />
-                </Card>
-            </Collapse>
-        </div>
-    );
+    const component = <div style={{ height: "100%" }} ref={observe}>
+        {/* The front of the card, referred to as the 'view' */}
+        <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{ height: "100%" }}>
+            <Card style={{ height: "100%" }}>
+                <NeoCardView
+                    settingsOpen={settingsOpen}
+                    editable={editable}
+                    dashboardSettings={dashboardSettings}
+                    settings={report.settings ? report.settings : {}}
+                    type={report.type}
+                    database={database}
+                    active={active}
+                    setActive={setActive}
+                    query={report.query}
+                    globalParameters={globalParameters}
+                    fields={report.fields ? report.fields : []}
+                    refreshRate={report.refreshRate}
+                    selection={report.selection}
+                    widthPx={width}
+                    heightPx={height}
+                    title={report.title}
+                    expanded={expanded}
+                    onToggleCardExpand={onToggleCardExpand}
+                    onGlobalParameterUpdate={onGlobalParameterUpdate}
+                    onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
+                    onTitleUpdate={(title) => onTitleUpdate(index, title)}
+                    onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
+                    onToggleCardSettings={() => {
+                        setSettingsOpen(true);
+                        setCollapseTimeout("auto");
+                        debouncedOnToggleCardSettings(index, true)
+                    }} />
+            </Card>
+        </Collapse>
+        {/* The back of the card, referred to as the 'settings' */}
+        <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout} >
+            <Card style={{ height: "100%" }}>
+                <NeoCardSettings
+                    settingsOpen={settingsOpen}
+                    query={report.query}
+                    database={database}
+                    width={report.width}
+                    height={report.height}
+                    widthPx={width}
+                    heightPx={height}
+                    fields={report.fields}
+                    type={report.type}
+                    refreshRate={report.refreshRate}
+                    expanded={expanded}
+                    dashboardSettings={dashboardSettings}
+                    onToggleCardExpand={onToggleCardExpand}
+                    setActive={setActive}
+                    reportSettings={report.settings}
+                    reportSettingsOpen={report.advancedSettingsOpen}
+                    onQueryUpdate={(query) => onQueryUpdate(index, query)}
+                    onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
+                    onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
+                    onTypeUpdate={(type) => onTypeUpdate(index, type)}
+                    onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
+                    onRemovePressed={() => onRemovePressed(index)}
+                    onCreateNotification={(title, message) => onCreateNotification(title, message)}
+                    onToggleCardSettings={() => {
+                        setSettingsOpen(false);
+                        setCollapseTimeout("auto");
+                        debouncedOnToggleCardSettings(index, false);
+                    }}
+                    onToggleReportSettings={() => onToggleReportSettings(index)} />
+            </Card>
+        </Collapse>
+    </div>;
+
+    // If the card is viewed in fullscreen, wrap it in a dialog.
+    // TODO - this causes a re-render (and therefore, a re-run of the report)
+    // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
+    if (expanded) {
+        return <Dialog maxWidth={"xl"} open={expanded} aria-labelledby="form-dialog-title">
+            <DialogContent style={{ width: Math.min(1920, document.documentElement.clientWidth - 64), height: document.documentElement.clientHeight }} >
+                {component}
+            </DialogContent>
+        </Dialog>
+    }
+    return component;
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -162,9 +176,6 @@ const mapDispatchToProps = dispatch => ({
     onQueryUpdate: (index: any, query: any) => {
         dispatch(updateReportQueryThunk(index, query))
     },
-    onSizeUpdate: (index: any, width: any, height: any) => {
-        dispatch(updateReportSizeThunk(index, width, height))
-    },
     onRefreshRateUpdate: (index: any, rate: any) => {
         dispatch(updateReportRefreshRateThunk(index, rate))
     },
@@ -173,9 +184,6 @@ const mapDispatchToProps = dispatch => ({
     },
     onReportSettingUpdate: (index: any, setting: any, value: any) => {
         dispatch(updateReportSettingThunk(index, setting, value))
-    },
-    onCypherParametersUpdate: (index: any, parameters: any) => {
-        dispatch(updateCypherParametersThunk(index, parameters))
     },
     onFieldsUpdate: (index: any, fields: any) => {
         dispatch(updateFieldsThunk(index, fields))
@@ -188,6 +196,9 @@ const mapDispatchToProps = dispatch => ({
     },
     onToggleCardSettings: (index: any, open: any) => {
         dispatch(toggleCardSettingsThunk(index, open))
+    },
+    onReportHelpButtonPressed: () => {
+        dispatch(setReportHelpModalOpen(true))
     },
     onToggleReportSettings: (index: any) => {
         dispatch(toggleReportSettings(index))

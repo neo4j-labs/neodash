@@ -14,16 +14,6 @@ export const updateReportTitleThunk = (index, title) => (dispatch: any, getState
     }
 }
 
-export const updateReportSizeThunk = (index, width, height) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateReportSize(pagenumber, index, width, height))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot set report size", e));
-    }
-}
-
 export const updateReportQueryThunk = (index, query) => (dispatch: any, getState: any) => {
     try {
         const state = getState();
@@ -72,12 +62,13 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
     try {
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
-        if(!state.dashboard.pages[pagenumber].reports[index]){
-            return
+        const oldReport = state.dashboard.pages[pagenumber].reports[index];
+        if(!oldReport){
+            return;
         }
-        const oldFields = state.dashboard.pages[pagenumber].reports[index].fields;
-        const reportType = state.dashboard.pages[pagenumber].reports[index].type;
-        const oldSelection = state.dashboard.pages[pagenumber].reports[index].selection;
+        const oldFields = oldReport.fields;
+        const reportType =oldReport.type;
+        const oldSelection = oldReport.selection;
         const selectableFields = REPORT_TYPES[reportType].selection; // The dictionary of selectable fields as defined in the config.
         const autoAssignSelectedProperties = REPORT_TYPES[reportType].autoAssignSelectedProperties;
         const selectables = (selectableFields) ? Object.keys(selectableFields) : [];

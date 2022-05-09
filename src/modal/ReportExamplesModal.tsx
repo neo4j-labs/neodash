@@ -6,16 +6,16 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import CategoryIcon from '@material-ui/icons/Category';
 import Badge from '@material-ui/core/Badge';
 import { Grid, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { EXAMPLE_REPORTS } from '../config/ExampleConfig';
+import WidgetsIcon from '@material-ui/icons/Widgets';
 
 
-
-export const NeoDocumentationModal = ({ database }) => {
+export const NeoReportExamplesModal = ({ database }) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -30,14 +30,14 @@ export const NeoDocumentationModal = ({ database }) => {
         <div>
             <ListItem button onClick={handleClickOpen}>
                 <ListItemIcon>
-                    <LibraryBooksIcon />
+                    <CategoryIcon />
                 </ListItemIcon>
-                <ListItemText primary="Documentation" />
+                <ListItemText primary="Examples" />
             </ListItem>
 
             {open ? <Dialog maxWidth={"xl"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    Documentation - Example Usage
+                    Report Examples
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >
                             <CloseIcon />
@@ -92,6 +92,6 @@ export const NeoDocumentationModal = ({ database }) => {
     );
 }
 
-export default (NeoDocumentationModal);
+export default (NeoReportExamplesModal);
 
 
