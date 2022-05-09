@@ -70,6 +70,15 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
                     bottom: (legend) ? legendHeight + marginBottom : marginBottom,
                     left: marginLeft
                 }}
+                childColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'brighter',
+                            0.4
+                        ]
+                    ]
+                }}
                 animate={true}
                 arcLabelsSkipAngle={arcLabelsSkipAngle}
                 colors={{ scheme: colorScheme }}
