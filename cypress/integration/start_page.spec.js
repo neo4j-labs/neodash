@@ -1,4 +1,4 @@
-import {tableCypherQuery, barChartCypherQuery} from "../fixtures/cypher_queries"
+import {tableCypherQuery, barChartCypherQuery, mapChartCypherQuery} from "../fixtures/cypher_queries"
 
 describe('The Dashboard Page', () => {
     beforeEach(() => {
@@ -71,6 +71,26 @@ describe('The Dashboard Page', () => {
         cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > path').should('have.length', 5)
     })
 
+    it('creates a line chart report', () => {
+        createReportOfType('Line Chart', barChartCypherQuery)
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('X-value').next()
+                                                                                   .should('contain', 'released')
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Y-value').next()
+                                                                                   .should('contain', 'count')
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6)
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > line').should('have.length', 11)
+    })
+
+    it('creates a map chart report', () => {
+        createReportOfType('Map', mapChartCypherQuery)
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root svg > g > path').should('have.length', 5)
+    })
+
+/*     it('creates a single value report', () => {
+        createReportOfType('Single Value', barChartCypherQuery)
+        cy.get('main .MuiGrid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span').contains(1,999)
+    })
+ */
     // Test card deletion
 
     // Test create/delete new page
@@ -86,6 +106,6 @@ function createReportOfType(type, query) {
     cy.get('main .MuiGrid-item:eq(2) button[aria-label="settings"]').click()
     cy.get('main .MuiGrid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
     cy.contains(type).click()
-    cy.get('main .MuiGrid-item:eq(2) .ReactCodeMirror').type(query)
+    cy.get('main .MuiGrid-item:eq(2) .ReactCodeMirror').type(query, {parseSpecialCharSequences: false})
     cy.get('main .MuiGrid-item:eq(2) button[aria-label="save"]').click()
 }
