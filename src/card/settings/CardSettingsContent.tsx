@@ -65,7 +65,6 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
             <SettingsComponent type={type} onReportSettingUpdate={onReportSettingUpdate} settings={reportSettings} database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
             <div>
                 <NeoCodeEditorComponent
-                    key={0}
                     value={queryText}
                     editable={true}
                     language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}
