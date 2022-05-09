@@ -198,7 +198,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     }
 }
 
-function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
+export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
 
     if (origin == "2.0" && target == "2.1") {
         dashboard["pages"].forEach((p, i) => {
