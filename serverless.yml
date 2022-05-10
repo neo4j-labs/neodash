@@ -1,0 +1,25 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: neodash
+
+frameworkVersion: '3'
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+plugins:
+ - serverless-finch
+
+custom:
+  client:
+    bucketName: neodash-test.graphapp.io
+    distributionFolder: build
+    indexDocument: index.html
+    errorDocument: index.html
