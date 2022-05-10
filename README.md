@@ -22,24 +22,6 @@ docker run -it --rm -p 5005:5005 nielsdejong/neodash
 
 See the [Developer Guide](https://github.com/nielsdejong/neodash/wiki/Developer%20Guide) for more information.
 
-
-## Auth Provider (SSO)
-
-To set up NeoDash to use an external identiy provider, you can add a /auth_provider resource to nginx (in `/conf/default.conf`):
-
-```
-location /auth_provider {
-        default_type application/json;
-        return 200 '{
-                        "auth_config" : {
-                            "oidc_providers" : [ ... ]
-                        }
-                    }';
-    }
-```
-
-For basic deployments it might suffice to route requests to `/auth_provider` on the https port of the neo4j database.
-
 ## Questions / Suggestions
 If you have any questions about NeoDash, please reach out. For feature requests, consider opening an issue on GitHub.
 
