@@ -35,3 +35,10 @@ yarn-error.log*
 
 # Ignore builds
 *.tgz
+
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
