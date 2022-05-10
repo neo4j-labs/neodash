@@ -14,6 +14,9 @@ target
 
 # testing
 /coverage
+cypress/plugins
+cypress/support
+cypress/videos
 
 # production
 /build

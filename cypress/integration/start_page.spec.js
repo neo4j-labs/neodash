@@ -1,9 +1,9 @@
-import {tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadFileDashboard} from "../fixtures/cypher_queries"
+import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL } from "../fixtures/cypher_queries"
 
-describe('The Dashboard Page', () => {
+describe('NeoDash E2E Tests', () => {
     beforeEach(() => {
         cy.clearLocalStorage()
-        cy.viewport(1920, 1080) 
+        cy.viewport(1920, 1080)
         // Navigate to index
         cy.visit('/')
         cy.get('#form-dialog-title').should('contain', 'NeoDash - Neo4j Dashboard Builder')
@@ -13,9 +13,9 @@ describe('The Dashboard Page', () => {
         cy.contains('New Dashboard').click()
         cy.wait(300)
 
-        if(cy.contains("Create new dashboard")) {
+        if (cy.contains("Create new dashboard")) {
             cy.contains('Yes').click()
-        } 
+        }
         cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j')
 
         // Connect to Neo4j database
@@ -58,18 +58,18 @@ describe('The Dashboard Page', () => {
     it('creates a bar chart report', () => {
         createReportOfType('Bar Chart', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Category').next()
-                                                                                   .should('contain', 'released')
+            .should('contain', 'released')
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
-                                                                                   .should('contain', 'count')
+            .should('contain', 'count')
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 8)
     })
 
     it('creates a pie chart report', () => {
         createReportOfType('Pie Chart', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Category').next()
-                                                                                   .should('contain', 'released')
+            .should('contain', 'released')
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
-                                                                                   .should('contain', 'count')
+            .should('contain', 'count')
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 3)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > path').should('have.length', 5)
     })
@@ -77,9 +77,9 @@ describe('The Dashboard Page', () => {
     it('creates a line chart report', () => {
         createReportOfType('Line Chart', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('X-value').next()
-                                                                                   .should('contain', 'released')
+            .should('contain', 'released')
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Y-value').next()
-                                                                                   .should('contain', 'count')
+            .should('contain', 'count')
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > line').should('have.length', 11)
     })
@@ -97,52 +97,52 @@ describe('The Dashboard Page', () => {
     it('creates a sunburst chart report', () => {
         createReportOfType('Sunburst Chart', sunburstChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Path').next()
-        .should('contain', 'x.path')
+            .should('contain', 'x.path')
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
-                                                                                   .should('contain', 'x.value')
-        cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(1) > path').should('have.length', 5)                                                                           
+            .should('contain', 'x.value')
+        cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(1) > path').should('have.length', 5)
     })
 
     it('creates a circle packing report', () => {
         createReportOfType('Circle Packing', sunburstChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Path').next()
-        .should('contain', 'x.path')
+            .should('contain', 'x.path')
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
-                                                                                   .should('contain', 'x.value')
-        cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > circle').should('have.length', 6)                                                                           
+            .should('contain', 'x.value')
+        cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > circle').should('have.length', 6)
     })
 
     it('creates a tree map report', () => {
         createReportOfType('Treemap', sunburstChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Path').next()
-        .should('contain', 'x.path')
+            .should('contain', 'x.path')
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Value').next()
-                                                                                   .should('contain', 'x.value')
-        cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6)                                                                           
+            .should('contain', 'x.value')
+        cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6)
     })
 
     it('creates a raw json report', () => {
         createReportOfType('Raw JSON', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)').should(($div) => {
             const text = $div.text()
-          
+
             expect(text.length).to.eq(1387)
-          })
+        })
     })
 
     it('creates a parameter select report', () => {
-    cy.get('main .react-grid-item:eq(2) button').click()
-    cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click()
-    cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
-    cy.contains('Parameter Select').click()
-    cy.get('#autocomplete-label-type').type('Movie')
-    cy.get('#autocomplete-label-type-option-0').click()
-    cy.wait(300)
-    cy.get('#autocomplete-property').type('title')
-    cy.get('#autocomplete-property-option-0').click()
-    cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click()
-    cy.get('#autocomplete').type('The Matrix')
-    cy.get('#autocomplete-option-0').click()
+        cy.get('main .react-grid-item:eq(2) button').click()
+        cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click()
+        cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
+        cy.contains('Parameter Select').click()
+        cy.get('#autocomplete-label-type').type('Movie')
+        cy.get('#autocomplete-label-type-option-0').click()
+        cy.wait(300)
+        cy.get('#autocomplete-property').type('title')
+        cy.get('#autocomplete-property-option-0').click()
+        cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click()
+        cy.get('#autocomplete').type('The Matrix')
+        cy.get('#autocomplete-option-0').click()
     })
 
     it('creates an iframe report', () => {
@@ -155,29 +155,37 @@ describe('The Dashboard Page', () => {
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1').should('have.text', 'Hello')
     })
 
- 
-    // Test card deletion
+    // Test load stress-test dashboard from file
+    it('test load dashboard from file and stress test report customizations', () => {
+        try {
+            var NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD = 5;
+            const file = cy.request(loadDashboardURL).should((response) => {
+         
+                cy.get('#root .MuiDrawer-root .MuiIconButton-root:eq(2)').click()
+                cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').invoke('val', response.body).trigger('change')
+                cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').type(' ')
+                cy.get('.MuiDialog-root .MuiDialogContent-root .MuiButtonBase-root:eq(2)').click()
+                cy.wait(2000)
 
-    // Test create/delete new page
-
-    // Test load dashboard from file
-    // Niels to provide file test case
-    it.only('test load dashboard from file', () => {
-        cy.get('#root .MuiDrawer-root .MuiIconButton-root:eq(2)').click()
-        cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').invoke('val',loadFileDashboard).trigger('change')
-        cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').type(' ')
-        cy.get('.MuiDialog-root .MuiDialogContent-root .MuiButtonBase-root:eq(2)').click()
-        cy.wait(500)
+                // Click on each page and wait ~2 seconds for it to load completely
+                for (let i = 1; i < NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD; i++) {
+                    cy.get('.MuiAppBar-root .react-grid-item:eq('+i+')').click()
+                    cy.wait(2500)
+                }
+            })
+       
+        } catch (e) {
+            console.log("Unable to fetch test dashboard. Skipping test.");
+        }
     })
 
-    // Test opening existing dashboard ?
-  })
+})
 
 function createReportOfType(type, query) {
     cy.get('main .react-grid-item:eq(2) button').click()
     cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click()
     cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
     cy.contains(type).click()
-    cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, {parseSpecialCharSequences: false})
+    cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false })
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click()
 }
