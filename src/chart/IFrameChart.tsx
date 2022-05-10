@@ -12,7 +12,7 @@ const NeoIFrameChart = (props: ChartProps) => {
     const parameters = props.parameters ? props.parameters : {};
     const passGlobalParameters = props.settings && props.settings.passGlobalParameters ? props.settings.passGlobalParameters : false;
     const replaceGlobalParameters = props.settings && props.settings.replaceGlobalParameters !== undefined ? props.settings.replaceGlobalParameters : true;
-    const url = records[0]["input"];
+    const url = records[0]["input"].trim();
 
     if (!url || !(url.startsWith("http://") || url.startsWith("https://"))) {
         return <p style={{ margin: "15px" }}>Invalid iFrame URL. Make sure your url starts with <code>http://</code> or <code>https://</code>.</p>
