@@ -20,6 +20,7 @@ jobs:
        node-version: ${{ matrix.node-version }}
    - run: npm install
    - run: npm run build
+   - run: npm run test-headless
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
