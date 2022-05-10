@@ -7,15 +7,11 @@ NeoDash is an open source tool for visualizing your Neo4j data. It lets you grou
 Neodash supports presenting your data as tables, graphs, bar charts, line charts, maps and more. It contains a Cypher editor to directly write the Cypher queries that populate the reports. You can save dashboards to your database, and share them with others.
 
 ## Running NeoDash
-There are three ways to run the application:
+There are several ways to run the application:
 
 1. You can install NeoDash into Neo4j Desktop from the [graph app gallery](https://install.graphapp.io). NeoDash will automatically connect to your active database.
 2. You can run NeoDash from a web browser by visiting http://neodash.graphapp.io.
-3. For offline deployments, you can build the application yourself, or run it with Docker:
-
-
-### Run with Docker
-Pull the latest image from Docker Hub to run the application locally:
+3. For offline deployments, you can build the application yourself, or pull the latest Docker image from Docker Hub to run the application:
 ```
 # Run the application on http://localhost:5005
 docker pull nielsdejong/neodash:latest
@@ -23,18 +19,6 @@ docker run -it --rm -p 5005:5005 nielsdejong/neodash
 ```
 
 > Windows users may need to prefix the `docker run` command with `winpty`.
-
-## Run using npm
-NeoDash is built with React. You'll need `npm` installed to run the web app.
-
-> Use a recent version of `npm` and `node` to build NeoDash. The application has been tested with npm 8.6 & node v17.4.0.
-
-To run the application in development mode:
-- clone this repository.
-- open a terminal and navigate to the directory you just cloned.
-- execute `npm install` to install the necessary dependencies.
-- execute `npm run dev` to run the app in development mode.
-- the application should be available at http://localhost:3000.
 
 See the [Developer Guide](https://github.com/nielsdejong/neodash/wiki/Developer%20Guide) for more information.
 
