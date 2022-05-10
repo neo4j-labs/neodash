@@ -29,6 +29,7 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
             // There's a bug here that causes an extra change event to be first after copy-pasting (with replacement) in the editor text box.
             // This is a workaround for that.
             if (change.origin == "paste" && change.removed.length > 0) {
+                onChange(val);
                 setCancelNextEdit(true);
                 return
             }
