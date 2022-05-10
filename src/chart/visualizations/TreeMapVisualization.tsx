@@ -1,5 +1,5 @@
 import React from 'react'
-import { ResponsiveTreeMap  } from '@nivo/treeMap'
+import { ResponsiveTreeMap  } from '@nivo/treemap'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
 import { checkResultKeys,  mutateName, processHierarchyFromRecords, findObject, flatten } from './Utils'
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
