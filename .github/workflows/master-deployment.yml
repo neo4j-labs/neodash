@@ -8,6 +8,7 @@ on:
  
 jobs:
   build-s3:
+   needs: build-test
    runs-on: ubuntu-latest
    strategy:
      matrix:
@@ -19,12 +20,7 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: npm install
-   - name: Cypress run
-     uses: cypress-io/github-action@v2
-     with:
-        build: npm run build
-        start: npm run dev
-        wait-on: 'http://localhost:3000'
+   - run: npm run build
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
@@ -33,7 +29,7 @@ jobs:
        aws-region: us-west-1
    - run: aws s3 rm s3://neodash-test.graphapp.io/ --recursive && aws s3 sync dist s3://neodash-test.graphapp.io/ --acl public-read
 
-  build-docker:
+  build-test:
    runs-on: ubuntu-latest
    strategy:
      matrix:
@@ -51,6 +47,14 @@ jobs:
         build: npm run build
         start: npm run dev
         wait-on: 'http://localhost:3000'
+
+  build-docker:
+   needs: build-test
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [17.x]
+   steps:
    - name: run Docker 
      uses: actions/checkout@v2
    - name: Login to Docker Hub
