@@ -7,7 +7,7 @@ on:
    branches: [ develop ]
  
 jobs:
- build-s3:
+  build-s3:
    runs-on: ubuntu-latest
    strategy:
      matrix:
@@ -33,7 +33,7 @@ jobs:
        aws-region: us-west-1
    - run: aws s3 rm s3://neodash-test.graphapp.io/ --recursive && aws s3 sync dist s3://neodash-test.graphapp.io/ --acl public-read
 
- build-docker:
+  build-docker:
    runs-on: ubuntu-latest
    strategy:
      matrix:
@@ -53,20 +53,17 @@ jobs:
         wait-on: 'http://localhost:3000'
    - name: run Docker 
      uses: actions/checkout@v2
-  
-  - name: Login to Docker Hub
-    uses: docker/login-action@v1
-    with:
-      username: ${{ secrets.DOCKER_HUB_USERNAME }}
-      password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-  - name: Set up Docker Buildx
-    uses: docker/setup-buildx-action@v1
-
-  - name: Build and push
-    uses: docker/build-push-action@v2
-    with:
-    context: .
+   - name: Login to Docker Hub
+     uses: docker/login-action@v1
+     with:
+       username: ${{ secrets.DOCKER_HUB_USERNAME }}
+       password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+   - name: Set up Docker Buildx
+     uses: docker/setup-buildx-action@v1
+   - name: Build and push
+     uses: docker/build-push-action@v2
+     with:
+      context: .
       file: ./Dockerfile
       push: true
       tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:develop
