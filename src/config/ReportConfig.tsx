@@ -12,6 +12,7 @@ import NeoParameterSelectionChart from '../chart/ParameterSelectionChart';
 import NeoPieChart from '../chart/PieChart';
 import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
+import NeoTableChartEditable from '../chart/TableChartEditable';
 
 
 export enum SELECTION_TYPES {
@@ -66,6 +67,13 @@ export const REPORT_TYPES = {
                 default: true
             }
         }
+    },
+    "table-editable": {
+        label: "Table Editable",
+        helperText: "A table will contain all returned data. To make e.g. `e.name` editable, ensure to RETURN `e.name` with a specifically structured alias: `RETURN e.name AS editable,e.name,string,Your desired column label`. Also return the node identity via `id(e)`. The id columns will be hidden by default.",
+        component: NeoTableChartEditable,
+        maxRecords: 1000,
+        settings: {}
     },
     "graph": {
         label: "Graph",
