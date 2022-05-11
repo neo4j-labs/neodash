@@ -1,3 +1,3 @@
 npm run build
-aws s3 rm s3://neodash.graphapp.io/ --recursive
-aws s3 sync dist s3://neodash.graphapp.io/ --acl public-read
+aws s3 rm s3://neodash-test.graphapp.io/ --recursive
+aws s3 sync dist s3://neodash-test.graphapp.io/ --acl public-read
