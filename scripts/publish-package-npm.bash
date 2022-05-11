@@ -1,8 +1,5 @@
-PWD=~/Desktop/Code/neodash/
-APPNAME=NeoDash
 
-cd $PWD
-
+# package and unpackage the app
 npm run-script build
 npm pack
 rm -rf target
