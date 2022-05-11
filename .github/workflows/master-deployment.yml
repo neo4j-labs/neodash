@@ -24,9 +24,8 @@ jobs:
    - run: rm -rf target
    - run: mkdir target
    - run: mv *.tgz target/
-   - run: cd target/
-   - run: tar -xvf *.tgz
-   - run: rm -f *.tgz
+   - run: tar -xvf target/*.tgz
+   - run: rm -f target/*.tgz
    - run: cp package/dist/favicon.ico package/favicon.ico
    - run: rm package/*.cert
    - run: rm package/*.pem
