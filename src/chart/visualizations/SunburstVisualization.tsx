@@ -45,43 +45,45 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
 
     return (
         <>
-            <Tooltip title="Reset" aria-label="reset">
-                <RefreshIcon onClick={() => setData(commonProperties.data)} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 76, right: 12, position: "absolute", borderRadius: "12px", zIndex: 5, background: "#eee" }} color="disabled" fontSize="small"></RefreshIcon>
-            </Tooltip>
-            <ResponsiveSunburst
-                {...commonProperties}
-                id="name"
-                value="loc"
-                data={data}
-                transitionMode={"pushIn"}
-                isInteractive={interactive}
-                onClick={clickedData => {
-                    const foundObject = findObject(flatten(data.children), clickedData.id)
-                    if (foundObject && foundObject.children) {
-                        setData(foundObject)
-                    }
-                }}
-                enableArcLabels={enableArcLabels}
-                borderWidth={borderWidth}
-                cornerRadius={cornerRadius}
-                margin={{
-                    top: marginTop,
-                    right: marginRight,
-                    bottom: (legend) ? legendHeight + marginBottom : marginBottom,
-                    left: marginLeft
-                }}
-                childColor={{
-                    from: 'color',
-                    modifiers: [
-                        [
-                            'brighter',
-                            0.4
+            <div style={{ position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>
+                <Tooltip title="Reset" aria-label="reset">
+                    <RefreshIcon onClick={() => setData(commonProperties.data)} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", borderRadius: "12px", zIndex: 5, background: "#eee" }} color="disabled" fontSize="small"></RefreshIcon>
+                </Tooltip>
+                <ResponsiveSunburst
+                    {...commonProperties}
+                    id="name"
+                    value="loc"
+                    data={data}
+                    transitionMode={"pushIn"}
+                    isInteractive={interactive}
+                    onClick={clickedData => {
+                        const foundObject = findObject(flatten(data.children), clickedData.id)
+                        if (foundObject && foundObject.children) {
+                            setData(foundObject)
+                        }
+                    }}
+                    enableArcLabels={enableArcLabels}
+                    borderWidth={borderWidth}
+                    cornerRadius={cornerRadius}
+                    margin={{
+                        top: marginTop,
+                        right: marginRight,
+                        bottom: (legend) ? legendHeight + marginBottom : marginBottom,
+                        left: marginLeft
+                    }}
+                    childColor={{
+                        from: 'color',
+                        modifiers: [
+                            [
+                                'brighter',
+                                0.4
+                            ]
                         ]
-                    ]
-                }}
-                animate={true}
-                arcLabelsSkipAngle={arcLabelsSkipAngle}
-                colors={{ scheme: colorScheme }}
-            /></>)
-
+                    }}
+                    animate={true}
+                    arcLabelsSkipAngle={arcLabelsSkipAngle}
+                    colors={{ scheme: colorScheme }}
+                />
+            </div>
+        </>)
 }

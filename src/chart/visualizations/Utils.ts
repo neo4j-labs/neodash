@@ -60,7 +60,7 @@ export const search = (tree, value, key = 'id', reverse = false) => {
 export const mutateName = (currentNode) => {
     if (currentNode.name){
         let s = currentNode.name.split('_');
-        currentNode.name = s.length > 0 ? s[1] : s[0];
+        currentNode.name = s.length > 0 ? s.slice(1).join('_'): s[0];
     }
 
     if(currentNode.children)
