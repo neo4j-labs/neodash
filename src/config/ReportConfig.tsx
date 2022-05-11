@@ -418,7 +418,7 @@ export const REPORT_TYPES = {
                 default: 1
             },
             "cornerRadius": {
-                label: "Rounded slices",
+                label: "Slice Corner Radius",
                 type: SELECTION_TYPES.NUMBER,
                 default: 1
             },
@@ -713,7 +713,7 @@ export const REPORT_TYPES = {
         maxRecords: 3000,
         settings: {
             "enableArcLabels": {
-                label: "Show Values in slices",
+                label: "Show Values on Arcs",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
@@ -731,7 +731,7 @@ export const REPORT_TYPES = {
                 default: "set2"
             },
             "borderWidth": {
-                label: "Slice border width (px)",
+                label: "Arc border width (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
             },
@@ -756,12 +756,12 @@ export const REPORT_TYPES = {
                 default: 40
             },
             "arcLabelsSkipAngle": {
-                label: "Skip label if corresponding arc's angle is lower than provided value",
+                label: "Minimum Arc Angle for Label (degrees)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 10
             },
             "cornerRadius": {
-                label: "Rounded slices",
+                label: "Slice Corner Radius",
                 type: SELECTION_TYPES.NUMBER,
                 default: 3
             },
@@ -796,12 +796,6 @@ export const REPORT_TYPES = {
         useRecordMapper: true,
         maxRecords: 3000,
         settings: {
-            "enableArcLabels": {
-                label: "Show Values in slices",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
             "interactive": {
                 label: "Enable interactivity",
                 type: SELECTION_TYPES.LIST,
@@ -815,7 +809,7 @@ export const REPORT_TYPES = {
                 default: "set2"
             },
             "borderWidth": {
-                label: "Slice border width (px)",
+                label: "Circle border width (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
             },
@@ -870,12 +864,6 @@ export const REPORT_TYPES = {
         useRecordMapper: true,
         maxRecords: 3000,
         settings: {
-            "enableArcLabels": {
-                label: "Show Values in slices",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
             "interactive": {
                 label: "Enable interactivity",
                 type: SELECTION_TYPES.LIST,
@@ -889,7 +877,7 @@ export const REPORT_TYPES = {
                 default: "set2"
             },
             "borderWidth": {
-                label: "Slice border width (px)",
+                label: "Rectangle border width (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
             },
