@@ -234,8 +234,8 @@ RETURN value
     },
     {
         title: "Sunburst Chart",
-        description: "Sunburst charts can be used to visualize multiple hierarchies categories based on leafs numeric values.",
-        exampleQuery: "// How the people is distributed in the company?\n" +
+        description: "Sunburst charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
+        exampleQuery: "// How are people distributed in the company?\n" +
             "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
             "WITH nodes(path) as no\n" +
             "WITH no, last(no) as leaf\n" +
@@ -256,9 +256,9 @@ RETURN value
         chartType: NeoSunburstChart
     },
     {
-        title: "CirclePacking Chart",
-        description: "CirclePacking charts can be used to visualize multiple hierarchies categories based on leafs numeric values.",
-        exampleQuery: "// How the people is distributed in the company?\n" +
+        title: "Circle Packing Chart",
+        description: "Circle Packing charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
+        exampleQuery: "// How are people distributed in the company?\n" +
             "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
             "WITH nodes(path) as no\n" +
             "WITH no, last(no) as leaf\n" +
@@ -279,9 +279,9 @@ RETURN value
         chartType: NeoCirclePackingChart
     },
     {
-        title: "TreeMap Chart",
-        description: "TreeMap charts can be used to visualize multiple hierarchies categories based on leafs numeric values.",
-        exampleQuery: "// How the people is distributed in the company?\n" +
+        title: "Treemap Chart",
+        description: "Treemap charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
+        exampleQuery: "// How are people distributed in the company?\n" +
             "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
             "WITH nodes(path) as no\n" +
             "WITH no, last(no) as leaf\n" +
