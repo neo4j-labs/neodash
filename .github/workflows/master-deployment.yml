@@ -33,11 +33,11 @@ jobs:
    - run: echo "${{ secrets.NEO4J_DESKTOP_CERTIFICATE }}" > neo4j_desktop.cert
    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
    - run: cd package && npm pack
-   - run: mv *.tgz ../
+   - run: mv package/*.tgz ../
    - run: rm -rf package
-   - run: cd ..
    - run: tar xvf *.tgz package
    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
    - run: rm -rf package
    - run: echo Done!
+   - run: ls
    
