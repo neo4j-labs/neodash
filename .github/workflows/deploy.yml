@@ -19,9 +19,11 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: npm install
-   - run: npm run build
-   - run: npm run dev&
-   - run: npm run test-headless
+   - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm run build
+          start: npm start
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
