@@ -27,8 +27,6 @@ jobs:
    - run: tar -xvf target/*.tgz
    - run: rm -f target/*.tgz
    - run: cp package/dist/favicon.ico package/favicon.ico
-   - run: rm package/*.cert
-   - run: rm package/*.pem
    - run: npx @neo4j/code-signer --app ./package --private-key ../neo4j-labs-app.pem --cert ../neo4j-labs-app.cert --passphrase ${{ secrets.GRAPH_APP_PASSPHRASE }}
    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert ../neo4j_desktop.cert
    - run: cd package
