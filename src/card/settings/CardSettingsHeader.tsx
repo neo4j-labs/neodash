@@ -9,6 +9,14 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { FullscreenExit } from '@material-ui/icons';
+import styled from '@emotion/styled';
+
+const ButtonContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
 
 const NeoCardSettingsHeader = ({ onRemovePressed, onShiftLeftPressed, onShiftRightPressed,
      onToggleCardSettings, onToggleCardExpand, expanded, fullscreenEnabled }) => {
@@ -25,18 +33,20 @@ const NeoCardSettingsHeader = ({ onRemovePressed, onShiftLeftPressed, onShiftRig
     return (
         <CardHeader
             avatar={<div style={{ marginTop: "-8px" }}>
-                <IconButton size="medium" style={{ padding: "8px", backgroundColor: red[500], color: "white" }} aria-label="remove"
+                <ButtonContainer>
+                <IconButton size="medium" style={{ padding: "8px", backgroundColor: red[500], color: "white", margin:"2px" }} aria-label="remove"
                     onClick={onRemovePressed} >
                     <DeleteIcon />
                 </IconButton>
-                <IconButton size="medium" style={{ padding: "8px", backgroundColor: "#222", color: "white" }} aria-label="move left"
+                <IconButton size="medium" style={{ padding: "8px", backgroundColor: "#222", color: "white", margin:"2px" }} aria-label="move left"
                     onClick={onShiftLeftPressed}>
                     <ChevronLeft />
                 </IconButton>
-                <IconButton size="medium" style={{ padding: "8px", backgroundColor: "#222", color: "white" }} aria-label="move-right"
+                <IconButton size="medium" style={{ padding: "8px", backgroundColor: "#222", color: "white", margin:"2px" }} aria-label="move-right"
                     onClick={onShiftRightPressed}>
                     <ChevronRight />
                 </IconButton>
+                </ButtonContainer>
             </div>}
              action={<>
                 {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
