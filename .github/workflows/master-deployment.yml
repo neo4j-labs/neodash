@@ -1,4 +1,4 @@
-name: NeoDash CI/CD
+name: Master Branch CI/CD
  
 on:
  push:

@@ -1,4 +1,4 @@
-name: NeoDash CI/CD
+name: Develop Branch CI/CD
  
 on:
  push:
