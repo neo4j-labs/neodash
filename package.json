@@ -51,7 +51,7 @@
     "codemirror": "^5.65.3",
     "cypher-codemirror": "github:nielsdejong/cypher-editor#c0eff97fc97f22355e60b57fb6f8dc26b16f9a5f",
     "d3-scale-chromatic": "^3.0.0",
-    "html2canvas": "^1.4.1",
+    "dom-to-image": "^2.6.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
     "material-ui-color-picker": "github:nielsdejong/material-ui-color-picker#c1bae552c1daf81952bf0478d7f71c1a416527d3",
