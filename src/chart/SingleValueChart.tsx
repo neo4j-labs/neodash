@@ -4,7 +4,8 @@ import { ChartProps } from './Chart';
 
 import { renderValueByType } from '../report/ReportRecordProcessing';
 import { evaluateRulesOnNeo4jRecord } from '../report/ReportRuleEvaluator';
-import { CARD_FOOTER_HEIGHT } from '../card/view/CardView';
+import { CARD_FOOTER_HEIGHT } from '../config/CardConfig';
+
 /**
  * Renders Neo4j records as their JSON representation.
  */

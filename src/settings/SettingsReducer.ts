@@ -7,7 +7,7 @@ const update = (state, mutations) =>
 export const SETTINGS_INITIAL_STATE = {
     pagenumber: 0,
     editable: true,
-    fullscreenEnabled: true,
+    fullscreenEnabled: false,
     parameters: {}
 }
 
@@ -27,6 +27,7 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, action: { type: 
     // Else, deal with page-level operations.
     switch (type) {
         case UPDATE_DASHBOARD_SETTING: {
+        
             const { dashboard, setting, value } = payload;
             const settings = (state.settings) ? (state.settings) : {};
 

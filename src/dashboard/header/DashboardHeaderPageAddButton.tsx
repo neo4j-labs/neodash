@@ -5,7 +5,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 export const NeoPageAddButton = ({onClick}) => {
     const content = (
-        <div key={9999} style={{
+        <div style={{
             padding: "5px", cursor: 'pointer',
             display: "inline-block", borderRight: "1px solid #ddd", borderLeft: "1px solid #ddd"
         }}>

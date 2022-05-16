@@ -63,7 +63,7 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
 export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
     const [saveModalOpen, setSaveModalOpen] = React.useState(false);
     const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
-    const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(true);
+    const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
     const [dashboardDatabase, setDashboardDatabase] = React.useState("neo4j");
     const [databases, setDatabases] = React.useState(["neo4j"]);
 

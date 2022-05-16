@@ -1,5 +1,7 @@
 import { useConnection } from "use-neo4j";
-import React, { useEffect } from 'react';
+import React from 'react';
+import _ from 'lodash';
+
 
 /**
  * Updates the Neo4j context when noticing an update in the global connection state.

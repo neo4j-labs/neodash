@@ -1,4 +1,4 @@
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 
 /**
  * Basic function to convert a table row output to a CSV file, and download it.
@@ -48,19 +48,11 @@ export function replaceDashboardParameters(str, parameters) {
  */
 export const downloadComponentAsImage = async (ref) => {
     const element = ref.current;
-    const canvas = await html2canvas(element);
 
-    const data = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-
-    if (typeof link.download === 'string') {
-      link.href = data;
-      link.download = 'image.png';
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      window.open(data);
-    }
+    domtoimage.toPng(element,{bgcolor:'white'}).then(function (dataUrl) {
+        var link = document.createElement('a');
+        link.download = 'image.png';
+        link.href = dataUrl;
+        link.click();
+    });
   };

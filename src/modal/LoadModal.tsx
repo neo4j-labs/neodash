@@ -71,8 +71,9 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
         { field: 'date', headerName: 'Date', width: 200 },
         { field: 'title', headerName: 'Title', width: 270 },
         { field: 'author', headerName: 'Author', width: 160 },
+        { field: 'version', headerName: 'Version', width: 95 },
         {
-            field: 'load', headerName: ' ', renderCell: (c) => {
+            field: 'load', headerName: 'Select', renderCell: (c) => {
                 return <Button onClick={(e) => { loadDashboardFromNeo4j(driver, dashboardDatabase, c.id, handleDashboardLoadedFromNeo4j) }} style={{ float: "right", backgroundColor: "white" }} variant="contained" size="medium" endIcon={<PlayArrow />}>Select</Button>
             }, width: 120
         },
@@ -172,7 +173,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                         </Badge>
                     </IconButton>
                 </DialogTitle>
-                <DialogContent style={{ width: "800px" }}>
+                <DialogContent style={{ width: "900px" }}>
                     <DialogContentText>If dashboards are saved in your current database, choose a dashboard below.
                     </DialogContentText>
 

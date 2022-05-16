@@ -52,7 +52,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         setShareID(null);
         setShareLink(null);
         setShareModalOpen(true);
-        loadDatabaseListFromNeo4j(driver, (result) => { setDatabases(result )});
+        loadDatabaseListFromNeo4j(driver, (result) => { setDatabases(result) });
     };
 
     const handleClose = () => {
@@ -106,6 +106,10 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 </DialogTitle>
                 <DialogContent style={{ width: "1000px" }}>
                     <DialogContentText>
+                        This window lets you create a temporary share link for your dashboard.
+                        Keep in mind that share links are not intended as a way to publish your dashboard for users, see the <a href="https://github.com/nielsdejong/neodash/wiki/Publishing">wiki</a> for more on publishing.
+                        <br />
+                        <hr /><br />
                         Step 1: Select a dashboard to share.
                         <br />
                         <br />
@@ -115,7 +119,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                 loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setShareLink(null); setRows(result) });
                                 setLoadFromNeo4jModalOpen(true);
                             }}
-                            style={{  marginBottom: "10px", backgroundColor: "white" }}
+                            style={{ marginBottom: "10px", backgroundColor: "white" }}
                             color="default"
                             variant="contained"
                             size="medium"
@@ -181,7 +185,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                             onClick={(e) => {
                                 setShareLink((shareBaseURL + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) + "&dashboardDatabase=" + encodeURIComponent(dashboardDatabase) +
                                     (shareConnectionDetails == "Yes" ? "&credentials=" + encodeURIComponent(connection.protocol + "://"
-                                        + connection.username + ":" + connection.password + "@" + connection.database +":" + connection.url + ":" + connection.port) : "")
+                                        + connection.username + ":" + connection.password + "@" + connection.database + ":" + connection.url + ":" + connection.port) : "")
                                     + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")));
                             }}
                             style={{ marginBottom: "10px", backgroundColor: "white" }}
@@ -225,7 +229,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                 ColumnSortedAscendingIcon: () => <></>,
                             }}
                         /></div>
-                        <FormControl style={{ marginTop: "-58px", marginLeft: "10px" }}>
+                    <FormControl style={{ marginTop: "-58px", marginLeft: "10px" }}>
                         <InputLabel id="demo-simple-select-label">Database</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -235,7 +239,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                             onChange={(e) => {
                                 setRows([]);
                                 setDashboardDatabase(e.target.value);
-                                loadDashboardListFromNeo4j(driver, e.target.value, (result) => {  setRows(result); });
+                                loadDashboardListFromNeo4j(driver, e.target.value, (result) => { setRows(result); });
                             }}
                         >
                             {databases.map(database => {
@@ -274,7 +278,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                             component="label"
                             onClick={(e) => {
                                 setShareID(shareFileURL);
-                                setShareName(shareFileURL.substring(0,100) + "...");
+                                setShareName(shareFileURL.substring(0, 100) + "...");
                                 setShareType("file");
                                 setShareLink(null);
                                 setShareFileURL("");

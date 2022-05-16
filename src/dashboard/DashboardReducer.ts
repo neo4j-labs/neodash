@@ -4,9 +4,9 @@
 
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
-import { CREATE_PAGE, REMOVE_PAGE, SET_DASHBOARD_TITLE, RESET_DASHBOARD_STATE, SET_DASHBOARD } from './DashboardActions';
+import { CREATE_PAGE, REMOVE_PAGE, SET_DASHBOARD_TITLE, RESET_DASHBOARD_STATE, SET_DASHBOARD, MOVE_PAGE } from './DashboardActions';
 
-export const NEODASH_VERSION = "2.0";
+export const NEODASH_VERSION = "2.1";
 
 export const initialState = {
     title: "",
@@ -77,7 +77,18 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
                 pages: pagesInFront.concat(pagesBehind)
             }
         }
+        case MOVE_PAGE: {
+            // Moves a page from a given index to a new index.
+            const { oldIndex, newIndex } = payload;
 
+            const element = state.pages.splice(oldIndex, 1)[0];
+            state.pages.splice(newIndex, 0, element);
+            
+            return {
+                ...state,
+                pages: state.pages
+            }
+        }
         default: {
             return state;
         }

@@ -1,0 +1,110 @@
+name: Test/Deploy Master
+ 
+on:
+ push:
+   branches: [ develop ]
+ 
+ 
+jobs:
+ build-test:
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [17.x]
+   steps:
+   - uses: actions/checkout@v2
+   - name: Use Node.js ${{ matrix.node-version }}
+     uses: actions/setup-node@v1
+     with:
+       node-version: ${{ matrix.node-version }}
+   - run: npm install
+   - name: Cypress run
+     uses: cypress-io/github-action@v2
+     with:
+        build: npm run build
+        start: npm run dev
+        wait-on: 'http://localhost:3000'
+ build-s3:
+   needs: build-test
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [17.x]
+   steps:
+   - uses: actions/checkout@v2
+   - name: Use Node.js ${{ matrix.node-version }}
+     uses: actions/setup-node@v1
+     with:
+       node-version: ${{ matrix.node-version }}
+   - run: npm install
+   - run: npm run build
+   - name: Set AWS credentials
+     uses: aws-actions/configure-aws-credentials@v1
+     with:
+       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+       aws-region: us-west-1
+   - run: curl https://gist.githubusercontent.com/nielsdejong/5be9e87e71aa06be5695a57a0daec04c/raw/f3673787d74d402b4450a4a58025e64feb4466d5/index.html > dist/index.html
+   - run: aws s3 rm s3://neodash-test.graphapp.io/ --recursive && aws s3 sync dist s3://neodash-test.graphapp.io/ --acl public-read
+
+ build-docker:
+   needs: build-test
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [17.x]
+   steps:
+   - name: run Docker 
+     uses: actions/checkout@v2
+   - name: Login to Docker Hub
+     uses: docker/login-action@v1
+     with:
+       username: ${{ secrets.DOCKER_HUB_USERNAME }}
+       password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+   - name: Set up Docker Buildx
+     uses: docker/setup-buildx-action@v1
+   - name: Build and push
+     uses: docker/build-push-action@v2
+     with:
+      context: .
+      file: ./Dockerfile
+      push: true
+      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:develop
+
+ build-npm:
+   needs: build-test
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [17.x]
+   steps:
+   - uses: actions/checkout@v2
+   - name: Use Node.js ${{ matrix.node-version }}
+     uses: actions/setup-node@v1
+     with:
+       node-version: ${{ matrix.node-version }}
+   - run: npm install
+   - run: npm run-script build
+   - run: npm pack
+   - run: rm -rf target
+   - run: mkdir target
+   - run: mv *.tgz target/
+   - run: tar -xvf target/*.tgz
+   - run: rm -f target/*.tgz
+   - run: cp package/dist/favicon.ico package/favicon.ico
+   - run: echo "${{ secrets.NEO4J_LABS_APP_KEY }}" > neo4j-labs-app.pem 
+   - run: echo "${{ secrets.NEO4J_LABS_APP_CERTIFICATE }}" > neo4j-labs-app.cert
+   - run: npx @neo4j/code-signer --app ./package --private-key neo4j-labs-app.pem --cert neo4j-labs-app.cert --passphrase ${{ secrets.NEO4J_DESKTOP_PASSPHRASE }}
+   - run: echo "${{ secrets.NEO4J_DESKTOP_CERTIFICATE }}" > neo4j_desktop.cert
+   - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
+   - run: cd package && npm pack
+   - run: mv package/*.tgz .
+   - run: rm -rf package
+   - run: ls
+   - run: tar xvf *.tgz package
+   - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
+   - run: ls -la package
+   - run: rm -rf package
+   - run: echo Done!
+
+   

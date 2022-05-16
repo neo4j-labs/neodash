@@ -6,6 +6,9 @@ import NeoLineChart from "../chart/LineChart";
 import NeoMapChart from "../chart/MapChart";
 import NeoPieChart from "../chart/PieChart";
 import NeoTableChart from "../chart/TableChart";
+import NeoSunburstChart from "../chart/SunburstChart";
+import NeoCirclePackingChart from "../chart/CirclePackingChart";
+import NeoTreeMapChart from "../chart/TreeMapChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -228,5 +231,74 @@ RETURN value
         selection: {},
         type: "iframe",
         chartType: NeoIFrameChart
-    }
+    },
+    {
+        title: "Sunburst Chart",
+        description: "Sunburst charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
+        exampleQuery: "// How are people distributed in the company?\n" +
+            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
+            "WITH nodes(path) as no\n" +
+            "WITH no, last(no) as leaf\n" +
+            "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
+            "RETURN result, val",
+        syntheticQuery: 'UNWIND [\n'+
+            '{path: ["NeoDash", "North"], value: 3},\n'+
+            '{path: ["NeoDash", "Center"], value: 5},\n'+
+            '{path: ["NeoDash", "South", "South 1"], value: 2},\n'+
+            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n'+
+            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n'+
+            '] as x\n'+
+            'RETURN x.path as path, x.value as value',
+        settings: { },
+        selection: { index: "path", value: "value", key: "path"},
+        fields: ["path","value"],
+        type: "sunburst",
+        chartType: NeoSunburstChart
+    },
+    {
+        title: "Circle Packing Chart",
+        description: "Circle Packing charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
+        exampleQuery: "// How are people distributed in the company?\n" +
+            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
+            "WITH nodes(path) as no\n" +
+            "WITH no, last(no) as leaf\n" +
+            "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
+            "RETURN result, val",
+        syntheticQuery: 'UNWIND [\n'+
+            '{path: ["NeoDash", "North"], value: 3},\n'+
+            '{path: ["NeoDash", "Center"], value: 5},\n'+
+            '{path: ["NeoDash", "South", "South 1"], value: 2},\n'+
+            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n'+
+            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n'+
+            '] as x\n'+
+            'RETURN x.path as path, x.value as value',
+        settings: { },
+        selection: { index: "path", value: "value", key: "path"},
+        fields: ["path","value"],
+        type: "circlePacking",
+        chartType: NeoCirclePackingChart
+    },
+    {
+        title: "Treemap Chart",
+        description: "Treemap charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
+        exampleQuery: "// How are people distributed in the company?\n" +
+            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
+            "WITH nodes(path) as no\n" +
+            "WITH no, last(no) as leaf\n" +
+            "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
+            "RETURN result, val",
+        syntheticQuery: 'UNWIND [\n'+
+            '{path: ["NeoDash", "North"], value: 3},\n'+
+            '{path: ["NeoDash", "Center"], value: 5},\n'+
+            '{path: ["NeoDash", "South", "South 1"], value: 2},\n'+
+            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n'+
+            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n'+
+            '] as x\n'+
+            'RETURN x.path as path, x.value as value',
+        settings: { },
+        selection: { index: "path", value: "value", key: "path"},
+        fields: ["path","value"],
+        type: "treeMap",
+        chartType: NeoTreeMapChart
+    },
 ]
