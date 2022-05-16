@@ -57,6 +57,10 @@ const NeoCard = ({
 
     const [expanded, setExpanded] = useState(false);
     const onToggleCardExpand = () => {
+        // When we re-minimize a card, close the settings to avoid position issues.
+        if(expanded && settingsOpen){
+            onToggleCardSettings(index, false);
+        }
         setExpanded(!expanded);
     }
 
