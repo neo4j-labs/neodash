@@ -21,7 +21,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
-    handleDrawerClose, aboutModalOpen, onShareModalOpen, onAboutModalOpen, resetApplication }) => {
+    handleDrawerClose, onAboutModalOpen, resetApplication }) => {
 
     // Override to hide the drawer when the application is in standalone mode.
     if (hidden) {

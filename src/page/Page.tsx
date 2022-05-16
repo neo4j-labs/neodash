@@ -13,21 +13,21 @@ import { GRID_COMPACTION_TYPE } from '../config/PageConfig';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 /**
- * A component responsible for rendering the page, a collection of reports.
+ * A component responsible for rendering the **current** page, a collection of reports.
  */
 export const NeoPage = (
     {
         editable = true, // Whether the page is editable.
         dashboardSettings, // global settings for the entire dashboard.
-        pagenumber, // The page number.
+        pagenumber, // The page number to render.
         reports = [], // list of reports as defined in the dashboard state.
-        onCreatePressed, // callback for when the user wants to add a new report.
-        onRemovePressed = (index) => { }, // action to take when a report gets removed.
+        onCreatePressed = () => {},  // callback for when the user wants to add a new report.
+        onRemovePressed = (index: number) => {}, // action to take when a report gets removed.
         isLoaded = true, // Whether the page is loaded and the cards can be displayed.
-        onPageLayoutUpdate // action to take when the page layout is updated.
+        onPageLayoutUpdate = (newLayout: object) => { }  // action to take when the page layout is updated.
     }) => {
 
-    const getReportIndex = (pagenumber, index) => {
+    const getReportIndex = (pagenumber: number, index: number) => {
         return pagenumber + ":" + index;
     }
 
@@ -44,9 +44,7 @@ export const NeoPage = (
     const [isDragging, setIsDragging] = React.useState(false);
     const [layouts, setLayouts] = React.useState(defaultLayouts);
     const [lastElement, setLastElement] = React.useState(<div key={getReportIndex(pagenumber, 999999)}></div>);
-    const [animated, setAnimated] = React.useState(false);
-
-
+    const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
 
     /**

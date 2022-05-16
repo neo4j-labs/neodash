@@ -14,23 +14,11 @@ import { NeoDashboardHeaderTitleBar } from "./DashboardHeaderTitleBar";
 
 const drawerWidth = 240;
 
-const styles = {
-    root: {
-        background: "transparent",
-        marginLeft: "30px",
-        marginRight: "30px",
-
-    },
-    input: {
-        color: "white",
-        fontSize: 20
-    }
-};
 
 
-export const NeoDashboardHeader = ({ classes, open, standalone, pagenumber, pages, dashboardTitle,
+export const NeoDashboardHeader = ({ open, standalone, dashboardTitle,
     handleDrawerOpen, setDashboardTitle, editable, connection, settings,
-    addPage, removePage, selectPage, setPageTitle, onConnectionModalOpen, onDownloadImage }) => {
+    onConnectionModalOpen, onDownloadImage }) => {
 
     const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
     const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);

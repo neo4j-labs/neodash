@@ -34,6 +34,7 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
     welcomeScreenOpen, setWelcomeScreenOpen, onConnectionModalOpen, onConnectionModalClose, onSSOAttempt }) => {
 
     const [initialized, setInitialized] = React.useState(false);
+
     if (!initialized) {
         setInitialized(true);
         initializeApplication(initialized);
@@ -45,13 +46,16 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
     return (
         <div ref={ref} style={{ display: 'flex' }}>
             <CssBaseline />
+            {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
             <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
-            {(connected) ? <Dashboard onDownloadDashboardAsImage={(e) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
+            {(connected) ?
+                <Dashboard onDownloadDashboardAsImage={(e) => downloadComponentAsImage(ref)}></Dashboard>
+                : <></>}
+            {/* TODO - move all models into a pop-ups (or modals) component. */}
             <NeoAboutModal
                 open={aboutModalOpen}
                 handleClose={onAboutModalClose}
-                getDebugState={getDebugState}>
-            </NeoAboutModal>
+                getDebugState={getDebugState}/>
             <NeoConnectionModal
                 open={connectionModalOpen}
                 dismissable={connected}
@@ -75,16 +79,14 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
                 open={oldDashboard}
                 text={oldDashboard}
                 loadDashboard={loadDashboard}
-                clearOldDashboard={clearOldDashboard}>
-            </NeoUpgradeOldDashboardModal>
+                clearOldDashboard={clearOldDashboard}/>
             <NeoLoadSharedDashboardModal
                 shareDetails={shareDetails}
                 onResetShareDetails={onResetShareDetails}
-                onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}>
-            </NeoLoadSharedDashboardModal>
+                onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard} />
             <NeoReportHelpModal
                 open={reportHelpModalOpen}
-                handleClose={onReportHelpModalClose}/>
+                handleClose={onReportHelpModalClose} />
             <NeoNotificationModal></NeoNotificationModal>
         </div>
     );
@@ -102,7 +104,7 @@ const mapStateToProps = state => ({
     reportHelpModalOpen: applicationHasReportHelpModalOpen(state),
     welcomeScreenOpen: applicationHasWelcomeScreenOpen(state),
     hasCachedDashboard: applicationHasCachedDashboard(state),
-    getDebugState: () => { return applicationGetDebugState(state) },
+    getDebugState: () => { return applicationGetDebugState(state) }, // TODO - change this to be variable instead of a function?
     hasNeo4jDesktopConnection: applicationHasNeo4jDesktopConnection(state),
 });
 
@@ -125,7 +127,6 @@ const mapDispatchToProps = dispatch => ({
         if (!initialized) {
             dispatch(loadApplicationConfigThunk());
         }
-
     },
     onResetShareDetails: _ => {
         dispatch(setWelcomeScreenOpen(true));
