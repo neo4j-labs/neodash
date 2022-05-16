@@ -1,9 +1,7 @@
-name: Develop Branch CI/CD
+name: Test/Deploy Develop
  
 on:
  push:
-   branches: [ develop ]
- pull_request:
    branches: [ develop ]
  
  

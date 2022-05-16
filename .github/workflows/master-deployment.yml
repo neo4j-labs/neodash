@@ -1,9 +1,7 @@
-name: Master Branch CI/CD
+name: Test/Deploy Master
  
 on:
  push:
-   branches: [ develop ]
- pull_request:
    branches: [ develop ]
  
  
@@ -105,7 +103,8 @@ jobs:
    - run: ls
    - run: tar xvf *.tgz package
    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
+   - run: ls -la package
    - run: rm -rf package
    - run: echo Done!
-   - run: ls
+
    
