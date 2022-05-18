@@ -19,9 +19,11 @@ describe('NeoDash E2E Tests', () => {
         cy.contains('New Dashboard').click()
         cy.wait(300)
 
-        if (cy.contains("Create new dashboard")) {
-            cy.contains('Yes').click()
-        }
+        // If an old dashboard exists in cache, do a check to make sure we clear it. 
+        // if (cy.contains("Create new dashboard")) {
+        //     cy.contains('Yes').click()
+        // }
+
         cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j')
 
         // Connect to Neo4j database
