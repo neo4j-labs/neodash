@@ -156,7 +156,7 @@ describe('NeoDash E2E Tests', () => {
     })
 
     // Test load stress-test dashboard from file
-    it('test load dashboard from file and stress test report customizations', () => {
+    it.only('test load dashboard from file and stress test report customizations', () => {
         try {
             var NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD = 5;
             const file = cy.request(loadDashboardURL).should((response) => {
@@ -170,7 +170,7 @@ describe('NeoDash E2E Tests', () => {
                 // Click on each page and wait ~2 seconds for it to load completely
                 for (let i = 1; i < NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD; i++) {
                     cy.get('.MuiAppBar-root .react-grid-item:eq('+i+')').click()
-                    cy.wait(2500)
+                    cy.wait(3000)
                 }
             })
        
