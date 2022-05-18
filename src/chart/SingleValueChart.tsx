@@ -4,7 +4,6 @@ import { ChartProps } from './Chart';
 
 import { renderValueByType } from '../report/ReportRecordProcessing';
 import { evaluateRulesOnNeo4jRecord } from '../report/ReportRuleEvaluator';
-import { CARD_FOOTER_HEIGHT } from '../config/CardConfig';
 
 /**
  * Renders Neo4j records as their JSON representation.
@@ -16,14 +15,14 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : "left";
     const verticalAlign = props.settings && props.settings.verticalAlign ? props.settings.verticalAlign : "top";
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
-    const dimensions = props.dimensions ? props.dimensions : {width: 3, height: 3};
-    const reportHeight = (97 * dimensions.height) + (148 * Math.floor((dimensions.height - 1) / 3));
+    const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
+    const reportHeight = dimensions.height - fontSize;
 
     const value = (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0]) ? records[0]["_fields"][0] : "";
     const displayValue = renderValueByType(value);
     return <div style={{
-        height: reportHeight + CARD_FOOTER_HEIGHT,
-        lineHeight: (reportHeight + CARD_FOOTER_HEIGHT) + "px",
+        height: reportHeight,
+        lineHeight: (reportHeight) + "px",
         position: "relative",
         textAlign: textAlign,
         marginLeft: "15px",

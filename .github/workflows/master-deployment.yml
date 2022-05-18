@@ -17,6 +17,7 @@ jobs:
      uses: actions/setup-node@v1
      with:
        node-version: ${{ matrix.node-version }}
+   - run: rm -rf docs
    - run: npm install
    - name: Cypress run
      uses: cypress-io/github-action@v2
@@ -36,6 +37,7 @@ jobs:
      uses: actions/setup-node@v1
      with:
        node-version: ${{ matrix.node-version }}
+   - run: rm -rf docs
    - run: npm install
    - run: npm run build
    - name: Set AWS credentials
@@ -46,7 +48,6 @@ jobs:
        aws-region: us-west-1
    - run: curl https://gist.githubusercontent.com/nielsdejong/5be9e87e71aa06be5695a57a0daec04c/raw/f3673787d74d402b4450a4a58025e64feb4466d5/index.html > dist/index.html
    - run: aws s3 rm s3://neodash-test.graphapp.io/ --recursive && aws s3 sync dist s3://neodash-test.graphapp.io/ --acl public-read
-
  build-docker:
    needs: build-test
    runs-on: ubuntu-latest
@@ -56,6 +57,7 @@ jobs:
    steps:
    - name: run Docker 
      uses: actions/checkout@v2
+   - run: rm -rf docs
    - name: Login to Docker Hub
      uses: docker/login-action@v1
      with:
@@ -70,7 +72,6 @@ jobs:
       file: ./Dockerfile
       push: true
       tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:develop
-
  build-npm:
    needs: build-test
    runs-on: ubuntu-latest
@@ -83,6 +84,7 @@ jobs:
      uses: actions/setup-node@v1
      with:
        node-version: ${{ matrix.node-version }}
+   - run: rm -rf docs
    - run: npm install
    - run: npm run-script build
    - run: npm pack
