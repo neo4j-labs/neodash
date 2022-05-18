@@ -12,7 +12,8 @@ export const initialState = {
     title: "",
     version: NEODASH_VERSION,
     settings: SETTINGS_INITIAL_STATE,
-    pages: [FIRST_PAGE_INITIAL_STATE]
+    pages: [FIRST_PAGE_INITIAL_STATE],
+    parameters: {}
 }
 
 

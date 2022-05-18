@@ -7,7 +7,8 @@ const update = (state, mutations) =>
 export const SETTINGS_INITIAL_STATE = {
     pagenumber: 0,
     editable: true,
-    fullscreenEnabled: false
+    fullscreenEnabled: false,
+    parameters: {}
 }
 
 
