@@ -30,6 +30,7 @@ describe('NeoDash E2E Tests', () => {
         cy.get('#protocol').click()
         cy.contains('neo4j+s').click()
         cy.get('#url').clear().type('demo.neo4jlabs.com')
+        cy.wait(100)
         cy.get('#database').type('movies')
         cy.get('#dbusername').clear().type('movies')
         cy.get('#dbpassword').type('movies')
@@ -164,7 +165,7 @@ describe('NeoDash E2E Tests', () => {
     })
 
     // Test load stress-test dashboard from file
-    it('test load dashboard from file and stress test report customizations', () => {
+    it.only('test load dashboard from file and stress test report customizations', () => {
         try {
             var NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD = 5;
             const file = cy.request(loadDashboardURL).should((response) => {
