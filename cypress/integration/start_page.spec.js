@@ -1,5 +1,11 @@
 import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL } from "../fixtures/cypher_queries"
 
+// Ignore warnings that may appear when using the Cypress dev server
+Cypress.on('uncaught:exception', (err, runnable) => {
+    console.log(err, runnable);
+    return false;
+});
+
 describe('NeoDash E2E Tests', () => {
     beforeEach(() => {
         cy.clearLocalStorage()
@@ -160,7 +166,7 @@ describe('NeoDash E2E Tests', () => {
         try {
             var NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD = 5;
             const file = cy.request(loadDashboardURL).should((response) => {
-         
+
                 cy.get('#root .MuiDrawer-root .MuiIconButton-root:eq(2)').click()
                 cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').invoke('val', response.body).trigger('change')
                 cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').type(' ')
@@ -169,11 +175,11 @@ describe('NeoDash E2E Tests', () => {
 
                 // Click on each page and wait ~2 seconds for it to load completely
                 for (let i = 1; i < NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD; i++) {
-                    cy.get('.MuiAppBar-root .react-grid-item:eq('+i+')').click()
+                    cy.get('.MuiAppBar-root .react-grid-item:eq(' + i + ')').click()
                     cy.wait(3000)
                 }
             })
-       
+
         } catch (e) {
             console.log("Unable to fetch test dashboard. Skipping test.");
         }
