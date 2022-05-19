@@ -16,7 +16,7 @@ import NeoTableChart from "../chart/TableChart";
 export const NeoReport = ({
     database = "neo4j", // The Neo4j database to run queries onto.
     query = "", // The Cypher query used to populate the report.
-    stringParameters = "", // A string, to be parsed as JSON, which contains cypher parameters.
+    stringParameters = "", // A string, to be parsed as JSON, which contains cypher parameters. TODO - remove this, replaced by mapParameters.
     mapParameters = {}, // A dictionary of parameters to pass into the query.
     disabled = false, // Whether to disable query execution.
     selection = {}, // A selection of return fields to send to the report.

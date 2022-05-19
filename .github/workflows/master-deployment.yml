@@ -2,7 +2,7 @@ name: Test/Deploy Master
  
 on:
  push:
-   branches: [ master ]
+   branches: [ develop ]
  
  
 jobs:
@@ -102,11 +102,11 @@ jobs:
    - run: cd package && npm pack
    - run: mv package/*.tgz .
    - run: rm -rf package
-   - run: ls
    - run: tar xvf *.tgz package
    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
-   - run: ls -la package
    - run: rm -rf package
-   - run: echo Done!
+   - uses: JS-DevTools/npm-publish@v1
+       with:
+         token: ${{ secrets.NPM_TOKEN }}
 
    
