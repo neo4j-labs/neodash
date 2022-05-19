@@ -105,8 +105,9 @@ jobs:
    - run: tar xvf *.tgz package
    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
    - run: rm -rf package
-   - uses: JS-DevTools/npm-publish@v1
-       with:
+   - name: Publish to npm registry
+     uses: JS-DevTools/npm-publish@v1
+     with:
          token: ${{ secrets.NPM_TOKEN }}
 
    
