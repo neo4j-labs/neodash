@@ -34,6 +34,7 @@ describe('NeoDash E2E Tests', () => {
         cy.get('#database').type('movies')
         cy.get('#dbusername').clear().type('movies')
         cy.get('#dbpassword').type('movies')
+        cy.wait(100)
         cy.get('button').contains('Connect').click()
     })
 
@@ -165,19 +166,18 @@ describe('NeoDash E2E Tests', () => {
     })
 
     // Test load stress-test dashboard from file
-    it('test load dashboard from file and stress test report customizations', () => {
+    it.only('test load dashboard from file and stress test report customizations', () => {
         try {
             var NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD = 5;
             const file = cy.request(loadDashboardURL).should((response) => {
 
                 cy.get('#root .MuiDrawer-root .MuiIconButton-root:eq(2)').click()
                 cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').invoke('val', response.body).trigger('change')
-                cy.wait(500)
                 cy.get('.MuiDialog-root .MuiPaper-root .MuiDialogContent-root textarea:eq(0)').type(' ')
                 cy.get('.MuiDialog-root .MuiDialogContent-root .MuiButtonBase-root:eq(2)').click()
                 cy.wait(2500)
 
-                // Click on each page and wait ~2 seconds for it to load completely
+                // Click on each page and wait ~3 seconds for it to load completely
                 for (let i = 1; i < NUMBER_OF_PAGES_IN_STRESS_TEST_DASHBOARD; i++) {
                     cy.get('.MuiAppBar-root .react-grid-item:eq(' + i + ')').click()
                     cy.wait(3000)
