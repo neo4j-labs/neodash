@@ -108,4 +108,4 @@ jobs:
    - name: Publish package to NPM 📦
      run: npm publish --access public neodash*.tgz
      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
