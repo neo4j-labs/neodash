@@ -11,16 +11,10 @@ export const removeReport = (pagenumber: number, index: any) => ({
     payload: { pagenumber, index },
 });
 
-export const SHIFT_REPORT_LEFT = 'PAGE/SHIFT_REPORT_LEFT';
-export const shiftReportLeft = (pagenumber: number, index: any) => ({
-    type: SHIFT_REPORT_LEFT,
-    payload: { pagenumber, index },
-});
-
-export const SHIFT_REPORT_RIGHT = 'PAGE/SHIFT_REPORT_RIGHT';
-export const shiftReportRight = (pagenumber: number, index: any) => ({
-    type: SHIFT_REPORT_RIGHT,
-    payload: { pagenumber, index },
+export const UPDATE_ALL_CARD_POSITIONS_IN_PAGE = 'PAGE/UPDATE_ALL_CARD_POSITIONS_IN_PAGE';
+export const updateAllCardPositionsInPage = (pagenumber: number, positions: any) => ({
+    type: UPDATE_ALL_CARD_POSITIONS_IN_PAGE,
+    payload: { pagenumber, positions }
 });
 
 export const SET_PAGE_TITLE = 'PAGE/SET_TITLE';

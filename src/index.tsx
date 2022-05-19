@@ -5,7 +5,8 @@ import { configureStore } from './store';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Application from './application/Application';
-
+import '/node_modules/react-grid-layout/css/styles.css';
+import '/node_modules/react-resizable/css/styles.css';
 
 /**
  * Set up the NeoDash application and wrap it in the needed providers.

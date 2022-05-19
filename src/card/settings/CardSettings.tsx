@@ -4,22 +4,21 @@ import NeoCardSettingsHeader from './CardSettingsHeader';
 import NeoCardSettingsContent from './CardSettingsContent';
 import NeoCardSettingsFooter from './CardSettingsFooter';
 import { CardContent } from '@material-ui/core';
+import { CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 
-const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherParameters, width, height, type, 
-    reportSettings, reportSettingsOpen, fields,
-    onQueryUpdate, onSizeUpdate, onRefreshRateUpdate, onCypherParametersUpdate, onRemovePressed, onReportSettingUpdate,
-    onShiftLeftPressed, onShiftRightPressed, onToggleCardSettings, onTypeUpdate, setActive,
+const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, width, height, type, 
+    reportSettings, reportSettingsOpen, fields, widthPx, heightPx,
+    onQueryUpdate, onRefreshRateUpdate, onRemovePressed, onReportSettingUpdate,
+    onToggleCardSettings, onTypeUpdate, setActive, onReportHelpButtonPressed,
      onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand, onCreateNotification }) => {
 
-   
-    const cardHeight = 10 + (120 * height) + (78 * Math.floor((height - 1) / 3)) + "px";
+    const reportHeight = heightPx - CARD_HEADER_HEIGHT + 24;
 
     const cardSettingsHeader = <NeoCardSettingsHeader
         expanded={expanded}
         onToggleCardExpand={onToggleCardExpand}
         onRemovePressed={onRemovePressed}
-        onShiftLeftPressed={onShiftLeftPressed}
-        onShiftRightPressed={onShiftRightPressed}
+        onReportHelpButtonPressed={onReportHelpButtonPressed}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
         onToggleCardSettings={(e) => { setActive(reportSettings.autorun !== undefined ? reportSettings.autorun : true); onToggleCardSettings(e) }} />
 
@@ -29,15 +28,12 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         database={database}
         refreshRate={refreshRate}
         reportSettings={reportSettings}
-        cypherParameters={cypherParameters}
         width={width}
         height={height}
         type={type}
         onQueryUpdate={onQueryUpdate}
-        onSizeUpdate={onSizeUpdate}
         onReportSettingUpdate={onReportSettingUpdate}
         onRefreshRateUpdate={onRefreshRateUpdate}
-        onCypherParametersUpdate={onCypherParametersUpdate}
         onTypeUpdate={onTypeUpdate}></NeoCardSettingsContent> : <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}/>;
 
     const cardSettingsFooter = (settingsOpen) ? <NeoCardSettingsFooter
@@ -50,9 +46,9 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, cypherPar
         onReportSettingUpdate={onReportSettingUpdate}></NeoCardSettingsFooter> : <div></div>;
 
     return (
-        <div className={`card-view ${expanded ? "expanded" : ""}`} style={{ overflowY: "auto" }}>
+        <div className={`card-view ${expanded ? "expanded" : ""}`} style={{ overflowY: "auto", height: "100%"  }}>
             {cardSettingsHeader}
-            <ReportItemContainer style={{ height: cardHeight, marginTop: "-20px" }} >
+            <ReportItemContainer style={{ height: reportHeight, marginTop: "-20px" }} >
                 {cardSettingsContent}
                 {cardSettingsFooter}
             </ReportItemContainer>

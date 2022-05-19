@@ -12,15 +12,15 @@ const NeoIFrameChart = (props: ChartProps) => {
     const parameters = props.parameters ? props.parameters : {};
     const passGlobalParameters = props.settings && props.settings.passGlobalParameters ? props.settings.passGlobalParameters : false;
     const replaceGlobalParameters = props.settings && props.settings.replaceGlobalParameters !== undefined ? props.settings.replaceGlobalParameters : true;
-    const url = records[0]["input"];
-
-    if (!url || !(url.startsWith("http://") || url.startsWith("https://"))) {
-        return <p style={{ margin: "15px" }}>Invalid iFrame URL. Make sure your url starts with <code>http://</code> or <code>https://</code>.</p>
-    }
-
+    const url = records[0]["input"].trim();
     const mapParameters = records[0]["mapParameters"] || {};
     const queryString = Object.keys(mapParameters).map(key => key + '=' + mapParameters[key]).join('&');
     const modifiedUrl = (replaceGlobalParameters ? replaceDashboardParameters(url, parameters) : url) + (passGlobalParameters ? "#" + queryString : "");
+  
+    if (!modifiedUrl || !(modifiedUrl.startsWith("http://") || modifiedUrl.startsWith("https://"))) {
+        return <p style={{ margin: "15px" }}>Invalid iFrame URL. Make sure your url starts with <code>http://</code> or <code>https://</code>.</p>
+    }
+
     return <iframe style={{ width: "100%", border: "none", marginBottom: "-5px", height: "100%", overflow: "hidden" }} src={modifiedUrl} />;
 }
 

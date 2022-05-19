@@ -1,17 +1,18 @@
 import React from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
-import { red } from '@material-ui/core/colors';
 import SaveIcon from '@material-ui/icons/Save';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { FullscreenExit } from '@material-ui/icons';
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+import { Tooltip } from '@material-ui/core';
 
-const NeoCardSettingsHeader = ({ onRemovePressed, onShiftLeftPressed, onShiftRightPressed,
-     onToggleCardSettings, onToggleCardExpand, expanded, fullscreenEnabled }) => {
+const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggleCardExpand, 
+    expanded, fullscreenEnabled, onReportHelpButtonPressed }) => {
     const maximizeButton = <IconButton aria-label="maximize"
         onClick={onToggleCardExpand}>
         <FullscreenIcon />
@@ -25,22 +26,26 @@ const NeoCardSettingsHeader = ({ onRemovePressed, onShiftLeftPressed, onShiftRig
     return (
         <CardHeader
             avatar={<div style={{ marginTop: "-8px" }}>
-                <IconButton size="medium" style={{ padding: "8px", backgroundColor: red[500], color: "white" }} aria-label="remove"
-                    onClick={onRemovePressed} >
-                    <DeleteIcon />
-                </IconButton>
-                <IconButton size="medium" style={{ padding: "8px", backgroundColor: "#222", color: "white" }} aria-label="move left"
-                    onClick={onShiftLeftPressed}>
-                    <ChevronLeft />
-                </IconButton>
-                <IconButton size="medium" style={{ padding: "8px", backgroundColor: "#222", color: "white" }} aria-label="move-right"
-                    onClick={onShiftRightPressed}>
-                    <ChevronRight />
-                </IconButton>
+
+                <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginTop: "8px", marginLeft: "-7px", marginRight: "10px" }}></DragIndicatorIcon>
+                <Tooltip title="Help" aria-label="help">
+                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px" }} aria-label="help"
+                        onClick={onReportHelpButtonPressed}>
+                        <HelpOutlineIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete" aria-label="delete">
+                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "red" }} aria-label="remove"
+                        onClick={onRemovePressed} >
+                        <DeleteOutlineIcon />
+                    </IconButton>
+                </Tooltip>
             </div>}
-             action={<>
+            action={<>
                 {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-                {!expanded ? <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton> : <></>}
+                <Tooltip title="Save" aria-label="save">
+                    <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton>
+                </Tooltip >
             </>}
             title=""
             subheader="" />

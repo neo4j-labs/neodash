@@ -16,7 +16,7 @@ import NeoTableChart from "../chart/TableChart";
 export const NeoReport = ({
     database = "neo4j", // The Neo4j database to run queries onto.
     query = "", // The Cypher query used to populate the report.
-    stringParameters = "", // A string, to be parsed as JSON, which contains cypher parameters.
+    stringParameters = "", // A string, to be parsed as JSON, which contains cypher parameters. TODO - remove this, replaced by mapParameters.
     mapParameters = {}, // A dictionary of parameters to pass into the query.
     disabled = false, // Whether to disable query execution.
     selection = {}, // A selection of return fields to send to the report.
@@ -26,7 +26,7 @@ export const NeoReport = ({
     setGlobalParameter = () => { }, // callback to update global (dashboard) parameters.
     getGlobalParameter = (key) => {return ""}, // function to get global (cypher) parameters.
     refreshRate = 0, // Optionally refresh the report every X seconds.
-    dimensions = { width: 3, height: 3 }, // Size of the report.
+    dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
     rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
     queryTimeLimit = 20, // Time limit for queries before automatically aborted.
     type = "table", // The type of report as a string.

@@ -384,15 +384,15 @@ function RenderString(value) {
 }
 
 function RenderPoint(value, key = 0) {
-    return <HtmlTooltip key={value.toString()}
-        title={<div>
-            <b> Point x={value.x} y={value.y}  </b>
-        </div>}>
+    return <HtmlTooltip key={value.toString()} 
+    title={<div>
+        <b> Point x={value.x} y={value.y}  </b>
+    </div>}>
         <Chip label={"📍"} />
     </HtmlTooltip>
-}
+ }
 
-
+ 
 function RenderInteger(value) {
     // if we cannot cast to integer, use the generic number renderer.
     if (!value || !value.toInt) {
@@ -404,7 +404,7 @@ function RenderInteger(value) {
 
 function RenderNumber(value) {
 
-    if (value === null || !value.toLocaleString) {
+    if(value === null || !value.toLocaleString){
         return "null";
     }
     const number = value.toLocaleString();
@@ -444,7 +444,7 @@ export const rendererForType: any = {
     "point": {
         type: 'string',
         renderValue: (c) => RenderPoint(c.value),
-    },
+    }, 
     "object": {
         type: 'string',
         // valueGetter enables sorting and filtering on string values inside the object

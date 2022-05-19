@@ -53,6 +53,10 @@ export const applicationHasAboutModalOpen = (state: any) => {
     return state.application.aboutModalOpen;
 }
 
+export const applicationHasReportHelpModalOpen = (state: any) => {
+    return state.application.reportHelpModalOpen;
+}
+
 export const applicationGetSsoSettings = (state: any) => {
     return {
         'ssoEnabled': state.application.ssoEnabled,

@@ -3,10 +3,9 @@ import cardReducer from '../card/CardReducer';
 import {
     CREATE_REPORT,
     REMOVE_REPORT,
-    SHIFT_REPORT_LEFT,
-    SHIFT_REPORT_RIGHT,
     SET_PAGE_TITLE,
-    FORCE_REFRESH_PAGE
+    FORCE_REFRESH_PAGE,
+    UPDATE_ALL_CARD_POSITIONS_IN_PAGE
 } from './PageActions';
 
 const update = (state, mutations) =>
@@ -18,8 +17,10 @@ export const FIRST_PAGE_INITIAL_STATE = {
         "title": "Hi there 👋",
         "query": "**This is your first dashboard!** \n \nYou can click (⋮) to edit this report, or add a new report to get started. You can run any Cypher query directly from each report and render data in a variety of formats. \n \nTip: try _renaming_ this report by editing the title text. You can also edit the dashboard header at the top of the screen.\n\n\n",
         "width": 3,
+        "height": 2,
+        "x": 0,
+        "y": 0,
         "type": "text",
-        "height": 3,
         "selection": {},
         "settings": {}
     },
@@ -27,8 +28,10 @@ export const FIRST_PAGE_INITIAL_STATE = {
         "title": "",
         "query": "MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n",
         "width": 3,
+        "height": 2,
+        "x": 3,
+        "y": 0,
         "type": "graph",
-        "height": 3,
         "selection": {
             "Person": "name",
             "Movie": "title"
@@ -40,23 +43,6 @@ export const FIRST_PAGE_INITIAL_STATE = {
 export const PAGE_INITIAL_STATE = {
     "title": "",
     "reports": []
-}
-
-/**
- * Swaps two elements in the reports array.
- */
-function swapTwoCardsInPage(cards, fromIndex, toIndex) {
-    // If the indices are the same, just return the same array.
-    if (fromIndex === toIndex) {
-        return cards;
-    }
-    cards.splice(fromIndex, 1, cards.splice(toIndex, 1, cards[fromIndex])[0]);
-
-    // We make sure that the transition is temporarily disabled for both cards.
-    cards[fromIndex].collapseTimeout = 0
-    cards[toIndex].collapseTimeout = 0
-
-    return cards;
 }
 
 /**
@@ -105,27 +91,26 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
                 // @ts-ignore
                 cardsBehind[0].collapseTimeout = 0;
             }
-
             return {
                 ...state,
                 reports: cardsInFront.concat(cardsBehind)
             }
         }
-        case SHIFT_REPORT_LEFT: {
-            // Moves a card left (swaps it with the previous card)
-            const { pagenumber, index } = payload;
-
+        case UPDATE_ALL_CARD_POSITIONS_IN_PAGE: {
+            // Updates the layout for the entire page (all positions of all cards in that page).
+            const  {pagenumber, positions} = payload;
+            const newReports = state.reports.map((report : object, index) => {
+                return {
+                    ...report,
+                    x:positions[index]["x"],
+                    y:positions[index]["y"],
+                    width:positions[index]["w"],
+                    height:positions[index]["h"]
+                }
+            });
             return {
                 ...state,
-                reports: swapTwoCardsInPage(state.reports, index, Math.max(0, index - 1))
-            }
-        }
-        case SHIFT_REPORT_RIGHT: {
-            // Moves a card right (swaps it with the next card)
-            const { pagenumber, index } = payload;
-            return {
-                ...state,
-                reports: swapTwoCardsInPage(state.reports, index, Math.min(state.reports.length - 1, index + 1))
+                reports: newReports
             }
         }
         case SET_PAGE_TITLE: {

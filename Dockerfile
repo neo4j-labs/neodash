@@ -10,6 +10,7 @@ WORKDIR /usr/local/src/neodash
 
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
+
 RUN npm install
 COPY ./ /usr/local/src/neodash
 RUN npm run build
@@ -37,4 +38,4 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 USER nginx
 EXPOSE 5005
 HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
-LABEL version="2.0.15"
+LABEL version="2.1.0"

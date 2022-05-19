@@ -10,6 +10,7 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
     editable = true, language = "cypher",
     style = { width: "100%", height: "auto", border: "1px solid lightgray" } }) => {
 
+    const [cancelNextEdit, setCancelNextEdit] = React.useState(false);
     const options = {
         viewPortMargin: Infinity,
         mode: language,
@@ -23,23 +24,47 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
         options={options}
         aria-label=""
         readOnly={!editable}
-        value={value}
-        onValueChange={(val) => {
-            if (editable) {
+        value={!cancelNextEdit ? value : value +" "}
+        onValueChange={(val, change) => {
+            // There's a bug here that causes an extra change event to be first after copy-pasting (with replacement) in the editor text box.
+            // This is a workaround for that.
+            if(cancelNextEdit){
+                setCancelNextEdit(false);
+                onChange(value)
+                return;
+            }
+            if (change.origin == "paste" && change.removed[0].length > 0) {
+                onChange(val);
+                setCancelNextEdit(true);
+                return;
+            }
+            if (editable && !cancelNextEdit) {
                 onChange(val);
             }
         }}
         placeholder={placeholder} /> : <div><CypherEditor
-        options={options}
-        readOnly={!editable}
-        aria-label=""
-        value={value}
-        onValueChange={(val) => {
-            if (editable) {
-                onChange(val);
-            }
-        }}
-        placeholder={placeholder} /></div>
+            options={options}
+            readOnly={!editable}
+            aria-label=""
+            value={!cancelNextEdit ? value : value +" "}
+            onValueChange={(val, change) => {
+                // There's a bug here that causes an extra change event to be first after copy-pasting (with replacement) in the editor text box.
+                // This is a workaround for that.
+                if(cancelNextEdit){
+                    setCancelNextEdit(false);
+                    onChange(value)
+                    return;
+                }
+                if (change.origin == "paste" && change.removed[0].length > 0) {
+                    onChange(val);
+                    setCancelNextEdit(true);
+                    return;
+                }
+                if (editable && !cancelNextEdit) {
+                    onChange(val);
+                }
+            }}
+            placeholder={placeholder} /></div>
 
     return (
         <div className={"autosize"} style={style}>

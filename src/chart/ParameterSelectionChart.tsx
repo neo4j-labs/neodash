@@ -63,7 +63,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                     value={value}
                     variant="outlined"
                     placeholder={"Enter text here..."}
-                    style={{ width: 300, marginLeft: "15px", marginTop: "5px" }}
+                    style={{ maxWidth: "calc(100% - 30px)", marginLeft: "15px", marginTop: "5px" }}
                     onChange={(newValue) => {
                         // TODO: i want this to be a proper wait instead of triggering on the first character.
                         if (newValue == null && clearParameterOnFieldClear) {
@@ -82,7 +82,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                 id="autocomplete"
                 options={extraRecords.map(r => r["_fields"] && r["_fields"][0] !== null ? r["_fields"][0] : "(no data)").sort()}
                 getOptionLabel={(option) => option ? option.toString() : ""}
-                style={{ width: 300, marginLeft: "15px", marginTop: "5px" }}
+                style={{ maxWidth: "calc(100% - 30px)",  marginLeft: "15px", marginTop: "5px" }}
                 inputValue={inputText}
                 onInputChange={(event, value) => {
                     setInputText("" + value);

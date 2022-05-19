@@ -1,6 +1,8 @@
 import { createDriver } from "use-neo4j";
 import { initializeSSO } from "../component/sso/SSOUtils";
-import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk } from "../dashboard/DashboardThunks";
+import { setDashboard } from "../dashboard/DashboardActions";
+import { NEODASH_VERSION } from "../dashboard/DashboardReducer";
+import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk, upgradeDashboardVersion } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/ReportQueryRunner";
 import { updateGlobalParametersThunk, updateGlobalParameterThunk } from "../settings/SettingsThunks";
@@ -8,7 +10,7 @@ import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
     setOldDashboard, clearDesktopConnectionProperties, clearNotification, setSSOEnabled, setStandaloneEnabled,
-    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase, setWaitForSSO, setParametersToLoadAfterConnecting
+    setAboutModalOpen, setStandaloneMode, setStandaloneDashboardDatabase, setWaitForSSO, setParametersToLoadAfterConnecting, setReportHelpModalOpen
 } from "./ApplicationActions";
 
 /**
@@ -248,6 +250,15 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase'], config["standaloneDashboardURL"]))
         dispatch(setConnectionModalOpen(false));
 
+        // Auto-upgrade the dashboard version if an old version is cached.
+        if(state.dashboard && state.dashboard.version !== NEODASH_VERSION){
+            if(state.dashboard.version == "2.0"){
+                const upgradedDashboard = upgradeDashboardVersion(state.dashboard, "2.0", "2.1");
+                dispatch(setDashboard(upgradedDashboard));
+                dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.0. You might need to refresh this page."));
+            }
+        }
+
         // SSO - specific case starts here.
         if (state.application.waitForSSO) {
             // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
@@ -330,6 +341,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             }
             dispatch(handleSharedDashboardsThunk());
             dispatch(setConnectionModalOpen(false));
+            dispatch(setReportHelpModalOpen(false));
             dispatch(setAboutModalOpen(false));
         }
     } catch (e) {
