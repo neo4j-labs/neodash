@@ -105,9 +105,6 @@ jobs:
    - run: tar xvf *.tgz package
    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
    - run: rm -rf package
-   - name: Publish to npm registry
-     uses: JS-DevTools/npm-publish@v1
-     with:
-         token: ${{ secrets.NPM_TOKEN }}
-
-   
+   - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+   - name: Publish package to NPM 📦
+     run: npm publish --access public neodash*.tgz
