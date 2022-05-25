@@ -1,0 +1,134 @@
+NeoDash is an application with a complex internal state. If you are
+planning to extend the application state in some way, make sure you are
+familiar with https://redux.js.org/[Redux] design patterns.
+
+The app’s entire state object is encapsulated in the following JSON
+structure:
+
+....
+{
+  "dashboard": {
+    "title": "My Dashboard Name",
+    "version": "2.1",
+    "settings": {
+      "pagenumber": 0,
+      "editable": true,
+      ...
+      "parameters": {
+          ...
+       }
+    },
+    "pages": [
+        ...
+    ]
+  },
+  "application": {
+        ...
+   },
+  "version": "2.1.0"
+}
+....
+
+At the highest level, this object consists of three entries: -
+`dashboard`: all state related to the currently active dashboard. This
+is changed when a dashboard gets loaded, modified or removed. -
+`application`: all state related to the application itself. This
+describes which windows are open, what database you are connected to,
+etc. - `version`: the version of NeoDash that is running. Note that
+these are complete version numbers (of the shape X.Y.Z), unlike
+dashboard versions, which have a different versioning scheme.
+
+____
+Want to see the complete state object for your application? Generate a
+*Debug Report* from the About window.
+____
+
+== Dashboard State
+
+The dashboard entry contains the entire state of the currently loaded
+dashboard. Take the following simple dashboard as an example.
+
+....
+{
+  "dashboard": {
+    "title": "A Simple Dashboard",
+    "version": "2.1",
+    "settings": {
+      "pagenumber": 0,
+      "editable": true,
+      "fullscreenEnabled": true,
+      "parameters": {
+          "neodash_person_name": "Bob"
+       }
+    },
+    "pages": [
+        {
+          title: “My Page”
+          reports: [
+            {
+                "title": "My Report",
+                "query": "MATCH (n)-[e]->(m) RETURN n,e,m",
+                "type": "graph",
+                "x": "1",
+                "y": "2",
+                "width": "6",
+                "height": "3",
+                "settings": {
+                    "nodeColorSchmeme": "blue"
+                }
+            }
+        ]
+     }
+    ]
+  }
+}
+....
+
+Key entries of the object are: - `title`: the title of the dashboard.
+This is displayed on the top of the window. - `version`: _Main_ version
+of the dashboard that is loaded. - `settings`: contains settings for the
+dashboard. This includes the current page number, whether the dashboard
+is editable, whether the dashboard is in fullscreen mode, and the
+dashboard parameters that are currently set. - `pages`: contains the
+list of all pages in the dashboard. Each page has a title and a list of
+reports.
+
+== Application State
+
+The application state is a flat dictionary of values that determine what
+the user’s window looks like (which windows are open?) as well as the
+current database connection, and whether the app is running in
+standalone mode.
+
+....
+"application": {
+    "notificationTitle": null,
+    "notificationMessage": null,
+    "connectionModalOpen": false,
+    "welcomeScreenOpen": true,
+    "aboutModalOpen": true,
+    "connection": {
+      "protocol": "neo4j+s",
+      "url": "localhost",
+      "port": "",
+      "database": "",
+      "username": "neo4j",
+      "password": "************"
+    },
+    "desktopConnection": null,
+    "connected": false,
+    "dashboardToLoadAfterConnecting": null,
+    "waitForSSO": false,
+    "standalone": false,
+    "oldDashboard": null,
+    "ssoEnabled": false,
+    "ssoDiscoveryUrl": "https://example.com",
+    "standaloneProtocol": "neo4j",
+    "standaloneHost": "localhost",
+    "standalonePort": "7687",
+    "standaloneDatabase": "neo4j",
+    "standaloneDashboardName": "My Dashboard",
+    "standaloneDashboardDatabase": "dashboards",
+    "notificationIsDismissable": null
+}
+....

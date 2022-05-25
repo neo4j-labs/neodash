@@ -1,0 +1,13 @@
+For further reading, check out the following list of resources (blogs,
+videos and sites):
+
+* https://medium.com/p/ddc938ff82fa[Investigating Supply Chains with
+NeoDash]
+* https://thatdavestevens.medium.com/social-recommendations-slack-neo4j-and-neodash-fe916588e65b[Social
+Recommendations with Neo4j & NeoDash]
+* https://nielsdejong.nl/neo4j%20projects/2021/12/14/neodash-2.0-a-brand-new-way-of-visualizing-neo4j-data.html[NeoDash
+2.0 Release Overview]
+* https://nielsdejong.nl/neo4j%20projects/2021/06/06/neodash-1.1-extensible-interactive-dashboards.html[NeoDash
+1.1 Release Overview]
+* https://nielsdejong.nl/neo4j%20projects/2020/11/16/neodash.[NeoDash
+1.0 Release Overview]

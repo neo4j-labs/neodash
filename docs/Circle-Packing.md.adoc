@@ -1,0 +1,51 @@
+A circle packing chart will render hierarchical data in a group of
+nested circles. It takes two fields: - *Path*: a list of strings. This
+represents the hierarchy (from highest to lowest level). - *Value*: a
+number that matches the size of the element at the lowest level. Sizes
+of non-leaf levels are determined from the sum of their children.
+
+== Examples
+
+=== Basic Circle Packing Chart
+
+[source,cypher]
+----
+MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)
+WITH nodes(path) as no
+WITH no, last(no) as leaf
+WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val
+RETURN result, val
+----
+
+image::./img/circlepacking.png[Circle Packing Chart]
+
+== Advanced Settings
+
+[width="100%",cols="13%,3%,6%,78%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Enable interactivity |on/off |on |If enabled, turn on animations when a
+user hovers over an circle.
+
+|Color Scheme |List | |The color scheme to use for the circles. Colors
+are assigned automatically for each of the sub-hierarchies.
+
+|Circle border width (px) |number |0 |The width of the border of each
+circle.
+
+|Margin Left (px) |number |24 |The margin in pixels on the left side of
+the visualization.
+
+|Margin Right (px) |number |24 |The margin in pixels on the right side
+of the visualization.
+
+|Margin Top (px) |number |24 |The margin in pixels on the top side of
+the visualization.
+
+|Margin Bottom (px) |number |40 |The margin in pixels on the bottom side
+of the visualization.
+
+|Auto-run query |on/off |on |When activated, automatically runs the
+query when the report is displayed. When set to `off', the query is
+displayed and will need to be executed manually.
+|===
