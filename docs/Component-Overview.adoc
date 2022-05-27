@@ -36,13 +36,6 @@ the report. This is most often the Cypher query editor.
 * *Charts* - the different visualizations used by the application: bar
 charts, tables, graphs, etc.
 
-The screenshot below has the visual components annotated with their
-respective names in the application.
-image:./img/components.png[Components]
-
-Note that some small variations might be present in the dashboard,
-depending on the report types chosen. (E.g. a specific visualization
-type might not have a footer)
 
 == A note on Cards v.s. Reports
 

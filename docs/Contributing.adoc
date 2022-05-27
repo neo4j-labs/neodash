@@ -3,10 +3,12 @@ creating a https://github.com/nielsdejong/neodash/pulls[Pull Request].
 Ensure you start from the `develop` branch, and set the merge base to
 `develop` as well.
 
-For your feature to be accepted, ensure: 1. The component is tested (if
-relevant, see Testing). 2. Your code is aligned with
-https://www.w3.org/wiki/JavaScript_best_practices[JS Best Practises]. 2.
-The component is well documented in the documentation portal (if
+For your feature to be accepted, ensure: 
+
+1. The component is tested (if relevant, see Testing). 
+2. Your code is aligned with
+https://www.w3.org/wiki/JavaScript_best_practices[JS Best Practises]. 
+3. The component is well documented in the documentation portal (if
 applicable).
 
 == Feature Requests / Bugs

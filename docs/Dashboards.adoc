@@ -4,8 +4,8 @@ consist of multiple reports.
 image::./img/dashboard2.png[Dashboard]
 
 As an example: The screenshot above shows a dashboard with three pages:
-``Breweries'', ``Beer Ratings'' and ``Styles''. The dashboard title ``My
-Beer Database Dashboard 🍺'' is displayed on the top of the window.
+`Breweries`, `Beer Ratings` and `Styles`. The dashboard title `My
+Beer Database Dashboard 🍺` is displayed on the top of the window.
 
 The first page is selected, and contains three reports, a table, a graph
 and a map. Each report can be given their own name, and has exactly one
@@ -70,33 +70,42 @@ default dashboard has the following structure:
 ....
 
 After opening the save dialog, there are three options for saving your
-dashboard: 1. Save as a file. This triggers a download of the current
-dashboard as `.json` file. 2. Save inside Neo4j. This stores a
+dashboard: 
+
+1. Save as a file. This triggers a download of the current
+dashboard as `.json` file. 
+2. Save inside Neo4j. This stores a
 stringified representation of the dashboard as a node in the database.
 When using Neo4j multi-database, you will be given the choice of which
-database to save the dashboard in. 3. Copy-paste the JSON file directly.
+database to save the dashboard in. 
+3. Copy-paste the JSON file directly.
 
 === Load a Dashboard
 
 Just like in the save screen, a dashboard can be loaded in one of three
-ways: 1. Load from a file. This requires you to select a `.json`
-somewhere on your computer. 2. Load from Neo4j. This requires you to
+ways: 
+
+1. Load from a file. This requires you to select a `.json`
+somewhere on your computer. 
+2. Load from Neo4j. This requires you to
 select a dashboard node stored in the database. When loading from Neo4j,
 you will be presented with the list of dashboards in reverse
-chronological order. 3. Loading a JSON file by pasting it directly into
+chronological order. 
+3. Loading a JSON file by pasting it directly into
 the editor.
 
 === Share a Dashboard
 
 A dashboard can be shared with other users by generating a direct link
-to it. This link will contain: - A link to the dashboard (either a
-direct URL or the name of the dashboard inside Neo4j). - (Optionally),
+to it. This link will contain: 
+
+- A link to the dashboard (either a
+direct URL or the name of the dashboard inside Neo4j). 
+- (Optionally),
 the credentials of the database that the dashboard is reporting on. *Be
 warned*, when using this feature, the share link will contain the
-database credentials, which can be a security risk. - If the dashboard
-should be viewed in `editor mode', or `standalone mode'. The latter
-configures neodash to run in a stripped down UI without any of the
-editor features enabled.
+database credentials, which can be a security risk. 
+- If the dashboard should be viewed in `editor mode', or `standalone mode'. The latter configures neodash to run in a stripped down UI without any of the editor features enabled.
 
 When creating a NeoDash deployment on a production database, it is not
 recommended to use the `Share' feature. Rather, set up a dedicated
