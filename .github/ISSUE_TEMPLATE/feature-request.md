@@ -8,7 +8,6 @@ assignees: ''
 ---
 
 ## Guidelines
-
 Please note that GitHub issues are only meant for bug reports/feature requests.
 
 ## Feature request template
