@@ -8,6 +8,9 @@
 :page-pagination:
 :page-product: NeoDash
 
+image::https://raw.githubusercontent.com/nielsdejong/neodash/16cab52f96ed234042b11e1e5c87cba6d4a0e3a5/public/screenshot.png[width=800]
+
+
 
 NeoDash is an open-source, low-code Dashboard Builder for Neo4j. It lets you build an interactive dashboard with tables, graphs, bar charts, line charts, maps and more, in minutes.
 
