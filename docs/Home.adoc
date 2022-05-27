@@ -1,4 +1,14 @@
-== NeoDash - Neo4j Dashboard Builder
+= NeoDash - Neo4j Dashboard Builder
+:imagesdir: https://s3.amazonaws.com/dev.assets.neo4j.com/wp-content/uploads
+:slug: neodash
+:author: Niels de Jong
+:category: labs
+:tags: visualization, dashboard
+:neo4j-versions: 3.5, 4.0, 4.1, 4.2, 4.3, 4.4
+:page-pagination:
+:page-product: NeoDash
+
+
 NeoDash is an open-source, low-code Dashboard Builder for Neo4j. It lets you build an interactive dashboard with tables, graphs, bar charts, line charts, maps and more, in minutes.
 
 == Availability & Installation
