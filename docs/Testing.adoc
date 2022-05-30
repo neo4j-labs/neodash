@@ -29,6 +29,6 @@ report contains a JSON representation of the current state of the
 NeoDash application.
 
 To generate a debug report, open the `About' screen. Then, click the
-``Debug Report'' button in the bottom left corner.
+'Debug Report' button in the bottom left corner.
 
 image::./img/about.png[About]

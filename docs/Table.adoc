@@ -3,9 +3,11 @@ NeoDash contains a powerful table component that can render all the data
 returned by a Cypher query. This includes simple data like numbers or
 text, but also Neo4j native data like nodes, relationships, and paths.
 
-The table report supports the following additional features: - automatic
-pagination of results. - Sorting/filtering by clicking on the table
-headers. - Downloading your data as a CSV file.
+The table report supports the following additional features: 
+
+- automatic pagination of results. 
+- Sorting/filtering by clicking on the table headers. 
+- Downloading your data as a CSV file.
 
 == Examples
 
@@ -53,7 +55,9 @@ and will need to be executed manually.
 == Rule-Based Styling
 
 Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
-following style rules can be applied to the table: - The background
-color of an entire row in a table. - The text color of an entire row in
-a table. - The background color of a single cell in the table. - The
-text color of a single cell in the table.
+following style rules can be applied to the table: 
+
+- The background color of an entire row in a table. 
+- The text color of an entire row in a table. 
+- The background color of a single cell in the table. 
+- The text color of a single cell in the table.

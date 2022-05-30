@@ -5,26 +5,32 @@ cycle may look something like this:
 image::./img/publish.png[Workflow]
 
 Keep in mind that the purpose of an application in the `View' phase is
-very different from the `Build' phase: 1. A dashboard cannot be edited
-after it has been published. 2. A fixed dashboard must be loaded and a
-fixed database must be connected to. 3. Users in the `View' phase should
-not see the Cypher queries configuration powering the visualizations.
+very different from the `Build' phase: 
+
+1. A dashboard cannot be edited
+after it has been published. 
+2. A fixed dashboard must be loaded and a fixed database must be connected to. 
+3. Users in the `View' phase should not see the Cypher queries configuration powering the visualizations.
 
 == Architecture
 
 NeoDash enables the Build, Publish, View workflow by having two seperate
-deployments of the NeoDash application: 1. An ``editor'' deployment for
-the build phase. 2. A ``viewer'' deployment for the view phase.
+deployments of the NeoDash application: 
+
+1. An `editor` deployment for the build phase. 
+2. A `viewer` deployment for the view phase.
 
 The *editor* deployment is the app you are using from Neo4j Desktop,
 from https://neodash.graphapp.io, or from your own deployment.
 
 The *viewer* deployment will require some configuration to be set up.
 These three configurations must be set for NeoDash to be able to run in
-`View' mode: 1. A flag telling the app to disable all editing features.
-2. A hardcoded Neo4j database to connect to. 3. A hardcoded dashboard to
-load.
+`View' mode: 
 
-Technical details on setting this up are documented in the [Standalone
+1. A flag telling the app to disable all editing features.
+2. A hardcoded Neo4j database to connect to. 
+3. A hardcoded dashboard to load.
+
+Technical details on setting this up are documented in the link:Standalone%20Mode[Standalone
 Mode] page. If you need help setting this up, please reach out to the
 mailto:niels.dejong@neo4j.com[Neo4j Team].

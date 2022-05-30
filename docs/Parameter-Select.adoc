@@ -6,9 +6,11 @@ parameter (e.g. *$neodash_person_name*) dynamically. This means that
 your reports can be created to show different data depending on the
 value of a parameter.
 
-There are three types of parameter select reports: - Node property-based
-selections - Relaitonship property-based selections - Free text
-selections
+There are three types of parameter select reports: 
+
+- Node property-based selections 
+- Relationship property-based selections 
+- Free text selections
 
 The first two are straightforward for users to understand, as the list
 of choices is auto-populated from Neo4j. The third is a bit more

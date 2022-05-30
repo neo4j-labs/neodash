@@ -9,5 +9,5 @@ Recommendations with Neo4j & NeoDash]
 2.0 Release Overview]
 * https://nielsdejong.nl/neo4j%20projects/2021/06/06/neodash-1.1-extensible-interactive-dashboards.html[NeoDash
 1.1 Release Overview]
-* https://nielsdejong.nl/neo4j%20projects/2020/11/16/neodash.[NeoDash
+* https://nielsdejong.nl/neo4j%20projects/2020/11/16/neodash[NeoDash
 1.0 Release Overview]

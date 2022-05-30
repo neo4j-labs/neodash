@@ -2,9 +2,11 @@ Next to being a dashboard editor, NeoDash can be deployed in a
 `standalone mode' - allowing you set up a architecture to publish and
 read dashboards.
 
-Running in standalone modec mode will: - Disable all editing options -
-Have a hardcoded Neo4j URL and database name - Load a dashboard from
-Neo4j with a fixed name.
+Running in standalone modec mode will: 
+
+- Disable all editing options 
+- Have a hardcoded Neo4j URL and database name 
+- Load a dashboard from Neo4j with a fixed name.
 
 The diagram below illustrates how NeoDash standalone mode can be
 deployed next to a standard `Editor Mode' instance:

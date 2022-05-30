@@ -119,5 +119,6 @@ and will need to be executed manually.
 == Rule-Based Styling
 
 Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
-following style rules can be applied to the line chart: - The color of
-the line.
+following style rules can be applied to the line chart: 
+
+- The color of the line.

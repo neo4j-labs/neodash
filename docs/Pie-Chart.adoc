@@ -91,5 +91,6 @@ and will need to be executed manually.
 == Rule-Based Styling
 
 Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
-following style rules can be applied to the pie chart: - The background
-color of a pie slice.
+following style rules can be applied to the pie chart:
+
+- The background color of a pie slice.

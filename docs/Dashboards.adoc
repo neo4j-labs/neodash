@@ -143,7 +143,7 @@ disabled.
 viewed. This can only be changed by switching pages in the dashboard
 header.
 
-|Global Parameters |No |\{} |The global parameters that are shared among
+|Global Parameters |No | {} |The global parameters that are shared among
 all reports in the dashboard. See the next section for more on global
 parameters.
 |===

@@ -6,9 +6,11 @@ The library `react-force-graph` is used to create the visualizations.
 Depending on your browser, the visualization should be able to handle
 drawing 1000-3000 nodes/relationships with custom styling options.
 
-The graph layout contains an extensive set of features, including: -
-Drag and drop nodes. - Custom node/relationship styling. -
-Tooltips/inspect window on nodes/relationships.
+The graph layout contains an extensive set of features, including:
+
+- Drag and drop nodes. 
+- Custom node/relationship styling. 
+- Tooltips/inspect window on nodes/relationships.
 
 == Examples
 
@@ -124,5 +126,7 @@ and will need to be executed manually.
 == Rule-Based Styling
 
 Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
-following style rules can be applied to the graph: - The background
-color of a node. - The label color of a node.
+following style rules can be applied to the graph: 
+
+- The background color of a node. 
+- The label color of a node.

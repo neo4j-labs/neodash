@@ -1,8 +1,8 @@
 A treemap chart will render hierarchical data in a nested rectangle
-layout. It takes two fields: - *Path*: a list of strings. This
-represents the hierarchy (from highest to lowest level). - *Value*: a
-number that matches the size of the element at the lowest level. Sizes
-of non-leaf levels are determined from the sum of their children.
+layout. It takes two fields: 
+
+- *Path*: a list of strings. This represents the hierarchy (from highest to lowest level). 
+- *Value*: a number that matches the size of the element at the lowest level. Sizes of non-leaf levels are determined from the sum of their children.
 
 == Examples
 

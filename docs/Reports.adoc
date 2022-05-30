@@ -49,8 +49,11 @@ https://neo4j.com/docs/graph-data-science/current/[GDS], and even
 https://neo4j.com/docs/operations-manual/current/fabric/queries/[Fabric]!
 
 Keep the following best practises in mind when writing your Cypher
-queries: 1. Always use a `LIMIT` in your query to keep the result size
-manageable. 2. Ensure you return the right data types for the right
+queries: 
+
+1. Always use a `LIMIT` in your query to keep the result size
+manageable. 
+2. Ensure you return the right data types for the right
 report type. For example, a graph report expects nodes and
 relationships, whereas a line chart expects numbers.
 
@@ -97,8 +100,19 @@ will be used. If no rules are matched, the default style will be used.
 == Report Types
 
 To learn more about a specific report type, see one of the following
-pages: - Table - Graph - link:Bar%20Chart[Bar Chart] -
-link:Pie%20Chart[Pie Chart] - link:Line%20Chart[Line Chart] - Sunburst -
-link:Circle%20Packing[Circle Packing] - Treemap - Map -
-link:Single%20Value[Single Value] - link:Raw%20JSON[Raw JSON] -
-link:Parameter%20Select[Parameter Select] - iFrame - Markdown
+pages: 
+
+- link:Table[Table] 
+- link:Graph[Graph]
+- link:Bar%20Chart[Bar Chart]
+- link:Pie%20Chart[Pie Chart] 
+- link:Line%20Chart[Line Chart] 
+- link:Sunburst[Sunburst]
+- link:Circle%20Packing[Circle Packing] 
+- link:Treemap[Treemap]
+- link:Map[Map]
+- link:Single%20Value[Single Value] 
+- link:Raw%20JSON[Raw JSON] 
+- link:Parameter%20Select[Parameter Select] 
+- link:iFrame[iFrame]
+- link:Markdown[Markdown]

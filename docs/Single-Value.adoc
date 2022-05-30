@@ -1,8 +1,10 @@
 A single value report will render the first column of the first row
 returned by the Cypher query. Single value reports are typically used
-for key observations: - The total number of nodes - The total number of
-data integrity violations - The name of a node or relationship that is
-standing out in the data.
+for key metrics: 
+
+- The total number of nodes 
+- The total number of data integrity violations 
+- The name of a node or relationship that is standing out in the data.
 
 == Examples
 
@@ -47,5 +49,6 @@ and will need to be executed manually.
 == Rule-Based Styling
 
 Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
-following style rules can be applied to the map: - The color of the
-text.
+following style rules can be applied to the map: 
+
+- The color of the text.

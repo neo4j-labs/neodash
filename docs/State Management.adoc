@@ -29,12 +29,14 @@ structure:
 }
 ....
 
-At the highest level, this object consists of three entries: -
-`dashboard`: all state related to the currently active dashboard. This
-is changed when a dashboard gets loaded, modified or removed. -
-`application`: all state related to the application itself. This
+At the highest level, this object consists of three entries: 
+
+- `dashboard`: all state related to the currently active dashboard. This
+is changed when a dashboard gets loaded, modified or removed. 
+- `application`: all state related to the application itself. This
 describes which windows are open, what database you are connected to,
-etc. - `version`: the version of NeoDash that is running. Note that
+etc. 
+- `version`: the version of NeoDash that is running. Note that
 these are complete version numbers (of the shape X.Y.Z), unlike
 dashboard versions, which have a different versioning scheme.
 
@@ -84,13 +86,14 @@ dashboard. Take the following simple dashboard as an example.
 }
 ....
 
-Key entries of the object are: - `title`: the title of the dashboard.
-This is displayed on the top of the window. - `version`: _Main_ version
-of the dashboard that is loaded. - `settings`: contains settings for the
-dashboard. This includes the current page number, whether the dashboard
+Key entries of the object are: 
+
+- `title`: the title of the dashboard. This is displayed on the top of the window. 
+- `version`: _Main_ version of the dashboard that is loaded. 
+- `settings`: contains settings for the dashboard. This includes the current page number, whether the dashboard
 is editable, whether the dashboard is in fullscreen mode, and the
-dashboard parameters that are currently set. - `pages`: contains the
-list of all pages in the dashboard. Each page has a title and a list of
+dashboard parameters that are currently set. 
+- `pages`: contains the list of all pages in the dashboard. Each page has a title and a list of
 reports.
 
 == Application State
