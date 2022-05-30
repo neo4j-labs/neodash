@@ -6,6 +6,7 @@ import BarVisualization from './visualizations/BarVisualization';
 
 /**
  * Embeds a BarReport (from Charts) into NeoDash.
+ *  This visualization was extracted from https://github.com/neo4j-labs/charts.
  */
 const NeoBarChart = (props: ChartProps) => {
     

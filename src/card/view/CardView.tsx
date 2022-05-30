@@ -82,8 +82,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
                     {active ?
                         <NeoReport query={query}
                             database={database}
-                            stringParameters={""}
-                            mapParameters={getLocalParameters()}
+                            parameters={getLocalParameters()}
                             disabled={settingsOpen}
                             selection={selection}
                             fields={fields}
