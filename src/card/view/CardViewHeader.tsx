@@ -32,7 +32,7 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
     }, [title])
 
     const cardTitle = <>
-        <table>
+        <table style={{width: "100%"}}>
             <tbody>
                 <tr>
                     {editable ? <td>
