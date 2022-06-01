@@ -170,7 +170,6 @@ export const NeoPage = (
     return !isLoaded ? loadingMessage : content;
 }
 
-// fråga Niels om de behövs kanske läggas till ett tillståmd om kloning
 const mapStateToProps = state => ({
     isLoaded: true,
     pagenumber: getPageNumber(state),
