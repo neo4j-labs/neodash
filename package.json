@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -8,7 +8,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nielsdejong/neodash/"
+    "url": "https://github.com/neo4j-labs/neodash/"
   },
   "license": "Apache-2.0",
   "icons": [

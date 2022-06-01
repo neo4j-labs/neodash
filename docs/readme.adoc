@@ -1,1 +1,1 @@
-Documentation is currently available at https://github.com/nielsdejong/neodash/wiki.
+Documentation is currently available at https://github.com/neo4j-labs/neodash/wiki.

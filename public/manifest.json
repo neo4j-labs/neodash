@@ -1,7 +1,7 @@
 {
     "short_name": "NeoDash",
     "name": "NeoDash",
-    "homepage": "https://github.com/nielsdejong/neodash/",
+    "homepage": "https://github.com/neo4j-labs/neodash/",
     "neo4jDesktop": {
         "apiVersion": "^1.2.0"
     },

@@ -15,5 +15,5 @@ Main updates:
 
 Other changes:
 - Added continuous integration and deployment workflows.
-- Created a new [User Guide](https://github.com/nielsdejong/neodash/wiki/User-Guide) with documentation on all report customizations is available.
-- Added a new [Developer Guide](https://github.com/nielsdejong/neodash/wiki/Developer-Guide) with info on installing, building and extending the application.
+- Created a new [User Guide](https://github.com/neo4j-labs/neodash/wiki/User-Guide) with documentation on all report customizations is available.
+- Added a new [Developer Guide](https://github.com/neo4j-labs/neodash/wiki/Developer-Guide) with info on installing, building and extending the application.
