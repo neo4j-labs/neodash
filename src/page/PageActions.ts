@@ -11,6 +11,11 @@ export const removeReport = (pagenumber: number, index: any) => ({
     payload: { pagenumber, index },
 });
 
+export const CLONE_REPORT = 'PAGE/CLONE_REPORT';
+export const cloneReport = (pagenumber: number, index: any) => ({
+    type: CLONE_REPORT,
+    payload: { pagenumber, index },
+});
 export const UPDATE_ALL_CARD_POSITIONS_IN_PAGE = 'PAGE/UPDATE_ALL_CARD_POSITIONS_IN_PAGE';
 export const updateAllCardPositionsInPage = (pagenumber: number, positions: any) => ({
     type: UPDATE_ALL_CARD_POSITIONS_IN_PAGE,

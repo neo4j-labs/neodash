@@ -26,6 +26,7 @@ const NeoCard = ({
     globalParameters, // Query parameters that are globally set for the entire dashboard.
     dashboardSettings, // Dictionary of settings for the entire dashboard.
     onRemovePressed, // action to take when the card is removed. (passed from parent)
+    onClonePressed, // action to take when user presses the clone button
     onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
     onTitleUpdate, // action to take when the card title is updated.
     onTypeUpdate, // action to take when the card report type is updated.
@@ -142,6 +143,7 @@ const NeoCard = ({
                     onTypeUpdate={(type) => onTypeUpdate(index, type)}
                     onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
                     onRemovePressed={() => onRemovePressed(index)}
+                    onClonePressed={() => onClonePressed(index)}
                     onCreateNotification={(title, message) => onCreateNotification(title, message)}
                     onToggleCardSettings={() => {
                         setSettingsOpen(false);

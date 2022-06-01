@@ -1,6 +1,6 @@
 import { createNotification } from "../application/ApplicationActions";
 import { CARD_INITIAL_STATE } from "../card/CardReducer";
-import { createReport, removeReport, updateAllCardPositionsInPage } from "./PageActions";
+import { createReport, removeReport, cloneReport,updateAllCardPositionsInPage } from "./PageActions";
 
 
 export const createNotificationThunk = (title: any, message: any) => (dispatch: any) => {
@@ -23,6 +23,16 @@ export const removeReportThunk = (index: number) => (dispatch: any, getState: an
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
         dispatch(removeReport(pagenumber, index));
+    } catch (e) {
+        dispatch(createNotificationThunk("Cannot remove report", e));
+    }
+}
+
+export const cloneReportThunk = (index: number) => (dispatch: any, getState: any) => {
+    try {
+        const state = getState();
+        const pagenumber = state.dashboard.settings.pagenumber;
+        dispatch(cloneReport(pagenumber, index));
     } catch (e) {
         dispatch(createNotificationThunk("Cannot remove report", e));
     }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import NeoAddCard from '../card/CardAddButton';
 import NeoCard from '../card/Card';
 import { getReports } from './PageSelectors';
-import { addReportThunk, removeReportThunk, updatePageLayoutThunk } from './PageThunks';
+import { addReportThunk, removeReportThunk, updatePageLayoutThunk, cloneReportThunk } from './PageThunks';
 import Grid from '@material-ui/core/Grid';
 import { getDashboardIsEditable, getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
@@ -22,6 +22,7 @@ export const NeoPage = (
         pagenumber, // The page number to render.
         reports = [], // list of reports as defined in the dashboard state.
         onCreatePressed = () => {},  // callback for when the user wants to add a new report.
+        onClonePressed = () => {}, // callback/action to take when a user wants to clone a report 
         onRemovePressed = (index: number) => {}, // action to take when a report gets removed.
         isLoaded = true, // Whether the page is loaded and the cards can be displayed.
         onPageLayoutUpdate = (newLayout: object) => { }  // action to take when the page layout is updated.
@@ -155,7 +156,8 @@ export const NeoPage = (
                     return <Grid index={getReportIndex(pagenumber, index)} key={getReportIndex(pagenumber, index)} style={{ paddingBottom: "6px" }} item xs={Math.min(w * 4, 12)} sm={Math.min(w * 2, 12)} md={Math.min(w * 2, 12)} lg={Math.min(w, 12)} xl={Math.min(w, 12)}>
                         <NeoCard index={index} key={getReportIndex(pagenumber, index)}
                             dashboardSettings={dashboardSettings}
-                            onRemovePressed={onRemovePressed} />
+                            onRemovePressed={onRemovePressed}
+                            onClonePressed={onClonePressed} />
                     </Grid>
                 })}
                 {editable && !isDragging ? lastElement : <div key={getReportIndex(pagenumber, 999999)}></div>}
@@ -165,6 +167,7 @@ export const NeoPage = (
     return !isLoaded ? loadingMessage : content;
 }
 
+// fråga Niels om de behövs kanske läggas till ett tillståmd om kloning
 const mapStateToProps = state => ({
     isLoaded: true,
     pagenumber: getPageNumber(state),
@@ -175,6 +178,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onRemovePressed: index => dispatch(removeReportThunk(index)),
+    onClonePressed: index => dispatch(cloneReportThunk(index)),
     onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height)),
     onPageLayoutUpdate: layout => dispatch(updatePageLayoutThunk(layout))
 });
