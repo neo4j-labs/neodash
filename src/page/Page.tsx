@@ -22,7 +22,7 @@ export const NeoPage = (
         pagenumber, // The page number to render.
         reports = [], // list of reports as defined in the dashboard state.
         onCreatePressed = () => {},  // callback for when the user wants to add a new report.
-        onClonePressed = () => {}, // callback/action to take when a user wants to clone a report 
+        onClonePressed = (index: number, x: number, y: number) => {}, // callback/action to take when a user wants to clone a report
         onRemovePressed = (index: number) => {}, // action to take when a report gets removed.
         isLoaded = true, // Whether the page is loaded and the cards can be displayed.
         onPageLayoutUpdate = (newLayout: object) => { }  // action to take when the page layout is updated.
@@ -157,7 +157,10 @@ export const NeoPage = (
                         <NeoCard index={index} key={getReportIndex(pagenumber, index)}
                             dashboardSettings={dashboardSettings}
                             onRemovePressed={onRemovePressed}
-                            onClonePressed={onClonePressed} />
+                            onClonePressed={() => {
+                                const { x, y } = getAddCardButtonPosition();
+                                onClonePressed(index, x, y);
+                            }} />
                     </Grid>
                 })}
                 {editable && !isDragging ? lastElement : <div key={getReportIndex(pagenumber, 999999)}></div>}
@@ -178,8 +181,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onRemovePressed: index => dispatch(removeReportThunk(index)),
-    onClonePressed: index => dispatch(cloneReportThunk(index)),
-    onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height)),
+    onClonePressed: (index, x, y) => dispatch(cloneReportThunk(index, x, y)),
+    onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height, undefined)),
     onPageLayoutUpdate: layout => dispatch(updatePageLayoutThunk(layout))
 });
 

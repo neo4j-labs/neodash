@@ -1,15 +1,16 @@
 import { createNotification } from "../application/ApplicationActions";
 import { CARD_INITIAL_STATE } from "../card/CardReducer";
-import { createReport, removeReport, cloneReport,updateAllCardPositionsInPage } from "./PageActions";
+import { createReport, removeReport,updateAllCardPositionsInPage } from "./PageActions";
 
 
 export const createNotificationThunk = (title: any, message: any) => (dispatch: any) => {
     dispatch(createNotification(title, message));
 };
 
-export const addReportThunk = (x: number, y: number, width: number, height: number) => (dispatch: any, getState: any) => {
+export const addReportThunk = (x: number, y: number, width: number, height: number, data:any) => (dispatch: any, getState: any) => {
     try {
-        const report = {...CARD_INITIAL_STATE, x: x, y: y, width: width, height: height};
+        const initialState = data ? data : CARD_INITIAL_STATE;
+        const report = {...initialState, x: x, y: y, width: width, height: height};
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
         dispatch(createReport(pagenumber, report));
@@ -28,13 +29,16 @@ export const removeReportThunk = (index: number) => (dispatch: any, getState: an
     }
 }
 
-export const cloneReportThunk = (index: number) => (dispatch: any, getState: any) => {
+export const cloneReportThunk = (index: number, x:number, y:number) => (dispatch: any, getState: any) => {
     try {
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(cloneReport(pagenumber, index));
+        const data = {... state.dashboard.pages[pagenumber].reports[index]};
+        data.settingsOpen = false;
+        data.title = data.title ? "Clone_" + data.title : data.title;
+        dispatch(addReportThunk(x , y,  data.width,  data.height, data));
     } catch (e) {
-        dispatch(createNotificationThunk("Cannot remove report", e));
+        dispatch(createNotificationThunk("Cannot clone report", e));
     }
 }
 
