@@ -1,8 +1,7 @@
 import React from 'react'
 import { ResponsiveCirclePacking } from '@nivo/circle-packing'
-import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
+import {  ExtendedChartReportProps } from './VisualizationProps'
 import { checkResultKeys, mutateName, processHierarchyFromRecords, findObject, flatten } from './Utils'
-import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
 import { useState } from 'react'
 import { Tooltip } from '@material-ui/core'
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -27,7 +26,8 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
     // as Nivo needs a common root, so in that case, we create it for them.
     const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: "Total", children: dataPre } };
 
-    const [data, setData] = useState(commonProperties.data)
+    const [data, setData] = useState(commonProperties.data);
+    const [refreshable, setRefreshable] = useState(false);
     const settings = (props.settings) ? props.settings : {};
     const legendHeight = 20;
     const marginRight = (settings["marginRight"]) ? settings["marginRight"] : 24;
@@ -38,13 +38,22 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
     const legend = (settings["legend"]) ? settings["legend"] : false;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
+    const withLabels = (settings["withLabels"]) ? settings["withLabels"] : true;
+
+    const labelsFilterFn = (n) => {
+        return n.node.height == 0;
+    }
 
     return (
         <>
             <div style={{ position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>
-                <Tooltip title="Reset" aria-label="reset">
-                    <RefreshIcon onClick={() => setData(commonProperties.data)} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", borderRadius: "12px", zIndex: 5, background: "#eee" }} color="disabled" fontSize="small"></RefreshIcon>
-                </Tooltip>
+                {refreshable ? <Tooltip title="Reset" aria-label="reset">
+                        <RefreshIcon onClick={() => {setData(commonProperties.data); setRefreshable(false);}}
+                                    style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", borderRadius: "12px", zIndex: 5, background: "#eee" }}
+                                    color="disabled" fontSize="small">
+                        </RefreshIcon>
+                    </Tooltip> : <div></div>
+                }
                 <ResponsiveCirclePacking
                     {...commonProperties}
                     id="name"
@@ -53,7 +62,8 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
                     onClick={clickedData => {
                         const foundObject = findObject(flatten(data.children), clickedData.id)
                         if (foundObject && foundObject.children) {
-                            setData(foundObject)
+                            setData(foundObject);
+                            setRefreshable(true);
                         }
                     }}
                     isInteractive={interactive}
@@ -65,7 +75,10 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
                         left: marginLeft
                     }}
                     animate={true}
+                    enableLabels={withLabels}
+                    labelsFilter={labelsFilterFn}
                     colors={{ scheme: colorScheme }}
+
                 />
             </div>
         </>)

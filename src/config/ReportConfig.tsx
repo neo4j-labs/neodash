@@ -25,7 +25,7 @@ export enum SELECTION_TYPES {
     DICTIONARY,
     COLOR,
     NODE_PROPERTIES
-};
+}
 
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
@@ -835,6 +835,12 @@ export const REPORT_TYPES = {
             },
             "autorun": {
                 label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "withLabels": {
+                label: "Use labels",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
