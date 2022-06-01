@@ -1,0 +1,95 @@
+You can extend NeoDash with your own visualizations without diving deep
+into the core application. Likewise, adding a new customization to an
+existing report requires minimal changes.
+
+== Add a Visualization
+
+You can add a new chart to NeoDash in three steps:
+
+[arabic]
+. Make sure you have a local copy of NeoDash installed and running:
+
+....
+git clone git@github.com:nielsdejong/neodash.git
+git checkout develop
+npm install
+npm run dev
+....
+
+[arabic, start=2]
+. Create a new file `src/charts/ABCChart.tsx`. In here, add a new object
+that implements the `ChartProps` interface:
+
+....
+export interface ChartProps {
+   records: Neo4jRecord[]; // Query output, Neo4j records as returned from the driver.
+   selection?: Record<string, any>; // A dictionary with the selection made in the report footer.
+   settings?: Record<string, any>; // A dictionary with the 'advanced settings' specified through the NeoDash interface.
+   dimensions?: Number[]; // a 2D array with the dimensions of the report (likely not needed, charts automatically fill up space).
+   fullscreen?: boolean; // flag indicating whether the report is rendered in a fullscreen view.
+   queryCallback?: (query: string, parameters: Record<string, any>, records: Neo4jRecord[]) => null; // Optionally, a way for the report to read more data from Neo4j.
+   setGlobalParameter?: (name: string, value: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
+   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
+}
+....
+
+Note that the only mandatory property is `records`. This contains a list
+of
+https://neo4j.com/docs/api/javascript-driver/current/class/lib6/record.js~Record.html[records]
+returned from the Cypher query specified by the user.
+
+For inspiration, below is a basic example of a component that renders
+all returned data as a list:
+
+....
+import React from 'react';
+import { ChartProps } from './Chart';
+import { renderValueByType } from '../report/ReportRecordProcessing';
+
+const NeoListReport = (props: ChartProps) => {
+   const records = props.records;
+   return records.map(r => {
+       return <div>{
+           r["_fields"].map(value => {
+               return <>{renderValueByType(value)},</>
+           })}
+       </div>
+   })
+}
+
+export default NeoListReport;
+....
+
+[arabic, start=3]
+. Make your component selectable. Now that you’ve created a new chart
+type, you need to tell the card settings window that it can be chosen by
+a user.
+
+To accomplish this, open `config/ReportConfig.tsx`. Add a new entry to
+the `REPORT_TYPES` dictionary:
+
+....
+export const REPORT_TYPES = {
+   ...
+   "list": {
+       label: "List",
+       helperText: "I'm a list",
+       component: NeoListReport,
+       maxRecords: 10,
+       settings: {}
+   },
+   ...
+}
+....
+
+Inspect the other entries for examples of the fields that each entry can
+have. Restart the application, and you should be able to select your new
+chart type. Finally, *Cypress* can be used to develop an end-to-end test
+for your component in a matter of minutes. See Testing for more on
+Cypress testing.
+
+____
+After you added a visualization or a new customization, consider
+contributing it to the NeoDash project by creating a
+https://github.com/nielsdejong/neodash/pulls[Pull Request].
+____

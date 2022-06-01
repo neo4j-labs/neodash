@@ -31,7 +31,9 @@ After building a dashboard, you can chose to deploy a read-only, standalone inst
 
 
 ## Questions / Suggestions
-If you have any questions about NeoDash, please reach out to the maintainers. For feature requests, consider opening an issue on GitHub.
-
+If you have any questions about NeoDash, please reach out to the maintainers:
+- Create an [Issue](https://github.com/nielsdejong/neodash/issues/new) on GitHub for feature requests/bugs.
+- Connect with us on the [Neo4j Discord](https://neo4j.com/developer/discord/).
+- Create a post on the Neo4j [Community Forum](https://community.neo4j.com/).
 
 > NeoDash is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. If you have a need for a commercial agreement around training, custom extensions or other services, please contact the [Neo4j Professional Services](https://neo4j.com/professional-services/) team.

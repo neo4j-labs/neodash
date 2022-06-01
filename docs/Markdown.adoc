@@ -1,0 +1,30 @@
+Markdown reports let you specify
+https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#styling-text[Markdown]
+text, to be renderer as rich HTML. This lets you turn your dashboards
+into a storybook with textual descriptions, hyperlinks, images and
+videos.
+
+== Examples
+
+=== Basic Markdown
+
+....
+## Hello there!
+I'm a **Markdown** file.
+
+Check out this cool image:
+
+![image](https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/how-to-keep-ducks-call-ducks-1615457181.jpg?resize=240:*)
+....
+
+image::./img/markdown.png[Basic Markdown]
+
+== Advanced Settings
+
+[width="100%",cols="19%,17%,26%,38%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Replace global parameters in Markdown |on/off |on |If enabled, replaces
+all instances of query parameters (e.g. $neodash_person_name) inside the
+markdown source.
+|===
