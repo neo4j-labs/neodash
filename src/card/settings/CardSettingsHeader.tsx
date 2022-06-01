@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import ToysTwoTone from '@material-ui/icons/ToysTwoTone';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { FullscreenExit } from '@material-ui/icons';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
@@ -42,7 +42,7 @@ const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggle
                 <Tooltip title="Clone" aria-label="clone">
                     <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "green" }} aria-label="clone"
                                 onClick={onClonePressed} >
-                        <ToysTwoTone />
+                        <FileCopyOutlinedIcon />
                     </IconButton>
                 </Tooltip>
             </div>}

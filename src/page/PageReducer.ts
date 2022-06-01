@@ -3,7 +3,6 @@ import cardReducer from '../card/CardReducer';
 import {
     CREATE_REPORT,
     REMOVE_REPORT,
-    CLONE_REPORT,
     SET_PAGE_TITLE,
     FORCE_REFRESH_PAGE,
     UPDATE_ALL_CARD_POSITIONS_IN_PAGE

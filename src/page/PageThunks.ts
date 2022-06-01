@@ -35,7 +35,6 @@ export const cloneReportThunk = (index: number, x:number, y:number) => (dispatch
         const pagenumber = state.dashboard.settings.pagenumber;
         const data = {... state.dashboard.pages[pagenumber].reports[index]};
         data.settingsOpen = false;
-        data.title = data.title ? "Clone_" + data.title : data.title;
         dispatch(addReportThunk(x , y,  data.width,  data.height, data));
     } catch (e) {
         dispatch(createNotificationThunk("Cannot clone report", e));
