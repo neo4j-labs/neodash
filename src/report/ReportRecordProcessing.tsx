@@ -469,7 +469,7 @@ export const rendererForType: any = {
     },
     "null": {
         type: 'string',
-        renderValue: (c) => "null"
+        renderValue: (c) => RenderString(c.value)
     },
     "undefined": {
         type: 'string'

@@ -20,14 +20,14 @@ docker run -it --rm -p 5005:5005 nielsdejong/neodash
 
 > Windows users may need to prefix the `docker run` command with `winpty`.
 
-See the [Developer Guide](https://github.com/nielsdejong/neodash/wiki/Developer%20Guide) for more on installing, building, and running the application.
+See the [Developer Guide](https://github.com/neo4j-labs/neodash/wiki/Developer%20Guide) for more on installing, building, and running the application.
 
 ## User Guide
 NeoDash comes with built-in examples of dashboards and reports. For more details on the types of reports and how to customize them, see the [User Guide](
-https://github.com/nielsdejong/neodash/wiki/User-Guide).
+https://github.com/neo4j-labs/neodash/wiki/User-Guide).
 
 ## Publish Dashboards
-After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://github.com/nielsdejong/neodash/wiki/Publishing) for more on publishing dashboards.
+After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://github.com/neo4j-labs/neodash/wiki/Publishing) for more on publishing dashboards.
 
 
 ## Questions / Suggestions

@@ -11,6 +11,8 @@ echo " \
     \"standaloneHost\": \"${standaloneHost:='test.databases.neo4j.io'}\", \
     \"standalonePort\": ${standalonePort:=7687}, \
     \"standaloneDatabase\": \"${standaloneDatabase:='neo4j'}\",  \
+    \"standaloneUsername\": \"${standaloneUsername:=}\", \
+    \"standalonePassword\": \"${standalonePassword:=}\", \
     \"standaloneDashboardName\": \"${standaloneDashboardName:='My Dashboard'}\", \
     \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase:='neo4j'}\"  \
     }" > /usr/share/nginx/html/config.json
