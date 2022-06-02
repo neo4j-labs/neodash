@@ -38,9 +38,14 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
     const legend = (settings["legend"]) ? settings["legend"] : false;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
-    const withLabels = (settings["withLabels"]) ? settings["withLabels"] : true;
+    const showLabels = (settings["showLabels"] !== undefined) ? settings["showLabels"] : true;
 
-    const labelsFilterFn = (n) => {
+    /**
+     * Helper function to decide whether to show labels for a specific node in the hierarchy,
+     * @param n - the entity
+     * @returns a boolean
+     */
+    const showLabelsForNode = (n) => {
         return n.node.height == 0;
     }
 
@@ -75,8 +80,8 @@ export default function CirclePackingVisualization(props: ExtendedChartReportPro
                         left: marginLeft
                     }}
                     animate={true}
-                    enableLabels={withLabels}
-                    labelsFilter={labelsFilterFn}
+                    enableLabels={showLabels}
+                    labelsFilter={showLabelsForNode}
                     colors={{ scheme: colorScheme }}
 
                 />

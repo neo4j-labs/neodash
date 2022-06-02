@@ -808,6 +808,12 @@ export const REPORT_TYPES = {
                 values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
                 default: "set2"
             },
+            "showLabels": {
+                label: "Show Circle Labels",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "borderWidth": {
                 label: "Circle border width (px)",
                 type: SELECTION_TYPES.NUMBER,
@@ -835,12 +841,6 @@ export const REPORT_TYPES = {
             },
             "autorun": {
                 label: "Auto-run query",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
-            "withLabels": {
-                label: "Use labels",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
