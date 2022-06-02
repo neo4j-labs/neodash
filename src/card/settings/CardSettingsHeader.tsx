@@ -2,17 +2,16 @@ import React from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { FullscreenExit } from '@material-ui/icons';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { Tooltip } from '@material-ui/core';
 
 const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggleCardExpand, 
-    expanded, fullscreenEnabled, onReportHelpButtonPressed }) => {
+    expanded, fullscreenEnabled, onReportHelpButtonPressed, onClonePressed }) => {
     const maximizeButton = <IconButton aria-label="maximize"
         onClick={onToggleCardExpand}>
         <FullscreenIcon />
@@ -38,6 +37,12 @@ const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggle
                     <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "red" }} aria-label="remove"
                         onClick={onRemovePressed} >
                         <DeleteOutlineIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Clone" aria-label="clone">
+                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "green" }} aria-label="clone"
+                                onClick={onClonePressed} >
+                        <FileCopyOutlinedIcon />
                     </IconButton>
                 </Tooltip>
             </div>}
