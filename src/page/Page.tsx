@@ -157,7 +157,7 @@ export const NeoPage = (
                         <NeoCard index={index} key={getReportIndex(pagenumber, index)}
                             dashboardSettings={dashboardSettings}
                             onRemovePressed={onRemovePressed}
-                            onClonePressed={() => {
+                            onClonePressed={(index) => {
                                 const { x, y } = getAddCardButtonPosition();
                                 onClonePressed(index, x, y);
                             }} />

@@ -9,7 +9,7 @@ export const createNotificationThunk = (title: any, message: any) => (dispatch: 
 
 export const addReportThunk = (x: number, y: number, width: number, height: number, data:any) => (dispatch: any, getState: any) => {
     try {
-        const initialState = data ? data : CARD_INITIAL_STATE;
+        const initialState = data !== undefined ? data : CARD_INITIAL_STATE;
         const report = {...initialState, x: x, y: y, width: width, height: height};
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
