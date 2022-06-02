@@ -40,7 +40,12 @@ export default function TreeMapVisualization(props: ExtendedChartReportProps) {
     const legend = (settings["legend"]) ? settings["legend"] : false;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
 
-    const labelFn = (n) => {
+    /**
+     * Helper function to determine which label to draw on a node in the hierarchy.
+     * @param n  the node.
+     * @returns a string (label).
+     */
+    const getLabelForNode = (n) => {
         return n.formattedValue
     }
     return (
@@ -75,7 +80,7 @@ export default function TreeMapVisualization(props: ExtendedChartReportProps) {
                     }}
                     animate={true}
                     colors={{ scheme: colorScheme }}
-                    label = { labelFn }
+                    label = { getLabelForNode }
                 />
             </div>
         </>)
