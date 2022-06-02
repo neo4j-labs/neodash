@@ -87,6 +87,7 @@ jobs:
    - run: rm -rf docs
    - run: npm install
    - run: npm run-script build
+   - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
    - run: npm pack
    - run: rm -rf target
    - run: mkdir target
