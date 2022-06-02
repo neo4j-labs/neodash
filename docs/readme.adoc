@@ -1,1 +1,0 @@
-Documentation is currently available at https://github.com/nielsdejong/neodash/wiki.

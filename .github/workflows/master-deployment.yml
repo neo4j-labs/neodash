@@ -71,7 +71,7 @@ jobs:
       context: .
       file: ./Dockerfile
       push: true
-      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.1
+      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.1.2
  build-npm:
    needs: build-test
    runs-on: ubuntu-latest
@@ -87,6 +87,7 @@ jobs:
    - run: rm -rf docs
    - run: npm install
    - run: npm run-script build
+   - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
    - run: npm pack
    - run: rm -rf target
    - run: mkdir target

@@ -1,0 +1,67 @@
+= NeoDash - Neo4j Dashboard Builder
+:imagesdir: https://s3.amazonaws.com/dev.assets.neo4j.com/wp-content/uploads
+:slug: neodash
+:author: Niels de Jong
+:category: labs
+:tags: visualization, dashboard
+:neo4j-versions: 3.5, 4.0, 4.1, 4.2, 4.3, 4.4
+:page-pagination:
+:page-product: NeoDash
+
+image::https://raw.githubusercontent.com/nielsdejong/neodash/16cab52f96ed234042b11e1e5c87cba6d4a0e3a5/public/screenshot.png[width=800]
+
+
+
+NeoDash is an open-source, low-code Dashboard Builder for Neo4j. It lets you build an interactive dashboard with tables, graphs, bar charts, line charts, maps and more, in minutes.
+
+== Availability & Installation
+
+- Web Browser: https://neodash.graphapp.io
+- Neo4j Desktop: Install it from the https://install.graphapp.io[Graph App Gallery].
+- Docker: https://hub.docker.com/r/nielsdejong/neodash 
+
+== Functionality Includes
+- A low-code dashboard builder with a drag-and-drop interface
+- Create visualizations directly from Cypher
+- The ability to add customization and interactivity to dashboards
+- Build and publish dashboards for read-only access
+
+== Documentation
+* To start building dashboards, see the link:./User-Guide[User Guide].
+* For deploying, configuring and extending NeoDash, check out the
+link:./Developer-Guide[Developer Guide].
+
+== Relevant Links
+
+[cols="1,4"]
+|===
+| icon:comments[] Support | https://community.neo4j.com/c/neo4j-graph-platform/visualization/17[Neo4j Online Community]
+| icon:user[] Authors | https://github.com/nielsdejong[Niels de Jong], https://github.com/mariusconjeaud[Marius Conjeaud], https://github.com/BennuFire[Harold Agudelo Ramirez], https://github.com/AleSim94[Aleksandar Simeunovic]
+| icon:gift[] Releases | https://github.com/nielsdejong/neodash/releases
+| icon:github[] Source | https://github.com/nielsdejong/neodash
+| icon:book[] Docs | https://github.com/nielsdejong/neodash/wiki
+| icon:gift[] Graph App | Install from your Neo4j Desktop via https://install.graphapp.io
+// | icon:book[] Article |
+// | icon:play-circle[] Example |
+|===
+
+
+
+== Recent Articles
+
+
+- https://www.youtube.com/watch?v=Ygzj0Y4cYm4[NeoDash 2.0 in
+Five Minutes] 
+- https://www.youtube.com/watch?v=vjZ9M7JpExA[NeoDash 2.0 Hands On at Neo4j Live] 
+- https://medium.com/p/ddc938ff82fa[Investigating Supply Chains with
+NeoDash] 
+- https://thatdavestevens.medium.com/social-recommendations-slack-neo4j-and-neodash-fe916588e65b[Social
+Recommendations with Neo4j & NeoDash] 
+- https://neo4j.com/developer-blog/bitcoin-transactions-dashboard-neo4j-neodash/[Real-Time
+Dashboard of Bitcoin Transactions With Neo4j and NeoDash]
+- https://medium.com/@a.emrevarol/european-natural-gas-network-via-knowledge-graph-3c3decb5f2ec[European
+Natural Gas Pipelines] 
+- http://blog.bruggen.com/2020/11/exporting-spotify-playlists-into-neo4j.html[Exporting Spotify Playlists into Neo4j]
+- https://nielsdejong.nl/neo4j%20projects/2021/12/14/neodash-2.0-a-brand-new-way-of-visualizing-neo4j-data.html[NeoDash 2.0 Release Overview] 
+- https://nielsdejong.nl/neo4j%20projects/2021/06/06/neodash-1.1-extensible-interactive-dashboards.html[NeoDash 1.1 Release Overview] 
+- https://nielsdejong.nl/neo4j%20projects/2020/11/16/neodash[NeoDash 1.0 Release Overview]

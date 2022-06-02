@@ -71,7 +71,7 @@ export const NeoReportExamplesModal = ({ database }) => {
                                                     database={database}
                                                     disabled={!open}
                                                     selection={example.selection}
-                                                    mapParameters={example.globalParameters}
+                                                    parameters={example.globalParameters}
                                                     settings={example.settings}
                                                     fields={example.fields}
                                                     dimensions={example.dimensions}

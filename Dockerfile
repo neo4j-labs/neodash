@@ -6,7 +6,7 @@ WORKDIR /usr/local/src/neodash
 
 # Pull source code if you have not cloned the repository
 #RUN apk add --no-cache git
-#RUN git clone https://github.com/nielsdejong/neodash.git /usr/local/src/neodash
+#RUN git clone https://github.com/neo4j-labs/neodash.git /usr/local/src/neodash
 
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
@@ -38,4 +38,4 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 USER nginx
 EXPOSE 5005
 HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
-LABEL version="2.1.1"
+LABEL version="2.1.2"

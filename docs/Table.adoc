@@ -1,0 +1,63 @@
+The most common report in a dashboard is often a simple table view.
+NeoDash contains a powerful table component that can render all the data
+returned by a Cypher query. This includes simple data like numbers or
+text, but also Neo4j native data like nodes, relationships, and paths.
+
+The table report supports the following additional features: 
+
+- automatic pagination of results. 
+- Sorting/filtering by clicking on the table headers. 
+- Downloading your data as a CSV file.
+
+== Examples
+
+=== Basic Table
+
+....
+MATCH (n:Movie)<-[:ACTED_IN]-(p:Person)
+RETURN n.title, n.released, count(p) as actors
+....
+
+image::./img/table1.png[Basic Table]
+
+=== Table with nodes / collections
+
+....
+MATCH (n:Movie)<-[:ACTED_IN]-(p:Person)
+RETURN n, collect(p.name) as actors LIMIT 200
+....
+
+image::./img/table2.png[Table with nodes / collections]
+
+== Advanced Settings
+
+[width="100%",cols="12%,6%,6%,76%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Transpose Rows & Columns |on/off |off |when activated, transposes the
+rows and columns of the table. This means that each of the returned rows
+from Neo4j will be shown as a column instead of a row.
+
+|Relative Column Sizes |List of numbers |[1, 1, 1, …] |The relative
+width between each of the columns in the table. For example, if the
+first column should be twice the width of the 2nd and 3rd, this will be
+set to ``[2, 1, 1]''.
+
+|Enable CSV Download |on/off |off |when activated, displays a button on
+the bottom right of the table footer. This button lets the user download
+the complete set of table results (all pages) as a CSV file.
+
+|Auto-run query |on/off |on |when activated automatically runs the query
+when the report is displayed. When set to `off', the query is displayed
+and will need to be executed manually.
+|===
+
+== Rule-Based Styling
+
+Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
+following style rules can be applied to the table: 
+
+- The background color of an entire row in a table. 
+- The text color of an entire row in a table. 
+- The background color of a single cell in the table. 
+- The text color of a single cell in the table.

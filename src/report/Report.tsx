@@ -16,8 +16,7 @@ import NeoTableChart from "../chart/TableChart";
 export const NeoReport = ({
     database = "neo4j", // The Neo4j database to run queries onto.
     query = "", // The Cypher query used to populate the report.
-    stringParameters = "", // A string, to be parsed as JSON, which contains cypher parameters. TODO - remove this, replaced by mapParameters.
-    mapParameters = {}, // A dictionary of parameters to pass into the query.
+    parameters = {}, // A dictionary of parameters to pass into the query.
     disabled = false, // Whether to disable query execution.
     selection = {}, // A selection of return fields to send to the report.
     fields = [], // A list of the return data fields that the query produces.
@@ -48,27 +47,12 @@ export const NeoReport = ({
         // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
         if (REPORT_TYPES[type].textOnly) {
             setStatus(QueryStatus.COMPLETE);
-            setRecords([{ input: query, mapParameters: mapParameters }]);
+            setRecords([{ input: query, parameters: parameters }]);
             return;
         }
 
         // Reset the report records before we run the query.
         setRecords([]);
-
-        // Try and parse the provided query parameters.
-        var parsedParameters = {};
-        try {
-            parsedParameters = JSON.parse(stringParameters != "" ? stringParameters : "{}")
-        } catch (e) {
-            const message = "Unable to parse Cypher parameters: \""
-                + stringParameters + "\"\n" + e.message + '.\n\n' +
-                "Ensure you specify parameters in a valid JSON format."
-            // @ts-ignore
-            setRecords([{ "error": message }]);
-            setStatus(QueryStatus.ERROR)
-            return
-        }
-        const parameters = Object.assign({}, parsedParameters, mapParameters);
 
         // Determine the set of fields from the configurations.
         var numericFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.NUMBER && !REPORT_TYPES[type].selection[field].multiple) : [];
@@ -122,8 +106,8 @@ export const NeoReport = ({
             }
         }
     }, REPORT_TYPES[type].useRecordMapper == true ?
-        [disabled, query, JSON.stringify(mapParameters), fields ? fields : [], JSON.stringify(selection)] :
-        [disabled, query, JSON.stringify(mapParameters), null, null])
+        [disabled, query, JSON.stringify(parameters), fields ? fields : [], JSON.stringify(selection)] :
+        [disabled, query, JSON.stringify(parameters), null, null])
 
     // Define query callback to allow reports to get extra data on interactions.
     const queryCallback = useCallback(
@@ -167,7 +151,7 @@ export const NeoReport = ({
                 settings={settings}
                 fullscreen={expanded}
                 dimensions={dimensions}
-                parameters={mapParameters}
+                parameters={parameters}
                 queryCallback={queryCallback}
                 setGlobalParameter={setGlobalParameter}
                 getGlobalParameter={getGlobalParameter} />
@@ -191,7 +175,7 @@ export const NeoReport = ({
                 settings={settings}
                 fullscreen={expanded}
                 dimensions={dimensions}
-                parameters={mapParameters}
+                parameters={parameters}
                 queryCallback={queryCallback}
                 setGlobalParameter={setGlobalParameter}
                 getGlobalParameter={getGlobalParameter} />

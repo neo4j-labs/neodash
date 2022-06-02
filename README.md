@@ -20,18 +20,20 @@ docker run -it --rm -p 5005:5005 nielsdejong/neodash
 
 > Windows users may need to prefix the `docker run` command with `winpty`.
 
-See the [Developer Guide](https://github.com/nielsdejong/neodash/wiki/Developer%20Guide) for more on installing, building, and running the application.
+See the [Developer Guide](https://github.com/neo4j-labs/neodash/wiki/Developer%20Guide) for more on installing, building, and running the application.
 
 ## User Guide
 NeoDash comes with built-in examples of dashboards and reports. For more details on the types of reports and how to customize them, see the [User Guide](
-https://github.com/nielsdejong/neodash/wiki/User-Guide).
+https://github.com/neo4j-labs/neodash/wiki/User-Guide).
 
 ## Publish Dashboards
-After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://github.com/nielsdejong/neodash/wiki/Publishing) for more on publishing dashboards.
+After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://github.com/neo4j-labs/neodash/wiki/Publishing) for more on publishing dashboards.
 
 
 ## Questions / Suggestions
-If you have any questions about NeoDash, please reach out to the maintainers. For feature requests, consider opening an issue on GitHub.
-
+If you have any questions about NeoDash, please reach out to the maintainers:
+- Create an [Issue](https://github.com/nielsdejong/neodash/issues/new) on GitHub for feature requests/bugs.
+- Connect with us on the [Neo4j Discord](https://neo4j.com/developer/discord/).
+- Create a post on the Neo4j [Community Forum](https://community.neo4j.com/).
 
 > NeoDash is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. If you have a need for a commercial agreement around training, custom extensions or other services, please contact the [Neo4j Professional Services](https://neo4j.com/professional-services/) team.

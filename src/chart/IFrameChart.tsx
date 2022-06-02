@@ -13,7 +13,7 @@ const NeoIFrameChart = (props: ChartProps) => {
     const passGlobalParameters = props.settings && props.settings.passGlobalParameters ? props.settings.passGlobalParameters : false;
     const replaceGlobalParameters = props.settings && props.settings.replaceGlobalParameters !== undefined ? props.settings.replaceGlobalParameters : true;
     const url = records[0]["input"].trim();
-    const mapParameters = records[0]["mapParameters"] || {};
+    const mapParameters = records[0]["parameters"] || {};
     const queryString = Object.keys(mapParameters).map(key => key + '=' + mapParameters[key]).join('&');
     const modifiedUrl = (replaceGlobalParameters ? replaceDashboardParameters(url, parameters) : url) + (passGlobalParameters ? "#" + queryString : "");
   
