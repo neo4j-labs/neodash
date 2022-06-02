@@ -25,7 +25,7 @@ export enum SELECTION_TYPES {
     DICTIONARY,
     COLOR,
     NODE_PROPERTIES
-};
+}
 
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
@@ -807,6 +807,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
                 default: "set2"
+            },
+            "showLabels": {
+                label: "Show Circle Labels",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             },
             "borderWidth": {
                 label: "Circle border width (px)",
