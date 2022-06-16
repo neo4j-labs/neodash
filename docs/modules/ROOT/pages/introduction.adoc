@@ -1,0 +1,5 @@
+This wiki contains information on getting started with NeoDash - A Low-Code Dashboard Builder for Neo4j.
+
+
+- To start building dashboards, see the [User Guide](./User-Guide).
+- For deploying, configuring and extending NeoDash, check out the [Developer Guide](./Developer-Guide).

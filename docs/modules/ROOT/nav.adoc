@@ -1,4 +1,4 @@
-* xref:index.adoc[NeoDash]
-** xref:User Guide.adoc[User Guide]
-** xref:Developer Guide.adoc[Developer Guide]
-*** xref:State Management.adoc[State Management]
+* xref:introduction.adoc[Introduction]
+* xref:user-guide/index.adoc[User Guide]
+* xref:developer-guide/index.adoc[Developer Guide]
+** xref:developer-guide/state-management.adoc[State Management]
