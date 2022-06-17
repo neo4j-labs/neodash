@@ -1,3 +1,5 @@
+= Standalone Mode
+
 Next to being a dashboard editor, NeoDash can be deployed in a
 `standalone mode' - allowing you set up a architecture to publish and
 read dashboards.

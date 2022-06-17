@@ -1,3 +1,5 @@
+= Build & Run
+
 To start developing the application, you’ll need to set up the
 development environment.
 

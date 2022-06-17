@@ -1,3 +1,5 @@
+= Testing 
+
 NeoDash uses *Cypress* for automated testing. To install Cypress, check
 out the official
 https://docs.cypress.io/guides/getting-started/installing-cypress#What-you-ll-learn[installation

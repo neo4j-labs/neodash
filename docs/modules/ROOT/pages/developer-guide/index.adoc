@@ -1,8 +1,6 @@
-The following pages will guide developers who want to dive deeper into
-NeoDash, and extend it for their own needs. In case you just want to run
-NeoDash, see the Quickstart page.
+= Developer Guide
 
-This guide has the following sections: 
+This guide contains information for developers looking to deploy NeoDash, or extend it for their own needs. 
 
 - link:Build%20&%20Run[Build & Run] 
 - link:Configuration[Configuration]
@@ -14,7 +12,7 @@ This guide has the following sections:
 - link:Testing[Testing]
 - link:Contributing[Contributing]
 
-== Prerequisites
+== Prerequisites for extending NeoDash
 
 NeoDash is a web application written in TypeScript. Knowledge of React &
 Redux is also highly recommended when extending the application.

@@ -1,3 +1,5 @@
+= Contributing
+
 Contributions to the project are highly welcomed. Please consider
 creating a https://github.com/nielsdejong/neodash/pulls[Pull Request].
 Ensure you start from the `develop` branch, and set the merge base to

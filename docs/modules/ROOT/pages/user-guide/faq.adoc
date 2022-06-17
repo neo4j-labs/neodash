@@ -1,3 +1,5 @@
+= FAQ
+
 == 1. How can I learn more about NeoDash?
 
 To learn more, check out the following list of resources (blogs, videos

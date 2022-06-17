@@ -1,3 +1,5 @@
+= Bloom Integration
+
 NeoDash can be linked to Neo4j Bloom perspectives by using
 https://neo4j.com/docs/bloom-user-guide/current/bloom-tutorial/deep-links/[Bloom
 Deep Links]. This functionality allows you to combine the power of graph

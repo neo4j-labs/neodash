@@ -1,3 +1,5 @@
+= Configuration
+
 When using a custom NeoDash deployment, there are several settings that
 can be configured. These mostly relate to
 link:Standalone%20Mode[Standalone Mode] and SSO configurations.
