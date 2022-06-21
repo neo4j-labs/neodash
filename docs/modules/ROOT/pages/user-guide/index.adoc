@@ -1,0 +1,12 @@
+= User Guide
+
+The following pages contain everything you need to get started with NeoDash.
+
+
+* link:../Quickstart[Quickstart] tells you how to get started with NeoDash right away.
+* link:Dashboards[Dashboards] elaborates on how dashboards are created and used in
+NeoDash.
+* link:Pages[Pages] explains how to manage pages inside a dashboard.
+* link:Reports[Reports] contains information on how a report works, and lists the
+different types that can be used.
+* link:Publishing[Publishing] explains how to publish a dashboard for others to view.

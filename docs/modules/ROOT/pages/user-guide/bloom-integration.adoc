@@ -1,0 +1,27 @@
+= Bloom Integration
+
+NeoDash can be linked to Neo4j Bloom perspectives by using
+https://neo4j.com/docs/bloom-user-guide/current/bloom-tutorial/deep-links/[Bloom
+Deep Links]. This functionality allows you to combine the power of graph
+reporting (NeoDash) with intuitive graph exploration (Bloom).
+
+== Bloom Deep-Linking
+
+To link NeoDash to a Bloom perspective, you will need to: 
+
+1. Create a Neo4j Bloom https://neo4j.com/docs/bloom-user-guide/current/bloom-perspectives/bloom-perspectives/[perspective].
+2. Define a https://neo4j.com/docs/bloom-user-guide/current/bloom-tutorial/search-phrases-advanced/[Bloom
+Search Phrase] for the perspective. 
+3. Generate a https://neo4j.com/docs/bloom-user-guide/current/bloom-tutorial/deep-links/#_server_hosted_bloom[Deep
+Link] for your perspective and respective search phrase. This requires
+that you have a
+https://neo4j.com/docs/bloom-user-guide/current/bloom-installation/installation-activation/#installing-server-plugin[Server-hosted
+Bloom installation] running. 
+
+4. Use the deep link you created in either:
+- an iFrame Report (optionally passing in the dashboard parameters into
+the search phrase). 
+- a Graph Report (Adding your deep link inside the
+`Drilldown Link' field under advanced settings):
+
+image::graphdrilldown.png[Graph Drilldown]
