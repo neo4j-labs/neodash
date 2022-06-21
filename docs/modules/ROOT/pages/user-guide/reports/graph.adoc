@@ -1,3 +1,5 @@
+= Graph
+
 The graph report will render all returned nodes, relationships and paths
 in a force-directed graph layout. This includes collections (lists) of
 these objects.
@@ -22,7 +24,7 @@ WHERE m.title = 'The Matrix'
 RETURN p, a, m
 ....
 
-image::./img/graph.png[Basic Graph]
+image::graph.png[Basic Graph]
 
 == Virtual Graph (apoc is required)
 
@@ -32,7 +34,7 @@ WHERE m.title = "The Matrix"
 RETURN p, p2, apoc.create.vRelationship(p, "KNOWS", {}, p2)
 ....
 
-image::./img/graph2.png[Virtual Graph]
+image::graph2.png[Virtual Graph]
 
 == Advanced Settings
 
@@ -125,7 +127,7 @@ and will need to be executed manually.
 
 == Rule-Based Styling
 
-Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
+Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
 following style rules can be applied to the graph: 
 
 - The background color of a node. 

@@ -1,3 +1,5 @@
+= Treemap
+
 A treemap chart will render hierarchical data in a nested rectangle
 layout. It takes two fields: 
 
@@ -17,11 +19,11 @@ WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val
 RETURN result, val
 ----
 
-image::./img/treemap.png[Treemap Chart]
+image::treemap.png[Treemap Chart]
 
 == Advanced Settings
 
-[width="100%",cols="15%,2%,6%,77%",options="header",]
+[width="100%",cols="15%,2%,26%,57%",options="header",]
 |===
 |Name |Type |Default Value |Description
 |Enable interactivity |on/off |on |If enabled, turn on animations when a

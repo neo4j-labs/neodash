@@ -24,4 +24,4 @@ the search phrase).
 - a Graph Report (Adding your deep link inside the
 `Drilldown Link' field under advanced settings):
 
-image::./img/graphdrilldown.png[Graph Drilldown]
+image::graphdrilldown.png[Graph Drilldown]

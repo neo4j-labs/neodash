@@ -4,7 +4,7 @@ When you are done building a dashboard, you may want to *publish* that
 dashboard for others to view. The workflow for a continuous dashboarding
 cycle may look something like this:
 
-image::./img/publish.png[Workflow]
+image::publish.png[Workflow]
 
 Keep in mind that the purpose of an application in the `View' phase is
 very different from the `Build' phase: 
@@ -33,6 +33,6 @@ These three configurations must be set for NeoDash to be able to run in
 2. A hardcoded Neo4j database to connect to. 
 3. A hardcoded dashboard to load.
 
-Technical details on setting this up are documented in the link:Standalone%20Mode[Standalone
+Technical details on setting this up are documented in the link:../../developer-guide/standalone-mode[Standalone
 Mode] page. If you need help setting this up, please reach out to the
 mailto:niels.dejong@neo4j.com[Neo4j Team].

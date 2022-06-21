@@ -1,3 +1,5 @@
+= Map
+
 The map report will render all returned nodes, relationships and paths
 on a geomap. https://www.openstreetmap.org[Open Street Map] is used to
 visualize the data on the map.
@@ -26,7 +28,7 @@ MATCH (b:Brewery)
 RETURN b
 ....
 
-image::./img/map.png[Basic Map]
+image::map.png[Basic Map]
 
 === Nodes and relationships on a map
 
@@ -35,7 +37,7 @@ MATCH (b:Brewery)-[e]->(b2:Brewery)
 RETURN b, e, b2
 ....
 
-image::./img/map2.png[Relationships on a Map]
+image::map2.png[Relationships on a Map]
 
 === Artificial map data
 
@@ -51,7 +53,7 @@ RETURN {id: a.name, label: "Person", point: l1.point},
        {start: a.name, end: b.name, type: "KNOWS", id: 1}
 ....
 
-image::./img/map3.png[Artificial Map Data]
+image::map3.png[Artificial Map Data]
 
 == Advanced Settings
 
@@ -96,7 +98,7 @@ and will need to be executed manually.
 
 == Rule-Based Styling
 
-Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
+Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
 following style rules can be applied to the map: 
 
 - The color of a node marker.

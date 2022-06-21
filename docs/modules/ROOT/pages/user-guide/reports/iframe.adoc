@@ -1,3 +1,5 @@
+= iFrame
+
 An iFrame report lets you embed a webpage inside your NeoDash dashboard.
 The page can be loaded from any web address starting with `http://` or
 `https://`, with some exceptions*.
@@ -15,11 +17,11 @@ global dashboard parameters can be passed into it dynamically. See the
 
 === Basic iFrame
 
-image::./img/iframe.png[Basic iFrame]
+image::iframe.png[Basic iFrame]
 
 === Dynamic iFrame
 
-image::./img/iframe2.png[Dynamic iFrame]
+image::iframe2.png[Dynamic iFrame]
 
 == Advanced Settings
 

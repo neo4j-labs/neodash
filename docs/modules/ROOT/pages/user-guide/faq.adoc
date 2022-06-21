@@ -69,7 +69,7 @@ dedicated read-only user for reporting.
 
 == 6. I’m missing a feature. Can I ask for help?
 Feature requests and bug reports are more than welcome. Please open an
-issue on https://github.com/nielsdejong/neodash/issues[Github]. Issues
+issue on https://github.com/neo4j-labs/neodash/issues[Github]. Issues
 will be addressed on a best-effort basis.
 
 If you’re looking for a specific feature with high priority, you can
@@ -79,13 +79,13 @@ reach out to the mailto:niels.dejong@neo4j.com[Neo4j Team].
 
 NeoDash is an open-source tool that can be extended by anyone. If you
 are interested in contributing, please check out the
-https://github.com/nielsdejong/neodash[Github repository].
+https://github.com/neo4j-labs/neodash[Github repository].
 
 Aside from code contributions, we are also very happy to hear about how
 you use NeoDash. If you have a blog post, podcast or video of your graph
 dashboard, let us know!
 
-== 8. Can I pay for help with NeoDash?
+== 8. Can I get professional help with NeoDash?
 
 If you are interested in a services agreement to support your NeoDash deployment, please reach out to the
 mailto:niels.dejong@neo4j.com[Neo4j Services Team].

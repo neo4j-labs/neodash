@@ -1,3 +1,5 @@
+= Circle Packing
+
 A circle packing chart will render hierarchical data in a group of
 nested circles. It takes two fields: 
 
@@ -17,11 +19,11 @@ WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val
 RETURN result, val
 ----
 
-image::./img/circlepacking.png[Circle Packing Chart]
+image::circlepacking.png[Circle Packing Chart]
 
 == Advanced Settings
 
-[width="100%",cols="13%,3%,6%,78%",options="header",]
+[width="100%",cols="13%,3%,26%,58%",options="header",]
 |===
 |Name |Type |Default Value |Description
 |Enable interactivity |on/off |on |If enabled, turn on animations when a

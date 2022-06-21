@@ -1,3 +1,5 @@
+= Line Chart
+
 A line chart can be used to draw one or more lines in a two-dimensional
 plane. It requires two numeric fields:
 
@@ -23,7 +25,7 @@ RETURN  (p.born/10)*10 as Decade, COUNT(p) as People
 ORDER BY Decade ASC
 ....
 
-image::./img/line1.png[Basic Line Chart]
+image::line1.png[Basic Line Chart]
 
 === Multi-Line Chart (Actors born & movies released by decade)
 
@@ -36,7 +38,7 @@ WHERE (m.released/10)*10 = Decade
 RETURN Decade, People, COUNT(DISTINCT m) as Movies
 ....
 
-image::./img/line2.png[Multi Line Chart]
+image::line2.png[Multi Line Chart]
 
 == Advanced Settings
 
@@ -118,7 +120,7 @@ and will need to be executed manually.
 
 == Rule-Based Styling
 
-Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
+Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
 following style rules can be applied to the line chart: 
 
 - The color of the line.

@@ -3,7 +3,7 @@
 In NeoDash, a dashboard consists of several pages, each of which can
 consist of multiple reports.
 
-image::./img/dashboard2.png[Dashboard]
+image::dashboard2.png[Dashboard]
 
 As an example: The screenshot above shows a dashboard with three pages:
 `Breweries`, `Beer Ratings` and `Styles`. The dashboard title `My
@@ -21,7 +21,7 @@ dashboard or open an existing one (if available). After being connected,
 the buttons on the sidebar can be used to save, load or share a
 dashboard.
 
-image::./img/saveloadshare.png[Save/Load/Share Button]
+image::saveloadshare.png[Save/Load/Share Button]
 
 === Save a Dashboard
 
@@ -118,7 +118,7 @@ standalone deployment of NeoDash. See Publishing for more infomation.
 Settings for the entire dashboard can be accessed by clicking the
 *Settings ⚙️* button in the dashboard sidebar.
 
-image::./img/dashboardsettings.png[Dashboard Settings]
+image::dashboardsettings.png[Dashboard Settings]
 
 This window can be used to control the followng settings:
 
@@ -157,7 +157,7 @@ queries of reports. A convention is that a dashboard parameter in
 NeoDash will always start with `$neodash_`.
 
 Parameters can only be set (and unset) using the
-link:Parameter%20Select[`Parameter Select'] reports. After setting a
+link:../reports/parameter-select[Parameter Select] reports. After setting a
 parameter, it will be available to all reports in the dashboard. A query
 that uses a dashboard parameter will look like this:
 

@@ -1,3 +1,5 @@
+= Single Value
+
 A single value report will render the first column of the first row
 returned by the Cypher query. Single value reports are typically used
 for key metrics: 
@@ -15,7 +17,7 @@ MATCH (n)
 RETURN COUNT(n)
 ....
 
-image::./img/value.png[Basic Value]
+image::value.png[Basic Value]
 
 === Text value with custom styling
 
@@ -26,11 +28,11 @@ RETURN n.name, COUNT(t)
 ORDER BY COUNT(t) DESC
 ....
 
-image::./img/value2.png[Styled Value]
+image::value2.png[Styled Value]
 
 == Advanced Settings
 
-[width="100%",cols="10%,3%,9%,78%",options="header",]
+[width="100%",cols="10%,3%,29%,58%",options="header",]
 |===
 |Name |Type |Default Value |Description
 |Font Size |Number |64 |The font size of the value text.
@@ -48,7 +50,7 @@ and will need to be executed manually.
 
 == Rule-Based Styling
 
-Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
+Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
 following style rules can be applied to the map: 
 
 - The color of the text.

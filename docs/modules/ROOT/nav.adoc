@@ -3,7 +3,7 @@
 * xref:user-guide/index.adoc[User Guide]
 ** xref:user-guide/dashboards.adoc[Dashboards]
 ** xref:user-guide/pages.adoc[Pages]
-** xref:user-guide/reports[Reports]
+** xref:user-guide/reports/index.adoc[Reports]
 *** xref:user-guide/reports/table.adoc[Table]
 *** xref:user-guide/reports/graph.adoc[Graph]
 *** xref:user-guide/reports/bar-chart.adoc[Bar Chart]

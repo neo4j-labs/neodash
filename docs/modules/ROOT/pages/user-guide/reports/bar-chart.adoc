@@ -1,3 +1,5 @@
+= Bar Chart
+
 A bar chart will draw categories and values in a familiar bar-layout.
 The bar chart will require you to choose the following selections:
 
@@ -17,7 +19,7 @@ MATCH (p:Person)-[e]->(m:Movie)
 RETURN m.title as Title, COUNT(p) as People
 ----
 
-image::./img/bar.png[Basic Table]
+image::bar.png[Basic Table]
 
 === Stacked Bar Chart
 
@@ -27,7 +29,7 @@ Match (n:Person)-[e]->(m:Movie)
 RETURN m.title, COUNT(p) as People, type(e) as Role
 ----
 
-image::./img/barstacked.png[Basic Table]
+image::barstacked.png[Basic Table]
 
 == Advanced Settings
 
@@ -93,7 +95,7 @@ and will need to be executed manually.
 
 == Rule-Based Styling
 
-Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
+Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
 following style rules can be applied to the bar chart: 
 
 - The color of the bar.

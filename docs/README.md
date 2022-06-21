@@ -9,7 +9,7 @@ https://neo4j.com/labs/neodash/{version}
 For example: https://neo4j.com/labs/neodash/2.1
 
 ## Local Build
-To compile and view the documentation locally, navigate to this folder and run:
+To compile and view the documentation locally, navigate to this (`./docs`) folder and run:
 ```
 npm install
 npm start

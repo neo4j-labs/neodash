@@ -5,7 +5,7 @@ The image below contains a high-level overview of the component
 hierarchy within the application. The following conceptual building
 blocks are used to create the interface:
 
-image::./img/component-hierarchy.png[NeoDash Component Hierarchy]
+image::component-hierarchy.png[NeoDash Component Hierarchy]
 
 * *Application* - highest level in the component structure. Handles all
 application-level logic (e.g. initalizing the app).
@@ -42,8 +42,8 @@ charts, tables, graphs, etc.
 
 == A note on Cards v.s. Reports
 
-Whereas a user might associate a `Card' in NeoDash to a report directly,
-the application has a more nuanced seggration of responsibilities;
+Whereas a user might associate a Card in NeoDash to a report directly,
+the application has a more nuanced seggration of responsibilities:
 
 * The *Card* is responsible for positioning the component in a page.
 * The *Card Content* is the core element of the card (exclusive of the

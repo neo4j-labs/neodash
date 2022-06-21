@@ -10,7 +10,7 @@ A report can be given a title, which will be displayed in the dashboard
 header. To change the query of a report, open the settings by clicking
 the (⋮) icon on the top right of the report.
 
-image::./img/report.gif[Report]
+image::report.gif[Report]
 
 The settings window additionally allows you to change the type of
 report, the refresh rate of the report, and a number of *Advanced
@@ -33,14 +33,14 @@ As of NeoDash 2.1, reports can be re-ordered by dragging and dropping
 them around the page. To move a report, grab it by the handle (top left
 corner), and drag it to the desired location.
 
-image::./img/movereport.gif[Report]
+image::movereport.gif[Report]
 
 == Resize Reports
 
 As of NeoDash 2.1, reports can be resized by grabbing their bottom-right
 corner, and dragging your mouse to the desired size.
 
-image::./img/resizereport.gif[Report]
+image::resizereport.gif[Report]
 
 == Writing Queries
 
@@ -77,14 +77,14 @@ visualization. To do this, open up the report settings, Then, click the
 *Rule-Based Styling* button on the bottom right (marked with the red
 circle):
 
-image::./img/rulebasedstylingbutton.png[Report]
+image::rulebasedstylingbutton.png[Report]
 
 This will open up the rule definition window. Inside this screen, a list
 of rules can be defined. Each rule will have the following structure:
 
 `IF [CONDITION] THEN [STYLE]`
 
-image::./img/rulebasedstyling.png[Report]
+image::rulebasedstyling.png[Report]
 
 Conditions are always based on one of the return fields of the query.
 This can be a simple field (text, number) or a node property. Style

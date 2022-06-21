@@ -1,3 +1,5 @@
+= Pie Chart
+
 A pie chart will draw categories and values in a circular disc layout.
 The pie chart will require you to choose the following selections:
 
@@ -19,7 +21,7 @@ RETURN m.title as Title, COUNT(p) as People
 LIMIT 8
 ----
 
-image::./img/pie.png[Pie Chart]
+image::pie.png[Pie Chart]
 
 === Donut Chart
 
@@ -31,7 +33,7 @@ WITH TYPE(e) as Role
 RETURN Role, COUNT(Role) as Count
 ----
 
-image::./img/piedonut.png[Donut Chart]
+image::piedonut.png[Donut Chart]
 
 == Advanced Settings
 
@@ -90,7 +92,7 @@ and will need to be executed manually.
 
 == Rule-Based Styling
 
-Using the link:Reports#rule-based-styling[Rule-Based Styling] menu, the
+Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
 following style rules can be applied to the pie chart:
 
 - The background color of a pie slice.

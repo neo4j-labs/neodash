@@ -1,3 +1,5 @@
+= Parameter Select
+
 Parameter select reports provide you with an easy way to add
 interactivity into your dashboards.
 
@@ -21,15 +23,15 @@ the complete freedom to enter any value they want.
 
 == Node Property Select
 
-image::./img/select.png[Node Property Select]
+image::select.png[Node Property Select]
 
 == Relationship Property Select
 
-image::./img/select2.png[Relationship Property Select]
+image::select2.png[Relationship Property Select]
 
 == Free Text Select
 
-image::./img/select3.png[Free Text Select]
+image::select3.png[Free Text Select]
 
 == Advanced Settings
 

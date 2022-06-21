@@ -93,5 +93,5 @@ Cypress testing.
 ____
 After you added a visualization or a new customization, consider
 contributing it to the NeoDash project by creating a
-https://github.com/nielsdejong/neodash/pulls[Pull Request].
+https://github.com/neo4j-labs/neodash/pulls[Pull Request].
 ____
