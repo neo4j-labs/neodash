@@ -53,6 +53,17 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const helperText = settings.helperText;
     const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
 
+    useEffect(() => {
+        const timeOutId = setTimeout(() => {
+            if(value == "")
+                debouncedSetGlobalParameter(parameter, undefined);
+            else
+                debouncedSetGlobalParameter(parameter, value);
+
+        }, 350);
+        return () => clearTimeout(timeOutId);
+    }, [value]);
+
     return <div>
         {type == "Free Text" ?
             <>
@@ -68,10 +79,10 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                         // TODO: i want this to be a proper wait instead of triggering on the first character.
                         if (newValue == null && clearParameterOnFieldClear) {
                             setValue("");
-                            debouncedSetGlobalParameter(parameter, undefined);
+                            //debouncedSetGlobalParameter(parameter, undefined);
                         } else {
                             setValue(newValue);
-                            debouncedSetGlobalParameter(parameter, newValue);
+                            //debouncedSetGlobalParameter(parameter, newValue);
                         }
                     }}
                 />
