@@ -669,6 +669,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "rgba(0, 0, 0, 0.87)"
             },
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.TEXT,
+                default: "rgba(255, 255, 255, 1)"
+            },
             "textAlign": {
                 label: "Horizontal Align",
                 type: SELECTION_TYPES.LIST,
