@@ -38,7 +38,7 @@ image::value2.png[Styled Value]
 |Font Size |Number |64 |The font size of the value text.
 
 |Color |Text |rgba(0, 0, 0, 0.87) |The HTML color value of the text.
-
+|Background Color |Text | white |The HTML color value of the background of the report.
 |Horizontal Align |List |left |The horizontal alignment of the text.
 
 |Vertical Align |List |top |The vertical alignment of the text.
