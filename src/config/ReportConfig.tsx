@@ -984,7 +984,33 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "projectionScale": {
+                label: "projectionScale",
+                type: SELECTION_TYPES.NUMBER,
+                default: 100
+            },
+            "projectionTranslationX": {
+                label: "projectionTranslationX",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0.5
+            },
+            "projectionTranslationY": {
+                label: "projectionTranslationY",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0.5
+            },
+            "countrySpec": {
+                label: "countrySpec",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
+            },
+            "labelProperty": {
+                label: "labelProperty",
+                type: SELECTION_TYPES.TEXT,
+                default: "properties.name"
             }
+
         }
     },
     "json": {

@@ -8,7 +8,7 @@ import {
 import { useState } from 'react'
 import { Tooltip } from '@material-ui/core'
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { globeFeature } from '../util/ChoroplethFeatures'
+import { globeFeature, colombiaFeature } from '../util/ChoroplethFeatures'
 
 export default function ChroplethMapVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
@@ -723,6 +723,15 @@ export default function ChroplethMapVisualization(props: ExtendedChartReportProp
         }
     }, []);
 
+    const dataCol = [
+        {
+            "id":"wy467dw9492.1",
+            "value" : 15
+        }
+    ];
+
+    //data = dataCol;
+
     let m = Math.max(...data.map(o => o.value));
 
     //const [data, setData] = useState(commonProperties.data);
@@ -737,6 +746,13 @@ export default function ChroplethMapVisualization(props: ExtendedChartReportProp
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
     const legend = (settings["legend"]) ? settings["legend"] : false;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
+    const projectionScale = (settings["projectionScale"]) ? settings["projectionScale"] : 100;
+    const projectionTranslationX = (settings["projectionTranslationX"]) ? settings["projectionTranslationX"] : 0.5;
+    const projectionTranslationY = (settings["projectionTranslationY"]) ? settings["projectionTranslationY"] : 0.5;
+    const labelProperty = (settings["labelProperty"]) ? settings["labelProperty"] : "properties.name";
+    const countrySpec = (settings["countrySpec"]) ? settings["countrySpec"] : "";
+
+    const feature = countrySpec == "COL" ? colombiaFeature : globeFeature;
 
     return (
         <>
@@ -751,21 +767,17 @@ export default function ChroplethMapVisualization(props: ExtendedChartReportProp
                 <ResponsiveChoropleth
                     //data={dataTestChoropleth}
                     data = {data}
-                    features = {globeFeature.features}
+                    features = {feature.features}
                     domain={[ 0, m ]}
-                    margin={{
-                        top: marginTop,
-                        right: marginRight,
-                        bottom: (legend) ? legendHeight + marginBottom : marginBottom,
-                        left: marginLeft
-                    }}
+                    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                     animate={true}
                     colors="YlOrRd"
                     //label = { getLabelForNode }
                     unknownColor="#666666"
-                    label="properties.name"
+                    label= { labelProperty }
                     valueFormat=".2s"
-                    projectionTranslation={[ 0.5, 0.5 ]}
+                    projectionScale={projectionScale}
+                    projectionTranslation={[ projectionTranslationX, projectionTranslationY ]}
                     projectionRotation={[ 0, 0, 0 ]}
                     enableGraticule={true}
                     graticuleLineColor="#dddddd"
