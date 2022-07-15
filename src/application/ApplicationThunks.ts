@@ -46,9 +46,9 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
                 if (application.dashboardToLoadAfterConnecting && (application.dashboardToLoadAfterConnecting.startsWith("http") || application.dashboardToLoadAfterConnecting.startsWith("./") || application.dashboardToLoadAfterConnecting.startsWith("/"))) {
                     fetch(application.dashboardToLoadAfterConnecting)
                         .then(response => response.text())
-                        .then(data => dispatch(loadDashboardThunk(data))); 
+                        .then(data => dispatch(loadDashboardThunk(data)));
                     dispatch(setDashboardToLoadAfterConnecting(null));
-                } else if (application.dashboardToLoadAfterConnecting) {            
+                } else if (application.dashboardToLoadAfterConnecting) {
                     const setDashboardAfterLoadingFromDatabase = (value) => {
                         dispatch(loadDashboardThunk(value));
                     }
@@ -139,11 +139,11 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
         //  Parse the URL parameters to see if there's any deep linking of parameters.
         const paramsToSetAfterConnecting = {}
         Array.from(urlParams.entries()).forEach(([key, value]) => {
-           if (key.startsWith("neodash_")){
-               paramsToSetAfterConnecting[key] = value;
-           } 
+            if (key.startsWith("neodash_")) {
+                paramsToSetAfterConnecting[key] = value;
+            }
         });
-        if(Object.keys(paramsToSetAfterConnecting).length > 0){
+        if (Object.keys(paramsToSetAfterConnecting).length > 0) {
             dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
         }
 
@@ -156,12 +156,28 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
                 const protocol = connection.split("://")[0];
                 const username = connection.split("://")[1].split(":")[0];
                 const password = connection.split("://")[1].split(":")[1].split("@")[0];
+
                 const database = connection.split("@")[1].split(":")[0];
                 const url = connection.split("@")[1].split(":")[1];
                 const port = connection.split("@")[1].split(":")[2];
+
+                if (url == password) {
+                    // Special case where a connect link is generated without a password.
+                    // Here, the format is parsed incorrectly and we open the connection window instead.
+
+                    dispatch(resetShareDetails());
+                    dispatch(setConnectionProperties("neo4j", url, "7687", database, username.split("@")[0], ""));
+                    dispatch(setWelcomeScreenOpen(false));
+                    dispatch(setConnectionModalOpen(true));
+                    // window.history.pushState({}, document.title, "/");
+                    return
+                }
+
+                dispatch(setConnectionModalOpen(false));
                 dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password));
                 window.history.pushState({}, document.title, "/");
             } else {
+                dispatch(setConnectionModalOpen(false));
                 dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
                 window.history.pushState({}, document.title, "/");
             }
@@ -185,7 +201,7 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
         dispatch(setWelcomeScreenOpen(false));
         dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
 
-       
+
         if (shareDetails.dashboardDatabase) {
             dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
             dispatch(setStandaloneDashboardDatabase(shareDetails.database));
@@ -238,9 +254,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         const urlParams = new URLSearchParams(queryString);
         const paramsToSetAfterConnecting = {}
         Array.from(urlParams.entries()).forEach(([key, value]) => {
-           if (key.startsWith("neodash_")){
-               paramsToSetAfterConnecting[key] = value;
-           } 
+            if (key.startsWith("neodash_")) {
+                paramsToSetAfterConnecting[key] = value;
+            }
         });
 
         const clearNotificationAfterLoad = true;
@@ -251,8 +267,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(setConnectionModalOpen(false));
 
         // Auto-upgrade the dashboard version if an old version is cached.
-        if(state.dashboard && state.dashboard.version !== NEODASH_VERSION){
-            if(state.dashboard.version == "2.0"){
+        if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
+            if (state.dashboard.version == "2.0") {
                 const upgradedDashboard = upgradeDashboardVersion(state.dashboard, "2.0", "2.1");
                 dispatch(setDashboard(upgradedDashboard));
                 dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.0. You might need to refresh this page."));
@@ -269,9 +285,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
                 if (standalone) {
                     dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
                     dispatch(createConnectionThunk(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
-                    if(config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
+                    if (config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
                         dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
-                    }else{
+                    } else {
                         dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
                     }
                     dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
@@ -299,14 +315,14 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setAboutModalOpen(false));
             dispatch(setConnected(false));
             dispatch(setWelcomeScreenOpen(false));
-            if(config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
+            if (config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
                 dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
-            }else{
+            } else {
                 dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
             }
-           
+
             dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
-            
+
             if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
             }
@@ -330,17 +346,16 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             dispatch(setConnected(false));
             dispatch(setDashboardToLoadAfterConnecting(null));
             dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
-            if(Object.keys(paramsToSetAfterConnecting).length > 0) {
+            if (Object.keys(paramsToSetAfterConnecting).length > 0) {
                 dispatch(setParametersToLoadAfterConnecting(null));
             }
 
             dispatch(setWelcomeScreenOpen(true));
-            
+
             if (clearNotificationAfterLoad) {
                 dispatch(clearNotification());
             }
             dispatch(handleSharedDashboardsThunk());
-            dispatch(setConnectionModalOpen(false));
             dispatch(setReportHelpModalOpen(false));
             dispatch(setAboutModalOpen(false));
         }

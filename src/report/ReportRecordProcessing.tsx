@@ -124,7 +124,16 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
         const value = record._fields[record._fieldLookup[numericOrDatetimeFieldName]];
         const className = getRecordType(value);
         if (className == "dateTime") {
-            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString();
+            if(value.toString().includes(".")){
+                // Nivo charts do not support time strings with millisecond accuracy, so we get rid of those.
+                record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString().split('.')[0] + "Z";
+            }else{
+                record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString();
+            }
+
+        } else if (className == "date") {
+            // Similarly, for dates, we add the suffix
+            record._fields[record._fieldLookup[numericOrDatetimeFieldName]] = value.toString().split("Z")[0] + "T00:00:00Z";   
         } else if (className !== "integer" && className !== "number") {
             record = null;
         }
