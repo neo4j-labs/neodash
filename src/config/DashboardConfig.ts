@@ -35,6 +35,12 @@ export const DASHBOARD_SETTINGS = {
         default: false,
         helperText: "This disables the automatic row limiting feature. When disabled, always ensure your queries are not returning too many rows."
     },
+    "resizing": {
+        label: "Resize Mode",
+        type: SELECTION_TYPES.LIST,
+        values: ["bottom-right", "all"] ,
+        helperText: "These are the resize handle options shared across all reports. "
+    },
     "pagenumber": {
         label: "Page Number",
         type: SELECTION_TYPES.NUMBER,

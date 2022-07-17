@@ -47,6 +47,14 @@ export const NeoPage = (
     const [lastElement, setLastElement] = React.useState(<div key={getReportIndex(pagenumber, 999999)}></div>);
     const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
+    const availableHandles = () => {
+
+    if(dashboardSettings.resizing && dashboardSettings.resizing == "bottom-right") {
+        return ["se"]
+        }else{ 
+        return ["s", "w", "e", "sw",  "se"];
+        }
+    }
 
     /**
      * Based on the current layout, determine where the 'add report' card should be placed.
@@ -89,7 +97,8 @@ export const NeoPage = (
                     w: report.width !== undefined ? Math.max(parseInt(report.width), 2) : 3,
                     h: report.height !== undefined ? Math.max(parseInt(report.height), 1) : 2,
                     minW: 2,
-                    minH: 1
+                    minH: 1,
+                    resizeHandles: availableHandles()
                 }
             }), {
                 x: x,
@@ -115,7 +124,8 @@ export const NeoPage = (
     useEffect(() => {
         setAnimated(false);
         recomputeLayout();
-    }, [reports])
+    }, [reports, dashboardSettings.resizing])
+
 
     const content = (
         <div style={{ paddingTop: "52px" }}>
