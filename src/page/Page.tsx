@@ -21,9 +21,9 @@ export const NeoPage = (
         dashboardSettings, // global settings for the entire dashboard.
         pagenumber, // The page number to render.
         reports = [], // list of reports as defined in the dashboard state.
-        onCreatePressed = () => {},  // callback for when the user wants to add a new report.
-        onClonePressed = (index: number, x: number, y: number) => {}, // callback/action to take when a user wants to clone a report
-        onRemovePressed = (index: number) => {}, // action to take when a report gets removed.
+        onCreatePressed = () => { },  // callback for when the user wants to add a new report.
+        onClonePressed = (index: number, x: number, y: number) => { }, // callback/action to take when a user wants to clone a report
+        onRemovePressed = (index: number) => { }, // action to take when a report gets removed.
         isLoaded = true, // Whether the page is loaded and the cards can be displayed.
         onPageLayoutUpdate = (newLayout: object) => { }  // action to take when the page layout is updated.
     }) => {
@@ -49,10 +49,10 @@ export const NeoPage = (
 
     const availableHandles = () => {
 
-    if(dashboardSettings.resizing && dashboardSettings.resizing == "bottom-right") {
-        return ["se"]
-        }else{ 
-        return ["s", "w", "e", "sw",  "se"];
+        if (dashboardSettings.resizing && dashboardSettings.resizing == "all") {
+            return ["s", "w", "e", "sw", "se"];
+        } else {
+            return ["se"];
         }
     }
 
