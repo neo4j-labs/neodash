@@ -1,14 +1,14 @@
 import NeoBarChart from "../chart/BarChart";
-import NeoGraphChart from "../chart/GraphChart";
-import NeoIFrameChart from "../chart/IFrameChart";
-import NeoJSONChart from "../chart/JSONChart";
-import NeoLineChart from "../chart/LineChart";
-import NeoMapChart from "../chart/MapChart";
-import NeoPieChart from "../chart/PieChart";
-import NeoTableChart from "../chart/TableChart";
-import NeoSunburstChart from "../chart/SunburstChart";
-import NeoCirclePackingChart from "../chart/CirclePackingChart";
-import NeoTreeMapChart from "../chart/TreeMapChart";
+import NeoGraphChart from "../chart/graph/GraphChart";
+import NeoIFrameChart from "../chart/iframe/IFrameChart";
+import NeoJSONChart from "../chart/json/JSONChart";
+import NeoLineChart from "../chart/line/LineChart";
+import NeoMapChart from "../chart/map/MapChart";
+import NeoPieChart from "../chart/pie/PieChart";
+import NeoTableChart from "../chart/table/TableChart";
+import NeoSunburstChart from "../chart/sunburst/SunburstChart";
+import NeoCirclePackingChart from "../chart/circlepacking/CirclePackingChart";
+import NeoTreeMapChart from "../chart/treemap/TreeMapChart";
 
 export const EXAMPLE_REPORTS = [
     {
