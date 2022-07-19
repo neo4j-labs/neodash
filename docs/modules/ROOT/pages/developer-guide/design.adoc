@@ -1,0 +1,48 @@
+= Design
+
+This page contains some key guidelines for design of the application.
+This entails code architecture, as well as UX/UI design.
+
+== File Structure
+
+The source code of NeoDash is organized as a flat file structure based
+on components. Given a component `ABC` is to be added, you should create
+a directory called `abc` with the following files:
+
+* `ABC.tsx` (component renderer)
+* `ABCActions.ts` (objects defining state manipulation)
+* `ABCReducer.ts` (handling state changes based on actions)
+* `ABCSelectors.ts` (used by components to retrieve part of the state)
+* `ABCThunks.ts` (Complex state handling logic, to fire one or more
+actions)
+
+=== Structure of the other folders
+
+....
+conf: nginx configuration for Docker image.
+dist: directory for generated webpack files.
+doc: documentation (to be moved to wiki)
+node_modules: downloaded dependencies
+public: style files/images. Runtime app config.
+scripts: utility scripts for deployment.
+src: source code. 
+target: compiled package as tgz file.
+.babelrc: javascript compiled settings.
+.gitignore: gitignore files.
+.npmignore: files ignored by the npm package.
+Dockerfile: docker image definition.
+....
+
+== UX Design
+
+At it’s core, NeoDash aims to be a tool that is _easy to learn, but hard
+to master_. This translates into the following five design principles in
+mind:
+
+[arabic]
+. Use a limited set of core visualizations, with high customizability.
+. It should be easy to get started without reading documentation.
+. The tool should be self-documenting.
+. Complex data transformations should be done by dashboard builders in
+Cypher, and not by the application.
+. The tool should be easy to extend with custom visualizations.
