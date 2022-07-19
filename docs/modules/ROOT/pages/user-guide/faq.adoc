@@ -1,0 +1,91 @@
+= FAQ
+
+== 1. How can I learn more about NeoDash?
+
+To learn more, check out the following list of resources (blogs, videos
+and sites): 
+
+- https://www.youtube.com/watch?v=Ygzj0Y4cYm4[NeoDash 2.0 in
+Five Minutes] 
+- https://www.youtube.com/watch?v=vjZ9M7JpExA[NeoDash 2.0 - Hands On at Neo4j Live] 
+- https://medium.com/p/ddc938ff82fa[Investigating Supply Chains with NeoDash] 
+- https://thatdavestevens.medium.com/social-recommendations-slack-neo4j-and-neodash-fe916588e65b[Social Recommendations with Neo4j & NeoDash] 
+- https://neo4j.com/developer-blog/bitcoin-transactions-dashboard-neo4j-neodash/[Real-Time Dashboard of Bitcoin Transactions With Neo4j and NeoDash]
+- https://medium.com/@a.emrevarol/european-natural-gas-network-via-knowledge-graph-3c3decb5f2ec[European
+Natural Gas Pipelines] 
+- http://blog.bruggen.com/2020/11/exporting-spotify-playlists-into-neo4j.html[Exporting Spotify Playlists into Neo4j] 
+- https://nielsdejong.nl/neo4j%20projects/2021/12/14/neodash-2.0-a-brand-new-way-of-visualizing-neo4j-data.html[NeoDash
+2.0 Release Overview] 
+- https://nielsdejong.nl/neo4j%20projects/2021/06/06/neodash-1.1-extensible-interactive-dashboards.html[NeoDash
+1.1 Release Overview] 
+- https://nielsdejong.nl/neo4j%20projects/2020/11/16/neodash[NeoDash 1.0
+Release Overview]
+
+_Have a blog post about NeoDash you’d like to share? Let us know and we
+can add it to this list!_
+
+== 2. Is NeoDash free to use?
+
+NeoDash 2.X is available under the
+https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 license], which
+means you can use it for free for with your project.
+
+____
+Keep in mind! As NeoDash is a https://neo4j.com/labs/[Neo4j Labs]
+project, it is not part of the official Neo4j product suite, and is not
+supported as part of a Neo4j license. (See also question #8 below…)
+____
+
+== 3. Can I publish the dashboard that I built?
+
+When you’re done building a dashboard and want to show to others as a
+read-only web page, you can set up a link:Standalone%20Mode[Standalone
+Mode] deployment of NeoDash.
+
+If you need help setting this up, please contact the
+mailto:niels.dejong@neo4j.com[team] and we can help out.
+
+== 4. Is NeoDash Production Ready?
+
+NeoDash is safe to be used in a production environment. As it is a
+reporting tool, keep the following things in mind: 
+
+- Always use *read-only* Neo4j accounts when connecting to a dashboard. 
+- Always deploy NeoDash with SSL, so that an encrypted Neo4j connection must be
+used. 
+- As NeoDash accesses Neo4j directly, make sure you only give
+access to the right people. As a rule of thumb, you should give NeoDash
+access to the people that can also see Bloom.
+
+For other questions regarding setting up your own production deployment,
+please mailto:niels.dejong@neo4j.com[contact us].
+
+== 5. Can I use NeoDash with Neo4j Community Edition?
+
+Yes, NeoDash can be used with any type of Neo4j deployment (On-premise,
+cloud, or fully managed in Neo4j Aura). We do however recommend that you use the
+Enterprise version, as it lets you create a
+dedicated read-only user for reporting.
+
+== 6. I’m missing a feature. Can I ask for help?
+Feature requests and bug reports are more than welcome. Please open an
+issue on https://github.com/neo4j-labs/neodash/issues[Github]. Issues
+will be addressed on a best-effort basis.
+
+If you’re looking for a specific feature with high priority, you can
+reach out to the mailto:niels.dejong@neo4j.com[Neo4j Team].
+
+== 7. How can I contribute to NeoDash myself?
+
+NeoDash is an open-source tool that can be extended by anyone. If you
+are interested in contributing, please check out the
+https://github.com/neo4j-labs/neodash[Github repository].
+
+Aside from code contributions, we are also very happy to hear about how
+you use NeoDash. If you have a blog post, podcast or video of your graph
+dashboard, let us know!
+
+== 8. Can I get professional help with NeoDash?
+
+If you are interested in a services agreement to support your NeoDash deployment, please reach out to the
+mailto:niels.dejong@neo4j.com[Neo4j Services Team].

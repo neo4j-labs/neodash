@@ -1,0 +1,36 @@
+= Quickstart
+
+There are three easy ways to run NeoDash and start dashboarding your Neo4j data:
+
+. The latest version is always available online:
+https://neodash.graphapp.io.
+. Neo4j Desktop: Install it from the https://install.graphapp.io[Graph
+App Gallery].
+. Using Docker:
+```
+docker pull nielsdejong/neodash:latest      
+docker run -it --rm -p 5005:5005 nielsdejong/neodash
+```
+
+Or, build it yourself:
+```
+git clone https://github.com/nielsdejong/neodash     
+npm install      
+npm run dev
+```
+
+NeoDash connects to any recent version of the Neo4j database. (Neo4j 4.0
+or later). The quickest way to get started is to create a free cloud
+database on https://neo4j.io[Neo4j Aura].
+
+To get started with building your own dashboard, see the Dashboards
+page.
+
+== NeoDash in Five Minutes
+
+See the video below for tips on how to get started with NeoDash in 5 minutes:
+https://www.youtube.com/watch?v=Ygzj0Y4cYm4[image:https://img.youtube.com/vi/Ygzj0Y4cYm4/0.jpg[Youtube
+Video]]
+
+See also the link:../user-guide/FAQ#1-how-can-i-learn-more-about-neodash[list of
+blog posts] in the FAQ.

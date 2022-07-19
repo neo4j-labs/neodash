@@ -1,0 +1,26 @@
+= Raw JSON
+
+The Raw JSON report renders the JSON response received from Neo4j
+directly. This is typically used for debugging queries, or,
+understanding the exact data types being returned from Neo4j.
+
+== Examples
+
+=== Raw JSON
+
+....
+MATCH (n)
+RETURN COUNT(n)
+....
+
+image::json.png[Basic Value]
+
+== Advanced Settings
+
+[width="100%",cols="19%,17%,26%,38%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Auto-run query |on/off |on |when activated automatically runs the query
+when the report is displayed. When set to `off', the query is displayed
+and will need to be executed manually.
+|===

@@ -74,7 +74,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
     };
 
     return (
-        <div className={`card-view ${expanded ? "expanded" : ""}`}>
+        <div className={`card-view ${expanded ? "expanded" : ""}`} style={settings && settings.backgroundColor ? {backgroundColor: settings.backgroundColor} : {}}>
             {reportHeader}
             {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
             <ReportItemContainer style={{ height: expanded ? (withoutFooter ? "calc(100% - 69px)" : "calc(100% - 79px)") : cardHeight }}>
