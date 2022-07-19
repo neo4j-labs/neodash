@@ -1,7 +1,7 @@
 import React from 'react'
 import { ResponsiveCirclePacking } from '@nivo/circle-packing'
 import {  ExtendedChartReportProps } from '../ChartProps'
-import { checkResultKeys, mutateName, processHierarchyFromRecords, findObject, flatten } from '../Utils'
+import { checkResultKeys, mutateName, processHierarchyFromRecords, findObject, flatten } from '../ChartUtils'
 import { useState } from 'react'
 import { Tooltip } from '@material-ui/core'
 import RefreshIcon from '@material-ui/icons/Refresh';

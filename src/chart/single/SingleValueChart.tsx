@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { ChartProps } from '../Chart';
-
 import { renderValueByType } from '../../report/ReportRecordProcessing';
 import { evaluateRulesOnNeo4jRecord } from '../../report/ReportRuleEvaluator';
 

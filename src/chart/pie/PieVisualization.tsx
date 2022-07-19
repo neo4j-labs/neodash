@@ -1,7 +1,7 @@
 import React from 'react'
 import { ResponsivePie } from '@nivo/pie'
 import { ChartReportProps, ExtendedChartReportProps } from '../ChartProps'
-import { checkResultKeys, recordToNative } from '../Utils'
+import { checkResultKeys, recordToNative } from '../ChartUtils'
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
 
 export default function PieVisualization(props: ExtendedChartReportProps) {

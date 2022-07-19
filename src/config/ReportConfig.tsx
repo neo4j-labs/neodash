@@ -1,7 +1,7 @@
 
 import React from 'react';
 import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
-import NeoBarChart from '../chart/BarChart';
+import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoJSONChart from '../chart/json/JSONChart';
@@ -224,7 +224,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 250,
         settings: {
             "legend": {
@@ -343,7 +342,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 250,
         settings: {
             "legend": {
@@ -467,7 +465,6 @@ export const REPORT_TYPES = {
             },
         },
         maxRecords: 250,
-        useRecordMapper: true,
         settings: {
             "legend": {
                 label: "Show Legend",
@@ -714,7 +711,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 3000,
         settings: {
             "enableArcLabels": {
@@ -798,7 +794,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 3000,
         settings: {
             "interactive": {
@@ -872,7 +867,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 3000,
         settings: {
             "interactive": {

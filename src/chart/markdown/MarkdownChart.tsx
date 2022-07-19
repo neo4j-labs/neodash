@@ -3,7 +3,7 @@ import React from 'react';
 import { ChartProps } from '../Chart';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
-import { replaceDashboardParameters } from './util/ChartUtils';
+import { replaceDashboardParameters } from '../ChartUtils';
 
 /**
  * Renders Markdown text provided by the user.

@@ -1,14 +1,11 @@
 
 import React, { useEffect } from 'react';
 import { ChartProps } from '../Chart';
-import { Icon, TextareaAutosize } from '@material-ui/core';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../../report/ReportRecordProcessing';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
-import useDimensions from "react-cool-dimensions";
 import Marker from 'react-leaflet-enhanced-marker';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import LocationOnTwoToneIcon from '@material-ui/icons/LocationOnTwoTone';
 
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode } from '../../report/ReportRuleEvaluator';

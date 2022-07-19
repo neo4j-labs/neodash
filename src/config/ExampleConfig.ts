@@ -1,4 +1,4 @@
-import NeoBarChart from "../chart/BarChart";
+import NeoBarChart from "../chart/bar/BarChart";
 import NeoGraphChart from "../chart/graph/GraphChart";
 import NeoIFrameChart from "../chart/iframe/IFrameChart";
 import NeoJSONChart from "../chart/json/JSONChart";

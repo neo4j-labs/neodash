@@ -12,7 +12,7 @@ import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotification } from '../application/ApplicationActions';
 import { createNotificationThunk } from '../page/PageThunks';
-import { downloadComponentAsImage } from '../chart/util/ChartUtils';
+import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 
 

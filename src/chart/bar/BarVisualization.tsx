@@ -1,7 +1,7 @@
 import React from 'react'
 import { ResponsiveBar } from '@nivo/bar'
-import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
-import { checkResultKeys, recordToNative } from './Utils';
+import { ChartReportProps, ExtendedChartReportProps } from '../ChartProps';
+import { checkResultKeys, recordToNative } from '../ChartUtils';
 import { green, grey } from '@material-ui/core/colors'
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 

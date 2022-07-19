@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line';
-import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps';
-import { recordToNative } from './Utils';
+import { ChartReportProps, ExtendedChartReportProps } from '../ChartProps';
+import { recordToNative } from '../ChartUtils';
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 
 interface LineChartData {

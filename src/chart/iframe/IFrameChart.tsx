@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ChartProps } from '../Chart';
-import { replaceDashboardParameters } from './util/ChartUtils';
+import { replaceDashboardParameters } from '../ChartUtils';
 
 /**
  * Renders an iFrame of the URL provided by the user.

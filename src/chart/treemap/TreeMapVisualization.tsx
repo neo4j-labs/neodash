@@ -1,7 +1,7 @@
 import React from 'react'
 import { ResponsiveTreeMap  } from '@nivo/treemap'
 import {  ExtendedChartReportProps } from '../ChartProps'
-import { checkResultKeys,  mutateName, processHierarchyFromRecords, findObject, flatten } from '../Utils'
+import { checkResultKeys,  mutateName, processHierarchyFromRecords, findObject, flatten } from '../ChartUtils';
 import { useState } from 'react'
 import { Tooltip } from '@material-ui/core'
 import RefreshIcon from '@material-ui/icons/Refresh';

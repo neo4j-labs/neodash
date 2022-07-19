@@ -1,7 +1,7 @@
 import React from 'react';
 // import BarReport from "@graphapps/charts/dist/components/reports/bar";
-import { ChartProps } from './Chart';
-import BarVisualization from './visualizations/BarVisualization';
+import { ChartProps } from '../Chart';
+import BarVisualization from './BarVisualization';
 
 
 /**

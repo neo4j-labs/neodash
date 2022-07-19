@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChartProps } from '../Chart';
-import LineVisualization from './visualizations/LineVisualization';
+import LineVisualization from './LineVisualization';
 
 
 /**
