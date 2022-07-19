@@ -5,10 +5,13 @@ import { Icon, TextareaAutosize } from '@material-ui/core';
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../report/ReportRecordProcessing';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
+import HeatmapLayer from './HeatmapLayer';
 import useDimensions from "react-cool-dimensions";
 import Marker from 'react-leaflet-enhanced-marker';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LocationOnTwoToneIcon from '@material-ui/icons/LocationOnTwoTone';
+
+import { addressPoints } from './realworld.10000.js';
 
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
@@ -303,12 +306,19 @@ const NeoMapChart = (props: ChartProps) => {
         zoom={data.zoom ? data.zoom : 0}
         maxZoom={18}
         scrollWheelZoom={false}>
+        <HeatmapLayer
+        fitBoundsOnLoad
+        fitBoundsOnUpdate
+        points={addressPoints}
+        longitudeExtractor={m => m[1]}
+        latitudeExtractor={m => m[0]}
+        intensityExtractor={m => parseFloat(m[2])} />
         <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {markers}
-        {lines}
+        {/* {markers}
+        {lines} */}
     </MapContainer>;
 }
 
