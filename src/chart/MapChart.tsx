@@ -5,7 +5,7 @@ import { Icon, TextareaAutosize } from '@material-ui/core';
 import { categoricalColorSchemes } from '../config/ColorConfig';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../report/ReportRecordProcessing';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
-import HeatmapLayer from './HeatmapLayer';
+import { HeatmapLayer } from 'react-leaflet-heatmap-layer-v3';
 import useDimensions from "react-cool-dimensions";
 import Marker from 'react-leaflet-enhanced-marker';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -25,6 +25,7 @@ const update = (state, mutations) =>
 const NeoMapChart = (props: ChartProps) => {
 
     // Retrieve config from advanced settings
+    const layerType = props.settings && props.settings.layerType ? props.settings.layerType : "markers";
     const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : "color";
     const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : "large";
     const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : "width";
@@ -217,36 +218,37 @@ const NeoMapChart = (props: ChartProps) => {
         });
     }
 
-    // Render a node label tooltip
-    const renderNodeLabel = (node) => {
-        const selectedProp = props.selection && props.selection[node.firstLabel];
-        if (selectedProp == "(id)") {
-            return node.id;
+    if (layerType == "markers") {
+        // Render a node label tooltip
+        const renderNodeLabel = (node) => {
+            const selectedProp = props.selection && props.selection[node.firstLabel];
+            if (selectedProp == "(id)") {
+                return node.id;
+            }
+            if (selectedProp == "(label)") {
+                return node.labels;
+            }
+            if (selectedProp == "(no label)") {
+                return "";
+            }
+            return node.properties[selectedProp] ? node.properties[selectedProp].toString() : "";
         }
-        if (selectedProp == "(label)") {
-            return node.labels;
-        }
-        if (selectedProp == "(no label)") {
-            return "";
-        }
-        return node.properties[selectedProp] ? node.properties[selectedProp].toString() : "";
-    }
 
-    var markerMarginTop = "6px";
-    switch (defaultNodeSize) {
-        case "large":
-            markerMarginTop = "-5px";
-            break;
-        case "medium":
-            markerMarginTop = "3px";
-            break;
-        default:
-            break;
+        var markerMarginTop = "6px";
+        switch (defaultNodeSize) {
+            case "large":
+                markerMarginTop = "-5px";
+                break;
+            case "medium":
+                markerMarginTop = "3px";
+                break;
+            default:
+                break;
+        }
     }
 
     function createMarkers() {
         // Create markers to plot on the map
-
         return data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
             <Marker position={node.pos} key={i}
                 icon={<div style={{ color: node.color, textAlign: "center", marginTop: markerMarginTop }}>
@@ -268,6 +270,20 @@ const NeoMapChart = (props: ChartProps) => {
                 </Polyline>
             }
         });
+    }
+
+    function createHeatmap() {
+        // Create Heatmap layer to add on top of the map
+        let points = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
+            [node.pos[0], node.pos[1], 1]
+        );
+        return <HeatmapLayer
+                fitBoundsOnLoad
+                fitBoundsOnUpdate
+                points={points}
+                longitudeExtractor={m => m[1]}
+                latitudeExtractor={m => m[0]}
+                intensityExtractor={m => parseFloat(m[2])} />
     }
 
 
@@ -296,8 +312,9 @@ const NeoMapChart = (props: ChartProps) => {
 
 
 
-    const markers = createMarkers();
-    const lines = createLines();
+    const markers = layerType == "markers" ? createMarkers() : "";
+    const lines = layerType == "markers" ? createLines() : "";
+    const heatmap = layerType == "heatmap" ? createHeatmap() : "";
     const fullscreen = props.fullscreen ? props.fullscreen : true;
 
     // Draw the component.
@@ -306,19 +323,13 @@ const NeoMapChart = (props: ChartProps) => {
         zoom={data.zoom ? data.zoom : 0}
         maxZoom={18}
         scrollWheelZoom={false}>
-        <HeatmapLayer
-        fitBoundsOnLoad
-        fitBoundsOnUpdate
-        points={addressPoints}
-        longitudeExtractor={m => m[1]}
-        latitudeExtractor={m => m[0]}
-        intensityExtractor={m => parseFloat(m[2])} />
+        {heatmap}
         <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {/* {markers}
-        {lines} */}
+        {markers}
+        {lines}
     </MapContainer>;
 }
 

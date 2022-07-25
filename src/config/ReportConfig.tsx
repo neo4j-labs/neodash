@@ -602,6 +602,12 @@ export const REPORT_TYPES = {
         component: NeoMapChart,
         maxRecords: 1000,
         settings: {
+            "layerType": {
+                label: "Layer type",
+                type: SELECTION_TYPES.LIST,
+                values: ["markers", "heatmap"],
+                default: "markers"
+            },
             "nodeColorScheme": {
                 label: "Node Color Scheme",
                 type: SELECTION_TYPES.LIST,
