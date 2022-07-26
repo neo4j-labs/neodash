@@ -8,6 +8,7 @@ import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet
 import { HeatmapLayer } from 'react-leaflet-heatmap-layer-v3';
 import useDimensions from "react-cool-dimensions";
 import Marker from 'react-leaflet-enhanced-marker';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LocationOnTwoToneIcon from '@material-ui/icons/LocationOnTwoTone';
 
@@ -15,6 +16,7 @@ import { addressPoints } from './realworld.10000.js';
 
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
+import { Tonality } from '@material-ui/icons';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -36,6 +38,7 @@ const NeoMapChart = (props: ChartProps) => {
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
     const defaultNodeColor = "grey"; // Color of nodes without labels
     const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
+    const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : "";
 
     const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
@@ -274,8 +277,9 @@ const NeoMapChart = (props: ChartProps) => {
 
     function createHeatmap() {
         // Create Heatmap layer to add on top of the map
+        console.log(data.nodes);
         let points = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
-            [node.pos[0], node.pos[1], 1]
+            [node.pos[0], node.pos[1], intensityProp == "" ? 1 : extractIntensityProperty(node)]
         );
         return <HeatmapLayer
                 fitBoundsOnLoad
@@ -284,6 +288,16 @@ const NeoMapChart = (props: ChartProps) => {
                 longitudeExtractor={m => m[1]}
                 latitudeExtractor={m => m[0]}
                 intensityExtractor={m => parseFloat(m[2])} />
+    }
+
+    function extractIntensityProperty(node) {
+        // Extract the intensity property from a node.
+        if(node.properties[intensityProp]) {
+            // Parse int from Neo4j Integer type if it has this type
+            // Or return plain value (if already parsed as a standard integer or float)
+            return node.properties[intensityProp].low ?? node.properties[intensityProp];
+        }
+        return 0;
     }
 
 

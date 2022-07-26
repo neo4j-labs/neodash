@@ -608,6 +608,12 @@ export const REPORT_TYPES = {
                 values: ["markers", "heatmap"],
                 default: "markers"
             },
+            "clusterMarkers": {
+                label: "Cluster Markers",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "nodeColorScheme": {
                 label: "Node Color Scheme",
                 type: SELECTION_TYPES.LIST,
@@ -644,6 +650,11 @@ export const REPORT_TYPES = {
                 label: "Relationship Width Property",
                 type: SELECTION_TYPES.TEXT,
                 default: "width"
+            },
+            "intensityProp": {
+                label: "Intensity Property (for heatmap)",
+                type: SELECTION_TYPES.TEXT,
+                default: "intensity"
             },
             "hideSelections": {
                 label: "Hide Property Selection",
