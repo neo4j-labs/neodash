@@ -6,17 +6,11 @@ import { categoricalColorSchemes } from '../config/ColorConfig';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../report/ReportRecordProcessing';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
 import { HeatmapLayer } from 'react-leaflet-heatmap-layer-v3';
-import useDimensions from "react-cool-dimensions";
 import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import LocationOnTwoToneIcon from '@material-ui/icons/LocationOnTwoTone';
-
-import { addressPoints } from './realworld.10000.js';
-
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
-import { Tonality } from '@material-ui/icons';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -36,7 +30,7 @@ const NeoMapChart = (props: ChartProps) => {
     const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#666";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
-    const clusterMarkers = props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : true;
+    const clusterMarkers = props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
     const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : "";
     const defaultNodeColor = "grey"; // Color of nodes without labels
     const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
@@ -282,7 +276,6 @@ const NeoMapChart = (props: ChartProps) => {
 
     function createHeatmap() {
         // Create Heatmap layer to add on top of the map
-        console.log(data.nodes);
         let points = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
             [node.pos[0], node.pos[1], intensityProp == "" ? 1 : extractIntensityProperty(node)]
         );

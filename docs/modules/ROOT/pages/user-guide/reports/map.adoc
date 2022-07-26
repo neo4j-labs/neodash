@@ -79,7 +79,7 @@ image::map3.png[Artificial Map Data]
 [width="100%",cols="19%,17%,26%,38%",options="header",]
 |===
 |Name |Type |Default Value |Description
-|Layer type |List |markers |Allows you to choose between the standard map with markers, or a heatmap.
+|Layer Type |List |markers |Allows you to choose between the standard map with markers, or a heatmap.
 |Cluster markers |on/off |on |Whether to automatically cluster and expand the markers on the map.
 |Node Color Scheme |List |neodash |The color scheme to use for the node
 labels. Colors are assigned automatically (consequitevely) to the

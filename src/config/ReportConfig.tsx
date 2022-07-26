@@ -603,7 +603,7 @@ export const REPORT_TYPES = {
         maxRecords: 1000,
         settings: {
             "layerType": {
-                label: "Layer type",
+                label: "Layer Type",
                 type: SELECTION_TYPES.LIST,
                 values: ["markers", "heatmap"],
                 default: "markers"
@@ -612,7 +612,7 @@ export const REPORT_TYPES = {
                 label: "Cluster Markers",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
-                default: true
+                default: false
             },
             "nodeColorScheme": {
                 label: "Node Color Scheme",
