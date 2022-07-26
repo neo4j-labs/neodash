@@ -36,9 +36,10 @@ const NeoMapChart = (props: ChartProps) => {
     const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#666";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+    const clusterMarkers = props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : true;
+    const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : "";
     const defaultNodeColor = "grey"; // Color of nodes without labels
     const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
-    const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : "";
 
     const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
@@ -252,7 +253,7 @@ const NeoMapChart = (props: ChartProps) => {
 
     function createMarkers() {
         // Create markers to plot on the map
-        return data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
+        let markers = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
             <Marker position={node.pos} key={i}
                 icon={<div style={{ color: node.color, textAlign: "center", marginTop: markerMarginTop }}>
                     <LocationOnIcon fontSize={node.size}></LocationOnIcon>
@@ -262,6 +263,10 @@ const NeoMapChart = (props: ChartProps) => {
                     : <></>}
                 {createPopupFromNodeProperties(node)}
             </Marker>);
+        if(clusterMarkers) {
+            markers = <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
+        }
+        return markers;
     }
 
     function createLines() {
