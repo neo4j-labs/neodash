@@ -12,6 +12,7 @@ locations stored as a spatial property.
 Customizations are available to change several parts of the
 visualization, including the label for each node as well as the colors
 and sizes of the markers/lines.
+The nodes can also automatically cluster together and expand depending on the level of zoom. A heatmap mode is also available.
 
 == Examples
 
@@ -39,6 +40,24 @@ RETURN b, e, b2
 
 image::map2.png[Relationships on a Map]
 
+=== Clustered nodes on a map
+
+....
+MATCH (b:Brewery)
+RETURN b
+....
+
+image::map_cluster.png[Clustered nodes on a map]
+
+=== Heatmap
+
+....
+MATCH (b:Brewery)
+RETURN b
+....
+
+image::map_heatmap.png[Heatmap]
+
 === Artificial map data
 
 By returning a dictionary instead of a node directly, you can work
@@ -60,6 +79,8 @@ image::map3.png[Artificial Map Data]
 [width="100%",cols="19%,17%,26%,38%",options="header",]
 |===
 |Name |Type |Default Value |Description
+|Layer type |List |markers |Allows you to choose between the standard map with markers, or a heatmap.
+|Cluster markers |on/off |on |Whether to automatically cluster and expand the markers on the map.
 |Node Color Scheme |List |neodash |The color scheme to use for the node
 labels. Colors are assigned automatically (consequitevely) to the
 different labels returned by the Cypher query.
@@ -87,6 +108,8 @@ that directly maps to the HTML color value.
 relationship property to map to the arrow width. This lets you define
 widths on a relationship-specific level, if you have a property that
 directly maps to the width value.
+
+|Intensity Property (for heatmap)|Text|intensity|Optionally, and only for heatmaps, the node property to use as the intensity of that point on the heatmap. If left empty, all points will have the same intensity of 1. If one of the nodes in the results doesn't have the specific property, its intensity will be set to 0.
 
 |Hide Property Selection |on/off |off |If enabled, hides the property
 selector (footer of the visualization).
