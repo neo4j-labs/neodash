@@ -33,12 +33,10 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
     // Define query callback to allow reports to get extra data on interactions.
     const queryCallback = useCallback(
         (query, parameters, setRecords) => {
-            debouncedRunCypherQuery(driver, database, query, parameters, {}, [], 10,
+            debouncedRunCypherQuery(driver, database, query, parameters, 10,
                 (status) => { status == QueryStatus.NO_DATA ? setRecords([]) : null },
                 (result => setRecords(result)),
-                () => { return }, false,
-                false, false,
-                [], [], [], [], null);
+                () => { return });
         },
         [],
     );

@@ -38,7 +38,8 @@ export const DASHBOARD_SETTINGS = {
     "resizing": {
         label: "Resize Mode",
         type: SELECTION_TYPES.LIST,
-        values: ["bottom-right", "all"] ,
+        values: ["bottom-right", "all"],
+        default: "bottom-right",
         helperText: "These are the resize handle options shared across all reports. "
     },
     "pagenumber": {
