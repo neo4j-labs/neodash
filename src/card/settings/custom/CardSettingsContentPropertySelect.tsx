@@ -92,10 +92,10 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
         // Set query based on whether we are selecting a node or relationship property.
         onReportSettingUpdate('parameterName', new_parameter_name);
         if (settings['type'] == "Node Property") {
-            const newQuery = "MATCH (n:`" + entityType + "`) \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value ORDER BY size(value) ASC LIMIT 5";
+            const newQuery = "MATCH (n:`" + entityType + "`) \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value ORDER BY size(toString(value)) ASC LIMIT 5";
             onQueryUpdate(newQuery);
         } else if (settings['type'] == "Relationship Property"){
-            const newQuery = "MATCH ()-[n:`" + entityType + "`]->() \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value ORDER BY size(value) ASC LIMIT 5";
+            const newQuery = "MATCH ()-[n:`" + entityType + "`]->() \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value ORDER BY size(toString(value)) ASC LIMIT 5";
             onQueryUpdate(newQuery);
         } else {
             const newQuery = "RETURN true";
