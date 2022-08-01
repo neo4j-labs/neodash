@@ -1,5 +1,141 @@
 import domtoimage from 'dom-to-image';
 
+
+
+
+
+/**
+ * Converts a neo4j record entry to a readable string representation. 
+ */
+ export const convertRecordObjectToString = (entry) => {
+    if (entry == null || entry == undefined) {
+        return entry;
+    }
+    const className = entry.__proto__.constructor.name;
+    if (className == "String") {
+        return entry;
+    } else if (valueIsNode(entry)) {
+        return convertNodeToString(entry);
+    } else if (valueIsRelationship(entry)) {
+        return convertRelationshipToString(entry);
+    } else if (valueIsPath(entry)) {
+        return convertPathToString(entry);
+    }
+    return entry.toString();
+}
+
+/**
+ * Converts a neo4j node record entry to a readable string representation. 
+ * if it's a fieldType =="Node"
+ * Then, return
+ * 1. 'name' property, if it exists,
+ * 2. the 'title' property, if it exists,
+ * 3. the 'id' property, if it exists...
+ * 4. the 'uid' property, if it exists..
+ * 5. the ({labels}}, if they exist,
+ * 6. Node(id).
+ */
+const convertNodeToString = (nodeEntry => {
+    if (nodeEntry.properties.name) {
+        return nodeEntry.labels + "(" + nodeEntry.properties.name + ")";
+    }
+    if (nodeEntry.properties.title) {
+        return nodeEntry.labels + "(" + nodeEntry.properties.title + ")";
+    }
+    if (nodeEntry.properties.id) {
+        return nodeEntry.labels + "(" + nodeEntry.properties.id + ")";
+    }
+    if (nodeEntry.properties.uid) {
+        return nodeEntry.labels + "(" + nodeEntry.properties.uid + ")";
+    }
+    return nodeEntry.labels + "(" + "_id=" + nodeEntry.identity + ")";
+});
+
+
+// if it's a fieldType == "Relationship"
+const convertRelationshipToString = (relEntry => {
+    return relEntry.toString();
+});
+
+// if it's a fieldType == "Path"
+const convertPathToString = (pathEntry => {
+    return pathEntry.toString();
+});
+// Anything else, return the string representation of the object.
+
+
+
+/* HELPER FUNCTIONS FOR DETERMINING TYPE OF FIELD RETURNED FROM NEO4J */
+export function valueIsArray(value) {
+    const className = value.__proto__.constructor.name;
+    return className == "Array";
+}
+
+export function valueIsNode(value) {
+    // const className = value.__proto__.constructor.name;
+    // return className == "Node";
+    return (value && value["labels"] && value["identity"] && value["properties"]);
+}
+
+export function valueIsRelationship(value) {
+    // const className = value.__proto__.constructor.name;
+    // return className == "Relationship";
+    return (value && value["type"] && value["start"] && value["end"] && value["identity"] && value["properties"]);
+}
+
+export function valueIsPath(value) {
+    // const className = value.__proto__.constructor.name;
+    // return className == "Path"
+    return (value && value["start"] && value["end"] && value["segments"] && value["length"]);
+}
+
+export function valueisPoint(value) {
+    // Look at the properties and identify the type.
+    return (value && value["x"] && value["y"] && value["srid"]);
+}
+
+export function valueIsObject(value) {
+    // TODO - this will not work in production builds. Need alternative.
+    const className = value.__proto__.constructor.name;
+    return className == "Object";
+}
+
+export function getRecordType(value) {
+    // mui data-grid native column types are: 'string' (default),
+    // 'number', 'date', 'dateTime', 'boolean' and 'singleSelect'
+    // https://v4.mui.com/components/data-grid/columns/#column-types
+    // Type singleSelect is not implemented here
+    if (value === true || value === false) {
+        return 'boolean';
+    } else if (value === undefined) {
+        return 'undefined';
+    } else if (value === null) {
+        return 'null';
+    } else if (value.__isInteger__) {
+        return 'integer';
+    } else if (typeof (value) == "number") {
+        return 'number';
+    } else if (value.__isDate__) {
+        return 'date';
+    } else if (value.__isDateTime__) {
+        return 'dateTime';
+    } else if (valueIsNode(value)) {
+        return 'node';
+    } else if (valueIsRelationship(value)) {
+        return 'relationship';
+    } else if (valueIsPath(value)) {
+        return 'path';
+    } else if (valueIsArray(value)) {
+        return 'array';
+    } else if (valueIsObject(value)) {
+        return 'object';
+    }
+
+    // Use string as default type
+    return 'string';
+}
+
+
 /**
  * Basic function to convert a table row output to a CSV file, and download it.
  * TODO: Make this more robust. Probably the commas should be escaped to ensure the CSV is always valid.

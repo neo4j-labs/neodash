@@ -71,15 +71,15 @@ export const NeoReport = ({
 
         const defaultKeyField = (REPORT_TYPES[type].selection) ? Object.keys(REPORT_TYPES[type].selection).find(field => REPORT_TYPES[type].selection[field].key == true) : undefined;
         const useNodePropsAsFields = REPORT_TYPES[type].useNodePropsAsFields == true;
-        const refreshOnSelectionChange = REPORT_TYPES[type].refreshOnSelectionChange == true;
+        const useReturnValuesAsFields = REPORT_TYPES[type].useReturnValuesAsFields == true;
 
         if (debounced) {
             setStatus(QueryStatus.RUNNING);
             debouncedRunCypherQuery(driver, database, query, parameters, 
-                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, refreshOnSelectionChange, HARD_ROW_LIMITING,  queryTimeLimit);
+                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, useReturnValuesAsFields, HARD_ROW_LIMITING,  queryTimeLimit);
         } else {
             runCypherQuery(driver, database, query, parameters,
-                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, refreshOnSelectionChange, HARD_ROW_LIMITING,  queryTimeLimit);
+                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, useReturnValuesAsFields, HARD_ROW_LIMITING,  queryTimeLimit);
         }
     };
 
@@ -103,9 +103,7 @@ export const NeoReport = ({
                 }, Math.min(refreshRate, 86400) * 1000.0));
             }
         }
-    }, REPORT_TYPES[type].refreshOnSelectionChange == true ?
-        [disabled, query, JSON.stringify(parameters), fields ? fields : [], JSON.stringify(selection)] :
-        [disabled, query, JSON.stringify(parameters), null, null])
+    }, [disabled, query, JSON.stringify(parameters)])
 
     // Define query callback to allow reports to get extra data on interactions.
     const queryCallback = useCallback(

@@ -37,11 +37,11 @@ export async function runCypherQuery(driver,
     setFields = (fields) => { },
     fields = [],
     useNodePropsAsFields = false,
-    refreshOnSelectionChange = false,
+    useReturnValuesAsFields = false,
     useHardRowLimit = false,
     queryTimeLimit = 20,
 ) {
-
+    console.log(query);
     // If no query specified, we don't do anything.
     if (query.trim() == "") {
         setFields([]);
@@ -75,13 +75,11 @@ export async function runCypherQuery(driver,
                 return
             }
 
-            if (refreshOnSelectionChange == true) {
+            if (useReturnValuesAsFields) {
                 // Send a deep copy of the returned record keys as the set of fields.
                 const newFields = (records && records[0] && records[0].keys) ? records[0].keys.slice() : [];
                 if (!_.isEqual(newFields, fields)) {
                     setFields(newFields);
-                    transaction.commit();
-                    return
                 }
 
             } else if (useNodePropsAsFields) {

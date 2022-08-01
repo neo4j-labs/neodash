@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { ChartProps } from '../Chart';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../../report/ReportRecordProcessing';
+import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../../chart/ChartUtils';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
 import Marker from 'react-leaflet-enhanced-marker';
 import LocationOnIcon from '@material-ui/icons/LocationOn';

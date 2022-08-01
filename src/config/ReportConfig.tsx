@@ -207,7 +207,7 @@ export const REPORT_TYPES = {
     "bar": {
         label: "Bar Chart",
         component: NeoBarChart,
-        refreshOnSelectionChange: true,
+        useReturnValuesAsFields: true,
         helperText: <div>A bar chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -326,7 +326,7 @@ export const REPORT_TYPES = {
     "pie": {
         label: "Pie Chart",
         component: NeoPieChart,
-        refreshOnSelectionChange: true,
+        useReturnValuesAsFields: true,
         helperText: <div>A pie chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -453,7 +453,7 @@ export const REPORT_TYPES = {
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
-        refreshOnSelectionChange: true,
+        useReturnValuesAsFields: true,
         helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.</div>,
         selection: {
             "x": {
@@ -697,7 +697,7 @@ export const REPORT_TYPES = {
     "sunburst": {
         label: "Sunburst Chart",
         component: NeoSunburstChart,
-        refreshOnSelectionChange: true,
+        useReturnValuesAsFields: true,
         helperText: <div>A Sunburst chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -781,7 +781,7 @@ export const REPORT_TYPES = {
     "circlePacking": {
         label: "Circle Packing",
         component: NeoCirclePackingChart,
-        refreshOnSelectionChange: true,
+        useReturnValuesAsFields: true,
         helperText: <div>A circle packing chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -855,7 +855,7 @@ export const REPORT_TYPES = {
     "treeMap": {
         label: "Treemap",
         component: NeoTreeMapChart,
-        refreshOnSelectionChange: true,
+        useReturnValuesAsFields: true,
         helperText: <div>A Tree Map chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {

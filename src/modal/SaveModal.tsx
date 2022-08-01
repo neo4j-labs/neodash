@@ -16,7 +16,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { getDashboardJson } from './ModalSelectors';
-import { valueIsArray, valueIsObject } from '../report/ReportRecordProcessing';
+import { valueIsArray, valueIsObject } from '../chart/ChartUtils';
 import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';

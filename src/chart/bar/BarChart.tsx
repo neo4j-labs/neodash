@@ -1,32 +1,38 @@
+import { ResponsiveBar } from '@nivo/bar';
 import React from 'react';
+import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 import { ChartProps } from '../Chart';
+import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 
 /**
  * Embeds a BarReport (from Charts) into NeoDash.
  *  This visualization was extracted from https://github.com/neo4j-labs/charts.
+ * TODO: There is a regression here with nivo > 0.73 causing the bar chart to have a very slow re-render.
  */
 const NeoBarChart = (props: ChartProps) => {
-    
+
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
     }
-    console.log(props);
-    return <>Nope</>
-    const error = checkResultKeys(first, ['index', 'key', 'value'])
+    const records = props.records;
+    const selection = props.selection;
 
-    if (error !== false) {
-        return <p>{error.message}</p>
+    if(!selection){
+        return <>Invalid selection.</>;
     }
-
+ 
     const keys: string[] = []
 
     const data: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
-        const index = recordToNative(row.get('index'))
+        const index = convertRecordObjectToString(row.get(selection['index']));
         const idx = data.findIndex(item => item.index === index)
 
-        const key = recordToNative(row.get('key'))
-        const value = recordToNative(row.get('value'))
+        const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
+        const value = recordToNative(row.get(selection['value']))
 
+        if(isNaN(value)){
+            return data;
+        }
         if (!keys.includes(key)) {
             keys.push(key)
         }
@@ -82,8 +88,8 @@ const NeoBarChart = (props: ChartProps) => {
     }
 
     return <ResponsiveBar
-        layout={props.layout}
-        groupMode={props.stacked ? 'stacked' : 'grouped'}
+        layout={settings.layout == "horizontal" ? 'horizontal' : 'vertical'}
+        groupMode={settings.groupMode == "stacked" ? 'stacked' : 'grouped'}
         data={data}
         keys={keys}
         indexBy="index"
@@ -135,8 +141,6 @@ const NeoBarChart = (props: ChartProps) => {
         animate={false}
         motionStiffness={90}
         motionDamping={15}
-
-        {...props.config}
     />
 
 
