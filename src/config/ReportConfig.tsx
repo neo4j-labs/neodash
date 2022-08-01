@@ -922,7 +922,7 @@ export const REPORT_TYPES = {
         helperText: <div>A Choropleth Map chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
-                label: "code",
+                label: "Code",
                 type: SELECTION_TYPES.TEXT
             },
             "value": {
@@ -938,8 +938,6 @@ export const REPORT_TYPES = {
             }
         },
         useRecordMapper: true,
-        //useNodePropsAsFields: true,
-        //autoAssignSelectedProperties: true,
         maxRecords: 3000,
         settings: {
             "interactive": {
@@ -948,11 +946,17 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "colors": {
                 label: "Color Scheme",
                 type: SELECTION_TYPES.LIST,
-                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
-                default: "set2"
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3", "YlOrRd"],
+                default: "nivo"
             },
             "borderWidth": {
                 label: "Rectangle border width (px)",
@@ -986,27 +990,22 @@ export const REPORT_TYPES = {
                 default: true
             },
             "projectionScale": {
-                label: "projectionScale",
+                label: "Projection Scale",
                 type: SELECTION_TYPES.NUMBER,
                 default: 100
             },
             "projectionTranslationX": {
-                label: "projectionTranslationX",
+                label: "Projection x translation",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0.5
             },
             "projectionTranslationY": {
-                label: "projectionTranslationY",
+                label: "Projection y translation",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0.5
             },
-            "countrySpec": {
-                label: "countrySpec",
-                type: SELECTION_TYPES.TEXT,
-                default: ""
-            },
             "labelProperty": {
-                label: "labelProperty",
+                label: "Property containing the tooltip name",
                 type: SELECTION_TYPES.TEXT,
                 default: "properties.name"
             }
