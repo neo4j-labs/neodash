@@ -1,6 +1,6 @@
 = Pages
 
-A page is a collection of link:../Reports[reports] that can be viewed at
+A page is a collection of link:../reports[reports] that can be viewed at
 the same time. Each page can have an unlimited number of reports in it,
 and will switch to a scrollable view when the number of reports do not
 fit in the user’s window.
