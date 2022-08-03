@@ -17,5 +17,5 @@ applicable).
 
 If you have a request for a feature, or have found a bug, consider
 creating an https://github.com/neo4j-labs/neodash/issues[issue] on
-GitHub. Please include a link:./Testing#debug-report[Debug Report] if
+GitHub. Please include a link:./testing#debug-report[Debug Report] if
 available.

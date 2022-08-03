@@ -138,7 +138,7 @@ allowed to take before being cancelled automatically. Increase this if
 you have complex analytical queries.
 
 |Disable Row Limiting |Yes |off |If enabled, the automatic
-link:Reports#row-limiting[row limiting] feature of dashboards is
+link:reports#row-limiting[row limiting] feature of dashboards is
 disabled.
 
 |Page Number |No |0 |The current page number of the dashboard being
