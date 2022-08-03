@@ -21,7 +21,6 @@ actions)
 ....
 conf: nginx configuration for Docker image.
 dist: directory for generated webpack files.
-doc: documentation (to be moved to wiki)
 node_modules: downloaded dependencies
 public: style files/images. Runtime app config.
 scripts: utility scripts for deployment.
