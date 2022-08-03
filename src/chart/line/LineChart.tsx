@@ -17,7 +17,6 @@ const NeoLineChart = (props: ChartProps) => {
         return <>No data, re-run the report.</>
     }
     const records = props.records;
-    const first = records[0];
     const selection = props.selection;
 
     if (!selection || selection.value.length == 0) {
