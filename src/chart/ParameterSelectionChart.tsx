@@ -25,7 +25,6 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     useEffect(() => {
         const queryTimeOut = setTimeout(() => {
             debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText, ...props.parameters }, setExtraRecords);
-
         }, 150);
         return () => clearTimeout(queryTimeOut);
     }, [inputText, query, props.parameters]);
@@ -124,11 +123,11 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                     if (newValue && newValue["low"]) {
                         newValue = newValue["low"];
                     }
-                    /*if (newValue == null && clearParameterOnFieldClear) {
+                    if (newValue == null && clearParameterOnFieldClear) {
                         props.setGlobalParameter(parameter, undefined);
                     } else {
                         props.setGlobalParameter(parameter, newValue);
-                    }*/
+                    }
                 }}
                 renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }}
                                                     placeholder="Start typing..."
