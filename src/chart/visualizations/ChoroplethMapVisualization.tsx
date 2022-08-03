@@ -6,9 +6,6 @@ import {
     recordToNative
 } from './Utils'
 import { useState, useEffect } from 'react'
-import { Tooltip } from '@material-ui/core'
-import RefreshIcon from '@material-ui/icons/Refresh';
-import { globeFeature, colombiaFeature } from '../util/ChoroplethFeatures'
 
 export default function ChroplethMapVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
