@@ -39,7 +39,7 @@ ____
 == 3. Can I publish the dashboard that I built?
 
 When you’re done building a dashboard and want to show to others as a
-read-only web page, you can set up a link:Standalone%20Mode[Standalone
+read-only web page, you can set up a link:standalone%20mode[Standalone
 Mode] deployment of NeoDash.
 
 If you need help setting this up, please contact the
