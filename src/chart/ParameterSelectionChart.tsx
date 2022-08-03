@@ -10,17 +10,38 @@ import NeoField from '../component/field/Field';
  */
 const NeoParameterSelectionChart = (props: ChartProps) => {
 
-    useEffect(() => {
-        debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText }, setExtraRecords);
-    }, [inputText, query]);
-
     const records = props.records;
     const query = records[0]["input"] ? records[0]["input"] : undefined;
     const parameter = props.settings && props.settings["parameterName"] ? props.settings["parameterName"] : undefined;
     const type = props.settings && props.settings["type"] ? props.settings["type"] : undefined;
     const suggestionsUpdateTimeout = props.settings && props.settings["suggestionsUpdateTimeout"] ? props.settings["suggestionsUpdateTimeout"] : 250;
     const setParameterTimeout = props.settings && props.settings["setParameterTimeout"] ? props.settings["setParameterTimeout"] : 1000;
-    
+
+    const currentValue = (props.getGlobalParameter && props.getGlobalParameter(parameter)) ? props.getGlobalParameter(parameter) : "";
+    const [extraRecords, setExtraRecords] = React.useState([]);
+    const [inputText, setInputText] = React.useState(currentValue);
+    const [value, setValue] = React.useState(currentValue);
+
+    useEffect(() => {
+        const queryTimeOut = setTimeout(() => {
+            debouncedQueryCallback && debouncedQueryCallback(query, { input: inputText, ...props.parameters }, setExtraRecords);
+
+        }, 150);
+        return () => clearTimeout(queryTimeOut);
+    }, [inputText, query, props.parameters]);
+
+
+    useEffect(() => {
+        const timeOutId = setTimeout(() => {
+            if(value == "")
+                debouncedSetGlobalParameter(parameter, undefined);
+            else
+                debouncedSetGlobalParameter(parameter, value);
+
+        }, 250);
+        return () => clearTimeout(timeOutId);
+    }, [value]);
+
     const debouncedQueryCallback = useCallback(
         debounce(props.queryCallback, suggestionsUpdateTimeout),
         [],
@@ -31,11 +52,6 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
         [],
     );
 
-   
-    const currentValue = (props.getGlobalParameter && props.getGlobalParameter(parameter)) ? props.getGlobalParameter(parameter) : "";
-    const [extraRecords, setExtraRecords] = React.useState([]);
-    const [inputText, setInputText] = React.useState(currentValue);
-    const [value, setValue] = React.useState(currentValue);
 
     // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
     if (query && value != currentValue && currentValue != inputText) {
@@ -108,15 +124,15 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                     if (newValue && newValue["low"]) {
                         newValue = newValue["low"];
                     }
-                    if (newValue == null && clearParameterOnFieldClear) {
+                    /*if (newValue == null && clearParameterOnFieldClear) {
                         props.setGlobalParameter(parameter, undefined);
                     } else {
                         props.setGlobalParameter(parameter, newValue);
-                    }
+                    }*/
                 }}
-                renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }} 
-                placeholder="Start typing..." 
-                label={helperText ? helperText : label + " " + property} variant="outlined" />}
+                renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }}
+                                                    placeholder="Start typing..."
+                                                    label={helperText ? helperText : label + " " + property} variant="outlined" />}
             />
         }
     </div>

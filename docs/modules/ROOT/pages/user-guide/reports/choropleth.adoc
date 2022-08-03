@@ -18,7 +18,7 @@ WITH c.code as code, count(e) as value
 RETURN code, value
 ----
 
-image::choropleth.png[Treemap Chart]
+image::choropleth.png[Choropleth Chart]
 
 == Advanced Settings
 
@@ -26,12 +26,12 @@ image::choropleth.png[Treemap Chart]
 |===
 |Name |Type |Default Value |Description
 |Enable interactivity |on/off |on |If enabled, turn on animations when a
-user hovers over a rectangle.
+user hovers over a polygon.
 
 |Color Scheme |List | |The color scheme to use for the choropleth. Country colors
 will vary according their min to max ratio.
 
-|Rectangle border width (px) |number |0 |The width of the border of each
+|Polygon border width (px) |number |0 |The width of the border of each
 rectangle.
 
 |Margin Left (px) |number |24 |The margin in pixels on the left side of

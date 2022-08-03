@@ -938,7 +938,7 @@ export const REPORT_TYPES = {
             }
         },
         useRecordMapper: true,
-        maxRecords: 3000,
+        maxRecords: 300,
         settings: {
             "interactive": {
                 label: "Enable interactivity",
@@ -959,7 +959,7 @@ export const REPORT_TYPES = {
                 default: "nivo"
             },
             "borderWidth": {
-                label: "Rectangle border width (px)",
+                label: "Polygon border width (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
             },
