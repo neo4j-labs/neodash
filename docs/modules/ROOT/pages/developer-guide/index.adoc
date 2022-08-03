@@ -2,15 +2,15 @@
 
 This guide contains information for developers looking to deploy NeoDash, or extend it for their own needs. 
 
-- link:Build-and-Run[Build & Run] 
-- link:Configuration[Configuration]
-- link:Standalone-Mode[Standalone Mode] 
-- link:Component-Overview[Component Overview] 
-- link:Design[Design] 
-- link:Adding-Visualizations[Adding Visualizations] 
-- link:State-Management[State Management] 
-- link:Testing[Testing]
-- link:Contributing[Contributing]
+- link:build-and-run[Build & Run] 
+- link:configuration[Configuration]
+- link:standalone-mode[Standalone Mode] 
+- link:component-overview[Component Overview] 
+- link:design[Design] 
+- link:adding-visualizations[Adding Visualizations] 
+- link:state-management[State Management] 
+- link:testing[Testing]
+- link:contributing[Contributing]
 
 == Prerequisites for extending NeoDash
 
