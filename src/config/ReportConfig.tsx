@@ -919,7 +919,7 @@ export const REPORT_TYPES = {
     "choropleth": {
         label: "Choropleth Map",
         component: NeoChoroplethMapChart,
-        helperText: <div>A Choropleth Map chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
+        helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Code",
@@ -941,7 +941,7 @@ export const REPORT_TYPES = {
         maxRecords: 300,
         settings: {
             "interactive": {
-                label: "Enable interactivity",
+                label: "Enable Interactivity",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
@@ -959,7 +959,7 @@ export const REPORT_TYPES = {
                 default: "nivo"
             },
             "borderWidth": {
-                label: "Polygon border width (px)",
+                label: "Polygon Border Width (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0
             },
@@ -984,7 +984,7 @@ export const REPORT_TYPES = {
                 default: 40
             },
             "autorun": {
-                label: "Auto-run query",
+                label: "Auto-run Query",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
@@ -995,17 +995,17 @@ export const REPORT_TYPES = {
                 default: 100
             },
             "projectionTranslationX": {
-                label: "Projection x translation",
+                label: "Projection X translation",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0.5
             },
             "projectionTranslationY": {
-                label: "Projection y translation",
+                label: "Projection Y translation",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0.5
             },
             "labelProperty": {
-                label: "Property containing the tooltip name",
+                label: "Tooltip Property",
                 type: SELECTION_TYPES.TEXT,
                 default: "properties.name"
             }
