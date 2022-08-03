@@ -17,7 +17,7 @@ image:standalone-architecture.png[image]
 
 == Option 1 - Standard Deployment (Non-Docker)
 
-First, build NeoDash as described link:../Build-and-Run[here]. After
+First, build NeoDash as described link:../build-and-run[here]. After
 building, you’ll have a `dist` directory that you can deploy to a web
 server.
 
@@ -51,7 +51,7 @@ docker run  -it --rm -p 5005:5005 \
 ....
 
 Make sure that all of the environment variables are set to the correct
-values. This is described in more detail link:../Configuration[here].
+values. This is described in more detail link:../configuration[here].
 
 ____
 Alternatively, environment variables from docker compose or a kubernetes
