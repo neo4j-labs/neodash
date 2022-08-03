@@ -955,7 +955,7 @@ export const REPORT_TYPES = {
             "colors": {
                 label: "Color Scheme",
                 type: SELECTION_TYPES.LIST,
-                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3", "YlOrRd"],
+                values: ["nivo", "BrBG", "RdYlGn", "YlOrRd", "greens"],
                 default: "nivo"
             },
             "borderWidth": {

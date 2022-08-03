@@ -43,9 +43,9 @@ export default function ChroplethMapVisualization(props: ExtendedChartReportProp
     const marginLeft = (settings["marginLeft"]) ? settings["marginLeft"] : 24;
     const marginTop = (settings["marginTop"]) ? settings["marginTop"] : 24;
     const marginBottom = (settings["marginBottom"]) ? settings["marginBottom"] : 40;
-    const interactive = (settings["interactive"]) ? settings["interactive"] : true;
+    const interactive = (settings["interactive"] !== undefined) ? settings["interactive"] : true;
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
-    const legend = (settings["legend"]) ? settings["legend"] : true;
+    const legend = (settings["legend"] !== undefined) ? settings["legend"] : true;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
     const projectionScale = (settings["projectionScale"]) ? settings["projectionScale"] : 100;
     const projectionTranslationX = (settings["projectionTranslationX"]) ? settings["projectionTranslationX"] : 0.5;
