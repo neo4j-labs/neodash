@@ -7,7 +7,7 @@ link:../Standalone-Mode[Standalone Mode] and SSO configurations.
 For a simple (non-Dockerized) deployment, these configuration parameters
 can be changed by modifying `dist/config.json` after you have built the
 application. When Docker image, these can be passed as environment
-variables. See link:../Standalone-Mode[Standalone Mode] for more on
+variables. See link:../standalone-mode[Standalone Mode] for more on
 Docker deployments.
 
 An example configuration for NeoDash (default, running in editor mode)
