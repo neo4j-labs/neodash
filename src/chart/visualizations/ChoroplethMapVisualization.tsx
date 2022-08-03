@@ -5,7 +5,7 @@ import {
     checkResultKeys,
     recordToNative
 } from './Utils'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Tooltip } from '@material-ui/core'
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { globeFeature, colombiaFeature } from '../util/ChoroplethFeatures'
@@ -38,8 +38,6 @@ export default function ChroplethMapVisualization(props: ExtendedChartReportProp
 
     let m = Math.max(...data.map(o => o.value));
 
-    //const [data, setData] = useState(commonProperties.data);
-    const [refreshable, setRefreshable] = useState(false);
     const settings = (props.settings) ? props.settings : {};
     const marginRight = (settings["marginRight"]) ? settings["marginRight"] : 24;
     const marginLeft = (settings["marginLeft"]) ? settings["marginLeft"] : 24;
@@ -56,7 +54,15 @@ export default function ChroplethMapVisualization(props: ExtendedChartReportProp
 
 
     //TODO Apply certain logic to determine different map features to display
-    const feature = globeFeature;
+    //const feature = globeFeature;
+
+    const [ feature, setFeature ] = useState({ features : []});
+
+    useEffect(() => {
+        fetch("https://raw.githubusercontent.com/plouc/nivo/master/website/src/data/components/geo/world_countries.json")
+            .then((res) => res.json())
+            .then((matched) => setFeature(matched));
+    }, []);
 
     return (
         <>
