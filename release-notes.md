@@ -1,12 +1,11 @@
-## NeoDash 2.1.2
-The 2.1.2 release contains some bug fixes and minor improvements to the application.
+## NeoDash 2.1.3
+The 2.1.3 release contains updates to the map visualization, as well as a new Choropleth map report type.
+Several usability improvements were also added, including fixing all links into the new documentation pages.
 
-Application changes:
-- Added button to clone (duplicate) a report inside a dashboard.
-- Added option to show/hide labels inside circle packing charts.
-- Changed dashboard layout compaction strategy to be more natural.
-- Fixed card headers not rendering correctly in read-only mode.
-- Fixed rendering issues for table columns containing null values.
-
-Operational changes:
-- Added support for username/password environment variables in Docker.
+- Extended the map visualization with a heatmap mode & marker clustering.
+- Added a Choropleth map visualization report type.
+- Added support for auto-linking into a predefined database from https://tools.neo4jlabs.com/.
+- Added optional background color setting for reports.
+- Added a new 'resize mode' for page layout creation.
+- Added support for drawing dates on a time chart (in addition to existing datetime types).
+- Fixed broken links in the documentation portal, all in-app links now point to this portal as well.

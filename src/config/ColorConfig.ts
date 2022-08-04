@@ -1,4 +1,4 @@
-import { schemeCategory10, schemeAccent, schemeDark2, schemePaired, schemePastel1, schemePastel2, schemeSet1, schemeSet2, schemeSet3 } from 'd3-scale-chromatic';
+import { schemeCategory10, schemeAccent, schemeDark2, schemePaired, schemePastel1, schemePastel2, schemeSet1, schemeSet2, schemeSet3, schemeYlOrRd, schemeGreens, schemeBrBG, schemeRdYlGn } from 'd3-scale-chromatic';
 
 export const categoricalColorSchemes = {
     neodash: ["#588c7e", "#f2e394", "#f2ae72", "#d96459", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569", "#ddd5af", "#d9ad7c", "#a2836e", "#674d3c"],
@@ -11,5 +11,9 @@ export const categoricalColorSchemes = {
     pastel2: schemePastel2,
     set1: schemeSet1,
     set2: schemeSet2,
-    set3: schemeSet3
+    set3: schemeSet3,
+    BrBG : schemeBrBG,
+    RdYlGn : schemeRdYlGn,
+    YlOrRd : schemeYlOrRd,
+    greens : schemeGreens
 };

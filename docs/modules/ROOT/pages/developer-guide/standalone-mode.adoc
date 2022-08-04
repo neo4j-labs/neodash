@@ -1,0 +1,59 @@
+= Standalone Mode
+
+Next to being a dashboard editor, NeoDash can be deployed in a
+`standalone mode' - allowing you set up a architecture to publish and
+read dashboards.
+
+Running in standalone modec mode will: 
+
+- Disable all editing options 
+- Have a hardcoded Neo4j URL and database name 
+- Load a dashboard from Neo4j with a fixed name.
+
+The diagram below illustrates how NeoDash standalone mode can be
+deployed next to a standard `Editor Mode' instance:
+
+image:standalone-architecture.png[image]
+
+== Option 1 - Standard Deployment (Non-Docker)
+
+First, build NeoDash as described link:../build-and-run[here]. After
+building, you’ll have a `dist` directory that you can deploy to a web
+server.
+
+To configure the app to run in standalone mode, you’ll need to edit
+`dist/config.json` and change the `standalone` property to `true`. The
+other variables inside `config.json` should also be configured to match
+the hostname, port and database name of your Neo4j instance. See
+Configuration for more on configuration variables.
+
+As `config.json` gets picked up at runtime by the application, users
+viewing the application will now access the dashboard in standalone
+mode.
+
+== Option 2 - Docker Deployment
+
+You can configure the app to run in standalone by passing environment
+variables to Docker:
+
+....
+docker run  -it --rm -p 5005:5005 \
+    -e ssoEnabled=false \
+    -e ssoDiscoveryUrl="https://example.com" \
+    -e standalone=true \
+    -e standaloneProtocol="neo4j" \
+    -e standaloneHost="localhost" \
+    -e standalonePort="7687" \
+    -e standaloneDatabase="neo4j" \
+    -e standaloneDashboardName="My Dashboard" \
+    -e standaloneDashboardDatabase="dashboards" \
+    nielsdejong/neodash
+....
+
+Make sure that all of the environment variables are set to the correct
+values. This is described in more detail link:../configuration[here].
+
+____
+Alternatively, environment variables from docker compose or a kubernetes
+deployment can be used.
+____

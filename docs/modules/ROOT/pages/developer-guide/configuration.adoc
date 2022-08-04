@@ -1,0 +1,136 @@
+= Configuration
+
+When using a custom NeoDash deployment, there are several settings that
+can be configured. These mostly relate to
+link:../standalone-mode[Standalone Mode] and SSO configurations.
+
+For a simple (non-Dockerized) deployment, these configuration parameters
+can be changed by modifying `dist/config.json` after you have built the
+application. When Docker image, these can be passed as environment
+variables. See link:../standalone-mode[Standalone Mode] for more on
+Docker deployments.
+
+An example configuration for NeoDash (default, running in editor mode)
+will look like this:
+
+....
+{
+    "ssoEnabled": false,
+    "ssoDiscoveryUrl": "https://example.com",
+    "standalone": false,
+    "standaloneProtocol": "neo4j",
+    "standaloneHost": "localhost",
+    "standalonePort": "7687",
+    "standaloneDatabase": "neo4j",
+    "standaloneDashboardName": "My Dashboard",
+    "standaloneDashboardDatabase": "dashboards",
+    "standaloneDashboardURL": ""
+}
+....
+
+== Configuration Options
+
+[width="100%",cols="19%,17%,26%,38%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|ssoEnabled |boolean |false |If enabled, lets users connect to Neo4j
+using SSO. This requires the app to be running in standalone mode, and a
+valid ssoDiscoveryUrl to be set.
+
+|ssoDiscoveryUrl |string |https://example.com |If ssoEnabled is true &
+standalone mode is enabled, the URL to retrieve SSO auth config from.
+
+|standalone |boolean |false |Determines whether to run NeoDash in editor
+mode (false), or reader mode (true). The terms ``Reader mode'' and
+``Standalone mode'' are used interchangibly.
+
+|standaloneProtocol |string |neo4j |When running in standalone mode, the
+protocol to used for the Neo4j driver. This shoudl be set to one of
+`neo4j`, `neo4j+s`, `neo4j+ssc`, `bolt`, `bolt+s`, or `bolt+ssc`.
+
+|standaloneHost |string |localhost |When running in standalone mode, the
+hostname to connect to. This should be *just* the hostname, no protocols
+or ports.
+
+|standalonePort |string |7687 |When running in standalone mode, the Bolt
+port to connect to.
+
+|standaloneDatabase |string |neo4j |When running in standalone mode, the
+database to use for reporting. Cypher queries used in reports will read
+data from this database.
+
+|standaloneUsername ⚠️ |string |… |A hidden config parameter enables you
+to set the username for standalone mode by default. Keep in mind this is
+a security risk, as it exposes the Neo4j username to anyone who can
+access the NeoDash deployment.
+
+|standalonePassword ⚠️ |string |… |A hidden config parameter enables you
+to set the password for standalone mode by default. If this value is set
+connections are also made automatically. Keep in mind this is a security
+risk, as it exposes the Neo4j username to anyone who can access the
+NeoDash deployment.
+
+|standaloneDashboardName |string |My Dashboard |The exact name
+(case-sensentive) of the dashboard to be loaded when running in
+standalone mode. This must be a dashboard that is saved as a node in the
+graph.
+
+|standaloneDashboardDatabase |string |neo4j |The name of the Neo4j
+database that contains the saved dashboard node. This is neo4j by
+default, _unless you are using Neo4j Enterprise Edition_, which lets you
+use multiple databases.
+
+|standaloneDashboardURL |string |neo4j |If you do not save a dashboard
+inside Neo4j and would like to run a standalone mode deployment with a
+dashboard from a URL, set this parameter to the complete URL pointing to
+the dashboard JSON.
+|===
+
+== Configuring SSO
+
+NeoDash can use SSO as an alternative for password-based sign-in, if
+your Neo4j database is enabled to use single sign on. To enable SSO, set
+`ssoEnabled` to `true`. Then, set `ssoDiscoveryUrl` to the place where
+your `discovery.json` is located (This will often be the hostname of
+your database, appended by `/discovery.json`).
+
+____
+Note that SSO is only available when Standalone Mode is enabled.
+____
+
+== Auth Provider
+
+To set up NeoDash to use an external identity provider, you can add a
+/auth_provider resource to nginx (in `/conf/default.conf`):
+
+....
+location /auth_provider {
+        default_type application/json;
+        return 200 '{
+                        "auth_config" : {
+                            "oidc_providers" : [ ... ]
+                        }
+                    }';
+    }
+....
+
+For basic deployments it might suffice to route requests to
+`/auth_provider` on the https port of the neo4j database.
+
+== Configuring Standalone Mode
+
+Standalone mode, or reader-mode, overrides the functionality of NeoDash,
+allowing you to deploy a fixed dashboard to users. Standalone mode can
+be enabled by changing the `standalone` config parameter:
+
+* If standalone mode is `false`, all other configuration parameters are
+ignored. NeoDash will run in Editor mode, and require a manual sign-in.
+* If standalone mode is `true`, NeoDash will read all configuration
+parameters. A *fixed dashboard* will be auto-loaded, and no changes to
+the dashboard can be made. There are two types of valid standalone
+deployments:
+** A standalone deployment that *reads the fixed dashboard from Neo4j*.
+The `standaloneDashboardName` and `standaloneDashboardDatabase` config
+parameters are used to define these.
+** A standalone deployment that *reads the fixed dashboard from a URL*.
+The `standaloneDashboardURL` config parameter is used to define this.

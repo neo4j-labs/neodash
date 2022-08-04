@@ -1,0 +1,37 @@
+= Developer Guide
+
+This guide contains information for developers looking to deploy NeoDash, or extend it for their own needs. 
+
+- link:build-and-run[Build & Run] 
+- link:configuration[Configuration]
+- link:standalone-mode[Standalone Mode] 
+- link:component-overview[Component Overview] 
+- link:design[Design] 
+- link:adding-visualizations[Adding Visualizations] 
+- link:state-management[State Management] 
+- link:testing[Testing]
+- link:contributing[Contributing]
+
+== Prerequisites for extending NeoDash
+
+NeoDash is a web application written in TypeScript. Knowledge of React &
+Redux is also highly recommended when extending the application.
+Concretely, the following languages and frameworks make up the core of
+NeoDash: 
+
+- https://reactjs.org/[React] 
+- https://redux.js.org/[Redux] 
+- https://redux.js.org/usage/writing-logic-thunks[Redux Thunks] 
+- https://www.cypress.io/[Cypress] 
+- https://mui.com/[Material UI] 
+- https://webpack.js.org/[Webpack]
+
+The following core libraries are used to build the visualizations for
+reports: 
+
+- https://github.com/vasturiano/react-force-graph[react-force-graph
+(Graph)] 
+- https://mui.com/components/data-grid/[@mui/datagrid (Table)]
+- https://nivo.rocks/[@nivo (Bar, Line, Pie charts)] 
+- https://leafletjs.com/[leaflet (Map)] 
+- https://github.com/remarkjs/react-markdown[react-markdown (Markdown)]

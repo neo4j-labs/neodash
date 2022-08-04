@@ -163,7 +163,6 @@ export const initializeSSO = async (ssoDiscoveryUrl, _setCredentials) => {
     }else{
         return false;
     }
-    alert("hmmmmm")
     return false;
 }
  

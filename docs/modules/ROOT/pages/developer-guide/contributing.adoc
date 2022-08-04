@@ -1,0 +1,21 @@
+= Contributing
+
+Contributions to the project are highly welcomed. Please consider
+creating a https://github.com/neo4j-labs/neodash/pulls[Pull Request].
+Ensure you start from the `develop` branch, and set the merge base to
+`develop` as well.
+
+For your feature to be accepted, ensure: 
+
+1. The component is tested (if relevant, see Testing). 
+2. Your code is aligned with
+https://www.w3.org/wiki/JavaScript_best_practices[JS Best Practices]. 
+3. The component is well documented in the documentation portal (if
+applicable).
+
+== Feature Requests / Bugs
+
+If you have a request for a feature, or have found a bug, consider
+creating an https://github.com/neo4j-labs/neodash/issues[issue] on
+GitHub. Please include a link:./testing#debug-report[Debug Report] if
+available.

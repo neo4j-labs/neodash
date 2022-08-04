@@ -21,9 +21,9 @@ export const NeoPage = (
         dashboardSettings, // global settings for the entire dashboard.
         pagenumber, // The page number to render.
         reports = [], // list of reports as defined in the dashboard state.
-        onCreatePressed = () => {},  // callback for when the user wants to add a new report.
-        onClonePressed = (index: number, x: number, y: number) => {}, // callback/action to take when a user wants to clone a report
-        onRemovePressed = (index: number) => {}, // action to take when a report gets removed.
+        onCreatePressed = () => { },  // callback for when the user wants to add a new report.
+        onClonePressed = (index: number, x: number, y: number) => { }, // callback/action to take when a user wants to clone a report
+        onRemovePressed = (index: number) => { }, // action to take when a report gets removed.
         isLoaded = true, // Whether the page is loaded and the cards can be displayed.
         onPageLayoutUpdate = (newLayout: object) => { }  // action to take when the page layout is updated.
     }) => {
@@ -47,6 +47,14 @@ export const NeoPage = (
     const [lastElement, setLastElement] = React.useState(<div key={getReportIndex(pagenumber, 999999)}></div>);
     const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
+    const availableHandles = () => {
+
+        if (dashboardSettings.resizing && dashboardSettings.resizing == "all") {
+            return ["s", "w", "e", "sw", "se"];
+        } else {
+            return ["se"];
+        }
+    }
 
     /**
      * Based on the current layout, determine where the 'add report' card should be placed.
@@ -89,7 +97,8 @@ export const NeoPage = (
                     w: report.width !== undefined ? Math.max(parseInt(report.width), 2) : 3,
                     h: report.height !== undefined ? Math.max(parseInt(report.height), 1) : 2,
                     minW: 2,
-                    minH: 1
+                    minH: 1,
+                    resizeHandles: availableHandles()
                 }
             }), {
                 x: x,
@@ -115,7 +124,8 @@ export const NeoPage = (
     useEffect(() => {
         setAnimated(false);
         recomputeLayout();
-    }, [reports])
+    }, [reports, dashboardSettings.resizing])
+
 
     const content = (
         <div style={{ paddingTop: "52px" }}>

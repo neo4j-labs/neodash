@@ -18,6 +18,7 @@ import useDimensions from 'react-cool-dimensions';
 import { setReportHelpModalOpen } from '../application/ApplicationActions';
 
 
+
 const NeoCard = ({
     index, // index of the card. 
     report, // state of the card, retrieved based on card index.
@@ -48,13 +49,14 @@ const NeoCard = ({
     );
     const [collapseTimeout, setCollapseTimeout] = React.useState(report.collapseTimeout);
 
-    const { observe, unobserve, width, height, entry } = useDimensions({
+     const { observe, unobserve, width, height, entry } = useDimensions({
         onResize: ({ observe, unobserve, width, height, entry }) => {
             // Triggered whenever the size of the target is changed...
             unobserve(); // To stop observing the current target element
             observe(); // To re-start observing the current target element
         },
-    });
+    }); 
+   
 
     const [expanded, setExpanded] = useState(false);
     const onToggleCardExpand = () => {

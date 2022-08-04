@@ -1,0 +1,19 @@
+= Pages
+
+A page is a collection of link:../reports[reports] that can be viewed at
+the same time. Each page can have an unlimited number of reports in it,
+and will switch to a scrollable view when the number of reports do not
+fit in the user’s window.
+
+An example of a dashboard with 4 pages can be seen below:
+
+image::page.png[Page]
+
+A dashboard may have as many pages as required by the dashboard builder.
+To switch pages, simply click on the page title in the dashboard header.
+
+== Editing Pages
+
+Pages can be added, renamed, and deleted by using the buttons in the
+dashboard header (if editing is enabled). Pages can additionally be
+*re-ordered* by dragging and dropping them in the header.
