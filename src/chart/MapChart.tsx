@@ -218,20 +218,7 @@ const NeoMapChart = (props: ChartProps) => {
 
     if (layerType == "markers") {
         // Render a node label tooltip
-        const renderNodeLabel = (node) => {
-            const selectedProp = props.selection && props.selection[node.firstLabel];
-            if (selectedProp == "(id)") {
-                return node.id;
-            }
-            if (selectedProp == "(label)") {
-                return node.labels;
-            }
-            if (selectedProp == "(no label)") {
-                return "";
-            }
-            return node.properties[selectedProp] ? node.properties[selectedProp].toString() : "";
-        }
-
+       
         var markerMarginTop = "6px";
         switch (defaultNodeSize) {
             case "large":
@@ -245,6 +232,21 @@ const NeoMapChart = (props: ChartProps) => {
         }
     }
 
+    const renderNodeLabel = (node) => {
+        const selectedProp = props.selection && props.selection[node.firstLabel];
+        if (selectedProp == "(id)") {
+            return node.id;
+        }
+        if (selectedProp == "(label)") {
+            return node.labels;
+        }
+        if (selectedProp == "(no label)") {
+            return "";
+        }
+        return node.properties[selectedProp] ? node.properties[selectedProp].toString() : "";
+    }
+
+    
     function createMarkers() {
         // Create markers to plot on the map
         let markers = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
