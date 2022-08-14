@@ -1,3 +1,6 @@
+## NeoDash 2.1.4
+Added hotfix for missing function in map visualization (https://github.com/neo4j-labs/neodash/issues/183).
+
 ## NeoDash 2.1.3
 The 2.1.3 release contains updates to the map visualization, as well as a new Choropleth map report type.
 Several usability improvements were also added, including fixing all links into the new documentation pages.
