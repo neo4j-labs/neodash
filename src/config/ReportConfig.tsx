@@ -16,7 +16,7 @@ import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
 import NeoCirclePackingChart from "../chart/CirclePackingChart";
 import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
-
+import NeoSankeyChart from "../chart/SankeyChart";
 
 export enum SELECTION_TYPES {
     NUMBER,
@@ -422,6 +422,80 @@ export const REPORT_TYPES = {
                 label: "Slice Corner Radius",
                 type: SELECTION_TYPES.NUMBER,
                 default: 1
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
+    "sankey": {
+        label: "Sankey Chart",
+        component: NeoSankeyChart,
+        helperText: <div>A Sankey chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        selection: {
+            "index": {
+                label: "Category",
+                type: SELECTION_TYPES.TEXT
+            },
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "Group",
+                type: SELECTION_TYPES.TEXT,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 250,
+        settings: {
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "nodeBorderWidth": {
+                label: "Node border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
             },
             "marginLeft": {
                 label: "Margin Left (px)",
