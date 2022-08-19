@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ResponsiveSankey  } from '@nivo/sankey'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
-import { checkResultKeys, recordToNative } from './Utils'
-import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator'
+import {evaluateRulesOnDict, evaluateRulesOnNode} from '../../report/ReportRuleEvaluator'
+import {categoricalColorSchemes} from "../../config/ColorConfig";
+import {valueIsArray, valueIsNode, valueIsPath, valueIsRelationship} from "../../report/ReportRecordProcessing";
 
 export default function SankeyVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
@@ -11,147 +12,9 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
         return <p>Loading data...</p>
     }
 
-    const error = checkResultKeys(first, ['index', 'key', 'value'])
-
-    if (error !== false) {
-        return <p>{error.message}</p>
-    }
-
-    const keys: string[] = [];
-    const data2: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
-        const index = recordToNative(row.get('index'))
-        const idx = data.findIndex(item => item.index === index)
-
-        const key = recordToNative(row.get('key'))
-        const value = recordToNative(row.get('value'))
-
-        if (!keys.includes(key)) {
-            keys.push(key)
-        }
-
-        if (idx > -1) {
-            data[idx][key] = value
-        }
-        else {
-            data.push({ id: index, label: index, value: value })
-        }
-
-        return data
-    }, [])
-        .map(row => {
-            keys.forEach(key => {
-                if (!row.hasOwnProperty(key)) {
-                    row[key] = 0
-                }
-            })
-
-            return row
-        })
-
-
-    const data = {
-        "nodes": [
-            {
-                "id": "John",
-                "nodeColor": "hsl(44, 70%, 50%)"
-            },
-            {
-                "id": "Raoul",
-                "nodeColor": "hsl(132, 70%, 50%)"
-            },
-            {
-                "id": "Jane",
-                "nodeColor": "hsl(184, 70%, 50%)"
-            },
-            {
-                "id": "Marcel",
-                "nodeColor": "hsl(36, 70%, 50%)"
-            },
-            {
-                "id": "Ibrahim",
-                "nodeColor": "hsl(76, 70%, 50%)"
-            },
-            {
-                "id": "Junko",
-                "nodeColor": "hsl(335, 70%, 50%)"
-            }
-        ],
-        "links": [
-            {
-                "source": "Junko",
-                "target": "Marcel",
-                "value": 9
-            },
-            {
-                "source": "Junko",
-                "target": "Jane",
-                "value": 197
-            },
-            {
-                "source": "Junko",
-                "target": "Ibrahim",
-                "value": 11
-            },
-            {
-                "source": "Junko",
-                "target": "John",
-                "value": 166
-            },
-            {
-                "source": "Junko",
-                "target": "Raoul",
-                "value": 132
-            },
-            {
-                "source": "John",
-                "target": "Ibrahim",
-                "value": 195
-            },
-            {
-                "source": "John",
-                "target": "Jane",
-                "value": 81
-            },
-            {
-                "source": "John",
-                "target": "Raoul",
-                "value": 139
-            },
-            {
-                "source": "Raoul",
-                "target": "Marcel",
-                "value": 66
-            },
-            {
-                "source": "Raoul",
-                "target": "Ibrahim",
-                "value": 48
-            },
-            {
-                "source": "Raoul",
-                "target": "Jane",
-                "value": 39
-            },
-            {
-                "source": "Ibrahim",
-                "target": "Jane",
-                "value": 89
-            },
-            {
-                "source": "Marcel",
-                "target": "Jane",
-                "value": 105
-            },
-            {
-                "source": "Marcel",
-                "target": "Ibrahim",
-                "value": 138
-            }
-        ]
-    };
-
     const settings = (props.settings) ? props.settings : {};
     const legendHeight = 20;
+    const legendWidth = 120;
     const marginRight = (settings["marginRight"]) ? settings["marginRight"] : 24;
     const marginLeft = (settings["marginLeft"]) ? settings["marginLeft"] : 24;
     const marginTop = (settings["marginTop"]) ? settings["marginTop"] : 24;
@@ -160,9 +23,99 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
     const interactive = (settings["interactive"] !== undefined) ? settings["interactive"] : true;
     const nodeBorderWidth = (settings["nodeBorderWidth"]) ? settings["nodeBorderWidth"] : 0;
 
-    const legend = (settings["legend"]) ? settings["legend"] : false;
+    const legend = (settings["legend"] !== undefined) ? settings["legend"] : false;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'set2';
-    const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+    const labelProperty = (settings["labelProperty"]) ? settings["labelProperty"] : 'value';
+    const layout = (settings["layout"]) ? settings["layout"] : 'horizontal';
+    const labelPosition = (settings["labelPosition"]) ? settings["labelPosition"] : 'inside';
+    const labelOrientation = (settings["labelOrientation"]) ? settings["labelOrientation"] : 'horizontal';
+    const nodeThickness = (settings["nodeThickness"]) ? settings["nodeThickness"] : 12;
+    const nodeSpacing = (settings["nodeSpacing"]) ? settings["nodeSpacing"] : 12;
+
+
+    const styleRules = settings && settings["styleRules"] ? settings["styleRules"] : [];
+
+    const update = (state, mutations) =>
+        Object.assign({}, state, mutations)
+
+    const [data, setData] = React.useState({ nodes: [], links: [] });
+
+    useEffect(() => {
+        buildVisualizationDictionaryFromRecords(props.records);
+    }, []);
+
+    var nodes = {};
+    var nodeLabels = {};
+    var links = {};
+    var linkTypes = {};
+
+    function extractGraphEntitiesFromField(value) {
+        if (value == undefined) {
+            return
+        }
+        if (valueIsArray(value)) {
+            value.forEach((v, i) => extractGraphEntitiesFromField(v));
+        } else if (valueIsNode(value)) {
+            value.labels.forEach(l => nodeLabels[l] = true)
+            nodes[value.identity.low] = {
+                id: value.identity.low,
+                labels: value.labels,
+                properties: value.properties,
+                lastLabel: value.labels[value.labels.length - 1]
+            };
+        } else if (valueIsRelationship(value)) {
+            if (links[value.start.low + "," + value.end.low] == undefined) {
+                links[value.start.low + "," + value.end.low] = [];
+            }
+            const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
+            addItem(links[value.start.low + "," + value.end.low], {
+                id: value.identity.low,
+                source: value.start.low,
+                target: value.end.low,
+                type: value.type,
+                properties: value.properties,
+                value : value.properties[labelProperty]
+            });
+
+        } else if (valueIsPath(value)) {
+            value.segments.map((segment, i) => {
+                extractGraphEntitiesFromField(segment.start);
+                extractGraphEntitiesFromField(segment.relationship);
+                extractGraphEntitiesFromField(segment.end);
+            });
+        }
+    }
+
+    function buildVisualizationDictionaryFromRecords(records) {
+        // Extract graph objects from result set.
+        records.forEach((record, rownumber) => {
+            record._fields.forEach((field, i) => {
+                extractGraphEntitiesFromField(field);
+            })
+        });
+        // Assign proper curvatures to relationships.
+        // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
+        const linksList = Object.values(links).map(nodePair => {
+            return nodePair;
+        });
+
+        // Assign proper colors to nodes.
+        const totalColors = categoricalColorSchemes[colorScheme] ? categoricalColorSchemes[colorScheme].length : 0;
+        const nodeLabelsList = Object.keys(nodeLabels);
+        const nodesList = Object.values(nodes).map(node => {
+            // First try to assign a node a color if it has a property specifying the color.
+            var assignedColor = totalColors > 0 ? categoricalColorSchemes[colorScheme][nodeLabelsList.indexOf(node.lastLabel) % totalColors] : "grey";
+            // Next, evaluate the custom styling rules to see if there's a rule-based override
+            assignedColor = evaluateRulesOnNode(node, 'node color', assignedColor, styleRules);
+            return update(node, { nodeColor: assignedColor ? assignedColor : "grey" });
+        });
+
+        // Set the data dictionary that is read by the visualization.
+        setData({
+            nodes: nodesList,
+            links: linksList.flat()
+        });
+    }
 
     // Compute slice color based on rules - overrides default color scheme completely.
     const getSliceColor = (slice) => {
@@ -180,20 +133,35 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
     }
 
     const getArcLabel = item => {
-        return (item.arc.angleDeg * 100 / 360).toFixed(2).toString() + '%';
+        let lbl = "";
+
+        switch(props.selection[item.lastLabel]) {
+            case "(id)":
+                lbl = item.id;
+                break;
+            case "(label)":
+                lbl = item.lastLabel;
+                break;
+            default:
+                lbl = item.properties[props.selection[item.lastLabel]];
+        };
+
+        return typeof lbl === 'object' ? lbl["low"] : lbl;
     }
 
     return <ResponsiveSankey
         data={data}
-        margin={{ top: marginTop, right: marginRight, bottom: (legend) ? legendHeight + marginBottom : marginBottom, left: marginLeft }}
+        margin={{ top: marginTop, right: (legend) ? legendWidth + marginRight : marginRight, bottom: (legend) ? legendHeight + marginBottom : marginBottom, left: marginLeft }}
         isInteractive={interactive}
+        layout={layout}
+        label={getArcLabel}
         nodeBorderWidth={nodeBorderWidth}
 
         align="justify"
         nodeOpacity={1}
         nodeHoverOthersOpacity={0.35}
-        nodeThickness={18}
-        nodeSpacing={24}
+        nodeThickness={nodeThickness}
+        nodeSpacing={nodeSpacing}
         nodeBorderColor={{
             from: 'color',
             modifiers: [
@@ -208,8 +176,8 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
         linkHoverOthersOpacity={0.1}
         linkContract={3}
         enableLinkGradient={true}
-        labelPosition="outside"
-        labelOrientation="vertical"
+        labelPosition={labelPosition}
+        labelOrientation={labelOrientation}
         labelPadding={16}
         labelTextColor={{
             from: 'color',
@@ -221,13 +189,12 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
             ]
         }}
 
-
         colors={styleRules.length >= 1 ? getSliceColor : { scheme: colorScheme }}
         legends={(legend) ? [
             {
                 anchor: 'bottom-right',
                 direction: 'column',
-                translateX: 130,
+                translateX: 120,
                 itemWidth: 100,
                 itemHeight: 14,
                 itemDirection: 'right-to-left',
@@ -245,8 +212,6 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
             }
         ] : []}
         animate={true}
-        //TODO : Needs to be set dynamic (default true on percentage)
-        arcLabel={getArcLabel}
         {...props.config}
     />
 

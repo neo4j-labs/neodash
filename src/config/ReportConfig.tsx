@@ -454,24 +454,15 @@ export const REPORT_TYPES = {
     "sankey": {
         label: "Sankey Chart",
         component: NeoSankeyChart,
+        useNodePropsAsFields: true,
+        autoAssignSelectedProperties: true,
         helperText: <div>A Sankey chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
         selection: {
-            "index": {
-                label: "Category",
-                type: SELECTION_TYPES.TEXT
-            },
-            "value": {
-                label: "Value",
-                type: SELECTION_TYPES.NUMBER,
-                key: true
-            },
-            "key": {
-                label: "Group",
-                type: SELECTION_TYPES.TEXT,
-                optional: true
+            "nodeProperties": {
+                label: "Node Properties",
+                type: SELECTION_TYPES.NODE_PROPERTIES
             }
         },
-        useRecordMapper: true,
         maxRecords: 250,
         settings: {
             "legend": {
@@ -486,11 +477,29 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "layout": {
+                label: "Control sankey layout direction",
+                type: SELECTION_TYPES.LIST,
+                values: ["horizontal", "vertical"],
+                default: "horizontal"
+            },
             "colors": {
                 label: "Color Scheme",
                 type: SELECTION_TYPES.LIST,
                 values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
                 default: "set2"
+            },
+            "labelPosition": {
+                label: "Control sankey label position",
+                type: SELECTION_TYPES.LIST,
+                values: ["inside", "outside"],
+                default: "inside"
+            },
+            "labelOrientation": {
+                label: "Control sankey label orientation",
+                type: SELECTION_TYPES.LIST,
+                values: ["horizontal", "vertical"],
+                default: "horizontal"
             },
             "nodeBorderWidth": {
                 label: "Node border width (px)",
@@ -516,6 +525,21 @@ export const REPORT_TYPES = {
                 label: "Margin Bottom (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 40
+            },
+            "labelProperty": {
+                label: "Relationship value Property",
+                type: SELECTION_TYPES.TEXT,
+                default: "value"
+            },
+            "nodeThickness": {
+                label: "Node thickness (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 18
+            },
+            "nodeSpacing": {
+                label: "Spacing between nodes at an identical level (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 18
             },
             "autorun": {
                 label: "Auto-run query",

@@ -19,7 +19,7 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                exclude: /(node_modules\/react-leaflet-heatmap-layer-v3)/,
+                //exclude: /(node_modules\/react-leaflet-heatmap-layer-v3)/,
                 enforce: 'pre',
                 use: ['source-map-loader'],
             },
