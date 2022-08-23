@@ -16,6 +16,7 @@ import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
 import NeoCirclePackingChart from "../chart/CirclePackingChart";
 import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
+import NeoRadarChart from "../chart/RadarChart";
 
 
 export enum SELECTION_TYPES {
@@ -442,6 +443,110 @@ export const REPORT_TYPES = {
                 label: "Margin Bottom (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 40
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
+    "radar": {
+        label: "Radar Chart",
+        component: NeoRadarChart,
+        //useNodePropsAsFields: true,
+        //autoAssignSelectedProperties: true,
+        helperText: <div>A radar chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        selection: {
+            /*"index": {
+                label: "Category",
+                type: SELECTION_TYPES.TEXT
+            },
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            },
+            "key": {
+                label: "Group",
+                type: SELECTION_TYPES.TEXT,
+                optional: true
+            }*/
+        },
+        //useRecordMapper: true,
+        maxRecords: 250,
+        settings: {
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "animate": {
+                label: "Enable transitions",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "dotSize": {
+                label: "Size of the dots (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 10
+            },
+            "dotBorderWidth": {
+                label: "Width of the dots border (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 2
+            },
+            "gridLabelOffset": {
+                label: "Label offset from outer radius (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 16
+            },
+            "blendMode": {
+                label: "Define CSS mix-blend-mode for layers",
+                type: SELECTION_TYPES.LIST,
+                values: ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"],
+                default: "normal"
+            },
+            "motionConfig": {
+                label: "Motion config for react-spring, either a preset or a custom configuration",
+                type: SELECTION_TYPES.LIST,
+                values: ["default", "gentle", "wobbly", "stiff", "slow","molasses"],
+                default: "gentle"
             },
             "autorun": {
                 label: "Auto-run query",
