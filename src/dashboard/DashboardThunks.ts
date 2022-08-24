@@ -7,7 +7,7 @@ import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from "../app
 import { updateGlobalParametersThunk } from "../settings/SettingsThunks";
 
 
-function createUUID() {
+export function createUUID() {
     var dt = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = (dt + Math.random() * 16) % 16 | 0;

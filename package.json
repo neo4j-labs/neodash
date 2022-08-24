@@ -73,7 +73,8 @@
     "redux-thunk": "^2.4.1",
     "remark-gfm": "^3.0.1",
     "reselect": "^4.1.5",
-    "use-neo4j": "^0.3.6"
+    "use-neo4j": "^0.3.6",
+    "react-gauge-chart": "^0.4.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
