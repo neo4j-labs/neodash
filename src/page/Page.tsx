@@ -51,7 +51,7 @@ export const NeoPage = (
         if (dashboardSettings.resizing && dashboardSettings.resizing == "all") {
             return ["s", "w", "e", "sw", "se"];
         } else {
-            return ["se"]
+            return ["se"];
         }
     }
 

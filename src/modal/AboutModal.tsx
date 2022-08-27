@@ -13,7 +13,7 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
     const email = "niels.dejong@neo4j.com";
-    const version = "2.1.2";
+    const version = "2.1.4";
 
     const downloadDebugFile = () => {
         const element = document.createElement("a");
@@ -57,7 +57,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                         <hr></hr>
                         <h3 style={{ marginBottom: "5px" }}>Extending NeoDash</h3>
                         NeoDash is built with React and <a target="_blank" href="https://github.com/adam-cowley/use-neo4j">use-neo4j</a>,
-                        It uses <a target="_blank" href="https://github.com/neo4j-labs/charts">charts</a> to power some of the visualizations, and openstreetmap for the map view.<br />
+                        It uses <a target="_blank" href="https://github.com/neo4j-labs/charts">charts</a> to power some of the visualizations, and <a target="_blank" href="https://www.openstreetmap.org/">Open Streetmap</a> for the map view.<br />
                         You can also extend NeoDash with your own visualizations. Check out the developer guide in the <a target="_blank" href="https://github.com/neo4j-labs/neodash/"> project repository</a>.
                         <hr></hr>
                         <h3 style={{ marginBottom: "5px" }}>Contact</h3>

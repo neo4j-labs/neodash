@@ -4,9 +4,10 @@ import { ChartProps } from '../Chart';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../../chart/ChartUtils';
 import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
+import { HeatmapLayer } from 'react-leaflet-heatmap-layer-v3';
 import Marker from 'react-leaflet-enhanced-marker';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode } from '../../report/ReportRuleEvaluator';
 
@@ -19,6 +20,7 @@ const update = (state, mutations) =>
 const NeoMapChart = (props: ChartProps) => {
 
     // Retrieve config from advanced settings
+    const layerType = props.settings && props.settings.layerType ? props.settings.layerType : "markers";
     const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : "color";
     const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : "large";
     const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : "width";
@@ -27,6 +29,8 @@ const NeoMapChart = (props: ChartProps) => {
     const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#666";
     const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+    const clusterMarkers = props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
+    const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : "";
     const defaultNodeColor = "grey"; // Color of nodes without labels
     const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
 
@@ -211,7 +215,22 @@ const NeoMapChart = (props: ChartProps) => {
         });
     }
 
-    // Render a node label tooltip
+    if (layerType == "markers") {
+        // Render a node label tooltip
+       
+        var markerMarginTop = "6px";
+        switch (defaultNodeSize) {
+            case "large":
+                markerMarginTop = "-5px";
+                break;
+            case "medium":
+                markerMarginTop = "3px";
+                break;
+            default:
+                break;
+        }
+    }
+
     const renderNodeLabel = (node) => {
         const selectedProp = props.selection && props.selection[node.firstLabel];
         if (selectedProp == "(id)") {
@@ -226,22 +245,10 @@ const NeoMapChart = (props: ChartProps) => {
         return node.properties[selectedProp] ? node.properties[selectedProp].toString() : "";
     }
 
-    var markerMarginTop = "6px";
-    switch (defaultNodeSize) {
-        case "large":
-            markerMarginTop = "-5px";
-            break;
-        case "medium":
-            markerMarginTop = "3px";
-            break;
-        default:
-            break;
-    }
-
+    
     function createMarkers() {
         // Create markers to plot on the map
-
-        return data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
+        let markers = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
             <Marker position={node.pos} key={i}
                 icon={<div style={{ color: node.color, textAlign: "center", marginTop: markerMarginTop }}>
                     <LocationOnIcon fontSize={node.size}></LocationOnIcon>
@@ -251,6 +258,10 @@ const NeoMapChart = (props: ChartProps) => {
                     : <></>}
                 {createPopupFromNodeProperties(node)}
             </Marker>);
+        if(clusterMarkers) {
+            markers = <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
+        }
+        return markers;
     }
 
     function createLines() {
@@ -262,6 +273,30 @@ const NeoMapChart = (props: ChartProps) => {
                 </Polyline>
             }
         });
+    }
+
+    function createHeatmap() {
+        // Create Heatmap layer to add on top of the map
+        let points = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
+            [node.pos[0], node.pos[1], intensityProp == "" ? 1 : extractIntensityProperty(node)]
+        );
+        return <HeatmapLayer
+                fitBoundsOnLoad
+                fitBoundsOnUpdate
+                points={points}
+                longitudeExtractor={m => m[1]}
+                latitudeExtractor={m => m[0]}
+                intensityExtractor={m => parseFloat(m[2])} />
+    }
+
+    function extractIntensityProperty(node) {
+        // Extract the intensity property from a node.
+        if(node.properties[intensityProp]) {
+            // Parse int from Neo4j Integer type if it has this type
+            // Or return plain value (if already parsed as a standard integer or float)
+            return node.properties[intensityProp].low ?? node.properties[intensityProp];
+        }
+        return 0;
     }
 
 
@@ -290,8 +325,9 @@ const NeoMapChart = (props: ChartProps) => {
 
 
 
-    const markers = createMarkers();
-    const lines = createLines();
+    const markers = layerType == "markers" ? createMarkers() : "";
+    const lines = layerType == "markers" ? createLines() : "";
+    const heatmap = layerType == "heatmap" ? createHeatmap() : "";
     const fullscreen = props.fullscreen ? props.fullscreen : true;
 
     // Draw the component.
@@ -300,6 +336,7 @@ const NeoMapChart = (props: ChartProps) => {
         zoom={data.zoom ? data.zoom : 0}
         maxZoom={18}
         scrollWheelZoom={false}>
+        {heatmap}
         <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

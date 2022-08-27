@@ -1,11 +1,11 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
-import { getRecordType, getRendererForValue, rendererForType, RenderSubValue, valueIsNode, valueIsRelationship } from '../../report/ReportRecordProcessing';
 import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../../report/ReportRuleEvaluator';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from '../ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;

@@ -4,7 +4,7 @@ import React from 'react';
 import { Chip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import { valueIsArray, valueIsNode, valueIsPath } from '../chart/ChartUtils';
+import { getRecordType, valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../chart/ChartUtils';
 
 const OPTIONAL_FIELD_UNAVAILABLE_IDENTIFIER = "(none)";
 

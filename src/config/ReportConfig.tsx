@@ -1,8 +1,8 @@
 
 import React from 'react';
 import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
-import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
+import NeoBarChart from '../chart/bar/BarChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoJSONChart from '../chart/json/JSONChart';
 import NeoLineChart from '../chart/line/LineChart';
@@ -15,7 +15,7 @@ import NeoTreeMapChart from '../chart/treemap/TreeMapChart';
 import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoTableChart from '../chart/table/TableChart';
 import NeoCirclePackingChart from "../chart/circlepacking/CirclePackingChart";
-
+import NeoChoroplethMapChart from '../chart/choropleth/ChoroplethMapChart';
 
 export enum SELECTION_TYPES {
     NUMBER,
@@ -43,7 +43,7 @@ export const REPORT_TYPES = {
         helperText: "A table will contain all returned data.",
         component: NeoTableChart,
         maxRecords: 1000,
-      
+
         settings: {
             "transposed": {
                 label: "Transpose Rows & Columns",
@@ -602,6 +602,18 @@ export const REPORT_TYPES = {
         component: NeoMapChart,
         maxRecords: 1000,
         settings: {
+            "layerType": {
+                label: "Layer Type",
+                type: SELECTION_TYPES.LIST,
+                values: ["markers", "heatmap"],
+                default: "markers"
+            },
+            "clusterMarkers": {
+                label: "Cluster Markers",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
             "nodeColorScheme": {
                 label: "Node Color Scheme",
                 type: SELECTION_TYPES.LIST,
@@ -638,6 +650,11 @@ export const REPORT_TYPES = {
                 label: "Relationship Width Property",
                 type: SELECTION_TYPES.TEXT,
                 default: "width"
+            },
+            "intensityProp": {
+                label: "Intensity Property (for heatmap)",
+                type: SELECTION_TYPES.TEXT,
+                default: "intensity"
             },
             "hideSelections": {
                 label: "Hide Property Selection",
@@ -918,6 +935,102 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             }
+        }
+    },
+    "choropleth": {
+        label: "Choropleth Map",
+        component: NeoChoroplethMapChart,
+        helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a <code>value</code>.</div>,
+        selection: {
+            "index": {
+                label: "Code",
+                type: SELECTION_TYPES.TEXT
+            },
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+
+            },
+            "key": {
+                label: "code",
+                type: SELECTION_TYPES.TEXT,
+                optional: true
+            }
+        },
+        useRecordMapper: true,
+        maxRecords: 300,
+        settings: {
+            "interactive": {
+                label: "Enable Interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "BrBG", "RdYlGn", "YlOrRd", "greens"],
+                default: "nivo"
+            },
+            "borderWidth": {
+                label: "Polygon Border Width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "autorun": {
+                label: "Auto-run Query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "projectionScale": {
+                label: "Projection Scale",
+                type: SELECTION_TYPES.NUMBER,
+                default: 100
+            },
+            "projectionTranslationX": {
+                label: "Projection X translation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0.5
+            },
+            "projectionTranslationY": {
+                label: "Projection Y translation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0.5
+            },
+            "labelProperty": {
+                label: "Tooltip Property",
+                type: SELECTION_TYPES.TEXT,
+                default: "properties.name"
+            }
+
         }
     },
     "json": {

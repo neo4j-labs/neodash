@@ -10,7 +10,8 @@ const generateListItem = (label, option) => {
         return (option ? 'on' : 'off')
     } else {
         if (label == "Color Scheme" || label == "Node Color Scheme") {
-            const colors = categoricalColorSchemes[option];
+                const colorsFull = categoricalColorSchemes[option];
+                const colors = Array.isArray(colorsFull) ? (Array.isArray(colorsFull.slice(-1)[0]) ? colorsFull.slice(-1)[0] : colorsFull) : colorsFull;
             return (<div>
                 {Array.isArray(colors) ? colors.map(element => {
                     return <span key={element} style={{ display: "inline-block", background: element, width: "18px", height: "18px" }}></span>

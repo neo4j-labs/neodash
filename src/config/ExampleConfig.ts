@@ -9,6 +9,7 @@ import NeoTableChart from "../chart/table/TableChart";
 import NeoSunburstChart from "../chart/sunburst/SunburstChart";
 import NeoCirclePackingChart from "../chart/circlepacking/CirclePackingChart";
 import NeoTreeMapChart from "../chart/treemap/TreeMapChart";
+import NeoChoroplethMapChart from "../chart/choropleth/ChoroplethMapChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -300,5 +301,28 @@ RETURN value
         fields: ["path","value"],
         type: "treeMap",
         chartType: NeoTreeMapChart
+    },
+    {
+        title: "Choropleth Chart",
+        description: "Choropleth charts can be used to render geographical based information on geoJson polygons.",
+        exampleQuery: "// How are people distributed in the company per country?\n" +
+            "MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),\n"+
+            "(e)-[:LIVES_IN]->(c:Country)\n" +
+            "WITH c.code as code, count(e) as value\n" +
+            "RETURN code, value",
+        syntheticQuery: 'UNWIND [\n'+
+            '{id: "ARG", value: 23},\n'+
+            '{id: "BOL", value: 2},\n'+
+            '{id: "CAN", value: 100},\n'+
+            '{id: "COL", value: 5},\n'+
+            '{id: "FRA", value: 40},\n'+
+            '{id: "USA", value: 156}\n'+
+            '] as x \n'+
+            'RETURN x.id as code, x.value as value',
+        settings: { colors : "nivo"},
+        selection: { index: "code", value: "value", key: "code"},
+        fields: ["code","value"],
+        type: "choropleth",
+        chartType: NeoChoroplethMapChart
     },
 ]
