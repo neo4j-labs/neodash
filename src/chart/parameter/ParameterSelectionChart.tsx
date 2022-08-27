@@ -74,7 +74,6 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                 debouncedSetGlobalParameter(parameter, undefined);
             else
                 debouncedSetGlobalParameter(parameter, value);
-
         }, 350);
         return () => clearTimeout(timeOutId);
     }, [value]);

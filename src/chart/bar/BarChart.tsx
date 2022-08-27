@@ -1,15 +1,32 @@
 import { ResponsiveBar } from '@nivo/bar';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 
 /**
- * Embeds a BarReport (from Charts) into NeoDash.
+ * Embeds a BarReport (from Nivo) into NeoDash.
  *  This visualization was extracted from https://github.com/neo4j-labs/charts.
  * TODO: There is a regression here with nivo > 0.73 causing the bar chart to have a very slow re-render.
  */
 const NeoBarChart = (props: ChartProps) => {
+ 
+    /**
+     * The code fragment below is a workaround for a bug in nivo > 0.73 causing bar charts to re-render very slowly.
+     */
+    const [loading, setLoading] = React.useState(false);
+    useEffect(() => {
+        setLoading(true);
+        const timeOutId = setTimeout(() => {
+            setLoading(false);
+        }, 1);
+        return () => clearTimeout(timeOutId);
+    }, [props.selection])
+    if(loading){
+        return <></>;
+    }
+
 
     if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <>No data, re-run the report.</>
@@ -17,25 +34,26 @@ const NeoBarChart = (props: ChartProps) => {
     const records = props.records;
     const selection = props.selection;
 
-    if(!selection){
+    if (!selection) {
         return <>Invalid selection.</>;
     }
- 
-    const keys: string[] = []
 
+    const keys = {}
     const data: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
+
+        if (!selection || !selection['index'] || !selection['value']) {
+            return data;
+        }
         const index = convertRecordObjectToString(row.get(selection['index']));
         const idx = data.findIndex(item => item.index === index)
-
+        
         const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
         const value = recordToNative(row.get(selection['value']))
 
-        if(isNaN(value)){
+        if (isNaN(value)) {
             return data;
         }
-        if (!keys.includes(key)) {
-            keys.push(key)
-        }
+        keys[key] = true;
 
         if (idx > -1) {
             data[idx][key] = value
@@ -47,12 +65,11 @@ const NeoBarChart = (props: ChartProps) => {
         return data
     }, [])
         .map(row => {
-            keys.forEach(key => {
+            Object.keys(keys).forEach(key => {
                 if (!row.hasOwnProperty(key)) {
                     row[key] = 0
                 }
             })
-
             return row
         })
 
@@ -66,6 +83,7 @@ const NeoBarChart = (props: ChartProps) => {
     const labelRotation = (settings["labelRotation"] != undefined) ? settings["labelRotation"] : 45;
     const labelSkipSize = (settings["barValues"]) ? 1 : 2000;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'set2';
+    const groupMode = (settings["groupMode"]) ? settings["groupMode"] : 'stacked';
     const valueScale = (settings["valueScale"]) ? settings["valueScale"] : 'linear';
     const minValue = (settings["minValue"]) ? settings["minValue"] : 'auto';
     const maxValue = (settings["maxValue"]) ? settings["maxValue"] : 'auto';
@@ -74,24 +92,26 @@ const NeoBarChart = (props: ChartProps) => {
     // Compute bar color based on rules - overrides default color scheme completely.
     const getBarColor = (bar) => {
         const data = {}
-        if(!props.selection){
+        if (!selection || !selection['index'] || !selection['value']) {
             return "grey";
         }
-        data[props.selection['index']] = bar.indexValue;
-        data[props.selection['value']] = bar.value;
-        data[props.selection['key']] = bar.id;
+        data[selection['index']] = bar.indexValue;
+        data[selection['value']] = bar.value;
+        data[selection['key']] = bar.id;
         const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['bar color']);
-        if(validRuleIndex !== -1){
+        if (validRuleIndex !== -1) {
             return styleRules[validRuleIndex]['customizationValue'];
         }
         return "grey"
     }
-
+    if(data.length == 0){
+        return <NoDrawableDataErrorMessage/>
+    }
     return <ResponsiveBar
         layout={settings.layout == "horizontal" ? 'horizontal' : 'vertical'}
-        groupMode={settings.groupMode == "stacked" ? 'stacked' : 'grouped'}
+        groupMode={groupMode == "stacked" ? 'stacked' : 'grouped'}
         data={data}
-        keys={keys}
+        keys={Object.keys(keys)}
         indexBy="index"
         margin={{ top: marginTop, right: (legend) ? legendWidth + marginRight : marginRight, bottom: marginBottom, left: marginLeft }}
         valueScale={{ type: valueScale }}
@@ -139,8 +159,6 @@ const NeoBarChart = (props: ChartProps) => {
             }
         ] : []}
         animate={false}
-        motionStiffness={90}
-        motionDamping={15}
     />
 
 

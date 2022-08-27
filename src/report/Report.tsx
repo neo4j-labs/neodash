@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import NeoCodeViewerComponent from "../component/editor/CodeViewerComponent";
+import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from "../component/editor/CodeViewerComponent";
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
@@ -129,12 +129,7 @@ export const NeoReport = ({
     } else if (status == QueryStatus.NO_DATA) {
         return <NeoCodeViewerComponent value={"Query returned no data."} />
     } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
-        return <NeoCodeViewerComponent value={"Data was returned, but it can't be visualized.\n\n" +
-            "This could have the following causes:\n" +
-            "- a numeric value field was selected, but no numeric values were returned. \n" +
-            "- a numeric value field was selected, but only zero's were returned.\n" +
-            "- Your visualization expects nodes/relationships, but none were returned."
-        } />
+        return <NoDrawableDataErrorMessage/>
     } else if (status == QueryStatus.COMPLETE) {
         if (records == null || records.length == 0) {
             return <div>Loading...</div>

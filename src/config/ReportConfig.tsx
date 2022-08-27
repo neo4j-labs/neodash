@@ -958,7 +958,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 300,
         settings: {
             "interactive": {
