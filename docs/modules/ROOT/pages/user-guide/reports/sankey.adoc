@@ -1,6 +1,6 @@
 = Sankey Chart
 
-A Sankey visualization will compute a diagram from nodes and links.
+A Sankey visualization will generate a flow diagram from nodes and links.
 Beware that cyclic dependencies are not supported.
 The Sankey chart will advice you to choose the property to be used on the visualization per Label.
 
