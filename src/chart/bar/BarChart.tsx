@@ -11,7 +11,7 @@ import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
  * TODO: There is a regression here with nivo > 0.73 causing the bar chart to have a very slow re-render.
  */
 const NeoBarChart = (props: ChartProps) => {
- 
+
     /**
      * The code fragment below is a workaround for a bug in nivo > 0.73 causing bar charts to re-render very slowly.
      */
@@ -23,30 +23,25 @@ const NeoBarChart = (props: ChartProps) => {
         }, 1);
         return () => clearTimeout(timeOutId);
     }, [props.selection])
-    if(loading){
+    if (loading) {
         return <></>;
     }
 
-
-    if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-        return <>No data, re-run the report.</>
-    }
     const records = props.records;
     const selection = props.selection;
 
-    if (!selection) {
-        return <>Invalid selection.</>;
+    if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+        return <NoDrawableDataErrorMessage />
     }
 
-    const keys = {}
+    const keys = {};
     const data: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
-
         if (!selection || !selection['index'] || !selection['value']) {
             return data;
         }
         const index = convertRecordObjectToString(row.get(selection['index']));
         const idx = data.findIndex(item => item.index === index)
-        
+
         const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
         const value = recordToNative(row.get(selection['value']))
 
@@ -104,8 +99,8 @@ const NeoBarChart = (props: ChartProps) => {
         }
         return "grey"
     }
-    if(data.length == 0){
-        return <NoDrawableDataErrorMessage/>
+    if (data.length == 0) {
+        return <NoDrawableDataErrorMessage />
     }
     return <ResponsiveBar
         layout={settings.layout == "horizontal" ? 'horizontal' : 'vertical'}
