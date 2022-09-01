@@ -69,3 +69,38 @@ After building, you can run the image with:
 ....
 docker run -it –rm -p 5005:5005 neodash
 .... 
+
+== Run on Kubernetes
+
+An example of a pod definition YAML file to create a NeoDash pod in a cluster:
+
+....
+apiVersion: v1
+kind: Pod
+metadata:
+  name: neodash
+  labels:
+    project: neodash
+spec:
+  containers:
+    - name: neodash
+      image: nielsdejong/neodash:latest
+      ports:
+        - containerPort: 5005
+....
+
+
+Creating a Kubernetes service to expose the application:
+....
+apiVersion: v1
+kind: Service
+metadata:
+    name: neodash-svc
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 5005
+      targetPort: 5005
+    selector:
+      project: neodash
+....
