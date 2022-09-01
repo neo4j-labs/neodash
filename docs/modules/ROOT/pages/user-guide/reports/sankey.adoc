@@ -2,12 +2,11 @@
 
 A Sankey visualization will generate a flow diagram from nodes and links.
 Beware that cyclic dependencies are not supported.
-The Sankey chart will advice you to choose the property to be used on the visualization per Label.
-
 
 == Examples
 
 === Basic Sankey Chart
+For a sankey chart to use the correct relationship weights - it is mandatory to set a 'Relationship Property' in the report's advanced settings.
 
 [source,cypher]
 ----

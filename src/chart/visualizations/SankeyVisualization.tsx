@@ -4,6 +4,7 @@ import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps
 import {evaluateRulesOnDict, evaluateRulesOnNode} from '../../report/ReportRuleEvaluator'
 import {categoricalColorSchemes} from "../../config/ColorConfig";
 import {valueIsArray, valueIsNode, valueIsPath, valueIsRelationship} from "../../report/ReportRecordProcessing";
+import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 
 export default function SankeyVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
@@ -68,15 +69,17 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
                 links[value.start.low + "," + value.end.low] = [];
             }
             const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
-            addItem(links[value.start.low + "," + value.end.low], {
-                id: value.identity.low,
-                source: value.start.low,
-                target: value.end.low,
-                type: value.type,
-                properties: value.properties,
-                value : value.properties[labelProperty]
-            });
-
+            if(value.properties[labelProperty] !== undefined && !isNaN(value.properties[labelProperty])){
+                addItem(links[value.start.low + "," + value.end.low], {
+                    id: value.identity.low,
+                    source: value.start.low,
+                    target: value.end.low,
+                    type: value.type,
+                    properties: value.properties,
+                    value : value.properties[labelProperty]
+                });
+            }
+         
         } else if (valueIsPath(value)) {
             value.segments.map((segment, i) => {
                 extractGraphEntitiesFromField(segment.start);
@@ -147,6 +150,10 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
         };
 
         return typeof lbl === 'object' ? lbl["low"] : lbl;
+    }
+    
+    if(data && data.links && data.links.length == 0){
+        return <NeoCodeViewerComponent value={"No relationship weights found. \nDefine a numeric 'Relationship Property' in the \nreport's advanced settings to view the sankey diagram."}></NeoCodeViewerComponent>
     }
 
     return <ResponsiveSankey
