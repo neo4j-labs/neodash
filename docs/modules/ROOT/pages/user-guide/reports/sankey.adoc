@@ -1,0 +1,67 @@
+= Sankey Chart
+
+A Sankey visualization will generate a flow diagram from nodes and links.
+Beware that cyclic dependencies are not supported.
+
+== Examples
+
+=== Basic Sankey Chart
+For a sankey chart to use the correct relationship weights - it is mandatory to set a 'Relationship Property' in the report's advanced settings.
+
+[source,cypher]
+----
+MATCH (p:Person)-[r:RATES]->(m:Movie)
+RETURN p, r, m
+----
+
+image::sankey.png[Sankey Chart]
+
+
+== Advanced Settings
+
+[width="100%",cols="15%,2%,6%,77%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Show Legend |on/off |off |If enabled, shows a legend on the bottom of
+the visualization.
+
+|Enable interactivity |on/off |on |If enabled, turn on animations when a
+user hovers over a node or link.
+
+|Relationship Property |text | value | Name of the property with an integer value that is going
+to be used to determine thickness of links.
+
+|Color Scheme |List | |The color scheme to use for the slices. Colors
+are assigned automatically (consecutively) to the different categories
+returned by the Cypher query.
+
+|Layout |List |horizontal |Sankey layout direction.
+
+|Label Position |List |inside |Control sankey label position.
+
+|Label Orientation |List |horizontal |Control sankey label orientation.
+
+|Node Border Width (px) |number |0 |Controls Node border width.
+
+|Node Spacing (px) |number |18 |Controls spacing between nodes at an identical level (px).
+
+|Node thickness (px) |number |18 |Controls Node thickness.
+
+|Margin Left (px) |number |24 |The margin in pixels on the left side of
+the visualization.
+
+|Margin Right (px) |number |24 |The margin in pixels on the right side
+of the visualization.
+
+|Margin Top (px) |number |24 |The margin in pixels on the top side of
+the visualization.
+
+|Margin Bottom (px) |number |40 |The margin in pixels on the bottom side
+of the visualization.
+
+|Auto-run query |on/off |on |when activated automatically runs the query
+when the report is displayed. When set to `off', the query is displayed
+and will need to be executed manually.
+|===
+
+
