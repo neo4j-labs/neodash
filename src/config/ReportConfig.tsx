@@ -1157,8 +1157,31 @@ export const REPORT_TYPES = {
         disableRefreshRate: true,
         disableCypherParameters: true,
         textOnly: true,
-        maxRecords: 5,
+        maxRecords: 100,
         settings: {
+            "suggestionLimit": {
+                label: "Value Suggestion Limit",
+                type: SELECTION_TYPES.NUMBER,
+                default: 5,
+            },
+            "searchType": {
+                label: "Search Type",
+                type: SELECTION_TYPES.LIST,
+                values: ["CONTAINS", "STARTS WITH", "ENDS WITH"],
+                default: "CONTAINS"
+            },
+            "caseSensitive": {
+                label: "Case Sensitive Search",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "deduplicateSuggestions": {
+                label: "Deduplicate Suggestion Values",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "clearParameterOnFieldClear": {
                 label: "Clear Parameter on Field Reset",
                 type: SELECTION_TYPES.LIST,
