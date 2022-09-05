@@ -31,7 +31,7 @@ jobs:
       - name: Trigger Developer Event
         uses: peter-evans/repository-dispatch@main
         with:
-          token: ${{ secrets.BUILD_ACCESS_TOKEN }}
+          token: ${{ secrets.DOCS_REFRESH_TOKEN }}
           repository: neo4j-documentation/docs-refresh
           event-type: labs
  build-s3:
