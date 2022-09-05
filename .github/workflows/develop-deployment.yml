@@ -4,7 +4,6 @@ on:
  push:
    branches: [ develop ]
  
- 
 jobs:
  build-test:
    runs-on: ubuntu-latest
@@ -25,6 +24,16 @@ jobs:
         build: npm run build
         start: npm run dev
         wait-on: 'http://localhost:3000'
+ deploy-docs:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Developer Event
+        uses: peter-evans/repository-dispatch@main
+        with:
+          token: ${{ secrets.BUILD_ACCESS_TOKEN }}
+          repository: neo4j-documentation/docs-refresh
+          event-type: labs
  build-s3:
    needs: build-test
    runs-on: ubuntu-latest
