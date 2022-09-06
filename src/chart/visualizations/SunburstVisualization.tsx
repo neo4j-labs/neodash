@@ -4,7 +4,7 @@ import { ExtendedChartReportProps } from './VisualizationProps'
 import { checkResultKeys,  mutateName, processHierarchyFromRecords, findObject, flatten } from './Utils'
 import { useState } from 'react'
 import { Tooltip } from '@material-ui/core'
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { HeroIcon, IconButton } from '@neo4j-ndl/react'
 
 export default function SunburstVisualization(props: ExtendedChartReportProps) {
     const { records, first } = props
@@ -46,12 +46,17 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
     return (
         <>
             <div style={{ position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>
-                {refreshable ? <Tooltip title="Reset" aria-label="reset">
-                    <RefreshIcon onClick={() => {setData(commonProperties.data); setRefreshable(false);}}
-                            style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", borderRadius: "12px", zIndex: 5, background: "#eee" }}
-                            color="disabled" fontSize="small">
-                    </RefreshIcon>
-                </Tooltip> : <div></div>
+                {refreshable ? 
+                    <IconButton
+                        aria-label="reset"
+                        buttonSize="small"
+                        clean
+                        style={{ bottom: 12, right: 12, position: "absolute", zIndex: 5 }}>
+                        <Tooltip title="Reset" aria-label="reset">
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="RefreshIcon"
+                                onClick={() => {setData(commonProperties.data); setRefreshable(false);}}/>
+                        </Tooltip>
+                    </IconButton> : <div></div>
                 }
                 <ResponsiveSunburst
                     {...commonProperties}

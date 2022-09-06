@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { authRequestForSSO } from 'neo4j-client-sso'
 import { getDiscoveryDataInfo } from './SSOUtils'
 import { Button } from '@material-ui/core'
-import SecurityIcon from '@material-ui/icons/Security';
+import { HeroIcon } from '@neo4j-ndl/react'
 
 
 export const SSOLoginButton = ({discoveryAPIUrl, onSSOAttempt}) => {
@@ -30,7 +30,7 @@ export const SSOLoginButton = ({discoveryAPIUrl, onSSOAttempt}) => {
                         color="default"
                         variant="contained"
                         size="large"
-                        endIcon={<SecurityIcon />}>
+                        endIcon={<HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ShieldCheckIcon" />}>
                         Sign in
                         {/* {provider.name} */}
                     </Button>

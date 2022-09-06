@@ -7,17 +7,15 @@ import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/ReportRecordProcessing';
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
-import LockIcon from '@material-ui/icons/Lock';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
 import { Card, CardContent, CardHeader, Fab, Tooltip } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
-import SearchIcon from '@material-ui/icons/Search';
 import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
+
+import { HeroIcon, CustomIcon, IconButton, IconButtonArray } from '@neo4j-ndl/react';
 
 const  drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
     var img = new Image;
@@ -350,41 +348,87 @@ const NeoGraphChart = (props: ChartProps) => {
     const fgRef = useRef();
     return <>
         <div ref={observe} style={{ paddingLeft: "10px", position: "relative", overflow: "hidden", width: "100%", height: "100%" }}>
-            <Tooltip title="Fit graph to view." aria-label="">
-                <SettingsOverscanIcon onClick={(e) => {
-                    fgRef.current.zoomToFit(400)
-                }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 11, right: 34, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small"></SettingsOverscanIcon>
-            </Tooltip>
-            {lockable ? (frozen ?
+        <IconButtonArray
+            floating
+            orientation="horizontal"
+            style={{ position: "absolute", bottom: "15px", right: "15px", zIndex:50 }}
+            >
+                
+            <IconButton
+            aria-label="Search Icon Button"
+            buttonSize="medium"
+            clean
+            grouped
+            >
+                <Tooltip title="Fit graph to view." aria-label="">
+                    <HeroIcon
+                        className="ndl-icon n-w-6 n-h-6"
+                        iconName="ArrowsExpandIcon"
+                        onClick={(e) => {
+                            fgRef.current.zoomToFit(400);
+                        }}
+                    />
+                </Tooltip>
+            </IconButton>
+            <IconButton
+            aria-label="Filter Icon Button"
+            buttonSize="medium"
+            clean
+            grouped
+            >
+                {lockable ? (frozen ?
                 <Tooltip title="Toggle dynamic graph layout." aria-label="">
-                    <LockIcon onClick={(e) => {
-                        setFrozen(false);
-                        if (props.settings) {
-                            props.settings.frozen = false;
-                        }
-                    }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small"></LockIcon>
+                    <HeroIcon
+                        className="ndl-icon n-w-6 n-h-6"
+                        type="solid"
+                        iconName="LockClosedIcon"
+                        onClick={(e) => {
+                            setFrozen(false);
+                            if (props.settings) {
+                                props.settings.frozen = false;
+                            }
+                        }}
+                    />
                 </Tooltip>
                 :
                 <Tooltip title="Toggle fixed graph layout." aria-label="">
-                    <LockOpenIcon onClick={(e) => {
-                        if (nodePositions == undefined) {
-                            nodePositions = {};
-                        }
-                        setFrozen(true);
-                        if (props.settings) {
-                            props.settings.frozen = true;
-                        }
-                    }} style={{ fontSize: "1.3rem", opacity: 0.6, bottom: 12, right: 12, position: "absolute", zIndex: 5 }} color="disabled" fontSize="small"></LockOpenIcon>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6"
+                        type="outline"
+                        iconName="LockOpenIcon"
+                        onClick={(e) => {
+                            if (nodePositions == undefined) {
+                                nodePositions = {};
+                            }
+                            setFrozen(true);
+                            if (props.settings) {
+                                props.settings.frozen = true;
+                            }
+                        }}
+                    />
                 </Tooltip>
             ) : <></>}
-            {drilldownLink !== "" ?
-            <a href={replaceDashboardParameters(drilldownLink)} target="_blank">
-            <Fab style={{ position: "absolute", backgroundColor: "steelblue", right: "15px", zIndex: 50, top: "5px" }} color="primary" size="small" aria-label="search">
-                <Tooltip title="Investigate" aria-label="">
-                    <SearchIcon />
-                </Tooltip>
-            </Fab>
-            </a> : <></>}
+            </IconButton>
+        </IconButtonArray>
+            
+        {drilldownLink !== "" ?
+            <IconButtonArray
+                floating
+                orientation="horizontal"
+                style={{ position: "absolute", top: "5px", right: "14px", zIndex:50 }}
+            >
+                <IconButton
+                    aria-label="Investigate"
+                    buttonSize="large"
+                    href={replaceDashboardParameters(drilldownLink)}
+                    target="_blank"
+                    clean
+                    grouped >
+                    <Tooltip title="Investigate" aria-label="">
+                        <HeroIcon iconName="SearchIcon" />
+                    </Tooltip>
+                </IconButton>
+            </IconButtonArray>
+            : <></>}
 
             <ForceGraph2D
                 ref={fgRef}

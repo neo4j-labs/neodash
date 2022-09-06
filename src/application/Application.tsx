@@ -17,6 +17,7 @@ import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/util/ChartUtils';
 import NeoReportHelpModal from '../modal/ReportHelpModal';
+import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
 
 /**
  * This is the main application component for NeoDash.

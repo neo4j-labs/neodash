@@ -1,9 +1,8 @@
 import { Toolbar, IconButton, Badge, InputBase, Tooltip } from "@material-ui/core";
 import React, { useCallback, useEffect } from "react";
-import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from "react-redux";
 import debounce from 'lodash/debounce';
-import ImageIcon from '@material-ui/icons/Image';
+import { HeroIcon } from '@neo4j-ndl/react';
 
 export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, downloadImageEnabled, onDownloadImage, open, setDashboardTitle, connection, editable, standalone, handleDrawerOpen, onConnectionModalOpen }) => {
 
@@ -36,7 +35,7 @@ export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, downloadImageEnable
                 }
             }
         >
-            <MenuIcon />
+            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="MenuIcon" />
         </IconButton> : <></>}
         <InputBase
             id="center-aligned"
@@ -54,8 +53,8 @@ export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, downloadImageEnable
         />
         {downloadImageEnabled ? <Tooltip title={"Download Dashboard as Image"}>
     <IconButton style={{background: "#ffffff22", padding: "3px", marginRight: "3px"}} onClick={(e) => onDownloadImage()}>
-        <ImageIcon style={{ padding: 6, color: "#ffffffdd", width: "36px", height: "36px", fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
-        </ImageIcon>
+        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PhotographIcon"
+            style={{ padding: 6, color: "#ffffffdd", width: "36px", height: "36px" }} />
     </IconButton>
 </Tooltip> : <></>}
 

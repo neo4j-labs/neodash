@@ -1,16 +1,9 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import { Badge, Tooltip } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { HeroIcon, IconButton } from '@neo4j-ndl/react';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -21,10 +14,8 @@ export const NeoReportHelpModal = ({ open, handleClose }) => {
         <Dialog maxWidth={"lg"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">
                 About Reports
-                <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                    <Badge badgeContent={""} >
-                        <CloseIcon />
-                    </Badge>
+                <IconButton onClick={handleClose} style={{ float: "right" }} clean>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                 </IconButton>
             </DialogTitle>
             <DialogContent style={{ width: "1000px" }}>

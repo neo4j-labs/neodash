@@ -1,15 +1,9 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import { Tooltip } from '@material-ui/core';
+import { Button, HeroIcon } from '@neo4j-ndl/react';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -24,26 +18,23 @@ export const NeoDeletePageModal = ({modalOpen, onRemove, handleClose}) => {
             <DialogContent>
                 <DialogContentText> Are you sure you want to remove this page? This cannot be undone.</DialogContentText>
                 <Button onClick={() => {
-                    onRemove();
                     handleClose();
                 }}
-                    style={{ float: "right", marginTop: "20px", marginBottom: "20px", backgroundColor: "red" }}
-                    color="secondary"
-                    variant="contained"
-                    size="large"
-                    endIcon={<DeleteIcon color={"white"} />}>
-                    Remove
+                    fill="outlined"
+                    style={{ float: "right" }}>
+                        Cancel
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ReplyIcon" />
                 </Button>
-                <Button onClick={() => {
-                    handleClose();
-                }}
-                    style={{ float: "right", marginTop: "20px", marginRight: "6px", marginBottom: "20px", backgroundColor: "white" }}
-                    color="default"
-                    variant="contained"
-                    size="large">
-                    Cancel
-                </Button>
-              
+                <Button
+                    onClick={() => {
+                        onRemove();
+                        handleClose();
+                    }}
+                    color="danger"
+                    style={{ float: "right", marginRight: "5px" }}>
+                        Remove
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="TrashIcon" />
+                    </Button>
             </DialogContent>
         </Dialog>
     );

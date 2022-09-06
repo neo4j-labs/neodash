@@ -6,7 +6,7 @@ import NeoReport from '../../report/Report';
 import { CardContent, IconButton } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import { HeroIcon } from '@neo4j-ndl/react';
 
 import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
@@ -99,7 +99,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
                             setFields={onFieldsUpdate} /> :
                         <>
                             <IconButton style={{ float: "right", padding: "4px", marginRight: "12px" }} aria-label="run" onClick={(e) => { setActive(true) }}>
-                                <PlayCircleFilledIcon />
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
                             </IconButton>
                             <NeoCodeEditorComponent value={query} language={"cypher"}
                                 editable={false} style={{ border: "1px solid lightgray", borderRight: "35px solid #eee", marginTop: "0px", marginLeft: "10px", marginRight: "10px" }}

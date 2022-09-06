@@ -1,55 +1,55 @@
 import React from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
-import SaveIcon from '@material-ui/icons/Save';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import { FullscreenExit } from '@material-ui/icons';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { Tooltip } from '@material-ui/core';
+import { HeroIcon } from '@neo4j-ndl/react';
+import { CustomIcon } from '@neo4j-ndl/react';
 
 const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggleCardExpand, 
     expanded, fullscreenEnabled, onReportHelpButtonPressed, onClonePressed }) => {
     const maximizeButton = <IconButton aria-label="maximize"
         onClick={onToggleCardExpand}>
-        <FullscreenIcon />
+        <CustomIcon className="ndl-icon n-w-6 n-h-6" iconName="Expand" />
     </IconButton>
 
     const unMaximizeButton = <IconButton aria-label="un-maximize"
         onClick={onToggleCardExpand}>
-        <FullscreenExit />
+        <CustomIcon className="ndl-icon n-w-6 n-h-6" iconName="Shrink" />
     </IconButton>
 
     return (
         <CardHeader
-            avatar={<div style={{ marginTop: "-8px" }}>
+            avatar={<div>
 
-                <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginTop: "8px", marginLeft: "-7px", marginRight: "10px" }}></DragIndicatorIcon>
+                <CustomIcon className="ndl-icon n-w-6 n-h-6 drag-handle"
+                    iconName="Drag"
+                    color="grey"
+                    style={{ cursor: "pointer", marginLeft: "-7px", marginBottom: "-5px" }}/>
                 <Tooltip title="Help" aria-label="help">
-                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px" }} aria-label="help"
+                    <IconButton size="medium" style={{ marginTop: "-38px", marginLeft: "20px", padding: "8px" }} aria-label="help"
                         onClick={onReportHelpButtonPressed}>
-                        <HelpOutlineIcon />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="QuestionMarkCircleIcon" />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete" aria-label="delete">
-                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "red" }} aria-label="remove"
+                    <IconButton size="medium" style={{ marginTop: "-38px", padding: "8px", color: "red" }} aria-label="remove"
                         onClick={onRemovePressed} >
-                        <DeleteOutlineIcon />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="TrashIcon" />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Clone" aria-label="clone">
-                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "green" }} aria-label="clone"
+                    <IconButton size="medium" style={{ marginTop: "-38px", padding: "8px", color: "green" }} aria-label="clone"
                                 onClick={onClonePressed} >
-                        <FileCopyOutlinedIcon />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DuplicateIcon" />
                     </IconButton>
                 </Tooltip>
             </div>}
             action={<>
                 {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
                 <Tooltip title="Save" aria-label="save">
-                    <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton>
+                    <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
+                    </IconButton>
                 </Tooltip >
             </>}
             title=""

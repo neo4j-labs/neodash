@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from "@material-ui/core";
 import React, {  } from "react";
-import MenuIcon from '@material-ui/icons/Menu';
+import { HeroIcon } from '@neo4j-ndl/react';
 
 export const NeoDashboardPlaceholder = ({connected}) => {
     const content = (
@@ -25,7 +25,7 @@ export const NeoDashboardPlaceholder = ({connected}) => {
                             }
                         }
                     >
-                        <MenuIcon />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="MenuIcon" />
                     </IconButton>
                     <InputBase
                         disabled

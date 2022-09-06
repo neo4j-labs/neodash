@@ -3,10 +3,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from './Chart';
 import { getRecordType, getRendererForValue, rendererForType, RenderSubValue, valueIsNode, valueIsRelationship } from '../report/ReportRecordProcessing';
 import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../report/ReportRuleEvaluator';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { downloadCSV } from './util/ChartUtils';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import { HeroIcon, IconButton } from '@neo4j-ndl/react';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -79,9 +78,10 @@ const NeoTableChart = (props: ChartProps) => {
            {(allowDownload && rows && rows.length > 0) ? <Tooltip title="Download CSV" aria-label="">
                 <IconButton onClick={(e) => {
                         downloadCSV(rows);
-                    }} aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute"}}>
-                    <SaveAltIcon style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
-                    </SaveAltIcon>
+                    }} aria-label="download csv"
+                    style={{ bottom: "13px", left: "3px", position: "absolute", zIndex:50 }}
+                    clean>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="SaveIcon" />
                 </IconButton>
             </Tooltip> : <></>}
             <DataGrid

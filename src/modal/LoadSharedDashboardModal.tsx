@@ -1,21 +1,13 @@
 import React, { useContext } from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import SaveIcon from '@material-ui/icons/Save';
-import { ListItem, ListItemIcon, ListItemText, TextareaAutosize, Tooltip } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-import DashboardIcon from '@material-ui/icons/Dashboard';
+import { HeroIcon, IconButton, Button } from '@neo4j-ndl/react';
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
@@ -35,18 +27,11 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
         <div>
             <Dialog maxWidth={"lg"} open={shareDetails !== undefined} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                <DashboardIcon style={{
-                        height: "30px",
-                        paddingTop: "4px",
-                        marginBottom: "-8px",
-                        marginRight: "5px",
-                        paddingBottom: "5px"
-                    }} /> Loading Dashboard
-
-                    <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="AdjustmentsIcon"
+                        style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
+                    Loading Dashboard
+                    <IconButton onClick={handleClose} style={{ float: "right" }} clean>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
@@ -59,25 +44,18 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
                         </> : <><br/><br/><br/></>}
                         <br/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                         <Button
-                            component="label"
+                            onClick={handleClose}
+                            style={{ float: "right" }}>
+                            Cancel
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ReplyIcon" />
+                        </Button>
+                        <Button
                             onClick={e => {
                                 onConfirmLoadSharedDashboard();
                             }}
-                            style={{ backgroundColor: "white", marginTop: "20px", float: "right" }}
-                            color="default"
-                            variant="contained"
-                            endIcon={<PlayArrow />}
-                            size="medium">
+                            style={{ float: "right", marginRight: "5px" }}>
                             Continue
-                        </Button>
-                        <Button
-                            component="label"
-                            onClick={handleClose}
-                            style={{ float: "right", marginTop: "20px", marginRight: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium">
-                            Cancel
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
                         </Button>
                     </DialogContentText>
                 </DialogContent>
