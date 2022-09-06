@@ -4,13 +4,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import SettingsIcon from '@material-ui/icons/Settings';
-import Badge from '@material-ui/core/Badge';
 import { Grid, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import NeoSetting from '../component/field/Setting';
 import { DASHBOARD_SETTINGS } from '../config/DashboardConfig';
+import { HeroIcon, IconButton } from '@neo4j-ndl/react';
 
 
 
@@ -48,25 +45,19 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
         <div>
             <ListItem button onClick={handleClickOpen}>
                 <ListItemIcon>
-                    <SettingsIcon />
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="CogIcon" />
                 </ListItemIcon>
                 <ListItemText primary="Settings" />
             </ListItem>
 
             <Dialog maxWidth={"lg"} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                <SettingsIcon style={{
-                        height: "30px",
-                        paddingTop: "4px",
-                        marginBottom: "-8px",
-                        marginRight: "5px",
-                        paddingBottom: "5px"
-                    }} />  
+                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="CogIcon"
+                            style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
                     Dashboard Settings
-                    <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
+                    
+                    <IconButton onClick={handleClose} style={{ float: "right" }} clean>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>

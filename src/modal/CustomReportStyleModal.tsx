@@ -2,14 +2,12 @@ import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
-import { Button, Fab, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Fab, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Button } from '@neo4j-ndl/react';
 import NeoColorPicker from '../component/field/ColorPicker';
-import AddIcon from '@material-ui/icons/Add';
-import TuneIcon from '@material-ui/icons/Tune';
 import { Autocomplete } from '@material-ui/lab';
+import { HeroIcon, IconButton } from '@neo4j-ndl/react';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = [
@@ -188,18 +186,12 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                     style={{ overflow: "inherit", overflowY: "inherit" }}
                     aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">
-                        <TuneIcon style={{
-                            height: "30px",
-                            paddingTop: "4px",
-                            marginBottom: "-8px",
-                            marginRight: "5px",
-                            paddingBottom: "5px"
-                        }} />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="AdjustmentsIcon"
+                            style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
                         Rule-Based Styling
-                        <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                            <Badge badgeContent={""} >
-                                <CloseIcon />
-                            </Badge>
+                        
+                        <IconButton onClick={handleClose} style={{ float: "right" }} clean>
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                         </IconButton>
                     </DialogTitle>
                     <div>
@@ -270,12 +262,17 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                                                     <td style={{ paddingLeft: "5px", paddingRight: "5px" }}><NeoColorPicker label="" defaultValue="black" key={undefined} style={undefined} value={rule['customizationValue']} onChange={(value) => updateRuleField(index, 'customizationValue', value)} ></NeoColorPicker></td>
                                                 </div>
                                                 <td>
-                                                    <Fab size="small" aria-label="add" style={{ background: "black", color: "white", marginTop: "-6px", marginLeft: "20px" }}
+                                                <IconButton
+                                                    aria-label="remove rule"
+                                                    buttonSize="medium"
+                                                    floating
+                                                    >
+                                                    <HeroIcon iconName="XIcon"
                                                         onClick={() => {
                                                             setRules([...rules.slice(0, index), ...rules.slice(index + 1)])
-                                                        }} >
-                                                        <CloseIcon />
-                                                    </Fab>
+                                                        }}
+                                                    />
+                                                </IconButton>
                                                 </td>
                                                 <hr />
                                             </tr></>
@@ -284,13 +281,18 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                                     <tr >
                                         <td style={{ borderBottom: "1px solid grey", width: "750px" }} colSpan={5}>
                                             <Typography variant="h3" color="primary" style={{ textAlign: "center", marginBottom: "5px" }}>
-                                                <Fab size="small" aria-label="add" style={{ background: "white", color: "black" }}
-                                                    onClick={() => {
-                                                        const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0]['value']);
-                                                        setRules(rules.concat(newRule));
-                                                    }} >
-                                                    <AddIcon />
-                                                </Fab>
+                                                <IconButton
+                                                    aria-label="add"
+                                                    buttonSize="medium"
+                                                    floating
+                                                    >
+                                                    <HeroIcon iconName="PlusIcon"
+                                                        onClick={() => {
+                                                            const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0]['value']);
+                                                            setRules(rules.concat(newRule));
+                                                        }}
+                                                    />
+                                                </IconButton>
                                             </Typography>
 
                                         </td>

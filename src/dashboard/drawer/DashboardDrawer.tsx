@@ -1,9 +1,5 @@
 import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List, Button } from "@material-ui/core";
 import React from "react";
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import NeoSaveModal from "../../modal/SaveModal";
 import NeoLoadModal from "../../modal/LoadModal";
 import NeoShareModal from "../../modal/ShareModal";
@@ -16,8 +12,7 @@ import NeoSettingsModal from "../../settings/SettingsModal";
 import { createNotificationThunk } from "../../page/PageThunks";
 import { getDashboardSettings } from "../DashboardSelectors";
 import { updateDashboardSetting } from "../../settings/SettingsActions";
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import CategoryIcon from '@material-ui/icons/Category';
+import { HeroIcon, CustomIcon } from '@neo4j-ndl/react'
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
@@ -67,13 +62,13 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
                         color="default"
                         variant="outlined"
                         size="small"
-                        startIcon={<ExitToAppIcon />}>Menu
+                        startIcon={<HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="LoginIcon" />}>Menu
                     </Button>
                 </ListItem>
 
 
                 <IconButton onClick={handleDrawerClose}>
-                    <ChevronLeftIcon />
+                    <CustomIcon className="ndl-icon n-w-6 n-h-6" iconName="CollapseExpand" />
                 </IconButton>
             </div>
             <Divider />
@@ -97,14 +92,14 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
             <List>
                 <ListItem button onClick={(e) => window.open("https://neo4j.com/labs/neodash/2.1/user-guide/", "_blank")}>
                     <ListItemIcon>
-                        <LibraryBooksIcon />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="BookOpenIcon" />
                     </ListItemIcon>
                     <ListItemText primary="Documentation" />
                 </ListItem>
                 <NeoReportExamplesModal database={connection.database}></NeoReportExamplesModal>
                 <ListItem button onClick={onAboutModalOpen}>
                     <ListItemIcon>
-                        <InfoOutlinedIcon />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="InformationCircleIcon" />
                     </ListItemIcon>
                     <ListItemText primary="About" />
                 </ListItem>

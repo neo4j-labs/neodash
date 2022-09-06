@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
 import NeoSetting from '../../component/field/Setting';
 import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../modal/CustomReportStyleModal';
-import TuneIcon from '@material-ui/icons/Tune';
+import { HeroIcon } from '@neo4j-ndl/react';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -86,7 +86,7 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
                                 onClick={(e) => {
                                     setCustomReportStyleModalOpen(true); // Open the modal.
                                 }}>
-                                <TuneIcon></TuneIcon>
+                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="AdjustmentsIcon" />
                             </IconButton>
                         </Tooltip>
                     </td> : <></>}

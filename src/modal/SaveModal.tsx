@@ -1,26 +1,19 @@
 import React, { useContext, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import SaveIcon from '@material-ui/icons/Save';
 import { Checkbox, FormControl, FormControlLabel, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize, Tooltip } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { getDashboardJson } from './ModalSelectors';
 import { valueIsArray, valueIsObject } from '../report/ReportRecordProcessing';
-import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
+import { HeroIcon, CustomIcon, IconButton, Button } from '@neo4j-ndl/react';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -97,58 +90,46 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
         <div>
             <ListItem button onClick={handleClickOpen}>
                 <ListItemIcon>
-                    <IconButton style={{ padding: "0px" }} >
-                        <SaveIcon />
-                    </IconButton>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="CloudDownloadIcon" />
                 </ListItemIcon>
                 <ListItemText primary="Save" />
             </ListItem>
 
             <Dialog maxWidth={"lg"} open={saveModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    <SaveIcon style={{
-                        height: "30px",
-                        paddingTop: "4px",
-                        marginBottom: "-8px",
-                        marginRight: "5px",
-                        paddingBottom: "5px"
-                    }} />
+                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="CloudDownloadIcon"
+                    style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
                     Save Dashboard
-
-                    <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
+                    <IconButton onClick={handleClose} style={{ float: "right" }} clean>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent style={{ width: "1000px" }}>
-                    <Button
-                        component="label"
-                        onClick={(e) => { setSaveToNeo4jModalOpen(true) }}
-                        style={{ backgroundColor: "white" }}
-                        color="default"
-                        variant="contained"
-                        size="medium"
-                        endIcon={<StorageIcon />}>
-                        Save to Neo4j
-                    </Button>
-                    <Button
-                        component="label"
-                        onClick={downloadDashboard}
-                        style={{ backgroundColor: "white", marginLeft: "10px" }}
-                        color="default"
-                        variant="contained"
-                        size="medium"
-                        endIcon={<GetAppIcon />}>
-                        Save to File
-                    </Button>
-                    <br /><br />
-                    <TextareaAutosize
-                        style={{ minHeight: "500px", width: "100%", border: "1px solid lightgray" }}
-                        className={"textinput-linenumbers"}
-                        value={dashboardString}
-                        aria-label=""
-                        placeholder="Your dashboard JSON should show here" />
+                    <div style={{ marginBottom: "10px" }}>
+                        <Button
+                            onClick={(e) => { setSaveToNeo4jModalOpen(true) }}
+                            fill="outlined"
+                            color="neutral"
+                            floating>
+                            Save to Neo4j
+                            <CustomIcon className="ndl-icon n-w-6 n-h-6" iconName="DatabaseAddCircle" />
+                        </Button>
+                        <Button
+                            onClick={downloadDashboard}
+                            fill="outlined"
+                            color="neutral"
+                            style={{ marginLeft: "10px" }}
+                            floating>
+                            Save to file
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DocumentDownloadIcon" />
+                        </Button>
+                        </div>
+                        <TextareaAutosize
+                            style={{ minHeight: "500px", width: "100%", border: "1px solid lightgray" }}
+                            className={"textinput-linenumbers"}
+                            value={dashboardString}
+                            aria-label=""
+                            placeholder="Your dashboard JSON should show here" />
                 </DialogContent>
                 <DialogActions>
 
@@ -160,10 +141,8 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
 
                     Save to Neo4j
 
-                    <IconButton onClick={(e) => { setSaveToNeo4jModalOpen(false) }} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
+                    <IconButton onClick={(e) => { setSaveToNeo4jModalOpen(false) }} style={{ float: "right" }} clean>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent style={{ width: "800px" }}>
@@ -208,29 +187,28 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                         </Tooltip>
                     </FormControl>
 
-                    <Button
-                        component="label"
-                        onClick={e => {
-                            saveDashboardToNeo4j(driver, dashboardDatabase, dashboard, new Date().toISOString(), connection.username, overwriteExistingDashboard);
-                            setSaveToNeo4jModalOpen(false);
-                            setSaveModalOpen(false);
-                        }}
-                        style={{ backgroundColor: "white", marginTop: "20px", float: "right" }}
-                        color="default"
-                        variant="contained"
-                        endIcon={<SaveIcon />}
-                        size="medium">
-                        Save
-                    </Button>
-                    <Button
-                        component="label"
-                        onClick={(e) => { setSaveToNeo4jModalOpen(false) }}
-                        style={{ float: "right", marginTop: "20px", marginRight: "10px", backgroundColor: "white" }}
-                        color="default"
-                        variant="contained"
-                        size="medium">
-                        Cancel
-                    </Button>
+                    <div style={{ marginTop: "10px" }}>
+                        <Button
+                            onClick={e => {
+                                saveDashboardToNeo4j(driver, dashboardDatabase, dashboard, new Date().toISOString(), connection.username, overwriteExistingDashboard);
+                                setSaveToNeo4jModalOpen(false);
+                                setSaveModalOpen(false);
+                            }}
+                            color="success"
+                            style={{ float: "right" }}
+                            floating>
+                            Save
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DatabaseIcon" />
+                        </Button>
+                        <Button
+                            onClick={(e) => { setSaveToNeo4jModalOpen(false) }}
+                            style={{ float: "right", marginRight: "10px" }}
+                            fill="outlined"
+                            floating>
+                            Cancel
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ReplyIcon" />
+                        </Button>
+                    </div>
                 </DialogContent>
                 <DialogActions>
 

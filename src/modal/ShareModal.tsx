@@ -1,27 +1,18 @@
 import React, { useContext } from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import PlayArrow from '@material-ui/icons/PlayArrow';
 import { DialogContentText, Divider, FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import StorageIcon from '@material-ui/icons/Storage';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
-import ShareIcon from '@material-ui/icons/Share';
 import { SELECTION_TYPES } from '../config/ReportConfig';
 import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
+import { HeroIcon, Button, IconButton } from '@neo4j-ndl/react';
 
-// const shareBaseURL = "http://localhost:3000";
 const shareBaseURL = "http://neodash.graphapp.io";
 const styles = {
 
@@ -81,27 +72,19 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         <div>
             <ListItem button onClick={handleClickOpen}>
                 <ListItemIcon>
-                    <IconButton style={{ padding: "0px" }} >
-                        <ShareIcon />
-                    </IconButton>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ShareIcon" />
                 </ListItemIcon>
                 <ListItemText primary="Share" />
             </ListItem>
 
             <Dialog key={1} maxWidth={"lg"} open={shareModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    <ShareIcon style={{
-                        height: "30px",
-                        paddingTop: "4px",
-                        marginBottom: "-8px",
-                        marginRight: "5px",
-                        paddingBottom: "5px"
-                    }} />   Share Dashboard
-                    <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
-                    </IconButton>
+                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ShareIcon"
+                    style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
+                Share Dashboard
+                <IconButton onClick={handleClose} style={{ float: "right" }} clean>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
+                </IconButton>
 
                 </DialogTitle>
                 <DialogContent style={{ width: "1000px" }}>
@@ -113,33 +96,31 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                         Step 1: Select a dashboard to share.
                         <br />
                         <br />
-                        <Button
-                            component="label"
-                            onClick={(e) => {
-                                loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setShareLink(null); setRows(result) });
-                                setLoadFromNeo4jModalOpen(true);
-                            }}
-                            style={{ marginBottom: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium"
-                            endIcon={<StorageIcon />}>
-                            Share From Neo4j
-                        </Button>
-                        <Button
-                            component="label"
-                            onClick={(e) => {
-                                setLoadFromFileModalOpen(true);
-                            }}
-                            style={{ marginBottom: "10px", marginLeft: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium"
-                            endIcon={<PostAddIcon />}>
-                            Share a File
-                        </Button>
+                        <div style={{ marginBottom: "10px" }}>
+                            <Button
+                                onClick={(e) => {
+                                    loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setShareLink(null); setRows(result) });
+                                    setLoadFromNeo4jModalOpen(true);
+                                }}
+                                fill="outlined"
+                                color="neutral"
+                                floating>
+                                Share from Neo4j
+                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DatabaseIcon" />
+                            </Button>
+                            <Button
+                                onClick={(e) => {
+                                    setLoadFromFileModalOpen(true);
+                                }}
+                                fill="outlined"
+                                color="neutral"
+                                style={{ marginLeft: "10px" }}
+                                floating>
+                                Share a file
+                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DocumentDuplicateIcon" />
+                            </Button>
+                        </div>
 
-                        <br />
                         <b>{shareID ? "Selected dashboard: " + shareName : ""}</b>
                     </DialogContentText>
                     <Divider />
@@ -181,18 +162,17 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                             }}
                         />
                         <Button
-                            component="label"
                             onClick={(e) => {
                                 setShareLink((shareBaseURL + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) + "&dashboardDatabase=" + encodeURIComponent(dashboardDatabase) +
                                     (shareConnectionDetails == "Yes" ? "&credentials=" + encodeURIComponent(connection.protocol + "://"
                                         + connection.username + ":" + connection.password + "@" + connection.database + ":" + connection.url + ":" + connection.port) : "")
                                     + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")));
                             }}
-                            style={{ marginBottom: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium">
+                            fill="outlined"
+                            color="neutral"
+                            floating>
                             Generate Link
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="LinkIcon" />
                         </Button>
                     </DialogContentText>
                         <Divider /></> : <></>}
@@ -206,11 +186,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
             </Dialog>
             <Dialog key={2} maxWidth={"lg"} open={loadFromNeo4jModalOpen == true} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
-                    Select From Neo4j
-                    <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
+                    Select from Neo4j
+                    <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ float: "right" }} clean>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent style={{ width: "800px" }}>
@@ -253,10 +231,8 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
             <Dialog key={3} maxWidth={"lg"} open={loadFromFileModalOpen == true} onClose={(e) => { setLoadFromFileModalOpen(false) }} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     Select from URL
-                    <IconButton onClick={(e) => { setLoadFromFileModalOpen(false) }} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
+                    <IconButton onClick={(e) => { setLoadFromFileModalOpen(false) }} style={{ float: "right" }} clean>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent style={{ width: "1000px" }}>
@@ -274,22 +250,22 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                 setShareFileURL(e);
                             }}
                         />
-                        <Button
-                            component="label"
-                            onClick={(e) => {
-                                setShareID(shareFileURL);
-                                setShareName(shareFileURL.substring(0, 100) + "...");
-                                setShareType("file");
-                                setShareLink(null);
-                                setShareFileURL("");
-                                setLoadFromFileModalOpen(false);
-                            }}
-                            style={{ marginBottom: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium">
-                            Confirm URL
-                        </Button>
+                        <div style={{ marginBottom: "10px" }}>
+                            <Button
+                                onClick={(e) => {
+                                    setShareID(shareFileURL);
+                                    setShareName(shareFileURL.substring(0, 100) + "...");
+                                    setShareType("file");
+                                    setShareLink(null);
+                                    setShareFileURL("");
+                                    setLoadFromFileModalOpen(false);
+                                }}
+                                style={{ marginBottom: "10px"}}
+                                color="success">
+                                Confirm URL
+                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
+                            </Button>
+                        </div>
                     </DialogContentText>
 
 

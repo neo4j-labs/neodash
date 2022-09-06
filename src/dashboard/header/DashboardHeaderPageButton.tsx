@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { IconButton, InputBase } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
+import { HeroIcon } from '@neo4j-ndl/react';
 
 export const NeoPageButton = ({ title, disabled = false, selected = false, onSelect, onRemove, onTitleUpdate }) => {
 
@@ -50,11 +50,11 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
                 </Grid>
             </Grid>
             <div style={{position: "absolute", top: 5, right: 0, paddingRight: 3, background: selected ? "white" : "transparent"}}>
-                {(selected && !disabled) ? <IconButton size="medium" style={{ padding: "5px", color: "white" }} aria-label="move left" onClick={() => setModalOpen(true)}>
-                    <CloseIcon color="disabled" />
-                </IconButton> : <IconButton size="medium" style={{ opacity: 0, padding: "5px", color: "white" }} aria-label="move left"
+                {(selected && !disabled) ? <IconButton size="medium" style={{ padding: "5px" }} aria-label="move left" onClick={() => setModalOpen(true)}>
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
+                </IconButton> : <IconButton size="medium" style={{ opacity: 0, padding: "5px" }} aria-label="move left"
                     onClick={(event) => null}>
-                    <CloseIcon color="disabled" />
+                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                 </IconButton>}
             </div>
             <NeoDeletePageModal modalOpen={modalOpen} onRemove={onRemove} handleClose={handleClose}></NeoDeletePageModal>

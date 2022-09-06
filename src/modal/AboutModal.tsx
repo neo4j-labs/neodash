@@ -3,12 +3,7 @@ import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import Badge from '@material-ui/core/Badge';
-import { Button } from '@material-ui/core';
-import BugReportIcon from '@material-ui/icons/BugReport';
+import { HeroIcon, Button, IconButton } from '@neo4j-ndl/react';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
@@ -30,10 +25,8 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
             <Dialog maxWidth={"lg"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     About NeoDash
-                    <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge>
+                    <IconButton onClick={handleClose} style={{ float: "right" }} clean>
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
@@ -52,7 +45,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                         <hr></hr>
                         <h3 style={{ marginBottom: "5px" }}>Getting Started</h3>
                         You will automatically start with an empty dashboard when starting up NeoDash for this first time.<br />
-                        Click the <strong>(<LibraryBooksIcon style={{ paddingTop: "5px" }} fontSize="small" /> Documentation)</strong> button to see some example queries and visualizations.
+                        Click the <strong>(<HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="BookOpenIcon" style={{ display: "inline" }} /> Documentation)</strong> button to see some example queries and visualizations.
                         <hr></hr>
                         <h3 style={{ marginBottom: "5px" }}>Extending NeoDash</h3>
                         NeoDash is built with React and <a target="_blank" href="https://github.com/adam-cowley/use-neo4j">use-neo4j</a>,
@@ -69,14 +62,12 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                             <tr>
                                 <td>
                                     <Button
-                                        component="label"
                                         onClick={downloadDebugFile}
-                                        style={{ backgroundColor: "white" }}
-                                        color="default"
-                                        variant="contained"
-                                        size="small"
-                                        endIcon={<BugReportIcon />}>
+                                        fill="outlined"
+                                        color="neutral"
+                                        buttonSize="small">
                                         Debug Report
+                                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="BeakerIcon" />
                                     </Button>
                                 </td>
                                 <td>

@@ -1,16 +1,12 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import PlayArrow from '@material-ui/icons/PlayArrow';
 import { connect } from "react-redux";
 import { applicationHasNotification, applicationHasWelcomeScreenOpen, applicationIsConnected, getNotification, getNotificationIsDismissable, getNotificationTitle } from '../application/ApplicationSelectors';
 import { clearNotification, setConnectionModalOpen } from '../application/ApplicationActions';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import CloseIcon from '@material-ui/icons/Close';
+import { HeroIcon, IconButton } from "@neo4j-ndl/react";
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -33,19 +29,21 @@ export const NeoNotificationModal = ({ open, title, text, dismissable,
                 aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
                     {title}
-                    <IconButton onClick={(e) => {
-                        if(dismissable){
-                            onNotificationClose();
-                            if (openConnectionModalOnClose) {
-                                setConnectionModalOpen();
+                    <IconButton
+                        onClick={(e) => {
+                            if(dismissable){
+                                onNotificationClose();
+                                if (openConnectionModalOnClose) {
+                                    setConnectionModalOpen();
+                                }
                             }
-                        }
-                       
-                    }}
-                        style={{ marginLeft: "40px", padding: "3px", float: "right" }}>
-                        {dismissable ? <Badge badgeContent={""} >
-                            <CloseIcon />
-                        </Badge> : <></>}
+                           
+                        }}
+                        style={{ float: "right" }}
+                        clean>
+                            {dismissable ?
+                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
+                            : <></>}
                     </IconButton>
                 </DialogTitle>
 

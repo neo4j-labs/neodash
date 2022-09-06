@@ -8,7 +8,7 @@ import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet
 import { HeatmapLayer } from 'react-leaflet-heatmap-layer-v3';
 import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import { HeroIcon } from '@neo4j-ndl/react';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
 
@@ -252,7 +252,7 @@ const NeoMapChart = (props: ChartProps) => {
         let markers = data.nodes.filter(node => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1])).map((node, i) =>
             <Marker position={node.pos} key={i}
                 icon={<div style={{ color: node.color, textAlign: "center", marginTop: markerMarginTop }}>
-                    <LocationOnIcon fontSize={node.size}></LocationOnIcon>
+                    <HeroIcon fontSize={node.size} className="ndl-icon n-w-6 n-h-6" type="solid" iconName="LocationMarkerIcon" />
                 </div>}>
                 {props.selection && props.selection[node.firstLabel] && props.selection[node.firstLabel] != "(no label)" ?
                     <Tooltip direction='bottom' permanent className={"leaflet-custom-tooltip"}> {renderNodeLabel(node)}   </Tooltip>

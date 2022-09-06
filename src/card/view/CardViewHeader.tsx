@@ -1,17 +1,11 @@
 import React, { useEffect } from "react";
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { TextField } from "@material-ui/core";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
-import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { Tooltip } from '@material-ui/core';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
-import ImageIcon from '@material-ui/icons/Image';
+import { HeroIcon, CustomIcon } from '@neo4j-ndl/react';
 
 const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, downloadImageEnabled,
     onToggleCardSettings, onDownloadImage, onToggleCardExpand, expanded }) => {
@@ -36,7 +30,12 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
             <tbody>
                 <tr>
                     {editable ? <td>
-                        <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginLeft: "-10px", marginRight: "10px" }}></DragIndicatorIcon>
+                        <CustomIcon
+                            className="ndl-icon n-w-6 n-h-6 drag-handle"
+                            iconName="Drag"
+                            color="grey"
+                            style={{ cursor: "pointer", marginTop: "-7px", marginLeft: "-8px" }}
+                        />
                     </td> : <></>}
                     <td style={{ width: "100%" }}>
                         <TextField
@@ -62,26 +61,25 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
     const settingsButton = <Tooltip title="Settings" aria-label="settings">
         <IconButton aria-label="settings"
             onClick={onToggleCardSettings}>
-            <MoreVertIcon />
+            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DotsVerticalIcon" />
         </IconButton>
     </Tooltip>
 
     const maximizeButton = <Tooltip title="Maximize" aria-label="maximize">
         <IconButton aria-label="maximize"
             onClick={onToggleCardExpand}>
-            <FullscreenIcon />
+            <CustomIcon className="ndl-icon n-w-6 n-h-6" iconName="Expand" />
         </IconButton>
     </Tooltip>
 
     const unMaximizeButton = <IconButton aria-label="un-maximize"
         onClick={onToggleCardExpand}>
-        <FullscreenExit />
+        <CustomIcon className="ndl-icon n-w-6 n-h-6" iconName="Shrink" />
     </IconButton>
 
     const downloadImageButton = <Tooltip title="Download as Image" aria-label="download">
         <IconButton onClick={onDownloadImage} aria-label="download csv">
-            <ImageIcon style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
-            </ImageIcon>
+            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PhotographIcon" />
         </IconButton>
     </Tooltip>
 

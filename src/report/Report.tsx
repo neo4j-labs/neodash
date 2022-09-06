@@ -1,10 +1,9 @@
 import { CardContent, Chip, IconButton, Tooltip } from "@material-ui/core";
 import React, { useState, useEffect } from 'react';
-import WarningIcon from '@material-ui/icons/Warning';
 import { QueryStatus, runCypherQuery } from "./ReportQueryRunner";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { Typography, Fab } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import NeoCodeViewerComponent from "../component/editor/CodeViewerComponent";
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
@@ -12,6 +11,7 @@ import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { useContext } from "react";
 import NeoTableChart from "../chart/TableChart";
+import { HeroIcon } from '@neo4j-ndl/react';
 
 export const NeoReport = ({
     database = "neo4j", // The Neo4j database to run queries onto.
@@ -165,7 +165,8 @@ export const NeoReport = ({
             <div style={{ marginBottom: "-31px" }}>
                 <div style={{ display: "flex" }} >
                     <Tooltip title={"Over " + rowLimit + " row(s) were returned, results have been truncated."} placement="left" aria-label="host">
-                        <WarningIcon style={{ zIndex: 999, marginTop: "2px", marginRight: "20px", marginLeft: "auto", color: "orange" }} />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="ExclamationIcon"
+                            style={{ zIndex: 999, marginTop: "2px", marginRight: "20px", marginLeft: "auto", color: "orange" }} />
                     </Tooltip>
                 </div>
             </div>

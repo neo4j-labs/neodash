@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Button from '@material-ui/core/Button';
+import { Button, HeroIcon } from '@neo4j-ndl/react';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,10 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import { FormControlLabel, MenuItem, Switch, Tooltip } from '@material-ui/core';
-import SecurityIcon from '@material-ui/icons/Security';
-import WarningIcon from '@material-ui/icons/Warning';
+import { FormControlLabel, MenuItem, Switch } from '@material-ui/core';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
 
 /**
@@ -125,12 +122,10 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                             onConnectionModalClose();
                             createConnection(protocol, url, port, database, username, password);
                         }} 
-                            style={{ float: "right", marginTop: "20px", marginBottom: "20px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="large"
-                            endIcon={<PlayArrow />}>
+                            style={{ float: "right" }}
+                            >
                             Connect
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="PlayIcon" />
                         </Button>}
 
 
