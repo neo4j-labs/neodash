@@ -551,6 +551,16 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "every 1 year"
             },
+            "xTickRotationAngle": {
+                label: "X-axis Tick Rotation (Degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "yTickRotationAngle": {
+                label: "Y-axis Tick Rotation (Degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
             "curve": {
                 label: "Line Smoothing",
                 type: SELECTION_TYPES.LIST,

@@ -260,7 +260,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         });
 
         const page = urlParams.get('page');
-        if(page !== undefined){
+        if(page !== "" && page !== null){
             if(!isNaN(page)){
                 dispatch(setPageNumberThunk(parseInt(page)));
             }
