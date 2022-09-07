@@ -26,6 +26,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
     const reportHeader = <NeoCardViewHeader
         title={title}
         editable={editable}
+        description={settings.description}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
         downloadImageEnabled={dashboardSettings.downloadImageEnabled}
         onTitleUpdate={onTitleUpdate}

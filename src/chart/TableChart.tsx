@@ -7,6 +7,10 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from './util/ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -28,6 +32,7 @@ const NeoTableChart = (props: ChartProps) => {
     const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
     const allowDownload = props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+    const [notificationOpen, setNotificationOpen] = React.useState(false);
 
     const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
     const classes = useStyles();
@@ -76,10 +81,29 @@ const NeoTableChart = (props: ChartProps) => {
 
     return (
         <div className={classes.root} style={{ height: "100%", width: '100%', position: "relative" }}>
-           {(allowDownload && rows && rows.length > 0) ? <Tooltip title="Download CSV" aria-label="">
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center'
+                }}
+                open={notificationOpen}
+                autoHideDuration={2000}
+                onClose={() => setNotificationOpen(false)}
+                message="Value copied to clipboard."
+                action={
+                    <React.Fragment>
+                        <IconButton size="small" aria-label="close" color="inherit" onClick={() => setNotificationOpen(false)}>
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </React.Fragment>
+                }
+            />
+
+
+            {(allowDownload && rows && rows.length > 0) ? <Tooltip title="Download CSV" aria-label="">
                 <IconButton onClick={(e) => {
-                        downloadCSV(rows);
-                    }} aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute"}}>
+                    downloadCSV(rows);
+                }} aria-label="download csv" style={{ bottom: "9px", left: "3px", position: "absolute" }}>
                     <SaveAltIcon style={{ fontSize: "1.3rem", zIndex: 5 }} fontSize="small">
                     </SaveAltIcon>
                 </IconButton>
@@ -88,7 +112,11 @@ const NeoTableChart = (props: ChartProps) => {
                 headerHeight={32}
                 rows={rows}
                 columns={columns}
-                pageSize={Math.floor((props.dimensions.height-TABLE_HEADER_HEIGHT-TABLE_FOOTER_HEIGHT) / TABLE_ROW_HEIGHT)-1}
+                onCellDoubleClick={(e) => {
+                    setNotificationOpen(true);
+                    navigator.clipboard.writeText(e.value);
+                }}
+                pageSize={Math.floor((props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / TABLE_ROW_HEIGHT) - 1}
                 disableSelectionOnClick
                 components={{
                     ColumnSortedDescendingIcon: () => <></>,
