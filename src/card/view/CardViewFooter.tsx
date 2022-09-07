@@ -1,7 +1,8 @@
 import React from "react";
-import { CardActions, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField } from "@material-ui/core";
+import { CardActions, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField } from "@material-ui/core";
 import { REPORT_TYPES, SELECTION_TYPES } from "../../config/ReportConfig";
 import { categoricalColorSchemes } from "../../config/ColorConfig";
+import { Checkbox } from "@neo4j-ndl/react";
 
 const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSelections, onSelectionUpdate }) => {
     /**

@@ -1,13 +1,6 @@
 import React, { useEffect } from 'react';
-import { Button, HeroIcon } from '@neo4j-ndl/react';
+import { Button, HeroIcon, IconButton, Dialog } from '@neo4j-ndl/react';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import { FormControlLabel, MenuItem, Switch } from '@material-ui/core';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
 
@@ -45,15 +38,11 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
     return (
         <div>
            
-            <Dialog maxWidth="xs" open={open == true} onClose={() => { dismissable ? onConnectionModalClose() : null }} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">{standalone ? "Connect to Dashboard" : "Connect to Neo4j"}
-                    <IconButton style={{ padding: "3px", float: "right" }}>
-                        <Badge badgeContent={""} >
-                            <img style={{ width: "36px", height: "36px" }} src="neo4j-icon-color.png" />
-                        </Badge>
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
+            <Dialog size="small" open={open == true} onClose={() => { dismissable ? onConnectionModalClose() : null }} aria-labelledby="form-dialog-title" disableCloseButton>
+                <Dialog.Header id="form-dialog-title">
+                    {standalone ? "Connect to Dashboard" : "Connect to Neo4j"}
+                </Dialog.Header>
+                <Dialog.Content>
                     <TextField select={true} autoFocus margin="dense" id="protocol" value={protocol} disabled={standalone}
                         onChange={(e) => setProtocol(e.target.value)} style={{ width: "25%" }} label="Protocol"
                         placeholder="neo4j://" type="text" >
@@ -116,7 +105,12 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                                 color="primary"
                             />}
                             label="Use SSO"></FormControlLabel> : <></>}
-                        {ssoVisible ? <SSOLoginButton discoveryAPIUrl={discoveryAPIUrl} onSSOAttempt={onSSOAttempt} /> 
+
+
+                    </form>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    {ssoVisible ? <SSOLoginButton discoveryAPIUrl={discoveryAPIUrl} onSSOAttempt={onSSOAttempt} /> 
                         : <Button type="submit" onClick={(e) => {
                             e.preventDefault();
                             onConnectionModalClose();
@@ -127,28 +121,23 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                             Connect
                             <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="PlayIcon" />
                         </Button>}
-
-
-                    </form>
-                </DialogContent>
-                <DialogActions style={{ background: "#555" }}>
-                    <DialogContent>
+                </Dialog.Actions>
+                <Dialog.Actions style={{ background: "#555", marginLeft: "-3rem", marginRight: "-3rem", marginBottom: "-3rem", padding:"3rem" }}>
                         {standalone ? 
-                        <DialogContentText style={{ color: "lightgrey" }}>
+                        <div style={{ color: "lightgrey" }}>
                             {standaloneSettings['standaloneDashboardURL'] === "" ? 
                             <>  Sign in to continue. You will be connected to Neo4j, and load a dashboard called <b>{standaloneSettings['standaloneDashboardName']}</b>.</> :
                             <>  Sign in to continue. You will be connected to Neo4j, and load a dashboard.</>}
-                    </DialogContentText>
-                        : <DialogContentText style={{ color: "lightgrey" }}>
+                        </div>
+                        : <div style={{ color: "lightgrey" }}>
                             
                             Enter your Neo4j database credentials to start.
                             Don't have a Neo4j database yet?
                             Create your own in <a style={{ color: "white" }} href="https://neo4j.com/download/">Neo4j Desktop</a>,
                             or try the <a style={{ color: "white" }} href="https://console.neo4j.io/">Neo4j Aura</a> free tier.
 
-                        </DialogContentText> }
-                    </DialogContent>
-                </DialogActions>
+                        </div> }
+                </Dialog.Actions>
             </Dialog>
         </div>
     );

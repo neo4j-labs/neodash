@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
+import { FormControlLabel, FormGroup, Switch, Tooltip } from '@material-ui/core';
 import NeoSetting from '../../component/field/Setting';
 import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../modal/CustomReportStyleModal';
-import { HeroIcon } from '@neo4j-ndl/react';
+import { HeroIcon, IconButton } from '@neo4j-ndl/react';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -82,10 +82,11 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
                     </td>
                     {RULE_BASED_REPORT_CUSTOMIZATIONS[type] ? <td>
                         <Tooltip title="Set rule-based styling" aria-label="">
-                            <IconButton size="small" style={{ float: "right", marginRight: "10px" }} aria-label="custom styling"
+                            <IconButton style={{ float: "right", marginRight: "10px" }} aria-label="custom styling"
                                 onClick={(e) => {
                                     setCustomReportStyleModalOpen(true); // Open the modal.
-                                }}>
+                                }}
+                                clean>
                                 <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="AdjustmentsIcon" />
                             </IconButton>
                         </Tooltip>

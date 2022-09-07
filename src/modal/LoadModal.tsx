@@ -1,15 +1,11 @@
 import React, { useContext } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { loadDashboardFromNeo4jByUUIDThunk, loadDashboardListFromNeo4jThunk, loadDashboardThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
-import { HeroIcon, IconButton, Button } from "@neo4j-ndl/react";
+import { HeroIcon, IconButton, Button, Dialog } from "@neo4j-ndl/react";
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -89,17 +85,14 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                 <ListItemText primary="Load" />
             </ListItem>
 
-            <Dialog maxWidth={"lg"} open={loadModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog size="large" open={loadModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                 <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="CloudUploadIcon"
                     style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
                 Load Dashboard
-                <IconButton onClick={handleClose} style={{ float: "right" }} clean>
-                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                </IconButton>
 
-                </DialogTitle>
-                <DialogContent style={{ width: "1000px" }}>
+                </Dialog.Header>
+                <Dialog.Content>
                     <div style={{ marginBottom: "10px" }}>
                         <Button
                             onClick={(e) => {
@@ -130,7 +123,6 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                         <Button onClick={(text.length > 0) ? handleCloseAndLoad : null}
                             style={{ float: "right", color: text.length > 0 ? "white" : "lightgrey", backgroundColor: text.length > 0 ? "green" : "white" }}
                             fill="outlined"
-                            color="neutral"
                             floating>
                             Load Dashboard
                             <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
@@ -146,19 +138,16 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                         aria-label=""
                         placeholder="Select a dashboard first, then preview it here..." />
 
-                </DialogContent>
+                </Dialog.Content>
             </Dialog>
-            <Dialog maxWidth={"lg"} open={loadFromNeo4jModalOpen == true} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog size="large" open={loadFromNeo4jModalOpen == true} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                     Select from Neo4j
-                    <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ float: "right" }} clean>
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent style={{ width: "900px" }}>
-                    <DialogContentText>If dashboards are saved in your current database, choose a dashboard below.
-                    </DialogContentText>
-
+                </Dialog.Header>
+                <Dialog.Subtitle>
+                    If dashboards are saved in your current database, choose a dashboard below.
+                </Dialog.Subtitle>
+                <Dialog.Content>
                     <div style={{ height: "380px", borderBottom: "1px solid lightgrey" }}>
                         <DataGrid
                             rows={rows}
@@ -190,7 +179,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                             })}
                         </Select>
                     </FormControl>
-                </DialogContent>
+                </Dialog.Content>
             </Dialog>
         </div>
     );

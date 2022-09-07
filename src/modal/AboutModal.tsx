@@ -1,9 +1,6 @@
 
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { HeroIcon, Button, IconButton } from '@neo4j-ndl/react';
+import { HeroIcon, Button, IconButton, Dialog } from '@neo4j-ndl/react';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
@@ -22,19 +19,21 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
 
     return (
         <div>
-            <Dialog maxWidth={"lg"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog
+                onClose={handleClose}
+                open={open == true}
+                aria-labelledby="form-dialog-title"
+                size="large"
+                >
+                <Dialog.Header>
                     About NeoDash
-                    <IconButton onClick={handleClose} style={{ float: "right" }} clean>
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <div style={{ color: "rgba(0, 0, 0, 0.84)" }} class="MuiTypography-root MuiDialogContentText-root MuiTypography-body1 MuiTypography-colorTextSecondary">
+                </Dialog.Header>
+                <Dialog.Content>
+                <div>
                         NeoDash is a dashboard builder for the Neo4j graph database.<br />
                         If you can write Cypher queries, you can build a dashboard in minutes.
                         <hr></hr>
-                        <h3 style={{ marginBottom: "5px" }}>Core Features</h3>
+                        <h4>Core Features</h4>
                         <ul>
                             <li>An editor to write and execute <a target="_blank" href="https://neo4j.com/developer/cypher/">Cypher</a> queries.</li>
                             <li>Use results of your Cypher queries to create tables, bar charts, graph visualizations, and more.</li>
@@ -43,16 +42,16 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                         </ul>
                         No connectors or data pre-processing needed, it works directly with Neo4j!
                         <hr></hr>
-                        <h3 style={{ marginBottom: "5px" }}>Getting Started</h3>
+                        <h4>Getting Started</h4>
                         You will automatically start with an empty dashboard when starting up NeoDash for this first time.<br />
                         Click the <strong>(<HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="BookOpenIcon" style={{ display: "inline" }} /> Documentation)</strong> button to see some example queries and visualizations.
                         <hr></hr>
-                        <h3 style={{ marginBottom: "5px" }}>Extending NeoDash</h3>
+                        <h4>Extending NeoDash</h4>
                         NeoDash is built with React and <a target="_blank" href="https://github.com/adam-cowley/use-neo4j">use-neo4j</a>,
                         It uses <a target="_blank" href="https://github.com/neo4j-labs/charts">charts</a> to power some of the visualizations, and <a target="_blank" href="https://www.openstreetmap.org/">openstreetmap</a> for the map view.<br />
                         You can also extend NeoDash with your own visualizations. Check out the developer guide in the <a target="_blank" href="https://github.com/neo4j-labs/neodash/"> project repository</a>.
                         <hr></hr>
-                        <h3 style={{ marginBottom: "5px" }}>Contact</h3>
+                        <h4>Contact</h4>
                         For suggestions, feature requests and other feedback: create an issue on the <a href="https://github.com/neo4j-labs/neodash">GitHub repository</a>, 
                         or the <a href={"https://community.neo4j.com/t5/forums/filteredbylabelpage/board-id/integrations/label-name/neodash"}>Neo4j Community Forums</a>.
                         <br />
@@ -75,7 +74,8 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                                 </td>
                             </tr>
                         </table>
-                    </div></DialogContent>
+                    </div>
+                </Dialog.Content>
             </Dialog>
         </div >
     );

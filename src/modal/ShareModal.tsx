@@ -1,8 +1,5 @@
 import React, { useContext } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { DialogContentText, Divider, FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize } from '@material-ui/core';
+import { Divider, FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { DataGrid } from '@mui/x-data-grid';
@@ -11,7 +8,7 @@ import { SELECTION_TYPES } from '../config/ReportConfig';
 import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
-import { HeroIcon, Button, IconButton } from '@neo4j-ndl/react';
+import { HeroIcon, Button, IconButton, Dialog } from '@neo4j-ndl/react';
 
 const shareBaseURL = "http://neodash.graphapp.io";
 const styles = {
@@ -77,54 +74,49 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 <ListItemText primary="Share" />
             </ListItem>
 
-            <Dialog key={1} maxWidth={"lg"} open={shareModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog size="large" open={shareModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                 <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ShareIcon"
                     style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
                 Share Dashboard
-                <IconButton onClick={handleClose} style={{ float: "right" }} clean>
-                    <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                </IconButton>
 
-                </DialogTitle>
-                <DialogContent style={{ width: "1000px" }}>
-                    <DialogContentText>
-                        This window lets you create a temporary share link for your dashboard.
-                        Keep in mind that share links are not intended as a way to publish your dashboard for users, see the <a href="https://neo4j.com/labs/neodash/2.1/user-guide/publishing/">documentation</a> for more on publishing.
-                        <br />
-                        <hr /><br />
-                        Step 1: Select a dashboard to share.
-                        <br />
-                        <br />
-                        <div style={{ marginBottom: "10px" }}>
-                            <Button
-                                onClick={(e) => {
-                                    loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setShareLink(null); setRows(result) });
-                                    setLoadFromNeo4jModalOpen(true);
-                                }}
-                                fill="outlined"
-                                color="neutral"
-                                floating>
-                                Share from Neo4j
-                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DatabaseIcon" />
-                            </Button>
-                            <Button
-                                onClick={(e) => {
-                                    setLoadFromFileModalOpen(true);
-                                }}
-                                fill="outlined"
-                                color="neutral"
-                                style={{ marginLeft: "10px" }}
-                                floating>
-                                Share a file
-                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DocumentDuplicateIcon" />
-                            </Button>
-                        </div>
+                </Dialog.Header>
+                <Dialog.Content>
+                    This window lets you create a temporary share link for your dashboard.
+                    Keep in mind that share links are not intended as a way to publish your dashboard for users, see the <a href="https://neo4j.com/labs/neodash/2.1/user-guide/publishing/">documentation</a> for more on publishing.
+                    <br />
+                    <hr /><br />
+                    Step 1: Select a dashboard to share.
+                    <br />
+                    <br />
+                    <div style={{ marginBottom: "10px" }}>
+                        <Button
+                            onClick={(e) => {
+                                loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setShareLink(null); setRows(result) });
+                                setLoadFromNeo4jModalOpen(true);
+                            }}
+                            fill="outlined"
+                            color="neutral"
+                            floating>
+                            Share from Neo4j
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DatabaseIcon" />
+                        </Button>
+                        <Button
+                            onClick={(e) => {
+                                setLoadFromFileModalOpen(true);
+                            }}
+                            fill="outlined"
+                            color="neutral"
+                            style={{ marginLeft: "10px" }}
+                            floating>
+                            Share a file
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DocumentDuplicateIcon" />
+                        </Button>
+                    </div>
 
-                        <b>{shareID ? "Selected dashboard: " + shareName : ""}</b>
-                    </DialogContentText>
-                    <Divider />
-                    {shareID ? <><DialogContentText>
+                    <b>{shareID ? "Selected dashboard: " + shareName : ""}</b>
+                    <hr />
+                    {shareID ? <>
                         <br />
                         Step 2: Configure sharing settings.
                         <br />
@@ -174,26 +166,21 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                             Generate Link
                             <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="LinkIcon" />
                         </Button>
-                    </DialogContentText>
-                        <Divider /></> : <></>}
-                    {shareLink ? <DialogContentText>
+                        <hr /></> : <></>}
+                    {shareLink ? <>
                         <br />
                         Step 3: Use the generated link to view the dashboard:<br />
                         <a href={shareLink} target="_blank">{shareLink}</a><br />
 
-                    </DialogContentText> : <></>}
-                </DialogContent>
+                    </> : <></>}
+                </Dialog.Content>
             </Dialog>
-            <Dialog key={2} maxWidth={"lg"} open={loadFromNeo4jModalOpen == true} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog size="large" open={loadFromNeo4jModalOpen == true} onClose={(e) => { setLoadFromNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                     Select from Neo4j
-                    <IconButton onClick={(e) => { setLoadFromNeo4jModalOpen(false) }} style={{ float: "right" }} clean>
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent style={{ width: "800px" }}>
-                    <DialogContentText>Choose a dashboard to share below.
-                    </DialogContentText>
+                </Dialog.Header>
+                <Dialog.Content>
+                    Choose a dashboard to share below.
 
                     <div style={{ height: "380px" }}>
                         <DataGrid
@@ -226,51 +213,43 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                         </Select>
                     </FormControl>
 
-                </DialogContent>
+                </Dialog.Content>
             </Dialog>
-            <Dialog key={3} maxWidth={"lg"} open={loadFromFileModalOpen == true} onClose={(e) => { setLoadFromFileModalOpen(false) }} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog size="large" open={loadFromFileModalOpen == true} onClose={(e) => { setLoadFromFileModalOpen(false) }} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                     Select from URL
-                    <IconButton onClick={(e) => { setLoadFromFileModalOpen(false) }} style={{ float: "right" }} clean>
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent style={{ width: "1000px" }}>
-                    <DialogContentText>
-                        To share a dashboard file directly, make it accessible <a target="_blank" href="https://gist.github.com/">online</a>.
-                        Then, paste the direct link here:
-                        <NeoSetting key={"url"} name={"url"}
-                            value={shareFileURL}
-                            style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
-                            type={SELECTION_TYPES.TEXT}
-                            helperText={"Make sure the URL starts with http:// or https://."}
-                            label={""}
-                            defaultValue="https://gist.githubusercontent.com/username/0a78d80567f23072f06e03005cf53bce/raw/f97cc..."
-                            onChange={(e) => {
-                                setShareFileURL(e);
+                </Dialog.Header>
+                <Dialog.Content>
+                    To share a dashboard file directly, make it accessible <a target="_blank" href="https://gist.github.com/">online</a>.
+                    Then, paste the direct link here:
+                    <NeoSetting key={"url"} name={"url"}
+                        value={shareFileURL}
+                        style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
+                        type={SELECTION_TYPES.TEXT}
+                        helperText={"Make sure the URL starts with http:// or https://."}
+                        label={""}
+                        defaultValue="https://gist.githubusercontent.com/username/0a78d80567f23072f06e03005cf53bce/raw/f97cc..."
+                        onChange={(e) => {
+                            setShareFileURL(e);
+                        }}
+                    />
+                    <div style={{ marginBottom: "10px" }}>
+                        <Button
+                            onClick={(e) => {
+                                setShareID(shareFileURL);
+                                setShareName(shareFileURL.substring(0, 100) + "...");
+                                setShareType("file");
+                                setShareLink(null);
+                                setShareFileURL("");
+                                setLoadFromFileModalOpen(false);
                             }}
-                        />
-                        <div style={{ marginBottom: "10px" }}>
-                            <Button
-                                onClick={(e) => {
-                                    setShareID(shareFileURL);
-                                    setShareName(shareFileURL.substring(0, 100) + "...");
-                                    setShareType("file");
-                                    setShareLink(null);
-                                    setShareFileURL("");
-                                    setLoadFromFileModalOpen(false);
-                                }}
-                                style={{ marginBottom: "10px"}}
-                                color="success">
-                                Confirm URL
-                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
-                            </Button>
-                        </div>
-                    </DialogContentText>
-
-
-
-                </DialogContent>
+                            style={{ marginBottom: "10px"}}
+                            color="success">
+                            Confirm URL
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
+                        </Button>
+                    </div>
+                </Dialog.Content>
             </Dialog>
         </div>
     );

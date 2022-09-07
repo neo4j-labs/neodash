@@ -1,6 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { connect } from 'react-redux';
@@ -46,7 +45,6 @@ const Application = ({ connection, connected, hasCachedDashboard, oldDashboard, 
     // Only render the dashboard component if we have an active Neo4j connection.
     return (
         <div ref={ref} style={{ display: 'flex' }}>
-            <CssBaseline />
             {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
             <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
             {(connected) ?

@@ -1,6 +1,6 @@
-import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from "@material-ui/core";
-import React, {  } from "react";
-import { HeroIcon } from '@neo4j-ndl/react';
+import { AppBar, Toolbar, Typography, InputBase, CircularProgress } from "@material-ui/core";
+import React from "react";
+import { HeroIcon, IconButton } from '@neo4j-ndl/react';
 
 export const NeoDashboardPlaceholder = ({connected}) => {
     const content = (
@@ -13,19 +13,20 @@ export const NeoDashboardPlaceholder = ({connected}) => {
             }>
                 <Toolbar style={{ paddingRight: 24, minHeight: "64px", background: '#0B297D', zIndex: 1201 }}>
                     <IconButton
-                        edge="start"
-                        color="inherit"
                         aria-label="open drawer"
                         style={
                             (open) ? {
                                 display: 'none',
                             } : {
-                                marginRight: 36,
-                                marginLeft: -19,
+                                marginRight: 34,
+                                marginLeft: -17,
+                                color: 'white'
                             }
                         }
+                        buttonSize="large"
+                        clean
                     >
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="MenuIcon" />
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="MenuIcon" />
                     </IconButton>
                     <InputBase
                         disabled

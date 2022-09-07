@@ -10,12 +10,13 @@ import {
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
-import { debounce, Dialog, DialogContent } from '@material-ui/core';
+import { debounce } from '@material-ui/core';
 import { getDashboardIsEditable, getDatabase, getGlobalParameters } from '../settings/SettingsSelectors';
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
 import { createNotificationThunk } from '../page/PageThunks';
 import useDimensions from 'react-cool-dimensions';
 import { setReportHelpModalOpen } from '../application/ApplicationActions';
+import { Dialog } from '@neo4j-ndl/react';
 
 
 
@@ -161,10 +162,10 @@ const NeoCard = ({
     // TODO - this causes a re-render (and therefore, a re-run of the report)
     // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
     if (expanded) {
-        return <Dialog maxWidth={"xl"} open={expanded} aria-labelledby="form-dialog-title">
-            <DialogContent style={{ width: Math.min(1920, document.documentElement.clientWidth - 64), height: document.documentElement.clientHeight }} >
+        return <Dialog size="large" open={expanded} aria-labelledby="form-dialog-title" style={{ maxWidth: "100%" }}>
+            <Dialog.Content style={{ height: document.documentElement.clientHeight }} >
                 {component}
-            </DialogContent>
+            </Dialog.Content>
         </Dialog>
     }
     return component;
