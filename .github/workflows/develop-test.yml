@@ -17,10 +17,10 @@ jobs:
      uses: actions/setup-node@v1
      with:
        node-version: ${{ matrix.node-version }}
-   - run: npm install
+   - run: yarn install
    - name: Cypress run
      uses: cypress-io/github-action@v2
      with:
-        build: npm run build
-        start: npm run dev
+        build: yarn run build
+        start: yarn run dev
         wait-on: 'http://localhost:3000'

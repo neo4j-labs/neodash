@@ -1,6 +1,5 @@
 import { extractNodePropertiesFromRecords, mapRecords } from "./ReportRecordProcessing";
-import _ from 'lodash';
-
+import isEqual from 'lodash.isequal';
 
 export enum QueryStatus {
     NO_QUERY, // No query specified
@@ -86,7 +85,7 @@ export async function runCypherQuery(driver,
             if (useRecordMapper == true) {
                 // Send a deep copy of the returned record keys as the set of fields.
                 const newFields = (records && records[0] && records[0].keys) ? records[0].keys.slice() : [];
-                if (!_.isEqual(newFields, fields)) {
+                if (!isEqual(newFields, fields)) {
                     setFields(newFields);
                     transaction.commit();
                     return
