@@ -3,7 +3,7 @@ import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
-import { CardContent, IconButton } from '@material-ui/core';
+import { CardContent } from '@material-ui/core';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { HeroIcon } from '@neo4j-ndl/react';
@@ -11,6 +11,8 @@ import { HeroIcon } from '@neo4j-ndl/react';
 import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { downloadComponentAsImage } from '../../chart/util/ChartUtils';
+
+import { IconButton } from '@neo4j-ndl/react';
 
 const NeoCardView = ({ title, database, query, globalParameters, 
     widthPx, heightPx, fields, active, setActive,
@@ -98,8 +100,11 @@ const NeoCardView = ({ title, database, query, globalParameters,
                             queryTimeLimit={dashboardSettings['queryTimeLimit'] ? dashboardSettings['queryTimeLimit'] : 20}
                             setFields={onFieldsUpdate} /> :
                         <>
-                            <IconButton style={{ float: "right", padding: "4px", marginRight: "12px" }} aria-label="run" onClick={(e) => { setActive(true) }}>
-                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
+                            <IconButton style={{ float: "right", padding: "4px", marginRight: "12px" }}
+                                aria-label="run"
+                                onClick={(e) => { setActive(true) }}
+                                clean grouped>
+                                <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
                             </IconButton>
                             <NeoCodeEditorComponent value={query} language={"cypher"}
                                 editable={false} style={{ border: "1px solid lightgray", borderRight: "35px solid #eee", marginTop: "0px", marginLeft: "10px", marginRight: "10px" }}

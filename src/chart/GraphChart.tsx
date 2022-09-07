@@ -7,7 +7,7 @@ import { categoricalColorSchemes } from '../config/ColorConfig';
 import { ChartProps } from './Chart';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../report/ReportRecordProcessing';
 import { NeoGraphItemInspectModal } from '../modal/GraphItemInspectModal';
-import { Card, CardContent, CardHeader, Fab, Tooltip } from '@material-ui/core';
+import { Card, Tooltip } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,7 +15,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import { evaluateRulesOnNode } from '../report/ReportRuleEvaluator';
 
-import { HeroIcon, CustomIcon, IconButton, IconButtonArray } from '@neo4j-ndl/react';
+import { HeroIcon, IconButton, IconButtonArray } from '@neo4j-ndl/react';
 
 const  drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
     var img = new Image;

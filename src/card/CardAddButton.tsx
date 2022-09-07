@@ -18,6 +18,7 @@ const NeoAddNewCard = ({ onCreatePressed }) => {
                             onClick={() => {
                                 onCreatePressed();
                             }}
+                            buttonSize="large"
                             floating >
                             <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ViewGridAddIcon" />
                         </IconButton>

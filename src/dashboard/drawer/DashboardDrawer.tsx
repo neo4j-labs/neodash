@@ -1,4 +1,4 @@
-import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List, Button } from "@material-ui/core";
+import { Drawer, ListItem, Divider, ListItemIcon, ListItemText, List } from "@material-ui/core";
 import React from "react";
 import NeoSaveModal from "../../modal/SaveModal";
 import NeoLoadModal from "../../modal/LoadModal";
@@ -12,7 +12,7 @@ import NeoSettingsModal from "../../settings/SettingsModal";
 import { createNotificationThunk } from "../../page/PageThunks";
 import { getDashboardSettings } from "../DashboardSelectors";
 import { updateDashboardSetting } from "../../settings/SettingsActions";
-import { HeroIcon, CustomIcon } from '@neo4j-ndl/react'
+import { HeroIcon, CustomIcon, Button, IconButton } from '@neo4j-ndl/react'
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
@@ -33,11 +33,13 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
                     width: '240px',
                     transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
                     boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
+                    zIndex: 1000
 
                 } : {
                     position: 'relative',
                     overflowX: 'hidden',
                     boxShadow: " 2px 1px 10px 0px rgb(0 0 0 / 12%)",
+                    zIndex: 1000,
 
                     transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
                     width: "56px"
@@ -56,18 +58,16 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
             }}>
                 <ListItem>
                     <Button
-                        component="label"
                         onClick={resetApplication}
-                        style={{ backgroundColor: "white", marginLeft: "-8px" }}
-                        color="default"
-                        variant="outlined"
-                        size="small"
-                        startIcon={<HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="LoginIcon" />}>Menu
+                        color="neutral"
+                        fill="outlined">
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="LoginIcon" />
+                            Menu
                     </Button>
                 </ListItem>
 
 
-                <IconButton onClick={handleDrawerClose}>
+                <IconButton onClick={handleDrawerClose} clean>
                     <CustomIcon className="ndl-icon n-w-6 n-h-6" iconName="CollapseExpand" />
                 </IconButton>
             </div>

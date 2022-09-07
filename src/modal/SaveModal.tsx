@@ -1,10 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { Checkbox, FormControl, FormControlLabel, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize, Tooltip } from '@material-ui/core';
+import { FormControl, FormControlLabel, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize, Tooltip } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
@@ -13,7 +8,7 @@ import { valueIsArray, valueIsObject } from '../report/ReportRecordProcessing';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
-import { HeroIcon, CustomIcon, IconButton, Button } from '@neo4j-ndl/react';
+import { HeroIcon, CustomIcon, IconButton, Button, Checkbox, Dialog } from '@neo4j-ndl/react';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -95,16 +90,13 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                 <ListItemText primary="Save" />
             </ListItem>
 
-            <Dialog maxWidth={"lg"} open={saveModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog size="large" open={saveModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                 <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="CloudDownloadIcon"
                     style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
                     Save Dashboard
-                    <IconButton onClick={handleClose} style={{ float: "right" }} clean>
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent style={{ width: "1000px" }}>
+                </Dialog.Header>
+                <Dialog.Content>
                     <div style={{ marginBottom: "10px" }}>
                         <Button
                             onClick={(e) => { setSaveToNeo4jModalOpen(true) }}
@@ -124,31 +116,23 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                             <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DocumentDownloadIcon" />
                         </Button>
                         </div>
+
                         <TextareaAutosize
                             style={{ minHeight: "500px", width: "100%", border: "1px solid lightgray" }}
                             className={"textinput-linenumbers"}
                             value={dashboardString}
                             aria-label=""
                             placeholder="Your dashboard JSON should show here" />
-                </DialogContent>
-                <DialogActions>
-
-                </DialogActions>
+                </Dialog.Content>
             </Dialog>
 
-            <Dialog maxWidth={"lg"} open={saveToNeo4jModalOpen == true} onClose={(e) => { setSaveToNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
-
+            <Dialog size="large" open={saveToNeo4jModalOpen == true} onClose={(e) => { setSaveToNeo4jModalOpen(false) }} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                     Save to Neo4j
-
-                    <IconButton onClick={(e) => { setSaveToNeo4jModalOpen(false) }} style={{ float: "right" }} clean>
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent style={{ width: "800px" }}>
-                    <DialogContentText>This will save your current dashboard as a node to your active Neo4j database.
-                        <br />Ensure you have write permissions to the database to use this feature.
-                    </DialogContentText>
+                </Dialog.Header>
+                <Dialog.Content>
+                    This will save your current dashboard as a node to your active Neo4j database.
+                    <br />Ensure you have write permissions to the database to use this feature.
 
                     <TextareaAutosize
                         style={{ width: "100%", border: "1px solid lightgray" }}
@@ -178,7 +162,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
 
                     </FormControl>
 
-                    <FormControl style={{ marginTop: "20px", marginLeft: "10px" }}>
+                    <FormControl style={{ marginTop: "30px", marginLeft: "25px" }}>
                         <Tooltip title="Overwrite dashboard(s) with the same name." aria-label="">
                             <FormControlLabel
                                 control={<Checkbox style={{ fontSize: "small", color: "grey" }} checked={overwriteExistingDashboard} onChange={e => setOverwriteExistingDashboard(!overwriteExistingDashboard)} name="overwrite" />}
@@ -186,33 +170,29 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                             />
                         </Tooltip>
                     </FormControl>
-
-                    <div style={{ marginTop: "10px" }}>
-                        <Button
-                            onClick={e => {
-                                saveDashboardToNeo4j(driver, dashboardDatabase, dashboard, new Date().toISOString(), connection.username, overwriteExistingDashboard);
-                                setSaveToNeo4jModalOpen(false);
-                                setSaveModalOpen(false);
-                            }}
-                            color="success"
-                            style={{ float: "right" }}
-                            floating>
-                            Save
-                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DatabaseIcon" />
-                        </Button>
-                        <Button
-                            onClick={(e) => { setSaveToNeo4jModalOpen(false) }}
-                            style={{ float: "right", marginRight: "10px" }}
-                            fill="outlined"
-                            floating>
-                            Cancel
-                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ReplyIcon" />
-                        </Button>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-
-                </DialogActions>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button
+                        onClick={e => {
+                            saveDashboardToNeo4j(driver, dashboardDatabase, dashboard, new Date().toISOString(), connection.username, overwriteExistingDashboard);
+                            setSaveToNeo4jModalOpen(false);
+                            setSaveModalOpen(false);
+                        }}
+                        color="success"
+                        style={{ float: "right" }}
+                        floating>
+                        Save
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DatabaseIcon" />
+                    </Button>
+                    <Button
+                        onClick={(e) => { setSaveToNeo4jModalOpen(false) }}
+                        style={{ float: "right", marginRight: "10px" }}
+                        fill="outlined"
+                        floating>
+                        Cancel
+                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="ReplyIcon" />
+                    </Button>
+                </Dialog.Actions>
             </Dialog>
         </div>
     );

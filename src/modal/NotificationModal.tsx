@@ -1,12 +1,8 @@
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { connect } from "react-redux";
 import { applicationHasNotification, applicationHasWelcomeScreenOpen, applicationIsConnected, getNotification, getNotificationIsDismissable, getNotificationTitle } from '../application/ApplicationSelectors';
 import { clearNotification, setConnectionModalOpen } from '../application/ApplicationActions';
-import { HeroIcon, IconButton } from "@neo4j-ndl/react";
+import { HeroIcon, IconButton, Dialog } from "@neo4j-ndl/react";
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -17,17 +13,17 @@ export const NeoNotificationModal = ({ open, title, text, dismissable,
 
     return (
         <div>
-            <Dialog maxWidth={"lg"} open={open == true} onClose={(e) => {
-                if(dismissable){
-                    onNotificationClose();
-                    if (openConnectionModalOnClose) {
-                        setConnectionModalOpen();
+            <Dialog size="large" open={open == true} onClose={(e) => {
+                    if(dismissable){
+                        onNotificationClose();
+                        if (openConnectionModalOnClose) {
+                            setConnectionModalOpen();
+                        }
                     }
-                }
-                
-            }}
-                aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+                }}
+                aria-labelledby="form-dialog-title"
+                disableCloseButton>
+                <Dialog.Header id="form-dialog-title">
                     {title}
                     <IconButton
                         onClick={(e) => {
@@ -45,12 +41,11 @@ export const NeoNotificationModal = ({ open, title, text, dismissable,
                                 <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
                             : <></>}
                     </IconButton>
-                </DialogTitle>
+                </Dialog.Header>
 
-                <DialogContent style={{ minWidth: "300px" }}>
-                    <DialogContentText>{text && text.toString()}</DialogContentText>
-
-                </DialogContent>
+                <Dialog.Content style={{ minWidth: "300px" }}>
+                    {text && text.toString()}
+                </Dialog.Content>
             </Dialog >
         </div >
     );

@@ -1,13 +1,8 @@
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Badge from '@material-ui/core/Badge';
-import { Fab, MenuItem, TextField, Typography } from '@material-ui/core';
-import { Button } from '@neo4j-ndl/react';
+import { MenuItem, TextField, Typography } from '@material-ui/core';
 import NeoColorPicker from '../component/field/ColorPicker';
 import { Autocomplete } from '@material-ui/lab';
-import { HeroIcon, IconButton } from '@neo4j-ndl/react';
+import { HeroIcon, IconButton, Button, Dialog } from '@neo4j-ndl/react';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = [
@@ -177,141 +172,130 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
     return (
         <div>
             {customReportStyleModalOpen ?
-                <Dialog maxWidth={"xl"} open={customReportStyleModalOpen == true}
-                    PaperProps={{
-                        style: {
-                            overflow: 'inherit'
-                        },
-                    }}
-                    style={{ overflow: "inherit", overflowY: "inherit" }}
+                <Dialog size="large" open={customReportStyleModalOpen == true}
                     aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">
+                    <Dialog.Header id="form-dialog-title">
                         <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="AdjustmentsIcon"
                             style={{ display: "inline", marginRight: "5px", marginBottom: "5px" }} />
                         Rule-Based Styling
-                        
-                        <IconButton onClick={handleClose} style={{ float: "right" }} clean>
-                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                        </IconButton>
-                    </DialogTitle>
-                    <div>
-                        <DialogContent style={{ overflow: "inherit" }}>
-                            <p>You can define rule-based styling for the report here. <br />
-                                Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is applied.<br />
-                                {(type == "graph" || type == "map") ? <p>For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>, for example: <code>Person.age</code>. This is case-sensentive.</p> : <></>}
-                                {(type == "line" || type == "value" || type == "bar" || type == "pie" || type == "table") ? <p>For <b>{type}</b> reports, the field name should be the exact name of the returned field. <br />For example, if your query is <code>MATCH (n:Movie) RETURN n.rating as Rating</code>, your field name is <code>Rating</code>.</p> : <></>}
-                            </p>
-                            <div>
+                    </Dialog.Header>
+                    <Dialog.Content>
+                        <p>You can define rule-based styling for the report here. <br />
+                            Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is applied.<br />
+                            {(type == "graph" || type == "map") ? <p>For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>, for example: <code>Person.age</code>. This is case-sensentive.</p> : <></>}
+                            {(type == "line" || type == "value" || type == "bar" || type == "pie" || type == "table") ? <p>For <b>{type}</b> reports, the field name should be the exact name of the returned field. <br />For example, if your query is <code>MATCH (n:Movie) RETURN n.rating as Rating</code>, your field name is <code>Rating</code>.</p> : <></>}
+                        </p>
+                        <div>
 
-                                <hr></hr>
+                            <hr></hr>
 
-                                <table>
-                                    {rules.map((rule, index) => {
-                                        return <>
-                                            <tr>
+                            <table>
+                                {rules.map((rule, index) => {
+                                    return <>
+                                        <tr>
 
-                                       
-                                            <td style={{ paddingLeft: "2px", paddingRight: "2px" }}><span style={{ color: "black", width: "50px" }}>{index+1}.</span></td>
-                                                <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}> IF</span></td>
-                                                <div style={{ border: "2px dashed grey" }}>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
-                                                        <Autocomplete
-                                                            disableClearable={true}
-                                                            id="autocomplete-label-type"
-                                                            noOptionsText="*Specify an exact field name"
-                                                            options={createFieldVariableSuggestions().filter(e => e.toLowerCase().includes(rule['field'].toLowerCase()))}
-                                                            value={rule['field'] ? rule['field'] : ""}
-                                                            inputValue={rule['field'] ? rule['field'] : ""}
-                                                            popupIcon={<></>}
-                                                            style={{ display: "inline-block", width: 185, marginLeft: "5px", marginTop: "5px" }}
-                                                            onInputChange={(event, value) => {
-                                                                updateRuleField(index, 'field', value)
-                                                            }}
-                                                            onChange={(event, newValue) => {
-                                                                updateRuleField(index, 'field', newValue)
-                                                            }}
-                                                            renderInput={(params) => <TextField {...params} placeholder="Field name..." InputLabelProps={{ shrink: true }} />}
-                                                        />
-                                                    </td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px" }}>
-                                                        <TextField select value={rule['condition']}
-                                                            onChange={(e) => updateRuleField(index, 'condition', e.target.value)}>
-                                                            {RULE_CONDITIONS.map((option) => (
-                                                                <MenuItem key={option.value} value={option.value}>
-                                                                    {option.label}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </TextField></td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px" }}><TextField placeholder="Value..." value={rule['value']}
-                                                        onChange={(e) => updateRuleField(index, 'value', e.target.value)}></TextField></td>
-                                                </div>
-                                                <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}>THEN</span></td>
-                                                <div style={{ border: "2px dashed grey", marginBottom: "5px" }}>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
-                                                        <TextField select value={rule['customization']}
-                                                            onChange={(e) => updateRuleField(index, 'customization', e.target.value)}>
-                                                            {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => (
-                                                                <MenuItem key={option.value} value={option.value}>
-                                                                    {option.label}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </TextField></td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
-                                                        <TextField style={{ width: "20px", color: "black" }} disabled={true} value={'='}></TextField>
-                                                    </td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px" }}><NeoColorPicker label="" defaultValue="black" key={undefined} style={undefined} value={rule['customizationValue']} onChange={(value) => updateRuleField(index, 'customizationValue', value)} ></NeoColorPicker></td>
-                                                </div>
-                                                <td>
-                                                <IconButton
-                                                    aria-label="remove rule"
-                                                    buttonSize="medium"
-                                                    floating
-                                                    >
-                                                    <HeroIcon iconName="XIcon"
-                                                        onClick={() => {
-                                                            setRules([...rules.slice(0, index), ...rules.slice(index + 1)])
+                                    
+                                        <td style={{ paddingLeft: "2px", paddingRight: "2px" }}><span style={{ color: "black", width: "50px" }}>{index+1}.</span></td>
+                                            <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}> IF</span></td>
+                                            <div style={{ border: "2px dashed grey" }}>
+                                                <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
+                                                    <Autocomplete
+                                                        disableClearable={true}
+                                                        id="autocomplete-label-type"
+                                                        noOptionsText="*Specify an exact field name"
+                                                        options={createFieldVariableSuggestions().filter(e => e.toLowerCase().includes(rule['field'].toLowerCase()))}
+                                                        value={rule['field'] ? rule['field'] : ""}
+                                                        inputValue={rule['field'] ? rule['field'] : ""}
+                                                        popupIcon={<></>}
+                                                        style={{ display: "inline-block", width: 185, marginLeft: "5px", marginTop: "5px" }}
+                                                        onInputChange={(event, value) => {
+                                                            updateRuleField(index, 'field', value)
                                                         }}
+                                                        onChange={(event, newValue) => {
+                                                            updateRuleField(index, 'field', newValue)
+                                                        }}
+                                                        renderInput={(params) => <TextField {...params} placeholder="Field name..." InputLabelProps={{ shrink: true }} />}
                                                     />
-                                                </IconButton>
                                                 </td>
-                                                <hr />
-                                            </tr></>
-                                    })}
+                                                <td style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+                                                    <TextField select value={rule['condition']}
+                                                        onChange={(e) => updateRuleField(index, 'condition', e.target.value)}>
+                                                        {RULE_CONDITIONS.map((option) => (
+                                                            <MenuItem key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </TextField></td>
+                                                <td style={{ paddingLeft: "5px", paddingRight: "5px" }}><TextField placeholder="Value..." value={rule['value']}
+                                                    onChange={(e) => updateRuleField(index, 'value', e.target.value)}></TextField></td>
+                                            </div>
+                                            <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}>THEN</span></td>
+                                            <div style={{ border: "2px dashed grey", marginBottom: "5px" }}>
+                                                <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
+                                                    <TextField select value={rule['customization']}
+                                                        onChange={(e) => updateRuleField(index, 'customization', e.target.value)}>
+                                                        {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => (
+                                                            <MenuItem key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </TextField></td>
+                                                <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
+                                                    <TextField style={{ width: "20px", color: "black" }} disabled={true} value={'='}></TextField>
+                                                </td>
+                                                <td style={{ paddingLeft: "5px", paddingRight: "5px" }}><NeoColorPicker label="" defaultValue="black" key={undefined} style={undefined} value={rule['customizationValue']} onChange={(value) => updateRuleField(index, 'customizationValue', value)} ></NeoColorPicker></td>
+                                            </div>
+                                            <td>
+                                            <IconButton
+                                                aria-label="remove rule"
+                                                buttonSize="medium"
+                                                floating
+                                                >
+                                                <HeroIcon iconName="XIcon"
+                                                    onClick={() => {
+                                                        setRules([...rules.slice(0, index), ...rules.slice(index + 1)])
+                                                    }}
+                                                />
+                                            </IconButton>
+                                            </td>
+                                            <hr />
+                                        </tr></>
+                                })}
 
-                                    <tr >
-                                        <td style={{ borderBottom: "1px solid grey", width: "750px" }} colSpan={5}>
-                                            <Typography variant="h3" color="primary" style={{ textAlign: "center", marginBottom: "5px" }}>
-                                                <IconButton
-                                                    aria-label="add"
-                                                    buttonSize="medium"
-                                                    floating
-                                                    >
-                                                    <HeroIcon iconName="PlusIcon"
-                                                        onClick={() => {
-                                                            const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0]['value']);
-                                                            setRules(rules.concat(newRule));
-                                                        }}
-                                                    />
-                                                </IconButton>
-                                            </Typography>
+                                <tr >
+                                    <td style={{ borderBottom: "1px solid grey", width: "750px" }} colSpan={5}>
+                                        <Typography variant="h3" color="primary" style={{ textAlign: "center", marginBottom: "5px" }}>
+                                            <IconButton
+                                                aria-label="add"
+                                                buttonSize="medium"
+                                                floating
+                                                >
+                                                <HeroIcon iconName="PlusIcon"
+                                                    onClick={() => {
+                                                        const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0]['value']);
+                                                        setRules(rules.concat(newRule));
+                                                    }}
+                                                />
+                                            </IconButton>
+                                        </Typography>
 
-                                        </td>
-                                    </tr>
-                                </table>
+                                    </td>
+                                </tr>
+                            </table>
 
-                            </div>
-
-                            <Button
-                                style={{ float: "right", marginTop: "20px", marginBottom: "20px", backgroundColor: "white" }}
-                                color="default"
-                                variant="contained"
-                                size="large"
-                                onClick={(e) => {
-                                    handleClose();
-                                }}>
-                                Save</Button>
-                        </DialogContent>
-                    </div>
+                        </div>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button
+                            onClick={(e) => {
+                                handleClose();
+                            }}
+                            buttonSize="large"
+                            floating>
+                            Save
+                            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PlayIcon" />
+                        </Button>
+                    </Dialog.Actions>
                 </Dialog> : <></>}
         </div>
     );

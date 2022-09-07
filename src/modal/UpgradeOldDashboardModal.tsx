@@ -1,20 +1,17 @@
 
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { TextareaAutosize } from '@material-ui/core';
-import { HeroIcon, Button } from '@neo4j-ndl/react';
+import { HeroIcon, Button, Dialog } from '@neo4j-ndl/react';
 
 
 export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loadDashboard }) => {
     return (
         <div>
-            <Dialog maxWidth={"lg"} open={open == true} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            <Dialog size="large" open={open == true} aria-labelledby="form-dialog-title">
+                <Dialog.Header id="form-dialog-title">
                     Old Dashboard Found
-                </DialogTitle>
-                <DialogContent>
+                </Dialog.Header>
+                <Dialog.Content>
                     We've found a dashboard built with an old version of NeoDash.
                     Would you like to attempt an upgrade, or start from scratch?
                     <br />
@@ -25,8 +22,7 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
                             clearOldDashboard();
                         }}
                             style={{ marginRight: "20px" }}
-                            color="primary"
-                            buttonSize="large"
+                            color="danger"
                             floating>
                             Delete old dashboard
                             <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="TrashIcon" />
@@ -51,7 +47,7 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
                         value={text ? text : ""}
                         aria-label=""
                         placeholder="" />
-                </DialogContent>
+                </Dialog.Content>
             </Dialog>
         </div >
     );

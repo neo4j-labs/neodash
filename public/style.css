@@ -1,3 +1,13 @@
+.logo-btn.large .ndl-icon {
+    width: 36px!important;
+    height: 36px!important;
+}
+
+.ndl-modal hr {
+    margin-top:0.5em!important;
+    margin-bottom:0.5em!important;
+}
+
 .MuiDrawer-paper {
     position: relative !important;
 }

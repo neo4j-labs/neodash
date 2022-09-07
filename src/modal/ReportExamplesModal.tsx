@@ -1,14 +1,10 @@
 
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { Grid, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { EXAMPLE_REPORTS } from '../config/ExampleConfig';
-import { HeroIcon, IconButton } from '@neo4j-ndl/react';
+import { HeroIcon, IconButton, Dialog } from '@neo4j-ndl/react';
 
 
 export const NeoReportExamplesModal = ({ database }) => {
@@ -31,20 +27,17 @@ export const NeoReportExamplesModal = ({ database }) => {
                 <ListItemText primary="Examples" />
             </ListItem>
 
-            {open ? <Dialog maxWidth={"xl"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">
+            {open ? <Dialog size="large" open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title" style={{ maxWidth: "90%" }}>
+                <Dialog.Header id="form-dialog-title">
                     Report Examples
-                    <IconButton onClick={handleClose} style={{ float: "right" }} clean>
-                        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="XIcon" />
-                    </IconButton>
-                </DialogTitle>
+                </Dialog.Header>
                 <div>
-                    <DialogContent >
+                    <Dialog.Content>
                         <hr></hr>
                         {EXAMPLE_REPORTS.map(example => {
                             return <>
                                 <h3>{example.title}</h3>
-                                <DialogContentText>{example.description}
+                                {example.description}
                                     <br />
                                     <br />
                                     <Grid container spacing={4}>
@@ -75,11 +68,10 @@ export const NeoReportExamplesModal = ({ database }) => {
                                             </div>
                                         </Grid>
                                     </Grid>
-                                </DialogContentText>
                                 <hr></hr>
                             </>
                         })}
-                    </DialogContent>
+                    </Dialog.Content>
                 </div>
             </Dialog> : <></>}
         </div>
