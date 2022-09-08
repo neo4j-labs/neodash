@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { MenuItem, TextField, Typography } from '@material-ui/core';
+import { MenuItem, TextField } from '@material-ui/core';
 import NeoColorPicker from '../component/field/ColorPicker';
 import { Autocomplete } from '@material-ui/lab';
 import { HeroIcon, IconButton, Button, Dialog } from '@neo4j-ndl/react';
@@ -173,6 +173,7 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
         <div>
             {customReportStyleModalOpen ?
                 <Dialog size="large" open={customReportStyleModalOpen == true}
+                        onClose={handleClose}
                     aria-labelledby="form-dialog-title">
                     <Dialog.Header id="form-dialog-title">
                         <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="AdjustmentsIcon"
@@ -264,7 +265,7 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
 
                                 <tr >
                                     <td style={{ borderBottom: "1px solid grey", width: "750px" }} colSpan={5}>
-                                        <Typography variant="h3" color="primary" style={{ textAlign: "center", marginBottom: "5px" }}>
+                                        <div style={{ textAlign: "center", marginBottom: "5px" }}>
                                             <IconButton
                                                 aria-label="add"
                                                 buttonSize="medium"
@@ -277,8 +278,7 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                                                     }}
                                                 />
                                             </IconButton>
-                                        </Typography>
-
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
