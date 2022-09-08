@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { FormControlLabel, FormGroup, Switch, Tooltip } from '@material-ui/core';
+import { FormControlLabel, FormGroup, Tooltip } from '@material-ui/core';
 import NeoSetting from '../../component/field/Setting';
 import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../modal/CustomReportStyleModal';
-import { HeroIcon, IconButton } from '@neo4j-ndl/react';
+import { HeroIcon, IconButton, Switch } from '@neo4j-ndl/react';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -73,11 +73,10 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
                 <tr>
                     <td>
                         <FormGroup >
-                            <FormControlLabel style={{ marginLeft: "5px", marginBottom: "10px" }}
-                                control={<Switch
-                                    checked={reportSettingsOpen} onChange={onToggleReportSettings} color="default" />}
-                                labelPlacement="end"
-                                label={<div style={{ fontSize: "12px", color: "grey" }}>Advanced settings</div>} />
+                            <Switch label="Advanced settings"
+                                checked={reportSettingsOpen}
+                                onChange={onToggleReportSettings}
+                                style={{ marginLeft: "5px" }} />
                         </FormGroup>
                     </td>
                     {RULE_BASED_REPORT_CUSTOMIZATIONS[type] ? <td>
