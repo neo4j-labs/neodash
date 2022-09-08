@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, InputBase } from "@material-ui/core";
+import { AppBar, Toolbar, InputBase } from "@material-ui/core";
 import React from "react";
 import { HeroIcon, IconButton, LoadingSpinner } from '@neo4j-ndl/react';
 
@@ -55,12 +55,7 @@ export const NeoDashboardPlaceholder = ({connected}) => {
                 width: "100%",
                 height: "100%"
             }}>
-                <Typography variant="h2" color="textSecondary" style={{
-                    position: "absolute", top: "50%", left: "50%",
-                    transform: "translate(-50%, -50%)"
-                }}>
-                    {!connected ? <LoadingSpinner /> :<></>}
-                </Typography>
+                {!connected ? <LoadingSpinner size="large" className="centered" /> :<></>}
             </div>
         </div>
     );

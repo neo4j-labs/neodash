@@ -1,9 +1,8 @@
-import { CardContent, Chip, IconButton, Tooltip } from "@material-ui/core";
+import { Chip } from "@material-ui/core";
 import React, { useState, useEffect } from 'react';
 import { QueryStatus, runCypherQuery } from "./ReportQueryRunner";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { Typography } from '@material-ui/core';
 import NeoCodeViewerComponent from "../component/editor/CodeViewerComponent";
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
@@ -127,7 +126,7 @@ export const NeoReport = ({
     } else if (status == QueryStatus.NO_QUERY) {
         return (<div style={{ padding: 15 }}>No query specified. <br /> Use the <Chip style={{backgroundColor: "#efefef"}}size="small" icon={<MoreVert />} label="Report Settings" /> button to get started. </div>);
     } else if (status == QueryStatus.RUNNING) {
-        return (<LoadingSpinner size="large" className="centered-spinner" />);
+        return (<LoadingSpinner size="large" className="centered" />);
     } else if (status == QueryStatus.NO_DATA) {
         return <NeoCodeViewerComponent value={"Query returned no data."} />
     } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
