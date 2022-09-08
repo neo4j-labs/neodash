@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { Button, HeroIcon, IconButton, Dialog } from '@neo4j-ndl/react';
+import { Button, HeroIcon, Dialog, Switch } from '@neo4j-ndl/react';
 import TextField from '@material-ui/core/TextField';
-import { FormControlLabel, MenuItem, Switch } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
 
 /**
@@ -97,14 +97,12 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                         createConnection(protocol, url, port, database, username, password);
                     }}>
                         {!ssoVisible ? <TextField autoFocus margin="dense" id="dbpassword" value={password} onChange={(e) => setPassword(e.target.value)} label="Password" type="password" fullWidth /> : <></>}
-                        {ssoSettings['ssoEnabled'] ? <FormControlLabel style={{marginTop: "25px"}} control={
-                            <Switch
+                        {ssoSettings['ssoEnabled'] ?
+                            <Switch label="Use SSO"
                                 checked={ssoVisible}
                                 onChange={(e) => setSsoVisible(!ssoVisible)}
-                                name="checked"
-                                color="primary"
-                            />}
-                            label="Use SSO"></FormControlLabel> : <></>}
+                                style={{ marginLeft: "5px" }} />
+                        : <></>}
 
 
                     </form>
