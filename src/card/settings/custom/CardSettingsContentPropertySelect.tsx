@@ -6,6 +6,7 @@ import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import NeoField from '../../../component/field/Field';
+import { TextInput, Dropdown } from '@neo4j-ndl/react';
 
 const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -124,24 +125,22 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
     }
 
     const parameterSelectTypes = ["Node Property", "Relationship Property", "Free Text"]
+    const selectedType = settings["type"] ? settings["type"] : "Node Property"
 
     return <div>
         <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", border: "1px solid lightgrey", marginTop: "0px" }}>
             {REPORT_TYPES[type].helperText}
         </p>
-        <TextField select={true} autoFocus id="type" value={settings["type"] ? settings["type"] : "Node Property"}
-            onChange={(e) => {
-                handleParameterTypeUpdate(e.target.value);
-            }}
-            style={{ width: "25%" }} label="Selection Type"
-            type="text"
-            style={{ width: 335, marginLeft: "5px", marginTop: "0px" }}>
-            {parameterSelectTypes.map((option) => (
-                <MenuItem key={option} value={option}>
-                    {option}
-                </MenuItem>
+        <Dropdown id="type"
+            onChange={(newValue) => newValue && handleParameterTypeUpdate(newValue.value)}
+            options={parameterSelectTypes.map((option) => (
+                { label: option, value: option }
             ))}
-        </TextField>
+            value={{ label: selectedType, value: selectedType }}
+            label="Selection Type"
+            type="select"
+            fluid
+            autoFocus/>
 
         {settings.type == "Free Text" ?
             <NeoField

@@ -9,6 +9,7 @@ import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { useContext } from "react";
 import NeoTableChart from "../chart/TableChart";
+import { Tooltip } from "@material-ui/core";
 import { HeroIcon, LoadingSpinner } from '@neo4j-ndl/react';
 
 export const NeoReport = ({
