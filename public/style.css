@@ -8,11 +8,17 @@
     margin-bottom:0.5em!important;
 }
 
-.centered-spinner {
+.centered {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
 }
+
+.CodeMirror {
+    font-family: "Fira Code"!important;
+    font-size:0.8em;
+}
+
 
 .MuiDrawer-paper {
     position: relative !important;
