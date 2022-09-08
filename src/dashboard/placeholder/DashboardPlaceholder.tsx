@@ -1,6 +1,6 @@
-import { AppBar, Toolbar, Typography, InputBase, CircularProgress } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, InputBase } from "@material-ui/core";
 import React from "react";
-import { HeroIcon, IconButton } from '@neo4j-ndl/react';
+import { HeroIcon, IconButton, LoadingSpinner } from '@neo4j-ndl/react';
 
 export const NeoDashboardPlaceholder = ({connected}) => {
     const content = (
@@ -59,7 +59,7 @@ export const NeoDashboardPlaceholder = ({connected}) => {
                     position: "absolute", top: "50%", left: "50%",
                     transform: "translate(-50%, -50%)"
                 }}>
-                    {!connected ? <CircularProgress color="inherit" /> :<></>}
+                    {!connected ? <LoadingSpinner /> :<></>}
                 </Typography>
             </div>
         </div>

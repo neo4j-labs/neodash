@@ -4,14 +4,13 @@ import { QueryStatus, runCypherQuery } from "./ReportQueryRunner";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { Typography } from '@material-ui/core';
-import CircularProgress from "@material-ui/core/CircularProgress";
 import NeoCodeViewerComponent from "../component/editor/CodeViewerComponent";
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { useContext } from "react";
 import NeoTableChart from "../chart/TableChart";
-import { HeroIcon } from '@neo4j-ndl/react';
+import { HeroIcon, LoadingSpinner } from '@neo4j-ndl/react';
 
 export const NeoReport = ({
     database = "neo4j", // The Neo4j database to run queries onto.
@@ -128,9 +127,7 @@ export const NeoReport = ({
     } else if (status == QueryStatus.NO_QUERY) {
         return (<div style={{ padding: 15 }}>No query specified. <br /> Use the <Chip style={{backgroundColor: "#efefef"}}size="small" icon={<MoreVert />} label="Report Settings" /> button to get started. </div>);
     } else if (status == QueryStatus.RUNNING) {
-        return (<Typography variant="h2" color="textSecondary" style={{ paddingTop: "100px", textAlign: "center" }}>
-            <CircularProgress color="inherit" />
-        </Typography>);
+        return (<LoadingSpinner size="large" className="centered-spinner" />);
     } else if (status == QueryStatus.NO_DATA) {
         return <NeoCodeViewerComponent value={"Query returned no data."} />
     } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
