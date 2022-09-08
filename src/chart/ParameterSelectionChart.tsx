@@ -4,6 +4,7 @@ import { ChartProps } from './Chart';
 import { CircularProgress, debounce, TextareaAutosize, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import NeoField from '../component/field/Field';
+import { LoadingSpinner } from '@neo4j-ndl/react';
 
 /**
  * A special chart type to define global dashboard parameters that are injected as query parameters into each report.
@@ -85,7 +86,10 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                         }
                     }}
                 />
-                {value !== currentValue ? <CircularProgress size={26} style={{ marginTop: "20px", marginLeft: "5px" }} /> : <></>}
+                {value !== currentValue ?
+                    <div style={{ display: "inline-block", marginTop: "20px", marginLeft: "5px" }}>
+                        <LoadingSpinner size="large" />
+                    </div> : <></>}
             </div>
             :
             <Autocomplete
