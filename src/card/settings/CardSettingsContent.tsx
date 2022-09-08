@@ -7,6 +7,7 @@ import { useCallback } from 'react';
 import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { CARD_SIZES } from '../../config/CardConfig';
+import { Dropdown, TextInput } from '@neo4j-ndl/react';
 
 
 const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, type,
@@ -42,22 +43,33 @@ const NeoCardSettingsContent = ({ query, database, reportSettings, refreshRate, 
     const SettingsComponent = REPORT_TYPES[type].settingsComponent;
 
     return <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}>
-        <NeoField select label={"Type"} value={type}
-            style={{ marginLeft: "0px", marginRight: "10px", width: "47%", maxWidth: "200px" }}
-            onChange={(value) => onTypeUpdate(value)}
-            choices={Object.keys(REPORT_TYPES).map((option) => (
-                <MenuItem key={option} value={option}>
-                    {REPORT_TYPES[option].label}
-                </MenuItem>
-            ))} />
+        <Dropdown id="type"
+            onChange={(newValue) => newValue && onTypeUpdate(Object.keys(REPORT_TYPES).find(key => REPORT_TYPES[key].label === newValue.value))}
+            options={Object.keys(REPORT_TYPES).map((option) => (
+                { label: REPORT_TYPES[option].label, value: REPORT_TYPES[option].label }
+            ))}
+            value={{label: REPORT_TYPES[type].label, value: REPORT_TYPES[type].label}}
+            label="Type"
+            type="select"
+            selectProps={{menuPortalTarget: document.querySelector('body')}}
+            fluid
+            style={{ marginLeft: "0px", marginRight: "10px", width: "47%", maxWidth: "200px", display: "inline-block" }}/>
 
-        {REPORT_TYPES[type]["disableRefreshRate"] == undefined ? <NeoField placeholder='0 (No Refresh)'
-            label="Refresh Rate (sec)" numeric={true} value={refreshRateText}
-            style={{ width: "47%", maxWidth: "200px" }}
-            onChange={(value) => {
-                setRefreshRateText(value);
-                debouncedRefreshRateUpdate(value);
-            }} /> : <></>}
+        {REPORT_TYPES[type]["disableRefreshRate"] == undefined ?
+        <div style={{ width: "47%", maxWidth: "200px", display: "inline-block" }}>
+            <TextInput id="refreshRate"
+                value={refreshRateText}
+                onChange={(e) => {
+                    setRefreshRateText(e.target.value);
+                    debouncedRefreshRateUpdate(e.target.value);
+                }}
+                label="Refresh Rate (sec)"
+                placeholder="0 (No Refresh)"
+                fluid
+                />
+        </div>
+        
+        : <></>}
 
         <br /><br />
         {/* Allow for overriding the code box with a custom component */}

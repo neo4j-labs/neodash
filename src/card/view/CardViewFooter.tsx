@@ -2,7 +2,7 @@ import React from "react";
 import { CardActions, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField } from "@material-ui/core";
 import { REPORT_TYPES, SELECTION_TYPES } from "../../config/ReportConfig";
 import { categoricalColorSchemes } from "../../config/ColorConfig";
-import { Checkbox } from "@neo4j-ndl/react";
+import { Checkbox, Dropdown } from "@neo4j-ndl/react";
 
 const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSelections, onSelectionUpdate }) => {
     /**
@@ -17,7 +17,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
         return <div></div>
     }
     return (
-        <CardActions style={{ position: "relative", paddingLeft: "15px", marginTop: "-5px", overflowX: "scroll" }} disableSpacing>
+        <CardActions style={{ position: "relative", paddingLeft: "15px", marginTop: selectableFields[selectables[0]].type == SELECTION_TYPES.NODE_PROPERTIES ? "-5px" : "-18px", overflowX: "scroll" }} disableSpacing>
             {selectables.map((selectable, index) => {
                 const selectionIsMandatory = (selectableFields[selectable]['optional']) ? false : true;
 
@@ -61,38 +61,26 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
 
                         const fieldsToRender = (selectionIsMandatory ? sortedFields : sortedFields.concat(["(none)"]));
                         return <FormControl key={index}>
-                            <InputLabel id={selectable}>{selectableFields[selectable].label}</InputLabel>
-                            <Select labelId={selectable}
-                                id={selectable}
-                                multiple={selectableFields[selectable].multiple}
-                                style={{ minWidth: 120, marginRight: 20 }}
-                                onChange={e => onSelectionUpdate(selectable, e.target.value)}
-                                renderValue={(selected) => Array.isArray(selected) ? selected.join(', ') : selected}
+                            <Dropdown id={selectable}
+                                onChange={(newValue) => newValue &&
+                                    selectableFields[selectable].multiple
+                                        ? onSelectionUpdate(selectable, newValue.map(v => v.value))
+                                        : onSelectionUpdate(selectable, newValue.value)}
+                                options={fieldsToRender.map((option) => (
+                                    { label: option, value: option }
+                                ))}
                                 value={
-                                    (selection && selection[selectable]) ?
-                                        (selectableFields[selectable].multiple && !Array.isArray(selection[selectable])) ? 
-                                        [selection[selectable]] : 
-                                        selection[selectable]
-                                    : 
-                                        (selectableFields[selectable].multiple) ? 
-                                            (selection[selectable] && selection[selectable].length > 0 ? 
-                                             selection[selectable][0] 
-                                            : 
-                                            [])
-                                        : "(no data)"}>
-
-                                {/* Render choices */}
-                                {fieldsToRender.map((field) => {
-                                    return <MenuItem key={field} value={field}>
-                                        {selectableFields[selectable].multiple && Array.isArray(selection[selectable]) ?
-                                            <Checkbox checked={selection[selectable].indexOf(field) > -1} /> :
-                                            <></>
-                                        }
-                                        {field}
-                                        {/* <ListItemText primary={field} /> */}
-                                    </MenuItem>
-                                })}
-                            </Select>
+                                    selectableFields[selectable].multiple
+                                    ? selection[selectable].map((sel) => ({ label: sel, value: sel }))
+                                    : {label: selection[selectable], value: selection[selectable]}
+                                    }
+                                label={selectableFields[selectable].label}
+                                type="select"
+                                isMulti={selectableFields[selectable].multiple}
+                                selectProps={{menuPortalTarget: document.querySelector('body')}}
+                                fluid
+                                style={{ minWidth: selectableFields[selectable].multiple ? 170 : 120, marginRight: 20, display: "inline-block" }}
+                                placeholder={ selectableFields[selectable].multiple ? "Select (multiple)" : "Select" }/>
                         </FormControl>
                     }
                 }
