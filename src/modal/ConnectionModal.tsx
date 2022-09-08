@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, HeroIcon, Dialog, Switch } from '@neo4j-ndl/react';
+import { Button, HeroIcon, Dialog, Switch, TextInput, Dropdown } from '@neo4j-ndl/react';
 import TextField from '@material-ui/core/TextField';
 import { MenuItem } from '@material-ui/core';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
@@ -43,31 +43,47 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                     {standalone ? "Connect to Dashboard" : "Connect to Neo4j"}
                 </Dialog.Header>
                 <Dialog.Content>
-                    <TextField select={true} autoFocus margin="dense" id="protocol" value={protocol} disabled={standalone}
-                        onChange={(e) => setProtocol(e.target.value)} style={{ width: "25%" }} label="Protocol"
-                        placeholder="neo4j://" type="text" >
-                        {protocols.map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
-                            </MenuItem>
+                    <Dropdown id="protocol"
+                        disabled={standalone}
+                        onChange={(newValue) => newValue && setProtocol(newValue.value)}
+                        options={protocols.map((option) => (
+                            { label: option, value: option }
                         ))}
-                    </TextField>
-                    <TextField type="text" autoFocus margin="dense" id="url" value={url} disabled={standalone} onChange={(e) => {
-                        // Help the user here a bit by extracting the hostname if they copy paste things in
-                        const input = e.target.value;
-                        const splitted = input.split("://")
-                        const host = splitted[splitted.length - 1].split(":")[0].split("/")[0]
-                        setUrl(host)
-                    }}
-                        label="Hostname" style={{ marginLeft: "2.5%", width: "60%", marginRight: "2.5%" }}
-                        placeholder="localhost" type="text" />
-                    <TextField autoFocus margin="dense" id="port" value={port} disabled={standalone} onChange={(event) => {
-                        if (event.target.value.toString().length == 0) {
-                            setPort(event.target.value);
-                        } else if (!isNaN(event.target.value)) {
-                            setPort(Number(event.target.value));
-                        }
-                    }} label="Port" style={{ width: "10%" }} placeholder="7687" type="text" />
+                        value={{label: protocol, value: protocol}}
+                        label="Protocol"
+                        type="select"
+                        fluid
+                        style={{ width: "25%", display: "inline-block" }}/>
+                    <div style={{ marginLeft: "2.5%", width: "55%", marginRight: "2.5%", display: "inline-block" }}>
+                        <TextInput id="url"
+                            value={url} disabled={standalone}
+                            onChange={(e) => {
+                                // Help the user here a bit by extracting the hostname if they copy paste things in
+                                const input = e.target.value;
+                                const splitted = input.split("://")
+                                const host = splitted[splitted.length - 1].split(":")[0].split("/")[0]
+                                setUrl(host)
+                            }}
+                            label="Hostname"
+                            placeholder="localhost"
+                            autoFocus
+                            fluid/>
+                    </div>
+                    <div style={{ width: "15%", display: "inline-block" }}>
+                        <TextInput id="port"
+                            value={port} disabled={standalone}
+                            onChange={(event) => {
+                                if (event.target.value.toString().length == 0) {
+                                    setPort(event.target.value);
+                                } else if (!isNaN(event.target.value)) {
+                                    setPort(Number(event.target.value));
+                                }
+                            }}
+                            label="Port"
+                            placeholder="7687"
+                            fluid
+                            />
+                    </div>
 
                     {(window.location.href.startsWith("https") && (!(protocol.endsWith("+s") || protocol.endsWith("+scc"))))
                         ? <div> You're running NeoDash from a secure (https) webpage.
@@ -88,15 +104,38 @@ export default function NeoConnectionModal({ open, standalone, standaloneSetting
                             Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
                         </div> : <div></div>
                     }
-                    <TextField autoFocus margin="dense" id="database" value={database} disabled={standalone} onChange={(e) => setDatabase(e.target.value)} label="Database (optional)" placeholder="neo4j" type="text" fullWidth />
+                    <TextInput id="database"
+                            value={database} disabled={standalone}
+                            onChange={(e) => setDatabase(e.target.value)}
+                            label="Database (optional)"
+                            placeholder="neo4j"
+                            fluid
+                            />
                     
-                    {!ssoVisible ? <TextField autoFocus margin="dense" id="dbusername" value={username} onChange={(e) => setUsername(e.target.value)} label="Username" placeholder="neo4j" type="text" fullWidth /> : <></>}
+                    {!ssoVisible ?
+                        <TextInput id="dbusername"
+                            value={username} disabled={standalone}
+                            onChange={(e) => setUsername(e.target.value)}
+                            label="Username"
+                            placeholder="neo4j"
+                            fluid
+                        />
+                    : <></>}
                     <form onSubmit={(e) => {
                         e.preventDefault();
                         onConnectionModalClose();
                         createConnection(protocol, url, port, database, username, password);
                     }}>
-                        {!ssoVisible ? <TextField autoFocus margin="dense" id="dbpassword" value={password} onChange={(e) => setPassword(e.target.value)} label="Password" type="password" fullWidth /> : <></>}
+                        {!ssoVisible ?
+                            <TextInput id="dbpassword"
+                                value={password} disabled={standalone}
+                                onChange={(e) => setPassword(e.target.value)}
+                                label="Password"
+                                placeholder="neo4j"
+                                type="password"
+                                fluid
+                            />
+                        : <></>}
                         {ssoSettings['ssoEnabled'] ?
                             <Switch label="Use SSO"
                                 checked={ssoVisible}
