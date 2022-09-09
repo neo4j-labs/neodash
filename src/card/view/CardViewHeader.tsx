@@ -80,7 +80,7 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
     const downloadImageButton = <Tooltip title="Download as Image" aria-label="download">
         <IconButton onClick={onDownloadImage} aria-label="download csv"
             clean buttonSize="large">
-            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PhotographIcon" />
+            <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="CameraIcon" />
         </IconButton>
     </Tooltip>
 

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { loadDashboardFromNeo4jByUUIDThunk, loadDashboardListFromNeo4jThunk, loadDashboardThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
-import { HeroIcon, IconButton, Button, Dialog } from "@neo4j-ndl/react";
+import { HeroIcon, Button, Dialog, Dropdown } from "@neo4j-ndl/react";
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -164,24 +164,20 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                                 ColumnSortedAscendingIcon: () => <></>,
                             }}
                         /></div>
-                    <FormControl style={{ marginTop: "-58px", marginLeft: "10px" }}>
-                        <InputLabel id="demo-simple-select-label">Database</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            style={{ width: "150px" }}
-                            value={dashboardDatabase}
-                            onChange={(e) => {
-                                setRows([]);
-                                setDashboardDatabase(e.target.value);
-                                loadDashboardListFromNeo4j(driver, e.target.value, (result) => {  setRows(result); });
-                            }}
-                        >
-                            {databases.map(database => {
-                                return <MenuItem value={database}>{database}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
+                    <Dropdown id="database"
+                        onChange={(newValue) => {
+                            setRows([]);
+                            setDashboardDatabase(newValue.value);
+                            loadDashboardListFromNeo4j(driver, newValue.value, (result) => { setRows(result); });
+                        }}
+                        options={databases.map((database) => (
+                            { label: database, value: database }
+                        ))}
+                        value={{label: dashboardDatabase, value: dashboardDatabase}}
+                        label="Database"
+                        type="select"
+                        style={{ width: "150px" }}>
+                    </Dropdown>
                 </Dialog.Content>
             </Dialog>
         </div>

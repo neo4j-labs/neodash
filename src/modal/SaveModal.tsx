@@ -8,7 +8,7 @@ import { valueIsArray, valueIsObject } from '../report/ReportRecordProcessing';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
-import { HeroIcon, CustomIcon, IconButton, Button, Checkbox, Dialog } from '@neo4j-ndl/react';
+import { HeroIcon, CustomIcon, Button, Checkbox, Dialog, Dropdown } from '@neo4j-ndl/react';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -144,30 +144,20 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                         aria-label=""
                         placeholder="" />
 
-                    <FormControl style={{ marginTop: "10px" }}>
-                        <InputLabel id="demo-simple-select-label">Save to Database</InputLabel>
+                    <Dropdown id="database"
+                        onChange={(newValue) => { newValue && setDashboardDatabase(newValue.value) }}
+                        options={databases.map((database) => (
+                            { label: database, value: database }
+                        ))}
+                        value={{label: dashboardDatabase, value: dashboardDatabase}}
+                        label="Save to Database"
+                        type="select"
+                        style={{ width: "150px", display: "inline-block" }}>
+                    </Dropdown>
 
-
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            style={{ width: "150px" }}
-                            value={dashboardDatabase}
-                            onChange={(e) => setDashboardDatabase(e.target.value)}
-                        >
-                            {databases.map(database => {
-                                return <MenuItem value={database}>{database}</MenuItem>
-                            })}
-                        </Select>
-
-                    </FormControl>
-
-                    <FormControl style={{ marginTop: "30px", marginLeft: "25px" }}>
+                    <FormControl style={{ marginTop: "35px", marginLeft: "25px" }}>
                         <Tooltip title="Overwrite dashboard(s) with the same name." aria-label="">
-                            <FormControlLabel
-                                control={<Checkbox style={{ fontSize: "small", color: "grey" }} checked={overwriteExistingDashboard} onChange={e => setOverwriteExistingDashboard(!overwriteExistingDashboard)} name="overwrite" />}
-                                label="Overwrite"
-                            />
+                            <Checkbox checked={overwriteExistingDashboard} onChange={e => setOverwriteExistingDashboard(!overwriteExistingDashboard)} label="Overwrite" />
                         </Tooltip>
                     </FormControl>
                 </Dialog.Content>
