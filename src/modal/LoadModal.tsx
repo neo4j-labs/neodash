@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { FormControl, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextareaAutosize } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
@@ -24,6 +24,7 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
     const [dashboardDatabase, setDashboardDatabase] = React.useState("neo4j");
     const [databases, setDatabases] = React.useState(["neo4j"]);
+    const loadFromFile = useRef(null);
 
     const handleClickOpen = () => {
         setLoadModalOpen(true);
@@ -107,12 +108,14 @@ export const NeoLoadModal = ({ loadDashboard, loadDatabaseListFromNeo4j, loadDas
                             <HeroIcon className="ndl-icon n-w-6 n-h-6" type="outline" iconName="DatabaseIcon" />
                         </Button>
                         <Button
+                            onClick={(e) => {loadFromFile.current.click()}}
                             fill="outlined"
                             color="neutral"
                             style={{ marginLeft: "10px" }}
                             floating>
                             <input
                                 type="file"
+                                ref={loadFromFile}
                                 onChange={(e) => uploadDashboard(e)}
                                 hidden
                             />
