@@ -8,7 +8,7 @@ import { SELECTION_TYPES } from '../config/ReportConfig';
 import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
-import { HeroIcon, Button, IconButton, Dialog } from '@neo4j-ndl/react';
+import { HeroIcon, Button, Dialog, Dropdown } from '@neo4j-ndl/react';
 
 const shareBaseURL = "http://neodash.graphapp.io";
 const styles = {
@@ -194,25 +194,20 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                 ColumnSortedAscendingIcon: () => <></>,
                             }}
                         /></div>
-                    <FormControl style={{ marginTop: "-58px", marginLeft: "10px" }}>
-                        <InputLabel id="demo-simple-select-label">Database</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            style={{ width: "150px" }}
-                            value={dashboardDatabase}
-                            onChange={(e) => {
-                                setRows([]);
-                                setDashboardDatabase(e.target.value);
-                                loadDashboardListFromNeo4j(driver, e.target.value, (result) => { setRows(result); });
-                            }}
-                        >
-                            {databases.map(database => {
-                                return <MenuItem value={database}>{database}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
-
+                    <Dropdown id="database"
+                        onChange={(newValue) => {
+                            setRows([]);
+                            setDashboardDatabase(newValue.value);
+                            loadDashboardListFromNeo4j(driver, newValue.value, (result) => { setRows(result); });
+                        }}
+                        options={databases.map((database) => (
+                            { label: database, value: database }
+                        ))}
+                        value={{label: dashboardDatabase, value: dashboardDatabase}}
+                        label="Database"
+                        type="select"
+                        style={{ width: "150px" }}>
+                    </Dropdown>
                 </Dialog.Content>
             </Dialog>
             <Dialog size="large" open={loadFromFileModalOpen == true} onClose={(e) => { setLoadFromFileModalOpen(false) }} aria-labelledby="form-dialog-title">

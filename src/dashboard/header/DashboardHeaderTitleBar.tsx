@@ -54,7 +54,7 @@ export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, downloadImageEnable
         />
         {downloadImageEnabled ? <Tooltip title={"Download Dashboard as Image"}>
     <IconButton style={{ marginRight: "3px", background: "#ffffff22" }} onClick={(e) => onDownloadImage()} buttonSize="large" clean>
-        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="PhotographIcon"
+        <HeroIcon className="ndl-icon n-w-6 n-h-6" type="solid" iconName="CameraIcon"
             style={{ color: "#ffffffdd" }} />
     </IconButton>
 </Tooltip> : <></>}
