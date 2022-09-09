@@ -1,8 +1,10 @@
+import { ResponsivePie } from '@nivo/pie';
 import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
+import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 import { ChartProps } from '../Chart';
+import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 import PieVisualization from './PieVisualization';
-
 
 /**
  * Embeds a PieChart (from Nivo) into NeoDash.
@@ -17,7 +19,7 @@ const NeoPieChart = (props: ChartProps) => {
     }
 
 
-    const keys: string[] = [];
+    const keys = {};
     const data: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
         if (!selection || !selection['index'] || !selection['value']) {
             return data;
@@ -26,12 +28,22 @@ const NeoPieChart = (props: ChartProps) => {
         const index = convertRecordObjectToString(row.get(selection['index']));
         const idx = data.findIndex(item => item.index === index)
 
-        const key = recordToNative(row.get('key'))
-        const value = recordToNative(row.get('value'))
+        const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
+        const value = recordToNative(row.get(selection['value']));
 
-        if (!keys.includes(key)) {
-            keys.push(key)
+        if (isNaN(value)) {
+            return data;
         }
+        keys[key] = true;
+
+        // if (idx > -1) {
+        //     data[idx][key] = value
+        // }
+        // else {
+        //     data.push({ index, [key]: value })
+        // }
+
+        // return data
 
         if (idx > -1) {
             data[idx][key] = value
@@ -43,7 +55,7 @@ const NeoPieChart = (props: ChartProps) => {
         return data
     }, [])
         .map(row => {
-            keys.forEach(key => {
+            Object.keys(keys).forEach(key => {
                 if (!row.hasOwnProperty(key)) {
                     row[key] = 0
                 }
@@ -94,6 +106,10 @@ const NeoPieChart = (props: ChartProps) => {
         return (item.arc.angleDeg * 100 / 360).toFixed(2).toString() + '%';
     }
 
+    if (data.length == 0) {
+        return <NoDrawableDataErrorMessage />
+    }
+    
     return <ResponsivePie
         data={data}
         sortByValue={sortByValue}

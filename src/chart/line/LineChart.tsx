@@ -1,5 +1,6 @@
 import { ResponsiveLine } from '@nivo/line';
 import React from 'react';
+import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
@@ -19,7 +20,7 @@ const NeoLineChart = (props: ChartProps) => {
     const records = props.records;
     const selection = props.selection;
 
-    if (!selection || selection.value.length == 0) {
+    if (!selection || !selection.value || selection.value.length == 0) {
         return <div style={{ margin: "15px" }}>
         No y-axis selected. To view the report, select a value below. </div>;
     }
@@ -101,6 +102,18 @@ const NeoLineChart = (props: ChartProps) => {
         })
     })
 
+    // Post-processing validation on the data --> confirm only numeric data was selected by the user.
+    let validSelection = true;
+    data.forEach(selected => {
+        if(selected['data'].length == 0){
+            validSelection = false;
+            return;
+        };
+    })
+
+    if(!validSelection){
+        return <NoDrawableDataErrorMessage />;
+    }
 
     // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
     // Therefore, we now require a manual refresh.

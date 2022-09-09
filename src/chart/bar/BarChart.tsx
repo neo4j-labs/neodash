@@ -43,7 +43,7 @@ const NeoBarChart = (props: ChartProps) => {
         const idx = data.findIndex(item => item.index === index)
 
         const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
-        const value = recordToNative(row.get(selection['value']))
+        const value = recordToNative(row.get(selection['value']));
 
         if (isNaN(value)) {
             return data;
@@ -102,6 +102,9 @@ const NeoBarChart = (props: ChartProps) => {
     if (data.length == 0) {
         return <NoDrawableDataErrorMessage />
     }
+
+    // TODO: Get rid of duplicate pie slice names...
+    
     return <ResponsiveBar
         layout={settings.layout == "horizontal" ? 'horizontal' : 'vertical'}
         groupMode={groupMode == "stacked" ? 'stacked' : 'grouped'}
