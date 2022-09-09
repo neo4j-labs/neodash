@@ -14,9 +14,13 @@
     transform: translate(-50%,-50%);
 }
 
-.CodeMirror {
+.MuiInputBase-root {
+    font-family: "Nunito Sans", sans-serif!important;
+}
+
+.CodeMirror, .CodeMirror > * {
     font-family: "Fira Code"!important;
-    font-size:0.8em;
+    font-size:0.9em;
 }
 
 
