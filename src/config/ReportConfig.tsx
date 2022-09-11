@@ -664,6 +664,11 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "providerUrl": {
+                label: "Map Provider URL",
+                type: SELECTION_TYPES.TEXT,
+                default: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            },
             "autorun": {
                 label: "Auto-run query",
                 type: SELECTION_TYPES.LIST,
