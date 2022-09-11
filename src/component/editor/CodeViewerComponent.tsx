@@ -20,10 +20,12 @@ const NeoCodeViewerComponent = ({ value = "", placeholder = "" }) => {
 
 export const NoDrawableDataErrorMessage = () => {
     return <NeoCodeViewerComponent value={"Data was returned, but it can not be visualized.\n\n" +
-        "This could have the following causes:\n" +
+        "This could have one of the following causes:\n" +
         "- a numeric value field was selected, but no numeric values were returned. \n" +
-        "- a numeric value field was selected, but only zero's were returned.\n" +
-        "- Your visualization expects nodes/relationships, but none were returned."
+        "- a numeric value field was selected, but only zeroes were returned.\n" +
+        "- an array field was selected, but no array was returned.\n" +
+        "- Your visualization expects nodes/relationships, but none were returned.\n\n"+
+        "View the NeoDash documentation for more information."
     } />
 }
 

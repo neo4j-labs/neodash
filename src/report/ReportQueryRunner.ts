@@ -41,7 +41,6 @@ export async function runCypherQuery(driver,
     useHardRowLimit = false,
     queryTimeLimit = 20,
 ) {
-    console.log(query);
     // If no query specified, we don't do anything.
     if (query.trim() == "") {
         setFields([]);

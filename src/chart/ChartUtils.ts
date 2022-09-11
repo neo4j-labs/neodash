@@ -7,7 +7,7 @@ import domtoimage from 'dom-to-image';
 /**
  * Converts a neo4j record entry to a readable string representation. 
  */
- export const convertRecordObjectToString = (entry) => {
+export const convertRecordObjectToString = (entry) => {
     if (entry == null || entry == undefined) {
         return entry;
     }
@@ -185,31 +185,31 @@ export function replaceDashboardParameters(str, parameters) {
 export const downloadComponentAsImage = async (ref) => {
     const element = ref.current;
 
-    domtoimage.toPng(element,{bgcolor:'white'}).then(function (dataUrl) {
+    domtoimage.toPng(element, { bgcolor: 'white' }).then(function (dataUrl) {
         var link = document.createElement('a');
         link.download = 'image.png';
         link.href = dataUrl;
         link.click();
     });
-  };
+};
 
-  import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver'
+import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver'
 
 export function recordToNative(input: any): any {
-    if ( !input && input !== false ) {
+    if (!input && input !== false) {
         return null
     }
-    else if ( typeof input.keys === 'object' && typeof input.get === 'function' ) {
-        return Object.fromEntries(input.keys.map(key => [ key, recordToNative(input.get(key)) ]))
+    else if (typeof input.keys === 'object' && typeof input.get === 'function') {
+        return Object.fromEntries(input.keys.map(key => [key, recordToNative(input.get(key))]))
     }
-    else if ( typeof input.toNumber === 'function' ) {
+    else if (typeof input.toNumber === 'function') {
         return input.toNumber()
     }
-    else if ( Array.isArray(input) ) {
+    else if (Array.isArray(input)) {
         return (input as Array<any>).map(item => recordToNative(item))
     }
-    else if ( typeof input === 'object' ) {
-        const converted = Object.entries(input).map(([ key, value ]) => [ key, recordToNative(value) ])
+    else if (typeof input === 'object') {
+        const converted = Object.entries(input).map(([key, value]) => [key, recordToNative(value)])
 
         return Object.fromEntries(converted)
     }
@@ -225,7 +225,7 @@ export function resultToNative(result: QueryResult): Record<string, any> {
 export function checkResultKeys(first: Neo4jRecord, keys: string[]) {
     const missing = keys.filter(key => !first.keys.includes(key))
 
-    if ( missing.length > 0 ) {
+    if (missing.length > 0) {
         return new Error(`The query is missing the following key${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}.  The expected keys are: ${keys.join(', ')}`)
     }
 
@@ -253,12 +253,12 @@ export const search = (tree, value, key = 'id', reverse = false) => {
  * This ensures that the visualization itself shows the 'real' names, and not the intermediate ones.
  */
 export const mutateName = (currentNode) => {
-    if (currentNode.name){
+    if (currentNode.name) {
         let s = currentNode.name.split('_');
-        currentNode.name = s.length > 0 ? s.slice(1).join('_'): s[0];
+        currentNode.name = s.length > 0 ? s.slice(1).join('_') : s[0];
     }
 
-    if(currentNode.children)
+    if (currentNode.children)
         currentNode.children.forEach(n => mutateName(n))
 }
 
@@ -274,36 +274,42 @@ export const flatten = data =>
 /**
  * Converts a list of Neo4j records into a hierarchy structure for hierarchical data visualizations.
  */
-export const processHierarchyFromRecords = (records : Record<string, any>[]) => {
+export const processHierarchyFromRecords = (records: Record<string, any>[], selection: any ) => {
     return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
-
         try {
-        const index = recordToNative(row.get('index'));
-        const key = recordToNative(row.get('key'));
-        const value = recordToNative(row.get('value'));
-
-        let holder = data;
-        for (let [idx, val] of index.entries()) {
-            // Add a level prefix to each item to avoid duplicates
-            val = "lvl"+idx+"_"+val;
-            let obj = search(holder, val, 'name');
-            let entry = { name: val };
-            if(obj)
-                holder = obj;
-            else{
-                if(Array.isArray(holder))
-                    holder.push(entry);
-                else if (holder.hasOwnProperty("children"))
-                    holder.children.push(entry)
-                else
-                    holder.children = [entry]
-
-                holder = search(holder, val, 'name');
+            // const index = recordToNative(row.get('index'));
+            // const key = recordToNative(row.get('key'));
+            // const value = recordToNative(row.get('value'));
+            
+            const index = recordToNative(row.get(selection['index']));
+            // const idx = data.findIndex(item => item.index === index)
+            // const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
+            const value = recordToNative(row.get(selection['value']));
+            if(!Array.isArray(index) || isNaN(value)){
+                throw "Invalid data format selected for hierarchy report.";
             }
-        }
-        holder.loc = value;
-        return data
-        } catch(e) {
+            let holder = data;
+            for (let [idx, val] of index.entries()) {
+                // Add a level prefix to each item to avoid duplicates
+                val = "lvl" + idx + "_" + val;
+                let obj = search(holder, val, 'name');
+                let entry = { name: val };
+                if (obj)
+                    holder = obj;
+                else {
+                    if (Array.isArray(holder))
+                        holder.push(entry);
+                    else if (holder.hasOwnProperty("children"))
+                        holder.children.push(entry)
+                    else
+                        holder.children = [entry]
+
+                    holder = search(holder, val, 'name');
+                }
+            }
+            holder.loc = value;
+            return data
+        } catch (e) {
             console.error(e);
             return [];
         }
