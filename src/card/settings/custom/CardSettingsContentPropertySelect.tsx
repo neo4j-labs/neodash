@@ -1,5 +1,5 @@
 
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { REPORT_TYPES, RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
@@ -22,6 +22,11 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
     const [propertyInputText, setPropertyInputText] = React.useState(settings['propertyType']);
     const [propertyRecords, setPropertyRecords] = React.useState([]);
     var parameterName = settings['parameterName'];
+
+    // When certain settings are updated, a re-generated search query is needed.
+    useEffect(() => {
+        updateReportQuery(settings.entityType, settings.propertyType);
+    }, [settings.suggestionLimit,  settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive])
 
     if (settings["type"] == undefined) {
         onReportSettingUpdate("type", "Node Property");
@@ -58,7 +63,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
 
     function handleFreeTextNameSelectionUpdate(newValue) {
         if (newValue) {
-            const new_parameter_name = ("neodash_" +  newValue).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
+            const new_parameter_name = ("neodash_" + newValue).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
             handleReportQueryUpdate(new_parameter_name, newValue, undefined);
         } else {
             onReportSettingUpdate('parameterName', undefined);
@@ -87,13 +92,28 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
     }
 
     function handleReportQueryUpdate(new_parameter_name, entityType, propertyType) {
-        // Set query based on whether we are selecting a node or relationship property.
         onReportSettingUpdate('parameterName', new_parameter_name);
+        updateReportQuery(entityType, propertyType);
+    }
+
+    function updateReportQuery(entityType, propertyType) {
+        const limit = settings.suggestionLimit ? settings.suggestionLimit : 5;
+        const deduplicate = settings.deduplicateSuggestions !== undefined ? settings.deduplicateSuggestions : true;
+        const searchType = settings.searchType ? settings.searchType : "CONTAINS";
+        const caseSensitive = settings.caseSensitive !== undefined ? settings.caseSensitive : false;
         if (settings['type'] == "Node Property") {
-            const newQuery = "MATCH (n:`" + entityType + "`) \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value ORDER BY size(toString(value)) ASC LIMIT 5";
+            const newQuery = "MATCH (n:`" + entityType + "`) \n"+
+                             "WHERE "+(caseSensitive ? "" : "toLower")+"(toString(n.`" + propertyType + "`)) "+searchType+
+                                  " "+(caseSensitive ? "" : "toLower")+"($input) \n"+
+                             "RETURN " + (deduplicate ? "DISTINCT" : "") + " n.`" + propertyType + "` as value "+
+                             "ORDER BY size(toString(value)) ASC LIMIT " + limit;
             onQueryUpdate(newQuery);
-        } else if (settings['type'] == "Relationship Property"){
-            const newQuery = "MATCH ()-[n:`" + entityType + "`]->() \nWHERE toLower(toString(n.`" + propertyType + "`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`" + propertyType + "` as value ORDER BY size(toString(value)) ASC LIMIT 5";
+        } else if (settings['type'] == "Relationship Property") {
+            const newQuery = "MATCH ()-[n:`" + entityType + "`]->() \n"+
+                             "WHERE "+(caseSensitive ? "" : "toLower")+"(toString(n.`" + propertyType + "`)) "+searchType+
+                                  " "+(caseSensitive ? "" : "toLower")+"($input) \n"+
+                             "RETURN " + (deduplicate ? "DISTINCT" : "") + " n.`" + propertyType + "` as value "+
+                             "ORDER BY size(toString(value)) ASC LIMIT " + limit;
             onQueryUpdate(newQuery);
         } else {
             const newQuery = "RETURN true";
@@ -122,18 +142,18 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, onRepo
         </TextField>
 
         {settings.type == "Free Text" ?
-          <NeoField
-            label={"Name"} 
-            key={"freetext"}
-            value={settings["entityType"] ? settings["entityType"] : ""}
-            defaultValue={""}
-            placeholder={"Enter a parameter name here..."}
-            style={{ width: 335, marginLeft: "5px", marginTop: "0px" }}
-            onChange={(value) => {
-                setLabelInputText(value);
-                handleNodeLabelSelectionUpdate(value);
-                handleFreeTextNameSelectionUpdate(value);
-            }}
+            <NeoField
+                label={"Name"}
+                key={"freetext"}
+                value={settings["entityType"] ? settings["entityType"] : ""}
+                defaultValue={""}
+                placeholder={"Enter a parameter name here..."}
+                style={{ width: 335, marginLeft: "5px", marginTop: "0px" }}
+                onChange={(value) => {
+                    setLabelInputText(value);
+                    handleNodeLabelSelectionUpdate(value);
+                    handleFreeTextNameSelectionUpdate(value);
+                }}
             />
             :
             <>
