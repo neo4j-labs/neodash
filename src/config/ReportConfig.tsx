@@ -1182,6 +1182,11 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "defaultValue": {
+                label: "Default Value (Override)",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
+            },
             "clearParameterOnFieldClear": {
                 label: "Clear Parameter on Field Reset",
                 type: SELECTION_TYPES.LIST,
