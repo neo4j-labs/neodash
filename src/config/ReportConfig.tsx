@@ -940,6 +940,7 @@ export const REPORT_TYPES = {
     "choropleth": {
         label: "Choropleth Map",
         component: NeoChoroplethMapChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a <code>value</code>.</div>,
         selection: {
             "index": {
