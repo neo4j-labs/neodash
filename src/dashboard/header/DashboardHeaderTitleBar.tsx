@@ -20,7 +20,7 @@ export const NeoDashboardHeaderTitleBar = ({ dashboardTitle, downloadImageEnable
     }, [dashboardTitle])
 
 
-    const content = <Toolbar key={1} style={{ paddingRight: 24, minHeight: "64px", background: '#004092', zIndex: 1000 }}>
+    const content = <Toolbar key={1} className="n-bg-primary-70" style={{ paddingRight: 24, minHeight: "64px", zIndex: 1000 }}>
         {!standalone ? <IconButton
             aria-label="open drawer"
             onClick={handleDrawerOpen}
