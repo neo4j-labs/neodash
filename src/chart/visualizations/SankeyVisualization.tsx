@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ResponsiveSankey  } from '@nivo/sankey'
 import { ChartReportProps, ExtendedChartReportProps } from './VisualizationProps'
 import {evaluateRulesOnDict, evaluateRulesOnNode} from '../../report/ReportRuleEvaluator'
@@ -147,7 +147,7 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
                 break;
             default:
                 lbl = item.properties[props.selection[item.lastLabel]];
-        };
+        }
 
         return typeof lbl === 'object' ? lbl["low"] : lbl;
     }
@@ -156,7 +156,58 @@ export default function SankeyVisualization(props: ExtendedChartReportProps) {
         return <NeoCodeViewerComponent value={"No relationship weights found. \nDefine a numeric 'Relationship Property' in the \nreport's advanced settings to view the sankey diagram."}></NeoCodeViewerComponent>
     }
 
-    return <ResponsiveSankey
+    function isCyclicUtil(i,visited,recStack, adj)
+    {
+        // Mark the current node as visited and
+        // part of recursion stack
+        if (recStack.get(i))
+            return true;
+
+        if (visited.get(i))
+            return false;
+
+        visited.set(i, true);
+        recStack.set(i, true);
+
+        let childrens = adj.get(i);
+
+        for (const children in childrens)
+            if (isCyclicUtil(childrens[children], visited, recStack, adj))
+                return true;
+
+        recStack.set(i, false);
+
+        return false;
+    }
+
+
+    const isCyclic = (graph) => {
+        let visited = new Map();
+        let recStack = new Map();
+        let adj = new Map();
+
+        graph.nodes.forEach( (node) => {
+            visited.set(node["id"], false);
+            recStack.set(node["id"], false);
+            adj.set(node["id"], []);
+        })
+
+        graph.links.forEach( (link) => {
+            adj.get(link["source"]).push(link["target"]);
+        })
+
+        for (const idx in graph.nodes)
+            if (isCyclicUtil(graph.nodes[idx]["id"], visited, recStack, adj))
+                return true;
+
+        return false;
+    }
+
+    if(data && data.nodes && data.links && isCyclic(data)){
+        return <NeoCodeViewerComponent value={"Please be careful with the data you use for this chart as it does not support cyclic dependencies."}></NeoCodeViewerComponent>;
+    }
+
+    return  <ResponsiveSankey
         data={data}
         margin={{ top: marginTop, right: (legend) ? legendWidth + marginRight : marginRight, bottom: (legend) ? legendHeight + marginBottom : marginBottom, left: marginLeft }}
         isInteractive={interactive}
