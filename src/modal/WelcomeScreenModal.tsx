@@ -2,7 +2,6 @@ import React from 'react';
 import { Tooltip } from '@material-ui/core';
 import { HeroIcon, Button, Dialog } from '@neo4j-ndl/react';
 
-
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
