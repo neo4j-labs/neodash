@@ -10,6 +10,7 @@ import NeoSunburstChart from "../chart/SunburstChart";
 import NeoCirclePackingChart from "../chart/CirclePackingChart";
 import NeoTreeMapChart from "../chart/TreeMapChart";
 import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
+import NeoRadarChart from "../chart/RadarChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -325,4 +326,26 @@ RETURN value
         type: "choropleth",
         chartType: NeoChoroplethMapChart
     },
+    {
+        title: "Radar Chart",
+        description: "Radar charts can be used to render multivariate data from an array of nodes into the form of a two dimensional chart of three or more quantitative variables.",
+        exampleQuery: "// How are FIFA22 best players stats distributed?\n" +
+            "MATCH (n:FIFA22)\n"+
+            "RETURN n",
+        syntheticQuery: 'UNWIND [\n'+
+            '{labels: ["Person"], identity: 1, properties:{DEFENDING: 44,SHOOTING: 92,PASSING: 79,PACE: 78,PHYSICAL: 82,name: "Lewandowski",DRIBBLING: 86}},\n'+
+            '{labels: ["Person"], identity: 2, properties:{DEFENDING: 34,SHOOTING: 90,PASSING: 91,PACE: 83,PHYSICAL: 64,name: "Messi",DRIBBLING: 95}},\n'+
+            '{labels: ["Person"], identity: 3, properties:{DEFENDING: 34,SHOOTING: 93,PASSING: 80,PACE: 85,PHYSICAL: 75,name: "C Ronaldo",DRIBBLING: 86}},\n'+
+            '{labels: ["Person"], identity: 4, properties:{DEFENDING: 39,SHOOTING: 88,PASSING: 83,PACE: 80,PHYSICAL: 78,name: "Benzema",DRIBBLING: 87}},\n'+
+            '{labels: ["Person"], identity: 5, properties:{DEFENDING: 36,SHOOTING: 88,PASSING: 80,PACE: 97,PHYSICAL: 77,name: "Mbappé",DRIBBLING: 92}}\n'+
+            '] as x \n'+
+            'RETURN x',
+        settings: { colors : "nivo", keysProperties : "PACE,SHOOTING,PASSING,DRIBBLING,DEFENDING,PHYSICAL", legend : true},
+        selection: { index: "code", value: "value", key: "code"},
+        fields: ["code","value"],
+        type: "radar",
+        chartType: NeoRadarChart
+    },
 ]
+
+

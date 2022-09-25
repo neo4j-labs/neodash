@@ -1,0 +1,66 @@
+= Radar Chart
+
+A Radar chart can be used to render multivariate data from an array of nodes
+into the form of a two dimensional chart of three or more quantitative variables.
+
+A radar chart expects two advanced configurations: a Quantitative Variables and anIndex Property.
+
+== Examples
+
+=== Basic Radar
+
+[source,cypher]
+----
+MATCH (n:FIFA)
+RETURN n
+----
+
+image::radar.png[Radar Chart]
+
+== Advanced Settings
+
+[width="100%",cols="15%,2%,26%,57%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Enable interactivity |on/off |on |If enabled, turn on animations when a
+user hovers over a layer.
+
+|Show Legend |on/off |off |If enabled, shows a legend on the bottom of
+the visualization.
+
+|Color Scheme |List | |The color scheme to use for the Radar. Each polygon will have a color from the list.
+
+|Quantitative Variables |String | value1,value2,value3 |Comma separated string of the properties names that contains the quantitative information to be displayed.
+
+|Index Property |String | name |Name of the property that will be used to pivot the radar.
+
+|Margin Left (px) |number |24 |The margin in pixels on the left side of
+the visualization.
+
+|Margin Right (px) |number |24 |The margin in pixels on the right side
+of the visualization.
+
+|Margin Top (px) |number |24 |The margin in pixels on the top side of
+the visualization.
+
+|Margin Bottom (px) |number |40 |The margin in pixels on the bottom side
+of the visualization.
+
+|Dot Size |number |10 |Size of the dots (px).
+
+|Dot Border Width |number |2 |Width of the dots border (px).
+
+|Grid Levels |number |5 |Number of levels to display for grid.
+
+|Grid Label Offset (px) |number |16 |Label offset from outer radius (px)
+
+|Blend Mode |List |normal |This will define CSS mix-blend-mode for layers
+
+|Motion Configuration |List |gentle |This parameter will select the motion config for react-spring.
+
+|Curve |List |linearClosed |This parameter will select the type of curve interpolation.
+
+|Auto-run query |on/off |on |When activated, automatically runs the
+query when the report is displayed. When set to `off', the query is
+displayed and will need to be executed manually.
+|===

@@ -45,7 +45,6 @@ export const REPORT_TYPES = {
         helperText: "A table will contain all returned data.",
         component: NeoTableChart,
         maxRecords: 1000,
-      
         settings: {
             "transposed": {
                 label: "Transpose Rows & Columns",
@@ -457,11 +456,11 @@ export const REPORT_TYPES = {
         component: NeoRadarChart,
         //useNodePropsAsFields: true,
         //autoAssignSelectedProperties: true,
-        helperText: <div>A radar chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
+        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and an <code>Index Property</code>.</div>,
         selection: {
             /*"index": {
-                label: "Category",
-                type: SELECTION_TYPES.TEXT
+                label: "IndexBy",
+                type: SELECTION_TYPES.NODE_PROPERTIES
             },
             "value": {
                 label: "Value",
@@ -501,6 +500,16 @@ export const REPORT_TYPES = {
                 values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
                 default: "set2"
             },
+            "keysProperties": {
+                label: "Quantitative Variables",
+                type: SELECTION_TYPES.TEXT,
+                default: "value1,value2,value3"
+            },
+            "indexProperty": {
+                label: "Index Property",
+                type: SELECTION_TYPES.TEXT,
+                default: "name"
+            },
             "marginLeft": {
                 label: "Margin Left (px)",
                 type: SELECTION_TYPES.NUMBER,
@@ -514,7 +523,7 @@ export const REPORT_TYPES = {
             "marginTop": {
                 label: "Margin Top (px)",
                 type: SELECTION_TYPES.NUMBER,
-                default: 24
+                default: 40
             },
             "marginBottom": {
                 label: "Margin Bottom (px)",
@@ -531,22 +540,33 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.NUMBER,
                 default: 2
             },
+            "gridLevels": {
+                label: "Number of levels to display for grid",
+                type: SELECTION_TYPES.NUMBER,
+                default: 5
+            },
             "gridLabelOffset": {
                 label: "Label offset from outer radius (px)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 16
             },
             "blendMode": {
-                label: "Define CSS mix-blend-mode for layers",
+                label: "Blend Mode",
                 type: SELECTION_TYPES.LIST,
                 values: ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"],
                 default: "normal"
             },
             "motionConfig": {
-                label: "Motion config for react-spring, either a preset or a custom configuration",
+                label: "Motion Configuration",
                 type: SELECTION_TYPES.LIST,
                 values: ["default", "gentle", "wobbly", "stiff", "slow","molasses"],
                 default: "gentle"
+            },
+            "curve": {
+                label: "Curve interpolation",
+                type: SELECTION_TYPES.LIST,
+                values: ["basicClosed", "cardinalClosed", "catmullRomClosed", "linearClosed"],
+                default: "linearClosed"
             },
             "autorun": {
                 label: "Auto-run query",
