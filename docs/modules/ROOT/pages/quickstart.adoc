@@ -14,9 +14,9 @@ docker run -it --rm -p 5005:5005 nielsdejong/neodash
 
 Or, build it yourself:
 ```
-git clone https://github.com/nielsdejong/neodash     
-npm install      
-npm run dev
+git clone https://github.com/neo4j-labs/neodash     
+yarn install      
+yarn run dev
 ```
 
 NeoDash connects to any recent version of the Neo4j database. (Neo4j 4.0

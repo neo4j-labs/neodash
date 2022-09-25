@@ -1,8 +1,7 @@
 import { updateReportTitle, updateReportQuery, updateSelection, updateReportSize, updateReportRefreshRate, updateCypherParameters, updateFields, updateReportType, updateReportSetting, toggleCardSettings, clearSelection, updateAllSelections } from "./CardActions";
 import { createNotificationThunk } from "../page/PageThunks";
-import _ from 'lodash';
 import { DEFAULT_NODE_LABELS, REPORT_TYPES, SELECTION_TYPES } from "../config/ReportConfig";
-
+import isEqual from 'lodash.isequal';
 
 export const updateReportTitleThunk = (index, title) => (dispatch: any, getState: any) => {
     try {
@@ -75,7 +74,7 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
 
 
         // If the new set of fields is not equal to the current set of fields, we ned to update the field selection.
-        if (!_.isEqual(oldFields, fields) || Object.keys(oldSelection).length === 0) {
+        if (!isEqual(oldFields, fields) || Object.keys(oldSelection).length === 0) {
             selectables.forEach((selection, i) => {
                 if (fields.includes(oldSelection[selection])) {
                     // If the current selection is still present in the new set of fields, no need to reset.
