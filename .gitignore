@@ -4,7 +4,6 @@
 *.cert
 *.passphrase
 node_modules
-package-lock.json
 build
 target
 /node_modules
@@ -28,8 +27,6 @@ cypress/videos
 .env.development.local
 .env.test.local
 .env.production.local
-
-npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 

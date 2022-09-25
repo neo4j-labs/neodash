@@ -11,6 +11,7 @@ import NeoCirclePackingChart from "../chart/CirclePackingChart";
 import NeoTreeMapChart from "../chart/TreeMapChart";
 import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
 import NeoRadarChart from "../chart/RadarChart";
+import NeoSankeyChart from "../chart/SankeyChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -302,6 +303,55 @@ RETURN value
         fields: ["path","value"],
         type: "treeMap",
         chartType: NeoTreeMapChart
+    },
+    {
+        title: "Sankey",
+        description: "A Sankey visualization will compute a diagram from nodes and links. Beware that cyclic dependencies are not supported.",
+        exampleQuery: "MATCH (p:Person)-[r:RATES]->(m:Movie)\nRETURN p, r, m",
+        syntheticQuery: `
+        WITH [
+            {
+                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 11, identity: 10001, properties: {rating: 4.5}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Jim", movie: "The Matrix", rating: 4.5
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 11, identity: 10002, properties: {rating: 3.8}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Mike", movie: "The Matrix", rating: 3.8
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 11, identity: 10003, properties: {rating: 5.0}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix", rating: 5.0
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 12, identity: 10004, properties: {rating: 3.5}}, end: {labels: ["Movie"], identity: 12, properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Jim", movie: "The Matrix - Reloaded", rating: 3.5
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 12, identity: 10005, properties: {rating: 2.7}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Sarah", movie: "The Matrix - Reloaded", rating: 2.7
+            },
+            {
+                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 12, identity: 10006, properties: {rating: 4.1}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Reloaded", rating: 4.1
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 13, identity: 10007, properties: {rating: 4.9}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Jim", movie: "The Matrix - Revolutions", rating: 4.9
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 13, identity: 10008, properties: {rating: 4.8}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Mike", movie: "The Matrix - Revolutions", rating: 4.8
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 13, identity: 10009, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix - Revolutions", rating: 4.0
+            },
+            {
+                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 13, identity: 10010, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Revolutions", rating: 4.0
+            }
+          ] as data
+          UNWIND data as row
+          RETURN row.path as Path
+        `,
+        settings: {labelPosition: "outside", labelProperty : "rating", layout : "vertical"},
+        fields: [],
+        selection: {
+            "Person": "name",
+            "Movie": "title"
+        },
+        type: "sankey",
+        chartType: NeoSankeyChart
     },
     {
         title: "Choropleth Chart",

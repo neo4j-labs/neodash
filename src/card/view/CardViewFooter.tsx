@@ -11,7 +11,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
     const selectables = (selectableFields) ? Object.keys(selectableFields) : [];
     const nodeColorScheme = settings && settings.nodeColorScheme ? settings.nodeColorScheme : "neodash";
     const hideSelections = settings && settings.hideSelections ? settings.hideSelections : false;
-
+    const ignoreLabelColors = REPORT_TYPES[type].ignoreLabelColors;
     if (!fields || fields.length == 0 || hideSelections) {
         return <div></div>
     }
@@ -29,7 +29,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSele
                             const discoveredProperties = field.slice(1);
                             const properties = (discoveredProperties ? [...discoveredProperties].sort() : []).concat(["(label)", "(id)", "(no label)"]);
                             const totalColors = categoricalColorSchemes[nodeColorScheme] ? categoricalColorSchemes[nodeColorScheme].length : 0;
-                            const color = totalColors > 0 ? categoricalColorSchemes[nodeColorScheme][i % totalColors] : "grey";
+                            const color = (totalColors > 0 && !ignoreLabelColors) ? categoricalColorSchemes[nodeColorScheme][i % totalColors] : "lightgrey";
                             return <FormControl key={nodeLabel}>
                                 <InputLabel style={{ paddingLeft: "10px" }} id={nodeLabel}>{nodeLabel}</InputLabel>
                                 <Select labelId={nodeLabel}

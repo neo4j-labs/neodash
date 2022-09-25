@@ -1,14 +1,16 @@
-## NeoDash 2.1.4
-Added hotfix for missing function in map visualization (https://github.com/neo4j-labs/neodash/issues/183).
+## NeoDash 2.1.5
+Added *New* Sankey charts:
+- Visualize nodes and relationships as a flow diagram.
+- Select a customizable flow value from relationship properties.
+- Configure a variety of style customizations.
 
-## NeoDash 2.1.3
-The 2.1.3 release contains updates to the map visualization, as well as a new Choropleth map report type.
-Several usability improvements were also added, including fixing all links into the new documentation pages.
+Parameter select:
+- Fixed bug where values would randomly be deleted after changing the parameter.
+- Added option to customize the number of suggested values when a user enters (part of) a property value.
+- Added option to customize search type (CONTAINS, STARTS WITH, or ENDS WITH).
+- Added option to enable/disable case-sensitive search.
+- Added option to enable/disable removing duplicate suggestions.
 
-- Extended the map visualization with a heatmap mode & marker clustering.
-- Added a Choropleth map visualization report type.
-- Added support for auto-linking into a predefined database from https://tools.neo4jlabs.com/.
-- Added optional background color setting for reports.
-- Added a new 'resize mode' for page layout creation.
-- Added support for drawing dates on a time chart (in addition to existing datetime types).
-- Fixed broken links in the documentation portal, all in-app links now point to this portal as well.
+Miscellaneous:
+- Extended documentation with examples on running NeoDash in Kubernetes.
+- Fixed issue where duplicate database names were visible when running NeoDash on an on-prem Neo4j cluster.

@@ -17,7 +17,7 @@ import NeoTableChart from '../chart/TableChart';
 import NeoCirclePackingChart from "../chart/CirclePackingChart";
 import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
 import NeoRadarChart from "../chart/RadarChart";
-
+import NeoSankeyChart from "../chart/SankeyChart";
 
 export enum SELECTION_TYPES {
     NUMBER,
@@ -1063,6 +1063,105 @@ export const REPORT_TYPES = {
             }
         }
     },
+    "sankey": {
+        label: "Sankey Chart",
+        component: NeoSankeyChart,
+        useNodePropsAsFields: true,
+        autoAssignSelectedProperties: true,
+        ignoreLabelColors: true,
+        helperText: <div>A Sankey chart expects Neo4j <code>nodes</code> and <code>weighted relationships</code>.</div>,
+        selection: {
+            "nodeProperties": {
+                label: "Node Properties",
+                type: SELECTION_TYPES.NODE_PROPERTIES
+            }
+        },
+        maxRecords: 250,
+        settings: {
+            "legend": {
+                label: "Show legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "layout": {
+                label: "Sankey layout",
+                type: SELECTION_TYPES.LIST,
+                values: ["horizontal", "vertical"],
+                default: "horizontal"
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "labelPosition": {
+                label: "Control sankey label position",
+                type: SELECTION_TYPES.LIST,
+                values: ["inside", "outside"],
+                default: "inside"
+            },
+            "labelOrientation": {
+                label: "Control sankey label orientation",
+                type: SELECTION_TYPES.LIST,
+                values: ["horizontal", "vertical"],
+                default: "horizontal"
+            },
+            "nodeBorderWidth": {
+                label: "Node border width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "labelProperty": {
+                label: "Relationship value Property",
+                type: SELECTION_TYPES.TEXT,
+                default: "value"
+            },
+            "nodeThickness": {
+                label: "Node thickness (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 18
+            },
+            "nodeSpacing": {
+                label: "Spacing between nodes at an identical level (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 18
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
     "choropleth": {
         label: "Choropleth Map",
         component: NeoChoroplethMapChart,
@@ -1182,8 +1281,31 @@ export const REPORT_TYPES = {
         disableRefreshRate: true,
         disableCypherParameters: true,
         textOnly: true,
-        maxRecords: 5,
+        maxRecords: 100,
         settings: {
+            "suggestionLimit": {
+                label: "Value Suggestion Limit",
+                type: SELECTION_TYPES.NUMBER,
+                default: 5,
+            },
+            "searchType": {
+                label: "Search Type",
+                type: SELECTION_TYPES.LIST,
+                values: ["CONTAINS", "STARTS WITH", "ENDS WITH"],
+                default: "CONTAINS"
+            },
+            "caseSensitive": {
+                label: "Case Sensitive Search",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "deduplicateSuggestions": {
+                label: "Deduplicate Suggestion Values",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "clearParameterOnFieldClear": {
                 label: "Clear Parameter on Field Reset",
                 type: SELECTION_TYPES.LIST,
