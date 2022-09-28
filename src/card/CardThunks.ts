@@ -1,4 +1,18 @@
-import { updateReportTitle, updateReportQuery, updateSelection, updateReportSize, updateReportRefreshRate, updateCypherParameters, updateFields, updateReportType, updateReportSetting, toggleCardSettings, clearSelection, updateAllSelections } from "./CardActions";
+import {
+    updateReportTitle,
+    updateReportQuery,
+    updateSelection,
+    updateReportSize,
+    updateReportRefreshRate,
+    updateCypherParameters,
+    updateFields,
+    updateReportType,
+    updateReportSetting,
+    toggleCardSettings,
+    clearSelection,
+    updateAllSelections,
+    updateReportDatabase
+} from "./CardActions";
 import { createNotificationThunk } from "../page/PageThunks";
 import _ from 'lodash';
 import { DEFAULT_NODE_LABELS, REPORT_TYPES, SELECTION_TYPES } from "../config/ReportConfig";
@@ -11,6 +25,19 @@ export const updateReportTitleThunk = (index, title) => (dispatch: any, getState
         dispatch(updateReportTitle(pagenumber, index, title))
     } catch (e) {
         dispatch(createNotificationThunk("Cannot update report title", e));
+    }
+}
+
+/*
+Thunk used to update the database used from a report
+ */
+export const updateReportDatabaseThunk = (index, database) => (dispatch: any, getState: any) => {
+    try {
+        const state = getState();
+        const pagenumber = state.dashboard.settings.pagenumber;
+        dispatch(updateReportDatabase(pagenumber, index, database))
+    } catch (e) {
+        dispatch(createNotificationThunk("Cannot update report database", e));
     }
 }
 
@@ -177,3 +204,5 @@ export const updateReportSettingThunk = (index, setting, value) => (dispatch: an
         dispatch(createNotificationThunk("Error when updating report settings", e));
     }
 }
+
+

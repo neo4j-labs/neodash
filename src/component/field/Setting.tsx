@@ -98,6 +98,7 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                 <NeoColorPicker
                     label={label}
                     key={label}
+                    disabled={disabled}
                     defaultValue={defaultValue}
                     value={value}
                     onClick={(val) => onClick(val)}

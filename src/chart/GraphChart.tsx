@@ -96,8 +96,7 @@ const NeoGraphChart = (props: ChartProps) => {
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const defaultNodeColor = "lightgrey"; // Color of nodes without labels
     const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
-    const linkDirectionalParticleSpeed = 0.005; // Speed of particles on relationships.
-
+    const linkDirectionalParticleSpeed = props.settings && props.settings.relationshipParticleSpeed ? props.settings.relationshipParticleSpeed : 0.005; // Speed of particles on relationships.
     const iconStyle = props.settings && props.settings.iconStyle !== undefined ? props.settings.iconStyle : "";
     let iconObject = undefined;
     try {
@@ -404,7 +403,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 onLinkClick={showPopup}
                 onNodeRightClick={handleExpand}
                 linkDirectionalParticles={linkDirectionalParticles}
-                linkDirectionalParticleSpeed={d => linkDirectionalParticleSpeed}
+                linkDirectionalParticleSpeed={linkDirectionalParticleSpeed}
                 cooldownTicks={100}
                 onEngineStop={() => {
                     if (firstRun) {
