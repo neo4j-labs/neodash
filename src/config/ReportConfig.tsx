@@ -458,22 +458,19 @@ export const REPORT_TYPES = {
         //autoAssignSelectedProperties: true,
         helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and an <code>Index Property</code>.</div>,
         selection: {
-            /*"index": {
-                label: "IndexBy",
-                type: SELECTION_TYPES.NODE_PROPERTIES
-            },
-            "value": {
-                label: "Value",
-                type: SELECTION_TYPES.NUMBER,
+            "index": {
+                label: "Index",
+                type: SELECTION_TYPES.TEXT,
                 key: true
             },
-            "key": {
-                label: "Group",
-                type: SELECTION_TYPES.TEXT,
-                optional: true
-            }*/
+            "values": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                multiple: true,
+                key: true
+            },
         },
-        //useRecordMapper: true,
+        useRecordMapper: true,
         maxRecords: 250,
         settings: {
             "legend": {
