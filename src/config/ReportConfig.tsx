@@ -497,16 +497,6 @@ export const REPORT_TYPES = {
                 values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
                 default: "set2"
             },
-            "keysProperties": {
-                label: "Quantitative Variables",
-                type: SELECTION_TYPES.TEXT,
-                default: "value1,value2,value3"
-            },
-            "indexProperty": {
-                label: "Index Property",
-                type: SELECTION_TYPES.TEXT,
-                default: "name"
-            },
             "marginLeft": {
                 label: "Margin Left (px)",
                 type: SELECTION_TYPES.NUMBER,
