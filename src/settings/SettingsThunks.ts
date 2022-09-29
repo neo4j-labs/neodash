@@ -9,9 +9,13 @@ const update = (state, mutations) =>
 
 export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => {
     try {
+        const pages = getState().dashboard.pages;
+        // Make sure the page number is within bounds.
+        number = Math.max(0, Math.min(pages.length - 1, number));
         dispatch(updateDashboardSetting("pagenumber", number))
         // Make sure that we don't have weird transitions with the settings popups.
-        const page = getState().dashboard.pages[number];
+     
+        const page = pages[number];
         page.reports.map((report, i) => {
             dispatch(hardResetCardSettings(number, i))
         });

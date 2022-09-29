@@ -23,6 +23,7 @@ export enum SELECTION_TYPES {
     NUMBER_OR_DATETIME,
     LIST,
     TEXT,
+    MULTILINE_TEXT,
     DICTIONARY,
     COLOR,
     NODE_PROPERTIES
@@ -68,6 +69,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -192,16 +198,21 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "iconStyle": {
+                label: "Node Background Image by label, formatted as {label: url}",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
+            },
             "autorun": {
                 label: "Auto-run query",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
             },
-            "iconStyle": {
-                label: "Icon Style on format { label : url}",
-                type: SELECTION_TYPES.TEXT,
-                default: ""
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -321,6 +332,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -448,6 +464,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -530,6 +551,16 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "every 1 year"
             },
+            "xTickRotationAngle": {
+                label: "X-axis Tick Rotation (Degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "yTickRotationAngle": {
+                label: "Y-axis Tick Rotation (Degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
             "curve": {
                 label: "Line Smoothing",
                 type: SELECTION_TYPES.LIST,
@@ -588,6 +619,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -669,6 +705,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -710,6 +751,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -794,6 +840,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -868,6 +919,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -936,6 +992,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1035,6 +1096,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1130,8 +1196,12 @@ export const REPORT_TYPES = {
                 label: "Tooltip Property",
                 type: SELECTION_TYPES.TEXT,
                 default: "properties.name"
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
-
         }
     },
     "json": {
@@ -1146,6 +1216,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1208,6 +1283,11 @@ export const REPORT_TYPES = {
                 label: "Timeout for value updates (ms)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 1000
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1231,6 +1311,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1249,6 +1334,11 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
+            }
         }
     }
 }
