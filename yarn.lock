@@ -1580,6 +1580,18 @@
     "@nivo/tooltip" "0.79.0"
     d3-shape "^1.3.5"
 
+"@nivo/radar@^0.79.1":
+  version "0.79.1"
+  resolved "https://registry.yarnpkg.com/@nivo/radar/-/radar-0.79.1.tgz#530d3c2db5334615e0f32d7d0b0d4230ef9c254f"
+  integrity sha512-T91l/905PMjYNFT1ikOxNOVvDzTw4ysIOZcRj+xT7fLMpqd4TKlNUFoQ/t3XyrYFgIlVaSCSQxF/XKlPD8AhCw==
+  dependencies:
+    "@nivo/colors" "0.79.1"
+    "@nivo/legends" "0.79.1"
+    "@nivo/tooltip" "0.79.0"
+    "@react-spring/web" "9.3.1"
+    d3-scale "^3.2.3"
+    d3-shape "^1.3.5"
+
 "@nivo/recompose@0.79.0":
   version "0.79.0"
   resolved "https://registry.yarnpkg.com/@nivo/recompose/-/recompose-0.79.0.tgz#c0c54ecabb2300ce672f3c3199f74629df33cc08"
@@ -3243,7 +3255,7 @@ csstype@^3.0.2, csstype@^3.1.0:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
   integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
 
-cypher-codemirror@latest:
+cypher-codemirror@1.1.9:
   version "1.1.9"
   resolved "https://registry.yarnpkg.com/cypher-codemirror/-/cypher-codemirror-1.1.9.tgz#6da06d5384be6238a9fbe6060e75d5d822371ad1"
   integrity sha512-nGJ+AHNW1k1zxbHGXaqqZLX44XG2uYGeD1TyfHIMegVAs/J++EhaHxi7Nu47gZOMRFuQThnyiassy0PoZUGWuA==
@@ -5378,7 +5390,7 @@ lodash-es@^4.17.15:
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
-lodash.debounce@^4.0.8, lodash.debounce@^4.17.21:
+lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
@@ -5526,7 +5538,7 @@ material-colors@^1.2.1:
   resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
   integrity sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
 
-material-ui-color-picker@latest:
+material-ui-color-picker@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/material-ui-color-picker/-/material-ui-color-picker-3.5.1.tgz#2f33f02a0a22647b135af848662409cad15f56e5"
   integrity sha512-0mxnmfpl31m6ton13SbwWy3uUqQtmzV0bZl+pEK9lD+4daYB4+FeM05IW0wNU9pAum6JNT7ddYBUQ0tyDA1kvQ==
@@ -6782,7 +6794,7 @@ react-leaflet-cluster@^1.0.4:
   dependencies:
     leaflet.markercluster "^1.5.3"
 
-react-leaflet-enhanced-marker@latest:
+react-leaflet-enhanced-marker@^1.0.21:
   version "1.0.21"
   resolved "https://registry.yarnpkg.com/react-leaflet-enhanced-marker/-/react-leaflet-enhanced-marker-1.0.21.tgz#a705a1eb917862b9e9ad533cdcf3979aafb66aee"
   integrity sha512-F8m1SXuOlTQ5tD0vi4DXWOYwfwLg/9ft7/6tewPE658eRXp3CrgittpMKA55EN8mPxIzeRyOwypSEQTdwY0WKw==

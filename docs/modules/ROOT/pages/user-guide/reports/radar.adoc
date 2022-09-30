@@ -3,7 +3,7 @@
 A Radar chart can be used to render multivariate data from an array of nodes
 into the form of a two dimensional chart of three or more quantitative variables.
 
-A radar chart expects two advanced configurations: a Quantitative Variables and anIndex Property.
+A radar chart expects a single index, to which a list of numeric fields can be linked.
 
 == Examples
 
@@ -11,8 +11,14 @@ A radar chart expects two advanced configurations: a Quantitative Variables and 
 
 [source,cypher]
 ----
-MATCH (n:FIFA)
-RETURN n
+MATCH (s:Skill)
+MATCH (:Player{name:"Messi"})-[h1:HAS_SKILL]->(s)
+MATCH (:Player{name:"Mbappe"})-[h2:HAS_SKILL]->(s)
+MATCH (:Player{name:"Benzema"})-[h3:HAS_SKILL]->(s)
+MATCH (:Player{name:"C Ronaldo"})-[h4:HAS_SKILL]->(s)
+MATCH (:Player{name:"Lewandowski"})-[h5:HAS_SKILL]->(s)
+RETURN s.name as Skill, h1.value as Messi, h2.value as Mbappe, h3.value as Benzema,
+                        h4.value as `C Ronaldo`, h5.value as Lewandowski
 ----
 
 image::radar.png[Radar Chart]
@@ -29,10 +35,6 @@ user hovers over a layer.
 the visualization.
 
 |Color Scheme |List | |The color scheme to use for the Radar. Each polygon will have a color from the list.
-
-|Quantitative Variables |String | value1,value2,value3 |Comma separated string of the properties names that contains the quantitative information to be displayed.
-
-|Index Property |String | name |Name of the property that will be used to pivot the radar.
 
 |Margin Left (px) |number |24 |The margin in pixels on the left side of
 the visualization.

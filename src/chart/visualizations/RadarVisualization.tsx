@@ -55,12 +55,13 @@ export default function RadarVisualization(props: ExtendedChartReportProps) {
         }
         return "grey"
     }
-
+ 
     const data = records.map(r => {
         const entry = {}
         first!.keys.forEach((k,i) => {
             const key = k == "index" ? selection["index"]: k.substring(7,k.length - 1);
-            entry[key] = ""+r["_fields"][i];
+            const fieldIndex = r["_fieldLookup"][k];
+            entry[key] = ""+r["_fields"][fieldIndex];
         });
         return entry;
     });
