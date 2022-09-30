@@ -144,7 +144,7 @@ export function mapSingleRecord(record, fieldLookup, keys, defaultKey,
 /**
  * Converts a neo4j record entry to a readable string representation. 
  */
-const convertRecordObjectToString = (entry) => {
+export const convertRecordObjectToString = (entry) => {
     if (entry == null || entry == undefined) {
         return entry;
     }

@@ -16,6 +16,7 @@ import NeoSingleValueChart from '../chart/SingleValueChart';
 import NeoTableChart from '../chart/TableChart';
 import NeoCirclePackingChart from "../chart/CirclePackingChart";
 import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
+import NeoRadarChart from "../chart/RadarChart";
 import NeoSankeyChart from "../chart/SankeyChart";
 
 export enum SELECTION_TYPES {
@@ -45,7 +46,6 @@ export const REPORT_TYPES = {
         helperText: "A table will contain all returned data.",
         component: NeoTableChart,
         maxRecords: 1000,
-      
         settings: {
             "transposed": {
                 label: "Transpose Rows & Columns",
@@ -472,7 +472,118 @@ export const REPORT_TYPES = {
             }
         }
     },
-
+    "radar": {
+        label: "Radar Chart",
+        component: NeoRadarChart,
+        //useNodePropsAsFields: true,
+        //autoAssignSelectedProperties: true,
+        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and an <code>Index Property</code>.</div>,
+        selection: {
+            "index": {
+                label: "Index",
+                type: SELECTION_TYPES.TEXT,
+                key: true
+            },
+            "values": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                multiple: true,
+                key: true
+            },
+        },
+        useRecordMapper: true,
+        maxRecords: 250,
+        settings: {
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "animate": {
+                label: "Enable transitions",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "dotSize": {
+                label: "Size of the dots (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 10
+            },
+            "dotBorderWidth": {
+                label: "Width of the dots border (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 2
+            },
+            "gridLevels": {
+                label: "Number of levels to display for grid",
+                type: SELECTION_TYPES.NUMBER,
+                default: 5
+            },
+            "gridLabelOffset": {
+                label: "Label offset from outer radius (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 16
+            },
+            "blendMode": {
+                label: "Blend Mode",
+                type: SELECTION_TYPES.LIST,
+                values: ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"],
+                default: "normal"
+            },
+            "motionConfig": {
+                label: "Motion Configuration",
+                type: SELECTION_TYPES.LIST,
+                values: ["default", "gentle", "wobbly", "stiff", "slow","molasses"],
+                default: "gentle"
+            },
+            "curve": {
+                label: "Curve interpolation",
+                type: SELECTION_TYPES.LIST,
+                values: ["basicClosed", "cardinalClosed", "catmullRomClosed", "linearClosed"],
+                default: "linearClosed"
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            }
+        }
+    },
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
