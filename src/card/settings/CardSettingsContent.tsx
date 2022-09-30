@@ -10,7 +10,7 @@ import {CARD_SIZES} from '../../config/CardConfig';
 import {FormControl, InputLabel, Select} from "@material-ui/core";
 
 
-const NeoCardSettingsContenCt = ({
+const NeoCardSettingsContent = ({
                                     query,
                                     database, // Current report database
                                     databaseList, // List of databases the user can choose from ('system' is filtered out)
