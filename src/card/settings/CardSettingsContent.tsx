@@ -10,7 +10,7 @@ import {CARD_SIZES} from '../../config/CardConfig';
 import {FormControl, InputLabel, Select} from "@material-ui/core";
 
 
-const NeoCardSettingsContent = ({
+const NeoCardSettingsContenCt = ({
                                     query,
                                     database, // Current report database
                                     databaseList, // List of databases the user can choose from ('system' is filtered out)
@@ -81,7 +81,7 @@ const NeoCardSettingsContent = ({
                                                                            }}/> : <></>}
 
         <FormControl style={{ marginTop: "10px" }}>
-            <InputLabel id="demo-simple-select-label">Save to Database</InputLabel>
+            <InputLabel id="demo-simple-select-label">Database</InputLabel>
 
 
             <Select
