@@ -29,4 +29,5 @@ image::markdown.png[Basic Markdown]
 |Replace global parameters in Markdown |on/off |on |If enabled, replaces
 all instances of query parameters (e.g. $neodash_person_name) inside the
 markdown source.
+|Report Description |markdown text | | When specified, adds another button the report header that opens a pop-up. This pop-up contains the rendered markdown from this setting. 
 |===

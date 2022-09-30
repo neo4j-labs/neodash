@@ -44,6 +44,9 @@ export default function  (props: ExtendedChartReportProps) {
     const xTickTimeValues = (settings["xTickTimeValues"] != undefined) ? settings["xTickTimeValues"] : "every 1 years";
     const xAxisTimeFormat = (settings["xAxisTimeFormat"] != undefined) ? settings["xAxisTimeFormat"] : "%Y-%m-%dT%H:%M:%SZ";
     const xAxisFormat = (settings["xAxisFormat"] != undefined) ? settings["xAxisFormat"] : undefined;
+
+    const xTickRotationAngle = (settings["xTickRotationAngle"] != undefined) ? settings["xTickRotationAngle"] : 0;
+    const yTickRotationAngle = (settings["yTickRotationAngle"] != undefined) ? settings["yTickRotationAngle"] : 0;
     const styleRules = settings && settings.styleRules ? settings.styleRules : [];
 
     // Compute line color based on rules - overrides default color scheme completely. 
@@ -125,7 +128,7 @@ export default function  (props: ExtendedChartReportProps) {
                 tickValues: xTickTimeValues,
                 tickSize: 5,
                 tickPadding: 5,
-                tickRotation: 0,
+                tickRotation: xTickRotationAngle,
                 format: xAxisTimeFormat,
                 legend: "Time",
                 legendOffset: 36,
@@ -135,14 +138,14 @@ export default function  (props: ExtendedChartReportProps) {
                 tickSize: 6,
                 tickValues: xTickValues,
                 format: xAxisFormat,
-                tickPadding: 12,
-                tickRotation: 0,
+                tickRotation: xTickRotationAngle,
+                tickPadding: 12
             }
             }
             axisLeft={{
                 tickSize: 6,
                 tickPadding: 12,
-                tickRotation: 0,
+                tickRotation: yTickRotationAngle,
             }}
             pointSize={pointSize}
             lineWidth={lineWidth}

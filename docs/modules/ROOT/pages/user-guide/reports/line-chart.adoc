@@ -87,6 +87,10 @@ format should look like this:
 smoothened. One of linear (no smoothing), basis (interpolating),
 cardinal (through each point) and step (step-based interpolation).
 
+|X-axis Tick Rotation (Degrees) |number |0 | The angle at which the tick labels on the x-axis are rotated.
+
+|Y-axis Tick Rotation (Degrees) |number |0 | The angle at which the tick labels on the y-axis are rotated.
+
 |Show Grid |on/off |on |If enabled, shows a grid in the line chart that
 intersects at the axis ticks.
 
@@ -116,6 +120,7 @@ selector (footer of the visualization).
 |Auto-run query |on/off |on |when activated automatically runs the query
 when the report is displayed. When set to `off', the query is displayed
 and will need to be executed manually.
+|Report Description |markdown text | | When specified, adds another button the report header that opens a pop-up. This pop-up contains the rendered markdown from this setting. 
 |===
 
 == Rule-Based Styling

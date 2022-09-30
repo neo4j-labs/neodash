@@ -115,328 +115,49 @@ export const processHierarchyFromRecords = (records : Record<string, any>[]) => 
     }, []);
 }
 
-// TODO: Delete this test data for hierarchical reports.
-export const hierarchicalTestData =  {
-    "name": "nivo",
-    "children": [
-        {
-            "name": "viz",
-            "children": [
-                {
-                    "name": "stack",
-                    "children": [
-                        {
-                            "name": "cchart",
-                            "loc": 30064
-                        },
-                        {
-                            "name": "xAxis",
-                            "loc": 163841
-                        },
-                        {
-                            "name": "yAxis",
-                            "loc": 81499
-                        },
-                        {
-                            "name": "layers",
-                            "loc": 123359
-                        }
-                    ]
-                },
-                {
-                    "name": "ppie",
-                    "children": [
-                        {
-                            "name": "chart",
-                            "children": [
-                                {
-                                    "name": "pie",
-                                    "children": [
-                                        {
-                                            "name": "outline",
-                                            "loc": 18509
-                                        },
-                                        {
-                                            "name": "slices",
-                                            "loc": 96675
-                                        },
-                                        {
-                                            "name": "bbox",
-                                            "loc": 161558
-                                        }
-                                    ]
-                                },
-                                {
-                                    "name": "donut",
-                                    "loc": 192783
-                                },
-                                {
-                                    "name": "gauge",
-                                    "loc": 92239
-                                }
-                            ]
-                        },
-                        {
-                            "name": "legends",
-                            "loc": 27356
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "colors",
-            "children": [
-                {
-                    "name": "rgb",
-                    "loc": 138303
-                },
-                {
-                    "name": "hsl",
-                    "loc": 28193
-                }
-            ]
-        },
-        {
-            "name": "utils",
-            "children": [
-                {
-                    "name": "randomize",
-                    "loc": 21157
-                },
-                {
-                    "name": "resetClock",
-                    "loc": 125941
-                },
-                {
-                    "name": "noop",
-                    "loc": 149459
-                },
-                {
-                    "name": "tick",
-                    "loc": 129827
-                },
-                {
-                    "name": "forceGC",
-                    "loc": 943
-                },
-                {
-                    "name": "stackTrace",
-                    "loc": 47399
-                },
-                {
-                    "name": "dbg",
-                    "loc": 123995
-                }
-            ]
-        },
-        {
-            "name": "generators",
-            "children": [
-                {
-                    "name": "address",
-                    "loc": 100493
-                }
-            ]
-        },
-        {
-            "name": "set",
-            "children": [
-                {
-                    "name": "clone",
-                    "loc": 81139
-                },
-                {
-                    "name": "intersect",
-                    "loc": 62508
-                },
-                {
-                    "name": "merge",
-                    "loc": 55346
-                },
-                {
-                    "name": "reverse",
-                    "loc": 121311
-                },
-                {
-                    "name": "toArray",
-                    "loc": 38100
-                },
-                {
-                    "name": "toObject",
-                    "loc": 154522
-                },
-                {
-                    "name": "fromCSV",
-                    "loc": 41776
-                },
-                {
-                    "name": "slice",
-                    "loc": 101958
-                },
-                {
-                    "name": "append",
-                    "loc": 147860
-                },
-                {
-                    "name": "prepend",
-                    "loc": 112871
-                },
-                {
-                    "name": "shuffle",
-                    "loc": 9858
-                },
-                {
-                    "name": "pick",
-                    "loc": 152671
-                },
-                {
-                    "name": "plouc",
-                    "loc": 166894
-                }
-            ]
-        },
-        {
-            "name": "text",
-            "children": [
-                {
-                    "name": "trim",
-                    "loc": 16888
-                },
-                {
-                    "name": "slugify",
-                    "loc": 1891
-                },
-                {
-                    "name": "snakeCase",
-                    "loc": 93336
-                },
-                {
-                    "name": "camelCase",
-                    "loc": 12307
-                },
-                {
-                    "name": "repeat",
-                    "loc": 83941
-                },
-                {
-                    "name": "padLeft",
-                    "loc": 51330
-                },
-                {
-                    "name": "padRight",
-                    "loc": 109450
-                },
-                {
-                    "name": "sanitize",
-                    "loc": 163124
-                },
-                {
-                    "name": "ploucify",
-                    "loc": 118283
-                }
-            ]
-        },
-        {
-            "name": "misc",
-            "children": [
-                {
-                    "name": "greetings",
-                    "children": [
-                        {
-                            "name": "hey",
-                            "loc": 147145
-                        },
-                        {
-                            "name": "HOWDY",
-                            "loc": 115821
-                        },
-                        {
-                            "name": "aloha",
-                            "loc": 168617
-                        },
-                        {
-                            "name": "AHOY",
-                            "loc": 5059
-                        }
-                    ]
-                },
-                {
-                    "name": "other",
-                    "loc": 141182
-                },
-                {
-                    "name": "path",
-                    "children": [
-                        {
-                            "name": "pathA",
-                            "loc": 111697
-                        },
-                        {
-                            "name": "pathB",
-                            "children": [
-                                {
-                                    "name": "pathB1",
-                                    "loc": 19589
-                                },
-                                {
-                                    "name": "pathB2",
-                                    "loc": 139581
-                                },
-                                {
-                                    "name": "pathB3",
-                                    "loc": 32288
-                                },
-                                {
-                                    "name": "pathB4",
-                                    "loc": 128382
-                                }
-                            ]
-                        },
-                        {
-                            "name": "pathC",
-                            "children": [
-                                {
-                                    "name": "pathC1",
-                                    "loc": 134193
-                                },
-                                {
-                                    "name": "pathC2",
-                                    "loc": 131748
-                                },
-                                {
-                                    "name": "pathC3",
-                                    "loc": 48812
-                                },
-                                {
-                                    "name": "pathC4",
-                                    "loc": 92870
-                                },
-                                {
-                                    "name": "pathC5",
-                                    "loc": 60282
-                                },
-                                {
-                                    "name": "pathC6",
-                                    "loc": 89867
-                                },
-                                {
-                                    "name": "pathC7",
-                                    "loc": 197107
-                                },
-                                {
-                                    "name": "pathC8",
-                                    "loc": 15449
-                                },
-                                {
-                                    "name": "pathC9",
-                                    "loc": 95465
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-};
+function isCyclicUtil(i,visited,recStack, adj)
+{
+    // Mark the current node as visited and
+    // part of recursion stack
+    if (recStack.get(i))
+        return true;
+
+    if (visited.get(i))
+        return false;
+
+    visited.set(i, true);
+    recStack.set(i, true);
+
+    let childrens = adj.get(i);
+
+    for (const children in childrens)
+        if (isCyclicUtil(childrens[children], visited, recStack, adj))
+            return true;
+
+    recStack.set(i, false);
+
+    return false;
+}
+
+
+export const isCyclic = (graph) => {
+    let visited = new Map();
+    let recStack = new Map();
+    let adj = new Map();
+
+    graph.nodes.forEach( (node) => {
+        visited.set(node["id"], false);
+        recStack.set(node["id"], false);
+        adj.set(node["id"], []);
+    })
+
+    graph.links.forEach( (link) => {
+        adj.get(link["source"]).push(link["target"]);
+    })
+
+    for (const idx in graph.nodes)
+        if (isCyclicUtil(graph.nodes[idx]["id"], visited, recStack, adj))
+            return true;
+
+    return false;
+}

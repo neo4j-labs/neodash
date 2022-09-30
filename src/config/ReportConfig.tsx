@@ -44,7 +44,6 @@ export const REPORT_TYPES = {
         helperText: "A table will contain all returned data.",
         component: NeoTableChart,
         maxRecords: 1000,
-
         settings: {
             "transposed": {
                 label: "Transpose Rows & Columns",

@@ -12,10 +12,10 @@ You can add a new chart to NeoDash in three steps:
 . Make sure you have a local copy of NeoDash installed and running:
 
 ....
-git clone git@github.com:nielsdejong/neodash.git
+git clone git@github.com:neo4j-labs/neodash.git
 git checkout develop
-npm install
-npm run dev
+yarn install
+yarn run dev
 ....
 
 [arabic, start=2]

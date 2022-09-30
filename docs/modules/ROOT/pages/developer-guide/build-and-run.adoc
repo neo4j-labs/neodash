@@ -1,30 +1,30 @@
 = Build & Run
 
-To start developing the application, you’ll need to set up the
+To start developing the application, you will need to set up the
 development environment.
 
-== Run & Build using npm
+== Run & Build using yarn
 
-NeoDash is built with React. You’ll need `npm` installed to run the web
+NeoDash is built with React. You will need `yarn` installed to run the web
 app.
 
 ____
-Use a recent version of `npm` and `node` to build NeoDash. The
-application has been tested with npm 8.6 & node v17.4.0.
+Use a recent version of `yarn` and `node` to build NeoDash. The
+application has been tested with yarn 1.22.17 & node v18.8.0.
 ____
 
 To run the application in development mode: 
 
 - clone this repository. 
 - open a terminal and navigate to the directory you just cloned. 
-- execute `npm install` to install the necessary dependencies. 
-- execute `npm run dev` to run the app in development mode. 
+- run `yarn install` to install the necessary dependencies. 
+- run `yarn run dev` to run the app in development mode. 
 - the application should be available at http://localhost:3000.
 
 To build the app for production: 
 
 - follow the steps above to clone the repository and install dependencies. 
-- execute `npm run build`. This will create a `build` folder in your project directory. 
+- execute `yarn run build`. This will create a `build` folder in your project directory. 
 - deploy the contents of the build folder to a web server. You should then be able to run the web app.
 
 == Run locally with Docker
