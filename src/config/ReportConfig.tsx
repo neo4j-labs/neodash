@@ -951,6 +951,12 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.NUMBER,
                 default: 3
             },
+            "inheritColorFromParent": {
+                label: "Inherit color from parent",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
             "autorun": {
                 label: "Auto-run query",
                 type: SELECTION_TYPES.LIST,

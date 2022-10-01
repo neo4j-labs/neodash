@@ -29,6 +29,7 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
 
     const [data, setData] = useState(commonProperties.data);
     const [refreshable, setRefreshable] = useState(false);
+    const [back, setBack] = useState(false);
     const settings = (props.settings) ? props.settings : {};
     const legendHeight = 20;
     const marginRight = (settings["marginRight"]) ? settings["marginRight"] : 24;
@@ -38,10 +39,11 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
     const enableArcLabels = (settings["enableArcLabels"] !== undefined) ? settings["enableArcLabels"] : true;
     const interactive = (settings["interactive"]) ? settings["interactive"] : true;
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
-    const legend = (settings["legend"]) ? settings["legend"] : false;
+    const legend = (settings["legend"] !== undefined) ? settings["legend"] : false;
     const arcLabelsSkipAngle = (settings["arcLabelsSkipAngle"]) ? settings["arcLabelsSkipAngle"] : 10;
     const cornerRadius = (settings["cornerRadius"]) ? settings["cornerRadius"] : 3;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
+    const inheritColorFromParent = (settings["inheritColorFromParent"] !== undefined) ? settings["inheritColorFromParent"] : true;
 
     return (
         <>
@@ -70,6 +72,7 @@ export default function SunburstVisualization(props: ExtendedChartReportProps) {
                     enableArcLabels={enableArcLabels}
                     borderWidth={borderWidth}
                     cornerRadius={cornerRadius}
+                    inheritColorFromParent = {inheritColorFromParent}
                     margin={{
                         top: marginTop,
                         right: marginRight,

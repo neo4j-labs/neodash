@@ -55,6 +55,10 @@ an arc needed to display a label (if labels are enabled).
 |Slice Corner Radius |number |3 |The rounding angle of each of the arcs
 in the visualization.
 
+|Inherit color from parent |on/off |on |If enabled, starting from level 2, each
+level will inherit the same color of his parent. If disabled, color will be randomly
+assigned based on the color scheme.
+
 |Auto-run query |on/off |on |When activated, automatically runs the
 query when the report is displayed. When set to `off', the query is
 displayed and will need to be executed manually.
