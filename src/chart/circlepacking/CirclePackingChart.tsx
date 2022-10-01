@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { ChartProps } from '../Chart';
-import { ResponsiveCirclePacking } from '@nivo/circle-packing'
-import {  ExtendedChartReportProps } from '../ChartProps'
+import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import { checkResultKeys, mutateName, processHierarchyFromRecords, findObject, flatten } from '../ChartUtils'
 import { useState } from 'react'
 import { Tooltip } from '@material-ui/core'

@@ -35,15 +35,6 @@ const NeoPieChart = (props: ChartProps) => {
         }
         keys[key] = true;
 
-        // if (idx > -1) {
-        //     data[idx][key] = value
-        // }
-        // else {
-        //     data.push({ index, [key]: value })
-        // }
-
-        // return data
-
         if (idx > -1) {
             data[idx][key] = value
         }
