@@ -33,8 +33,6 @@ export const FIRST_PAGE_INITIAL_STATE = {
         "y": 0,
         "type": "graph",
         "selection": {
-            "Person": "name",
-            "Movie": "title"
         },
         "settings": {}
     }]

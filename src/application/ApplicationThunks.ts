@@ -66,7 +66,9 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
                 dispatch(createNotificationThunk("Unknown Connection Error", "Check the browser console."));
             }
         }
-        runCypherQuery(driver, database, "RETURN true as connected", {}, {}, ["connected"], 1, () => { return }, (records) => validateConnection(records))
+        const query = "RETURN true as connected";
+        const parameters = {}
+        runCypherQuery(driver, database, query, parameters, 1, () => { return }, (records) => validateConnection(records))
     } catch (e) {
         dispatch(createNotificationThunk("Unable to establish connection", e));
     }

@@ -1,16 +1,14 @@
-## NeoDash 2.1.5
-Added *New* Sankey charts:
-- Visualize nodes and relationships as a flow diagram.
-- Select a customizable flow value from relationship properties.
-- Configure a variety of style customizations.
+## NeoDash 2.1.6
+New features:
+- Added *Radar Charts/Spider Charts*.
 
-Parameter select:
-- Fixed bug where values would randomly be deleted after changing the parameter.
-- Added option to customize the number of suggested values when a user enters (part of) a property value.
-- Added option to customize search type (CONTAINS, STARTS WITH, or ENDS WITH).
-- Added option to enable/disable case-sensitive search.
-- Added option to enable/disable removing duplicate suggestions.
+Extensions:
+- Added option to provide a custom map provider for map charts.
+- Added support for default values in parameter selectors.
 
-Miscellaneous:
-- Extended documentation with examples on running NeoDash in Kubernetes.
-- Fixed issue where duplicate database names were visible when running NeoDash on an on-prem Neo4j cluster.
+Improvements:
+- Rewiring of the internal query/rendering engine - resulting in far fewer query executions and a smoother UX.
+- Reduced flaky behaviour in parameter selectors.
+- Added cycle-detection logic for sankey charts.
+
+For a complete version history, see the [Changelog](https://github.com/neo4j-labs/neodash/blob/master/changelog.md).

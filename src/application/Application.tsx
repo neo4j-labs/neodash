@@ -15,7 +15,7 @@ import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
-import { downloadComponentAsImage } from '../chart/util/ChartUtils';
+import { downloadComponentAsImage } from '../chart/ChartUtils';
 import NeoReportHelpModal from '../modal/ReportHelpModal';
 
 /**

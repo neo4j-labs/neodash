@@ -1,17 +1,17 @@
-import NeoBarChart from "../chart/BarChart";
-import NeoGraphChart from "../chart/GraphChart";
-import NeoIFrameChart from "../chart/IFrameChart";
-import NeoJSONChart from "../chart/JSONChart";
-import NeoLineChart from "../chart/LineChart";
-import NeoMapChart from "../chart/MapChart";
-import NeoPieChart from "../chart/PieChart";
-import NeoTableChart from "../chart/TableChart";
-import NeoSunburstChart from "../chart/SunburstChart";
-import NeoCirclePackingChart from "../chart/CirclePackingChart";
-import NeoTreeMapChart from "../chart/TreeMapChart";
-import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
-import NeoRadarChart from "../chart/RadarChart";
-import NeoSankeyChart from "../chart/SankeyChart";
+import NeoBarChart from "../chart/bar/BarChart";
+import NeoGraphChart from "../chart/graph/GraphChart";
+import NeoIFrameChart from "../chart/iframe/IFrameChart";
+import NeoJSONChart from "../chart/json/JSONChart";
+import NeoLineChart from "../chart/line/LineChart";
+import NeoMapChart from "../chart/map/MapChart";
+import NeoPieChart from "../chart/pie/PieChart";
+import NeoTableChart from "../chart/table/TableChart";
+import NeoSunburstChart from "../chart/sunburst/SunburstChart";
+import NeoCirclePackingChart from "../chart/circlepacking/CirclePackingChart";
+import NeoTreeMapChart from "../chart/treemap/TreeMapChart";
+import NeoChoroplethMapChart from "../chart/choropleth/ChoroplethMapChart";
+import NeoSankeyChart from "../chart/sankey/SankeyChart";
+import NeoRadarChart from "../chart/radar/RadarChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -305,6 +305,41 @@ RETURN value
         chartType: NeoTreeMapChart
     },
     {
+        title: "Radar Chart",
+        description: "Radar charts can be used to render multivariate data from an array of nodes into the form of a two dimensional chart of three or more quantitative variables.",
+        exampleQuery: "// What are FIFA22 players stats?\n" +
+            "MATCH (s:Skill),\n" +
+            "(:Player{name:'Messi'})-[h1]->(s),\n" +
+            "(:Player{name:'Mbappe'})-[h2]->(s),\n" +
+            "(:Player{name:'Benzema'})-[h3]->(s),\n" +
+            "(:Player{name:'Ronaldo'})-[h4]->(s),\n" +
+            "(:Player{name:'Lewandowski'})-[h5]->(s)\n" +
+            "RETURN s.name as Skill, \n h1.value as Messi,\nh2.value as Mbappe,\n h3.value as Benzema,\n" +
+            "h4.value as `Ronaldo`,\n h5.value as Lewandowski",
+        syntheticQuery: 'UNWIND [' +
+            '{Skill: "PACE", Lewandowski: 78, Messi: 83, Ronaldo: 85, Benzema: 80, Mbappé: 97},' +
+            '   {Skill: "SHOOTING", Lewandowski: 92, Messi: 90, Ronaldo: 93, Benzema: 88, Mbappé: 88},' +
+            '   {Skill: "PASSING", Lewandowski: 79, Messi: 91, Ronaldo: 80, Benzema: 83, Mbappé: 80},' +
+            '   {Skill: "DRIBBLING", Lewandowski: 86, Messi: 95, Ronaldo: 86, Benzema: 87, Mbappé: 92},' +
+            '   {Skill: "DEFENDING", Lewandowski: 44, Messi: 34, Ronaldo: 34, Benzema: 39, Mbappé: 36},' +
+            '   {Skill: "PHYSICAL", Lewandowski: 82, Messi: 64, Ronaldo: 75, Benzema: 78, Mbappé: 77}' +
+            '   ] as data ' +
+            '   RETURN data.Skill as Skill, data.Lewandowski as Lewandowski, data.Messi as Messi, data.Ronaldo as Ronaldo, data.Benzema as Benzema ,data.Mbappé as Mbappé',
+        settings: {"colors": "set3"},
+        selection: {
+            index: "Skill", values: [
+                "Lewandowski",
+                "Benzema",
+                "Mbappé",
+                "Messi",
+                "Ronaldo"
+            ]
+        },
+        fields: ["Skill", 'Lewandowski', 'Messi', 'Ronaldo', 'Benzema', 'Mbappé'],
+        type: "radar",
+        chartType: NeoRadarChart
+    },
+    {
         title: "Sankey",
         description: "A Sankey visualization will compute a diagram from nodes and links. Beware that cyclic dependencies are not supported.",
         exampleQuery: "MATCH (p:Person)-[r:RATES]->(m:Movie)\nRETURN p, r, m",
@@ -375,40 +410,5 @@ RETURN value
         fields: ["code", "value"],
         type: "choropleth",
         chartType: NeoChoroplethMapChart
-    },
-    {
-        title: "Radar Chart",
-        description: "Radar charts can be used to render multivariate data from an array of nodes into the form of a two dimensional chart of three or more quantitative variables.",
-        exampleQuery: "// What are FIFA22 players stats?\n" +
-            "MATCH (s:Skill),\n" +
-            "(:Player{name:'Messi'})-[h1]->(s),\n" +
-            "(:Player{name:'Mbappe'})-[h2]->(s),\n" +
-            "(:Player{name:'Benzema'})-[h3]->(s),\n" +
-            "(:Player{name:'Ronaldo'})-[h4]->(s),\n" +
-            "(:Player{name:'Lewandowski'})-[h5]->(s)\n" +
-            "RETURN s.name as Skill, \n h1.value as Messi,\nh2.value as Mbappe,\n h3.value as Benzema,\n" +
-            "h4.value as `Ronaldo`,\n h5.value as Lewandowski",
-        syntheticQuery: 'UNWIND [' +
-            '{Skill: "PACE", Lewandowski: 78, Messi: 83, Ronaldo: 85, Benzema: 80, Mbappé: 97},' +
-            '   {Skill: "SHOOTING", Lewandowski: 92, Messi: 90, Ronaldo: 93, Benzema: 88, Mbappé: 88},' +
-            '   {Skill: "PASSING", Lewandowski: 79, Messi: 91, Ronaldo: 80, Benzema: 83, Mbappé: 80},' +
-            '   {Skill: "DRIBBLING", Lewandowski: 86, Messi: 95, Ronaldo: 86, Benzema: 87, Mbappé: 92},' +
-            '   {Skill: "DEFENDING", Lewandowski: 44, Messi: 34, Ronaldo: 34, Benzema: 39, Mbappé: 36},' +
-            '   {Skill: "PHYSICAL", Lewandowski: 82, Messi: 64, Ronaldo: 75, Benzema: 78, Mbappé: 77}' +
-            '   ] as data ' +
-            '   RETURN data.Skill as Skill, data.Lewandowski as Lewandowski, data.Messi as Messi, data.Ronaldo as Ronaldo, data.Benzema as Benzema ,data.Mbappé as Mbappé',
-        settings: {"colors": "set3"},
-        selection: {
-            index: "Skill", values: [
-                "Lewandowski",
-                "Benzema",
-                "Mbappé",
-                "Messi",
-                "Ronaldo"
-            ]
-        },
-        fields: ["Skill", 'Lewandowski', 'Messi', 'Ronaldo', 'Benzema', 'Mbappé'],
-        type: "radar",
-        chartType: NeoRadarChart
-    },
+    }
 ]

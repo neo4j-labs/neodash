@@ -128,7 +128,6 @@ const NeoCard = ({
                     database={database}
                     width={report.width}
                     height={report.height}
-                    widthPx={width}
                     heightPx={height}
                     fields={report.fields}
                     type={report.type}

@@ -125,7 +125,7 @@ export const NeoWelcomeScreenModal = ({ welcomeScreenOpen, setWelcomeScreenOpen,
                 <DialogActions style={{ background: "#555" }}>
                     <DialogContent>
                         <DialogContentText style={{ color: "lightgrey" }}>
-                            NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated solution? <a style={{ color: "white" }} href="mailto:niels.dejong@neo4j.com">Get in touch</a>!
+                            NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated solution? <a style={{ color: "white" }} href="https://neo4j.com/professional-services/">Get in touch</a>!
                         </DialogContentText>
                     </DialogContent>
                 </DialogActions>

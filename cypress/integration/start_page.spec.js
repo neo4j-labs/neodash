@@ -170,6 +170,15 @@ describe('NeoDash E2E Tests', () => {
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1').should('have.text', 'Hello')
     })
 
+    // it('creates a radar report', () => {
+    //     // TODO - create a test for radar.
+    // })
+
+
+    // it('creates a sankey report', () => {
+    //     // TODO - create a test for sankey charts.
+    // })
+
     // Test load stress-test dashboard from file
     // TODO - this test is flaky, especially in GitHub actions environment.
     it.skip('test load dashboard from file and stress test report customizations', () => {

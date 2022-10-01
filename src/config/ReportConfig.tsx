@@ -1,23 +1,24 @@
 
 import React from 'react';
 import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
-import NeoBarChart from '../chart/BarChart';
-import NeoGraphChart from '../chart/GraphChart';
-import NeoIFrameChart from '../chart/IFrameChart';
-import NeoJSONChart from '../chart/JSONChart';
-import NeoLineChart from '../chart/LineChart';
-import NeoMapChart from '../chart/MapChart';
-import NeoMarkdownChart from '../chart/MarkdownChart';
-import NeoParameterSelectionChart from '../chart/ParameterSelectionChart';
-import NeoPieChart from '../chart/PieChart';
-import NeoSunburstChart from '../chart/SunburstChart';
-import NeoTreeMapChart from '../chart/TreeMapChart';
-import NeoSingleValueChart from '../chart/SingleValueChart';
-import NeoTableChart from '../chart/TableChart';
-import NeoCirclePackingChart from "../chart/CirclePackingChart";
-import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
-import NeoRadarChart from "../chart/RadarChart";
-import NeoSankeyChart from "../chart/SankeyChart";
+import NeoBarChart from "../chart/bar/BarChart";
+import NeoGraphChart from "../chart/graph/GraphChart";
+import NeoIFrameChart from "../chart/iframe/IFrameChart";
+import NeoJSONChart from "../chart/json/JSONChart";
+import NeoLineChart from "../chart/line/LineChart";
+import NeoMapChart from "../chart/map/MapChart";
+import NeoPieChart from "../chart/pie/PieChart";
+import NeoTableChart from "../chart/table/TableChart";
+import NeoSunburstChart from "../chart/sunburst/SunburstChart";
+import NeoCirclePackingChart from "../chart/circlepacking/CirclePackingChart";
+import NeoTreeMapChart from "../chart/treemap/TreeMapChart";
+import NeoChoroplethMapChart from "../chart/choropleth/ChoroplethMapChart";
+import NeoSankeyChart from "../chart/sankey/SankeyChart";
+import NeoSingleValueChart from '../chart/single/SingleValueChart';
+import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
+import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
+import NeoRadarChart from '../chart/radar/RadarChart';
+
 
 export enum SELECTION_TYPES {
     NUMBER,
@@ -219,6 +220,7 @@ export const REPORT_TYPES = {
     "bar": {
         label: "Bar Chart",
         component: NeoBarChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A bar chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -236,7 +238,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 250,
         settings: {
             "legend": {
@@ -343,6 +344,7 @@ export const REPORT_TYPES = {
     "pie": {
         label: "Pie Chart",
         component: NeoPieChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A pie chart expects two fields: a <code>category</code> and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -360,7 +362,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 250,
         settings: {
             "legend": {
@@ -472,121 +473,10 @@ export const REPORT_TYPES = {
             }
         }
     },
-    "radar": {
-        label: "Radar Chart",
-        component: NeoRadarChart,
-        //useNodePropsAsFields: true,
-        //autoAssignSelectedProperties: true,
-        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and an <code>Index Property</code>.</div>,
-        selection: {
-            "index": {
-                label: "Index",
-                type: SELECTION_TYPES.TEXT,
-                key: true
-            },
-            "values": {
-                label: "Value",
-                type: SELECTION_TYPES.NUMBER,
-                multiple: true,
-                key: true
-            },
-        },
-        useRecordMapper: true,
-        maxRecords: 250,
-        settings: {
-            "legend": {
-                label: "Show Legend",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: false
-            },
-            "interactive": {
-                label: "Enable interactivity",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
-            "animate": {
-                label: "Enable transitions",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
-            "colors": {
-                label: "Color Scheme",
-                type: SELECTION_TYPES.LIST,
-                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
-                default: "set2"
-            },
-            "marginLeft": {
-                label: "Margin Left (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginRight": {
-                label: "Margin Right (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginTop": {
-                label: "Margin Top (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 40
-            },
-            "marginBottom": {
-                label: "Margin Bottom (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 40
-            },
-            "dotSize": {
-                label: "Size of the dots (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 10
-            },
-            "dotBorderWidth": {
-                label: "Width of the dots border (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 2
-            },
-            "gridLevels": {
-                label: "Number of levels to display for grid",
-                type: SELECTION_TYPES.NUMBER,
-                default: 5
-            },
-            "gridLabelOffset": {
-                label: "Label offset from outer radius (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 16
-            },
-            "blendMode": {
-                label: "Blend Mode",
-                type: SELECTION_TYPES.LIST,
-                values: ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"],
-                default: "normal"
-            },
-            "motionConfig": {
-                label: "Motion Configuration",
-                type: SELECTION_TYPES.LIST,
-                values: ["default", "gentle", "wobbly", "stiff", "slow","molasses"],
-                default: "gentle"
-            },
-            "curve": {
-                label: "Curve interpolation",
-                type: SELECTION_TYPES.LIST,
-                values: ["basicClosed", "cardinalClosed", "catmullRomClosed", "linearClosed"],
-                default: "linearClosed"
-            },
-            "autorun": {
-                label: "Auto-run query",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            }
-        }
-    },
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.</div>,
         selection: {
             "x": {
@@ -601,7 +491,6 @@ export const REPORT_TYPES = {
             },
         },
         maxRecords: 250,
-        useRecordMapper: true,
         settings: {
             "legend": {
                 label: "Show Legend",
@@ -735,6 +624,116 @@ export const REPORT_TYPES = {
                 label: "Report Description",
                 type: SELECTION_TYPES.MULTILINE_TEXT,
                 default: "Enter markdown here..."
+            }
+        }
+    },
+    "radar": {
+        label: "Radar Chart",
+        component: NeoRadarChart,
+        useReturnValuesAsFields: true,
+        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and an <code>Index Property</code>.</div>,
+        selection: {
+            "index": {
+                label: "Index",
+                type: SELECTION_TYPES.TEXT,
+                key: true
+            },
+            "values": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                multiple: true,
+                key: true
+            },
+        },
+        maxRecords: 250,
+        settings: {
+            "legend": {
+                label: "Show Legend",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
+            "interactive": {
+                label: "Enable interactivity",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "animate": {
+                label: "Enable transitions",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
+            },
+            "colors": {
+                label: "Color Scheme",
+                type: SELECTION_TYPES.LIST,
+                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
+                default: "set2"
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "dotSize": {
+                label: "Size of the dots (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 10
+            },
+            "dotBorderWidth": {
+                label: "Width of the dots border (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 2
+            },
+            "gridLevels": {
+                label: "Number of levels to display for grid",
+                type: SELECTION_TYPES.NUMBER,
+                default: 5
+            },
+            "gridLabelOffset": {
+                label: "Label offset from outer radius (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 16
+            },
+            "blendMode": {
+                label: "Blend Mode",
+                type: SELECTION_TYPES.LIST,
+                values: ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"],
+                default: "normal"
+            },
+            "motionConfig": {
+                label: "Motion Configuration",
+                type: SELECTION_TYPES.LIST,
+                values: ["default", "gentle", "wobbly", "stiff", "slow","molasses"],
+                default: "gentle"
+            },
+            "curve": {
+                label: "Curve interpolation",
+                type: SELECTION_TYPES.LIST,
+                values: ["basicClosed", "cardinalClosed", "catmullRomClosed", "linearClosed"],
+                default: "linearClosed"
+            },
+            "autorun": {
+                label: "Auto-run query",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: true
             }
         }
     },
@@ -878,6 +877,7 @@ export const REPORT_TYPES = {
     "sunburst": {
         label: "Sunburst Chart",
         component: NeoSunburstChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A Sunburst chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -895,7 +895,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 3000,
         settings: {
             "enableArcLabels": {
@@ -967,6 +966,7 @@ export const REPORT_TYPES = {
     "circlePacking": {
         label: "Circle Packing",
         component: NeoCirclePackingChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A circle packing chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -984,7 +984,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 3000,
         settings: {
             "interactive": {
@@ -1046,6 +1045,7 @@ export const REPORT_TYPES = {
     "treeMap": {
         label: "Treemap",
         component: NeoTreeMapChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A Tree Map chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -1063,7 +1063,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 3000,
         settings: {
             "interactive": {
@@ -1223,6 +1222,7 @@ export const REPORT_TYPES = {
     "choropleth": {
         label: "Choropleth Map",
         component: NeoChoroplethMapChart,
+        useReturnValuesAsFields: true,
         helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a <code>value</code>.</div>,
         selection: {
             "index": {
@@ -1241,7 +1241,6 @@ export const REPORT_TYPES = {
                 optional: true
             }
         },
-        useRecordMapper: true,
         maxRecords: 300,
         settings: {
             "interactive": {

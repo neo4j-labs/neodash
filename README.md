@@ -32,7 +32,7 @@ After building a dashboard, you can chose to deploy a read-only, standalone inst
 
 ## Questions / Suggestions
 If you have any questions about NeoDash, please reach out to the maintainers:
-- Create an [Issue](https://github.com/nielsdejong/neodash/issues/new) on GitHub for feature requests/bugs.
+- Create an [Issue](https://github.com/neo4j-labs/neodash/issues/new) on GitHub for feature requests/bugs.
 - Connect with us on the [Neo4j Discord](https://neo4j.com/developer/discord/).
 - Create a post on the Neo4j [Community Forum](https://community.neo4j.com/).
 
