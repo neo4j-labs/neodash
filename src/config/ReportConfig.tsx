@@ -19,6 +19,7 @@ import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionCha
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import NeoRadarChart from '../chart/radar/RadarChart';
 
+
 export enum SELECTION_TYPES {
     NUMBER,
     NUMBER_OR_DATETIME,
@@ -46,7 +47,6 @@ export const REPORT_TYPES = {
         helperText: "A table will contain all returned data.",
         component: NeoTableChart,
         maxRecords: 1000,
-
         settings: {
             "transposed": {
                 label: "Transpose Rows & Columns",
