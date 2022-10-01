@@ -1,11 +1,13 @@
+
 import { ChartProps } from '../Chart';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ResponsiveSankey  } from '@nivo/sankey';
 import {evaluateRulesOnDict, evaluateRulesOnNode} from '../../report/ReportRuleEvaluator'
 import {categoricalColorSchemes} from "../../config/ColorConfig";
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
-import { ExtendedChartReportProps } from '../ChartProps';
 import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../ChartUtils';
+import { isCyclic } from '../Utils';
+
 
 
 /**
@@ -152,7 +154,7 @@ const NeoSankeyChart = (props: ChartProps) => {
                 break;
             default:
                 lbl = item.properties[props.selection[item.lastLabel]];
-        };
+        }
 
         return typeof lbl === 'object' ? lbl["low"] : lbl;
     }
@@ -161,7 +163,12 @@ const NeoSankeyChart = (props: ChartProps) => {
         return <NeoCodeViewerComponent value={"No relationship weights found. \nDefine a numeric 'Relationship Property' in the \nreport's advanced settings to view the sankey diagram."}></NeoCodeViewerComponent>
     }
 
-    return <ResponsiveSankey
+
+    if(data && data.nodes && data.links && isCyclic(data)){
+        return <NeoCodeViewerComponent value={"Please be careful with the data you use for this chart as it does not support cyclic dependencies."}></NeoCodeViewerComponent>;
+    }
+
+    return  <ResponsiveSankey
         data={data}
         margin={{ top: marginTop, right: (legend) ? legendWidth + marginRight : marginRight, bottom: (legend) ? legendHeight + marginBottom : marginBottom, left: marginLeft }}
         isInteractive={interactive}

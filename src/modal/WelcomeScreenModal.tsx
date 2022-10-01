@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import { Tooltip } from '@material-ui/core';
 
+
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */

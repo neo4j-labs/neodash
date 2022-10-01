@@ -33,7 +33,11 @@ const NeoMapChart = (props: ChartProps) => {
     const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : "";
     const defaultNodeColor = "grey"; // Color of nodes without labels
     const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
+    const mapProviderURL = props.settings && props.settings.providerUrl ? props.settings.providerUrl : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    const attribution = props.settings && props.settings.attribution ? props.settings.attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
+
+    
     const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
     // Per pixel, scaling factors for the latitude/longitude mapping function.
@@ -338,8 +342,8 @@ const NeoMapChart = (props: ChartProps) => {
         scrollWheelZoom={false}>
         {heatmap}
         <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution={attribution}
+            url={mapProviderURL}
         />
         {markers}
         {lines}

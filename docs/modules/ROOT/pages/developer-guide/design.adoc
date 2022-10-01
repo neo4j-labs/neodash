@@ -28,7 +28,6 @@ src: source code.
 target: compiled package as tgz file.
 .babelrc: javascript compiled settings.
 .gitignore: gitignore files.
-.npmignore: files ignored by the npm package.
 Dockerfile: docker image definition.
 ....
 

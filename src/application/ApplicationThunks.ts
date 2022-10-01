@@ -5,7 +5,7 @@ import { NEODASH_VERSION } from "../dashboard/DashboardReducer";
 import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk, upgradeDashboardVersion } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/ReportQueryRunner";
-import { updateGlobalParametersThunk, updateGlobalParameterThunk } from "../settings/SettingsThunks";
+import { setPageNumberThunk, updateGlobalParametersThunk, updateGlobalParameterThunk } from "../settings/SettingsThunks";
 import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
@@ -261,6 +261,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             }
         });
 
+        const page = urlParams.get('page');
+        if(page !== "" && page !== null){
+            if(!isNaN(page)){
+                dispatch(setPageNumberThunk(parseInt(page)));
+            }
+        }
         const clearNotificationAfterLoad = true;
         dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
         const state = getState();

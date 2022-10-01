@@ -6,7 +6,6 @@ import NeoDashboardHeader from './header/DashboardHeader';
 import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
 import { applicationGetConnection, applicationHasAboutModalOpen } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';

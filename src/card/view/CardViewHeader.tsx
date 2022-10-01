@@ -4,19 +4,23 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExit from '@material-ui/icons/FullscreenExit';
-import { TextField } from "@material-ui/core";
+import { Badge, Dialog, DialogContent, DialogTitle, TextField } from "@material-ui/core";
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { Tooltip } from '@material-ui/core';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ImageIcon from '@material-ui/icons/Image';
+import CloseIcon from '@material-ui/icons/Close';
+import ReactMarkdown from "react-markdown";
+import gfm from 'remark-gfm';
 
-const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, downloadImageEnabled,
+const NeoCardViewHeader = ({ title, description, editable, onTitleUpdate, fullscreenEnabled, downloadImageEnabled,
     onToggleCardSettings, onDownloadImage, onToggleCardExpand, expanded }) => {
 
     const [text, setText] = React.useState(title);
+    const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
 
     // Ensure that we only trigger a text update event after the user has stopped typing.
     const debouncedTitleUpdate = useCallback(
@@ -32,7 +36,7 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
     }, [title])
 
     const cardTitle = <>
-        <table style={{width: "100%"}}>
+        <table style={{ width: "100%" }}>
             <tbody>
                 <tr>
                     {editable ? <td>
@@ -58,6 +62,8 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
             </tbody>
         </table>
     </>
+
+    const descriptionEnabled = description && description.length > 0;
 
     const settingsButton = <Tooltip title="Settings" aria-label="settings">
         <IconButton aria-label="settings"
@@ -85,13 +91,37 @@ const NeoCardViewHeader = ({ title, editable, onTitleUpdate, fullscreenEnabled, 
         </IconButton>
     </Tooltip>
 
-    return <CardHeader style={{ height: "72px" }}
-        action={<>
-            {(downloadImageEnabled) ? downloadImageButton : <></>}
-            {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-            {editable ? settingsButton : <></>}
-        </>}
-        title={cardTitle} />
+    const descriptionButton = <Tooltip title="Details" aria-label="details">
+        <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label="details">
+            <InfoOutlinedIcon />
+        </IconButton>
+    </Tooltip>
+
+    return <>
+        <Dialog maxWidth={"lg"} open={descriptionModalOpen == true} onClose={() => setDescriptionModalOpen(false)} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">
+                {title}
+                <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: "3px", float: "right" }}>
+                    <Badge badgeContent={""} >
+                        <CloseIcon />
+                    </Badge>
+                </IconButton>
+            </DialogTitle>
+            <DialogContent style={{ minWidth: "400px" }}>
+                <div>
+                    <base target="_blank" /> <ReactMarkdown plugins={[gfm]} children={description} />
+                </div>
+            </DialogContent>
+        </Dialog>
+        <CardHeader style={{ height: "72px" }}
+            action={<>
+                {(downloadImageEnabled) ? downloadImageButton : <></>}
+                {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
+                {descriptionEnabled ? descriptionButton : <></>}
+                {editable ? settingsButton : <></>}
+            </>}
+            title={cardTitle} />
+    </>
 }
 
 export default NeoCardViewHeader;

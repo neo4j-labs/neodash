@@ -15,7 +15,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const type = props.settings && props.settings["type"] ? props.settings["type"] : undefined;
     const suggestionsUpdateTimeout = props.settings && props.settings["suggestionsUpdateTimeout"] ? props.settings["suggestionsUpdateTimeout"] : 250;
     const setParameterTimeout = props.settings && props.settings["setParameterTimeout"] ? props.settings["setParameterTimeout"] : 1000;
-
+    const defaultValue = props.settings && props.settings["defaultValue"] && props.settings["defaultValue"].length > 0 ? props.settings["defaultValue"] : "";
     const currentValue = (props.getGlobalParameter && props.getGlobalParameter(parameter)) ? props.getGlobalParameter(parameter) : "";
     const [extraRecords, setExtraRecords] = React.useState([]);
     const [inputText, setInputText] = React.useState(currentValue);
@@ -50,7 +50,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
     if (query && value != currentValue && currentValue != inputText) {
         setValue(currentValue);
-        setInputText(currentValue);
+        setInputText(value == defaultValue ? "" : currentValue);
         setExtraRecords([]);
     }
 
@@ -64,13 +64,14 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     const helperText = settings.helperText;
     const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
 
+
     return <div>
         {type == "Free Text" ?
             <div style={{ width: "100%" }}>
                 <NeoField
                     key={"freetext"}
                     label={helperText ? helperText : label + " " + property}
-                    defaultValue={""}
+                    defaultValue={defaultValue}
                     value={value}
                     variant="outlined"
                     placeholder={"Enter text here..."}
@@ -78,7 +79,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                     onChange={(newValue) => {
                         // TODO: i want this to be a proper wait instead of triggering on the first character.
                         if (newValue == null && clearParameterOnFieldClear) {
-                            setValue("");
+                            setValue(defaultValue);
                         } else {
                             setValue(newValue);
                         }
@@ -107,6 +108,8 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
                     }
                     if (newValue == null && clearParameterOnFieldClear) {
                         props.setGlobalParameter(parameter, undefined);
+                    } else if (newValue == null) {
+                        props.setGlobalParameter(parameter, defaultValue);
                     } else {
                         props.setGlobalParameter(parameter, newValue);
                     }
