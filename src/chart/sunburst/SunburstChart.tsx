@@ -14,7 +14,6 @@ const NeoSunburstChart = (props: ChartProps) => {
     }
     const records = props.records;
     const selection = props.selection;
-    const [data, setData] = useState(undefined);
     useEffect(() => {
         setData(commonProperties.data);
     }, [props.selection]);
@@ -32,10 +31,15 @@ const NeoSunburstChart = (props: ChartProps) => {
     // Where a user give us just the tree starting one hop away from the root. 
     // as Nivo needs a common root, so in that case, we create it for them.
     const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: "Total", children: dataPre } };
+
+    const [data, setData] = useState(commonProperties.data);
+    
     if(data == undefined){
         setData(commonProperties.data);
     }
 
+
+    const [back, setBack] = useState(false);
     const settings = (props.settings) ? props.settings : {};
     const legendHeight = 20;
     const marginRight = (settings["marginRight"]) ? settings["marginRight"] : 24;
@@ -45,10 +49,11 @@ const NeoSunburstChart = (props: ChartProps) => {
     const enableArcLabels = (settings["enableArcLabels"] !== undefined) ? settings["enableArcLabels"] : true;
     const interactive = (settings["interactive"]) ? settings["interactive"] : true;
     const borderWidth = (settings["borderWidth"]) ? settings["borderWidth"] : 0;
-    const legend = (settings["legend"]) ? settings["legend"] : false;
+    const legend = (settings["legend"] !== undefined) ? settings["legend"] : false;
     const arcLabelsSkipAngle = (settings["arcLabelsSkipAngle"]) ? settings["arcLabelsSkipAngle"] : 10;
     const cornerRadius = (settings["cornerRadius"]) ? settings["cornerRadius"] : 3;
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'nivo';
+    const inheritColorFromParent = (settings["inheritColorFromParent"] !== undefined) ? settings["inheritColorFromParent"] : true;
 
     if(!data || !data.children || data.children.length == 0){
         return <NoDrawableDataErrorMessage />;
@@ -80,6 +85,7 @@ const NeoSunburstChart = (props: ChartProps) => {
                     enableArcLabels={enableArcLabels}
                     borderWidth={borderWidth}
                     cornerRadius={cornerRadius}
+                    inheritColorFromParent = {inheritColorFromParent}
                     margin={{
                         top: marginTop,
                         right: marginRight,
