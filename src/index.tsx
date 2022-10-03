@@ -13,7 +13,7 @@ import '/node_modules/react-resizable/css/styles.css';
  */
 const store = configureStore();
 
-// @ts-ignore
+// @ts-ignore - persist state in browser cache.
 const persister = persistStore(store);
 
 /** Wrap the application in a redux provider / browser cache persistance gate **/
