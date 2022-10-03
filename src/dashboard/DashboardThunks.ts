@@ -139,13 +139,15 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
 
 export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, 
-        1, () => { return }, (records) => {
-            if (records.length == 0) {
-                dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
+        const query = "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard";
+        runCypherQuery(driver, database, query, { uuid: uuid }, 1,
+            () => { return },
+            (records) => {
+                if (records.length == 0) {
+                    dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
+                }
+                callback(records[0]['_fields'][0])
             }
-            callback(records[0]['_fields'][0])
-        }
         )
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));

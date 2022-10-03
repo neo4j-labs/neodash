@@ -1,5 +1,5 @@
-# NeoDash Dashboard Gallery
-This is the source code for the NeoDash dashboard gallery located at [https://neodash.graphapp.io/gallery]([https://neodash.graphapp.io/gallery).
+# NeoDash Dashboard Gallery 🎨
+This is the source code for the NeoDash dashboard gallery located at [https://neodash.graphapp.io/gallery](https://neodash.graphapp.io/gallery).
 
 ## Run the app locally
 This app is built with React, Tailwind and the Neo4j Design Language.

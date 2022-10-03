@@ -5,42 +5,70 @@ import './App.css';
 
 import { Button, TextInput, HeroIcon } from '@neo4j-ndl/react';
 
+const uri = "neo4j+s://03470df6.databases.neo4j.io"
+const user = "gallery";
+const password = "gallery";
+const baseUrl = "http://localhost:3000"; //https://neodash.graphapp.io";
+
+async function loadDashboards(setResults: any) {
+  const neo4j = require('neo4j-driver')
+
+  const driver = neo4j.driver(uri, neo4j.auth.basic(user, password))
+  const session = driver.session()
+  const personName = 'Alice'
+
+  try {
+    const result = await session.run(
+      'MATCH (n:_Neodash_Dashboard) RETURN properties(n) as entry'
+    )
+    setResults(result.records.map((r: { _fields: any; }) => { return r._fields[0] }));
+  } finally {
+    await session.close()
+  }
+
+  // on application exit:
+  await driver.close()
+}
 function App() {
 
   const [searchText, setSearchText] = React.useState("");
+  const [list, setList] = React.useState([]);
+  if (list.length == 0) {
+    loadDashboards(setList);
+  }
+  // const list = [
+  //   {
+  //     title: "Fraud Detection",
+  //     description: "A demo dashboard that shows off fraud detection using Neo4j.",
+  //     keywords: "fraud banking money laundering detection",
+  //     image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
+  //     link: "https://test.com"
+  //   },
+  //   {
+  //     title: "Telecommunications Network",
+  //     description: "View the status of a telco network represented in the graph.",
+  //     keywords: "telco telecommunications network live data",
+  //     image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
+  //     link: "https://test.com"
+  //   },
+  //   {
+  //     title: "Clinical Data Graph",
+  //     description: "Inspect complex clinical data, modelled as a graph.",
+  //     keywords: "clinical studies medical research",
+  //     image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
+  //     link: "https://test.com"
+  //   },
+  //   {
+  //     title: "Logistics Dashboard",
+  //     description: "View a global logistics network that powers the modern shipping world.",
+  //     keywords: 'shipping global logistics freight products',
+  //     image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
+  //     link: "https://test.com"
+  //   }
+  // ]
 
-  const list = [
-    {
-      title: "Fraud Detection",
-      description: "A demo dashboard that shows off fraud detection using Neo4j.",
-      keywords: "fraud banking money laundering detection",
-      image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
-      link: "https://test.com"
-    },
-    {
-      title: "Telecommunications Network",
-      description: "View the status of a telco network represented in the graph.",
-      keywords: "telco telecommunications network live data",
-      image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
-      link: "https://test.com"
-    },
-    {
-      title: "Clinical Data Graph",
-      description: "Inspect complex clinical data, modelled as a graph.",
-      keywords: "clinical studies medical research",
-      image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
-      link: "https://test.com"
-    },
-    {
-      title: "Logistics Dashboard",
-      description: "View a global logistics network that powers the modern shipping world.",
-      keywords: 'shipping global logistics freight products',
-      image: "https://github.com/neo4j-labs/neodash/blob/master/public/screenshot.png?raw=true",
-      link: "https://test.com"
-    }
-  ]
+  const filteredList = list.filter((item: { keywords: any }) => item['keywords'] && item['keywords'].includes(searchText.toLowerCase()));
 
-  const filteredList = list.filter(item => item.keywords.includes(searchText.toLowerCase()));
   return (
 
     <div className="n-bg-neutral-20 h-100" >
@@ -66,20 +94,32 @@ function App() {
             filteredList.map(item => {
               return <div className='m-4 n-bg-neutral-10 n-shadow-l4'>
                 <div className="">
-                  <h4 className="p-3">{item.title}</h4>
-                  <p className="p-3">{item.description}</p>
-                  <img className="p-3" src={item.image}></img>
+                  <h4 className="p-3">{item['title']}</h4>
+                  <p className="p-3">{item['description']}</p>
+                  <img width="1000" height="350" className="p-3" src={item['image']}></img>
                   <div className='m-2 flex item-center justify-center'>
-                    <a href={item.link}><Button>Try me</Button></a>
+                    <a target="_blank" href={
+                      baseUrl + 
+                      "/?share&type=database&id="
+                      + item['uuid'] +
+                      "&dashboardDatabase=neo4j"
+                      +"&database=neo4j"+
+                      "&credentials=neo4j%2Bs%3A%2F%2F"
+                      + item['user'] +
+                      "%3A"
+                      + item['user'] +
+                      "%40%3A03470df6.databases.neo4j.io%3A7687"}><Button>Load</Button></a>
+
                   </div>
 
                 </div>
               </div>
             })
           }
-      
+
         </div>
-        {(filteredList.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> No results. </p> : <></>}
+        {(list.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> Loading... </p> : <></>}
+        {(list.length != 0 && filteredList.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> No results. </p> : <></>}
       </div>
 
       <div className='n-bg-neutral-10'>
@@ -88,7 +128,7 @@ function App() {
             <ul>
               <a className="mx-2 underline" href='https://github.com/neo4j-labs/neodash/tree/master/gallery'>Guidelines</a>
             </ul> on GitHub.
-            </p>
+          </p>
         </div>
       </div>
     </div >
