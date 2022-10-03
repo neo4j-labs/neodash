@@ -6,13 +6,12 @@ import NeoDashboardHeader from './header/DashboardHeader';
 import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
 import { applicationGetConnection, applicationHasAboutModalOpen } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotification } from '../application/ApplicationActions';
 import { createNotificationThunk } from '../page/PageThunks';
-import { downloadComponentAsImage } from '../chart/util/ChartUtils';
+import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 
 

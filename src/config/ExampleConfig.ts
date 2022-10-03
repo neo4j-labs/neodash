@@ -1,18 +1,17 @@
-import NeoBarChart from "../chart/BarChart";
-import NeoGraphChart from "../chart/GraphChart";
-import NeoIFrameChart from "../chart/IFrameChart";
-import NeoJSONChart from "../chart/JSONChart";
-import NeoLineChart from "../chart/LineChart";
-import NeoMapChart from "../chart/MapChart";
-import NeoPieChart from "../chart/PieChart";
-import NeoTableChart from "../chart/TableChart";
-import NeoSunburstChart from "../chart/SunburstChart";
-import NeoCirclePackingChart from "../chart/CirclePackingChart";
-import NeoTreeMapChart from "../chart/TreeMapChart";
-import NeoChoroplethMapChart from "../chart/ChoroplethMapChart";
-import NeoSankeyChart from "../chart/SankeyChart";
-
-
+import NeoBarChart from "../chart/bar/BarChart";
+import NeoGraphChart from "../chart/graph/GraphChart";
+import NeoIFrameChart from "../chart/iframe/IFrameChart";
+import NeoJSONChart from "../chart/json/JSONChart";
+import NeoLineChart from "../chart/line/LineChart";
+import NeoMapChart from "../chart/map/MapChart";
+import NeoPieChart from "../chart/pie/PieChart";
+import NeoTableChart from "../chart/table/TableChart";
+import NeoSunburstChart from "../chart/sunburst/SunburstChart";
+import NeoCirclePackingChart from "../chart/circlepacking/CirclePackingChart";
+import NeoTreeMapChart from "../chart/treemap/TreeMapChart";
+import NeoChoroplethMapChart from "../chart/choropleth/ChoroplethMapChart";
+import NeoSankeyChart from "../chart/sankey/SankeyChart";
+import NeoRadarChart from "../chart/radar/RadarChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -55,7 +54,7 @@ export const EXAMPLE_REPORTS = [
           UNWIND data as row
           RETURN row.path as Path, row.person as Person, row.rating as Rating, row.movie as Movie
         `,
-        settings: {columnWidths: "[2,1,1,1]"},
+        settings: { columnWidths: "[2,1,1,1]" },
         fields: [],
         selection: {},
         type: "table",
@@ -101,7 +100,7 @@ export const EXAMPLE_REPORTS = [
           UNWIND data as row
           RETURN row.path as Path
         `,
-        settings: {lockable: false},
+        settings: { lockable: false },
         fields: [],
         selection: {
             "Person": "name",
@@ -137,9 +136,9 @@ export const EXAMPLE_REPORTS = [
         description: "Pie charts can be used to visualize categories and numeric values.",
         exampleQuery: "// How much fruit is in stock?" + "\n" + "MATCH (p:Product) \nRETURN p.name as Product,\n       p.quantity as Quantity",
         syntheticQuery: 'WITH [["Apple",10], ["Banana",20], ["Coconut",20], ["Pear",40] ] as array UNWIND array as row RETURN row[0] as Product, row[1] as Quantity',
-        settings: { },
-        selection: { index: "Product", value: "Quantity", key: "Product"},
-        fields: ["Product","Quantity"],
+        settings: {},
+        selection: { index: "Product", value: "Quantity", key: "Product" },
+        fields: ["Product", "Quantity"],
         type: "pie",
         chartType: NeoPieChart
     },
@@ -229,9 +228,9 @@ RETURN value
         description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
         exampleQuery: `https://neodash.graphapp.io/embed-test.html`,
         syntheticQuery: `https://neodash.graphapp.io/embed-test.html`,
-        settings: {"passGlobalParameters": true},
+        settings: { "passGlobalParameters": true },
         fields: [],
-        globalParameters: {"neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix"},
+        globalParameters: { "neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix" },
         selection: {},
         type: "iframe",
         chartType: NeoIFrameChart
@@ -240,22 +239,22 @@ RETURN value
         title: "Sunburst Chart",
         description: "Sunburst charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
         exampleQuery: "// How are people distributed in the company?\n" +
-            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
+            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n" +
             "WITH nodes(path) as no\n" +
             "WITH no, last(no) as leaf\n" +
             "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
             "RETURN result, val",
-        syntheticQuery: 'UNWIND [\n'+
-            '{path: ["NeoDash", "North"], value: 3},\n'+
-            '{path: ["NeoDash", "Center"], value: 5},\n'+
-            '{path: ["NeoDash", "South", "South 1"], value: 2},\n'+
-            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n'+
-            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n'+
-            '] as x\n'+
+        syntheticQuery: 'UNWIND [\n' +
+            '{path: ["NeoDash", "North"], value: 3},\n' +
+            '{path: ["NeoDash", "Center"], value: 5},\n' +
+            '{path: ["NeoDash", "South", "South 1"], value: 2},\n' +
+            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n' +
+            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n' +
+            '] as x\n' +
             'RETURN x.path as path, x.value as value',
-        settings: { },
-        selection: { index: "path", value: "value", key: "path"},
-        fields: ["path","value"],
+        settings: {},
+        selection: { index: "path", value: "value", key: "path" },
+        fields: ["path", "value"],
         type: "sunburst",
         chartType: NeoSunburstChart
     },
@@ -263,22 +262,22 @@ RETURN value
         title: "Circle Packing Chart",
         description: "Circle Packing charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
         exampleQuery: "// How are people distributed in the company?\n" +
-            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
+            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n" +
             "WITH nodes(path) as no\n" +
             "WITH no, last(no) as leaf\n" +
             "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
             "RETURN result, val",
-        syntheticQuery: 'UNWIND [\n'+
-            '{path: ["NeoDash", "North"], value: 3},\n'+
-            '{path: ["NeoDash", "Center"], value: 5},\n'+
-            '{path: ["NeoDash", "South", "South 1"], value: 2},\n'+
-            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n'+
-            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n'+
-            '] as x\n'+
+        syntheticQuery: 'UNWIND [\n' +
+            '{path: ["NeoDash", "North"], value: 3},\n' +
+            '{path: ["NeoDash", "Center"], value: 5},\n' +
+            '{path: ["NeoDash", "South", "South 1"], value: 2},\n' +
+            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n' +
+            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n' +
+            '] as x\n' +
             'RETURN x.path as path, x.value as value',
-        settings: { },
-        selection: { index: "path", value: "value", key: "path"},
-        fields: ["path","value"],
+        settings: {},
+        selection: { index: "path", value: "value", key: "path" },
+        fields: ["path", "value"],
         type: "circlePacking",
         chartType: NeoCirclePackingChart
     },
@@ -286,24 +285,59 @@ RETURN value
         title: "Treemap Chart",
         description: "Treemap charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
         exampleQuery: "// How are people distributed in the company?\n" +
-            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n"+
+            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n" +
             "WITH nodes(path) as no\n" +
             "WITH no, last(no) as leaf\n" +
             "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
             "RETURN result, val",
-        syntheticQuery: 'UNWIND [\n'+
-            '{path: ["NeoDash", "North"], value: 3},\n'+
-            '{path: ["NeoDash", "Center"], value: 5},\n'+
-            '{path: ["NeoDash", "South", "South 1"], value: 2},\n'+
-            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n'+
-            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n'+
-            '] as x\n'+
+        syntheticQuery: 'UNWIND [\n' +
+            '{path: ["NeoDash", "North"], value: 3},\n' +
+            '{path: ["NeoDash", "Center"], value: 5},\n' +
+            '{path: ["NeoDash", "South", "South 1"], value: 2},\n' +
+            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n' +
+            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n' +
+            '] as x\n' +
             'RETURN x.path as path, x.value as value',
-        settings: { },
-        selection: { index: "path", value: "value", key: "path"},
-        fields: ["path","value"],
+        settings: {},
+        selection: { index: "path", value: "value", key: "path" },
+        fields: ["path", "value"],
         type: "treeMap",
         chartType: NeoTreeMapChart
+    },
+    {
+        title: "Radar Chart",
+        description: "Radar charts can be used to render multivariate data from an array of nodes into the form of a two dimensional chart of three or more quantitative variables.",
+        exampleQuery: "// What are FIFA22 players stats?\n" +
+            "MATCH (s:Skill),\n" +
+            "(:Player{name:'Messi'})-[h1]->(s),\n" +
+            "(:Player{name:'Mbappe'})-[h2]->(s),\n" +
+            "(:Player{name:'Benzema'})-[h3]->(s),\n" +
+            "(:Player{name:'Ronaldo'})-[h4]->(s),\n" +
+            "(:Player{name:'Lewandowski'})-[h5]->(s)\n" +
+            "RETURN s.name as Skill, \n h1.value as Messi,\nh2.value as Mbappe,\n h3.value as Benzema,\n" +
+            "h4.value as `Ronaldo`,\n h5.value as Lewandowski",
+        syntheticQuery: 'UNWIND [' +
+            '{Skill: "PACE", Lewandowski: 78, Messi: 83, Ronaldo: 85, Benzema: 80, Mbappé: 97},' +
+            '   {Skill: "SHOOTING", Lewandowski: 92, Messi: 90, Ronaldo: 93, Benzema: 88, Mbappé: 88},' +
+            '   {Skill: "PASSING", Lewandowski: 79, Messi: 91, Ronaldo: 80, Benzema: 83, Mbappé: 80},' +
+            '   {Skill: "DRIBBLING", Lewandowski: 86, Messi: 95, Ronaldo: 86, Benzema: 87, Mbappé: 92},' +
+            '   {Skill: "DEFENDING", Lewandowski: 44, Messi: 34, Ronaldo: 34, Benzema: 39, Mbappé: 36},' +
+            '   {Skill: "PHYSICAL", Lewandowski: 82, Messi: 64, Ronaldo: 75, Benzema: 78, Mbappé: 77}' +
+            '   ] as data ' +
+            '   RETURN data.Skill as Skill, data.Lewandowski as Lewandowski, data.Messi as Messi, data.Ronaldo as Ronaldo, data.Benzema as Benzema ,data.Mbappé as Mbappé',
+        settings: {"colors": "set3"},
+        selection: {
+            index: "Skill", values: [
+                "Lewandowski",
+                "Benzema",
+                "Mbappé",
+                "Messi",
+                "Ronaldo"
+            ]
+        },
+        fields: ["Skill", 'Lewandowski', 'Messi', 'Ronaldo', 'Benzema', 'Mbappé'],
+        type: "radar",
+        chartType: NeoRadarChart
     },
     {
         title: "Sankey",
@@ -345,7 +379,7 @@ RETURN value
           UNWIND data as row
           RETURN row.path as Path
         `,
-        settings: {labelPosition: "outside", labelProperty : "rating", layout : "vertical"},
+        settings: { labelPosition: "outside", labelProperty: "rating", layout: "vertical" },
         fields: [],
         selection: {
             "Person": "name",
@@ -358,23 +392,23 @@ RETURN value
         title: "Choropleth Chart",
         description: "Choropleth charts can be used to render geographical based information on geoJson polygons.",
         exampleQuery: "// How are people distributed in the company per country?\n" +
-            "MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),\n"+
+            "MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),\n" +
             "(e)-[:LIVES_IN]->(c:Country)\n" +
             "WITH c.code as code, count(e) as value\n" +
             "RETURN code, value",
-        syntheticQuery: 'UNWIND [\n'+
-            '{id: "ARG", value: 23},\n'+
-            '{id: "BOL", value: 2},\n'+
-            '{id: "CAN", value: 100},\n'+
-            '{id: "COL", value: 5},\n'+
-            '{id: "FRA", value: 40},\n'+
-            '{id: "USA", value: 156}\n'+
-            '] as x \n'+
+        syntheticQuery: 'UNWIND [\n' +
+            '{id: "ARG", value: 23},\n' +
+            '{id: "BOL", value: 2},\n' +
+            '{id: "CAN", value: 100},\n' +
+            '{id: "COL", value: 5},\n' +
+            '{id: "FRA", value: 40},\n' +
+            '{id: "USA", value: 156}\n' +
+            '] as x \n' +
             'RETURN x.id as code, x.value as value',
-        settings: { colors : "nivo"},
-        selection: { index: "code", value: "value", key: "code"},
-        fields: ["code","value"],
+        settings: { colors: "nivo" },
+        selection: { index: "code", value: "value", key: "code" },
+        fields: ["code", "value"],
         type: "choropleth",
         chartType: NeoChoroplethMapChart
-    },
+    }
 ]

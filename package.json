@@ -1,11 +1,10 @@
 {
   "name": "neodash",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
   },
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/neo4j-labs/neodash/"
@@ -22,17 +21,15 @@
     }
   ],
   "scripts": {
-    "dev": "npx webpack-dev-server --mode development",
-    "debug": "npx --node-options='--inspect' webpack-dev-server --mode development",
-    "build": "npx webpack --mode production && cp -r public/* dist/",
-    "sync": "aws s3 sync --acl public-read build s3://neodash.graphapp.io/preview",
-    "test": "npx cypress open",
-    "test-headless": "npx cypress run"
+    "dev": "yarn webpack-dev-server --mode development",
+    "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
+    "build": "yarn webpack --mode production && cp -r public/* dist/",
+    "test": "yarn cypress open",
+    "test-headless": "yarn cypress run"
   },
   "keywords": [],
-  "author": "Niels de Jong",
+  "author": "Neo4j Labs",
   "dependencies": {
-    "@babel/runtime": "^7.14.6",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
@@ -45,18 +42,20 @@
     "@nivo/geo": "^0.79.1",
     "@nivo/line": "^0.79.1",
     "@nivo/pie": "^0.79.1",
+    "@nivo/radar": "^0.79.1",
     "@nivo/sankey": "^0.79.1",
     "@nivo/sunburst": "^0.79.1",
     "@nivo/treemap": "^0.79.1",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.3.1",
     "codemirror": "^5.65.3",
-    "cypher-codemirror": "github:nielsdejong/cypher-editor#c0eff97fc97f22355e60b57fb6f8dc26b16f9a5f",
+    "cypher-codemirror": "1.1.9",
     "d3-scale-chromatic": "^3.0.0",
     "dom-to-image": "^2.6.0",
     "leaflet": "^1.7.1",
-    "lodash": "^4.17.21",
-    "material-ui-color-picker": "github:nielsdejong/material-ui-color-picker#c1bae552c1daf81952bf0478d7f71c1a416527d3",
+    "lodash.debounce": "^4.0.8",
+    "lodash.isequal": "^4.5.0",
+    "material-ui-color-picker": "^3.5.1",
     "neo4j-client-sso": "^1.2.2",
     "react": "^17.0.2",
     "react-cool-dimensions": "^2.0.7",
@@ -65,16 +64,15 @@
     "react-grid-layout": "^1.3.4",
     "react-leaflet": "^3.2.5",
     "react-leaflet-cluster": "^1.0.4",
-    "react-leaflet-enhanced-marker": "github:nielsdejong/react-leaflet-enhanced-marker#603a7d73dc9b13a31ab1e8abfd932d63263b4af0",
+    "react-leaflet-enhanced-marker": "^1.0.21",
     "react-leaflet-heatmap-layer-v3": "^3.0.3-beta-1",
     "react-markdown": "^8.0.0",
     "react-redux": "^7.2.6",
-    "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "remark-gfm": "^3.0.1",
     "reselect": "^4.1.5",
-    "use-neo4j": "^0.3.6"
+    "use-neo4j": "^0.3.13"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
@@ -86,6 +84,7 @@
     "@babel/register": "^7.16.9",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@redux-devtools/extension": "^3.2.3",
     "babel-loader": "^8.2.3",
     "css-loader": "^3.6.0",
     "cypress": "^9.5.3",

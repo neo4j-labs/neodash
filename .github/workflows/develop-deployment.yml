@@ -4,13 +4,12 @@ on:
  push:
    branches: [ develop ]
  
- 
 jobs:
  build-test:
    runs-on: ubuntu-latest
    strategy:
      matrix:
-       node-version: [17.x]
+       node-version: [18.x]
    steps:
    - uses: actions/checkout@v2
    - name: Use Node.js ${{ matrix.node-version }}
@@ -18,27 +17,37 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: rm -rf docs
-   - run: npm install
+   - run: yarn install
    - name: Cypress run
      uses: cypress-io/github-action@v2
      with:
-        build: npm run build
-        start: npm run dev
+        build: yarn run build
+        start: yarn run dev
         wait-on: 'http://localhost:3000'
+ deploy-docs:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Developer Event
+        uses: peter-evans/repository-dispatch@main
+        with:
+          token: ${{ secrets.DOCS_REFRESH_TOKEN }}
+          repository: neo4j-documentation/docs-refresh
+          event-type: labs
  build-s3:
    needs: build-test
    runs-on: ubuntu-latest
    strategy:
      matrix:
-       node-version: [17.x]
+       node-version: [18.x]
    steps:
    - uses: actions/checkout@v2
    - name: Use Node.js ${{ matrix.node-version }}
      uses: actions/setup-node@v1
      with:
        node-version: ${{ matrix.node-version }}
-   - run: npm install
-   - run: npm run build
+   - run: yarn install
+   - run: yarn run build
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:

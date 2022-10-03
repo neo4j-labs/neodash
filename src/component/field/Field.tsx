@@ -16,6 +16,7 @@ const NeoField = ({ label,
     variant= undefined,
     helperText = undefined,
     defaultValue = undefined,
+    multiline = false,
     placeholder = "" }) => {
     return (
         <TextField
@@ -30,7 +31,7 @@ const NeoField = ({ label,
             helperText={helperText}
             disabled={disabled}
             value={value != null ? value : defaultValue}
-            // defaultValue={defaultValue}
+            multiline={multiline}
             onClick={(e) => {onClick(e.target.textContent)}}
             onChange={(event) => {
                 if (!numeric) {

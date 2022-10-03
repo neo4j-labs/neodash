@@ -1,7 +1,7 @@
 # build stage
 FROM node:lts-alpine AS build-stage
 
-RUN npm install -g typescript jest 
+RUN yarn install -g typescript jest 
 WORKDIR /usr/local/src/neodash
 
 # Pull source code if you have not cloned the repository
@@ -11,9 +11,9 @@ WORKDIR /usr/local/src/neodash
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
 
-RUN npm install
+RUN yarn install
 COPY ./ /usr/local/src/neodash
-RUN npm run build
+RUN yarn run build
 
 # production stage
 FROM nginx:alpine AS neodash
@@ -38,4 +38,4 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 USER nginx
 EXPOSE 5005
 HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
-LABEL version="2.1.5"
+LABEL version="2.1.6"
