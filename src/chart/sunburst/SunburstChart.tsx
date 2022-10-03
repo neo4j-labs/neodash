@@ -14,7 +14,6 @@ const NeoSunburstChart = (props: ChartProps) => {
     }
     const records = props.records;
     const selection = props.selection;
-    const [data, setData] = useState(undefined);
     useEffect(() => {
         setData(commonProperties.data);
     }, [props.selection]);
@@ -32,12 +31,14 @@ const NeoSunburstChart = (props: ChartProps) => {
     // Where a user give us just the tree starting one hop away from the root. 
     // as Nivo needs a common root, so in that case, we create it for them.
     const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: "Total", children: dataPre } };
+
+    const [data, setData] = useState(commonProperties.data);
+    
     if(data == undefined){
         setData(commonProperties.data);
     }
 
-    const [data, setData] = useState(commonProperties.data);
-    const [refreshable, setRefreshable] = useState(false);
+
     const [back, setBack] = useState(false);
     const settings = (props.settings) ? props.settings : {};
     const legendHeight = 20;
