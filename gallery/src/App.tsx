@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 
-import { Button, TextInput, HeroIcon } from '@neo4j-ndl/react';
+import { Button, TextInput, HeroIcon, Tag } from '@neo4j-ndl/react';
 
 // These are the credentials of the public database where the gallery entires
 const uri = "neo4j+s://03470df6.databases.neo4j.io"
@@ -97,9 +97,6 @@ function App() {
                 <div className="">
                   <h4 className="p-3">{item['title']}</h4>
 
-
-                  <img width="1000" height="350" className="p-3" src={item['image']}></img>
-
                   <p className="p-3">
                     {item['description']}
                     <br />
@@ -107,7 +104,11 @@ function App() {
                       Author: <a className="underline" href={item['authorURL']}>{item['author']}</a>
                     </span>
                   </p>
-
+                  <span className='mx-2'>{("" + item['keywords']).split(' ').map(k => <Tag className='mx-1'>{k}</Tag>)}</span>
+            
+                  <img width="1000" height="350" className="p-3" src={item['image']}></img>
+                
+                 
                   <div className='m-2 flex item-center justify-center'>
                     <a target="_blank" href={
                       baseUrl +

@@ -17,6 +17,6 @@ To add a dashboard - we need the following information.
 - A one sentence description for the dashboard.
 - A screenshot of the main page.
 - A data dump of the Neo4j database powering the dashboard.
-- A list of 5 to 10 keywords for the dashboard.
+- A list of 5 keywords for the dashboard.
 
 Keep in mind that the data you provide needs to be public data, as it will be accessible by anyone.
