@@ -19,26 +19,21 @@ import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
 import { evaluateRulesOnNode } from '../../report/ReportRuleEvaluator';
 
-const  drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
+
+
+// TODO, create three files:
+// 1. JUST for rendering the graph component
+// 2. for converting the Neo4j record objects into the format the visualization needs.
+// 3. Utility functions for rendering
+
+
+// Draw an image on the canvas (experimental)
+const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
     var img = new Image;
     let prop = defaultNodeSize * 6;
-    /*img.onload = function(){
-        canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
-    }*/
-
     img.src = strDataURI;
     canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
-
-}
-    // TODO: Fix experimental 3D graph visualization.
-    // const nodeTree = (node) => {
-    //     const imgTexture = new THREE.TextureLoader().load(`https://img.icons8.com/external-flaticons-lineal-color-flat-icons/344/external-url-gdpr-flaticons-lineal-color-flat-icons.png`);
-    //     const material = new THREE.SpriteMaterial({ map: imgTexture });
-    //     const sprite = new THREE.Sprite(material);
-    //     sprite.scale.set(12, 12);
-    //     return sprite;
-    // }
-
+} 
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
