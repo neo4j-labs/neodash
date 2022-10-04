@@ -160,7 +160,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
             return state;
         }
         case SET_SHARE_DETAILS_FROM_URL: {
-            const { type, id, standalone, protocol, url, port, database, username, password } = payload;
+            const { type, id, standalone, protocol, url, port, database, username, password, dashboardDatabase } = payload;
             state = update(state, {
                 shareDetails: {
                     type: type,
@@ -171,7 +171,8 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
                     port: port,
                     database: database,
                     username: username,
-                    password: password
+                    password: password,
+                    dashboardDatabase: dashboardDatabase
                 }
             })
             return state;

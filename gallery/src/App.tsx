@@ -5,6 +5,7 @@ import './App.css';
 
 import { Button, TextInput, HeroIcon } from '@neo4j-ndl/react';
 
+// These are the credentials of the public database where the gallery entires
 const uri = "neo4j+s://03470df6.databases.neo4j.io"
 const user = "gallery";
 const password = "gallery";
@@ -14,8 +15,7 @@ async function loadDashboards(setResults: any) {
   const neo4j = require('neo4j-driver')
 
   const driver = neo4j.driver(uri, neo4j.auth.basic(user, password))
-  const session = driver.session()
-  const personName = 'Alice'
+  const session = driver.session();
 
   try {
     const result = await session.run(
@@ -76,6 +76,7 @@ function App() {
         <div className="md:container md:mx-auto m-5 p-8 ">
           <h3 className='flex item-center justify-center'>NeoDash Dashboard Gallery 🎨</h3>
           <p className='flex item-center justify-center'>This page contains a set of sample NeoDash dashboards built on public data. </p>
+          <p className='flex item-center justify-center'>This gallery is created and maintained by the NeoDash community.</p>
           <div className='flex item-center justify-center p-2'>
             <TextInput
               label=""
@@ -95,15 +96,25 @@ function App() {
               return <div className='m-4 n-bg-neutral-10 n-shadow-l4'>
                 <div className="">
                   <h4 className="p-3">{item['title']}</h4>
-                  <p className="p-3">{item['description']}</p>
+
+
                   <img width="1000" height="350" className="p-3" src={item['image']}></img>
+
+                  <p className="p-3">
+                    {item['description']}
+                    <br />
+                    <span className='n-text-neutral-70'>
+                      Author: <a className="underline" href={item['authorURL']}>{item['author']}</a>
+                    </span>
+                  </p>
+
                   <div className='m-2 flex item-center justify-center'>
                     <a target="_blank" href={
-                      baseUrl + 
+                      baseUrl +
                       "/?share&type=database&id="
                       + item['uuid'] +
                       "&dashboardDatabase=neo4j"
-                      +"&database=neo4j"+
+                      + "&database=neo4j" +
                       "&credentials=neo4j%2Bs%3A%2F%2F"
                       + item['user'] +
                       "%3A"

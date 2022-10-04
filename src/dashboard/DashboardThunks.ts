@@ -143,8 +143,8 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
         runCypherQuery(driver, database, query, { uuid: uuid }, 1,
             () => { return },
             (records) => {
-                if (records.length == 0) {
-                    dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
+                if (!records[0]['_fields']) {
+                    dispatch(createNotificationThunk("Unable to load dashboard from database '"+ database +"'.", "A dashboard with UUID '"+uuid+"' could not be found."));
                 }
                 callback(records[0]['_fields'][0])
             }
