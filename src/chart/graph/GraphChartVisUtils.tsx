@@ -21,21 +21,27 @@ export const graphLayout = {
     "radial": "radialout"
 };
 
-const DEFAULT_NODE_SIZE_PROP = "size"
-const DEFAULT_NODE_COLOR_PROP = "color"
-const DEFAULT_NODE_LABEL_COLOR = "black"
-const DEFAULT_NODE_SIZE_VALUE = 2
-const DEFAULT_NODE_LABEL_FONT_SIZE = 3.5
-const DEFAULT_NODE_LABEL_COLOR_SCHEME = 3.5
-const DEFAULT_NODE_COLOR = "lightgrey"
-const DEFAULT_REL_WIDTH_COLOR = "width"
-const DEFAULT_REL_COLOR_PROP = "color"
-const DEFAULT_REL_WIDTH_VALUE = 1
-const DEFAULT_REL_COLOR_VALUE = "#a0a0a0"
-const DEFAULT_REL_LABEL_FONT_SIZE = 2.75
-const DEFAULT_REL_LINK_DIRECTIONAL_PARTICLES = 5
-const DEFAULT_REL_LINK_DIRECTIONAL_PARTICLES_SPEED = 0.005
-
+export const DEFAULT_NODE_SIZE_PROP = "size"
+export const DEFAULT_NODE_COLOR_PROP = "color"
+export const DEFAULT_NODE_LABEL_COLOR = "black"
+export const DEFAULT_NODE_SIZE_VALUE = 2
+export const DEFAULT_NODE_LABEL_FONT_SIZE = 3.5
+export const DEFAULT_NODE_LABEL_COLOR_SCHEME = 3.5
+export const DEFAULT_NODE_COLOR = "lightgrey"
+export const DEFAULT_REL_WIDTH_COLOR = "width"
+export const DEFAULT_REL_COLOR_PROP = "color"
+export const DEFAULT_REL_WIDTH_VALUE = 1
+export const DEFAULT_REL_COLOR_VALUE = "#a0a0a0"
+export const DEFAULT_REL_LABEL_FONT_SIZE = 2.75
+export const DEFAULT_REL_LINK_DIRECTIONAL_PARTICLES = 5
+export const DEFAULT_REL_LINK_DIRECTIONAL_PARTICLES_SPEED = 0.005
+export const DEFAULT_BACKGROUND_COLOR = "#fafafa"
+export const DEFAULT_REL_LABEL_COLOR = "#fafafa"
+export const DEFAULT_SHOW_PROPERTIES_ON_HOVER = true
+export const DEFAULT_SHOW_PROPERTIES_ON_CLICK = true
+export const DEFAULT_LAYOUT = "force-directed"
+export const DEFAULT_LOCKABLE = true
+export const DEFAULT_SELF_LOOP_ROTATION_DEGREES = 45
 
 
 /*
@@ -59,21 +65,21 @@ export const getGraphChartProps = (props:ChartProps) => {
     const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : DEFAULT_REL_WIDTH_VALUE;
     const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : DEFAULT_REL_COLOR_VALUE;
     const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : DEFAULT_REL_LABEL_FONT_SIZE;
+    const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : DEFAULT_REL_LABEL_COLOR;
 
     // Animation props
     const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? DEFAULT_REL_LINK_DIRECTIONAL_PARTICLES : undefined;
     const linkDirectionalParticleSpeed = DEFAULT_REL_LINK_DIRECTIONAL_PARTICLES_SPEED; // Speed of particles on relationships.
 
     // General options
-    const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : "#fafafa";
-    const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#a0a0a0";
+    const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : DEFAULT_BACKGROUND_COLOR;
     const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
-    const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
-    const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
-    const layout = props.settings && props.settings.layout !== undefined ? props.settings.layout : "force-directed";
-    const lockable = props.settings && props.settings.lockable !== undefined ? props.settings.lockable : true;
+    const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : DEFAULT_SHOW_PROPERTIES_ON_HOVER;
+    const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : DEFAULT_SHOW_PROPERTIES_ON_CLICK;
+    const layout = props.settings && props.settings.layout !== undefined ? props.settings.layout : DEFAULT_LAYOUT;
+    const lockable = props.settings && props.settings.lockable !== undefined ? props.settings.lockable : DEFAULT_LOCKABLE;
     const drilldownLink = props.settings && props.settings.drilldownLink !== undefined ? props.settings.drilldownLink : "";
-    const selfLoopRotationDegrees = 45;
+    const selfLoopRotationDegrees = DEFAULT_SELF_LOOP_ROTATION_DEGREES;
     const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
     const iconStyle = props.settings && props.settings.iconStyle !== undefined ? props.settings.iconStyle : "";
     return {
