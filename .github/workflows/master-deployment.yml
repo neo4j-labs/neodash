@@ -86,7 +86,7 @@ jobs:
        node-version: ${{ matrix.node-version }}
    - run: rm -rf docs
    - run: yarn install
-   - run: yarn run-script build
+   - run: yarn run build
    - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
    - run: yarn pack
    - run: rm -rf target
