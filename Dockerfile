@@ -1,7 +1,7 @@
 # build stage
 FROM node:lts-alpine AS build-stage
 
-RUN yarn install -g typescript jest 
+RUN yarn global add typescript jest
 WORKDIR /usr/local/src/neodash
 
 # Pull source code if you have not cloned the repository
