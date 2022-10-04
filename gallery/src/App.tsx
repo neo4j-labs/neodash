@@ -67,7 +67,8 @@ function App() {
   //   }
   // ]
 
-  const filteredList = list.filter((item: { keywords: any }) => item['keywords'] && item['keywords'].includes(searchText.toLowerCase()));
+  const filteredList = list.filter((item: { title: string, description: string, keywords: any }) =>
+    item['keywords'] && (item['title'] + " " +  item['description'] + " " + item['keywords']).includes(searchText.toLowerCase()));
 
   return (
 
@@ -105,10 +106,10 @@ function App() {
                     </span>
                   </p>
                   <span className='mx-2'>{("" + item['keywords']).split(' ').map(k => <Tag className='mx-1'>{k}</Tag>)}</span>
-            
+
                   <img width="1000" height="350" className="p-3" src={item['image']}></img>
-                
-                 
+
+
                   <div className='m-2 flex item-center justify-center'>
                     <a target="_blank" href={
                       baseUrl +
@@ -138,7 +139,7 @@ function App() {
         <div className="md:container md:mx-auto m-5 p-8 ">
           <p className='flex item-center justify-center n-text-neutral-60'>Want to add a dashboard to this gallery? Check out the
             <ul>
-              <a className="mx-2 underline" href='https://github.com/neo4j-labs/neodash/tree/master/gallery'>Guidelines</a>
+              <a className="mx-1 underline" href='https://github.com/neo4j-labs/neodash/tree/master/gallery'>Guidelines</a>
             </ul> on GitHub.
           </p>
         </div>
