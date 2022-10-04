@@ -19,9 +19,6 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
     // Variables related to customizing report settings
     const [customReportStyleModalOpen, setCustomReportStyleModalOpen] = React.useState(false);
 
-    //Specific state to manage particle activation
-    const [isParticlesDisabled, setIsParticlesDisabled] = React.useState(true);
-
     const settingToCustomize = "styleRules";
 
     const debouncedReportSettingUpdate = useCallback(

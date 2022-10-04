@@ -1,4 +1,3 @@
-
 import React from 'react';
 import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
 import NeoBarChart from "../chart/bar/BarChart";
@@ -25,6 +24,7 @@ export enum SELECTION_TYPES {
     NUMBER_OR_DATETIME,
     LIST,
     TEXT,
+    MULTILINE_TEXT,
     DICTIONARY,
     COLOR,
     NODE_PROPERTIES
@@ -69,6 +69,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -87,8 +92,8 @@ export const REPORT_TYPES = {
         maxRecords: 1000,
         // The idea is to match a setting to its dependency, the operator represents the kind of relationship
         // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
-        disabledDependency: { relationshipParticleSpeed : {dependsOn:"relationshipParticles", operator:false}},
-            settings: {
+        disabledDependency: {relationshipParticleSpeed: {dependsOn: "relationshipParticles", operator: false}},
+        settings: {
             "nodeColorScheme": {
                 label: "Node Color Scheme",
                 type: SELECTION_TYPES.LIST,
@@ -211,7 +216,12 @@ export const REPORT_TYPES = {
                 label: "Icon Style on format { label : url}",
                 type: SELECTION_TYPES.TEXT,
                 default: ""
-            }
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
+            },
         }
     },
     "bar": {
@@ -330,6 +340,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -470,7 +485,9 @@ export const REPORT_TYPES = {
         label: "Line Chart",
         component: NeoLineChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.</div>,
+        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value.
+            The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from
+            your query results.</div>,
         selection: {
             "x": {
                 label: "X-value",
@@ -544,6 +561,16 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "every 1 year"
             },
+            "xTickRotationAngle": {
+                label: "X-axis Tick Rotation (Degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "yTickRotationAngle": {
+                label: "Y-axis Tick Rotation (Degrees)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
             "curve": {
                 label: "Line Smoothing",
                 type: SELECTION_TYPES.LIST,
@@ -602,6 +629,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -609,7 +641,8 @@ export const REPORT_TYPES = {
         label: "Radar Chart",
         component: NeoRadarChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and an <code>Index Property</code>.</div>,
+        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and
+            an <code>Index Property</code>.</div>,
         selection: {
             "index": {
                 label: "Index",
@@ -698,7 +731,7 @@ export const REPORT_TYPES = {
             "motionConfig": {
                 label: "Motion Configuration",
                 type: SELECTION_TYPES.LIST,
-                values: ["default", "gentle", "wobbly", "stiff", "slow","molasses"],
+                values: ["default", "gentle", "wobbly", "stiff", "slow", "molasses"],
                 default: "gentle"
             },
             "curve": {
@@ -777,6 +810,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "width"
             },
+            "providerUrl": {
+                label: "Map Provider URL",
+                type: SELECTION_TYPES.TEXT,
+                default: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            },
             "intensityProp": {
                 label: "Intensity Property (for heatmap)",
                 type: SELECTION_TYPES.TEXT,
@@ -793,6 +831,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -834,6 +877,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -841,7 +889,8 @@ export const REPORT_TYPES = {
         label: "Sunburst Chart",
         component: NeoSunburstChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A Sunburst chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
+        helperText: <div>A Sunburst chart expects two fields: a <code>path</code> (list of strings) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Path",
@@ -924,6 +973,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -931,7 +985,8 @@ export const REPORT_TYPES = {
         label: "Circle Packing",
         component: NeoCirclePackingChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A circle packing chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
+        helperText: <div>A circle packing chart expects two fields: a <code>path</code> (list of strings) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Path",
@@ -998,6 +1053,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1005,7 +1065,8 @@ export const REPORT_TYPES = {
         label: "Treemap",
         component: NeoTreeMapChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A Tree Map chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
+        helperText: <div>A Tree Map chart expects two fields: a <code>path</code> (list of strings) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Path",
@@ -1066,6 +1127,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1165,105 +1231,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
-            }
-        }
-    },
-    "sankey": {
-        label: "Sankey Chart",
-        component: NeoSankeyChart,
-        useNodePropsAsFields: true,
-        autoAssignSelectedProperties: true,
-        ignoreLabelColors: true,
-        helperText: <div>A Sankey chart expects Neo4j <code>nodes</code> and <code>weighted relationships</code>.</div>,
-        selection: {
-            "nodeProperties": {
-                label: "Node Properties",
-                type: SELECTION_TYPES.NODE_PROPERTIES
-            }
-        },
-        maxRecords: 250,
-        settings: {
-            "legend": {
-                label: "Show legend",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: false
             },
-            "interactive": {
-                label: "Enable interactivity",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
-            "layout": {
-                label: "Sankey layout",
-                type: SELECTION_TYPES.LIST,
-                values: ["horizontal", "vertical"],
-                default: "horizontal"
-            },
-            "colors": {
-                label: "Color Scheme",
-                type: SELECTION_TYPES.LIST,
-                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
-                default: "set2"
-            },
-            "labelPosition": {
-                label: "Control sankey label position",
-                type: SELECTION_TYPES.LIST,
-                values: ["inside", "outside"],
-                default: "inside"
-            },
-            "labelOrientation": {
-                label: "Control sankey label orientation",
-                type: SELECTION_TYPES.LIST,
-                values: ["horizontal", "vertical"],
-                default: "horizontal"
-            },
-            "nodeBorderWidth": {
-                label: "Node border width (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 0
-            },
-            "marginLeft": {
-                label: "Margin Left (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginRight": {
-                label: "Margin Right (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginTop": {
-                label: "Margin Top (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginBottom": {
-                label: "Margin Bottom (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 40
-            },
-            "labelProperty": {
-                label: "Relationship value Property",
-                type: SELECTION_TYPES.TEXT,
-                default: "value"
-            },
-            "nodeThickness": {
-                label: "Node thickness (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 18
-            },
-            "nodeSpacing": {
-                label: "Spacing between nodes at an identical level (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 18
-            },
-            "autorun": {
-                label: "Auto-run query",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1271,7 +1243,8 @@ export const REPORT_TYPES = {
         label: "Choropleth Map",
         component: NeoChoroplethMapChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a <code>value</code>.</div>,
+        helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Code",
@@ -1359,8 +1332,12 @@ export const REPORT_TYPES = {
                 label: "Tooltip Property",
                 type: SELECTION_TYPES.TEXT,
                 default: "properties.name"
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
-
         }
     },
     "json": {
@@ -1375,6 +1352,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1411,6 +1393,11 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "defaultValue": {
+                label: "Default Value (Override)",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
+            },
             "clearParameterOnFieldClear": {
                 label: "Clear Parameter on Field Reset",
                 type: SELECTION_TYPES.LIST,
@@ -1437,6 +1424,11 @@ export const REPORT_TYPES = {
                 label: "Timeout for value updates (ms)",
                 type: SELECTION_TYPES.NUMBER,
                 default: 1000
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1460,6 +1452,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
+            },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
             }
         }
     },
@@ -1478,6 +1475,11 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "description": {
+                label: "Report Description",
+                type: SELECTION_TYPES.MULTILINE_TEXT,
+                default: "Enter markdown here..."
+            }
         }
     }
 }
