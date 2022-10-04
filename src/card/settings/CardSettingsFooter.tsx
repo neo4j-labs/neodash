@@ -18,6 +18,10 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
 
     // Variables related to customizing report settings
     const [customReportStyleModalOpen, setCustomReportStyleModalOpen] = React.useState(false);
+
+    //Specific state to manage particle activation
+    const [isParticlesDisabled, setIsParticlesDisabled] = React.useState(true);
+
     const settingToCustomize = "styleRules";
 
     const debouncedReportSettingUpdate = useCallback(
@@ -32,6 +36,25 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
         debouncedReportSettingUpdate(field, value);
     };
 
+    // Contains, for a certain type of chart, its disabling logic
+    const disabledDependency = REPORT_TYPES[type]["disabledDependency"];
+
+    /* This method manages the disabling logic for all the settings inside the footer.
+    *  The logic is based on the disabledDependency param inside the chart's configuration */
+    const getDisabled = (field:string) =>{
+        // By default an option is enabled
+        let isDisabled = false
+        let dependencyLogic = disabledDependency[field]
+        if(dependencyLogic != undefined) {
+            // Getting the current parameter defined in the settings of the report
+            // (if undefined, the param will be treated as undefined (boolean false)
+            isDisabled = reportSettingsText[dependencyLogic.dependsOn]
+            if (!dependencyLogic.operator){
+                isDisabled = !isDisabled
+            }
+        }
+        return isDisabled
+    }
     useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
         setReportSettingsText(reportSettings);
@@ -46,15 +69,23 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
 
     // Else, build the advanced settings view.
     const advancedReportSettings = <div style={{ marginLeft: "5px" }}>
-        {Object.keys(settings).map(setting =>
-            <NeoSetting key={setting} name={setting}
+        {Object.keys(settings).map(setting =>{
+            let isDisabled = false
+            // Adding disabling logic to specific entries but only if the logic is defined inside the configuration
+            if (disabledDependency != undefined) {
+                isDisabled = getDisabled(setting)
+            }
+
+            return <NeoSetting key={setting} name={setting}
                 value={reportSettingsText[setting]}
                 type={settings[setting]["type"]}
                 label={settings[setting]["label"]}
                 defaultValue={settings[setting]["default"]}
                 choices={settings[setting]["values"]}
+                disabled={isDisabled}
                 onChange={(e) => updateSpecificReportSetting(setting, e)}
             />
+        }
         )}
     </div>
 

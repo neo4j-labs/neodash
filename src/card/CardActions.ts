@@ -87,3 +87,9 @@ export const toggleReportSettings = (index: any) => ({
     type: TOGGLE_REPORT_SETTINGS,
     payload: { index },
 });
+
+export const UPDATE_REPORT_DATABASE = 'PAGE/CARD/UPDATE_REPORT_DATABASE';
+export const updateReportDatabase = (pagenumber: number, index: number, database: any) => ({
+    type: UPDATE_REPORT_DATABASE,
+    payload: { pagenumber, index, database },
+});

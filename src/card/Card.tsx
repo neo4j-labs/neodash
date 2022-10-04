@@ -1,12 +1,20 @@
 import Card from '@material-ui/core/Card';
 import Collapse from '@material-ui/core/Collapse';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import NeoCardSettings from './settings/CardSettings';
 import NeoCardView from './view/CardView';
 import { connect } from 'react-redux';
 import {
-    updateCypherParametersThunk, updateFieldsThunk, updateSelectionThunk, updateReportQueryThunk, toggleCardSettingsThunk,
-    updateReportRefreshRateThunk, updateReportSettingThunk, updateReportTitleThunk, updateReportTypeThunk
+    updateCypherParametersThunk,
+    updateFieldsThunk,
+    updateSelectionThunk,
+    updateReportQueryThunk,
+    toggleCardSettingsThunk,
+    updateReportRefreshRateThunk,
+    updateReportSettingThunk,
+    updateReportTitleThunk,
+    updateReportTypeThunk,
+    updateReportDatabaseThunk
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
@@ -16,6 +24,8 @@ import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
 import { createNotificationThunk } from '../page/PageThunks';
 import useDimensions from 'react-cool-dimensions';
 import { setReportHelpModalOpen } from '../application/ApplicationActions';
+import {loadDatabaseListFromNeo4jThunk} from "../dashboard/DashboardThunks";
+import {Neo4jContext, Neo4jContextState} from "use-neo4j/dist/neo4j.context";
 
 
 
@@ -39,9 +49,27 @@ const NeoCard = ({
     onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
     onToggleCardSettings, // action to take when the card settings button is clicked.
     onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
-    onCreateNotification // action to take when an (error) notification is created.
+    onCreateNotification, // action to take when an (error) notification is created.
+    onDatabaseChanged, // action to take when the user changes the database related to the card
+    loadDatabaseListFromNeo4j // Thunk to get the list of databases
 }) => {
-   
+
+    // Will be used to fetch the list of current databases
+    const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+
+    const [databaseList, setDatabaseList] = React.useState([database])
+
+    // fetching the list of databases from neo4j, filtering out the 'system' db
+    useEffect(() => {
+        loadDatabaseListFromNeo4j(driver, (result) => {
+            let index = result.indexOf("system")
+            if (index > -1) { // only splice array when item is found
+                result.splice(index, 1); // 2nd parameter means remove one item only
+            }
+            setDatabaseList(result)
+        });
+    },[report.query]);
+
     const [settingsOpen, setSettingsOpen] = React.useState(false);
     const debouncedOnToggleCardSettings = useCallback(
         debounce(onToggleCardSettings, 500),
@@ -126,6 +154,7 @@ const NeoCard = ({
                     settingsOpen={settingsOpen}
                     query={report.query}
                     database={database}
+                    databaseList={databaseList}
                     width={report.width}
                     height={report.height}
                     heightPx={height}
@@ -140,6 +169,7 @@ const NeoCard = ({
                     reportSettingsOpen={report.advancedSettingsOpen}
                     onQueryUpdate={(query) => onQueryUpdate(index, query)}
                     onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
+                    onDatabaseChanged = {(database) => onDatabaseChanged(index,database)}
                     onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
                     onTypeUpdate={(type) => onTypeUpdate(index, type)}
                     onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
@@ -172,7 +202,7 @@ const NeoCard = ({
 const mapStateToProps = (state, ownProps) => ({
     report: getReportState(state, ownProps.index),
     editable: getDashboardIsEditable(state),
-    database: getDatabase(state),
+    database: getDatabase(state, ownProps.index, ownProps.dashboardSettings.pagenumber),
     globalParameters: getGlobalParameters(state)
 });
 
@@ -212,7 +242,12 @@ const mapDispatchToProps = dispatch => ({
     },
     onCreateNotification: (title: any, message: any) => {
         dispatch(createNotificationThunk(title, message))
-    }
+    },
+    onDatabaseChanged: (index:any, database:any) => {
+        dispatch(updateReportDatabaseThunk(index, database))
+    },
+    loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback))
+
 });
 
 

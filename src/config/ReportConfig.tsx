@@ -91,7 +91,10 @@ export const REPORT_TYPES = {
         autoAssignSelectedProperties: true,
         component: NeoGraphChart,
         maxRecords: 1000,
-        settings: {
+        // The idea is to match a setting to its dependency, the operator represents the kind of relationship
+        // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
+        disabledDependency: { relationshipParticleSpeed : {dependsOn:"relationshipParticles", operator:false}},
+            settings: {
             "nodeColorScheme": {
                 label: "Node Color Scheme",
                 type: SELECTION_TYPES.LIST,
@@ -158,6 +161,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 default: false,
                 values: [false, true]
+            },
+            "relationshipParticleSpeed": {
+                label: "Speed of the particle animation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0.005,
             },
             "backgroundColor": {
                 label: "Background Color",
