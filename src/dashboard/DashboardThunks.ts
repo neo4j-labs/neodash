@@ -194,7 +194,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     try {
         runCypherQuery(driver, "system",
             "SHOW DATABASES yield name RETURN DISTINCT name",
-            {}, {}, ["name"], 1000, () => { return }, (records) => {
+            {}, 1000, () => {return },  (records) => {
                 const result = records.map(r => {
                     return r["_fields"] && r["_fields"][0];
                 });
