@@ -111,17 +111,7 @@ function App() {
 
 
                   <div className='m-2 flex item-center justify-center'>
-                    <a target="_blank" href={
-                      baseUrl +
-                      "/?share&type=database&id="
-                      + item['uuid'] +
-                      "&dashboardDatabase=neo4j"
-                      + "&database=neo4j" +
-                      "&credentials=neo4j%2Bs%3A%2F%2F"
-                      + item['user'] +
-                      "%3A"
-                      + item['user'] +
-                      "%40%3A03470df6.databases.neo4j.io%3A7687"}><Button>Load</Button></a>
+                    <a target="_blank" href={item['url']}><Button>Load</Button></a>
 
                   </div>
 
