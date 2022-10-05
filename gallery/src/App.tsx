@@ -19,7 +19,7 @@ async function loadDashboards(setResults: any) {
 
   try {
     const result = await session.run(
-      'MATCH (n:_Neodash_Dashboard) RETURN properties(n) as entry'
+      'MATCH (n:_Neodash_Dashboard) RETURN properties(n) as entry ORDER BY entry.title ASC'
     )
     setResults(result.records.map((r: { _fields: any; }) => { return r._fields[0] }));
   } finally {
