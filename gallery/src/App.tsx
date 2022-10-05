@@ -67,8 +67,8 @@ function App() {
   //   }
   // ]
 
-  const filteredList = list.filter((item: { title: string, description: string, keywords: any }) =>
-    item['keywords'] && (item['title'] + " " +  item['description'] + " " + item['keywords']).includes(searchText.toLowerCase()));
+  const filteredList = list.filter((item: { title: string, author: string, description: string, keywords: any }) =>
+    item['keywords'] && (item['title'] + " " + item['author'] + " " + item['description'] + " " + item['keywords']).toLowerCase().includes(searchText.toLowerCase()));
 
   return (
 
@@ -76,6 +76,7 @@ function App() {
       <div className='n-bg-neutral-10'>
         <div className="md:container md:mx-auto m-5 p-8 ">
           <h3 className='flex item-center justify-center'>NeoDash Dashboard Gallery 🎨</h3>
+
           <p className='flex item-center justify-center'>This page contains a set of sample NeoDash dashboards built on public data. </p>
           <p className='flex item-center justify-center'>This gallery is created and maintained by the NeoDash community.</p>
           <div className='flex item-center justify-center p-2'>
@@ -127,11 +128,14 @@ function App() {
 
       <div className='n-bg-neutral-10'>
         <div className="md:container md:mx-auto m-5 p-8 ">
+      
           <p className='flex item-center justify-center n-text-neutral-60'>Want to add a dashboard to this gallery? Check out the
             <ul>
               <a className="mx-1 underline" href='https://github.com/neo4j-labs/neodash/tree/master/gallery'>Guidelines</a>
             </ul> on GitHub.
           </p>
+          <br/>
+          <code className='flex item-center justify-center n-text-neutral-40'> {"-- neodash-gallery v0.1 --"} </code>
         </div>
       </div>
     </div >
