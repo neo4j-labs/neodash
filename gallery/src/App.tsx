@@ -102,7 +102,7 @@ function App() {
                     {item['description']}
                     <br />
                     <span className='n-text-neutral-70'>
-                      Author: <a className="underline" href={item['authorURL']}>{item['author']}</a>
+                      Author: <a className="underline" target="_blank" href={item['authorURL']}>{item['author']}</a>
                     </span>
                   </p>
                   <span className='mx-2'>{("" + item['keywords']).split(' ').map(k => <Tag className='mx-1'>{k}</Tag>)}</span>
