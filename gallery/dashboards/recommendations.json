@@ -2,7 +2,7 @@
     "title": "NeoDash Recommendations Dashboard 🎬",
     "version": "2.1",
     "settings": {
-      "pagenumber": 1,
+      "pagenumber": 0,
       "editable": true,
       "fullscreenEnabled": false,
       "parameters": {
