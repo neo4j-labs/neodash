@@ -49,7 +49,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
             showOptionalSelections={(settings["showOptionalSelections"])} >
         </NeoCardViewFooter> : <></>;
 
-    const withoutFooter = !REPORT_TYPES[type].selection || (settings && settings.hideSelections);
+    const withoutFooter = REPORT_TYPES[type].withoutFooter ? REPORT_TYPES[type].withoutFooter : !REPORT_TYPES[type].selection || (settings && settings.hideSelections);
 
     const getGlobalParameter = (key: string): any => {
         return globalParameters ? globalParameters[key] : undefined;
