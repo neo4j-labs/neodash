@@ -20,10 +20,8 @@ jobs:
    - run: yarn install
    - name: Creating Neo4j Container
      run: |
-       ls -l
-       pwd
-       chmod +x ./scripts/test.sh
-       ./scripts/test.sh
+       chmod +x ./scripts/docker-neo4j.sh
+       ./scripts/docker-neo4j.sh
        shell: bash
    - name: Cypress run
      uses: cypress-io/github-action@v2
