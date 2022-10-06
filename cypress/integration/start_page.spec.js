@@ -1,4 +1,4 @@
-import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL } from "../fixtures/cypher_queries"
+import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL, sankeyChartCypherQuery } from "../fixtures/cypher_queries"
 
 // Ignore warnings that may appear when using the Cypress dev server
 Cypress.on('uncaught:exception', (err, runnable) => {
@@ -131,6 +131,11 @@ describe('NeoDash E2E Tests', () => {
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6)
     })
 
+    it('creates a sankey chart report', () => {
+        createReportOfType('Sankey Chart', sankeyChartCypherQuery, true)
+        cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path').should('have.attr', 'fill-opacity', 0.5)
+    })
+
     it('creates a raw json report', () => {
         createReportOfType('Raw JSON', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)').should(($div) => {
@@ -165,6 +170,15 @@ describe('NeoDash E2E Tests', () => {
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1').should('have.text', 'Hello')
     })
 
+    // it('creates a radar report', () => {
+    //     // TODO - create a test for radar.
+    // })
+
+
+    // it('creates a sankey report', () => {
+    //     // TODO - create a test for sankey charts.
+    // })
+
     // Test load stress-test dashboard from file
     // TODO - this test is flaky, especially in GitHub actions environment.
     it.skip('test load dashboard from file and stress test report customizations', () => {
@@ -192,11 +206,16 @@ describe('NeoDash E2E Tests', () => {
 
 })
 
-function createReportOfType(type, query) {
+function createReportOfType(type, query, fast=false) {
     cy.get('main .react-grid-item:eq(2) button').click()
     cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click()
     cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
     cy.contains(type).click()
-    cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false })
+    if(fast){
+        cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { delay:1, parseSpecialCharSequences: false })
+    }else{
+        cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false })
+    }
+
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click()
 }

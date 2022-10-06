@@ -195,5 +195,5 @@
 }
 
 .react-grid-layout {
-    overflow: hidden;
+    overflow-x: hidden;
 }

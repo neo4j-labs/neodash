@@ -48,7 +48,6 @@ export const NeoPage = (
     const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
     const availableHandles = () => {
-
         if (dashboardSettings.resizing && dashboardSettings.resizing == "all") {
             return ["s", "w", "e", "sw", "se"];
         } else {

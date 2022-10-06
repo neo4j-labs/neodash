@@ -120,16 +120,16 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
         const query = (overwrite) ?
             "OPTIONAL MATCH (n:_Neodash_Dashboard{title:$title}) DELETE n WITH 1 as X LIMIT 1 CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid" :
             "CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid";
-        runCypherQuery(driver, database,
-            query,
-            { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date },
-            {}, ["uuid"], 1, () => { return }, (records) => {
+
+        const parameters = { uuid: uuid, title: title, version: version, user: user, content: JSON.stringify(dashboard, null, 2), date: date };
+        runCypherQuery(driver, database, query, parameters, 1,
+            () => { return },
+            (records) => {
                 if (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0] && records[0]["_fields"][0] == uuid) {
                     dispatch(createNotificationThunk("🎉 Success!", "Your current dashboard was saved to Neo4j."));
                 } else {
                     dispatch(createNotificationThunk("Unable to save dashboard", "Do you have write access to the '" + database + "' database?"));
                 }
-
             });
 
     } catch (e) {
@@ -139,7 +139,8 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
 
 export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, {}, ["dashboard"], 1, () => { return }, (records) => {
+        runCypherQuery(driver, database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, 
+        1, () => { return }, (records) => {
             if (records.length == 0) {
                 dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
             }
@@ -153,12 +154,18 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
 
 export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, database, "MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1", { name: name }, {}, ["dashboard"], 1, () => { return }, (records) => {
-            if (records.length == 0) {
-                dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided name could not be found."));
-            }
-            callback(records[0]['_fields'][0])
-        })
+        const query = "MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1";
+        runCypherQuery(driver,
+            database,
+            query,
+            { name: name }, 1,
+            () => { return },
+            (records) => {
+                if (records.length == 0) {
+                    dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided name could not be found."));
+                }
+                callback(records[0]['_fields'][0])
+            })
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard from Neo4j", e));
     }
@@ -168,7 +175,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
     try {
         runCypherQuery(driver, database,
             "MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC",
-            {}, {}, ["id, title, date, user, version"], 1000, () => { return }, (records) => {
+            {}, 1000, () => { return }, (records) => {
                 if (!records || !records[0] || !records[0]["_fields"]) {
                     callback([]);
                     return
@@ -186,8 +193,8 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
 export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: any, getState: any) => {
     try {
         runCypherQuery(driver, "system",
-            "SHOW DATABASES yield name RETURN name",
-            {}, {}, ["name"], 1000, () => { return }, (records) => {
+            "SHOW DATABASES yield name RETURN DISTINCT name",
+            {}, 1000, () => {return },  (records) => {
                 const result = records.map(r => {
                     return r["_fields"] && r["_fields"][0];
                 });
@@ -215,7 +222,7 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
                 dashboard["pages"][i]["reports"][j] = { x: xPos, y: yPos, ...dashboard["pages"][i]["reports"][j] };
                 dashboard["pages"][i]["reports"][j]['height'] = reportHeight / 1.5;
                 xPos += reportWidth;
-                rowHeight = Math.max(reportHeight /1.5, rowHeight);
+                rowHeight = Math.max(reportHeight / 1.5, rowHeight);
                 if (xPos >= 12) {
                     xPos = 0;
                     yPos += rowHeight;

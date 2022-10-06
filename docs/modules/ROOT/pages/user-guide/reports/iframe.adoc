@@ -35,4 +35,5 @@ iFrame URL.
 |Append global parameters to iFrame URL |on/off |off |If enabled,
 appends the full list of global parameters as URL parameters to the
 specified URL.
+|Report Description |markdown text | | When specified, adds another button the report header that opens a pop-up. This pop-up contains the rendered markdown from this setting. 
 |===

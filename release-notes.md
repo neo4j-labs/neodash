@@ -1,14 +1,20 @@
-## NeoDash 2.1.4
-Added hotfix for missing function in map visualization (https://github.com/neo4j-labs/neodash/issues/183).
+## NeoDash 2.1.6 & 2.1.7
+New features:
+- Added *Radar Charts/Spider Charts*.
+- Added optional markdown description for each report, to be displayed via the header.
 
-## NeoDash 2.1.3
-The 2.1.3 release contains updates to the map visualization, as well as a new Choropleth map report type.
-Several usability improvements were also added, including fixing all links into the new documentation pages.
+Extensions:
+- Added option to provide a custom map provider for map charts.
+- Added support for default values in parameter selectors.
+- Added documentation on deep-linking into NeoDash.
+- Added tick-rotation customization for line charts.
+- Added option to have children in the sunburst chart inherit colors from their parents.
 
-- Extended the map visualization with a heatmap mode & marker clustering.
-- Added a Choropleth map visualization report type.
-- Added support for auto-linking into a predefined database from https://tools.neo4jlabs.com/.
-- Added optional background color setting for reports.
-- Added a new 'resize mode' for page layout creation.
-- Added support for drawing dates on a time chart (in addition to existing datetime types).
-- Fixed broken links in the documentation portal, all in-app links now point to this portal as well.
+Improvements:
+- Rewiring of the internal query/rendering engine - resulting in far fewer query executions and a smoother UX.
+- Changed package manager from `npm` to `yarn`, and bumped node version to 18. Cleaned up `package.json`.
+- Reduced flaky behaviour in parameter selectors.
+- Added cycle-detection logic for sankey charts.
+- Fixed report documentation pop-up to open link in a new window.
+  
+For a complete version history, see the [Changelog](https://github.com/neo4j-labs/neodash/blob/master/changelog.md).

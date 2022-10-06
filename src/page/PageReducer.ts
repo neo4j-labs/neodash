@@ -11,6 +11,8 @@ import {
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
 
+
+//TODO : Alfredo: this should source the card config defined inside the reducer and then define the first page initial state
 export const FIRST_PAGE_INITIAL_STATE = {
     "title": "Main Page",
     "reports": [{
@@ -22,7 +24,7 @@ export const FIRST_PAGE_INITIAL_STATE = {
         "y": 0,
         "type": "text",
         "selection": {},
-        "settings": {}
+        "settings": {},
     },
     {
         "title": "",
@@ -33,10 +35,8 @@ export const FIRST_PAGE_INITIAL_STATE = {
         "y": 0,
         "type": "graph",
         "selection": {
-            "Person": "name",
-            "Movie": "title"
         },
-        "settings": {}
+        "settings": {},
     }]
 }
 

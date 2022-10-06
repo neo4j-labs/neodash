@@ -6,12 +6,12 @@ import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import NeoCodeViewerComponent from "../component/editor/CodeViewerComponent";
+import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from "../component/editor/CodeViewerComponent";
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { useContext } from "react";
-import NeoTableChart from "../chart/TableChart";
+import NeoTableChart from "../chart/table/TableChart";
 
 export const NeoReport = ({
     database = "neo4j", // The Neo4j database to run queries onto.
@@ -70,18 +70,16 @@ export const NeoReport = ({
         }
 
         const defaultKeyField = (REPORT_TYPES[type].selection) ? Object.keys(REPORT_TYPES[type].selection).find(field => REPORT_TYPES[type].selection[field].key == true) : undefined;
-        const useRecordMapper = REPORT_TYPES[type].useRecordMapper == true;
         const useNodePropsAsFields = REPORT_TYPES[type].useNodePropsAsFields == true;
+        const useReturnValuesAsFields = REPORT_TYPES[type].useReturnValuesAsFields == true;
 
         if (debounced) {
-            setStatus(QueryStatus.RUNNING)
-            debouncedRunCypherQuery(driver, database, query, parameters, selection, fields,
-                rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
-                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField, queryTimeLimit);
+            setStatus(QueryStatus.RUNNING);
+            debouncedRunCypherQuery(driver, database, query, parameters, 
+                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, useReturnValuesAsFields, HARD_ROW_LIMITING,  queryTimeLimit);
         } else {
-            runCypherQuery(driver, database, query, parameters, selection, fields,
-                rowLimit, setStatus, setRecords, setFields, HARD_ROW_LIMITING, useRecordMapper, useNodePropsAsFields,
-                numericFields, numericOrDatetimeFields, textFields, optionalFields, defaultKeyField, queryTimeLimit);
+            runCypherQuery(driver, database, query, parameters,
+                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, useReturnValuesAsFields, HARD_ROW_LIMITING,  queryTimeLimit);
         }
     };
 
@@ -105,19 +103,16 @@ export const NeoReport = ({
                 }, Math.min(refreshRate, 86400) * 1000.0));
             }
         }
-    }, REPORT_TYPES[type].useRecordMapper == true ?
-        [disabled, query, JSON.stringify(parameters), fields ? fields : [], JSON.stringify(selection)] :
-        [disabled, query, JSON.stringify(parameters), null, null])
+    }, [disabled, query, JSON.stringify(parameters)])
 
     // Define query callback to allow reports to get extra data on interactions.
     const queryCallback = useCallback(
         (query, parameters, setRecords) => {
-            runCypherQuery(driver, database, query, parameters, selection, fields, rowLimit,
+            runCypherQuery(driver, database, query, parameters, rowLimit,
                 (status) => { status == QueryStatus.NO_DATA ? setRecords([]) : null },
                 (result => setRecords(result)),
-                () => { return }, HARD_ROW_LIMITING,
-                REPORT_TYPES[type].useRecordMapper == true, false,
-                [], [], [], [], null, queryTimeLimit);
+                () => { return }, 
+                fields, false, false, HARD_ROW_LIMITING, queryTimeLimit);
         },
         [],
     );
@@ -134,12 +129,7 @@ export const NeoReport = ({
     } else if (status == QueryStatus.NO_DATA) {
         return <NeoCodeViewerComponent value={"Query returned no data."} />
     } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
-        return <NeoCodeViewerComponent value={"Data was returned, but it can't be visualized.\n\n" +
-            "This could have the following causes:\n" +
-            "- a numeric value field was selected, but no numeric values were returned. \n" +
-            "- a numeric value field was selected, but only zero's were returned.\n" +
-            "- Your visualization expects nodes/relationships, but none were returned."
-        } />
+        return <NoDrawableDataErrorMessage/>
     } else if (status == QueryStatus.COMPLETE) {
         if (records == null || records.length == 0) {
             return <div>Loading...</div>

@@ -34,5 +34,4 @@ These three configurations must be set for NeoDash to be able to run in
 3. A hardcoded dashboard to load.
 
 Technical details on setting this up are documented in the link:../../developer-guide/standalone-mode[Standalone
-Mode] page. If you need help setting this up, please reach out to the
-mailto:niels.dejong@neo4j.com[Neo4j Team].
+Mode] page. 

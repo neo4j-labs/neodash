@@ -1,5 +1,5 @@
 import { initialState } from "../dashboard/DashboardReducer";
-import _ from 'lodash';
+import isEqual from 'lodash.isequal';
 
 /**
  * Selectors define a way to retrieve parts of the global application state for a sub-component.
@@ -86,7 +86,7 @@ export const applicationHasCachedDashboard = (state: any) => {
     if (state.application.connected) {
         return false;
     }
-    return !_.isEqual(state.dashboard, initialState);
+    return !isEqual(state.dashboard, initialState);
 }
 
 /**

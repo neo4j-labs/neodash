@@ -10,7 +10,7 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { downloadComponentAsImage } from '../../chart/util/ChartUtils';
+import { downloadComponentAsImage } from '../../chart/ChartUtils';
 
 const NeoCardView = ({ title, database, query, globalParameters, 
     widthPx, heightPx, fields, active, setActive,
@@ -26,6 +26,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
     const reportHeader = <NeoCardViewHeader
         title={title}
         editable={editable}
+        description={settings.description}
         fullscreenEnabled={dashboardSettings.fullscreenEnabled}
         downloadImageEnabled={dashboardSettings.downloadImageEnabled}
         onTitleUpdate={onTitleUpdate}

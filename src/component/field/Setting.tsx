@@ -10,13 +10,13 @@ const generateListItem = (label, option) => {
         return (option ? 'on' : 'off')
     } else {
         if (label == "Color Scheme" || label == "Node Color Scheme") {
-                const colorsFull = categoricalColorSchemes[option];
-                const colors = Array.isArray(colorsFull) ? (Array.isArray(colorsFull.slice(-1)[0]) ? colorsFull.slice(-1)[0] : colorsFull) : colorsFull;
+            const colorsFull = categoricalColorSchemes[option];
+            const colors = Array.isArray(colorsFull) ? (Array.isArray(colorsFull.slice(-1)[0]) ? colorsFull.slice(-1)[0] : colorsFull) : colorsFull;
             return (<div>
                 {Array.isArray(colors) ? colors.map(element => {
                     return <span key={element} style={{ display: "inline-block", background: element, width: "18px", height: "18px" }}></span>
-                }) : ""+option
-            }</div>)
+                }) : "" + option
+                }</div>)
 
         } else {
             return "" + option
@@ -29,7 +29,7 @@ const generateListItem = (label, option) => {
  * A setting is a generic React component that is rendered dynamically based on the 'type'.
  */
 const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled = undefined,
-    helperText = undefined, inverted = false, onChange, onClick=(val)=>{},
+    helperText = undefined, inverted = false, onChange, onClick = (val) => { },
     style = { width: "100%", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" } }) => {
     switch (type) {
         case SELECTION_TYPES.NUMBER:
@@ -56,6 +56,21 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                     value={value}
                     defaultValue={""}
                     placeholder={"" + defaultValue}
+                    style={style}
+                    onClick={(val) => onClick(val)}
+                    onChange={(val) => onChange(val)} />
+            </div>;
+        case SELECTION_TYPES.MULTILINE_TEXT:
+            return <div key={label} style={{ width: "100%", paddingRight: "28px" }}>
+                <NeoField
+                    label={label}
+                    key={label}
+                    disabled={disabled}
+                    helperText={helperText}
+                    value={value}
+                    defaultValue={""}
+                    placeholder={"" + defaultValue}
+                    multiline={true}
                     style={style}
                     onClick={(val) => onClick(val)}
                     onChange={(val) => onChange(val)} />
@@ -98,10 +113,11 @@ const NeoSetting = ({ name, value, choices, type, label, defaultValue, disabled 
                 <NeoColorPicker
                     label={label}
                     key={label}
+                    disabled={disabled}
                     defaultValue={defaultValue}
                     value={value}
                     onClick={(val) => onClick(val)}
-                    onChange={(val) => onChange(val)} 
+                    onChange={(val) => onChange(val)}
                     style={style}></NeoColorPicker>
             </div>
     }
