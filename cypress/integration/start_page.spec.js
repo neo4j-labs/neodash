@@ -1,4 +1,4 @@
-import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL, sankeyChartCypherQuery } from "../fixtures/cypher_queries"
+import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL, sankeyChartCypherQuery, gaugeChartCypherQuery } from "../fixtures/cypher_queries"
 
 // Ignore warnings that may appear when using the Cypress dev server
 Cypress.on('uncaught:exception', (err, runnable) => {
@@ -102,6 +102,11 @@ describe('NeoDash E2E Tests', () => {
     it('creates a single value report', () => {
         createReportOfType('Single Value', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span').contains('1,999')
+    })
+
+    it('creates a gauge chart report', () => {
+        createReportOfType('Gauge Chart', gaugeChartCypherQuery)
+        cy.get('.text-group > text').contains('69')
     })
 
     it('creates a sunburst chart report', () => {
