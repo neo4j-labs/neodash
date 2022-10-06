@@ -27,11 +27,11 @@ describe('NeoDash E2E Tests', () => {
         cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j')
 
         // Connect to Neo4j database
-        cy.get('#protocol').click()
-        cy.contains('neo4j').click()
+        // cy.get('#protocol').click()
+        // cy.contains('neo4j').click()
         cy.get('#url').clear().type('localhost')
         cy.wait(100)
-        cy.get('#database').type('neo4j')
+        // cy.get('#database').type('neo4j')
         cy.get('#dbusername').clear().type('neo4j')
         cy.get('#dbpassword').type('test')
         cy.wait(100)
