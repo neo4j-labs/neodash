@@ -28,9 +28,7 @@ const NeoGaugeChart = (props: ChartProps) => {
 
         let arcsLengthN = arcsLength.split(",").forEach(e => parseFloat(e.trim));
 
-        if (arcsLengthN.filter(e=> isNaN(e)).length == 0){
-
-        }
+      
 
         const chartId = createUUID();
         let score;

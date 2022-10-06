@@ -1,6 +1,9 @@
 = Gauge Chart
-A gauge chart takes a single numeric value, and plots it on an animated gauge.
-The value returned should be in the range of 0 to 100.
+
+A gauge chart takes a single numeric value, and plots it on an animated gauge:
+
+- The value returned should be in the range of 0 to 100.
+- The gauge chart can be customized with different colors and levels (arc segments).
 
 == Examples
 
