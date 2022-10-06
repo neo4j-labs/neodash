@@ -18,6 +18,11 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: yarn install
+   - name: Creating Neo4j Container
+     run: |
+       chmod +x ./scripts/test.sh
+       ./scripts/test.sh
+       shell: bash
    - name: Cypress run
      uses: cypress-io/github-action@v2
      with:
