@@ -17,7 +17,7 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import NeoRadarChart from '../chart/radar/RadarChart';
-import NeoGaugeChart from "../chart/GaugeChart";
+import NeoGaugeChart from "../chart/gauge/GaugeChart";
 
 
 
