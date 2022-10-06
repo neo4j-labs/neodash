@@ -1,4 +1,4 @@
-## NeoDash 2.1.6
+## NeoDash 2.1.6 & 2.1.7
 New features:
 - Added *Radar Charts/Spider Charts*.
 - Added optional markdown description for each report, to be displayed via the header.
