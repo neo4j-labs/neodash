@@ -6,11 +6,36 @@ import NeoCardSettingsFooter from './CardSettingsFooter';
 import { CardContent } from '@material-ui/core';
 import { CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 
-const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, width, height, type, 
-    reportSettings, reportSettingsOpen, fields, widthPx, heightPx,
-    onQueryUpdate, onRefreshRateUpdate, onRemovePressed, onClonePressed, onReportSettingUpdate,
-    onToggleCardSettings, onTypeUpdate, setActive, onReportHelpButtonPressed,
-     onToggleReportSettings, dashboardSettings, expanded, onToggleCardExpand, onCreateNotification }) => {
+const NeoCardSettings = ({
+                             settingsOpen,
+                             query,
+                             database, // Current database related to the report
+                             databaseList, // List of databases the user can choose from ('system' is filtered out)
+                             refreshRate,
+                             width,
+                             height,
+                             type,
+                             reportSettings,
+                             reportSettingsOpen,
+                             fields,
+                             widthPx,
+                             heightPx,
+                             onQueryUpdate,
+                             onRefreshRateUpdate,
+                             onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
+                             onRemovePressed,
+                             onClonePressed,
+                             onReportSettingUpdate,
+                             onToggleCardSettings,
+                             onTypeUpdate,
+                             setActive,
+                             onReportHelpButtonPressed,
+                             onToggleReportSettings,
+                             dashboardSettings,
+                             expanded,
+                             onToggleCardExpand,
+                             onCreateNotification
+                         }) => {
 
     const reportHeight = heightPx - CARD_HEADER_HEIGHT + 24;
 
@@ -32,6 +57,8 @@ const NeoCardSettings = ({ settingsOpen, query, database, refreshRate, width, he
         width={width}
         height={height}
         type={type}
+        databaseList={databaseList}
+        onDatabaseChanged={onDatabaseChanged}
         onQueryUpdate={onQueryUpdate}
         onReportSettingUpdate={onReportSettingUpdate}
         onRefreshRateUpdate={onRefreshRateUpdate}
