@@ -1,0 +1,1 @@
+cat movies.cypher | docker exec neo4j -u neo4j -p test

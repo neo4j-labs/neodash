@@ -20,9 +20,12 @@ jobs:
    - run: yarn install
    - name: Creating Neo4j Container
      run: |
-       chmod +x ./scripts/docker-neo4j.sh
+       chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
        ./scripts/docker-neo4j.sh
-       shell: bash
+       sleep 30s
+       chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
+       ./scripts/start-movies-db.sh
+
    - name: Cypress run
      uses: cypress-io/github-action@v2
      with:
