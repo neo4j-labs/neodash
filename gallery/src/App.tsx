@@ -97,8 +97,9 @@ function App() {
             filteredList.map(item => {
               return <div className='m-4 n-bg-neutral-10 n-shadow-l4'>
                 <div className="">
+                <h4 className="p-3 float-right opacity-50">{item['language']}</h4>
                   <h4 className="p-3">{item['title']}</h4>
-
+                  
                   <p className="p-3">
                     {item['description']}
                     <br />
