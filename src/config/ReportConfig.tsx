@@ -365,6 +365,11 @@ export const REPORT_TYPES = {
             useRecordMapper: false,
             withoutFooter: true,
             settings: {
+                "propertyName": {
+                    label: "Property Name",
+                    type: SELECTION_TYPES.TEXT,
+                    default: "value"
+                },
                 "nrOfLevels": {
                     label: "Number of levels",
                     type: SELECTION_TYPES.NUMBER,
