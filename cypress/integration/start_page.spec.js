@@ -12,6 +12,7 @@ describe('NeoDash E2E Tests', () => {
         cy.viewport(1920, 1080)
         // Navigate to index
         cy.visit('/')
+        cy.wait(1000)
         cy.get('#form-dialog-title').should('contain', 'NeoDash - Neo4j Dashboard Builder')
         cy.wait(300)
 
