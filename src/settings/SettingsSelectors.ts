@@ -9,7 +9,7 @@ export const getGlobalParameters = (state: any) => state.dashboard.settings.para
 The database related to a card is, at its start, the same as the one defined inside the application connection field, however
 a user can modify the database that is used by a card with a new option inside the card itself.
  */
-export const getDatabase = (state: any,cardIndex:number, pageNumber:number) => {
+export const getDatabase = (state: any, pageNumber:number, cardIndex:number) => {
     let reportDatabase = state.dashboard.pages[pageNumber].reports[cardIndex].database
     if (reportDatabase != undefined) {
         return reportDatabase
