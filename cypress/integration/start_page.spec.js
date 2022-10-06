@@ -28,7 +28,7 @@ describe('NeoDash E2E Tests', () => {
 
         // Connect to Neo4j database
         cy.get('#protocol').click()
-        cy.contains('neo4j+s').click()
+        cy.contains('neo4j').click()
         cy.get('#url').clear().type('localhost:7687')
         cy.wait(100)
         cy.get('#database').type('movies')
