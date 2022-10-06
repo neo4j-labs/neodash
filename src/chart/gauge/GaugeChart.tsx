@@ -5,6 +5,9 @@ import { checkResultKeys } from '../ChartUtils'
 import { createUUID } from '../../dashboard/DashboardThunks'
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from "../../component/editor/CodeViewerComponent";
 
+    /**
+     * Based on https://github.com/dekelpaz PR https://github.com/neo4j-labs/neodash/pull/191
+     */
 const NeoGaugeChart = (props: ChartProps) => {
 
     const records = props.records;
@@ -17,15 +20,13 @@ const NeoGaugeChart = (props: ChartProps) => {
      * This visualization was extracted from https://github.com/Martin36/react-gauge-chart.
      */
 
-
-    const propertyName = props.settings.propertyName ? props.settings.propertyName : "value";
-    const nrOfLevels = props.settings.nrOfLevels ? props.settings.nrOfLevels : 3;
-    const arcsLength = props.settings.arcsLength ? props.settings.arcsLength : "0.15, 0.55, 0.3";
-    const arcPadding = props.settings.arcPadding ? props.settings.arcPadding : 0.02;
-    const colors = props.settings.colors ? props.settings.colors : "#5BE12C, #F5CD19, #EA4228";
-    const textColor = props.settings.textColor ? props.settings.textColor : "black";
-    const animDelay = props.settings.animDelay ? props.settings.animDelay : 0;
-    const animateDuration = props.settings.animateDuration ? props.settings.animateDuration : 2000;
+        const nrOfLevels = props.settings.nrOfLevels ? props.settings.nrOfLevels : 3;
+        const arcsLength = props.settings.arcsLength ? props.settings.arcsLength : "0.15, 0.55, 0.3";
+        const arcPadding = props.settings.arcPadding ? props.settings.arcPadding : 0.02;
+        const colors = props.settings.colors ? props.settings.colors : "#5BE12C, #F5CD19, #EA4228";
+        const textColor = props.settings.textColor ? props.settings.textColor : "black";
+        const animDelay = props.settings.animDelay ? props.settings.animDelay : 0;
+        const animateDuration = props.settings.animateDuration ? props.settings.animateDuration : 2000;
 
     let arcsLengthN = arcsLength.split(",").map(
         e => parseFloat(e.trim())
