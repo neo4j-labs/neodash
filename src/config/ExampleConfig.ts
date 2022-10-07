@@ -12,6 +12,7 @@ import NeoTreeMapChart from "../chart/treemap/TreeMapChart";
 import NeoChoroplethMapChart from "../chart/choropleth/ChoroplethMapChart";
 import NeoSankeyChart from "../chart/sankey/SankeyChart";
 import NeoRadarChart from "../chart/radar/RadarChart";
+import NeoGaugeChart from "../chart/gauge/GaugeChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -410,5 +411,22 @@ RETURN value
         fields: ["code", "value"],
         type: "choropleth",
         chartType: NeoChoroplethMapChart
+    },
+    {
+        title: "Gauge Chart",
+        description: "Gauge charts can be used to visualize a single numeric value (0-100) as a reading on a dial",
+        exampleQuery: "// How many story points has been closed during this sprint (based on the total)?\n" +
+            "MATCH (:Sprint{name:'Sprint 2'})-[:HAS_STORY]->(s:Story)\n" +
+            "WITH collect(s) as Stories\n" +
+            "WITH  reduce(t = 0, n IN Stories | t + n.points) as Total, reduce(t = 0, n IN [story in Stories where story.closed = true ] | t + n.points) as TotalClosed\n" +
+            "RETURN toFloat(TotalClosed*100)/Total",
+        syntheticQuery: 'RETURN rand()*100',
+        settings: {},
+        selection: {},
+        fields: [],
+        type: "gauge",
+        chartType: NeoGaugeChart
     }
+
+
 ]

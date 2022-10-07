@@ -1,14 +1,19 @@
 import React from 'react';
 import { ChartProps } from '../Chart';
 import GaugeChart from 'react-gauge-chart'
-import { checkResultKeys } from '../ChartUtils'
 import { createUUID } from '../../dashboard/DashboardThunks'
-import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from "../../component/editor/CodeViewerComponent";
+import { NoDrawableDataErrorMessage } from "../../component/editor/CodeViewerComponent";
 
+    /**
+     * Based on https://github.com/dekelpaz PR https://github.com/neo4j-labs/neodash/pull/191
+     */
 const NeoGaugeChart = (props: ChartProps) => {
 
     const records = props.records;
     const selection = props.selection;
+    const settings = props.settings;
+
+
 
     if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
         return <NoDrawableDataErrorMessage />
@@ -17,15 +22,17 @@ const NeoGaugeChart = (props: ChartProps) => {
      * This visualization was extracted from https://github.com/Martin36/react-gauge-chart.
      */
 
-
-    const propertyName = props.settings.propertyName ? props.settings.propertyName : "value";
-    const nrOfLevels = props.settings.nrOfLevels ? props.settings.nrOfLevels : 3;
-    const arcsLength = props.settings.arcsLength ? props.settings.arcsLength : "0.15, 0.55, 0.3";
-    const arcPadding = props.settings.arcPadding ? props.settings.arcPadding : 0.02;
-    const colors = props.settings.colors ? props.settings.colors : "#5BE12C, #F5CD19, #EA4228";
-    const textColor = props.settings.textColor ? props.settings.textColor : "black";
-    const animDelay = props.settings.animDelay ? props.settings.animDelay : 0;
-    const animateDuration = props.settings.animateDuration ? props.settings.animateDuration : 2000;
+        const nrOfLevels = settings.nrOfLevels ? props.settings.nrOfLevels : 3;
+        const arcsLength = settings.arcsLength ? props.settings.arcsLength : "0.15, 0.55, 0.3";
+        const arcPadding = props.settings.arcPadding ? props.settings.arcPadding : 0.02;
+        const colors = props.settings.colors ? props.settings.colors : "#5BE12C, #F5CD19, #EA4228";
+        const textColor = props.settings.textColor ? props.settings.textColor : "black";
+        const animDelay = props.settings.animDelay ? props.settings.animDelay : 0;
+        const animateDuration = props.settings.animateDuration ? props.settings.animateDuration : 2000;
+        const marginRight = (settings["marginRight"]) ? settings["marginRight"] : 24;
+        const marginLeft = (settings["marginLeft"]) ? settings["marginLeft"] : 24;
+        const marginTop = (settings["marginTop"]) ? settings["marginTop"] : 40;
+        const marginBottom = (settings["marginBottom"]) ? settings["marginBottom"] : 40;
 
     let arcsLengthN = arcsLength.split(",").map(
         e => parseFloat(e.trim())
@@ -56,7 +63,7 @@ const NeoGaugeChart = (props: ChartProps) => {
                 arcPadding={arcPadding}
                 colors={colors.split(", ")}
                 textColor={textColor}
-                style={{ width: "95%", height: "95%", margin: "0 auto" }}
+                style={{ marginTop: marginTop, marginRight: marginRight, marginBottom:  marginBottom, marginLeft : marginLeft  }}
                 animDelay={animDelay}
                 animateDuration={animateDuration}
             /> : <></>}
