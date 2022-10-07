@@ -18,7 +18,7 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - name: Creating Neo4j Container
-      run: |
+     run: |
         chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
         ./scripts/docker-neo4j-initializer/docker-neo4j.sh
         sleep 30s
