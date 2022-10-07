@@ -41,6 +41,7 @@ export async function runCypherQuery(driver,
     useHardRowLimit = false,
     queryTimeLimit = 20,
 ) {
+
     // If no query specified, we don't do anything.
     if (query.trim() == "") {
         setFields([]);
@@ -121,7 +122,7 @@ export async function runCypherQuery(driver,
             }
 
             // Process other errors.
-            setRecords([{ "error": e.message }]);
+            if(setRecords) setRecords([{ "error": e.message }]);
             transaction.rollback();
             setStatus(QueryStatus.ERROR);
             return e.message;

@@ -153,6 +153,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
             const id = decodeURIComponent(urlParams.get("id"));
             const type = urlParams.get("type");
             const standalone = urlParams.get("standalone") == "Yes";
+            const dashboardDatabase = urlParams.get("dashboardDatabase");
             if (urlParams.get("credentials")) {
                 const connection = decodeURIComponent(urlParams.get("credentials"));
                 const protocol = connection.split("://")[0];
@@ -176,11 +177,11 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState: any) 
                 }
 
                 dispatch(setConnectionModalOpen(false));
-                dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password));
+                dispatch(setShareDetailsFromUrl(type, id, standalone, protocol, url, port, database, username, password, dashboardDatabase));
                 window.history.pushState({}, document.title, "/");
             } else {
                 dispatch(setConnectionModalOpen(false));
-                dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
+                dispatch(setShareDetailsFromUrl(type, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
                 window.history.pushState({}, document.title, "/");
             }
         } else {
