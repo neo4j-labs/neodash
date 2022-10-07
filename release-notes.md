@@ -7,4 +7,8 @@ New features:
 
 Bug fixes:
 - Fixed issue preventing dashboards to be shared with a non-standard database name.
-- 
+- Fixed table chart breaking when returning a property called 'id' with a null value.
+- Fixed bug not allowing users to select a different database when loading/saving a dashboard.
+
+
+For a complete version history, see the [Changelog](https://github.com/neo4j-labs/neodash/blob/master/changelog.md).
