@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -72,7 +72,8 @@
     "redux-thunk": "^2.4.1",
     "remark-gfm": "^3.0.1",
     "reselect": "^4.1.5",
-    "use-neo4j": "^0.3.13"
+    "use-neo4j": "^0.3.13",
+    "react-gauge-chart": "^0.4.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",

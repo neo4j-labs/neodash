@@ -16,6 +16,13 @@ jobs:
      uses: actions/setup-node@v1
      with:
        node-version: ${{ matrix.node-version }}
+   - name: Creating Neo4j Container
+     run: |
+       chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+       ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+       sleep 30s
+       chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
+       ./scripts/docker-neo4j-initializer/start-movies-db.sh
    - run: rm -rf docs
    - run: yarn install
    - name: Cypress run
@@ -56,3 +63,23 @@ jobs:
        aws-region: us-west-1
    - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
    - run: aws s3 rm s3://neodash-test.graphapp.io/ --recursive && aws s3 sync dist s3://neodash-test.graphapp.io/ --acl public-read
+ deploy-gallery:
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [18.x]
+   steps:
+   - uses: actions/checkout@v2
+   - name: Use Node.js ${{ matrix.node-version }}
+     uses: actions/setup-node@v1
+     with:
+       node-version: ${{ matrix.node-version }}
+   - run: cd gallery && yarn install
+   - run: cd gallery && CI=false yarn run build
+   - name: Set AWS credentials
+     uses: aws-actions/configure-aws-credentials@v1
+     with:
+       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+       aws-region: us-west-1
+   - run: aws s3 rm s3://neodash-gallery.graphapp.io/ --recursive && aws s3 sync gallery/build s3://neodash-gallery.graphapp.io/ --acl public-read

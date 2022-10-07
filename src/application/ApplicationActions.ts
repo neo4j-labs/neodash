@@ -82,9 +82,9 @@ export const resetShareDetails = () => ({
 });
 
 export const SET_SHARE_DETAILS_FROM_URL = 'APPLICATION/SET_SHARE_DETAILS_FROM_URL';
-export const setShareDetailsFromUrl = (type: string, id: string, standalone: boolean, protocol: string, url: string, port: string, database: string, username: string, password: string) => ({
+export const setShareDetailsFromUrl = (type: string, id: string, standalone: boolean, protocol: string, url: string, port: string, database: string, username: string, password: string, dashboardDatabase : string) => ({
     type: SET_SHARE_DETAILS_FROM_URL,
-    payload: { type, id, standalone, protocol, url, port, database, username, password },
+    payload: { type, id, standalone, protocol, url, port, database, username, password, dashboardDatabase },
 });
 
 export const SET_STANDALONE_ENABLED = 'APPLICATION/SET_STANDALONE_ENABLED';

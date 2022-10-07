@@ -1,0 +1,373 @@
+{
+  "title": "NeoDash Twitter Dashboard 📲",
+  "version": "2.1",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_person_name": "Florent Biville",
+      "neodash_tweet_info": {
+        "low": -1013501951,
+        "high": 311222644
+      },
+      "neodash_tweet_url": "https://twitter.com/i/web/status/1352796210650886145",
+      "neodash_user_pic": "http://pbs.twimg.com/profile_images/792577726230237184/8ZSDZEvI_normal.jpg"
+    },
+    "extensions": [
+      "core",
+      "actions"
+    ]
+  },
+  "pages": [
+    {
+      "title": "Overview",
+      "reports": [
+        {
+          "title": "The Twitter Dashboard",
+          "query": "The *Twitter Database* is a great way to get to know Neo4j and Cypher. This graph contains the following data:\n- `Tweet` nodes with four properties (`id`, `created_at`, `text`, `favorites`).\n- `User` nodes with six properties (`name`, `followers`, `following`, `location`, `profile_image_url`, `screen_name`).\n- `HashTag` nodes with the property `name`.\n- `Link` nodes with the property `url`.\n- `Source` nodes with the property `name`.\n- Two relationship types between `Tweet` and `User` (`POSTS`,  `MENTIONS`).\n- Five relationship type between different `User` nodes (`FOLLOWS`, `INTERACTS_WITH`, `RT_MENTIONS`, `AMPLIFIES`, `SIMILAR_TO`).\n- Five relationship type between different `Tweet` nodes (`REPLY_TO`, `RETWEETS`).\n- One relationship types between `Tweet` and `Hashtag`, `TAGS`.\n- One relationship types between `Tweet` and `Link`, `CONTAINS`.\n- One relationship types between `Tweet` and `Source`, `USING`.\n\nThis dashboard uses the sample dataset from the Neo4j developer guide.\n[https://neo4j.com/developer/example-data/](https://neo4j.com/developer/example-data/)\n\n____\n\n\nYou will find two pages in this same dashboard:\n1. An **Overview** page with general info about the graph.\n2. An **User view** page that lets you drill down on a specific person.\n3. A **Tweet view** page that lets you drill down on a specific tweet.\n\nTo inspect the Cypher behind each of the visualizations, click the (⋮) button on the top right of a report. This lets you see and edit the query.",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "The entire graph",
+          "query": "// It's the entire graph!\nMATCH (u:User)-[r:FOLLOWS]->(b)\nRETURN *",
+          "width": 6,
+          "height": 3,
+          "x": 6,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "User": "name",
+            "Me": "name"
+          },
+          "settings": {}
+        },
+        {
+          "title": "Total Tweets",
+          "query": "MATCH (n:Tweet)\nRETURN COUNT(n) as Total",
+          "width": 2,
+          "height": 1,
+          "x": 6,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Total Users",
+          "query": "MATCH (n:User)\nRETURN COUNT(n)\n\n\n",
+          "width": 2,
+          "height": 1,
+          "x": 8,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Relationships",
+          "query": "MATCH ()-[r]->()\nRETURN count(r)\n\n\n",
+          "width": 2,
+          "height": 1,
+          "x": 10,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Relationship types",
+          "query": "MATCH ()-[r]->()\nRETURN type(r) as Relationship, COUNT(r) as Total\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "bar",
+          "selection": {
+            "index": "Relationship",
+            "value": "Total",
+            "key": "(none)"
+          },
+          "settings": {
+            "marginBottom": 80
+          }
+        },
+        {
+          "title": "Browse the movies",
+          "query": "MATCH (m:Tweet)\nRETURN m.id_str as idx, m.text as Text\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 5,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Users with most tweets",
+          "query": "MATCH (t:Tweet)<-[:POSTS]-(u:User)\nRETURN u.name as User, COUNT(t) as Tweets\nORDER BY Tweets\nDESC LIMIT 10\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 4,
+          "type": "pie",
+          "selection": {
+            "index": "User",
+            "value": "Tweets",
+            "key": "(none)"
+          },
+          "settings": {
+            "marginRight": 60,
+            "marginLeft": 60,
+            "marginTop": 40,
+            "marginBottom": 60
+          }
+        },
+        {
+          "title": "Tweets by Month",
+          "query": "MATCH (t:Tweet)\nWHERE t.created_at is not null\nWITH datetime(t.created_at).month as nMonth, apoc.temporal.format(t.created_at, \"MMMM\") as month\nwith nMonth, month, count(nMonth) as Total\nRETURN nMonth, Total\nORDER by nMonth asc",
+          "width": 3,
+          "height": 2,
+          "x": 3,
+          "y": 2,
+          "type": "line",
+          "selection": {
+            "x": "nMonth",
+            "value": [
+              "Total"
+            ]
+          },
+          "settings": {
+            "curve": "cardinal",
+            "marginTop": 50
+          }
+        },
+        {
+          "title": "Total Sources",
+          "query": "MATCH (n:Source)\nRETURN COUNT(n) as Sources",
+          "width": 2,
+          "height": 1,
+          "x": 6,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Total Hashtags",
+          "query": "MATCH (n:Hashtag)\nRETURN COUNT(n) as Hashtags",
+          "width": 2,
+          "height": 1,
+          "x": 8,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Total Links",
+          "query": "MATCH (n:Link)\nRETURN COUNT(n) as Links",
+          "width": 2,
+          "height": 1,
+          "x": 10,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Tweets distribution by Hasgtag",
+          "query": "MATCH (t:Tweet)-[:TAGS]->(h:Hashtag)\nRETURN h.name as Hashtag, COUNT(t) as Tweets\nORDER BY Tweets\nDESC LIMIT 10\n\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 6,
+          "type": "pie",
+          "selection": {
+            "index": "Hashtag",
+            "value": "Tweets",
+            "key": "(none)"
+          },
+          "settings": {
+            "marginTop": 45
+          }
+        }
+      ]
+    },
+    {
+      "title": "User View",
+      "reports": [
+        {
+          "title": "Select an user",
+          "query": "MATCH (t:Tweet)<-[:POSTS]-(u:User)\nRETURN u.name as User, COUNT(t) as Tweets\nORDER BY Tweets desc\n\n",
+          "width": 4,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "actionsRules": [
+              {
+                "condition": "Click",
+                "field": "User",
+                "value": "User",
+                "customization": "set variable",
+                "customizationValue": "person_name"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Graph view for this user follow relationships",
+          "query": "MATCH path=(p:User)-[:FOLLOWS]-()\nWHERE p.name = $neodash_person_name\nRETURN path\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 7,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "User": "name",
+            "Me": "name"
+          },
+          "settings": {
+            "nodeColorScheme": "paired"
+          }
+        },
+        {
+          "title": "About this page",
+          "query": "On this page, you can select a person from a table, and dynamically view other visualizations update.\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "replaceGlobalParameters": true
+          }
+        },
+        {
+          "title": "Tweets for the selected user",
+          "query": "MATCH path=(p)-->(m:Tweet)\nWHERE p.name = $neodash_person_name\nand m.text is not null\nRETURN m.created_at as Creation_Date, m.favorites as Favs, m.text as Text order by Favs desc\n\n",
+          "width": 7,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[3,1,11]"
+          }
+        },
+        {
+          "title": "The highest tweeted hashtags by this user",
+          "query": "MATCH path=(p)-->(m:Tweet)-[:TAGS]->(t)\nWHERE p.name = $neodash_person_name\nRETURN t.name as HashTag, count(*) as Total\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 7,
+          "y": 3,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "labelProperty": "weight"
+          }
+        },
+        {
+          "title": "Selected User",
+          "query": "RETURN $neodash_person_name\n\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 26
+          }
+        }
+      ]
+    },
+    {
+      "title": "Tweet View",
+      "reports": [
+        {
+          "title": "About this page",
+          "query": "On this page, you can select a tweet from a table, and dynamically view other visualizations update.\n\n\n\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Selected User",
+          "query": "RETURN $neodash_person_name\n\n\n\n\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 26
+          }
+        },
+        {
+          "title": "Graph of Tweets for this User. (Click on a Tweet for more info)",
+          "query": "MATCH path=(p)-->(m:Tweet)\nWHERE p.name = $neodash_person_name\nRETURN path\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "User": "name",
+            "Tweet": "id"
+          },
+          "settings": {
+            "actionsRules": [
+              {
+                "condition": "onNodeClick",
+                "field": "Tweet",
+                "value": "id",
+                "customization": "set variable",
+                "customizationValue": "tweet_info"
+              },
+              {
+                "condition": "onNodeClick",
+                "field": "User",
+                "value": "profile_image_url",
+                "customization": "set variable",
+                "customizationValue": "user_pic"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Tweet Info",
+          "query": "MATCH path = (a:Tweet)-[b]-(c)\nWHERE a.id = $neodash_tweet_info\nRETURN path\n\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 8,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Tweet": "id",
+            "User": "name"
+          },
+          "settings": {}
+        }
+      ]
+    }
+  ],
+  "parameters": {}
+}

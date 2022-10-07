@@ -7,7 +7,7 @@ import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from "../app
 import { updateGlobalParametersThunk } from "../settings/SettingsThunks";
 
 
-function createUUID() {
+export function createUUID() {
     var dt = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = (dt + Math.random() * 16) % 16 | 0;
@@ -139,13 +139,15 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
 
 export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {
     try {
-        runCypherQuery(driver, database, "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard", { uuid: uuid }, 
-        1, () => { return }, (records) => {
-            if (records.length == 0) {
-                dispatch(createNotificationThunk("Unable to load dashboard.", "A dashboard with the provided UUID could not be found."));
+        const query = "MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard";
+        runCypherQuery(driver, database, query, { uuid: uuid }, 1,
+            () => { return },
+            (records) => {
+                if (!records[0]['_fields']) {
+                    dispatch(createNotificationThunk("Unable to load dashboard from database '"+ database +"'.", "A dashboard with UUID '"+uuid+"' could not be found."));
+                }
+                callback(records[0]['_fields'][0])
             }
-            callback(records[0]['_fields'][0])
-        }
         )
     } catch (e) {
         dispatch(createNotificationThunk("Unable to load dashboard to Neo4j", e));
@@ -194,7 +196,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     try {
         runCypherQuery(driver, "system",
             "SHOW DATABASES yield name RETURN DISTINCT name",
-            {}, {}, ["name"], 1000, () => { return }, (records) => {
+            {}, 1000, () => {return },  (records) => {
                 const result = records.map(r => {
                     return r["_fields"] && r["_fields"][0];
                 });

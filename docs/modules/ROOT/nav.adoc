@@ -17,6 +17,7 @@
 *** xref:user-guide/reports/map.adoc[Map]
 *** xref:user-guide/reports/choropleth.adoc[Choropleth]
 *** xref:user-guide/reports/single-value.adoc[Single Value]
+*** xref:user-guide/reports/gauge-chart.adoc[Gauge Chart]
 *** xref:user-guide/reports/raw-json.adoc[Raw JSON]
 *** xref:user-guide/reports/parameter-select.adoc[Parameter Select]
 *** xref:user-guide/reports/iframe.adoc[iFrame]

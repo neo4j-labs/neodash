@@ -50,11 +50,14 @@ const NeoTableChart = (props: ChartProps) => {
 
     const records = props.records;
 
+    const generateSafeColumnKey = (key) => {
+        return key != "id" ? key : key + " ";
+    }
     const columns = (transposed) ? ["Field"].concat(records.map((r, j) => "Value" + (j == 0 ? "" : " " + (j + 1).toString()))).map((key, i) => {
         const value = key;
         return ApplyColumnType({
-            field: key,
-            headerName: key,
+            field: generateSafeColumnKey(key),
+            headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
             disableColumnSelector: true,
             flex: (columnWidths && i < columnWidths.length) ? columnWidths[i] : 1,
@@ -63,8 +66,8 @@ const NeoTableChart = (props: ChartProps) => {
     }) : records[0].keys.map((key, i) => {
         const value = records[0].get(key);
         return ApplyColumnType({
-            field: key,
-            headerName: key,
+            field: generateSafeColumnKey(key),
+            headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
             disableColumnSelector: true,
             flex: (columnWidths && i < columnWidths.length) ? columnWidths[i] : 1,
@@ -72,11 +75,16 @@ const NeoTableChart = (props: ChartProps) => {
         }, value)
     });
 
-    const rows = (transposed) ? records[0].keys.map((key, i) => {
-        return Object.assign({ id: i, Field: key }, ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: RenderSubValue(r._fields[i]) })));
-    }) : records.map((record, rownumber) => {
-        return Object.assign({ id: rownumber }, ...record._fields.map((field, i) => ({ [record.keys[i]]: field })));
-    });
+    const rows = (transposed) ?
+        records[0].keys.map((key, i) => {
+            return Object.assign(
+                { id: i, Field: key },
+                ...records.map((r, j) => ({ ["Value" + (j == 0 ? "" : " " + (j + 1).toString())]: RenderSubValue(r._fields[i]) })));
+        }) : records.map((record, rownumber) => {
+            return Object.assign(
+                { id: rownumber },
+                ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field })));
+        });
 
     return (
         <div className={classes.root} style={{ height: "100%", width: '100%', position: "relative" }}>

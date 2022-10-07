@@ -1,4 +1,4 @@
-import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL, sankeyChartCypherQuery } from "../fixtures/cypher_queries"
+import { tableCypherQuery, barChartCypherQuery, mapChartCypherQuery, sunburstChartCypherQuery, iFrameText, markdownText, loadDashboardURL, sankeyChartCypherQuery, gaugeChartCypherQuery } from "../fixtures/cypher_queries"
 
 // Ignore warnings that may appear when using the Cypress dev server
 Cypress.on('uncaught:exception', (err, runnable) => {
@@ -12,6 +12,7 @@ describe('NeoDash E2E Tests', () => {
         cy.viewport(1920, 1080)
         // Navigate to index
         cy.visit('/')
+        cy.wait(1000)
         cy.get('#form-dialog-title').should('contain', 'NeoDash - Neo4j Dashboard Builder')
         cy.wait(300)
 
@@ -27,13 +28,13 @@ describe('NeoDash E2E Tests', () => {
         cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j')
 
         // Connect to Neo4j database
-        cy.get('#protocol').click()
-        cy.contains('neo4j+s').click()
-        cy.get('#url').clear().type('demo.neo4jlabs.com')
+        // cy.get('#protocol').click()
+        // cy.contains('neo4j').click()
+        cy.get('#url').clear().type('localhost')
         cy.wait(100)
-        cy.get('#database').type('movies')
-        cy.get('#dbusername').clear().type('movies')
-        cy.get('#dbpassword').type('movies')
+        // cy.get('#database').type('neo4j')
+        cy.get('#dbusername').clear().type('neo4j')
+        cy.get('#dbpassword').type('test')
         cy.wait(100)
         cy.get('button').contains('Connect').click()
     })
@@ -102,6 +103,11 @@ describe('NeoDash E2E Tests', () => {
     it('creates a single value report', () => {
         createReportOfType('Single Value', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span').contains('1,999')
+    })
+
+    it('creates a gauge chart report', () => {
+        createReportOfType('Gauge Chart', gaugeChartCypherQuery)
+        cy.get('.text-group > text').contains('69')
     })
 
     it('creates a sunburst chart report', () => {

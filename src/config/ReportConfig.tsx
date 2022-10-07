@@ -1,4 +1,3 @@
-
 import React from 'react';
 import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
 import NeoBarChart from "../chart/bar/BarChart";
@@ -18,6 +17,8 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import NeoRadarChart from '../chart/radar/RadarChart';
+import NeoGaugeChart from "../chart/gauge/GaugeChart";
+
 
 
 export enum SELECTION_TYPES {
@@ -91,6 +92,9 @@ export const REPORT_TYPES = {
         autoAssignSelectedProperties: true,
         component: NeoGraphChart,
         maxRecords: 1000,
+        // The idea is to match a setting to its dependency, the operator represents the kind of relationship
+        // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
+        disabledDependency: { relationshipParticleSpeed: { dependsOn: "relationshipParticles", operator: false } },
         settings: {
             "nodeColorScheme": {
                 label: "Node Color Scheme",
@@ -159,6 +163,11 @@ export const REPORT_TYPES = {
                 default: false,
                 values: [false, true]
             },
+            "relationshipParticleSpeed": {
+                label: "Speed of the particle animation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0.005,
+            },
             "backgroundColor": {
                 label: "Background Color",
                 type: SELECTION_TYPES.TEXT,
@@ -199,22 +208,22 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
-            "iconStyle": {
-                label: "Node Background Image by label, formatted as {label: url}",
-                type: SELECTION_TYPES.TEXT,
-                default: ""
-            },
             "autorun": {
                 label: "Auto-run query",
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: true
             },
+            "iconStyle": {
+                label: "Icon Style on format { label : url}",
+                type: SELECTION_TYPES.TEXT,
+                default: ""
+            },
             "description": {
                 label: "Report Description",
                 type: SELECTION_TYPES.MULTILINE_TEXT,
                 default: "Enter markdown here..."
-            }
+            },
         }
     },
     "bar": {
@@ -473,12 +482,13 @@ export const REPORT_TYPES = {
             }
         }
     },
-
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.</div>,
+        helperText: <div>A line chart expects two fields: an <code>x</code> value and a <code>y</code> value.
+            The <code>x</code> value can be a number or a Neo4j datetime object. Values are automatically selected from
+            your query results.</div>,
         selection: {
             "x": {
                 label: "X-value",
@@ -632,7 +642,8 @@ export const REPORT_TYPES = {
         label: "Radar Chart",
         component: NeoRadarChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and an <code>Index Property</code>.</div>,
+        helperText: <div>A radar chart expects two advanced configurations: a <code>Quantitative Variables</code> and
+            an <code>Index Property</code>.</div>,
         selection: {
             "index": {
                 label: "Index",
@@ -721,7 +732,7 @@ export const REPORT_TYPES = {
             "motionConfig": {
                 label: "Motion Configuration",
                 type: SELECTION_TYPES.LIST,
-                values: ["default", "gentle", "wobbly", "stiff", "slow","molasses"],
+                values: ["default", "gentle", "wobbly", "stiff", "slow", "molasses"],
                 default: "gentle"
             },
             "curve": {
@@ -800,6 +811,11 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.TEXT,
                 default: "width"
             },
+            "providerUrl": {
+                label: "Map Provider URL",
+                type: SELECTION_TYPES.TEXT,
+                default: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            },
             "intensityProp": {
                 label: "Intensity Property (for heatmap)",
                 type: SELECTION_TYPES.TEXT,
@@ -810,11 +826,6 @@ export const REPORT_TYPES = {
                 type: SELECTION_TYPES.LIST,
                 values: [true, false],
                 default: false
-            },
-            "providerUrl": {
-                label: "Map Provider URL",
-                type: SELECTION_TYPES.TEXT,
-                default: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             },
             "autorun": {
                 label: "Auto-run query",
@@ -875,11 +886,83 @@ export const REPORT_TYPES = {
             }
         }
     },
+    "gauge": {
+        label: "Gauge Chart",
+        component: NeoGaugeChart,
+        helperText: <div>A gauge chart expects a single <code>value</code>.</div>,
+        maxRecords: 1,
+        selection: {
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            }
+        },
+        withoutFooter: true,
+        settings: {
+            "nrOfLevels": {
+                label: "Number of levels",
+                type: SELECTION_TYPES.NUMBER,
+                default: 3
+            },
+            "arcsLength": {
+                label: "Comma-separated length of each arc",
+                type: SELECTION_TYPES.TEXT,
+                default: "0.15, 0.55, 0.3"
+            },
+            "arcPadding": {
+                label: "Arc padding",
+                type: SELECTION_TYPES.TEXT,
+                default: "0.02"
+            },
+            "colors": {
+                label: "Comma-separated arc colors",
+                type: SELECTION_TYPES.TEXT,
+                default: "#5BE12C, #F5CD19, #EA4228"
+            },
+            "textColor": {
+                label: "Color of the text",
+                type: SELECTION_TYPES.TEXT,
+                default: "black"
+            },
+            "animDelay": {
+                label: "Delay in ms before needle animation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "animateDuration": {
+                label: "Duration in ms for needle animation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 2000
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            }
+        }
+    },
     "sunburst": {
         label: "Sunburst Chart",
         component: NeoSunburstChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A Sunburst chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
+        helperText: <div>A Sunburst chart expects two fields: a <code>path</code> (list of strings) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Path",
@@ -974,7 +1057,8 @@ export const REPORT_TYPES = {
         label: "Circle Packing",
         component: NeoCirclePackingChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A circle packing chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
+        helperText: <div>A circle packing chart expects two fields: a <code>path</code> (list of strings) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Path",
@@ -1053,7 +1137,8 @@ export const REPORT_TYPES = {
         label: "Treemap",
         component: NeoTreeMapChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A Tree Map chart expects two fields: a <code>path</code> (list of strings) and a <code>value</code>.</div>,
+        helperText: <div>A Tree Map chart expects two fields: a <code>path</code> (list of strings) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Path",
@@ -1226,110 +1311,12 @@ export const REPORT_TYPES = {
             }
         }
     },
-    "sankey": {
-        label: "Sankey Chart",
-        component: NeoSankeyChart,
-        useNodePropsAsFields: true,
-        autoAssignSelectedProperties: true,
-        ignoreLabelColors: true,
-        helperText: <div>A Sankey chart expects Neo4j <code>nodes</code> and <code>weighted relationships</code>.</div>,
-        selection: {
-            "nodeProperties": {
-                label: "Node Properties",
-                type: SELECTION_TYPES.NODE_PROPERTIES
-            }
-        },
-        maxRecords: 250,
-        settings: {
-            "legend": {
-                label: "Show legend",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: false
-            },
-            "interactive": {
-                label: "Enable interactivity",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            },
-            "layout": {
-                label: "Sankey layout",
-                type: SELECTION_TYPES.LIST,
-                values: ["horizontal", "vertical"],
-                default: "horizontal"
-            },
-            "colors": {
-                label: "Color Scheme",
-                type: SELECTION_TYPES.LIST,
-                values: ["nivo", "category10", "accent", "dark2", "paired", "pastel1", "pastel2", "set1", "set2", "set3"],
-                default: "set2"
-            },
-            "labelPosition": {
-                label: "Control sankey label position",
-                type: SELECTION_TYPES.LIST,
-                values: ["inside", "outside"],
-                default: "inside"
-            },
-            "labelOrientation": {
-                label: "Control sankey label orientation",
-                type: SELECTION_TYPES.LIST,
-                values: ["horizontal", "vertical"],
-                default: "horizontal"
-            },
-            "nodeBorderWidth": {
-                label: "Node border width (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 0
-            },
-            "marginLeft": {
-                label: "Margin Left (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginRight": {
-                label: "Margin Right (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginTop": {
-                label: "Margin Top (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 24
-            },
-            "marginBottom": {
-                label: "Margin Bottom (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 40
-            },
-            "labelProperty": {
-                label: "Relationship value Property",
-                type: SELECTION_TYPES.TEXT,
-                default: "value"
-            },
-            "nodeThickness": {
-                label: "Node thickness (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 18
-            },
-            "nodeSpacing": {
-                label: "Spacing between nodes at an identical level (px)",
-                type: SELECTION_TYPES.NUMBER,
-                default: 18
-            },
-            "autorun": {
-                label: "Auto-run query",
-                type: SELECTION_TYPES.LIST,
-                values: [true, false],
-                default: true
-            }
-        }
-    },
     "choropleth": {
         label: "Choropleth Map",
         component: NeoChoroplethMapChart,
         useReturnValuesAsFields: true,
-        helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a <code>value</code>.</div>,
+        helperText: <div>A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and
+            a <code>value</code>.</div>,
         selection: {
             "index": {
                 label: "Code",

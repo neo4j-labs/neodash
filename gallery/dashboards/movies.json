@@ -1,0 +1,263 @@
+{
+    "title": "NeoDash Movies Dashboard 🎬",
+    "version": "2.1",
+    "settings": {
+      "pagenumber": 0,
+      "editable": true,
+      "fullscreenEnabled": false,
+      "parameters": {
+        "neodash_person_name": "Tom Hanks"
+      },
+      "extensions": [
+        "core",
+        "actions"
+      ]
+    },
+    "pages": [
+      {
+        "title": "Overview",
+        "reports": [
+          {
+            "title": "The Movies Dashboard",
+            "query": "The *Movies Database* is a great way to get to know Neo4j and Cypher. This graph contains the following data:\n- `Person` nodes with two properties (`name` and `born`).\n- `Movie` nodes with four properties (`title`, `tagline`, `released` and `votes`).\n- Five relationship types between `Person` and `Movie` (`ACTED_IN`,  `DIRECTED`, `PRODUCED`, `WROTE`, `FOLLOWS`)\n- One relationship type between different person nodes - `FOLLOWS`.\n\nThis dashboard uses the sample dataset from the Neo4j developer guide.\n[https://neo4j.com/developer/example-data/](https://neo4j.com/developer/example-data/)\n\n____\n\n\nYou will find two pages in this same dashboard:\n1. An **Overview** page with general info about the graph.\n3. An **Actor view** page that lets you drill down on a specific person.\n\nTo inspect the Cypher behind each of the visualizations, click the (⋮) button on the top right of a report. This lets you see and edit the query.",
+            "width": 6,
+            "height": 2,
+            "x": 0,
+            "y": 0,
+            "type": "text",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "The entire graph",
+            "query": "// It's the entire graph!\nMATCH (a)-[r]->(b)\nRETURN *",
+            "width": 6,
+            "height": 3,
+            "x": 6,
+            "y": 1,
+            "type": "graph",
+            "selection": {
+              "Person": "name",
+              "Movie": "title"
+            },
+            "settings": {}
+          },
+          {
+            "title": "Total movies",
+            "query": "MATCH (n)\nRETURN COUNT(n) as Total",
+            "width": 2,
+            "height": 1,
+            "x": 6,
+            "y": 0,
+            "type": "value",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Total people",
+            "query": "MATCH (n:Person)\nRETURN COUNT(n)\n\n\n",
+            "width": 2,
+            "height": 1,
+            "x": 8,
+            "y": 0,
+            "type": "value",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Relationships",
+            "query": "MATCH ()-[r]->()\nRETURN count(r)\n\n\n",
+            "width": 2,
+            "height": 1,
+            "x": 10,
+            "y": 0,
+            "type": "value",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Relationship types",
+            "query": "MATCH ()-[r]->()\nRETURN type(r) as Relationship, COUNT(r) as Total\n\n",
+            "width": 3,
+            "height": 2,
+            "x": 0,
+            "y": 2,
+            "type": "bar",
+            "selection": {
+              "index": "Relationship",
+              "value": "Total",
+              "key": "(none)"
+            },
+            "settings": {
+              "marginBottom": 80
+            }
+          },
+          {
+            "title": "Browse the movies",
+            "query": "MATCH (m:Movie)\nRETURN m.title as Movie, m.released as Year\n\n\n",
+            "width": 3,
+            "height": 2,
+            "x": 6,
+            "y": 4,
+            "type": "table",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Movies with most actors",
+            "query": "MATCH (m:Movie)<-[:ACTED_IN]-(p:Person)\nRETURN m.title as Movie, COUNT(p) as Actors\nORDER BY Actors\nDESC LIMIT 10\n\n\n",
+            "width": 6,
+            "height": 2,
+            "x": 0,
+            "y": 4,
+            "type": "pie",
+            "selection": {
+              "index": "Movie",
+              "value": "Actors",
+              "key": "(none)"
+            },
+            "settings": {
+              "marginRight": 60,
+              "marginLeft": 60,
+              "marginTop": 40,
+              "marginBottom": 60
+            }
+          },
+          {
+            "title": "Movies by decade",
+            "query": "MATCH (m:Movie)\nRETURN toInteger(m.released/10)*10 as Year, COUNT(m) as Total\nORDER BY Year ASC\n\n\n",
+            "width": 3,
+            "height": 2,
+            "x": 3,
+            "y": 2,
+            "type": "line",
+            "selection": {
+              "x": "Year",
+              "value": [
+                "Total"
+              ]
+            },
+            "settings": {
+              "curve": "cardinal",
+              "marginTop": 50
+            }
+          },
+          {
+            "title": "Customized, grouped bar chart",
+            "query": "MATCH (m:Movie)<-[r]-(p:Person)\nWHERE m.title CONTAINS \"Matrix\"\nRETURN \nm.title as Movie, \ntype(r) as Role, \nCOUNT(p) as People\n",
+            "width": 3,
+            "height": 2,
+            "x": 9,
+            "y": 4,
+            "type": "bar",
+            "selection": {
+              "index": "Movie",
+              "value": "People",
+              "key": "Role"
+            },
+            "settings": {
+              "showOptionalSelections": true,
+              "legend": true,
+              "marginBottom": 100
+            }
+          }
+        ]
+      },
+      {
+        "title": "Actor View",
+        "reports": [
+          {
+            "title": "Select a person",
+            "query": "MATCH (p:Person)--(m:Movie)\nRETURN p.name as Person, COUNT(m) as Movies \nORDER BY Movies DESC\n\n\n",
+            "width": 4,
+            "height": 2,
+            "x": 2,
+            "y": 0,
+            "type": "table",
+            "selection": {},
+            "settings": {
+              "actionsRules": [
+                {
+                  "condition": "Click",
+                  "field": "Person",
+                  "value": "Person",
+                  "customization": "set variable",
+                  "customizationValue": "person_name"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Graph view for this person",
+            "query": "MATCH path=(p:Person)--()\nWHERE p.name = $neodash_person_name\nRETURN path\n\n",
+            "width": 6,
+            "height": 2,
+            "x": 6,
+            "y": 0,
+            "type": "graph",
+            "selection": {
+              "Person": "name",
+              "Movie": "title"
+            },
+            "settings": {
+              "nodeColorScheme": "paired"
+            }
+          },
+          {
+            "title": "About this page",
+            "query": "On this page, you can select a person from a table, and dynamically view other visualizations update.\n\n",
+            "width": 2,
+            "height": 1,
+            "x": 0,
+            "y": 0,
+            "type": "text",
+            "selection": {},
+            "settings": {
+              "replaceGlobalParameters": true
+            }
+          },
+          {
+            "title": "Movies for the selected person",
+            "query": "MATCH path=(p)-->(m:Movie)\nWHERE p.name = $neodash_person_name\nRETURN m.title as Movie, m.tagline as Tagline, m.released as Released\n\n",
+            "width": 5,
+            "height": 2,
+            "x": 0,
+            "y": 3,
+            "type": "table",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "The highest voted movies for this person",
+            "query": "MATCH path=(p:Person)--(m:Movie)\nWHERE p.name = $neodash_person_name\nRETURN p, apoc.create.vRelationship(p, \"IN\", {weight: m.votes}, m), m\n\n",
+            "width": 7,
+            "height": 2,
+            "x": 5,
+            "y": 2,
+            "type": "sankey",
+            "selection": {
+              "Person": "name",
+              "Movie": "title"
+            },
+            "settings": {
+              "labelProperty": "weight"
+            }
+          },
+          {
+            "title": "Selected person",
+            "query": "RETURN $neodash_person_name\n\n\n",
+            "width": 2,
+            "height": 1,
+            "x": 0,
+            "y": 2,
+            "type": "value",
+            "selection": {},
+            "settings": {
+              "fontSize": 26
+            }
+          }
+        ]
+      }
+    ],
+    "parameters": {}
+  }
