@@ -17,6 +17,8 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import NeoRadarChart from '../chart/radar/RadarChart';
+import NeoGaugeChart from "../chart/gauge/GaugeChart";
+
 
 
 export enum SELECTION_TYPES {
@@ -92,7 +94,7 @@ export const REPORT_TYPES = {
         maxRecords: 1000,
         // The idea is to match a setting to its dependency, the operator represents the kind of relationship
         // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
-        disabledDependency: {relationshipParticleSpeed: {dependsOn: "relationshipParticles", operator: false}},
+        disabledDependency: { relationshipParticleSpeed: { dependsOn: "relationshipParticles", operator: false } },
         settings: {
             "nodeColorScheme": {
                 label: "Node Color Scheme",
@@ -480,7 +482,6 @@ export const REPORT_TYPES = {
             }
         }
     },
-
     "line": {
         label: "Line Chart",
         component: NeoLineChart,
@@ -882,6 +883,77 @@ export const REPORT_TYPES = {
                 label: "Report Description",
                 type: SELECTION_TYPES.MULTILINE_TEXT,
                 default: "Enter markdown here..."
+            }
+        }
+    },
+    "gauge": {
+        label: "Gauge Chart",
+        component: NeoGaugeChart,
+        helperText: <div>A gauge chart expects a single <code>value</code>.</div>,
+        maxRecords: 1,
+        selection: {
+            "value": {
+                label: "Value",
+                type: SELECTION_TYPES.NUMBER,
+                key: true
+            }
+        },
+        withoutFooter: true,
+        settings: {
+            "nrOfLevels": {
+                label: "Number of levels",
+                type: SELECTION_TYPES.NUMBER,
+                default: 3
+            },
+            "arcsLength": {
+                label: "Comma-separated length of each arc",
+                type: SELECTION_TYPES.TEXT,
+                default: "0.15, 0.55, 0.3"
+            },
+            "arcPadding": {
+                label: "Arc padding",
+                type: SELECTION_TYPES.TEXT,
+                default: "0.02"
+            },
+            "colors": {
+                label: "Comma-separated arc colors",
+                type: SELECTION_TYPES.TEXT,
+                default: "#5BE12C, #F5CD19, #EA4228"
+            },
+            "textColor": {
+                label: "Color of the text",
+                type: SELECTION_TYPES.TEXT,
+                default: "black"
+            },
+            "animDelay": {
+                label: "Delay in ms before needle animation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "animateDuration": {
+                label: "Duration in ms for needle animation",
+                type: SELECTION_TYPES.NUMBER,
+                default: 2000
+            },
+            "marginLeft": {
+                label: "Margin Left (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginRight": {
+                label: "Margin Right (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 24
+            },
+            "marginTop": {
+                label: "Margin Top (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
+            },
+            "marginBottom": {
+                label: "Margin Bottom (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 40
             }
         }
     },
