@@ -6,8 +6,6 @@ import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-import { CARD_SIZES } from '../../config/CardConfig';
-import { FormControl, InputLabel, Select } from "@material-ui/core";
 
 
 const NeoCardSettingsContent = ({

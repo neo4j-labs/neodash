@@ -68,7 +68,7 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: cd gallery && yarn install
-   - run: cd gallery && yarn run build
+   - run: cd gallery && CI=false yarn run build
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
