@@ -16,6 +16,13 @@ jobs:
      uses: actions/setup-node@v1
      with:
        node-version: ${{ matrix.node-version }}
+   - name: Creating Neo4j Container
+     run: |
+       chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+       ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+       sleep 30s
+       chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
+       ./scripts/docker-neo4j-initializer/start-movies-db.sh
    - run: rm -rf docs
    - run: yarn install
    - name: Cypress run
