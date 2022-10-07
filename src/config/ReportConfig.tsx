@@ -898,7 +898,6 @@ export const REPORT_TYPES = {
                 key: true
             }
         },
-        useRecordMapper: false,
         withoutFooter: true,
         settings: {
             "nrOfLevels": {
