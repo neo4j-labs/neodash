@@ -56,7 +56,7 @@ jobs:
        aws-region: us-west-1
    - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
    - run: aws s3 rm s3://neodash-test.graphapp.io/ --recursive && aws s3 sync dist s3://neodash-test.graphapp.io/ --acl public-read
- build-gallery:
+ deploy-gallery:
    needs: build-test
    runs-on: ubuntu-latest
    strategy:
