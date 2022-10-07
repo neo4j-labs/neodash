@@ -4,6 +4,7 @@ New features:
 - Added **Gauge Charts**, a contribution of the [BlueHound](https://github.com/zeronetworks/BlueHound) fork.
 - Updated testing pipeline to work as an independent procedure.
 - Added option to select a different Neo4j database for each report.
+- Added **Report Actions**, a neodash extension (available in beta) only on [https://neodash.graphapp.io](https://neodash.graphapp.io).
 
 Bug fixes:
 - Fixed issue preventing dashboards to be shared with a non-standard database name.
