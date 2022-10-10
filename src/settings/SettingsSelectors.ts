@@ -11,9 +11,11 @@ a user can modify the database that is used by a card with a new option inside t
  */
 export const getDatabase = (state: any, pageNumber:number, cardIndex:number) => {
     if(state == undefined || pageNumber == undefined || cardIndex == undefined){
+        // TODO - use DMBS default database instead of neo4j.
         return "neo4j";
     }
     if( state.dashboard.pages[pageNumber] == undefined || state.dashboard.pages[pageNumber].reports[cardIndex] == undefined){
+        // TODO - use DMBS default database instead of neo4j.
         return "neo4j";
     }
     let reportDatabase = state.dashboard.pages[pageNumber].reports[cardIndex].database;
