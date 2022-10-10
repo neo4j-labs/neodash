@@ -78,7 +78,7 @@ jobs:
       context: .
       file: ./Dockerfile
       push: true
-      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.1.8
+      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.1.9
  build-npm:
    needs: build-test
    runs-on: ubuntu-latest

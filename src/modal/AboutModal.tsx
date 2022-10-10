@@ -12,7 +12,7 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
     const app = "NeoDash - Neo4j Dashboard Builder";
-    const version = "2.1.8";
+    const version = "2.1.9";
 
     const downloadDebugFile = () => {
         const element = document.createElement("a");
