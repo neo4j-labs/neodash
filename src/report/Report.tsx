@@ -56,9 +56,6 @@ export const NeoReport = ({
 
         // Determine the set of fields from the configurations.
         var numericFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.NUMBER && !REPORT_TYPES[type].selection[field].multiple) : [];
-        var numericOrDatetimeFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.NUMBER_OR_DATETIME && !REPORT_TYPES[type].selection[field].multiple) : [];
-        var textFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.TEXT && !REPORT_TYPES[type].selection[field].multiple) : [];
-        var optionalFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].optional == true) : [];
 
         // Take care of multi select fields, they need to be added to the numeric fields too.
         if (REPORT_TYPES[type].selection) {
@@ -69,7 +66,6 @@ export const NeoReport = ({
             });
         }
 
-        const defaultKeyField = (REPORT_TYPES[type].selection) ? Object.keys(REPORT_TYPES[type].selection).find(field => REPORT_TYPES[type].selection[field].key == true) : undefined;
         const useNodePropsAsFields = REPORT_TYPES[type].useNodePropsAsFields == true;
         const useReturnValuesAsFields = REPORT_TYPES[type].useReturnValuesAsFields == true;
 

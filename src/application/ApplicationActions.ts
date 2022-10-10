@@ -88,9 +88,9 @@ export const setShareDetailsFromUrl = (type: string, id: string, standalone: boo
 });
 
 export const SET_STANDALONE_ENABLED = 'APPLICATION/SET_STANDALONE_ENABLED';
-export const setStandaloneEnabled = (standalone: boolean, standaloneProtocol: string, standaloneHost: string, standalonePort: string, standaloneDatabase: string, standaloneDashboardName: string, standaloneDashboardDatabase: string, standaloneDashboardURL: string ) => ({
+export const setStandaloneEnabled = (standalone: boolean, standaloneProtocol: string, standaloneHost: string, standalonePort: string, standaloneDatabase: string, standaloneDashboardName: string, standaloneDashboardDatabase: string, standaloneDashboardURL: string, standaloneUsername: string, standalonePassword: string) => ({
     type: SET_STANDALONE_ENABLED,
-    payload: { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase, standaloneDashboardURL },
+    payload: { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase, standaloneDashboardURL, standaloneUsername, standalonePassword },
 });
 
 export const SET_STANDALONE_MODE = 'APPLICATION/SET_STANDALONE_MODE';

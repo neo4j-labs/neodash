@@ -204,7 +204,7 @@ const NeoCard = ({
 const mapStateToProps = (state, ownProps) => ({
     report: getReportState(state, ownProps.index),
     editable: getDashboardIsEditable(state),
-    database: getDatabase(state, ownProps.dashboardSettings.pagenumber, ownProps.index),
+    database: getDatabase(state, ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined, ownProps.index),
     globalParameters: getGlobalParameters(state)
 });
 
