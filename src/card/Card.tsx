@@ -57,16 +57,20 @@ const NeoCard = ({
     const {driver} = useContext<Neo4jContextState>(Neo4jContext);
 
     const [databaseList, setDatabaseList] = React.useState([database])
+    const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
 
     // fetching the list of databases from neo4j, filtering out the 'system' db
     useEffect(() => {
-        loadDatabaseListFromNeo4j(driver, (result) => {
-            let index = result.indexOf("system")
-            if (index > -1) { // only splice array when item is found
-                result.splice(index, 1); // 2nd parameter means remove one item only
-            }
-            setDatabaseList(result)
-        });
+        if(!databaseListLoaded){
+            loadDatabaseListFromNeo4j(driver, (result) => {
+                let index = result.indexOf("system")
+                if (index > -1) { // only splice array when item is found
+                    result.splice(index, 1); // 2nd parameter means remove one item only
+                }
+                setDatabaseList(result)
+            });
+            setDatabaseListLoaded(true);
+        }
     }, [report.query]);
 
     const [settingsOpen, setSettingsOpen] = React.useState(false);
