@@ -73,7 +73,9 @@ export const applicationGetStandaloneSettings = (state: any) => {
         "standaloneDatabase": state.application.standaloneDatabase,
         "standaloneDashboardName": state.application.standaloneDashboardName,
         "standaloneDashboardDatabase": state.application.standaloneDashboardDatabase,
-        "standaloneDashboardURL": state.application.standaloneDashboardURL
+        "standaloneDashboardURL": state.application.standaloneDashboardURL,
+        "standaloneUsername": state.application.standaloneUsername,
+        "standalonePassword": state.application.standalonePassword
     }
 }
 

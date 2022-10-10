@@ -10,9 +10,17 @@ The database related to a card is, at its start, the same as the one defined ins
 a user can modify the database that is used by a card with a new option inside the card itself.
  */
 export const getDatabase = (state: any, pageNumber:number, cardIndex:number) => {
-    let reportDatabase = state.dashboard.pages[pageNumber].reports[cardIndex].database
-    if (reportDatabase != undefined) {
+    if(state == undefined || pageNumber == undefined || cardIndex == undefined){
+        // TODO - use DMBS default database instead of neo4j.
+        return "neo4j";
+    }
+    if( state.dashboard.pages[pageNumber] == undefined || state.dashboard.pages[pageNumber].reports[cardIndex] == undefined){
+        // TODO - use DMBS default database instead of neo4j.
+        return "neo4j";
+    }
+    let reportDatabase = state.dashboard.pages[pageNumber].reports[cardIndex].database;
+    if (reportDatabase !== undefined) {
         return reportDatabase
     }
-    return state.application.connection.database.length > 0 ? state.application.connection.database : "neo4j"
+    return state.application.connection.database ? state.application.connection.database : "neo4j";
 }
