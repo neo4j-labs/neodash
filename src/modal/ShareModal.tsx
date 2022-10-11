@@ -23,6 +23,7 @@ import { applicationGetConnection } from '../application/ApplicationSelectors';
 
 // const shareBaseURL = "http://localhost:3000";
 const shareBaseURL = "http://neodash.graphapp.io";
+const shareLocalURL = window.location.origin.startsWith("file")?  shareBaseURL : window.location.origin;
 const styles = {
 
 };
@@ -198,7 +199,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                         <Button
                             component="label"
                             onClick={(e) => {
-                                setShareLink((( selfHosted == "Yes" ? window.location.origin :shareBaseURL ) + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) + "&dashboardDatabase=" + encodeURIComponent(dashboardDatabase) +
+                                setShareLink((( selfHosted == "Yes" ? shareLocalURL :shareBaseURL ) + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) + "&dashboardDatabase=" + encodeURIComponent(dashboardDatabase) +
                                     (shareConnectionDetails == "Yes" ? "&credentials=" + encodeURIComponent(connection.protocol + "://"
                                         + connection.username + ":" + connection.password + "@" + connection.database + ":" + connection.url + ":" + connection.port) : "")
                                     + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")));
