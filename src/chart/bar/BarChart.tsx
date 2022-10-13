@@ -36,28 +36,32 @@ const NeoBarChart = (props: ChartProps) => {
 
     const keys = {};
     const data: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
-        if (!selection || !selection['index'] || !selection['value']) {
-            return data;
-        }
-        const index = convertRecordObjectToString(row.get(selection['index']));
-        const idx = data.findIndex(item => item.index === index)
+        try {
+            if (!selection || !selection['index'] || !selection['value']) {
+                return data;
+            }
+            const index = convertRecordObjectToString(row.get(selection['index']));
+            const idx = data.findIndex(item => item.index === index)
 
-        const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
-        const value = recordToNative(row.get(selection['value']));
+            const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
+            const value = recordToNative(row.get(selection['value']));
 
-        if (isNaN(value)) {
-            return data;
-        }
-        keys[key] = true;
+            if (isNaN(value)) {
+                return data;
+            }
+            keys[key] = true;
 
-        if (idx > -1) {
-            data[idx][key] = value
+            if (idx > -1) {
+                data[idx][key] = value
+            }
+            else {
+                data.push({ index, [key]: value })
+            }
+            return data
+        } catch (e) {
+            console.error(e);
+            return [];
         }
-        else {
-            data.push({ index, [key]: value })
-        }
-
-        return data
     }, [])
         .map(row => {
             Object.keys(keys).forEach(key => {
@@ -104,7 +108,7 @@ const NeoBarChart = (props: ChartProps) => {
     }
 
     // TODO: Get rid of duplicate pie slice names...
-    
+
     return <ResponsiveBar
         layout={settings.layout == "horizontal" ? 'horizontal' : 'vertical'}
         groupMode={groupMode == "stacked" ? 'stacked' : 'grouped'}

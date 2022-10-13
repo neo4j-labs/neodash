@@ -20,29 +20,33 @@ const NeoPieChart = (props: ChartProps) => {
 
     const keys = {};
     const data: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
-        if (!selection || !selection['index'] || !selection['value']) {
-            return data;
+        try {
+            if (!selection || !selection['index'] || !selection['value']) {
+                return data;
+            }
+
+            const index = convertRecordObjectToString(row.get(selection['index']));
+            const idx = data.findIndex(item => item.index === index)
+            const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
+            const value = recordToNative(row.get(selection['value']));
+
+            if (isNaN(value)) {
+                return data;
+            }
+            keys[key] = true;
+
+            if (idx > -1) {
+                data[idx][key] = value
+            }
+            else {
+                data.push({ id: index, label: index, value: value })
+            }
+
+            return data
+        } catch (e) {
+            console.error(e);
+            return [];
         }
-
-        const index = convertRecordObjectToString(row.get(selection['index']));
-        const idx = data.findIndex(item => item.index === index)
-
-        const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
-        const value = recordToNative(row.get(selection['value']));
-
-        if (isNaN(value)) {
-            return data;
-        }
-        keys[key] = true;
-
-        if (idx > -1) {
-            data[idx][key] = value
-        }
-        else {
-            data.push({ id: index, label: index, value: value })
-        }
-
-        return data
     }, [])
         .map(row => {
             Object.keys(keys).forEach(key => {
@@ -99,7 +103,7 @@ const NeoPieChart = (props: ChartProps) => {
     if (data.length == 0) {
         return <NoDrawableDataErrorMessage />
     }
-    
+
     return <ResponsivePie
         data={data}
         sortByValue={sortByValue}
