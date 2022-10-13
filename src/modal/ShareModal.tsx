@@ -167,6 +167,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                 setShareConnectionDetails(e)
                             }}
                         />
+                            {shareLocalURL != shareBaseURL ?
                         <NeoSetting key={"standalone"} name={"standalone"}
                             value={shareStandalone}
                             style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
@@ -182,7 +183,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                     setShareConnectionDetails("Yes")
                                 }
                             }}
-                        />
+                        /> : <></>}
                         <NeoSetting key={"selfHosted"} name={"selfHosted"}
                                     value={selfHosted}
                                     style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
