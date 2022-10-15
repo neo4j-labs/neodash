@@ -23,6 +23,7 @@ import { applicationGetConnection } from '../application/ApplicationSelectors';
 
 // const shareBaseURL = "http://localhost:3000";
 const shareBaseURL = "http://neodash.graphapp.io";
+const shareLocalURL = window.location.origin.startsWith("file")?  shareBaseURL : window.location.origin;
 const styles = {
 
 };
@@ -42,6 +43,8 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
     const [shareFileURL, setShareFileURL] = React.useState("");
     const [shareConnectionDetails, setShareConnectionDetails] = React.useState("No");
     const [shareStandalone, setShareStandalone] = React.useState("No");
+    const [selfHosted, setSelfHosted] = React.useState("No");
+
     const [shareLink, setShareLink] = React.useState(null);
 
 
@@ -164,6 +167,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                 setShareConnectionDetails(e)
                             }}
                         />
+                            {shareLocalURL != shareBaseURL ?
                         <NeoSetting key={"standalone"} name={"standalone"}
                             value={shareStandalone}
                             style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
@@ -179,11 +183,24 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                                     setShareConnectionDetails("Yes")
                                 }
                             }}
+                        /> : <></>}
+                        <NeoSetting key={"selfHosted"} name={"selfHosted"}
+                                    value={selfHosted}
+                                    style={{ marginLeft: "0px", width: "100%", marginBottom: "10px" }}
+                                    type={SELECTION_TYPES.LIST}
+                                    helperText={"Share the dashboard using self Hosted Neodash, otherwise neodash.graphapp.io will be used"}
+                                    label={"Self Hosted Dashboard"}
+                                    defaultValue={"No"}
+                                    choices={["Yes", "No"]}
+                                    onChange={(e) => {
+                                        setShareLink(null);
+                                        setSelfHosted(e);
+                                    }}
                         />
                         <Button
                             component="label"
                             onClick={(e) => {
-                                setShareLink((shareBaseURL + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) + "&dashboardDatabase=" + encodeURIComponent(dashboardDatabase) +
+                                setShareLink((( selfHosted == "Yes" ? shareLocalURL :shareBaseURL ) + "/?share&type=" + shareType + "&id=" + encodeURIComponent(shareID) + "&dashboardDatabase=" + encodeURIComponent(dashboardDatabase) +
                                     (shareConnectionDetails == "Yes" ? "&credentials=" + encodeURIComponent(connection.protocol + "://"
                                         + connection.username + ":" + connection.password + "@" + connection.database + ":" + connection.url + ":" + connection.port) : "")
                                     + (shareStandalone == "Yes" ? "&standalone=" + shareStandalone : "")));
