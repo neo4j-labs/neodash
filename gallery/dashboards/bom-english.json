@@ -1,0 +1,251 @@
+{
+    "title": "BOM - Bill of Material",
+    "version": "2.1",
+    "settings": {
+      "pagenumber": 0,
+      "editable": true,
+      "fullscreenEnabled": true,
+      "parameters": {
+        "neodash_supplier_name": "Audio Wizardry",
+        "neodash_model_number": null,
+        "neodash_model_name": "EveryRoad GPS Car Navigation Unit - Model 300 - US Edition",
+        "neodash_model_name_1": "EveryRoad GPS Car Navigation Unit - Model 300 - US Edition",
+        "neodash_model_name_2": "EveryRoad GPS Car Navigation Unit - Model 500 - UK Edition"
+      }
+    },
+    "pages": [
+      {
+        "title": "Suppliers",
+        "reports": [
+          {
+            "x": 0,
+            "y": 0,
+            "title": "Data model",
+            "query": "CALL db.schema.visualization()\nYIELD nodes, relationships\nWITH [x IN nodes WHERE NOT apoc.node.labels(x)[0] CONTAINS \"_\"] AS nodes, [r IN relationships WHERE NOT type(r) ='SIMILAR'] AS rels\nRETURN *;\n\n\n",
+            "width": "6",
+            "type": "graph",
+            "height": 2,
+            "selection": {
+              "Model": "name",
+              "Supplier": "name",
+              "Component": "name"
+            },
+            "settings": {
+              "nodePositions": {}
+            }
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "title": "Suppliers",
+            "query": "MATCH (s:Supplier) RETURN s.name AS `supplier name`\n\n\n",
+            "width": 3,
+            "type": "table",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "nodePositions": {}
+            }
+          },
+          {
+            "x": 9,
+            "y": 0,
+            "title": "Pick a supplier",
+            "query": "MATCH (n:`Supplier`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value LIMIT 5",
+            "width": "3",
+            "type": "select",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "type": "Node Property",
+              "entityType": "Supplier",
+              "propertyType": "name",
+              "parameterName": "neodash_supplier_name"
+            }
+          },
+          {
+            "x": 0,
+            "y": 2,
+            "title": "Model connected to supplier",
+            "query": "MATCH p=(m:Model)-[*]->(s:Supplier {name: $neodash_supplier_name}) return p\n\n\n",
+            "width": "12",
+            "type": "graph",
+            "height": 2,
+            "selection": {
+              "Model": "name",
+              "Component": "name",
+              "Supplier": "name"
+            },
+            "settings": {
+              "nodePositions": {}
+            }
+          }
+        ]
+      },
+      {
+        "title": "BOM models",
+        "reports": [
+          {
+            "x": 0,
+            "y": 0,
+            "title": "Models",
+            "query": "MATCH (m:Model) RETURN m.number AS ID, m.name AS name\n\n\n",
+            "width": "6",
+            "type": "table",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "nodePositions": {}
+            }
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "title": "Pick a model",
+            "query": "MATCH (n:`Model`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value LIMIT 5",
+            "width": "6",
+            "type": "select",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "nodePositions": {},
+              "type": "Node Property",
+              "entityType": "Model",
+              "propertyType": "name",
+              "parameterName": "neodash_model_name"
+            }
+          },
+          {
+            "x": 0,
+            "y": 2,
+            "title": "BOM",
+            "query": "MATCH path = (m:Model {name: $neodash_model_name})-[:HAS*]->(:Component)\nRETURN path\n\n",
+            "width": "6",
+            "type": "graph",
+            "height": 2,
+            "selection": {
+              "Model": "name",
+              "Component": "number"
+            },
+            "settings": {
+              "nodePositions": {},
+              "nodeColorScheme": "neodash",
+              "layout": "tree"
+            }
+          },
+          {
+            "x": 6,
+            "y": 2,
+            "title": "Prices",
+            "query": "MATCH path = (m:Model {name: $neodash_model_name})-[:HAS*]->(c:Component)\nWITH c.name AS name, toFloat(c.price) AS price, reduce(acc = 1, qty IN [r IN relationships(path)| toInteger(r.count)] | acc * qty) AS quantity\nRETURN name, round(price, 2) AS price, quantity, round(price*quantity, 2) AS total_price\nORDER BY total_price DESC",
+            "width": "6",
+            "type": "table",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "nodePositions": {}
+            }
+          }
+        ]
+      },
+      {
+        "title": " Model vs Model",
+        "reports": [
+          {
+            "x": 0,
+            "y": 0,
+            "title": "Models List",
+            "query": "MATCH (m:Model) RETURN m.name AS name",
+            "width": 7,
+            "type": "table",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "type": "Node Property",
+              "entityType": "Model",
+              "propertyType": "name",
+              "parameterName": "neodash_model_name"
+            }
+          },
+          {
+            "x": 7,
+            "y": 0,
+            "title": "Model 1",
+            "query": "MATCH (n:`Model`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value LIMIT 5",
+            "width": 2,
+            "type": "select",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "type": "Node Property",
+              "entityType": "Model",
+              "propertyType": "name",
+              "parameterName": "neodash_model_name_1",
+              "id": "1"
+            }
+          },
+          {
+            "x": 9,
+            "y": 0,
+            "title": "Model 2",
+            "query": "MATCH (n:`Model`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value LIMIT 5",
+            "width": 2,
+            "type": "select",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "type": "Node Property",
+              "entityType": "Model",
+              "propertyType": "name",
+              "parameterName": "neodash_model_name_2",
+              "id": "2"
+            }
+          },
+          {
+            "x": 7,
+            "y": 2,
+            "title": "Components in both",
+            "query": "MATCH (m:Model {name: $neodash_model_name_1})-[:HAS*]->(c:Component)\nWITH collect(c) as in_first\nMATCH (m2:Model {name: $neodash_model_name_2})-[:HAS*]->(c2:Component) WHERE c2 IN in_first\nRETURN c2.name AS component, c2.number AS ref\n\n\n",
+            "width": 4,
+            "type": "table",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "nodePositions": {}
+            }
+          },
+          {
+            "x": 0,
+            "y": 2,
+            "title": "Components only in first",
+            "query": "MATCH (m:Model {name: $neodash_model_name_2})-[:HAS*]->(c:Component)\nWITH collect(c) as in_first\nMATCH (m2:Model {name: $neodash_model_name_1})-[:HAS*]->(c2:Component) WHERE NOT c2 IN in_first\nRETURN c2.name AS component, c2.number AS ref\n\n\n",
+            "width": 4,
+            "type": "table",
+            "height": 2,
+            "selection": {},
+            "settings": {
+              "nodePositions": {}
+            }
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "title": "Similarity",
+            "query": "MATCH (m:Model {name: $neodash_model_name_1})-[:HAS*]->(c:Component)\nWITH collect(c) as in_first\nMATCH (m2:Model {name: $neodash_model_name_2})-[:HAS*]->(c2:Component) WHERE c2 IN in_first\nWITH in_first, count(c2) AS inter\nMATCH (m3:Model {name: $neodash_model_name_2})-[:HAS*]->(c3:Component)\nWITH size(in_first) - inter AS in_first, inter, size(collect(c3)) - inter as in_second\nWITH apoc.coll.zip([\"first only\", \"both\", \"second only\"], [in_first, inter, in_second]) AS l\nUNWIND l AS row\nRETURN row[0] AS name, row[1] AS cardinality\n\n\n",
+            "width": 3,
+            "type": "pie",
+            "height": 2,
+            "selection": {
+              "index": "name",
+              "value": "cardinality",
+              "key": "(none)"
+            },
+            "settings": {
+              "nodePositions": {}
+            }
+          }
+        ]
+      }
+    ],
+    "parameters": {}
+  }
