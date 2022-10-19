@@ -5,7 +5,12 @@ import { NEODASH_VERSION } from "../dashboard/DashboardReducer";
 import { loadDashboardFromNeo4jByNameThunk, loadDashboardFromNeo4jByUUIDThunk, loadDashboardThunk, upgradeDashboardVersion } from "../dashboard/DashboardThunks";
 import { createNotificationThunk } from "../page/PageThunks";
 import { QueryStatus, runCypherQuery } from "../report/ReportQueryRunner";
-import { setPageNumberThunk, updateGlobalParametersThunk, updateGlobalParameterThunk } from "../settings/SettingsThunks";
+import {
+    setPageNumberThunk,
+    updateGlobalParametersThunk,
+    updateGlobalParameterThunk,
+    updateReservedParameterThunk
+} from "../settings/SettingsThunks";
 import {
     setConnected, setConnectionModalOpen, setConnectionProperties, setDesktopConnectionProperties,
     resetShareDetails, setShareDetailsFromUrl, setWelcomeScreenOpen, setDashboardToLoadAfterConnecting,
@@ -40,6 +45,7 @@ export const createConnectionThunk = (protocol, url, port, database, username, p
                 dispatch(setConnectionProperties(protocol, url, port, database, username, password));
                 dispatch(setConnectionModalOpen(false));
                 dispatch(setConnected(true));
+                dispatch(updateReservedParameterThunk("neo_reserved_user", username));
 
                 // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
                 const application = getState().application;
