@@ -1,0 +1,10 @@
+*.babelrc
+*.json
+*.html
+*.css
+*.yml
+*.git
+*.svn
+*.hg
+*.md
+./node_modules
