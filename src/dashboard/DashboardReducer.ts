@@ -6,14 +6,15 @@ import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../pa
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
 import { CREATE_PAGE, REMOVE_PAGE, SET_DASHBOARD_TITLE, RESET_DASHBOARD_STATE, SET_DASHBOARD, MOVE_PAGE } from './DashboardActions';
 
-export const NEODASH_VERSION = "2.1";
+export const NEODASH_VERSION = "2.2";
 
 export const initialState = {
     title: "",
     version: NEODASH_VERSION,
     settings: SETTINGS_INITIAL_STATE,
     pages: [FIRST_PAGE_INITIAL_STATE],
-    parameters: {}
+    parameters: {},
+    extensions: {},
 }
 
 

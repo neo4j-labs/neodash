@@ -83,7 +83,14 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
             dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.1. You might need to refresh this page."));
             return
         }
-        if (dashboard["version"] != "2.1") {
+        if (dashboard["version"] == "2.1") {
+            const upgradedDashboard = upgradeDashboardVersion(dashboard, "2.1", "2.2");
+            dispatch(setDashboard(upgradedDashboard))
+            dispatch(setWelcomeScreenOpen(false))
+            dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.2. You might need to refresh this page."));
+            return
+        }
+        if (dashboard["version"] != "2.2") {
             throw ("Invalid dashboard version: " + dashboard.version + ". Try restarting the application, or retrieve your cached dashboard using a debug report.");
         }
 
@@ -209,6 +216,12 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
 
+    if (origin == "2.1" && target == "2.2") {
+        // Set the default extensions to an empty list.
+        dashboard["extensions"] = {};
+        dashboard["version"] = "2.2";
+        return dashboard;
+    }
     if (origin == "2.0" && target == "2.1") {
         dashboard["pages"].forEach((p, i) => {
             // From v2.1 onwards, reports will have their x,y positions explicitly specified.

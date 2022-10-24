@@ -13,6 +13,7 @@ import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { EXAMPLE_REPORTS } from '../config/ExampleConfig';
 import WidgetsIcon from '@material-ui/icons/Widgets';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 
 export const NeoReportExamplesModal = ({ database }) => {
@@ -30,13 +31,20 @@ export const NeoReportExamplesModal = ({ database }) => {
         <div>
             <ListItem button onClick={handleClickOpen}>
                 <ListItemIcon>
-                    <CategoryIcon />
+                    <AssessmentIcon />
                 </ListItemIcon>
                 <ListItemText primary="Examples" />
             </ListItem>
 
             {open ? <Dialog maxWidth={"xl"} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
+                    <AssessmentIcon style={{
+                        height: "30px",
+                        paddingTop: "4px",
+                        marginBottom: "-8px",
+                        marginRight: "5px",
+                        paddingBottom: "5px"
+                    }} />
                     Report Examples
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >

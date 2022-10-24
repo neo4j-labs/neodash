@@ -18,6 +18,7 @@ import { getDashboardSettings } from "../DashboardSelectors";
 import { updateDashboardSetting } from "../../settings/SettingsActions";
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import CategoryIcon from '@material-ui/icons/Category';
+import { NeoExtensionsModal } from "../../modal/ExtensionsModal";
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
@@ -95,13 +96,19 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
             </List>
             <Divider />
             <List>
+
+                <NeoReportExamplesModal database={connection.database}></NeoReportExamplesModal>
+                <NeoExtensionsModal></NeoExtensionsModal>
+
+            </List>
+            <Divider />
+            <List>
                 <ListItem button onClick={(e) => window.open("https://neo4j.com/labs/neodash/2.1/user-guide/", "_blank")}>
                     <ListItemIcon>
                         <LibraryBooksIcon />
                     </ListItemIcon>
                     <ListItemText primary="Documentation" />
                 </ListItem>
-                <NeoReportExamplesModal database={connection.database}></NeoReportExamplesModal>
                 <ListItem button onClick={onAboutModalOpen}>
                     <ListItemIcon>
                         <InfoOutlinedIcon />

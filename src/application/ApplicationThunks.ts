@@ -280,7 +280,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             if (state.dashboard.version == "2.0") {
                 const upgradedDashboard = upgradeDashboardVersion(state.dashboard, "2.0", "2.1");
                 dispatch(setDashboard(upgradedDashboard));
-                dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.0. You might need to refresh this page."));
+                dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.1. You might need to refresh this page."));
+            }
+            if (state.dashboard.version == "2.1") {
+                const upgradedDashboard = upgradeDashboardVersion(state.dashboard, "2.1", "2.2");
+                dispatch(setDashboard(upgradedDashboard));
+                dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.2. You might need to refresh this page."));
             }
         }
 
