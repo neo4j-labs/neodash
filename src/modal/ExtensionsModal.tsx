@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
-import { Checkbox, FormControlLabel, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
+import { Checkbox, Chip, FormControlLabel, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
 import { EXTENSIONS } from '../config/ExtensionConfig';
 
 
@@ -56,20 +56,29 @@ export const NeoExtensionsModal = () => {
                         <hr></hr>
 
                         {Object.values(EXTENSIONS).map(e => {
-                            return <div style={{opacity: e.enabled ? 1.0 : 0.6}}>
-                                
+                            return <div style={{ opacity: e.enabled ? 1.0 : 0.6 }}>
+
                                 <table>
                                     <tr>
                                         <td>
-                                            <h3>{e.label} {e.enabled ? "" : <i>(Pro Feature)</i>}</h3>
+                                            <h3>
+                                                {e.label}
+                                                &nbsp; &nbsp;
+                                                {e.enabled ? "" : <Chip
+                                                    label="Pro Feature"
+                                                    color="primary"
+                                                    size="small"
+                                                    variant="outlined"
+                                                />}
+                                            </h3>
                                         </td>
-                                        <td style={{width: 50}}>
-                                            
+                                        <td style={{ width: 50 }}>
+
                                         </td>
-                                        <td style={{float: 'right'}}>
+                                        <td style={{ float: 'right' }}>
                                             <Tooltip title="Enable the extension" aria-label="">
                                                 <FormControlLabel
-                                                    control={<Checkbox style={{ fontSize: "small"}} 
+                                                    control={<Checkbox style={{ fontSize: "small" }}
                                                         checked={false} onChange={e => alert(e)} name="enable" />}
                                                     label={<span color="red">Enable</span>}
                                                 />
@@ -82,7 +91,7 @@ export const NeoExtensionsModal = () => {
                                             <p>Author: <a href={e.link}>{e.author}</a></p>
                                         </td>
                                         <td>
-                                            
+
                                         </td>
                                         <td>
                                             <br />
