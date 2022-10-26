@@ -24,7 +24,7 @@ export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => 
     }
 }
 
-export const updateReservedParameterThunk = (key, value) => (dispatch: any, getState: any) => {
+export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getState: any) => {
     try {
         const settings = getState().dashboard.settings;
         const parameters = settings.parameters ? settings.parameters : {};
@@ -41,23 +41,23 @@ export const updateReservedParameterThunk = (key, value) => (dispatch: any, getS
     }
 }
 
-export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getState: any) => {
-    try {
-        if(!key.startsWith("neo_reserved")){
-            const settings = getState().dashboard.settings;
-            const parameters = settings.parameters ? settings.parameters : {};
-            if (value !== undefined) {
-                parameters[key] = value;
-            } else {
-                delete parameters[key];
-            }
-            dispatch(updateDashboardSetting("parameters", { ...parameters }))
-        } else {
-            dispatch(createNotificationThunk("Unable to update global parameter", "Unable to update reserved parameters"));
-        }
-    } catch (e) {
-        dispatch(createNotificationThunk("Unable to update global parameter", e));
-    }
+export const updateSessionParameterThunk = (key, value) => (dispatch: any, getState: any) => {
+    // try {
+    //     if(!key.startsWith("neo_reserved")){
+    //         const settings = getState().dashboard.settings;
+    //         const parameters = settings.parameters ? settings.parameters : {};
+    //         if (value !== undefined) {
+    //             parameters[key] = value;
+    //         } else {
+    //             delete parameters[key];
+    //         }
+    //         dispatch(updateDashboardSetting("parameters", { ...parameters }))
+    //     } else {
+    //         dispatch(createNotificationThunk("Unable to update global parameter", "Unable to update reserved parameters"));
+    //     }
+    // } catch (e) {
+    //     dispatch(createNotificationThunk("Unable to update global parameter", e));
+    // }
 }
 
 
