@@ -19,7 +19,7 @@ import {
 import {toggleReportSettings} from './CardActions';
 import {getReportState} from './CardSelectors';
 import {debounce, Dialog, DialogContent} from '@material-ui/core';
-import {getDashboardIsEditable, getDatabase, getGlobalParameters} from '../settings/SettingsSelectors';
+import {getDashboardIsEditable, getDatabase, getGlobalParameters, getSessionParameters} from '../settings/SettingsSelectors';
 import {updateGlobalParameterThunk} from '../settings/SettingsThunks';
 import {createNotificationThunk} from '../page/PageThunks';
 import useDimensions from 'react-cool-dimensions';
@@ -209,7 +209,7 @@ const mapStateToProps = (state, ownProps) => ({
     report: getReportState(state, ownProps.index),
     editable: getDashboardIsEditable(state),
     database: getDatabase(state, ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined, ownProps.index),
-    globalParameters: getGlobalParameters(state)
+    globalParameters: {...getGlobalParameters(state), ...getSessionParameters(state)} 
 });
 
 const mapDispatchToProps = dispatch => ({

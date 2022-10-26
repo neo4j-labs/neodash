@@ -1,10 +1,7 @@
-import { hardResetCardSettings, toggleCardSettings, toggleReportSettings } from "../card/CardActions";
+import { setSessionParameters } from "../application/ApplicationActions";
+import { hardResetCardSettings } from "../card/CardActions";
 import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "./SettingsActions";
-
-
-const update = (state, mutations) =>
-    Object.assign({}, state, mutations)
 
 
 export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => {
@@ -42,22 +39,20 @@ export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getSta
 }
 
 export const updateSessionParameterThunk = (key, value) => (dispatch: any, getState: any) => {
-    // try {
-    //     if(!key.startsWith("neo_reserved")){
-    //         const settings = getState().dashboard.settings;
-    //         const parameters = settings.parameters ? settings.parameters : {};
-    //         if (value !== undefined) {
-    //             parameters[key] = value;
-    //         } else {
-    //             delete parameters[key];
-    //         }
-    //         dispatch(updateDashboardSetting("parameters", { ...parameters }))
-    //     } else {
-    //         dispatch(createNotificationThunk("Unable to update global parameter", "Unable to update reserved parameters"));
-    //     }
-    // } catch (e) {
-    //     dispatch(createNotificationThunk("Unable to update global parameter", e));
-    // }
+    try {
+        const application =  getState().application;
+        const parameters = application.sessionParameters ? application.sessionParameters : {};
+        if (value !== undefined) {
+            parameters[key] = value;
+        } else {
+            delete parameters[key];
+        }
+
+        dispatch(setSessionParameters({ ...parameters }))
+
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to update session parameter", e));
+    }
 }
 
 
