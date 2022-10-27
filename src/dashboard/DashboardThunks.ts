@@ -68,7 +68,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
         }
         var dashboard = JSON.parse(text);
 
-        // Sanity check - make sure we didn't try to load a debug
+        // If we load a debug report, take out the 'dashboard' value and set it to safe values.
         if (dashboard["_persist"] && dashboard["application"] && dashboard["dashboard"]) {
             dispatch(createNotificationThunk("Loaded a Debug Report", "Recovery-mode active. All report types were set to 'table'."));
             dashboard['dashboard']['pages'].map(p => {
