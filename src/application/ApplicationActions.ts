@@ -117,6 +117,13 @@ export const setWaitForSSO = (wait: boolean ) => ({
     payload: { wait },
 });
 
+export const SET_SESSION_PARAMETERS = 'APPLICATION/SET_SESSION_PARAMETERS';
+export const setSessionParameters = ( parameters: any ) => ({
+    type: SET_SESSION_PARAMETERS,
+    payload: { parameters },
+});
+
+
 export const SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING';
 export const setDashboardToLoadAfterConnecting = (id: any) => ({
     type: SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING,

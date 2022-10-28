@@ -301,6 +301,22 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "labelSkipWidth": {
+                label: "Skip label on width (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "labelSkipHeight": {
+                label: "Skip label on height (px)",
+                type: SELECTION_TYPES.NUMBER,
+                default: 0
+            },
+            "positionLabel": {
+                label: "Custom label position",
+                type: SELECTION_TYPES.LIST,
+                values: ["off", "top", "bottom"],
+                default: "off"
+            },
             "labelRotation": {
                 label: "Label Rotation (degrees)",
                 type: SELECTION_TYPES.NUMBER,
@@ -518,7 +534,7 @@ export const REPORT_TYPES = {
             "xScale": {
                 label: "X Scale",
                 type: SELECTION_TYPES.LIST,
-                values: ["linear", "log"],
+                values: ["linear", "log", "point"],
                 default: "linear"
             },
             "yScale": {

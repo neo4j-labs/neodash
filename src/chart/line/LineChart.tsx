@@ -30,6 +30,8 @@ const NeoLineChart = (props: ChartProps) => {
     }
 
     const [isTimeChart, setIsTimeChart] = React.useState(false);
+    const [parseFormat, setParseFormat] = React.useState("%Y-%m-%dT%H:%M:%SZ");
+
     const settings = (props.settings) ? props.settings : {};
 
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'set2';
@@ -88,23 +90,31 @@ const NeoLineChart = (props: ChartProps) => {
         data: []
     }))
 
+    const isDate = (x) => {
+        return x.__isDate__;
+    }
+
     const isDateTime = (x) => {
-        return x !== undefined && x.day !== undefined && x.hour !== undefined && x.minute !== undefined &&
-            x.month !== undefined && x.nanosecond !== undefined && x.second !== undefined && x.year !== undefined;
+        return x.__isDateTime__;
+    }
+
+    const isDateTimeOrDate = (x) => {
+        return isDate(x) || isDateTime(x) || x instanceof Date;
     }
 
     records.forEach((row) => {
         selection['value'].forEach(key => {
             const index = data.findIndex(item => (item as Record<string, any>).id === key)
-            const x: any = row.get(selection['x']) || 0
+            let x: any = row.get(selection['x']) || 0
             const y: any = recordToNative(row.get(key)) || 0
             if (data[index] && !isNaN(y)) {
-                if (isDateTime(x)) {
+                if (isDate(x)) {
+                    data[index].data.push({ x, y })
+                } else if (isDateTime(x)) {
+                    x = new Date(x.toString());
                     data[index].data.push({ x, y })
                 }
-                if (!isNaN(x)) {
-                    data[index].data.push({ x, y })
-                }
+                else data[index].data.push({ x, y })
             }
         })
     })
@@ -124,13 +134,20 @@ const NeoLineChart = (props: ChartProps) => {
 
     // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
     // Therefore, we now require a manual refresh.
-    const chartIsTimeChart = (data[0] !== undefined && data[0].data[0] !== undefined && data[0].data[0]['x'] !== undefined && isNaN(data[0].data[0]['x']));
+
+
+    const chartIsTimeChart = (data[0] !== undefined && data[0].data[0] !== undefined && data[0].data[0]['x'] !== undefined && isDateTimeOrDate(data[0].data[0]['x']));
+
     if (isTimeChart !== chartIsTimeChart) {
         if (!chartIsTimeChart) {
             return <div style={{ margin: "15px" }}>
                 Line chart switched from time-axis to number-axis.
                 Please re-run the report to see your changes. </div>;
         }
+
+        let p = chartIsTimeChart ? (isDateTime(data[0].data[0]['x']) ? "%Y-%m-%dT%H:%M:%SZ": "%Y-%m-%d" ) : "";
+
+        setParseFormat(p);
         setIsTimeChart(chartIsTimeChart);
     }
 
@@ -151,12 +168,13 @@ const NeoLineChart = (props: ChartProps) => {
         return <code style={{ margin: "10px" }}>Invalid tick size specification for time chart. Parameter value must be set to "every [number] ['years', 'months', 'weeks', 'days', 'hours', 'seconds', 'milliseconds']".</code>;
     }
 
-
+//T18:40:32.142+0100
+    //%Y-%m-%dT%H:%M:%SZ
     const lineViz = <div className="h-full w-full overflow-hidden" style={{ height: "100%" }}>
         <ResponsiveLine
             data={data}
             xScale={isTimeChart ?
-                { format: "%Y-%m-%dT%H:%M:%SZ", type: "time" } :
+                {  format: parseFormat, type: "time" } :
                 xScale == 'linear' ?
                     { type: xScale, min: minXValue, max: maxXValue, stacked: false, reverse: false } :
                     { type: xScale, min: minXValue, max: maxXValue, constant: xScaleLogBase, base: xScaleLogBase }
