@@ -534,7 +534,7 @@ export const REPORT_TYPES = {
             "xScale": {
                 label: "X Scale",
                 type: SELECTION_TYPES.LIST,
-                values: ["linear", "log"],
+                values: ["linear", "log", "point"],
                 default: "linear"
             },
             "yScale": {
