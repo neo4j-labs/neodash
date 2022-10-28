@@ -99,6 +99,20 @@ Ultimately, it is important to understand that the order of the rules is
 important. If a node matches multiple rules, the first rule that matches
 will be used. If no rules are matched, the default style will be used.
 
+== Parameters
+...
+
+Parameters can be set in a dashboard by using a link:parameter-select[Parameter Select] report. Set parameters are then available in any Cypher query across the dashboard.
+
+In addition, **session parameters** are available based on the currently active database connection.
+
+|===
+|Parameter | Description
+| $session_uri | The URI of the current active database connection.
+| $session_database | The Neo4j database that was connected to when the user logged in.
+| $session_username | The username used to authenticate to Neo4j.
+|===
+
 == Report Types
 
 To learn more about a specific report type, see one of the following

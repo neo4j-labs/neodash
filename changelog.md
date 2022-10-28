@@ -1,3 +1,8 @@
+## NeoDash 2.1.10
+Changes:
+- Fixed bug where datetimes were not handled correctly by line charts.
+- Added **session parameters**, set automatically and available to Cypher queries ([Documentation](https://neo4j.com/labs/neodash/2.1/user-guide/reports/)).
+
 ## NeoDash 2.1.8 & 2.1.9
 New features:
 - Added the [Dashboard Gallery](https://neodash-gallery.graphapp.io), a live gallery of example NeoDash dashboards.
