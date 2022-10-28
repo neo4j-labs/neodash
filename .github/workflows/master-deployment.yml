@@ -78,7 +78,7 @@ jobs:
       context: .
       file: ./Dockerfile
       push: true
-      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.1.9
+      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.1.10
  build-npm:
    needs: build-test
    runs-on: ubuntu-latest
@@ -116,3 +116,33 @@ jobs:
    - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
    - name: Publish package to NPM 📦
      run: npm publish --access public neodash*.tgz
+ deploy-gallery:
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [18.x]
+   steps:
+   - uses: actions/checkout@v2
+   - name: Use Node.js ${{ matrix.node-version }}
+     uses: actions/setup-node@v1
+     with:
+       node-version: ${{ matrix.node-version }}
+   - run: cd gallery && yarn install
+   - run: cd gallery && CI=false yarn run build
+   - name: Set AWS credentials
+     uses: aws-actions/configure-aws-credentials@v1
+     with:
+       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+       aws-region: us-west-1
+   - run: aws s3 rm s3://neodash-gallery.graphapp.io/ --recursive && aws s3 sync gallery/build s3://neodash-gallery.graphapp.io/ --acl public-read
+ deploy-docs:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Developer Event
+        uses: peter-evans/repository-dispatch@main
+        with:
+          token: ${{ secrets.DOCS_REFRESH_TOKEN }}
+          repository: neo4j-documentation/docs-refresh
+          event-type: labs

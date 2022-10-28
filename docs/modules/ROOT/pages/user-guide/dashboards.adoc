@@ -82,6 +82,8 @@ When using Neo4j multi-database, you will be given the choice of which
 database to save the dashboard in. 
 3. Copy-paste the JSON file directly.
 
+> Keep in mind that your currently active dashboard is stored in the browser cache. If you clear your cache (cookies), the dashboard is gone.
+
 === Load a Dashboard
 
 Just like in the save screen, a dashboard can be loaded in one of three

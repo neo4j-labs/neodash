@@ -9,6 +9,7 @@ import {
     SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING, SET_DESKTOP_CONNECTION_PROPERTIES, SET_OLD_DASHBOARD, 
     SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING, 
     SET_REPORT_HELP_MODAL_OPEN, 
+    SET_SESSION_PARAMETERS, 
     SET_SHARE_DETAILS_FROM_URL, SET_SSO_ENABLED, SET_STANDALONE_DASHBOARD_DATEBASE, SET_STANDALONE_ENABLED, 
     SET_STANDALONE_MODE, SET_WAIT_FOR_SSO, SET_WELCOME_SCREEN_OPEN
 } from "./ApplicationActions";
@@ -101,7 +102,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
             state = update(state, { waitForSSO: wait })
             return state;
         }
-
+        case SET_SESSION_PARAMETERS: {
+            const { parameters } = payload;
+            state = update(state, { sessionParameters: parameters })
+            return state;
+        }
         case SET_STANDALONE_ENABLED: {
             const { standalone, standaloneProtocol, standaloneHost, standalonePort, standaloneDatabase, standaloneDashboardName, standaloneDashboardDatabase, standaloneDashboardURL, standaloneUsername, standalonePassword } = payload;
             state = update(state, {

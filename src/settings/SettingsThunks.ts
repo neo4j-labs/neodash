@@ -1,10 +1,7 @@
-import { hardResetCardSettings, toggleCardSettings, toggleReportSettings } from "../card/CardActions";
+import { setSessionParameters } from "../application/ApplicationActions";
+import { hardResetCardSettings } from "../card/CardActions";
 import { createNotificationThunk } from "../page/PageThunks";
 import { updateDashboardSetting } from "./SettingsActions";
-
-
-const update = (state, mutations) =>
-    Object.assign({}, state, mutations)
 
 
 export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => {
@@ -38,6 +35,23 @@ export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getSta
 
     } catch (e) {
         dispatch(createNotificationThunk("Unable to update global parameter", e));
+    }
+}
+
+export const updateSessionParameterThunk = (key, value) => (dispatch: any, getState: any) => {
+    try {
+        const application =  getState().application;
+        const parameters = application.sessionParameters ? application.sessionParameters : {};
+        if (value !== undefined) {
+            parameters[key] = value;
+        } else {
+            delete parameters[key];
+        }
+
+        dispatch(setSessionParameters({ ...parameters }))
+
+    } catch (e) {
+        dispatch(createNotificationThunk("Unable to update session parameter", e));
     }
 }
 
