@@ -66,7 +66,19 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
             dispatch(resetDashboardState());
             return
         }
-        const dashboard = JSON.parse(text);
+        var dashboard = JSON.parse(text);
+
+        // If we load a debug report, take out the 'dashboard' value and set it to safe values.
+        if (dashboard["_persist"] && dashboard["application"] && dashboard["dashboard"]) {
+            dispatch(createNotificationThunk("Loaded a Debug Report", "Recovery-mode active. All report types were set to 'table'."));
+            dashboard['dashboard']['pages'].map(p => {
+                p['reports'].map(r => {
+                    r['type'] = 'table';
+                })
+            });
+            dashboard = dashboard['dashboard'];
+        }
+
 
         // Attempt upgrade if dashboard version is outdated.
         if (dashboard["version"] == "1.1") {

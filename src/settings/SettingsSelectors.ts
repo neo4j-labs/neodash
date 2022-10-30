@@ -5,6 +5,8 @@ export const getDashboardIsEditable = (state: any) => state.dashboard.settings.e
 
 export const getGlobalParameters = (state: any) => state.dashboard.settings.parameters;
 
+export const getSessionParameters = (state: any) => state.application.sessionParameters;
+
 /*
 The database related to a card is, at its start, the same as the one defined inside the application connection field, however
 a user can modify the database that is used by a card with a new option inside the card itself.

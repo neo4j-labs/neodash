@@ -36,28 +36,32 @@ const NeoBarChart = (props: ChartProps) => {
 
     const keys = {};
     const data: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
-        if (!selection || !selection['index'] || !selection['value']) {
-            return data;
-        }
-        const index = convertRecordObjectToString(row.get(selection['index']));
-        const idx = data.findIndex(item => item.index === index)
+        try {
+            if (!selection || !selection['index'] || !selection['value']) {
+                return data;
+            }
+            const index = convertRecordObjectToString(row.get(selection['index']));
+            const idx = data.findIndex(item => item.index === index)
 
-        const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
-        const value = recordToNative(row.get(selection['value']));
+            const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
+            const value = recordToNative(row.get(selection['value']));
 
-        if (isNaN(value)) {
-            return data;
-        }
-        keys[key] = true;
+            if (isNaN(value)) {
+                return data;
+            }
+            keys[key] = true;
 
-        if (idx > -1) {
-            data[idx][key] = value
+            if (idx > -1) {
+                data[idx][key] = value
+            }
+            else {
+                data.push({ index, [key]: value })
+            }
+            return data
+        } catch (e) {
+            console.error(e);
+            return [];
         }
-        else {
-            data.push({ index, [key]: value })
-        }
-
-        return data
     }, [])
         .map(row => {
             Object.keys(keys).forEach(key => {
@@ -76,7 +80,13 @@ const NeoBarChart = (props: ChartProps) => {
     const marginBottom = (settings["marginBottom"]) ? settings["marginBottom"] : 40;
     const legend = (settings["legend"]) ? settings["legend"] : false;
     const labelRotation = (settings["labelRotation"] != undefined) ? settings["labelRotation"] : 45;
-    const labelSkipSize = (settings["barValues"]) ? 1 : 2000;
+
+    const labelSkipWidth = (settings["labelSkipWidth"]) ? (settings["labelSkipWidth"]) : 0;
+    const labelSkipHeight = (settings["labelSkipHeight"]) ? (settings["labelSkipHeight"]) : 0;
+    const enableLabel = (settings["barValues"]) ? settings["barValues"] : false;
+    const positionLabel = (settings["positionLabel"]) ? settings["positionLabel"] : 'off';
+
+    const layout = (settings["layout"]) ? settings["layout"] : 'vertical';
     const colorScheme = (settings["colors"]) ? settings["colors"] : 'set2';
     const groupMode = (settings["groupMode"]) ? settings["groupMode"] : 'stacked';
     const valueScale = (settings["valueScale"]) ? settings["valueScale"] : 'linear';
@@ -103,11 +113,69 @@ const NeoBarChart = (props: ChartProps) => {
         return <NoDrawableDataErrorMessage />
     }
 
+    const BarComponent = ({ bar, borderColor }) => {
+        let shade = false;
+        let darkTop = false;
+        let includeIndex = false;
+        let x = bar.width/ 2,y = bar.height / 2, textAnchor = "middle";
+        if (positionLabel == "top")
+            if(layout == "vertical")
+                y = - 10 ;
+            else
+                x = bar.width + 10;
+        else if (positionLabel == "bottom")
+                if(layout == "vertical")
+                    y = bar.height + 10;
+                else
+                    x = - 10 ;
+
+            return (
+                    <g transform={`translate(${bar.x},${bar.y})`}>
+                    {shade ? <rect x={-3} y={7} width={bar.width} height={bar.height} fill="rgba(0, 0, 0, .07)" />  : <></>}
+                    <rect width={bar.width} height={bar.height} fill={bar.color} />
+                    { darkTop ? <rect
+                        x={bar.width - 5}
+                        width={5}
+                        height={bar.height}
+                        fill={borderColor}
+                        fillOpacity={0.2}
+                    /> :  <></> }
+                    {includeIndex ? <text
+                        x={bar.width - 16}
+                        y={bar.height / 2}
+                        textAnchor="end"
+                        dominantBaseline="central"
+                        fill="black"
+                        style={{
+                                fontWeight: 900,
+                                    fontSize: 15,
+                                }}
+                    >
+                        {bar.data.indexValue}
+                    </text> :  <></> }
+                    { enableLabel ? <text
+                        x={x}
+                        y={y}
+                        textAnchor={textAnchor}
+                        dominantBaseline="central"
+                        fill={borderColor}
+                        style={{
+                                fontWeight: 400,
+                                    fontSize: 13,
+                                }}
+                    >
+                        {bar.data.value}
+                    </text> :  <></> }
+                </g>
+            )
+        }
     // TODO: Get rid of duplicate pie slice names...
-    
+
+    const extraProperties = positionLabel == "off" ? {} : { barComponent : BarComponent };
     return <ResponsiveBar
-        layout={settings.layout == "horizontal" ? 'horizontal' : 'vertical'}
+        layout={layout}
         groupMode={groupMode == "stacked" ? 'stacked' : 'grouped'}
+        enableLabel = {enableLabel}
         data={data}
         keys={Object.keys(keys)}
         indexBy="index"
@@ -129,9 +197,10 @@ const NeoBarChart = (props: ChartProps) => {
             tickPadding: 5,
             tickRotation: 0,
         }}
-        labelSkipWidth={labelSkipSize}
-        labelSkipHeight={labelSkipSize}
+        labelSkipWidth={labelSkipWidth}
+        labelSkipHeight={labelSkipHeight}
         labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+        { ...extraProperties}
         legends={(legend) ? [
             {
                 dataFrom: 'keys',

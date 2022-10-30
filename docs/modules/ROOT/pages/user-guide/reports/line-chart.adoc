@@ -53,7 +53,7 @@ Colors are assigned automatically to the different fields selected in
 the report footer.
 
 |X Scale |List |linear |How to scale the values on the x-axis. Can be
-either linear or logarithmic.
+either linear, logarithmic or point. Use point for categorical data.
 
 |Y Scale |List |linear |How to scale the values on the y-axis. Can be
 either linear or logarithmic.

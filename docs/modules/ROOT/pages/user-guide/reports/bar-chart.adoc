@@ -67,6 +67,13 @@ groups returned by the Cypher query.
 |Show Values on Bars |on/off |off |If enabled, shows the category value
 inside the respective bar.
 
+|Skip label on width (px) |number |0 |Skip label if bar width is lower than provided value, ignored if 0.
+
+|Skip label on height (px) |number |0 |Skip label if bar height is lower than provided value, ignored if 0.
+
+|Custom label position |off/top/bottom |off | Allow user to place label out of the bar. This will override any other
+label configuration.
+
 |Label Rotation (degrees) |number |45 |the angle at which the bar labels
 are rotated.
 
