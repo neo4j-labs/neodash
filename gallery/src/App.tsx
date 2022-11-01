@@ -78,7 +78,7 @@ function App() {
             })
           }
         </div>
-        {(list.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> Loading... </p> : <></>}
+        {(list.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> The gallery is currently in maintenance... to be fixed November 1st 2022. </p> : <></>}
         {(list.length != 0 && filteredList.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> No results. </p> : <></>}
       </div>
       {/* Footer */}
@@ -90,7 +90,7 @@ function App() {
             </ul> on GitHub.
           </p>
           <br />
-          <code className='flex item-center justify-center n-text-neutral-40'> {"-- neodash-gallery v0.1 --"} </code>
+          <code className='flex item-center justify-center n-text-neutral-40'> {"-- neodash-gallery v0.2 --"} </code>
         </div>
       </div>
     </div >
