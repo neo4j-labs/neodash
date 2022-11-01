@@ -3,7 +3,7 @@ import './App.css';
 import { Button, TextInput, HeroIcon, Tag } from '@neo4j-ndl/react';
 
 // These are the read-only credentials of the public database where the gallery exists.
-const uri = "neo4j+s://03470df6.databases.neo4j.io"
+const uri = "neo4j+s://acb5b6ae.databases.neo4j.io"
 const user = "gallery";
 const password = "gallery";
 
@@ -78,7 +78,7 @@ function App() {
             })
           }
         </div>
-        {(list.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> The gallery is currently in maintenance... to be fixed November 1st 2022. </p> : <></>}
+        {(list.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> Loading... </p> : <></>}
         {(list.length != 0 && filteredList.length == 0) ? <p className='item-center flex justify-center n-text-neutral-60'> No results. </p> : <></>}
       </div>
       {/* Footer */}
