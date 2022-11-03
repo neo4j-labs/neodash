@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChartProps } from '../Chart';
 import { ResponsiveRadar } from '@nivo/radar'
-import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../report/ReportRuleEvaluator';
+import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../extensions/styling/StyleRuleEvaluator';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 
 

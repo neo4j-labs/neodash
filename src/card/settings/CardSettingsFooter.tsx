@@ -4,15 +4,15 @@ import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
 import NeoSetting from '../../component/field/Setting';
-import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../modal/CustomReportStyleModal';
+import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../extensions/styling/StyleRuleCreationModal';
 import TuneIcon from '@material-ui/icons/Tune';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
 
 
-const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpen, onToggleReportSettings,
-    onCreateNotification, onReportSettingUpdate }) => {
+const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpen, extensions,
+    onToggleReportSettings, onCreateNotification, onReportSettingUpdate }) => {
 
     const [reportSettingsText, setReportSettingsText] = React.useState(reportSettings);
 
@@ -86,8 +86,9 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
         )}
     </div>
 
+    // TODO - Make the extensions more pluggable and dynamic, instead of hardcoded here.
     return <div>
-        <NeoCustomReportStyleModal
+        {extensions['styling'] ? <NeoCustomReportStyleModal
             settingName={settingToCustomize}
             settingValue={reportSettings[settingToCustomize]}
             type={type}
@@ -95,7 +96,7 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
             customReportStyleModalOpen={customReportStyleModalOpen}
             setCustomReportStyleModalOpen={setCustomReportStyleModalOpen}
             onReportSettingUpdate={onReportSettingUpdate}
-        ></NeoCustomReportStyleModal>
+        ></NeoCustomReportStyleModal> : <></>}
         <table style={{ borderTop: "1px dashed lightgrey", background: reportSettingsOpen ? "#f6f6f6" : "inherit", width: "100%" }}>
             <tbody>
                 <tr>
@@ -108,7 +109,7 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
                                 label={<div style={{ fontSize: "12px", color: "grey" }}>Advanced settings</div>} />
                         </FormGroup>
                     </td>
-                    {RULE_BASED_REPORT_CUSTOMIZATIONS[type] ? <td>
+                    {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions['styling'] ? <td>
                         <Tooltip title="Set rule-based styling" aria-label="">
                             <IconButton size="small" style={{ float: "right", marginRight: "10px" }} aria-label="custom styling"
                                 onClick={(e) => {

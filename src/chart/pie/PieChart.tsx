@@ -1,7 +1,7 @@
 import { ResponsivePie } from '@nivo/pie';
 import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
-import { evaluateRulesOnDict } from '../../report/ReportRuleEvaluator';
+import { evaluateRulesOnDict } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 

@@ -12,7 +12,6 @@ export const setDashboard = (dashboard: any) => ({
     payload: { dashboard },
 });
 
-
 export const SET_DASHBOARD_TITLE = 'DASHBOARD/SET_DASHBOARD_TITLE';
 export const setDashboardTitle = (title: any) => ({
     type: SET_DASHBOARD_TITLE,
@@ -35,4 +34,10 @@ export const MOVE_PAGE = 'DASHBOARD/MOVE_PAGE';
 export const movePage = (oldIndex: any, newIndex:any) => ({
     type: MOVE_PAGE,
     payload: { oldIndex, newIndex },
+});
+
+export const SET_EXTENSION_ENABLED =  'DASHBOARD/SET_EXTENSION_ENABLED';
+export const setExtensionEnabled = (name: string, enabled: boolean) => ({
+    type: SET_EXTENSION_ENABLED,
+    payload: { name, enabled },
 });

@@ -26,6 +26,7 @@ import useDimensions from 'react-cool-dimensions';
 import {setReportHelpModalOpen} from '../application/ApplicationActions';
 import {loadDatabaseListFromNeo4jThunk} from "../dashboard/DashboardThunks";
 import {Neo4jContext, Neo4jContextState} from "use-neo4j/dist/neo4j.context";
+import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 
 
 const NeoCard = ({
@@ -33,6 +34,7 @@ const NeoCard = ({
                      report, // state of the card, retrieved based on card index.
                      editable, // whether the card is editable.
                      database, // the neo4j database that the card is running against.
+                     extensions, // A set of enabled extensions.
                      globalParameters, // Query parameters that are globally set for the entire dashboard.
                      dashboardSettings, // Dictionary of settings for the entire dashboard.
                      onRemovePressed, // action to take when the card is removed. (passed from parent)
@@ -124,6 +126,7 @@ const NeoCard = ({
                     settingsOpen={settingsOpen}
                     editable={editable}
                     dashboardSettings={dashboardSettings}
+                    extensions={extensions}
                     settings={report.settings ? report.settings : {}}
                     type={report.type}
                     database={database}
@@ -165,6 +168,7 @@ const NeoCard = ({
                     type={report.type}
                     refreshRate={report.refreshRate}
                     expanded={expanded}
+                    extensions={extensions}
                     dashboardSettings={dashboardSettings}
                     onToggleCardExpand={onToggleCardExpand}
                     setActive={setActive}
@@ -207,6 +211,7 @@ const NeoCard = ({
 
 const mapStateToProps = (state, ownProps) => ({
     report: getReportState(state, ownProps.index),
+    extensions: getDashboardExtensions(state),
     editable: getDashboardIsEditable(state),
     database: getDatabase(state, ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined, ownProps.index),
     globalParameters: {...getGlobalParameters(state), ...getSessionParameters(state)} 

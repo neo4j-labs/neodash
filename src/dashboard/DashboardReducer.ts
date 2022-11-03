@@ -4,7 +4,7 @@
 
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
-import { CREATE_PAGE, REMOVE_PAGE, SET_DASHBOARD_TITLE, RESET_DASHBOARD_STATE, SET_DASHBOARD, MOVE_PAGE } from './DashboardActions';
+import { CREATE_PAGE, REMOVE_PAGE, SET_DASHBOARD_TITLE, RESET_DASHBOARD_STATE, SET_DASHBOARD, MOVE_PAGE, SET_EXTENSION_ENABLED } from './DashboardActions';
 
 export const NEODASH_VERSION = "2.2";
 
@@ -63,6 +63,12 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
         case SET_DASHBOARD_TITLE: {
             const { title } = payload;
             return { ...state, title: title }
+        }
+        case SET_EXTENSION_ENABLED: {
+            const { name, enabled } = payload;
+            const extensions = state.extensions ? {...state.extensions} : {};
+            extensions[name] = enabled;
+            return { ...state, extensions: extensions};
         }
         case CREATE_PAGE: {
             return { ...state, pages: [...state.pages, PAGE_INITIAL_STATE] }

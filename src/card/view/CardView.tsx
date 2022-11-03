@@ -8,12 +8,11 @@ import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
-import debounce from 'lodash/debounce';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { downloadComponentAsImage } from '../../chart/ChartUtils';
 
-const NeoCardView = ({ title, database, query, globalParameters, 
-    widthPx, heightPx, fields, active, setActive,
+const NeoCardView = ({ title, database, query, globalParameters,
+    widthPx, heightPx, fields, extensions, active, setActive,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
@@ -32,7 +31,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
         onTitleUpdate={onTitleUpdate}
         onToggleCardSettings={onToggleCardSettings}
         settings={settings}
-        onDownloadImage={()=> downloadComponentAsImage(ref)}
+        onDownloadImage={() => downloadComponentAsImage(ref)}
         onToggleCardExpand={onToggleCardExpand}
         expanded={expanded}
     >
@@ -56,15 +55,15 @@ const NeoCardView = ({ title, database, query, globalParameters,
     }
 
     const getLocalParameters = (): any => {
-        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables : string[] = [];
+        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables: string[] = [];
         while (match = re.exec(query)) {
             localQueryVariables.push(match[1]);
         }
 
-        if(!globalParameters){
+        if (!globalParameters) {
             return {};
         }
-        return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local) ));
+        return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local)));
     }
 
     // TODO - understand why CardContent is throwing a warning based on this style config.
@@ -75,15 +74,17 @@ const NeoCardView = ({ title, database, query, globalParameters,
     };
 
     return (
-        <div className={`card-view ${expanded ? "expanded" : ""}`} style={settings && settings.backgroundColor ? {backgroundColor: settings.backgroundColor} : {}}>
+        <div className={`card-view ${expanded ? "expanded" : ""}`} style={settings && settings.backgroundColor ? { backgroundColor: settings.backgroundColor } : {}}>
             {reportHeader}
             {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
             <ReportItemContainer style={{ height: expanded ? (withoutFooter ? "calc(100% - 69px)" : "calc(100% - 79px)") : cardHeight }}>
                 <CardContent ref={ref} style={cardContentStyle}>
                     {active ?
-                        <NeoReport query={query}
+                        <NeoReport
+                            query={query}
                             database={database}
                             parameters={getLocalParameters()}
+                            extensions={extensions}
                             disabled={settingsOpen}
                             selection={selection}
                             fields={fields}

@@ -2,7 +2,7 @@
 import { ChartProps } from '../Chart';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ResponsiveSankey  } from '@nivo/sankey';
-import {evaluateRulesOnDict, evaluateRulesOnNode} from '../../report/ReportRuleEvaluator'
+import {evaluateRulesOnDict, evaluateRulesOnNode} from '../../extensions/styling/StyleRuleEvaluator'
 import {categoricalColorSchemes} from "../../config/ColorConfig";
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../ChartUtils';

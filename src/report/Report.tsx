@@ -30,6 +30,7 @@ export const NeoReport = ({
     queryTimeLimit = 20, // Time limit for queries before automatically aborted.
     type = "table", // The type of report as a string.
     expanded = false, // whether the report is visualized in a fullscreen view.
+    extensions = {}, // A set of enabled extensions.
     ChartType = NeoTableChart, // The report component to render with the query results.
 }) => {
     const [records, setRecords] = useState(null);
@@ -133,6 +134,7 @@ export const NeoReport = ({
         {/* @ts-ignore */ }
         return (<div style={{ height: "100%", marginTop: "0px", overflow: REPORT_TYPES[type].allowScrolling ? "auto" : "hidden" }}>
             <ChartType records={records}
+                extensions={extensions}
                 selection={selection}
                 settings={settings}
                 fullscreen={expanded}
@@ -157,6 +159,7 @@ export const NeoReport = ({
             </div>
             <ChartType
                 records={records}
+                extensions={extensions}
                 selection={selection}
                 settings={settings}
                 fullscreen={expanded}

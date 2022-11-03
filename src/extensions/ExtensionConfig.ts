@@ -1,5 +1,6 @@
 export const EXTENSIONS = {
     "rule-based-styling": {
+        name: 'styling',
         label: "Rule-Based Styling",
         author: "Neo4j Labs",
         image: "rule-based-styling.png",
@@ -8,6 +9,7 @@ export const EXTENSIONS = {
         link: 'https://neo4j.com/labs/neodash/2.1/user-guide'
     },
     "report-actions": {
+        name: 'actions',
         label: "Report Actions",
         author: "Neo4j Professional Services",
         image: "report-actions.png",

@@ -18,7 +18,7 @@ import { getDashboardSettings } from "../DashboardSelectors";
 import { updateDashboardSetting } from "../../settings/SettingsActions";
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import CategoryIcon from '@material-ui/icons/Category';
-import { NeoExtensionsModal } from "../../modal/ExtensionsModal";
+import  NeoExtensionsModal  from "../../modal/ExtensionsModal";
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,

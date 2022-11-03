@@ -8,10 +8,22 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 import { Checkbox, Chip, FormControlLabel, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
-import { EXTENSIONS } from '../config/ExtensionConfig';
+import { EXTENSIONS } from '../extensions/ExtensionConfig';
+import { connect } from 'react-redux';
+import { createNotificationThunk } from '../page/PageThunks';
+import { getPageNumber } from '../settings/SettingsSelectors';
+import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
+import { setExtensionEnabled } from '../dashboard/DashboardActions';
 
 
-export const NeoExtensionsModal = () => {
+const NeoExtensionsModal = (
+    {
+        extensions,
+        setExtensionEnabled,
+        onExtensionUnavailableTriggered // Action to take when the user tries to enable a disabled extension.
+    }) => {
+
+
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -54,7 +66,6 @@ export const NeoExtensionsModal = () => {
                         This can be a new visualization, extra styling options for an existing visualization, or even a completely new logic for the dashboarding engine.
                         <br /> <br />
                         <hr></hr>
-
                         {Object.values(EXTENSIONS).map(e => {
                             return <div style={{ opacity: e.enabled ? 1.0 : 0.6 }}>
 
@@ -79,7 +90,13 @@ export const NeoExtensionsModal = () => {
                                             <Tooltip title="Enable the extension" aria-label="">
                                                 <FormControlLabel
                                                     control={<Checkbox style={{ fontSize: "small" }}
-                                                        checked={false} onChange={e => alert(e)} name="enable" />}
+                                                        checked={extensions[e.name]} onChange={x => {
+                                                            if (e.enabled) {
+                                                                setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
+                                                            } else {
+                                                                onExtensionUnavailableTriggered(e.label);
+                                                            }
+                                                        }} name="enable" />}
                                                     label={<span color="red">Enable</span>}
                                                 />
                                             </Tooltip>
@@ -109,6 +126,15 @@ export const NeoExtensionsModal = () => {
     );
 }
 
-export default (NeoExtensionsModal);
+const mapStateToProps = state => ({
+    extensions: getDashboardExtensions(state)
+});
 
+const mapDispatchToProps = dispatch => ({
+    setExtensionEnabled: (name, enabled) => dispatch(setExtensionEnabled(name, enabled)),
+    onExtensionUnavailableTriggered: (name) => dispatch(createNotificationThunk("Extension '" + name + "' Unavailable",
+        "This extension is not available in the open-source version of NeoDash.\n  \
+     To learn more about professional extensions, check out the project documentation.")),
+});
 
+export default connect(mapStateToProps, mapDispatchToProps)(NeoExtensionsModal);
