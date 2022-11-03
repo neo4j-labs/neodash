@@ -16,7 +16,7 @@ import WidgetsIcon from '@material-ui/icons/Widgets';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 
 
-export const NeoReportExamplesModal = ({ database }) => {
+export const NeoReportExamplesModal = ({ database, examples, extensions }) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -55,7 +55,7 @@ export const NeoReportExamplesModal = ({ database }) => {
                 <div>
                     <DialogContent >
                         <hr></hr>
-                        {EXAMPLE_REPORTS.map(example => {
+                        {examples.map(example => {
                             return <>
                                 <h3>{example.title}</h3>
                                 <DialogContentText>{example.description}
@@ -78,6 +78,7 @@ export const NeoReportExamplesModal = ({ database }) => {
                                                     query={example.syntheticQuery}
                                                     database={database}
                                                     disabled={!open}
+                                                    extensions={extensions}
                                                     selection={example.selection}
                                                     parameters={example.globalParameters}
                                                     settings={example.settings}

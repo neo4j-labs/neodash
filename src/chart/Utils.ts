@@ -76,45 +76,6 @@ export const flatten = data =>
         return [...acc, item]
     }, []);
 
-/**
- * Converts a list of Neo4j records into a hierarchy structure for hierarchical data visualizations.
- */
-export const processHierarchyFromRecords = (records : Record<string, any>[]) => {
-    return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
-
-        try {
-        const index = recordToNative(row.get('index'));
-        const key = recordToNative(row.get('key'));
-        const value = recordToNative(row.get('value'));
-
-        let holder = data;
-        for (let [idx, val] of index.entries()) {
-            // Add a level prefix to each item to avoid duplicates
-            val = "lvl"+idx+"_"+val;
-            let obj = search(holder, val, 'name');
-            let entry = { name: val };
-            if(obj)
-                holder = obj;
-            else{
-                if(Array.isArray(holder))
-                    holder.push(entry);
-                else if (holder.hasOwnProperty("children"))
-                    holder.children.push(entry)
-                else
-                    holder.children = [entry]
-
-                holder = search(holder, val, 'name');
-            }
-        }
-        holder.loc = value;
-        return data
-        } catch(e) {
-            console.error(e);
-            return [];
-        }
-    }, []);
-}
-
 function isCyclicUtil(i,visited,recStack, adj)
 {
     // Mark the current node as visited and

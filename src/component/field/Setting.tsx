@@ -1,9 +1,9 @@
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
-import { SELECTION_TYPES } from '../../config/ReportConfig';
 import NeoField from './Field';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import NeoColorPicker from './ColorPicker';
+import { SELECTION_TYPES } from '../../config/CardConfig';
 
 const generateListItem = (label, option) => {
     if ('boolean' === typeof option) {

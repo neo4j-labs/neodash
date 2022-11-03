@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 import { Checkbox, Chip, FormControlLabel, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
-import { EXTENSIONS } from '../extensions/ExtensionConfig';
+import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getPageNumber } from '../settings/SettingsSelectors';
@@ -88,16 +88,16 @@ const NeoExtensionsModal = (
                                         </td>
                                         <td style={{ float: 'right' }}>
                                             <Tooltip title="Enable the extension" aria-label="">
-                                                <FormControlLabel
-                                                    control={<Checkbox style={{ fontSize: "small" }}
-                                                        checked={extensions[e.name]} onChange={x => {
+                                                <FormControlLabel onClick={x => {
                                                             if (e.enabled) {
                                                                 setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
                                                             } else {
                                                                 onExtensionUnavailableTriggered(e.label);
                                                             }
-                                                        }} name="enable" />}
-                                                    label={<span color="red">Enable</span>}
+                                                        }}
+                                                    control={<Checkbox disabled={!e.enabled} style={{ fontSize: "small" }}
+                                                        checked={extensions[e.name]}  name="enable" />}
+                                                    label={<span color="green">{extensions[e.name] ? "Active  " : "Disabled"}</span>}
                                                 />
                                             </Tooltip>
                                         </td>
@@ -112,7 +112,7 @@ const NeoExtensionsModal = (
                                         </td>
                                         <td>
                                             <br />
-                                            <img src={e.image} style={{ width: 400 }}></img>
+                                            <img src={e.image} style={{ width: 400, border: '1px solid grey'}}></img>
                                         </td>
                                     </tr>
                                 </table>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { ChartProps } from '../Chart';
+import { ChartProps } from '../../../../chart/Chart';
 import { ResponsiveChoropleth } from '@nivo/geo';
 import { useState, useEffect } from 'react';
-import { checkResultKeys, recordToNative } from '../ChartUtils';
-import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
+import { checkResultKeys, recordToNative } from '../../../../chart/ChartUtils';
+import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 
 /**
  * Embeds a NeoChoroplethMapChart (from Charts) into NeoDash.

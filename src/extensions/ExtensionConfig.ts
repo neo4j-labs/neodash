@@ -1,4 +1,13 @@
 export const EXTENSIONS = {
+    "advanced-charts": {
+        name: 'advanced-charts',
+        label: "Advanced Visualizations",
+        author: "Neo4j Labs",
+        image: "advanced-visualizations.png",
+        enabled: true,
+        description: "Advanced visualizations let you take your dashboard to the next level. This extension adds a sankey chart to visualize flows, three charts to plot hierarchical data (Sunburst, Circle Packing, Treemap) A Gauge Chart to show percentages and a Choropleth map to visualize country-data.",
+        link: 'https://neo4j.com/labs/neodash/2.1/user-guide'
+    },
     "rule-based-styling": {
         name: 'styling',
         label: "Rule-Based Styling",
@@ -16,5 +25,5 @@ export const EXTENSIONS = {
         enabled: false,
         description: "Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked. To learn more about this extension, reach out to Neo4j Professional Services.",
         link: 'https://neo4j.com/professional-services/'
-    },
+    }
 }

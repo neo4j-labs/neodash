@@ -1,18 +1,11 @@
 import NeoBarChart from "../chart/bar/BarChart";
 import NeoGraphChart from "../chart/graph/GraphChart";
 import NeoIFrameChart from "../chart/iframe/IFrameChart";
-import NeoJSONChart from "../chart/json/JSONChart";
 import NeoLineChart from "../chart/line/LineChart";
 import NeoMapChart from "../chart/map/MapChart";
 import NeoPieChart from "../chart/pie/PieChart";
 import NeoTableChart from "../chart/table/TableChart";
-import NeoSunburstChart from "../chart/sunburst/SunburstChart";
-import NeoCirclePackingChart from "../chart/circlepacking/CirclePackingChart";
-import NeoTreeMapChart from "../chart/treemap/TreeMapChart";
-import NeoChoroplethMapChart from "../chart/choropleth/ChoroplethMapChart";
-import NeoSankeyChart from "../chart/sankey/SankeyChart";
 import NeoRadarChart from "../chart/radar/RadarChart";
-import NeoGaugeChart from "../chart/gauge/GaugeChart";
 
 export const EXAMPLE_REPORTS = [
     {
@@ -225,87 +218,6 @@ RETURN value
         chartType: NeoMapChart
     },
     {
-        title: "iFrame",
-        description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
-        exampleQuery: `https://neodash.graphapp.io/embed-test.html`,
-        syntheticQuery: `https://neodash.graphapp.io/embed-test.html`,
-        settings: { "passGlobalParameters": true },
-        fields: [],
-        globalParameters: { "neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix" },
-        selection: {},
-        type: "iframe",
-        chartType: NeoIFrameChart
-    },
-    {
-        title: "Sunburst Chart",
-        description: "Sunburst charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
-        exampleQuery: "// How are people distributed in the company?\n" +
-            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n" +
-            "WITH nodes(path) as no\n" +
-            "WITH no, last(no) as leaf\n" +
-            "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
-            "RETURN result, val",
-        syntheticQuery: 'UNWIND [\n' +
-            '{path: ["NeoDash", "North"], value: 3},\n' +
-            '{path: ["NeoDash", "Center"], value: 5},\n' +
-            '{path: ["NeoDash", "South", "South 1"], value: 2},\n' +
-            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n' +
-            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n' +
-            '] as x\n' +
-            'RETURN x.path as path, x.value as value',
-        settings: {},
-        selection: { index: "path", value: "value", key: "path" },
-        fields: ["path", "value"],
-        type: "sunburst",
-        chartType: NeoSunburstChart
-    },
-    {
-        title: "Circle Packing Chart",
-        description: "Circle Packing charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
-        exampleQuery: "// How are people distributed in the company?\n" +
-            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n" +
-            "WITH nodes(path) as no\n" +
-            "WITH no, last(no) as leaf\n" +
-            "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
-            "RETURN result, val",
-        syntheticQuery: 'UNWIND [\n' +
-            '{path: ["NeoDash", "North"], value: 3},\n' +
-            '{path: ["NeoDash", "Center"], value: 5},\n' +
-            '{path: ["NeoDash", "South", "South 1"], value: 2},\n' +
-            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n' +
-            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n' +
-            '] as x\n' +
-            'RETURN x.path as path, x.value as value',
-        settings: {},
-        selection: { index: "path", value: "value", key: "path" },
-        fields: ["path", "value"],
-        type: "circlePacking",
-        chartType: NeoCirclePackingChart
-    },
-    {
-        title: "Treemap Chart",
-        description: "Treemap charts can be used to visualize hierarchical data, where each leaf has a numeric value.",
-        exampleQuery: "// How are people distributed in the company?\n" +
-            "MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department)\n" +
-            "WITH nodes(path) as no\n" +
-            "WITH no, last(no) as leaf\n" +
-            "WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val\n" +
-            "RETURN result, val",
-        syntheticQuery: 'UNWIND [\n' +
-            '{path: ["NeoDash", "North"], value: 3},\n' +
-            '{path: ["NeoDash", "Center"], value: 5},\n' +
-            '{path: ["NeoDash", "South", "South 1"], value: 2},\n' +
-            '{path: ["NeoDash", "South", "South 2", "South 2.1"], value: 1},\n' +
-            '{path: ["NeoDash", "South", "South 2", "South 2.2"], value: 3}\n' +
-            '] as x\n' +
-            'RETURN x.path as path, x.value as value',
-        settings: {},
-        selection: { index: "path", value: "value", key: "path" },
-        fields: ["path", "value"],
-        type: "treeMap",
-        chartType: NeoTreeMapChart
-    },
-    {
         title: "Radar Chart",
         description: "Radar charts can be used to render multivariate data from an array of nodes into the form of a two dimensional chart of three or more quantitative variables.",
         exampleQuery: "// What are FIFA22 players stats?\n" +
@@ -326,7 +238,7 @@ RETURN value
             '   {Skill: "PHYSICAL", Lewandowski: 82, Messi: 64, Ronaldo: 75, Benzema: 78, Mbappé: 77}' +
             '   ] as data ' +
             '   RETURN data.Skill as Skill, data.Lewandowski as Lewandowski, data.Messi as Messi, data.Ronaldo as Ronaldo, data.Benzema as Benzema ,data.Mbappé as Mbappé',
-        settings: {"colors": "set3"},
+        settings: { "colors": "set3" },
         selection: {
             index: "Skill", values: [
                 "Lewandowski",
@@ -341,92 +253,17 @@ RETURN value
         chartType: NeoRadarChart
     },
     {
-        title: "Sankey",
-        description: "A Sankey visualization will compute a diagram from nodes and links. Beware that cyclic dependencies are not supported.",
-        exampleQuery: "MATCH (p:Person)-[r:RATES]->(m:Movie)\nRETURN p, r, m",
-        syntheticQuery: `
-        WITH [
-            {
-                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 11, identity: 10001, properties: {rating: 4.5}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Jim", movie: "The Matrix", rating: 4.5
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 11, identity: 10002, properties: {rating: 3.8}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Mike", movie: "The Matrix", rating: 3.8
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 11, identity: 10003, properties: {rating: 5.0}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix", rating: 5.0
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 12, identity: 10004, properties: {rating: 3.5}}, end: {labels: ["Movie"], identity: 12, properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Jim", movie: "The Matrix - Reloaded", rating: 3.5
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 12, identity: 10005, properties: {rating: 2.7}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Sarah", movie: "The Matrix - Reloaded", rating: 2.7
-            },
-            {
-                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 12, identity: 10006, properties: {rating: 4.1}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Reloaded", rating: 4.1
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 13, identity: 10007, properties: {rating: 4.9}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Jim", movie: "The Matrix - Revolutions", rating: 4.9
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 13, identity: 10008, properties: {rating: 4.8}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Mike", movie: "The Matrix - Revolutions", rating: 4.8
-            },
-            {
-                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 13, identity: 10009, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix - Revolutions", rating: 4.0
-            },
-            {
-                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 13, identity: 10010, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Revolutions", rating: 4.0
-            }
-          ] as data
-          UNWIND data as row
-          RETURN row.path as Path
-        `,
-        settings: { labelPosition: "outside", labelProperty: "rating", layout: "vertical" },
+        title: "iFrame",
+        description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
+        exampleQuery: `https://neodash.graphapp.io/embed-test.html`,
+        syntheticQuery: `https://neodash.graphapp.io/embed-test.html`,
+        settings: { "passGlobalParameters": true },
         fields: [],
-        selection: {
-            "Person": "name",
-            "Movie": "title"
-        },
-        type: "sankey",
-        chartType: NeoSankeyChart
-    },
-    {
-        title: "Choropleth Chart",
-        description: "Choropleth charts can be used to render geographical based information on geoJson polygons.",
-        exampleQuery: "// How are people distributed in the company per country?\n" +
-            "MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),\n" +
-            "(e)-[:LIVES_IN]->(c:Country)\n" +
-            "WITH c.code as code, count(e) as value\n" +
-            "RETURN code, value",
-        syntheticQuery: 'UNWIND [\n' +
-            '{id: "ARG", value: 23},\n' +
-            '{id: "BOL", value: 2},\n' +
-            '{id: "CAN", value: 100},\n' +
-            '{id: "COL", value: 5},\n' +
-            '{id: "FRA", value: 40},\n' +
-            '{id: "USA", value: 156}\n' +
-            '] as x \n' +
-            'RETURN x.id as code, x.value as value',
-        settings: { colors: "nivo" },
-        selection: { index: "code", value: "value", key: "code" },
-        fields: ["code", "value"],
-        type: "choropleth",
-        chartType: NeoChoroplethMapChart
-    },
-    {
-        title: "Gauge Chart",
-        description: "Gauge charts can be used to visualize a single numeric value (0-100) as a reading on a dial",
-        exampleQuery: "// How many story points has been closed during this sprint (based on the total)?\n" +
-            "MATCH (:Sprint{name:'Sprint 2'})-[:HAS_STORY]->(s:Story)\n" +
-            "WITH collect(s) as Stories\n" +
-            "WITH  reduce(t = 0, n IN Stories | t + n.points) as Total, reduce(t = 0, n IN [story in Stories where story.closed = true ] | t + n.points) as TotalClosed\n" +
-            "RETURN toFloat(TotalClosed*100)/Total",
-        syntheticQuery: 'RETURN rand()*100',
-        settings: {},
+        globalParameters: { "neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix" },
         selection: {},
-        fields: [],
-        type: "gauge",
-        chartType: NeoGaugeChart
+        type: "iframe",
+        chartType: NeoIFrameChart
     }
-
-
 ]
+
+export default EXAMPLE_REPORTS;

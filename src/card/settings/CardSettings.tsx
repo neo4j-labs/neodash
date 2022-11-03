@@ -58,6 +58,7 @@ const NeoCardSettings = ({
         width={width}
         height={height}
         type={type}
+        extensions={extensions}
         databaseList={databaseList}
         onDatabaseChanged={onDatabaseChanged}
         onQueryUpdate={onQueryUpdate}

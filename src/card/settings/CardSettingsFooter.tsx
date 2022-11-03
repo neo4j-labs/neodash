@@ -6,6 +6,8 @@ import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@mater
 import NeoSetting from '../../component/field/Setting';
 import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../extensions/styling/StyleRuleCreationModal';
 import TuneIcon from '@material-ui/icons/Tune';
+import { ADVANCED_REPORT_TYPES } from '../../extensions/advancedcharts/AdvancedChartsReportConfig';
+import { getReportTypes } from '../../extensions/ExtensionUtils';
 
 const update = (state, mutations) =>
     Object.assign({}, state, mutations)
@@ -33,8 +35,10 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
         debouncedReportSettingUpdate(field, value);
     };
 
+    const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+    
     // Contains, for a certain type of chart, its disabling logic
-    const disabledDependency = REPORT_TYPES[type]["disabledDependency"];
+    const disabledDependency = reportTypes[type] && reportTypes[type]["disabledDependency"];
 
     /* This method manages the disabling logic for all the settings inside the footer.
     *  The logic is based on the disabledDependency param inside the chart's configuration */
@@ -57,7 +61,7 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
         setReportSettingsText(reportSettings);
     }, [JSON.stringify(reportSettings)])
 
-    const settings = REPORT_TYPES[type]["settings"];
+    const settings = reportTypes[type] ? reportTypes[type]["settings"] : {};
 
     // If there are no advanced settings, render nothing.
     if (Object.keys(settings).length == 0) {

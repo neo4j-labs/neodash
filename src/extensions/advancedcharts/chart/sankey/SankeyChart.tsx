@@ -1,13 +1,12 @@
 
-import { ChartProps } from '../Chart';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ResponsiveSankey  } from '@nivo/sankey';
-import {evaluateRulesOnDict, evaluateRulesOnNode} from '../../extensions/styling/StyleRuleEvaluator'
-import {categoricalColorSchemes} from "../../config/ColorConfig";
-import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
-import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../ChartUtils';
-import { isCyclic } from '../Utils';
-
+import { ChartProps } from '../../../../chart/Chart';
+import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../../../chart/ChartUtils';
+import { categoricalColorSchemes } from '../../../../config/ColorConfig';
+import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
+import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
+import { isCyclic } from '../../../../chart/Utils';
 
 
 /**

@@ -16,10 +16,10 @@ import StorageIcon from '@material-ui/icons/Storage';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import ShareIcon from '@material-ui/icons/Share';
-import { SELECTION_TYPES } from '../config/ReportConfig';
 import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
+import { SELECTION_TYPES } from '../config/CardConfig';
 
 // const shareBaseURL = "http://localhost:3000";
 const shareBaseURL = "http://neodash.graphapp.io";
