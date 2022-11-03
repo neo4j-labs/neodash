@@ -1,13 +1,12 @@
 
 import React, { useCallback, useContext, useEffect } from 'react';
-import { REPORT_TYPES, RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
+import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import NeoField from '../../../component/field/Field';
 import { getReportTypes } from '../../../extensions/ExtensionUtils';
-import { ADVANCED_REPORT_TYPES } from '../../../extensions/advancedcharts/AdvancedChartsReportConfig';
 
 const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extensions, onReportSettingUpdate, onQueryUpdate }) => {
     const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -124,7 +123,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
     }
 
     const parameterSelectTypes = ["Node Property", "Relationship Property", "Free Text"]
-    const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+    const reportTypes = getReportTypes(extensions);
     
     return <div>
         <p style={{ color: "grey", fontSize: 12, paddingLeft: "5px", border: "1px solid lightgrey", marginTop: "0px" }}>

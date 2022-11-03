@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
-import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
 import NeoSetting from '../../component/field/Setting';
 import { NeoCustomReportStyleModal, RULE_BASED_REPORT_CUSTOMIZATIONS } from '../../extensions/styling/StyleRuleCreationModal';
 import TuneIcon from '@material-ui/icons/Tune';
-import { ADVANCED_REPORT_TYPES } from '../../extensions/advancedcharts/AdvancedChartsReportConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 
 const update = (state, mutations) =>
@@ -35,7 +33,7 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
         debouncedReportSettingUpdate(field, value);
     };
 
-    const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+    const reportTypes = getReportTypes(extensions);
     
     // Contains, for a certain type of chart, its disabling logic
     const disabledDependency = reportTypes[type] && reportTypes[type]["disabledDependency"];

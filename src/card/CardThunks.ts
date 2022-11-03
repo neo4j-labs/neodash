@@ -14,8 +14,7 @@ import {
     updateReportDatabase
 } from "./CardActions";
 import { createNotificationThunk } from "../page/PageThunks";
-import { DEFAULT_NODE_LABELS, REPORT_TYPES } from "../config/ReportConfig";
-import { ADVANCED_REPORT_TYPES } from "../extensions/advancedcharts/AdvancedChartsReportConfig";
+import { DEFAULT_NODE_LABELS } from "../config/ReportConfig";
 import { getReportTypes } from "../extensions/ExtensionUtils";
 import isEqual from 'lodash.isequal';
 import { SELECTION_TYPES } from "../config/CardConfig";
@@ -99,7 +98,7 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
         const oldFields = oldReport.fields;
         const reportType =oldReport.type;
         const oldSelection = oldReport.selection;
-        const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+        const reportTypes = getReportTypes(extensions);
         const selectableFields = reportTypes[reportType].selection; // The dictionary of selectable fields as defined in the config.
         const autoAssignSelectedProperties = reportTypes[reportType].autoAssignSelectedProperties;
         const selectables = (selectableFields) ? Object.keys(selectableFields) : [];
@@ -197,7 +196,7 @@ export const updateReportSettingThunk = (index, setting, value) => (dispatch: an
         if (setting == "showOptionalSelections" && value == false) {
 
             const reportType = state.dashboard.pages[pagenumber].reports[index].type;
-            const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+            const reportTypes = getReportTypes(extensions);
             const selectableFields = reportTypes[reportType].selection;
             const optionalSelectables =
                 (selectableFields) ? Object.keys(selectableFields).filter((key) => selectableFields[key].optional) : [];

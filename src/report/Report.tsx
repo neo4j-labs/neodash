@@ -7,12 +7,11 @@ import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from "../component/editor/CodeViewerComponent";
-import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS } from "../config/ReportConfig";
+import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { useContext } from "react";
 import NeoTableChart from "../chart/table/TableChart";
-import { ADVANCED_REPORT_TYPES } from "../extensions/advancedcharts/AdvancedChartsReportConfig";
 import { getReportTypes } from "../extensions/ExtensionUtils";
 import { SELECTION_TYPES } from "../config/CardConfig";
 
@@ -49,7 +48,7 @@ export const NeoReport = ({
 
     const populateReport = (debounced = true) => {
         // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
-        const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+        const reportTypes = getReportTypes(extensions);
         
         if (reportTypes[type]['textOnly']) {
             setStatus(QueryStatus.COMPLETE);
@@ -119,7 +118,7 @@ export const NeoReport = ({
         [],
     );
 
-    const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+    const reportTypes = getReportTypes(extensions);
 
     // Draw the report based on the query status.
     if (disabled) {

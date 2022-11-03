@@ -18,10 +18,9 @@ import { getDashboardExtensions, getDashboardSettings } from "../DashboardSelect
 import { updateDashboardSetting } from "../../settings/SettingsActions";
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import CategoryIcon from '@material-ui/icons/Category';
-import NeoExtensionsModal from "../../extensions/ExtensionsModal";
-import { EXAMPLE_REPORTS } from "../../config/ExampleConfig";
+import NeoExtensionsModal from "../../extensions/ExtensionsModal"; 
 import { getExampleReports } from "../../extensions/ExtensionUtils";
-import { EXAMPLE_ADVANCED_REPORTS } from "../../extensions/advancedcharts/AdvancedChartsExampleConfig";
+
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, extensions,
@@ -102,7 +101,7 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, extensi
 
                 <NeoReportExamplesModal
                     extensions={extensions}
-                    examples={getExampleReports(extensions, EXAMPLE_REPORTS, EXAMPLE_ADVANCED_REPORTS)}
+                    examples={getExampleReports(extensions)}
                     database={connection.database}>
                 </NeoReportExamplesModal>
                 <NeoExtensionsModal></NeoExtensionsModal>

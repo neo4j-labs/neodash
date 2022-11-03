@@ -4,14 +4,12 @@ import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
 import { CardContent, IconButton } from '@material-ui/core';
-import { REPORT_TYPES } from '../../config/ReportConfig';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { downloadComponentAsImage } from '../../chart/ChartUtils';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
-import { ADVANCED_REPORT_TYPES } from '../../extensions/advancedcharts/AdvancedChartsReportConfig';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 
 const NeoCardView = ({ title, database, query, globalParameters,
@@ -52,7 +50,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
             showOptionalSelections={(settings["showOptionalSelections"])} >
         </NeoCardViewFooter> : <></>;
 
-    const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+    const reportTypes = getReportTypes(extensions);
 
 
     const withoutFooter = reportTypes[type] && reportTypes[type].withoutFooter ? reportTypes[type].withoutFooter : reportTypes[type] && !reportTypes[type].selection || (settings && settings.hideSelections);

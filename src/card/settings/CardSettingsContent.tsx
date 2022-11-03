@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
 import CardContent from '@material-ui/core/CardContent';
 import MenuItem from '@material-ui/core/MenuItem';
-import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-import { ADVANCED_REPORT_TYPES } from '../../extensions/advancedcharts/AdvancedChartsReportConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 
 
@@ -59,7 +57,7 @@ const NeoCardSettingsContent = ({
         }
     }, [refreshRate])
 
-    const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+    const reportTypes = getReportTypes(extensions);
     const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
 
     return <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}>

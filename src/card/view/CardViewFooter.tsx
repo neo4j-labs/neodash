@@ -1,8 +1,6 @@
 import React from "react";
 import { CardActions, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField } from "@material-ui/core";
-import { REPORT_TYPES } from "../../config/ReportConfig";
 import { categoricalColorSchemes } from "../../config/ColorConfig";
-import { ADVANCED_REPORT_TYPES } from "../../extensions/advancedcharts/AdvancedChartsReportConfig";
 import { getReportTypes } from "../../extensions/ExtensionUtils";
 import { SELECTION_TYPES } from "../../config/CardConfig";
 
@@ -10,7 +8,7 @@ const NeoCardViewFooter = ({ fields, settings, selection, type, extensions, show
     /**
      * For each selectable field in the visualization, give the user an option to select them from the query output fields.
     */
-     const reportTypes = getReportTypes(extensions, REPORT_TYPES, ADVANCED_REPORT_TYPES);
+     const reportTypes = getReportTypes(extensions);
     const selectableFields = reportTypes[type].selection;
     const selectables = (selectableFields) ? Object.keys(selectableFields) : [];
     const nodeColorScheme = settings && settings.nodeColorScheme ? settings.nodeColorScheme : "neodash";
