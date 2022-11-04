@@ -1,0 +1,23 @@
+= Report Actions 
+
+label:Pro&nbsp;Extension[]
+
+Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked. 
+
+image::report-actions.png[Report Actions]
+
+
+
+== Configuration
+
+To create a **Report Action**, open up the report settings, Then, click the 'Report Action' button on the bottom right (marked with the red circle):
+
+== Supported Visualizations
+
+Report Actions are available for the following report types:
+
+- Tables
+- Graphs
+- Maps
+
+> This **Pro Extension** is free to try out in Neo4j Desktop, and the link:https://neodash.graphapp.io[NeoDash Demo Environment]. To use it in a self-hosted environment, reach out to link:mailto:ps_emea_pmo@neotechnology.com[Neo4j Professional Services] for a commercial agreement. 

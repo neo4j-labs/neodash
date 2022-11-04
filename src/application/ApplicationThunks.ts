@@ -269,15 +269,15 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         });
 
         const page = urlParams.get('page');
-        if(page !== "" && page !== null){
-            if(!isNaN(page)){
+        if (page !== "" && page !== null) {
+            if (!isNaN(page)) {
                 dispatch(setPageNumberThunk(parseInt(page)));
             }
         }
-        const clearNotificationAfterLoad = true;
+
         dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
         const state = getState();
-        const standalone = config['standalone'];// || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
+        const standalone = config['standalone'];
         dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase'], config["standaloneDashboardURL"], config['standaloneUsername'], config['standalonePassword']))
         dispatch(setConnectionModalOpen(false));
 
@@ -323,64 +323,79 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
 
         if (standalone) {
-            // If we are running in standalone mode, auto-set the connection details that are configured.
-            dispatch(setConnectionProperties(
-                config['standaloneProtocol'],
-                config['standaloneHost'],
-                config['standalonePort'],
-                config['standaloneDatabase'],
-                config['standaloneUsername'] ? config['standaloneUsername'] : state.application.connection.username,
-                config['standalonePassword'] ? config['standalonePassword'] : state.application.connection.password));
-
-            dispatch(setAboutModalOpen(false));
-            dispatch(setConnected(false));
-            dispatch(setWelcomeScreenOpen(false));
-            if (config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
-                dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
-            } else {
-                dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
-            }
-
-            dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
-
-            if (clearNotificationAfterLoad) {
-                dispatch(clearNotification());
-            }
-
-            // Override for when username and password are specified in the config - automatically connect to the specified URL.
-            if (config['standaloneUsername'] && config['standalonePassword']) {
-                dispatch(createConnectionThunk(config['standaloneProtocol'],
-                    config['standaloneHost'],
-                    config['standalonePort'],
-                    config['standaloneDatabase'],
-                    config['standaloneUsername'],
-                    config['standalonePassword']));
-            } else {
-                dispatch(setConnectionModalOpen(true));
-            }
+            dispatch(initializeApplicationAsStandaloneThunk(config, paramsToSetAfterConnecting));
         } else {
-            dispatch(clearDesktopConnectionProperties());
-            dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
-            const old = localStorage.getItem('neodash-dashboard');
-            dispatch(setOldDashboard(old));
-            dispatch(setConnected(false));
-            dispatch(setDashboardToLoadAfterConnecting(null));
-            dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
-            if (Object.keys(paramsToSetAfterConnecting).length > 0) {
-                dispatch(setParametersToLoadAfterConnecting(null));
-            }
-
-            dispatch(setWelcomeScreenOpen(true));
-
-            if (clearNotificationAfterLoad) {
-                dispatch(clearNotification());
-            }
-            dispatch(handleSharedDashboardsThunk());
-            dispatch(setReportHelpModalOpen(false));
-            dispatch(setAboutModalOpen(false));
+            initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting);
         }
     } catch (e) {
         dispatch(setWelcomeScreenOpen(false));
         dispatch(createNotificationThunk("Unable to load application configuration", "Do you have a valid config.json deployed with your application?"));
     }
 }
+
+// Set up NeoDash to run in editor mode.
+export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConnecting) => async (dispatch: any, getState: any) => {
+    const clearNotificationAfterLoad = true;
+    dispatch(clearDesktopConnectionProperties());
+    dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
+    const old = localStorage.getItem('neodash-dashboard');
+    dispatch(setOldDashboard(old));
+    dispatch(setConnected(false));
+    dispatch(setDashboardToLoadAfterConnecting(null));
+    dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
+    if (Object.keys(paramsToSetAfterConnecting).length > 0) {
+        dispatch(setParametersToLoadAfterConnecting(null));
+    }
+
+    dispatch(setWelcomeScreenOpen(true));
+
+    if (clearNotificationAfterLoad) {
+        dispatch(clearNotification());
+    }
+    dispatch(handleSharedDashboardsThunk());
+    dispatch(setReportHelpModalOpen(false));
+    dispatch(setAboutModalOpen(false));
+}
+
+// Set up NeoDash to run in standalone mode.
+export const initializeApplicationAsStandaloneThunk = (config, paramsToSetAfterConnecting) => async (dispatch: any, getState: any) => {
+    const clearNotificationAfterLoad = true;
+    const state = getState();
+
+    // If we are running in standalone mode, auto-set the connection details that are configured.
+    dispatch(setConnectionProperties(
+        config['standaloneProtocol'],
+        config['standaloneHost'],
+        config['standalonePort'],
+        config['standaloneDatabase'],
+        config['standaloneUsername'] ? config['standaloneUsername'] : state.application.connection.username,
+        config['standalonePassword'] ? config['standalonePassword'] : state.application.connection.password));
+
+    dispatch(setAboutModalOpen(false));
+    dispatch(setConnected(false));
+    dispatch(setWelcomeScreenOpen(false));
+    if (config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
+        dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
+    } else {
+        dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+    }
+
+    dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
+
+    if (clearNotificationAfterLoad) {
+        dispatch(clearNotification());
+    }
+
+    // Override for when username and password are specified in the config - automatically connect to the specified URL.
+    if (config['standaloneUsername'] && config['standalonePassword']) {
+        dispatch(createConnectionThunk(config['standaloneProtocol'],
+            config['standaloneHost'],
+            config['standalonePort'],
+            config['standaloneDatabase'],
+            config['standaloneUsername'],
+            config['standalonePassword']));
+    } else {
+        dispatch(setConnectionModalOpen(true));
+    }
+}
+

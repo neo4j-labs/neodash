@@ -10,3 +10,4 @@ NeoDash.
 * link:reports[Reports] contains information on how a report works, and lists the
 different types that can be used.
 * link:publishing[Publishing] explains how to publish a dashboard for others to view.
+* link:extensions[Extensions] lists the different extensions available for NeoDash.

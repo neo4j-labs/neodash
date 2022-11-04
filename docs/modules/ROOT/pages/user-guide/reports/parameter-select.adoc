@@ -21,15 +21,15 @@ the complete freedom to enter any value they want.
 
 == Examples
 
-== Node Property Select
+=== Node Property Select
 
 image::select.png[Node Property Select]
 
-== Relationship Property Select
+=== Relationship Property Select
 
 image::select2.png[Relationship Property Select]
 
-== Free Text Select
+=== Free Text Select
 
 image::select3.png[Free Text Select]
 
