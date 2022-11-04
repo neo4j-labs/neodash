@@ -1,5 +1,3 @@
-
-
 // import { expect } from 'chai';
 // import { getBorderStyleForDate } from '../logic/cardStyle';
 // import { describe } from 'mocha';

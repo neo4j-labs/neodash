@@ -13,25 +13,25 @@
   },
   "ignorePatterns": ["node_modules/**", "packages/**/dist/**", "packages/**/coverage/**"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "off", // off for v1
-    "@typescript-eslint/ban-ts-comment": "off", // off for v1
-    "@typescript-eslint/no-empty-function": "off", // off for v1
+    "@typescript-eslint/no-explicit-any": "off", // Off for v1
+    "@typescript-eslint/ban-ts-comment": "off", // Off for v1
+    "@typescript-eslint/no-empty-function": "off", // Off for v1
     "@typescript-eslint/no-unused-vars": [
       "error",
       { "vars": "all", "varsIgnorePattern": "^_*", "args": "after-used", "argsIgnorePattern": "^_" }
     ],
-    "array-callback-return": "off", // off for v1
+    "array-callback-return": "off", // Off for v1
     "arrow-body-style": "off",
     "block-scoped-var": "error",
-    "camelcase": "off", // off in v1
-    "consistent-return": "off", // off in v1
+    "camelcase": "off", // Off for v1
+    "consistent-return": "off", // Off for v1
     "consistent-this": ["error", "self"],
     "constructor-super": "error",
     "curly": ["error", "all"],
     "default-case": "error",
-    "default-param-last": "off", // off in v1
+    "default-param-last": "off", // Off for v1
     "dot-notation": "error",
-    "eqeqeq": "off", // off for v1
+    "eqeqeq": "off", // Off for v1
     "func-names": "error",
     "func-style": [
       "error",
@@ -41,11 +41,11 @@
       }
     ],
     "grouped-accessor-pairs": "error",
-    "line-comment-position": "off", // off for v1
+    "line-comment-position": "off", // Off for v1
     "lines-between-class-members": "error",
     "max-depth": "error",
     "max-len": [
-      "off", // off for v1
+      "off", // Off for v1
       {
         "code": 120,
         "comments": 120,
@@ -57,9 +57,9 @@
     "max-nested-callbacks": ["error", 5],
     "max-statements": ["off"],
     "max-statements-per-line": "error",
-    "no-alert": "off", // off in v1
+    "no-alert": "off", // Off for v1
     "no-array-constructor": "error",
-    "no-await-in-loop": "off", // off in v1
+    "no-await-in-loop": "off", // Off for v1
     "no-buffer-constructor": "error",
     "no-caller": "error",
     "no-confusing-arrow": "error",
@@ -70,12 +70,12 @@
     "no-dupe-else-if": "error",
     "no-else-return": "error",
     "no-empty-function": [
-      "off", // off for v1
+      "off", // Off for v1
       {
         "allow": ["constructors"]
       }
     ],
-    "no-eq-null": "off", // off for V1
+    "no-eq-null": "off", // Off for V1
     "no-eval": "error",
     "no-extend-native": "error",
     "no-extra-bind": "error",
@@ -93,13 +93,13 @@
     "no-magic-numbers": "off",
     "no-multi-assign": "error",
     "no-multi-str": "error",
-    "no-nested-ternary": "off", // off for v1
+    "no-nested-ternary": "off", // Off for v1
     "no-new": "error",
     "no-new-func": "error",
     "no-new-object": "error",
     "no-new-wrappers": "error",
     "no-octal-escape": "error",
-    "no-param-reassign": "off", // off for v1
+    "no-param-reassign": "off", // Off for v1
     "no-path-concat": "error",
     "no-plusplus": [
       "error",
@@ -107,7 +107,7 @@
         "allowForLoopAfterthoughts": true
       }
     ],
-    "no-proto": "off", // off in v1
+    "no-proto": "off", // Off for v1
     "no-restricted-globals": "error",
     "no-return-assign": "error",
     "no-return-await": "error",
@@ -117,14 +117,14 @@
     "no-sync": "error",
     "no-tabs": "error",
     "no-template-curly-in-string": "error",
-    "no-underscore-dangle": "off", // off for v1
+    "no-underscore-dangle": "off", // Off for v1
     "no-unmodified-loop-condition": "error",
     "no-unneeded-ternary": "error",
     "no-unreachable": "error",
-    "no-unused-expressions": "off", // off in v1
+    "no-unused-expressions": "off", // Off for v1
     "no-useless-call": "error",
     "no-useless-computed-key": "error",
-    "no-useless-concat": "off", // off in v1
+    "no-useless-concat": "off", // Off for v1
     "no-useless-rename": "error",
     "no-useless-return": "error",
     "no-var": "error",
@@ -133,9 +133,9 @@
     "operator-assignment": "error",
     "padding-line-between-statements": "error",
     "prefer-arrow-callback": "warn",
-    "prefer-const": "off", // off in v1
+    "prefer-const": "off", // Off for v1
     "prefer-destructuring": [
-      // off in v1
+      // Off for v1
       "warn",
       {
         "VariableDeclarator": {
@@ -153,9 +153,9 @@
     "prefer-rest-params": "warn",
     "prefer-spread": "warn",
     "prefer-template": "warn",
-    "radix": "off", // off for v1
+    "radix": "off", // Off for v1
     "require-atomic-updates": "error",
-    "require-await": "warn", // off for v1
+    "require-await": "warn", // Warn for v1
     "sort-keys": "off",
     "spaced-comment": [
       "warn",

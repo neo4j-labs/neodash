@@ -1,7 +1,7 @@
-import { CardContent, Chip, IconButton, Tooltip } from "@material-ui/core";
+import { CardContent, Chip, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import WarningIcon from '@material-ui/icons/Warning';
-import { QueryStatus, runCypherQuery } from "./ReportQueryRunner";
+import { QueryStatus, runCypherQuery } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';
@@ -35,16 +35,15 @@ export const NeoReport = ({
     extensions = {}, // A set of enabled extensions.
     ChartType = NeoTableChart, // The report component to render with the query results.
 }) => {
-    const [records, setRecords] = useState(null);
-    const [timer, setTimer] = useState(null);
-    const [status, setStatus] = useState(QueryStatus.NO_QUERY);
-    const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-    if (!driver) throw new Error('`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?')
-
-    const debouncedRunCypherQuery = useCallback(
-        debounce(runCypherQuery, RUN_QUERY_DELAY_MS),
-        [],
+  const [records, setRecords] = useState(null);
+  const [timer, setTimer] = useState(null);
+  const [status, setStatus] = useState(QueryStatus.NO_QUERY);
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+  if (!driver) {
+    throw new Error(
+      '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?',
     );
+  }
 
     const populateReport = (debounced = true) => {
         // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
@@ -74,49 +73,53 @@ export const NeoReport = ({
         const useNodePropsAsFields = reportTypes[type].useNodePropsAsFields == true;
         const useReturnValuesAsFields = reportTypes[type].useReturnValuesAsFields == true;
 
-        if (debounced) {
-            setStatus(QueryStatus.RUNNING);
-            debouncedRunCypherQuery(driver, database, query, parameters, 
-                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, useReturnValuesAsFields, HARD_ROW_LIMITING,  queryTimeLimit);
-        } else {
-            runCypherQuery(driver, database, query, parameters,
-                rowLimit, setStatus, setRecords, setFields, fields, useNodePropsAsFields, useReturnValuesAsFields, HARD_ROW_LIMITING,  queryTimeLimit);
+    // Take care of multi select fields, they need to be added to the numeric fields too.
+    if (REPORT_TYPES[type].selection) {
+      Object.keys(REPORT_TYPES[type].selection).forEach((field) => {
+        if (REPORT_TYPES[type].selection[field].multiple && selection[field]) {
+          selection[field].forEach((f) => numericFields.push(`${field}(${f})`));
         }
-    };
+      });
+    }
 
-    // When report parameters are changed, re-run the report.
-    useEffect(() => {
+    const useNodePropsAsFields = REPORT_TYPES[type].useNodePropsAsFields == true;
+    const useReturnValuesAsFields = REPORT_TYPES[type].useReturnValuesAsFields == true;
 
-        if (timer) {
-            // @ts-ignore
-            clearInterval(timer);
-        }
-        if (!disabled) {
-            if (query.trim() == "") {
-                setStatus(QueryStatus.NO_QUERY);
-            }
-            populateReport();
-            // If a refresh rate was specified, set up an interval for re-running the report. (max 24 hrs)
-            if (refreshRate && refreshRate > 0) {
-                // @ts-ignore
-                setTimer(setInterval(function () {
-                    populateReport(false);
-                }, Math.min(refreshRate, 86400) * 1000.0));
-            }
-        }
-    }, [disabled, query, JSON.stringify(parameters)])
-
-    // Define query callback to allow reports to get extra data on interactions.
-    const queryCallback = useCallback(
-        (query, parameters, setRecords) => {
-            runCypherQuery(driver, database, query, parameters, rowLimit,
-                (status) => { status == QueryStatus.NO_DATA ? setRecords([]) : null },
-                (result => setRecords(result)),
-                () => { return }, 
-                fields, false, false, HARD_ROW_LIMITING, queryTimeLimit);
-        },
-        [],
-    );
+    if (debounced) {
+      setStatus(QueryStatus.RUNNING);
+      debouncedRunCypherQuery(
+        driver,
+        database,
+        query,
+        parameters,
+        rowLimit,
+        setStatus,
+        setRecords,
+        setFields,
+        fields,
+        useNodePropsAsFields,
+        useReturnValuesAsFields,
+        HARD_ROW_LIMITING,
+        queryTimeLimit,
+      );
+    } else {
+      runCypherQuery(
+        driver,
+        database,
+        query,
+        parameters,
+        rowLimit,
+        setStatus,
+        setRecords,
+        setFields,
+        fields,
+        useNodePropsAsFields,
+        useReturnValuesAsFields,
+        HARD_ROW_LIMITING,
+        queryTimeLimit,
+      );
+    }
+  };
 
     const reportTypes = getReportTypes(extensions);
 
@@ -179,11 +182,121 @@ export const NeoReport = ({
         return <NeoCodeViewerComponent value={"Query was aborted - it took longer than " + queryTimeLimit + "s to run. \n"
             + "Consider limiting your returned query rows,\nor increase the maximum query time."} />
     }
-    {/* @ts-ignore */ }
+  }, [disabled, query, JSON.stringify(parameters)]);
 
-    return <NeoCodeViewerComponent value={records && records[0] && records[0].error && records[0].error}
-        placeholder={"Unknown query error, check the browser console."} />
+  // Define query callback to allow reports to get extra data on interactions.
+  const queryCallback = useCallback((query, parameters, setRecords) => {
+    runCypherQuery(
+      driver,
+      database,
+      query,
+      parameters,
+      rowLimit,
+      (status) => {
+        status == QueryStatus.NO_DATA ? setRecords([]) : null;
+      },
+      (result) => setRecords(result),
+      () => {},
+      fields,
+      false,
+      false,
+      HARD_ROW_LIMITING,
+      queryTimeLimit,
+    );
+  }, []);
 
-}
+  // Draw the report based on the query status.
+  if (disabled) {
+    return <div></div>;
+  } else if (status == QueryStatus.NO_QUERY) {
+    return (
+      <div style={{ padding: 15 }}>
+        No query specified. <br /> Use the{' '}
+        <Chip style={{ backgroundColor: '#efefef' }} size="small" icon={<MoreVert />} label="Report Settings" /> button
+        to get started.{' '}
+      </div>
+    );
+  } else if (status == QueryStatus.RUNNING) {
+    return (
+      <Typography variant="h2" color="textSecondary" style={{ paddingTop: '100px', textAlign: 'center' }}>
+        <CircularProgress color="inherit" />
+      </Typography>
+    );
+  } else if (status == QueryStatus.NO_DATA) {
+    return <NeoCodeViewerComponent value={'Query returned no data.'} />;
+  } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
+    return <NoDrawableDataErrorMessage />;
+  } else if (status == QueryStatus.COMPLETE) {
+    if (records == null || records.length == 0) {
+      return <div>Loading...</div>;
+    }
+    return (
+      <div
+        style={{ height: '100%', marginTop: '0px', overflow: REPORT_TYPES[type].allowScrolling ? 'auto' : 'hidden' }}
+      >
+        <ChartType
+          records={records}
+          selection={selection}
+          settings={settings}
+          fullscreen={expanded}
+          dimensions={dimensions}
+          parameters={parameters}
+          queryCallback={queryCallback}
+          setGlobalParameter={setGlobalParameter}
+          getGlobalParameter={getGlobalParameter}
+        />
+      </div>
+    );
+  } else if (status == QueryStatus.COMPLETE_TRUNCATED) {
+    if (records == null || records.length == 0) {
+      return <div>Loading...</div>;
+    }
+    return (
+      <div
+        style={{ height: '100%', marginTop: '0px', overflow: REPORT_TYPES[type].allowScrolling ? 'auto' : 'hidden' }}
+      >
+        <div style={{ marginBottom: '-31px' }}>
+          <div style={{ display: 'flex' }}>
+            <Tooltip
+              title={`Over ${rowLimit} row(s) were returned, results have been truncated.`}
+              placement="left"
+              aria-label="host"
+            >
+              <WarningIcon
+                style={{ zIndex: 999, marginTop: '2px', marginRight: '20px', marginLeft: 'auto', color: 'orange' }}
+              />
+            </Tooltip>
+          </div>
+        </div>
+        <ChartType
+          records={records}
+          selection={selection}
+          settings={settings}
+          fullscreen={expanded}
+          dimensions={dimensions}
+          parameters={parameters}
+          queryCallback={queryCallback}
+          setGlobalParameter={setGlobalParameter}
+          getGlobalParameter={getGlobalParameter}
+        />
+      </div>
+    );
+  } else if (status == QueryStatus.TIMED_OUT) {
+    return (
+      <NeoCodeViewerComponent
+        value={
+          `Query was aborted - it took longer than ${queryTimeLimit}s to run. \n` +
+          `Consider limiting your returned query rows,\nor increase the maximum query time.`
+        }
+      />
+    );
+  }
+  return (
+    <NeoCodeViewerComponent
+      value={records && records[0] && records[0].error && records[0].error}
+      placeholder={'Unknown query error, check the browser console.'}
+    />
+  );
+};
 
 export default NeoReport;

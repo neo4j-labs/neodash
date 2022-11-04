@@ -964,9 +964,7 @@ export const REPORT_TYPES = {
 }
 
 // Default node labels to display when rendering a node in a graph visualization.
-export const DEFAULT_NODE_LABELS = [
-    "name", "title", "label", "id", "uid", "(label)"
-]
+export const DEFAULT_NODE_LABELS = ['name', 'title', 'label', 'id', 'uid', '(label)'];
 
 // Default node labels to display when rendering a node in a graph visualization.
-export const DEFAULT_NODE_LABEL_BLANK = "(no label)"
+export const DEFAULT_NODE_LABEL_BLANK = '(no label)';

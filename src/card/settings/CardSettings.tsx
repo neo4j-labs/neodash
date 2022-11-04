@@ -38,16 +38,41 @@ const NeoCardSettings = ({
                              onCreateNotification
                          }) => {
 
-    const reportHeight = heightPx - CARD_HEADER_HEIGHT + 24;
+  const cardSettingsHeader = (
+    <NeoCardSettingsHeader
+      expanded={expanded}
+      onToggleCardExpand={onToggleCardExpand}
+      onRemovePressed={onRemovePressed}
+      onClonePressed={onClonePressed}
+      onReportHelpButtonPressed={onReportHelpButtonPressed}
+      fullscreenEnabled={dashboardSettings.fullscreenEnabled}
+      onToggleCardSettings={(e) => {
+        setActive(reportSettings.autorun !== undefined ? reportSettings.autorun : true);
+        onToggleCardSettings(e);
+      }}
+    />
+  );
 
-    const cardSettingsHeader = <NeoCardSettingsHeader
-        expanded={expanded}
-        onToggleCardExpand={onToggleCardExpand}
-        onRemovePressed={onRemovePressed}
-        onClonePressed={onClonePressed}
-        onReportHelpButtonPressed={onReportHelpButtonPressed}
-        fullscreenEnabled={dashboardSettings.fullscreenEnabled}
-        onToggleCardSettings={(e) => { setActive(reportSettings.autorun !== undefined ? reportSettings.autorun : true); onToggleCardSettings(e) }} />
+  // TODO - instead of hiding everything based on settingsopen, only hide the components that slow down render (cypher editor)
+  const cardSettingsContent = settingsOpen ? (
+    <NeoCardSettingsContent
+      query={query}
+      database={database}
+      refreshRate={refreshRate}
+      reportSettings={reportSettings}
+      width={width}
+      height={height}
+      type={type}
+      databaseList={databaseList}
+      onDatabaseChanged={onDatabaseChanged}
+      onQueryUpdate={onQueryUpdate}
+      onReportSettingUpdate={onReportSettingUpdate}
+      onRefreshRateUpdate={onRefreshRateUpdate}
+      onTypeUpdate={onTypeUpdate}
+    ></NeoCardSettingsContent>
+  ) : (
+    <CardContent style={{ paddingTop: '10px', paddingBottom: '10px' }} />
+  );
 
     // TODO - instead of hiding everything based on settingsopen, only hide the components that slow down render (cypher editor)
     const cardSettingsContent = (settingsOpen) ? <NeoCardSettingsContent

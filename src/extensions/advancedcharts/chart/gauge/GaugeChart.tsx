@@ -8,18 +8,21 @@ import { createUUID } from '../../../../dashboard/DashboardThunks';
  * Based on https://github.com/dekelpaz PR https://github.com/neo4j-labs/neodash/pull/191
  */
 const NeoGaugeChart = (props: ChartProps) => {
+  const { records } = props;
+  const { selection } = props;
+  const { settings } = props;
 
     const records = props.records;
     const selection = props.selection;
     const settings = props.settings ? props.settings : {};
 
+  let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
 
-    if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-        return <NoDrawableDataErrorMessage />
-    }
-    /**
-     * This visualization was extracted from https://github.com/Martin36/react-gauge-chart.
-     */
+  if (arcsLengthN.filter((e) => isNaN(e)).length > 0 || arcsLengthN.length != nrOfLevels) {
+    arcsLengthN = Array(nrOfLevels).fill(1);
+  }
+  const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+  arcsLengthN = arcsLengthN.map((e) => e / sumArcs);
 
     const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
     const arcsLength = settings.arcsLength ? settings.arcsLength : "0.15, 0.55, 0.3";
@@ -33,9 +36,15 @@ const NeoGaugeChart = (props: ChartProps) => {
     const marginTop = (settings["marginTop"]) ? settings["marginTop"] : 40;
     const marginBottom = (settings["marginBottom"]) ? settings["marginBottom"] : 40;
 
-    let arcsLengthN = arcsLength.split(",").map(
-        e => parseFloat(e.trim())
-    );
+  if (isNaN(score)) {
+    return <NoDrawableDataErrorMessage />;
+  }
+  if (score.low != undefined) {
+    score = score.low;
+  }
+  if (score >= 0) {
+    score /= 100;
+  } // supporting older versions of Neo4j which don't support round to 2 decimal points
 
     if ((arcsLengthN.filter(e => isNaN(e)).length > 0) || (arcsLengthN.length != nrOfLevels))
         arcsLengthN = Array(nrOfLevels).fill(1);
@@ -67,7 +76,7 @@ const NeoGaugeChart = (props: ChartProps) => {
                 animateDuration={animateDuration}
             /> : <></>}
     </div>
-
-}
+  );
+};
 
 export default NeoGaugeChart;

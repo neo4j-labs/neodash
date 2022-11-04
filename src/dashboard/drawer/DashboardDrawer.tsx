@@ -1,15 +1,19 @@
-import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List, Button } from "@material-ui/core";
-import React from "react";
+import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List, Button } from '@material-ui/core';
+import React from 'react';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import NeoSaveModal from "../../modal/SaveModal";
-import NeoLoadModal from "../../modal/LoadModal";
-import NeoShareModal from "../../modal/ShareModal";
-import { NeoAboutModal } from "../../modal/AboutModal";
-import { NeoReportExamplesModal } from "../../modal/ReportExamplesModal";
-import { applicationGetConnection, applicationHasAboutModalOpen, applicationIsStandalone } from '../../application/ApplicationSelectors';
+import NeoSaveModal from '../../modal/SaveModal';
+import NeoLoadModal from '../../modal/LoadModal';
+import NeoShareModal from '../../modal/ShareModal';
+import { NeoAboutModal } from '../../modal/AboutModal';
+import { NeoReportExamplesModal } from '../../modal/ReportExamplesModal';
+import {
+  applicationGetConnection,
+  applicationHasAboutModalOpen,
+  applicationIsStandalone,
+} from '../../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
 import NeoSettingsModal from "../../settings/SettingsModal";
@@ -26,54 +30,52 @@ import { getExampleReports } from "../../extensions/ExtensionUtils";
 export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, extensions,
     updateDashboardSetting, handleDrawerClose, onAboutModalOpen, resetApplication }) => {
 
-    // Override to hide the drawer when the application is in standalone mode.
-    if (hidden) {
-        return <></>;
-    }
-
-    const content = (
-        <Drawer
-            variant="permanent"
-            style={
-                (open) ? {
-                    position: 'relative',
-                    overflowX: 'hidden',
-                    width: '240px',
-                    transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
-                    boxShadow: "2px 1px 10px 0px rgb(0 0 0 / 12%)",
-
-                } : {
-                    position: 'relative',
-                    overflowX: 'hidden',
-                    boxShadow: " 2px 1px 10px 0px rgb(0 0 0 / 12%)",
-
-                    transition: "width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
-                    width: "56px"
-                }
+  const content = (
+    <Drawer
+      variant="permanent"
+      style={
+        open
+          ? {
+              position: 'relative',
+              overflowX: 'hidden',
+              width: '240px',
+              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
+              boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
             }
-            open={open == true}
-        >
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                overflowX: 'hidden',
-                justifyContent: 'flex-end',
-                padding: '0 8px',
-                minHeight: '64px',
+          : {
+              position: 'relative',
+              overflowX: 'hidden',
+              boxShadow: ' 2px 1px 10px 0px rgb(0 0 0 / 12%)',
 
-            }}>
-                <ListItem>
-                    <Button
-                        component="label"
-                        onClick={resetApplication}
-                        style={{ backgroundColor: "white", marginLeft: "-8px" }}
-                        color="default"
-                        variant="outlined"
-                        size="small"
-                        startIcon={<ExitToAppIcon />}>Menu
-                    </Button>
-                </ListItem>
-
+              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
+              width: '56px',
+            }
+      }
+      open={open == true}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          overflowX: 'hidden',
+          justifyContent: 'flex-end',
+          padding: '0 8px',
+          minHeight: '64px',
+        }}
+      >
+        <ListItem>
+          <Button
+            component="label"
+            onClick={resetApplication}
+            style={{ backgroundColor: 'white', marginLeft: '-8px' }}
+            color="default"
+            variant="outlined"
+            size="small"
+            startIcon={<ExitToAppIcon />}
+          >
+            Menu
+          </Button>
+        </ListItem>
 
                 <IconButton onClick={handleDrawerClose}>
                     <ChevronLeftIcon />
@@ -137,16 +139,15 @@ const mapStateToProps = state => ({
     connection: applicationGetConnection(state)
 });
 
-const mapDispatchToProps = dispatch => ({
-    onAboutModalOpen: _ => dispatch(setAboutModalOpen(true)),
-    updateDashboardSetting: (setting, value) => {
-        dispatch(updateDashboardSetting(setting, value));
-    },
-    resetApplication: _ => {
-        dispatch(setWelcomeScreenOpen(true));
-        dispatch(setConnected(false));
-    }
+const mapDispatchToProps = (dispatch) => ({
+  onAboutModalOpen: () => dispatch(setAboutModalOpen(true)),
+  updateDashboardSetting: (setting, value) => {
+    dispatch(updateDashboardSetting(setting, value));
+  },
+  resetApplication: () => {
+    dispatch(setWelcomeScreenOpen(true));
+    dispatch(setConnected(false));
+  },
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoDrawer);

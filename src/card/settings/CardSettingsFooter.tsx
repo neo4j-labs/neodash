@@ -65,28 +65,29 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
     if (Object.keys(settings).length == 0) {
         return <div></div>
     }
+    return isDisabled;
+  };
+  useEffect(() => {
+    // Reset text to the dashboard state when the page gets reorganized.
+    setReportSettingsText(reportSettings);
+  }, [JSON.stringify(reportSettings)]);
 
-    // Else, build the advanced settings view.
-    const advancedReportSettings = <div style={{ marginLeft: "5px" }}>
-        {Object.keys(settings).map(setting =>{
-            let isDisabled = false
-            // Adding disabling logic to specific entries but only if the logic is defined inside the configuration
-            if (disabledDependency != undefined) {
-                isDisabled = getDisabled(setting)
-            }
+  const { settings } = REPORT_TYPES[type];
 
-            return <NeoSetting key={setting} name={setting}
-                value={reportSettingsText[setting]}
-                type={settings[setting]["type"]}
-                label={settings[setting]["label"]}
-                defaultValue={settings[setting]["default"]}
-                choices={settings[setting]["values"]}
-                disabled={isDisabled}
-                onChange={(e) => updateSpecificReportSetting(setting, e)}
-            />
+  // If there are no advanced settings, render nothing.
+  if (Object.keys(settings).length == 0) {
+    return <div></div>;
+  }
+
+  // Else, build the advanced settings view.
+  const advancedReportSettings = (
+    <div style={{ marginLeft: '5px' }}>
+      {Object.keys(settings).map((setting) => {
+        let isDisabled = false;
+        // Adding disabling logic to specific entries but only if the logic is defined inside the configuration
+        if (disabledDependency != undefined) {
+          isDisabled = getDisabled(setting);
         }
-        )}
-    </div>
 
     // TODO - Make the extensions more pluggable and dynamic, instead of hardcoded here.
     return <div>
@@ -130,6 +131,7 @@ const NeoCardSettingsFooter = ({ type, fields, reportSettings, reportSettingsOpe
             </tbody>
         </table>
     </div>
+  );
 };
 
 export default NeoCardSettingsFooter;

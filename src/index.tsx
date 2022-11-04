@@ -17,10 +17,12 @@ const store = configureStore();
 const persister = persistStore(store);
 
 /** Wrap the application in a redux provider / browser cache persistance gate **/
-const provider = <ReduxProvider store={store}>
+const provider = (
+  <ReduxProvider store={store}>
     <PersistGate persistor={persister} loading={<div>Loading NeoDash...</div>}>
-        <Application />
+      <Application />
     </PersistGate>
-</ReduxProvider>
+  </ReduxProvider>
+);
 
 ReactDOM.render(<React.StrictMode>{provider}</React.StrictMode>, document.getElementById('root'));

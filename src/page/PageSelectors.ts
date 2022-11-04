@@ -1,8 +1,8 @@
-import { createSelector } from "reselect";
+import { createSelector } from 'reselect';
 export const getReports = (state: any) => {
-    const pagenumber = state.dashboard.settings.pagenumber;
-    return state.dashboard.pages[pagenumber].reports;
-}
+  const { pagenumber } = state.dashboard.settings;
+  return state.dashboard.pages[pagenumber].reports;
+};
 export const getReportsLoading = (state: any) => state.dashboard.isLoading;
 
 export const getCurrentReports = createSelector(

@@ -40,16 +40,31 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
             ]
         }
     }
-
-    // Settings-specific updates are deferred to the page reducer.
-    if (action.type.startsWith('SETTINGS/')) {
-        const enrichedPayload = update(payload, { dashboard: state });
-        const enrichedAction = { type, payload: enrichedPayload };
-        return {
-            ...state,
-            settings: settingsReducer(state, enrichedAction)
-        }
+    case SET_DASHBOARD: {
+      const { dashboard } = payload;
+      return { ...dashboard };
     }
+    case SET_DASHBOARD_TITLE: {
+      const { title } = payload;
+      return { ...state, title: title };
+    }
+    case CREATE_PAGE: {
+      return { ...state, pages: [...state.pages, PAGE_INITIAL_STATE] };
+    }
+    case REMOVE_PAGE: {
+      // Removes the card at a given index on a selected page number.
+      const { number } = payload;
+      const pagesInFront = state.pages.slice(0, number);
+      const pagesBehind = state.pages.slice(number + 1);
+
+      return {
+        ...state,
+        pages: pagesInFront.concat(pagesBehind),
+      };
+    }
+    case MOVE_PAGE: {
+      // Moves a page from a given index to a new index.
+      const { oldIndex, newIndex } = payload;
 
     // Global dashboard updates are handled here.
     switch (type) {
@@ -88,20 +103,13 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
             // Moves a page from a given index to a new index.
             const { oldIndex, newIndex } = payload;
 
-            const element = state.pages.splice(oldIndex, 1)[0];
-            state.pages.splice(newIndex, 0, element);
-            
-            return {
-                ...state,
-                pages: state.pages
-            }
-        }
-        default: {
-            return state;
-        }
+      return {
+        ...state,
+        pages: state.pages,
+      };
     }
-}
-
-function dispatch(arg0: { type: string; payload: { number: any; }; }) {
-    throw new Error('Function not implemented.');
-}
+    default: {
+      return state;
+    }
+  }
+};

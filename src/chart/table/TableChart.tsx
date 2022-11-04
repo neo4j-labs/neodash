@@ -6,11 +6,9 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from '../ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -18,15 +16,15 @@ const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = "__";
 
 function ApplyColumnType(column, value) {
-    const renderer = getRendererForValue(value);
-    const columnProperties = (renderer ? { type: renderer.type, renderCell: renderer.renderValue } : rendererForType["string"]);
-    if (columnProperties) {
-        column = { ...column, ...columnProperties }
-    }
-    return column;
+  const renderer = getRendererForValue(value);
+  const columnProperties = renderer
+    ? { type: renderer.type, renderCell: renderer.renderValue }
+    : rendererForType.string;
+  if (columnProperties) {
+    column = { ...column, ...columnProperties };
+  }
+  return column;
 }
-
-
 
 const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;
@@ -57,17 +55,22 @@ const NeoTableChart = (props: ChartProps) => {
     }
     const columns = (transposed) ? ["Field"].concat(records.map((r, j) => "Value" + (j == 0 ? "" : " " + (j + 1).toString()))).map((key, i) => {
         const value = key;
-        return ApplyColumnType({
+        return ApplyColumnType(
+          {
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
             disableColumnSelector: true,
-            flex: (columnWidths && i < columnWidths.length) ? columnWidths[i] : 1,
-            disableClickEventBubbling: true
-        }, value)
-    }) : records[0].keys.map((key, i) => {
+            flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+            disableClickEventBubbling: true,
+          },
+          value,
+        );
+      })
+    : records[0].keys.map((key, i) => {
         const value = records[0].get(key);
-        return ApplyColumnType({
+        return ApplyColumnType(
+          {
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',

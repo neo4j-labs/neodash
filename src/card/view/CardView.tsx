@@ -18,9 +18,22 @@ const NeoCardView = ({ title, database, query, globalParameters,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
 
-    const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
-    const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
-    const ref = React.useRef();
+  // @ts-ignore
+  const reportHeader = (
+    <NeoCardViewHeader
+      title={title}
+      editable={editable}
+      description={settings.description}
+      fullscreenEnabled={dashboardSettings.fullscreenEnabled}
+      downloadImageEnabled={dashboardSettings.downloadImageEnabled}
+      onTitleUpdate={onTitleUpdate}
+      onToggleCardSettings={onToggleCardSettings}
+      settings={settings}
+      onDownloadImage={() => downloadComponentAsImage(ref)}
+      onToggleCardExpand={onToggleCardExpand}
+      expanded={expanded}
+    ></NeoCardViewHeader>
+  );
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
@@ -55,8 +68,12 @@ const NeoCardView = ({ title, database, query, globalParameters,
 
     const withoutFooter = reportTypes[type] && reportTypes[type].withoutFooter ? reportTypes[type].withoutFooter : reportTypes[type] && !reportTypes[type].selection || (settings && settings.hideSelections);
 
-    const getGlobalParameter = (key: string): any => {
-        return globalParameters ? globalParameters[key] : undefined;
+  const getLocalParameters = (): any => {
+    const re = /(?:^|\W)\$(\w+)(?!\w)/g;
+    let match;
+    const localQueryVariables: string[] = [];
+    while ((match = re.exec(query))) {
+      localQueryVariables.push(match[1]);
     }
 
     const getLocalParameters = (): any => {
@@ -70,6 +87,10 @@ const NeoCardView = ({ title, database, query, globalParameters,
         }
         return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local)));
     }
+    return Object.fromEntries(
+      Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local)),
+    );
+  };
 
     // TODO - understand why CardContent is throwing a warning based on this style config.
     const cardContentStyle = {

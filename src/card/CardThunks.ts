@@ -20,71 +20,70 @@ import isEqual from 'lodash.isequal';
 import { SELECTION_TYPES } from "../config/CardConfig";
 
 export const updateReportTitleThunk = (index, title) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateReportTitle(pagenumber, index, title))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update report title", e));
-    }
-}
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(updateReportTitle(pagenumber, index, title));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update report title', e));
+  }
+};
 
 /*
 Thunk used to update the database used from a report
  */
 export const updateReportDatabaseThunk = (index, database) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateReportDatabase(pagenumber, index, database))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update report database", e));
-    }
-}
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(updateReportDatabase(pagenumber, index, database));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update report database', e));
+  }
+};
 
 export const updateReportQueryThunk = (index, query) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateReportQuery(pagenumber, index, query))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update query", e));
-    }
-}
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(updateReportQuery(pagenumber, index, query));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update query', e));
+  }
+};
 
 export const updateReportRefreshRateThunk = (index, rate) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateReportRefreshRate(pagenumber, index, rate))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update refresh rate", e));
-    }
-}
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(updateReportRefreshRate(pagenumber, index, rate));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update refresh rate', e));
+  }
+};
 
 export const updateCypherParametersThunk = (index, parameters) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateCypherParameters(pagenumber, index, parameters))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update cypher parameters rate", e));
-    }
-}
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(updateCypherParameters(pagenumber, index, parameters));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update cypher parameters rate', e));
+  }
+};
 
 export const updateReportTypeThunk = (index, type) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
 
-        dispatch(updateReportType(pagenumber, index, type));
-        dispatch(updateFields(pagenumber, index, []));
-        dispatch(clearSelection(pagenumber, index));
-
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update report type", e));
-    }
-}
+    dispatch(updateReportType(pagenumber, index, type));
+    dispatch(updateFields(pagenumber, index, []));
+    dispatch(clearSelection(pagenumber, index));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update report type', e));
+  }
+};
 
 export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: any) => {
     try {
@@ -156,35 +155,47 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
                         }
 
                     }
-                }
+                  }
+                });
+                selection[label] = selectedProp ? selectedProp : '(label)';
+              } else {
+                selection[label] = selectedProp ? selectedProp : '(no label)';
+              }
             });
-            // Set the new set of fields for the report so that we may select them.
-            dispatch(updateFields(pagenumber, index, fields))
+            dispatch(updateAllSelections(pagenumber, index, selection));
+          } else {
+            // Else, default the selection to the Nth item of the result set fields.
+            dispatch(updateSelection(pagenumber, index, selection, fields[Math.min(i, fields.length - 1)]));
+          }
         }
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update report fields", e));
+      });
+      // Set the new set of fields for the report so that we may select them.
+      dispatch(updateFields(pagenumber, index, fields));
     }
-}
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update report fields', e));
+  }
+};
 
 export const updateSelectionThunk = (index, selectable, field) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(updateSelection(pagenumber, index, selectable, field))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot update report selection", e));
-    }
-}
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(updateSelection(pagenumber, index, selectable, field));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot update report selection', e));
+  }
+};
 
 export const toggleCardSettingsThunk = (index, open) => (dispatch: any, getState: any) => {
-    try {
-        const state = getState();
-        const pagenumber = state.dashboard.settings.pagenumber;
-        dispatch(toggleCardSettings(pagenumber, index, open))
-    } catch (e) {
-        dispatch(createNotificationThunk("Cannot open card settings", e));
-    }
-}
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(toggleCardSettings(pagenumber, index, open));
+  } catch (e) {
+    dispatch(createNotificationThunk('Cannot open card settings', e));
+  }
+};
 
 export const updateReportSettingThunk = (index, setting, value) => (dispatch: any, getState: any) => {
     try {
@@ -208,6 +219,8 @@ export const updateReportSettingThunk = (index, setting, value) => (dispatch: an
     } catch (e) {
         dispatch(createNotificationThunk("Error when updating report settings", e));
     }
-}
-
-
+    dispatch(updateReportSetting(pagenumber, index, setting, value));
+  } catch (e) {
+    dispatch(createNotificationThunk('Error when updating report settings', e));
+  }
+};

@@ -1,27 +1,32 @@
 import Card from '@material-ui/core/Card';
 import Collapse from '@material-ui/core/Collapse';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import NeoCardSettings from './settings/CardSettings';
 import NeoCardView from './view/CardView';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
-    updateCypherParametersThunk,
-    updateFieldsThunk,
-    updateSelectionThunk,
-    updateReportQueryThunk,
-    toggleCardSettingsThunk,
-    updateReportRefreshRateThunk,
-    updateReportSettingThunk,
-    updateReportTitleThunk,
-    updateReportTypeThunk,
-    updateReportDatabaseThunk
+  updateCypherParametersThunk,
+  updateFieldsThunk,
+  updateSelectionThunk,
+  updateReportQueryThunk,
+  toggleCardSettingsThunk,
+  updateReportRefreshRateThunk,
+  updateReportSettingThunk,
+  updateReportTitleThunk,
+  updateReportTypeThunk,
+  updateReportDatabaseThunk,
 } from './CardThunks';
-import {toggleReportSettings} from './CardActions';
-import {getReportState} from './CardSelectors';
-import {debounce, Dialog, DialogContent} from '@material-ui/core';
-import {getDashboardIsEditable, getDatabase, getGlobalParameters, getSessionParameters} from '../settings/SettingsSelectors';
-import {updateGlobalParameterThunk} from '../settings/SettingsThunks';
-import {createNotificationThunk} from '../page/PageThunks';
+import { toggleReportSettings } from './CardActions';
+import { getReportState } from './CardSelectors';
+import { debounce, Dialog, DialogContent } from '@material-ui/core';
+import {
+  getDashboardIsEditable,
+  getDatabase,
+  getGlobalParameters,
+  getSessionParameters,
+} from '../settings/SettingsSelectors';
+import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
+import { createNotificationThunk } from '../page/PageThunks';
 import useDimensions from 'react-cool-dimensions';
 import {setReportHelpModalOpen} from '../application/ApplicationActions';
 import {loadDatabaseListFromNeo4jThunk} from "../dashboard/DashboardThunks";
@@ -55,67 +60,62 @@ const NeoCard = ({
                      loadDatabaseListFromNeo4j // Thunk to get the list of databases
                  }) => {
 
-    // Will be used to fetch the list of current databases
-    const {driver} = useContext<Neo4jContextState>(Neo4jContext);
+  const [databaseList, setDatabaseList] = React.useState([database]);
+  const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
 
-    const [databaseList, setDatabaseList] = React.useState([database])
-    const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
-
-    // fetching the list of databases from neo4j, filtering out the 'system' db
-    useEffect(() => {
-        if(!databaseListLoaded){
-            loadDatabaseListFromNeo4j(driver, (result) => {
-                let index = result.indexOf("system")
-                if (index > -1) { // only splice array when item is found
-                    result.splice(index, 1); // 2nd parameter means remove one item only
-                }
-                setDatabaseList(result)
-            });
-            setDatabaseListLoaded(true);
+  // fetching the list of databases from neo4j, filtering out the 'system' db
+  useEffect(() => {
+    if (!databaseListLoaded) {
+      loadDatabaseListFromNeo4j(driver, (result) => {
+        const index = result.indexOf('system');
+        if (index > -1) {
+          // only splice array when item is found
+          result.splice(index, 1); // 2nd parameter means remove one item only
         }
-    }, [report.query]);
-
-    const [settingsOpen, setSettingsOpen] = React.useState(false);
-    const debouncedOnToggleCardSettings = useCallback(
-        debounce(onToggleCardSettings, 500),
-        [],
-    );
-    const [collapseTimeout, setCollapseTimeout] = React.useState(report.collapseTimeout);
-
-    const {observe, unobserve, width, height, entry} = useDimensions({
-        onResize: ({observe, unobserve, width, height, entry}) => {
-            // Triggered whenever the size of the target is changed...
-            unobserve(); // To stop observing the current target element
-            observe(); // To re-start observing the current target element
-        },
-    });
-
-
-    const [expanded, setExpanded] = useState(false);
-    const onToggleCardExpand = () => {
-        // When we re-minimize a card, close the settings to avoid position issues.
-        if (expanded && settingsOpen) {
-            onToggleCardSettings(index, false);
-        }
-        setExpanded(!expanded);
+        setDatabaseList(result);
+      });
+      setDatabaseListLoaded(true);
     }
+  }, [report.query]);
 
-    const [active, setActive] = React.useState(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const debouncedOnToggleCardSettings = useCallback(debounce(onToggleCardSettings, 500), []);
+  const [collapseTimeout, setCollapseTimeout] = React.useState(report.collapseTimeout);
 
-    useEffect(() => {
-        if (!report.settingsOpen) {
-            setActive(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
-        }
-    }, [report.query])
+  const { observe, unobserve, width, height, entry } = useDimensions({
+    onResize: ({ observe, unobserve }) => {
+      // Triggered whenever the size of the target is changed...
+      unobserve(); // To stop observing the current target element
+      observe(); // To re-start observing the current target element
+    },
+  });
 
+  const [expanded, setExpanded] = useState(false);
+  const onToggleCardExpand = () => {
+    // When we re-minimize a card, close the settings to avoid position issues.
+    if (expanded && settingsOpen) {
+      onToggleCardSettings(index, false);
+    }
+    setExpanded(!expanded);
+  };
 
-    useEffect(() => {
-        setSettingsOpen(report.settingsOpen);
-    }, [report.settingsOpen])
+  const [active, setActive] = React.useState(
+    report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true,
+  );
 
-    useEffect(() => {
-        setCollapseTimeout(report.collapseTimeout);
-    }, [report.collapseTimeout])
+  useEffect(() => {
+    if (!report.settingsOpen) {
+      setActive(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
+    }
+  }, [report.query]);
+
+  useEffect(() => {
+    setSettingsOpen(report.settingsOpen);
+  }, [report.settingsOpen]);
+
+  useEffect(() => {
+    setCollapseTimeout(report.collapseTimeout);
+  }, [report.collapseTimeout]);
 
     // TODO - get rid of some of the props-drilling here...
     const component = <div style={{height: "100%"}} ref={observe}>
@@ -193,20 +193,24 @@ const NeoCard = ({
         </Collapse>
     </div>;
 
-    // If the card is viewed in fullscreen, wrap it in a dialog.
-    // TODO - this causes a re-render (and therefore, a re-run of the report)
-    // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
-    if (expanded) {
-        return <Dialog maxWidth={"xl"} open={expanded} aria-labelledby="form-dialog-title">
-            <DialogContent style={{
-                width: Math.min(1920, document.documentElement.clientWidth - 64),
-                height: document.documentElement.clientHeight
-            }}>
-                {component}
-            </DialogContent>
-        </Dialog>
-    }
-    return component;
+  // If the card is viewed in fullscreen, wrap it in a dialog.
+  // TODO - this causes a re-render (and therefore, a re-run of the report)
+  // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
+  if (expanded) {
+    return (
+      <Dialog maxWidth={'xl'} open={expanded} aria-labelledby="form-dialog-title">
+        <DialogContent
+          style={{
+            width: Math.min(1920, document.documentElement.clientWidth - 64),
+            height: document.documentElement.clientHeight,
+          }}
+        >
+          {component}
+        </DialogContent>
+      </Dialog>
+    );
+  }
+  return component;
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -217,50 +221,47 @@ const mapStateToProps = (state, ownProps) => ({
     globalParameters: {...getGlobalParameters(state), ...getSessionParameters(state)} 
 });
 
-const mapDispatchToProps = dispatch => ({
-    onTitleUpdate: (index: any, title: any) => {
-        dispatch(updateReportTitleThunk(index, title))
-    },
-    onQueryUpdate: (index: any, query: any) => {
-        dispatch(updateReportQueryThunk(index, query))
-    },
-    onRefreshRateUpdate: (index: any, rate: any) => {
-        dispatch(updateReportRefreshRateThunk(index, rate))
-    },
-    onTypeUpdate: (index: any, type: any) => {
-        dispatch(updateReportTypeThunk(index, type))
-    },
-    onReportSettingUpdate: (index: any, setting: any, value: any) => {
-        dispatch(updateReportSettingThunk(index, setting, value))
-    },
-    onFieldsUpdate: (index: any, fields: any) => {
-        dispatch(updateFieldsThunk(index, fields))
-    },
-    onGlobalParameterUpdate: (key: any, value: any) => {
-        dispatch(updateGlobalParameterThunk(key, value))
-    },
-    onSelectionUpdate: (index: any, selectable: any, field: any) => {
-        dispatch(updateSelectionThunk(index, selectable, field))
-    },
-    onToggleCardSettings: (index: any, open: any) => {
-        dispatch(toggleCardSettingsThunk(index, open))
-    },
-    onReportHelpButtonPressed: () => {
-        dispatch(setReportHelpModalOpen(true))
-    },
-    onToggleReportSettings: (index: any) => {
-        dispatch(toggleReportSettings(index))
-    },
-    onCreateNotification: (title: any, message: any) => {
-        dispatch(createNotificationThunk(title, message))
-    },
-    onDatabaseChanged: (index: any, database: any) => {
-        dispatch(updateReportDatabaseThunk(index, database))
-    },
-    loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback))
-
+const mapDispatchToProps = (dispatch) => ({
+  onTitleUpdate: (index: any, title: any) => {
+    dispatch(updateReportTitleThunk(index, title));
+  },
+  onQueryUpdate: (index: any, query: any) => {
+    dispatch(updateReportQueryThunk(index, query));
+  },
+  onRefreshRateUpdate: (index: any, rate: any) => {
+    dispatch(updateReportRefreshRateThunk(index, rate));
+  },
+  onTypeUpdate: (index: any, type: any) => {
+    dispatch(updateReportTypeThunk(index, type));
+  },
+  onReportSettingUpdate: (index: any, setting: any, value: any) => {
+    dispatch(updateReportSettingThunk(index, setting, value));
+  },
+  onFieldsUpdate: (index: any, fields: any) => {
+    dispatch(updateFieldsThunk(index, fields));
+  },
+  onGlobalParameterUpdate: (key: any, value: any) => {
+    dispatch(updateGlobalParameterThunk(key, value));
+  },
+  onSelectionUpdate: (index: any, selectable: any, field: any) => {
+    dispatch(updateSelectionThunk(index, selectable, field));
+  },
+  onToggleCardSettings: (index: any, open: any) => {
+    dispatch(toggleCardSettingsThunk(index, open));
+  },
+  onReportHelpButtonPressed: () => {
+    dispatch(setReportHelpModalOpen(true));
+  },
+  onToggleReportSettings: (index: any) => {
+    dispatch(toggleReportSettings(index));
+  },
+  onCreateNotification: (title: any, message: any) => {
+    dispatch(createNotificationThunk(title, message));
+  },
+  onDatabaseChanged: (index: any, database: any) => {
+    dispatch(updateReportDatabaseThunk(index, database));
+  },
+  loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
-
 export default connect(mapStateToProps, mapDispatchToProps)(NeoCard);
-

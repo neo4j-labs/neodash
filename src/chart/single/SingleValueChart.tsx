@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChartProps } from '../Chart';
 import { renderValueByType } from '../../report/ReportRecordProcessing';
@@ -19,25 +18,33 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
     const reportHeight = dimensions.height - fontSize;
 
-    const value = (records && records[0] && records[0]["_fields"] && records[0]["_fields"][0]) ? records[0]["_fields"][0] : "";
-    const displayValue = renderValueByType(value);
-    return <div style={{
+  const value = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
+  const displayValue = renderValueByType(value);
+  return (
+    <div
+      style={{
         height: reportHeight,
-        lineHeight: (reportHeight) + "px",
-        position: "relative",
+        lineHeight: `${reportHeight}px`,
+        position: 'relative',
         textAlign: textAlign,
-        marginLeft: "15px",
-        marginRight: "15px"
-    }}>
-        <span style={{
-            display: "inline-block", 
-            verticalAlign: verticalAlign,
-            marginTop: (verticalAlign == "middle") ? "-72px" : "0px", // go to a "true middle", subtract header height.
-            fontSize: fontSize,
-            lineHeight: (fontSize+8) + "px",
-            color: evaluateRulesOnNeo4jRecord(records[0], "text color", color, styleRules)
-        }}>{displayValue}</span>
-    </div >;
-}
+        marginLeft: '15px',
+        marginRight: '15px',
+      }}
+    >
+      <span
+        style={{
+          display: 'inline-block',
+          verticalAlign: verticalAlign,
+          marginTop: verticalAlign == 'middle' ? '-72px' : '0px', // go to a "true middle", subtract header height.
+          fontSize: fontSize,
+          lineHeight: `${fontSize + 8}px`,
+          color: evaluateRulesOnNeo4jRecord(records[0], 'text color', color, styleRules),
+        }}
+      >
+        {displayValue}
+      </span>
+    </div>
+  );
+};
 
 export default NeoSingleValueChart;

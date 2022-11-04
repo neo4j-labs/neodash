@@ -7,7 +7,6 @@ import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 
-
 const NeoCardSettingsContent = ({
     query,
     database, // Current report database
@@ -121,6 +120,7 @@ const NeoCardSettingsContent = ({
             </div>}
 
     </CardContent>
+  );
 };
 
 export default NeoCardSettingsContent;

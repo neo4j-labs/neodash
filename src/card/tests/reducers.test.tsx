@@ -10,7 +10,7 @@
 //         const fakeTodo = { text: 'hello', isCompleted: false };
 //         const fakeAction = {
 //             type: 'CREATE_TODO',
-//             payload: { 
+//             payload: {
 //                 todo: fakeTodo,
 //             },
 //         }
