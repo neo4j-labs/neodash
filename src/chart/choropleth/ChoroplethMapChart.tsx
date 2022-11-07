@@ -38,10 +38,11 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
             const value = recordToNative(row.get(selection['value']));
 
             if(!index || index.length != 3 || isNaN(value)){
-                throw "Invalid selection for choropleth chart. Ensure a three letter country code is retrieved together with a value."
+                return data;
+                //throw "Invalid selection for choropleth chart. Ensure a three letter country code is retrieved together with a value."
             }
             data.push({ "id": index, "value": value });
-            return data
+            return data;
         } catch (e) {
             console.error(e);
             return [];
