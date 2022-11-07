@@ -36,7 +36,7 @@ const NeoExtensionsModal = (
 
     return (
         <div>
-            <ListItem button onClick={handleClickOpen}>
+            <ListItem button onClick={handleClickOpen} id="extensions-sidebar-button">
                 <ListItemIcon>
                     <ExtensionIcon />
                 </ListItemIcon>
@@ -55,7 +55,7 @@ const NeoExtensionsModal = (
                     Extensions
                     <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
                         <Badge badgeContent={""} >
-                            <CloseIcon />
+                            <CloseIcon id={"extensions-modal-close-button"} />
                         </Badge>
                     </IconButton>
                 </DialogTitle>
@@ -95,7 +95,7 @@ const NeoExtensionsModal = (
                                                                 onExtensionUnavailableTriggered(e.label);
                                                             }
                                                         }}
-                                                    control={<Checkbox disabled={!e.enabled} style={{ fontSize: "small" }}
+                                                    control={<Checkbox id={"checkbox-" + e.name} disabled={!e.enabled} style={{ fontSize: "small" }}
                                                         checked={extensions[e.name]}  name="enable" />}
                                                     label={<span color="green">{extensions[e.name] ? "Active  " : "Disabled"}</span>}
                                                 />

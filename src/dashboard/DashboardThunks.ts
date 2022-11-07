@@ -163,7 +163,7 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
             () => { return },
             (records) => {
                 if (!records[0]['_fields']) {
-                    dispatch(createNotificationThunk("Unable to load dashboard from database '"+ database +"'.", "A dashboard with UUID '"+uuid+"' could not be found."));
+                    dispatch(createNotificationThunk("Unable to load dashboard from database '" + database + "'.", "A dashboard with UUID '" + uuid + "' could not be found."));
                 }
                 callback(records[0]['_fields'][0])
             }
@@ -215,7 +215,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     try {
         runCypherQuery(driver, "system",
             "SHOW DATABASES yield name RETURN DISTINCT name",
-            {}, 1000, () => {return },  (records) => {
+            {}, 1000, () => { return }, (records) => {
                 const result = records.map(r => {
                     return r["_fields"] && r["_fields"][0];
                 });
@@ -229,8 +229,11 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
 
     if (origin == "2.1" && target == "2.2") {
-        // Set the default extensions to an empty list.
-        dashboard["extensions"] = {};
+        // In 2.1, extensions were enabled by default. Therefore if we migrate, enable them.
+        dashboard["extensions"] = {
+            "advanced-charts": true,
+            "styling": true
+        }
         dashboard["version"] = "2.2";
         return dashboard;
     }

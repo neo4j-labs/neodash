@@ -10,7 +10,8 @@ export const extensionEnabled = (extensions, name) => {
 
 // Tell the application what charts are available, dynmically, based on the selected extensions.
 export const getReportTypes = (extensions) => {
-    if (extensions['advanced-charts']) {
+    
+    if (extensions && extensions['advanced-charts']) {
         return { ...REPORT_TYPES, ...ADVANCED_REPORT_TYPES };
     }
     return REPORT_TYPES;
@@ -18,7 +19,7 @@ export const getReportTypes = (extensions) => {
 
 // Tell the application what examples are available, dynmically, based on the selected extensions.
 export const getExampleReports = (extensions) => {
-    if (extensions['advanced-charts']) {
+    if (extensions && extensions['advanced-charts']) {
         return [...EXAMPLE_REPORTS, ...EXAMPLE_ADVANCED_REPORTS];
     }
     return EXAMPLE_REPORTS;

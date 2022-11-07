@@ -8,18 +8,19 @@ image::rule-based-styling.png[Rule-Based Styling]
 
 
 == Configuration
+First, ensure that the extension is enabled.
 
-On several report types, rule-based styling can be applied to the
+Then, on several report types, rule-based styling can be applied to the
 visualization. To do this, open up the report settings, Then, click the
 *Rule-Based Styling* button on the bottom right (marked with the red
 circle):
 
 image::rulebasedstylingbutton.png[Report]
 
-This will open up the rule definition window. Inside this screen, a list
-of rules can be defined. Each rule will have the following structure:
+This will open up the action definition window. Inside this screen, a list
+of action rules can be defined. Each rule will have the following structure:
 
-`IF [CONDITION] THEN [STYLE]`
+ IF [CONDITION] THEN [STYLE]
 
 image::rulebasedstyling.png[Report]
 

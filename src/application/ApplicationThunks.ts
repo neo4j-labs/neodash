@@ -325,7 +325,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         if (standalone) {
             dispatch(initializeApplicationAsStandaloneThunk(config, paramsToSetAfterConnecting));
         } else {
-            initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting);
+            dispatch(initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting));
         }
     } catch (e) {
         dispatch(setWelcomeScreenOpen(false));
