@@ -86,7 +86,8 @@ import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeVie
         dotSize={dotSize}
         dotColor={{ theme: 'background' }}
         dotBorderWidth={dotBorderWidth}
-        colors={styleRules.length >= 1 ? getCircleColor : { scheme: colorScheme }}
+        //colors={styleRules.length >= 1 ? getCircleColor : { scheme: colorScheme }}
+        colors={{ scheme: colorScheme }}
         blendMode={blendMode}
         motionConfig={motionConfig}
         curve={curve}
