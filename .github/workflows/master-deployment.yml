@@ -79,43 +79,43 @@ jobs:
       file: ./Dockerfile
       push: true
       tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.2.0
- build-npm:
-   needs: build-test
-   runs-on: ubuntu-latest
-   strategy:
-     matrix:
-       node-version: [18.x]
-   steps:
-   - uses: actions/checkout@v2
-   - name: Use Node.js ${{ matrix.node-version }}
-     uses: actions/setup-node@v1
-     with:
-       node-version: ${{ matrix.node-version }}
-   - run: rm -rf docs
-   - run: yarn install
-   - run: yarn run build
-   - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
-   - run: npm pack
-   - run: rm -rf target
-   - run: mkdir target
-   - run: mv *.tgz target/
-   - run: tar -xvf target/*.tgz
-   - run: rm -f target/*.tgz
-   - run: cp package/dist/favicon.ico package/favicon.ico
-   - run: echo "${{ secrets.NEO4J_LABS_APP_KEY }}" > neo4j-labs-app.pem 
-   - run: echo "${{ secrets.NEO4J_LABS_APP_CERTIFICATE }}" > neo4j-labs-app.cert
-   - run: npx @neo4j/code-signer --app ./package --private-key neo4j-labs-app.pem --cert neo4j-labs-app.cert --passphrase ${{ secrets.NEO4J_DESKTOP_PASSPHRASE }}
-   - run: echo "${{ secrets.NEO4J_DESKTOP_CERTIFICATE }}" > neo4j_desktop.cert
-   - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
-   - run: cd package && npm pack
-   - run: mv package/*.tgz .
-   - run: rm -rf package
-   - run: tar xvf *.tgz package
-   - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
-   - run: rm -rf package
-   - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-   - name: Publish package to NPM 📦
-     run: npm publish --access public neodash*.tgz
+#  build-npm:
+#    needs: build-test
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        node-version: [18.x]
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Use Node.js ${{ matrix.node-version }}
+#      uses: actions/setup-node@v1
+#      with:
+#        node-version: ${{ matrix.node-version }}
+#    - run: rm -rf docs
+#    - run: yarn install
+#    - run: yarn run build
+#    - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
+#    - run: npm pack
+#    - run: rm -rf target
+#    - run: mkdir target
+#    - run: mv *.tgz target/
+#    - run: tar -xvf target/*.tgz
+#    - run: rm -f target/*.tgz
+#    - run: cp package/dist/favicon.ico package/favicon.ico
+#    - run: echo "${{ secrets.NEO4J_LABS_APP_KEY }}" > neo4j-labs-app.pem 
+#    - run: echo "${{ secrets.NEO4J_LABS_APP_CERTIFICATE }}" > neo4j-labs-app.cert
+#    - run: npx @neo4j/code-signer --app ./package --private-key neo4j-labs-app.pem --cert neo4j-labs-app.cert --passphrase ${{ secrets.NEO4J_DESKTOP_PASSPHRASE }}
+#    - run: echo "${{ secrets.NEO4J_DESKTOP_CERTIFICATE }}" > neo4j_desktop.cert
+#    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
+#    - run: cd package && npm pack
+#    - run: mv package/*.tgz .
+#    - run: rm -rf package
+#    - run: tar xvf *.tgz package
+#    - run: npx @neo4j/code-signer --verify  --app ./package --root-cert neo4j_desktop.cert
+#    - run: rm -rf package
+#    - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+#    - name: Publish package to NPM 📦
+#      run: npm publish --access public neodash*.tgz
  deploy-gallery:
    runs-on: ubuntu-latest
    strategy:
