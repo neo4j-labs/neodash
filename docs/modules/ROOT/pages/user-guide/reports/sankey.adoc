@@ -1,5 +1,7 @@
 = Sankey Chart
 
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
+
 A Sankey visualization will generate a flow diagram from nodes and links.
 Beware that cyclic dependencies are not supported.
 

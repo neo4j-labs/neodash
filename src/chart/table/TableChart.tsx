@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
-import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../../report/ReportRuleEvaluator';
+import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from '../ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
@@ -9,6 +9,7 @@ import { getRendererForValue, rendererForType, RenderSubValue } from '../../repo
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
+import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 
 const TABLE_HEADER_HEIGHT = 32;
@@ -30,7 +31,7 @@ const NeoTableChart = (props: ChartProps) => {
     const fullscreen = props.fullscreen ? props.fullscreen : false;
     const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
     const allowDownload = props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
-    const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+    const styleRules = extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules ? props.settings.styleRules : [];
     const [notificationOpen, setNotificationOpen] = React.useState(false);
 
     const useStyles = generateClassDefinitionsBasedOnRules(styleRules);

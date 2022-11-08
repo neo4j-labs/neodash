@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 import { Button, Fab, MenuItem, TextField, Typography } from '@material-ui/core';
-import NeoColorPicker from '../component/field/ColorPicker';
+import NeoColorPicker from '../../component/field/ColorPicker';
 import AddIcon from '@material-ui/icons/Add';
 import TuneIcon from '@material-ui/icons/Tune';
 import { Autocomplete } from '@material-ui/lab';
@@ -277,12 +277,11 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                                                         <CloseIcon />
                                                     </Fab>
                                                 </td>
-                                                <hr />
                                             </tr></>
                                     })}
 
                                     <tr >
-                                        <td style={{ borderBottom: "1px solid grey", width: "750px" }} colSpan={5}>
+                                        <td style={{ minWidth: '850px'}} colSpan={5}>
                                             <Typography variant="h3" color="primary" style={{ textAlign: "center", marginBottom: "5px" }}>
                                                 <Fab size="small" aria-label="add" style={{ background: "white", color: "black" }}
                                                     onClick={() => {
@@ -296,6 +295,8 @@ export const NeoCustomReportStyleModal = ({ customReportStyleModalOpen, settingN
                                         </td>
                                     </tr>
                                 </table>
+
+                                <hr></hr>
 
                             </div>
 

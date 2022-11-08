@@ -14,14 +14,17 @@ import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
 import NeoSettingsModal from "../../settings/SettingsModal";
 import { createNotificationThunk } from "../../page/PageThunks";
-import { getDashboardSettings } from "../DashboardSelectors";
+import { getDashboardExtensions, getDashboardSettings } from "../DashboardSelectors";
 import { updateDashboardSetting } from "../../settings/SettingsActions";
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import CategoryIcon from '@material-ui/icons/Category';
+import NeoExtensionsModal from "../../extensions/ExtensionsModal"; 
+import { getExampleReports } from "../../extensions/ExtensionUtils";
+
 
 // The sidebar that appears on the left side of the dashboard.
-export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateDashboardSetting,
-    handleDrawerClose, onAboutModalOpen, resetApplication }) => {
+export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, extensions,
+    updateDashboardSetting, handleDrawerClose, onAboutModalOpen, resetApplication }) => {
 
     // Override to hide the drawer when the application is in standalone mode.
     if (hidden) {
@@ -95,13 +98,23 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
             </List>
             <Divider />
             <List>
-                <ListItem button onClick={(e) => window.open("https://neo4j.com/labs/neodash/2.1/user-guide/", "_blank")}>
+
+                <NeoReportExamplesModal
+                    extensions={extensions}
+                    examples={getExampleReports(extensions)}
+                    database={connection.database}>
+                </NeoReportExamplesModal>
+                <NeoExtensionsModal></NeoExtensionsModal>
+
+            </List>
+            <Divider />
+            <List>
+                <ListItem button onClick={(e) => window.open("https://neo4j.com/labs/neodash/2.2/user-guide/", "_blank")}>
                     <ListItemIcon>
                         <LibraryBooksIcon />
                     </ListItemIcon>
                     <ListItemText primary="Documentation" />
                 </ListItem>
-                <NeoReportExamplesModal database={connection.database}></NeoReportExamplesModal>
                 <ListItem button onClick={onAboutModalOpen}>
                     <ListItemIcon>
                         <InfoOutlinedIcon />
@@ -119,6 +132,7 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, updateD
 const mapStateToProps = state => ({
     dashboardSettings: getDashboardSettings(state),
     hidden: applicationIsStandalone(state),
+    extensions: getDashboardExtensions(state),
     aboutModalOpen: applicationHasAboutModalOpen(state),
     connection: applicationGetConnection(state)
 });

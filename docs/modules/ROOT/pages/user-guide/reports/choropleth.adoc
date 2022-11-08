@@ -1,5 +1,7 @@
 = Choropleth
 
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
+
 A Choropleth chart will render geographical data in geoJson polygons
 layout. It takes two fields: 
 
@@ -9,6 +11,9 @@ layout. It takes two fields:
 == Examples
 
 === Basic Choropleth
+
+
+
 
 [source,cypher]
 ----

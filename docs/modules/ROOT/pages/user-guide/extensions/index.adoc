@@ -1,0 +1,37 @@
+= Extensions
+
+Extensions provide a way to expand the basic functionality of NeoDash with extra features.
+To enable an extension, open up the extensions window by clicking the puzzle piece icon in the left-sidebar of the screen.
+This will open up the **Extensions Window**, which lets you toggle active extensions for the current dashboard.
+
+image::extensions.png[The Extensions Window]
+
+The following types of functionality can be added through NeoDash extensions:
+
+- A new type of visualization.
+- A more customizable version of an existing visualization.
+- New core features, such as rule-based styling or interactive reports.
+
+The currently available extensions in NeoDash are:
+
+- link:advanced-visualizations[Advanced Visualizations]
+- link:rule-based-styling[Rule-based Styling]
+- link:report-actions[Report Actions (Pro)]
+
+== Types of Extensions
+
+=== 1. Core Extensions
+Core Extensions are available as part of the open-source NeoDash project.
+These are available to use for free anywhere - Neo4j Desktop, public NeoDash deployments, and self-hosted NeoDash deployments.
+
+=== 2. Pro Extensions
+Pro Extensions are built by the Neo4j Professional Services team. These extensions are available to try out for free:
+
+1. In link:https://install.graphapp.io[NeoDash in Neo4j Desktop]
+2. On link:https://neodash.graphapp.io[the Online Demo Environment]
+
+If you would like to use a pro extension in a self-hosted NeoDash environment, and have an Enterprise Neo4j License, reach out to link:mailto:ps_emea_pmo@neotechnology.com[Neo4j Professional Services] to discuss a commercial agreement.
+
+=== 3. Custom Extensions
+Custom Extensions are self-built extensions that you can plug into the project.
+To learn about how to fork and extend NeoDash, check out the link:../../developer-guide[Developer Guide].

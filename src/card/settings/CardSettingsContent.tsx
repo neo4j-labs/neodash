@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import CardContent from '@material-ui/core/CardContent';
 import MenuItem from '@material-ui/core/MenuItem';
-import { REPORT_TYPES } from '../../config/ReportConfig'
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
+import { getReportTypes } from '../../extensions/ExtensionUtils';
 
 
 const NeoCardSettingsContent = ({
@@ -15,6 +15,7 @@ const NeoCardSettingsContent = ({
     reportSettings,
     refreshRate,
     type,
+    extensions,
     onQueryUpdate,
     onRefreshRateUpdate,
     onReportSettingUpdate,
@@ -56,40 +57,20 @@ const NeoCardSettingsContent = ({
         }
     }, [refreshRate])
 
-
-    const SettingsComponent = REPORT_TYPES[type].settingsComponent;
+    const reportTypes = getReportTypes(extensions);
+    const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
 
     return <CardContent style={{ paddingTop: "10px", paddingBottom: "10px" }}>
         <NeoField select label={"Type"} value={type}
             style={{ marginLeft: "0px", marginRight: "10px", width: "47%", maxWidth: "200px" }}
             onChange={(value) => onTypeUpdate(value)}
-            choices={Object.keys(REPORT_TYPES).map((option) => (
+            choices={Object.keys(reportTypes).map((option) => (
                 <MenuItem key={option} value={option}>
-                    {REPORT_TYPES[option].label}
+                    {reportTypes[option].label}
                 </MenuItem>
             ))} />
 
-
-
-        {/* {REPORT_TYPES[type]["disableRefreshRate"] == undefined ?
-            <FormControl style={{ width: "155px", marginBottom: "10px", marginRight: "10px", marginLeft: "10px" }}>
-                <InputLabel id="demo-simple-select-label">Database</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={databaseText}
-                    onChange={(e) => {
-                        setDatabaseText(e.target.value);
-                        debouncedDatabaseUpdate(e.target.value)
-                    }}
-                >
-                    {databaseList.map(database => {
-                        return <MenuItem value={database}>{database}</MenuItem>
-                    })}
-                </Select>
-            </FormControl> : <></>} */}
-
-        {REPORT_TYPES[type]["disableRefreshRate"] == undefined ? <NeoField select placeholder='neo4j'
+        {reportTypes[type] && reportTypes[type]["disableRefreshRate"] == undefined ? <NeoField select placeholder='neo4j'
             label="Database"
             value={databaseText}
             style={{ width: "47%", maxWidth: "200px", marginRight: "10px" }}
@@ -103,7 +84,7 @@ const NeoCardSettingsContent = ({
                 debouncedDatabaseUpdate(value)
             }} /> : <></>}
 
-        {REPORT_TYPES[type]["disableRefreshRate"] == undefined ? <NeoField placeholder='0 (No Refresh)'
+        {reportTypes[type] && reportTypes[type]["disableRefreshRate"] == undefined ? <NeoField placeholder='0 (No Refresh)'
             label="Refresh Rate (sec)" numeric={true}
             value={refreshRateText}
             style={{ width: "47%", maxWidth: "200px" }}
@@ -114,14 +95,14 @@ const NeoCardSettingsContent = ({
 
         <br /><br />
         {/* Allow for overriding the code box with a custom component */}
-        {REPORT_TYPES[type]["settingsComponent"] ?
+        {reportTypes[type] && reportTypes[type]["settingsComponent"] ?
             <SettingsComponent type={type} onReportSettingUpdate={onReportSettingUpdate} settings={reportSettings}
                 database={database} query={query} onQueryUpdate={onQueryUpdate} /> :
             <div>
                 <NeoCodeEditorComponent
                     value={queryText}
                     editable={true}
-                    language={REPORT_TYPES[type]["inputMode"] ? REPORT_TYPES[type]["inputMode"] : "cypher"}
+                    language={reportTypes[type] && reportTypes[type]["inputMode"] ? reportTypes[type]["inputMode"] : "cypher"}
                     onChange={(value) => {
                         debouncedQueryUpdate(value);
                         setQueryText(value);
@@ -136,7 +117,7 @@ const NeoCardSettingsContent = ({
                     borderLeft: "1px solid lightgrey",
                     borderRight: "1px solid lightgrey",
                     marginTop: "0px"
-                }}>{REPORT_TYPES[type].helperText}</p>
+                }}>{reportTypes[type] && reportTypes[type].helperText}</p>
             </div>}
 
     </CardContent>

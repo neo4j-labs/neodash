@@ -20,6 +20,7 @@ const NeoCardSettings = ({
                              fields,
                              widthPx,
                              heightPx,
+                             extensions, // A set of enabled extensions.
                              onQueryUpdate,
                              onRefreshRateUpdate,
                              onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
@@ -57,6 +58,7 @@ const NeoCardSettings = ({
         width={width}
         height={height}
         type={type}
+        extensions={extensions}
         databaseList={databaseList}
         onDatabaseChanged={onDatabaseChanged}
         onQueryUpdate={onQueryUpdate}
@@ -67,6 +69,7 @@ const NeoCardSettings = ({
     const cardSettingsFooter = (settingsOpen) ? <NeoCardSettingsFooter
         type={type}
         fields={fields}
+        extensions={extensions}
         reportSettings={reportSettings}
         reportSettingsOpen={reportSettingsOpen}
         onToggleReportSettings={onToggleReportSettings}
