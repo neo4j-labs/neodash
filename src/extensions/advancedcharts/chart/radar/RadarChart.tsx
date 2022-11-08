@@ -1,8 +1,8 @@
 import React from 'react';
-import { ChartProps } from '../Chart';
+import { ChartProps } from '../../../../chart/Chart';
 import { ResponsiveRadar } from '@nivo/radar'
-import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../extensions/styling/StyleRuleEvaluator';
-import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
+import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
+import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 
 
 /**
