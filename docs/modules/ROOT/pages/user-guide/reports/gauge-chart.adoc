@@ -1,6 +1,6 @@
 = Gauge Chart
 
-label:Advanced&nbsp;Visualization[]
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
 A gauge chart takes a single numeric value, and plots it on an animated gauge:
 

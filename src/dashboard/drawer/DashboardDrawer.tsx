@@ -109,7 +109,7 @@ export const NeoDrawer = ({ open, hidden, connection, dashboardSettings, extensi
             </List>
             <Divider />
             <List>
-                <ListItem button onClick={(e) => window.open("https://neo4j.com/labs/neodash/2.1/user-guide/", "_blank")}>
+                <ListItem button onClick={(e) => window.open("https://neo4j.com/labs/neodash/2.2/user-guide/", "_blank")}>
                     <ListItemIcon>
                         <LibraryBooksIcon />
                     </ListItemIcon>
