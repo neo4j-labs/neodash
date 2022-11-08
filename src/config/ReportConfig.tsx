@@ -33,6 +33,11 @@ export const REPORT_TYPES = {
         component: NeoTableChart,
         maxRecords: 1000,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "transposed": {
                 label: "Transpose Rows & Columns",
                 type: SELECTION_TYPES.LIST,
@@ -80,6 +85,11 @@ export const REPORT_TYPES = {
         // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
         disabledDependency: { relationshipParticleSpeed: { dependsOn: "relationshipParticles", operator: false } },
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "nodeColorScheme": {
                 label: "Node Color Scheme",
                 type: SELECTION_TYPES.LIST,
@@ -151,11 +161,6 @@ export const REPORT_TYPES = {
                 label: "Speed of the particle animation",
                 type: SELECTION_TYPES.NUMBER,
                 default: 0.005,
-            },
-            "backgroundColor": {
-                label: "Background Color",
-                type: SELECTION_TYPES.TEXT,
-                default: "#fafafa"
             },
             "layout": {
                 label: "Graph Layout (experimental)",
@@ -233,6 +238,11 @@ export const REPORT_TYPES = {
         },
         maxRecords: 250,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "legend": {
                 label: "Show Legend",
                 type: SELECTION_TYPES.LIST,
@@ -373,6 +383,11 @@ export const REPORT_TYPES = {
         },
         maxRecords: 250,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "legend": {
                 label: "Show Legend",
                 type: SELECTION_TYPES.LIST,
@@ -503,6 +518,11 @@ export const REPORT_TYPES = {
         },
         maxRecords: 250,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "legend": {
                 label: "Show Legend",
                 type: SELECTION_TYPES.LIST,
@@ -659,6 +679,11 @@ export const REPORT_TYPES = {
         },
         maxRecords: 250,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "legend": {
                 label: "Show Legend",
                 type: SELECTION_TYPES.LIST,
@@ -762,6 +787,11 @@ export const REPORT_TYPES = {
         component: NeoMapChart,
         maxRecords: 1000,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "layerType": {
                 label: "Layer Type",
                 type: SELECTION_TYPES.LIST,
@@ -846,6 +876,11 @@ export const REPORT_TYPES = {
         component: NeoSingleValueChart,
         maxRecords: 1,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "fontSize": {
                 label: "Font Size",
                 type: SELECTION_TYPES.NUMBER,
@@ -855,11 +890,6 @@ export const REPORT_TYPES = {
                 label: "Color",
                 type: SELECTION_TYPES.TEXT,
                 default: "rgba(0, 0, 0, 0.87)"
-            },
-            "backgroundColor": {
-                label: "Background Color",
-                type: SELECTION_TYPES.TEXT,
-                default: "white"
             },
             "textAlign": {
                 label: "Horizontal Align",
@@ -893,6 +923,11 @@ export const REPORT_TYPES = {
         allowScrolling: true,
         maxRecords: 500,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "autorun": {
                 label: "Auto-run query",
                 type: SELECTION_TYPES.LIST,
@@ -916,6 +951,11 @@ export const REPORT_TYPES = {
         textOnly: true,
         maxRecords: 100,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "suggestionLimit": {
                 label: "Value Suggestion Limit",
                 type: SELECTION_TYPES.NUMBER,
@@ -987,6 +1027,11 @@ export const REPORT_TYPES = {
         maxRecords: 1,
         allowScrolling: true,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "replaceGlobalParameters": {
                 label: "Replace global parameters in URL",
                 type: SELECTION_TYPES.LIST,
@@ -1015,6 +1060,11 @@ export const REPORT_TYPES = {
         maxRecords: 1,
         allowScrolling: true,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "replaceGlobalParameters": {
                 label: "Replace global parameters in Markdown",
                 type: SELECTION_TYPES.LIST,

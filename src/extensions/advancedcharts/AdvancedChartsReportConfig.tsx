@@ -24,6 +24,11 @@ export const ADVANCED_REPORT_TYPES = {
         },
         withoutFooter: true,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "nrOfLevels": {
                 label: "Number of levels",
                 type: SELECTION_TYPES.NUMBER,
@@ -105,6 +110,11 @@ export const ADVANCED_REPORT_TYPES = {
         },
         maxRecords: 3000,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "enableArcLabels": {
                 label: "Show Values on Arcs",
                 type: SELECTION_TYPES.LIST,
@@ -201,6 +211,11 @@ export const ADVANCED_REPORT_TYPES = {
         },
         maxRecords: 3000,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "interactive": {
                 label: "Enable interactivity",
                 type: SELECTION_TYPES.LIST,
@@ -281,6 +296,11 @@ export const ADVANCED_REPORT_TYPES = {
         },
         maxRecords: 3000,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "interactive": {
                 label: "Enable interactivity",
                 type: SELECTION_TYPES.LIST,
@@ -346,6 +366,11 @@ export const ADVANCED_REPORT_TYPES = {
         },
         maxRecords: 250,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "legend": {
                 label: "Show legend",
                 type: SELECTION_TYPES.LIST,
@@ -460,6 +485,11 @@ export const ADVANCED_REPORT_TYPES = {
         },
         maxRecords: 300,
         settings: {
+            "backgroundColor": {
+                label: "Background Color",
+                type: SELECTION_TYPES.COLOR,
+                default: "#fafafa"
+            },
             "interactive": {
                 label: "Enable Interactivity",
                 type: SELECTION_TYPES.LIST,
