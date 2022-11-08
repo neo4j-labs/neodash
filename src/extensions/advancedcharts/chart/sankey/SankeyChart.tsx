@@ -6,7 +6,7 @@ import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../
 import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
 import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
-import { isCyclic } from '../../../../chart/Utils';
+import { isCyclic } from '../../Utils';
 
 
 /**
