@@ -21,9 +21,9 @@
     }
   ],
   "scripts": {
-    "dev": "yarn webpack-dev-server --mode development",
+    "dev": "cross-env PRODUCTION=false yarn webpack-dev-server --mode development",
     "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
-    "build": "yarn webpack --mode production && cp -r public/* dist/",
+    "build": "cross-env PRODUCTION=true yarn webpack --mode production && cp -r public/* dist/",
     "test": "yarn cypress open",
     "test-headless": "yarn cypress run"
   },
