@@ -7,11 +7,13 @@ import { useCallback } from 'react';
 import { Typography, Fab } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from "../component/editor/CodeViewerComponent";
-import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, REPORT_TYPES, RUN_QUERY_DELAY_MS, SELECTION_TYPES } from "../config/ReportConfig";
+import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from "../config/ReportConfig";
 import { MoreVert } from "@material-ui/icons";
 import { Neo4jContext, Neo4jContextState } from "use-neo4j/dist/neo4j.context";
 import { useContext } from "react";
 import NeoTableChart from "../chart/table/TableChart";
+import { getReportTypes } from "../extensions/ExtensionUtils";
+import { SELECTION_TYPES } from "../config/CardConfig";
 
 export const NeoReport = ({
     database = "neo4j", // The Neo4j database to run queries onto.
@@ -30,6 +32,7 @@ export const NeoReport = ({
     queryTimeLimit = 20, // Time limit for queries before automatically aborted.
     type = "table", // The type of report as a string.
     expanded = false, // whether the report is visualized in a fullscreen view.
+    extensions = {}, // A set of enabled extensions.
     ChartType = NeoTableChart, // The report component to render with the query results.
 }) => {
     const [records, setRecords] = useState(null);
@@ -45,7 +48,9 @@ export const NeoReport = ({
 
     const populateReport = (debounced = true) => {
         // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
-        if (REPORT_TYPES[type].textOnly) {
+        const reportTypes = getReportTypes(extensions);
+        
+        if (reportTypes[type]['textOnly']) {
             setStatus(QueryStatus.COMPLETE);
             setRecords([{ input: query, parameters: parameters }]);
             return;
@@ -55,19 +60,19 @@ export const NeoReport = ({
         setRecords([]);
 
         // Determine the set of fields from the configurations.
-        var numericFields = (REPORT_TYPES[type].selection && fields) ? Object.keys(REPORT_TYPES[type].selection).filter(field => REPORT_TYPES[type].selection[field].type == SELECTION_TYPES.NUMBER && !REPORT_TYPES[type].selection[field].multiple) : [];
+        var numericFields = (reportTypes[type].selection && fields) ? Object.keys(reportTypes[type].selection).filter(field => reportTypes[type].selection[field].type == SELECTION_TYPES.NUMBER && !reportTypes[type].selection[field].multiple) : [];
 
         // Take care of multi select fields, they need to be added to the numeric fields too.
-        if (REPORT_TYPES[type].selection) {
-            Object.keys(REPORT_TYPES[type].selection).forEach((field, i) => {
-                if (REPORT_TYPES[type].selection[field].multiple && selection[field]) {
+        if (reportTypes[type].selection) {
+            Object.keys(reportTypes[type].selection).forEach((field, i) => {
+                if (reportTypes[type].selection[field].multiple && selection[field]) {
                     selection[field].forEach((f, i) => numericFields.push(field + "(" + f + ")"))
                 }
             });
         }
 
-        const useNodePropsAsFields = REPORT_TYPES[type].useNodePropsAsFields == true;
-        const useReturnValuesAsFields = REPORT_TYPES[type].useReturnValuesAsFields == true;
+        const useNodePropsAsFields = reportTypes[type].useNodePropsAsFields == true;
+        const useReturnValuesAsFields = reportTypes[type].useReturnValuesAsFields == true;
 
         if (debounced) {
             setStatus(QueryStatus.RUNNING);
@@ -113,13 +118,15 @@ export const NeoReport = ({
         [],
     );
 
+    const reportTypes = getReportTypes(extensions);
+
     // Draw the report based on the query status.
     if (disabled) {
         return <div></div>;
     } else if (status == QueryStatus.NO_QUERY) {
         return (<div style={{ padding: 15 }}>No query specified. <br /> Use the <Chip style={{backgroundColor: "#efefef"}}size="small" icon={<MoreVert />} label="Report Settings" /> button to get started. </div>);
     } else if (status == QueryStatus.RUNNING) {
-        return (<Typography variant="h2" color="textSecondary" style={{ paddingTop: "100px", textAlign: "center" }}>
+        return (<Typography variant="h2" color="textSecondary" style={{ position: "absolute", left: "50%", transform: "translateY(-50%) translateX(-50%)", top: "50%", textAlign: "center" }}>
             <CircularProgress color="inherit" />
         </Typography>);
     } else if (status == QueryStatus.NO_DATA) {
@@ -131,8 +138,9 @@ export const NeoReport = ({
             return <div>Loading...</div>
         }
         {/* @ts-ignore */ }
-        return (<div style={{ height: "100%", marginTop: "0px", overflow: REPORT_TYPES[type].allowScrolling ? "auto" : "hidden" }}>
+        return (<div style={{ height: "100%", marginTop: "0px", overflow: reportTypes[type].allowScrolling ? "auto" : "hidden" }}>
             <ChartType records={records}
+                extensions={extensions}
                 selection={selection}
                 settings={settings}
                 fullscreen={expanded}
@@ -147,7 +155,7 @@ export const NeoReport = ({
             return <div>Loading...</div>
         }
         {/* Results have been truncated */ }
-        return (<div style={{ height: "100%", marginTop: "0px", overflow: REPORT_TYPES[type].allowScrolling ? "auto" : "hidden" }}>
+        return (<div style={{ height: "100%", marginTop: "0px", overflow: reportTypes[type].allowScrolling ? "auto" : "hidden" }}>
             <div style={{ marginBottom: "-31px" }}>
                 <div style={{ display: "flex" }} >
                     <Tooltip title={"Over " + rowLimit + " row(s) were returned, results have been truncated."} placement="left" aria-label="host">
@@ -157,6 +165,7 @@ export const NeoReport = ({
             </div>
             <ChartType
                 records={records}
+                extensions={extensions}
                 selection={selection}
                 settings={settings}
                 fullscreen={expanded}

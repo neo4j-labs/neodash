@@ -1,6 +1,6 @@
 {
   "name": "neodash-gallery",
-  "version": "0.1",
+  "version": "0.2",
   "private": true,
   "dependencies": {
     "@neo4j-ndl/base": "^0.8.3",
@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "cross-env PRODUCTION=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

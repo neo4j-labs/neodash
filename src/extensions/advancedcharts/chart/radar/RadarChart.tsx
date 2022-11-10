@@ -1,8 +1,8 @@
 import React from 'react';
-import { ChartProps } from '../Chart';
+import { ChartProps } from '../../../../chart/Chart';
 import { ResponsiveRadar } from '@nivo/radar'
-import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../report/ReportRuleEvaluator';
-import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
+import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
+import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 
 
 /**
@@ -86,7 +86,8 @@ import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerCom
         dotSize={dotSize}
         dotColor={{ theme: 'background' }}
         dotBorderWidth={dotBorderWidth}
-        colors={styleRules.length >= 1 ? getCircleColor : { scheme: colorScheme }}
+        //colors={styleRules.length >= 1 ? getCircleColor : { scheme: colorScheme }}
+        colors={{ scheme: colorScheme }}
         blendMode={blendMode}
         motionConfig={motionConfig}
         curve={curve}

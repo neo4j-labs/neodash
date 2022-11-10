@@ -106,11 +106,13 @@ describe('NeoDash E2E Tests', () => {
     })
 
     it('creates a gauge chart report', () => {
+        enableAdvancedVisualizations()
         createReportOfType('Gauge Chart', gaugeChartCypherQuery)
         cy.get('.text-group > text').contains('69')
     })
 
     it('creates a sunburst chart report', () => {
+        enableAdvancedVisualizations()
         createReportOfType('Sunburst Chart', sunburstChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Path').next()
             .should('contain', 'x.path')
@@ -120,6 +122,7 @@ describe('NeoDash E2E Tests', () => {
     })
 
     it('creates a circle packing report', () => {
+        enableAdvancedVisualizations()
         createReportOfType('Circle Packing', sunburstChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Path').next()
             .should('contain', 'x.path')
@@ -129,6 +132,7 @@ describe('NeoDash E2E Tests', () => {
     })
 
     it('creates a tree map report', () => {
+        enableAdvancedVisualizations()
         createReportOfType('Treemap', sunburstChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root').contains('Path').next()
             .should('contain', 'x.path')
@@ -138,6 +142,7 @@ describe('NeoDash E2E Tests', () => {
     })
 
     it('creates a sankey chart report', () => {
+        enableAdvancedVisualizations()
         createReportOfType('Sankey Chart', sankeyChartCypherQuery, true)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path').should('have.attr', 'fill-opacity', 0.5)
     })
@@ -146,7 +151,6 @@ describe('NeoDash E2E Tests', () => {
         createReportOfType('Raw JSON', barChartCypherQuery)
         cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)').should(($div) => {
             const text = $div.text()
-
             expect(text.length).to.eq(1387)
         })
     })
@@ -156,6 +160,7 @@ describe('NeoDash E2E Tests', () => {
         cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click()
         cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains("Type").next().click()
         cy.contains('Parameter Select').click()
+        cy.wait(300)
         cy.get('#autocomplete-label-type').type('Movie')
         cy.get('#autocomplete-label-type-option-0').click()
         cy.wait(300)
@@ -211,6 +216,15 @@ describe('NeoDash E2E Tests', () => {
     })
 
 })
+
+function enableAdvancedVisualizations(){
+    cy.get('#extensions-sidebar-button').click()
+    cy.wait(100)
+    cy.get('#checkbox-advanced-charts').click()
+    cy.wait(100)
+    cy.get('#extensions-modal-close-button').click()
+    cy.wait(200)
+}
 
 function createReportOfType(type, query, fast=false) {
     cy.get('main .react-grid-item:eq(2) button').click()

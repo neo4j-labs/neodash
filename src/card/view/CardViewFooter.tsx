@@ -1,17 +1,19 @@
 import React from "react";
 import { CardActions, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField } from "@material-ui/core";
-import { REPORT_TYPES, SELECTION_TYPES } from "../../config/ReportConfig";
 import { categoricalColorSchemes } from "../../config/ColorConfig";
+import { getReportTypes } from "../../extensions/ExtensionUtils";
+import { SELECTION_TYPES } from "../../config/CardConfig";
 
-const NeoCardViewFooter = ({ fields, settings, selection, type, showOptionalSelections, onSelectionUpdate }) => {
+const NeoCardViewFooter = ({ fields, settings, selection, type, extensions, showOptionalSelections, onSelectionUpdate }) => {
     /**
      * For each selectable field in the visualization, give the user an option to select them from the query output fields.
     */
-    const selectableFields = REPORT_TYPES[type].selection;
+     const reportTypes = getReportTypes(extensions);
+    const selectableFields = reportTypes[type].selection;
     const selectables = (selectableFields) ? Object.keys(selectableFields) : [];
     const nodeColorScheme = settings && settings.nodeColorScheme ? settings.nodeColorScheme : "neodash";
     const hideSelections = settings && settings.hideSelections ? settings.hideSelections : false;
-    const ignoreLabelColors = REPORT_TYPES[type].ignoreLabelColors;
+    const ignoreLabelColors = reportTypes[type].ignoreLabelColors;
     if (!fields || fields.length == 0 || hideSelections) {
         return <div></div>
     }

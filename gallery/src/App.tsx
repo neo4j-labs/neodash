@@ -3,7 +3,7 @@ import './App.css';
 import { Button, TextInput, HeroIcon, Tag } from '@neo4j-ndl/react';
 
 // These are the read-only credentials of the public database where the gallery exists.
-const uri = "neo4j+s://03470df6.databases.neo4j.io"
+const uri = "neo4j+s://acb5b6ae.databases.neo4j.io"
 const user = "gallery";
 const password = "gallery";
 
@@ -90,7 +90,7 @@ function App() {
             </ul> on GitHub.
           </p>
           <br />
-          <code className='flex item-center justify-center n-text-neutral-40'> {"-- neodash-gallery v0.1 --"} </code>
+          <code className='flex item-center justify-center n-text-neutral-40'> {"-- neodash-gallery v0.2 --"} </code>
         </div>
       </div>
     </div >

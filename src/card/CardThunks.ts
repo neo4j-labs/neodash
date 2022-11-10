@@ -14,8 +14,10 @@ import {
     updateReportDatabase
 } from "./CardActions";
 import { createNotificationThunk } from "../page/PageThunks";
-import { DEFAULT_NODE_LABELS, REPORT_TYPES, SELECTION_TYPES } from "../config/ReportConfig";
+import { DEFAULT_NODE_LABELS } from "../config/ReportConfig";
+import { getReportTypes } from "../extensions/ExtensionUtils";
 import isEqual from 'lodash.isequal';
+import { SELECTION_TYPES } from "../config/CardConfig";
 
 export const updateReportTitleThunk = (index, title) => (dispatch: any, getState: any) => {
     try {
@@ -88,6 +90,7 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
     try {
         const state = getState();
         const pagenumber = state.dashboard.settings.pagenumber;
+        const extensions = state.dashboard.extensions;
         const oldReport = state.dashboard.pages[pagenumber].reports[index];
         if(!oldReport){
             return;
@@ -95,8 +98,9 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
         const oldFields = oldReport.fields;
         const reportType =oldReport.type;
         const oldSelection = oldReport.selection;
-        const selectableFields = REPORT_TYPES[reportType].selection; // The dictionary of selectable fields as defined in the config.
-        const autoAssignSelectedProperties = REPORT_TYPES[reportType].autoAssignSelectedProperties;
+        const reportTypes = getReportTypes(extensions);
+        const selectableFields = reportTypes[reportType].selection; // The dictionary of selectable fields as defined in the config.
+        const autoAssignSelectedProperties = reportTypes[reportType].autoAssignSelectedProperties;
         const selectables = (selectableFields) ? Object.keys(selectableFields) : [];
 
 
@@ -185,13 +189,15 @@ export const toggleCardSettingsThunk = (index, open) => (dispatch: any, getState
 export const updateReportSettingThunk = (index, setting, value) => (dispatch: any, getState: any) => {
     try {
         const state = getState();
+        const extensions = state.dashboard.extensions;
         const pagenumber = state.dashboard.settings.pagenumber;
 
         // If we disable optional selections (e.g. grouping), we reset these selections to their none value.
         if (setting == "showOptionalSelections" && value == false) {
 
             const reportType = state.dashboard.pages[pagenumber].reports[index].type;
-            const selectableFields = REPORT_TYPES[reportType].selection;
+            const reportTypes = getReportTypes(extensions);
+            const selectableFields = reportTypes[reportType].selection;
             const optionalSelectables =
                 (selectableFields) ? Object.keys(selectableFields).filter((key) => selectableFields[key].optional) : [];
             optionalSelectables.forEach((selection) => {

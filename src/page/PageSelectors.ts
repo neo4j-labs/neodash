@@ -8,6 +8,4 @@ export const getReportsLoading = (state: any) => state.dashboard.isLoading;
 export const getCurrentReports = createSelector(
     getReports,
     (reports) => reports.filter((report) => true),
-
 );
-

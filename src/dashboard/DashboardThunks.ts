@@ -95,7 +95,14 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
             dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.1. You might need to refresh this page."));
             return
         }
-        if (dashboard["version"] != "2.1") {
+        if (dashboard["version"] == "2.1") {
+            const upgradedDashboard = upgradeDashboardVersion(dashboard, "2.1", "2.2");
+            dispatch(setDashboard(upgradedDashboard))
+            dispatch(setWelcomeScreenOpen(false))
+            dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.2. You might need to refresh this page."));
+            return
+        }
+        if (dashboard["version"] != "2.2") {
             throw ("Invalid dashboard version: " + dashboard.version + ". Try restarting the application, or retrieve your cached dashboard using a debug report.");
         }
 
@@ -156,7 +163,7 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
             () => { return },
             (records) => {
                 if (!records[0]['_fields']) {
-                    dispatch(createNotificationThunk("Unable to load dashboard from database '"+ database +"'.", "A dashboard with UUID '"+uuid+"' could not be found."));
+                    dispatch(createNotificationThunk("Unable to load dashboard from database '" + database + "'.", "A dashboard with UUID '" + uuid + "' could not be found."));
                 }
                 callback(records[0]['_fields'][0])
             }
@@ -208,7 +215,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     try {
         runCypherQuery(driver, "system",
             "SHOW DATABASES yield name RETURN DISTINCT name",
-            {}, 1000, () => {return },  (records) => {
+            {}, 1000, () => { return }, (records) => {
                 const result = records.map(r => {
                     return r["_fields"] && r["_fields"][0];
                 });
@@ -221,6 +228,15 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
 
+    if (origin == "2.1" && target == "2.2") {
+        // In 2.1, extensions were enabled by default. Therefore if we migrate, enable them.
+        dashboard["extensions"] = {
+            "advanced-charts": true,
+            "styling": true
+        }
+        dashboard["version"] = "2.2";
+        return dashboard;
+    }
     if (origin == "2.0" && target == "2.1") {
         dashboard["pages"].forEach((p, i) => {
             // From v2.1 onwards, reports will have their x,y positions explicitly specified.

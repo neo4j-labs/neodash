@@ -1,0 +1,42 @@
+= Report Actions 
+
+link:../#_2_pro_extensions[label:Pro&nbsp;Extension[]]
+
+Report actions let dashboard builders add interactivity into dashboards. Actions can be used to achieve:
+
+1. Cross-report filtering.
+2. Using the output of one report in another report.
+3. Providing users with more parameterized control beyond parameter selectors.
+
+The image below displays an example of two reports interacting using report actions:
+
+- An action is defined for the table: **If a user clicks on a row in the Customer column, set the parameter `$neodash_customer_name` to `row.Customer`**.
+- The graph visualization uses the parameter `$neodash_customer_name` to select a specific node. The graph is automatically updated when the user clicks on a row entry inside the table.
+
+image::report-actions.png[Report Actions]
+
+
+
+== Configuration
+First, ensure that the extension is enabled.
+Then, to create a **Report Action**, open up the report settings, Then, click the 'Report Action' button on the bottom right (marked with the red circle):
+
+image::reportactionsbutton.png[Report]
+
+
+This will open up the rule definition window. Inside this screen, a list
+of rules can be defined. An unlimited number of rules can be defined, and based on the visualization, different actions can be specified. Each rule will have the following structure:
+
+ IF [CONDITION] SET [OBJECT] TO [VALUE] 
+
+image::reportactions.png[Report]
+
+== Supported Visualizations
+
+Report Actions are available for the following report types:
+
+- Tables
+- Graphs
+- Maps
+
+> This **Pro Extension** is free to try out in Neo4j Desktop, and the link:https://neodash.graphapp.io[NeoDash Demo Environment]. To use it in a self-hosted environment, reach out to link:mailto:ps_emea_pmo@neotechnology.com[Neo4j Professional Services] for a commercial agreement. 

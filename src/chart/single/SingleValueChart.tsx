@@ -2,7 +2,8 @@
 import React from 'react';
 import { ChartProps } from '../Chart';
 import { renderValueByType } from '../../report/ReportRecordProcessing';
-import { evaluateRulesOnNeo4jRecord } from '../../report/ReportRuleEvaluator';
+import { evaluateRulesOnNeo4jRecord } from '../../extensions/styling/StyleRuleEvaluator';
+import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 /**
  * Renders Neo4j records as their JSON representation.
@@ -13,7 +14,8 @@ const NeoSingleValueChart = (props: ChartProps) => {
     const color = props.settings && props.settings.color ? props.settings.color : "rgba(0, 0, 0, 0.87)";
     const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : "left";
     const verticalAlign = props.settings && props.settings.verticalAlign ? props.settings.verticalAlign : "top";
-    const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+    const styleRules = extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+
     const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
     const reportHeight = dimensions.height - fontSize;
 

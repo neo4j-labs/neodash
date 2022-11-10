@@ -1,14 +1,19 @@
 = Choropleth
 
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
+
 A Choropleth chart will render geographical data in geoJson polygons
 layout. It takes two fields: 
 
-- *code*: String. This represents the country code of region to be used.
+- *code*: String. This represents the Alpha-3 country code of region to be used. Alpha-2 it's not supported.
 - *value*:  Number. Cardinal data to be used on the chart.
 
 == Examples
 
 === Basic Choropleth
+
+
+
 
 [source,cypher]
 ----

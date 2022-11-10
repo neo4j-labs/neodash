@@ -1,0 +1,262 @@
+{
+    "title": "New Caledonia Domains Dashboard",
+    "version": "2.1",
+    "settings": {
+      "pagenumber": 0,
+      "editable": true,
+      "fullscreenEnabled": false,
+      "parameters": {
+        "neodash_gestionnaires_name": "",
+        "neodash_gestionnaires_id": ""
+      }
+    },
+    "pages": [
+      {
+        "title": "Overview",
+        "reports": [
+          {
+            "title": "New Caledonia Domain Names",
+            "query": "This is a dashboard containing data about the domain names registered for New Caledonia.\n\n![new caledonia](https://upload.wikimedia.org/wikipedia/commons/1/18/New_Caledonia-CIA_WFB_Map.png)\n\nThis page contains an overview of the dataset. The second page lets you drill down into a specific beneficiary and view the graph around them.",
+            "width": 3,
+            "height": 3,
+            "x": 0,
+            "y": 0,
+            "type": "text",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Graph Schema",
+            "query": "CALL db.schema.visualization()\n\n",
+            "width": 3,
+            "height": 3,
+            "x": 3,
+            "y": 0,
+            "type": "graph",
+            "selection": {
+              "Site": "name",
+              "DNS": "name",
+              "Gestionnaires": "name",
+              "Beneficiaires": "name"
+            },
+            "settings": {
+              "nodeColorScheme": "nivo"
+            }
+          },
+          {
+            "title": "Total nodes",
+            "query": "MATCH (n)\nRETURN COUNT(n) as Nodes\n\n\n",
+            "width": 3,
+            "height": 1,
+            "x": 6,
+            "y": 0,
+            "type": "value",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Total relationships",
+            "query": "MATCH ()-[e]->()\nRETURN count(e) as rels\n\n\n",
+            "width": 3,
+            "height": 1,
+            "x": 9,
+            "y": 0,
+            "type": "value",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Site Status",
+            "query": "MATCH (n:Site)\nRETURN n as node, n.id as id, n.status as status\nSKIP 1025 LIMIT 1000",
+            "width": 3,
+            "height": 2,
+            "x": 0,
+            "y": 3,
+            "type": "table",
+            "selection": {},
+            "settings": {
+              "styleRules": [
+                {
+                  "field": "status",
+                  "condition": "=",
+                  "value": "green",
+                  "customization": "cell color",
+                  "customizationValue": "#00e300"
+                },
+                {
+                  "field": "status",
+                  "condition": "=",
+                  "value": "orange",
+                  "customization": "cell color",
+                  "customizationValue": "orange"
+                },
+                {
+                  "field": "status",
+                  "condition": "=",
+                  "value": "red",
+                  "customization": "cell color",
+                  "customizationValue": "red"
+                }
+              ],
+              "description": "Click the column headers to sort the website by status code."
+            }
+          },
+          {
+            "title": "A sample of the data",
+            "query": "MATCH (s:Site)\nWHERE s.id in [\"1013\",\"1050\",\"1016\"]\nMATCH p=(s)--()\nRETURN p",
+            "width": 6,
+            "height": 2,
+            "x": 6,
+            "y": 1,
+            "type": "graph",
+            "selection": {
+              "Site": "id",
+              "DNS": "id",
+              "Beneficiaires": "id",
+              "Gestionnaires": "id"
+            },
+            "settings": {
+              "nodeColorScheme": "pastel1"
+            }
+          },
+          {
+            "title": "DNS'es",
+            "query": "MATCH (n:DNS)\nRETURN n as node, n.id as name\nLIMIT 1000\n\n\n",
+            "width": 3,
+            "height": 2,
+            "x": 3,
+            "y": 3,
+            "type": "table",
+            "selection": {},
+            "settings": {
+              "columnWidths": "[1,2]"
+            }
+          },
+          {
+            "title": "Gestionnaires (Managers)",
+            "query": "MATCH (n:Gestionnaires)\nRETURN n as node, n.id as name\nLIMIT 1000\n\n\n",
+            "width": 3,
+            "height": 2,
+            "x": 6,
+            "y": 3,
+            "type": "table",
+            "selection": {},
+            "settings": {
+              "columnWidths": "[1,2]"
+            }
+          },
+          {
+            "title": "Beneficiaires (Clients)",
+            "query": "MATCH (n:Beneficiaires)\nRETURN n as node, n.id as name\nLIMIT 1000\n\n\n\n\n\n",
+            "width": 3,
+            "height": 2,
+            "x": 9,
+            "y": 3,
+            "type": "table",
+            "selection": {},
+            "settings": {
+              "columnWidths": "[1,2]"
+            }
+          },
+          {
+            "title": "Domains created by year",
+            "query": "MATCH (s:Site)\nWITH date(s.dateCreation).year as year, COUNT(*) as number\nWHERE year <> 0\nRETURN year, number\nORDER BY year ASC \n\n\n",
+            "width": 6,
+            "height": 2,
+            "x": 0,
+            "y": 5,
+            "type": "line",
+            "selection": {
+              "x": "year",
+              "value": [
+                "number"
+              ]
+            },
+            "settings": {}
+          },
+          {
+            "title": "Gestionnaires with most clients",
+            "query": "MATCH (g:Gestionnaires)<-[:CLIENTDE]-(b:Beneficiaires)\nRETURN g.id as Gestionnaires, COUNT(b) as clients\nORDER BY clients DESC LIMIT 20\n\n",
+            "width": 6,
+            "height": 2,
+            "x": 6,
+            "y": 5,
+            "type": "bar",
+            "selection": {
+              "index": "Gestionnaires",
+              "value": "clients",
+              "key": "(none)"
+            },
+            "settings": {
+              "marginBottom": 120
+            }
+          }
+        ]
+      },
+      {
+        "title": "Drilldown",
+        "reports": [
+          {
+            "title": "Select a Gestionnaire",
+            "query": "MATCH (n:`Gestionnaires`) \nWHERE toLower(toString(n.`id`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`id` as value ORDER BY size(toString(value)) ASC LIMIT 5",
+            "width": 3,
+            "height": 1,
+            "x": 0,
+            "y": 1,
+            "type": "select",
+            "selection": {},
+            "settings": {
+              "type": "Node Property",
+              "entityType": "Gestionnaires",
+              "propertyType": "id",
+              "parameterName": "neodash_gestionnaires_id"
+            }
+          },
+          {
+            "title": "Drilldown page",
+            "query": "On this page, you can select a specific Gestionnaire, and drilldown into the graph attached to it.\n\n**TIP**: Try selecting \"TLI\" in the textbox below:",
+            "width": 3,
+            "height": 1,
+            "x": 0,
+            "y": 0,
+            "type": "text",
+            "selection": {},
+            "settings": {}
+          },
+          {
+            "title": "Clients and number of domains for the selected provider",
+            "query": "MATCH (g:Gestionnaires)<-[:CLIENTDE]-(b:Beneficiaires)-[:POSSEDE]->(d:Site)\nWHERE g.id = $neodash_gestionnaires_id\nRETURN b.id as Client, COUNT(d) as Domains\n\n\n\n\n\n\n",
+            "width": 9,
+            "height": 4,
+            "x": 3,
+            "y": 0,
+            "type": "bar",
+            "selection": {
+              "index": "Client",
+              "value": "Domains",
+              "key": "(none)"
+            },
+            "settings": {
+              "marginBottom": 160
+            }
+          },
+          {
+            "title": "Graph view",
+            "query": "MATCH path=(g:Gestionnaires)<-[:CLIENTDE]-(b:Beneficiaires)-[:POSSEDE]->(d:Site)\nWHERE g.id = $neodash_gestionnaires_id\nRETURN path\n\n\n\n\n\n\n\n\n\n",
+            "width": 3,
+            "height": 2,
+            "x": 0,
+            "y": 4,
+            "type": "graph",
+            "selection": {
+              "Gestionnaires": "id",
+              "Beneficiaires": "id",
+              "Site": "id"
+            },
+            "settings": {}
+          }
+        ]
+      }
+    ],
+    "parameters": {}
+  }

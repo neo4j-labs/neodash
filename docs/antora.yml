@@ -1,5 +1,5 @@
 name: neodash
-version: 2.1
+version: 2.2
 title: NeoDash Documentation
 start_page: ROOT:index.adoc
 nav:
@@ -7,7 +7,7 @@ nav:
 
 asciidoc:
   attributes:
-    docs-version: 2.1
+    docs-version: 2.2
     page-product: NeoDash
     page-type: NeoDash Manual
     page-canonical-root: /labs

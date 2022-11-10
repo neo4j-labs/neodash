@@ -98,7 +98,7 @@ export const NeoWelcomeScreenModal = ({ welcomeScreenOpen, setWelcomeScreenOpen,
                                 color="default"
                                 variant="contained"
                                 size="large">
-                                ✨ Examples ✨
+                                Examples
                             </Button>
                         </a>
                     </Tooltip>
