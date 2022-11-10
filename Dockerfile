@@ -13,7 +13,7 @@ COPY ./package.json /usr/local/src/neodash/package.json
 
 RUN yarn install
 COPY ./ /usr/local/src/neodash
-RUN yarn run build
+RUN PRODUCTION=true && yarn run build
 
 # production stage
 FROM nginx:alpine AS neodash
