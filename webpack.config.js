@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const production = process.env.PRODUCTION !== 'false';
+const production = process.env.PRODUCTION === 'true';
 
 const rules = [{
     test: /\.(js|jsx|ts|tsx)$/,
