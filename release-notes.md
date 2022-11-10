@@ -1,9 +1,14 @@
-## NeoDash 2.1.10
-This is a minor update which adds some operational/styling improvements, and a bug fix for line charts.
+## NeoDash 2.2.0
+This release marks the official arrival of **[Extensions](https://neo4j.com/labs/neodash/2.2/user-guide/extensions/)**, which provide a simple way of extending NeoDash with additional features. Adding your own features to NeoDash just became a lot easier!
 
-Changes:
-- Added customizable label positions for bar charts.
-- Fixed bug where datetimes were not handled correctly by line charts. (https://github.com/neo4j-labs/neodash/issues/243)
-- Added **session parameters**, set automatically and available to Cypher queries ([Documentation](https://neo4j.com/labs/neodash/2.1/user-guide/reports/)).
-- Added option to restore debug reports in recovery mode.
-- Added option to share dashboards from self-hosted deployments.
+NeoDash 2.2 comes with three in-built extensions.
+- **Rule-Based Styling**
+- **Advanced Visualizations**: These provide a means to enable complex visualizations in a dashboard. These were previously available as Radar charts, Treemaps, Circle Packing reports, Sankey charts, Choropleth and a Gauge Chart).
+- **Report Actions**: Which let you create interactivity in dashboards, using the output of one report as input for another visualization. (Pro Extension)
+
+You can enable extensions by clicking the 🧩 icon on the left sidebar of the screen.
+
+Other changes include:
+- New example dashboards available in the [Dashboard Gallery](https://neodash-gallery.graphapp.io).
+- Customizable background colors for all report types.
+- Fixing a bug where the Choropleth map chart was unable to parse country-codes.
