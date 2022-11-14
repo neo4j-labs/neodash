@@ -25,6 +25,7 @@
     "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
     "build": "yarn webpack --mode production && cp -r public/* dist/",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
     "prepare": "husky install",
     "test": "yarn cypress open",
