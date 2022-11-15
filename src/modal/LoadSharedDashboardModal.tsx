@@ -30,8 +30,8 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
 
   return (
     <div>
-      <Dialog maxWidth={'lg'} open={shareDetails !== undefined} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">
+      <Dialog maxWidth={'lg'} open={shareDetails !== undefined} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>
           <DashboardIcon
             style={{
               height: '30px',
@@ -40,7 +40,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
               marginRight: '5px',
               paddingBottom: '5px',
             }}
-          />{' '}
+          />
           Loading Dashboard
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
             <Badge badgeContent={''}>
@@ -85,25 +85,25 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
             <br />
             <br />
             <Button
-              component="label"
+              component='label'
               onClick={() => {
                 onConfirmLoadSharedDashboard();
               }}
               style={{ backgroundColor: 'white', marginTop: '20px', float: 'right' }}
-              color="default"
-              variant="contained"
+              color='default'
+              variant='contained'
               endIcon={<PlayArrow />}
-              size="medium"
+              size='medium'
             >
               Continue
             </Button>
             <Button
-              component="label"
+              component='label'
               onClick={handleClose}
               style={{ float: 'right', marginTop: '20px', marginRight: '10px', backgroundColor: 'white' }}
-              color="default"
-              variant="contained"
-              size="medium"
+              color='default'
+              variant='contained'
+              size='medium'
             >
               Cancel
             </Button>

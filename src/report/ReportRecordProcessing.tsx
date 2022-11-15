@@ -142,7 +142,7 @@ function RenderPath(value) {
       i < value.segments.length - 1
         ? [segment.start, addDirection(segment.relationship, segment.start)]
         : [segment.start, addDirection(segment.relationship, segment.start), segment.end],
-      i,
+      i
     );
   });
 }
@@ -163,7 +163,7 @@ function RenderString(value) {
   const str = value ? value.toString() : '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
-      <a target="_blank" href={str}>
+      <a target='_blank' href={str}>
         {str}
       </a>
     );
@@ -178,8 +178,7 @@ function RenderPoint(value) {
       title={
         <div>
           <b>
-            {' '}
-            Point x={value.x} y={value.y}{' '}
+            Point x={value.x} y={value.y}
           </b>
         </div>
       }

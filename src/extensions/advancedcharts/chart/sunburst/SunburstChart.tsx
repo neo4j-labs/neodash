@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { checkResultKeys, mutateName as mutateHierarchyNameIntoDisplayName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
-import { ResponsiveSunburst } from '@nivo/sunburst'
+import {
+  checkResultKeys,
+  mutateName as mutateHierarchyNameIntoDisplayName,
+  processHierarchyFromRecords,
+  findObject,
+  flatten,
+} from '../../../../chart/ChartUtils';
+import { ResponsiveSunburst } from '@nivo/sunburst';
 import { Tooltip } from '@material-ui/core';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { ChartProps } from '../../../../chart/Chart';
@@ -61,7 +67,7 @@ const NeoSunburstChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title="Reset" aria-label="reset">
+          <Tooltip title='Reset' aria-label='reset'>
             <RefreshIcon
               onClick={() => {
                 setData(commonProperties.data);
@@ -77,8 +83,8 @@ const NeoSunburstChart = (props: ChartProps) => {
                 zIndex: 5,
                 background: '#eee',
               }}
-              color="disabled"
-              fontSize="small"
+              color='disabled'
+              fontSize='small'
             ></RefreshIcon>
           </Tooltip>
         ) : (
@@ -86,8 +92,8 @@ const NeoSunburstChart = (props: ChartProps) => {
         )}
         <ResponsiveSunburst
           {...commonProperties}
-          id="name"
-          value="loc"
+          id='name'
+          value='loc'
           data={data}
           transitionMode={'pushIn'}
           isInteractive={interactive}

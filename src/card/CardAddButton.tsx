@@ -11,11 +11,11 @@ const NeoAddNewCard = ({ onCreatePressed }) => {
     <div>
       <Card style={{ background: '#e0e0e0' }}>
         <CardContent style={{ height: '429px' }}>
-          <Typography variant="h2" color="textSecondary" style={{ paddingTop: '155px', textAlign: 'center' }}>
+          <Typography variant='h2' color='textSecondary' style={{ paddingTop: '155px', textAlign: 'center' }}>
             <Fab
-              size="medium"
+              size='medium'
               className={'blue-grey'}
-              aria-label="add"
+              aria-label='add'
               onClick={() => {
                 onCreatePressed();
               }}

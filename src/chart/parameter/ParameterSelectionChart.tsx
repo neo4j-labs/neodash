@@ -68,8 +68,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
   const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
   const settings = props.settings ? props.settings : {};
-  const { helperText } = settings;
-  const { clearParameterOnFieldClear } = settings;
+  const { helperText, clearParameterOnFieldClear } = settings;
 
   return (
     <div>
@@ -80,7 +79,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             label={helperText ? helperText : `${label} ${property}`}
             defaultValue={defaultValue}
             value={value}
-            variant="outlined"
+            variant='outlined'
             placeholder={'Enter text here...'}
             style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px', width: 'calc(100% - 80px)' }}
             onChange={(newValue) => {
@@ -100,7 +99,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
         </div>
       ) : (
         <Autocomplete
-          id="autocomplete"
+          id='autocomplete'
           options={extraRecords.map((r) => (r._fields && r._fields[0] !== null ? r._fields[0] : '(no data)')).sort()}
           getOptionLabel={(option) => (option ? option.toString() : '')}
           style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
@@ -129,9 +128,9 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             <TextField
               {...params}
               InputLabelProps={{ shrink: true }}
-              placeholder="Start typing..."
+              placeholder='Start typing...'
               label={helperText ? helperText : `${label} ${property}`}
-              variant="outlined"
+              variant='outlined'
             />
           )}
         />

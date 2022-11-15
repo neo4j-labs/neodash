@@ -16,8 +16,8 @@ import { Tooltip } from '@material-ui/core';
  */
 export const NeoDeletePageModal = ({ modalOpen, onRemove, handleClose }) => {
   return (
-    <Dialog maxWidth={'lg'} open={modalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Delete page?</DialogTitle>
+    <Dialog maxWidth={'lg'} open={modalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      <DialogTitle id='form-dialog-title'>Delete page?</DialogTitle>
       <DialogContent>
         <DialogContentText> Are you sure you want to remove this page? This cannot be undone.</DialogContentText>
         <Button
@@ -26,9 +26,9 @@ export const NeoDeletePageModal = ({ modalOpen, onRemove, handleClose }) => {
             handleClose();
           }}
           style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'red' }}
-          color="secondary"
-          variant="contained"
-          size="large"
+          color='secondary'
+          variant='contained'
+          size='large'
           endIcon={<DeleteIcon color={'white'} />}
         >
           Remove
@@ -44,9 +44,9 @@ export const NeoDeletePageModal = ({ modalOpen, onRemove, handleClose }) => {
             marginBottom: '20px',
             backgroundColor: 'white',
           }}
-          color="default"
-          variant="contained"
-          size="large"
+          color='default'
+          variant='contained'
+          size='large'
         >
           Cancel
         </Button>

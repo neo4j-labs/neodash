@@ -27,8 +27,7 @@ const NeoBarChart = (props: ChartProps) => {
     return <></>;
   }
 
-  const { records } = props;
-  const { selection } = props;
+  const { records, selection } = props;
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
@@ -47,18 +46,10 @@ const NeoBarChart = (props: ChartProps) => {
         const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
         const value = recordToNative(row.get(selection.value));
 
-    const labelSkipWidth = (settings["labelSkipWidth"]) ? (settings["labelSkipWidth"]) : 0;
-    const labelSkipHeight = (settings["labelSkipHeight"]) ? (settings["labelSkipHeight"]) : 0;
-    const enableLabel = (settings["barValues"]) ? settings["barValues"] : false;
-    const positionLabel = (settings["positionLabel"]) ? settings["positionLabel"] : 'off';
-
-    const layout = (settings["layout"]) ? settings["layout"] : 'vertical';
-    const colorScheme = (settings["colors"]) ? settings["colors"] : 'set2';
-    const groupMode = (settings["groupMode"]) ? settings["groupMode"] : 'stacked';
-    const valueScale = (settings["valueScale"]) ? settings["valueScale"] : 'linear';
-    const minValue = (settings["minValue"]) ? settings["minValue"] : 'auto';
-    const maxValue = (settings["maxValue"]) ? settings["maxValue"] : 'auto';
-    const styleRules = extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+        if (isNaN(value)) {
+          return data;
+        }
+        keys[key] = true;
 
         if (idx > -1) {
           data[idx][key] = value;
@@ -96,13 +87,17 @@ const NeoBarChart = (props: ChartProps) => {
   const enableLabel = settings.barValues ? settings.barValues : false;
   const positionLabel = settings.positionLabel ? settings.positionLabel : 'off';
 
+  // TODO: we should make all these defaults be loaded from the config file.
   const layout = settings.layout ? settings.layout : 'vertical';
   const colorScheme = settings.colors ? settings.colors : 'set2';
   const groupMode = settings.groupMode ? settings.groupMode : 'stacked';
   const valueScale = settings.valueScale ? settings.valueScale : 'linear';
   const minValue = settings.minValue ? settings.minValue : 'auto';
   const maxValue = settings.maxValue ? settings.maxValue : 'auto';
-  const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+  const styleRules =
+    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
+      ? props.settings.styleRules
+      : [];
 
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
@@ -124,12 +119,12 @@ const NeoBarChart = (props: ChartProps) => {
   }
 
   const BarComponent = ({ bar, borderColor }) => {
-    const shade = false;
-    const darkTop = false;
-    const includeIndex = false;
+    let shade = false;
+    let darkTop = false;
+    let includeIndex = false;
     let x = bar.width / 2;
     let y = bar.height / 2;
-    const textAnchor = 'middle';
+    let textAnchor = 'middle';
     if (positionLabel == 'top') {
       if (layout == 'vertical') {
         y = -10;
@@ -146,7 +141,7 @@ const NeoBarChart = (props: ChartProps) => {
 
     return (
       <g transform={`translate(${bar.x},${bar.y})`}>
-        {shade ? <rect x={-3} y={7} width={bar.width} height={bar.height} fill="rgba(0, 0, 0, .07)" /> : <></>}
+        {shade ? <rect x={-3} y={7} width={bar.width} height={bar.height} fill='rgba(0, 0, 0, .07)' /> : <></>}
         <rect width={bar.width} height={bar.height} fill={bar.color} />
         {darkTop ? (
           <rect x={bar.width - 5} width={5} height={bar.height} fill={borderColor} fillOpacity={0.2} />
@@ -157,9 +152,9 @@ const NeoBarChart = (props: ChartProps) => {
           <text
             x={bar.width - 16}
             y={bar.height / 2}
-            textAnchor="end"
-            dominantBaseline="central"
-            fill="black"
+            textAnchor='end'
+            dominantBaseline='central'
+            fill='black'
             style={{
               fontWeight: 900,
               fontSize: 15,
@@ -175,7 +170,7 @@ const NeoBarChart = (props: ChartProps) => {
             x={x}
             y={y}
             textAnchor={textAnchor}
-            dominantBaseline="central"
+            dominantBaseline='central'
             fill={borderColor}
             style={{
               fontWeight: 400,
@@ -200,7 +195,7 @@ const NeoBarChart = (props: ChartProps) => {
       enableLabel={enableLabel}
       data={data}
       keys={Object.keys(keys)}
-      indexBy="index"
+      indexBy='index'
       margin={{
         top: marginTop,
         right: legend ? legendWidth + marginRight : marginRight,

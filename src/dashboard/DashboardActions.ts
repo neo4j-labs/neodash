@@ -34,8 +34,8 @@ export const movePage = (oldIndex: any, newIndex: any) => ({
   payload: { oldIndex, newIndex },
 });
 
-export const SET_EXTENSION_ENABLED =  'DASHBOARD/SET_EXTENSION_ENABLED';
+export const SET_EXTENSION_ENABLED = 'DASHBOARD/SET_EXTENSION_ENABLED';
 export const setExtensionEnabled = (name: string, enabled: boolean) => ({
-    type: SET_EXTENSION_ENABLED,
-    payload: { name, enabled },
+  type: SET_EXTENSION_ENABLED,
+  payload: { name, enabled },
 });

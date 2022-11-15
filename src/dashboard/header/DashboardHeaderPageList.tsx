@@ -65,7 +65,7 @@ export const NeoDashboardHeaderPageList = ({
         }}
       >
         <NeoPageAddButton onClick={addPage}></NeoPageAddButton>
-      </div>,
+      </div>
     );
   }
 
@@ -87,14 +87,12 @@ export const NeoDashboardHeaderPageList = ({
             height: '0px',
             background: 'white',
           }}
-        >
-          {' '}
-        </div>
+        ></div>
       ) : (
         <></>
       )}
       <ReactGridLayout
-        className="layout"
+        className='layout'
         layout={layout}
         isResizable={false}
         isDraggable={editable}
@@ -110,7 +108,7 @@ export const NeoDashboardHeaderPageList = ({
           const oldIndex = oldPosition.i;
           const newIndex = Math.min(
             newXPositions.length - 2,
-            newXPositions.sort((a, b) => a - b).indexOf(newPosition.x),
+            newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
           );
           if (oldIndex !== newIndex) {
             movePage(oldIndex, newIndex);

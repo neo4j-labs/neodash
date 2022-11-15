@@ -31,8 +31,8 @@ export function checkResultKeys(first: Neo4jRecord, keys: string[]) {
   if (missing.length > 0) {
     return new Error(
       `The query is missing the following key${missing.length > 1 ? 's' : ''}: ${missing.join(
-        ', ',
-      )}.  The expected keys are: ${keys.join(', ')}`,
+        ', '
+      )}.  The expected keys are: ${keys.join(', ')}`
     );
   }
 
@@ -77,9 +77,10 @@ export const mutateName = (currentNode) => {
 
 export const findObject = (data, name) => data.find((searchedName) => searchedName.name === name);
 
-export const flatten = data =>
-    data.reduce((acc, item) => {
-        if (item.children)
-            return [...acc, item, ...flatten(item.children)]
-        return [...acc, item]
-    }, []);
+export const flatten = (data) =>
+  data.reduce((acc, item) => {
+    if (item.children) {
+      return [...acc, item, ...flatten(item.children)];
+    }
+    return [...acc, item];
+  }, []);

@@ -48,7 +48,7 @@ const NeoCardViewHeader = ({
             {editable ? (
               <td>
                 <DragIndicatorIcon
-                  className="drag-handle"
+                  className='drag-handle'
                   style={{ color: 'grey', cursor: 'pointer', marginLeft: '-10px', marginRight: '10px' }}
                 ></DragIndicatorIcon>
               </td>
@@ -57,11 +57,11 @@ const NeoCardViewHeader = ({
             )}
             <td style={{ width: '100%' }}>
               <TextField
-                id="standard-outlined"
+                id='standard-outlined'
                 className={'no-underline large'}
-                label=""
+                label=''
                 disabled={!editable}
-                placeholder="Report name..."
+                placeholder='Report name...'
                 fullWidth
                 maxRows={4}
                 value={text}
@@ -79,39 +79,40 @@ const NeoCardViewHeader = ({
 
   const descriptionEnabled = description && description.length > 0;
 
+  // TODO: all components like buttons should probably be seperate files
   const settingsButton = (
-    <Tooltip title="Settings" aria-label="settings">
-      <IconButton aria-label="settings" onClick={onToggleCardSettings}>
+    <Tooltip title='Settings' aria-label='settings'>
+      <IconButton aria-label='settings' onClick={onToggleCardSettings}>
         <MoreVertIcon />
       </IconButton>
     </Tooltip>
   );
 
   const maximizeButton = (
-    <Tooltip title="Maximize" aria-label="maximize">
-      <IconButton aria-label="maximize" onClick={onToggleCardExpand}>
+    <Tooltip title='Maximize' aria-label='maximize'>
+      <IconButton aria-label='maximize' onClick={onToggleCardExpand}>
         <FullscreenIcon />
       </IconButton>
     </Tooltip>
   );
 
   const unMaximizeButton = (
-    <IconButton aria-label="un-maximize" onClick={onToggleCardExpand}>
+    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand}>
       <FullscreenExit />
     </IconButton>
   );
 
   const downloadImageButton = (
-    <Tooltip title="Download as Image" aria-label="download">
-      <IconButton onClick={onDownloadImage} aria-label="download csv">
-        <ImageIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize="small"></ImageIcon>
+    <Tooltip title='Download as Image' aria-label='download'>
+      <IconButton onClick={onDownloadImage} aria-label='download csv'>
+        <ImageIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></ImageIcon>
       </IconButton>
     </Tooltip>
   );
 
   const descriptionButton = (
-    <Tooltip title="Details" aria-label="details">
-      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label="details">
+    <Tooltip title='Details' aria-label='details'>
+      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details'>
         <InfoOutlinedIcon />
       </IconButton>
     </Tooltip>
@@ -123,9 +124,9 @@ const NeoCardViewHeader = ({
         maxWidth={'lg'}
         open={descriptionModalOpen == true}
         onClose={() => setDescriptionModalOpen(false)}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
             <Badge badgeContent={''}>
@@ -135,7 +136,7 @@ const NeoCardViewHeader = ({
         </DialogTitle>
         <DialogContent style={{ minWidth: '400px' }}>
           <div>
-            <base target="_blank" /> <ReactMarkdown plugins={[gfm]} children={description} />
+            <base target='_blank' /> <ReactMarkdown plugins={[gfm]} children={description} />
           </div>
         </DialogContent>
       </Dialog>

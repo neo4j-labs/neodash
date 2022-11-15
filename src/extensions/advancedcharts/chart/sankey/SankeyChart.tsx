@@ -1,6 +1,5 @@
-
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ResponsiveSankey  } from '@nivo/sankey';
+import React, { useEffect, useState } from 'react';
+import { ResponsiveSankey } from '@nivo/sankey';
 import { ChartProps } from '../../../../chart/Chart';
 import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../../../chart/ChartUtils';
 import { categoricalColorSchemes } from '../../../../config/ColorConfig';
@@ -8,13 +7,10 @@ import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/Style
 import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
 import { isCyclic } from '../../Utils';
 
-
 /**
  * Embeds a SankeyChart (from Charts) into NeoDash.
  */
 const NeoSankeyChart = (props: ChartProps) => {
-  const { records } = props;
-
   const settings = props.settings ? props.settings : {};
   const legendHeight = 20;
   const legendWidth = 120;
@@ -37,9 +33,10 @@ const NeoSankeyChart = (props: ChartProps) => {
 
   const styleRules = settings && settings.styleRules ? settings.styleRules : [];
 
+  // TODO this line is duplicated in a lot of places, should be in an utils file
   const update = (state, mutations) => Object.assign({}, state, mutations);
 
-  const [data, setData] = React.useState({ nodes: [], links: [] });
+  const [data, setData] = useState({ nodes: [], links: [] });
 
   useEffect(() => {
     buildVisualizationDictionaryFromRecords(props.records);
@@ -48,9 +45,10 @@ const NeoSankeyChart = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
-  const nodes = {};
-  const nodeLabels = {};
-  const links = {};
+  let nodes = {};
+  let nodeLabels = {};
+  let links = {};
+  let linkTypes = {};
 
   function extractGraphEntitiesFromField(value) {
     if (value == undefined) {
@@ -187,7 +185,7 @@ const NeoSankeyChart = (props: ChartProps) => {
       layout={layout}
       label={getArcLabel}
       nodeBorderWidth={nodeBorderWidth}
-      align="justify"
+      align='justify'
       nodeOpacity={1}
       nodeHoverOthersOpacity={0.35}
       nodeThickness={nodeThickness}

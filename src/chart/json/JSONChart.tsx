@@ -15,8 +15,8 @@ const NeoJSONChart = (props: ChartProps) => {
         style={{ width: '100%', border: '1px solid lightgray' }}
         className={'textinput-linenumbers'}
         value={JSON.stringify(records, null, 2)}
-        aria-label=""
-        placeholder="Query output should be rendered here."
+        aria-label=''
+        placeholder='Query output should be rendered here.'
       />
     </div>
   );

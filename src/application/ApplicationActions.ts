@@ -50,7 +50,7 @@ export const setConnectionProperties = (
   port: string,
   database: string,
   username: string,
-  password: string,
+  password: string
 ) => ({
   type: SET_CONNECTION_PROPERTIES,
   payload: { protocol, url, port, database, username, password },
@@ -63,7 +63,7 @@ export const setBasicConnectionProperties = (
   port: string,
   database: string,
   username: string,
-  password: string,
+  password: string
 ) => ({
   type: SET_CONNECTION_PROPERTIES,
   payload: { protocol, url, port, database, username, password },
@@ -76,7 +76,7 @@ export const setDesktopConnectionProperties = (
   port: string,
   database: string,
   username: string,
-  password: string,
+  password: string
 ) => ({
   type: SET_DESKTOP_CONNECTION_PROPERTIES,
   payload: { protocol, url, port, database, username, password },
@@ -113,7 +113,7 @@ export const setShareDetailsFromUrl = (
   database: string,
   username: string,
   password: string,
-  dashboardDatabase: string,
+  dashboardDatabase: string
 ) => ({
   type: SET_SHARE_DETAILS_FROM_URL,
   payload: { type, id, standalone, protocol, url, port, database, username, password, dashboardDatabase },
@@ -130,7 +130,7 @@ export const setStandaloneEnabled = (
   standaloneDashboardDatabase: string,
   standaloneDashboardURL: string,
   standaloneUsername: string,
-  standalonePassword: string,
+  standalonePassword: string
 ) => ({
   type: SET_STANDALONE_ENABLED,
   payload: {

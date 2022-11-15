@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChartProps } from '../../../../chart/Chart';
-import { ResponsiveRadar } from '@nivo/radar'
-import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
+import { ResponsiveRadar } from '@nivo/radar';
+import { evaluateRulesOnDict } from '../../../styling/StyleRuleEvaluator';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 
 /**
@@ -18,7 +18,6 @@ const NeoRadarChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
   const { records } = props;
-  const first = records[0] ? records[0] : undefined;
   const selection = props.selection ? props.selection : {};
   const settings = props.settings ? props.settings : {};
   const legendHeight = 20;
@@ -62,8 +61,6 @@ const NeoRadarChart = (props: ChartProps) => {
     selection.values.concat([selection.index]).forEach((k) => {
       const fieldIndex = r._fieldLookup[k];
       if (k !== selection.index && isNaN(r._fields[fieldIndex])) {
-        // eslint-disable-next-line no-console
-        console.log(k, r._fields[fieldIndex]);
         valid = false;
       }
       entry[k] = `${r._fields[fieldIndex]}`;
@@ -71,31 +68,39 @@ const NeoRadarChart = (props: ChartProps) => {
     return entry;
   });
 
-    // If we find inconsitent data, return an error/
-    if(!valid){
-        return <NoDrawableDataErrorMessage/>;
-    }
-    return <ResponsiveRadar
-        data={data}
-        isInteractive={interactive}
-        animate={animate}
-        margin={{ top: (legend) ? legendHeight + marginTop : marginTop, right: (legend) ? legendWidth + marginRight : marginRight, bottom: marginBottom, left: (legend) ? legendHeight + marginLeft : marginLeft }}
-        gridLevels={gridLevels}
-        keys={keys}
-        indexBy={selection['index']}
-        valueFormat=">-.2f"
-        borderColor={{ from: 'color' }}
-        gridLabelOffset={gridLabelOffset}
-        dotSize={dotSize}
-        dotColor={{ theme: 'background' }}
-        dotBorderWidth={dotBorderWidth}
-        //colors={styleRules.length >= 1 ? getCircleColor : { scheme: colorScheme }}
-        colors={{ scheme: colorScheme }}
-        blendMode={blendMode}
-        motionConfig={motionConfig}
-        curve={curve}
-        legends={(legend) ? [
-            {
+  // If we find inconsitent data, return an error/
+  if (!valid) {
+    return <NoDrawableDataErrorMessage />;
+  }
+  return (
+    <ResponsiveRadar
+      data={data}
+      isInteractive={interactive}
+      animate={animate}
+      margin={{
+        top: legend ? legendHeight + marginTop : marginTop,
+        right: legend ? legendWidth + marginRight : marginRight,
+        bottom: marginBottom,
+        left: legend ? legendHeight + marginLeft : marginLeft,
+      }}
+      gridLevels={gridLevels}
+      keys={keys}
+      indexBy={selection.index}
+      valueFormat='>-.2f'
+      borderColor={{ from: 'color' }}
+      gridLabelOffset={gridLabelOffset}
+      dotSize={dotSize}
+      dotColor={{ theme: 'background' }}
+      dotBorderWidth={dotBorderWidth}
+      // colors={styleRules.length >= 1 ? getCircleColor : { scheme: colorScheme }}
+      colors={{ scheme: colorScheme }}
+      blendMode={blendMode}
+      motionConfig={motionConfig}
+      curve={curve}
+      legends={
+        legend
+          ? [
+              {
                 anchor: 'top-left',
                 direction: 'column',
                 translateX: 0,

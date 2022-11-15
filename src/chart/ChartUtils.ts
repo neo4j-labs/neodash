@@ -220,8 +220,8 @@ export function checkResultKeys(first: Neo4jRecord, keys: string[]) {
   if (missing.length > 0) {
     return new Error(
       `The query is missing the following key${missing.length > 1 ? 's' : ''}: ${missing.join(
-        ', ',
-      )}.  The expected keys are: ${keys.join(', ')}`,
+        ', '
+      )}.  The expected keys are: ${keys.join(', ')}`
     );
   }
 
@@ -277,6 +277,7 @@ export const flatten = (data) =>
 /**
  * Converts a list of Neo4j records into a hierarchy structure for hierarchical data visualizations.
  */
+// TODO: this needs docs
 export const processHierarchyFromRecords = (records: Record<string, any>[], selection: any) => {
   return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
     try {

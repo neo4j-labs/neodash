@@ -60,6 +60,7 @@ const NeoPieChart = (props: ChartProps) => {
 
   const settings = props.settings ? props.settings : {};
   const legendHeight = 20;
+  // TODO to retrieve all defaults from the ReportConfig.ts file instead of hardcoding them in the file
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 24;
   const marginTop = settings.marginTop ? settings.marginTop : 24;

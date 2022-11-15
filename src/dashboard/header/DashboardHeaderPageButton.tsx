@@ -22,7 +22,7 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
 
   const content = (
     <>
-      <Grid style={{ height: '100%' }} onClick={onSelect} container spacing={1} alignItems="flex-end">
+      <Grid style={{ height: '100%' }} onClick={onSelect} container spacing={1} alignItems='flex-end'>
         <Grid item key={1} style={{ width: '100%' }}>
           <InputBase
             value={titleText}
@@ -49,7 +49,7 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
               textAlign: 'center',
               textTransform: 'uppercase',
             }}
-            placeholder="Page name..."
+            placeholder='Page name...'
           />
         </Grid>
       </Grid>
@@ -64,21 +64,21 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
       >
         {selected && !disabled ? (
           <IconButton
-            size="medium"
+            size='medium'
             style={{ padding: '5px', color: 'white' }}
-            aria-label="move left"
+            aria-label='move left'
             onClick={() => setModalOpen(true)}
           >
-            <CloseIcon color="disabled" />
+            <CloseIcon color='disabled' />
           </IconButton>
         ) : (
           <IconButton
-            size="medium"
+            size='medium'
             style={{ opacity: 0, padding: '5px', color: 'white' }}
-            aria-label="move left"
+            aria-label='move left'
             onClick={() => null}
           >
-            <CloseIcon color="disabled" />
+            <CloseIcon color='disabled' />
           </IconButton>
         )}
       </div>

@@ -1,11 +1,10 @@
-import NeoBarChart from "../chart/bar/BarChart";
-import NeoGraphChart from "../chart/graph/GraphChart";
-import NeoIFrameChart from "../chart/iframe/IFrameChart";
-import NeoLineChart from "../chart/line/LineChart";
-import NeoMapChart from "../chart/map/MapChart";
-import NeoPieChart from "../chart/pie/PieChart";
-import NeoTableChart from "../chart/table/TableChart";
-
+import NeoBarChart from '../chart/bar/BarChart';
+import NeoGraphChart from '../chart/graph/GraphChart';
+import NeoIFrameChart from '../chart/iframe/IFrameChart';
+import NeoLineChart from '../chart/line/LineChart';
+import NeoMapChart from '../chart/map/MapChart';
+import NeoPieChart from '../chart/pie/PieChart';
+import NeoTableChart from '../chart/table/TableChart';
 
 export const EXAMPLE_REPORTS = [
   {
@@ -219,24 +218,25 @@ RETURN {id: a.name, label: "Person", point: l1.point},
 ] as value
 RETURN value
         `,
-        settings: {},
-        fields: [],
-        selection: {},
-        type: "map",
-        chartType: NeoMapChart
-    },
-    {
-        title: "iFrame",
-        description: "You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.",
-        exampleQuery: `https://neodash.graphapp.io/embed-test.html`,
-        syntheticQuery: `https://neodash.graphapp.io/embed-test.html`,
-        settings: { "passGlobalParameters": true },
-        fields: [],
-        globalParameters: { "neodash_person_name": "Keanu", "neodash_movie_title": "The Matrix" },
-        selection: {},
-        type: "iframe",
-        chartType: NeoIFrameChart
-    }
-]
+    settings: {},
+    fields: [],
+    selection: {},
+    type: 'map',
+    chartType: NeoMapChart,
+  },
+  {
+    title: 'iFrame',
+    description:
+      'You can iFrame other webpages inside a dashboard, and dynamically pass in your dashboard parameters into the URL.',
+    exampleQuery: `https://neodash.graphapp.io/embed-test.html`,
+    syntheticQuery: `https://neodash.graphapp.io/embed-test.html`,
+    settings: { passGlobalParameters: true },
+    fields: [],
+    globalParameters: { neodash_person_name: 'Keanu', neodash_movie_title: 'The Matrix' },
+    selection: {},
+    type: 'iframe',
+    chartType: NeoIFrameChart,
+  },
+];
 
 export default EXAMPLE_REPORTS;

@@ -14,10 +14,10 @@ export const NeoPageAddButton = ({ onClick }) => {
         borderLeft: '1px solid #ddd',
       }}
     >
-      <Grid style={{ cursor: 'pointer', height: '100%' }} container spacing={1} alignItems="flex-end">
+      <Grid style={{ cursor: 'pointer', height: '100%' }} container spacing={1} alignItems='flex-end'>
         <Grid item>
-          <IconButton size="medium" style={{ padding: '5px', color: 'white' }} aria-label="move left" onClick={onClick}>
-            <AddIcon color="disabled" />
+          <IconButton size='medium' style={{ padding: '5px', color: 'white' }} aria-label='move left' onClick={onClick}>
+            <AddIcon color='disabled' />
           </IconButton>
         </Grid>
       </Grid>

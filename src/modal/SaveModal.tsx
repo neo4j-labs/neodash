@@ -7,7 +7,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
-import PlayArrow from '@material-ui/icons/PlayArrow';
 import SaveIcon from '@material-ui/icons/Save';
 import {
   Checkbox,
@@ -24,8 +23,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { getDashboardJson } from './ModalSelectors';
 import { valueIsArray, valueIsObject } from '../chart/ChartUtils';
@@ -114,11 +112,11 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
             <SaveIcon />
           </IconButton>
         </ListItemIcon>
-        <ListItemText primary="Save" />
+        <ListItemText primary='Save' />
       </ListItem>
 
-      <Dialog maxWidth={'lg'} open={saveModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">
+      <Dialog maxWidth={'lg'} open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>
           <SaveIcon
             style={{
               height: '30px',
@@ -137,25 +135,25 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
         </DialogTitle>
         <DialogContent style={{ width: '1000px' }}>
           <Button
-            component="label"
+            component='label'
             onClick={() => {
               setSaveToNeo4jModalOpen(true);
             }}
             style={{ backgroundColor: 'white' }}
-            color="default"
-            variant="contained"
-            size="medium"
+            color='default'
+            variant='contained'
+            size='medium'
             endIcon={<StorageIcon />}
           >
             Save to Neo4j
           </Button>
           <Button
-            component="label"
+            component='label'
             onClick={downloadDashboard}
             style={{ backgroundColor: 'white', marginLeft: '10px' }}
-            color="default"
-            variant="contained"
-            size="medium"
+            color='default'
+            variant='contained'
+            size='medium'
             endIcon={<GetAppIcon />}
           >
             Save to File
@@ -166,8 +164,8 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
             style={{ minHeight: '500px', width: '100%', border: '1px solid lightgray' }}
             className={'textinput-linenumbers'}
             value={dashboardString}
-            aria-label=""
-            placeholder="Your dashboard JSON should show here"
+            aria-label=''
+            placeholder='Your dashboard JSON should show here'
           />
         </DialogContent>
         <DialogActions></DialogActions>
@@ -179,9 +177,9 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
         onClose={() => {
           setSaveToNeo4jModalOpen(false);
         }}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           Save to Neo4j
           <IconButton
             onClick={() => {
@@ -212,16 +210,16 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
               `{...}` +
               `\n}`
             }
-            aria-label=""
-            placeholder=""
+            aria-label=''
+            placeholder=''
           />
 
           <FormControl style={{ marginTop: '10px' }}>
-            <InputLabel id="demo-simple-select-label">Save to Database</InputLabel>
+            <InputLabel id='demo-simple-select-label'>Save to Database</InputLabel>
 
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId='demo-simple-select-label'
+              id='demo-simple-select'
               style={{ width: '150px' }}
               value={dashboardDatabase}
               onChange={(e) => setDashboardDatabase(e.target.value)}
@@ -233,23 +231,23 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           </FormControl>
 
           <FormControl style={{ marginTop: '20px', marginLeft: '10px' }}>
-            <Tooltip title="Overwrite dashboard(s) with the same name." aria-label="">
+            <Tooltip title='Overwrite dashboard(s) with the same name.' aria-label=''>
               <FormControlLabel
                 control={
                   <Checkbox
                     style={{ fontSize: 'small', color: 'grey' }}
                     checked={overwriteExistingDashboard}
                     onChange={() => setOverwriteExistingDashboard(!overwriteExistingDashboard)}
-                    name="overwrite"
+                    name='overwrite'
                   />
                 }
-                label="Overwrite"
+                label='Overwrite'
               />
             </Tooltip>
           </FormControl>
 
           <Button
-            component="label"
+            component='label'
             onClick={() => {
               saveDashboardToNeo4j(
                 driver,
@@ -257,28 +255,28 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
                 dashboard,
                 new Date().toISOString(),
                 connection.username,
-                overwriteExistingDashboard,
+                overwriteExistingDashboard
               );
               setSaveToNeo4jModalOpen(false);
               setSaveModalOpen(false);
             }}
             style={{ backgroundColor: 'white', marginTop: '20px', float: 'right' }}
-            color="default"
-            variant="contained"
+            color='default'
+            variant='contained'
             endIcon={<SaveIcon />}
-            size="medium"
+            size='medium'
           >
             Save
           </Button>
           <Button
-            component="label"
+            component='label'
             onClick={() => {
               setSaveToNeo4jModalOpen(false);
             }}
             style={{ float: 'right', marginTop: '20px', marginRight: '10px', backgroundColor: 'white' }}
-            color="default"
-            variant="contained"
-            size="medium"
+            color='default'
+            variant='contained'
+            size='medium'
           >
             Cancel
           </Button>

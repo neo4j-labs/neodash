@@ -17,110 +17,78 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
  * Renders Neo4j records as their JSON representation.
  */
 const NeoMapChart = (props: ChartProps) => {
+  // Retrieve config from advanced settings
+  const layerType = props.settings && props.settings.layerType ? props.settings.layerType : 'markers';
+  const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : 'color';
+  const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
+  const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : 'width';
+  const relColorProp = props.settings && props.settings.relColorProp ? props.settings.relColorProp : 'color';
+  const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : 3.5;
+  const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : '#666';
+  const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : 'neodash';
+  const styleRules =
+    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
+      ? props.settings.styleRules
+      : [];
+  const clusterMarkers =
+    props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
+  const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : '';
+  const defaultNodeColor = 'grey'; // Color of nodes without labels
+  const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
+  const mapProviderURL =
+    props.settings && props.settings.providerUrl
+      ? props.settings.providerUrl
+      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  const attribution =
+    props.settings && props.settings.attribution
+      ? props.settings.attribution
+      : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
-    // Retrieve config from advanced settings
-    const layerType = props.settings && props.settings.layerType ? props.settings.layerType : "markers";
-    const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : "color";
-    const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : "large";
-    const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : "width";
-    const relColorProp = props.settings && props.settings.relColorProp ? props.settings.relColorProp : "color";
-    const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : 3.5;
-    const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#666";
-    const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
-    const styleRules = extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules ? props.settings.styleRules : [];
-    const clusterMarkers = props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
-    const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : "";
-    const defaultNodeColor = "grey"; // Color of nodes without labels
-    const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
-    const mapProviderURL = props.settings && props.settings.providerUrl ? props.settings.providerUrl : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-    const attribution = props.settings && props.settings.attribution ? props.settings.attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+  const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
+  // Per pixel, scaling factors for the latitude/longitude mapping function.
+  const widthScale = 8.55;
+  const heightScale = 6.7;
 
-    
-    const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
+  let markerMarginTop;
 
-    // Per pixel, scaling factors for the latitude/longitude mapping function.
-    const widthScale = 8.55;
-    const heightScale = 6.7;
+  let key = `${dimensions.width},${dimensions.height},${data.centerLatitude},${data.centerLongitude},${props.fullscreen}`;
+  useEffect(() => {
+    `${data.centerLatitude},${data.centerLongitude},${props.fullscreen}`;
+  }, [props.fullscreen]);
 
-    var key = dimensions.width + "," + dimensions.height + ","+ data.centerLatitude + "," + data.centerLongitude + "," + props.fullscreen;
-    useEffect(() => {
-        data.centerLatitude + "," + data.centerLongitude + "," + props.fullscreen;
-    }, [props.fullscreen])
+  useEffect(() => {
+    buildVisualizationDictionaryFromRecords(props.records);
+  }, []);
 
-    useEffect(() => {
-        buildVisualizationDictionaryFromRecords(props.records);
-    }, [])
+  let nodes = {};
+  let nodeLabels = {};
+  let links = {};
+  let linkTypes = {};
 
-    var nodes = {};
-    var nodeLabels = {};
-    var links = {};
-    var linkTypes = {};
-
-    // Gets all graphy objects (nodes/relationships) from the complete set of return values.
-    function extractGraphEntitiesFromField(value) {
-        if (value == undefined) {
-            return
-        }
-        if (valueIsArray(value)) {
-            value.forEach((v, i) => extractGraphEntitiesFromField(v));
-        } else if (valueIsObject(value)) {
-            if (value["label"] && value["id"]) {
-                // Override for adding point nodes using a manually constructed dict.
-                nodeLabels[value["label"]] = true;
-                nodes[value["id"]] = {
-                    id: value["id"],
-                    labels: [value["label"]],
-                    size: defaultNodeSize,
-                    properties: value,
-                    firstLabel: value["label"]
-                };
-            } else if (value["type"] && value["id"] && value["start"] && value["end"]) {
-                // Override for adding relationships using a manually constructed dict.
-                if (links[value["start"] + "," + value["end"]] == undefined) {
-                    links[value["start"] + "," + value["end"]] = [];
-                }
-                const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
-                addItem(links[value["start"] + "," + value["end"]], {
-                    id: value["id"],
-                    source: value["start"],
-                    target: value["end"],
-                    type: value["type"],
-                    width: value[relWidthProp] ? value[relWidthProp] : defaultRelWidth,
-                    color: value[relColorProp] ? value[relColorProp] : defaultRelColor,
-                    properties: value
-                });
-            }
-        } else if (valueIsNode(value)) {
-            value.labels.forEach(l => nodeLabels[l] = true)
-            nodes[value.identity.low] = {
-                id: value.identity.low,
-                labels: value.labels,
-                size: defaultNodeSize,
-                properties: value.properties,
-                firstLabel: value.labels[0]
-            };
-        } else if (valueIsRelationship(value)) {
-            if (links[value.start.low + "," + value.end.low] == undefined) {
-                links[value.start.low + "," + value.end.low] = [];
-            }
-            const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
-            addItem(links[value.start.low + "," + value.end.low], {
-                id: value.identity.low,
-                source: value.start.low,
-                target: value.end.low,
-                type: value.type,
-                width: value.properties[relWidthProp] ? value.properties[relWidthProp] : defaultRelWidth,
-                color: value.properties[relColorProp] ? value.properties[relColorProp] : defaultRelColor,
-                properties: value.properties
-            });
-
-        } else if (valueIsPath(value)) {
-            value.segments.map((segment, i) => {
-                extractGraphEntitiesFromField(segment.start);
-                extractGraphEntitiesFromField(segment.relationship);
-                extractGraphEntitiesFromField(segment.end);
-            });
+  // Gets all graphy objects (nodes/relationships) from the complete set of return values.
+  // TODO this should be in Utils.ts
+  function extractGraphEntitiesFromField(value) {
+    if (value == undefined) {
+      return;
+    }
+    if (valueIsArray(value)) {
+      value.forEach((v) => extractGraphEntitiesFromField(v));
+    } else if (valueIsObject(value)) {
+      if (value.label && value.id) {
+        // Override for adding point nodes using a manually constructed dict.
+        nodeLabels[value.label] = true;
+        nodes[value.id] = {
+          id: value.id,
+          labels: [value.label],
+          size: defaultNodeSize,
+          properties: value,
+          firstLabel: value.label,
+        };
+      } else if (value.type && value.id && value.start && value.end) {
+        // Override for adding relationships using a manually constructed dict.
+        if (links[`${value.start},${value.end}`] == undefined) {
+          links[`${value.start},${value.end}`] = [];
         }
         const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
         addItem(links[`${value.start},${value.end}`], {
@@ -165,6 +133,7 @@ const NeoMapChart = (props: ChartProps) => {
     }
   }
 
+  // TODO this should be in Utils.ts
   function buildVisualizationDictionaryFromRecords(records) {
     // Extract graph objects from result set.
     records.forEach((record) => {
@@ -240,19 +209,19 @@ const NeoMapChart = (props: ChartProps) => {
     const minLat = Math.min(...latitudes);
     const avgLat = maxLat - (maxLat - minLat) / 2.0;
 
-    const latWidthScaleFactor = (dimensions.width ? dimensions.width : 300) / widthScale;
-    const latDiff = maxLat - avgLat;
-    const latProjectedWidth = latDiff / latWidthScaleFactor;
-    const latZoomFit = Math.ceil(Math.log2(1.0 / latProjectedWidth));
+    let latWidthScaleFactor = (dimensions.width ? dimensions.width : 300) / widthScale;
+    let latDiff = maxLat - avgLat;
+    let latProjectedWidth = latDiff / latWidthScaleFactor;
+    let latZoomFit = Math.ceil(Math.log2(1.0 / latProjectedWidth));
 
     const maxLong = Math.min(...longitudes);
     const minLong = Math.min(...longitudes);
     const avgLong = maxLong - (maxLong - minLong) / 2.0;
 
-    const longHeightScaleFactor = (dimensions.height ? dimensions.height : 300) / heightScale;
-    const longDiff = maxLong - avgLong;
-    const longProjectedHeight = longDiff / longHeightScaleFactor;
-    const longZoomFit = Math.ceil(Math.log2(1.0 / longProjectedHeight));
+    let longHeightScaleFactor = (dimensions.height ? dimensions.height : 300) / heightScale;
+    let longDiff = maxLong - avgLong;
+    let longProjectedHeight = longDiff / longHeightScaleFactor;
+    let longZoomFit = Math.ceil(Math.log2(1.0 / longProjectedHeight));
     // Set data based on result values.
     setData({
       zoom: Math.min(latZoomFit, longZoomFit),
@@ -265,8 +234,6 @@ const NeoMapChart = (props: ChartProps) => {
 
   if (layerType == 'markers') {
     // Render a node label tooltip
-
-    markerMarginTop = '6px';
     switch (defaultNodeSize) {
       case 'large':
         markerMarginTop = '-5px';
@@ -275,6 +242,7 @@ const NeoMapChart = (props: ChartProps) => {
         markerMarginTop = '3px';
         break;
       default:
+        markerMarginTop = '6px';
         break;
     }
   }
@@ -308,9 +276,8 @@ const NeoMapChart = (props: ChartProps) => {
           }
         >
           {props.selection && props.selection[node.firstLabel] && props.selection[node.firstLabel] != '(no label)' ? (
-            <Tooltip direction="bottom" permanent className={'leaflet-custom-tooltip'}>
-              {' '}
-              {renderNodeLabel(node)}{' '}
+            <Tooltip direction='bottom' permanent className={'leaflet-custom-tooltip'}>
+              {renderNodeLabel(node)}
             </Tooltip>
           ) : (
             <></>
@@ -341,7 +308,7 @@ const NeoMapChart = (props: ChartProps) => {
 
   function createHeatmap() {
     // Create Heatmap layer to add on top of the map
-    const points = data.nodes
+    let points = data.nodes
       .filter((node) => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1]))
       .map((node) => [node.pos[0], node.pos[1], intensityProp == '' ? 1 : extractIntensityProperty(node)]);
     return (
@@ -430,10 +397,10 @@ const NeoMapChart = (props: ChartProps) => {
     );
   }
 
+  // TODO this should definitely be refactored as an if/case statement.
   const markers = layerType == 'markers' ? createMarkers() : '';
   const lines = layerType == 'markers' ? createLines() : '';
   const heatmap = layerType == 'heatmap' ? createHeatmap() : '';
-  const fullscreen = props.fullscreen ? props.fullscreen : true;
 
   // Draw the component.
   return (

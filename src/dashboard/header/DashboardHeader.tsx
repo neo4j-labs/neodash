@@ -38,7 +38,7 @@ export const NeoDashboardHeader = ({
 
   const content = (
     <AppBar
-      position="absolute"
+      position='absolute'
       style={
         open
           ? {

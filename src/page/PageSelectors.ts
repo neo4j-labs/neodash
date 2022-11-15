@@ -5,7 +5,6 @@ export const getReports = (state: any) => {
 };
 export const getReportsLoading = (state: any) => state.dashboard.isLoading;
 
-export const getCurrentReports = createSelector(
-    getReports,
-    (reports) => reports.filter((report) => true),
-);
+// TODO: Investigate to define what is the expected behavior => current filter is useless
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getCurrentReports = createSelector(getReports, (reports) => reports.filter((report) => true));

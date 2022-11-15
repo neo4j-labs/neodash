@@ -148,134 +148,99 @@ export const NeoCustomReportStyleModal = ({
 
   // Update a single field in one of the rules in the rule array.
   const updateRuleField = (ruleIndex, ruleField, ruleFieldValue) => {
-    const newRules = [...rules]; // Deep copy
+    let newRules = [...rules]; // Deep copy
     newRules[ruleIndex][ruleField] = ruleFieldValue;
     setRules(newRules);
   };
 
-    return (
-        <div>
-            {customReportStyleModalOpen ?
-                <Dialog maxWidth={"xl"} open={customReportStyleModalOpen == true}
-                    PaperProps={{
-                        style: {
-                            overflow: 'inherit'
-                        },
-                    }}
-                    style={{ overflow: "inherit", overflowY: "inherit" }}
-                    aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">
-                        <TuneIcon style={{
-                            height: "30px",
-                            paddingTop: "4px",
-                            marginBottom: "-8px",
-                            marginRight: "5px",
-                            paddingBottom: "5px"
-                        }} />
-                        Rule-Based Styling
-                        <IconButton onClick={handleClose} style={{ padding: "3px", float: "right" }}>
-                            <Badge badgeContent={""} >
-                                <CloseIcon />
-                            </Badge>
-                        </IconButton>
-                    </DialogTitle>
-                    <div>
-                        <DialogContent style={{ overflow: "inherit" }}>
-                            <p>You can define rule-based styling for the report here. <br />
-                                Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is applied.<br />
-                                {(type == "graph" || type == "map") ? <p>For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>, for example: <code>Person.age</code>. This is case-sensentive.</p> : <></>}
-                                {(type == "line" || type == "value" || type == "bar" || type == "pie" || type == "table") ? <p>For <b>{type}</b> reports, the field name should be the exact name of the returned field. <br />For example, if your query is <code>MATCH (n:Movie) RETURN n.rating as Rating</code>, your field name is <code>Rating</code>.</p> : <></>}
-                            </p>
-                            <div>
+  /**
+   * Create the list of suggestions used in the autocomplete box of the rule specification window.
+   * This will be dynamic based on the type of report we are customizing.
+   */
+  const createFieldVariableSuggestions = () => {
+    if (!fields) {
+      return [];
+    }
+    if (type == 'graph' || type == 'map') {
+      return fields
+        .map((node, index) => {
+          if (!Array.isArray(node)) {
+            return undefined;
+          }
+          return fields[index].map((property, propertyIndex) => {
+            if (propertyIndex == 0) {
+              return undefined;
+            }
+            return `${fields[index][0]}.${property}`;
+          });
+        })
+        .flat()
+        .filter((e) => e !== undefined);
+    }
+    if (type == 'bar' || type == 'line' || type == 'pie' || type == 'table' || type == 'value') {
+      return fields;
+    }
+    return [];
+  };
 
-                                <hr></hr>
-
-                                <table>
-                                    {rules.map((rule, index) => {
-                                        return <>
-                                            <tr>
-
-                                       
-                                            <td style={{ paddingLeft: "2px", paddingRight: "2px" }}><span style={{ color: "black", width: "50px" }}>{index+1}.</span></td>
-                                                <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}> IF</span></td>
-                                                <div style={{ border: "2px dashed grey" }}>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
-                                                        <Autocomplete
-                                                            disableClearable={true}
-                                                            id="autocomplete-label-type"
-                                                            noOptionsText="*Specify an exact field name"
-                                                            options={createFieldVariableSuggestions().filter(e => e.toLowerCase().includes(rule['field'].toLowerCase()))}
-                                                            value={rule['field'] ? rule['field'] : ""}
-                                                            inputValue={rule['field'] ? rule['field'] : ""}
-                                                            popupIcon={<></>}
-                                                            style={{ display: "inline-block", width: 185, marginLeft: "5px", marginTop: "5px" }}
-                                                            onInputChange={(event, value) => {
-                                                                updateRuleField(index, 'field', value)
-                                                            }}
-                                                            onChange={(event, newValue) => {
-                                                                updateRuleField(index, 'field', newValue)
-                                                            }}
-                                                            renderInput={(params) => <TextField {...params} placeholder="Field name..." InputLabelProps={{ shrink: true }} />}
-                                                        />
-                                                    </td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px" }}>
-                                                        <TextField select value={rule['condition']}
-                                                            onChange={(e) => updateRuleField(index, 'condition', e.target.value)}>
-                                                            {RULE_CONDITIONS.map((option) => (
-                                                                <MenuItem key={option.value} value={option.value}>
-                                                                    {option.label}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </TextField></td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px" }}><TextField placeholder="Value..." value={rule['value']}
-                                                        onChange={(e) => updateRuleField(index, 'value', e.target.value)}></TextField></td>
-                                                </div>
-                                                <td style={{ paddingLeft: "20px", paddingRight: "20px" }}><span style={{ fontWeight: "bold", color: "black", width: "50px" }}>THEN</span></td>
-                                                <div style={{ border: "2px dashed grey", marginBottom: "5px" }}>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
-                                                        <TextField select value={rule['customization']}
-                                                            onChange={(e) => updateRuleField(index, 'customization', e.target.value)}>
-                                                            {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => (
-                                                                <MenuItem key={option.value} value={option.value}>
-                                                                    {option.label}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </TextField></td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px", paddingTop: "5px", paddingBottom: "5px" }}>
-                                                        <TextField style={{ width: "20px", color: "black" }} disabled={true} value={'='}></TextField>
-                                                    </td>
-                                                    <td style={{ paddingLeft: "5px", paddingRight: "5px" }}><NeoColorPicker label="" defaultValue="black" key={undefined} style={undefined} value={rule['customizationValue']} onChange={(value) => updateRuleField(index, 'customizationValue', value)} ></NeoColorPicker></td>
-                                                </div>
-                                                <td>
-                                                    <Fab size="small" aria-label="add" style={{ background: "black", color: "white", marginTop: "-6px", marginLeft: "20px" }}
-                                                        onClick={() => {
-                                                            setRules([...rules.slice(0, index), ...rules.slice(index + 1)])
-                                                        }} >
-                                                        <CloseIcon />
-                                                    </Fab>
-                                                </td>
-                                            </tr></>
-                                    })}
-
-                                    <tr >
-                                        <td style={{ minWidth: '850px'}} colSpan={5}>
-                                            <Typography variant="h3" color="primary" style={{ textAlign: "center", marginBottom: "5px" }}>
-                                                <Fab size="small" aria-label="add" style={{ background: "white", color: "black" }}
-                                                    onClick={() => {
-                                                        const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0]['value']);
-                                                        setRules(rules.concat(newRule));
-                                                    }} >
-                                                    <AddIcon />
-                                                </Fab>
-                                            </Typography>
-
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <hr></hr>
-
-                            </div>
+  return (
+    <div>
+      {customReportStyleModalOpen ? (
+        <Dialog
+          maxWidth={'xl'}
+          open={customReportStyleModalOpen == true}
+          PaperProps={{
+            style: {
+              overflow: 'inherit',
+            },
+          }}
+          style={{ overflow: 'inherit', overflowY: 'inherit' }}
+          aria-labelledby='form-dialog-title'
+        >
+          <DialogTitle id='form-dialog-title'>
+            <TuneIcon
+              style={{
+                height: '30px',
+                paddingTop: '4px',
+                marginBottom: '-8px',
+                marginRight: '5px',
+                paddingBottom: '5px',
+              }}
+            />
+            Rule-Based Styling
+            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
+              <Badge badgeContent={''}>
+                <CloseIcon />
+              </Badge>
+            </IconButton>
+          </DialogTitle>
+          <div>
+            <DialogContent style={{ overflow: 'inherit' }}>
+              <p>
+                You can define rule-based styling for the report here. <br />
+                Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is
+                applied.
+                <br />
+                {type == 'graph' || type == 'map' ? (
+                  <p>
+                    For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>,
+                    for example: <code>Person.age</code>. This is case-sensentive.
+                  </p>
+                ) : (
+                  <></>
+                )}
+                {type == 'line' || type == 'value' || type == 'bar' || type == 'pie' || type == 'table' ? (
+                  <p>
+                    For <b>{type}</b> reports, the field name should be the exact name of the returned field. <br />
+                    For example, if your query is <code>MATCH (n:Movie) RETURN n.rating as Rating</code>, your field
+                    name is <code>Rating</code>.
+                  </p>
+                ) : (
+                  <></>
+                )}
+              </p>
+              <div>
+                <hr></hr>
 
                 <table>
                   {rules.map((rule, index) => {
@@ -299,10 +264,10 @@ export const NeoCustomReportStyleModal = ({
                             >
                               <Autocomplete
                                 disableClearable={true}
-                                id="autocomplete-label-type"
-                                noOptionsText="*Specify an exact field name"
+                                id='autocomplete-label-type'
+                                noOptionsText='*Specify an exact field name'
                                 options={createFieldVariableSuggestions().filter((e) =>
-                                  e.toLowerCase().includes(rule.field.toLowerCase()),
+                                  e.toLowerCase().includes(rule.field.toLowerCase())
                                 )}
                                 value={rule.field ? rule.field : ''}
                                 inputValue={rule.field ? rule.field : ''}
@@ -317,7 +282,7 @@ export const NeoCustomReportStyleModal = ({
                                 renderInput={(params) => (
                                   <TextField
                                     {...params}
-                                    placeholder="Field name..."
+                                    placeholder='Field name...'
                                     InputLabelProps={{ shrink: true }}
                                   />
                                 )}
@@ -338,7 +303,7 @@ export const NeoCustomReportStyleModal = ({
                             </td>
                             <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
                               <TextField
-                                placeholder="Value..."
+                                placeholder='Value...'
                                 value={rule.value}
                                 onChange={(e) => updateRuleField(index, 'value', e.target.value)}
                               ></TextField>
@@ -385,8 +350,8 @@ export const NeoCustomReportStyleModal = ({
                             </td>
                             <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
                               <NeoColorPicker
-                                label=""
-                                defaultValue="black"
+                                label=''
+                                defaultValue='black'
                                 key={undefined}
                                 style={undefined}
                                 value={rule.customizationValue}
@@ -396,8 +361,8 @@ export const NeoCustomReportStyleModal = ({
                           </div>
                           <td>
                             <Fab
-                              size="small"
-                              aria-label="add"
+                              size='small'
+                              aria-label='add'
                               style={{ background: 'black', color: 'white', marginTop: '-6px', marginLeft: '20px' }}
                               onClick={() => {
                                 setRules([...rules.slice(0, index), ...rules.slice(index + 1)]);
@@ -406,18 +371,17 @@ export const NeoCustomReportStyleModal = ({
                               <CloseIcon />
                             </Fab>
                           </td>
-                          <hr />
                         </tr>
                       </>
                     );
                   })}
 
                   <tr>
-                    <td style={{ borderBottom: '1px solid grey', width: '750px' }} colSpan={5}>
-                      <Typography variant="h3" color="primary" style={{ textAlign: 'center', marginBottom: '5px' }}>
+                    <td style={{ minWidth: '850px' }} colSpan={5}>
+                      <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
                         <Fab
-                          size="small"
-                          aria-label="add"
+                          size='small'
+                          aria-label='add'
                           style={{ background: 'white', color: 'black' }}
                           onClick={() => {
                             const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0].value);
@@ -430,13 +394,15 @@ export const NeoCustomReportStyleModal = ({
                     </td>
                   </tr>
                 </table>
+
+                <hr></hr>
               </div>
 
               <Button
                 style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'white' }}
-                color="default"
-                variant="contained"
-                size="large"
+                color='default'
+                variant='contained'
+                size='large'
                 onClick={() => {
                   handleClose();
                 }}

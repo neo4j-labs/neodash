@@ -94,8 +94,8 @@ export const createConnectionThunk =
                   driver,
                   application.standaloneDashboardDatabase,
                   application.dashboardToLoadAfterConnecting.substring(5),
-                  setDashboardAfterLoadingFromDatabase,
-                ),
+                  setDashboardAfterLoadingFromDatabase
+                )
               );
             } else {
               dispatch(
@@ -103,8 +103,8 @@ export const createConnectionThunk =
                   driver,
                   application.standaloneDashboardDatabase,
                   application.dashboardToLoadAfterConnecting,
-                  setDashboardAfterLoadingFromDatabase,
-                ),
+                  setDashboardAfterLoadingFromDatabase
+                )
               );
             }
             dispatch(setDashboardToLoadAfterConnecting(null));
@@ -122,7 +122,7 @@ export const createConnectionThunk =
         parameters,
         1,
         () => {},
-        (records) => validateConnection(records),
+        (records) => validateConnection(records)
       );
     } catch (e) {
       dispatch(createNotificationThunk('Unable to establish connection', e));
@@ -135,12 +135,7 @@ export const createConnectionThunk =
 export const createConnectionFromDesktopIntegrationThunk = () => (dispatch: any, getState: any) => {
   try {
     const desktopConnectionDetails = getState().application.desktopConnection;
-    const { protocol } = desktopConnectionDetails;
-    const { url } = desktopConnectionDetails;
-    const { port } = desktopConnectionDetails;
-    const { database } = desktopConnectionDetails;
-    const { username } = desktopConnectionDetails;
-    const { password } = desktopConnectionDetails;
+    const { protocol, url, port, database, username, password } = desktopConnectionDetails;
     dispatch(createConnectionThunk(protocol, url, port, database, username, password));
   } catch (e) {
     dispatch(createNotificationThunk('Unable to establish connection to Neo4j Desktop', e));
@@ -154,9 +149,9 @@ export const createConnectionFromDesktopIntegrationThunk = () => (dispatch: any,
 export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any) => {
   const getActiveDatabase = (context) => {
     for (let pi = 0; pi < context.projects.length; pi++) {
-      const prj = context.projects[pi];
+      let prj = context.projects[pi];
       for (let gi = 0; gi < prj.graphs.length; gi++) {
-        const grf = prj.graphs[gi];
+        let grf = prj.graphs[gi];
         if (grf.status == 'ACTIVE') {
           return grf;
         }
@@ -166,11 +161,11 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any)
     return null;
   };
 
-  const promise = window.neo4jDesktopApi && window.neo4jDesktopApi.getContext();
+  let promise = window.neo4jDesktopApi && window.neo4jDesktopApi.getContext();
 
   if (promise) {
     promise.then((context) => {
-      const neo4j = getActiveDatabase(context);
+      let neo4j = getActiveDatabase(context);
       if (neo4j) {
         dispatch(
           setDesktopConnectionProperties(
@@ -179,8 +174,8 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any)
             neo4j.connection.configuration.protocols.bolt.port,
             undefined,
             neo4j.connection.configuration.protocols.bolt.username,
-            neo4j.connection.configuration.protocols.bolt.password,
-          ),
+            neo4j.connection.configuration.protocols.bolt.password
+          )
         );
       }
     });
@@ -246,8 +241,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             database,
             username,
             password,
-            dashboardDatabase,
-          ),
+            dashboardDatabase
+          )
         );
         window.history.pushState({}, document.title, '/');
       } else {
@@ -263,8 +258,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             undefined,
             undefined,
             undefined,
-            undefined,
-          ),
+            undefined
+          )
         );
         window.history.pushState({}, document.title, '/');
       }
@@ -275,8 +270,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
     dispatch(
       createNotificationThunk(
         'Unable to load shared dashboard',
-        'You have specified an invalid/incomplete share URL. Try regenerating the share URL from the sharing window.',
-      ),
+        'You have specified an invalid/incomplete share URL. Try regenerating the share URL from the sharing window.'
+      )
     );
   }
 };
@@ -303,8 +298,8 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
           shareDetails.port,
           shareDetails.database,
           shareDetails.username,
-          shareDetails.password,
-        ),
+          shareDetails.password
+        )
       );
     } else {
       dispatch(setConnectionModalOpen(true));
@@ -317,8 +312,8 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
     dispatch(
       createNotificationThunk(
         'Unable to load shared dashboard',
-        'The provided connection or dashboard identifiers are invalid. Try regenerating the share URL from the sharing window.',
-      ),
+        'The provided connection or dashboard identifiers are invalid. Try regenerating the share URL from the sharing window.'
+      )
     );
   }
 };
@@ -368,10 +363,10 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(setPageNumberThunk(parseInt(page)));
       }
     }
-    const clearNotificationAfterLoad = true;
+
     dispatch(setSSOEnabled(config.ssoEnabled, config.ssoDiscoveryUrl));
     const state = getState();
-    const { standalone } = config; // || (state.application.shareDetails !== undefined && state.application.shareDetails.standalone);
+    const { standalone } = config;
     dispatch(
       setStandaloneEnabled(
         standalone,
@@ -383,8 +378,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standaloneDashboardDatabase,
         config.standaloneDashboardURL,
         config.standaloneUsername,
-        config.standalonePassword,
-      ),
+        config.standalonePassword
+      )
     );
     dispatch(setConnectionModalOpen(false));
 
@@ -396,151 +391,159 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(
           createNotificationThunk(
             'Successfully upgraded dashboard',
-            'Your old dashboard was migrated to version 2.0. You might need to refresh this page.',
-          ),
+            'Your old dashboard was migrated to version 2.1. You might need to refresh this page.'
+          )
+        );
+      }
+      if (state.dashboard.version == '2.1') {
+        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.1', '2.2');
+        dispatch(setDashboard(upgradedDashboard));
+        dispatch(
+          createNotificationThunk(
+            'Successfully upgraded dashboard',
+            'Your old dashboard was migrated to version 2.2. You might need to refresh this page.'
+          )
         );
       }
     }
 
-    try {
-        // Parse the URL parameters to see if there's any deep linking of parameters.
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const paramsToSetAfterConnecting = {}
-        Array.from(urlParams.entries()).forEach(([key, value]) => {
-            if (key.startsWith("neodash_")) {
-                paramsToSetAfterConnecting[key] = value;
-            }
-        });
-
-        const page = urlParams.get('page');
-        if (page !== "" && page !== null) {
-            if (!isNaN(page)) {
-                dispatch(setPageNumberThunk(parseInt(page)));
-            }
-        }
-
-        dispatch(setSSOEnabled(config['ssoEnabled'], config["ssoDiscoveryUrl"]));
-        const state = getState();
-        const standalone = config['standalone'];
-        dispatch(setStandaloneEnabled(standalone, config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], config['standaloneDashboardName'], config['standaloneDashboardDatabase'], config["standaloneDashboardURL"], config['standaloneUsername'], config['standalonePassword']))
-        dispatch(setConnectionModalOpen(false));
-
-        // Auto-upgrade the dashboard version if an old version is cached.
-        if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
-            if (state.dashboard.version == "2.0") {
-                const upgradedDashboard = upgradeDashboardVersion(state.dashboard, "2.0", "2.1");
-                dispatch(setDashboard(upgradedDashboard));
-                dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.1. You might need to refresh this page."));
-            }
-            if (state.dashboard.version == "2.1") {
-                const upgradedDashboard = upgradeDashboardVersion(state.dashboard, "2.1", "2.2");
-                dispatch(setDashboard(upgradedDashboard));
-                dispatch(createNotificationThunk("Successfully upgraded dashboard", "Your old dashboard was migrated to version 2.2. You might need to refresh this page."));
-            }
-        }
-
-        // SSO - specific case starts here.
-        if (state.application.waitForSSO) {
-            // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
-            dispatch(setAboutModalOpen(false));
-            dispatch(setConnected(false));
-            dispatch(setWelcomeScreenOpen(false));
-            const success = await initializeSSO(config["ssoDiscoveryUrl"], (credentials) => {
-                if (standalone) {
-                    dispatch(setConnectionProperties(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
-                    dispatch(createConnectionThunk(config['standaloneProtocol'], config['standaloneHost'], config['standalonePort'], config['standaloneDatabase'], credentials['username'], credentials['password']));
-                    if (config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
-                        dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
-                    } else {
-                        dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
-                    }
-                    dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
-                }
-            });
-            dispatch(setWaitForSSO(false));
-            if (!success) {
-                alert("Unable to connect using SSO");
-                dispatch(createNotificationThunk("Unable to connect using SSO", "Something went wrong. Most likely your credentials are incorrect..."));
-            } else {
-                return;
-            }
-        }
-
+    // SSO - specific case starts here.
+    if (state.application.waitForSSO) {
+      // We just got redirected from the SSO provider. Hide all windows and attempt the connection.
+      dispatch(setAboutModalOpen(false));
+      dispatch(setConnected(false));
+      dispatch(setWelcomeScreenOpen(false));
+      const success = await initializeSSO(config.ssoDiscoveryUrl, (credentials) => {
         if (standalone) {
-            dispatch(initializeApplicationAsStandaloneThunk(config, paramsToSetAfterConnecting));
-        } else {
-            dispatch(initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting));
+          dispatch(
+            setConnectionProperties(
+              config.standaloneProtocol,
+              config.standaloneHost,
+              config.standalonePort,
+              config.standaloneDatabase,
+              credentials.username,
+              credentials.password
+            )
+          );
+          dispatch(
+            createConnectionThunk(
+              config.standaloneProtocol,
+              config.standaloneHost,
+              config.standalonePort,
+              config.standaloneDatabase,
+              credentials.username,
+              credentials.password
+            )
+          );
+          if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+            dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
+          } else {
+            dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
+          }
+          dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
         }
-    } catch (e) {
-        dispatch(setWelcomeScreenOpen(false));
-        dispatch(createNotificationThunk("Unable to load application configuration", "Do you have a valid config.json deployed with your application?"));
+      });
+      dispatch(setWaitForSSO(false));
+      if (!success) {
+        alert('Unable to connect using SSO');
+        dispatch(
+          createNotificationThunk(
+            'Unable to connect using SSO',
+            'Something went wrong. Most likely your credentials are incorrect...'
+          )
+        );
+      } else {
+        return;
+      }
     }
-}
+
+    if (standalone) {
+      dispatch(initializeApplicationAsStandaloneThunk(config, paramsToSetAfterConnecting));
+    } else {
+      dispatch(initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting));
+    }
+  } catch (e) {
+    dispatch(setWelcomeScreenOpen(false));
+    dispatch(
+      createNotificationThunk(
+        'Unable to load application configuration',
+        'Do you have a valid config.json deployed with your application?'
+      )
+    );
+  }
+};
 
 // Set up NeoDash to run in editor mode.
-export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConnecting) => async (dispatch: any, getState: any) => {
-    const clearNotificationAfterLoad = true;
-    dispatch(clearDesktopConnectionProperties());
-    dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
-    const old = localStorage.getItem('neodash-dashboard');
-    dispatch(setOldDashboard(old));
-    dispatch(setConnected(false));
-    dispatch(setDashboardToLoadAfterConnecting(null));
-    dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
-    if (Object.keys(paramsToSetAfterConnecting).length > 0) {
-        dispatch(setParametersToLoadAfterConnecting(null));
-    }
+export const initializeApplicationAsEditorThunk = (_, paramsToSetAfterConnecting) => (dispatch: any) => {
+  const clearNotificationAfterLoad = true;
+  dispatch(clearDesktopConnectionProperties());
+  dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
+  const old = localStorage.getItem('neodash-dashboard');
+  dispatch(setOldDashboard(old));
+  dispatch(setConnected(false));
+  dispatch(setDashboardToLoadAfterConnecting(null));
+  dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
+  // TODO: this logic around loading/saving/upgrading/migrating dashboards needs a cleanup
+  if (Object.keys(paramsToSetAfterConnecting).length > 0) {
+    dispatch(setParametersToLoadAfterConnecting(null));
+  }
 
-    dispatch(setWelcomeScreenOpen(true));
+  dispatch(setWelcomeScreenOpen(true));
 
-    if (clearNotificationAfterLoad) {
-        dispatch(clearNotification());
-    }
-    dispatch(handleSharedDashboardsThunk());
-    dispatch(setReportHelpModalOpen(false));
-    dispatch(setAboutModalOpen(false));
-}
+  if (clearNotificationAfterLoad) {
+    dispatch(clearNotification());
+  }
+  dispatch(handleSharedDashboardsThunk());
+  dispatch(setReportHelpModalOpen(false));
+  dispatch(setAboutModalOpen(false));
+};
 
 // Set up NeoDash to run in standalone mode.
-export const initializeApplicationAsStandaloneThunk = (config, paramsToSetAfterConnecting) => async (dispatch: any, getState: any) => {
+export const initializeApplicationAsStandaloneThunk =
+  (config, paramsToSetAfterConnecting) => (dispatch: any, getState: any) => {
     const clearNotificationAfterLoad = true;
     const state = getState();
 
     // If we are running in standalone mode, auto-set the connection details that are configured.
-    dispatch(setConnectionProperties(
-        config['standaloneProtocol'],
-        config['standaloneHost'],
-        config['standalonePort'],
-        config['standaloneDatabase'],
-        config['standaloneUsername'] ? config['standaloneUsername'] : state.application.connection.username,
-        config['standalonePassword'] ? config['standalonePassword'] : state.application.connection.password));
+    dispatch(
+      setConnectionProperties(
+        config.standaloneProtocol,
+        config.standaloneHost,
+        config.standalonePort,
+        config.standaloneDatabase,
+        config.standaloneUsername ? config.standaloneUsername : state.application.connection.username,
+        config.standalonePassword ? config.standalonePassword : state.application.connection.password
+      )
+    );
 
     dispatch(setAboutModalOpen(false));
     dispatch(setConnected(false));
     dispatch(setWelcomeScreenOpen(false));
-    if (config['standaloneDashboardURL'] !== undefined && config['standaloneDashboardURL'].length > 0) {
-        dispatch(setDashboardToLoadAfterConnecting(config['standaloneDashboardURL']));
+    if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+      dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
     } else {
-        dispatch(setDashboardToLoadAfterConnecting("name:" + config['standaloneDashboardName']));
+      dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
     }
 
     dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
 
     if (clearNotificationAfterLoad) {
-        dispatch(clearNotification());
+      dispatch(clearNotification());
     }
 
     // Override for when username and password are specified in the config - automatically connect to the specified URL.
-    if (config['standaloneUsername'] && config['standalonePassword']) {
-        dispatch(createConnectionThunk(config['standaloneProtocol'],
-            config['standaloneHost'],
-            config['standalonePort'],
-            config['standaloneDatabase'],
-            config['standaloneUsername'],
-            config['standalonePassword']));
+    if (config.standaloneUsername && config.standalonePassword) {
+      dispatch(
+        createConnectionThunk(
+          config.standaloneProtocol,
+          config.standaloneHost,
+          config.standalonePort,
+          config.standaloneDatabase,
+          config.standaloneUsername,
+          config.standalonePassword
+        )
+      );
     } else {
-        dispatch(setConnectionModalOpen(true));
+      dispatch(setConnectionModalOpen(true));
     }
-}
-
+  };

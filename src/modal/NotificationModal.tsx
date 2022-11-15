@@ -45,9 +45,9 @@ export const NeoNotificationModal = ({
             }
           }
         }}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton
             onClick={() => {

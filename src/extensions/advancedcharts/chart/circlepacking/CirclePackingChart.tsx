@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
-import { useState } from 'react'
-import { Tooltip } from '@material-ui/core'
+import { useState } from 'react';
+import { Tooltip } from '@material-ui/core';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
-import { checkResultKeys, mutateName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
+import {
+  checkResultKeys,
+  mutateName,
+  processHierarchyFromRecords,
+  findObject,
+  flatten,
+} from '../../../../chart/ChartUtils';
 
 const NeoCirclePackingChart = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
@@ -62,7 +68,7 @@ const NeoCirclePackingChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title="Reset" aria-label="reset">
+          <Tooltip title='Reset' aria-label='reset'>
             <RefreshIcon
               onClick={() => {
                 setData(commonProperties.data);
@@ -78,8 +84,8 @@ const NeoCirclePackingChart = (props: ChartProps) => {
                 zIndex: 5,
                 background: '#eee',
               }}
-              color="disabled"
-              fontSize="small"
+              color='disabled'
+              fontSize='small'
             ></RefreshIcon>
           </Tooltip>
         ) : (
@@ -87,8 +93,8 @@ const NeoCirclePackingChart = (props: ChartProps) => {
         )}
         <ResponsiveCirclePacking
           {...commonProperties}
-          id="name"
-          value="loc"
+          id='name'
+          value='loc'
           data={data}
           onClick={(clickedData) => {
             const foundObject = findObject(flatten(data.children), clickedData.id);

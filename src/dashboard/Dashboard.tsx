@@ -24,7 +24,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
     connection.url,
     connection.port,
     connection.username,
-    connection.password,
+    connection.password
   );
 
   const handleDrawerOpen = () => {
@@ -49,7 +49,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
         handleDrawerOpen={handleDrawerOpen}
       ></NeoDashboardHeader>
       <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: '#fafafa' }}>
-        <Container maxWidth="xl" style={{ marginTop: '60px' }}>
+        <Container maxWidth='xl' style={{ marginTop: '60px' }}>
           {applicationSettings.standalonePassword ? (
             <div style={{ textAlign: 'center', color: 'red', zIndex: 999, paddingTop: 60, marginBottom: -50 }}>
               Warning: NeoDash is running with a plaintext password in config.json.
@@ -76,8 +76,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(
       createNotificationThunk(
         'Connection Updated',
-        'You have updated your Neo4j connection, your reports have been reloaded.',
-      ),
+        'You have updated your Neo4j connection, your reports have been reloaded.'
+      )
     );
     dispatch(forceRefreshPage(pagenumber));
   },

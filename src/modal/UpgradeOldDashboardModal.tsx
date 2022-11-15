@@ -9,8 +9,8 @@ import { TextareaAutosize } from '@material-ui/core';
 export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loadDashboard }) => {
   return (
     <div>
-      <Dialog maxWidth={'lg'} open={open == true} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Old Dashboard Found</DialogTitle>
+      <Dialog maxWidth={'lg'} open={open == true} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>Old Dashboard Found</DialogTitle>
         <DialogContent>
           We've found a dashboard built with an old version of NeoDash. Would you like to attempt an upgrade, or start
           from scratch?
@@ -23,9 +23,9 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
               clearOldDashboard();
             }}
             style={{ marginTop: '20px', marginBottom: '20px', marginRight: '20px' }}
-            color="default"
-            variant="contained"
-            size="large"
+            color='default'
+            variant='contained'
+            size='large'
             endIcon={<DeleteIcon color={'white'} />}
           >
             Delete Old Dashboard
@@ -37,9 +37,9 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
               clearOldDashboard();
             }}
             style={{ marginTop: '20px', marginRight: '6px', marginBottom: '20px', backgroundColor: 'white' }}
-            color="default"
-            variant="contained"
-            size="large"
+            color='default'
+            variant='contained'
+            size='large'
           >
             Upgrade
           </Button>
@@ -48,8 +48,8 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
             className={'textinput-linenumbers'}
             onChange={() => {}}
             value={text ? text : ''}
-            aria-label=""
-            placeholder=""
+            aria-label=''
+            placeholder=''
           />
         </DialogContent>
       </Dialog>

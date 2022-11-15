@@ -5,7 +5,6 @@ import NeoCardSettings from './settings/CardSettings';
 import NeoCardView from './view/CardView';
 import { connect } from 'react-redux';
 import {
-  updateCypherParametersThunk,
   updateFieldsThunk,
   updateSelectionThunk,
   updateReportQueryThunk,
@@ -26,39 +25,38 @@ import {
   getSessionParameters,
 } from '../settings/SettingsSelectors';
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
-import { createNotificationThunk } from '../page/PageThunks';
 import useDimensions from 'react-cool-dimensions';
-import {setReportHelpModalOpen} from '../application/ApplicationActions';
-import {loadDatabaseListFromNeo4jThunk} from "../dashboard/DashboardThunks";
-import {Neo4jContext, Neo4jContextState} from "use-neo4j/dist/neo4j.context";
+import { setReportHelpModalOpen } from '../application/ApplicationActions';
+import { loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
+import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 
-
 const NeoCard = ({
-                     index, // index of the card.
-                     report, // state of the card, retrieved based on card index.
-                     editable, // whether the card is editable.
-                     database, // the neo4j database that the card is running against.
-                     extensions, // A set of enabled extensions.
-                     globalParameters, // Query parameters that are globally set for the entire dashboard.
-                     dashboardSettings, // Dictionary of settings for the entire dashboard.
-                     onRemovePressed, // action to take when the card is removed. (passed from parent)
-                     onClonePressed, // action to take when user presses the clone button
-                     onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
-                     onTitleUpdate, // action to take when the card title is updated.
-                     onTypeUpdate, // action to take when the card report type is updated.
-                     onFieldsUpdate, // action to take when the set of returned query fields is updated.
-                     onQueryUpdate, // action to take when the card query is updated.
-                     onRefreshRateUpdate, // action to take when the card refresh rate is updated.
-                     onReportSettingUpdate, // action to take when an advanced report setting is updated.
-                     onSelectionUpdate, // action to take when the selected visualization fields are updated.
-                     onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
-                     onToggleCardSettings, // action to take when the card settings button is clicked.
-                     onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
-                     onCreateNotification, // action to take when an (error) notification is created.
-                     onDatabaseChanged, // action to take when the user changes the database related to the card
-                     loadDatabaseListFromNeo4j // Thunk to get the list of databases
-                 }) => {
+  index, // index of the card.
+  report, // state of the card, retrieved based on card index.
+  editable, // whether the card is editable.
+  database, // the neo4j database that the card is running against.
+  extensions, // A set of enabled extensions.
+  globalParameters, // Query parameters that are globally set for the entire dashboard.
+  dashboardSettings, // Dictionary of settings for the entire dashboard.
+  onRemovePressed, // action to take when the card is removed. (passed from parent)
+  onClonePressed, // action to take when user presses the clone button
+  onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
+  onTitleUpdate, // action to take when the card title is updated.
+  onTypeUpdate, // action to take when the card report type is updated.
+  onFieldsUpdate, // action to take when the set of returned query fields is updated.
+  onQueryUpdate, // action to take when the card query is updated.
+  onRefreshRateUpdate, // action to take when the card refresh rate is updated.
+  onReportSettingUpdate, // action to take when an advanced report setting is updated.
+  onSelectionUpdate, // action to take when the selected visualization fields are updated.
+  onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
+  onToggleCardSettings, // action to take when the card settings button is clicked.
+  onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
+  onDatabaseChanged, // action to take when the user changes the database related to the card
+  loadDatabaseListFromNeo4j, // Thunk to get the list of databases
+}) => {
+  // Will be used to fetch the list of current databases
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   const [databaseList, setDatabaseList] = React.useState([database]);
   const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
@@ -67,7 +65,7 @@ const NeoCard = ({
   useEffect(() => {
     if (!databaseListLoaded) {
       loadDatabaseListFromNeo4j(driver, (result) => {
-        const index = result.indexOf('system');
+        let index = result.indexOf('system');
         if (index > -1) {
           // only splice array when item is found
           result.splice(index, 1); // 2nd parameter means remove one item only
@@ -82,7 +80,7 @@ const NeoCard = ({
   const debouncedOnToggleCardSettings = useCallback(debounce(onToggleCardSettings, 500), []);
   const [collapseTimeout, setCollapseTimeout] = React.useState(report.collapseTimeout);
 
-  const { observe, unobserve, width, height, entry } = useDimensions({
+  const { observe, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {
       // Triggered whenever the size of the target is changed...
       unobserve(); // To stop observing the current target element
@@ -100,7 +98,7 @@ const NeoCard = ({
   };
 
   const [active, setActive] = React.useState(
-    report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true,
+    report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true
   );
 
   useEffect(() => {
@@ -117,88 +115,91 @@ const NeoCard = ({
     setCollapseTimeout(report.collapseTimeout);
   }, [report.collapseTimeout]);
 
-    // TODO - get rid of some of the props-drilling here...
-    const component = <div style={{height: "100%"}} ref={observe}>
-        {/* The front of the card, referred to as the 'view' */}
-        <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{height: "100%"}}>
-            <Card style={{height: "100%"}}>
-                <NeoCardView
-                    settingsOpen={settingsOpen}
-                    editable={editable}
-                    dashboardSettings={dashboardSettings}
-                    extensions={extensions}
-                    settings={report.settings ? report.settings : {}}
-                    type={report.type}
-                    database={database}
-                    active={active}
-                    setActive={setActive}
-                    query={report.query}
-                    globalParameters={globalParameters}
-                    fields={report.fields ? report.fields : []}
-                    refreshRate={report.refreshRate}
-                    selection={report.selection}
-                    widthPx={width}
-                    heightPx={height}
-                    title={report.title}
-                    expanded={expanded}
-                    onToggleCardExpand={onToggleCardExpand}
-                    onGlobalParameterUpdate={onGlobalParameterUpdate}
-                    onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
-                    onTitleUpdate={(title) => onTitleUpdate(index, title)}
-                    onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
-                    onToggleCardSettings={() => {
-                        setSettingsOpen(true);
-                        setCollapseTimeout("auto");
-                        debouncedOnToggleCardSettings(index, true)
-                    }}/>
-            </Card>
-        </Collapse>
-        {/* The back of the card, referred to as the 'settings' */}
-        <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout}>
-            <Card style={{height: "100%"}}>
-                <NeoCardSettings
-                    settingsOpen={settingsOpen}
-                    query={report.query}
-                    database={database}
-                    databaseList={databaseList}
-                    width={report.width}
-                    height={report.height}
-                    heightPx={height}
-                    fields={report.fields}
-                    type={report.type}
-                    refreshRate={report.refreshRate}
-                    expanded={expanded}
-                    extensions={extensions}
-                    dashboardSettings={dashboardSettings}
-                    onToggleCardExpand={onToggleCardExpand}
-                    setActive={setActive}
-                    reportSettings={report.settings}
-                    reportSettingsOpen={report.advancedSettingsOpen}
-                    onQueryUpdate={(query) => onQueryUpdate(index, query)}
-                    onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
-                    onDatabaseChanged={(database) => onDatabaseChanged(index, database)}
-                    onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
-                    onTypeUpdate={(type) => onTypeUpdate(index, type)}
-                    onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
-                    onRemovePressed={() => onRemovePressed(index)}
-                    onClonePressed={() => onClonePressed(index)}
-                    onCreateNotification={(title, message) => onCreateNotification(title, message)}
-                    onToggleCardSettings={() => {
-                        setSettingsOpen(false);
-                        setCollapseTimeout("auto");
-                        debouncedOnToggleCardSettings(index, false);
-                    }}
-                    onToggleReportSettings={() => onToggleReportSettings(index)}/>
-            </Card>
-        </Collapse>
-    </div>;
+  // TODO - get rid of some of the props-drilling here...
+  const component = (
+    <div style={{ height: '100%' }} ref={observe}>
+      {/* The front of the card, referred to as the 'view' */}
+      <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
+        <Card style={{ height: '100%' }}>
+          <NeoCardView
+            settingsOpen={settingsOpen}
+            editable={editable}
+            dashboardSettings={dashboardSettings}
+            extensions={extensions}
+            settings={report.settings ? report.settings : {}}
+            type={report.type}
+            database={database}
+            active={active}
+            setActive={setActive}
+            query={report.query}
+            globalParameters={globalParameters}
+            fields={report.fields ? report.fields : []}
+            refreshRate={report.refreshRate}
+            selection={report.selection}
+            widthPx={width}
+            heightPx={height}
+            title={report.title}
+            expanded={expanded}
+            onToggleCardExpand={onToggleCardExpand}
+            onGlobalParameterUpdate={onGlobalParameterUpdate}
+            onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
+            onTitleUpdate={(title) => onTitleUpdate(index, title)}
+            onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
+            onToggleCardSettings={() => {
+              setSettingsOpen(true);
+              setCollapseTimeout('auto');
+              debouncedOnToggleCardSettings(index, true);
+            }}
+          />
+        </Card>
+      </Collapse>
+      {/* The back of the card, referred to as the 'settings' */}
+      <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout}>
+        <Card style={{ height: '100%' }}>
+          <NeoCardSettings
+            settingsOpen={settingsOpen}
+            query={report.query}
+            database={database}
+            databaseList={databaseList}
+            width={report.width}
+            height={report.height}
+            heightPx={height}
+            fields={report.fields}
+            type={report.type}
+            refreshRate={report.refreshRate}
+            expanded={expanded}
+            extensions={extensions}
+            dashboardSettings={dashboardSettings}
+            onToggleCardExpand={onToggleCardExpand}
+            setActive={setActive}
+            reportSettings={report.settings}
+            reportSettingsOpen={report.advancedSettingsOpen}
+            onQueryUpdate={(query) => onQueryUpdate(index, query)}
+            onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
+            onDatabaseChanged={(database) => onDatabaseChanged(index, database)}
+            onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
+            onTypeUpdate={(type) => onTypeUpdate(index, type)}
+            onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
+            onRemovePressed={() => onRemovePressed(index)}
+            onClonePressed={() => onClonePressed(index)}
+            onToggleCardSettings={() => {
+              setSettingsOpen(false);
+              setCollapseTimeout('auto');
+              debouncedOnToggleCardSettings(index, false);
+            }}
+            onToggleReportSettings={() => onToggleReportSettings(index)}
+          />
+        </Card>
+      </Collapse>
+    </div>
+  );
 
   // If the card is viewed in fullscreen, wrap it in a dialog.
   // TODO - this causes a re-render (and therefore, a re-run of the report)
   // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
   if (expanded) {
     return (
-      <Dialog maxWidth={'xl'} open={expanded} aria-labelledby="form-dialog-title">
+      <Dialog maxWidth={'xl'} open={expanded} aria-labelledby='form-dialog-title'>
         <DialogContent
           style={{
             width: Math.min(1920, document.documentElement.clientWidth - 64),
@@ -214,11 +215,15 @@ const NeoCard = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    report: getReportState(state, ownProps.index),
-    extensions: getDashboardExtensions(state),
-    editable: getDashboardIsEditable(state),
-    database: getDatabase(state, ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined, ownProps.index),
-    globalParameters: {...getGlobalParameters(state), ...getSessionParameters(state)} 
+  report: getReportState(state, ownProps.index),
+  extensions: getDashboardExtensions(state),
+  editable: getDashboardIsEditable(state),
+  database: getDatabase(
+    state,
+    ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined,
+    ownProps.index
+  ),
+  globalParameters: { ...getGlobalParameters(state), ...getSessionParameters(state) },
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -254,9 +259,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onToggleReportSettings: (index: any) => {
     dispatch(toggleReportSettings(index));
-  },
-  onCreateNotification: (title: any, message: any) => {
-    dispatch(createNotificationThunk(title, message));
   },
   onDatabaseChanged: (index: any, database: any) => {
     dispatch(updateReportDatabaseThunk(index, database));

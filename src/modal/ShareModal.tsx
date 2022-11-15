@@ -67,41 +67,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
     });
   };
 
-                </DialogTitle>
-                <DialogContent style={{ width: "1000px" }}>
-                    <DialogContentText>
-                        This window lets you create a temporary share link for your dashboard.
-                        Keep in mind that share links are not intended as a way to publish your dashboard for users, see the <a href="https://neo4j.com/labs/neodash/2.2/user-guide/publishing/">documentation</a> for more on publishing.
-                        <br />
-                        <hr /><br />
-                        Step 1: Select a dashboard to share.
-                        <br />
-                        <br />
-                        <Button
-                            component="label"
-                            onClick={(e) => {
-                                loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => { setShareLink(null); setRows(result) });
-                                setLoadFromNeo4jModalOpen(true);
-                            }}
-                            style={{ marginBottom: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium"
-                            endIcon={<StorageIcon />}>
-                            Share From Neo4j
-                        </Button>
-                        <Button
-                            component="label"
-                            onClick={(e) => {
-                                setLoadFromFileModalOpen(true);
-                            }}
-                            style={{ marginBottom: "10px", marginLeft: "10px", backgroundColor: "white" }}
-                            color="default"
-                            variant="contained"
-                            size="medium"
-                            endIcon={<PostAddIcon />}>
-                            Share a File
-                        </Button>
+  const handleClose = () => {
+    setShareModalOpen(false);
+  };
 
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
@@ -121,8 +89,8 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               setLoadFromNeo4jModalOpen(false);
             }}
             style={{ float: 'right', backgroundColor: 'white' }}
-            variant="contained"
-            size="medium"
+            variant='contained'
+            size='medium'
             endIcon={<PlayArrow />}
           >
             Select
@@ -141,7 +109,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
             <ShareIcon />
           </IconButton>
         </ListItemIcon>
-        <ListItemText primary="Share" />
+        <ListItemText primary='Share' />
       </ListItem>
 
       <Dialog
@@ -149,9 +117,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         maxWidth={'lg'}
         open={shareModalOpen == true}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           <ShareIcon
             style={{
               height: '30px',
@@ -160,7 +128,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               marginRight: '5px',
               paddingBottom: '5px',
             }}
-          />{' '}
+          />
           Share Dashboard
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
             <Badge badgeContent={''}>
@@ -171,8 +139,8 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         <DialogContent style={{ width: '1000px' }}>
           <DialogContentText>
             This window lets you create a temporary share link for your dashboard. Keep in mind that share links are not
-            intended as a way to publish your dashboard for users, see the{' '}
-            <a href="https://neo4j.com/labs/neodash/2.1/user-guide/publishing/">documentation</a> for more on
+            intended as a way to publish your dashboard for users, see the
+            <a href='https://neo4j.com/labs/neodash/2.2/user-guide/publishing/'>documentation</a> for more on
             publishing.
             <br />
             <hr />
@@ -181,7 +149,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
             <br />
             <br />
             <Button
-              component="label"
+              component='label'
               onClick={() => {
                 loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => {
                   setShareLink(null);
@@ -190,22 +158,22 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 setLoadFromNeo4jModalOpen(true);
               }}
               style={{ marginBottom: '10px', backgroundColor: 'white' }}
-              color="default"
-              variant="contained"
-              size="medium"
+              color='default'
+              variant='contained'
+              size='medium'
               endIcon={<StorageIcon />}
             >
               Share From Neo4j
             </Button>
             <Button
-              component="label"
+              component='label'
               onClick={() => {
                 setLoadFromFileModalOpen(true);
               }}
               style={{ marginBottom: '10px', marginLeft: '10px', backgroundColor: 'white' }}
-              color="default"
-              variant="contained"
-              size="medium"
+              color='default'
+              variant='contained'
+              size='medium'
               endIcon={<PostAddIcon />}
             >
               Share a File
@@ -279,26 +247,26 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                   }}
                 />
                 <Button
-                  component="label"
+                  component='label'
                   onClick={() => {
                     setShareLink(
                       `${
                         selfHosted == 'Yes' ? shareLocalURL : shareBaseURL
                       }/?share&type=${shareType}&id=${encodeURIComponent(
-                        shareID,
+                        shareID
                       )}&dashboardDatabase=${encodeURIComponent(dashboardDatabase)}${
                         shareConnectionDetails == 'Yes'
                           ? `&credentials=${encodeURIComponent(
-                              `${connection.protocol}://${connection.username}:${connection.password}@${connection.database}:${connection.url}:${connection.port}`,
+                              `${connection.protocol}://${connection.username}:${connection.password}@${connection.database}:${connection.url}:${connection.port}`
                             )}`
                           : ''
-                      }${shareStandalone == 'Yes' ? `&standalone=${shareStandalone}` : ''}`,
+                      }${shareStandalone == 'Yes' ? `&standalone=${shareStandalone}` : ''}`
                     );
                   }}
                   style={{ marginBottom: '10px', backgroundColor: 'white' }}
-                  color="default"
-                  variant="contained"
-                  size="medium"
+                  color='default'
+                  variant='contained'
+                  size='medium'
                 >
                   Generate Link
                 </Button>
@@ -313,7 +281,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               <br />
               Step 3: Use the generated link to view the dashboard:
               <br />
-              <a href={shareLink} target="_blank">
+              <a href={shareLink} target='_blank'>
                 {shareLink}
               </a>
               <br />
@@ -330,9 +298,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         onClose={() => {
           setLoadFromNeo4jModalOpen(false);
         }}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           Select From Neo4j
           <IconButton
             onClick={() => {
@@ -362,10 +330,10 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
             />
           </div>
           <FormControl style={{ marginTop: '-58px', marginLeft: '10px' }}>
-            <InputLabel id="demo-simple-select-label">Database</InputLabel>
+            <InputLabel id='demo-simple-select-label'>Database</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId='demo-simple-select-label'
+              id='demo-simple-select'
               style={{ width: '150px' }}
               value={dashboardDatabase}
               onChange={(e) => {
@@ -390,9 +358,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         onClose={() => {
           setLoadFromFileModalOpen(false);
         }}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           Select from URL
           <IconButton
             onClick={() => {
@@ -407,8 +375,8 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         </DialogTitle>
         <DialogContent style={{ width: '1000px' }}>
           <DialogContentText>
-            To share a dashboard file directly, make it accessible{' '}
-            <a target="_blank" href="https://gist.github.com/">
+            To share a dashboard file directly, make it accessible
+            <a target='_blank' href='https://gist.github.com/'>
               online
             </a>
             . Then, paste the direct link here:
@@ -420,13 +388,13 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               type={SELECTION_TYPES.TEXT}
               helperText={'Make sure the URL starts with http:// or https://.'}
               label={''}
-              defaultValue="https://gist.githubusercontent.com/username/0a78d80567f23072f06e03005cf53bce/raw/f97cc..."
+              defaultValue='https://gist.githubusercontent.com/username/0a78d80567f23072f06e03005cf53bce/raw/f97cc...'
               onChange={(e) => {
                 setShareFileURL(e);
               }}
             />
             <Button
-              component="label"
+              component='label'
               onClick={() => {
                 setShareID(shareFileURL);
                 setShareName(`${shareFileURL.substring(0, 100)}...`);
@@ -436,9 +404,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 setLoadFromFileModalOpen(false);
               }}
               style={{ marginBottom: '10px', backgroundColor: 'white' }}
-              color="default"
-              variant="contained"
-              size="medium"
+              color='default'
+              variant='contained'
+              size='medium'
             >
               Confirm URL
             </Button>

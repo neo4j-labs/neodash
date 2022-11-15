@@ -56,18 +56,18 @@ export default function NeoConnectionModal({
   return (
     <div>
       <Dialog
-        maxWidth="xs"
+        maxWidth='xs'
         open={open == true}
         onClose={() => {
           dismissable ? onConnectionModalClose() : null;
         }}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           {standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}
           <IconButton style={{ padding: '3px', float: 'right' }}>
             <Badge badgeContent={''}>
-              <img style={{ width: '36px', height: '36px' }} src="neo4j-icon-color.png" />
+              <img style={{ width: '36px', height: '36px' }} src='neo4j-icon-color.png' />
             </Badge>
           </IconButton>
         </DialogTitle>
@@ -75,15 +75,15 @@ export default function NeoConnectionModal({
           <TextField
             select={true}
             autoFocus
-            margin="dense"
-            id="protocol"
+            margin='dense'
+            id='protocol'
             value={protocol}
             disabled={standalone}
             onChange={(e) => setProtocol(e.target.value)}
             style={{ width: '25%' }}
-            label="Protocol"
-            placeholder="neo4j://"
-            type="text"
+            label='Protocol'
+            placeholder='neo4j://'
+            type='text'
           >
             {protocols.map((option) => (
               <MenuItem key={option} value={option}>
@@ -92,10 +92,10 @@ export default function NeoConnectionModal({
             ))}
           </TextField>
           <TextField
-            type="text"
+            type='text'
             autoFocus
-            margin="dense"
-            id="url"
+            margin='dense'
+            id='url'
             value={url}
             disabled={standalone}
             onChange={(e) => {
@@ -105,15 +105,15 @@ export default function NeoConnectionModal({
               const host = splitted[splitted.length - 1].split(':')[0].split('/')[0];
               setUrl(host);
             }}
-            label="Hostname"
+            label='Hostname'
             style={{ marginLeft: '2.5%', width: '60%', marginRight: '2.5%' }}
-            placeholder="localhost"
-            type="text"
+            placeholder='localhost'
+            type='text'
           />
           <TextField
             autoFocus
-            margin="dense"
-            id="port"
+            margin='dense'
+            id='port'
             value={port}
             disabled={standalone}
             onChange={(event) => {
@@ -123,15 +123,14 @@ export default function NeoConnectionModal({
                 setPort(Number(event.target.value));
               }
             }}
-            label="Port"
+            label='Port'
             style={{ width: '10%' }}
-            placeholder="7687"
-            type="text"
+            placeholder='7687'
+            type='text'
           />
 
           {window.location.href.startsWith('https') && !(protocol.endsWith('+s') || protocol.endsWith('+scc')) ? (
             <div>
-              {' '}
               You're running NeoDash from a secure (https) webpage. You can't connect to a Neo4j database with an
               unencrypted protocol. Change the protocol, or use NeoDash using http instead: &nbsp;
               <a href={window.location.href.replace('https://', 'http://')}>
@@ -158,27 +157,27 @@ export default function NeoConnectionModal({
           )}
           <TextField
             autoFocus
-            margin="dense"
-            id="database"
+            margin='dense'
+            id='database'
             value={database}
             disabled={standalone}
             onChange={(e) => setDatabase(e.target.value)}
-            label="Database (optional)"
-            placeholder="neo4j"
-            type="text"
+            label='Database (optional)'
+            placeholder='neo4j'
+            type='text'
             fullWidth
           />
 
           {!ssoVisible ? (
             <TextField
               autoFocus
-              margin="dense"
-              id="dbusername"
+              margin='dense'
+              id='dbusername'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              label="Username"
-              placeholder="neo4j"
-              type="text"
+              label='Username'
+              placeholder='neo4j'
+              type='text'
               fullWidth
             />
           ) : (
@@ -194,12 +193,12 @@ export default function NeoConnectionModal({
             {!ssoVisible ? (
               <TextField
                 autoFocus
-                margin="dense"
-                id="dbpassword"
+                margin='dense'
+                id='dbpassword'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                label="Password"
-                type="password"
+                label='Password'
+                type='password'
                 fullWidth
               />
             ) : (
@@ -212,11 +211,11 @@ export default function NeoConnectionModal({
                   <Switch
                     checked={ssoVisible}
                     onChange={() => setSsoVisible(!ssoVisible)}
-                    name="checked"
-                    color="primary"
+                    name='checked'
+                    color='primary'
                   />
                 }
-                label="Use SSO"
+                label='Use SSO'
               ></FormControlLabel>
             ) : (
               <></>
@@ -225,16 +224,16 @@ export default function NeoConnectionModal({
               <SSOLoginButton discoveryAPIUrl={discoveryAPIUrl} onSSOAttempt={onSSOAttempt} />
             ) : (
               <Button
-                type="submit"
+                type='submit'
                 onClick={(e) => {
                   e.preventDefault();
                   onConnectionModalClose();
                   createConnection(protocol, url, port, database, username, password);
                 }}
                 style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'white' }}
-                color="default"
-                variant="contained"
-                size="large"
+                color='default'
+                variant='contained'
+                size='large'
                 endIcon={<PlayArrow />}
               >
                 Connect
@@ -248,8 +247,7 @@ export default function NeoConnectionModal({
               <DialogContentText style={{ color: 'lightgrey' }}>
                 {standaloneSettings.standaloneDashboardURL === '' ? (
                   <>
-                    {' '}
-                    Sign in to continue. You will be connected to Neo4j, and load a dashboard called{' '}
+                    Sign in to continue. You will be connected to Neo4j, and load a dashboard called
                     <b>{standaloneSettings.standaloneDashboardName}</b>.
                   </>
                 ) : (
@@ -258,14 +256,14 @@ export default function NeoConnectionModal({
               </DialogContentText>
             ) : (
               <DialogContentText style={{ color: 'lightgrey' }}>
-                Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in{' '}
-                <a style={{ color: 'white' }} href="https://neo4j.com/download/">
+                Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in
+                <a style={{ color: 'white' }} href='https://neo4j.com/download/'>
                   Neo4j Desktop
                 </a>
-                , or try the{' '}
-                <a style={{ color: 'white' }} href="https://console.neo4j.io/">
+                , or try the
+                <a style={{ color: 'white' }} href='https://console.neo4j.io/'>
                   Neo4j Aura
-                </a>{' '}
+                </a>
                 free tier.
               </DialogContentText>
             )}

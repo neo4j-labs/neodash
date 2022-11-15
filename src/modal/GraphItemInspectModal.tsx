@@ -21,8 +21,8 @@ const formatProperty = (property) => {
 export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, textAlign = 'left' }) => {
   return (
     <div>
-      <Dialog maxWidth={'lg'} open={open == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">
+      <Dialog maxWidth={'lg'} open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton onClick={handleClose} style={{ padding: '3px', marginLeft: '20px', float: 'right' }}>
             <Badge badgeContent={''}>
@@ -33,7 +33,7 @@ export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, tex
         <DialogContent>
           {object && (
             <TableContainer>
-              <Table size="small">
+              <Table size='small'>
                 <TableBody>
                   {Object.keys(object).length == 0 ? (
                     <i>(No properties)</i>
@@ -42,7 +42,7 @@ export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, tex
                       .sort()
                       .map((key) => (
                         <TableRow key={key}>
-                          <TableCell component="th" scope="row">
+                          <TableCell component='th' scope='row'>
                             {key}
                           </TableCell>
                           <TableCell align={textAlign}>{formatProperty(object[key].toString())}</TableCell>

@@ -26,7 +26,7 @@ const NeoCodeEditorComponent = ({
     language == 'cypher' ? (
       <CypherEditor
         options={options}
-        aria-label=""
+        aria-label=''
         readOnly={!editable}
         value={!cancelNextEdit ? value : `${value} `}
         onValueChange={(val, change) => {
@@ -53,7 +53,7 @@ const NeoCodeEditorComponent = ({
         <CypherEditor
           options={options}
           readOnly={!editable}
-          aria-label=""
+          aria-label=''
           value={!cancelNextEdit ? value : `${value} `}
           onValueChange={(val, change) => {
             // There's a bug here that causes an extra change event to be first after copy-pasting (with replacement) in the editor text box.

@@ -34,6 +34,7 @@ export const evaluateRulesOnNeo4jRecord = (record, customization, defaultValue, 
  * @deprecated - to be removed together with record mapper.
  * We translate the 'mapped' record back into its original using the mapping specified by the user.
  */
+// TODO this function is no longer needed as the record mapper is gone since 2.2.
 export const evaluateRulesOnMappedNeo4jRecord = (record, mapping, customization, defaultValue, rules) => {
   const tempRecord = {};
 

@@ -20,13 +20,13 @@ const NeoCardSettingsHeader = ({
   onClonePressed,
 }) => {
   const maximizeButton = (
-    <IconButton aria-label="maximize" onClick={onToggleCardExpand}>
+    <IconButton aria-label='maximize' onClick={onToggleCardExpand}>
       <FullscreenIcon />
     </IconButton>
   );
 
   const unMaximizeButton = (
-    <IconButton aria-label="un-maximize" onClick={onToggleCardExpand}>
+    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand}>
       <FullscreenExit />
     </IconButton>
   );
@@ -36,34 +36,34 @@ const NeoCardSettingsHeader = ({
       avatar={
         <div style={{ marginTop: '-8px' }}>
           <DragIndicatorIcon
-            className="drag-handle"
+            className='drag-handle'
             style={{ color: 'grey', cursor: 'pointer', marginTop: '8px', marginLeft: '-7px', marginRight: '10px' }}
           ></DragIndicatorIcon>
-          <Tooltip title="Help" aria-label="help">
+          <Tooltip title='Help' aria-label='help'>
             <IconButton
-              size="medium"
+              size='medium'
               style={{ marginTop: '-16px', padding: '8px' }}
-              aria-label="help"
+              aria-label='help'
               onClick={onReportHelpButtonPressed}
             >
               <HelpOutlineIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete" aria-label="delete">
+          <Tooltip title='Delete' aria-label='delete'>
             <IconButton
-              size="medium"
+              size='medium'
               style={{ marginTop: '-16px', padding: '8px', color: 'red' }}
-              aria-label="remove"
+              aria-label='remove'
               onClick={onRemovePressed}
             >
               <DeleteOutlineIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Clone" aria-label="clone">
+          <Tooltip title='Clone' aria-label='clone'>
             <IconButton
-              size="medium"
+              size='medium'
               style={{ marginTop: '-16px', padding: '8px', color: 'green' }}
-              aria-label="clone"
+              aria-label='clone'
               onClick={onClonePressed}
             >
               <FileCopyOutlinedIcon />
@@ -74,9 +74,9 @@ const NeoCardSettingsHeader = ({
       action={
         <>
           {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
-          <Tooltip title="Save" aria-label="save">
+          <Tooltip title='Save' aria-label='save'>
             <IconButton
-              aria-label="save"
+              aria-label='save'
               onClick={(e) => {
                 e.preventDefault();
                 onToggleCardSettings();
@@ -87,8 +87,8 @@ const NeoCardSettingsHeader = ({
           </Tooltip>
         </>
       }
-      title=""
-      subheader=""
+      title=''
+      subheader=''
     />
   );
 };

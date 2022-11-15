@@ -131,7 +131,7 @@ export class CypherEditor extends Component {
     const editorClassNames = classNames(
       'ReactCodeMirror',
       { 'ReactCodeMirror--focused': this.state.isFocused },
-      this.props.classNames,
+      this.props.classNames
     );
 
     return <div className={editorClassNames} ref={(ref) => (this.editorReference = ref)} />;

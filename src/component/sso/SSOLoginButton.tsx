@@ -26,9 +26,9 @@ export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
               onSSOAttempt();
               authRequestForSSO(selectedSSOProvider);
             }}
-            color="default"
-            variant="contained"
-            size="large"
+            color='default'
+            variant='contained'
+            size='large'
             endIcon={<SecurityIcon />}
           >
             Sign in
@@ -40,7 +40,7 @@ export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
           <p>
             No SSO providers found or present. Make sure that config.json contains a correct discovery URL. This is
             currently set to <a href={discoveryAPIUrl}>{discoveryAPIUrl}</a>
-            <div className=""></div>
+            <div className=''></div>
           </p>
         </div>
       )}

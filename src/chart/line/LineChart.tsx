@@ -21,8 +21,7 @@ const NeoLineChart = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
-  const { records } = props;
-  const { selection } = props;
+  const { records, selection } = props;
 
   if (!selection || !selection.value || selection.value.length == 0) {
     return <div style={{ margin: '15px' }}>No y-axis selected. To view the report, select a value below. </div>;
@@ -143,7 +142,7 @@ const NeoLineChart = (props: ChartProps) => {
     if (!chartIsTimeChart) {
       return (
         <div style={{ margin: '15px' }}>
-          Line chart switched from time-axis to number-axis. Please re-run the report to see your changes.{' '}
+          Line chart switched from time-axis to number-axis. Please re-run the report to see your changes.
         </div>
       );
     }
@@ -180,7 +179,7 @@ const NeoLineChart = (props: ChartProps) => {
   // T18:40:32.142+0100
   // %Y-%m-%dT%H:%M:%SZ
   const lineViz = (
-    <div className="h-full w-full overflow-hidden" style={{ height: '100%' }}>
+    <div className='h-full w-full overflow-hidden' style={{ height: '100%' }}>
       <ResponsiveLine
         data={data}
         xScale={
@@ -230,8 +229,8 @@ const NeoLineChart = (props: ChartProps) => {
         }}
         pointSize={pointSize}
         lineWidth={lineWidth}
-        lineColor="black"
-        pointColor="white"
+        lineColor='black'
+        pointColor='white'
         colors={styleRules.length >= 1 ? getLineColors : { scheme: colorScheme }}
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}

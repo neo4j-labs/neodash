@@ -47,7 +47,7 @@ export function runCypherQuery(
   useNodePropsAsFields = false,
   useReturnValuesAsFields = false,
   useHardRowLimit = false,
-  queryTimeLimit = 20,
+  queryTimeLimit = 20
 ) {
   // If no query specified, we don't do anything.
   if (query.trim() == '') {
@@ -121,7 +121,7 @@ export function runCypherQuery(
         e.message.startsWith(
           'The transaction has been terminated. ' +
             'Retry your operation in a new transaction, and you should see a successful result. ' +
-            'The transaction has not completed within the specified timeout (dbms.transaction.timeout).',
+            'The transaction has not completed within the specified timeout (dbms.transaction.timeout).'
         )
       ) {
         setRecords([{ error: e.message }]);

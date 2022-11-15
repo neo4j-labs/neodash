@@ -8,15 +8,18 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
  * Renders Neo4j records as their JSON representation.
  */
 const NeoSingleValueChart = (props: ChartProps) => {
-    const records = props.records;
-    const fontSize = props.settings && props.settings.fontSize ? props.settings.fontSize : 64;
-    const color = props.settings && props.settings.color ? props.settings.color : "rgba(0, 0, 0, 0.87)";
-    const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : "left";
-    const verticalAlign = props.settings && props.settings.verticalAlign ? props.settings.verticalAlign : "top";
-    const styleRules = extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+  const { records } = props;
+  const fontSize = props.settings && props.settings.fontSize ? props.settings.fontSize : 64;
+  const color = props.settings && props.settings.color ? props.settings.color : 'rgba(0, 0, 0, 0.87)';
+  const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : 'left';
+  const verticalAlign = props.settings && props.settings.verticalAlign ? props.settings.verticalAlign : 'top';
+  const styleRules =
+    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
+      ? props.settings.styleRules
+      : [];
 
-    const dimensions = props.dimensions ? props.dimensions : {width: 100, height: 100};
-    const reportHeight = dimensions.height - fontSize;
+  const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
+  const reportHeight = dimensions.height - fontSize;
 
   const value = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
   const displayValue = renderValueByType(value);

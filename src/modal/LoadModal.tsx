@@ -98,8 +98,8 @@ export const NeoLoadModal = ({
               loadDashboardFromNeo4j(driver, dashboardDatabase, c.id, handleDashboardLoadedFromNeo4j);
             }}
             style={{ float: 'right', backgroundColor: 'white' }}
-            variant="contained"
-            size="medium"
+            variant='contained'
+            size='medium'
             endIcon={<PlayArrow />}
           >
             Select
@@ -118,11 +118,11 @@ export const NeoLoadModal = ({
             <SystemUpdateAltIcon />
           </IconButton>
         </ListItemIcon>
-        <ListItemText primary="Load" />
+        <ListItemText primary='Load' />
       </ListItem>
 
-      <Dialog maxWidth={'lg'} open={loadModalOpen == true} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">
+      <Dialog maxWidth={'lg'} open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>
           <SystemUpdateAltIcon
             style={{
               height: '30px',
@@ -131,7 +131,7 @@ export const NeoLoadModal = ({
               marginRight: '5px',
               paddingBottom: '5px',
             }}
-          />{' '}
+          />
           Load Dashboard
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
             <Badge badgeContent={''}>
@@ -143,7 +143,7 @@ export const NeoLoadModal = ({
           {/* <DialogContentText> Paste your dashboard file here to load it into NeoDash.</DialogContentText> */}
           <div>
             <Button
-              component="label"
+              component='label'
               onClick={() => {
                 loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => {
                   setRows(result);
@@ -154,23 +154,23 @@ export const NeoLoadModal = ({
                 });
               }}
               style={{ marginBottom: '10px', backgroundColor: 'white' }}
-              color="default"
-              variant="contained"
-              size="medium"
+              color='default'
+              variant='contained'
+              size='medium'
               endIcon={<StorageIcon />}
             >
               Select From Neo4j
             </Button>
             <Button
-              component="label"
+              component='label'
               // onClick={(e)=>uploadDashboard(e)}
               style={{ marginLeft: '10px', backgroundColor: 'white', marginBottom: '10px' }}
-              color="default"
-              variant="contained"
-              size="medium"
+              color='default'
+              variant='contained'
+              size='medium'
               endIcon={<PostAddIcon />}
             >
-              <input type="file" onChange={(e) => uploadDashboard(e)} hidden />
+              <input type='file' onChange={(e) => uploadDashboard(e)} hidden />
               Select From File
             </Button>
 
@@ -183,9 +183,9 @@ export const NeoLoadModal = ({
                 marginBottom: '10px',
                 backgroundColor: text.length > 0 ? 'green' : 'white',
               }}
-              color="default"
-              variant="contained"
-              size="medium"
+              color='default'
+              variant='contained'
+              size='medium'
               endIcon={<PlayArrow />}
             >
               Load Dashboard
@@ -197,8 +197,8 @@ export const NeoLoadModal = ({
             className={'textinput-linenumbers'}
             onChange={(e) => setText(e.target.value)}
             value={text}
-            aria-label=""
-            placeholder="Select a dashboard first, then preview it here..."
+            aria-label=''
+            placeholder='Select a dashboard first, then preview it here...'
           />
         </DialogContent>
         {/* <DialogActions> */}
@@ -210,9 +210,9 @@ export const NeoLoadModal = ({
         onClose={() => {
           setLoadFromNeo4jModalOpen(false);
         }}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id='form-dialog-title'>
           Select From Neo4j
           <IconButton
             onClick={() => {
@@ -244,10 +244,10 @@ export const NeoLoadModal = ({
             />
           </div>
           <FormControl style={{ marginTop: '-58px', marginLeft: '10px' }}>
-            <InputLabel id="demo-simple-select-label">Database</InputLabel>
+            <InputLabel id='demo-simple-select-label'>Database</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId='demo-simple-select-label'
+              id='demo-simple-select'
               style={{ width: '150px' }}
               value={dashboardDatabase}
               onChange={(e) => {

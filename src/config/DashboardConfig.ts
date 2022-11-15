@@ -1,4 +1,4 @@
-import { SELECTION_TYPES } from "./CardConfig";
+import { SELECTION_TYPES } from './CardConfig';
 
 export const DASHBOARD_SETTINGS = {
   editable: {

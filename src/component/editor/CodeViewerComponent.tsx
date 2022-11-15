@@ -18,7 +18,7 @@ const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
           border: '1px solid lightgray',
         }}
         className={'textinput-linenumbers'}
-        aria-label=""
+        aria-label=''
         value={value}
         placeholder={placeholder}
       />

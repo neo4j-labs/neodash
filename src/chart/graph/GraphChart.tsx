@@ -20,8 +20,8 @@ import { evaluateRulesOnNode } from '../../extensions/styling/StyleRuleEvaluator
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
-  const img = new Image();
-  const prop = defaultNodeSize * 6;
+  let img = new Image();
+  let prop = defaultNodeSize * 6;
   /* img.onload = function(){
         canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
     }*/
@@ -80,7 +80,10 @@ const NeoGraphChart = (props: ChartProps) => {
   const nodeLabelColor = props.settings && props.settings.nodeLabelColor ? props.settings.nodeLabelColor : 'black';
   const nodeLabelFontSize = props.settings && props.settings.nodeLabelFontSize ? props.settings.nodeLabelFontSize : 3.5;
   const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
-  const styleRules = props.settings && props.settings.styleRules ? props.settings.styleRules : [];
+  const styleRules =
+    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
+      ? props.settings.styleRules
+      : [];
   const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : '#a0a0a0';
   const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : 'neodash';
   const showPropertiesOnHover =
@@ -113,6 +116,7 @@ const NeoGraphChart = (props: ChartProps) => {
 
   const [data, setData] = useState({ nodes: [], links: [] });
 
+  // TODO we are modifying state directly instead of with an action, not good
   // Create the dictionary used for storing the memory of dragged node positions.
   if (props.settings.nodePositions == undefined) {
     props.settings.nodePositions = {};
@@ -121,7 +125,7 @@ const NeoGraphChart = (props: ChartProps) => {
 
   // 'frozen' indicates that the graph visualization engine is paused, node positions and stored and only dragging is possible.
   const [frozen, setFrozen] = useState(
-    props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false,
+    props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false
   );
 
   // Currently unused, but dynamic graph exploration could be done with these records.
@@ -141,61 +145,51 @@ const NeoGraphChart = (props: ChartProps) => {
   });
 
   // Dictionaries to populate based on query results.
-  const nodes = {};
-  const nodeLabels = {};
-  const links = {};
-  const linkTypes = {};
+  let nodes = {};
+  let nodeLabels = {};
+  let links = {};
+  let linkTypes = {};
 
   // Gets all graphy objects (nodes/relationships) from the complete set of return values.
   function extractGraphEntitiesFromField(value) {
     if (value == undefined) {
       return;
     }
-
-    const [open, setOpen] = React.useState(false);
-    const [firstRun, setFirstRun] = React.useState(true);
-    const [inspectItem, setInspectItem] = React.useState({});
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    // Retrieve config from advanced settings
-    const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : "#fafafa";
-    const nodeSizeProp = props.settings && props.settings.nodeSizeProp ? props.settings.nodeSizeProp : "size";
-    const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : "color";
-    const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 2;
-    const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : "width";
-    const relColorProp = props.settings && props.settings.relColorProp ? props.settings.relColorProp : "color";
-    const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : 1;
-    const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : "#a0a0a0";
-    const nodeLabelColor = props.settings && props.settings.nodeLabelColor ? props.settings.nodeLabelColor : "black";
-    const nodeLabelFontSize = props.settings && props.settings.nodeLabelFontSize ? props.settings.nodeLabelFontSize : 3.5;
-    const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
-    const styleRules = extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules ? props.settings.styleRules : [];
-    const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : "#a0a0a0";
-    const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : "neodash";
-    const showPropertiesOnHover = props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
-    const showPropertiesOnClick = props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
-    const fixNodeAfterDrag = props.settings && props.settings.fixNodeAfterDrag !== undefined ? props.settings.fixNodeAfterDrag : true;
-    const layout = props.settings && props.settings.layout !== undefined ? props.settings.layout : "force-directed";
-    const lockable = props.settings && props.settings.lockable !== undefined ? props.settings.lockable : true;
-    const drilldownLink = props.settings && props.settings.drilldownLink !== undefined ? props.settings.drilldownLink : "";
-    const selfLoopRotationDegrees = 45;
-    const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
-    const defaultNodeColor = "lightgrey"; // Color of nodes without labels
-    const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
-    const linkDirectionalParticleSpeed = props.settings && props.settings.relationshipParticleSpeed ? props.settings.relationshipParticleSpeed : 0.005; // Speed of particles on relationships.
-    const iconStyle = props.settings && props.settings.iconStyle !== undefined ? props.settings.iconStyle : "";
-    let iconObject = undefined;
-    try {
-        iconObject = iconStyle ? JSON.parse(iconStyle) : undefined;
-    } catch (error) {
-        console.error(error);
+    if (valueIsArray(value)) {
+      value.forEach((v) => extractGraphEntitiesFromField(v));
+    } else if (valueIsNode(value)) {
+      value.labels.forEach((l) => (nodeLabels[l] = true));
+      nodes[value.identity.low] = {
+        id: value.identity.low,
+        labels: value.labels,
+        size: value.properties[nodeSizeProp] ? value.properties[nodeSizeProp] : defaultNodeSize,
+        properties: value.properties,
+        lastLabel: value.labels[value.labels.length - 1],
+      };
+      if (frozen && nodePositions && nodePositions[value.identity.low]) {
+        nodes[value.identity.low].fx = nodePositions[value.identity.low][0];
+        nodes[value.identity.low].fy = nodePositions[value.identity.low][1];
+      }
+    } else if (valueIsRelationship(value)) {
+      if (links[`${value.start.low},${value.end.low}`] == undefined) {
+        links[`${value.start.low},${value.end.low}`] = [];
+      }
+      const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
+      addItem(links[`${value.start.low},${value.end.low}`], {
+        id: value.identity.low,
+        source: value.start.low,
+        target: value.end.low,
+        type: value.type,
+        width: value.properties[relWidthProp] ? value.properties[relWidthProp] : defaultRelWidth,
+        color: value.properties[relColorProp] ? value.properties[relColorProp] : defaultRelColor,
+        properties: value.properties,
+      });
+    } else if (valueIsPath(value)) {
+      value.segments.map((segment) => {
+        extractGraphEntitiesFromField(segment.start);
+        extractGraphEntitiesFromField(segment.relationship);
+        extractGraphEntitiesFromField(segment.end);
+      });
     }
   }
 
@@ -250,7 +244,7 @@ const NeoGraphChart = (props: ChartProps) => {
             (link.source > link.target ? 1 : -1) *
             getCurvature(
               link.source > link.target ? i : i + mirroredNodePair.length,
-              nodePair.length + mirroredNodePair.length,
+              nodePair.length + mirroredNodePair.length
             ),
         });
       });
@@ -301,13 +295,13 @@ const NeoGraphChart = (props: ChartProps) => {
           </i>
         ) : (
           <TableContainer>
-            <Table size="small">
+            <Table size='small'>
               <TableBody>
                 {Object.keys(value.properties)
                   .sort()
                   .map((key) => (
                     <TableRow key={key}>
-                      <TableCell component="th" scope="row" style={{ padding: '3px', paddingLeft: '8px' }}>
+                      <TableCell component='th' scope='row' style={{ padding: '3px', paddingLeft: '8px' }}>
                         {key}
                       </TableCell>
                       <TableCell align={'left'} style={{ padding: '3px', paddingLeft: '8px' }}>
@@ -355,13 +349,6 @@ const NeoGraphChart = (props: ChartProps) => {
     }
   }, []);
 
-  const showPopup2 = useCallback((item) => {
-    if (showPropertiesOnClick) {
-      setInspectItem(item);
-      handleOpen();
-    }
-  }, []);
-
   // If the set of extra records gets updated (e.g. on relationship expand), rebuild the graph.
   useEffect(() => {
     buildVisualizationDictionaryFromRecords(props.records.concat(extraRecords));
@@ -375,19 +362,19 @@ const NeoGraphChart = (props: ChartProps) => {
         ref={observe}
         style={{ paddingLeft: '10px', position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}
       >
-        <Tooltip title="Fit graph to view." aria-label="">
+        <Tooltip title='Fit graph to view.' aria-label=''>
           <SettingsOverscanIcon
             onClick={() => {
               fgRef.current.zoomToFit(400);
             }}
             style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 11, right: 34, position: 'absolute', zIndex: 5 }}
-            color="disabled"
-            fontSize="small"
+            color='disabled'
+            fontSize='small'
           ></SettingsOverscanIcon>
         </Tooltip>
         {lockable ? (
           frozen ? (
-            <Tooltip title="Toggle dynamic graph layout." aria-label="">
+            <Tooltip title='Toggle dynamic graph layout.' aria-label=''>
               <LockIcon
                 onClick={() => {
                   setFrozen(false);
@@ -396,12 +383,12 @@ const NeoGraphChart = (props: ChartProps) => {
                   }
                 }}
                 style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 12, right: 12, position: 'absolute', zIndex: 5 }}
-                color="disabled"
-                fontSize="small"
+                color='disabled'
+                fontSize='small'
               ></LockIcon>
             </Tooltip>
           ) : (
-            <Tooltip title="Toggle fixed graph layout." aria-label="">
+            <Tooltip title='Toggle fixed graph layout.' aria-label=''>
               <LockOpenIcon
                 onClick={() => {
                   if (nodePositions == undefined) {
@@ -413,8 +400,8 @@ const NeoGraphChart = (props: ChartProps) => {
                   }
                 }}
                 style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 12, right: 12, position: 'absolute', zIndex: 5 }}
-                color="disabled"
-                fontSize="small"
+                color='disabled'
+                fontSize='small'
               ></LockOpenIcon>
             </Tooltip>
           )
@@ -422,14 +409,14 @@ const NeoGraphChart = (props: ChartProps) => {
           <></>
         )}
         {drilldownLink !== '' ? (
-          <a href={replaceDashboardParameters(drilldownLink)} target="_blank">
+          <a href={replaceDashboardParameters(drilldownLink)} target='_blank'>
             <Fab
               style={{ position: 'absolute', backgroundColor: 'steelblue', right: '15px', zIndex: 50, top: '5px' }}
-              color="primary"
-              size="small"
-              aria-label="search"
+              color='primary'
+              size='small'
+              aria-label='search'
             >
-              <Tooltip title="Investigate" aria-label="">
+              <Tooltip title='Investigate' aria-label=''>
                 <SearchIcon />
               </Tooltip>
             </Fab>
@@ -442,7 +429,7 @@ const NeoGraphChart = (props: ChartProps) => {
           ref={fgRef}
           width={width ? width - 10 : 0}
           height={height ? height - 10 : 0}
-          linkCurvature="curvature"
+          linkCurvature='curvature'
           backgroundColor={backgroundColor}
           linkDirectionalArrowLength={3}
           linkDirectionalArrowRelPos={1}

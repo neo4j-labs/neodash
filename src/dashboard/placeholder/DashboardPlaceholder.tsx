@@ -6,7 +6,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
   const content = (
     <div style={{ zIndex: -99 }}>
       <AppBar
-        position="absolute"
+        position='absolute'
         style={{
           zIndex: 'auto',
           boxShadow: 'none',
@@ -15,9 +15,9 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
       >
         <Toolbar style={{ paddingRight: 24, minHeight: '64px', background: '#0B297D', zIndex: 1201 }}>
           <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
+            edge='start'
+            color='inherit'
+            aria-label='open drawer'
             style={
               open
                 ? {
@@ -33,10 +33,10 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
           </IconButton>
           <InputBase
             disabled
-            id="center-aligned"
-            label="placeholder"
+            id='center-aligned'
+            label='placeholder'
             style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
-            placeholder="Dashboard Name..."
+            placeholder='Dashboard Name...'
             fullWidth
             maxRows={4}
             value={'NeoDash ⚡'}
@@ -67,8 +67,8 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
         }}
       >
         <Typography
-          variant="h2"
-          color="textSecondary"
+          variant='h2'
+          color='textSecondary'
           style={{
             position: 'absolute',
             top: '50%',
@@ -76,7 +76,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
             transform: 'translate(-50%, -50%)',
           }}
         >
-          {!connected ? <CircularProgress color="inherit" /> : <></>}
+          {!connected ? <CircularProgress color='inherit' /> : <></>}
         </Typography>
       </div>
     </div>

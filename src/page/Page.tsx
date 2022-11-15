@@ -69,7 +69,7 @@ export const NeoPage = ({
       Math,
       reports.map((o) => {
         return o.y + o.height;
-      }),
+      })
     );
     const maxXbyYLevel = {}; // The max x value for each y-level.
     for (let i = 0; i < maxY; i++) {
@@ -81,8 +81,8 @@ export const NeoPage = ({
             .filter((report) => report.y + report.height > i && report.y <= i)
             .map((o) => {
               return o.x + o.width;
-            }),
-        ),
+            })
+        )
       );
     }
 
@@ -134,7 +134,7 @@ export const NeoPage = ({
             onCreatePressed(x, y, 3, 2);
           }}
         />
-      </Grid>,
+      </Grid>
     );
   };
 
@@ -146,7 +146,7 @@ export const NeoPage = ({
   const content = (
     <div style={{ paddingTop: '52px' }}>
       <ResponsiveGridLayout
-        draggableHandle=".drag-handle"
+        draggableHandle='.drag-handle'
         layouts={layouts}
         className={`layout neodash-card-editable-${editable} ${animated ? 'animated' : 'not-animated'}`}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}

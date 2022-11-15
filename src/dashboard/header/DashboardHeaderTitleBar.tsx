@@ -31,9 +31,9 @@ export const NeoDashboardHeaderTitleBar = ({
     <Toolbar key={1} style={{ paddingRight: 24, minHeight: '64px', background: '#0B297D', zIndex: 1201 }}>
       {!standalone ? (
         <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
+          edge='start'
+          color='inherit'
+          aria-label='open drawer'
           onClick={handleDrawerOpen}
           style={
             open
@@ -52,9 +52,9 @@ export const NeoDashboardHeaderTitleBar = ({
         <></>
       )}
       <InputBase
-        id="center-aligned"
+        id='center-aligned'
         style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
-        placeholder="Dashboard Name..."
+        placeholder='Dashboard Name...'
         fullWidth
         maxRows={4}
         value={dashboardTitleText}
@@ -73,7 +73,7 @@ export const NeoDashboardHeaderTitleBar = ({
           >
             <ImageIcon
               style={{ padding: 6, color: '#ffffffdd', width: '36px', height: '36px', fontSize: '1.3rem', zIndex: 5 }}
-              fontSize="small"
+              fontSize='small'
             ></ImageIcon>
           </IconButton>
         </Tooltip>
@@ -83,8 +83,8 @@ export const NeoDashboardHeaderTitleBar = ({
 
       <Tooltip
         title={`${connection.protocol}://${connection.url}:${connection.port}`}
-        placement="left"
-        aria-label="host"
+        placement='left'
+        aria-label='host'
       >
         <IconButton
           style={{ background: '#ffffff22', padding: '3px' }}
@@ -95,7 +95,7 @@ export const NeoDashboardHeaderTitleBar = ({
           }}
         >
           <Badge badgeContent={''}>
-            <img style={{ width: '36px', height: '36px' }} src="neo4j-icon.png" />
+            <img style={{ width: '36px', height: '36px' }} src='neo4j-icon.png' />
           </Badge>
         </IconButton>
       </Tooltip>

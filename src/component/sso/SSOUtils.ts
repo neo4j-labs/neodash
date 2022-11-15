@@ -68,7 +68,7 @@ export const getDiscoveryDataInfo = async (discoveryAPIurl) => {
 
   const newProvidersFromLocalDiscovery = localDiscoveryData.SSOProviders.filter(
     (providerFromLocalDisc) =>
-      !discoveryURLData.SSOProviders.find((provider) => providerFromLocalDisc.id === provider.id),
+      !discoveryURLData.SSOProviders.find((provider) => providerFromLocalDisc.id === provider.id)
   );
 
   const mergedSSOProviders = discoveryURLData.SSOProviders.concat(newProvidersFromLocalDiscovery);
@@ -101,8 +101,6 @@ export const initializeSSO = async (ssoDiscoveryUrl, _setCredentials) => {
       // _setIsProcessing(false)
       alert(error);
       return false;
-      // TODO check if this unreachable code is still needed
-      // authLog(`Discovery data after sso_redirect step erroneous. err: ${error}`, 'warn');
     }
   } else if (wasRedirectedBackFromSSOServer()) {
     // _setIsProcessing(true)
