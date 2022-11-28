@@ -17,10 +17,19 @@ import ReactMarkdown from "react-markdown";
 import gfm from 'remark-gfm';
 
 const NeoCardViewHeader = ({ title, description, editable, onTitleUpdate, fullscreenEnabled, downloadImageEnabled,
-    onToggleCardSettings, onDownloadImage, onToggleCardExpand, expanded }) => {
+    onToggleCardSettings, onDownloadImage, onToggleCardExpand, expanded, parameters }) => {
 
     const [text, setText] = React.useState(title);
+    const [parsedText, setParsedText] = React.useState(title);
+    const [editing, setEditing] = React.useState(false);
     const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
+
+    function replaceParamsOnString(s, p){
+        for (const [key, value] of Object.entries(p)) {
+            s= s.replace("$"+key+" ", value+" ");
+        }
+        return s;
+    }
 
     // Ensure that we only trigger a text update event after the user has stopped typing.
     const debouncedTitleUpdate = useCallback(
@@ -29,11 +38,19 @@ const NeoCardViewHeader = ({ title, description, editable, onTitleUpdate, fullsc
     );
 
     useEffect(() => {
+        let titleParsed = replaceParamsOnString(`${title}`, parameters);
+        if(!editing)
+            setParsedText(titleParsed);
+
+    }, [editing,parameters])
+
+    useEffect(() => {
         // Reset text to the dashboard state when the page gets reorganized.
         if (text !== title) {
             setText(title);
         }
     }, [title])
+
 
     const cardTitle = <>
         <table style={{ width: "100%" }}>
@@ -45,13 +62,19 @@ const NeoCardViewHeader = ({ title, description, editable, onTitleUpdate, fullsc
                     <td style={{ width: "100%" }}>
                         <TextField
                             id="standard-outlined"
+                            onFocus={(e) => {
+                                setEditing(true);
+                            }}
+                            onBlur={(e) => {
+                                setEditing(false);
+                            }}
                             className={"no-underline large"}
                             label=""
                             disabled={!editable}
                             placeholder="Report name..."
                             fullWidth
                             maxRows={4}
-                            value={text}
+                            value={editing ? text : parsedText}
                             onChange={(event) => {
                                 setText(event.target.value);
                                 debouncedTitleUpdate(event.target.value);

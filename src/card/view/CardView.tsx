@@ -22,6 +22,18 @@ const NeoCardView = ({ title, database, query, globalParameters,
     const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
     const ref = React.useRef();
 
+    const getLocalParameters = (parse_string): any => {
+        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables: string[] = [];
+        while (match = re.exec(parse_string)) {
+            localQueryVariables.push(match[1]);
+        }
+
+        if (!globalParameters) {
+            return {};
+        }
+        return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local)));
+    }
+
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
         title={title}
@@ -35,6 +47,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
         onDownloadImage={() => downloadComponentAsImage(ref)}
         onToggleCardExpand={onToggleCardExpand}
         expanded={expanded}
+        parameters={getLocalParameters(title)}
     >
     </NeoCardViewHeader>;
 
@@ -59,17 +72,11 @@ const NeoCardView = ({ title, database, query, globalParameters,
         return globalParameters ? globalParameters[key] : undefined;
     }
 
-    const getLocalParameters = (): any => {
-        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables: string[] = [];
-        while (match = re.exec(query)) {
-            localQueryVariables.push(match[1]);
-        }
+    // ONLY if the 'actions' extension is enabled, we send 'actionsRules' to the table visualization.
+    const filteredSettings = Object.fromEntries(Object.entries(settings).filter(
+        ([k, v]) => !(k == 'actionsRules' && dashboardSettings['extensions'] != null && !dashboardSettings['extensions'].includes('actions')))
+    );
 
-        if (!globalParameters) {
-            return {};
-        }
-        return Object.fromEntries(Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local)));
-    }
 
     // TODO - understand why CardContent is throwing a warning based on this style config.
     const cardContentStyle = {
@@ -83,7 +90,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
             <NeoReport
                 query={query}
                 database={database}
-                parameters={getLocalParameters()}
+                parameters={getLocalParameters(query)}
                 extensions={extensions}
                 disabled={settingsOpen}
                 selection={selection}

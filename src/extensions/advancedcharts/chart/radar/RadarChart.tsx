@@ -60,7 +60,6 @@ import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeVie
         selection.values.concat([selection['index']]).forEach((k,i) => {
             const fieldIndex = r["_fieldLookup"][k];
             if(k !== selection['index'] && isNaN(r["_fields"][fieldIndex])){
-                console.log(k, r["_fields"][fieldIndex])
                 valid = false;
             }
             entry[k] = ""+r["_fields"][fieldIndex];
