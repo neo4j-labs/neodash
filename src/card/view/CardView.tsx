@@ -13,7 +13,7 @@ import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 
 const NeoCardView = ({ title, database, query, globalParameters,
-    widthPx, heightPx, fields, extensions, active, setActive,
+    widthPx, heightPx, fields, extensions, active, setActive, onDownloadImage,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
@@ -32,7 +32,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
         onTitleUpdate={onTitleUpdate}
         onToggleCardSettings={onToggleCardSettings}
         settings={settings}
-        onDownloadImage={() => downloadComponentAsImage(ref)}
+        onDownloadImage={onDownloadImage}
         onToggleCardExpand={onToggleCardExpand}
         expanded={expanded}
     >
