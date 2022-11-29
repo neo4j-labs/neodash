@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
@@ -41,6 +41,7 @@ const NeoCardView = ({
   const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
   const ref = React.useRef();
+  const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   // @ts-ignore
   const reportHeader = (
@@ -52,6 +53,7 @@ const NeoCardView = ({
       downloadImageEnabled={dashboardSettings.downloadImageEnabled}
       onTitleUpdate={onTitleUpdate}
       onToggleCardSettings={onToggleCardSettings}
+      onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
       settings={settings}
       onDownloadImage={() => downloadComponentAsImage(ref)}
       onToggleCardExpand={onToggleCardExpand}
@@ -100,7 +102,12 @@ const NeoCardView = ({
     return Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
-  };
+  }
+
+  const localParameters = getLocalParameters();
+  useEffect(() => {
+      setLastRunTimestamp(Date.now())
+  }, [settingsOpen, query, JSON.stringify(localParameters)]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
@@ -126,7 +133,8 @@ const NeoCardView = ({
         <NeoReport
           query={query}
           database={database}
-          parameters={getLocalParameters()}
+          parameters={localParameters}
+          lastRunTimestamp={lastRunTimestamp}
           extensions={extensions}
           disabled={settingsOpen}
           selection={selection}

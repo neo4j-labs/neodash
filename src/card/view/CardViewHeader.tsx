@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { Badge, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
@@ -23,6 +24,7 @@ const NeoCardViewHeader = ({
   fullscreenEnabled,
   downloadImageEnabled,
   onToggleCardSettings,
+  onManualRefreshCard,
   onDownloadImage,
   onToggleCardExpand,
   expanded,
@@ -88,6 +90,15 @@ const NeoCardViewHeader = ({
     </Tooltip>
   );
 
+  const refreshButton = (
+    <Tooltip title="Refresh" aria-label="refresh">
+      <IconButton aria-label="refresh"
+          onClick={onManualRefreshCard}>
+          <RefreshIcon />
+      </IconButton>
+    </Tooltip>
+  );
+
   const maximizeButton = (
     <Tooltip title='Maximize' aria-label='maximize'>
       <IconButton aria-label='maximize' onClick={onToggleCardExpand}>
@@ -147,6 +158,7 @@ const NeoCardViewHeader = ({
             {downloadImageEnabled ? downloadImageButton : <></>}
             {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
             {descriptionEnabled ? descriptionButton : <></>}
+            {refreshButton}
             {editable ? settingsButton : <></>}
           </>
         }

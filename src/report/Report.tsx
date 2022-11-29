@@ -18,6 +18,7 @@ import { SELECTION_TYPES } from '../config/CardConfig';
 export const NeoReport = ({
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
+  lastRunTimestamp = 0, // Timestamp of the last query run for this report.
   parameters = {}, // A dictionary of parameters to pass into the query.
   disabled = false, // Whether to disable query execution.
   selection = {}, // A selection of return fields to send to the report.
@@ -143,7 +144,7 @@ export const NeoReport = ({
         );
       }
     }
-  }, [disabled, query, JSON.stringify(parameters)]);
+  }, [lastRunTimestamp]);
 
   // Define query callback to allow reports to get extra data on interactions.
   const queryCallback = useCallback((query, parameters, setRecords) => {
