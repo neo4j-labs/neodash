@@ -43,6 +43,12 @@ export const REPORT_TYPES = {
                 values: [true, false],
                 default: false
             },
+            "compact": {
+                label: "Compact table",
+                type: SELECTION_TYPES.LIST,
+                values: [true, false],
+                default: false
+            },
             "columnWidths": {
                 label: "Relative Column Sizes",
                 type: SELECTION_TYPES.TEXT,
