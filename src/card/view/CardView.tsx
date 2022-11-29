@@ -60,7 +60,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
     }
 
     const getLocalParameters = (): any => {
-        let re = /(?:^|\W)\$(\w+)(?!\w)/g, match, localQueryVariables: string[] = [];
+        let re = /(?:^|\W|%20)\$(\w+)(?!\w)/g, match, localQueryVariables: string[] = [];
         while (match = re.exec(query)) {
             localQueryVariables.push(match[1]);
         }
