@@ -13,7 +13,7 @@ import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig'
 import { downloadComponentAsImage } from '../../chart/ChartUtils';
 
 const NeoCardView = ({ title, database, query, globalParameters, 
-    widthPx, heightPx, fields, active, setActive,
+    widthPx, heightPx, fields, active, setActive, onDownloadImage,
     type, selection, dashboardSettings, settings, settingsOpen, refreshRate, editable,
     onGlobalParameterUpdate, onSelectionUpdate, onToggleCardSettings, onTitleUpdate,
     onFieldsUpdate, expanded, onToggleCardExpand }) => {
@@ -32,7 +32,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
         onTitleUpdate={onTitleUpdate}
         onToggleCardSettings={onToggleCardSettings}
         settings={settings}
-        onDownloadImage={()=> downloadComponentAsImage(ref)}
+        onDownloadImage={onDownloadImage}
         onToggleCardExpand={onToggleCardExpand}
         expanded={expanded}
     >
@@ -79,7 +79,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
             {reportHeader}
             {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
             <ReportItemContainer style={{ height: expanded ? (withoutFooter ? "calc(100% - 69px)" : "calc(100% - 79px)") : cardHeight }}>
-                <CardContent ref={ref} style={cardContentStyle}>
+                <CardContent style={cardContentStyle}>
                     {active ?
                         <NeoReport query={query}
                             database={database}
