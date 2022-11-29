@@ -9,6 +9,7 @@ The table report supports the following additional features:
 
 - automatic pagination of results. 
 - Sorting/filtering by clicking on the table headers. 
+- Prefixing a column header with __ (double underscore) will make the column hidden
 - Downloading your data as a CSV file.
 
 Double-clicking on a table cell will copy that cell's value to the user's clipboard.
@@ -66,3 +67,5 @@ following style rules can be applied to the table:
 - The text color of an entire row in a table. 
 - The background color of a single cell in the table. 
 - The text color of a single cell in the table.
+
+If a column is hidden (header prefixed with __ double underscore), it can still be used as an entry point for a styling rule.

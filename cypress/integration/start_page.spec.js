@@ -58,7 +58,7 @@ describe('NeoDash E2E Tests', () => {
         cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains("Type").next().should('contain', 'Table')
         cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery)
         cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click()
-        cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders').should('contain', 'title').and('contain', 'released')
+        cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders').should('contain', 'title').and('contain', 'released').and('not.contain', '__id')
         cy.get('main .react-grid-item:eq(2) .MuiDataGrid-virtualScroller .MuiDataGrid-row').should('have.length', 5)
         cy.get('main .react-grid-item:eq(2) .MuiDataGrid-footerContainer').should('contain', '1–5 of 8')
         cy.get('main .react-grid-item:eq(2) .MuiDataGrid-footerContainer button[aria-label="Go to next page"]').click()
