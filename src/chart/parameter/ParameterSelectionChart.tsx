@@ -48,11 +48,11 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
 
 
     // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
-    if (query && value != currentValue && currentValue != inputText) {
+    /*if (query && value != currentValue && currentValue != inputText) {
         setValue(currentValue);
         setInputText(value == defaultValue ? "" : currentValue);
         setExtraRecords([]);
-    }
+    }*/
 
     if (!query || query.trim().length == 0) {
         return <p style={{ margin: "15px" }}>No selection specified. Open up the report settings and choose a node label and property.</p>
@@ -60,6 +60,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
 
     const label = props.settings && props.settings["entityType"] ? props.settings["entityType"] : "";
     const property = props.settings && props.settings["propertyType"] ? props.settings["propertyType"] : "";
+    const propertyDisplay = props.settings && props.settings["propertyDisplay"] ? props.settings["propertyDisplay"] : "";
     const settings = (props.settings) ? props.settings : {};
     const helperText = settings.helperText;
     const clearParameterOnFieldClear = settings.clearParameterOnFieldClear;
@@ -70,7 +71,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             <div style={{ width: "100%" }}>
                 <NeoField
                     key={"freetext"}
-                    label={helperText ? helperText : label + " " + property}
+                    label={helperText ? helperText : label + " " + propertyDisplay}
                     defaultValue={defaultValue}
                     value={value}
                     variant="outlined"
@@ -90,22 +91,23 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             :
             <Autocomplete
                 id="autocomplete"
-                options={extraRecords.map(r => r["_fields"] && r["_fields"][0] !== null ? r["_fields"][0] : "(no data)").sort()}
+                options={extraRecords.map(r => r["_fields"] && r["_fields"][1] !== null ? r["_fields"][1] : "(no data)").sort()}
                 getOptionLabel={(option) => option ? option.toString() : ""}
                 style={{ maxWidth: "calc(100% - 30px)", marginLeft: "15px", marginTop: "5px" }}
                 inputValue={inputText}
-                onInputChange={(event, value) => {
-                    setInputText("" + value);
-                    debouncedQueryCallback(query, { input: "" + value }, setExtraRecords);
+                onInputChange={(event, val) => {
+                    setInputText("" + val);
+                    debouncedQueryCallback(query, { input: "" + val }, setExtraRecords);
                 }}
-                getOptionSelected={(option, value) => (option && option.toString()) === (value && value.toString())}
-                value={value ? value.toString() : "" + currentValue}
-                onChange={(event, newValue) => {
-                    setValue(newValue);
-                    setInputText("" + newValue);
+                getOptionSelected={(option, val) => (option && option.toString()) === (val && val.toString())}
+                value={inputText !== undefined ? inputText.toString() : "" + currentValue}
+                onChange={(event, newVal) => {
+                    let newValue = extraRecords.filter(r => r["_fields"][1] ==  newVal)[0]["_fields"][0];
                     if (newValue && newValue["low"]) {
                         newValue = newValue["low"];
                     }
+                    setValue(newValue);
+                    setInputText("" + newVal);
                     if (newValue == null && clearParameterOnFieldClear) {
                         props.setGlobalParameter(parameter, undefined);
                     } else if (newValue == null) {
