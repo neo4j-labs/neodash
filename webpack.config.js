@@ -1,8 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const production = process.env.PRODUCTION === 'true';
-
 const rules = [{
     test: /\.(js|jsx|ts|tsx)$/,
     exclude: /(node_modules)/,
@@ -25,20 +23,23 @@ const rules = [{
 }]
 
 
-module.exports = {
-    entry: './src/index.tsx',
-    mode: production ? 'production' : 'development',
-    devtool: production ? undefined : 'source-map',
-    module: {
-        rules: rules
-    },
-    resolve: { extensions: ['*', '.js', '.jsx', '.ts', '.tsx'] },
-    output: {
-        filename: 'bundle.js'
-    },
-    devServer: {
-        port: 3000,
-        hot: true
-    },
-    plugins: [new webpack.HotModuleReplacementPlugin()]
+module.exports = (env) => {
+    const production = env.production;
+    return {
+        entry: './src/index.tsx',
+        mode: production ? 'production' : 'development',
+        devtool: production ? undefined : 'source-map',
+        module: {
+            rules: rules
+        },
+        resolve: { extensions: ['*', '.js', '.jsx', '.ts', '.tsx'] },
+        output: {
+            filename: 'bundle.js'
+        },
+        devServer: {
+            port: 3000,
+            hot: true
+        },
+        plugins: [new webpack.HotModuleReplacementPlugin()]
+    }
 };
