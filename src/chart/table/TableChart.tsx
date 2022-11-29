@@ -15,6 +15,7 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
 const TABLE_ROW_HEIGHT = 52;
+const HIDDEN_COLUMN_PREFIX = "__";
 
 function ApplyColumnType(column, value) {
     const renderer = getRendererForValue(value);
@@ -75,6 +76,7 @@ const NeoTableChart = (props: ChartProps) => {
             disableClickEventBubbling: true
         }, value)
     });
+    const hiddenColumns = Object.assign({}, ...columns.filter((x) => (x.field.startsWith(HIDDEN_COLUMN_PREFIX))).map((x) => ({[x.field]: false})));
 
     const rows = (transposed) ?
         records[0].keys.map((key, i) => {
@@ -120,6 +122,7 @@ const NeoTableChart = (props: ChartProps) => {
                 headerHeight={32}
                 rows={rows}
                 columns={columns}
+                columnVisibilityModel={hiddenColumns}
                 onCellDoubleClick={(e) => {
                     setNotificationOpen(true);
                     navigator.clipboard.writeText(e.value);
