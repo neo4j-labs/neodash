@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
@@ -21,6 +21,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
     const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
     const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
     const ref = React.useRef();
+    const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
     // @ts-ignore
     const reportHeader = <NeoCardViewHeader
@@ -31,6 +32,7 @@ const NeoCardView = ({ title, database, query, globalParameters,
         downloadImageEnabled={dashboardSettings.downloadImageEnabled}
         onTitleUpdate={onTitleUpdate}
         onToggleCardSettings={onToggleCardSettings}
+        onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
         settings={settings}
         onDownloadImage={() => downloadComponentAsImage(ref)}
         onToggleCardExpand={onToggleCardExpand}
@@ -78,12 +80,19 @@ const NeoCardView = ({ title, database, query, globalParameters,
         overflow: "auto"
     };
 
+    const localParameters = getLocalParameters();
+
+    useEffect(() => {
+        setLastRunTimestamp(Date.now())
+    }, [settingsOpen, query, JSON.stringify(localParameters)])
+
     const reportContent = <CardContent ref={ref} style={cardContentStyle}>
         {active ?
             <NeoReport
                 query={query}
                 database={database}
-                parameters={getLocalParameters()}
+                parameters={localParameters}
+                lastRunTimestamp={lastRunTimestamp}
                 extensions={extensions}
                 disabled={settingsOpen}
                 selection={selection}

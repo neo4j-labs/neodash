@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { Badge, Dialog, DialogContent, DialogTitle, TextField } from "@material-ui/core";
@@ -17,7 +18,7 @@ import ReactMarkdown from "react-markdown";
 import gfm from 'remark-gfm';
 
 const NeoCardViewHeader = ({ title, description, editable, onTitleUpdate, fullscreenEnabled, downloadImageEnabled,
-    onToggleCardSettings, onDownloadImage, onToggleCardExpand, expanded }) => {
+    onToggleCardSettings, onManualRefreshCard, onDownloadImage, onToggleCardExpand, expanded }) => {
 
     const [text, setText] = React.useState(title);
     const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
@@ -72,6 +73,13 @@ const NeoCardViewHeader = ({ title, description, editable, onTitleUpdate, fullsc
         </IconButton>
     </Tooltip>
 
+    const refreshButton = <Tooltip title="Refresh" aria-label="refresh">
+        <IconButton aria-label="refresh"
+            onClick={onManualRefreshCard}>
+            <RefreshIcon />
+        </IconButton>
+    </Tooltip>
+
     const maximizeButton = <Tooltip title="Maximize" aria-label="maximize">
         <IconButton aria-label="maximize"
             onClick={onToggleCardExpand}>
@@ -118,6 +126,7 @@ const NeoCardViewHeader = ({ title, description, editable, onTitleUpdate, fullsc
                 {(downloadImageEnabled) ? downloadImageButton : <></>}
                 {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
                 {descriptionEnabled ? descriptionButton : <></>}
+                {refreshButton}
                 {editable ? settingsButton : <></>}
             </>}
             title={cardTitle} />
