@@ -3270,7 +3270,7 @@ cypher-editor-support@1.1.9:
   dependencies:
     antlr4 "4.7.0"
     fuzzaldrin "2.1.0"
-    lodash "4.17.15"
+    lodash "4.17.21"
 
 cypress@^9.5.3:
   version "9.7.0"
