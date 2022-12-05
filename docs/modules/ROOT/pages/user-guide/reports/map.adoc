@@ -109,6 +109,8 @@ relationship property to map to the arrow width. This lets you define
 widths on a relationship-specific level, if you have a property that
 directly maps to the width value.
 
+|Map Provider URL|Text|https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png| When specified, Open Street map provider get override by a custom map tiles provider.
+
 |Intensity Property (for heatmap)|Text|intensity|Optionally, and only for heatmaps, the node property to use as the intensity of that point on the heatmap. If left empty, all points will have the same intensity of 1. If one of the nodes in the results doesn't have the specific property, its intensity will be set to 0.
 
 |Hide Property Selection |on/off |off |If enabled, hides the property
