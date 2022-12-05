@@ -53,7 +53,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
         onReportSettingUpdate('propertyType', undefined);
         onReportSettingUpdate('id', undefined);
         onReportSettingUpdate('parameterName', undefined);
-        onReportSettingUpdate('parameterDisplay', undefined);
+        onReportSettingUpdate('propertyDisplay', undefined);
         onReportSettingUpdate("type", newValue);
     }
 
@@ -63,7 +63,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
         onReportSettingUpdate('entityType', newValue);
         onReportSettingUpdate('propertyType', undefined);
         onReportSettingUpdate('parameterName', undefined);
-        onReportSettingUpdate('parameterDisplay', undefined);
+        onReportSettingUpdate('propertyDisplay', undefined);
     }
 
     function handleFreeTextNameSelectionUpdate(newValue) {
@@ -77,11 +77,11 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
 
     function handlePropertyNameSelectionUpdate(newValue) {
         onReportSettingUpdate("propertyType", newValue);
-        onReportSettingUpdate('propertyDisplay', newValue);
+        onReportSettingUpdate("propertyDisplay", newValue);
         if (newValue && settings['entityType']) {
             const id = settings['id'] ? settings['id'] : "";
             const new_parameter_name = "neodash_" + (settings['entityType'] + "_" + newValue + (id == "" || id.startsWith("_") ? id : "_" + id)).toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
-            handleReportQueryUpdate(new_parameter_name, settings['entityType'], settings['propertyType'], settings['propertyDisplay']);
+            handleReportQueryUpdate(new_parameter_name, settings['entityType'], newValue, newValue);
         } else {
             onReportSettingUpdate('parameterName', undefined);
         }
@@ -90,7 +90,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
     function handlePropertyDisplayNameSelectionUpdate(newValue) {
         onReportSettingUpdate("propertyDisplay", newValue);
         if (newValue && settings['entityType']) {
-            updateReportQuery(settings['entityType'], settings['propertyType'], settings['propertyDisplay']);
+            updateReportQuery(settings['entityType'], settings['propertyType'], newValue);
         } else {
             onReportSettingUpdate('parameterName', undefined);
         }
@@ -118,7 +118,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
         const caseSensitive = settings.caseSensitive !== undefined ? settings.caseSensitive : false;
         if (settings['type'] == "Node Property") {
             const newQuery = "MATCH (n:`" + entityType + "`) \n"+
-                             "WHERE "+(caseSensitive ? "" : "toLower")+"(toString(n.`" + propertyType + "`)) "+searchType+
+                             "WHERE "+(caseSensitive ? "" : "toLower")+"(toString(n.`" + propertyDisplay + "`)) "+searchType+
                                   " "+(caseSensitive ? "" : "toLower")+"($input) \n"+
                              "RETURN " + (deduplicate ? "DISTINCT" : "") + " n.`" + propertyType + "` as value, "+
                              " n.`" + propertyDisplay + "` as display "+
@@ -126,9 +126,10 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
             onQueryUpdate(newQuery);
         } else if (settings['type'] == "Relationship Property") {
             const newQuery = "MATCH ()-[n:`" + entityType + "`]->() \n"+
-                             "WHERE "+(caseSensitive ? "" : "toLower")+"(toString(n.`" + propertyType + "`)) "+searchType+
+                             "WHERE "+(caseSensitive ? "" : "toLower")+"(toString(n.`" + propertyDisplay + "`)) "+searchType+
                                   " "+(caseSensitive ? "" : "toLower")+"($input) \n"+
-                             "RETURN " + (deduplicate ? "DISTINCT" : "") + " n.`" + propertyType + "` as value "+
+                             "RETURN " + (deduplicate ? "DISTINCT" : "") + " n.`" + propertyType + "` as value, "+
+                             " n.`" + propertyDisplay + "` as display "+
                              "ORDER BY size(toString(value)) ASC LIMIT " + limit;
             onQueryUpdate(newQuery);
         } else {
@@ -207,6 +208,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
                             inputValue={propertyInputText}
                             onInputChange={(event, value) => {
                                 setPropertyInputText(value);
+                                setPropertyInputDisplayText(value);
                                 if (manualPropertyNameSpecification) {
                                     handlePropertyNameSelectionUpdate(value);
                                 } else {
@@ -232,7 +234,7 @@ const NeoCardSettingsContentPropertySelect = ({ type, database, settings, extens
                                 }
                             }}
                             value={settings['propertyDisplay']}
-                            onChange={(event, newValue) => handlePropertyDisplayNameSelectionUpdate(newValue, 'propertyDisplay')}
+                            onChange={(event, newValue) => handlePropertyDisplayNameSelectionUpdate(newValue)}
                             renderInput={(params) => <TextField {...params} placeholder="Start typing..." InputLabelProps={{ shrink: true }} label={"Property Display"} />}
                         />
                         <NeoField placeholder='number'
