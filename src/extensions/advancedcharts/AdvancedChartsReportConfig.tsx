@@ -539,6 +539,14 @@ export const ADVANCED_REPORT_TYPES = {
                 values: [true, false],
                 default: true
             },
+            "matchAccessor": {
+                label: "Country Code Format",
+                type: SELECTION_TYPES.LIST,
+                values: ["iso_a3", "iso_a2", "iso_n3"],
+                default: "iso_a3"
+            },
+
+
             "projectionScale": {
                 label: "Projection Scale",
                 type: SELECTION_TYPES.NUMBER,
