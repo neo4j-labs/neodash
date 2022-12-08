@@ -197,3 +197,7 @@
 .react-grid-layout {
     overflow-x: hidden;
 }
+
+.cm-tooltip-autocomplete {
+    margin-top: 4px;
+}
