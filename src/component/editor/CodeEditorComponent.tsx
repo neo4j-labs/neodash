@@ -19,7 +19,7 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
                 onChange(val);
             }
         },
-
+        className: "ReactCodeMirror" // only used by integration tests
     }
 
     // TODO -  we force a recreating of the editor object here in a strange way...
