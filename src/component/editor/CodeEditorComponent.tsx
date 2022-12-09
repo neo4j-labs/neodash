@@ -12,8 +12,6 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
         readOnly: !editable,
         placeholder: placeholder,
         value: value,
-        autocompleteCloseOnBlur: false,
-        tooltipAbsolute: true,
         onValueChanged: (val, change) => {
             if (editable) {
                 onChange(val);

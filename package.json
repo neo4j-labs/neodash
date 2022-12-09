@@ -36,7 +36,7 @@
     "@material-ui/styles": "^4.11.4",
     "@mui/material": "^5.3.0",
     "@mui/x-data-grid": "5.10.0",
-    "@neo4j-cypher/react-codemirror": "1.0.0-next.10",
+    "@neo4j-cypher/react-codemirror": "1.0.0-next.11",
     "@nivo/bar": "^0.79.1",
     "@nivo/circle-packing": "^0.79.1",
     "@nivo/core": "^0.79.0",
