@@ -1,5 +1,5 @@
 export const defaultCypherQuery = "MATCH (n) RETURN n LIMIT 25";
-export const tableCypherQuery = "MATCH (n:Movie) RETURN n.title AS title, n.released AS released LIMIT 8";
+export const tableCypherQuery = "MATCH (n:Movie) RETURN n.title AS title, n.released AS released, id(n) AS __id LIMIT 8";
 export const barChartCypherQuery = "MATCH (n:Movie) RETURN n.released AS released, count(n.title) AS count LIMIT 5";
 export const mapChartCypherQuery =  "UNWIND [{id: 'Tilburg', label: 'Cinema', point: point({latitude:51.59444886664065 , longitude:5.088862976119185})}, {id: 'Antwerp', label: 'Cinema', point: point({latitude:51.22065200961528  , longitude:4.414094044161085})}, \n" + 
 "{id: 'Brussels', label: 'Cinema', point: point({latitude:50.854284724408664, longitude:4.344177490986771})},{id: 'Cologne', label: 'Cinema', point: point({latitude:50.94247712506476  , longitude:6.9699327434361855 })}, \n" +
