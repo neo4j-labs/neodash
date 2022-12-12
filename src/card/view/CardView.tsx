@@ -89,8 +89,8 @@ const NeoCardView = ({
     if (!globalParameters) {
       return {};
     }
-    
-    let re = /(?:^|\W)\$(\w+)(?!\w)/g;
+
+    let re = /(?:^|\W|%20)\$(\w+)(?!\w)/g;
     let match;
     let localQueryVariables: string[] = [];
     while ((match = re.exec(query))) {
