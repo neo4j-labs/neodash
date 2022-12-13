@@ -144,7 +144,7 @@ export const NeoPage = ({
   }, [reports, dashboardSettings.resizing]);
 
   const content = (
-    <div style={{ paddingTop: '52px' }}>
+    <div style={{ paddingTop: '5px' }}>
       <ResponsiveGridLayout
         draggableHandle='.drag-handle'
         layouts={layouts}

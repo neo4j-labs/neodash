@@ -16,6 +16,7 @@ import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotification } from '../application/ApplicationActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
+import NeoPageListDrawer from './drawer/DashboardPageListDrawer';
 
 const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -42,6 +43,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
         onConnectionUpdate={onConnectionUpdate}
       />
       <NeoDrawer open={drawerOpen} handleDrawerClose={handleDrawerClose}></NeoDrawer>
+      <NeoPageListDrawer></NeoPageListDrawer>
       <NeoDashboardHeader
         open={drawerOpen}
         connection={connection}

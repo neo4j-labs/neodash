@@ -9,7 +9,6 @@ import { addPageThunk, removePageThunk } from '../DashboardThunks';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
-import NeoDashboardHeaderPageList from './DashboardHeaderPageList';
 import { NeoDashboardHeaderTitleBar } from './DashboardHeaderTitleBar';
 
 const drawerWidth = 240;
@@ -67,7 +66,6 @@ export const NeoDashboardHeader = ({
         handleDrawerOpen={handleDrawerOpen}
         connection={connection}
       ></NeoDashboardHeaderTitleBar>
-      <NeoDashboardHeaderPageList open={open}></NeoDashboardHeaderPageList>
     </AppBar>
   );
   return content;
