@@ -24,8 +24,8 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     props.getGlobalParameter && props.getGlobalParameter(parameter) ? props.getGlobalParameter(parameter) : '';
   const [extraRecords, setExtraRecords] = React.useState([]);
   const [inputText, setInputText] = React.useState(currentValue);
-  const queryCallback = props.queryCallback ? props.queryCallback : () => {};
-  const setGlobalParameter = props.setGlobalParameter ? props.setGlobalParameter : () => {};
+  const queryCallback = props.queryCallback ? props.queryCallback : () => { };
+  const setGlobalParameter = props.setGlobalParameter ? props.setGlobalParameter : () => { };
   const [value, setValue] = React.useState(currentValue);
 
   const debouncedQueryCallback = useCallback(debounce(queryCallback, suggestionsUpdateTimeout), []);
