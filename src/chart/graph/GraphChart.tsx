@@ -100,7 +100,7 @@ const NeoGraphChart = (props: ChartProps) => {
     console.error(error);
   }
 
-  const { observe, unobserve } = useDimensions({
+  const { observe, unobserve, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {
       // Triggered whenever the size of the target is changed...
       unobserve(); // To stop observing the current target element
