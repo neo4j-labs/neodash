@@ -27,7 +27,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
   // Else, build the advanced settings view.
   const advancedDashboardSettings = (
     <div style={{ marginLeft: '-10px' }}>
-      {Object.keys(settings).map((setting) => (
+      {Object.keys(settings).filter(setting => !settings[setting]['hidden']).map((setting) => (
         <>
           <NeoSetting
             key={setting}

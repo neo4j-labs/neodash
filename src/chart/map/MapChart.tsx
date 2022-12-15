@@ -10,6 +10,8 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import Button from "@material-ui/core/Button";
+import { getRule } from '../../extensions/advancedcharts/Utils';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -43,6 +45,8 @@ const NeoMapChart = (props: ChartProps) => {
     props.settings && props.settings.attribution
       ? props.settings.attribution
       : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+
+  const actionsRules = extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules ? props.settings.actionsRules : [];
 
   const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
@@ -370,31 +374,28 @@ const NeoMapChart = (props: ChartProps) => {
   }
 
   function createPopupFromNodeProperties(value) {
-    return (
-      <Popup className={'leaflet-custom-node-popup'}>
-        <h3>
-          <b>{value.labels.length > 0 ? value.labels.map((b) => `${b} `) : '(No labels)'}</b>
-        </h3>
-        <table>
-          <tbody>
-            {Object.keys(value.properties).length == 0 ? (
-              <tr>
-                <td>(No properties)</td>
-              </tr>
-            ) : (
-              Object.keys(value.properties).map((k, i) => (
-                <tr key={i}>
-                  <td style={{ marginRight: '10px' }} key={0}>
-                    {k.toString()}:
-                  </td>
-                  <td key={1}>{value.properties[k].toString()}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </Popup>
-    );
+    return <Popup className={"leaflet-custom-node-popup"}>
+      <h3><b>{(value.labels.length > 0) ? value.labels.map(b => b + " ") : "(No labels)"}</b></h3>
+      <table>
+        <tbody>{Object.keys(value.properties).length == 0 ? <tr><td>(No properties)</td></tr> : Object.keys(value.properties).map((k, i) => {
+          //TODO MOVE THIS DEPENDENCY OUT OF THE TOOLTIP GENERATION
+          let rule = getRule({ field: k.toString(), value: value.properties[k].toString() }, actionsRules, "Click");
+          let execRule = rule !== null && rule.customization == "set variable" && props && props.setGlobalParameter ? true : false;
+          return <tr key={i} onClick={(e) => {
+            if (execRule) {
+              //call thunk for $neodash_customizationValue
+              props.setGlobalParameter("neodash_" + rule.customizationValue, value.properties[k].toString());
+            }
+          }}>
+            <td style={{ marginRight: "10px" }} key={0}>{k.toString()}:</td>
+            <td key={1}>{execRule ?
+              <Button style={{ width: "100%", marginLeft: "10px", marginRight: "10px" }} variant="contained" color="primary">{"" + value.properties[k].toString()}</Button>
+              : value.properties[k].toString()}</td>
+          </tr>;
+        })}
+        </tbody>
+      </table>
+    </Popup>;
   }
 
   // TODO this should definitely be refactored as an if/case statement.

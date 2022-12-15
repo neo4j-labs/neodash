@@ -10,6 +10,10 @@ import {
 import TuneIcon from '@material-ui/icons/Tune';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 
+import { NeoCustomReportActionsModal, RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS } from '../../extensions/actions/ActionsRuleCreationModal';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import StarsIcon from '@material-ui/icons/Stars';
+
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
 const NeoCardSettingsFooter = ({
@@ -27,6 +31,10 @@ const NeoCardSettingsFooter = ({
   const [customReportStyleModalOpen, setCustomReportStyleModalOpen] = React.useState(false);
 
   const settingToCustomize = 'styleRules';
+
+  // Variables related to customizing report actions
+  const [customReportActionsModalOpen, setCustomReportActionsModalOpen] = React.useState(false);
+  const actionsToCustomize = "actionsRules";
 
   const debouncedReportSettingUpdate = useCallback(debounce(onReportSettingUpdate, 250), []);
 
@@ -113,6 +121,17 @@ const NeoCardSettingsFooter = ({
       ) : (
         <></>
       )}
+
+      {extensions['actions'] ? <NeoCustomReportActionsModal
+        settingName={actionsToCustomize}
+        settingValue={reportSettings[actionsToCustomize]}
+        type={type}
+        fields={fields}
+        customReportActionsModalOpen={customReportActionsModalOpen}
+        setCustomReportActionsModalOpen={setCustomReportActionsModalOpen}
+        onReportSettingUpdate={onReportSettingUpdate}
+      ></NeoCustomReportActionsModal> : <></>}
+
       <table
         style={{
           borderTop: '1px dashed lightgrey',
@@ -150,6 +169,18 @@ const NeoCardSettingsFooter = ({
             ) : (
               <></>
             )}
+            {extensions['actions'] && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ?
+              <td>
+                <Tooltip title="Set report actions" aria-label="">
+                  <IconButton size="small" style={{ float: "right", marginRight: "10px" }} aria-label="custom actions"
+                    onClick={(e) => {
+                      setCustomReportActionsModalOpen(true); // Open the modal.
+                    }}>
+                    <StarsIcon></StarsIcon>
+                  </IconButton>
+                </Tooltip>
+              </td>
+              : <></>}
           </tr>
           <tr>
             <td colSpan={2} style={{ maxWidth: '100%' }}>
