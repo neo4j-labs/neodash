@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
 import ReactDOMServer from 'react-dom/server';
 import useDimensions from 'react-cool-dimensions';
@@ -18,17 +18,19 @@ import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
 import { evaluateRulesOnNode } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import { getCurvature, getRuleWithFieldPropertyName, merge, update } from '../../extensions/advancedcharts/Utils';
 
 const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
   let img = new Image();
   let prop = defaultNodeSize * 6;
   /* img.onload = function(){
-        canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
-    }*/
+      canvas.drawImage(img,node.x - (prop/2),node.y -(prop/2) , prop, prop);
+  }*/
 
   img.src = strDataURI;
   canvas.drawImage(img, node.x - prop / 2, node.y - prop / 2, prop, prop);
 };
+
 // TODO: Fix experimental 3D graph visualization.
 // const nodeTree = (node) => {
 //     const imgTexture = new THREE.TextureLoader().load(`https://img.icons8.com/external-flaticons-lineal-color-flat-icons/344/external-url-gdpr-flaticons-lineal-color-flat-icons.png`);
@@ -38,35 +40,16 @@ const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
 //     return sprite;
 // }
 
-const update = (state, mutations) => Object.assign({}, state, mutations);
-
 const layouts = {
   'force-directed': undefined,
   tree: 'td',
   radial: 'radialout',
 };
 
-/**
- * Draws graph data using a force-directed-graph visualization.
- * This visualization is powered by `react-force-graph`.
- * See https://github.com/vasturiano/react-force-graph for examples on customization.
- */
 const NeoGraphChart = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
-
-  const [open, setOpen] = useState(false);
-  const [firstRun, setFirstRun] = useState(true);
-  const [inspectItem, setInspectItem] = useState({});
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   // Retrieve config from advanced settings
   const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : '#fafafa';
@@ -97,46 +80,28 @@ const NeoGraphChart = (props: ChartProps) => {
   const drilldownLink =
     props.settings && props.settings.drilldownLink !== undefined ? props.settings.drilldownLink : '';
   const selfLoopRotationDegrees = 45;
-  const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
+  const rightClickToExpandNodes =
+    props.settings && props.settings.rightClickToExpandNodes !== undefined
+      ? props.settings.rightClickToExpandNodes
+      : false; // TODO - this isn't working properly yet, disable it.
   const defaultNodeColor = 'lightgrey'; // Color of nodes without labels
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
   const linkDirectionalParticleSpeed =
     props.settings && props.settings.relationshipParticleSpeed ? props.settings.relationshipParticleSpeed : 0.005; // Speed of particles on relationships.
+  const actionsRules =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
+
   const iconStyle = props.settings && props.settings.iconStyle !== undefined ? props.settings.iconStyle : '';
   let iconObject = undefined;
   try {
     iconObject = iconStyle ? JSON.parse(iconStyle) : undefined;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
   }
 
-  // get dashboard parameters.
-  const parameters = props.parameters ? props.parameters : {};
-
-  const [data, setData] = useState({ nodes: [], links: [] });
-
-  // TODO we are modifying state directly instead of with an action, not good
-  // Create the dictionary used for storing the memory of dragged node positions.
-  if (props.settings.nodePositions == undefined) {
-    props.settings.nodePositions = {};
-  }
-  let nodePositions = props.settings && props.settings.nodePositions;
-
-  // 'frozen' indicates that the graph visualization engine is paused, node positions and stored and only dragging is possible.
-  const [frozen, setFrozen] = useState(
-    props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false
-  );
-
-  // Currently unused, but dynamic graph exploration could be done with these records.
-  const [extraRecords, setExtraRecords] = useState([]);
-
-  // When data is refreshed, rebuild the visualization data.
-  useEffect(() => {
-    buildVisualizationDictionaryFromRecords(props.records);
-  }, []);
-
-  const { observe, width, height } = useDimensions({
+  const { observe, unobserve, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {
       // Triggered whenever the size of the target is changed...
       unobserve(); // To stop observing the current target element
@@ -144,21 +109,54 @@ const NeoGraphChart = (props: ChartProps) => {
     },
   });
 
-  // Dictionaries to populate based on query results.
-  let nodes = {};
-  let nodeLabels = {};
-  let links = {};
-  let linkTypes = {};
+  const { useRef } = React;
+  // Return the actual graph visualization component with the parsed data and selected customizations.
+  const fgRef = useRef();
+  const [data, setData] = React.useState({ nodes: {}, links: {} });
+  const [dataViz, setDataViz] = React.useState({ nodes: [], links: [] });
+  const [firstRun, setFirstRun] = React.useState(true);
+  const [frozen, setFrozen] = React.useState(
+    props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false
+  );
+  const [addExtraRecords, setAddExtraRecords] = React.useState([]);
+  const [removeExtraRecords, setRemoveExtraRecords] = React.useState([]);
+  const [refreshRecords, setRefreshRecords] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [inspectItem, setInspectItem] = React.useState({});
 
-  // Gets all graphy objects (nodes/relationships) from the complete set of return values.
-  function extractGraphEntitiesFromField(value) {
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // Create the dictionary used for storing the memory of dragged node positions.
+  if (props.settings && props.settings.nodePositions == undefined) {
+    props.settings.nodePositions = {};
+  }
+  let nodePositions = props.settings && props.settings.nodePositions;
+
+  // get dashboard parameters.
+  const parameters = props.parameters ? props.parameters : {};
+
+  const replaceDashboardParameters = (str) => {
+    Object.keys(parameters).forEach((key) => {
+      str = str.replaceAll(`$${key}`, parameters[key]);
+    });
+    return str;
+  };
+
+  // let nodeLabels = {};
+  function extractGraphEntitiesFromField(value, nodes, links) {
     if (value == undefined) {
       return;
     }
     if (valueIsArray(value)) {
-      value.forEach((v) => extractGraphEntitiesFromField(v));
+      value.forEach((v) => extractGraphEntitiesFromField(v, nodes, links));
     } else if (valueIsNode(value)) {
-      value.labels.forEach((l) => (nodeLabels[l] = true));
+      // value.labels.forEach(l => nodeLabels[l] = true);
       nodes[value.identity.low] = {
         id: value.identity.low,
         labels: value.labels,
@@ -186,48 +184,62 @@ const NeoGraphChart = (props: ChartProps) => {
       });
     } else if (valueIsPath(value)) {
       value.segments.map((segment) => {
-        extractGraphEntitiesFromField(segment.start);
-        extractGraphEntitiesFromField(segment.relationship);
-        extractGraphEntitiesFromField(segment.end);
+        extractGraphEntitiesFromField(segment.start, nodes, links);
+        extractGraphEntitiesFromField(segment.relationship, nodes, links);
+        extractGraphEntitiesFromField(segment.end, nodes, links);
       });
     }
   }
 
-  // Function to manually compute curvatures for dense node pairs.
-  function getCurvature(index, total) {
-    if (total <= 6) {
-      // Precomputed edge curvatures for nodes with multiple edges in between.
-      const curvatures = {
-        0: 0,
-        1: 0,
-        2: [-0.5, 0.5], // 2 = Math.floor(1/2) + 1
-        3: [-0.5, 0, 0.5], // 2 = Math.floor(3/2) + 1
-        4: [-0.66666, -0.33333, 0.33333, 0.66666], // 3 = Math.floor(4/2) + 1
-        5: [-0.66666, -0.33333, 0, 0.33333, 0.66666], // 3 = Math.floor(5/2) + 1
-        6: [-0.75, -0.5, -0.25, 0.25, 0.5, 0.75], // 4 = Math.floor(6/2) + 1
-        7: [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75], // 4 = Math.floor(7/2) + 1
-      };
-      return curvatures[total][index];
+  function extractNodesAndRelationshipsFromRecords(records) {
+    if (records.length === 0) {
+      return;
     }
-    const arr1 = [...Array(Math.floor(total / 2)).keys()].map((i) => {
-      return (i + 1) / (Math.floor(total / 2) + 1);
-    });
-    const arr2 = total % 2 == 1 ? [0] : [];
-    const arr3 = [...Array(Math.floor(total / 2)).keys()].map((i) => {
-      return (i + 1) / -(Math.floor(total / 2) + 1);
-    });
-    return arr1.concat(arr2).concat(arr3)[index];
-  }
 
-  function buildVisualizationDictionaryFromRecords(records) {
-    // Extract graph objects from result set.
+    let nodes = {};
+    let links = {};
     records.forEach((record) => {
       record._fields.forEach((field) => {
-        extractGraphEntitiesFromField(field);
+        extractGraphEntitiesFromField(field, nodes, links);
       });
     });
-    // Assign proper curvatures to relationships.
-    // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
+
+    return { nodes: nodes, links: links };
+  }
+
+  function mergeGraphData(mergeData, operation) {
+    let nodesState = { ...data.nodes };
+    let linksState = { ...data.links };
+    return mergeData == undefined
+      ? data
+      : { nodes: merge(nodesState, mergeData.nodes, operation), links: merge(linksState, mergeData.links, operation) };
+  }
+
+  // TODO : CHECK AUTO REFRESH BEHAVIOR
+  useEffect(() => {
+    if (refreshRecords && refreshRecords.length > 0) {
+      let data = extractNodesAndRelationshipsFromRecords(refreshRecords);
+      // Here I need to check what action must be done. Let test the auto add btm
+      setData(mergeGraphData(data, true));
+    }
+  }, [refreshRecords]);
+
+  useEffect(() => {
+    if (props.settings.r != 0) {
+      setInterval(
+        () => props.queryCallback && props.queryCallback(props.settings.q, props.settings.p, setRefreshRecords),
+        5000
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    setData(mergeGraphData(extractNodesAndRelationshipsFromRecords(props.records), true));
+  }, [props.records]);
+
+  useEffect(() => {
+    let links = { ...data.links };
+    let nodes = { ...data.nodes };
     const linksList = Object.values(links).map((nodePair) => {
       return nodePair.map((link, i) => {
         if (link.source == link.target) {
@@ -250,9 +262,16 @@ const NeoGraphChart = (props: ChartProps) => {
       });
     });
 
-    // Assign proper colors to nodes.
     const totalColors = categoricalColorSchemes[nodeColorScheme] ? categoricalColorSchemes[nodeColorScheme].length : 0;
-    const nodeLabelsList = Object.keys(nodeLabels);
+
+    let nodeLabels = {};
+    Object.values(nodes).forEach((node) =>
+      node.labels.forEach((l) => {
+        nodeLabels[l] = true;
+        return true;
+      })
+    );
+    const nodeLabelsList = Object.keys(nodeLabels).sort();
     const nodesList = Object.values(nodes).map((node) => {
       // First try to assign a node a color if it has a property specifying the color.
       let assignedColor = node.properties[nodeColorProp]
@@ -265,20 +284,44 @@ const NeoGraphChart = (props: ChartProps) => {
       return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });
     });
 
-    // Set the data dictionary that is read by the visualization.
-    setData({
-      nodes: nodesList,
-      links: linksList.flat(),
-    });
-  }
+    setDataViz({ nodes: nodesList, links: linksList.flat() });
+  }, [data]);
 
-  // Replaces all global dashboard parameters inside a string with their values.
-  function replaceDashboardParameters(str) {
-    Object.keys(parameters).forEach((key) => {
-      str = str.replaceAll(`$${key}`, parameters[key]);
-    });
-    return str;
-  }
+  // TODO - implement this.
+  const handleExpand = useCallback((node, e) => {
+    if (rightClickToExpandNodes) {
+      if (e.ctrlKey) {
+        props.queryCallback &&
+          props.queryCallback(
+            `MATCH (n)-[e]-(m) WHERE id(n) =${node.id} RETURN n,e limit 100`,
+            {},
+            setRemoveExtraRecords
+          );
+      } else {
+        props.queryCallback &&
+          props.queryCallback(`MATCH (n)-[e]-(m) WHERE id(n) =${node.id} RETURN e,m limit 100`, {}, setAddExtraRecords);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (addExtraRecords && addExtraRecords.length > 0) {
+      setData(mergeGraphData(extractNodesAndRelationshipsFromRecords(addExtraRecords), true));
+    }
+  }, [addExtraRecords]);
+
+  useEffect(() => {
+    if (removeExtraRecords && removeExtraRecords.length > 0) {
+      setData(mergeGraphData(extractNodesAndRelationshipsFromRecords(removeExtraRecords), false));
+    }
+  }, [removeExtraRecords]);
+
+  const showPopup = useCallback((item) => {
+    if (showPropertiesOnClick) {
+      setInspectItem(item);
+      handleOpen();
+    }
+  }, []);
 
   // Generates tooltips when hovering on nodes/relationships.
   const generateTooltip = (value) => {
@@ -334,28 +377,19 @@ const NeoGraphChart = (props: ChartProps) => {
     return node.properties[selectedProp] ? node.properties[selectedProp] : '';
   };
 
-  // TODO - implement this.
-  const handleExpand = useCallback((node) => {
-    if (rightClickToExpandNodes) {
-      props.queryCallback &&
-        props.queryCallback(`MATCH (n)-[e]-(m) WHERE id(n) =${node.id} RETURN e,m`, {}, setExtraRecords);
+  function actionRule(rule, e) {
+    if (rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter) {
+      // call thunk for $neodash_customizationValue
+      if (rule.value != '' && e.row && e.row[rule.value]) {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.row[rule.value]);
+      } else if (rule.value != '' && e.properties && e.properties[rule.value]) {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.properties[rule.value]);
+      } else {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
+      }
     }
-  }, []);
+  }
 
-  const showPopup = useCallback((item) => {
-    if (showPropertiesOnClick) {
-      setInspectItem(item);
-      handleOpen();
-    }
-  }, []);
-
-  // If the set of extra records gets updated (e.g. on relationship expand), rebuild the graph.
-  useEffect(() => {
-    buildVisualizationDictionaryFromRecords(props.records.concat(extraRecords));
-  }, [extraRecords]);
-
-  // Return the actual graph visualization component with the parsed data and selected customizations.
-  const fgRef = useRef();
   return (
     <>
       <div
@@ -370,7 +404,7 @@ const NeoGraphChart = (props: ChartProps) => {
             style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 11, right: 34, position: 'absolute', zIndex: 5 }}
             color='disabled'
             fontSize='small'
-          ></SettingsOverscanIcon>
+          />
         </Tooltip>
         {lockable ? (
           frozen ? (
@@ -385,7 +419,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 12, right: 12, position: 'absolute', zIndex: 5 }}
                 color='disabled'
                 fontSize='small'
-              ></LockIcon>
+              />
             </Tooltip>
           ) : (
             <Tooltip title='Toggle fixed graph layout.' aria-label=''>
@@ -402,7 +436,7 @@ const NeoGraphChart = (props: ChartProps) => {
                 style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 12, right: 12, position: 'absolute', zIndex: 5 }}
                 color='disabled'
                 fontSize='small'
-              ></LockOpenIcon>
+              />
             </Tooltip>
           )
         ) : (
@@ -424,7 +458,6 @@ const NeoGraphChart = (props: ChartProps) => {
         ) : (
           <></>
         )}
-
         <ForceGraph2D
           ref={fgRef}
           width={width ? width - 10 : 0}
@@ -438,9 +471,14 @@ const NeoGraphChart = (props: ChartProps) => {
           linkLabel={(link) => (showPropertiesOnHover ? `<div>${generateTooltip(link)}</div>` : '')}
           nodeLabel={(node) => (showPropertiesOnHover ? `<div>${generateTooltip(node)}</div>` : '')}
           nodeVal={(node) => node.size}
-          onNodeClick={showPopup}
-          // nodeThreeObject = {nodeTree}
-          onLinkClick={showPopup}
+          onNodeClick={(e) => {
+            let rules = getRuleWithFieldPropertyName(e, actionsRules, 'onNodeClick', 'labels');
+            rules != null ? rules.forEach((rule) => actionRule(rule, e)) : showPopup(e);
+          }}
+          onLinkClick={(e) => {
+            let rules = getRuleWithFieldPropertyName(e, actionsRules, 'onLinkClick', 'type');
+            rules != null ? rules.forEach((rule) => actionRule(rule, e)) : showPopup(e);
+          }}
           onNodeRightClick={handleExpand}
           linkDirectionalParticles={linkDirectionalParticles}
           linkDirectionalParticleSpeed={linkDirectionalParticleSpeed}
@@ -492,7 +530,7 @@ const NeoGraphChart = (props: ChartProps) => {
             const fontSize = relLabelFontSize;
             ctx.font = `${fontSize}px Sans-Serif`;
             ctx.fillStyle = relLabelColor;
-            if (link.target != link.source) {
+            if (link && link.target && link.source && link.target != link.source) {
               const lenX = link.target.x - link.source.x;
               const lenY = link.target.y - link.source.y;
               const posX = link.target.x - lenX / 2;
@@ -520,18 +558,16 @@ const NeoGraphChart = (props: ChartProps) => {
               ctx.restore();
             }
           }}
-          graphData={width ? data : { nodes: [], links: [] }}
+          graphData={width ? dataViz : { nodes: [], links: [] }}
         />
-
         <NeoGraphItemInspectModal
           open={open}
           handleClose={handleClose}
           title={(inspectItem.labels && inspectItem.labels.join(', ')) || inspectItem.type}
           object={inspectItem.properties}
-        ></NeoGraphItemInspectModal>
+        />
       </div>
     </>
   );
 };
-
 export default NeoGraphChart;

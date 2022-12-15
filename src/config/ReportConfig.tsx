@@ -28,6 +28,7 @@ export const REPORT_TYPES = {
     label: 'Table',
     helperText: 'A table will contain all returned data.',
     component: NeoTableChart,
+    useReturnValuesAsFields: true,
     maxRecords: 1000,
     settings: {
       backgroundColor: {
@@ -62,7 +63,7 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      },
+      }
     },
   },
   graph: {
@@ -216,6 +217,12 @@ export const REPORT_TYPES = {
         label: 'Icon Style on format { label : url}',
         type: SELECTION_TYPES.TEXT,
         default: '',
+      },
+      rightClickToExpandNodes: {
+        label: "Right Click to Expand Nodes",
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false
       },
       description: {
         label: 'Report Description',
