@@ -60,7 +60,7 @@ const convertPathToString = (pathEntry) => {
 
 /* HELPER FUNCTIONS FOR DETERMINING TYPE OF FIELD RETURNED FROM NEO4J */
 export function valueIsArray(value) {
-  const className = value.__proto__.constructor.name;
+  const className = value !== undefined && value.__proto__.constructor.name;
   return className == 'Array';
 }
 

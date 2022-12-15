@@ -86,7 +86,8 @@ const NeoGraphChart = (props: ChartProps) => {
       : false; // TODO - this isn't working properly yet, disable it.
   const defaultNodeColor = 'lightgrey'; // Color of nodes without labels
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
-  const linkDirectionalParticleSpeed = 0.005; // Speed of particles on relationships.
+  const linkDirectionalParticleSpeed =
+    props.settings && props.settings.relationshipParticleSpeed ? props.settings.relationshipParticleSpeed : 0.005; // Speed of particles on relationships.
   const actionsRules =
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
       ? props.settings.actionsRules
