@@ -17,15 +17,26 @@ const TABLE_FOOTER_HEIGHT = 52;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 
-const fallbackRenderer = (value) => { return JSON.stringify(value) };
+const fallbackRenderer = (value) => {
+  return JSON.stringify(value);
+};
+
 function renderAsButton(value) {
-  return <Button style={{ width: "100%", marginLeft: "5px", marginRight: "5px" }} variant="contained" color="primary">{"" + value.formattedValue}</Button>;
+  return (
+    <Button
+      style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
+      variant='contained'
+      color='primary'
+    >{`${value.formattedValue}`}</Button>
+  );
 }
 
 function ApplyColumnType(column, value, asAction) {
   const renderer = getRendererForValue(value);
-  const renderCell = (asAction) ? renderAsButton : renderer.renderValue;
-  const columnProperties = (renderer ? { type: renderer.type, renderCell: renderCell ? renderCell : fallbackRenderer } : rendererForType["string"]);
+  const renderCell = asAction ? renderAsButton : renderer.renderValue;
+  const columnProperties = renderer
+    ? { type: renderer.type, renderCell: renderCell ? renderCell : fallbackRenderer }
+    : rendererForType.string;
   if (columnProperties) {
     column = { ...column, ...columnProperties };
   }
@@ -40,7 +51,10 @@ const NeoTableChart = (props: ChartProps) => {
     extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
       ? props.settings.styleRules
       : [];
-  const actionsRules = extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules ? props.settings.actionsRules : [];
+  const actionsRules =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
   const [notificationOpen, setNotificationOpen] = React.useState(false);
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
@@ -64,37 +78,39 @@ const NeoTableChart = (props: ChartProps) => {
     return key != 'id' ? key : `${key} `;
   };
 
-  const actionableFields = actionsRules.map(r => r.field);
+  const actionableFields = actionsRules.map((r) => r.field);
 
   const columns = transposed
     ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
-      const value = key;
-      return ApplyColumnType(
-        {
-          field: generateSafeColumnKey(key),
-          headerName: generateSafeColumnKey(key),
-          headerClassName: 'table-small-header',
-          disableColumnSelector: true,
-          flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
-          disableClickEventBubbling: true,
-        },
-        value, actionableFields.includes(key)
-      );
-    })
+        const value = key;
+        return ApplyColumnType(
+          {
+            field: generateSafeColumnKey(key),
+            headerName: generateSafeColumnKey(key),
+            headerClassName: 'table-small-header',
+            disableColumnSelector: true,
+            flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+            disableClickEventBubbling: true,
+          },
+          value,
+          actionableFields.includes(key)
+        );
+      })
     : records[0].keys.map((key, i) => {
-      const value = records[0].get(key);
-      return ApplyColumnType(
-        {
-          field: generateSafeColumnKey(key),
-          headerName: generateSafeColumnKey(key),
-          headerClassName: 'table-small-header',
-          disableColumnSelector: true,
-          flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
-          disableClickEventBubbling: true,
-        },
-        value, actionableFields.includes(key)
-      );
-    });
+        const value = records[0].get(key);
+        return ApplyColumnType(
+          {
+            field: generateSafeColumnKey(key),
+            headerName: generateSafeColumnKey(key),
+            headerClassName: 'table-small-header',
+            disableColumnSelector: true,
+            flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+            disableClickEventBubbling: true,
+          },
+          value,
+          actionableFields.includes(key)
+        );
+      });
   const hiddenColumns = Object.assign(
     {},
     ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
@@ -102,29 +118,29 @@ const NeoTableChart = (props: ChartProps) => {
 
   const rows = transposed
     ? records[0].keys.map((key, i) => {
-      return Object.assign(
-        { id: i, Field: key },
-        ...records.map((r, j) => ({
-          [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
-        }))
-      );
-    })
+        return Object.assign(
+          { id: i, Field: key },
+          ...records.map((r, j) => ({
+            [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
+          }))
+        );
+      })
     : records.map((record, rownumber) => {
-      return Object.assign(
-        { id: rownumber },
-        ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
-      );
-    });
+        return Object.assign(
+          { id: rownumber },
+          ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
+        );
+      });
 
-  function actionRule(rule, e,) {
-    if (rule !== null && rule.customization == "set variable" && props && props.setGlobalParameter) {
-      //call thunk for $neodash_customizationValue
-      let rValue = rule.value == "id" ? "id " : rule.value;
-      if (rValue != "" && e.row[rValue]) {
-        props.setGlobalParameter("neodash_" + rule.customizationValue, e.row[rValue]);
+  function actionRule(rule, e) {
+    if (rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter) {
+      // call thunk for $neodash_customizationValue
+      let rValue = rule.value == 'id' ? 'id ' : rule.value;
+      if (rValue != '' && e.row[rValue]) {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.row[rValue]);
+      } else {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
       }
-      else
-        props.setGlobalParameter("neodash_" + rule.customizationValue, e.value);
     }
   }
 
@@ -169,11 +185,11 @@ const NeoTableChart = (props: ChartProps) => {
         columns={columns}
         columnVisibilityModel={hiddenColumns}
         onCellClick={(e) => {
-          let rule = getRule(e, actionsRules, "Click");
+          let rule = getRule(e, actionsRules, 'Click');
           actionRule(rule, e);
         }}
         onCellDoubleClick={(e) => {
-          let rule = getRule(e, actionsRules, "doubleClick");
+          let rule = getRule(e, actionsRules, 'doubleClick');
           if (rule !== null) {
             actionRule(rule, e);
           } else {
@@ -193,9 +209,10 @@ const NeoTableChart = (props: ChartProps) => {
           return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
         }}
         getCellClassName={(params) => {
-          return (
-            `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, ['cell color', 'cell text color'])}`
-          );
+          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
+            'cell color',
+            'cell text color',
+          ])}`;
         }}
       />
     </div>

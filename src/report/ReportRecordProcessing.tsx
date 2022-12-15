@@ -271,13 +271,13 @@ export const rendererForType: any = {
   },
   undefined: {
     type: 'string',
-    renderValue: (c) => RenderString(c.value)
+    renderValue: (c) => RenderString(c.value),
   },
 };
 
 export function getRendererForValue(value) {
   const type = getRecordType(value);
-  return rendererForType[type] == null ? rendererForType["undefined"] : rendererForType[type];
+  return rendererForType[type] == null ? rendererForType.undefined : rendererForType[type];
 }
 
 export function renderValueByType(value) {
