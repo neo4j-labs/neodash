@@ -158,8 +158,8 @@ const NeoCardSettingsFooter = ({
                 />
               </FormGroup>
             </td>
-            {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling ? (
-              <td>
+            <td>
+              {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling ? (
                 <Tooltip title='Set rule-based styling' aria-label=''>
                   <IconButton
                     size='small'
@@ -172,12 +172,10 @@ const NeoCardSettingsFooter = ({
                     <TuneIcon></TuneIcon>
                   </IconButton>
                 </Tooltip>
-              </td>
-            ) : (
-              <></>
-            )}
-            {extensions.actions && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ? (
-              <td>
+              ) : (
+                <></>
+              )}
+              {extensions.actions && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ? (
                 <Tooltip title='Set report actions' aria-label=''>
                   <IconButton
                     size='small'
@@ -190,10 +188,10 @@ const NeoCardSettingsFooter = ({
                     <StarsIcon></StarsIcon>
                   </IconButton>
                 </Tooltip>
-              </td>
-            ) : (
-              <></>
-            )}
+              ) : (
+                <></>
+              )}
+            </td>
           </tr>
           <tr>
             <td colSpan={2} style={{ maxWidth: '100%' }}>
