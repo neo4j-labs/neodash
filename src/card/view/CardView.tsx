@@ -102,11 +102,13 @@ const NeoCardView = ({
     return Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
-  }
+  };
 
   const localParameters = getLocalParameters();
   useEffect(() => {
-      setLastRunTimestamp(Date.now())
+    if (!settingsOpen) {
+      setLastRunTimestamp(Date.now());
+    }
   }, [settingsOpen, query, JSON.stringify(localParameters)]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
