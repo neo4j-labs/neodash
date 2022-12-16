@@ -26,12 +26,33 @@ const NeoCardViewHeader = ({
   onDownloadImage,
   onToggleCardExpand,
   expanded,
+  parameters,
 }) => {
   const [text, setText] = React.useState(title);
+  const [parsedText, setParsedText] = React.useState(title);
+  const [editing, setEditing] = React.useState(false);
   const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
+
+  function replaceParamsOnString(s, p) {
+    let parsed = `${s} `;
+    for (const [key, value] of Object.entries(p)) {
+      // TODO: make this a regex.
+      parsed = parsed.replace(`$${key} `, `${value} `);
+      parsed = parsed.replace(`$${key},`, `${value},`);
+      parsed = parsed.replace(`$${key}.`, `${value}.`);
+    }
+    return parsed;
+  }
 
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const debouncedTitleUpdate = useCallback(debounce(onTitleUpdate, 250), []);
+
+  useEffect(() => {
+    let titleParsed = replaceParamsOnString(`${title}`, parameters);
+    if (!editing) {
+      setParsedText(titleParsed);
+    }
+  }, [editing, parameters]);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -58,13 +79,19 @@ const NeoCardViewHeader = ({
             <td style={{ width: '100%' }}>
               <TextField
                 id='standard-outlined'
+                onFocus={() => {
+                  setEditing(true);
+                }}
+                onBlur={() => {
+                  setEditing(false);
+                }}
                 className={'no-underline large'}
                 label=''
                 disabled={!editable}
                 placeholder='Report name...'
                 fullWidth
                 maxRows={4}
-                value={text}
+                value={editing ? text : parsedText}
                 onChange={(event) => {
                   setText(event.target.value);
                   debouncedTitleUpdate(event.target.value);
