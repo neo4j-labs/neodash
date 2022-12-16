@@ -55,10 +55,10 @@ const NeoTableChart = (props: ChartProps) => {
   const { records } = props;
 
   const generateSafeColumnKey = (key) => {
-    return key != 'id' ? key : `${key  } `;
+    return key != 'id' ? key : `${key} `;
   };
   const columns = transposed
-    ? ['Field'].concat(records.map((r, j) => `Value${  j == 0 ? '' : ` ${  (j + 1).toString()}`}`)).map((key, i) => {
+    ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
         const value = key;
         return ApplyColumnType(
           {
@@ -96,7 +96,7 @@ const NeoTableChart = (props: ChartProps) => {
         return Object.assign(
           { id: i, Field: key },
           ...records.map((r, j) => ({
-            [`Value${  j == 0 ? '' : ` ${  (j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
+            [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
           }))
         );
       })
@@ -160,13 +160,13 @@ const NeoTableChart = (props: ChartProps) => {
           ColumnSortedAscendingIcon: () => <></>,
         }}
         getRowClassName={(params) => {
-          return `rule${  evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+          return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
         }}
         getCellClassName={(params) => {
-          return (
-            `rule${ 
-            evaluateRulesOnDict({ [params.field]: params.value }, styleRules, ['cell color', 'cell text color'])}`
-          );
+          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
+            'cell color',
+            'cell text color',
+          ])}`;
         }}
       />
     </div>
