@@ -1,6 +1,6 @@
 
 ## NeoDash - Neo4j Dashboard Builder
-NeoDash is an open source tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports. 
+NeoDash is an open source tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
 
 ![screenshot](public/screenshot.png)
 
@@ -21,6 +21,23 @@ docker run -it --rm -p 5005:5005 nielsdejong/neodash
 > Windows users may need to prefix the `docker run` command with `winpty`.
 
 See the [Developer Guide](https://neo4j.com/labs/neodash/2.1/developer-guide/) for more on installing, building, and running the application.
+
+## Coding practices
+In order to improve the code quality, we added a Prettier and a Linter to this repository.
+
+### Behavior
+While commiting, a pre-commit hook will be executed in order to prettify and run the Linter on your staged files. Linter warnings are currently accepted. The commands executed by this hook can be found in /.lintstagedrc.json.
+
+There is also a dedicated linting step in the Github project pipeline in order to catch each potential inconsistency.
+
+**Don't hesitate to setup your IDE formatting feature to use the Prettier module and our defined rules (.prettierrc.json).**
+
+### Manual execution
+If you want to **manually prettify all the project .ts and .tsx files**, you can run `yarn run format`.
+
+If you wan to **manually run linting of all your .ts and .tsx files**, you can run `yarn run lint`.
+
+If you wan to **manually run linting of all your .ts and .tsx staged files**, you can run `yarn run lint-staged`.
 
 ## User Guide
 NeoDash comes with built-in examples of dashboards and reports. For more details on the types of reports and how to customize them, see the [User Guide](
