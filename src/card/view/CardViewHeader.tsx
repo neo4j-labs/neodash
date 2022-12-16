@@ -35,7 +35,7 @@ const NeoCardViewHeader = ({
 
   function replaceParamsOnString(s, p) {
     for (const [key, value] of Object.entries(p)) {
-      s += ' '.replace(`$${  key  } `, `${value  } `);
+      s.replace(`$${key} `, `${value} `);
     }
     return s;
   }

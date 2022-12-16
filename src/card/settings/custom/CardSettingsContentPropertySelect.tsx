@@ -98,7 +98,7 @@ const NeoCardSettingsContentPropertySelect = ({
   function handlePropertyNameSelectionUpdate(newValue) {
     onReportSettingUpdate('propertyType', newValue);
     if (newValue && settings.entityType) {
-      const newParameterName = `neodash_$${settings.entityType}_${newValue}`;
+      const newParameterName = `neodash_${settings.entityType}_${newValue}`;
       const formattedParameterId = formatParameterId(settings.id);
       const cleanedParameter = cleanParameter(newParameterName + formattedParameterId);
 
