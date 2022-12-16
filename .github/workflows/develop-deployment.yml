@@ -46,7 +46,7 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: yarn install
-   - run: PRODUCTION=true && yarn run build
+   - run: yarn run build-minimal
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
