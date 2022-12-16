@@ -23,6 +23,7 @@ const NeoCardView = ({
   extensions,
   active,
   setActive,
+  onDownloadImage,
   type,
   selection,
   dashboardSettings,
@@ -42,6 +43,22 @@ const NeoCardView = ({
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
   const ref = React.useRef();
 
+  const getLocalParameters = (parse_string): any => {
+    let re = /(?:^|\W)\$(\w+)(?!\w)/g;
+      let match;
+      let localQueryVariables: string[] = [];
+    while ((match = re.exec(parse_string))) {
+      localQueryVariables.push(match[1]);
+    }
+
+    if (!globalParameters) {
+      return {};
+    }
+    return Object.fromEntries(
+      Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
+    );
+  };
+
   // @ts-ignore
   const reportHeader = (
     <NeoCardViewHeader
@@ -53,9 +70,10 @@ const NeoCardView = ({
       onTitleUpdate={onTitleUpdate}
       onToggleCardSettings={onToggleCardSettings}
       settings={settings}
-      onDownloadImage={() => downloadComponentAsImage(ref)}
+      onDownloadImage={onDownloadImage}
       onToggleCardExpand={onToggleCardExpand}
       expanded={expanded}
+      parameters={getLocalParameters(title)}
     ></NeoCardViewHeader>
   );
 
@@ -85,22 +103,17 @@ const NeoCardView = ({
     return globalParameters ? globalParameters[key] : undefined;
   };
 
-  const getLocalParameters = (): any => {
-    if (!globalParameters) {
-      return {};
-    }
-
-    let re = /(?:^|\W|%20)\$(\w+)(?!\w)/g;
-    let match;
-    let localQueryVariables: string[] = [];
-    while ((match = re.exec(query))) {
-      localQueryVariables.push(match[1]);
-    }
-
-    return Object.fromEntries(
-      Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
-    );
-  };
+  // ONLY if the 'actions' extension is enabled, we send 'actionsRules' to the table visualization.
+  const filteredSettings = Object.fromEntries(
+    Object.entries(settings).filter(
+      ([k, _]) =>
+        !(
+          k == 'actionsRules' &&
+          dashboardSettings.extensions != null &&
+          !dashboardSettings.extensions.includes('actions')
+        )
+    )
+  );
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
@@ -126,7 +139,7 @@ const NeoCardView = ({
         <NeoReport
           query={query}
           database={database}
-          parameters={getLocalParameters()}
+          parameters={getLocalParameters(query)}
           extensions={extensions}
           disabled={settingsOpen}
           selection={selection}

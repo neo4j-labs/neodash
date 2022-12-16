@@ -108,7 +108,9 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
             setInputText(`${value}`);
             debouncedQueryCallback(query, { input: `${value}` }, setExtraRecords);
           }}
-          getOptionSelected={(option, value) => (option && option.toString()) === (value && value.toString())}
+          getOptionSelected={(option, value) => {
+            return (option && option.toString()) === (value && value.toString());
+          }}
           value={value !== null ? value.toString() : `${currentValue}`}
           onChange={(event, newValue) => {
             setValue(newValue);

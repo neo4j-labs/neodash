@@ -98,7 +98,7 @@ const NeoCardSettingsContentPropertySelect = ({
   function handlePropertyNameSelectionUpdate(newValue) {
     onReportSettingUpdate('propertyType', newValue);
     if (newValue && settings.entityType) {
-      const newParameterName = `neodash_$${settings.entityType}_${newValue}`;
+      const newParameterName = `neodash_${settings.entityType}_${newValue}`;
       const formattedParameterId = formatParameterId(settings.id);
       const cleanedParameter = cleanParameter(newParameterName + formattedParameterId);
 
@@ -113,9 +113,8 @@ const NeoCardSettingsContentPropertySelect = ({
     onReportSettingUpdate('id', `${newValue}`);
     if (settings.propertyType && settings.entityType) {
       const newParameterName = `neodash_${settings.entityType}_${settings.propertyType}`;
-      const formattedParameterId = formatParameterId(settings.id);
+      const formattedParameterId = formatParameterId(`${newValue}`);
       const cleanedParameter = cleanParameter(newParameterName + formattedParameterId);
-
       handleReportQueryUpdate(cleanedParameter, settings.entityType, settings.propertyType);
     }
   }
