@@ -1,14 +1,22 @@
-## NeoDash 2.2.0
-This release marks the official arrival of **[Extensions](https://neo4j.com/labs/neodash/2.2/user-guide/extensions/)**, which provide a simple way of extending NeoDash with additional features. Adding your own features to NeoDash just became a lot easier!
+## NeoDash 2.2.1
+This update provides a number of usability improves over the 2.2.0 release.
+In addition, it entails various improvements to the codebase, including security patches on the dependencies.
 
-NeoDash 2.2 comes with three in-built extensions.
-- **Rule-Based Styling**
-- **Advanced Visualizations**: These provide a means to enable complex visualizations in a dashboard. These were previously available as Radar charts, Treemaps, Circle Packing reports, Sankey charts, Choropleth and a Gauge Chart).
-- **Report Actions**: Which let you create interactivity in dashboards, using the output of one report as input for another visualization. (Pro Extension)
+Table:
+- Column names prefixed with `__` are now hidden in the table view.
+  
+Map:
+- Added documentation for adding a custom map provider.
 
-You can enable extensions by clicking the 🧩 icon on the left sidebar of the screen.
+Parameter selector:
+- Added support for boolean parameters.
 
-Other changes include:
-- New example dashboards available in the [Dashboard Gallery](https://neodash-gallery.graphapp.io).
-- Customizable background colors for all report types.
-- Fixing a bug where the Choropleth map chart was unable to parse country-codes.
+Editor:
+- Parameters are now automatically replaced **inside report titles**.
+- Image downloads now include the report title alongside the visualization.
+
+Others:
+- Applied security patches for dependencies.
+- Set test container for release pipeline to fixed version of Neo4j.
+- Aligned code style / linting with Neo4j product standards.
+- Updated Docker setup to inject `standaloneDashboardURL` into the application config.
