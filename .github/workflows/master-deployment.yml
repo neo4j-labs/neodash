@@ -47,7 +47,7 @@ jobs:
 #        node-version: ${{ matrix.node-version }}
 #    - run: rm -rf docs
 #    - run: yarn install
-#    - run: yarn run build
+#    - run: yarn run build-minimal
 #    - name: Set AWS credentials
 #      uses: aws-actions/configure-aws-credentials@v1
 #      with:
@@ -93,8 +93,8 @@ jobs:
 #      with:
 #        node-version: ${{ matrix.node-version }}
 #    - run: rm -rf docs
-#    - run: yarn install
-#    - run: yarn run build
+#    - run: yarn install-minimal
+#    - run: yarn run build-minimal
 #    - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
 #    - run: npm pack
 #    - run: rm -rf target
@@ -129,7 +129,7 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: cd gallery && yarn install
-   - run: cd gallery && CI=false yarn run build
+   - run: cd gallery && yarn run build
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
