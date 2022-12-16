@@ -30,6 +30,7 @@ import { setReportHelpModalOpen } from '../application/ApplicationActions';
 import { loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
+import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 const NeoCard = ({
   index, // index of the card.
@@ -60,6 +61,8 @@ const NeoCard = ({
 
   const [databaseList, setDatabaseList] = React.useState([database]);
   const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
+
+  const ref = React.useRef();
 
   // fetching the list of databases from neo4j, filtering out the 'system' db
   useEffect(() => {
@@ -120,7 +123,7 @@ const NeoCard = ({
     <div style={{ height: '100%' }} ref={observe}>
       {/* The front of the card, referred to as the 'view' */}
       <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
-        <Card style={{ height: '100%' }}>
+        <Card ref={ref} style={{ height: '100%' }}>
           <NeoCardView
             settingsOpen={settingsOpen}
             editable={editable}
@@ -131,6 +134,7 @@ const NeoCard = ({
             database={database}
             active={active}
             setActive={setActive}
+            onDownloadImage={() => downloadComponentAsImage(ref)}
             query={report.query}
             globalParameters={globalParameters}
             fields={report.fields ? report.fields : []}
@@ -199,7 +203,7 @@ const NeoCard = ({
   // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
   if (expanded) {
     return (
-      <Dialog maxWidth={'xl'} open={expanded} aria-labelledby='form-dialog-title'>
+      <Dialog maxWidth={'xl'} ref={ref} open={expanded} aria-labelledby='form-dialog-title'>
         <DialogContent
           style={{
             width: Math.min(1920, document.documentElement.clientWidth - 64),

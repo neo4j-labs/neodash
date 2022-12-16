@@ -23,6 +23,7 @@ const NeoCardView = ({
   extensions,
   active,
   setActive,
+  onDownloadImage,
   type,
   selection,
   dashboardSettings,
@@ -53,7 +54,7 @@ const NeoCardView = ({
       onTitleUpdate={onTitleUpdate}
       onToggleCardSettings={onToggleCardSettings}
       settings={settings}
-      onDownloadImage={() => downloadComponentAsImage(ref)}
+      onDownloadImage={onDownloadImage}
       onToggleCardExpand={onToggleCardExpand}
       expanded={expanded}
     ></NeoCardViewHeader>
