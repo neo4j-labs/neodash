@@ -1,10 +1,9 @@
 name: Test/Deploy Master
- 
+
 on:
  push:
    branches: [ master ]
- 
- 
+
 jobs:
  build-test:
    runs-on: ubuntu-latest
@@ -26,6 +25,8 @@ jobs:
         ./scripts/docker-neo4j-initializer/start-movies-db.sh
    - run: rm -rf docs
    - run: yarn install
+   - name: Eslint check
+     run: yarn run lint
    - name: Cypress run
      uses: cypress-io/github-action@v2
      with:
