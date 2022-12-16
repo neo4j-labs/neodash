@@ -200,7 +200,7 @@ const NeoCard = ({
     // TODO - this causes a re-render (and therefore, a re-run of the report)
     // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
     if (expanded) {
-        return <Dialog maxWidth={"xl"} open={expanded} aria-labelledby="form-dialog-title">
+        const expandedView = <Dialog maxWidth={"xl"} ref={ref} open={expanded} aria-labelledby="form-dialog-title">
             <DialogContent style={{
                 width: Math.min(1920, document.documentElement.clientWidth - 64),
                 height: document.documentElement.clientHeight
@@ -208,6 +208,7 @@ const NeoCard = ({
                 {component}
             </DialogContent>
         </Dialog>
+        return expandedView
     }
     return component;
 };
