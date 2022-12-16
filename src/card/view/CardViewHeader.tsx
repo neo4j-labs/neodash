@@ -34,10 +34,14 @@ const NeoCardViewHeader = ({
   const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
 
   function replaceParamsOnString(s, p) {
+    let parsed = `${s} `;
     for (const [key, value] of Object.entries(p)) {
-      s.replace(`$${key} `, `${value} `);
+      // TODO: make this a regex.
+      parsed = parsed.replace(`$${key} `, `${value} `);
+      parsed = parsed.replace(`$${key},`, `${value},`);
+      parsed = parsed.replace(`$${key}.`, `${value}.`);
     }
-    return s;
+    return parsed;
   }
 
   // Ensure that we only trigger a text update event after the user has stopped typing.
