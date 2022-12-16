@@ -103,13 +103,15 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
           options={extraRecords.map((r) => (r._fields && r._fields[0] !== null ? r._fields[0] : '(no data)')).sort()}
           getOptionLabel={(option) => (option ? option.toString() : '')}
           style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
-          inputValue={inputText}
+          inputValue={inputText !== null ? inputText.toString() : ''}
           onInputChange={(event, value) => {
             setInputText(`${value}`);
             debouncedQueryCallback(query, { input: `${value}` }, setExtraRecords);
           }}
-          getOptionSelected={(option, value) => (option && option.toString()) === (value && value.toString())}
-          value={value ? value.toString() : `${currentValue}`}
+          getOptionSelected={(option, value) => {
+            return (option && option.toString()) === (value && value.toString());
+          }}
+          value={value !== null ? value.toString() : `${currentValue}`}
           onChange={(event, newValue) => {
             setValue(newValue);
             setInputText(`${newValue}`);
