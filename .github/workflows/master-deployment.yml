@@ -1,10 +1,9 @@
 name: Test/Deploy Master
- 
+
 on:
  push:
    branches: [ master ]
- 
- 
+
 jobs:
  build-test:
    runs-on: ubuntu-latest
@@ -26,6 +25,8 @@ jobs:
         ./scripts/docker-neo4j-initializer/start-movies-db.sh
    - run: rm -rf docs
    - run: yarn install
+   - name: Eslint check
+     run: yarn run lint
    - name: Cypress run
      uses: cypress-io/github-action@v2
      with:
@@ -46,7 +47,7 @@ jobs:
 #        node-version: ${{ matrix.node-version }}
 #    - run: rm -rf docs
 #    - run: yarn install
-#    - run: yarn run build
+#    - run: yarn run build-minimal
 #    - name: Set AWS credentials
 #      uses: aws-actions/configure-aws-credentials@v1
 #      with:
@@ -92,8 +93,8 @@ jobs:
 #      with:
 #        node-version: ${{ matrix.node-version }}
 #    - run: rm -rf docs
-#    - run: yarn install
-#    - run: yarn run build
+#    - run: yarn install-minimal
+#    - run: yarn run build-minimal
 #    - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
 #    - run: npm pack
 #    - run: rm -rf target
@@ -128,7 +129,7 @@ jobs:
      with:
        node-version: ${{ matrix.node-version }}
    - run: cd gallery && yarn install
-   - run: cd gallery && CI=false yarn run build
+   - run: cd gallery && yarn run build
    - name: Set AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
