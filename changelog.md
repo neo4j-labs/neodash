@@ -1,3 +1,26 @@
+## NeoDash 2.2.1
+This update provides a number of usability improves over the 2.2.0 release.
+In addition, it entails various improvements to the codebase, including security patches on the dependencies.
+
+Table:
+- Column names prefixed with `__` are now hidden in the table view.
+  
+Map:
+- Added documentation for adding a custom map provider.
+
+Parameter selector:
+- Added support for boolean parameters.
+
+Editor:
+- Parameters are now automatically replaced **inside report titles**.
+- Image downloads now include the report title alongside the visualization.
+
+Others:
+- Applied security patches for dependencies.
+- Set test container for release pipeline to fixed version of Neo4j.
+- Aligned code style / linting with Neo4j product standards.
+- Updated Docker setup to inject `standaloneDashboardURL` into the application config.
+
 ## NeoDash 2.2.0
 This release marks the official arrival of **[Extensions](https://neo4j.com/labs/neodash/2.2/user-guide/extensions/)**, which provide a simple way of extending NeoDash with additional features. Adding your own features to NeoDash just became a lot easier!
 

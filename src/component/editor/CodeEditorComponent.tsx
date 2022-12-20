@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CypherEditor, CypherEditorProps } from '@neo4j-cypher/react-codemirror';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
@@ -14,7 +13,6 @@ import "@neo4j-cypher/codemirror/css/cypher-codemirror.css";
 const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
     editable = true, language = "cypher",
     style = { width: "100%", height: "auto", border: "1px solid lightgray" } }) => {
-
 
     const editorProps: CypherEditorProps = {
         cypherLanguage: language === "cypher",
