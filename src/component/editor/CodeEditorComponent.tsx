@@ -1,6 +1,13 @@
 
 import React from 'react';
 import { CypherEditor, CypherEditorProps } from '@neo4j-cypher/react-codemirror';
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
+// import { languages } from '@codemirror/language-data';
+
+const markdownExtensions = [markdown({
+    base: markdownLanguage, //Support GFM
+    // codeLanguages: languages
+  }),];
 
 import "@neo4j-cypher/codemirror/css/cypher-codemirror.css";
 
@@ -8,9 +15,12 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
     editable = true, language = "cypher",
     style = { width: "100%", height: "auto", border: "1px solid lightgray" } }) => {
 
+
     const editorProps: CypherEditorProps = {
+        cypherLanguage: language === "cypher",
         readOnly: !editable,
         placeholder: placeholder,
+        preExtensions: language === "markdown" ? markdownExtensions : [],
         value: value,
         onValueChanged: (val, change) => {
             if (editable) {
@@ -20,14 +30,10 @@ const NeoCodeEditorComponent = ({ value, onChange = (e) => { }, placeholder,
         className: "ReactCodeMirror" // only used by integration tests
     }
 
-    // TODO -  we force a recreating of the editor object here in a strange way...
-    const editor = (language == "cypher") ?
-        <CypherEditor {...editorProps}/> :
-        <div><CypherEditor {...editorProps} /></div>
-
     return (
         <div className={"autosize"} style={style}>
-            {editor}</div>
+            <CypherEditor {...editorProps}/>
+        </div>
     );
 };
 
