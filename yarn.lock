@@ -3001,10 +3001,10 @@ ansi-styles@^6.0.0:
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.1.tgz#0e62320cf99c21afff3b3012192546aacbfb05c5"
   integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
-antlr4@4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.7.0.tgz#297f956ddc06f83397fc0990ecf2e0cf20bfbbee"
-  integrity sha512-It7yoGEJ4cz918lGlxZk2R0A2l0t7M1IWfj9rHzCrJQ50ZyyfGjUr+xa2+lcBVBnhvqZvfuCp5Lh8hO5I+owVA==
+antlr4@4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.10.1.tgz#6be8e3e1ead19ca82419ef0ffe974ef4efe4a793"
+  integrity sha512-fmxidcOwmktzHUD+tz8y/zKLI/NfVAB0+MOvnFUBzo8ToFnphK8JY88oOJeRdhnTrAhjtu45bvxddzbb8nMeIA==
 
 anymatch@~3.1.2:
   version "3.1.2"
@@ -5629,10 +5629,10 @@ functions-have-names@^1.2.2:
   resolved "https://registry.yarnpkg.com/functions-have-names/-/functions-have-names-1.2.3.tgz#0404fe4ee2ba2f607f0e0ec3c80bae994133b834"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
-fuzzaldrin@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/fuzzaldrin/-/fuzzaldrin-2.1.0.tgz#90204c3e2fdaa6941bb28d16645d418063a90e9b"
-  integrity sha512-zgllBYwfHR5P3CncJiGbGVPpa3iFYW1yuPaIv8DiTVRrcg5/6uETNL5zvIoKflG1aifXVUZTlIroDehw4WygGA==
+fuse.js@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-6.6.2.tgz#fe463fed4b98c0226ac3da2856a415576dc9a111"
+  integrity sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
