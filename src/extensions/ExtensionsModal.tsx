@@ -53,7 +53,7 @@ const NeoExtensionsModal = ({
             />
             Extensions
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-              <Badge badgeContent={''}>
+              <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon id={'extensions-modal-close-button'} />
               </Badge>
             </IconButton>

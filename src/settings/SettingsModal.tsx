@@ -28,7 +28,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
   const advancedDashboardSettings = (
     <div style={{ marginLeft: '-10px' }}>
       {Object.keys(settings).map((setting) => (
-        <>
+        <div key={setting}>
           <NeoSetting
             key={setting}
             name={setting}
@@ -42,7 +42,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
             onChange={(e) => updateDashboardSetting(setting, e)}
           />
           <br />
-        </>
+        </div>
       ))}
     </div>
   );
@@ -69,7 +69,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
           />
           Dashboard Settings
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>

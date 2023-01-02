@@ -345,7 +345,11 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               }}
             >
               {databases.map((database) => {
-                return <MenuItem value={database}>{database}</MenuItem>;
+                return (
+                  <MenuItem key={database} value={database}>
+                    {database}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>

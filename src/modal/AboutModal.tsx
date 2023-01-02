@@ -29,7 +29,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
         <DialogTitle id='form-dialog-title'>
           About NeoDash
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
