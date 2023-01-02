@@ -28,22 +28,22 @@
         },
         {
           "title": "Modèle de données",
-          "query": "CALL apoc.meta.subGraph({labels: [\"Country\", \"Designation\", \"Province\", \"Region\", \"Review\", \"Taster\", \"Variety\", \"Wine\", \"Winery\"]})\n\n\n",
+          "query": "CALL db.schema.visualization()\n\n",
           "width": 6,
           "height": 2,
           "x": 3,
           "y": 0,
           "type": "graph",
           "selection": {
-            "Country": "(label)",
+            "Wine": "(label)",
+            "Winery": "(label)",
             "Designation": "(label)",
-            "Province": "(label)",
+            "Country": "(label)",
             "Region": "(label)",
             "Review": "(label)",
-            "Taster": "(label)",
             "Variety": "(label)",
-            "Wine": "(label)",
-            "Winery": "(label)"
+            "Province": "(label)",
+            "Taster": "(label)"
           },
           "settings": {
             "nodePositions": {}
