@@ -14,8 +14,8 @@ You can run NeoDash in one of three ways:
 3. For on-prem deployments, you can build the application yourself, or pull the latest Docker image from Docker Hub.
 ```
 # Run the application on http://localhost:5005
-docker pull nielsdejong/neodash:latest
-docker run -it --rm -p 5005:5005 nielsdejong/neodash
+docker pull neo4jlabs/neodash:latest
+docker run -it --rm -p 5005:5005 neo4jlabs/neodash
 ```
 
 > Windows users may need to prefix the `docker run` command with `winpty`.
