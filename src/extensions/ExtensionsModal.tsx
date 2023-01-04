@@ -63,7 +63,7 @@ const NeoExtensionsModal = ({
               <a target='_blank' href='https://neo4j.com/labs/neodash/2.2/user-guide/extensions/'>
                 Extensions
               </a>
-              are a way of extending the core functionality of NeoDash with custom logic.
+              &nbsp;are a way of extending the core functionality of NeoDash with custom logic.
               <br />
               This can be a new visualization, extra styling options for an existing visualization, or even a completely
               new logic for the dashboarding engine.
