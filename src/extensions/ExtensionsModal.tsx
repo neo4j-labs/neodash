@@ -105,7 +105,7 @@ const NeoExtensionsModal = ({
                                   name='enable'
                                 />
                               }
-                              label={<span color='green'>{extensions[e.name] ? 'Active  ' : 'Disabled'}</span>}
+                              label={<span color='green'>{'Active'}</span>}
                             />
                           </Tooltip>
                         </td>
