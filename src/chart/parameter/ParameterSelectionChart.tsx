@@ -3,6 +3,9 @@ import { ChartProps } from '../Chart';
 import { CircularProgress, debounce, TextareaAutosize, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import NeoField from '../../component/field/Field';
+import FreeTextParameterSelectComponent from './component/FreeTextParameterSelect';
+import NodePropertyParameterSelectComponent from './component/NodePropertyParameterSelect';
+import RelationshipPropertyParameterSelectComponent from './component/RelationshipPropertyParameterSelect';
 
 /**
  * A special chart type to define global dashboard parameters that are injected as query parameters into each report.
@@ -57,6 +60,11 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     setExtraRecords([]);
   }
 
+  const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
+  const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
+  const settings = props.settings ? props.settings : {};
+  const { helperText, clearParameterOnFieldClear } = settings;
+
   if (!query || query.trim().length == 0) {
     return (
       <p style={{ margin: '15px' }}>
@@ -65,80 +73,45 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
     );
   }
 
-  const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
-  const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
-  const settings = props.settings ? props.settings : {};
-  const { helperText, clearParameterOnFieldClear } = settings;
+  if (type == 'Free Text') {
+    return (
+      <FreeTextParameterSelectComponent
+        helperText={helperText}
+        label={label}
+        property={property}
+        defaultValue={defaultValue}
+        value={value}
+        clearParameterOnFieldClear={clearParameterOnFieldClear}
+        setValue={setValue}
+        currentValue={currentValue}
+      />
+    );
+  } else if (type == 'Node Property') {
+    return (
+      <NodePropertyParameterSelectComponent
+        query={query}
+        extraRecords={extraRecords}
+        inputText={setInputText}
+        setInputText={setInputText}
+        debouncedQueryCallback={debouncedQueryCallback}
+        setExtraRecords={setExtraRecords}
+        helperText={helperText}
+        label={label}
+        property={property}
+        value={value}
+        currentValue={currentValue}
+        setValue={setValue}
+        clearParameterOnFieldClear={clearParameterOnFieldClear}
+        setGlobalParameter={setGlobalParameter}
+        parameter={parameter}
+        defaultValue={defaultValue}
+      />
+    );
+  } else if (type == 'Relationship Property') {
+    return <RelationshipPropertyParameterSelectComponent></RelationshipPropertyParameterSelectComponent>;
+  }
 
-  return (
-    <div>
-      {type == 'Free Text' ? (
-        <div style={{ width: '100%' }}>
-          <NeoField
-            key={'freetext'}
-            label={helperText ? helperText : `${label} ${property}`}
-            defaultValue={defaultValue}
-            value={value}
-            variant='outlined'
-            placeholder={'Enter text here...'}
-            style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px', width: 'calc(100% - 80px)' }}
-            onChange={(newValue) => {
-              // TODO: i want this to be a proper wait instead of triggering on the first character.
-              if (newValue == null && clearParameterOnFieldClear) {
-                setValue(defaultValue);
-              } else {
-                setValue(newValue);
-              }
-            }}
-          />
-          {value !== currentValue ? (
-            <CircularProgress size={26} style={{ marginTop: '20px', marginLeft: '5px' }} />
-          ) : (
-            <></>
-          )}
-        </div>
-      ) : (
-        <Autocomplete
-          id='autocomplete'
-          options={extraRecords.map((r) => (r._fields && r._fields[0] !== null ? r._fields[0] : '(no data)')).sort()}
-          getOptionLabel={(option) => (option ? option.toString() : '')}
-          style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
-          inputValue={inputText !== null ? inputText.toString() : ''}
-          onInputChange={(event, value) => {
-            setInputText(`${value}`);
-            debouncedQueryCallback(query, { input: `${value}` }, setExtraRecords);
-          }}
-          getOptionSelected={(option, value) => {
-            return (option && option.toString()) === (value && value.toString());
-          }}
-          value={value !== null ? value.toString() : `${currentValue}`}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-            setInputText(`${newValue}`);
-            if (newValue && newValue.low) {
-              newValue = newValue.low;
-            }
-            if (newValue == null && clearParameterOnFieldClear) {
-              props.setGlobalParameter(parameter, undefined);
-            } else if (newValue == null) {
-              props.setGlobalParameter(parameter, defaultValue);
-            } else {
-              props.setGlobalParameter(parameter, newValue);
-            }
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              InputLabelProps={{ shrink: true }}
-              placeholder='Start typing...'
-              label={helperText ? helperText : `${label} ${property}`}
-              variant='outlined'
-            />
-          )}
-        />
-      )}
-    </div>
-  );
+  return <div>Invalid Type.</div>;
 };
 
 export default NeoParameterSelectionChart;
