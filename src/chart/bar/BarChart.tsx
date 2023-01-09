@@ -5,6 +5,7 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { evaluateRulesOnDict } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
+import { getD3ColorsByScheme } from '../ChartColorUtils';
 
 /**
  * Embeds a BarReport (from Nivo) into NeoDash.
@@ -99,21 +100,30 @@ const NeoBarChart = (props: ChartProps) => {
       ? props.settings.styleRules
       : [];
 
+  const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
+
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
-    const data = {};
-    if (!selection || !selection.index || !selection.value) {
-      return 'grey';
+    let index = bar.index;
+    let colorIndex = index;
+    if (index >= chartColorsByScheme.length) {
+      colorIndex = index % chartColorsByScheme.length;
     }
-    data[selection.index] = bar.indexValue;
-    data[selection.value] = bar.value;
-    data[selection.key] = bar.id;
-    const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['bar color']);
+
+    const dict = {};
+    if (!props.selection) {
+      return chartColorsByScheme[colorIndex];
+    }
+    dict[selection.index] = bar.indexValue;
+    dict[selection.value] = bar.value;
+    dict[selection.key] = bar.id;
+    const validRuleIndex = evaluateRulesOnDict(dict, styleRules, ['bar color']);
     if (validRuleIndex !== -1) {
       return styleRules[validRuleIndex].customizationValue;
     }
-    return 'grey';
+    return chartColorsByScheme[colorIndex];
   };
+
   if (data.length == 0) {
     return <NoDrawableDataErrorMessage />;
   }
@@ -206,7 +216,7 @@ const NeoBarChart = (props: ChartProps) => {
       padding={0.3}
       minValue={minValue}
       maxValue={maxValue}
-      colors={styleRules.length >= 1 ? getBarColor : { scheme: colorScheme }}
+      colors={ getBarColor }
       axisTop={null}
       axisRight={null}
       axisBottom={{
