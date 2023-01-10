@@ -1,0 +1,275 @@
+{
+  "title": "Revue de vins par Winemag",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_wine": "DFJ Vinhos 2012 Paxis Red (Lisboa)"
+    },
+    "extensions": ["core", "actions"],
+    "disableRowLimiting": true
+  },
+  "pages": [
+    {
+      "title": "Aperçu",
+      "reports": [
+        {
+          "title": "Bonjour !",
+          "query": "**Analyse des notations WineMag** \n \nCe tableau de bord s'appuie sur des données de notations fournies par le magazine WineMag.\n\nNous pouvons étudier comment se répartissent les notes, l'influence des cépages sur les notes, de la note sur le prix,...\n\nEnfin, la dernière page fournit des recommandations sur les meilleurs rapports qualité prix !\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Modèle de données",
+          "query": "CALL db.schema.visualization()\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Wine": "(label)",
+            "Winery": "(label)",
+            "Designation": "(label)",
+            "Country": "(label)",
+            "Region": "(label)",
+            "Review": "(label)",
+            "Variety": "(label)",
+            "Province": "(label)",
+            "Taster": "(label)"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Répartition des vins par pays",
+          "query": "MATCH p=(n:Wine)-[:IS_FROM|PART_OF*]->(c:Country)\nWITH DISTINCT c.iso3 as country, count(DISTINCT n) as wines\nRETURN country, wines\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 3,
+          "y": 2,
+          "type": "choropleth",
+          "selection": {
+            "index": "country",
+            "value": "wines",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "title": "Nombre de vins dégustés",
+          "query": "MATCH (n:Wine)\nRETURN count(n)\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 2,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Nombre de dégustations",
+          "query": "MATCH (n:Review)\nRETURN count(n)\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 3,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Nombre de vignobles",
+          "query": "MATCH (n:Winery)\nRETURN count(n)\n",
+          "width": 3,
+          "height": 1,
+          "x": 9,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Exemples de vins",
+          "query": "MATCH (w:Wine)\nRETURN w.title as Désignation\nLIMIT 50\n",
+          "width": 3,
+          "height": 3,
+          "x": 9,
+          "y": 1,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Répartition des notes",
+      "reports": [
+        {
+          "title": "Note moyenne",
+          "query": "MATCH (n:Review)\nRETURN avg(n.points)\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "gauge",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Vins les mieux notés",
+          "query": "MATCH (c:Country)<-[:IS_FROM|PART_OF*]-(n:Wine)<--(r:Review)\nWITH n, c, avg(r.points) as noteMoyenne\nRETURN n.title as vin, c.name as pays, noteMoyenne\nORDER BY noteMoyenne DESC LIMIT 100",
+          "width": 6,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Note moyenne par pays (nombre de notes > 100)",
+          "query": "MATCH (c:Country)<-[:IS_FROM|PART_OF*]-(n:Wine)<--(r:Review)\nWITH c, count(distinct r) as count, avg(r.points) as averageScore, avg(n.price) as averagePrice\nWHERE count >= 100\nRETURN c.name as pays, count as `Nombre de notes`, averageScore AS `Note moyenne`, averagePrice AS `Prix moyen`\nORDER BY `Note moyenne` DESC\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Cépages les mieux notés",
+          "query": "MATCH (v:Variety)<-[:HAS_VARIETY]-(:Wine)<-[:ON]-(r:Review)\nWITH v.name AS variety, avg(r.points) as averageScore\nRETURN variety AS `Type de vin/Cépages`, averageScore AS `Note moyenne` ORDER BY averageScore DESC",
+          "width": 3,
+          "height": 2,
+          "x": 9,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Evolution de la note moyenne en fonction du prix",
+          "query": "MATCH (w:Wine)<-[:ON]-(r:Review)\nWHERE w.price IS NOT NULL AND w.price < 750\nWITH w.price AS price, avg(r.points) as averageScore\nRETURN price AS Prix, averageScore AS `Note moyenne`\nORDER BY Prix\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 3,
+          "type": "line",
+          "selection": {
+            "x": "Prix",
+            "value": ["Note moyenne"]
+          },
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Vins recommandés",
+      "reports": [
+        {
+          "title": "Meilleur rapport qualité prix (note >= 90)",
+          "query": "MATCH (n:Wine)<--(r:Review)\nWHERE n.price IS NOT NULL\nWITH n, avg(r.points) as averageScore, n.price as price\nWITH n, averageScore, price, averageScore/price as ratio\nWHERE averageScore >= 90\nRETURN 'Sélectionner' as Sélectionner, n.title AS `Vin`, price AS `Prix`\nORDER BY ratio DESC LIMIT 100\n",
+          "width": 5,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "actionsRules": [
+              {
+                "condition": "Click",
+                "field": "Sélectionner",
+                "value": "Vin",
+                "customization": "set variable",
+                "customizationValue": "wine"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Pays",
+          "query": "MATCH (n:Wine)-[:IS_FROM|PART_OF*]->(c:Country)\nWHERE n.title=$neodash_wine\nRETURN DISTINCT c.name\n\n",
+          "width": 2,
+          "height": 1,
+          "x": 5,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 32
+          }
+        },
+        {
+          "title": "Région",
+          "query": "MATCH (n:Wine)-[:IS_FROM]->(p)\nWHERE n.title=$neodash_wine\nRETURN p.name\n\n",
+          "width": 2,
+          "height": 1,
+          "x": 7,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 32
+          }
+        },
+        {
+          "title": "Plus d'informations sur ce vin / Acheter",
+          "query": "https://www.winemag.com/?s=$neodash_wine\n\n",
+          "width": 7,
+          "height": 3,
+          "x": 5,
+          "y": 1,
+          "type": "iframe",
+          "selection": {},
+          "settings": {
+            "replaceGlobalParameters": true,
+            "passGlobalParameters": false
+          }
+        },
+        {
+          "title": "Type de vin",
+          "query": "MATCH (n:Wine)-->(d:Designation)\nWHERE n.title=$neodash_wine\nRETURN d.title\nLIMIT 1\n",
+          "width": 3,
+          "height": 1,
+          "x": 9,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 32
+          }
+        },
+        {
+          "title": "Commentaires - $neodash_wine",
+          "query": "MATCH (n:Wine)<-[:ON]-(r:Review)\nWHERE n.title=$neodash_wine\nRETURN r.content AS commentaire\n",
+          "width": 5,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 24
+          }
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "advanced-charts": true,
+    "styling": true,
+    "actions": true
+  }
+}
