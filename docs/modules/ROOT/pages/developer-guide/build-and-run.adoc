@@ -15,7 +15,7 @@ ____
 
 To run the application in development mode: 
 
-- clone this repository. 
+- https://github.com/neo4j-labs/neodash[clone this repository.]
 - open a terminal and navigate to the directory you just cloned. 
 - run `yarn install` to install the necessary dependencies. 
 - run `yarn run dev` to run the app in development mode. 

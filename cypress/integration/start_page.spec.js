@@ -47,6 +47,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('#dbpassword').type('test');
     cy.wait(100);
     cy.get('button').contains('Connect').click();
+    cy.wait(100);
   });
 
   it('initializes the dashboard', () => {
