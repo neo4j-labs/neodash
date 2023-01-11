@@ -1,0 +1,166 @@
+{
+  "title": "Graph Assessment",
+  "version": "2.1",
+  "settings": {
+    "pagenumber": 1,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_customer_name": "Black Mesa"
+    },
+    "extensions": ["core", "actions"]
+  },
+  "pages": [
+    {
+      "title": "Main Page",
+      "reports": [
+        {
+          "title": "Neo4j Graph Framework",
+          "query": "https://dist.neo4j.com/wp-content/uploads/20220812112237/FrameworkBrighter.jpg\n\n",
+          "width": 6,
+          "height": 3,
+          "x": 6,
+          "y": 0,
+          "type": "iframe",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Neo4j Graph Framework",
+          "query": "**The Neo4j Graph Framework is the single trusted reference for any organization to act upon to ensure all areas are addressed throughout the lifecycle of the solution development or project implementation.**\n\nBroken down into five key pillars, the framework covers aspects from the initial use case assessment to scaling and expanding the solution (and the adoption of Graph technologies) with new data and business requirements.\n\n### The Five Core Pillars\n\n**Use Case Assessment:** Understand the business requirements and goals of the solution. Who are the stakeholders and users and what are their goals?\n\n**Graph Readiness:** Review, advise, and design the overall solution architecture, ensuring the best possible outcomes are achieved.\n\n**Graph Development:** Review, advise, and design the detailed technical architecture required to meet the goals of the solution.\n\n**Graph Operations:** Review, advise, and design the deployment and monitoring environment for the solution.\n\n**Graph Scale and Expand:** Advise and consult on the full adoption and expansion of the solution with users and stakeholders.\n\n---\n\nYou can learn more about the Neo4j Graph Framework and project assessment [here](https://neo4j.com/blog/neo4j-graph-framework-project-assessment/), or contact your Customer Success Manager or Professional Services Engagement Manager.\n",
+          "width": 6,
+          "height": 3,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Customer Summary",
+      "reports": [
+        {
+          "title": "Select Customer",
+          "query": "MATCH (n:`Customer`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 5,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Customer",
+            "propertyType": "name",
+            "parameterName": "neodash_customer_name"
+          }
+        },
+        {
+          "title": "Overall Summary",
+          "query": "MATCH (c:Customer)-[:HAS]->(pr:Project)<-[:ASSOCIATED]-(pa:ProjectAssessment)-[r]-(t:Topic)--(p:Pillar)\nwhere c.name=$neodash_customer_name\nreturn p.name as pillar,AVG(r.current) as current,AVG(r.target) as target\n\n\n\n",
+          "width": 4,
+          "height": 2,
+          "x": 8,
+          "y": 0,
+          "type": "radar",
+          "selection": {
+            "index": "pillar",
+            "values": ["current", "target"]
+          },
+          "settings": {}
+        },
+        {
+          "title": "Use Case Assessment",
+          "query": "MATCH (c:Customer)-[:HAS]->(pr:Project)<-[:ASSOCIATED]-(n:ProjectAssessment)-[r]-(t:Topic)--(p:Pillar)\nWHERE c.name=$neodash_customer_name AND p.name='Use Case Assessment'\nreturn t.name as Topic,AVG(r.current) as current,AVG(r.target) as target\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "radar",
+          "selection": {
+            "index": "Topic",
+            "values": ["current", "target"]
+          },
+          "settings": {}
+        },
+        {
+          "title": "Operations",
+          "query": "MATCH (c:Customer)-[:HAS]->(pr:Project)<-[:ASSOCIATED]-(n:ProjectAssessment)-[r]-(t:Topic)--(p:Pillar)\nWHERE c.name=$neodash_customer_name AND p.name='Operations'\nreturn t.name as Topic,AVG(r.current) as current,AVG(r.target) as target\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 2,
+          "type": "radar",
+          "selection": {
+            "index": "Topic",
+            "values": ["current", "target"]
+          },
+          "settings": {}
+        },
+        {
+          "title": "Graph Readiness",
+          "query": "MATCH (c:Customer)-[:HAS]->(pr:Project)<-[:ASSOCIATED]-(n:ProjectAssessment)-[r]-(t:Topic)--(p:Pillar)\nWHERE c.name=$neodash_customer_name AND p.name='Graph Readiness'\nreturn t.name as Topic,AVG(r.current) as current,AVG(r.target) as target\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 4,
+          "type": "radar",
+          "selection": {
+            "index": "Topic",
+            "values": ["current", "target"]
+          },
+          "settings": {}
+        },
+        {
+          "title": "Number of responses",
+          "query": "MATCH (c:Customer)-[:HAS]->(pr:Project)<-[r:ASSOCIATED]-(pa:ProjectAssessment)\nwhere c.name=$neodash_customer_name\nreturn count (r)\n\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 5,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Customer List",
+          "query": "match (c:Customer)-[:HAS]->(p:Project)\nreturn c.name as Customer, p.name as Project\norder by c.name\n\n\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "actionsRules": [
+              {
+                "condition": "Click",
+                "field": "Customer",
+                "value": "Customer",
+                "customization": "set variable",
+                "customizationValue": "customer_name"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Graph Development",
+          "query": "MATCH (c:Customer)-[:HAS]->(pr:Project)<-[:ASSOCIATED]-(n:ProjectAssessment)-[r]-(t:Topic)--(p:Pillar)\nWHERE c.name=$neodash_customer_name AND p.name='Graph Development'\nreturn t.name as Topic,AVG(r.current) as current,AVG(r.target) as target\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 4,
+          "type": "radar",
+          "selection": {
+            "index": "Topic",
+            "values": ["current", "target"]
+          },
+          "settings": {}
+        }
+      ]
+    }
+  ],
+  "parameters": {}
+}
