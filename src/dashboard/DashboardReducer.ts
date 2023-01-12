@@ -17,7 +17,7 @@ import {
 export const NEODASH_VERSION = '2.2';
 
 export const initialState = {
-  title: '',
+  title: 'Anomaly Detection for Public Health Intelligence',
   version: NEODASH_VERSION,
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],

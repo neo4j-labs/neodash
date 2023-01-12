@@ -67,7 +67,7 @@ export default function NeoConnectionModal({
           {standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}
           <IconButton style={{ padding: '3px', float: 'right' }}>
             <Badge badgeContent={''}>
-              <img style={{ width: '36px', height: '36px' }} src='neo4j-icon-color.png' />
+              <img style={{ width: '36px', height: '36px', marginTop: '-4px' }} src='neo4j-icon-color.png' />
             </Badge>
           </IconButton>
         </DialogTitle>
@@ -256,15 +256,7 @@ export default function NeoConnectionModal({
               </DialogContentText>
             ) : (
               <DialogContentText style={{ color: 'lightgrey' }}>
-                Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in
-                <a style={{ color: 'white' }} href='https://neo4j.com/download/'>
-                  Neo4j Desktop
-                </a>
-                , or try the
-                <a style={{ color: 'white' }} href='https://console.neo4j.io/'>
-                  Neo4j Aura
-                </a>
-                free tier.
+                Enter your database credentials to connect to Neo4j, and load a dashboard.
               </DialogContentText>
             )}
           </DialogContent>

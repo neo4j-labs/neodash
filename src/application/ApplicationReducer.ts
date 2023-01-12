@@ -36,7 +36,7 @@ const initialState = {
   aboutModalOpen: false,
   connection: {
     protocol: 'neo4j',
-    url: 'localhost',
+    url: 'dev-kg-who-ewaa.graphapp.io',
     port: '7687',
     database: '',
     username: 'neo4j',

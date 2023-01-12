@@ -488,7 +488,8 @@ export const initializeApplicationAsEditorThunk = (_, paramsToSetAfterConnecting
     dispatch(setParametersToLoadAfterConnecting(null));
   }
 
-  dispatch(setWelcomeScreenOpen(true));
+  dispatch(setWelcomeScreenOpen(false));
+  dispatch(setConnectionModalOpen(true));
 
   if (clearNotificationAfterLoad) {
     dispatch(clearNotification());
