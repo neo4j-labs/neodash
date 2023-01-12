@@ -15,6 +15,13 @@ export const DASHBOARD_SETTINGS = {
     default: 20,
     helperText: 'The maximum time a report is allowed to run before automatically aborted.',
   },
+  downloadImageEnabled: {
+    label: 'Enable Image Download',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+    helperText: 'Shows a button in the dashboard header that lets users capture their dashboard as an image.',
+  },
   disableRowLimiting: {
     label: 'Disable Row Limiting ⚠️',
     type: SELECTION_TYPES.LIST,
