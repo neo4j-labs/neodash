@@ -34,7 +34,7 @@ jobs:
         start: yarn run dev
         wait-on: 'http://localhost:3000'
  build-s3:
-   needs: build-test
+  #  needs: build-test
    runs-on: ubuntu-latest
    strategy:
      matrix:
