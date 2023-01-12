@@ -23,6 +23,7 @@ const NeoCardViewHeader = ({
   onTitleUpdate,
   fullscreenEnabled,
   downloadImageEnabled,
+  refreshButtonEnabled,
   onToggleCardSettings,
   onManualRefreshCard,
   onDownloadImage,
@@ -184,7 +185,7 @@ const NeoCardViewHeader = ({
             {downloadImageEnabled ? downloadImageButton : <></>}
             {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
             {descriptionEnabled ? descriptionButton : <></>}
-            {refreshButton}
+            {refreshButtonEnabled ? refreshButton : <></>}
             {editable ? settingsButton : <></>}
           </>
         }

@@ -66,8 +66,9 @@ const NeoCardView = ({
       title={title}
       editable={editable}
       description={settings.description}
-      fullscreenEnabled={dashboardSettings.fullscreenEnabled}
-      downloadImageEnabled={dashboardSettings.downloadImageEnabled}
+      fullscreenEnabled={settings.fullscreenEnabled}
+      downloadImageEnabled={settings.downloadImageEnabled}
+      refreshButtonEnabled={settings.refreshButtonEnabled}
       onTitleUpdate={onTitleUpdate}
       onToggleCardSettings={onToggleCardSettings}
       onManualRefreshCard={() => setLastRunTimestamp(Date.now())}

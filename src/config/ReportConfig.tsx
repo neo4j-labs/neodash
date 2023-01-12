@@ -58,6 +58,24 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,

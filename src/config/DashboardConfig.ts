@@ -9,21 +9,6 @@ export const DASHBOARD_SETTINGS = {
     helperText:
       'This controls whether users can edit your dashboard. Disable this to turn the dashboard into presentation mode.',
   },
-  fullscreenEnabled: {
-    label: 'Enable Fullscreen Report Views',
-    type: SELECTION_TYPES.LIST,
-    values: [true, false],
-    default: true,
-    helperText: "Show a 'fullscreen view' button for each report, letting users expand a visualization.",
-  },
-  downloadImageEnabled: {
-    label: 'Enable Image Download',
-    type: SELECTION_TYPES.LIST,
-    values: [true, false],
-    default: false,
-    helperText:
-      "Enables a 'download image' button for each report, letting users download a visualization as an image.",
-  },
   queryTimeLimit: {
     label: 'Maximum Query Time (seconds)',
     type: SELECTION_TYPES.NUMBER,
