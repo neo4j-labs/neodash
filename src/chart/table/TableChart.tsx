@@ -45,6 +45,7 @@ const NeoTableChart = (props: ChartProps) => {
   }
 
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
+  const pageSizeReducer = compact ? 2 : 1;
 
   let columnWidths = null;
   try {
@@ -58,10 +59,10 @@ const NeoTableChart = (props: ChartProps) => {
   const { records } = props;
 
   const generateSafeColumnKey = (key) => {
-    return key != 'id' ? key : `${key  } `;
+    return key != 'id' ? key : `${key} `;
   };
   const columns = transposed
-    ? ['Field'].concat(records.map((r, j) => `Value${  j == 0 ? '' : ` ${  (j + 1).toString()}`}`)).map((key, i) => {
+    ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
         const value = key;
         return ApplyColumnType(
           {
@@ -99,7 +100,7 @@ const NeoTableChart = (props: ChartProps) => {
         return Object.assign(
           { id: i, Field: key },
           ...records.map((r, j) => ({
-            [`Value${  j == 0 ? '' : ` ${  (j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
+            [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
           }))
         );
       })
@@ -156,7 +157,8 @@ const NeoTableChart = (props: ChartProps) => {
           navigator.clipboard.writeText(e.value);
         }}
         pageSize={
-          Math.floor((props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight) - 1
+          Math.floor((props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight) -
+          pageSizeReducer
         }
         disableSelectionOnClick
         components={{
@@ -164,13 +166,13 @@ const NeoTableChart = (props: ChartProps) => {
           ColumnSortedAscendingIcon: () => <></>,
         }}
         getRowClassName={(params) => {
-          return `rule${  evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+          return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
         }}
         getCellClassName={(params) => {
-          return (
-            `rule${ 
-            evaluateRulesOnDict({ [params.field]: params.value }, styleRules, ['cell color', 'cell text color'])}`
-          );
+          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
+            'cell color',
+            'cell text color',
+          ])}`;
         }}
       />
     </div>
