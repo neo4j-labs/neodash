@@ -10,9 +10,7 @@ This app is built with React, Tailwind and the Neo4j Design Language.
 
 ## Contribute to the Gallery
 Want to add a dashboard to the gallery?
-Send us an [e-mail]([mailto:niels.dejong@neo4j.com), and we will add your dashboard to the next release!
-
-To add a dashboard - we need the following information.
+Create an [issue on GitHub](https://github.com/neo4j-labs/neodash/issues) with the following information:
 - Your name.
 - A URL to your page (GitHub, LinkedIn, Personal Website, ...)
 - The name of your dashboard.
