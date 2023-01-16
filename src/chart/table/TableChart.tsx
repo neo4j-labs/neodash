@@ -45,7 +45,7 @@ const NeoTableChart = (props: ChartProps) => {
   }
 
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
-  const pageSizeReducer = compact ? 2 : 1;
+  const pageSizeReducer = compact ? 3 : 1;
 
   let columnWidths = null;
   try {
@@ -111,6 +111,11 @@ const NeoTableChart = (props: ChartProps) => {
         );
       });
 
+  const availableRowHeight = (props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight;
+  const tablePageSize = compact
+    ? Math.round(availableRowHeight) - pageSizeReducer
+    : Math.floor(availableRowHeight) - pageSizeReducer;
+
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
       <Snackbar
@@ -156,10 +161,7 @@ const NeoTableChart = (props: ChartProps) => {
           setNotificationOpen(true);
           navigator.clipboard.writeText(e.value);
         }}
-        pageSize={
-          Math.floor((props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight) -
-          pageSizeReducer
-        }
+        pageSize={tablePageSize}
         disableSelectionOnClick
         components={{
           ColumnSortedDescendingIcon: () => <></>,
