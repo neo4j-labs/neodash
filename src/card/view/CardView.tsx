@@ -8,7 +8,6 @@ import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { downloadComponentAsImage } from '../../chart/ChartUtils';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 
@@ -29,7 +28,6 @@ const NeoCardView = ({
   dashboardSettings,
   settings,
   settingsOpen,
-  refreshRate,
   editable,
   onGlobalParameterUpdate,
   onSelectionUpdate,
@@ -158,7 +156,6 @@ const NeoCardView = ({
           settings={settings}
           expanded={expanded}
           rowLimit={dashboardSettings.disableRowLimiting ? 1000000 : reportTypes[type] && reportTypes[type].maxRecords}
-          refreshRate={refreshRate}
           dimensions={{ width: widthPx, height: heightPx }}
           type={type}
           ChartType={reportTypes[type] && reportTypes[type].component}

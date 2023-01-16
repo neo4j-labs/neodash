@@ -28,10 +28,9 @@ export const NeoReport = ({
     fields = f;
   }, // The callback to update the set of query fields after query execution.
   setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
-  getGlobalParameter = () => {
+  getGlobalParameter = (_: string) => {
     return '';
   }, // function to get global (cypher) parameters.
-  refreshRate = 0, // Optionally refresh the report every X seconds.
   dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
   rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
   queryTimeLimit = 20, // Time limit for queries before automatically aborted.
@@ -135,12 +134,12 @@ export const NeoReport = ({
       }
       populateReport();
       // If a refresh rate was specified, set up an interval for re-running the report. (max 24 hrs)
-      if (refreshRate && refreshRate > 0) {
+      if (settings.refreshRate && settings.refreshRate > 0) {
         // @ts-ignore
         setTimer(
           setInterval(() => {
             populateReport(false);
-          }, Math.min(refreshRate, 86400) * 1000.0)
+          }, Math.min(settings.refreshRate, 86400) * 1000.0)
         );
       }
     }

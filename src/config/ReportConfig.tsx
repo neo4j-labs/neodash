@@ -76,6 +76,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -253,6 +258,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: '{label : url}',
       },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -420,6 +430,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -578,6 +593,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
       },
       description: {
         label: 'Report Description',
@@ -761,6 +781,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -887,6 +912,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -951,6 +981,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -994,6 +1029,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -1007,7 +1047,6 @@ export const REPORT_TYPES = {
       'This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.',
     component: NeoParameterSelectionChart,
     settingsComponent: NeoCardSettingsContentPropertySelect,
-    disableRefreshRate: true,
     disableCypherParameters: true,
     textOnly: true,
     maxRecords: 100,
