@@ -1129,6 +1129,7 @@ export const REPORT_TYPES = {
     helperText:
       'iFrame reports let you embed external webpages into your dashboard. Enter an URL in the query box above to embed it as an iFrame.',
     textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
+    disableDatabaseSelector: true,
     component: NeoIFrameChart,
     inputMode: 'url',
     maxRecords: 1,
@@ -1170,6 +1171,7 @@ export const REPORT_TYPES = {
     component: NeoMarkdownChart,
     inputMode: 'markdown',
     textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
+    disableDatabaseSelector: true,
     maxRecords: 1,
     allowScrolling: true,
     settings: {
