@@ -1900,7 +1900,7 @@
     lodash.find "^4.6.0"
     lodash.includes "^4.3.0"
 
-"@neo4j-cypher/react-codemirror@1.0.0-next.18":
+"@neo4j-cypher/react-codemirror@^1.0.0-next.18":
   version "1.0.0-next.18"
   resolved "https://registry.yarnpkg.com/@neo4j-cypher/react-codemirror/-/react-codemirror-1.0.0-next.18.tgz#7d89ebc8c3a51729c48950fba34a3f6226f1f861"
   integrity sha512-KHmyqIoB9DoDKRL26bo0W+WbS4Lk/0LNFQDwDzTPyFn6ltdLZ+NJMBqEPxwCbOsSlE+BJLijiwBquXik8Ad+SQ==
