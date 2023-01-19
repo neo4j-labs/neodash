@@ -1872,10 +1872,10 @@
     "@babel/runtime" "^7.20.6"
     "@neo4j-cypher/antlr4-browser" "1.0.0-next.0"
 
-"@neo4j-cypher/codemirror@1.0.0-next.15":
-  version "1.0.0-next.15"
-  resolved "https://registry.yarnpkg.com/@neo4j-cypher/codemirror/-/codemirror-1.0.0-next.15.tgz#03c8c1570d5b02042e281811c5c07b3fc3b89bc8"
-  integrity sha512-1YnZRwkPSImQ5rfOlStG6YrE6n4iGbvIS0NCM+g1+HsvqptuddZkhJ10ez+fDcDdfkLGbjhKDhKN/NxCC0gIUw==
+"@neo4j-cypher/codemirror@1.0.0-next.17":
+  version "1.0.0-next.17"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/codemirror/-/codemirror-1.0.0-next.17.tgz#0b7ec9a5db11835bb3987de470055ed5c7d67481"
+  integrity sha512-y049mtg/LVMa3ZcCN2sWDfrZJC3UEvPuFgKY9u+EFQeJ9sG/hOb1w2yX4h27mphpyNDq5Z31NVTKpHdWSbJRzQ==
   dependencies:
     "@babel/runtime" "^7.20.6"
     "@codemirror/autocomplete" "^6.3.4"
@@ -1900,13 +1900,13 @@
     lodash.find "^4.6.0"
     lodash.includes "^4.3.0"
 
-"@neo4j-cypher/react-codemirror@^1.0.0-next.16":
-  version "1.0.0-next.16"
-  resolved "https://registry.yarnpkg.com/@neo4j-cypher/react-codemirror/-/react-codemirror-1.0.0-next.16.tgz#daf199d02d3dc526e885635109fdfb7ad95857c3"
-  integrity sha512-gSH/VIvkT/PuzmH4XadAVbVE+ctdkFwNW6dSCCJSUT4u8bO6tK26rnVLX9dcYbRLvGhs0feYkP88K3VhXKS4jQ==
+"@neo4j-cypher/react-codemirror@1.0.0-next.18":
+  version "1.0.0-next.18"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/react-codemirror/-/react-codemirror-1.0.0-next.18.tgz#7d89ebc8c3a51729c48950fba34a3f6226f1f861"
+  integrity sha512-KHmyqIoB9DoDKRL26bo0W+WbS4Lk/0LNFQDwDzTPyFn6ltdLZ+NJMBqEPxwCbOsSlE+BJLijiwBquXik8Ad+SQ==
   dependencies:
     "@babel/runtime" "^7.20.6"
-    "@neo4j-cypher/codemirror" "1.0.0-next.15"
+    "@neo4j-cypher/codemirror" "1.0.0-next.17"
     codemirror "^6.0.1"
 
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3":
