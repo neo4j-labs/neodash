@@ -20,7 +20,7 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
     // TODO Think of a way to make it configurable to fetch vector data.
     // It makes sense to ship this JSON with NeoDash deployments that are behind some firewall and can't access this site.
     useEffect(() => {
-        fetch("https://raw.githubusercontent.com/BennuFire/neodashChoroplethMaps/main/world_DE")
+        fetch("https://raw.githubusercontent.com/neo4j-labs/neodash-static/main/world_polymap.json")
             .then((res) => res.json())
             .then((matched) => setFeature(matched));
     }, []);
