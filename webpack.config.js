@@ -43,6 +43,6 @@ module.exports = (env) => {
       port: 3000,
       hot: true,
     },
-    plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()]
+    plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()],
   };
 };
