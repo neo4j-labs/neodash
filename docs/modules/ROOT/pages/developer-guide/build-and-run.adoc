@@ -15,7 +15,7 @@ ____
 
 To run the application in development mode: 
 
-- clone this repository. 
+- https://github.com/neo4j-labs/neodash[clone this repository.]
 - open a terminal and navigate to the directory you just cloned. 
 - run `yarn install` to install the necessary dependencies. 
 - run `yarn run dev` to run the app in development mode. 
@@ -33,8 +33,8 @@ Pull the latest image from Docker Hub to run the application locally:
 
 ....
 # Run the application on http://localhost:5005
-docker pull nielsdejong/neodash:latest
-docker run -it --rm -p 5005:5005 nielsdejong/neodash
+docker pull neo4jlabs/neodash:latest
+docker run -it --rm -p 5005:5005 neo4jlabs/neodash
 ....
 
 ____
@@ -44,7 +44,7 @@ ____
 == Build Docker image
 
 A pre-built Docker image is available
-https://hub.docker.com/r/nielsdejong/neodash[on DockerHub]. This image
+https://hub.docker.com/r/neo4jlabs/neodash[on DockerHub]. This image
 is built using the default configuration (running in editor mode,
 without SSO).
 
@@ -84,7 +84,7 @@ metadata:
 spec:
   containers:
     - name: neodash
-      image: nielsdejong/neodash:latest
+      image: neo4jlabs/neodash:latest
       ports:
         - containerPort: 5005
 ....

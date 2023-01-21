@@ -13,7 +13,7 @@ COPY ./package.json /usr/local/src/neodash/package.json
 
 RUN yarn install
 COPY ./ /usr/local/src/neodash
-RUN PRODUCTION=true && yarn run build
+RUN yarn run build-minimal
 
 # production stage
 FROM nginx:alpine AS neodash
@@ -38,4 +38,4 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 USER nginx
 EXPOSE 5005
 HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
-LABEL version="2.2.0"
+LABEL version="2.2.1"
