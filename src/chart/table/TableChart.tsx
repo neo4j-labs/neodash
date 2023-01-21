@@ -31,7 +31,7 @@ const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
-  const compact = props.settings && props.settings.compact ? props.settings.compact : false;
+  const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
   const styleRules =
     extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
       ? props.settings.styleRules
