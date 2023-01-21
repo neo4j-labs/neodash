@@ -11,6 +11,6 @@ export interface ChartProps {
   fullscreen?: boolean; // flag indicating whether the report is rendered in a fullscreen view.
   parameters?: Record<string, any>; // A dictionary with the global dashboard parameters.
   queryCallback?: (query: string, parameters: Record<string, any>, records: Neo4jRecord[]) => null; // Optionally, a way for the report to read more data from Neo4j.
-  setGlobalParameter?: (name: string, value?: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
+  setGlobalParameter?: (name: string, value: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
 }
