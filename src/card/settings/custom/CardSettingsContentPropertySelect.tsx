@@ -127,15 +127,10 @@ const NeoCardSettingsContentPropertySelect = ({
     onReportSettingUpdate('id', `${newValue}`);
     if (settings.propertyType && settings.entityType) {
       const newParameterName = `neodash_${settings.entityType}_${settings.propertyType}`;
-      const formattedParameterId = formatParameterId(settings.id);
+      const formattedParameterId = formatParameterId(`${newValue}`);
       const cleanedParameter = cleanParameter(newParameterName + formattedParameterId);
 
-      handleReportQueryUpdate(
-        cleanedParameter,
-        settings.entityType,
-        settings.propertyType,
-        settings.propertyDisplay
-      );
+      handleReportQueryUpdate(cleanedParameter, settings.entityType, settings.propertyType, settings.propertyDisplay);
     }
   }
 
@@ -151,53 +146,23 @@ const NeoCardSettingsContentPropertySelect = ({
     const caseSensitive = settings.caseSensitive !== undefined ? settings.caseSensitive : false;
     if (settings.type == 'Node Property') {
       const newQuery =
-        `MATCH (n:\`${ 
-        entityType 
-        }\`) \n` +
-        `WHERE ${ 
-        caseSensitive ? '' : 'toLower' 
-        }(toString(n.\`${ 
-        propertyDisplay 
-        }\`)) ${ 
-        searchType 
-        } ${ 
-        caseSensitive ? '' : 'toLower' 
+        `MATCH (n:\`${entityType}\`) \n` +
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplay}\`)) ${searchType} ${
+          caseSensitive ? '' : 'toLower'
         }($input) \n` +
-        `RETURN ${ 
-        deduplicate ? 'DISTINCT' : '' 
-        } n.\`${ 
-        propertyType 
-        }\` as value, ` +
-        ` n.\`${ 
-        propertyDisplay 
-        }\` as display ` +
-        `ORDER BY size(toString(value)) ASC LIMIT ${ 
-        limit}`;
+        `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
+        ` n.\`${propertyDisplay}\` as display ` +
+        `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else if (settings.type == 'Relationship Property') {
       const newQuery =
-        `MATCH ()-[n:\`${ 
-        entityType 
-        }\`]->() \n` +
-        `WHERE ${ 
-        caseSensitive ? '' : 'toLower' 
-        }(toString(n.\`${ 
-        propertyDisplay 
-        }\`)) ${ 
-        searchType 
-        } ${ 
-        caseSensitive ? '' : 'toLower' 
+        `MATCH ()-[n:\`${entityType}\`]->() \n` +
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplay}\`)) ${searchType} ${
+          caseSensitive ? '' : 'toLower'
         }($input) \n` +
-        `RETURN ${ 
-        deduplicate ? 'DISTINCT' : '' 
-        } n.\`${ 
-        propertyType 
-        }\` as value, ` +
-        ` n.\`${ 
-        propertyDisplay 
-        }\` as display ` +
-        `ORDER BY size(toString(value)) ASC LIMIT ${ 
-        limit}`;
+        `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
+        ` n.\`${propertyDisplay}\` as display ` +
+        `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else {
       const newQuery = 'RETURN true';

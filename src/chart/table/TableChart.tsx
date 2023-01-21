@@ -31,6 +31,7 @@ const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
+  const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
   const styleRules =
     extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
       ? props.settings.styleRules
@@ -42,6 +43,9 @@ const NeoTableChart = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
+
+  const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
+  const pageSizeReducer = compact ? 3 : 1;
 
   let columnWidths = null;
   try {
@@ -107,6 +111,11 @@ const NeoTableChart = (props: ChartProps) => {
         );
       });
 
+  const availableRowHeight = (props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight;
+  const tablePageSize = compact
+    ? Math.round(availableRowHeight) - pageSizeReducer
+    : Math.floor(availableRowHeight) - pageSizeReducer;
+
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
       <Snackbar
@@ -144,6 +153,7 @@ const NeoTableChart = (props: ChartProps) => {
       )}
       <DataGrid
         headerHeight={32}
+        rowHeight={tableRowHeight}
         rows={rows}
         columns={columns}
         columnVisibilityModel={hiddenColumns}
@@ -151,9 +161,7 @@ const NeoTableChart = (props: ChartProps) => {
           setNotificationOpen(true);
           navigator.clipboard.writeText(e.value);
         }}
-        pageSize={
-          Math.floor((props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / TABLE_ROW_HEIGHT) - 1
-        }
+        pageSize={tablePageSize}
         disableSelectionOnClick
         components={{
           ColumnSortedDescendingIcon: () => <></>,

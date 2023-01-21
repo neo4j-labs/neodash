@@ -11,7 +11,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
   const { records } = props;
   const query = records[0].input ? records[0].input : undefined;
   const parameter = props.settings && props.settings.parameterName ? props.settings.parameterName : undefined;
-  const parameterDisplay = `${parameter  }_display`;
+  const parameterDisplay = `${parameter}_display`;
   const type = props.settings && props.settings.type ? props.settings.type : undefined;
   const suggestionsUpdateTimeout =
     props.settings && props.settings.suggestionsUpdateTimeout ? props.settings.suggestionsUpdateTimeout : 250;
@@ -65,8 +65,8 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
   const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
   const propertyDisplay = props.settings && props.settings.propertyDisplay ? props.settings.propertyDisplay : '';
   const settings = props.settings ? props.settings : {};
-  const {helperText} = settings;
-  const {clearParameterOnFieldClear} = settings;
+  const { helperText } = settings;
+  const { clearParameterOnFieldClear } = settings;
 
   if (!query || query.trim().length == 0) {
     return (
@@ -106,9 +106,7 @@ const NeoParameterSelectionChart = (props: ChartProps) => {
       ) : (
         <Autocomplete
           id='autocomplete'
-          options={extraRecords
-            .map((r) => (r._fields && r._fields[1] !== null ? r._fields[1] : '(no data)'))
-            .sort()}
+          options={extraRecords.map((r) => (r._fields && r._fields[1] !== null ? r._fields[1] : '(no data)')).sort()}
           getOptionLabel={(option) => (option ? option.toString() : '')}
           style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
           inputValue={inputText !== null ? inputText.toString() : ''}

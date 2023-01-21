@@ -1,0 +1,285 @@
+{
+  "title": "Dad Jokes Dashboard",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_entity_text": "bananas"
+    },
+    "downloadImageEnabled": false,
+    "resizing": "bottom-right"
+  },
+  "pages": [
+    {
+      "title": "Start",
+      "reports": [
+        {
+          "title": "Let's start this crazy trip down the dadjoke rathole!",
+          "query": "\n\nThe graph powering this dashboard was made using Google's NLP API. Curious how this dashboard was made? Check out the blog post!\n\n\n[https://blog.bruggen.com/2022/10/a-graph-database-and-dadjoke-walk-into.html](https://blog.bruggen.com/2022/10/a-graph-database-and-dadjoke-walk-into.html)\n\n![Logo](https://drive.google.com/uc?export=view&id=1Fmv5Ap0IJrUEjpHiYa7p1JxXWgGBvlf0)\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        }
+      ]
+    },
+    {
+      "title": "Tweets and Handles ",
+      "reports": [
+        {
+          "title": "Handles tweeting the same text",
+          "query": "MATCH (t1:Tweet), (t2:Tweet)\nWHERE t1 <> t2\nAND t1.Text = t2.Text\nRETURN t1.`Screen Name`, t2.`Screen Name`, t1.Text;\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Jeff Bezos and his Pijamas",
+      "reports": [
+        {
+          "title": "Jokes about Jeff Bezos",
+          "query": "MATCH path = (dj:Dadjoke)-[*..2]-(conn)\nWHERE dj.Text CONTAINS \"pyjamazon\"\n    RETURN path\nlimit 10;\n\n\n",
+          "width": 12,
+          "height": 3,
+          "x": 0,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Dadjoke": "Text"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "With Entities (after NLP)",
+          "query": "\nMATCH path = (e:Entity)--(dj:Dadjoke)-[REFERENCES_DADJOKE]-(t:Tweet)--(h:Handle)\nWHERE dj.Text CONTAINS \"amazon\"\n    RETURN path;\n\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 3,
+          "type": "graph",
+          "selection": {
+            "Entity": "text",
+            "Person": "text",
+            "Dadjoke": "Text",
+            "Tweet": "Text",
+            "Handle": "name",
+            "Other": "text"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        }
+      ]
+    },
+    {
+      "title": "String Metrics",
+      "reports": [
+        {
+          "title": "Levenshtein and Sørensen-Dice Similarity",
+          "query": "\nMATCH (dj1:Dadjoke), (dj2:Dadjoke)\n  WHERE id(dj1)<id(dj2)\n  AND dj1.Text <> dj2.Text\n  AND left(dj1.Text,30) = left(dj2.Text,30)\nWITH dj1.Text AS dj1text, dj2.Text AS dj2text\nLIMIT 100\nwith dj1text, dj2text, apoc.text.levenshteinSimilarity(dj1text, dj2text) AS LevenshteinSimilarity,\napoc.text.sorensenDiceSimilarity(dj1text, dj2text) AS SorensenDiceSimilarity\n  WHERE LevenshteinSimilarity < 0.65\nRETURN left(dj1text,60) as `First 60 chars of dadjoke1`,left(dj2text,60) as `First 60 chars of dadjoke2`,LevenshteinSimilarity,SorensenDiceSimilarity\nORDER BY LevenshteinSimilarity DESC;\n\n",
+          "width": 12,
+          "height": 4,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "autorun": true
+          }
+        }
+      ]
+    },
+    {
+      "title": "Jokes about cars",
+      "reports": [
+        {
+          "title": "Jokes with \"cars\" in the text",
+          "query": "MATCH (dj:Dadjoke) WHERE dj.Text CONTAINS \"car\" RETURN dj.Text as Dadjoke LIMIT 10;\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Jokes with \"car\" in the assosiated entity",
+          "query": "MATCH (e:Entity)--(dj:Dadjoke) WHERE e.text CONTAINS \"car\" RETURN e.text as Entity, dj.Text as Dadjoke LIMIT 10;",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Dadjoke with entity equal to \"car\"",
+          "query": "MATCH p = (e:Entity)--(dj:Dadjoke) WHERE e.text = \"car\" RETURN dj.Text as Dadjoke LIMIT 10;\n\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 3,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Jokes about spaghetti",
+      "reports": [
+        {
+          "title": "Spaghetti jokes",
+          "query": "\nMATCH p=(h:Handle)--(t:Tweet)--(dj:Dadjoke)-[r:JACCARD_SIMILAR]->() \nWHERE dj.Text CONTAINS \"spaghetti\" \n    AND (dj.Text CONTAINS \"bike\" OR dj.Text CONTAINS \"car\")\n    RETURN p;\n\n\n\n\n\n",
+          "width": 12,
+          "height": 3,
+          "x": 0,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Handle": "name",
+            "Tweet": "Tweet Id",
+            "Dadjoke": "Text"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        }
+      ]
+    },
+    {
+      "title": "Jokes about entities",
+      "reports": [
+        {
+          "title": "Select the Entity",
+          "query": "MATCH (n:`Entity`) \nWHERE toLower(toString(n.`text`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`text` as value ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 3,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "entityType": "Entity",
+            "propertyType": "text",
+            "parameterName": "neodash_entity_text"
+          }
+        },
+        {
+          "title": "",
+          "query": "WITH [\"car\",\"spaghetti\",\"water\",\"boil\",\"hell\"] AS entities\nMATCH p = (h:Handle)--(t:Tweet)--(dj:Dadjoke)--(e:Entity)\nWHERE e.text IN entities\nRETURN p;\n\n\n\n",
+          "width": 12,
+          "height": 3,
+          "x": 0,
+          "y": 3,
+          "type": "graph",
+          "selection": {
+            "Handle": "name",
+            "Tweet": "(label)",
+            "Dadjoke": "(label)",
+            "Entity": "(label)",
+            "ConsumerGood": "(label)",
+            "Other": "(label)"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Graph of jokes about the Entity selected",
+          "query": "MATCH p = (h:Handle)--(t:Tweet)--(dj:Dadjoke)--(e:Entity)\nWHERE e.text = $neodash_entity_text\nRETURN p;\n\n\n\n\n\n",
+          "width": 9,
+          "height": 3,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Handle": "name",
+            "Tweet": "Tweet Id",
+            "Dadjoke": "Text",
+            "Entity": "text",
+            "Other": "text"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        }
+      ]
+    },
+    {
+      "title": "Dadjoke Twitterverse",
+      "reports": [
+        {
+          "title": "Twitterverse cliques",
+          "query": "\nMATCH path = (h1:Handle)-[*2..2]->(dj:Dadjoke)<-[*2..2]-(h2:Handle)\nWHERE id(h1)<id(h2)\nRETURN path;\n\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Handle": "name",
+            "Tweet": "(label)",
+            "Dadjoke": "(label)"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Twitterverse stats",
+          "query": "\nMATCH path = (h1:Handle)-[*2..2]-(dj:Dadjoke)-[*2..2]-(h2:Handle)\nWHERE id(h1)<id(h2)\nWITH h1.name AS FirstHandle, h2.name AS SecondHandle, count(path) AS NrOfSharedJokes\nRETURN FirstHandle, SecondHandle,NrOfSharedJokes\nORDER BY NrOfSharedJokes DESC;\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "It's all about...",
+          "query": "\nMATCH (e:Entity)\nRETURN e.text as Entity, e.SumOfSumOfFavorites AS EntityFavoriteScore, e.SumOfSumOfRetweets AS EntityRetweetScore\nORDER BY EntityFavoriteScore DESC\nLIMIT 10;\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "advanced-charts": true,
+    "styling": true
+  }
+}
