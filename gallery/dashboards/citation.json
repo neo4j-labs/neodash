@@ -1,0 +1,324 @@
+{
+  "title": "Citation graph - Topic extraction, recommendation, and Bloom exploration",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_community_property": "2892",
+      "neodash_title": "Modeling of architectures with UML panel"
+    },
+    "extensions": ["core", "actions"]
+  },
+  "pages": [
+    {
+      "title": "Overview",
+      "reports": [
+        {
+          "title": "Summary",
+          "query": "**Citation graph in scientific research**\n\nThe data used is from the DBLP Citation Network, which includes citation data from various academic sources.\nYou can recreate the database with [this guide](https://neo4j.com/developer/graph-data-science/link-prediction/graph-data-science-library/).\n\nThis dashboard will explore the following use cases :\n- Topic extraction\n- Recommendation\n- Using Bloom with NeoDash to extend the data exploration capabilities\n\nBut first, here is an overview of the data.",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "A sample of the graph with some citations",
+          "query": "MATCH p=(n)-[e]->(m) RETURN n,e,m LIMIT 18\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Article": "title",
+            "Author": "name",
+            "Venue": "name"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Data model",
+          "query": "CALL db.schema.visualization()",
+          "width": 3,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "Venue": "name",
+            "Article": "name",
+            "Author": "name"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Some articles",
+          "query": "MATCH (n:Article)--(v:Venue)\nWHERE EXISTS(n.abstract)\nRETURN n.title as title, n.abstract as abstract, v.name as published_for LIMIT 50\n\n\n",
+          "width": 9,
+          "height": 2,
+          "x": 3,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Number of articles",
+          "query": "MATCH (n:Article) RETURN count(n)\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 2,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Number of citations",
+          "query": "MATCH ()-[rel:CITED]->()\nRETURN count(rel)\n\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 3,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Do articles cluster together ?",
+      "reports": [
+        {
+          "title": "Article clusters in Bloom - set username \"citation\" and password \"citation\" to view the perspective.",
+          "query": "https://bloom.neo4j.io/index.html?connectURL=neo4j%2Bs%3A%2F%2Facb5b6ae.databases.neo4j.io&search=Article%20cited%20Article%20cited%20Article&run=true\n\n\n",
+          "width": 9,
+          "height": 4,
+          "x": 0,
+          "y": 0,
+          "type": "iframe",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "# of distinct clusters",
+          "query": "MATCH (n:Article)\nWITH n.wcc as community, count(n) as communitySize\nWHERE communitySize > 1\nRETURN count(DISTINCT community)",
+          "width": 3,
+          "height": 1,
+          "x": 9,
+          "y": 2,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "What's next?",
+          "query": "**This means we can run community detection algorithms!**\n\nFirst of all, here's an analysis using the Weakly Connected Components, which identifies disjoint clusters.\nTwo nodes are in disjoint clusters if no path exists between them.\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 9,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Biggest community has :",
+          "query": "MATCH (n:Article)\nWITH n.wcc as community, count(n) as communitySize\nRETURN toString(max(communitySize)) + ' Articles'\n\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 9,
+          "y": 3,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 56
+          }
+        }
+      ]
+    },
+    {
+      "title": "Topic extraction",
+      "reports": [
+        {
+          "title": "Topic extraction",
+          "query": "Inside of that big community of 14k articles we've identified, let's see if we can identify different topics.\n\nFor this, we will identify communities of articles that cite each other ; and then, find the most influential article in each community.\nThis can be used as the topic for that community.\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Louvain detected :",
+          "query": "MATCH (n:Article)\nWHERE EXISTS(n.louvain)\nRETURN toString(count(DISTINCT n.louvain)) + \" communities\"\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "value",
+          "selection": {},
+          "settings": {
+            "fontSize": 56
+          }
+        },
+        {
+          "title": "You might see \"disconnected islands\" because not all nodes and relationships are displayed.",
+          "query": "https://bloom.neo4j.io/index.html?connectURL=neo4j%2Bs%3A%2F%2Facb5b6ae.databases.neo4j.io&search=Article%20cited%20Article%20with%20wcc%200&run=true\n\n",
+          "width": 9,
+          "height": 4,
+          "x": 3,
+          "y": 0,
+          "type": "iframe",
+          "selection": {},
+          "settings": {
+            "description": "Set username \"citation\" and password \"citation\" to view the perspective.\n\nBe aware that this Bloom view limits the number of nodes displayed. So you might see \"disconnected islands\" because not all nodes and relationships are displayed."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Topic extraction - 2",
+      "reports": [
+        {
+          "title": "Click on a community number to update view",
+          "query": "MATCH (n:Article)\nWHERE EXISTS(n.louvain)\nWITH toString(n.louvain) as community, n.pagerank as pagerank, n.title as title ORDER BY pagerank DESC\nWITH community, head(collect(title)) AS summary, head(collect(pagerank)) AS pagerank\nRETURN community, summary\n",
+          "width": 4,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "actionsRules": [
+              {
+                "condition": "Click",
+                "field": "community",
+                "value": "community",
+                "customization": "set variable",
+                "customizationValue": "community_property"
+              }
+            ],
+            "columnWidths": "[0.5,2]"
+          }
+        },
+        {
+          "title": "Top 10 topics",
+          "query": "MATCH (n:Article)\nWHERE EXISTS(n.louvain)\nWITH n.louvain as community, n.pagerank as pagerank, n.title as title, n ORDER BY pagerank DESC\nWITH community, head(collect(title)) AS summary, count(n) as count LIMIT 10\nRETURN summary, count\n\n",
+          "width": 4,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "pie",
+          "selection": {
+            "index": "summary",
+            "value": "count",
+            "key": "(none)"
+          },
+          "settings": {
+            "marginTop": 88,
+            "marginBottom": 88,
+            "marginRight": 88,
+            "marginLeft": 88
+          }
+        },
+        {
+          "title": "Size indicates an Article's influence - Biggest node for a given community = topic",
+          "query": "https://bloom.neo4j.io/index.html?connectURL=neo4j%2Bs%3A%2F%2Facb5b6ae.databases.neo4j.io&run=true&search=Article%20louvain%20$neodash_community_property%20cited%20Article%20louvain%20 $neodash_community_property",
+          "width": 8,
+          "height": 4,
+          "x": 4,
+          "y": 0,
+          "type": "iframe",
+          "selection": {},
+          "settings": {
+            "passGlobalParameters": false,
+            "replaceGlobalParameters": true,
+            "description": "Set username \"citation\" and password \"citation\" to view the perspective."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Recommendation",
+      "reports": [
+        {
+          "title": "Pick an article you like (a random one is also fine)",
+          "query": "MATCH (n:Article WHERE EXISTS(n.louvain))\nRETURN \"Click me\" AS click, n.title AS title LIMIT 100",
+          "width": 8,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "actionsRules": [
+              {
+                "condition": "Click",
+                "field": "click",
+                "value": "title",
+                "customization": "set variable",
+                "customizationValue": "title"
+              }
+            ],
+            "type": "Node Property",
+            "entityType": "Article",
+            "propertyType": "title",
+            "parameterName": "neodash_article_title",
+            "columnWidths": "[1,3]"
+          }
+        },
+        {
+          "title": "Recommended articles - Same topic",
+          "query": "MATCH (n:Article WHERE n.title=$neodash_title)\nMATCH (m:Article WHERE m.louvain=n.louvain)\nWITH n, m ORDER BY m.pagerank DESC LIMIT 5\nRETURN n.title AS `You read`, m.title AS `Read next`",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Some explanations",
+          "query": "To make recommendations based on our current data, the process is the following, you can go two ways :\n- Pick the articles with the top PageRank scores in the *same* community (same topic)\n- Pick the articles with the top PageRank scores in a *different* community (related topic)\n\nTo try it out, **pick an article** to the left, and see the results below.\n",
+          "width": 4,
+          "height": 2,
+          "x": 8,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Recommended articles - Related topic",
+          "query": "MATCH (n:Article WHERE n.title=$neodash_title)\nMATCH (m:Article WHERE m.louvain=n.louvain)\nWITH n, m ORDER BY m.pagerank DESC LIMIT 5\nMATCH (o:Article WHERE NOT o.louvain=n.louvain)-[:CITED]-(m)\nWITH n, m, o ORDER BY o.pagerank DESC LIMIT 5\nRETURN o.title AS `Read next`\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "advanced-charts": true,
+    "styling": true,
+    "actions": true
+  }
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
@@ -8,7 +8,6 @@ import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { downloadComponentAsImage } from '../../chart/ChartUtils';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 
@@ -29,7 +28,6 @@ const NeoCardView = ({
   dashboardSettings,
   settings,
   settingsOpen,
-  refreshRate,
   editable,
   onGlobalParameterUpdate,
   onSelectionUpdate,
@@ -42,11 +40,12 @@ const NeoCardView = ({
   const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
   const ref = React.useRef();
+  const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   const getLocalParameters = (parse_string): any => {
     let re = /(?:^|\W)\$(\w+)(?!\w)/g;
-      let match;
-      let localQueryVariables: string[] = [];
+    let match;
+    let localQueryVariables: string[] = [];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);
     }
@@ -65,10 +64,12 @@ const NeoCardView = ({
       title={title}
       editable={editable}
       description={settings.description}
-      fullscreenEnabled={dashboardSettings.fullscreenEnabled}
-      downloadImageEnabled={dashboardSettings.downloadImageEnabled}
+      fullscreenEnabled={settings.fullscreenEnabled}
+      downloadImageEnabled={settings.downloadImageEnabled}
+      refreshButtonEnabled={settings.refreshButtonEnabled}
       onTitleUpdate={onTitleUpdate}
       onToggleCardSettings={onToggleCardSettings}
+      onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
       settings={settings}
       onDownloadImage={onDownloadImage}
       onToggleCardExpand={onToggleCardExpand}
@@ -115,6 +116,13 @@ const NeoCardView = ({
     )
   );
 
+  const localParameters = getLocalParameters(query);
+  useEffect(() => {
+    if (!settingsOpen) {
+      setLastRunTimestamp(Date.now());
+    }
+  }, [settingsOpen, query, JSON.stringify(localParameters)]);
+
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
     paddingBottom: '0px',
@@ -139,7 +147,8 @@ const NeoCardView = ({
         <NeoReport
           query={query}
           database={database}
-          parameters={getLocalParameters(query)}
+          parameters={localParameters}
+          lastRunTimestamp={lastRunTimestamp}
           extensions={extensions}
           disabled={settingsOpen}
           selection={selection}
@@ -147,7 +156,6 @@ const NeoCardView = ({
           settings={settings}
           expanded={expanded}
           rowLimit={dashboardSettings.disableRowLimiting ? 1000000 : reportTypes[type] && reportTypes[type].maxRecords}
-          refreshRate={refreshRate}
           dimensions={{ width: widthPx, height: heightPx }}
           type={type}
           ChartType={reportTypes[type] && reportTypes[type].component}
