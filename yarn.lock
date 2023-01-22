@@ -1872,10 +1872,10 @@
     "@babel/runtime" "^7.20.6"
     "@neo4j-cypher/antlr4-browser" "1.0.0-next.0"
 
-"@neo4j-cypher/codemirror@1.0.0-next.18":
-  version "1.0.0-next.18"
-  resolved "https://registry.yarnpkg.com/@neo4j-cypher/codemirror/-/codemirror-1.0.0-next.18.tgz#416674ff6ca3f868018c99acca62186e97a23c9d"
-  integrity sha512-fxAUVYPmEsY1grVOo8Rzb7OHbECGMPeWOhp4epLM1x1pS1fxeDlU/3L0vMOZe1USaUEImjvum4uFAS6hPt7bvw==
+"@neo4j-cypher/codemirror@1.0.0-next.19":
+  version "1.0.0-next.19"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/codemirror/-/codemirror-1.0.0-next.19.tgz#799c3e666947180d1e3d133d681f0bb73b7106e9"
+  integrity sha512-KMIQvR+6EL3/HPyf986xAI2iBZJ5LQYLrNP3dg3FS6DRhxAsVAsKTeR4VEJqQ8HV8odIYaLctnwGkjJu3UGV/g==
   dependencies:
     "@babel/runtime" "^7.20.6"
     "@codemirror/autocomplete" "^6.3.4"
@@ -1886,12 +1886,12 @@
     "@codemirror/state" "^6.1.4"
     "@codemirror/view" "^6.6.0"
     "@lezer/highlight" "^1.1.3"
-    "@neo4j-cypher/editor-support" "1.0.0-next.2"
+    "@neo4j-cypher/editor-support" "1.0.0-next.3"
 
-"@neo4j-cypher/editor-support@1.0.0-next.2":
-  version "1.0.0-next.2"
-  resolved "https://registry.yarnpkg.com/@neo4j-cypher/editor-support/-/editor-support-1.0.0-next.2.tgz#ab18d6587334c85b5ad00dc8c35e251f9452ab0d"
-  integrity sha512-CVdNwoglvfsOoSmqAz2lvNMlnH4SjOdZkcqXQ9g7bUAF9q1JhnZYsCl+gT5ccoaFy77xEXJwWc/6cuTlqelcsw==
+"@neo4j-cypher/editor-support@1.0.0-next.3":
+  version "1.0.0-next.3"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/editor-support/-/editor-support-1.0.0-next.3.tgz#a8c3c957124329befd2efd4556711a9e559c15dd"
+  integrity sha512-gdxJOsJZvdYrHlbngabUzYXDtV2aE6VnEKMQ7uVPRoPZwQwT9haJGL8L8rjOyWmcibhyhPknf8Iw/DmMhW6nzw==
   dependencies:
     "@babel/runtime" "^7.20.6"
     "@neo4j-cypher/antlr4" "1.0.0-next.2"
@@ -1900,13 +1900,13 @@
     lodash.find "^4.6.0"
     lodash.includes "^4.3.0"
 
-"@neo4j-cypher/react-codemirror@^1.0.0-next.19":
-  version "1.0.0-next.19"
-  resolved "https://registry.yarnpkg.com/@neo4j-cypher/react-codemirror/-/react-codemirror-1.0.0-next.19.tgz#fb9755208618d88c3e4034eaac61dcfa84b55ba5"
-  integrity sha512-ABg82FC7ZZpibPAIgI40oCha1ZSn2AgY+jYR2/eC0PxivnKiH5AjdHimGnYEvPWyuRyBlXnbQ6AnvIe/80PG/A==
+"@neo4j-cypher/react-codemirror@^1.0.0-next.20":
+  version "1.0.0-next.20"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/react-codemirror/-/react-codemirror-1.0.0-next.20.tgz#f197cb9f8f27d77c1d6a9cadbffdb586d3eb167e"
+  integrity sha512-nZ5bLbAe+vaWxfA0bU8yT7cEDPtwX8S7x42AukrXRQHWM26bsSEQcxQXyI30JPg1hPuMlQDAr3rwiIFnMeY86Q==
   dependencies:
     "@babel/runtime" "^7.20.6"
-    "@neo4j-cypher/codemirror" "1.0.0-next.18"
+    "@neo4j-cypher/codemirror" "1.0.0-next.19"
     codemirror "^6.0.1"
 
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3":
