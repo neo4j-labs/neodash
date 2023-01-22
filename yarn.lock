@@ -8411,6 +8411,11 @@ react-transition-group@^4.4.0, react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-use-error-boundary@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-use-error-boundary/-/react-use-error-boundary-3.0.0.tgz#c5b44acf9ab376f59a219d740ac372b05aba6240"
+  integrity sha512-5urkfyU3ZzInEMSHe1gxtDzlQAHs0krTt0V6h8H2L5nXhDKq3OYXnCs9lGHDkEkYvLmsphw8ap5g8uYfvrkJng==
+
 react@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
