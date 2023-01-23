@@ -40,7 +40,7 @@ To build the app for deployment:
 yarn run build
 ```
 
-To manually prettify all the project `.ts` and `.tsx files`, run:
+To manually prettify all the project `.ts` and `.tsx` files, run:
 ```
 yarn run format
 ```
