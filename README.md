@@ -6,7 +6,7 @@ NeoDash is an open source tool for visualizing your Neo4j data. It lets you grou
 
 Neodash supports presenting your data as tables, graphs, bar charts, line charts, maps and more. It contains a Cypher editor to directly write the Cypher queries that populate the reports. You can save dashboards to your database, and share them with others.
 
-## Running NeoDash
+## Try NeoDash
 You can run NeoDash in one of three ways:
 
 1. You can install NeoDash into Neo4j Desktop from the [graph app gallery](https://install.graphapp.io). NeoDash will automatically connect to your active database.
@@ -20,9 +20,9 @@ docker run -it --rm -p 5005:5005 neo4jlabs/neodash
 
 > Windows users may need to prefix the `docker run` command with `winpty`.
 
-See the [Developer Guide](https://neo4j.com/labs/neodash/2.1/developer-guide/) for more on installing, building, and running the application.
+See the [Developer Guide](https://neo4j.com/labs/neodash/2.2/developer-guide/) for more on installing, building, and running the application.
 
-## Coding practices
+## Build and Run
 In order to improve the code quality, we added a Prettier and a Linter to this repository.
 
 ### Behavior
