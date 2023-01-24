@@ -31,6 +31,7 @@
 ** xref:user-guide/faq.adoc[FAQ]
 * xref:developer-guide/index.adoc[Developer Guide]
 ** xref:developer-guide/build-and-run.adoc[Build & Run]
+** xref:developer-guide/deploy-a-build.adoc[Deploy a Build]
 ** xref:developer-guide/configuration.adoc[Configuration]
 ** xref:developer-guide/standalone-mode.adoc[Standalone Mode]
 ** xref:developer-guide/component-overview.adoc[Component Overview]
