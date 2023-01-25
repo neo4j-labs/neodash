@@ -2,6 +2,7 @@
  * Reducers define changes to the application state when a given action is taken.
  */
 
+import { DEFAULT_NEO4J_URL } from '../config/ApplicationConfig';
 import {
   CLEAR_DESKTOP_CONNECTION_PROPERTIES,
   CLEAR_NOTIFICATION,
@@ -36,7 +37,7 @@ const initialState = {
   aboutModalOpen: false,
   connection: {
     protocol: 'neo4j',
-    url: 'localhost',
+    url: DEFAULT_NEO4J_URL,
     port: '7687',
     database: '',
     username: 'neo4j',
