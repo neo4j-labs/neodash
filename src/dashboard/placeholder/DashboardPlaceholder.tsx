@@ -10,23 +10,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 export const NeoDashboardPlaceholder = ({ connected }) => {
   const defaultToolbarContent = (
     <>
-      <IconButton
-        edge='start'
-        color='inherit'
-        aria-label='open drawer'
-        style={
-          open
-            ? {
-                display: 'none',
-              }
-            : {
-                marginRight: 36,
-                marginLeft: -19,
-              }
-        }
-      >
-        <MenuIcon />
-      </IconButton>
       <InputBase
         disabled
         id='center-aligned'
