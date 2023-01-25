@@ -2,6 +2,7 @@
  * Reducers define changes to the application state when a given action
  */
 
+import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
 import {
@@ -17,7 +18,7 @@ import {
 export const NEODASH_VERSION = '2.2';
 
 export const initialState = {
-  title: 'Anomaly Detection for Public Health Intelligence',
+  title: DEFAULT_DASHBOARD_TITLE,
   version: NEODASH_VERSION,
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],

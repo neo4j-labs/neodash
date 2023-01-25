@@ -4,7 +4,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from 'react-redux';
 import debounce from 'lodash/debounce';
 import ImageIcon from '@material-ui/icons/Image';
-import { DASHBOARD_HEADER_COLOR } from '../DashboardStyle';
+import {
+  DASHBOARD_BUTTON_IMAGE,
+  DASHBOARD_BUTTON_IMAGE_SIZE,
+  DASHBOARD_HEADER_COLOR,
+} from '../../config/ApplicationConfig';
 
 export const NeoDashboardHeaderTitleBar = ({
   dashboardTitle,
@@ -96,7 +100,10 @@ export const NeoDashboardHeaderTitleBar = ({
           }}
         >
           <Badge badgeContent={''}>
-            <img style={{ width: '40px', height: '40px' }} src='logo-small.png' />
+            <img
+              style={{ width: DASHBOARD_BUTTON_IMAGE_SIZE, height: DASHBOARD_BUTTON_IMAGE_SIZE }}
+              src={DASHBOARD_BUTTON_IMAGE}
+            />
           </Badge>
         </IconButton>
       </Tooltip>

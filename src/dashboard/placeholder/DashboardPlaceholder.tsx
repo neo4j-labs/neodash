@@ -1,7 +1,6 @@
 import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from '@material-ui/core';
 import React from 'react';
-import MenuIcon from '@material-ui/icons/Menu';
-import { DASHBOARD_HEADER_COLOR } from '../DashboardStyle';
+import { DASHBOARD_HEADER_COLOR } from '../../config/ApplicationConfig';
 
 export const NeoDashboardPlaceholder = ({ connected }) => {
   const content = (
