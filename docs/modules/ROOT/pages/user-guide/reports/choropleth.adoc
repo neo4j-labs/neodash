@@ -51,6 +51,9 @@ the visualization.
 |Margin Bottom (px) |number |40 |The margin in pixels on the bottom side
 of the visualization.
 
+|Country Code Format |List |iso_a3 |ISO Standard used on country codes.
+
+
 |Projection Scale |number |100 |Projection Scale of the visualization
 
 |Projection x translation |number |0.5 |This parameter will move the center of
