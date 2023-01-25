@@ -13,6 +13,7 @@ import { FormControlLabel, MenuItem, Switch, Tooltip } from '@material-ui/core';
 import SecurityIcon from '@material-ui/icons/Security';
 import WarningIcon from '@material-ui/icons/Warning';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
+import { CUSTOM_CONNECTION_FOOTER_TEXT } from '../config/ApplicationConfig';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -256,7 +257,21 @@ export default function NeoConnectionModal({
               </DialogContentText>
             ) : (
               <DialogContentText style={{ color: 'lightgrey' }}>
-                Enter your database credentials to connect to Neo4j, and load a dashboard.
+                {CUSTOM_CONNECTION_FOOTER_TEXT ? (
+                  CUSTOM_CONNECTION_FOOTER_TEXT
+                ) : (
+                  <>
+                    Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in
+                    <a style={{ color: 'white' }} href='https://neo4j.com/download/'>
+                      Neo4j Desktop
+                    </a>
+                    , or try the
+                    <a style={{ color: 'white' }} href='https://console.neo4j.io/'>
+                      Neo4j Aura
+                    </a>
+                    free tier.
+                  </>
+                )}
               </DialogContentText>
             )}
           </DialogContent>

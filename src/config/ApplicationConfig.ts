@@ -12,3 +12,6 @@ export const DASHBOARD_BUTTON_IMAGE_SIZE = 40; // 32;
 export const DASHBOARD_HEADER_COLOR = '#008dc9'; // '#0B297D'
 export const APPLY_CUSTOM_BRAND_LOGO = true; // false
 export const DASHBOARD_HEADER_BRAND_LOGO = 'logo.png';
+
+export const CUSTOM_CONNECTION_FOOTER_TEXT =
+  'Enter your database credentials to connect to Neo4j, and load a dashboard.'; // ''
