@@ -10,3 +10,5 @@ export const DEFAULT_DASHBOARD_TITLE = 'Anomaly Detection for Public Health Inte
 export const DASHBOARD_BUTTON_IMAGE = 'logo-small.png'; // 'neo4j-icon.png'
 export const DASHBOARD_BUTTON_IMAGE_SIZE = 40; // 32;
 export const DASHBOARD_HEADER_COLOR = '#008dc9'; // '#0B297D'
+export const APPLY_CUSTOM_BRAND_LOGO = true; // false
+export const DASHBOARD_HEADER_BRAND_LOGO = 'logo.png';
