@@ -18,7 +18,7 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
   // TODO Think of a way to make it configurable to fetch vector data.
   // It makes sense to ship this JSON with NeoDash deployments that are behind some firewall and can't access this site.
   useEffect(() => {
-    fetch('https://raw.githubusercontent.com/plouc/nivo/master/website/src/data/components/geo/world_countries.json')
+    fetch('https://raw.githubusercontent.com/neo4j-labs/neodash-static/main/world_polymap.json')
       .then((res) => res.json())
       .then((matched) => setFeature(matched));
   }, []);
@@ -26,26 +26,6 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
-
-  let data = records.reduce((data: Record<string, any>, row: Record<string, any>) => {
-    try {
-      const index = recordToNative(row.get(selection.index));
-      const value = recordToNative(row.get(selection.value));
-
-      if (!index || index.length != 3 || isNaN(value)) {
-        return data;
-        // throw "Invalid selection for choropleth chart. Ensure a three letter country code is retrieved together with a value."
-      }
-      data.push({ id: index, value: value });
-      return data;
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return [];
-    }
-  }, []);
-
-  let m = Math.max(...data.map((o) => o.value));
 
   const settings = props.settings ? props.settings : {};
   const marginRight = settings.marginRight ? settings.marginRight : 24;
@@ -60,6 +40,26 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
   const projectionTranslationX = settings.projectionTranslationX ? settings.projectionTranslationX : 0.5;
   const projectionTranslationY = settings.projectionTranslationY ? settings.projectionTranslationY : 0.5;
   const labelProperty = settings.labelProperty ? settings.labelProperty : 'properties.name';
+  const matchAccessor = settings.matchAccessor ? `properties.${  settings.matchAccessor}` : 'properties.iso_a3';
+
+  let data = records.reduce((data: Record<string, any>, row: Record<string, any>) => {
+    try {
+      const index = recordToNative(row.get(selection.index));
+      const value = recordToNative(row.get(selection.value));
+
+      if (!index || isNaN(value)) {
+        return data;
+        // throw "Invalid selection for choropleth chart. Ensure a three letter country code is retrieved together with a value."
+      }
+      data.push({ [matchAccessor]: index, value: value });
+      return data;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      return [];
+    }
+  }, []);
+  let m = Math.max(...data.map((o) => o.value));
 
   if (!data || data.length == 0) {
     return <NoDrawableDataErrorMessage />;
@@ -78,6 +78,7 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
           unknownColor='#666666'
           label={labelProperty}
           valueFormat='.2s'
+          match={matchAccessor}
           projectionScale={projectionScale}
           projectionTranslation={[projectionTranslationX, projectionTranslationY]}
           projectionRotation={[0, 0, 0]}
