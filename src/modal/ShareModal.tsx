@@ -379,7 +379,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         </DialogTitle>
         <DialogContent style={{ width: '1000px' }}>
           <DialogContentText>
-            To share a dashboard file directly, make it accessible
+            To share a dashboard file directly, make it accessible&nbsp;
             <a target='_blank' href='https://gist.github.com/'>
               online
             </a>

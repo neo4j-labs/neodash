@@ -65,7 +65,7 @@ export default function NeoConnectionModal({
       >
         <DialogTitle id='form-dialog-title'>
           {standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}
-          <IconButton style={{ padding: '3px', float: 'right' }}>
+          <IconButton style={{ padding: '0px', float: 'right' }}>
             <Badge overlap='rectangular' badgeContent={''}>
               <img style={{ width: '36px', height: '36px' }} src='neo4j-icon-color.png' />
             </Badge>
