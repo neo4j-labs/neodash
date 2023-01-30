@@ -630,6 +630,12 @@ export const ADVANCED_REPORT_TYPES = {
     },
     maxRecords: 300,
     settings: {
+      matchAccessor: {
+        label: 'Country code format',
+        type: SELECTION_TYPES.LIST,
+        values: ['iso_a3', 'iso_a2', 'iso_n3'],
+        default: 'iso_a3',
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,

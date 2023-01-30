@@ -43,7 +43,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
           />
           Loading Dashboard
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
