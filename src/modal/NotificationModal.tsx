@@ -61,7 +61,7 @@ export const NeoNotificationModal = ({
             style={{ marginLeft: '40px', padding: '3px', float: 'right' }}
           >
             {dismissable ? (
-              <Badge badgeContent={''}>
+              <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon />
               </Badge>
             ) : (

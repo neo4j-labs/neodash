@@ -94,7 +94,7 @@ const NeoCardViewHeader = ({
                 placeholder='Report name...'
                 fullWidth
                 maxRows={4}
-                value={editing ? text : parsedText}
+                value={editing ? text : parsedText !== ' ' ? parsedText : ''}
                 onChange={(event) => {
                   setText(event.target.value);
                   debouncedTitleUpdate(event.target.value);
@@ -167,7 +167,7 @@ const NeoCardViewHeader = ({
         <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
