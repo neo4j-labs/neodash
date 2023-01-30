@@ -10,6 +10,7 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
+import { NeoReportWrapper } from '../../report/ReportWrapper';
 
 const NeoCardView = ({
   title,
@@ -144,7 +145,7 @@ const NeoCardView = ({
   const reportContent = (
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (
-        <NeoReport
+        <NeoReportWrapper
           query={query}
           database={database}
           parameters={localParameters}

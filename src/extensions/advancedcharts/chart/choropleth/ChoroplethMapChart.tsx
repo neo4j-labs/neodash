@@ -40,7 +40,7 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
   const projectionTranslationX = settings.projectionTranslationX ? settings.projectionTranslationX : 0.5;
   const projectionTranslationY = settings.projectionTranslationY ? settings.projectionTranslationY : 0.5;
   const labelProperty = settings.labelProperty ? settings.labelProperty : 'properties.name';
-  const matchAccessor = settings.matchAccessor ? `properties.${  settings.matchAccessor}` : 'properties.iso_a3';
+  const matchAccessor = settings.matchAccessor ? `properties.${settings.matchAccessor}` : 'properties.iso_a3';
 
   let data = records.reduce((data: Record<string, any>, row: Record<string, any>) => {
     try {

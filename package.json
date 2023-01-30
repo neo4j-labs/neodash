@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -75,6 +75,7 @@
     "react-leaflet-heatmap-layer-v3": "^3.0.3-beta-1",
     "react-markdown": "^8.0.0",
     "react-redux": "^7.2.6",
+    "react-use-error-boundary": "^3.0.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "remark-gfm": "^3.0.1",
