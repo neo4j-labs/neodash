@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { Badge, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
@@ -22,7 +23,9 @@ const NeoCardViewHeader = ({
   onTitleUpdate,
   fullscreenEnabled,
   downloadImageEnabled,
+  refreshButtonEnabled,
   onToggleCardSettings,
+  onManualRefreshCard,
   onDownloadImage,
   onToggleCardExpand,
   expanded,
@@ -91,7 +94,7 @@ const NeoCardViewHeader = ({
                 placeholder='Report name...'
                 fullWidth
                 maxRows={4}
-                value={editing ? text : parsedText}
+                value={editing ? text : parsedText !== ' ' ? parsedText : ''}
                 onChange={(event) => {
                   setText(event.target.value);
                   debouncedTitleUpdate(event.target.value);
@@ -111,6 +114,14 @@ const NeoCardViewHeader = ({
     <Tooltip title='Settings' aria-label='settings'>
       <IconButton aria-label='settings' onClick={onToggleCardSettings}>
         <MoreVertIcon />
+      </IconButton>
+    </Tooltip>
+  );
+
+  const refreshButton = (
+    <Tooltip title='Refresh' aria-label='refresh'>
+      <IconButton aria-label='refresh' onClick={onManualRefreshCard}>
+        <RefreshIcon />
       </IconButton>
     </Tooltip>
   );
@@ -156,7 +167,7 @@ const NeoCardViewHeader = ({
         <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
@@ -174,6 +185,7 @@ const NeoCardViewHeader = ({
             {downloadImageEnabled ? downloadImageButton : <></>}
             {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
             {descriptionEnabled ? descriptionButton : <></>}
+            {refreshButtonEnabled ? refreshButton : <></>}
             {editable ? settingsButton : <></>}
           </>
         }

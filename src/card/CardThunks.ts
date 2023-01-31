@@ -2,8 +2,6 @@ import {
   updateReportTitle,
   updateReportQuery,
   updateSelection,
-  updateReportSize,
-  updateReportRefreshRate,
   updateCypherParameters,
   updateFields,
   updateReportType,
@@ -49,17 +47,6 @@ export const updateReportQueryThunk = (index, query) => (dispatch: any, getState
     dispatch(updateReportQuery(pagenumber, index, query));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update query', e));
-  }
-};
-
-// TODO: make refresh rate an advanced setting
-export const updateReportRefreshRateThunk = (index, rate) => (dispatch: any, getState: any) => {
-  try {
-    const state = getState();
-    const { pagenumber } = state.dashboard.settings;
-    dispatch(updateReportRefreshRate(pagenumber, index, rate));
-  } catch (e) {
-    dispatch(createNotificationThunk('Cannot update refresh rate', e));
   }
 };
 
