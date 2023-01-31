@@ -1,25 +1,23 @@
-import { TextField } from '@material-ui/core';
+import React, { useCallback } from 'react';
+import { debounce, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import React, { useCallback, useEffect } from 'react';
+import { ParameterSelectProps } from './ParameterSelect';
 
-const NodePropertyParameterSelectComponent = ({
-  query,
-  extraRecords,
-  inputText,
-  setInputText,
-  debouncedQueryCallback,
-  setExtraRecords,
-  helperText,
-  label,
-  property,
-  value,
-  currentValue,
-  setValue,
-  clearParameterOnFieldClear,
-  setGlobalParameter,
-  parameter,
-  defaultValue,
-}) => {
+const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
+  const suggestionsUpdateTimeout =
+    props.settings && props.settings.suggestionsUpdateTimeout ? props.settings.suggestionsUpdateTimeout : 250;
+  const defaultValue =
+    props.settings && props.settings.defaultValue && props.settings.defaultValue.length > 0
+      ? props.settings.defaultValue
+      : '';
+  const [extraRecords, setExtraRecords] = React.useState([]);
+  const [inputText, setInputText] = React.useState(props.parameterValue);
+  const [displayValue, setDisplayValue] = React.useState(props.parameterValue);
+  const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
+  const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
+  const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
+  const { helperText, clearParameterOnFieldClear } = props.settings;
+
   return (
     <Autocomplete
       id='autocomplete'
@@ -29,24 +27,24 @@ const NodePropertyParameterSelectComponent = ({
       inputValue={inputText !== null ? inputText.toString() : ''}
       onInputChange={(event, value) => {
         setInputText(`${value}`);
-        debouncedQueryCallback(query, { input: `${value}` }, setExtraRecords);
+        debouncedQueryCallback(props.query, { input: `${value}` }, setExtraRecords);
       }}
       getOptionSelected={(option, value) => {
         return (option && option.toString()) === (value && value.toString());
       }}
-      value={value !== null ? value.toString() : `${currentValue}`}
+      value={displayValue !== null ? displayValue.toString() : `${props.parameterValue}`}
       onChange={(event, newValue) => {
-        setValue(newValue);
+        setDisplayValue(newValue);
         setInputText(`${newValue}`);
         if (newValue && newValue.low) {
           newValue = newValue.low;
         }
         if (newValue == null && clearParameterOnFieldClear) {
-          setGlobalParameter(parameter, undefined);
+          props.setParameterValue(undefined);
         } else if (newValue == null) {
-          setGlobalParameter(parameter, defaultValue);
+          props.setParameterValue(defaultValue);
         } else {
-          setGlobalParameter(parameter, newValue);
+          props.setParameterValue(newValue);
         }
       }}
       renderInput={(params) => (

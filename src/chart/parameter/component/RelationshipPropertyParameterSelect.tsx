@@ -1,10 +1,23 @@
-import { Autocomplete, TextField } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
-import React, { useCallback, useEffect } from 'react';
-import NeoField from '../../../component/field/Field';
+import React from 'react';
+import NodePropertyParameterSelectComponent from './NodePropertyParameterSelect';
+import { ParameterSelectProps } from './ParameterSelect';
 
-const RelationshipPropertyParameterSelectComponent = () => {
-  return <div>Placeholder</div>;
+/**
+ * At the moment relationship property selectors are identical to node property selectors.
+ * Therefore, just return the node component.
+ */
+const RelationshipPropertyParameterSelectComponent = (props: ParameterSelectProps) => {
+  return (
+    <NodePropertyParameterSelectComponent
+      parameterName={props.parameterName}
+      parameterValue={props.parameterValue}
+      setParameterValue={props.setParameterValue}
+      query={props.query}
+      queryCallback={props.queryCallback}
+      settings={props.settings}
+      allParameters={props.allParameters}
+    />
+  );
 };
 
 export default RelationshipPropertyParameterSelectComponent;
