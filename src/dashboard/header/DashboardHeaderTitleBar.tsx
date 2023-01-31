@@ -94,7 +94,7 @@ export const NeoDashboardHeaderTitleBar = ({
             }
           }}
         >
-          <Badge badgeContent={''}>
+          <Badge overlap='rectangular' badgeContent={''}>
             <img style={{ width: '36px', height: '36px' }} src='neo4j-icon.png' />
           </Badge>
         </IconButton>

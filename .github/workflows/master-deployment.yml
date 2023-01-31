@@ -79,7 +79,7 @@ jobs:
       context: .
       file: ./Dockerfile
       push: true
-      tags: ${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_LABS_ACCESS_TOKEN }}/neodash:2.2.1
+      tags: ${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_LABS_ACCESS_TOKEN }}/neodash:2.2.2
  build-docker-legacy:
    needs: build-test
    runs-on: ubuntu-latest
@@ -103,7 +103,7 @@ jobs:
       context: .
       file: ./Dockerfile
       push: true
-      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.2.1
+      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.2.2
 #  build-npm:
 #    needs: build-test
 #    runs-on: ubuntu-latest
