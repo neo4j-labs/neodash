@@ -1,60 +1,56 @@
 import { debounce } from '@material-ui/core';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { useCallback, useEffect } from 'react';
+import { ParameterSelectProps } from './ParameterSelect';
 import NeoField from '../../../component/field/Field';
 
-const FreeTextParameterSelectComponent = ({ parameterValue, setParameterValue, query, settings }) => {
-  const setParameterTimeout = settings && settings.setParameterTimeout ? settings.setParameterTimeout : 1000;
+const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
+  const setParameterTimeout =
+    props.settings && props.settings.setParameterTimeout ? props.settings.setParameterTimeout : 1000;
   const defaultValue =
-    settings && settings.defaultValue && settings.defaultValue.length > 0 ? settings.defaultValue : '';
-  const [inputText, setInputText] = React.useState(parameterValue);
-  const [displayValue, setDisplayValue] = React.useState(parameterValue);
-  const label = settings && settings.entityType ? settings.entityType : '';
-  const property = settings && settings.propertyType ? settings.propertyType : '';
-  const { helperText, clearParameterOnFieldClear } = settings;
-
+    props.settings && props.settings.defaultValue && props.settings.defaultValue.length > 0
+      ? props.settings.defaultValue
+      : '';
+  const [inputText, setInputText] = React.useState(props.parameterValue);
+  const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
+  const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
+  const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
+  const clearParameterOnFieldClear =
+    props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
+  const [running, setRunning] = React.useState(false);
+  const setParameterValue = (value) => {
+    setRunning(false);
+    props.setParameterValue(value);
+  };
   const debouncedSetParameterValue = useCallback(debounce(setParameterValue, setParameterTimeout), []);
-  useEffect(() => {
-    const timeOutId = setTimeout(() => {
-      if (displayValue == '' && clearParameterOnFieldClear) {
-        debouncedSetParameterValue(undefined);
-      } else {
-        debouncedSetParameterValue(displayValue);
-      }
-    }, 250);
-    return () => clearTimeout(timeOutId);
-  }, [displayValue]);
 
-  // In case the components gets (re)loaded with a different/non-existing selected parameter, set the text to the current global parameter value.
-  if (query && displayValue != parameterValue && parameterValue != inputText) {
-    setDisplayValue(parameterValue);
-    setInputText(displayValue == defaultValue ? '' : parameterValue);
+  // If the user hasn't typed, and the parameter value mismatches the input value --> it was changed externally --> refresh the input value.
+  if (running == false && inputText !== props.parameterValue) {
+    setInputText(props.parameterValue);
   }
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', marginTop: '5px' }}>
       <NeoField
         key={'freetext'}
         label={helperText ? helperText : `${label} ${property}`}
         defaultValue={defaultValue}
-        value={displayValue}
+        value={inputText}
         variant='outlined'
         placeholder={'Enter text here...'}
         style={{ marginBottom: '10px', marginRight: '10px', marginLeft: '15px', width: 'calc(100% - 80px)' }}
         onChange={(newValue) => {
-          // TODO: i want this to be a proper wait instead of triggering on the first character.
+          setRunning(true);
+          setInputText(newValue);
+
           if (newValue == null && clearParameterOnFieldClear) {
-            setDisplayValue(defaultValue);
+            debouncedSetParameterValue(defaultValue);
           } else {
-            setDisplayValue(newValue);
+            debouncedSetParameterValue(newValue);
           }
         }}
       />
-      {displayValue !== parameterValue ? (
-        <CircularProgress size={26} style={{ marginTop: '20px', marginLeft: '5px' }} />
-      ) : (
-        <></>
-      )}
+      {running ? <CircularProgress size={26} style={{ marginTop: '20px', marginLeft: '5px' }} /> : <></>}
     </div>
   );
 };
