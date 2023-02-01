@@ -8,9 +8,10 @@ import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { getReportTypes } from '../../extensions/ExtensionUtils';
+import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
+import { stylingParams } from '../../extensions/styling/StyleRuleEvaluator';
 
 const NeoCardView = ({
   title,
@@ -41,12 +42,14 @@ const NeoCardView = ({
   const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
   const ref = React.useRef();
+  const styleRules = settings.styleRules ? settings.styleRules : [];
+  const styleParams = extensionEnabled(extensions, 'styling') ? stylingParams(styleRules) : [];
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   const getLocalParameters = (parse_string): any => {
     let re = /(?:^|\W)\$(\w+)(?!\w)/g;
     let match;
-    let localQueryVariables: string[] = [];
+    let localQueryVariables: string[] = [...styleParams];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);
     }
