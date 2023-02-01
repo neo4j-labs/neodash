@@ -187,12 +187,14 @@ export const NeoCustomReportActionsModal = ({
   const createFieldVariableSuggestionsFromRule = (rule, type) => {
     let suggestions;
     if (type) {
-      if(rule.customization == "set page")
+      if(rule.customization == "set page"){
         suggestions = [];
-      else
+      }
+      else{
         suggestions = createFieldVariableSuggestions(rule.condition, true, null).filter((e) =>
           e.toLowerCase().startsWith(rule.field.toLowerCase())
         );
+      }
     } else {
       if(rule.customization == "set page" && pageNames)
         suggestions = pageNames;

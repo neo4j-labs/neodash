@@ -23,13 +23,15 @@ const ruleFieldCheck = (ruleValue, value) => {
 
 export const getPageFromPageNames = (pageNames, ruleValue) => {
   let page = pageNames.filter((pageNew)=> pageNew.split('/')[1] == ruleValue.split('/')[1]);
-  if (page.length == 1)
+  if (page.length == 1){
     return page[0];
+  }
 
   page = pageNames.filter((pageNew)=> pageNew == ruleValue);
 
-  if (page.length == 1)
+  if (page.length == 1){
     return page[0];
+  }
 
   return null;
 };
@@ -48,8 +50,9 @@ export const actionRule = (rule, e, props, type = 'default') => {
       }
     } else if(rule.customization == 'set page' && props.setPage && props.pageNames){
       let page = getPageFromPageNames(props.pageNames, rule.value);
-      if(page)
+      if(page){
         props.setPage(page.split('/')[0]);
+      }
     }
   }
 }
