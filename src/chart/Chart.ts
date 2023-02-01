@@ -13,4 +13,6 @@ export interface ChartProps {
   queryCallback?: (query: string, parameters: Record<string, any>, records: Neo4jRecord[]) => null; // Optionally, a way for the report to read more data from Neo4j.
   setGlobalParameter?: (name: string, value: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
+  setPage?:(reference:number)=>void;
+  pageNames?:String[];
 }

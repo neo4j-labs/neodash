@@ -2,7 +2,7 @@ import { valueIsArray } from '../../chart/ChartUtils';
 
 export const getRule = (e, rules, type) => {
   let r = getRuleWithFieldPropertyName(e, rules, type, null);
-  return r == null ? null : r[0];
+  return r || null;
 };
 
 export const getRuleWithFieldPropertyName = (e, rules, type, fieldPropertyName) => {
@@ -20,6 +20,39 @@ const ruleFieldCheck = (ruleValue, value) => {
   }
   return value.trim() == ruleValue.trim();
 };
+
+export const getPageFromPageNames = (pageNames, ruleValue) => {
+  let page = pageNames.filter((pageNew)=> pageNew.split('/')[1] == ruleValue.split('/')[1]);
+  if (page.length == 1)
+    return page[0];
+
+  page = pageNames.filter((pageNew)=> pageNew == ruleValue);
+
+  if (page.length == 1)
+    return page[0];
+
+  return null;
+};
+
+export const actionRule = (rule, e, props, type = 'default') => {
+  if (rule !== null ) {
+    if(rule.customization == 'set variable' && props && props.setGlobalParameter){
+      // call thunk for $neodash_customizationValue
+      let rValue = rule.value == 'id' ? 'id ' : rule.value;
+      if (rValue != '' && e.row && e.row[rValue]) {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.row[rule.value]);
+      } else if (rule.value != '' && e.properties && e.properties[rule.value]) {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.properties[rule.value]);
+      } else {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
+      }
+    } else if(rule.customization == 'set page' && props.setPage && props.pageNames){
+      let page = getPageFromPageNames(props.pageNames, rule.value);
+      if(page)
+        props.setPage(page.split('/')[0]);
+    }
+  }
+}
 
 export const unassign = (target, source) => {
   Object.keys(source).forEach((key) => {

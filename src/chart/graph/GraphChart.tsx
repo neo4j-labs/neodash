@@ -18,7 +18,19 @@ import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
 import { evaluateRulesOnNode } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import { getCurvature, getRuleWithFieldPropertyName, merge, update } from '../../extensions/advancedcharts/Utils';
+import {
+  actionRule,
+  getCurvature,
+  getPageFromPageNames,
+  getRuleWithFieldPropertyName,
+  merge,
+  update
+} from '../../extensions/advancedcharts/Utils';
+import {connect} from "react-redux";
+import {getPages} from "../../dashboard/DashboardSelectors";
+import {createNotificationThunk} from "../../page/PageThunks";
+import {forceRefreshPage} from "../../page/PageActions";
+import {updateDashboardSetting} from "../../settings/SettingsActions";
 
 const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
   let img = new Image();
@@ -377,19 +389,6 @@ const NeoGraphChart = (props: ChartProps) => {
     return node.properties[selectedProp] ? node.properties[selectedProp] : '';
   };
 
-  function actionRule(rule, e) {
-    if (rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter) {
-      // call thunk for $neodash_customizationValue
-      if (rule.value != '' && e.row && e.row[rule.value]) {
-        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.row[rule.value]);
-      } else if (rule.value != '' && e.properties && e.properties[rule.value]) {
-        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.properties[rule.value]);
-      } else {
-        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
-      }
-    }
-  }
-
   return (
     <>
       <div
@@ -473,11 +472,11 @@ const NeoGraphChart = (props: ChartProps) => {
           nodeVal={(node) => node.size}
           onNodeClick={(e) => {
             let rules = getRuleWithFieldPropertyName(e, actionsRules, 'onNodeClick', 'labels');
-            rules != null ? rules.forEach((rule) => actionRule(rule, e)) : showPopup(e);
+            rules != null ? rules.forEach((rule) => actionRule(rule, e, props)) : showPopup(e);
           }}
           onLinkClick={(e) => {
             let rules = getRuleWithFieldPropertyName(e, actionsRules, 'onLinkClick', 'type');
-            rules != null ? rules.forEach((rule) => actionRule(rule, e)) : showPopup(e);
+            rules != null ? rules.forEach((rule) => actionRule(rule, e, props)) : showPopup(e);
           }}
           onNodeRightClick={handleExpand}
           linkDirectionalParticles={linkDirectionalParticles}
@@ -570,4 +569,5 @@ const NeoGraphChart = (props: ChartProps) => {
     </>
   );
 };
+
 export default NeoGraphChart;

@@ -10,7 +10,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import Button from '@material-ui/core/Button';
-import { getRule } from '../../extensions/advancedcharts/Utils';
+import { getRule, actionRule } from '../../extensions/advancedcharts/Utils';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -132,18 +132,6 @@ const NeoTableChart = (props: ChartProps) => {
         );
       });
 
-  function actionRule(rule, e) {
-    if (rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter) {
-      // call thunk for $neodash_customizationValue
-      let rValue = rule.value == 'id' ? 'id ' : rule.value;
-      if (rValue != '' && e.row[rValue]) {
-        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.row[rValue]);
-      } else {
-        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
-      }
-    }
-  }
-
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
       <Snackbar
@@ -185,13 +173,15 @@ const NeoTableChart = (props: ChartProps) => {
         columns={columns}
         columnVisibilityModel={hiddenColumns}
         onCellClick={(e) => {
-          let rule = getRule(e, actionsRules, 'Click');
-          actionRule(rule, e);
+          let rules = getRule(e, actionsRules, 'Click');
+            if (rules !== null) {
+                rules.forEach(rule => actionRule(rule, e, props, 'table'))
+            }
         }}
         onCellDoubleClick={(e) => {
-          let rule = getRule(e, actionsRules, 'doubleClick');
-          if (rule !== null) {
-            actionRule(rule, e);
+          let rules = getRule(e, actionsRules, 'doubleClick');
+          if (rules !== null) {
+              rules.forEach(rule => actionRule(rule, e, props, 'table'))
           } else {
             setNotificationOpen(true);
             navigator.clipboard.writeText(e.value);

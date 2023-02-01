@@ -14,8 +14,12 @@ import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
+import {connect} from "react-redux";
+import {updateDashboardSetting} from "../settings/SettingsActions";
+import {getPages, getPagesNames} from "../dashboard/DashboardSelectors";
 
 export const NeoReport = ({
+  pageNames,
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
   parameters = {}, // A dictionary of parameters to pass into the query.
@@ -30,6 +34,7 @@ export const NeoReport = ({
   getGlobalParameter = () => {
     return '';
   }, // function to get global (cypher) parameters.
+  setPage = () => {},
   refreshRate = 0, // Optionally refresh the report every X seconds.
   dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
   rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
@@ -206,6 +211,8 @@ export const NeoReport = ({
     return (
       <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
         <ChartType
+          setPage = {setPage}
+          pageNames = {pageNames}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -239,6 +246,8 @@ export const NeoReport = ({
           </div>
         </div>
         <ChartType
+          setPage = {setPage}
+          pageNames = {pageNames}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -270,4 +279,20 @@ export const NeoReport = ({
   );
 };
 
-export default NeoReport;
+
+const mapStateToProps = (state) => ({
+  pageNames: getPagesNames(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setPage: (reference:number) => {
+    dispatch(
+        updateDashboardSetting(
+            'pagenumber',
+            reference
+        )
+    );
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoReport);

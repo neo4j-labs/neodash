@@ -11,6 +11,14 @@ import AddIcon from '@material-ui/icons/Add';
 import TuneIcon from '@material-ui/icons/Tune';
 import { Autocomplete } from '@material-ui/lab';
 import StarsIcon from '@material-ui/icons/Stars';
+import {applicationIsStandalone} from "../../application/ApplicationSelectors";
+import {getPages, getPagesNames} from "../../dashboard/DashboardSelectors";
+import {getDashboardIsEditable, getPageNumber} from "../../settings/SettingsSelectors";
+import {connect} from "react-redux";
+import {setDashboardTitle} from "../../dashboard/DashboardActions";
+import {setConnectionModalOpen} from "../../application/ApplicationActions";
+import {updateDashboardSetting} from "../../settings/SettingsActions";
+import {NeoReport} from "../../report/Report";
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = {
   table: [
@@ -51,17 +59,29 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
       value: 'set variable',
       label: 'Parameter',
     },
+    {
+      value: 'set page',
+      label: 'Page'
+    },
   ],
   map: [
     {
       value: 'set variable',
       label: 'Parameter',
     },
+    {
+      value: 'set page',
+      label: 'Page'
+    },
   ],
   graph: [
     {
       value: 'set variable',
       label: 'Parameter',
+    },
+    {
+      value: 'set page',
+      label: 'Page'
     },
   ],
 };
@@ -87,6 +107,7 @@ const getDefaultRule = (type) => {
  * The pop-up window used to build and specify custom styling rules for reports.
  */
 export const NeoCustomReportActionsModal = ({
+  pageNames,
   customReportActionsModalOpen,
   settingName,
   settingValue,
@@ -166,19 +187,74 @@ export const NeoCustomReportActionsModal = ({
   const createFieldVariableSuggestionsFromRule = (rule, type) => {
     let suggestions;
     if (type) {
-      suggestions = createFieldVariableSuggestions(rule.condition, true, null).filter((e) =>
-        e.toLowerCase().startsWith(rule.field.toLowerCase())
-      );
+      if(rule.customization == "set page")
+        suggestions = [];
+      else
+        suggestions = createFieldVariableSuggestions(rule.condition, true, null).filter((e) =>
+          e.toLowerCase().startsWith(rule.field.toLowerCase())
+        );
     } else {
-      suggestions = createFieldVariableSuggestions(rule.condition, false, rule.field).filter((e) =>
-        e.toLowerCase().startsWith(rule.value.toLowerCase())
-      );
+      if(rule.customization == "set page" && pageNames)
+        suggestions = pageNames;
+      else
+        suggestions = createFieldVariableSuggestions(rule.condition, false, rule.field).filter((e) =>
+          e.toLowerCase().startsWith(rule.value.toLowerCase())
+        );
     }
 
-    suggestions = suggestions.map((e) => (e.split('.')[1] ? e.split('.')[1] : e));
+    suggestions = suggestions.map((e) => (e.split('.')[1] || e));
 
     return suggestions;
   };
+
+  const getActionHelper = (rule, index, customization) => {
+    if (customization == "set variable")
+      return (
+          <>
+            <td
+                style={{
+                  paddingLeft: '5px',
+                  paddingRight: '0px',
+                  paddingTop: '5px',
+                  paddingBottom: '5px',
+                }}
+            >
+              <TextField
+                  style={{width: '80px', color: 'black', marginRight: '-5px'}}
+                  disabled={true}
+                  value='$neodash_'>
+              </TextField>
+            </td>
+            <td style={{paddingLeft: '5px', paddingRight: '5px'}}>
+              <TextField
+                  placeholder=''
+                  value={rule.customizationValue}
+                  onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
+              ></TextField>
+            </td>
+          </>
+      );
+    else if (customization == "set page")
+      return (
+          <>
+            <td
+                style={{
+                  paddingLeft: '5px',
+                  paddingRight: '0px',
+                  paddingTop: '5px',
+                  paddingBottom: '5px',
+                }}
+            >
+              <TextField
+                  style={{width: '100%', color: 'black', marginRight: '-5px'}}
+                  disabled={true}
+                  value='name/index'>
+              </TextField>
+            </td>
+          </>
+      );
+    return "wtf";
+  }
 
   return (
     <div>
@@ -299,27 +375,7 @@ export const NeoCustomReportActionsModal = ({
                                   ))}
                               </TextField>
                             </td>
-                            <td
-                              style={{
-                                paddingLeft: '5px',
-                                paddingRight: '0px',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
-                              }}
-                            >
-                              <TextField
-                                style={{ width: '80px', color: 'black', marginRight: '-5px' }}
-                                disabled={true}
-                                value={'$neodash_'}
-                              ></TextField>
-                            </td>
-                            <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                              <TextField
-                                placeholder=''
-                                value={rule.customizationValue}
-                                onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
-                              ></TextField>
-                            </td>
+                            {getActionHelper(rule, index, rules[index]['customization'])}
                           </div>
 
                           <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
@@ -339,8 +395,8 @@ export const NeoCustomReportActionsModal = ({
                                 id='autocomplete-label-type'
                                 noOptionsText='*Specify an exact field name'
                                 options={createFieldVariableSuggestionsFromRule(rule, false)}
-                                value={rule.value ? rule.value : ''}
-                                inputValue={rule.value ? rule.value : ''}
+                                value={rule.value || ''}
+                                inputValue={rule.value || ''}
                                 popupIcon={<></>}
                                 style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
                                 onInputChange={(event, value) => {
@@ -419,4 +475,20 @@ export const NeoCustomReportActionsModal = ({
   );
 };
 
-export default NeoCustomReportActionsModal;
+const mapStateToProps = (state) => ({
+  pageNames: getPagesNames(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setPage: (reference:number) => {
+    dispatch(
+        updateDashboardSetting(
+            'pagenumber',
+            reference
+        )
+    );
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoCustomReportActionsModal);
+
