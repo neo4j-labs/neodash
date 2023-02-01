@@ -196,12 +196,14 @@ export const NeoCustomReportActionsModal = ({
         );
       }
     } else {
-      if(rule.customization == "set page" && pageNames)
+      if(rule.customization == "set page" && pageNames){
         suggestions = pageNames;
-      else
+      }
+      else{
         suggestions = createFieldVariableSuggestions(rule.condition, false, rule.field).filter((e) =>
           e.toLowerCase().startsWith(rule.value.toLowerCase())
         );
+      }
     }
 
     suggestions = suggestions.map((e) => (e.split('.')[1] || e));
@@ -210,7 +212,7 @@ export const NeoCustomReportActionsModal = ({
   };
 
   const getActionHelper = (rule, index, customization) => {
-    if (customization == "set variable")
+    if (customization == "set variable"){
       return (
           <>
             <td
@@ -236,7 +238,8 @@ export const NeoCustomReportActionsModal = ({
             </td>
           </>
       );
-    else if (customization == "set page")
+    }
+    else if (customization == "set page"){
       return (
           <>
             <td
@@ -255,6 +258,7 @@ export const NeoCustomReportActionsModal = ({
             </td>
           </>
       );
+    }
     return "wtf";
   }
 
@@ -377,7 +381,7 @@ export const NeoCustomReportActionsModal = ({
                                   ))}
                               </TextField>
                             </td>
-                            {getActionHelper(rule, index, rules[index]['customization'])}
+                            {getActionHelper(rule, index, rules[index].customization)}
                           </div>
 
                           <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>

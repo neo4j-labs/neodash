@@ -14,5 +14,5 @@ export interface ChartProps {
   setGlobalParameter?: (name: string, value: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
   setPage?:(reference:number)=>void;
-  pageNames?:String[];
+  pageNames?:string[];
 }
