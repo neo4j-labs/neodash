@@ -30,13 +30,15 @@ const NeoCardSettingsContentPropertySelect = ({
   const [labelInputText, setLabelInputText] = React.useState(settings.entityType);
   const [labelRecords, setLabelRecords] = React.useState([]);
   const [propertyInputText, setPropertyInputText] = React.useState(settings.propertyType);
-  const [propertyInputDisplayText, setPropertyInputDisplayText] = React.useState(settings.propertyDisplay);
+  const [propertyInputDisplayText, setPropertyInputDisplayText] = React.useState(
+    settings.propertyDisplay || settings.propertyType
+  );
   const [propertyRecords, setPropertyRecords] = React.useState([]);
   let { parameterName } = settings;
 
   // When certain settings are updated, a re-generated search query is needed.
   useEffect(() => {
-    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyDisplay);
+    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyDisplay || settings.propertyDisplay);
   }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
@@ -140,6 +142,7 @@ const NeoCardSettingsContentPropertySelect = ({
   }
 
   function updateReportQuery(entityType, propertyType, propertyDisplay) {
+    const propertyDisplaySanitized = propertyDisplay || propertyType;
     const limit = settings.suggestionLimit ? settings.suggestionLimit : 5;
     const deduplicate = settings.deduplicateSuggestions !== undefined ? settings.deduplicateSuggestions : true;
     const searchType = settings.searchType ? settings.searchType : 'CONTAINS';
@@ -147,21 +150,21 @@ const NeoCardSettingsContentPropertySelect = ({
     if (settings.type == 'Node Property') {
       const newQuery =
         `MATCH (n:\`${entityType}\`) \n` +
-        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplay}\`)) ${searchType} ${
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplaySanitized}\`)) ${searchType} ${
           caseSensitive ? '' : 'toLower'
         }($input) \n` +
         `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
-        ` n.\`${propertyDisplay}\` as display ` +
+        ` n.\`${propertyDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else if (settings.type == 'Relationship Property') {
       const newQuery =
         `MATCH ()-[n:\`${entityType}\`]->() \n` +
-        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplay}\`)) ${searchType} ${
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplaySanitized}\`)) ${searchType} ${
           caseSensitive ? '' : 'toLower'
         }($input) \n` +
         `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
-        ` n.\`${propertyDisplay}\` as display ` +
+        ` n.\`${propertyDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else {
@@ -222,7 +225,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 ? [settings.entityType]
                 : labelRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
             }
-            getOptionLabel={(option) => (option ? option : '')}
+            getOptionLabel={(option) => option || ''}
             style={{ width: 335, marginLeft: '5px', marginTop: '5px' }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
@@ -295,7 +298,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 id='autocomplete-property-display'
                 options={
                   manualPropertyNameSpecification
-                    ? [settings.propertyDisplay]
+                    ? [settings.propertyDisplay || settins.propertyType]
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
                 getOptionLabel={(option) => (option ? option : '')}
@@ -313,14 +316,14 @@ const NeoCardSettingsContentPropertySelect = ({
                     );
                   }
                 }}
-                value={settings.propertyDisplay}
+                value={settings.propertyDisplay || settings.propertyType}
                 onChange={(event, newValue) => handlePropertyDisplayNameSelectionUpdate(newValue)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     placeholder='Start typing...'
                     InputLabelProps={{ shrink: true }}
-                    label={'Property Display'}
+                    label={'Override property display value'}
                   />
                 )}
               />
