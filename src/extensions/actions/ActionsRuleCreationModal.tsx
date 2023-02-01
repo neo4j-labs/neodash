@@ -195,8 +195,7 @@ export const NeoCustomReportActionsModal = ({
           e.toLowerCase().startsWith(rule.field.toLowerCase())
         );
       }
-    } else {
-      if(rule.customization == "set page" && pageNames){
+    } else if(rule.customization == "set page" && pageNames){
         suggestions = pageNames;
       }
       else{
@@ -204,7 +203,6 @@ export const NeoCustomReportActionsModal = ({
           e.toLowerCase().startsWith(rule.value.toLowerCase())
         );
       }
-    }
 
     suggestions = suggestions.map((e) => (e.split('.')[1] || e));
 

@@ -37,6 +37,7 @@ export const getPageFromPageNames = (pageNames, ruleValue) => {
 };
 
 export const actionRule = (rule, e, props, type = 'default') => {
+  let tt = type;
   if (rule !== null ) {
     if(rule.customization == 'set variable' && props && props.setGlobalParameter){
       // call thunk for $neodash_customizationValue
