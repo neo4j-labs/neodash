@@ -3,7 +3,6 @@ import { useMap, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import nuts_rg_60m_2013_lvl_1 from '../nuts_rg_60m_2013_lvl_1.geo.json';
 import nuts_rg_60m_2013_lvl_2 from '../nuts_rg_60m_2013_lvl_2.geo.json';
-import { getColor } from '../layerUtils';
 import Button from '@material-ui/core/Button';
 
 const featureLevel1 = nuts_rg_60m_2013_lvl_1.features;
@@ -19,7 +18,6 @@ export function CreateBoundaries(_data) {
   const [geoJson, setGeoJson] = React.useState(null);
   const geoJsonData = geoJson == null ? featureLevel1 : getDrillDown(geoJson.feature.properties.NUTS_ID, featureLevel2);
   const key = geoJson == null ? 'all' : geoJson.feature.properties.NUTS_ID;
-
   const map = useMap();
 
   function BootstrapButton() {
