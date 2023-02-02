@@ -6,7 +6,6 @@ import {
   UPDATE_CYPHER_PARAMETERS,
   UPDATE_FIELDS,
   UPDATE_REPORT_QUERY,
-  UPDATE_REPORT_REFRESH_RATE,
   UPDATE_REPORT_SETTING,
   UPDATE_REPORT_SIZE,
   UPDATE_REPORT_TITLE,
@@ -59,12 +58,6 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
     case UPDATE_REPORT_QUERY: {
       const { query } = payload;
       state = update(state, { query: query });
-      return state;
-    }
-    case UPDATE_REPORT_REFRESH_RATE: {
-      const { rate } = payload;
-
-      state = update(state, { refreshRate: rate });
       return state;
     }
     case UPDATE_CYPHER_PARAMETERS: {

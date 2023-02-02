@@ -45,7 +45,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions }) => {
             />
             Report Examples
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-              <Badge badgeContent={''}>
+              <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon />
               </Badge>
             </IconButton>

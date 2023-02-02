@@ -1,8 +1,9 @@
 import React from 'react';
 import { ChartProps } from '../../../../chart/Chart';
 import { ResponsiveRadar } from '@nivo/radar';
-import { evaluateRulesOnDict } from '../../../styling/StyleRuleEvaluator';
+import { evaluateRulesOnDict, useStyleRules } from '../../../styling/StyleRuleEvaluator';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
+import { extensionEnabled } from '../../../ExtensionUtils';
 
 /**
  * Embeds a RadarChart (from Charts) into NeoDash.
@@ -37,7 +38,12 @@ const NeoRadarChart = (props: ChartProps) => {
   const blendMode = settings.blendMode ? settings.blendMode : 'normal';
   const motionConfig = settings.motionConfig ? settings.motionConfig : 'gentle';
   const curve = settings.curve ? settings.curve : 'linearClosed';
-  const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
+
   const keys = selection.values;
 
   // Compute slice color based on rules - overrides default color scheme completely.

@@ -44,3 +44,5 @@ export const categoricalColorSchemes = {
   YlOrRd: schemeYlOrRd,
   greens: schemeGreens,
 };
+
+export const getD3ColorsByScheme = (scheme) => categoricalColorSchemes[scheme];

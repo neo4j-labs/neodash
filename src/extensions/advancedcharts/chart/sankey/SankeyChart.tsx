@@ -3,9 +3,10 @@ import { ResponsiveSankey } from '@nivo/sankey';
 import { ChartProps } from '../../../../chart/Chart';
 import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../../../chart/ChartUtils';
 import { categoricalColorSchemes } from '../../../../config/ColorConfig';
-import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
+import { evaluateRulesOnDict, evaluateRulesOnNode, useStyleRules } from '../../../styling/StyleRuleEvaluator';
 import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
 import { isCyclic } from '../../Utils';
+import { extensionEnabled } from '../../../ExtensionUtils';
 
 /**
  * Embeds a SankeyChart (from Charts) into NeoDash.
@@ -31,7 +32,11 @@ const NeoSankeyChart = (props: ChartProps) => {
   const nodeThickness = settings.nodeThickness ? settings.nodeThickness : 12;
   const nodeSpacing = settings.nodeSpacing ? settings.nodeSpacing : 12;
 
-  const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
 
   // TODO this line is duplicated in a lot of places, should be in an utils file
   const update = (state, mutations) => Object.assign({}, state, mutations);
