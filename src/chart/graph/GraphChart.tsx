@@ -16,12 +16,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
-import {
-  evaluateRulesOnNode,
-  identifyStyleRuleParameters,
-  styleRulesReplaceParams,
-  useStyleRules,
-} from '../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
@@ -85,13 +80,6 @@ const NeoGraphChart = (props: ChartProps) => {
   const nodeLabelColor = props.settings && props.settings.nodeLabelColor ? props.settings.nodeLabelColor : 'black';
   const nodeLabelFontSize = props.settings && props.settings.nodeLabelFontSize ? props.settings.nodeLabelFontSize : 3.5;
   const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
-  const styleRulesDefault =
-    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
-      ? props.settings.styleRules
-      : [];
-  const styleParamsCalc = extensionEnabled(props.extensions, 'styling')
-    ? identifyStyleRuleParameters(styleRulesDefault)
-    : [];
   const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : '#a0a0a0';
   const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : 'neodash';
   const showPropertiesOnHover =
