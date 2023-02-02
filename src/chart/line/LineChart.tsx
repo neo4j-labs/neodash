@@ -1,13 +1,10 @@
 import { ResponsiveLine } from '@nivo/line';
 import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
-import { evaluateRulesOnDict } from '../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
-import { ResponsiveSunburst } from '@nivo/sunburst';
-import { useState } from 'react';
-import { Tooltip } from '@material-ui/core';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 interface LineChartData {
   id: string;
@@ -58,7 +55,11 @@ const NeoLineChart = (props: ChartProps) => {
 
   const xTickRotationAngle = settings.xTickRotationAngle != undefined ? settings.xTickRotationAngle : 0;
   const yTickRotationAngle = settings.yTickRotationAngle != undefined ? settings.yTickRotationAngle : 0;
-  const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
 
   // Compute line color based on rules - overrides default color scheme completely.
   // For line charts, the line color is overridden if at least one value meets the criteria.

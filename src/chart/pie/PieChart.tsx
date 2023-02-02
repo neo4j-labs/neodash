@@ -2,9 +2,10 @@ import { ResponsivePie } from '@nivo/pie';
 import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
-import { evaluateRulesOnDict } from '../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
+import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 /**
  * Embeds a PieChart (from Nivo) into NeoDash.
@@ -81,7 +82,11 @@ const NeoPieChart = (props: ChartProps) => {
 
   const legend = settings.legend ? settings.legend : false;
   const colorScheme = settings.colors ? settings.colors : 'set2';
-  const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
 

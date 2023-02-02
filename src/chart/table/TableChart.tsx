@@ -1,7 +1,11 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
-import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../../extensions/styling/StyleRuleEvaluator';
+import {
+  evaluateRulesOnDict,
+  generateClassDefinitionsBasedOnRules,
+  useStyleRules,
+} from '../../extensions/styling/StyleRuleEvaluator';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from '../ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
@@ -31,10 +35,13 @@ const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
-  const styleRules =
-    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
-      ? props.settings.styleRules
-      : [];
+  const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
+
   const [notificationOpen, setNotificationOpen] = React.useState(false);
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
@@ -42,6 +49,9 @@ const NeoTableChart = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
+
+  const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
+  const pageSizeReducer = compact ? 3 : 1;
 
   let columnWidths = null;
   try {
@@ -55,10 +65,10 @@ const NeoTableChart = (props: ChartProps) => {
   const { records } = props;
 
   const generateSafeColumnKey = (key) => {
-    return key != 'id' ? key : `${key  } `;
+    return key != 'id' ? key : `${key} `;
   };
   const columns = transposed
-    ? ['Field'].concat(records.map((r, j) => `Value${  j == 0 ? '' : ` ${  (j + 1).toString()}`}`)).map((key, i) => {
+    ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
         const value = key;
         return ApplyColumnType(
           {
@@ -96,7 +106,7 @@ const NeoTableChart = (props: ChartProps) => {
         return Object.assign(
           { id: i, Field: key },
           ...records.map((r, j) => ({
-            [`Value${  j == 0 ? '' : ` ${  (j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
+            [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
           }))
         );
       })
@@ -106,6 +116,11 @@ const NeoTableChart = (props: ChartProps) => {
           ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
         );
       });
+
+  const availableRowHeight = (props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight;
+  const tablePageSize = compact
+    ? Math.round(availableRowHeight) - pageSizeReducer
+    : Math.floor(availableRowHeight) - pageSizeReducer;
 
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
@@ -144,6 +159,7 @@ const NeoTableChart = (props: ChartProps) => {
       )}
       <DataGrid
         headerHeight={32}
+        rowHeight={tableRowHeight}
         rows={rows}
         columns={columns}
         columnVisibilityModel={hiddenColumns}
@@ -151,22 +167,20 @@ const NeoTableChart = (props: ChartProps) => {
           setNotificationOpen(true);
           navigator.clipboard.writeText(e.value);
         }}
-        pageSize={
-          Math.floor((props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / TABLE_ROW_HEIGHT) - 1
-        }
+        pageSize={tablePageSize}
         disableSelectionOnClick
         components={{
           ColumnSortedDescendingIcon: () => <></>,
           ColumnSortedAscendingIcon: () => <></>,
         }}
         getRowClassName={(params) => {
-          return `rule${  evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+          return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
         }}
         getCellClassName={(params) => {
-          return (
-            `rule${ 
-            evaluateRulesOnDict({ [params.field]: params.value }, styleRules, ['cell color', 'cell text color'])}`
-          );
+          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
+            'cell color',
+            'cell text color',
+          ])}`;
         }}
       />
     </div>

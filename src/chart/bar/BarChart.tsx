@@ -3,7 +3,12 @@ import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import { evaluateRulesOnDict } from '../../extensions/styling/StyleRuleEvaluator';
+import {
+  evaluateRulesOnDict,
+  styleRulesReplaceParams,
+  identifyStyleRuleParameters,
+  useStyleRules,
+} from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 
@@ -95,16 +100,17 @@ const NeoBarChart = (props: ChartProps) => {
   const valueScale = settings.valueScale ? settings.valueScale : 'linear';
   const minValue = settings.minValue ? settings.minValue : 'auto';
   const maxValue = settings.maxValue ? settings.maxValue : 'auto';
-  const styleRules =
-    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
-      ? props.settings.styleRules
-      : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
 
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
-    let {index} = bar;
+    let { index } = bar;
     let colorIndex = index;
     if (index >= chartColorsByScheme.length) {
       colorIndex = index % chartColorsByScheme.length;

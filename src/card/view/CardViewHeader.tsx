@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { Badge, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
@@ -22,16 +23,39 @@ const NeoCardViewHeader = ({
   onTitleUpdate,
   fullscreenEnabled,
   downloadImageEnabled,
+  refreshButtonEnabled,
   onToggleCardSettings,
+  onManualRefreshCard,
   onDownloadImage,
   onToggleCardExpand,
   expanded,
+  parameters,
 }) => {
   const [text, setText] = React.useState(title);
+  const [parsedText, setParsedText] = React.useState(title);
+  const [editing, setEditing] = React.useState(false);
   const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
+
+  function replaceParamsOnString(s, p) {
+    let parsed = `${s} `;
+    for (const [key, value] of Object.entries(p)) {
+      // TODO: make this a regex.
+      parsed = parsed.replace(`$${key} `, `${value} `);
+      parsed = parsed.replace(`$${key},`, `${value},`);
+      parsed = parsed.replace(`$${key}.`, `${value}.`);
+    }
+    return parsed;
+  }
 
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const debouncedTitleUpdate = useCallback(debounce(onTitleUpdate, 250), []);
+
+  useEffect(() => {
+    let titleParsed = replaceParamsOnString(`${title}`, parameters);
+    if (!editing) {
+      setParsedText(titleParsed);
+    }
+  }, [editing, parameters]);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -58,13 +82,19 @@ const NeoCardViewHeader = ({
             <td style={{ width: '100%' }}>
               <TextField
                 id='standard-outlined'
+                onFocus={() => {
+                  setEditing(true);
+                }}
+                onBlur={() => {
+                  setEditing(false);
+                }}
                 className={'no-underline large'}
                 label=''
                 disabled={!editable}
                 placeholder='Report name...'
                 fullWidth
                 maxRows={4}
-                value={text}
+                value={editing ? text : parsedText !== ' ' ? parsedText : ''}
                 onChange={(event) => {
                   setText(event.target.value);
                   debouncedTitleUpdate(event.target.value);
@@ -84,6 +114,14 @@ const NeoCardViewHeader = ({
     <Tooltip title='Settings' aria-label='settings'>
       <IconButton aria-label='settings' onClick={onToggleCardSettings}>
         <MoreVertIcon />
+      </IconButton>
+    </Tooltip>
+  );
+
+  const refreshButton = (
+    <Tooltip title='Refresh' aria-label='refresh'>
+      <IconButton aria-label='refresh' onClick={onManualRefreshCard}>
+        <RefreshIcon />
       </IconButton>
     </Tooltip>
   );
@@ -129,7 +167,7 @@ const NeoCardViewHeader = ({
         <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
@@ -147,6 +185,7 @@ const NeoCardViewHeader = ({
             {downloadImageEnabled ? downloadImageButton : <></>}
             {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
             {descriptionEnabled ? descriptionButton : <></>}
+            {refreshButtonEnabled ? refreshButton : <></>}
             {editable ? settingsButton : <></>}
           </>
         }
