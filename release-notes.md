@@ -6,6 +6,8 @@ The NeoDash 2.2.2 release is packed with a bunch of new usuability features:
   - Use this to - for example - let users choose a name and set an ID for use by other reports.
   - Fields no longer reset randomly when parameters are changed.
   - Freetext fields are no longer slow - perform as fast as the other selectors.
+- Add the option to use rule-based styling based on dashboard parameters.
+- Changed rule-based styling on bar and pie charts to override color scheme instead of clear the scheme.
 - Extended the [Example Gallery](https://neodash-gallery.graphapp.io/) with several new demos.
 - Adding intermediate report error boundaries for improved app stability. 
 - Changed docker image name to `neo4jlabs/neodash`.
