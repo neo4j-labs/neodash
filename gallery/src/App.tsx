@@ -69,7 +69,7 @@ function App() {
       {/* Grid */}
       <div className='md:container md:mx-auto n-bg-neutral-00'>
         <div className='grid grid-cols-3 grid-flow-row gap-2'>
-          {filteredList.map((item) => {
+          {filteredList.map((item: Record<string, string>) => {
             return (
               <div className='m-4 n-bg-neutral-10 n-shadow-l4'>
                 <div className=''>
