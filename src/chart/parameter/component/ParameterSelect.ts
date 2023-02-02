@@ -7,13 +7,25 @@ export interface ParameterSelectProps {
    */
   parameterName: string;
   /**
+   * Display name of the parameter (e.g. neodash_person_name_display) - used by the NeoDash engine exclusively.
+   */
+  parameterDisplayName: string;
+  /**
    * Parameter value as defined in the global state. (e.g. "Alfredo" or 1234)
    */
   parameterValue: string | number;
   /**
+   * The parameter value ***displayed*** in the selector when selecting the actual parameterValue.
+   */
+  parameterDisplayValue: string | number;
+  /**
    * Callback to update the value in the global state.
    */
   setParameterValue: (value) => void;
+  /**
+   * Callback to update the display value in the global state.
+   */
+  setParameterDisplayValue: (value) => void;
   /**
    * The query that can be used to retrieve parameter value suggestions from the database.
    */
@@ -30,4 +42,8 @@ export interface ParameterSelectProps {
    * A dictionary of all global dashboard parameters.
    */
   allParameters: Record<string, any> | undefined;
+  /**
+   * Create the parameter selector in compatibility mode for NeoDash 2.2.1 or earlier.
+   */
+  compatibilityMode: boolean;
 }

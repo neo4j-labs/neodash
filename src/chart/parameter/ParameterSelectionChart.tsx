@@ -10,13 +10,22 @@ import RelationshipPropertyParameterSelectComponent from './component/Relationsh
 export const NeoParameterSelectionChart = (props: ChartProps) => {
   const query = props.records[0].input ? props.records[0].input : undefined;
   const parameterName = props.settings && props.settings.parameterName ? props.settings.parameterName : undefined;
+  const parameterDisplayName = `${parameterName}_display`;
   const type = props.settings && props.settings.type ? props.settings.type : undefined;
   const queryCallback = props.queryCallback ? props.queryCallback : () => {};
   const setGlobalParameter = props.setGlobalParameter ? props.setGlobalParameter : () => {};
   const parameterValue =
     props.getGlobalParameter && props.getGlobalParameter(parameterName) ? props.getGlobalParameter(parameterName) : '';
+  const parameterDisplayValue =
+    props.getGlobalParameter && props.getGlobalParameter(parameterDisplayName)
+      ? props.getGlobalParameter(parameterDisplayName)
+      : '';
   const setParameterValue = (value) => setGlobalParameter(parameterName, value);
+  const setParameterDisplayValue = (value) => setGlobalParameter(parameterDisplayName, value);
   const allParameters = props.parameters;
+
+  // in NeoDash 2.2.1 or earlier, there was no means to have a different display value in the selector. This condition handles that.
+  const compatibilityMode = !query.includes('as display');
 
   if (!query || query.trim().length == 0) {
     return <p style={{ margin: '15px' }}>No selection specified.</p>;
@@ -26,36 +35,48 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
     return (
       <FreeTextParameterSelectComponent
         parameterName={parameterName}
+        parameterDisplayName={parameterName}
         parameterValue={parameterValue}
+        parameterDisplayValue={parameterDisplayValue}
         setParameterValue={setParameterValue}
+        setParameterDisplayValue={setParameterDisplayValue}
         query={query}
         queryCallback={queryCallback}
         settings={props.settings}
         allParameters={allParameters}
+        compatibilityMode={compatibilityMode}
       />
     );
   } else if (type == 'Node Property') {
     return (
       <NodePropertyParameterSelectComponent
         parameterName={parameterName}
+        parameterDisplayName={parameterName}
         parameterValue={parameterValue}
+        parameterDisplayValue={parameterDisplayValue}
         setParameterValue={setParameterValue}
+        setParameterDisplayValue={setParameterDisplayValue}
         query={query}
         queryCallback={queryCallback}
         settings={props.settings}
         allParameters={allParameters}
+        compatibilityMode={compatibilityMode}
       />
     );
   } else if (type == 'Relationship Property') {
     return (
       <RelationshipPropertyParameterSelectComponent
         parameterName={parameterName}
+        parameterDisplayName={parameterName}
         parameterValue={parameterValue}
+        parameterDisplayValue={parameterDisplayValue}
         setParameterValue={setParameterValue}
+        setParameterDisplayValue={setParameterDisplayValue}
         query={query}
         queryCallback={queryCallback}
         settings={props.settings}
         allParameters={allParameters}
+        compatibilityMode={compatibilityMode}
       />
     );
   }
