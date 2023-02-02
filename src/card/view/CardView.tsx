@@ -11,7 +11,7 @@ import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig'
 import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
-import { stylingParams } from '../../extensions/styling/StyleRuleEvaluator';
+import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
 
 const NeoCardView = ({
   title,
@@ -42,13 +42,17 @@ const NeoCardView = ({
   const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
   const ref = React.useRef();
-  const styleRules = settings.styleRules ? settings.styleRules : [];
-  const styleParams = extensionEnabled(extensions, 'styling') ? stylingParams(styleRules) : [];
+
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   const getLocalParameters = (parse_string): any => {
     let re = /(?:^|\W)\$(\w+)(?!\w)/g;
     let match;
+
+    // If the report styling extension is enabled, extend the list of local (relevant) parameters with those used by the style rules.
+    const styleRules = settings.styleRules ? settings.styleRules : [];
+    const styleParams = extensionEnabled(extensions, 'styling') ? identifyStyleRuleParameters(styleRules) : [];
+
     let localQueryVariables: string[] = [...styleParams];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);

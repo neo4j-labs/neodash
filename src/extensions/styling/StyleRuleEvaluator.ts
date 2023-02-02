@@ -182,10 +182,7 @@ export const generateClassDefinitionsBasedOnRules = (rules) => {
   });
 };
 
-/**
- * To define
- */
-export const stylingParams = (rules) => {
+export const identifyStyleRuleParameters = (rules) => {
   return rules.reduce((acc, rule) => {
     if (rule.value.startsWith('$neodash_')) {
       acc.push(rule.value.substring(1).trim());
@@ -208,17 +205,12 @@ export const styleRulesReplaceParams = (rules, getGlobalParameter) => {
 };
 
 export function useStyleRules(enabled, rules, callback) {
-  if (!enabled) {
+  if (!enabled || !rules) {
     return [];
   }
-  const styleParamsCalc = stylingParams(rules);
-
-  const [styleRules, setStyleRules] = React.useState(rules);
-  const [styleParams] = React.useState(styleParamsCalc);
-
-  useEffect(() => {
-    setStyleRules(styleRulesReplaceParams(rules, callback));
-  }, [styleParams]);
+  const styleParamsCalc = identifyStyleRuleParameters(rules);
+  let styleRules = styleParamsCalc;
+  styleRules = styleRulesReplaceParams(rules, callback);
 
   return styleRules;
 }

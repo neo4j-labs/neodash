@@ -5,7 +5,7 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import {
   evaluateRulesOnDict,
   styleRulesReplaceParams,
-  stylingParams,
+  identifyStyleRuleParameters,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';

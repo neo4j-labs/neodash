@@ -18,7 +18,7 @@ import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
 import {
   evaluateRulesOnNode,
-  stylingParams,
+  identifyStyleRuleParameters,
   styleRulesReplaceParams,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
@@ -89,7 +89,9 @@ const NeoGraphChart = (props: ChartProps) => {
     extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
       ? props.settings.styleRules
       : [];
-  const styleParamsCalc = extensionEnabled(props.extensions, 'styling') ? stylingParams(styleRulesDefault) : [];
+  const styleParamsCalc = extensionEnabled(props.extensions, 'styling')
+    ? identifyStyleRuleParameters(styleRulesDefault)
+    : [];
   const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : '#a0a0a0';
   const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : 'neodash';
   const showPropertiesOnHover =
@@ -364,7 +366,7 @@ const NeoGraphChart = (props: ChartProps) => {
   // If the set of extra records gets updated (e.g. on relationship expand), rebuild the graph.
   useEffect(() => {
     buildVisualizationDictionaryFromRecords(props.records.concat(extraRecords));
-  }, [extraRecords, styleRules]);
+  }, [extraRecords]);
 
   // Return the actual graph visualization component with the parsed data and selected customizations.
   const fgRef = useRef();

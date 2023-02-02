@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
   generateClassDefinitionsBasedOnRules,
-  styleRulesReplaceParams,
-  stylingParams,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
 import { IconButton, Tooltip } from '@material-ui/core';
