@@ -1,10 +1,10 @@
 import { ResponsivePie } from '@nivo/pie';
 import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
+import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { evaluateRulesOnDict } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
-import { getD3ColorsByScheme } from '../ChartColorUtils';
 
 /**
  * Embeds a PieChart (from Nivo) into NeoDash.

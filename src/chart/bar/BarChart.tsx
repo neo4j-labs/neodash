@@ -1,11 +1,11 @@
 import { ResponsiveBar } from '@nivo/bar';
 import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
+import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { evaluateRulesOnDict } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
-import { getD3ColorsByScheme } from '../ChartColorUtils';
 
 /**
  * Embeds a BarReport (from Nivo) into NeoDash.
@@ -104,7 +104,7 @@ const NeoBarChart = (props: ChartProps) => {
 
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
-    let index = bar.index;
+    let {index} = bar;
     let colorIndex = index;
     if (index >= chartColorsByScheme.length) {
       colorIndex = index % chartColorsByScheme.length;
@@ -216,7 +216,7 @@ const NeoBarChart = (props: ChartProps) => {
       padding={0.3}
       minValue={minValue}
       maxValue={maxValue}
-      colors={ getBarColor }
+      colors={getBarColor}
       axisTop={null}
       axisRight={null}
       axisBottom={{
