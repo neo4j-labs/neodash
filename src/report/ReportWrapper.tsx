@@ -18,7 +18,7 @@ const ErrorBoundary = withErrorBoundary(({ children, resetTrigger }) => {
   if (error) {
     return (
       <NeoCodeViewerComponent
-        value={`An unexpected error occurred. Try refreshing the component. \n\n${  error.stack}`}
+        value={`An unexpected error occurred. Try refreshing the component. \n\n${error.stack}`}
       />
     );
   }

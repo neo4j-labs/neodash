@@ -1,6 +1,7 @@
 import { ResponsivePie } from '@nivo/pie';
 import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
+import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
@@ -87,20 +88,30 @@ const NeoPieChart = (props: ChartProps) => {
     props.getGlobalParameter
   );
 
-  // Compute slice color based on rules - overrides default color scheme completely.
-  const getSliceColor = (slice) => {
-    const data = {};
-    if (!props.selection) {
-      return 'grey';
+  const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
+
+  // Compute chart colors, based on default scheme and on styling rules
+  const computedChartColors = data.map((value, index) => {
+    let colorIndex = index;
+    if (index >= chartColorsByScheme.length) {
+      colorIndex = index % chartColorsByScheme.length;
     }
-    data[props.selection.value] = slice.value;
-    data[props.selection.index] = slice.id;
-    const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['slice color']);
+
+    const dict = {};
+    if (!props.selection) {
+      return chartColorsByScheme[colorIndex];
+    }
+
+    dict[props.selection.value] = value.value;
+    dict[props.selection.index] = value.id;
+    const validRuleIndex = evaluateRulesOnDict(dict, styleRules, ['slice color']);
+
     if (validRuleIndex !== -1) {
       return styleRules[validRuleIndex].customizationValue;
     }
-    return 'grey';
-  };
+
+    return chartColorsByScheme[colorIndex];
+  });
 
   const getArcLabel = (item) => {
     return `${((item.arc.angleDeg * 100) / 360).toFixed(2).toString()}%`;
@@ -131,7 +142,7 @@ const NeoPieChart = (props: ChartProps) => {
         bottom: legend ? legendHeight + marginBottom : marginBottom,
         left: marginLeft,
       }}
-      colors={styleRules.length >= 1 ? getSliceColor : { scheme: colorScheme }}
+      colors={computedChartColors}
       legends={
         legend
           ? [
