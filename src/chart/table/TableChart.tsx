@@ -1,7 +1,11 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
-import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../../extensions/styling/StyleRuleEvaluator';
+import {
+  evaluateRulesOnDict,
+  generateClassDefinitionsBasedOnRules,
+  useStyleRules,
+} from '../../extensions/styling/StyleRuleEvaluator';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from '../ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
@@ -32,10 +36,12 @@ const NeoTableChart = (props: ChartProps) => {
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
   const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
-  const styleRules =
-    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
-      ? props.settings.styleRules
-      : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
+
   const [notificationOpen, setNotificationOpen] = React.useState(false);
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
