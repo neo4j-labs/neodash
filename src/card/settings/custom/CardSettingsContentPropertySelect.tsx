@@ -31,14 +31,18 @@ const NeoCardSettingsContentPropertySelect = ({
   const [labelRecords, setLabelRecords] = React.useState([]);
   const [propertyInputText, setPropertyInputText] = React.useState(settings.propertyType);
   const [propertyInputDisplayText, setPropertyInputDisplayText] = React.useState(
-    settings.propertyDisplay || settings.propertyType
+    settings.propertyTypeDisplay || settings.propertyType
   );
   const [propertyRecords, setPropertyRecords] = React.useState([]);
   let { parameterName } = settings;
 
   // When certain settings are updated, a re-generated search query is needed.
   useEffect(() => {
-    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyDisplay || settings.propertyDisplay);
+    updateReportQuery(
+      settings.entityType,
+      settings.propertyType,
+      settings.propertyTypeDisplay || settings.propertyTypeDisplay
+    );
   }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
@@ -77,9 +81,9 @@ const NeoCardSettingsContentPropertySelect = ({
   function handleParameterTypeUpdate(newValue) {
     onReportSettingUpdate('entityType', undefined);
     onReportSettingUpdate('propertyType', undefined);
+    onReportSettingUpdate('propertyTypeDisplay', undefined);
     onReportSettingUpdate('id', undefined);
     onReportSettingUpdate('parameterName', undefined);
-    onReportSettingUpdate('propertyDisplay', undefined);
     onReportSettingUpdate('type', newValue);
   }
 
@@ -88,8 +92,8 @@ const NeoCardSettingsContentPropertySelect = ({
     setPropertyInputDisplayText('');
     onReportSettingUpdate('entityType', newValue);
     onReportSettingUpdate('propertyType', undefined);
+    onReportSettingUpdate('propertyTypeDisplay', undefined);
     onReportSettingUpdate('parameterName', undefined);
-    onReportSettingUpdate('propertyDisplay', undefined);
   }
 
   function handleFreeTextNameSelectionUpdate(newValue) {
@@ -103,7 +107,7 @@ const NeoCardSettingsContentPropertySelect = ({
 
   function handlePropertyNameSelectionUpdate(newValue) {
     onReportSettingUpdate('propertyType', newValue);
-    onReportSettingUpdate('propertyDisplay', newValue);
+    onReportSettingUpdate('propertyTypeDisplay', newValue);
     if (newValue && settings.entityType) {
       const newParameterName = `neodash_${settings.entityType}_${newValue}`;
       const formattedParameterId = formatParameterId(settings.id);
@@ -116,7 +120,7 @@ const NeoCardSettingsContentPropertySelect = ({
   }
 
   function handlePropertyDisplayNameSelectionUpdate(newValue) {
-    onReportSettingUpdate('propertyDisplay', newValue);
+    onReportSettingUpdate('propertyTypeDisplay', newValue);
     if (newValue && settings.entityType) {
       updateReportQuery(settings.entityType, settings.propertyType, newValue);
     } else {
@@ -132,17 +136,22 @@ const NeoCardSettingsContentPropertySelect = ({
       const formattedParameterId = formatParameterId(`${newValue}`);
       const cleanedParameter = cleanParameter(newParameterName + formattedParameterId);
 
-      handleReportQueryUpdate(cleanedParameter, settings.entityType, settings.propertyType, settings.propertyDisplay);
+      handleReportQueryUpdate(
+        cleanedParameter,
+        settings.entityType,
+        settings.propertyType,
+        settings.propertyTypeDisplay
+      );
     }
   }
 
-  function handleReportQueryUpdate(new_parameter_name, entityType, propertyType, propertyDisplay) {
+  function handleReportQueryUpdate(new_parameter_name, entityType, propertyType, propertyTypeDisplay) {
     onReportSettingUpdate('parameterName', new_parameter_name);
-    updateReportQuery(entityType, propertyType, propertyDisplay);
+    updateReportQuery(entityType, propertyType, propertyTypeDisplay);
   }
 
-  function updateReportQuery(entityType, propertyType, propertyDisplay) {
-    const propertyDisplaySanitized = propertyDisplay || propertyType;
+  function updateReportQuery(entityType, propertyType, propertyTypeDisplay) {
+    const propertyTypeDisplaySanitized = propertyTypeDisplay || propertyType;
     const limit = settings.suggestionLimit ? settings.suggestionLimit : 5;
     const deduplicate = settings.deduplicateSuggestions !== undefined ? settings.deduplicateSuggestions : true;
     const searchType = settings.searchType ? settings.searchType : 'CONTAINS';
@@ -150,21 +159,21 @@ const NeoCardSettingsContentPropertySelect = ({
     if (settings.type == 'Node Property') {
       const newQuery =
         `MATCH (n:\`${entityType}\`) \n` +
-        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplaySanitized}\`)) ${searchType} ${
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyTypeDisplaySanitized}\`)) ${searchType} ${
           caseSensitive ? '' : 'toLower'
         }($input) \n` +
         `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
-        ` n.\`${propertyDisplaySanitized}\` as display ` +
+        ` n.\`${propertyTypeDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else if (settings.type == 'Relationship Property') {
       const newQuery =
         `MATCH ()-[n:\`${entityType}\`]->() \n` +
-        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplaySanitized}\`)) ${searchType} ${
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyTypeDisplaySanitized}\`)) ${searchType} ${
           caseSensitive ? '' : 'toLower'
         }($input) \n` +
         `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
-        ` n.\`${propertyDisplaySanitized}\` as display ` +
+        ` n.\`${propertyTypeDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else {
@@ -301,7 +310,7 @@ const NeoCardSettingsContentPropertySelect = ({
                   id='autocomplete-property-display'
                   options={
                     manualPropertyNameSpecification
-                      ? [settings.propertyDisplay || settins.propertyType]
+                      ? [settings.propertyTypeDisplay || settins.propertyType]
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
                   getOptionLabel={(option) => (option ? option : '')}
@@ -319,7 +328,7 @@ const NeoCardSettingsContentPropertySelect = ({
                       );
                     }
                   }}
-                  value={settings.propertyDisplay || settings.propertyType}
+                  value={settings.propertyTypeDisplay || settings.propertyType}
                   onChange={(event, newValue) => handlePropertyDisplayNameSelectionUpdate(newValue)}
                   renderInput={(params) => (
                     <TextField
