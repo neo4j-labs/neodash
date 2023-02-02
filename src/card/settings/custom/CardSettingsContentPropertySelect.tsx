@@ -176,6 +176,8 @@ const NeoCardSettingsContentPropertySelect = ({
   // TODO: since this component is only rendered for parameter select, this is technically not needed
   const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text'];
   const reportTypes = getReportTypes(extensions);
+  const overridePropertyDisplayName =
+    settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
 
   return (
     <div>
@@ -193,7 +195,7 @@ const NeoCardSettingsContentPropertySelect = ({
         style={{ width: '25%' }}
         label='Selection Type'
         type='text'
-        style={{ width: 335, marginLeft: '5px', marginTop: '0px' }}
+        style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
       >
         {parameterSelectTypes.map((option) => (
           <MenuItem key={option} value={option}>
@@ -226,7 +228,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 : labelRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
             }
             getOptionLabel={(option) => option || ''}
-            style={{ width: 335, marginLeft: '5px', marginTop: '5px' }}
+            style={{ width: 350, marginLeft: '5px', marginTop: '5px' }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
               setLabelInputText(value);
@@ -268,7 +270,7 @@ const NeoCardSettingsContentPropertySelect = ({
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
                 getOptionLabel={(option) => (option ? option : '')}
-                style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
+                style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '5px' }}
                 inputValue={propertyInputText}
                 onInputChange={(event, value) => {
                   setPropertyInputText(value);
@@ -294,45 +296,49 @@ const NeoCardSettingsContentPropertySelect = ({
                   />
                 )}
               />
-              <Autocomplete
-                id='autocomplete-property-display'
-                options={
-                  manualPropertyNameSpecification
-                    ? [settings.propertyDisplay || settins.propertyType]
-                    : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
-                }
-                getOptionLabel={(option) => (option ? option : '')}
-                style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
-                inputValue={propertyInputDisplayText}
-                onInputChange={(event, value) => {
-                  setPropertyInputDisplayText(value);
-                  if (manualPropertyNameSpecification) {
-                    handlePropertyDisplayNameSelectionUpdate(value);
-                  } else {
-                    queryCallback(
-                      'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5',
-                      { input: value },
-                      setPropertyRecords
-                    );
+              {overridePropertyDisplayName ? (
+                <Autocomplete
+                  id='autocomplete-property-display'
+                  options={
+                    manualPropertyNameSpecification
+                      ? [settings.propertyDisplay || settins.propertyType]
+                      : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
-                }}
-                value={settings.propertyDisplay || settings.propertyType}
-                onChange={(event, newValue) => handlePropertyDisplayNameSelectionUpdate(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder='Start typing...'
-                    InputLabelProps={{ shrink: true }}
-                    label={'Override property display value'}
-                  />
-                )}
-              />
+                  getOptionLabel={(option) => (option ? option : '')}
+                  style={{ display: 'inline-block', width: 170, marginLeft: '10px', marginTop: '5px' }}
+                  inputValue={propertyInputDisplayText}
+                  onInputChange={(event, value) => {
+                    setPropertyInputDisplayText(value);
+                    if (manualPropertyNameSpecification) {
+                      handlePropertyDisplayNameSelectionUpdate(value);
+                    } else {
+                      queryCallback(
+                        'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5',
+                        { input: value },
+                        setPropertyRecords
+                      );
+                    }
+                  }}
+                  value={settings.propertyDisplay || settings.propertyType}
+                  onChange={(event, newValue) => handlePropertyDisplayNameSelectionUpdate(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder='Start typing...'
+                      InputLabelProps={{ shrink: true }}
+                      label={'Property Display Name'}
+                    />
+                  )}
+                />
+              ) : (
+                <></>
+              )}
               <NeoField
                 placeholder='number'
                 label='Number (optional)'
                 disabled={!settings.propertyType}
                 value={settings.id}
-                style={{ width: '135px', marginTop: '5px', marginLeft: '10px' }}
+                style={{ width: '170px', marginTop: '5px', marginLeft: '5px' }}
                 onChange={(value) => {
                   handleIdSelectionUpdate(value);
                 }}
