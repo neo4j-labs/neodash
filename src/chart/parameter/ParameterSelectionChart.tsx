@@ -17,9 +17,11 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const parameterValue =
     props.getGlobalParameter && props.getGlobalParameter(parameterName) ? props.getGlobalParameter(parameterName) : '';
   const parameterDisplayValue =
-    props.getGlobalParameter && props.getGlobalParameter(parameterDisplayName)
+    props.getGlobalParameter &&
+    props.getGlobalParameter(parameterDisplayName) &&
+    props.settings.overridePropertyDisplayName
       ? props.getGlobalParameter(parameterDisplayName)
-      : '';
+      : parameterValue;
   const setParameterValue = (value) => setGlobalParameter(parameterName, value);
   const setParameterDisplayValue = (value) => setGlobalParameter(parameterDisplayName, value);
   const allParameters = props.parameters;
