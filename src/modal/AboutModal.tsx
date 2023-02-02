@@ -65,7 +65,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
             <strong>
               (<LibraryBooksIcon style={{ paddingTop: '5px' }} fontSize='small' /> Documentation)
             </strong>
-            button to see some example queries and visualizations.
+            &nbsp;button to see some example queries and visualizations.
             <hr></hr>
             <h3 style={{ marginBottom: '5px' }}>Extending NeoDash</h3>
             NeoDash is built with React and&nbsp;
