@@ -66,3 +66,16 @@ export function CreateBoundaries(_data) {
     </div>
   );
 }
+function getColor(d: number) {
+  return d > 25
+    ? '#800026'
+    : d > 20
+    ? '#E31A1C'
+    : d > 15
+    ? '#FD8D3C'
+    : d > 10
+    ? '#FEB24C'
+    : d > 5
+    ? '#FED976'
+    : '#FFEDA0';
+}
