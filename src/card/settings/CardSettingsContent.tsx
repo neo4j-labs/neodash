@@ -12,11 +12,9 @@ const NeoCardSettingsContent = ({
   database, // Current report database
   databaseList, // List of databases the user can choose from ('system' is filtered out)
   reportSettings,
-  refreshRate,
   type,
   extensions,
   onQueryUpdate,
-  onRefreshRateUpdate,
   onReportSettingUpdate,
   onTypeUpdate,
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
@@ -24,9 +22,6 @@ const NeoCardSettingsContent = ({
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const [queryText, setQueryText] = React.useState(query);
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-
-  const [refreshRateText, setRefreshRateText] = React.useState(refreshRate);
-  const debouncedRefreshRateUpdate = useCallback(debounce(onRefreshRateUpdate, 250), []);
 
   // State to manage the current database entry inside the form
   const [databaseText, setDatabaseText] = React.useState(database);
@@ -38,13 +33,6 @@ const NeoCardSettingsContent = ({
       setQueryText(query);
     }
   }, [query]);
-
-  useEffect(() => {
-    // Reset text to the dashboard state when the page gets reorganized.
-    if (refreshRate !== refreshRateText) {
-      setRefreshRateText(refreshRate !== undefined ? refreshRate : '');
-    }
-  }, [refreshRate]);
 
   const reportTypes = getReportTypes(extensions);
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
@@ -64,13 +52,13 @@ const NeoCardSettingsContent = ({
         ))}
       />
 
-      {reportTypes[type] && reportTypes[type].disableRefreshRate == undefined ? (
+      {reportTypes[type] && reportTypes[type].disableDatabaseSelector == undefined ? (
         <NeoField
           select
           placeholder='neo4j'
           label='Database'
           value={databaseText}
-          style={{ width: '47%', maxWidth: '200px', marginRight: '10px' }}
+          style={{ width: '47%', maxWidth: '200px' }}
           choices={databaseList.map((database) => (
             <MenuItem key={database} value={database}>
               {database}
@@ -79,22 +67,6 @@ const NeoCardSettingsContent = ({
           onChange={(value) => {
             setDatabaseText(value);
             debouncedDatabaseUpdate(value);
-          }}
-        />
-      ) : (
-        <></>
-      )}
-
-      {reportTypes[type] && reportTypes[type].disableRefreshRate == undefined ? (
-        <NeoField
-          placeholder='0 (No Refresh)'
-          label='Refresh Rate (sec)'
-          numeric={true}
-          value={refreshRateText}
-          style={{ width: '47%', maxWidth: '200px' }}
-          onChange={(value) => {
-            setRefreshRateText(value);
-            debouncedRefreshRateUpdate(value);
           }}
         />
       ) : (

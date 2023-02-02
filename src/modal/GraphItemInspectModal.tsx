@@ -25,7 +25,7 @@ export const NeoGraphItemInspectModal = ({ open, handleClose, title, object, tex
         <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton onClick={handleClose} style={{ padding: '3px', marginLeft: '20px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>

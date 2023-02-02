@@ -134,7 +134,7 @@ export const NeoLoadModal = ({
           />
           Load Dashboard
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
@@ -220,7 +220,7 @@ export const NeoLoadModal = ({
             }}
             style={{ padding: '3px', float: 'right' }}
           >
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
@@ -259,7 +259,11 @@ export const NeoLoadModal = ({
               }}
             >
               {databases.map((database) => {
-                return <MenuItem value={database}>{database}</MenuItem>;
+                return (
+                  <MenuItem key={database} value={database}>
+                    {database}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>

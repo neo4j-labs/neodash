@@ -8,7 +8,7 @@ import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import 'leaflet/dist/leaflet.css';
-import { evaluateRulesOnNode } from '../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import Button from '@material-ui/core/Button';
 import { getRule } from '../../extensions/advancedcharts/Utils';
@@ -28,10 +28,12 @@ const NeoMapChart = (props: ChartProps) => {
   const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : 3.5;
   const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : '#666';
   const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : 'neodash';
-  const styleRules =
-    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
-      ? props.settings.styleRules
-      : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
+
   const clusterMarkers =
     props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
   const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : '';
