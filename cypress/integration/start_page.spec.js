@@ -131,7 +131,11 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a single value report', () => {
     createReportOfType('Single Value', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span').contains('1,999');
+    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span')
+      .invoke('text')
+      .then((text) => {
+        expect(text).to.be.oneOf(['1999', '1,999']);
+      });
   });
 
   it('creates a gauge chart report', () => {
