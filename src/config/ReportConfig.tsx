@@ -63,7 +63,7 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      }
+      },
     },
   },
   graph: {
@@ -219,10 +219,10 @@ export const REPORT_TYPES = {
         default: '',
       },
       rightClickToExpandNodes: {
-        label: "Right Click to Expand Nodes",
+        label: 'Right Click to Expand Nodes',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: false
+        default: false,
       },
       description: {
         label: 'Report Description',
@@ -706,7 +706,7 @@ export const REPORT_TYPES = {
       layerType: {
         label: 'Layer Type',
         type: SELECTION_TYPES.LIST,
-        values: ['markers', 'heatmap'],
+        values: ['markers', 'heatmap', 'boundary'],
         default: 'markers',
       },
       clusterMarkers: {
