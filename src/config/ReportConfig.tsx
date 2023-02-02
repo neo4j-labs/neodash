@@ -1062,6 +1062,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.COLOR,
         default: '#fafafa',
       },
+      overridePropertyDisplayName: {
+        label: 'Property Display Name Override',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       suggestionLimit: {
         label: 'Value Suggestion Limit',
         type: SELECTION_TYPES.NUMBER,

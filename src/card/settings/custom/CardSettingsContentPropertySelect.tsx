@@ -30,8 +30,16 @@ const NeoCardSettingsContentPropertySelect = ({
   const [labelInputText, setLabelInputText] = React.useState(settings.entityType);
   const [labelRecords, setLabelRecords] = React.useState([]);
   const [propertyInputText, setPropertyInputText] = React.useState(settings.propertyType);
+  const [propertyInputDisplayText, setPropertyInputDisplayText] = React.useState(
+    settings.propertyDisplay || settings.propertyType
+  );
   const [propertyRecords, setPropertyRecords] = React.useState([]);
   let { parameterName } = settings;
+
+  // When certain settings are updated, a re-generated search query is needed.
+  useEffect(() => {
+    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyDisplay || settings.propertyDisplay);
+  }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
   const formatParameterId = (id: string | undefined | null) => {
@@ -39,11 +47,6 @@ const NeoCardSettingsContentPropertySelect = ({
     const formattedId = cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
     return formattedId;
   };
-
-  // When certain settings are updated, a re-generated search query is needed.
-  useEffect(() => {
-    updateReportQuery(settings.entityType, settings.propertyType);
-  }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
   if (settings.type == undefined) {
     onReportSettingUpdate('type', 'Node Property');
@@ -76,20 +79,23 @@ const NeoCardSettingsContentPropertySelect = ({
     onReportSettingUpdate('propertyType', undefined);
     onReportSettingUpdate('id', undefined);
     onReportSettingUpdate('parameterName', undefined);
+    onReportSettingUpdate('propertyDisplay', undefined);
     onReportSettingUpdate('type', newValue);
   }
 
   function handleNodeLabelSelectionUpdate(newValue) {
     setPropertyInputText('');
+    setPropertyInputDisplayText('');
     onReportSettingUpdate('entityType', newValue);
     onReportSettingUpdate('propertyType', undefined);
     onReportSettingUpdate('parameterName', undefined);
+    onReportSettingUpdate('propertyDisplay', undefined);
   }
 
   function handleFreeTextNameSelectionUpdate(newValue) {
     if (newValue) {
       const new_parameter_name = cleanParameter(`neodash_${newValue}`);
-      handleReportQueryUpdate(new_parameter_name, newValue, undefined);
+      handleReportQueryUpdate(new_parameter_name, newValue, undefined, undefined);
     } else {
       onReportSettingUpdate('parameterName', undefined);
     }
@@ -97,12 +103,22 @@ const NeoCardSettingsContentPropertySelect = ({
 
   function handlePropertyNameSelectionUpdate(newValue) {
     onReportSettingUpdate('propertyType', newValue);
+    onReportSettingUpdate('propertyDisplay', newValue);
     if (newValue && settings.entityType) {
       const newParameterName = `neodash_${settings.entityType}_${newValue}`;
       const formattedParameterId = formatParameterId(settings.id);
       const cleanedParameter = cleanParameter(newParameterName + formattedParameterId);
 
-      handleReportQueryUpdate(cleanedParameter, settings.entityType, newValue);
+      handleReportQueryUpdate(cleanedParameter, settings.entityType, newValue, newValue);
+    } else {
+      onReportSettingUpdate('parameterName', undefined);
+    }
+  }
+
+  function handlePropertyDisplayNameSelectionUpdate(newValue) {
+    onReportSettingUpdate('propertyDisplay', newValue);
+    if (newValue && settings.entityType) {
+      updateReportQuery(settings.entityType, settings.propertyType, newValue);
     } else {
       onReportSettingUpdate('parameterName', undefined);
     }
@@ -115,16 +131,18 @@ const NeoCardSettingsContentPropertySelect = ({
       const newParameterName = `neodash_${settings.entityType}_${settings.propertyType}`;
       const formattedParameterId = formatParameterId(`${newValue}`);
       const cleanedParameter = cleanParameter(newParameterName + formattedParameterId);
-      handleReportQueryUpdate(cleanedParameter, settings.entityType, settings.propertyType);
+
+      handleReportQueryUpdate(cleanedParameter, settings.entityType, settings.propertyType, settings.propertyDisplay);
     }
   }
 
-  function handleReportQueryUpdate(new_parameter_name, entityType, propertyType) {
+  function handleReportQueryUpdate(new_parameter_name, entityType, propertyType, propertyDisplay) {
     onReportSettingUpdate('parameterName', new_parameter_name);
-    updateReportQuery(entityType, propertyType);
+    updateReportQuery(entityType, propertyType, propertyDisplay);
   }
 
-  function updateReportQuery(entityType, propertyType) {
+  function updateReportQuery(entityType, propertyType, propertyDisplay) {
+    const propertyDisplaySanitized = propertyDisplay || propertyType;
     const limit = settings.suggestionLimit ? settings.suggestionLimit : 5;
     const deduplicate = settings.deduplicateSuggestions !== undefined ? settings.deduplicateSuggestions : true;
     const searchType = settings.searchType ? settings.searchType : 'CONTAINS';
@@ -132,19 +150,21 @@ const NeoCardSettingsContentPropertySelect = ({
     if (settings.type == 'Node Property') {
       const newQuery =
         `MATCH (n:\`${entityType}\`) \n` +
-        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyType}\`)) ${searchType} ${
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplaySanitized}\`)) ${searchType} ${
           caseSensitive ? '' : 'toLower'
         }($input) \n` +
-        `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value ` +
+        `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
+        ` n.\`${propertyDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else if (settings.type == 'Relationship Property') {
       const newQuery =
         `MATCH ()-[n:\`${entityType}\`]->() \n` +
-        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyType}\`)) ${searchType} ${
+        `WHERE ${caseSensitive ? '' : 'toLower'}(toString(n.\`${propertyDisplaySanitized}\`)) ${searchType} ${
           caseSensitive ? '' : 'toLower'
         }($input) \n` +
-        `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value ` +
+        `RETURN ${deduplicate ? 'DISTINCT' : ''} n.\`${propertyType}\` as value, ` +
+        ` n.\`${propertyDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else {
@@ -156,6 +176,8 @@ const NeoCardSettingsContentPropertySelect = ({
   // TODO: since this component is only rendered for parameter select, this is technically not needed
   const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text'];
   const reportTypes = getReportTypes(extensions);
+  const overridePropertyDisplayName =
+    settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
 
   return (
     <div>
@@ -173,7 +195,7 @@ const NeoCardSettingsContentPropertySelect = ({
         style={{ width: '25%' }}
         label='Selection Type'
         type='text'
-        style={{ width: 335, marginLeft: '5px', marginTop: '0px' }}
+        style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
       >
         {parameterSelectTypes.map((option) => (
           <MenuItem key={option} value={option}>
@@ -205,8 +227,8 @@ const NeoCardSettingsContentPropertySelect = ({
                 ? [settings.entityType]
                 : labelRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
             }
-            getOptionLabel={(option) => (option ? option : '')}
-            style={{ width: 335, marginLeft: '5px', marginTop: '5px' }}
+            getOptionLabel={(option) => option || ''}
+            style={{ width: 350, marginLeft: '5px', marginTop: '5px' }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
               setLabelInputText(value);
@@ -248,10 +270,11 @@ const NeoCardSettingsContentPropertySelect = ({
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
                 getOptionLabel={(option) => (option ? option : '')}
-                style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
+                style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '5px' }}
                 inputValue={propertyInputText}
                 onInputChange={(event, value) => {
                   setPropertyInputText(value);
+                  setPropertyInputDisplayText(value);
                   if (manualPropertyNameSpecification) {
                     handlePropertyNameSelectionUpdate(value);
                   } else {
@@ -273,12 +296,49 @@ const NeoCardSettingsContentPropertySelect = ({
                   />
                 )}
               />
+              {overridePropertyDisplayName ? (
+                <Autocomplete
+                  id='autocomplete-property-display'
+                  options={
+                    manualPropertyNameSpecification
+                      ? [settings.propertyDisplay || settins.propertyType]
+                      : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
+                  }
+                  getOptionLabel={(option) => (option ? option : '')}
+                  style={{ display: 'inline-block', width: 170, marginLeft: '10px', marginTop: '5px' }}
+                  inputValue={propertyInputDisplayText}
+                  onInputChange={(event, value) => {
+                    setPropertyInputDisplayText(value);
+                    if (manualPropertyNameSpecification) {
+                      handlePropertyDisplayNameSelectionUpdate(value);
+                    } else {
+                      queryCallback(
+                        'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5',
+                        { input: value },
+                        setPropertyRecords
+                      );
+                    }
+                  }}
+                  value={settings.propertyDisplay || settings.propertyType}
+                  onChange={(event, newValue) => handlePropertyDisplayNameSelectionUpdate(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder='Start typing...'
+                      InputLabelProps={{ shrink: true }}
+                      label={'Property Display Name'}
+                    />
+                  )}
+                />
+              ) : (
+                <></>
+              )}
               <NeoField
                 placeholder='number'
                 label='Number (optional)'
                 disabled={!settings.propertyType}
                 value={settings.id}
-                style={{ width: '135px', marginTop: '5px', marginLeft: '10px' }}
+                style={{ width: '170px', marginTop: '5px', marginLeft: '5px' }}
                 onChange={(value) => {
                   handleIdSelectionUpdate(value);
                 }}
