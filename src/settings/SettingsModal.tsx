@@ -71,7 +71,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
           />
           Dashboard Settings
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>

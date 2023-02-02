@@ -1,22 +1,15 @@
-## NeoDash 2.2.1
-This update provides a number of usability improves over the 2.2.0 release.
-In addition, it entails various improvements to the codebase, including security patches on the dependencies.
-
-Table:
-- Column names prefixed with `__` are now hidden in the table view.
-  
-Map:
-- Added documentation for adding a custom map provider.
-
-Parameter selector:
-- Added support for boolean parameters.
-
-Editor:
-- Parameters are now automatically replaced **inside report titles**.
-- Image downloads now include the report title alongside the visualization.
-
-Others:
-- Applied security patches for dependencies.
-- Set test container for release pipeline to fixed version of Neo4j.
-- Aligned code style / linting with Neo4j product standards.
-- Updated Docker setup to inject `standaloneDashboardURL` into the application config.
+## NeoDash 2.2.2
+The NeoDash 2.2.2 release is packed with a bunch of new usuability features:
+- Changed the built-in Cypher editor to a brand-new [CodeMirror Editor](https://github.com/neo4j-contrib/cypher-editor).
+- Rebuilt the **Parameter Select** component from scratch for improved stability, performance and extendability:
+  - Added an optional setting to the parameter selector to display a different property from the one that is set by the selector.
+  - Use this to - for example - let users choose a name and set an ID for use by other reports.
+  - Fields no longer reset randomly when parameters are changed.
+  - Freetext fields are no longer slow - perform as fast as the other selectors.
+- Add the option to use rule-based styling based on dashboard parameters.
+- Changed rule-based styling on bar and pie charts to override color scheme instead of clear the scheme.
+- Extended the [Example Gallery](https://neodash-gallery.graphapp.io/) with several new demos.
+- Adding intermediate report error boundaries for improved app stability. 
+- Changed docker image name to `neo4jlabs/neodash`.
+- Improved documementation for developers.
+- Fixed inconsistent styling between different pop-up screens, and fixed report title placeholders.

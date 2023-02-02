@@ -50,7 +50,7 @@ export const NeoDashboardHeaderPageList = ({
       ...pages.map((page, index) => {
         return { x: index, y: 0, i: `${index}`, w: Math.min(2.0, 11.3 / pages.length), h: 1 };
       }),
-      { x: pages.length, y: 0, i: `${timestamp}`, w: 0.0001, h: 1, isDraggable: false },
+      { x: pages.length, y: 0, i: `${timestamp}`, minW: 0.1, w: 0.1, h: 1, isDraggable: false },
     ]);
 
     setLastElement(
