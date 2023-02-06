@@ -45,7 +45,12 @@ const NeoLineChart = (props: ChartProps) => {
   const marginLeft = settings.marginLeft ? settings.marginLeft : 36;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
-  const lineWidth = settings.lineWidth ? settings.lineWidth : 2;
+  const lineWidth = (settings): number => {
+    if (settings.type == 'scatter') {
+      return 0;
+    }
+    return settings.lineWidth ? settings.lineWidth : 2;
+  };
   const pointSize = settings.pointSize ? settings.pointSize : 10;
   const showGrid = settings.showGrid != undefined ? settings.showGrid : true;
   const xTickValues = settings.xTickValues != undefined ? settings.xTickValues : undefined;
@@ -229,7 +234,7 @@ const NeoLineChart = (props: ChartProps) => {
           tickRotation: yTickRotationAngle,
         }}
         pointSize={pointSize}
-        lineWidth={lineWidth}
+        lineWidth={lineWidth(settings)}
         lineColor='black'
         pointColor='white'
         colors={styleRules.length >= 1 ? getLineColors : { scheme: colorScheme }}
