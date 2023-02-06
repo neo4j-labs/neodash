@@ -44,5 +44,6 @@ module.exports = (env) => {
       hot: true,
     },
     plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()],
+    ignoreWarnings: [/Failed to parse source map/],
   };
 };
