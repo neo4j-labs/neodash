@@ -201,7 +201,6 @@ const NeoCardSettingsContentPropertySelect = ({
         onChange={(e) => {
           handleParameterTypeUpdate(e.target.value);
         }}
-        style={{ width: '25%' }}
         label='Selection Type'
         type='text'
         style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
@@ -310,7 +309,7 @@ const NeoCardSettingsContentPropertySelect = ({
                   id='autocomplete-property-display'
                   options={
                     manualPropertyNameSpecification
-                      ? [settings.propertyTypeDisplay || settins.propertyType]
+                      ? [settings.propertyTypeDisplay || settings.propertyType]
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
                   getOptionLabel={(option) => (option ? option : '')}
