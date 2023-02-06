@@ -110,8 +110,8 @@ const NeoBarChart = (props: ChartProps) => {
 
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
-    let { index } = bar;
-    let colorIndex = index;
+    let { index, data, id } = bar;
+    let colorIndex = Object.keys(data).length > 2 ? Object.keys(data).indexOf(id) : index;
     if (index >= chartColorsByScheme.length) {
       colorIndex = index % chartColorsByScheme.length;
     }
