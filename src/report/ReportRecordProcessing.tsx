@@ -193,7 +193,7 @@ function RenderInteger(value) {
   if (!value || !value.toInt) {
     return RenderNumber(value);
   }
-  const integer = value.toInt().toLocaleString();
+  const integer = value.toNumber().toLocaleString();
   return integer;
 }
 
