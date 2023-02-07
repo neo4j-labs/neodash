@@ -11,6 +11,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       ? props.settings.defaultValue
       : '';
 
+  const allParameters = props.allParameters ? props.allParameters : {};
   const [extraRecords, setExtraRecords] = React.useState([]);
   // const [inputText, setInputText] = React.useState(props.parameterValue);
   const [inputDisplayText, setInputDisplayText] = React.useState(props.parameterDisplayValue);
@@ -37,7 +38,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       inputValue={inputDisplayText !== null ? `${inputDisplayText}` : ''}
       onInputChange={(event, value) => {
         setInputDisplayText(value !== null ? `${value}` : '');
-        debouncedQueryCallback(props.query, { input: `${value}` }, setExtraRecords);
+        debouncedQueryCallback(props.query, { input: `${value}`, ...allParameters }, setExtraRecords);
       }}
       getOptionSelected={(option, value) => {
         return (option && option.toString()) === (value && value.toString());
