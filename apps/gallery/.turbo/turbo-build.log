@@ -1,0 +1,5 @@
+yarn run v1.22.19
+$ react-scripts build
+/bin/sh: react-scripts: command not found
+error Command failed with exit code 127.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

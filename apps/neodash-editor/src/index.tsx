@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider as ReduxProvider } from 'react-redux';
-import { configureStore } from './store';
+import { configureStore } from '../../../packages/neodash-engine/src/store';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import Application from './application/Application';
+import Application from '../../../neodash-engine';
 import '/node_modules/react-grid-layout/css/styles.css';
 import '/node_modules/react-resizable/css/styles.css';
 
