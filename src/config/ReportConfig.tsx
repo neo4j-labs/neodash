@@ -636,6 +636,12 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
+      type: {
+        label: 'Plot Type',
+        type: SELECTION_TYPES.LIST,
+        values: ['line', 'scatter'],
+        default: 'line',
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,
