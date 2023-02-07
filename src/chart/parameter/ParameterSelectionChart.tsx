@@ -3,6 +3,7 @@ import { ChartProps } from '../Chart';
 import FreeTextParameterSelectComponent from './component/FreeTextParameterSelect';
 import NodePropertyParameterSelectComponent from './component/NodePropertyParameterSelect';
 import RelationshipPropertyParameterSelectComponent from './component/RelationshipPropertyParameterSelect';
+import QueryParameterSelectComponent from './component/QueryParameterSelect';
 
 /**
  * A special chart type to define global dashboard parameters that are injected as query parameters into each report.
@@ -68,6 +69,22 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   } else if (type == 'Relationship Property') {
     return (
       <RelationshipPropertyParameterSelectComponent
+        parameterName={parameterName}
+        parameterDisplayName={parameterName}
+        parameterValue={parameterValue}
+        parameterDisplayValue={parameterDisplayValue}
+        setParameterValue={setParameterValue}
+        setParameterDisplayValue={setParameterDisplayValue}
+        query={query}
+        queryCallback={queryCallback}
+        settings={props.settings}
+        allParameters={allParameters}
+        compatibilityMode={compatibilityMode}
+      />
+    );
+  } else if (type == 'Query') {
+    return (
+      <QueryParameterSelectComponent
         parameterName={parameterName}
         parameterDisplayName={parameterName}
         parameterValue={parameterValue}
