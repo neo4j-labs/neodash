@@ -42,7 +42,7 @@
     "@material-ui/styles": "^4.11.4",
     "@mui/material": "^5.3.0",
     "@mui/x-data-grid": "5.10.0",
-    "@neo4j-cypher/react-codemirror": "^1.0.0-next.20",
+    "@neo4j-cypher/react-codemirror": "^1.0.0-next.21",
     "@nivo/bar": "^0.80.0",
     "@nivo/circle-packing": "^0.80.0",
     "@nivo/core": "^0.80.0",
