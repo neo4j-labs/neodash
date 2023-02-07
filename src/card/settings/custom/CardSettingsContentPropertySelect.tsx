@@ -55,6 +55,7 @@ const NeoCardSettingsContentPropertySelect = ({
   if (settings.type == undefined) {
     onReportSettingUpdate('type', 'Node Property');
   }
+
   if (!parameterName && settings.entityType && settings.propertyType) {
     const entityAndPropertyType = `neodash_${settings.entityType}_${settings.propertyType}`;
     const formattedParameterId = formatParameterId(settings.id);
@@ -188,6 +189,13 @@ const NeoCardSettingsContentPropertySelect = ({
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
 
+  // If the override is off, and the two values differ, set the display value to the original one again.
+  if (overridePropertyDisplayName == false && propertyInputText !== propertyInputDisplayText) {
+    onReportSettingUpdate('propertyTypeDisplay', settings.propertyType);
+    setPropertyInputDisplayText(propertyInputText);
+    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyType);
+  }
+
   return (
     <div>
       <p style={{ color: 'grey', fontSize: 12, paddingLeft: '5px', border: '1px solid lightgrey', marginTop: '0px' }}>
@@ -201,7 +209,6 @@ const NeoCardSettingsContentPropertySelect = ({
         onChange={(e) => {
           handleParameterTypeUpdate(e.target.value);
         }}
-        style={{ width: '25%' }}
         label='Selection Type'
         type='text'
         style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
@@ -310,7 +317,7 @@ const NeoCardSettingsContentPropertySelect = ({
                   id='autocomplete-property-display'
                   options={
                     manualPropertyNameSpecification
-                      ? [settings.propertyTypeDisplay || settins.propertyType]
+                      ? [settings.propertyTypeDisplay || settings.propertyType]
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
                   getOptionLabel={(option) => (option ? option : '')}
