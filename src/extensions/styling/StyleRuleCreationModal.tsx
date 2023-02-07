@@ -209,7 +209,7 @@ export const NeoCustomReportStyleModal = ({
             />
             Rule-Based Styling
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-              <Badge badgeContent={''}>
+              <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon />
               </Badge>
             </IconButton>

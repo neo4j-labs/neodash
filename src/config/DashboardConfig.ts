@@ -9,26 +9,18 @@ export const DASHBOARD_SETTINGS = {
     helperText:
       'This controls whether users can edit your dashboard. Disable this to turn the dashboard into presentation mode.',
   },
-  fullscreenEnabled: {
-    label: 'Enable Fullscreen Report Views',
-    type: SELECTION_TYPES.LIST,
-    values: [true, false],
-    default: true,
-    helperText: "Show a 'fullscreen view' button for each report, letting users expand a visualization.",
+  queryTimeLimit: {
+    label: 'Maximum Query Time (seconds)',
+    type: SELECTION_TYPES.NUMBER,
+    default: 20,
+    helperText: 'The maximum time a report is allowed to run before automatically aborted.',
   },
   downloadImageEnabled: {
     label: 'Enable Image Download',
     type: SELECTION_TYPES.LIST,
     values: [true, false],
     default: false,
-    helperText:
-      "Enables a 'download image' button for each report, letting users download a visualization as an image.",
-  },
-  queryTimeLimit: {
-    label: 'Maximum Query Time (seconds)',
-    type: SELECTION_TYPES.NUMBER,
-    default: 20,
-    helperText: 'The maximum time a report is allowed to run before automatically aborted.',
+    helperText: 'Shows a button in the dashboard header that lets users capture their dashboard as an image.',
   },
   disableRowLimiting: {
     label: 'Disable Row Limiting ⚠️',
@@ -59,11 +51,11 @@ export const DASHBOARD_SETTINGS = {
       "These are the query parameters shared across all reports. You can set these using a 'property select' report.",
   },
   extensions: {
-    label: "Extensions",
+    label: 'Extensions',
     type: SELECTION_TYPES.LIST,
     multiple: true,
     values: ['actions'],
     default: false,
-    hidden: true
-  }
+    hidden: true,
+  },
 };

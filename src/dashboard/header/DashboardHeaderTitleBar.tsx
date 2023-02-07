@@ -99,7 +99,7 @@ export const NeoDashboardHeaderTitleBar = ({
             }
           }}
         >
-          <Badge badgeContent={''}>
+          <Badge overlap='rectangular' badgeContent={''}>
             <img
               style={{ width: DASHBOARD_BUTTON_IMAGE_SIZE, height: DASHBOARD_BUTTON_IMAGE_SIZE }}
               src={DASHBOARD_BUTTON_IMAGE}

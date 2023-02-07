@@ -139,7 +139,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         <DialogContent style={{ width: '1000px' }}>
           <DialogContentText>
             This window lets you create a temporary share link for your dashboard. Keep in mind that share links are not
-            intended as a way to publish your dashboard for users, see the
+            intended as a way to publish your dashboard for users, see the&nbsp;
             <a href='https://neo4j.com/labs/neodash/2.2/user-guide/publishing/'>documentation</a> for more on
             publishing.
             <br />
@@ -345,7 +345,11 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               }}
             >
               {databases.map((database) => {
-                return <MenuItem value={database}>{database}</MenuItem>;
+                return (
+                  <MenuItem key={database} value={database}>
+                    {database}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>
@@ -375,7 +379,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         </DialogTitle>
         <DialogContent style={{ width: '1000px' }}>
           <DialogContentText>
-            To share a dashboard file directly, make it accessible
+            To share a dashboard file directly, make it accessible&nbsp;
             <a target='_blank' href='https://gist.github.com/'>
               online
             </a>
