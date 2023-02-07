@@ -1,6 +1,6 @@
 name: neodash
 version: 2.2
-title: NeoDash Documentation
+title: NeoDash
 start_page: ROOT:index.adoc
 nav:
   - modules/ROOT/nav.adoc
