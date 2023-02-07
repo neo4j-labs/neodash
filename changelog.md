@@ -4,7 +4,9 @@ This releases fixes a small set of bugs that slipped through the 2.2.3 release, 
 - Added the ability to use dashboard parameter as filters in custom parameter selector queries.
 - Fixed breaking bug in parameter selector settings causing a white-screen error.
 - Fixed auto-coloring of bar charts (resolved back to logic of 2.2.1 and earlier).
+- Added a quick fix for automatically resetting the parameter display value when the property display override is toggled.
 - Upversioned outdated dashboards and in the NeoDash Gallery.
+
   
 ## NeoDash 2.2.2
 The NeoDash 2.2.2 release is packed with a bunch of new usability features:
