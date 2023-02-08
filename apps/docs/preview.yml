@@ -3,8 +3,8 @@ site:
 
 content:
   sources:
-  - url: ../
-    start_path: docs
+  - url: ../../
+    start_path: apps/docs
     branches: HEAD
     exclude:
     - '!**/_includes/*'

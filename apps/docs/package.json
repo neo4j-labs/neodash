@@ -3,10 +3,12 @@
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
+    "license": "Apache-2.0",
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
-      "start": "npm run dev",
+      "start": "yarn run dev",
       "dev": "node server.js & npm-watch preview",
+      "build": "antora preview.yml",
       "preview": "antora preview.yml",
       "publish": "git push origin HEAD:publish"
     },
