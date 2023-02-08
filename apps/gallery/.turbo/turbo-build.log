@@ -1,5 +1,32 @@
 yarn run v1.22.19
-$ react-scripts build
-/bin/sh: react-scripts: command not found
-error Command failed with exit code 127.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+$ yarn webpack --mode production
+$ /Users/aleksandarneo4j/neodash/node_modules/.bin/webpack --mode production
+asset bundle.js 2.05 MiB [emitted] [minimized] [big] (name: main) 2 related assets
+asset 218.bundle.js 4.5 KiB [emitted] [minimized] 1 related asset
+orphan modules 2.63 MiB [orphan] 988 modules
+runtime modules 31.9 KiB 16 modules
+cacheable modules 3.77 MiB
+  modules by path ../../node_modules/ 2.86 MiB
+    javascript modules 2.86 MiB 725 modules
+    json modules 1.52 KiB
+      ../../node_modules/character-entities-legacy/index.json 1.24 KiB [built] [code generated]
+      ../../node_modules/character-reference-invalid/index.json 289 bytes [built] [code generated]
+  modules by path ./src/ 931 KiB
+    ./src/index.tsx + 623 modules 927 KiB [built] [code generated] [94 warnings]
+    ./src/index.css 1.79 KiB [built] [code generated]
+    ../../node_modules/css-loader/dist/cjs.js!./src/index.css 726 bytes [built] [code generated]
+    ./src/App.css 1.79 KiB [built] [code generated]
+    ../../node_modules/css-loader/dist/cjs.js!./src/App.css 238 bytes [built] [code generated]
+
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets: 
+  bundle.js (2.05 MiB)
+
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  main (2.05 MiB)
+      bundle.js
+
+webpack 5.75.0 compiled with 2 warnings in 17835 ms
+Done in 19.12s.
