@@ -37,6 +37,7 @@ import {
   setReportHelpModalOpen,
 } from './ApplicationActions';
 
+import { handleNeoDashLaunch } from '../solutions/launch/launch';
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
  * Several actions/other thunks may be dispatched from here.
@@ -338,12 +339,19 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDashboardDatabase: 'dashboards',
     standaloneDashboardURL: '',
   };
-  try {
-    config = await (await fetch('config.json')).json();
-  } catch (e) {
-    // Config may not be found, for example when we are in Neo4j Desktop.
-    // eslint-disable-next-line no-console
-    console.log('No config file detected. Setting to safe defaults.');
+
+  // for now putting auth code here
+  const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
+  if (launchResult.isHandled) {
+    config = launchResult.config;
+  } else {
+    try {
+      config = await (await fetch('config.json')).json();
+    } catch (e) {
+      // Config may not be found, for example when we are in Neo4j Desktop.
+      // eslint-disable-next-line no-console
+      console.log('No config file detected. Setting to safe defaults.');
+    }
   }
 
   try {

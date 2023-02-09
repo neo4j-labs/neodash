@@ -31,6 +31,7 @@ import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import SaveToHiveModel from './SaveToHiveModel';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -68,6 +69,7 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
 export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
+  const [saveToHiveModalOpen, setSaveToHiveModalOpen] = React.useState(false);
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
   const [dashboardDatabase, setDashboardDatabase] = React.useState('neo4j');
   const [databases, setDatabases] = React.useState(['neo4j']);
@@ -157,6 +159,19 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
             endIcon={<GetAppIcon />}
           >
             Save to File
+          </Button>
+          <Button
+            component='label'
+            onClick={() => {
+              setSaveToHiveModalOpen(true);
+            }}
+            style={{ backgroundColor: 'white', marginLeft: '10px' }}
+            color='default'
+            variant='contained'
+            size='medium'
+            endIcon={<img src='/hive.png' width='24' height='24' />}
+          >
+            Save to Hive
           </Button>
           <br />
           <br />
@@ -283,6 +298,16 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
+      <SaveToHiveModel
+        modalOpen={saveToHiveModalOpen}
+        closeDialog={(options) => {
+          options = options || {};
+          setSaveToHiveModalOpen(false);
+          if (options.closeSaveDialog) {
+            setSaveModalOpen(false);
+          }
+        }}
+      />
     </div>
   );
 };

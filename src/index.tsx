@@ -8,6 +8,11 @@ import Application from './application/Application';
 import '/node_modules/react-grid-layout/css/styles.css';
 import '/node_modules/react-resizable/css/styles.css';
 
+// new imports
+import { Route, BrowserRouter as Router } from 'react-router-dom';
+import Callback from './solutions/auth/callback';
+import PrivateRoute from './solutions/auth/privateRoute';
+
 /**
  * Set up the NeoDash application and wrap it in the needed providers.
  */
@@ -20,7 +25,10 @@ const persister = persistStore(store);
 const provider = (
   <ReduxProvider store={store}>
     <PersistGate persistor={persister} loading={<div>Loading NeoDash...</div>}>
-      <Application />
+      <Router>
+        <Route exact path='/callback' component={Callback} />
+        <PrivateRoute exact path='/' component={Application} />
+      </Router>
     </PersistGate>
   </ReduxProvider>
 );

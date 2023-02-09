@@ -4,6 +4,7 @@
 
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
+import { hiveReducer, HIVE_INITIAL_STATE } from '../solutions/persistence/HiveReducer';
 import {
   CREATE_PAGE,
   REMOVE_PAGE,
@@ -22,7 +23,7 @@ export const initialState = {
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
-  extensions: {},
+  extensions: {}, // TODO: update with HIVE_INITIAL_STATE?
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -50,6 +51,16 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     return {
       ...state,
       settings: settingsReducer(state, enrichedAction),
+    };
+  }
+
+  if (action.type.startsWith('EXTENSIONS/HIVE/')) {
+    return {
+      ...state,
+      extensions: {
+        ...(state.extensions || {}),
+        solutionsHive: hiveReducer(state, action),
+      },
     };
   }
 

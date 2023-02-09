@@ -42,7 +42,19 @@ module.exports = (env) => {
     devServer: {
       port: 3000,
       hot: true,
+      // https://stackoverflow.com/questions/31945763/how-to-tell-webpack-dev-server-to-serve-index-html-for-any-route
+      historyApiFallback: {
+        index: 'index.html',
+      },
     },
-    plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()],
+    plugins: production
+      ? []
+      : [
+          new webpack.HotModuleReplacementPlugin(),
+          // https://stackoverflow.com/questions/70368760/react-uncaught-referenceerror-process-is-not-defined
+          new webpack.DefinePlugin({
+            process: { env: {} },
+          }),
+        ],
   };
 };
