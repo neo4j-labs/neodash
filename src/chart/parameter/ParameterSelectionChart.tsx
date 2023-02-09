@@ -82,7 +82,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
         compatibilityMode={compatibilityMode}
       />
     );
-  } else if (type == 'Query') {
+  } else if (type == 'Custom Query') {
     return (
       <QueryParameterSelectComponent
         parameterName={parameterName}

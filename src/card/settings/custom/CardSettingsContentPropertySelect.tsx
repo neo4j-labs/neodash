@@ -181,8 +181,6 @@ const NeoCardSettingsContentPropertySelect = ({
         ` n.\`${propertyTypeDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
-    } else if (settings.type == 'Query') {
-      const newQuery = 'NO ACTION';
     } else {
       const newQuery = 'RETURN true';
       onQueryUpdate(newQuery);
@@ -190,7 +188,7 @@ const NeoCardSettingsContentPropertySelect = ({
   }
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
-  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Query'];
+  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query'];
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
@@ -240,7 +238,7 @@ const NeoCardSettingsContentPropertySelect = ({
             handleFreeTextNameSelectionUpdate(value);
           }}
         />
-      ) : settings.type == 'Query' ? (
+      ) : settings.type == 'Custom Query' ? (
         <>
           <div>
             <NeoField
