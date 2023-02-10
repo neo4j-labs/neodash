@@ -9,7 +9,6 @@ import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtil
 
 export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizationProps) => {
   const fgRef = useRef();
-
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
@@ -50,7 +49,7 @@ export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizati
       cooldownTicks={100}
       onEngineStop={() => {
         if (props.engine.firstRun) {
-          ref.current.zoomToFit(400);
+          fgRef.current.zoomToFit(400);
           props.engine.setFirstRun(false);
         }
       }}

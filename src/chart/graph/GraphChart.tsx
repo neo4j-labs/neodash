@@ -101,9 +101,6 @@ const NeoGraphChart = (props: ChartProps) => {
     setData(extractedGraphFromRecords);
   };
 
-  // The first time, build the visualization data graph.
-  // generateVisualizationDataGraph(props.records);
-
   // When data is refreshed, rebuild the visualization data.
   useEffect(() => {
     generateVisualizationDataGraph(props.records);
@@ -170,7 +167,7 @@ const NeoGraphChart = (props: ChartProps) => {
   };
 
   return (
-    <div ref={observe}>
+    <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
         <NeoGraphChartFitViewButton {...chartProps} />
         {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
