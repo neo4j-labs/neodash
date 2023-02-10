@@ -13,7 +13,7 @@ export interface ParameterSelectProps {
   /**
    * Parameter value as defined in the global state. (e.g. "Alfredo" or 1234)
    */
-  parameterValue: string | number;
+  parameterValue: string | number | null;
   /**
    * The parameter value ***displayed*** in the selector when selecting the actual parameterValue.
    */

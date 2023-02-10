@@ -322,3 +322,10 @@ export const processHierarchyFromRecords = (records: Record<string, any>[], sele
     }
   }, []);
 };
+
+export const isEmptyObject = (obj: object) => {
+  if (obj == undefined) {
+    return true;
+  }
+  return Object.keys(obj).length == 0;
+};
