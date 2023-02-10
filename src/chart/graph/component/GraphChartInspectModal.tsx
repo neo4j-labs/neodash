@@ -13,12 +13,15 @@ import TableRow from '@material-ui/core/TableRow';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { getEntityHeader } from '../util/NodeUtils';
 
-export const showInspectModal = useCallback((item, showPropertiesOnClick, setInspectItem, setInspectModalOpen) => {
-  if (showPropertiesOnClick) {
-    setInspectItem(item);
-    setInspectModalOpen(true);
-  }
-}, []);
+// export const showInspectModal = useCallback((item, showPropertiesOnClick, setInspectItem, setInspectModalOpen) => {
+//   if (showPropertiesOnClick) {
+//     setInspectItem(item);
+//     setInspectModalOpen(true);
+//   }
+// }, []);
+export const showInspectModal = () => {
+  throw 'Not Implemented';
+};
 
 export const formatProperty = (property) => {
   if (property.startsWith('http://') || property.startsWith('https://')) {
@@ -37,7 +40,7 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
         aria-labelledby='form-dialog-title'
       >
         <DialogTitle id='form-dialog-title'>
-          {getEntityHeader(props.interactivity.selectedEntity)}
+          {props.interactivity.selectedEntity ? getEntityHeader(props.interactivity.selectedEntity) : ''}
           <IconButton
             onClick={() => props.interactivity.setPropertyInspectorOpen(false)}
             style={{ padding: '3px', marginLeft: '20px', float: 'right' }}

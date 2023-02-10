@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ForceGraph2D, { LinkObject } from 'react-force-graph-2d';
 import { showInspectModal } from './component/GraphChartInspectModal';
 import { getTooltip } from './component/GraphChartTooltip';
@@ -8,12 +8,14 @@ import { generateNodeCanvasObject } from './util/NodeUtils';
 import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtils';
 
 export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizationProps) => {
+  const fgRef = useRef();
+
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
   return (
     <ForceGraph2D
-      ref={props.ref}
+      ref={fgRef}
       width={props.style.width - 10}
       height={props.style.height - 10}
       linkCurvature='curvature'
@@ -42,13 +44,13 @@ export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizati
           props.interactivity.setPropertyInspectorOpen
         )
       }
-      onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
+      // onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
       linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={100}
       onEngineStop={() => {
         if (props.engine.firstRun) {
-          props.ref.current.zoomToFit(400);
+          ref.current.zoomToFit(400);
           props.engine.setFirstRun(false);
         }
       }}

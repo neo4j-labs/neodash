@@ -75,7 +75,7 @@ const NeoGraphChart = (props: ChartProps) => {
   const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
   const [extraRecords, setExtraRecords] = useState([]);
   const [engineFrozen, setEngineFrozen] = useState(frozen);
-  let iconDefinition = parseNodeIconConfig(iconStyle);
+  let icons = parseNodeIconConfig(iconStyle);
   const colorScheme = categoricalColorSchemes[nodeColorScheme];
 
   const generateVisualizationDataGraph = (records) => {
@@ -102,7 +102,7 @@ const NeoGraphChart = (props: ChartProps) => {
   };
 
   // The first time, build the visualization data graph.
-  generateVisualizationDataGraph(props.records);
+  // generateVisualizationDataGraph(props.records);
 
   // When data is refreshed, rebuild the visualization data.
   useEffect(() => {
@@ -115,7 +115,7 @@ const NeoGraphChart = (props: ChartProps) => {
   }, [extraRecords]);
 
   // Return the actual graph visualization component with the parsed data and selected customizations.
-  const fgRef = useRef();
+
   const { observe, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {
       unobserve(); // To stop observing the current target element
@@ -124,7 +124,6 @@ const NeoGraphChart = (props: ChartProps) => {
   });
 
   const chartProps: GraphChartVisualizationProps = {
-    ref: fgRef,
     data: {
       nodes: data.nodes,
       links: data.links,
@@ -136,21 +135,34 @@ const NeoGraphChart = (props: ChartProps) => {
       backgroundColor: backgroundColor,
       linkDirectionalParticles: linkDirectionalParticles,
       linkDirectionalParticleSpeed: linkDirectionalParticleSpeed,
+      nodeLabelFontSize: nodeLabelFontSize,
+      nodeLabelColor: nodeLabelColor,
+      relLabelFontSize: relLabelFontSize,
+      relLabelColor: relLabelColor,
+      defaultNodeSize: defaultNodeSize,
+      nodeIcons: icons,
     },
     engine: {
       layout: layouts[layout],
+      queryCallback: props.queryCallback,
+      setExtraRecords: setExtraRecords,
+      firstRun: firstRun,
+      setFirstRun: setFirstRun,
+      selection: props.selection,
     },
     interactivity: {
       layoutFrozen: engineFrozen,
       setLayoutFrozen: setEngineFrozen,
       nodePositions: nodePositions,
       showPropertiesOnHover: showPropertiesOnHover,
+      showPropertiesOnClick: showPropertiesOnClick,
       showPropertyInspector: inspectModalOpen,
       setPropertyInspectorOpen: setInspectModalOpen,
       fixNodeAfterDrag: fixNodeAfterDrag,
       handleExpand: handleExpand,
       drilldownLink: drilldownLink,
       selectedEntity: selectedEntity,
+      setSelectedEntity: setSelectedEntity,
     },
     extensions: {
       styleRules: styleRules,
@@ -158,13 +170,15 @@ const NeoGraphChart = (props: ChartProps) => {
   };
 
   return (
-    <NeoGraphChartCanvas ref={observe}>
-      <NeoGraphChartFitViewButton {...chartProps} />
-      {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
-      {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
-      <NeoGraphChartVisualizationComponent {...chartProps} />
-      <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
-    </NeoGraphChartCanvas>
+    <div ref={observe}>
+      <NeoGraphChartCanvas>
+        <NeoGraphChartFitViewButton {...chartProps} />
+        {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+        {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        <NeoGraphChartVisualizationComponent {...chartProps} />
+        <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
+      </NeoGraphChartCanvas>
+    </div>
   );
 };
 

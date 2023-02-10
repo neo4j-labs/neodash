@@ -160,8 +160,8 @@ export function buildGraphVisualizationObjectFromRecords(
   });
   // Assign proper curvatures to relationships.
   // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
-  const linksList = Object.values(links).map((link) => {
-    return link.map((link, i) => {
+  const linksList = Object.values(links).map((linkArray) => {
+    return linkArray.map((link, i) => {
       if (link.source == link.target) {
         // Self-loop
         return update(link, { curvature: 0.4 + i / 8 });
@@ -169,7 +169,7 @@ export function buildGraphVisualizationObjectFromRecords(
       // If we also have edges from the target to the source, adjust curvatures accordingly.
       const mirroredNodePair = links[`${link.target},${link.source}`];
       if (!mirroredNodePair) {
-        return update(link, { curvature: getCurvature(i, link.length) });
+        return update(link, { curvature: getCurvature(i, linkArray.length) });
       }
       return update(link, {
         curvature:

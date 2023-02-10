@@ -11,6 +11,10 @@ export const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) =
  * Handles an 'expand' action taken by the user clicking on a node in the graph.
  *  TODO - improve the logic here.
  */
-export const handleExpand = useCallback((node, queryCallback, setExtraRecords) => {
-  queryCallback(`MATCH (n)-[e]-(m) WHERE id(n) =${node.id} RETURN e,m`, {}, setExtraRecords);
-}, []);
+// export const handleExpand = useCallback((node, queryCallback, setExtraRecords) => {
+//   queryCallback(`MATCH (n)-[e]-(m) WHERE id(n) =${node.id} RETURN e,m`, {}, setExtraRecords);
+// }, []);
+
+export const handleExpand = () => {
+  throw 'Not Implemented';
+};

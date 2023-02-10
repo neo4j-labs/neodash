@@ -8,7 +8,8 @@ export const NeoGraphChartFitViewButton = (props: GraphChartVisualizationProps) 
     <Tooltip title='Fit graph to view.' aria-label=''>
       <SettingsOverscanIcon
         onClick={() => {
-          props.ref.current.zoomToFit(400);
+          //   props.ref.current.zoomToFit(400);
+          throw `Not Implemented${  props}`;
         }}
         style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 11, right: 34, position: 'absolute', zIndex: 5 }}
         color='disabled'

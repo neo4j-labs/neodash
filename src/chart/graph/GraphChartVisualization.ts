@@ -33,7 +33,6 @@ export interface GraphEntity {
  * The set of properties a graph visualization component (and its peripheral components) expects.
  */
 export interface GraphChartVisualizationProps {
-  ref: MutableRefObject<any>;
   data: {
     nodes: any[];
     links: any[];

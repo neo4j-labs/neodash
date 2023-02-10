@@ -16,6 +16,7 @@ export function getCurvature(index, total) {
     };
     return curvatures[total][index];
   }
+
   // @ts-ignore
   const arr1 = [...Array(Math.floor(total / 2)).keys()].map((i) => {
     return (i + 1) / (Math.floor(total / 2) + 1);
@@ -33,8 +34,8 @@ export const selfLoopRotationDegrees = 45;
 export const generateRelCanvasObject = (link: any, ctx: any, relLabelFontSize: any, relLabelColor: any) => {
   const label = link.properties.name || link.type || link.id;
   const fontSize = relLabelFontSize;
-  const {source} = link;
-  const {target} = link;
+  const { source } = link;
+  const { target } = link;
   ctx.font = `${fontSize}px Sans-Serif`;
   ctx.fillStyle = relLabelColor;
   if (link.target != link.source) {
