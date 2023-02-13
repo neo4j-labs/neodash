@@ -31,7 +31,7 @@ export interface ParameterSelectProps {
    */
   query: string | undefined;
   /**
-   * Callback to query the database with a given set of parameters. Calls 'setReccords' upon completion.
+   * Callback to query the database with a given set of parameters. Calls 'setRecords' upon completion.
    */
   queryCallback: (query: string | undefined, parameters: Record<string, any>, setRecords: any) => void;
   /**

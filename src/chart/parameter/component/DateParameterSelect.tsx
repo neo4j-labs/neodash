@@ -40,10 +40,9 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
     setRunning(false);
     props.setParameterValue(castPropsToBoltDate(value));
   };
-  const debouncedSetParameterValue = useCallback(debounce(setParameterValue, setParameterTimeout), []);
 
   useEffect(() => {
-    debouncedSetParameterValue(Neo4jDate.fromStandardDate(inputDate.toDate()));
+    setParameterValue(Neo4jDate.fromStandardDate(inputDate.toDate()));
   }, []);
   // If the user hasn't typed, and the parameter value mismatches the input value --> it was changed externally --> refresh the input value.
   if (running == false && !inputDate.isSame(castPropsToJsDate(props.parameterValue))) {
@@ -59,9 +58,9 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
           setRunning(true);
           setInputDate(newValue);
           if (newValue == null && clearParameterOnFieldClear) {
-            debouncedSetParameterValue(Neo4jDate.fromStandardDate(defaultValue.toDate()));
+            setParameterValue(Neo4jDate.fromStandardDate(defaultValue.toDate()));
           } else {
-            debouncedSetParameterValue(Neo4jDate.fromStandardDate(newValue.toDate()));
+            setParameterValue(Neo4jDate.fromStandardDate(newValue.toDate()));
           }
         }}
       />
