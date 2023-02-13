@@ -1,4 +1,3 @@
-import { debounce } from '@material-ui/core';
 import React, { useCallback, useEffect } from 'react';
 import { ParameterSelectProps } from './ParameterSelect';
 import NeoDatePicker from '../../../component/field/DateField';
@@ -35,9 +34,7 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
-  const [running, setRunning] = React.useState(false);
   const setParameterValue = (value) => {
-    setRunning(false);
     props.setParameterValue(castPropsToBoltDate(value));
   };
 
@@ -45,17 +42,16 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
     setParameterValue(Neo4jDate.fromStandardDate(inputDate.toDate()));
   }, []);
   // If the user hasn't typed, and the parameter value mismatches the input value --> it was changed externally --> refresh the input value.
-  if (running == false && !inputDate.isSame(castPropsToJsDate(props.parameterValue))) {
+  if (!inputDate.isSame(castPropsToJsDate(props.parameterValue))) {
     setInputDate(castPropsToJsDate(props.parameterValue));
   }
 
   return (
-    <div style={{ width: '100%', marginTop: '5px' }}>
+    <div style={{ width: '155px', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' }}>
       <NeoDatePicker
         label={label}
         value={inputDate}
         onChange={(newValue) => {
-          setRunning(true);
           setInputDate(newValue);
           if (newValue == null && clearParameterOnFieldClear) {
             setParameterValue(Neo4jDate.fromStandardDate(defaultValue.toDate()));

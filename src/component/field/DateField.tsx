@@ -2,21 +2,29 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DatePicker, DesktopDatePicker } from '@mui/x-date-pickers';
 
-const dateFieldStyle = { width: '155px', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' };
-
-const NeoDatePicker = ({ value, style = dateFieldStyle, onChange }) => {
+const NeoDatePicker = ({ label, value, onChange }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} style={style}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DesktopDatePicker
-        label='Date desktop'
+        label={label}
         inputFormat='YYYY-MM-DD'
         value={value}
+        onError={(error) => {
+          console.log(error);
+        }}
         onChange={(event) => {
           onChange(event);
         }}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            onKeyDown={() => {
+              return false;
+            }}
+          />
+        )}
       />
     </LocalizationProvider>
   );
