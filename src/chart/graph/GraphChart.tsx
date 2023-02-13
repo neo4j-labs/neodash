@@ -103,15 +103,8 @@ const NeoGraphChart = (props: ChartProps) => {
 
   // When data is refreshed, rebuild the visualization data.
   useEffect(() => {
-    generateVisualizationDataGraph(props.records);
-  }, [props.records]);
-
-  // If the set of extra records gets updated (e.g. on relationship expand), rebuild the graph.
-  useEffect(() => {
     generateVisualizationDataGraph(props.records.concat(extraRecords));
-  }, [extraRecords]);
-
-  // Return the actual graph visualization component with the parsed data and selected customizations.
+  }, [props.records, extraRecords]);
 
   const { observe, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {

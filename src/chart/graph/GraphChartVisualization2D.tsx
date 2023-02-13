@@ -46,7 +46,7 @@ export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizati
       // onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
       linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
-      cooldownTicks={100}
+      cooldownTicks={props.engine.firstRun ? 100 : 0}
       onEngineStop={() => {
         if (props.engine.firstRun) {
           fgRef.current.zoomToFit(400);

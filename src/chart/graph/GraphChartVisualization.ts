@@ -9,7 +9,7 @@ export const layouts = {
   radial: 'radialout',
 };
 
-type DagMode = 'td' | 'bu' | 'lr' | 'rl' | 'radialout' | 'radialin';
+type Layout = 'td' | 'bu' | 'lr' | 'rl' | 'radialout' | 'radialin';
 
 /**
  * A node or relationship as selected in the graph.
@@ -52,7 +52,7 @@ export interface GraphChartVisualizationProps {
     nodeIcons: any;
   };
   engine: {
-    layout: any;
+    layout: Layout;
     queryCallback: any;
     setExtraRecords: any;
     firstRun: boolean;
