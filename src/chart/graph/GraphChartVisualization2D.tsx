@@ -7,7 +7,7 @@ import { handleExpand } from './util/GraphUtils';
 import { generateNodeCanvasObject } from './util/NodeUtils';
 import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtils';
 
-export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizationProps) => {
+export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
   const fgRef = useRef();
   if (!props.style.width || !props.style.height) {
     return <></>;
@@ -15,7 +15,7 @@ export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizati
   return (
     <ForceGraph2D
       ref={fgRef}
-      width={props.style.width - 10}
+      width={props.style.width - 20}
       height={props.style.height - 10}
       linkCurvature='curvature'
       backgroundColor={props.style.backgroundColor}
@@ -46,7 +46,7 @@ export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizati
       // onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
       linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
-      cooldownTicks={props.engine.firstRun ? 100 : 0}
+      cooldownTicks={props.engine.firstRun ? 100 : 1}
       onEngineStop={() => {
         if (props.engine.firstRun) {
           fgRef.current.zoomToFit(400);
@@ -59,10 +59,11 @@ export const NeoGraphChartVisualizationComponent = (props: GraphChartVisualizati
           node.fy = node.y;
         }
         if (props.interactivity.layoutFrozen) {
-          if (props.interactivity.nodePositions == undefined) {
-            props.interactivity.nodePositions = {};
-          }
-          props.interactivity.nodePositions[`${node.id}`] = [node.x, node.y];
+          const key = node.id;
+          const val = [node.x, node.y];
+          const old = { ...props.interactivity.nodePositions };
+          old[key] = val;
+          props.interactivity.setNodePositions(old);
         }
       }}
       nodeCanvasObjectMode={() => 'after'}

@@ -63,6 +63,7 @@ export interface GraphChartVisualizationProps {
     layoutFrozen: boolean;
     setLayoutFrozen: React.Dispatch<React.SetStateAction<boolean>>;
     nodePositions: Record<string, any>;
+    setNodePositions: any;
     showPropertiesOnHover: boolean;
     showPropertiesOnClick: boolean;
     showPropertyInspector: boolean;

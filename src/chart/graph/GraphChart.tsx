@@ -4,7 +4,7 @@ import { ChartProps } from '../Chart';
 import { NeoGraphChartInspectModal } from './component/GraphChartInspectModal';
 import { useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import { NeoGraphChartVisualizationComponent } from './GraphChartVisualization2D';
+import { NeoGraphChartVisualization2D } from './GraphChartVisualization2D';
 import { NeoGraphChartDeepLinkButton } from './component/button/GraphChartDeepLinkButton';
 import { NeoGraphChartCanvas } from './component/GraphChartCanvas';
 import { NeoGraphChartLockButton } from './component/button/GraphChartLockButton';
@@ -61,8 +61,9 @@ const NeoGraphChart = (props: ChartProps) => {
     props.getGlobalParameter
   );
   const parameters = props.parameters ? props.parameters : {};
-  let nodePositions: Record<string, any> =
-    props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
+  let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
+  const setNodePositions = (positions) =>
+    props.updateReportSetting && props.updateReportSetting('nodePositions', positions);
   const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
 
   const [inspectModalOpen, setInspectModalOpen] = useState(false);
@@ -74,7 +75,13 @@ const NeoGraphChart = (props: ChartProps) => {
   let linkTypes = {};
   const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
   const [extraRecords, setExtraRecords] = useState([]);
-  const [engineFrozen, setEngineFrozen] = useState(frozen);
+  const setLayoutFrozen = (value) => {
+    if (value == false) {
+      setNodePositions({});
+      setFirstRun(true);
+    }
+    props.updateReportSetting && props.updateReportSetting('frozen', value);
+  };
   let icons = parseNodeIconConfig(iconStyle);
   const colorScheme = categoricalColorSchemes[nodeColorScheme];
 
@@ -141,9 +148,10 @@ const NeoGraphChart = (props: ChartProps) => {
       selection: props.selection,
     },
     interactivity: {
-      layoutFrozen: engineFrozen,
-      setLayoutFrozen: setEngineFrozen,
+      layoutFrozen: frozen,
+      setLayoutFrozen: setLayoutFrozen,
       nodePositions: nodePositions,
+      setNodePositions: setNodePositions,
       showPropertiesOnHover: showPropertiesOnHover,
       showPropertiesOnClick: showPropertiesOnClick,
       showPropertyInspector: inspectModalOpen,
@@ -165,7 +173,7 @@ const NeoGraphChart = (props: ChartProps) => {
         <NeoGraphChartFitViewButton {...chartProps} />
         {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
         {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
-        <NeoGraphChartVisualizationComponent {...chartProps} />
+        <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
       </NeoGraphChartCanvas>
     </div>
