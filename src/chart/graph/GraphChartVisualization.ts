@@ -69,7 +69,10 @@ export interface GraphChartVisualizationProps {
     showPropertyInspector: boolean;
     setPropertyInspectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
     fixNodeAfterDrag: boolean;
+    onNodeClick: any;
+    onRelationshipClick: any;
     handleExpand: any;
+    zoomToFit?: any;
     drilldownLink: string;
     selectedEntity?: GraphEntity;
     setSelectedEntity: any;

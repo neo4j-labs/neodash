@@ -13,16 +13,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { getEntityHeader } from '../util/NodeUtils';
 
-// export const showInspectModal = useCallback((item, showPropertiesOnClick, setInspectItem, setInspectModalOpen) => {
-//   if (showPropertiesOnClick) {
-//     setInspectItem(item);
-//     setInspectModalOpen(true);
-//   }
-// }, []);
-export const showInspectModal = () => {
-  throw 'Not Implemented';
-};
-
 export const formatProperty = (property) => {
   if (property.startsWith('http://') || property.startsWith('https://')) {
     return <a href={property}>{property}</a>;

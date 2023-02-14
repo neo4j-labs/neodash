@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import ForceGraph2D, { LinkObject } from 'react-force-graph-2d';
-import { showInspectModal } from './component/GraphChartInspectModal';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
 import { handleExpand } from './util/GraphUtils';
@@ -9,9 +8,20 @@ import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtil
 
 export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
   const fgRef = useRef();
+
+  const [isDragging, setIsDragging] = React.useState(false);
+  const getCooldownTicks = () => {
+    if (props.engine.firstRun) {
+      return 100;
+    } else if (isDragging) {
+      return 1;
+    }
+    return 0;
+  };
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
+  props.interactivity.zoomToFit = () => fgRef.current.zoomToFit(400);
   return (
     <ForceGraph2D
       ref={fgRef}
@@ -26,34 +36,23 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       linkLabel={(link: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(link)}</div>` : '')}
       nodeLabel={(node: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(node)}</div>` : '')}
       nodeVal={(node: any) => node.size}
-      onNodeClick={(item) =>
-        showInspectModal(
-          item,
-          props.interactivity.showPropertiesOnClick,
-          props.interactivity.setSelectedEntity,
-          props.interactivity.setPropertyInspectorOpen
-        )
-      }
-      // nodeThreeObject = {nodeThree}
-      onLinkClick={(item) =>
-        showInspectModal(
-          item,
-          props.interactivity.showPropertiesOnClick,
-          props.interactivity.setSelectedEntity,
-          props.interactivity.setPropertyInspectorOpen
-        )
-      }
-      // onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
+      onNodeClick={(item) => props.interactivity.onNodeClick(item)}
+      onLinkClick={(item) => props.interactivity.onRelationshipClick(item)}
+      onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
       linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
-      cooldownTicks={props.engine.firstRun ? 100 : 1}
+      cooldownTicks={getCooldownTicks()}
       onEngineStop={() => {
         if (props.engine.firstRun) {
           fgRef.current.zoomToFit(400);
           props.engine.setFirstRun(false);
         }
       }}
+      onNodeDrag={() => {
+        setIsDragging(true);
+      }}
       onNodeDragEnd={(node) => {
+        setIsDragging(false);
         if (props.interactivity.fixNodeAfterDrag) {
           node.fx = node.x;
           node.fy = node.y;

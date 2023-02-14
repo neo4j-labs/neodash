@@ -64,11 +64,17 @@ const NeoGraphChart = (props: ChartProps) => {
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
   const setNodePositions = (positions) =>
     props.updateReportSetting && props.updateReportSetting('nodePositions', positions);
-  const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
 
+  const handleEntityClick = (item) => {
+    if (showPropertiesOnClick) {
+      setSelectedEntity(item);
+      setInspectModalOpen(true);
+    }
+  };
+  const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
   const [inspectModalOpen, setInspectModalOpen] = useState(false);
-  const [firstRun, setFirstRun] = useState(true);
   const [selectedEntity, setSelectedEntity] = useState(undefined);
+  const [firstRun, setFirstRun] = useState(true);
   let nodes: Record<string, any>[] = {};
   let nodeLabels = {};
   let links: Record<string, any>[] = {};
@@ -77,8 +83,8 @@ const NeoGraphChart = (props: ChartProps) => {
   const [extraRecords, setExtraRecords] = useState([]);
   const setLayoutFrozen = (value) => {
     if (value == false) {
-      setNodePositions({});
       setFirstRun(true);
+      setNodePositions({});
     }
     props.updateReportSetting && props.updateReportSetting('frozen', value);
   };
@@ -158,6 +164,8 @@ const NeoGraphChart = (props: ChartProps) => {
       setPropertyInspectorOpen: setInspectModalOpen,
       fixNodeAfterDrag: fixNodeAfterDrag,
       handleExpand: handleExpand,
+      onNodeClick: (item) => handleEntityClick(item),
+      onRelationshipClick: (item) => handleEntityClick(item),
       drilldownLink: drilldownLink,
       selectedEntity: selectedEntity,
       setSelectedEntity: setSelectedEntity,
