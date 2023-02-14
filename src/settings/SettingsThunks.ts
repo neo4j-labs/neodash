@@ -94,6 +94,6 @@ export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: 
     });
     dispatch(updateDashboardSetting('parameters', { ...parameters }));
   } catch (e) {
-    dispatch(createNotificationThunk('Unable to update global parameters', e));
+    dispatch(createNotificationThunk('Unable to update cached parameters to Neo4j types', e));
   }
 };

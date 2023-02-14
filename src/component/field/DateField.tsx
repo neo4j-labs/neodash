@@ -11,18 +11,14 @@ const NeoDatePicker = ({ label, value, onChange }) => {
         label={label}
         inputFormat='YYYY-MM-DD'
         value={value}
-        onError={(error) => {
-          console.log(error);
-        }}
         onChange={(event) => {
           onChange(event);
         }}
         renderInput={(params) => (
           <TextField
+            variant='outlined'
+            style={{ width: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
             {...params}
-            onKeyDown={() => {
-              return false;
-            }}
           />
         )}
       />
