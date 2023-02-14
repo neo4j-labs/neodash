@@ -29,6 +29,7 @@ const NeoCardView = ({
   selection,
   dashboardSettings,
   settings,
+  updateReportSetting,
   settingsOpen,
   editable,
   onGlobalParameterUpdate,
@@ -169,6 +170,7 @@ const NeoCardView = ({
           ChartType={reportTypes[type] && reportTypes[type].component}
           setGlobalParameter={onGlobalParameterUpdate}
           getGlobalParameter={getGlobalParameter}
+          updateReportSetting={updateReportSetting}
           queryTimeLimit={dashboardSettings.queryTimeLimit ? dashboardSettings.queryTimeLimit : 20}
           setFields={onFieldsUpdate}
         />

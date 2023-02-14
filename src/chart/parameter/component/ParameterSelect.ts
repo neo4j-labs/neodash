@@ -13,7 +13,7 @@ export interface ParameterSelectProps {
   /**
    * Parameter value as defined in the global state. (e.g. "Alfredo" or 1234)
    */
-  parameterValue: string | number;
+  parameterValue: string | number | null;
   /**
    * The parameter value ***displayed*** in the selector when selecting the actual parameterValue.
    */
@@ -31,7 +31,7 @@ export interface ParameterSelectProps {
    */
   query: string | undefined;
   /**
-   * Callback to query the database with a given set of parameters. Calls 'setReccords' upon completion.
+   * Callback to query the database with a given set of parameters. Calls 'setRecords' upon completion.
    */
   queryCallback: (query: string | undefined, parameters: Record<string, any>, setRecords: any) => void;
   /**

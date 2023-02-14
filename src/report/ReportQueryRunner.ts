@@ -69,6 +69,7 @@ export function runCypherQuery(
       query = `CALL { ${query}} RETURN * LIMIT ${rowLimit + 1}`;
     }
   }
+
   transaction
     .run(query, parameters)
     .then((res) => {
