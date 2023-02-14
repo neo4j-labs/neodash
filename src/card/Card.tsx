@@ -128,6 +128,7 @@ const NeoCard = ({
             dashboardSettings={dashboardSettings}
             extensions={extensions}
             settings={report.settings ? report.settings : {}}
+            updateReportSetting={(name, value) => onReportSettingUpdate(index, name, value)}
             type={report.type}
             database={database}
             active={active}
