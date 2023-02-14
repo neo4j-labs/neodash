@@ -694,6 +694,7 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NODE_PROPERTIES,
       },
     },
+    disabledDependency: { mapDrillDown: { dependsOn: 'layerType', operator: 'not in', values: ['boundary'] } },
     useNodePropsAsFields: true,
     component: NeoMapChart,
     maxRecords: 1000,
@@ -768,6 +769,13 @@ export const REPORT_TYPES = {
         label: 'Map Provider URL',
         type: SELECTION_TYPES.TEXT,
         default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      mapDrillDown: {
+        label: 'Activates Drill Down (only available for boundary map)',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        disabled: true,
       },
       intensityProp: {
         label: 'Intensity Property (for heatmap)',

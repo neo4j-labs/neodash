@@ -62,9 +62,17 @@ const NeoCardSettingsFooter = ({
     if (dependencyLogic != undefined) {
       // Getting the current parameter defined in the settings of the report
       // (if undefined, the param will be treated as undefined (boolean false)
-      isDisabled = reportSettingsText[dependencyLogic.dependsOn];
-      if (!dependencyLogic.operator) {
-        isDisabled = !isDisabled;
+      console.log('aho');
+      console.log(reportSettingsText);
+      let currentValue = reportSettingsText[dependencyLogic.dependsOn];
+      if (typeof dependencyLogic.operator === 'boolean') {
+        if (!dependencyLogic.operator) {
+          isDisabled = !currentValue;
+        }
+      }
+      // if the value is in the list of values that enable the option, then enable the option
+      else if (dependencyLogic.operator === 'not in') {
+        isDisabled = !dependencyLogic.values.includes(currentValue);
       }
     }
     return isDisabled;

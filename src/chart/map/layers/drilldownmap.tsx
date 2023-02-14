@@ -1,32 +1,45 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useMap, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import nuts_rg_60m_2013_lvl_1 from '../nuts_rg_60m_2013_lvl_1.geo.json';
-import nuts_rg_60m_2013_lvl_2 from '../nuts_rg_60m_2013_lvl_2.geo.json';
+import level1_who from '../level1_who.json';
+import level2_who from '../level2_who.json';
 import Button from '@material-ui/core/Button';
 
-const featureLevel1 = nuts_rg_60m_2013_lvl_1.features;
-const featureLevel2 = nuts_rg_60m_2013_lvl_2.features;
+const featureLevel1 = level1_who.features;
+const featureLevel2 = level2_who.features;
 
-export function CreateBoundaries(_data) {
+// Wraps the boundary logic function
+export const MapBoundary = ({ _data, isDrillDownEnabled = false }) => {
+  console.log('MapBoundary');
+  console.log(isDrillDownEnabled);
+  const boundary = CreateBoundaries(_data, isDrillDownEnabled);
+  return boundary;
+};
+
+function CreateBoundaries(_data, isDrillDownEnabled) {
   function getDrillDown(id, features) {
     return features.filter((x) => {
-      return x.properties.NUTS_ID.startsWith(id);
+      return x.properties.CODE_right === id;
     });
   }
 
+  // Current selected geojson (needed for drill down)
   const [geoJson, setGeoJson] = React.useState(null);
-  const geoJsonData = geoJson == null ? featureLevel1 : getDrillDown(geoJson.feature.properties.NUTS_ID, featureLevel2);
-  const key = geoJson == null ? 'all' : geoJson.feature.properties.NUTS_ID;
+  // Data that is going to be rendered in the Map
+  const geoJsonData = geoJson == null ? featureLevel1 : getDrillDown(geoJson.feature.properties.CODE, featureLevel2);
+  // Changing the key is fundamental to trigger re-render
+  const key = geoJson == null ? 'all' : geoJson.feature.properties.CODE;
   const map = useMap();
 
-  function BootstrapButton() {
+  // Button to reset the view and the whole drilldown
+  function ResetButton() {
     const map = useMap();
     function onClick() {
       setGeoJson(null);
-      map.setZoom(3.5);
+      map.setZoom(1);
       return null;
     }
+
     return (
       <div className='btnWrapper' style={{ zIndex: 1001, position: 'absolute', top: 10, right: 10 }}>
         <Button variant='contained' onClick={onClick}>
@@ -42,9 +55,11 @@ export function CreateBoundaries(_data) {
   }
 
   function onEachFeature(_, layer) {
-    layer.on({
-      click: onDrillDown,
-    });
+    if (isDrillDownEnabled) {
+      layer.on({
+        click: onDrillDown,
+      });
+    }
   }
 
   const geoJSONStyle = (_feature) => {
@@ -55,17 +70,16 @@ export function CreateBoundaries(_data) {
       fillColor: getColor(Math.floor(Math.random() * 26)),
     };
   };
-  // P
-  const elem = BootstrapButton();
-  console.log(key);
-  console.log(geoJsonData);
+
+  const resetButton = ResetButton();
   return (
     <div>
-      {elem}
+      {resetButton}
       <GeoJSON id='testAll' key={key} data={geoJsonData} style={geoJSONStyle} onEachFeature={onEachFeature}></GeoJSON>
     </div>
   );
 }
+
 function getColor(d: number) {
   return d > 25
     ? '#800026'
