@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
 import ForceGraph2D, { LinkObject } from 'react-force-graph-2d';
+import { actionRule } from '../../extensions/actions/ActionsRule';
+import { getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
 import { handleExpand } from './util/GraphUtils';
@@ -36,9 +38,19 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       linkLabel={(link: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(link)}</div>` : '')}
       nodeLabel={(node: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(node)}</div>` : '')}
       nodeVal={(node: any) => node.size}
-      onNodeClick={(item) => props.interactivity.onNodeClick(item)}
-      onLinkClick={(item) => props.interactivity.onRelationshipClick(item)}
-      onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
+      onNodeClick={(item) => {
+        let rules = getRuleWithFieldPropertyName(item, props.extensions.actionsRules, 'onNodeClick', 'labels');
+        rules != null
+          ? rules.forEach((rule) => actionRule(rule, item, props.interactivity.setGlobalParameter))
+          : props.interactivity.onNodeClick(item);
+      }}
+      onLinkClick={(item) => {
+        let rules = getRuleWithFieldPropertyName(item, props.extensions.actionsRules, 'onLinkClick', 'type');
+        rules != null
+          ? rules.forEach((rule) => actionRule(rule, item, props.interactivity.setGlobalParameter))
+          : props.interactivity.onRelationshipClick(item);
+      }}
+      // onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
       linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={getCooldownTicks()}

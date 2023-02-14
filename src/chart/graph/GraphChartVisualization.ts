@@ -71,6 +71,7 @@ export interface GraphChartVisualizationProps {
     fixNodeAfterDrag: boolean;
     onNodeClick: any;
     onRelationshipClick: any;
+    setGlobalParameter: any;
     handleExpand: any;
     zoomToFit?: any;
     drilldownLink: string;
@@ -79,5 +80,6 @@ export interface GraphChartVisualizationProps {
   };
   extensions: {
     styleRules: any;
+    actionsRules: any;
   };
 }

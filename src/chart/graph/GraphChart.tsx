@@ -60,6 +60,10 @@ const NeoGraphChart = (props: ChartProps) => {
     props.settings && props.settings.styleRules,
     props.getGlobalParameter
   );
+  const actionsRules =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
   const parameters = props.parameters ? props.parameters : {};
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
   const setNodePositions = (positions) =>
@@ -164,6 +168,7 @@ const NeoGraphChart = (props: ChartProps) => {
       setPropertyInspectorOpen: setInspectModalOpen,
       fixNodeAfterDrag: fixNodeAfterDrag,
       handleExpand: handleExpand,
+      setGlobalParameter: props.setGlobalParameter,
       onNodeClick: (item) => handleEntityClick(item),
       onRelationshipClick: (item) => handleEntityClick(item),
       drilldownLink: drilldownLink,
@@ -172,6 +177,7 @@ const NeoGraphChart = (props: ChartProps) => {
     },
     extensions: {
       styleRules: styleRules,
+      actionsRules: actionsRules,
     },
   };
 
