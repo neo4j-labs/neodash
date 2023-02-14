@@ -130,8 +130,10 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
         }
       });
     });
+
     dispatch(setDashboard(dashboard));
     const { application } = getState();
+
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
     dispatch(setParametersToLoadAfterConnecting(null));
     dispatch(updateParametersToNeo4jTypeThunk());

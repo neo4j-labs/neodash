@@ -173,6 +173,14 @@ export function replaceDashboardParameters(str, parameters) {
   return str;
 }
 
+// Replaces all global dashboard parameters inside a string with their values.
+export function replaceDashboardParametersInString(str, parameters) {
+  Object.keys(parameters).forEach((key) => {
+    str = str.replaceAll(`$${key}`, parameters[key]);
+  });
+  return str;
+}
+
 /**
  * Downloads a screenshot of the element reference passed to it.
  * @param ref The reference to the element to download as an image.
