@@ -3,7 +3,7 @@ import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard } from './DashboardActions';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
-import { updateGlobalParametersThunk } from '../settings/SettingsThunks';
+import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 
 // TODO move this to a generic utils file
 export function createUUID() {
@@ -134,6 +134,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
     const { application } = getState();
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
     dispatch(setParametersToLoadAfterConnecting(null));
+    dispatch(updateParametersToNeo4jTypeThunk());
   } catch (e) {
     dispatch(createNotificationThunk('Unable to load dashboard', e));
   }

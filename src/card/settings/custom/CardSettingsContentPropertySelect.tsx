@@ -184,7 +184,7 @@ const NeoCardSettingsContentPropertySelect = ({
   }
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
-  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text'];
+  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Date Picker'];
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
@@ -220,7 +220,7 @@ const NeoCardSettingsContentPropertySelect = ({
         ))}
       </TextField>
 
-      {settings.type == 'Free Text' ? (
+      {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
         <NeoField
           label={'Name'}
           key={'freetext'}
