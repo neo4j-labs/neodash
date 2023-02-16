@@ -7572,6 +7572,11 @@ ms@2.1.3, ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
+mui-nested-menu@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/mui-nested-menu/-/mui-nested-menu-3.2.0.tgz#2797ff5a573e6374ff093f1aa88a03096ba41d00"
+  integrity sha512-3js6P2RHkexTZPRFYY5VnkVAncmAWVcZrVX2lqcWRF2X+LjF7v6JmXf3tZHl6w7A2DFbJW5vU1EaUOa48W5Rlg==
+
 multicast-dns@^7.2.5:
   version "7.2.5"
   resolved "https://registry.yarnpkg.com/multicast-dns/-/multicast-dns-7.2.5.tgz#77eb46057f4d7adbd16d9290fa7299f6fa64cced"

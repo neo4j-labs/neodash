@@ -17,6 +17,9 @@ export function getCurvature(index, total) {
     return curvatures[total][index];
   }
 
+  if (isNaN(total)) {
+    return 0;
+  }
   // @ts-ignore
   const arr1 = [...Array(Math.floor(total / 2)).keys()].map((i) => {
     return (i + 1) / (Math.floor(total / 2) + 1);

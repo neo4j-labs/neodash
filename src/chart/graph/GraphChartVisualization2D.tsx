@@ -50,8 +50,12 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
           ? rules.forEach((rule) => actionRule(rule, item, props.interactivity.setGlobalParameter))
           : props.interactivity.onRelationshipClick(item);
       }}
-      // onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
-      linkDirectionalParticles={props.style.linkDirectionalParticles}
+      onNodeRightClick={(node, event) => props.interactivity.onNodeRightClick(node, event)}
+      onBackgroundClick={() => props.interactivity.onNodeClick(undefined)}
+      onBackgroundRightClick={() => props.interactivity.onNodeClick(undefined)}
+      linkLineDash={(link) => {
+        return link.new ? [2, 1] : undefined;
+      }}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={getCooldownTicks()}
       onEngineStop={() => {

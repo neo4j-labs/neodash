@@ -62,7 +62,7 @@ const rightRelationship =
 const leftRelationship =
   'polygon(10px 0%, calc(100% - 0%) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 0%) 100%, 10px 100%, 0% calc(100% - 50%), 0% 50%)';
 
-function RenderNode(value, key = 0) {
+export function RenderNode(value, key = 0) {
   return (
     <HtmlTooltip
       key={`${key}-${value.identity}`}

@@ -35,8 +35,12 @@ export interface GraphEntity {
 export interface GraphChartVisualizationProps {
   data: {
     nodes: any[];
+    nodeLabels: Record<string, any>;
     links: any[];
+    linkTypes: Record<string, any>;
     parameters: Record<string, any>;
+    appendNodes: any;
+    appendLink: any;
   };
   style: {
     width: number;
@@ -71,12 +75,17 @@ export interface GraphChartVisualizationProps {
     fixNodeAfterDrag: boolean;
     onNodeClick: any;
     onRelationshipClick: any;
+    onNodeRightClick: any;
     setGlobalParameter: any;
     handleExpand: any;
     zoomToFit?: any;
     drilldownLink: string;
     selectedEntity?: GraphEntity;
     setSelectedEntity: any;
+    contextMenuOpen: any;
+    setContextMenuOpen: any;
+    clickPosition: any;
+    setClickPosition: any;
   };
   extensions: {
     styleRules: any;

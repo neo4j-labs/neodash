@@ -2,7 +2,7 @@ import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvalua
 import { GraphEntity } from '../GraphChartVisualization';
 import { drawDataURIOnCanvas } from './GraphUtils';
 
-const getNodeLabel = (selection, node) => {
+export const getNodeLabel = (selection, node) => {
   const selectedProp = selection && selection[node.mainLabel];
   if (selectedProp == '(id)') {
     return node.id;

@@ -1,7 +1,9 @@
 import { Record as Neo4jRecord } from 'neo4j-driver';
 
-// Interface for all charts that NeoDash can render.
-// When you extend NeoDash, make sure that your component implements this interface.
+/**
+ * Interface for all charts that NeoDash can render.
+ * When you extend NeoDash, make sure that your component implements this interface.
+ */
 export interface ChartProps {
   records: Neo4jRecord[]; // Query output, Neo4j records as returned from the driver.
   extensions?: Record<string, any>; // A dictionary of enabled extensions.
@@ -14,4 +16,12 @@ export interface ChartProps {
   setGlobalParameter?: (name: string, value: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
   updateReportSetting?: (name, value) => void; // Callback to update a setting for this report.
+}
+
+/**
+ * A simplified schema of the Neo4j database.
+ */
+export interface Neo4jSchema {
+  nodeLabels: string[]; // list of node labels.
+  relationshipTypes: string[]; // list of relationship types.
 }

@@ -14,6 +14,7 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/GraphUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
+import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -70,14 +71,23 @@ const NeoGraphChart = (props: ChartProps) => {
     props.updateReportSetting && props.updateReportSetting('nodePositions', positions);
 
   const handleEntityClick = (item) => {
-    if (showPropertiesOnClick) {
-      setSelectedEntity(item);
+    setSelectedEntity(item);
+    setContextMenuOpen(false);
+    if (item !== undefined && showPropertiesOnClick) {
       setInspectModalOpen(true);
     }
+  };
+
+  const handleEntityRightClick = (item, event) => {
+    setSelectedEntity(item);
+    setContextMenuOpen(true);
+    setClickPosition({ x: event.offsetX, y: event.offsetY });
   };
   const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
   const [inspectModalOpen, setInspectModalOpen] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState(undefined);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [firstRun, setFirstRun] = useState(true);
   let nodes: Record<string, any>[] = {};
   let nodeLabels = {};
@@ -92,6 +102,13 @@ const NeoGraphChart = (props: ChartProps) => {
     }
     props.updateReportSetting && props.updateReportSetting('frozen', value);
   };
+  const appendLink = (link) => {
+    const {links} = data;
+    links.push(link);
+    console.log(links);
+    setData({ links: links, nodes: data.nodes });
+  };
+  console.log(links);
   let icons = parseNodeIconConfig(iconStyle);
   const colorScheme = categoricalColorSchemes[nodeColorScheme];
 
@@ -133,8 +150,14 @@ const NeoGraphChart = (props: ChartProps) => {
   const chartProps: GraphChartVisualizationProps = {
     data: {
       nodes: data.nodes,
+      nodeLabels: nodeLabels,
       links: data.links,
+      linkTypes: linkTypes,
       parameters: parameters,
+      appendNodes: () => {
+        throw 'Not Implemented';
+      },
+      appendLink: appendLink,
     },
     style: {
       width: width,
@@ -171,9 +194,14 @@ const NeoGraphChart = (props: ChartProps) => {
       setGlobalParameter: props.setGlobalParameter,
       onNodeClick: (item) => handleEntityClick(item),
       onRelationshipClick: (item) => handleEntityClick(item),
+      onNodeRightClick: (item, event) => handleEntityRightClick(item, event),
       drilldownLink: drilldownLink,
       selectedEntity: selectedEntity,
       setSelectedEntity: setSelectedEntity,
+      contextMenuOpen: contextMenuOpen,
+      setContextMenuOpen: setContextMenuOpen,
+      clickPosition: clickPosition,
+      setClickPosition: setClickPosition,
     },
     extensions: {
       styleRules: styleRules,
@@ -184,6 +212,7 @@ const NeoGraphChart = (props: ChartProps) => {
   return (
     <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
+        <GraphChartContextMenu {...chartProps} />
         <NeoGraphChartFitViewButton {...chartProps} />
         {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
         {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
