@@ -93,7 +93,6 @@ const NeoCardView = ({
   );
 
   const reportTypes = getReportTypes(extensions);
-
   const withoutFooter =
     reportTypes[type] && reportTypes[type].withoutFooter
       ? reportTypes[type].withoutFooter
@@ -132,7 +131,6 @@ const NeoCardView = ({
       : `${reportHeight}px`,
     overflow: 'auto',
   };
-
   const reportContent = (
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (

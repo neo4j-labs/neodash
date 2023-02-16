@@ -32,7 +32,6 @@ export function createLines(data) {
   }
 
   // Create lines to plot on the map.
-  console.log(data.links);
   return data.links
     .filter((link) => link)
     .map((rel, i) => {

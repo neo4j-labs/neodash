@@ -9,7 +9,7 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { createHeatmap } from './layers/heatmap';
 import { createMarkers } from './layers/markers';
 import { createLines } from './layers/lines';
-import { MapBoundary } from './layers/drilldownmap';
+import { MapBoundary } from './layers/Polygons';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -19,7 +19,6 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 const NeoMapChart = (props: ChartProps) => {
   // Retrieve config from advanced settings
   const layerType = props.settings && props.settings.layerType ? props.settings.layerType : 'markers';
-  const isDrillDownEnabled = props.settings && props.settings.mapDrillDown ? props.settings.mapDrillDown : false;
   const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : 'color';
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
   const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : 'width';
@@ -241,8 +240,6 @@ const NeoMapChart = (props: ChartProps) => {
   const markers = layerType == 'markers' ? createMarkers(data, intensityProp) : '';
   const lines = layerType == 'markers' ? createLines(data) : '';
   const heatmap = layerType == 'heatmap' ? createHeatmap(data, intensityProp) : '';
-  console.log('pwajdwaoj');
-  console.log(isDrillDownEnabled);
   // Draw the component.
   // Ideally, we want to have one component for each layer on the map, different files
   // https://stackoverflow.com/questions/69751481/i-want-to-use-useref-to-access-an-element-in-a-reat-leaflet-and-use-the-flyto
@@ -257,7 +254,7 @@ const NeoMapChart = (props: ChartProps) => {
     >
       {heatmap}
       <TileLayer attribution={attribution} url={mapProviderURL} />
-      {layerType == 'boundary' ? <MapBoundary data={data} isDrillDownEnabled={isDrillDownEnabled} /> : <></>}
+      {layerType == 'polygon' ? <MapBoundary data={data} props={props} /> : <></>}
       {markers}
       {lines}
     </MapContainer>

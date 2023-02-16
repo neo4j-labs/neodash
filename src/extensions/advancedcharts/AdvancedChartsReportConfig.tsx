@@ -476,6 +476,7 @@ export const ADVANCED_REPORT_TYPES = {
       },
     },
   },
+  // Todo:Understand why selection is always key:none
   choropleth: {
     label: 'Choropleth Map',
     component: NeoChoroplethMapChart,

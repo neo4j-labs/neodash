@@ -12,7 +12,9 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
+import NeoPolygonMapChart from '../chart/map/PolygonMap';
 
+// TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
 
@@ -694,7 +696,10 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NODE_PROPERTIES,
       },
     },
-    disabledDependency: { mapDrillDown: { dependsOn: 'layerType', operator: 'not in', values: ['boundary'] } },
+    disabledDependency: {
+      mapDrillDown: { dependsOn: 'layerType', operator: 'not in', values: ['polygon'] },
+      boundaryNodeProperty: { dependsOn: 'layerType', operator: 'not in', values: ['polygon'] },
+    },
     useNodePropsAsFields: true,
     component: NeoMapChart,
     maxRecords: 1000,
@@ -707,7 +712,7 @@ export const REPORT_TYPES = {
       layerType: {
         label: 'Layer Type',
         type: SELECTION_TYPES.LIST,
-        values: ['markers', 'heatmap', 'boundary'],
+        values: ['markers', 'heatmap', 'polygon'],
         default: 'markers',
       },
       clusterMarkers: {
@@ -770,8 +775,82 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       },
+      nodeGeographicIdentifierProperty: {
+        label: 'Node geographic identifier (for polygon map)',
+        type: SELECTION_TYPES.TEXT,
+        default: 'country',
+      },
+      nodePolygonValueProperty: {
+        label: 'Node property (for polygon map)',
+        type: SELECTION_TYPES.TEXT,
+        default: 'value',
+      },
       mapDrillDown: {
-        label: 'Activates Drill Down (only available for boundary map)',
+        label: 'Activates Drill Down (for polygon map)',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        disabled: true,
+      },
+      intensityProp: {
+        label: 'Intensity Property (for heatmap)',
+        type: SELECTION_TYPES.TEXT,
+        default: 'intensity',
+      },
+      hideSelections: {
+        label: 'Hide Property Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+    },
+  },
+  polygonMap: {
+    label: 'Polygon Map',
+    helperText: (
+      <div>
+        A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a
+        <code>value</code>.
+      </div>
+    ),
+    useReturnValuesAsFields: true,
+    maxRecords: 300,
+    component: NeoPolygonMapChart,
+    selection: {
+      index: {
+        label: 'Code',
+        type: SELECTION_TYPES.TEXT,
+      },
+      value: {
+        label: 'Value',
+        type: SELECTION_TYPES.NUMBER,
+        key: true,
+      },
+    },
+    settings: {
+      backgroundColor: {
+        label: 'Background Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#fafafa',
+      },
+      providerUrl: {
+        label: 'Map Provider URL',
+        type: SELECTION_TYPES.TEXT,
+        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      mapDrillDown: {
+        label: 'Activates Drill Down (for polygon map)',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
