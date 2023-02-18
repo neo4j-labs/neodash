@@ -211,7 +211,7 @@ export const REPORT_TYPES = {
         label: 'Show pop-up on Hover',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       showPropertiesOnClick: {
         label: 'Show properties on Click',

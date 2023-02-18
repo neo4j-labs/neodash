@@ -34,8 +34,13 @@ interface ExtendedGraphChartVisualizationProps extends GraphChartVisualizationPr
 }
 
 export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProps) => {
+  const type = 'Relationship';
   const [properties, setProperties] = React.useState([{ name: '', value: '' }]);
-  const [relTypes, setRelTypes] = React.useState(['IN_LOCATION', 'HAS_ENTITY', 'RELATED_TO', 'HAS_ALERT']);
+  const [labelRecords, setLabelRecords] = React.useState([]);
+  const [labelInputText, setLabelInputText] = React.useState('');
+  const [propertyRecords, setPropertyRecords] = React.useState([]);
+
+  const [propertyInputTexts, setPropertyInputTexts] = React.useState({});
   const [relType, setRelType] = React.useState(undefined);
   return (
     <Dialog
@@ -64,46 +69,76 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
 
       <DialogContent style={{ minWidth: '300px' }}>
         <DialogContentText>
-          <FormControl style={{ width: '100%' }}>
-            <InputLabel id='demo-simple-select-label'>Type</InputLabel>
-            <Select
-              labelId='demo-simple-select-label'
-              id='demo-simple-select'
-              style={{ width: '100%' }}
-              value={relType}
-              onChange={(e) => {
-                setRelType(e.target.value);
-              }}
-            >
-              {relTypes.map((rel) => {
-                return (
-                  <MenuItem key={rel} value={rel}>
-                    {rel}
-                  </MenuItem>
+          <Autocomplete
+            id='autocomplete-label-type'
+            options={labelRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))}
+            getOptionLabel={(option) => option || ''}
+            style={{ width: '100%', marginLeft: '5px', marginTop: '5px' }}
+            inputValue={labelInputText}
+            onInputChange={(event, value) => {
+              setLabelInputText(value);
+              if (type == 'Node Property') {
+                props.engine.queryCallback(
+                  'CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5',
+                  { input: value },
+                  setLabelRecords
                 );
-              })}
-            </Select>
-          </FormControl>
+              } else {
+                props.engine.queryCallback(
+                  'CALL db.relationshipTypes() YIELD relationshipType WITH relationshipType as relType WHERE toLower(relType) CONTAINS toLower($input) RETURN DISTINCT relType LIMIT 5',
+                  { input: value },
+                  setLabelRecords
+                );
+              }
+            }}
+            value={relType}
+            onChange={(event, newValue) => setRelType(newValue)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder='Start typing...'
+                InputLabelProps={{ shrink: true }}
+                label={type == 'Relationship' ? 'Type' : 'Label'}
+              />
+            )}
+          />
           <h4>Properties</h4>
           <table>
             {properties.map((property, index) => {
               return (
                 <>
-                  <tr>
+                  <tr style={{ marginBottom: 10 }}>
                     <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
                       <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
                     </td>
                     <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                      <TextField
-                        style={{ width: '100%' }}
-                        placeholder='Name...'
+                      <Autocomplete
+                        id='autocomplete-property'
+                        options={propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))}
+                        getOptionLabel={(option) => (option ? option : '')}
+                        style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '5px' }}
+                        inputValue={propertyInputTexts[index]}
+                        onInputChange={(event, value) => {
+                          const newPropertyInputTexts = { ...propertyInputTexts };
+                          newPropertyInputTexts[index] = value;
+                          setPropertyInputTexts(newPropertyInputTexts);
+
+                          props.engine.queryCallback(
+                            'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5',
+                            { input: value },
+                            setPropertyRecords
+                          );
+                        }}
                         value={property.name}
-                        onChange={(e) => {
+                        onChange={(e, val) => {
                           const newProperties = [...properties];
-                          newProperties[index].name = e.target.value;
+                          newProperties[index].name = val;
                           setProperties(newProperties);
                         }}
-                      ></TextField>
+                        renderInput={(params) => (
+                          <TextField {...params} placeholder='Name...' InputLabelProps={{ shrink: true }} />
+                        )}
+                      />
                     </td>
                     <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
                       <TextField
@@ -117,13 +152,32 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
                         }}
                       ></TextField>
                     </td>
+                    <td>
+                      <Fab
+                        size='small'
+                        aria-label='remove'
+                        style={{
+                          background: 'white',
+                          color: 'black',
+                          marginTop: '-6px',
+                          marginLeft: '20px',
+                          width: '34px',
+                          height: '30px',
+                        }}
+                        onClick={() => {
+                          setProperties([...properties.slice(0, index), ...properties.slice(index + 1)]);
+                        }}
+                      >
+                        <CloseIcon />
+                      </Fab>
+                    </td>
                   </tr>
                 </>
               );
             })}
 
             <tr>
-              <td style={{ minWidth: '450px' }} colSpan={3}>
+              <td style={{ minWidth: '450px' }} colSpan={4}>
                 <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
                   <Fab
                     size='small'
@@ -142,6 +196,8 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
           </table>
 
           <Button
+            style={{ marginBottom: '10px' }}
+            disabled={relType === undefined}
             onClick={() => {
               const newProperties = {
                 name: relType,
@@ -149,7 +205,9 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
               };
 
               properties.map((prop) => {
-                newProperties[prop.name] = prop.value;
+                if (prop.name !== '' && prop.value !== '') {
+                  newProperties[prop.name] = prop.value;
+                }
               });
 
               props.data.appendLink({

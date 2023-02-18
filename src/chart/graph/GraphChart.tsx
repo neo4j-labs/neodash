@@ -41,7 +41,7 @@ const NeoGraphChart = (props: ChartProps) => {
   const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : '#a0a0a0';
   const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : 'neodash';
   const showPropertiesOnHover: boolean =
-    props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
+    props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : false;
   const showPropertiesOnClick =
     props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
   const fixNodeAfterDrag: boolean =
@@ -103,7 +103,7 @@ const NeoGraphChart = (props: ChartProps) => {
     props.updateReportSetting && props.updateReportSetting('frozen', value);
   };
   const appendLink = (link) => {
-    const {links} = data;
+    const { links } = data;
     links.push(link);
     console.log(links);
     setData({ links: links, nodes: data.nodes });

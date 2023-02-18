@@ -1,18 +1,15 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import ReactDOMServer from 'react-dom/server';
-import { mutateName } from '../../ChartUtils';
-import { Avatar, Badge, Card, CardHeader, IconButton } from '@material-ui/core';
+import { Card, CardHeader, IconButton } from '@material-ui/core';
 import { NestedMenuItem, IconMenuItem } from 'mui-nested-menu';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import { RenderNode } from '../../../report/ReportRecordProcessing';
 import { getNodeLabel } from '../util/NodeUtils';
-import { GraphChartCreateModal } from './GraphChartCreateModal';
+import { GraphChartCreateModal } from './GraphChartCreateEntityModal';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
+import EditIcon from '@material-ui/icons/Edit';
 
 export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -34,7 +31,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
     >
       <Card id='basic-menu'>
         <CardHeader
-          style={{ marginTop: '-3px', marginBottom: '-8px' }}
+          style={{ marginTop: '-6px', marginBottom: '-8px', color: 'black' }}
           action={
             <IconButton
               aria-label='close'
@@ -48,8 +45,8 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               <CloseIcon />
             </IconButton>
           }
-          // subheader="September 14, 2016"
-          subheader={props.interactivity.selectedEntity && props.interactivity.selectedEntity.labels}
+          titleTypographyProps={{ variant: 'h6' }}
+          title={props.interactivity.selectedEntity && props.interactivity.selectedEntity.labels}
         />
         <IconMenuItem
           rightIcon={<SearchIcon />}
@@ -59,6 +56,15 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
             props.interactivity.setPropertyInspectorOpen(true);
           }}
         ></IconMenuItem>
+        <IconMenuItem
+          rightIcon={<EditIcon />}
+          label='Edit'
+          onClick={() => {
+            props.interactivity.setContextMenuOpen(false);
+            props.interactivity.setPropertyInspectorOpen(true);
+          }}
+        ></IconMenuItem>
+
         <NestedMenuItem label='Create relationship...' nonce={undefined} parentMenuOpen={true}>
           <div style={{ maxHeight: '400px', overflow: 'scroll' }}>
             <table>
@@ -84,13 +90,12 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
         </NestedMenuItem>
         <IconMenuItem
           rightIcon={<ZoomOutMapIcon />}
-          label='Explore'
+          label='Expand'
           onClick={() => {
             props.interactivity.setContextMenuOpen(false);
             props.interactivity.setPropertyInspectorOpen(true);
           }}
         ></IconMenuItem>
-        {/* <MenuItem onClick={handleClose}>Remove</MenuItem> */}
       </Card>
     </div>
   );
