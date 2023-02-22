@@ -17,8 +17,6 @@ const ISO_3166_2_regex =
  */
 function createGeoDictionary(records, selection) {
   let data = {};
-  let min = Number.POSITIVE_INFINITY;
-  let max = Number.NEGATIVE_INFINITY;
 
   records.forEach((row: Record<string, any>) => {
     try {
@@ -34,25 +32,14 @@ function createGeoDictionary(records, selection) {
         return;
         // throw "Invalid selection for choropleth chart. Ensure a three letter country code is retrieved together with a value."
       }
-      // Getting min and max to generate styling according to value
-      if (value < min || (min === Number.POSITIVE_INFINITY && value != undefined)) {
-        min = value;
-      }
-      if (value > max || (max === Number.NEGATIVE_INFINITY && value != undefined)) {
-        max = value;
-      }
+
       data[index] = value;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
     }
   });
-
-  // Normalizing values
-  // try with this :  https://stackoverflow.com/questions/1069666/sorting-object-property-by-values
-  // https://github.com/CodingWith-Adam/covid19-map
-
-  return { data: data, min: min, max: max };
+  return data;
 }
 /**
  * To speed up the binding process, let's reduce the list into a object to use the index access

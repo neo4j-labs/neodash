@@ -42,22 +42,29 @@ function getDrillDown(geoJson, id, features, key) {
  */
 function bindDataToMap(geoData, geoJsonData) {
   let newValues = {};
+  let listValues = [];
   Object.keys(geoData).forEach((key) => {
     let tmp;
     if (geoJsonData[key] != undefined) {
       tmp = Object.assign({}, geoJsonData[key]);
       tmp.properties.neo_value = geoData[key];
+      listValues.push(geoData[key]);
       newValues[key] = tmp;
     } else {
-      console.log(`Missing key in Polygon Map :  ${  key  } with value${  geoData[key]}`);
+      console.log(`Missing key in Polygon Map :  ${key} with value ${geoData[key]}`);
     }
   });
   // Deepcopying data to prevent strange behaviors
   let geoJsonData_copy = Object.assign(geoJsonData, {});
   let res = Object.assign(geoJsonData_copy, newValues);
 
+  // Sorting the values to get min and max
+  listValues.sort((a, b) => {
+    return a - b;
+  });
+
   // Returning the list of features
-  return Object.values(res);
+  return [Object.values(res), listValues[0], listValues.slice(-1)[0]];
 }
 
 // Wraps the boundary logic function
@@ -77,19 +84,15 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
       : colorScheme
     : colorScheme;
 
-  const minValue = data && !isNaN(data.min) ? Math.round(data.min * 100) / 100 : undefined;
-  const maxValue = data && !isNaN(data.max) ? Math.round(data.max * 100) / 100 : undefined;
-  const geoData = data && data.data ? data.data : {};
-
   // Final polygon data
   const [polygonData, setPolygonData] = useState([]);
 
   // Key of the current geoJson viz and currently selected geoJson
   const [state, setState] = useState({ key: 'firstAll', geoJson: undefined });
-
   // Key used to prevent race condition
   const [key, setKey] = React.useState('firstAll');
   const [legendRange, setLegendRange] = React.useState([]);
+  const [rangeValues, setRangeValues] = React.useState({ min: undefined, max: undefined });
 
   useEffect(() => {
     let currentKey =
@@ -98,10 +101,18 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
       state.geoJson === undefined
         ? featureLevel0
         : getDrillDown(state.geoJson, state.geoJson.properties[currentKey], featureLevel1, currentKey);
-    setPolygonData(bindDataToMap(geoData, tmp));
-    // Getting the new legend
+
+    // Getting the new data and the distribution of the values
+    let [newData, minValue, maxValue] = bindDataToMap(data, tmp);
+
+    // Saving the new polygon data and their value range
+    setPolygonData(newData);
+    setRangeValues({ min: minValue, max: maxValue });
+
+    // Getting the new legend numbers
     let legendRange = minValue && maxValue ? getLegendRange(minValue, maxValue, listColors.length) : [];
     setLegendRange(legendRange);
+
     // Synchronizing the key with the state key to retrigger rendering
     setKey(state.key);
   }, [state]);
@@ -109,7 +120,52 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
   // Getting the upper level Map
   const map = useMap();
 
-  // Button to reset the view and the whole drilldown
+  function onDrillDown(e) {
+    setState({ key: randomString(), geoJson: e.target.feature });
+    map.fitBounds(e.target.getBounds());
+  }
+
+  function onEachFeature(_, layer) {
+    if (isDrillDownEnabled) {
+      layer.on({
+        click: onDrillDown,
+      });
+    }
+  }
+
+  /**
+   * For each polygon, we have a defined style that we want to apply
+   * @param _feature : Features of the polygon
+   * @returns A style that will be applied to its polygon
+   */
+  const geoJSONStyle = (_feature) => {
+    /**
+     * A polygon has a fill color based on its value
+     * @param weight value inside the polygon
+     * @param legendRange List that is used to define the legend range
+     * @param listColors List of colors in the palette
+     * @returns color assigned to the polygon based on it's position in the legend
+     */
+    function getColor(weight, legendRange, listColors) {
+      let index = legendRange.findIndex((number) => {
+        return number >= weight;
+      });
+      return listColors.slice(index)[0];
+    }
+    let weight = _feature.properties.neo_value != undefined ? _feature.properties.neo_value : undefined;
+    let color = weight ? getColor(weight, legendRange, listColors) : 'gray';
+    let style = {
+      color: '#1f2021',
+      weight: 1,
+      fillOpacity: 0.8,
+      fillColor: color,
+    };
+    return style;
+  };
+  /**
+   * Functional component for a button to reset the visualization
+   * @returns button component binded to the current map
+   */
   function ResetButton() {
     // Binding the button to the map
     const map = useMap();
@@ -128,6 +184,8 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
     );
   }
 
+  const resetButton = ResetButton();
+
   function Legend(colors, legendRange) {
     return (
       <div className='info legend' style={{ zIndex: 1001, position: 'absolute', bottom: 30, right: 30 }}>
@@ -136,7 +194,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
           return (
             <div>
               <i style={{ background: colors[i] }}> &nbsp;&nbsp; </i>
-              &nbsp; {from} {to ? `- ${  to}` : i > 0 ? '+' : ''}
+              &nbsp; {from} {to ? `- ${to}` : i > 0 ? '+' : ''}
               <br />
             </div>
           );
@@ -144,40 +202,8 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
       </div>
     );
   }
+  const legend = rangeValues.min && rangeValues.min ? Legend(listColors, legendRange) : <></>;
 
-  function onDrillDown(e) {
-    setState({ key: randomString(), geoJson: e.target.feature });
-    map.fitBounds(e.target.getBounds());
-  }
-
-  function onEachFeature(_, layer) {
-    if (isDrillDownEnabled) {
-      layer.on({
-        click: onDrillDown,
-      });
-    }
-  }
-
-  const geoJSONStyle = (_feature) => {
-    function getColor(weight, legendRange, listColors) {
-      let index = legendRange.findIndex((number) => {
-        return number >= weight;
-      });
-      return listColors[index];
-    }
-    let weight = _feature.properties.neo_value != undefined ? _feature.properties.neo_value : undefined;
-    let color = weight ? getColor(weight, legendRange, listColors) : 'gray';
-    let style = {
-      color: '#1f2021',
-      weight: 1,
-      fillOpacity: 0.8,
-      fillColor: color,
-    };
-    return style;
-  };
-
-  const resetButton = ResetButton();
-  const legend = minValue && maxValue ? Legend(listColors, legendRange) : <></>;
   // We need data or synchronized keys to enable re-render
   if (polygonData.length == 0 || key !== state.key) {
     return <></>;
