@@ -105,7 +105,6 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
     case UPDATE_REPORT_SETTING: {
       const { setting, value } = payload;
       const settings = state.settings ? state.settings : {};
-
       // Javascript is amazing, so "" == 0. Instead we check if the string length is zero...
       if (value == undefined || value.toString().length == 0) {
         delete settings[setting];

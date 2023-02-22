@@ -49,7 +49,6 @@ const NeoMapChart = (props: ChartProps) => {
       ? props.settings.actionsRules
       : [];
 
-  const [map, setMap] = React.useState(null);
   const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
   // Per pixel, scaling factors for the latitude/longitude mapping function.

@@ -696,10 +696,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NODE_PROPERTIES,
       },
     },
-    disabledDependency: {
-      mapDrillDown: { dependsOn: 'layerType', operator: 'not in', values: ['polygon'] },
-      boundaryNodeProperty: { dependsOn: 'layerType', operator: 'not in', values: ['polygon'] },
-    },
     useNodePropsAsFields: true,
     component: NeoMapChart,
     maxRecords: 1000,
@@ -785,13 +781,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'value',
       },
-      mapDrillDown: {
-        label: 'Activates Drill Down (for polygon map)',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-        disabled: true,
-      },
       intensityProp: {
         label: 'Intensity Property (for heatmap)',
         type: SELECTION_TYPES.TEXT,
@@ -848,6 +837,12 @@ export const REPORT_TYPES = {
         label: 'Map Provider URL',
         type: SELECTION_TYPES.TEXT,
         default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      colors: {
+        label: 'Color Scheme',
+        type: SELECTION_TYPES.LIST,
+        values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
+        default: 'YlOrRd',
       },
       mapDrillDown: {
         label: 'Activates Drill Down (for polygon map)',

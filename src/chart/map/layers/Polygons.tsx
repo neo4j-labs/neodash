@@ -2,40 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useMap, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Button from '@material-ui/core/Button';
+import '../styles/polygonStyle.css';
+import { categoricalColorSchemes } from '../../../config/ColorConfig';
 
-function componentToHex(c) {
-  let hex = c.toString(16);
-  return hex.length == 1 ? `0${  hex}` : hex;
-}
-
-function rgbToHex(r, g, b) {
-  return `#${  componentToHex(r)  }${componentToHex(g)  }${componentToHex(b)}`;
-}
-
-function pickHex(weight) {
-  if (weight < 0) {
-    return [220, 220, 220];
+function getLegendRange(min, max, lenRange) {
+  let diff = (max - min) / lenRange;
+  // If the difference is 0 or less (strange that can be less, but you never know)
+  // Return only one value
+  if (diff <= 0) {
+    return [Math.round(min * 100) / 100];
   }
-  let color1 = [255, 0, 0];
-  let color2 = [255, 0, 0];
-  let w1 = weight;
-  let w2 = 1 - w1;
-  let rgb = [
-    Math.round(color1[0] * w1 + color2[0] * w2),
-    Math.round(color1[1] * w1 + color2[1] * w2),
-    Math.round(color1[2] * w1 + color2[2] * w2),
-  ];
-  let hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
-  return hex;
+  return [...Array(lenRange).keys()].map((i) => {
+    return Math.round((min + diff * i) * 100) / 100;
+  });
 }
 
 function randomString() {
-  return (`${Math.random().toString(36)  }00000000000000000`).slice(2, 16);
+  return `${Math.random().toString(36)}00000000000000000`.slice(2, 16);
 }
 
 // drill down function, to add more logic in future
 function getDrillDown(geoJson, id, features, key) {
-  console.log(geoJson);
   let data = Object.values(features).filter((x) => {
     return x.properties[key] === id;
   });
@@ -61,6 +48,8 @@ function bindDataToMap(geoData, geoJsonData) {
       tmp = Object.assign({}, geoJsonData[key]);
       tmp.properties.neo_value = geoData[key];
       newValues[key] = tmp;
+    } else {
+      console.log(`Missing key in Polygon Map :  ${  key  } with value${  geoData[key]}`);
     }
   });
   // Deepcopying data to prevent strange behaviors
@@ -75,8 +64,22 @@ function bindDataToMap(geoData, geoJsonData) {
 export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
   const level0key = 'SHORT_COUNTRY_CODE';
   const level1key = 'COMPOSITE_REGION_CODE';
-
   const isDrillDownEnabled = props.settings && props.settings.mapDrillDown ? props.settings.mapDrillDown : false;
+
+  // Getting the list of colors from the scheme (for now, starting from a scheme, we always get the last color of the scheme)
+  const colorScheme =
+    props.settings && props.settings.colors
+      ? categoricalColorSchemes[props.settings.colors]
+      : categoricalColorSchemes.YlOrRd;
+  const listColors = Array.isArray(colorScheme)
+    ? Array.isArray(colorScheme.slice(-1)[0])
+      ? colorScheme.slice(-1)[0]
+      : colorScheme
+    : colorScheme;
+
+  const minValue = data && !isNaN(data.min) ? Math.round(data.min * 100) / 100 : undefined;
+  const maxValue = data && !isNaN(data.max) ? Math.round(data.max * 100) / 100 : undefined;
+  const geoData = data && data.data ? data.data : {};
 
   // Final polygon data
   const [polygonData, setPolygonData] = useState([]);
@@ -86,6 +89,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
 
   // Key used to prevent race condition
   const [key, setKey] = React.useState('firstAll');
+  const [legendRange, setLegendRange] = React.useState([]);
 
   useEffect(() => {
     let currentKey =
@@ -94,7 +98,10 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
       state.geoJson === undefined
         ? featureLevel0
         : getDrillDown(state.geoJson, state.geoJson.properties[currentKey], featureLevel1, currentKey);
-    setPolygonData(bindDataToMap(data, tmp));
+    setPolygonData(bindDataToMap(geoData, tmp));
+    // Getting the new legend
+    let legendRange = minValue && maxValue ? getLegendRange(minValue, maxValue, listColors.length) : [];
+    setLegendRange(legendRange);
     // Synchronizing the key with the state key to retrigger rendering
     setKey(state.key);
   }, [state]);
@@ -121,6 +128,23 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
     );
   }
 
+  function Legend(colors, legendRange) {
+    return (
+      <div className='info legend' style={{ zIndex: 1001, position: 'absolute', bottom: 30, right: 30 }}>
+        {legendRange.map((from, i, legendRange) => {
+          let to = legendRange[i + 1];
+          return (
+            <div>
+              <i style={{ background: colors[i] }}> &nbsp;&nbsp; </i>
+              &nbsp; {from} {to ? `- ${  to}` : i > 0 ? '+' : ''}
+              <br />
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   function onDrillDown(e) {
     setState({ key: randomString(), geoJson: e.target.feature });
     map.fitBounds(e.target.getBounds());
@@ -135,19 +159,25 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
   }
 
   const geoJSONStyle = (_feature) => {
-    let weight = _feature.properties.neo_value != undefined ? _feature.properties.neo_value : -1;
-    console.log(pickHex(weight));
+    function getColor(weight, legendRange, listColors) {
+      let index = legendRange.findIndex((number) => {
+        return number >= weight;
+      });
+      return listColors[index];
+    }
+    let weight = _feature.properties.neo_value != undefined ? _feature.properties.neo_value : undefined;
+    let color = weight ? getColor(weight, legendRange, listColors) : 'gray';
     let style = {
       color: '#1f2021',
       weight: 1,
-      fillOpacity: 0.5,
-      fillColor: pickHex(weight),
+      fillOpacity: 0.8,
+      fillColor: color,
     };
     return style;
   };
 
   const resetButton = ResetButton();
-
+  const legend = minValue && maxValue ? Legend(listColors, legendRange) : <></>;
   // We need data or synchronized keys to enable re-render
   if (polygonData.length == 0 || key !== state.key) {
     return <></>;
@@ -156,6 +186,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
   const geoJsonLayer = (
     <div>
       {resetButton}
+      {legend}
       <GeoJSON
         id='polygonId'
         key={state.key}
