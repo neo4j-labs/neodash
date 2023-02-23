@@ -152,13 +152,14 @@ const saveDashboardToHiveGraphQL = async ({ dashboard, dbName }) => {
 };
 
 export const saveDashboardToHiveThunk =
-  (driver, selectedFile, dashboard, date, user, overwrite = false) =>
+  (driver, selectedFile, dashboard, date, user, overwrite = false, updateSaveToHiveProgress) =>
   (dispatch: any) => {
+    updateSaveToHiveProgress(true);
     try {
       const formData = new FormData();
       const uploadUrl = config('FILE_UPLOAD_URL');
       const existingDbName = dashboard?.extensions?.solutionsHive?.dbName;
-      if (existingDbName) {
+      if (overwrite && existingDbName) {
         formData.append('dbName', existingDbName);
         formData.append('overwrite', overwrite);
       }
@@ -187,12 +188,14 @@ export const saveDashboardToHiveThunk =
             dispatch(updateHiveInformation('dbName', dbName));
 
             console.log('title: ', title);
-            const saveCardResponse = await saveDemoCard({ uuid, name: title });
-            const solutionId = saveCardResponse?.data?.solution?.id;
-            dispatch(updateHiveInformation('solutionId', solutionId));
+            if (!overwrite) {
+              const saveCardResponse = await saveDemoCard({ uuid, name: title });
+              const solutionId = saveCardResponse?.data?.solution?.id;
+              dispatch(updateHiveInformation('solutionId', solutionId));
 
-            await addDeployment({ neoDashUuid: uuid, solutionId });
-
+              await addDeployment({ neoDashUuid: uuid, solutionId });
+            }
+            updateSaveToHiveProgress(false);
             dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
           } catch (e2) {
             dispatch(createNotificationThunk('Database uploaded, but could not save Dashboard', e2));

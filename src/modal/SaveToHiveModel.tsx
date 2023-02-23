@@ -23,7 +23,14 @@ import { saveDashboardToHiveThunk } from '../solutions/persistence/SolutionsThun
 
 const styles = {};
 
-export const SaveToHiveModel = ({ dashboard, connection, saveDashboardToHive, modalOpen, closeDialog }) => {
+export const SaveToHiveModel = ({
+  dashboard,
+  connection,
+  saveDashboardToHive,
+  modalOpen,
+  closeDialog,
+  updateSaveToHiveProgress,
+}) => {
   // pieces of code pulled from https://www.pluralsight.com/guides/uploading-files-with-reactjs
   // and pieces of code pulled from https://blog.logrocket.com/multer-nodejs-express-upload-file/
   const [selectedFile, setSelectedFile] = useState();
@@ -70,22 +77,23 @@ export const SaveToHiveModel = ({ dashboard, connection, saveDashboardToHive, mo
           )}
         </div>
 
-        <FormControl style={{ marginTop: '20px', marginLeft: '10px' }}>
-          <Tooltip title='Overwrite dashboard(s) with the same name.' aria-label=''>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  style={{ fontSize: 'small', color: 'grey' }}
-                  checked={overwriteExistingDashboard}
-                  onChange={() => setOverwriteExistingDashboard(!overwriteExistingDashboard)}
-                  name='overwrite'
-                />
-              }
-              label='Overwrite'
-            />
-          </Tooltip>
-        </FormControl>
-
+        {dashboard?.extensions?.solutionsHive?.dbName && (
+          <FormControl style={{ marginTop: '20px', marginLeft: '10px' }}>
+            <Tooltip title='Overwrite dashboard(s) with the same name.' aria-label=''>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    style={{ fontSize: 'small', color: 'grey' }}
+                    checked={overwriteExistingDashboard}
+                    onChange={() => setOverwriteExistingDashboard(!overwriteExistingDashboard)}
+                    name='overwrite'
+                  />
+                }
+                label='Overwrite'
+              />
+            </Tooltip>
+          </FormControl>
+        )}
         <Button
           component='label'
           onClick={() => {
@@ -95,7 +103,8 @@ export const SaveToHiveModel = ({ dashboard, connection, saveDashboardToHive, mo
               dashboard,
               new Date().toISOString(),
               connection.username,
-              overwriteExistingDashboard
+              overwriteExistingDashboard,
+              updateSaveToHiveProgress
             );
             closeDialog({ closeSaveDialog: true });
           }}
@@ -129,8 +138,18 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  saveDashboardToHive: (driver: any, selectedFile: any, dashboard: any, date: any, user: any, overwrite: boolean) => {
-    dispatch(saveDashboardToHiveThunk(driver, selectedFile, dashboard, date, user, overwrite));
+  saveDashboardToHive: (
+    driver: any,
+    selectedFile: any,
+    dashboard: any,
+    date: any,
+    user: any,
+    overwrite: boolean,
+    updateSaveToHiveProgress: any
+  ) => {
+    dispatch(
+      saveDashboardToHiveThunk(driver, selectedFile, dashboard, date, user, overwrite, updateSaveToHiveProgress)
+    );
   },
 });
 

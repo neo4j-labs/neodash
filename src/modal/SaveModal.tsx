@@ -20,6 +20,7 @@ import {
   Select,
   TextareaAutosize,
   Tooltip,
+  CircularProgress,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -70,6 +71,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
   const [saveToHiveModalOpen, setSaveToHiveModalOpen] = React.useState(false);
+  const [saveToHiveProgress, setSaveToHiveProgress] = React.useState(false);
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
   const [dashboardDatabase, setDashboardDatabase] = React.useState('neo4j');
   const [databases, setDatabases] = React.useState(['neo4j']);
@@ -300,6 +302,9 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
       </Dialog>
       <SaveToHiveModel
         modalOpen={saveToHiveModalOpen}
+        updateSaveToHiveProgress={(flag) => {
+          setSaveToHiveProgress(flag);
+        }}
         closeDialog={(options) => {
           options = options || {};
           setSaveToHiveModalOpen(false);
@@ -308,6 +313,12 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           }
         }}
       />
+
+      <Dialog maxWidth={'lg'} open={saveToHiveProgress == true} aria-labelledby='form-dialog-title'>
+        <DialogContent>
+          <CircularProgress color='inherit' />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
