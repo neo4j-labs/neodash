@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ChartProps } from '../Chart';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapBoundary } from './layers/Areas';
-import { recordToNative } from '../../chart/ChartUtils';
+import { MapBoundary } from './layers/PolygonLayer';
+import { recordToNative } from '../ChartUtils';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 
 const ISO_3166_2_regex =

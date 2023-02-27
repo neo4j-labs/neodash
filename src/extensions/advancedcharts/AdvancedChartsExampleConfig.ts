@@ -4,7 +4,7 @@ import NeoSankeyChart from './chart/sankey/SankeyChart';
 import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
-import NeoAreaMapChart from '../../chart/map/PolygonMap';
+import NeoAreaMapChart from '../../chart/map/AreaMapChart';
 
 export const EXAMPLE_ADVANCED_REPORTS = [
   {

@@ -6,10 +6,10 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import { createHeatmap } from './layers/Heatmap';
-import { createMarkers } from './layers/Markers';
-import { createLines } from './layers/Lines';
-import { MapBoundary } from './layers/Areas';
+import { createHeatmap } from './layers/HeatmapLayer';
+import { createMarkers } from './layers/MarkerLayer';
+import { createLines } from './layers/LineLayer';
+import { MapBoundary } from './layers/PolygonLayer';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 

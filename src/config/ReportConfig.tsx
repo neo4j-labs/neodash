@@ -12,7 +12,7 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
-import NeoAreaMapChart from '../chart/map/PolygonMap';
+import NeoAreaMapChart from '../chart/map/AreaMapChart';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
