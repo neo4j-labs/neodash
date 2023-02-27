@@ -54,7 +54,7 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     };
   }
 
-  if (action.type.startsWith('EXTENSIONS/HIVE/')) {
+  if (action.type.startsWith('EXTENSIONS/HIVE')) {
     return {
       ...state,
       extensions: {
