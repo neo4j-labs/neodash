@@ -50,7 +50,6 @@ const NeoGraphChart = (props: ChartProps) => {
   const lockable = props.settings && props.settings.lockable !== undefined ? props.settings.lockable : true;
   const drilldownLink: string =
     props.settings && props.settings.drilldownLink !== undefined ? props.settings.drilldownLink : '';
-  const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
   const defaultNodeColor = 'lightgrey'; // Color of nodes without labels
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
   const linkDirectionalParticleSpeed =
@@ -89,12 +88,12 @@ const NeoGraphChart = (props: ChartProps) => {
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [firstRun, setFirstRun] = useState(true);
-  let nodes: Record<string, any>[] = {};
+  let nodes: Record<string, any>[] = [];
   let nodeLabels = {};
-  let links: Record<string, any>[] = {};
+  let links: Record<string, any>[] = [];
   let linkTypes = {};
   const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
-  const [extraRecords, setExtraRecords] = useState([]);
+
   const setLayoutFrozen = (value) => {
     if (value == false) {
       setFirstRun(true);
@@ -105,10 +104,9 @@ const NeoGraphChart = (props: ChartProps) => {
   const appendLink = (link) => {
     const { links } = data;
     links.push(link);
-    console.log(links);
     setData({ links: links, nodes: data.nodes });
   };
-  console.log(links);
+
   let icons = parseNodeIconConfig(iconStyle);
   const colorScheme = categoricalColorSchemes[nodeColorScheme];
 
@@ -135,11 +133,6 @@ const NeoGraphChart = (props: ChartProps) => {
     setData(extractedGraphFromRecords);
   };
 
-  // When data is refreshed, rebuild the visualization data.
-  useEffect(() => {
-    generateVisualizationDataGraph(props.records.concat(extraRecords));
-  }, [props.records, extraRecords]);
-
   const { observe, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {
       unobserve(); // To stop observing the current target element
@@ -154,10 +147,22 @@ const NeoGraphChart = (props: ChartProps) => {
       links: data.links,
       linkTypes: linkTypes,
       parameters: parameters,
-      appendNodes: () => {
+      appendNode: () => {
+        throw 'Not Implemented';
+      },
+      editNode: () => {
+        throw 'Not Implemented';
+      },
+      deleteNode: () => {
         throw 'Not Implemented';
       },
       appendLink: appendLink,
+      editLink: () => {
+        throw 'Not Implemented';
+      },
+      deleteLink: () => {
+        throw 'Not Implemented';
+      },
     },
     style: {
       width: width,
@@ -175,7 +180,6 @@ const NeoGraphChart = (props: ChartProps) => {
     engine: {
       layout: layouts[layout],
       queryCallback: props.queryCallback,
-      setExtraRecords: setExtraRecords,
       firstRun: firstRun,
       setFirstRun: setFirstRun,
       selection: props.selection,
@@ -202,6 +206,7 @@ const NeoGraphChart = (props: ChartProps) => {
       setContextMenuOpen: setContextMenuOpen,
       clickPosition: clickPosition,
       setClickPosition: setClickPosition,
+      createNotification: props.createNotification,
     },
     extensions: {
       styleRules: styleRules,

@@ -9,7 +9,7 @@ export const NeoGraphChartFitViewButton = (props: GraphChartVisualizationProps) 
       <SettingsOverscanIcon
         onClick={() => {
           props.interactivity.zoomToFit();
-          throw `Not Implemented${props}`;
+          throw `Not Implemented ${props}`;
         }}
         style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 11, right: 34, position: 'absolute', zIndex: 5 }}
         color='disabled'

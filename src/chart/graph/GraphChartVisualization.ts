@@ -39,8 +39,12 @@ export interface GraphChartVisualizationProps {
     links: any[];
     linkTypes: Record<string, any>;
     parameters: Record<string, any>;
-    appendNodes: any;
+    appendNode: any;
+    editNode: any;
+    deleteNode: any;
     appendLink: any;
+    editLink: any;
+    deleteLink: any;
   };
   style: {
     width: number;
@@ -58,7 +62,6 @@ export interface GraphChartVisualizationProps {
   engine: {
     layout: Layout;
     queryCallback: any;
-    setExtraRecords: any;
     firstRun: boolean;
     setFirstRun: any;
     selection: any;
@@ -72,6 +75,7 @@ export interface GraphChartVisualizationProps {
     showPropertiesOnClick: boolean;
     showPropertyInspector: boolean;
     setPropertyInspectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    createNotification: any;
     fixNodeAfterDrag: boolean;
     onNodeClick: any;
     onRelationshipClick: any;

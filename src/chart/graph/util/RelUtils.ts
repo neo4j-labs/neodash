@@ -1,4 +1,7 @@
-import { GraphEntity } from '../GraphChartVisualization';
+export enum Direction {
+  Incoming,
+  Outgoing,
+}
 
 // Function to manually compute edge curvatures for dense node pairs.
 export function getCurvature(index, total) {

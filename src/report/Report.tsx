@@ -32,6 +32,7 @@ export const NeoReport = ({
     return '';
   }, // function to get global (cypher) parameters.
   updateReportSetting = () => {},
+  createNotification = () => {},
   dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
   rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
   queryTimeLimit = 20, // Time limit for queries before automatically aborted.
@@ -215,6 +216,7 @@ export const NeoReport = ({
           dimensions={dimensions}
           parameters={parameters}
           queryCallback={queryCallback}
+          createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
@@ -249,6 +251,7 @@ export const NeoReport = ({
           dimensions={dimensions}
           parameters={parameters}
           queryCallback={queryCallback}
+          createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
