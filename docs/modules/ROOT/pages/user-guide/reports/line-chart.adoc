@@ -45,6 +45,8 @@ image::line2.png[Multi Line Chart]
 [width="100%",cols="13%,2%,6%,79%",options="header",]
 |===
 |Name |Type |Default Value |Description
+|Plot Type |List |line | Whether to use a line plot (with connections) or a scatter plot of disjointed points
+
 |Show Legend |on/off |off |If enabled, shows a legend at the top right
 of the visualization.
 

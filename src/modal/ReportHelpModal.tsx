@@ -16,7 +16,7 @@ export const NeoReportHelpModal = ({ open, handleClose }) => {
       <DialogTitle id='form-dialog-title'>
         About Reports
         <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-          <Badge badgeContent={''}>
+          <Badge overlap='rectangular' badgeContent={''}>
             <CloseIcon />
           </Badge>
         </IconButton>

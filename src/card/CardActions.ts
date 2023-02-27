@@ -32,12 +32,6 @@ export const updateReportQuery = (pagenumber: number, index: number, query: any)
   payload: { pagenumber, index, query },
 });
 
-export const UPDATE_REPORT_REFRESH_RATE = 'PAGE/CARD/UPDATE_REPORT_REFRESH_RATE';
-export const updateReportRefreshRate = (pagenumber: number, index: number, rate: any) => ({
-  type: UPDATE_REPORT_REFRESH_RATE,
-  payload: { pagenumber, index, rate },
-});
-
 export const UPDATE_CYPHER_PARAMETERS = 'PAGE/CARD/UPDATE_CYPHER_PARAMETERS';
 export const updateCypherParameters = (pagenumber: number, index: number, parameters: any) => ({
   type: UPDATE_CYPHER_PARAMETERS,

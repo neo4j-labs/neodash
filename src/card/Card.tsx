@@ -9,7 +9,6 @@ import {
   updateSelectionThunk,
   updateReportQueryThunk,
   toggleCardSettingsThunk,
-  updateReportRefreshRateThunk,
   updateReportSettingThunk,
   updateReportTitleThunk,
   updateReportTypeThunk,
@@ -47,7 +46,6 @@ const NeoCard = ({
   onTypeUpdate, // action to take when the card report type is updated.
   onFieldsUpdate, // action to take when the set of returned query fields is updated.
   onQueryUpdate, // action to take when the card query is updated.
-  onRefreshRateUpdate, // action to take when the card refresh rate is updated.
   onReportSettingUpdate, // action to take when an advanced report setting is updated.
   onSelectionUpdate, // action to take when the selected visualization fields are updated.
   onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
@@ -130,6 +128,7 @@ const NeoCard = ({
             dashboardSettings={dashboardSettings}
             extensions={extensions}
             settings={report.settings ? report.settings : {}}
+            updateReportSetting={(name, value) => onReportSettingUpdate(index, name, value)}
             type={report.type}
             database={database}
             active={active}
@@ -138,7 +137,6 @@ const NeoCard = ({
             query={report.query}
             globalParameters={globalParameters}
             fields={report.fields ? report.fields : []}
-            refreshRate={report.refreshRate}
             selection={report.selection}
             widthPx={width}
             heightPx={height}
@@ -170,7 +168,6 @@ const NeoCard = ({
             heightPx={height}
             fields={report.fields}
             type={report.type}
-            refreshRate={report.refreshRate}
             expanded={expanded}
             extensions={extensions}
             dashboardSettings={dashboardSettings}
@@ -179,7 +176,6 @@ const NeoCard = ({
             reportSettings={report.settings}
             reportSettingsOpen={report.advancedSettingsOpen}
             onQueryUpdate={(query) => onQueryUpdate(index, query)}
-            onRefreshRateUpdate={(rate) => onRefreshRateUpdate(index, rate)}
             onDatabaseChanged={(database) => onDatabaseChanged(index, database)}
             onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
             onTypeUpdate={(type) => onTypeUpdate(index, type)}
@@ -236,9 +232,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onQueryUpdate: (index: any, query: any) => {
     dispatch(updateReportQueryThunk(index, query));
-  },
-  onRefreshRateUpdate: (index: any, rate: any) => {
-    dispatch(updateReportRefreshRateThunk(index, rate));
   },
   onTypeUpdate: (index: any, type: any) => {
     dispatch(updateReportTypeThunk(index, type));
