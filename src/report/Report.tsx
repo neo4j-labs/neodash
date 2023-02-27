@@ -74,7 +74,6 @@ export const NeoReport = ({
               !reportTypes[type].selection[field].multiple
           )
         : [];
-
     // Take care of multi select fields, they need to be added to the numeric fields too.
     if (reportTypes[type].selection) {
       Object.keys(reportTypes[type].selection).forEach((field) => {

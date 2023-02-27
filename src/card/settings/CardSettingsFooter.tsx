@@ -14,7 +14,6 @@ import {
   NeoCustomReportActionsModal,
   RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS,
 } from '../../extensions/actions/ActionsRuleCreationModal';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import StarsIcon from '@material-ui/icons/Stars';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -53,8 +52,12 @@ const NeoCardSettingsFooter = ({
   // Contains, for a certain type of chart, its disabling logic
   const disabledDependency = reportTypes[type] && reportTypes[type].disabledDependency;
 
-  /* This method manages the disabling logic for all the settings inside the footer.
-   *  The logic is based on the disabledDependency param inside the chart's configuration */
+  /**
+   * This method manages the disabling logic for all the settings inside the footer.
+   * The logic is based on the disabledDependency param inside the chart's configuration
+   * @param field
+   * @returns
+   */
   const getDisabled = (field: string) => {
     // By default an option is enabled
     let isDisabled = false;
@@ -62,13 +65,20 @@ const NeoCardSettingsFooter = ({
     if (dependencyLogic != undefined) {
       // Getting the current parameter defined in the settings of the report
       // (if undefined, the param will be treated as undefined (boolean false)
-      isDisabled = reportSettingsText[dependencyLogic.dependsOn];
-      if (!dependencyLogic.operator) {
-        isDisabled = !isDisabled;
+      let currentValue = reportSettingsText[dependencyLogic.dependsOn];
+      if (typeof dependencyLogic.operator === 'boolean') {
+        if (!dependencyLogic.operator) {
+          isDisabled = !currentValue;
+        }
+      }
+      // if the value is in the list of values that enable the option, then enable the option
+      else if (dependencyLogic.operator === 'not in') {
+        isDisabled = !dependencyLogic.values.includes(currentValue);
       }
     }
     return isDisabled;
   };
+
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
     setReportSettingsText(reportSettings);

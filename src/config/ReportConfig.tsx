@@ -12,7 +12,9 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
+import NeoAreaMapChart from '../chart/map/AreaMapChart';
 
+// TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
 
@@ -895,6 +897,86 @@ export const REPORT_TYPES = {
         label: 'Map Provider URL',
         type: SELECTION_TYPES.TEXT,
         default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      intensityProp: {
+        label: 'Intensity Property (for heatmap)',
+        type: SELECTION_TYPES.TEXT,
+        default: 'intensity',
+      },
+      hideSelections: {
+        label: 'Hide Property Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+    },
+  },
+  //
+  /** *
+   * * TODO: move to Neodash Extensions
+   * * TODO: An idea here:
+
+    For the level zero layers, perhaps we can make the component work agnostically of whether the user is using two or three level country codes.
+    E.g. it can apply colouring to germany based on "DE" or "GER", whatever it picks up. That would be a lot easier than providing an advanced setting for it. In the rare case that the user returns both (this will probably never happen), we just choose either.
+
+    I'm also thinking about adding three-letter country code support since that is what the choropleth used, so it will make migrating from choropleth to areamap a lot easier for users.
+   */
+  areamap: {
+    label: 'Area Map',
+    helperText: (
+      <div>
+        An Area Map expects two fields: a <code>country code / region code</code> (three-letter code) and a
+        <code>value</code>.
+      </div>
+    ),
+    useReturnValuesAsFields: true,
+    maxRecords: 300,
+    component: NeoAreaMapChart,
+    selection: {
+      index: {
+        label: 'Code',
+        type: SELECTION_TYPES.TEXT,
+      },
+      value: {
+        label: 'Value',
+        type: SELECTION_TYPES.NUMBER,
+        key: true,
+      },
+    },
+    settings: {
+      backgroundColor: {
+        label: 'Background Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#fafafa',
+      },
+      providerUrl: {
+        label: 'Map Provider URL',
+        type: SELECTION_TYPES.TEXT,
+        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      colors: {
+        label: 'Color Scheme',
+        type: SELECTION_TYPES.LIST,
+        values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
+        default: 'YlOrRd',
+      },
+      mapDrillDown: {
+        label: 'Activates Drill Down',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+        disabled: true,
       },
       intensityProp: {
         label: 'Intensity Property (for heatmap)',
