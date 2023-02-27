@@ -835,7 +835,7 @@ export const REPORT_TYPES = {
       layerType: {
         label: 'Layer Type',
         type: SELECTION_TYPES.LIST,
-        values: ['markers', 'heatmap', 'polygon'],
+        values: ['markers', 'heatmap'],
         default: 'markers',
       },
       clusterMarkers: {
@@ -897,16 +897,6 @@ export const REPORT_TYPES = {
         label: 'Map Provider URL',
         type: SELECTION_TYPES.TEXT,
         default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      },
-      nodeGeographicIdentifierProperty: {
-        label: 'Node geographic identifier (for polygon map)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'country',
-      },
-      nodePolygonValueProperty: {
-        label: 'Node property (for polygon map)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'value',
       },
       intensityProp: {
         label: 'Intensity Property (for heatmap)',
@@ -972,7 +962,7 @@ export const REPORT_TYPES = {
         default: 'YlOrRd',
       },
       mapDrillDown: {
-        label: 'Activates Drill Down (for polygon map)',
+        label: 'Activates Drill Down',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,

@@ -162,6 +162,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
     };
     return style;
   };
+
   /**
    * Functional component for a button to reset the visualization
    * @returns button component binded to the current map
@@ -184,7 +185,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
     );
   }
 
-  const resetButton = ResetButton();
+  const resetButton = isDrillDownEnabled ? ResetButton() : <></>;
 
   function Legend(colors, legendRange) {
     return (

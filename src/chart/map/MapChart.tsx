@@ -9,7 +9,6 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { createHeatmap } from './layers/HeatmapLayer';
 import { createMarkers } from './layers/MarkerLayer';
 import { createLines } from './layers/LineLayer';
-import { MapBoundary } from './layers/PolygonLayer';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -31,10 +30,6 @@ const NeoMapChart = (props: ChartProps) => {
     props.settings.styleRules,
     props.getGlobalParameter
   );
-
-  const clusterMarkers =
-    props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
-  const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : '';
   const defaultNodeColor = 'grey'; // Color of nodes without labels
   const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
   const mapProviderURL =
@@ -238,9 +233,9 @@ const NeoMapChart = (props: ChartProps) => {
   }
 
   // TODO this should definitely be refactored as an if/case statement.
-  const markers = layerType == 'markers' ? createMarkers(data, intensityProp) : '';
+  const markers = layerType == 'markers' ? createMarkers(data, props) : '';
   const lines = layerType == 'markers' ? createLines(data) : '';
-  const heatmap = layerType == 'heatmap' ? createHeatmap(data, intensityProp) : '';
+  const heatmap = layerType == 'heatmap' ? createHeatmap(data, props) : '';
   // Draw the component.
   // Ideally, we want to have one component for each layer on the map, different files
   // https://stackoverflow.com/questions/69751481/i-want-to-use-useref-to-access-an-element-in-a-reat-leaflet-and-use-the-flyto
@@ -255,7 +250,6 @@ const NeoMapChart = (props: ChartProps) => {
     >
       {heatmap}
       <TileLayer attribution={attribution} url={mapProviderURL} />
-      {layerType == 'polygon' ? <MapBoundary data={data} props={props} /> : <></>}
       {markers}
       {lines}
     </MapContainer>
