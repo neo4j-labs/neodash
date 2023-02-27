@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChartProps } from '../Chart';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapBoundary } from './layers/Polygons';
+import { MapBoundary } from './layers/Areas';
 import { recordToNative } from '../../chart/ChartUtils';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 
@@ -30,7 +30,7 @@ function createGeoDictionary(records, selection) {
         String(index).match(ISO_3166_2_regex)?.length == 0
       ) {
         return;
-        // throw "Invalid selection for choropleth chart. Ensure a three letter country code is retrieved together with a value."
+        // throw "Invalid selection for area map chart. Ensure a three letter country code is retrieved together with a value."
       }
 
       data[index] = value;
@@ -60,7 +60,7 @@ function fromFeatureListToObject(features, desiredLevel) {
 /**
  * Renders Neo4j Records inside a GeoJSON map.
  */
-const NeoPolygonMapChart = (props: ChartProps) => {
+const NeoAreaMapChart = (props: ChartProps) => {
   // Retrieve config from advanced settings
   const { records } = props;
   const { selection } = props;
@@ -131,4 +131,4 @@ const NeoPolygonMapChart = (props: ChartProps) => {
   return <></>;
 };
 
-export default NeoPolygonMapChart;
+export default NeoAreaMapChart;

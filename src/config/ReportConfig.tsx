@@ -12,7 +12,7 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
-import NeoPolygonMapChart from '../chart/map/PolygonMap';
+import NeoAreaMapChart from '../chart/map/PolygonMap';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -932,17 +932,17 @@ export const REPORT_TYPES = {
       },
     },
   },
-  polygonMap: {
-    label: 'Polygon Map',
+  areamap: {
+    label: 'Area Map',
     helperText: (
       <div>
-        A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a
+        An Area Map expects two fields: a <code>country code / region code</code> (three-letter code) and a
         <code>value</code>.
       </div>
     ),
     useReturnValuesAsFields: true,
     maxRecords: 300,
-    component: NeoPolygonMapChart,
+    component: NeoAreaMapChart,
     selection: {
       index: {
         label: 'Code',

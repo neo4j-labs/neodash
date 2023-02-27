@@ -15,7 +15,6 @@
 *** xref:user-guide/reports/radar.adoc[Radar Chart]
 *** xref:user-guide/reports/sankey.adoc[Sankey Chart]
 *** xref:user-guide/reports/map.adoc[Map]
-*** xref:user-guide/reports/choropleth.adoc[Choropleth]
 *** xref:user-guide/reports/single-value.adoc[Single Value]
 *** xref:user-guide/reports/gauge-chart.adoc[Gauge Chart]
 *** xref:user-guide/reports/raw-json.adoc[Raw JSON]

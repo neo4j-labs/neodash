@@ -98,7 +98,6 @@ pages:
 - link:treemap[Treemap]
 - link:radar[Radar Chart] 
 - link:map[Map]
-- link:choropleth[Choropleth Chart] 
 - link:single-value[Single Value] 
 - link:sankey[Sankey Chart] 
 - link:gauge[Gauge Chart]
