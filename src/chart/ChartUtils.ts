@@ -137,7 +137,7 @@ export const downloadCSV = (rows) => {
   const element = document.createElement('a');
   let csv = '';
   const headers = Object.keys(rows[0]).slice(1);
-  csv += `${headers.join(', ')}\n`;
+  csv += `${headers.join(',')}\n`;
   rows.forEach((row) => {
     headers.forEach((header) => {
       // Parse value
@@ -146,7 +146,7 @@ export const downloadCSV = (rows) => {
         value = value.low;
       }
       csv += JSON.stringify(value).replaceAll(',', ';');
-      csv += headers.indexOf(header) < headers.length - 1 ? ', ' : '';
+      csv += headers.indexOf(header) < headers.length - 1 ? ',' : '';
     });
     csv += '\n';
   });
