@@ -21,7 +21,7 @@ export const LabelTypeAutocomplete = ({
       inputValue={input}
       onInputChange={(event, value) => {
         setInput(value);
-        if (type == 'Node Property') {
+        if (type == 'Node') {
           queryCallback(
             'CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5',
             { input: value },

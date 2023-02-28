@@ -50,6 +50,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
           : props.interactivity.onRelationshipClick(item);
       }}
       onNodeRightClick={(node, event) => props.interactivity.onNodeRightClick(node, event)}
+      onLinkRightClick={(link, event) => props.interactivity.onRelationshipRightClick(link, event)}
       onBackgroundClick={() => props.interactivity.onNodeClick(undefined)}
       onBackgroundRightClick={() => props.interactivity.onNodeClick(undefined)}
       linkLineDash={(link) => (link.new ? [2, 1] : null)}

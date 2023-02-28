@@ -1,5 +1,5 @@
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -16,21 +16,53 @@ import { DeletePropertyButton } from './button/modal/DeletePropertyButton';
 import { handleRelationshipCreate } from '../util/GraphUtils';
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
-interface ExtendedGraphChartVisualizationProps extends GraphChartVisualizationProps {
+interface GraphChartEditorVisualizationProps extends GraphChartVisualizationProps {
+  type: any; // 'Node', 'Relationship'
+  action: string; // 'Create', 'Edit', 'Delete'
   selectedNode: any;
   dialogOpen: any;
   setDialogOpen: any;
 }
 
-export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProps) => {
-  const action = 'Create'; // 'Create', 'Edit', 'Delete'
-  const type = 'Relationship'; // 'Node', 'Relationship'
+export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) => {
   const [properties, setProperties] = React.useState([{ name: '', value: '' }]);
   const [labelRecords, setLabelRecords] = React.useState([]);
   const [labelInputText, setLabelInputText] = React.useState('');
   const [propertyRecords, setPropertyRecords] = React.useState([]);
-  const [propertyInputTexts, setPropertyInputTexts] = React.useState({});
-  const [relType, setRelType] = React.useState(undefined);
+  const [propertyInputTexts, setPropertyInputTexts] = React.useState([]);
+  const [label, setLabel] = React.useState(undefined);
+
+  // When the dialog gets opened, and we are editing, prepopulate the fields with current node/rel data in the database.
+  useEffect(() => {
+    if (props.dialogOpen && props.interactivity.selectedEntity && props.type == 'Node' && props.action == 'Edit') {
+      const label = props.interactivity.selectedEntity.labels ? props.interactivity.selectedEntity.labels[0] : '';
+      setLabelInputText(label);
+      setLabel(label);
+      const selectedProps = Object.keys(props.interactivity.selectedEntity.properties).map((prop) => {
+        return { name: prop, value: props.interactivity.selectedEntity.properties[prop] };
+      });
+      setProperties(selectedProps);
+      setPropertyInputTexts(selectedProps.map((p) => p.name));
+    } else if (
+      props.dialogOpen &&
+      props.interactivity.selectedEntity &&
+      props.type == 'Relationship' &&
+      props.action == 'Edit'
+    ) {
+      const {type} = props.interactivity.selectedEntity;
+      setLabelInputText(type);
+      setLabel(type);
+      const selectedProps = Object.keys(props.interactivity.selectedEntity.properties).map((prop) => {
+        return { name: prop, value: props.interactivity.selectedEntity.properties[prop] };
+      });
+      setProperties(selectedProps);
+      setPropertyInputTexts(selectedProps.map((p) => p.name));
+    } else if (props.dialogOpen) {
+      setLabelInputText('');
+      setLabel('');
+    }
+  }, [props.dialogOpen]);
+
   return (
     <Dialog
       maxWidth={'lg'}
@@ -41,7 +73,7 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
       aria-labelledby='form-dialog-title'
     >
       <DialogTitle id='form-dialog-title'>
-        {action} a {type}
+        {props.action} a {props.type}
         <IconButton
           onClick={() => {
             props.interactivity.setContextMenuOpen(false);
@@ -61,14 +93,15 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
           <LabelTypeAutocomplete
             records={labelRecords}
             setRecords={setLabelRecords}
-            value={relType}
-            setValue={setRelType}
+            value={label}
+            setValue={setLabel}
             queryCallback={props.engine.queryCallback}
-            type={type}
+            type={props.type}
             input={labelInputText}
             setInput={setLabelInputText}
           />
           <h4>Properties</h4>
+
           <table>
             {properties.map((property, index) => {
               return (
@@ -105,6 +138,10 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
                       <DeletePropertyButton
                         onClick={() => {
                           setProperties([...properties.slice(0, index), ...properties.slice(index + 1)]);
+                          setPropertyInputTexts([
+                            ...propertyInputTexts.slice(0, index),
+                            ...propertyInputTexts.slice(index + 1),
+                          ]);
                         }}
                       />
                     </td>
@@ -131,13 +168,13 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
               </td>
             </tr>
           </table>
-
+          <hr />
           <Button
             style={{ marginBottom: '10px' }}
-            disabled={relType === undefined}
+            disabled={label === undefined}
             onClick={() => {
               const newProperties = {
-                name: relType,
+                name: label,
               };
 
               properties.map((prop) => {
@@ -148,7 +185,7 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
 
               handleRelationshipCreate(
                 props.interactivity.selectedEntity,
-                relType,
+                label,
                 newProperties,
                 props.selectedNode,
                 props.engine,
@@ -163,7 +200,7 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
             size='medium'
             endIcon={<PlayArrow />}
           >
-            Create
+            {props.action == 'Create' ? 'Create' : 'Save'}
           </Button>
         </DialogContentText>
       </DialogContent>

@@ -79,8 +79,9 @@ export interface GraphChartVisualizationProps {
     createNotification: any;
     fixNodeAfterDrag: boolean;
     onNodeClick: any;
-    onRelationshipClick: any;
     onNodeRightClick: any;
+    onRelationshipClick: any;
+    onRelationshipRightClick: any;
     setGlobalParameter: any;
     handleExpand: any;
     zoomToFit?: any;

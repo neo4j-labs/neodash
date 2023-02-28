@@ -20,7 +20,7 @@ export const PropertyNameAutocomplete = ({
       style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '0px' }}
       inputValue={inputs[index]}
       onInputChange={(event, value) => {
-        const newPropertyInputTexts = { ...inputs };
+        const newPropertyInputTexts = [...inputs];
         newPropertyInputTexts[index] = value;
         setInputs(newPropertyInputTexts);
         queryCallback(

@@ -5,7 +5,7 @@ MATCH (b)
 WHERE id(b) = $id
 WITH b, apoc.node.relationship.types(b) as types
 UNWIND types as type
-WITH type, apoc.node.degree.in(b,type) as in, apoc.node.degree.out(b,type) AS out
+WITH type, apoc.node0.degree.in(b,type) as in, apoc.node.degree.out(b,type) AS out
 UNWIND ["in", "out"] as direction
 WITH type, direction, in, out
 WHERE (in <> 0 AND direction = "in") OR (out <> 0 AND direction = "out")
