@@ -4,7 +4,6 @@ import { actionRule } from '../../extensions/actions/ActionsRule';
 import { getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
-import { handleExpand } from './util/GraphUtils';
 import { generateNodeCanvasObject } from './util/NodeUtils';
 import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtils';
 
@@ -62,7 +61,11 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
           props.engine.setFirstRun(false);
         }
       }}
+      onZoom={() => {
+        props.interactivity.setContextMenuOpen(false);
+      }}
       onNodeDrag={() => {
+        props.interactivity.setContextMenuOpen(false);
         setIsDragging(true);
       }}
       onNodeDragEnd={(node) => {

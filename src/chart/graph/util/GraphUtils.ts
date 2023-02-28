@@ -1,29 +1,39 @@
 import { Direction, recomputeCurvatures } from './RelUtils';
 
+export const getNodeRelationshipCountsQuery = `
+MATCH (b)
+WHERE id(b) = $id
+WITH b, apoc.node.relationship.types(b) as types
+UNWIND types as type
+WITH type, apoc.node.degree.in(b,type) as in, apoc.node.degree.out(b,type) AS out
+UNWIND ["in", "out"] as direction
+WITH type, direction, in, out
+WHERE (in <> 0 AND direction = "in") OR (out <> 0 AND direction = "out")
+RETURN type, direction, CASE WHEN direction = "in" THEN in ELSE out END as direction
+`;
+
+export const getNodeRelationshipCountsQueryWithoutApoc = `
+MATCH (b)
+WHERE id(b) = $id
+WITH b 
+MATCH (b)-[r]-()
+RETURN type(r) as type, CASE WHEN startNode(r) = b THEN "out" ELSE "in" END as direction,  COUNT(r) as count
+`;
+
+export const handleGetNodeRelTypes = (id: number, engine: any, callback: any) => {
+  engine.queryCallback(getNodeRelationshipCountsQuery, { id: id }, (records) => {
+    if (records && records[0] && records[0].error) {
+      engine.queryCallback(getNodeRelationshipCountsQueryWithoutApoc, { id: id }, (records) => {
+        callback(records);
+      });
+    } else {
+      callback(records);
+    }
+  });
+};
+
 export const handleExpand = (id: number, type: string, direction: Direction) => {
   throw `Not Implemented${id}${type}${direction}`;
-
-  /**
-   * 
-   // Fallback for when apoc is missing
-    PROFILE MATCH (b:Brewery)
-    WITH b LIMIT 1
-    MATCH (b)-[r]-()
-    RETURN type(r) as type, CASE WHEN startNode(r) = b THEN "out" ELSE "in" END as direction,  COUNT(r) as count
-
-   */
-  /**
-   * 
-    // Optimized neighbour detection (apoc needed)
-    MATCH (b:Brewery)
-    WITH b, apoc.node.relationship.types(b) as types
-    UNWIND types as type
-    WITH type, apoc.node.degree.in(b,type) as in, apoc.node.degree.out(b,type) AS out
-    UNWIND ["in", "out"] as direction
-    WITH type, direction, in, out
-    WHERE (in <> 0 AND direction = "in") OR (out <> 0 AND direction = "out")
-    RETURN type, direction, CASE WHEN direction = "in" THEN in ELSE out END
-   */
 };
 
 export const handleNodeCreate = () => {
@@ -61,7 +71,7 @@ export const handleRelationshipCreate = (start, type, properties, end, engine, i
         }
       });
 
-      const {links} = data;
+      const { links } = data;
       links.push({
         id: -1,
         width: 2,

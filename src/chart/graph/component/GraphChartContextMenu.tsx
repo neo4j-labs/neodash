@@ -10,10 +10,13 @@ import { getNodeLabel } from '../util/NodeUtils';
 import { GraphChartCreateModal } from './GraphChartCreateEntityModal';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import EditIcon from '@material-ui/icons/Edit';
+import { Direction } from '../util/RelUtils';
+import { handleGetNodeRelTypes } from '../util/GraphUtils';
 
 export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedNode, setSelectedNode] = React.useState(undefined);
+  const [neighbourRelCounts, setNeighbourRelCounts] = React.useState([]);
   const handleClose = () => {
     props.interactivity.setContextMenuOpen(false);
   };
@@ -25,8 +28,8 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
       style={{
         position: 'absolute',
         zIndex: 999,
-        top: props.interactivity.clickPosition.y,
-        left: props.interactivity.clickPosition.x,
+        top: Math.min(props.interactivity.clickPosition.y, props.style.height - 200),
+        left: Math.min(props.interactivity.clickPosition.x, props.style.width - 200),
       }}
     >
       <Card id='basic-menu'>
@@ -65,8 +68,37 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           }}
         ></IconMenuItem>
 
+        <NestedMenuItem
+          label='Expand...'
+          nonce={undefined}
+          parentMenuOpen={true}
+          onMouseOver={() => {
+            handleGetNodeRelTypes(props.interactivity.selectedEntity?.id, props.engine, setNeighbourRelCounts);
+          }}
+        >
+          <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            <table>
+              {neighbourRelCounts &&
+                neighbourRelCounts.map((item) => (
+                  <tr>
+                    <MenuItem
+                      onClick={() => {
+                        props.interactivity.setContextMenuOpen(false);
+                        setDialogOpen(true);
+                      }}
+                    >
+                      <td style={{ width: '200px', overflow: 'hidden' }}>{item._fields[0]}</td>
+                      <td style={{ width: '100px', overflow: 'hidden' }}>{item._fields[1]}</td>
+                      <td style={{ width: 'auto', marginLeft: '15px' }}>{item._fields[2].low}</td>
+                    </MenuItem>
+                  </tr>
+                ))}
+            </table>
+          </div>
+        </NestedMenuItem>
+
         <NestedMenuItem label='Create relationship...' nonce={undefined} parentMenuOpen={true}>
-          <div style={{ maxHeight: '400px', overflow: 'scroll' }}>
+          <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
             <table>
               {props.data &&
                 props.data.nodes.map((node) => (
@@ -88,14 +120,6 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
             </table>
           </div>
         </NestedMenuItem>
-        <IconMenuItem
-          rightIcon={<ZoomOutMapIcon />}
-          label='Expand'
-          onClick={() => {
-            props.interactivity.setContextMenuOpen(false);
-            props.interactivity.setPropertyInspectorOpen(true);
-          }}
-        ></IconMenuItem>
       </Card>
     </div>
   );

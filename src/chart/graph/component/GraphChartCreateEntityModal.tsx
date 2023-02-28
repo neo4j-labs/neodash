@@ -138,7 +138,6 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
             onClick={() => {
               const newProperties = {
                 name: relType,
-                pending: true,
               };
 
               properties.map((prop) => {
