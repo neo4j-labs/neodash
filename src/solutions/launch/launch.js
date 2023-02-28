@@ -14,6 +14,10 @@ const fetchDashboardFromHive = async ({ uuid }) => {
                     version
                     user
                     dbName
+                    dbType
+                    dbConnectionUrl
+                    dbUsername
+                    dbPassword
                 }
             }	 
         `;
@@ -61,19 +65,45 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
     try {
       const response = await fetchDashboardFromHive({ uuid: dashboardUuid });
       const data = response?.data?.getDashboardByUUID;
+      let port = '7687';
+      let hostName;
+      let schema = 'neo4j';
+      let dbName = 'neo4j';
+      let userName = 'neo4j';
+      let pasword;
+      if (data.dbType == 'aura') {
+        // Extract port, schema and hostname info from connection url
+        const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w\.]+):?(\d+)?/);
+        port = connectionComps[3] ? connectionComps[3] : '7687';
+        hostName = connectionComps[2];
+        schema = connectionComps[1];
+        dbName = data.dbName ? data.dbName : 'neo4j';
+        userName = data.dbUsername ? data.dbUsername : 'neo4j';
+        pasword = data.dbPassword;
+      } else if (data.dbType == 'dump') {
+        port = '7687';
+        hostName = 'localhost';
+        schema = 'neo4j';
+        dbName = data.dbName;
+        userName = 'neo4j';
+        pasword = '';
+      }
       return {
         isHandled: true,
         config: {
           ssoEnabled: false,
           ssoDiscoveryUrl: 'https://example.com',
           standalone: true,
-          standaloneProtocol: 'neo4j',
-          standaloneHost: 'localhost',
-          standalonePort: '7687',
-          standaloneDatabase: data.dbName,
+          standaloneProtocol: schema,
+          standaloneHost: hostName,
+          standalonePort: port,
+          standaloneDatabase: dbName,
           standaloneDashboardName: data.title,
           standaloneDashboardDatabase: 'hive',
           standaloneDashboardURL: data.uuid,
+          standaloneUsername: userName,
+          standalonePassword: pasword,
+          isOwner: true,
         },
       };
     } catch (e) {

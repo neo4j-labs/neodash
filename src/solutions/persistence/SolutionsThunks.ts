@@ -102,7 +102,7 @@ const saveDemoCard = async ({ uuid, name }) => {
   return promise;
 };
 
-const saveDashboardToHiveGraphQL = async ({ dashboard, dbName }) => {
+const saveDashboardToHiveGraphQL = async ({ dashboard, dbName, dbType, dbConnectionUrl, dbUsername, dbPassword }) => {
   const promise = new Promise((resolve, reject) => {
     let dashboardCopy = JSON.parse(JSON.stringify(dashboard));
     dashboardCopy.extensions = dashboardCopy.extensions || {};
@@ -121,6 +121,10 @@ const saveDashboardToHiveGraphQL = async ({ dashboard, dbName }) => {
         dbName: dbName,
         version: dashboardCopy.version,
         user: auth.getEmail(),
+        dbType: dbType,
+        dbConnectionUrl: dbConnectionUrl,
+        dbUsername: dbUsername,
+        dbPassword: dbPassword,
       },
     };
 
@@ -151,57 +155,101 @@ const saveDashboardToHiveGraphQL = async ({ dashboard, dbName }) => {
   return promise;
 };
 
+const saveHiveCard = async (
+  dispatch,
+  dashboard,
+  dbName,
+  overwrite,
+  dbType,
+  dbConnectionUrl,
+  dbUsername,
+  dbPassword
+) => {
+  try {
+    const dashboardSaveResponse = await saveDashboardToHiveGraphQL({
+      dashboard,
+      dbName,
+      dbType,
+      dbConnectionUrl,
+      dbUsername,
+      dbPassword,
+    });
+    const input = dashboardSaveResponse?.variables?.input || {};
+    const { title, uuid } = input;
+
+    dispatch(updateHiveInformation('uuid', uuid));
+    dispatch(updateHiveInformation('dbName', dbName));
+
+    console.log('title: ', title);
+    if (!overwrite) {
+      const saveCardResponse = await saveDemoCard({ uuid, name: title });
+      const solutionId = saveCardResponse?.data?.solution?.id;
+      dispatch(updateHiveInformation('solutionId', solutionId));
+
+      await addDeployment({ neoDashUuid: uuid, solutionId });
+    }
+    // updateSaveToHiveProgress(false);
+    // dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
+  } catch (e2) {
+    dispatch(createNotificationThunk('Database uploaded, but could not save Dashboard', e2));
+  }
+};
+
 export const saveDashboardToHiveThunk =
-  (driver, selectedFile, dashboard, date, user, overwrite = false, updateSaveToHiveProgress) =>
+  (
+    driver,
+    selectedFile,
+    dashboard,
+    date,
+    user,
+    overwrite = false,
+    updateSaveToHiveProgress,
+    dbType,
+    dbConnectionUrl,
+    dbUsername,
+    dbPassword
+  ) =>
   (dispatch: any) => {
     updateSaveToHiveProgress(true);
     try {
-      const formData = new FormData();
-      const uploadUrl = config('FILE_UPLOAD_URL');
-      const existingDbName = dashboard?.extensions?.solutionsHive?.dbName;
-      if (overwrite && existingDbName) {
-        formData.append('dbName', existingDbName);
-        formData.append('overwrite', overwrite);
-      }
-      formData.append('databasedumpfile', selectedFile);
-      // console.log('selectedFile: ', selectedFile);
-      // console.log('formData: ', formData);
-      fetch(uploadUrl, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          // Content-Type": ""     // commenting it out so the browser will fill it in for me
-        },
-      })
-        .then(async (response) => {
-          console.log('response: ', response);
-          let json = await response.json();
-          console.log('json: ', json);
-          let { dbName } = json;
-          console.log('dbName: ', dbName);
-          try {
-            const dashboardSaveResponse = await saveDashboardToHiveGraphQL({ dashboard, dbName });
-            const input = dashboardSaveResponse?.variables?.input || {};
-            const { title, uuid } = input;
-
-            dispatch(updateHiveInformation('uuid', uuid));
-            dispatch(updateHiveInformation('dbName', dbName));
-
-            console.log('title: ', title);
-            if (!overwrite) {
-              const saveCardResponse = await saveDemoCard({ uuid, name: title });
-              const solutionId = saveCardResponse?.data?.solution?.id;
-              dispatch(updateHiveInformation('solutionId', solutionId));
-
-              await addDeployment({ neoDashUuid: uuid, solutionId });
-            }
-            updateSaveToHiveProgress(false);
-            dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
-          } catch (e2) {
-            dispatch(createNotificationThunk('Database uploaded, but could not save Dashboard', e2));
-          }
+      if (dbType == 'aura') {
+        saveHiveCard(dispatch, dashboard, 'neo4j', overwrite, dbType, dbConnectionUrl, dbUsername, dbPassword);
+        updateSaveToHiveProgress(false);
+        dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
+      } else if (dbType == 'dump') {
+        const formData = new FormData();
+        const uploadUrl = config('FILE_UPLOAD_URL');
+        const existingDbName = dashboard?.extensions?.solutionsHive?.dbName;
+        if (overwrite && existingDbName) {
+          formData.append('dbName', existingDbName);
+          formData.append('overwrite', overwrite);
+        }
+        formData.append('databasedumpfile', selectedFile);
+        // console.log('selectedFile: ', selectedFile);
+        // console.log('formData: ', formData);
+        fetch(uploadUrl, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            // Content-Type": ""     // commenting it out so the browser will fill it in for me
+          },
         })
-        .catch((err) => dispatch(createNotificationThunk('Unable to save dashboard to Hive (errno: 1)', err)));
+          .then(async (response) => {
+            console.log('response: ', response);
+            let json = await response.json();
+            console.log('json: ', json);
+            let { dbName } = json;
+            console.log('dbName: ', dbName);
+            try {
+              saveHiveCard(dispatch, dashboard, dbName, overwrite, dbType, dbConnectionUrl, dbUsername, dbPassword);
+              updateSaveToHiveProgress(false);
+              dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
+            } catch (e2) {
+              dispatch(createNotificationThunk('Database uploaded, but could not save Dashboard', e2));
+            }
+          })
+          .catch((err) => dispatch(createNotificationThunk('Unable to save dashboard to Hive (errno: 1)', err)));
+      }
     } catch (e) {
       dispatch(createNotificationThunk('Unable to save dashboard to Hive (errno: 2)', e));
     }

@@ -10,12 +10,23 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
-import { Checkbox, Input, FormControl, FormControlLabel, Tooltip } from '@material-ui/core';
+import {
+  Checkbox,
+  Input,
+  FormControl,
+  FormControlLabel,
+  Tooltip,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TextField,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { getDashboardJson } from './ModalSelectors';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { saveDashboardToHiveThunk } from '../solutions/persistence/SolutionsThunks';
+import { ExpandMore } from '@material-ui/icons';
 
 /**
  * A modal to save the dashboard and database to Hive
@@ -44,6 +55,12 @@ export const SaveToHiveModel = ({
     setIsSelected(true);
   };
 
+  const [expandedPanel, setExpandedPanel] = useState(false);
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    console.log({ event, isExpanded });
+    setExpandedPanel(isExpanded ? panel : false);
+  };
+
   return (
     <Dialog maxWidth={'lg'} open={modalOpen === true} onClose={closeDialog} aria-labelledby='form-dialog-title'>
       <DialogTitle id='form-dialog-title'>
@@ -64,36 +81,51 @@ export const SaveToHiveModel = ({
           This will save your current dashboard to Hive. Use the file dialog to upload your Neo4j .dump file.
         </DialogContentText>
 
-        <div style={{ height: '100px' }}>
-          <Input type='file' name='databasedumpfile' style={{ marginBottom: '3px' }} onChange={changeHandler} />
-          {isSelected && (
-            <DialogContentText>
-              Currently Selected File: {selectedFile.name}
-              <span style={{ marginLeft: '2px' }}>
-                ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB, last modified:{' '}
-                {selectedFile.lastModifiedDate.toLocaleDateString()})
-              </span>
-            </DialogContentText>
-          )}
-        </div>
+        <Accordion expanded={expandedPanel === 'dump'} onChange={handleAccordionChange('dump')}>
+          <AccordionSummary expandIcon={<ExpandMore />}>DB Dump Upload</AccordionSummary>
+          <AccordionDetails>
+            <div style={{ height: '100px' }}>
+              <Input type='file' name='databasedumpfile' style={{ marginBottom: '3px' }} onChange={changeHandler} />
+              {isSelected && (
+                <DialogContentText>
+                  Currently Selected File: {selectedFile.name}
+                  <span style={{ marginLeft: '2px' }}>
+                    ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB, last modified:{' '}
+                    {selectedFile.lastModifiedDate.toLocaleDateString()})
+                  </span>
+                </DialogContentText>
+              )}
+            </div>
 
-        {dashboard?.extensions?.solutionsHive?.dbName && (
-          <FormControl style={{ marginTop: '20px', marginLeft: '10px' }}>
-            <Tooltip title='Overwrite dashboard(s) with the same name.' aria-label=''>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    style={{ fontSize: 'small', color: 'grey' }}
-                    checked={overwriteExistingDashboard}
-                    onChange={() => setOverwriteExistingDashboard(!overwriteExistingDashboard)}
-                    name='overwrite'
+            {dashboard?.extensions?.solutionsHive?.dbName && (
+              <FormControl style={{ marginTop: '20px', marginLeft: '10px' }}>
+                <Tooltip title='Overwrite dashboard(s) with the same name.' aria-label=''>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        style={{ fontSize: 'small', color: 'grey' }}
+                        checked={overwriteExistingDashboard}
+                        onChange={() => setOverwriteExistingDashboard(!overwriteExistingDashboard)}
+                        name='overwrite'
+                      />
+                    }
+                    label='Overwrite'
                   />
-                }
-                label='Overwrite'
-              />
-            </Tooltip>
-          </FormControl>
-        )}
+                </Tooltip>
+              </FormControl>
+            )}
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion expanded={expandedPanel === 'aura'} onChange={handleAccordionChange('aura')}>
+          <AccordionSummary expandIcon={<ExpandMore />}>Aura DB</AccordionSummary>
+          <AccordionDetails>
+            <TextField id='auraConnection' label='Connection URL' variant='outlined' />
+            <TextField id='auraUsername' label='Username' variant='outlined' />
+            <TextField id='auraPassword' label='Password' variant='outlined' />
+          </AccordionDetails>
+        </Accordion>
+
         <Button
           component='label'
           onClick={() => {
@@ -104,7 +136,11 @@ export const SaveToHiveModel = ({
               new Date().toISOString(),
               connection.username,
               overwriteExistingDashboard,
-              updateSaveToHiveProgress
+              updateSaveToHiveProgress,
+              expandedPanel,
+              auraConnection.value,
+              auraUsername.value,
+              auraPassword.value
             );
             closeDialog({ closeSaveDialog: true });
           }}
@@ -145,10 +181,26 @@ const mapDispatchToProps = (dispatch) => ({
     date: any,
     user: any,
     overwrite: boolean,
-    updateSaveToHiveProgress: any
+    updateSaveToHiveProgress: any,
+    dbType: any,
+    dbConnectionUrl: any,
+    dbUsername: any,
+    dbPassword: any
   ) => {
     dispatch(
-      saveDashboardToHiveThunk(driver, selectedFile, dashboard, date, user, overwrite, updateSaveToHiveProgress)
+      saveDashboardToHiveThunk(
+        driver,
+        selectedFile,
+        dashboard,
+        date,
+        user,
+        overwrite,
+        updateSaveToHiveProgress,
+        dbType,
+        dbConnectionUrl,
+        dbUsername,
+        dbPassword
+      )
     );
   },
 });
