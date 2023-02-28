@@ -29,4 +29,13 @@ export const EXTENSIONS = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked. To learn more about this extension, reach out to Neo4j Professional Services.',
     link: 'https://neo4j.com/professional-services/',
   },
+  solutionsHive: {
+    name: 'solutionsHive',
+    label: 'Hive Extension',
+    author: 'Neo4j Solutions',
+    image: 'https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Begrippenlijst.svg',
+    enabled: false,
+    description: 'Extension to enable NeoDash integration in Hive. This is a work in progress.',
+    link: 'https://neo4j.solutions',
+  },
 };
