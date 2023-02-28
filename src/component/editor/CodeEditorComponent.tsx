@@ -25,6 +25,7 @@ const NeoCodeEditorComponent = ({
     readOnly: !editable,
     placeholder: placeholder,
     preExtensions: language === 'markdown' ? markdownExtensions : [],
+    indentUnit: '    ',
     value: value,
     onValueChanged: (val) => {
       if (editable && onChange) {
