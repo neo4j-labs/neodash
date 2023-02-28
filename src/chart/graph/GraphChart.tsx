@@ -101,6 +101,10 @@ const NeoGraphChart = (props: ChartProps) => {
     }
     props.updateReportSetting && props.updateReportSetting('frozen', value);
   };
+
+  const setLinks = (links) => {
+    setData({ links: links, nodes: data.nodes });
+  };
   const appendLink = (link) => {
     const { links } = data;
     links.push(link);
@@ -133,6 +137,11 @@ const NeoGraphChart = (props: ChartProps) => {
     setData(extractedGraphFromRecords);
   };
 
+  // When data is refreshed, rebuild the visualization data.
+  useEffect(() => {
+    generateVisualizationDataGraph(props.records);
+  }, [props.records]);
+
   const { observe, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {
       unobserve(); // To stop observing the current target element
@@ -163,6 +172,7 @@ const NeoGraphChart = (props: ChartProps) => {
       deleteLink: () => {
         throw 'Not Implemented';
       },
+      setLinks: setLinks,
     },
     style: {
       width: width,

@@ -2,6 +2,34 @@ export enum Direction {
   Incoming,
   Outgoing,
 }
+const update = (state, mutations) => Object.assign({}, state, mutations);
+
+/**
+ * Assigns a computed curvature value to a link in the visualization.
+ * @param link the link object (n)-[e]->(n2)
+ * @param index the index of the link in the list between a pair of nodes.
+ * @param nodePairListLength  the amount of links between (n) and (n2) in the same direction.
+ * @param mirroredNodePairListLength the amount of links between (n) and (n2) in the opposite direction.
+ * @returns the link with an assigned curvature value.
+ */
+export function assignCurvatureToLink(link, index, nodePairListLength, mirroredNodePairListLength) {
+  if (link.source == link.target) {
+    // Self-loop
+    return update(link, { curvature: 0.4 + index / 8 });
+  }
+  // If we also have edges from the target to the source, adjust curvatures accordingly.
+
+  if (mirroredNodePairListLength == 0) {
+    return update(link, { curvature: getCurvature(index, nodePairListLength) });
+  }
+  const totalRelsBetweenPair = nodePairListLength + mirroredNodePairListLength;
+  return update(link, {
+    curvature:
+      link.source.id > link.target.id
+        ? -getCurvature(index + mirroredNodePairListLength, totalRelsBetweenPair)
+        : getCurvature(index, totalRelsBetweenPair),
+  });
+}
 
 // Function to manually compute edge curvatures for dense node pairs.
 export function getCurvature(index, total) {
@@ -72,3 +100,25 @@ export const generateRelCanvasObject = (link: any, ctx: any, relLabelFontSize: a
     ctx.restore();
   }
 };
+
+/**
+ * Recompute curvatures for all links in the visualization.
+ * This is needed when new relationships are added by exploration or graph editing.
+ * TODO - this could be optimized by caching a dictionary instead of transforming the list here...
+ */
+export function recomputeCurvatures(links) {
+  const linksMap = {};
+  links.forEach((link) => {
+    if (linksMap[`${link.source.id},${link.target.id}`] == undefined) {
+      linksMap[`${link.source.id},${link.target.id}`] = [];
+    }
+    linksMap[`${link.source.id},${link.target.id}`].push(link);
+  });
+  const linksList = Object.values(linksMap).map((linkArray) => {
+    return linkArray.map((link, i) => {
+      const mirroredNodePair = linksMap[`${link.target.id},${link.source.id}`];
+      return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);
+    });
+  });
+  return linksList.flat();
+}

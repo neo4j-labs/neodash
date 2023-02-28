@@ -1,6 +1,6 @@
 import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
-import { getCurvature } from './RelUtils';
+import { assignCurvatureToLink, getCurvature } from './RelUtils';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -162,23 +162,8 @@ export function buildGraphVisualizationObjectFromRecords(
   // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
   const linksList = Object.values(links).map((linkArray) => {
     return linkArray.map((link, i) => {
-      if (link.source == link.target) {
-        // Self-loop
-        return update(link, { curvature: 0.4 + i / 8 });
-      }
-      // If we also have edges from the target to the source, adjust curvatures accordingly.
       const mirroredNodePair = links[`${link.target},${link.source}`];
-      if (!mirroredNodePair) {
-        return update(link, { curvature: getCurvature(i, linkArray.length) });
-      }
-      return update(link, {
-        curvature:
-          (link.source > link.target ? 1 : -1) *
-          getCurvature(
-            link.source > link.target ? i : i + mirroredNodePair.length,
-            link.length + mirroredNodePair.length
-          ),
-      });
+      return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);
     });
   });
 

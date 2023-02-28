@@ -45,6 +45,7 @@ export interface GraphChartVisualizationProps {
     appendLink: any;
     editLink: any;
     deleteLink: any;
+    setLinks: any;
   };
   style: {
     width: number;

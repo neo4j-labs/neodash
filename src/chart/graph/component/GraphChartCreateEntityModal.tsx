@@ -148,10 +148,10 @@ export const GraphChartCreateModal = (props: ExtendedGraphChartVisualizationProp
               });
 
               handleRelationshipCreate(
-                props.interactivity.selectedEntity?.id,
+                props.interactivity.selectedEntity,
                 relType,
                 newProperties,
-                props.selectedNode.id,
+                props.selectedNode,
                 props.engine,
                 props.interactivity,
                 props.data
