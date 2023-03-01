@@ -21,6 +21,17 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import NeoAlertModal from '../../extensions/alert/NeoAlertModal';
+import { AlertDrawer } from '../../extensions/alert/AlertDrawer';
+
+/**
+ * For each config in extensionConfig, if the extensionConfig is opened, render its component
+ * @returns
+ */
+// TODO: abstract logic
+function renderExtensions() {
+  return <AlertDrawer></AlertDrawer>;
+}
+
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   open,
@@ -38,9 +49,7 @@ export const NeoDrawer = ({
   if (hidden) {
     return <></>;
   }
-  if (extensionsConfig.alerts && extensionsConfig.alerts.opened) {
-    alert("i'm ready");
-  }
+
   const content = (
     <Drawer
       variant='permanent'
@@ -139,7 +148,12 @@ export const NeoDrawer = ({
       <Divider />
     </Drawer>
   );
-  return content;
+  return (
+    <>
+      {content}
+      {extensionsConfig.alerts && extensionsConfig.alerts.opened ? renderExtensions(open) : <></>}
+    </>
+  );
 };
 
 const mapStateToProps = (state) => ({
