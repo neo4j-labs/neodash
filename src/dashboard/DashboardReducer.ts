@@ -13,6 +13,7 @@ import {
   SET_DASHBOARD,
   MOVE_PAGE,
   SET_EXTENSION_ENABLED,
+  SET_EXTENSION_OPENED,
 } from './DashboardActions';
 
 export const NEODASH_VERSION = '2.2';
@@ -24,6 +25,7 @@ export const initialState = {
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
   extensions: {},
+  extensionsConfig: {},
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -97,6 +99,21 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
       return {
         ...state,
         pages: state.pages,
+      };
+    }
+    case SET_EXTENSION_OPENED: {
+      // Settign the extension opened to trigger its rendering
+      const { name, opened } = payload;
+      let extensionsConfig = state.extensionsConfig ? { ...state.extensionsConfig } : {};
+      // Managing first creation
+      if (extensionsConfig[name]) {
+        extensionsConfig[name].opened = opened;
+      } else {
+        extensionsConfig[name] = { opened: opened };
+      }
+      return {
+        ...state,
+        extensionsConfig: extensionsConfig,
       };
     }
     default: {

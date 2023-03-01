@@ -15,12 +15,12 @@ import {
 import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import { getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
+import { getDashboardExtensions, getDashboardExtensionsConfig, getDashboardSettings } from '../DashboardSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
-
+import NeoAlertModal from '../../extensions/alert/NeoAlertModal';
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   open,
@@ -28,6 +28,7 @@ export const NeoDrawer = ({
   connection,
   dashboardSettings,
   extensions,
+  extensionsConfig,
   updateDashboardSetting,
   handleDrawerClose,
   onAboutModalOpen,
@@ -37,7 +38,9 @@ export const NeoDrawer = ({
   if (hidden) {
     return <></>;
   }
-
+  if (extensionsConfig.alerts && extensionsConfig.alerts.opened) {
+    alert("i'm ready");
+  }
   const content = (
     <Drawer
       variant='permanent'
@@ -116,6 +119,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
+        {extensions.alerts ? <NeoAlertModal></NeoAlertModal> : <></>}
       </List>
       <Divider />
       <List>
@@ -142,6 +146,7 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   hidden: applicationIsStandalone(state),
   extensions: getDashboardExtensions(state),
+  extensionsConfig: getDashboardExtensionsConfig(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
   connection: applicationGetConnection(state),
 });

@@ -39,3 +39,12 @@ export const setExtensionEnabled = (name: string, enabled: boolean) => ({
   type: SET_EXTENSION_ENABLED,
   payload: { name, enabled },
 });
+
+/**
+ * Certain extensions need to be opened to be used (like the alert drawer)
+ */
+export const SET_EXTENSION_OPENED = 'DASHBOARD/SET_EXTENSION_OPENED';
+export const setExtensionOpened = (name: string, opened: boolean) => ({
+  type: SET_EXTENSION_OPENED,
+  payload: { name, opened },
+});

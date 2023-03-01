@@ -29,4 +29,13 @@ export const EXTENSIONS = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked. To learn more about this extension, reach out to Neo4j Professional Services.',
     link: 'https://neo4j.com/professional-services/',
   },
+  'alert-interface': {
+    name: 'alerts',
+    label: 'Alerts Inteface',
+    author: 'Neo4j Professional Services',
+    image: 'report-actions.png',
+    enabled: true,
+    description: 'blablablablablablablalbalblabla.',
+    link: 'https://neo4j.com/professional-services/',
+  },
 };
