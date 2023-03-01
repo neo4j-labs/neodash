@@ -122,3 +122,17 @@ export function recomputeCurvatures(links) {
   });
   return linksList.flat();
 }
+
+/**
+ * Merges two lists of (potententially duplicate) links.
+ */
+export function mergeLinksLists(oldLinks, newLinks) {
+  const links = {};
+  oldLinks.forEach((link) => {
+    links[link.id] = link;
+  });
+  newLinks.forEach((link) => {
+    links[link.id] = link;
+  });
+  return Object.values(links);
+}

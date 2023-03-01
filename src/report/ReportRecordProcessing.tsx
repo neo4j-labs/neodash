@@ -91,8 +91,28 @@ export function RenderNode(value, key = 0) {
         </div>
       }
     >
-      <Chip label={value.labels.length > 0 ? value.labels.join(', ') : 'Node'} />
+      {RenderNodeChip(value.labels.length > 0 ? value.labels.join(', ') : 'Node')}
     </HtmlTooltip>
+  );
+}
+
+export function RenderNodeChip(text, color = 'lightgrey', border = '0px') {
+  return <Chip label={text} style={{ background: color, minWidth: 32, border: border }} />;
+}
+
+export function RenderRelationshipChip(text, direction = undefined, color = 'lightgrey') {
+  return (
+    <Chip
+      style={{
+        background: color,
+        borderRadius: 0,
+        paddingRight: 5,
+        height: 21,
+        paddingLeft: 5,
+        clipPath: direction == undefined ? 'none' : direction ? rightRelationship : leftRelationship,
+      }}
+      label={`${text  } `}
+    />
   );
 }
 
@@ -125,13 +145,7 @@ function RenderRelationship(value, key = 0) {
         </div>
       }
     >
-      <Chip
-        style={{
-          borderRadius: 0,
-          clipPath: value.direction == undefined ? 'none' : value.direction ? rightRelationship : leftRelationship,
-        }}
-        label={value.type}
-      />
+      {RenderRelationshipChip(value.type, value.direction)}
     </HtmlTooltip>
   );
 }

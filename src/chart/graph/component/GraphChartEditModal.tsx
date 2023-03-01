@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import { LabelTypeAutocomplete } from './autocomplete/LabelTypeAutocomplete';
 import { DeletePropertyButton } from './button/modal/DeletePropertyButton';
-import { handleRelationshipCreate } from '../util/GraphUtils';
+import { handleRelationshipCreate } from '../util/EditUtils';
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
 interface GraphChartEditorVisualizationProps extends GraphChartVisualizationProps {
@@ -49,7 +49,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
       props.type == 'Relationship' &&
       props.action == 'Edit'
     ) {
-      const {type} = props.interactivity.selectedEntity;
+      const { type } = props.interactivity.selectedEntity;
       setLabelInputText(type);
       setLabel(type);
       const selectedProps = Object.keys(props.interactivity.selectedEntity.properties).map((prop) => {
@@ -104,6 +104,12 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
 
           <table>
             {properties.map((property, index) => {
+              const disabled = !(
+                typeof property.value == 'string' ||
+                typeof property.value == 'number' ||
+                property.value.toNumber !== undefined
+              );
+
               return (
                 <>
                   <tr style={{ height: 40 }}>
@@ -120,12 +126,14 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                         index={index}
                         inputs={propertyInputTexts}
                         setInputs={setPropertyInputTexts}
+                        disabled={disabled}
                       />
                     </td>
                     <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
                       <TextField
                         style={{ width: '100%' }}
                         placeholder='Value...'
+                        disabled={disabled}
                         value={property.value}
                         onChange={(e) => {
                           const newProperties = [...properties];
@@ -134,6 +142,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                         }}
                       ></TextField>
                     </td>
+
                     <td>
                       <DeletePropertyButton
                         onClick={() => {

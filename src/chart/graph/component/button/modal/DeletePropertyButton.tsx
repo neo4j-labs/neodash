@@ -9,11 +9,12 @@ export const DeletePropertyButton = ({ onClick }) => {
       aria-label='remove'
       style={{
         background: 'white',
-        color: 'black',
+        color: 'grey',
         marginTop: '-6px',
         marginLeft: '20px',
-        width: '34px',
-        height: '30px',
+        width: '26px',
+        height: '26px',
+        minHeight: '26px',
       }}
       onClick={onClick}
     >

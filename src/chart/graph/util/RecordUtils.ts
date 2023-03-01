@@ -120,7 +120,7 @@ function extractGraphEntitiesFromField(
 }
 
 export function buildGraphVisualizationObjectFromRecords(
-  records: Record<string, any>[],
+  records: any[], // Neo4jRecord[],
   nodes: Record<string, any>[],
   links: Record<string, any>[],
   nodeLabels: Record<string, any>,

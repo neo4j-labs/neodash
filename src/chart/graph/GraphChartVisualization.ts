@@ -42,9 +42,10 @@ export interface GraphChartVisualizationProps {
     appendNode: any;
     editNode: any;
     deleteNode: any;
-    appendLink: any;
     editLink: any;
     deleteLink: any;
+    setGraph: any;
+    setNodes: any;
     setLinks: any;
   };
   style: {
@@ -59,6 +60,14 @@ export interface GraphChartVisualizationProps {
     relLabelColor: any;
     defaultNodeSize: any;
     nodeIcons: any;
+    colorScheme: any;
+    nodeColorProp: any;
+    defaultNodeColor: any;
+    nodeSizeProp: any;
+    relWidthProp: any;
+    defaultRelWidth: any;
+    relColorProp: any;
+    defaultRelColor: any;
   };
   engine: {
     layout: Layout;

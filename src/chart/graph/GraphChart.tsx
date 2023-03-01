@@ -12,7 +12,7 @@ import { NeoGraphChartFitViewButton } from './component/button/GraphChartFitView
 import { buildGraphVisualizationObjectFromRecords } from './util/RecordUtils';
 import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
-import { handleExpand } from './util/GraphUtils';
+import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 
@@ -101,14 +101,14 @@ const NeoGraphChart = (props: ChartProps) => {
     }
     props.updateReportSetting && props.updateReportSetting('frozen', value);
   };
-
-  const setLinks = (links) => {
-    setData({ links: links, nodes: data.nodes });
+  const setGraph = (nodes, links) => {
+    setData({ nodes: nodes, links: links });
   };
-  const appendLink = (link) => {
-    const { links } = data;
-    links.push(link);
-    setData({ links: links, nodes: data.nodes });
+  const setNodes = (nodes) => {
+    setData({ nodes: nodes, links: data.links });
+  };
+  const setLinks = (links) => {
+    setData({ nodes: data.nodes, links: links });
   };
 
   let icons = parseNodeIconConfig(iconStyle);
@@ -165,13 +165,14 @@ const NeoGraphChart = (props: ChartProps) => {
       deleteNode: () => {
         throw 'Not Implemented';
       },
-      appendLink: appendLink,
       editLink: () => {
         throw 'Not Implemented';
       },
       deleteLink: () => {
         throw 'Not Implemented';
       },
+      setGraph: setGraph,
+      setNodes: setNodes,
       setLinks: setLinks,
     },
     style: {
@@ -186,6 +187,14 @@ const NeoGraphChart = (props: ChartProps) => {
       relLabelColor: relLabelColor,
       defaultNodeSize: defaultNodeSize,
       nodeIcons: icons,
+      colorScheme: colorScheme,
+      nodeColorProp: nodeColorProp,
+      defaultNodeColor: defaultNodeColor,
+      nodeSizeProp: nodeSizeProp,
+      relWidthProp: relWidthProp,
+      defaultRelWidth: defaultRelWidth,
+      relColorProp: relColorProp,
+      defaultRelColor: defaultRelColor,
     },
     engine: {
       layout: layouts[layout],
