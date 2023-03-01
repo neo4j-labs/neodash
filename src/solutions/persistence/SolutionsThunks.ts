@@ -181,15 +181,17 @@ const saveHiveCard = async (
     dispatch(updateHiveInformation('dbName', dbName));
 
     console.log('title: ', title);
+    let solutionId;
     if (!overwrite) {
       const saveCardResponse = await saveDemoCard({ uuid, name: title });
-      const solutionId = saveCardResponse?.data?.solution?.id;
+      solutionId = saveCardResponse?.data?.solution?.id;
       dispatch(updateHiveInformation('solutionId', solutionId));
 
       await addDeployment({ neoDashUuid: uuid, solutionId });
     }
     // updateSaveToHiveProgress(false);
     // dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
+    return { uuid: uuid, solutionId: solutionId };
   } catch (e2) {
     dispatch(createNotificationThunk('Database uploaded, but could not save Dashboard', e2));
   }
@@ -209,13 +211,26 @@ export const saveDashboardToHiveThunk =
     dbUsername,
     dbPassword
   ) =>
-  (dispatch: any) => {
-    updateSaveToHiveProgress(true);
+  async (dispatch: any) => {
+    updateSaveToHiveProgress({ flag: 'progress-bar' });
     try {
       if (dbType == 'aura') {
-        saveHiveCard(dispatch, dashboard, 'neo4j', overwrite, dbType, dbConnectionUrl, dbUsername, dbPassword);
-        updateSaveToHiveProgress(false);
-        dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
+        const hiveinfo = await saveHiveCard(
+          dispatch,
+          dashboard,
+          'neo4j',
+          overwrite,
+          dbType,
+          dbConnectionUrl,
+          dbUsername,
+          dbPassword
+        );
+        updateSaveToHiveProgress({
+          flag: 'progress-instructions',
+          dashboardUUID: hiveinfo?.uuid,
+          solutionId: hiveinfo?.solutionId,
+        });
+        // dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
       } else if (dbType == 'dump') {
         const formData = new FormData();
         const uploadUrl = config('FILE_UPLOAD_URL');
@@ -241,9 +256,23 @@ export const saveDashboardToHiveThunk =
             let { dbName } = json;
             console.log('dbName: ', dbName);
             try {
-              saveHiveCard(dispatch, dashboard, dbName, overwrite, dbType, dbConnectionUrl, dbUsername, dbPassword);
-              updateSaveToHiveProgress(false);
-              dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
+              const hiveinfo = await saveHiveCard(
+                dispatch,
+                dashboard,
+                dbName,
+                overwrite,
+                dbType,
+                dbConnectionUrl,
+                dbUsername,
+                dbPassword
+              );
+              updateSaveToHiveProgress({
+                flag: 'progress-instructions',
+                dashboardUUID: hiveinfo?.uuid,
+                solutionId: hiveinfo?.solutionId,
+                dbName: dbName,
+              });
+              // dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
             } catch (e2) {
               dispatch(createNotificationThunk('Database uploaded, but could not save Dashboard', e2));
             }

@@ -71,7 +71,12 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
   const [saveToHiveModalOpen, setSaveToHiveModalOpen] = React.useState(false);
-  const [saveToHiveProgress, setSaveToHiveProgress] = React.useState(false);
+  const [saveToHiveProgress, setSaveToHiveProgress] = React.useState({
+    flag: '',
+    dashboardUUID: '',
+    solutionId: '',
+    dbName: '',
+  });
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
   const [dashboardDatabase, setDashboardDatabase] = React.useState('neo4j');
   const [databases, setDatabases] = React.useState(['neo4j']);
@@ -314,9 +319,75 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
         }}
       />
 
-      <Dialog maxWidth={'lg'} open={saveToHiveProgress == true} aria-labelledby='form-dialog-title'>
+      <Dialog
+        maxWidth={'lg'}
+        open={saveToHiveProgress.flag.includes('progress')}
+        onClose={() => {
+          setSaveToHiveProgress({ flag: 'close', dashboardUUID: '', solutionId: '', dbName: '' });
+        }}
+        aria-labelledby='form-dialog-title'
+      >
+        <DialogTitle id='form-dialog-title'>
+          Save to Hive Progress
+          <IconButton
+            onClick={() => {
+              setSaveToHiveProgress({ flag: 'close', dashboardUUID: '', solutionId: '', dbName: '' });
+            }}
+            style={{ padding: '3px', float: 'right' }}
+          >
+            <Badge badgeContent={''}>
+              <CloseIcon />
+            </Badge>
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
-          <CircularProgress color='inherit' />
+          {saveToHiveProgress.flag == 'progress-bar' && <CircularProgress color='inherit' />}
+
+          {saveToHiveProgress.flag == 'progress-instructions' && (
+            <div>
+              <div>
+                Hive{' '}
+                <a
+                  href={`http://localhost:3000/?hivedashboarduuid=${saveToHiveProgress.dashboardUUID}`}
+                  target='_blank'
+                >
+                  dashboard
+                </a>
+              </div>
+              <br />
+              <div>
+                Hive solution{' '}
+                <a href={`http://localhost:3002/solutions/${saveToHiveProgress.solutionId}`} target='_blank'>
+                  card
+                </a>
+              </div>
+              <br />
+              {saveToHiveProgress.dbName && (
+                <div>
+                  <div>
+                    New database {saveToHiveProgress.dbName} and{' '}
+                    <a href={`http://localhost:7474/browser`} target='_blank'>
+                      browser url
+                    </a>
+                  </div>
+                  <br />
+                </div>
+              )}
+              <div>
+                Please update Hive solution{' '}
+                <a href={`http://localhost:3002/solutions/${saveToHiveProgress.solutionId}`} target='_blank'>
+                  card
+                </a>{' '}
+                info for better uses.
+                <ul>
+                  <li>Dashboard image by editing overview &gt; image. Upload image to link and copy the URL to use.</li>
+                  <li>Add demo info by editing documentation in ASCII style</li>
+                  <li>Additional owners by editing permissions</li>
+                  <li>Add usercase and vertical tags by editing overview &gt; tags</li>
+                </ul>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
