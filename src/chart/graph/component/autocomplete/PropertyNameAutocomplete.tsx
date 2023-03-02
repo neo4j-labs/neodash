@@ -2,6 +2,10 @@ import React from 'react';
 import { Autocomplete } from '@material-ui/lab';
 import { Fab, TextField, Typography } from '@material-ui/core';
 
+/**
+ * Renders an auto-complete text field for property identifiers.
+ * TODO - check that the same database is used that the component has selected.
+ */
 export const PropertyNameAutocomplete = ({
   disabled,
   index,

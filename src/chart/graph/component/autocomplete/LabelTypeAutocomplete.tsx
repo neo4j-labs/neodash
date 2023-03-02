@@ -2,14 +2,20 @@ import React from 'react';
 import { Autocomplete } from '@material-ui/lab';
 import { Fab, TextField, Typography } from '@material-ui/core';
 
+/**
+ * Renders an auto-complete text field that uses either:
+ * - The labels from the active Neo4j database.
+ * - The relationship types from the active Neo4j database.
+ * TODO - check that the same database is used that the component has selected.
+ */
 export const LabelTypeAutocomplete = ({
-  type,
+  type, // 'Node' or 'Relationship'
   input,
   setInput,
   value,
   setValue,
   records,
-  setRecords,
+  setRecords, // TODO document
   queryCallback,
 }) => {
   return (

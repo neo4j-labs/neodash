@@ -11,14 +11,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
   const fgRef = useRef();
 
   const [isDragging, setIsDragging] = React.useState(false);
-  const getCooldownTicks = () => {
-    if (props.engine.firstRun) {
-      return 100;
-    } else if (isDragging) {
-      return 1;
-    }
-    return 0;
-  };
+
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
@@ -55,11 +48,12 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       onBackgroundRightClick={() => props.interactivity.onNodeClick(undefined)}
       linkLineDash={(link) => (link.new ? [2, 1] : null)}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
-      cooldownTicks={getCooldownTicks()}
+      cooldownTicks={props.engine.cooldownTicks}
       onEngineStop={() => {
         if (props.engine.firstRun) {
           fgRef.current.zoomToFit(400);
           props.engine.setFirstRun(false);
+          props.engine.setCooldownTicks(0);
         }
       }}
       onZoom={() => {
@@ -67,9 +61,11 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       }}
       onNodeDrag={() => {
         props.interactivity.setContextMenuOpen(false);
+        props.engine.setCooldownTicks(1);
         setIsDragging(true);
       }}
       onNodeDragEnd={(node) => {
+        props.engine.setCooldownTicks(0);
         setIsDragging(false);
         if (props.interactivity.fixNodeAfterDrag) {
           node.fx = node.x;

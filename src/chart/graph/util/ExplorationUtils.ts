@@ -49,7 +49,7 @@ export const handleExpand = (id: number, type: string, dir: string, props: Graph
   const query = `
     MATCH (n)
     WHERE id(n) = $id 
-    MATCH (n)${dir == 'in' ? '<' : ''}-[r${type !== '...' ? `:\`${  type  }\`` : ''}]-${dir == 'out' ? '>' : ''}(m)
+    MATCH (n)${dir == 'in' ? '<' : ''}-[r${type !== '...' ? `:\`${type}\`` : ''}]-${dir == 'out' ? '>' : ''}(m)
     RETURN n, r, m
     `;
 
@@ -106,6 +106,7 @@ export const handleExpand = (id: number, type: string, dir: string, props: Graph
       }
     });
     props.data.setGraph(newNodes, newLinks);
+    props.engine.setCooldownTicks(50);
   });
 };
 
@@ -114,27 +115,27 @@ export const mergeDatabaseStatCountsWithCountsInView = (id, stats, links) => {
   const directions = ['out', 'in', 'any'];
   const mergedRelCounts = {};
   directions.map((d) => {
-    mergedRelCounts[`...` + `___${  d}`] = 0;
+    mergedRelCounts[`...` + `___${d}`] = 0;
   });
   stats.forEach((item) => {
-    const entry = `${item._fields[0]  }___${  item._fields[1]}`;
+    const entry = `${item._fields[0]}___${item._fields[1]}`;
     if (mergedRelCounts[entry] === undefined) {
       mergedRelCounts[entry] = 0;
     }
     mergedRelCounts[entry] += parseInt(item._fields[2]);
-    mergedRelCounts[`...` + `___${  item._fields[1]}`] += parseInt(item._fields[2]);
+    mergedRelCounts[`...` + `___${item._fields[1]}`] += parseInt(item._fields[2]);
   });
   // Subtract if we find links in the view that are already visible...
   links.forEach((item) => {
     if (item.source.id == id) {
-      mergedRelCounts[`${item.type  }___` + `out`] -= 1;
-      mergedRelCounts[`${item.type  }___` + `any`] -= 1;
+      mergedRelCounts[`${item.type}___` + `out`] -= 1;
+      mergedRelCounts[`${item.type}___` + `any`] -= 1;
       mergedRelCounts['...' + '___' + 'out'] -= 1;
       mergedRelCounts['...' + '___' + 'any'] -= 1;
     }
     if (item.target.id == id) {
-      mergedRelCounts[`${item.type  }___` + `in`] -= 1;
-      mergedRelCounts[`${item.type  }___` + `any`] -= 1;
+      mergedRelCounts[`${item.type}___` + `in`] -= 1;
+      mergedRelCounts[`${item.type}___` + `any`] -= 1;
       mergedRelCounts['...' + '___' + 'in'] -= 1;
       mergedRelCounts['...' + '___' + 'any'] -= 1;
     }

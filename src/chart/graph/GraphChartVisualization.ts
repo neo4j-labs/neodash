@@ -11,6 +11,8 @@ export const layouts = {
 
 type Layout = 'td' | 'bu' | 'lr' | 'rl' | 'radialout' | 'radialin';
 
+export const defaultNodeColor = 'lightgrey'; // Color of nodes without labels
+
 /**
  * A node or relationship as selected in the graph.
  */
@@ -47,6 +49,8 @@ export interface GraphChartVisualizationProps {
     setGraph: any;
     setNodes: any;
     setLinks: any;
+    setNodeLabels: any;
+    setLinkTypes: any;
   };
   style: {
     width: number;
@@ -72,6 +76,8 @@ export interface GraphChartVisualizationProps {
   engine: {
     layout: Layout;
     queryCallback: any;
+    cooldownTicks: number;
+    setCooldownTicks: any;
     firstRun: boolean;
     setFirstRun: any;
     selection: any;

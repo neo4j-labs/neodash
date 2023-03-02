@@ -1,0 +1,36 @@
+import { extensionEnabled, getReportTypes } from '../extensions/ExtensionUtils';
+import { useStyleRules } from '../extensions/styling/StyleRuleEvaluator';
+
+/**
+ * Gets the user specified settings and merges it with the defaults from ReportConfig.tsx.
+ * @param userSettings the user specified settings for the report.
+ * @param extensions the extensions enabled for the dashboard.
+ * @param getGlobalParameter a callback to get global parameters for the dashboard.
+ * @returns  a merged list of user settings and defaults as provided in the configuration.
+ */
+export const getSettings = (
+  userSettings: Record<string, any> | undefined,
+  extensions: Record<string, any> | undefined,
+  getGlobalParameter: any
+) => {
+  const settings = {};
+  const config = getReportTypes(extensions).graph.settings;
+
+  if (userSettings == undefined) {
+    alert('no');
+    return {};
+  } 
+    Object.keys(config).map((key) => {
+      settings[key] = userSettings.value !== undefined ? userSettings.value : config[key].default;
+    });
+
+    settings.styleRules = useStyleRules(
+      extensionEnabled(extensions, 'styling'),
+      userSettings && userSettings.styleRules,
+      getGlobalParameter
+    );
+    settings.actionsRules =
+      extensionEnabled(extensions, 'actions') && settings && userSettings.actionsRules ? userSettings.actionsRules : [];
+    return settings;
+  
+};

@@ -2,6 +2,9 @@ import React from 'react';
 import { Fab, TextField, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
+/**
+ * Returns a button to delete a property entry from the table inside the GraphChartEditModal.
+ */
 export const DeletePropertyButton = ({ onClick }) => {
   return (
     <Fab

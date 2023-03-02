@@ -228,7 +228,8 @@ export const REPORT_TYPES = {
       drilldownLink: {
         label: 'Drilldown Icon Link',
         type: SELECTION_TYPES.TEXT,
-        default: 'http://bloom.neo4j.io',
+        placeholder: 'http://bloom.neo4j.io',
+        default: '',
       },
       hideSelections: {
         label: 'Hide Property Selection',
@@ -263,7 +264,8 @@ export const REPORT_TYPES = {
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
-        default: '{label : url}',
+        placeholder: '{label : url}',
+        default: '',
       },
       refreshRate: {
         label: 'Refresh rate (seconds)',
@@ -874,12 +876,12 @@ export const REPORT_TYPES = {
       defaultRelColor: {
         label: 'Relationship Color',
         type: SELECTION_TYPES.TEXT,
-        default: '#666',
+        default: '#a0a0a0',
       },
       defaultRelWidth: {
         label: 'Relationship Width',
         type: SELECTION_TYPES.NUMBER,
-        default: 3.5,
+        default: 1,
       },
       relColorProp: {
         label: 'Relationship Color Property',
