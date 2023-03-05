@@ -1,5 +1,6 @@
 import { extractNodePropertiesFromRecords } from './ReportRecordProcessing';
 import isEqual from 'lodash.isequal';
+import { isNode } from 'neo4j-driver-core/lib/graph-types.js';
 
 export enum QueryStatus {
   NO_QUERY, // No query specified
@@ -125,18 +126,53 @@ export function runCypherQuery(
             'The transaction has not completed within the specified timeout (dbms.transaction.timeout).'
         )
       ) {
+        setStatus(QueryStatus.TIMED_OUT);
         setRecords([{ error: e.message }]);
         transaction.rollback();
-        setStatus(QueryStatus.TIMED_OUT);
         return e.message;
       }
 
+      setStatus(QueryStatus.ERROR);
       // Process other errors.
       if (setRecords) {
         setRecords([{ error: e.message }]);
       }
       transaction.rollback();
-      setStatus(QueryStatus.ERROR);
       return e.message;
     });
+}
+
+/**
+ * TODO: adapt
+ * @param records List of records got back from the Driver
+ * @param fieldIndex index of the field i want to check that is just nodes
+ * @returns True if all the records are Node Objects
+ */
+export function recordsAllNodes(records, fieldIndex) {
+  try {
+    let res = records.every((record) => {
+      return record._fields && isNode(record._fields[fieldIndex]);
+    });
+    return res;
+  } catch (error) {
+    // In any case of error, log and continue with false
+    console.error(error);
+    return false;
+  }
+}
+
+/**
+ * Ideally, we want to have a Node/Relationship representation indipendent from the return
+ * that the driver gets back.
+ * @param records List of records got from the driver
+ * @returns List of Object that are parsed from the Node object received from the driver
+ */
+export function parseNodesRecords(records, fieldIndex = 0) {
+  let res = records.map((record) => {
+    let { identity, labels, properties } = record._fields[fieldIndex];
+    // Preventing high/low fields by casting to its primitive type
+    identity = identity.toNumber();
+    return { id: identity, labels: labels, properties: properties };
+  });
+  return res;
 }

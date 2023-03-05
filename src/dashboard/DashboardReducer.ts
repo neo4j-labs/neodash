@@ -3,6 +3,7 @@
  */
 
 import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
+import { extensionsReducer } from '../extensions/ExtensionReducer';
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
 import {
@@ -56,6 +57,16 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     };
   }
 
+  // Settings-specific updates are deferred to the page reducer.
+  if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
+    const enrichedPayload = update(payload, { extensionsConfig: state.extensionsConfig });
+    const enrichedAction = { type, payload: enrichedPayload };
+    return {
+      ...state,
+      extensionsConfig: extensionsReducer(state, enrichedAction),
+    };
+  }
+
   // Global dashboard updates are handled here.
   switch (type) {
     case RESET_DASHBOARD_STATE: {
@@ -99,21 +110,6 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
       return {
         ...state,
         pages: state.pages,
-      };
-    }
-    case SET_EXTENSION_OPENED: {
-      // Settign the extension opened to trigger its rendering
-      const { name, opened } = payload;
-      let extensionsConfig = state.extensionsConfig ? { ...state.extensionsConfig } : {};
-      // Managing first creation
-      if (extensionsConfig[name]) {
-        extensionsConfig[name].opened = opened;
-      } else {
-        extensionsConfig[name] = { opened: opened };
-      }
-      return {
-        ...state,
-        extensionsConfig: extensionsConfig,
       };
     }
     default: {

@@ -20,8 +20,8 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
-import NeoAlertModal from '../../extensions/alert/NeoAlertModal';
-import { AlertDrawer } from '../../extensions/alert/AlertDrawer';
+import NeoAlertModal from '../../extensions/alert/NeoAlertDrawerButton';
+import AlertDrawer from '../../extensions/alert/AlertDrawer';
 
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
