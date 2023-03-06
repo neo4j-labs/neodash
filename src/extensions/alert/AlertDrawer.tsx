@@ -11,8 +11,16 @@ import { parseNodesRecords } from '../../report/ReportQueryRunner';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { setExtensionDatabase } from '../ExtensionsActions';
+import { applicationGetConnectionDatabase } from '../../application/ApplicationSelectors';
 // The sidebar that appears on the left side of the dashboard.
-export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseListFromNeo4j, onDatabaseChanged }) => {
+export const AlertDrawer = ({
+  _extensionSettings,
+  query,
+  database,
+  applicationDatabase,
+  loadDatabaseListFromNeo4j,
+  onDatabaseChanged,
+}) => {
   const [records, setRecords] = useState([]);
   // List of records parsed from the result
   const [parsedRecords, setParsedRecords] = useState([]);
@@ -27,6 +35,9 @@ export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseL
 
   // Setting up list of databases for settings
   useEffect(() => {
+    if (database === '') {
+      onDatabaseChanged(applicationDatabase ? applicationDatabase : 'neo4j');
+    }
     if (!databaseListLoaded) {
       loadDatabaseListFromNeo4j(driver, (result) => {
         let index = result.indexOf('system');
@@ -35,9 +46,7 @@ export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseL
           result.splice(index, 1); // 2nd parameter means remove one item only
         }
         setDatabaseList(result);
-        if (database === '') {
-          onDatabaseChanged(result[0]);
-        }
+        // At the start, set the DB of the drawer to the same db of the whole application
       });
       setDatabaseListLoaded(true);
     }
@@ -143,6 +152,7 @@ const mapStateToProps = (state) => ({
   _extensionSettings: getExtensionSettings(state, 'alerts'),
   query: getExtensionQuery(state, 'alerts'),
   database: getExtensionDatabase(state, 'alerts'),
+  applicationDatabase: applicationGetConnectionDatabase(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

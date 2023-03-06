@@ -7,8 +7,12 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 import { DialogContent } from '@material-ui/core';
+import NeoGraphChart from '../../../chart/graph/GraphChart';
+import NeoReport from '../../../report/Report';
+import { connect } from 'react-redux';
+import { getExtensionDatabase } from '../../ExtensionsSelectors';
 
-const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen }) => {
+const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen, database }) => {
   const handleClose = () => {
     setModalOpen(false);
   };
@@ -37,6 +41,14 @@ const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen }) => {
               <pre>{JSON.stringify(record, null, 2)}</pre>
               <br />
             </div>
+            <div style={{ width: 600, height: 600 }}>
+              <NeoReport
+                database={database}
+                query={`MATCH (n) WHERE id(n) = ${record.id} OPTIONAL MATCH p=(n)--() RETURN n,p`}
+                ChartType={NeoGraphChart}
+                type={'graph'}
+              ></NeoReport>
+            </div>
           </DialogContent>
         </Dialog>
       ) : (
@@ -45,5 +57,9 @@ const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen }) => {
     </div>
   );
 };
+const mapStateToProps = (state) => ({
+  database: getExtensionDatabase(state, 'alerts'),
+});
 
-export default AlertNodeInspectionModal;
+const mapDispatchToProps = (_dispatch) => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(AlertNodeInspectionModal);

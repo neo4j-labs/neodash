@@ -10,6 +10,7 @@ export const getSessionParameters = (state: any) => state.application.sessionPar
 /*
 The database related to a card is, at its start, the same as the one defined inside the application connection field, however
 a user can modify the database that is used by a card with a new option inside the card itself.
+TODO: too overloaded, define two different functions based on the scope (global db or card specifi db)
  */
 export const getDatabase = (state: any, pageNumber: number, cardIndex: number) => {
   if (state == undefined || pageNumber == undefined || cardIndex == undefined) {
