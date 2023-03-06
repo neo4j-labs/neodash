@@ -91,10 +91,10 @@ export interface GraphChartVisualizationProps {
     queryCallback: (query: string, parameters: Record<string, any>, setRecords: any) => void;
     cooldownTicks: number;
     setCooldownTicks: (ticks: number) => void;
-    selection: Record<string, any>;
+    selection: Record<string, any> | undefined;
     setSelection: (selection: Record<string, any>) => void;
-    fields: string[][];
-    setFields: (fields: string[][]) => void;
+    fields: any;
+    setFields: ((fields: any) => void) | undefined;
     recenterAfterEngineStop: boolean;
     setRecenterAfterEngineStop: (value: boolean) => void;
   };
@@ -113,7 +113,7 @@ export interface GraphChartVisualizationProps {
     showPropertiesOnClick: boolean;
     showPropertyInspector: boolean;
     setPropertyInspectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    createNotification: (title: string, message: string) => void;
+    createNotification: ((title: string, message: string) => void) | undefined;
     fixNodeAfterDrag: boolean;
     onNodeClick: (node) => void;
     onNodeRightClick: (node, event) => void;

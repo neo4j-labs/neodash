@@ -267,6 +267,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      lockable: {
+        label: 'Enable locking node positions',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       autorun: {
         label: 'Auto-run query',
         type: SELECTION_TYPES.LIST,
