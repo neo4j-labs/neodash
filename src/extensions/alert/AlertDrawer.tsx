@@ -5,7 +5,7 @@ import { HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../../config/ReportConfig
 import { QueryStatus, recordsAllNodes, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { connect } from 'react-redux';
-import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionSelectors';
+import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionsSelectors';
 import AlertNodeCard from './listElement/AlertNodeCard';
 import { parseNodesRecords } from '../../report/ReportQueryRunner';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';

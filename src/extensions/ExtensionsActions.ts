@@ -27,3 +27,9 @@ export const setExtensionDatabase = (extensionName: string, databaseName: string
   type: UPDATE_EXTENSION_DATABASE,
   payload: { extensionName, databaseName },
 });
+
+export const UPDATE_EXTENSION_TITLE = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_TITLE';
+export const setExtensionTitle = (extensionName: string, title: string) => ({
+  type: UPDATE_EXTENSION_TITLE,
+  payload: { extensionName, title },
+});

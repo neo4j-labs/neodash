@@ -7,6 +7,7 @@ import {
   UPDATE_EXTENSION_OPENED,
   UPDATE_EXTENSION_QUERY,
   UPDATE_EXTENSION_SETTINGS,
+  UPDATE_EXTENSION_TITLE,
 } from './ExtensionsActions';
 
 export const NEODASH_VERSION = '2.2';
@@ -55,6 +56,12 @@ export const extensionsReducer = (state = initialState, action: { type: any; pay
     case UPDATE_EXTENSION_DATABASE: {
       const { extensionName, databaseName, extensionsConfig } = payload;
       extensionsConfig[extensionName].database = databaseName;
+      return extensionsConfig;
+    }
+
+    case UPDATE_EXTENSION_TITLE: {
+      const { extensionName, title, extensionsConfig } = payload;
+      extensionsConfig[extensionName].title = title;
       return extensionsConfig;
     }
     default: {

@@ -9,7 +9,7 @@ import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { debounce, DialogContent, MenuItem } from '@material-ui/core';
-import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionSelectors';
+import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionsSelectors';
 import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../ExtensionsActions';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';

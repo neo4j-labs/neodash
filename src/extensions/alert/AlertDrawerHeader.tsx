@@ -1,11 +1,17 @@
-import { IconButton, TextField, Tooltip } from '@material-ui/core';
-import React from 'react';
+import { debounce, IconButton, TextField, Tooltip } from '@material-ui/core';
+import React, { useCallback } from 'react';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AlertSettingsModal from './AlertSettingsModal';
+import { getExtensionTitle } from '../ExtensionsSelectors';
+import { setExtensionTitle } from '../ExtensionsActions';
+import { connect } from 'react-redux';
 
 // The sidebar that appears on the left side of the dashboard.
-export const AlertDrawerHeader = ({ databaseList }) => {
+export const AlertDrawerHeader = ({ databaseList, title, onTitleUpdate }) => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [headerTitle, setHeaderTitle] = React.useState(title);
+
+  const debouncedTitleUpdate = useCallback(debounce(onTitleUpdate, 250), []);
 
   return (
     <table style={{ width: '100%' }}>
@@ -18,6 +24,11 @@ export const AlertDrawerHeader = ({ databaseList }) => {
               placeholder='Drawer Name...'
               className={'no-underline large'}
               maxRows={4}
+              value={headerTitle}
+              onChange={(event) => {
+                setHeaderTitle(event.target.value);
+                debouncedTitleUpdate(event.target.value);
+              }}
             />
           </td>
           <td>
@@ -43,4 +54,14 @@ export const AlertDrawerHeader = ({ databaseList }) => {
   );
 };
 
-export default AlertDrawerHeader;
+const mapStateToProps = (state) => ({
+  title: getExtensionTitle(state, 'alerts'),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onTitleUpdate: (title: any) => {
+    dispatch(setExtensionTitle('alerts', title));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AlertDrawerHeader);

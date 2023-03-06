@@ -17,3 +17,8 @@ export const getExtensionDatabase = (state: any, name: string) => {
   let res = state.dashboard.extensionsConfig[name];
   return res != undefined && res.database ? res.database : '';
 };
+
+export const getExtensionTitle = (state: any, name: string) => {
+  let res = state.dashboard.extensionsConfig[name];
+  return res != undefined && res.title ? res.title : '';
+};

@@ -3,7 +3,7 @@ import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { setExtensionOpened } from '../ExtensionsActions';
-import { getExtensionOpened } from '../ExtensionSelectors';
+import { getExtensionOpened } from '../ExtensionsSelectors';
 
 const NeoAlertModal = ({ isOpen, setAlertDrawerOpened }) => {
   const handleClick = () => {
