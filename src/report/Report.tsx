@@ -220,6 +220,8 @@ export const NeoReport = ({
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          fields={fields}
+          setFields={setFields}
         />
       </div>
     );
@@ -255,6 +257,8 @@ export const NeoReport = ({
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          fields={fields}
+          setFields={setFields}
         />
       </div>
     );

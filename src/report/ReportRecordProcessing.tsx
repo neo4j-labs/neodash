@@ -22,6 +22,31 @@ export function extractNodePropertiesFromRecords(records: any) {
   return fields.length > 0 ? fields : [];
 }
 
+/**
+ * Merges an existing set of fields (node labels and their properties) with a new one.
+ * This is used when we explore the graph and want to update the report footer.
+ * @param oldFields a list of string[].
+ * @param newFields  a list of string[].
+ * @returns a list of string[].
+ */
+export function mergeNodePropsFieldsLists(oldFields: any[], newFields: any[]) {
+  const fields = [...oldFields];
+  newFields.forEach((newEntry) => {
+    const label = newEntry[0];
+    const existingEntry = fields.filter((f) => f[0] == label)[0];
+    if (!existingEntry) {
+      fields.push(newEntry);
+    } else {
+      newEntry.slice(1).forEach((element) => {
+        if (!element in existingEntry) {
+          existingEntry.push(element);
+        }
+      });
+    }
+  });
+  return fields;
+}
+
 export function saveNodePropertiesToDictionary(field, fieldsDict) {
   // TODO - instead of doing this discovery ad-hoc, we could also use CALL db.schema.nodeTypeProperties().
   if (field == undefined) {
@@ -111,7 +136,7 @@ export function RenderRelationshipChip(text, direction = undefined, color = 'lig
         paddingLeft: 5,
         clipPath: direction == undefined ? 'none' : direction ? rightRelationship : leftRelationship,
       }}
-      label={`${text  } `}
+      label={`${text} `}
     />
   );
 }

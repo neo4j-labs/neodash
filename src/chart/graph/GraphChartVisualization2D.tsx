@@ -10,12 +10,11 @@ import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtil
 export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
   const fgRef = useRef();
 
-  const [isDragging, setIsDragging] = React.useState(false);
-
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
   props.interactivity.zoomToFit = () => fgRef.current.zoomToFit(400);
+
   return (
     <ForceGraph2D
       ref={fgRef}
@@ -50,10 +49,10 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={props.engine.cooldownTicks}
       onEngineStop={() => {
-        if (props.engine.firstRun) {
+        props.engine.setCooldownTicks(0);
+        if (props.engine.recenterAfterEngineStop) {
           fgRef.current.zoomToFit(400);
-          props.engine.setFirstRun(false);
-          props.engine.setCooldownTicks(0);
+          props.engine.setRecenterAfterEngineStop(false);
         }
       }}
       onZoom={() => {
@@ -62,11 +61,10 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       onNodeDrag={() => {
         props.interactivity.setContextMenuOpen(false);
         props.engine.setCooldownTicks(1);
-        setIsDragging(true);
+        props.engine.setRecenterAfterEngineStop(false);
       }}
       onNodeDragEnd={(node) => {
         props.engine.setCooldownTicks(0);
-        setIsDragging(false);
         if (props.interactivity.fixNodeAfterDrag) {
           node.fx = node.x;
           node.fy = node.y;

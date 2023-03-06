@@ -52,7 +52,7 @@ const NeoGraphChart = (props: ChartProps) => {
   const [selectedEntity, setSelectedEntity] = useState(undefined);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
-  const [firstRun, setFirstRun] = useState(true);
+  const [recenterAfterEngineStop, setRecenterAfterEngineStop] = useState(true);
   const [cooldownTicks, setCooldownTicks] = useState(100);
 
   let [nodeLabels, setNodeLabels] = useState({});
@@ -62,7 +62,7 @@ const NeoGraphChart = (props: ChartProps) => {
   const setLayoutFrozen = (value) => {
     if (value == false) {
       setCooldownTicks(100);
-      setFirstRun(true);
+      setRecenterAfterEngineStop(true);
       setNodePositions({});
     }
     props.updateReportSetting && props.updateReportSetting('frozen', value);
@@ -81,8 +81,7 @@ const NeoGraphChart = (props: ChartProps) => {
   let icons = parseNodeIconConfig(settings.iconStyle);
   const colorScheme = categoricalColorSchemes[settings.nodeColorScheme];
 
-  const generateVisualizationDataGraph = (records, chartProps) => {
-    console.log(chartProps);
+  const generateVisualizationDataGraph = (records, _) => {
     let nodes: Record<string, any>[] = [];
     let links: Record<string, any>[] = [];
     const extractedGraphFromRecords = buildGraphVisualizationObjectFromRecords(
@@ -168,9 +167,14 @@ const NeoGraphChart = (props: ChartProps) => {
       queryCallback: props.queryCallback,
       cooldownTicks: cooldownTicks,
       setCooldownTicks: setCooldownTicks,
-      firstRun: firstRun,
-      setFirstRun: setFirstRun,
       selection: props.selection,
+      setSelection: () => {
+        throw 'NotImplemented';
+      },
+      fields: props.fields,
+      setFields: props.setFields,
+      recenterAfterEngineStop: recenterAfterEngineStop,
+      setRecenterAfterEngineStop: setRecenterAfterEngineStop,
     },
     interactivity: {
       layoutFrozen: frozen,

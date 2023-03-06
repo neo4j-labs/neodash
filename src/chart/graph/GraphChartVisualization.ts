@@ -17,18 +17,24 @@ export const defaultNodeColor = 'lightgrey'; // Color of nodes without labels
  * A node or relationship as selected in the graph.
  */
 export interface GraphEntity {
-  labels: string[];
-  mainLabel: string; // The main label assigned to this node.
-  type: string;
   properties: any;
   id: string;
+}
+
+export interface Node extends GraphEntity {
+  labels: string[];
+  mainLabel: string;
   x?: number;
   y?: number;
   fx?: number;
   fy?: number;
+}
+
+export interface Link extends GraphEntity {
+  type: string;
   width?: number;
-  source?: GraphEntity;
-  target?: GraphEntity;
+  source?: Node;
+  target?: Node;
 }
 
 /**
@@ -36,21 +42,21 @@ export interface GraphEntity {
  */
 export interface GraphChartVisualizationProps {
   data: {
-    nodes: any[];
+    nodes: Node[];
     nodeLabels: Record<string, any>;
-    links: any[];
+    links: Link[];
     linkTypes: Record<string, any>;
     parameters: Record<string, any>;
-    appendNode: any;
-    editNode: any;
-    deleteNode: any;
-    editLink: any;
-    deleteLink: any;
-    setGraph: any;
-    setNodes: any;
-    setLinks: any;
-    setNodeLabels: any;
-    setLinkTypes: any;
+    appendNode: (node) => void;
+    editNode: (node) => void;
+    deleteNode: (node) => void;
+    editLink: (link) => void;
+    deleteLink: (link) => void;
+    setGraph: (nodes, links) => void;
+    setNodes: (nodes) => void;
+    setLinks: (links) => void;
+    setNodeLabels: (labels) => void;
+    setLinkTypes: (types) => void;
   };
   style: {
     width: number;
@@ -58,58 +64,61 @@ export interface GraphChartVisualizationProps {
     backgroundColor: any;
     linkDirectionalParticles?: number;
     linkDirectionalParticleSpeed: number;
-    nodeLabelFontSize: any;
-    nodeLabelColor: any;
-    relLabelFontSize: any;
-    relLabelColor: any;
-    defaultNodeSize: any;
-    nodeIcons: any;
-    colorScheme: any;
-    nodeColorProp: any;
-    defaultNodeColor: any;
-    nodeSizeProp: any;
-    relWidthProp: any;
-    defaultRelWidth: any;
-    relColorProp: any;
-    defaultRelColor: any;
+    nodeLabelFontSize: number;
+    nodeLabelColor: string;
+    relLabelFontSize: number;
+    relLabelColor: string;
+    defaultNodeSize: number;
+    nodeIcons: Record<string, any>;
+    colorScheme: Record<string, any>;
+    nodeColorProp: string;
+    defaultNodeColor: string;
+    nodeSizeProp: string;
+    relWidthProp: string;
+    defaultRelWidth: number;
+    relColorProp: string;
+    defaultRelColor: string;
   };
   engine: {
     layout: Layout;
-    queryCallback: any;
+    queryCallback: (query: string, parameters: Record<string, any>, setRecords: any) => void;
     cooldownTicks: number;
-    setCooldownTicks: any;
-    firstRun: boolean;
-    setFirstRun: any;
-    selection: any;
+    setCooldownTicks: (ticks: number) => void;
+    selection: Record<string, any>;
+    setSelection: (selection: Record<string, any>) => void;
+    fields: string[][];
+    setFields: (fields: string[][]) => void;
+    recenterAfterEngineStop: boolean;
+    setRecenterAfterEngineStop: (value: boolean) => void;
   };
   interactivity: {
     layoutFrozen: boolean;
     setLayoutFrozen: React.Dispatch<React.SetStateAction<boolean>>;
     nodePositions: Record<string, any>;
-    setNodePositions: any;
+    setNodePositions: (positions: any[]) => void;
     showPropertiesOnHover: boolean;
     showPropertiesOnClick: boolean;
     showPropertyInspector: boolean;
     setPropertyInspectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    createNotification: any;
+    createNotification: (title: string, message: string) => void;
     fixNodeAfterDrag: boolean;
-    onNodeClick: any;
-    onNodeRightClick: any;
-    onRelationshipClick: any;
-    onRelationshipRightClick: any;
-    setGlobalParameter: any;
-    handleExpand: any;
-    zoomToFit?: any;
+    onNodeClick: (node) => void;
+    onNodeRightClick: (node, event) => void;
+    onRelationshipClick: (rel) => void;
+    onRelationshipRightClick: (rel, event) => void;
+    setGlobalParameter: (name: string, value: string) => void;
+    handleExpand: (id, type, dir, properties) => void;
+    zoomToFit: () => void;
     drilldownLink: string;
     selectedEntity?: GraphEntity;
-    setSelectedEntity: any;
-    contextMenuOpen: any;
-    setContextMenuOpen: any;
-    clickPosition: any;
-    setClickPosition: any;
+    setSelectedEntity: (entity) => void;
+    contextMenuOpen: boolean;
+    setContextMenuOpen: (boolean) => void;
+    clickPosition: Record<string, any>;
+    setClickPosition: (pos) => void;
   };
   extensions: {
-    styleRules: any;
-    actionsRules: any;
+    styleRules: any[];
+    actionsRules: any[];
   };
 }

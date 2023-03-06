@@ -1,5 +1,6 @@
+import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import { buildGraphVisualizationObjectFromRecords } from './RecordUtils';
+import { buildGraphVisualizationObjectFromRecords, injectNewRecordsIntoGraphVisualization } from './RecordUtils';
 import { Direction, mergeLinksLists as mergeGraphEntityLists, recomputeCurvatures } from './RelUtils';
 
 export const getNodeRelationshipCountsQuery = `MATCH (b)
@@ -54,35 +55,11 @@ export const handleExpand = (id: number, type: string, dir: string, props: Graph
     `;
 
   props.engine.queryCallback(query, { id: id }, (records) => {
-    // We should probably just maintain these in the state...
-    const nodesMap = {};
-    props.data.nodes.forEach((node) => {
-      nodesMap[node.id] = node;
-    });
-    const linksMap = {};
-    props.data.links.forEach((link) => {
-      linksMap[link.id] = link;
-    });
-
-    const { nodes, links } = buildGraphVisualizationObjectFromRecords(
-      records,
-      { ...nodesMap },
-      {},
-      props.data.nodeLabels,
-      props.data.linkTypes,
-      props.style.colorScheme,
-      props.style.nodeColorProp,
-      props.style.defaultNodeColor,
-      props.style.nodeSizeProp,
-      props.style.defaultNodeSize,
-      props.style.relWidthProp,
-      props.style.defaultRelWidth,
-      props.style.relColorProp,
-      props.style.defaultRelColor,
-      props.extensions.styleRules,
-      props.interactivity.nodePositions,
-      props.interactivity.layoutFrozen
-    );
+    if (records && records[0] && records[0].error) {
+      props.interactivity.createNotification('Error', records[0].error);
+      return;
+    }
+    const { nodes, links, nodesMap, linksMap } = injectNewRecordsIntoGraphVisualization(records, props);
 
     const newNodes = [...props.data.nodes];
     nodes.forEach((n) => {
@@ -105,7 +82,7 @@ export const handleExpand = (id: number, type: string, dir: string, props: Graph
         newLinks.push(n);
       }
     });
-    props.data.setGraph(newNodes, newLinks);
+    props.data.setGraph(newNodes, recomputeCurvatures(newLinks));
     props.engine.setCooldownTicks(50);
   });
 };

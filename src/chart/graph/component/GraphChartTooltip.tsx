@@ -6,9 +6,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import { Card, Fab, Tooltip } from '@material-ui/core';
 import ReactDOMServer from 'react-dom/server';
-import { GraphEntity } from '../GraphChartVisualization';
+import { GraphEntity, Link } from '../GraphChartVisualization';
+import { Node } from '../GraphChartVisualization';
 
-export function getTooltip(entity: GraphEntity) {
+export function getTooltip(entity: Node | Link) {
   const tooltip = (
     <Card>
       <b style={{ padding: '10px' }}>

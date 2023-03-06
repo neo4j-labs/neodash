@@ -1,6 +1,8 @@
 import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
+import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
-import { assignCurvatureToLink, getCurvature } from './RelUtils';
+import { GraphChartVisualizationProps } from '../GraphChartVisualization';
+import { assignCurvatureToLink, getCurvature, recomputeCurvatures } from './RelUtils';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -187,4 +189,50 @@ export function buildGraphVisualizationObjectFromRecords(
     nodes: nodesList,
     links: linksList.flat(),
   };
+}
+
+/**
+ * Utility function to inject new records into an existing visualization while it already exists.
+ * This is used to enable graph interactivity (e.g. exploration, editing).
+ * @param records a new set of Neo4j records.
+ * @param props properties of the existing graph visualization.
+ */
+export function injectNewRecordsIntoGraphVisualization(
+  records: any[], // Neo4jRecord[],
+  props: GraphChartVisualizationProps
+) {
+  // We should probably just maintain these in the state...
+  const nodesMap = {};
+  props.data.nodes.forEach((node) => {
+    nodesMap[node.id] = node;
+  });
+  const linksMap = {};
+  props.data.links.forEach((link) => {
+    linksMap[link.id] = link;
+  });
+  const newFields = extractNodePropertiesFromRecords(records);
+  const mergedFields = mergeNodePropsFieldsLists(props.engine.fields, newFields);
+  props.engine.setFields(mergedFields);
+
+  const { nodes, links } = buildGraphVisualizationObjectFromRecords(
+    records,
+    { ...nodesMap },
+    {},
+    props.data.nodeLabels,
+    props.data.linkTypes,
+    props.style.colorScheme,
+    props.style.nodeColorProp,
+    props.style.defaultNodeColor,
+    props.style.nodeSizeProp,
+    props.style.defaultNodeSize,
+    props.style.relWidthProp,
+    props.style.defaultRelWidth,
+    props.style.relColorProp,
+    props.style.defaultRelColor,
+    props.extensions.styleRules,
+    props.interactivity.nodePositions,
+    props.interactivity.layoutFrozen
+  );
+
+  return { nodes, links, nodesMap, linksMap };
 }

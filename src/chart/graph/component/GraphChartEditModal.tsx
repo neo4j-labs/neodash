@@ -13,7 +13,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import { LabelTypeAutocomplete } from './autocomplete/LabelTypeAutocomplete';
 import { DeletePropertyButton } from './button/modal/DeletePropertyButton';
-import { handleRelationshipCreate } from '../util/EditUtils';
+import {
+  handleNodeCreate,
+  handleNodeDelete,
+  handleNodeEdit,
+  handleRelationshipCreate,
+  handleRelationshipDelete,
+  handleRelationshipEdit,
+} from '../util/EditUtils';
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
 interface GraphChartEditorVisualizationProps extends GraphChartVisualizationProps {
@@ -192,15 +199,29 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                 }
               });
 
-              handleRelationshipCreate(
-                props.interactivity.selectedEntity,
-                label,
-                newProperties,
-                props.selectedNode,
-                props.engine,
-                props.interactivity,
-                props.data
-              );
+              if (props.action == 'Create' && props.type == 'Node') {
+                handleNodeCreate();
+              } else if (props.action == 'Create' && props.type == 'Relationship') {
+                handleRelationshipCreate(
+                  props.interactivity.selectedEntity,
+                  label,
+                  newProperties,
+                  props.selectedNode,
+                  props.engine,
+                  props.interactivity,
+                  props.data
+                );
+              } else if (props.action == 'Edit' && props.type == 'Node') {
+                const labels = label.split(',').map((l) => l.trim());
+                handleNodeEdit(props.interactivity.selectedEntity, labels, newProperties, props);
+              } else if (props.action == 'Edit' && props.type == 'Relationship') {
+                handleRelationshipEdit();
+              } else if (props.action == 'Delete' && props.type == 'Node') {
+                handleNodeDelete();
+              } else if (props.action == 'Delete' && props.type == 'Relationship') {
+                handleRelationshipDelete();
+              }
+
               props.setDialogOpen(false);
               setProperties([{ name: '', value: '' }]);
             }}

@@ -13,24 +13,22 @@ export const getSettings = (
   extensions: Record<string, any> | undefined,
   getGlobalParameter: any
 ) => {
-  const settings = {};
-  const config = getReportTypes(extensions).graph.settings;
+  const settings: Record<string, any> = {};
+  const config: Record<string, any> = getReportTypes(extensions).graph.settings;
 
   if (userSettings == undefined) {
-    alert('no');
     return {};
-  } 
-    Object.keys(config).map((key) => {
-      settings[key] = userSettings.value !== undefined ? userSettings.value : config[key].default;
-    });
+  }
+  Object.keys(config).map((key) => {
+    settings[key] = userSettings.value !== undefined ? userSettings.value : config[key].default;
+  });
 
-    settings.styleRules = useStyleRules(
-      extensionEnabled(extensions, 'styling'),
-      userSettings && userSettings.styleRules,
-      getGlobalParameter
-    );
-    settings.actionsRules =
-      extensionEnabled(extensions, 'actions') && settings && userSettings.actionsRules ? userSettings.actionsRules : [];
-    return settings;
-  
+  settings.styleRules = useStyleRules(
+    extensionEnabled(extensions, 'styling'),
+    userSettings && userSettings.styleRules,
+    getGlobalParameter
+  );
+  settings.actionsRules =
+    extensionEnabled(extensions, 'actions') && settings && userSettings.actionsRules ? userSettings.actionsRules : [];
+  return settings;
 };
