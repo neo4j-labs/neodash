@@ -207,6 +207,18 @@ export const REPORT_TYPES = {
         values: ['force-directed', 'tree', 'radial'],
         default: 'force-directed',
       },
+      enableExploration: {
+        label: 'Enable graph exploration',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      enableEditing: {
+        label: 'Enable graph editing',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       showPropertiesOnHover: {
         label: 'Show pop-up on Hover',
         type: SELECTION_TYPES.LIST,

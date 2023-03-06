@@ -9,6 +9,9 @@ import ReactDOMServer from 'react-dom/server';
 import { GraphEntity, Link } from '../GraphChartVisualization';
 import { Node } from '../GraphChartVisualization';
 
+/**
+ * Renders a tooltip above the user's cursor showing information on the selected node/relationship.
+ */
 export function getTooltip(entity: Node | Link) {
   const tooltip = (
     <Card>

@@ -1,7 +1,6 @@
-import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import { buildGraphVisualizationObjectFromRecords, injectNewRecordsIntoGraphVisualization } from './RecordUtils';
-import { Direction, mergeLinksLists as mergeGraphEntityLists, recomputeCurvatures } from './RelUtils';
+import { injectNewRecordsIntoGraphVisualization } from './RecordUtils';
+import { recomputeCurvatures } from './RelUtils';
 
 export const getNodeRelationshipCountsQuery = `MATCH (b)
 WHERE id(b) = $id

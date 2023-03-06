@@ -19,8 +19,9 @@ export const getSettings = (
   if (userSettings == undefined) {
     return {};
   }
+
   Object.keys(config).map((key) => {
-    settings[key] = userSettings.value !== undefined ? userSettings.value : config[key].default;
+    settings[key] = userSettings[key] !== undefined ? userSettings[key] : config[key].default;
   });
 
   settings.styleRules = useStyleRules(

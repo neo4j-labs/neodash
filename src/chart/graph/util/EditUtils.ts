@@ -1,4 +1,4 @@
-import { GraphChartVisualizationProps, Node } from '../GraphChartVisualization';
+import { GraphChartVisualizationProps, Link, Node } from '../GraphChartVisualization';
 import { injectNewRecordsIntoGraphVisualization } from './RecordUtils';
 import { recomputeCurvatures } from './RelUtils';
 
@@ -7,7 +7,7 @@ export const handleNodeCreate = () => {
 };
 
 export const handleNodeEdit = (
-  node: any,
+  node: Node,
   labels: string[],
   properties: Record<string, any>,
   props: GraphChartVisualizationProps
@@ -70,7 +70,7 @@ export const handleRelationshipCreate = (
   data
 ) => {
   engine.queryCallback(
-    `MATCH (n), (m) WHERE id(n) = $start AND id(m) = $end CREATE (n)-[r:${type}]->(m) SET r = $properties`,
+    `MATCH (n), (m) WHERE id(n) = $start AND id(m) = $end CREATE (n)-[r:${type}]->(m) SET r = $properties RETURN r`,
     {
       start: start.id,
       type: type,
@@ -83,6 +83,8 @@ export const handleRelationshipCreate = (
         return;
       }
 
+      const id = records[0]._fields[0].identity;
+
       // Clean up properties for displaying in the visualization. This has to do with the visualization using 'name' as an override label.
       Object.keys(properties).map((prop) => {
         if (prop == 'name') {
@@ -93,7 +95,7 @@ export const handleRelationshipCreate = (
 
       const { links } = data;
       links.push({
-        id: -1,
+        id: id,
         width: 2,
         color: 'grey',
         type: type,
@@ -111,8 +113,51 @@ export const handleRelationshipCreate = (
   );
 };
 
-export const handleRelationshipEdit = () => {
-  throw 'Not Implemented';
+export const handleRelationshipEdit = (
+  link: Link,
+  properties: Record<string, any>,
+  props: GraphChartVisualizationProps
+) => {
+  // Cast properties to numbers if they are castable as such...
+  Object.keys(properties).forEach((key) => {
+    const value = properties[key];
+    if (!Number.isNaN(parseFloat(value))) {
+      properties[key] = parseFloat(value);
+    }
+  });
+
+  props.engine.queryCallback(
+    `MATCH ()-[r]->()  WHERE id(r) = $id SET r = $properties RETURN r`,
+    {
+      id: link.id,
+      properties: properties,
+    },
+    (records) => {
+      if (records && records[0] && records[0].error) {
+        props.interactivity.createNotification('Error', records[0].error);
+        return;
+      }
+
+      const { nodes, links, nodesMap, linksMap } = injectNewRecordsIntoGraphVisualization(records, props);
+      const newLinks = [...props.data.links];
+      // Iterate over the old links, and override the links object if it was changed.
+      newLinks.forEach((n, i) => {
+        links
+          .filter((x) => x.id == n.id)
+          .forEach((match) => {
+            newLinks[i].color = match.color;
+            newLinks[i].width = match.width;
+            newLinks[i].properties = match.properties;
+          });
+      });
+
+      props.data.setLinks(newLinks);
+      props.interactivity.createNotification(
+        'Relationship Updated',
+        'The relationship details were updated successfully.'
+      );
+    }
+  );
 };
 
 export const handleRelationshipDelete = () => {

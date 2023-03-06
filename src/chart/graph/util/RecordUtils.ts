@@ -2,7 +2,7 @@ import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvalua
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import { assignCurvatureToLink, getCurvature, recomputeCurvatures } from './RelUtils';
+import { assignCurvatureToLink } from './RelUtils';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 

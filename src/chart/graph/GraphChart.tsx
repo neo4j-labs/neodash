@@ -120,21 +120,6 @@ const NeoGraphChart = (props: ChartProps) => {
       links: data.links,
       linkTypes: linkTypes,
       parameters: parameters,
-      appendNode: () => {
-        throw 'Not Implemented';
-      },
-      editNode: () => {
-        throw 'Not Implemented';
-      },
-      deleteNode: () => {
-        throw 'Not Implemented';
-      },
-      editLink: () => {
-        throw 'Not Implemented';
-      },
-      deleteLink: () => {
-        throw 'Not Implemented';
-      },
       setGraph: setGraph,
       setNodes: setNodes,
       setLinks: setLinks,
@@ -177,6 +162,8 @@ const NeoGraphChart = (props: ChartProps) => {
       setRecenterAfterEngineStop: setRecenterAfterEngineStop,
     },
     interactivity: {
+      enableExploration: settings.enableExploration,
+      enableEditing: settings.enableEditing,
       layoutFrozen: frozen,
       setLayoutFrozen: setLayoutFrozen,
       nodePositions: nodePositions,

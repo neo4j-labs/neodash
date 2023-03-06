@@ -8,12 +8,12 @@ import { generateNodeCanvasObject } from './util/NodeUtils';
 import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtils';
 
 export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
-  const fgRef = useRef();
+  const fgRef: React.MutableRefObject<any> = useRef();
 
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
-  props.interactivity.zoomToFit = () => fgRef.current.zoomToFit(400);
+  props.interactivity.zoomToFit = () => fgRef.current && fgRef.current.zoomToFit(400);
 
   return (
     <ForceGraph2D

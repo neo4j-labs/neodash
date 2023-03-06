@@ -7,19 +7,21 @@ import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import { RenderNode, RenderNodeChip, RenderRelationshipChip } from '../../../report/ReportRecordProcessing';
 import { getNodeLabel } from '../util/NodeUtils';
-import { GraphChartEditModal } from './GraphChartEditModal';
-import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
+import { EditAction, EditType, GraphChartEditModal } from './GraphChartEditModal';
 import EditIcon from '@material-ui/icons/Edit';
-import { Direction } from '../util/RelUtils';
 import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
 
+/**
+ * Renders the context menu that is present when a user right clicks on a node or relationship in the graph.
+ * The context menu can be used to inspect and edit nodes/relationships, or explore the graph.
+ */
 export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [editableEntity, setEditableEntity] = React.useState(undefined);
-  const [editableEntityType, setEditableEntityType] = React.useState('Node'); // "Node" or "Relationship"
-  const [action, setAction] = React.useState('Create'); // "Create", "Edit" or "Delete"
+  const [editableEntityType, setEditableEntityType] = React.useState(EditType.Node);
+  const [action, setAction] = React.useState(EditAction.Create);
   const [neighbourRelCounts, setNeighbourRelCounts] = React.useState([]);
   const handleClose = () => {
     props.interactivity.setContextMenuOpen(false);
@@ -74,18 +76,22 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
             props.interactivity.setPropertyInspectorOpen(true);
           }}
         ></IconMenuItem>
-        <IconMenuItem
-          rightIcon={<EditIcon />}
-          label='Edit'
-          onClick={() => {
-            setEditableEntityType(expandable ? 'Node' : 'Relationship');
-            setAction('Edit');
-            props.interactivity.setContextMenuOpen(false);
-            setDialogOpen(true);
-          }}
-        ></IconMenuItem>
+        {props.interactivity.enableEditing ? (
+          <IconMenuItem
+            rightIcon={<EditIcon />}
+            label='Edit'
+            onClick={() => {
+              setEditableEntityType(expandable ? EditType.Node : EditType.Relationship);
+              setAction(EditAction.Edit);
+              props.interactivity.setContextMenuOpen(false);
+              setDialogOpen(true);
+            }}
+          ></IconMenuItem>
+        ) : (
+          <></>
+        )}
 
-        {expandable ? (
+        {props.interactivity.enableExploration && expandable ? (
           <NestedMenuItem
             label='Expand...'
             nonce={undefined}
@@ -141,7 +147,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           <></>
         )}
 
-        {expandable ? (
+        {props.interactivity.enableEditing && expandable ? (
           <NestedMenuItem label='Create relationship...' nonce={undefined} parentMenuOpen={true}>
             <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
               <table>
@@ -150,8 +156,8 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
                     <tr>
                       <MenuItem
                         onClick={() => {
-                          setEditableEntityType('Relationship');
-                          setAction('Create');
+                          setEditableEntityType(EditType.Relationship);
+                          setAction(EditAction.Create);
                           setEditableEntity(node);
                           props.interactivity.setContextMenuOpen(false);
                           setDialogOpen(true);

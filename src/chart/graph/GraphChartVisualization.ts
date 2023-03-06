@@ -1,5 +1,3 @@
-import { MutableRefObject } from 'react';
-
 /**
  * A mapping between human-readable layout names, and the ones used by the library.
  */
@@ -35,29 +33,35 @@ export interface Link extends GraphEntity {
   width?: number;
   source?: Node;
   target?: Node;
+  color?: string;
 }
 
 /**
  * The set of properties a graph visualization component (and its peripheral components) expects.
+ * objects implementing this interface are passed around the different utility functions for the graph visualization.
  */
 export interface GraphChartVisualizationProps {
+  /**
+   * entries in 'data' are related to anything relevant for rendering the graph.
+   * These are the nodes/relationships, but also their labels and types.
+   * The data dictionary can be updated by calling any of the functions in the data entry.
+   */
   data: {
     nodes: Node[];
     nodeLabels: Record<string, any>;
     links: Link[];
     linkTypes: Record<string, any>;
     parameters: Record<string, any>;
-    appendNode: (node) => void;
-    editNode: (node) => void;
-    deleteNode: (node) => void;
-    editLink: (link) => void;
-    deleteLink: (link) => void;
     setGraph: (nodes, links) => void;
     setNodes: (nodes) => void;
     setLinks: (links) => void;
     setNodeLabels: (labels) => void;
     setLinkTypes: (types) => void;
   };
+  /**
+   * The properties relevant for styling the graph.
+   * Style is applied at the moment the data dictionary is generated.
+   */
   style: {
     width: number;
     height: number;
@@ -79,6 +83,9 @@ export interface GraphChartVisualizationProps {
     relColorProp: string;
     defaultRelColor: string;
   };
+  /**
+   * The keys in 'engine' are related to the graph rendering engine (force-directed layout) or the NeoDash query engine.
+   */
   engine: {
     layout: Layout;
     queryCallback: (query: string, parameters: Record<string, any>, setRecords: any) => void;
@@ -91,7 +98,13 @@ export interface GraphChartVisualizationProps {
     recenterAfterEngineStop: boolean;
     setRecenterAfterEngineStop: (value: boolean) => void;
   };
+  /**
+   * The entries in 'interactivity' handle the interactive elements of the visualization.
+   * This includes handling click events, showing pop-ups, and more.
+   */
   interactivity: {
+    enableExploration: boolean;
+    enableEditing: boolean;
     layoutFrozen: boolean;
     setLayoutFrozen: React.Dispatch<React.SetStateAction<boolean>>;
     nodePositions: Record<string, any>;
@@ -106,7 +119,7 @@ export interface GraphChartVisualizationProps {
     onNodeRightClick: (node, event) => void;
     onRelationshipClick: (rel) => void;
     onRelationshipRightClick: (rel, event) => void;
-    setGlobalParameter: (name: string, value: string) => void;
+    setGlobalParameter?: (name: string, value: string) => void;
     handleExpand: (id, type, dir, properties) => void;
     zoomToFit: () => void;
     drilldownLink: string;
@@ -117,6 +130,9 @@ export interface GraphChartVisualizationProps {
     clickPosition: Record<string, any>;
     setClickPosition: (pos) => void;
   };
+  /**
+   * entries in 'extensions' let users plug in extra functionality into the visualization based on enabled plugins.
+   */
   extensions: {
     styleRules: any[];
     actionsRules: any[];

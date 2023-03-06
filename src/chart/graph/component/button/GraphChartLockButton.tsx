@@ -4,6 +4,9 @@ import { Tooltip } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
+/**
+ * Renders a button that can be used to 'lock' = freeze the current graph layout by disabling the force layout.
+ */
 export const NeoGraphChartLockButton = (props: GraphChartVisualizationProps) => {
   return props.interactivity.layoutFrozen ? (
     <Tooltip title='Toggle dynamic graph layout.' aria-label=''>

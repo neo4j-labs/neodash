@@ -23,14 +23,29 @@ import {
 } from '../util/EditUtils';
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
+export enum EditType {
+  Node,
+  Relationship,
+}
+
+export enum EditAction {
+  Create,
+  Edit,
+  Delete,
+}
+
 interface GraphChartEditorVisualizationProps extends GraphChartVisualizationProps {
-  type: any; // 'Node', 'Relationship'
-  action: string; // 'Create', 'Edit', 'Delete'
+  type: EditType;
+  action: EditAction;
   selectedNode: any;
   dialogOpen: any;
   setDialogOpen: any;
 }
 
+/**
+ * The edit modal is a pop-up window that lets users change a node or relationship in the graph.
+ * This is a generic component, that can be used for creating/editing/deleting either nodes or relationships, and their properties.
+ */
 export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) => {
   const [properties, setProperties] = React.useState([{ name: '', value: '' }]);
   const [labelRecords, setLabelRecords] = React.useState([]);
@@ -41,7 +56,12 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
 
   // When the dialog gets opened, and we are editing, prepopulate the fields with current node/rel data in the database.
   useEffect(() => {
-    if (props.dialogOpen && props.interactivity.selectedEntity && props.type == 'Node' && props.action == 'Edit') {
+    if (
+      props.dialogOpen &&
+      props.interactivity.selectedEntity &&
+      props.type == EditType.Node &&
+      props.action == EditAction.Edit
+    ) {
       const label = props.interactivity.selectedEntity.labels ? props.interactivity.selectedEntity.labels[0] : '';
       setLabelInputText(label);
       setLabel(label);
@@ -53,8 +73,8 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
     } else if (
       props.dialogOpen &&
       props.interactivity.selectedEntity &&
-      props.type == 'Relationship' &&
-      props.action == 'Edit'
+      props.type == EditType.Relationship &&
+      props.action == EditAction.Edit
     ) {
       const { type } = props.interactivity.selectedEntity;
       setLabelInputText(type);
@@ -80,7 +100,8 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
       aria-labelledby='form-dialog-title'
     >
       <DialogTitle id='form-dialog-title'>
-        {props.action} a {props.type}
+        {props.action == EditAction.Create ? 'Create' : 'Edit'} a{' '}
+        {props.type == EditType.Node ? 'Node' : 'Relationship'}
         <IconButton
           onClick={() => {
             props.interactivity.setContextMenuOpen(false);
@@ -106,6 +127,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
             type={props.type}
             input={labelInputText}
             setInput={setLabelInputText}
+            disabled={props.type == EditType.Relationship && props.action == EditAction.Edit}
           />
           <h4>Properties</h4>
 
@@ -189,9 +211,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
             style={{ marginBottom: '10px' }}
             disabled={label === undefined}
             onClick={() => {
-              const newProperties = {
-                name: label,
-              };
+              const newProperties = {};
 
               properties.map((prop) => {
                 if (prop.name !== '' && prop.value !== '') {
@@ -199,9 +219,9 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                 }
               });
 
-              if (props.action == 'Create' && props.type == 'Node') {
+              if (props.action == EditAction.Create && props.type == EditType.Node) {
                 handleNodeCreate();
-              } else if (props.action == 'Create' && props.type == 'Relationship') {
+              } else if (props.action == EditAction.Create && props.type == EditType.Relationship) {
                 handleRelationshipCreate(
                   props.interactivity.selectedEntity,
                   label,
@@ -211,17 +231,16 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                   props.interactivity,
                   props.data
                 );
-              } else if (props.action == 'Edit' && props.type == 'Node') {
+              } else if (props.action == EditAction.Edit && props.type == EditType.Node) {
                 const labels = label.split(',').map((l) => l.trim());
                 handleNodeEdit(props.interactivity.selectedEntity, labels, newProperties, props);
-              } else if (props.action == 'Edit' && props.type == 'Relationship') {
-                handleRelationshipEdit();
-              } else if (props.action == 'Delete' && props.type == 'Node') {
+              } else if (props.action == EditAction.Edit && props.type == EditType.Relationship) {
+                handleRelationshipEdit(props.interactivity.selectedEntity, newProperties, props);
+              } else if (props.action == EditAction.Delete && props.type == EditType.Node) {
                 handleNodeDelete();
-              } else if (props.action == 'Delete' && props.type == 'Relationship') {
+              } else if (props.action == EditAction.Delete && props.type == EditType.Relationship) {
                 handleRelationshipDelete();
               }
-
               props.setDialogOpen(false);
               setProperties([{ name: '', value: '' }]);
             }}
@@ -230,7 +249,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
             size='medium'
             endIcon={<PlayArrow />}
           >
-            {props.action == 'Create' ? 'Create' : 'Save'}
+            {props.action == EditAction.Create ? 'Create' : 'Save'}
           </Button>
         </DialogContentText>
       </DialogContent>

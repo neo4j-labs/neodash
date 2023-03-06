@@ -1,6 +1,7 @@
 import React from 'react';
 import { Autocomplete } from '@material-ui/lab';
 import { Fab, TextField, Typography } from '@material-ui/core';
+import { EditType } from '../GraphChartEditModal';
 
 /**
  * Renders an auto-complete text field that uses either:
@@ -9,25 +10,27 @@ import { Fab, TextField, Typography } from '@material-ui/core';
  * TODO - check that the same database is used that the component has selected.
  */
 export const LabelTypeAutocomplete = ({
-  type, // 'Node' or 'Relationship'
+  type,
+  disabled,
   input,
   setInput,
   value,
   setValue,
   records,
-  setRecords, // TODO document
+  setRecords,
   queryCallback,
 }) => {
   return (
     <Autocomplete
       id='autocomplete-label-type'
+      disabled={disabled}
       options={records.map((r) => (r._fields ? r._fields[0] : '(no data)'))}
       getOptionLabel={(option) => option || ''}
       style={{ width: '100%', marginLeft: '5px', marginTop: '5px' }}
       inputValue={input}
       onInputChange={(event, value) => {
         setInput(value);
-        if (type == 'Node') {
+        if (type == EditType.Node) {
           queryCallback(
             'CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5',
             { input: value },
@@ -48,7 +51,7 @@ export const LabelTypeAutocomplete = ({
           {...params}
           placeholder='Start typing...'
           InputLabelProps={{ shrink: true }}
-          label={type == 'Relationship' ? 'Type' : 'Label'}
+          label={type == EditType.Relationship ? 'Type' : 'Label'}
         />
       )}
     />
