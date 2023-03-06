@@ -17,17 +17,13 @@ export function assignCurvatureToLink(link, index, nodePairListLength, mirroredN
     // Self-loop
     return update(link, { curvature: 0.4 + index / 8 });
   }
-  // If we also have edges from the target to the source, adjust curvatures accordingly.
-
-  if (mirroredNodePairListLength == 0) {
-    return update(link, { curvature: getCurvature(index, nodePairListLength) });
-  }
+  // If we have edges from the target to the source, adjust curvatures accordingly.
   const totalRelsBetweenPair = nodePairListLength + mirroredNodePairListLength;
   return update(link, {
     curvature:
-      link.source.id > link.target.id
-        ? -getCurvature(index + mirroredNodePairListLength, totalRelsBetweenPair)
-        : getCurvature(index, totalRelsBetweenPair),
+      link.source > link.target
+        ? getCurvature(index, totalRelsBetweenPair)
+        : -getCurvature(index + mirroredNodePairListLength, totalRelsBetweenPair),
   });
 }
 
