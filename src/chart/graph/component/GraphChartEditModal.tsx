@@ -209,7 +209,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
           <hr />
           <Button
             style={{ marginBottom: '10px' }}
-            disabled={label === undefined}
+            disabled={label === undefined || label == '' || labelInputText !== label}
             onClick={() => {
               const newProperties = {};
 
