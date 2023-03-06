@@ -14,6 +14,7 @@ import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '.
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import NeoField from '../../component/field/Field';
+import { applicationGetConnectionDatabase } from '../../application/ApplicationSelectors';
 const styles = {
   dialogPaper: {
     minHeight: '80vh',
@@ -31,19 +32,30 @@ const AlertSettingsModal = ({
   onQueryUpdate,
   onSettingsUpdate,
   onDatabaseChanged,
+  applicationDatabase,
 }) => {
   const handleClose = () => {
     setSettingsOpen(false);
     // TODO: put real settings
     onSettingsUpdate({ ciao: 'comeStai?' });
-    onQueryUpdate(queryText);
-    onDatabaseChanged(databaseText);
+    if (query != queryText) {
+      onQueryUpdate(queryText);
+    }
+    if (database != databaseText) {
+      onDatabaseChanged(databaseText);
+    }
   };
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [queryText, setQueryText] = React.useState(query);
   const [databaseText, setDatabaseText] = React.useState(database);
 
+  useEffect(() => {
+    if (databaseText === '') {
+      let firstDb = applicationDatabase ? applicationDatabase : 'neo4j';
+      setDatabaseText(firstDb);
+    }
+  }, []);
   return (
     <div>
       {settingsOpen ? (
@@ -118,6 +130,7 @@ const mapStateToProps = (state) => ({
   _extensionSettings: getExtensionSettings(state, 'alerts'),
   query: getExtensionQuery(state, 'alerts'),
   database: getExtensionDatabase(state, 'alerts'),
+  applicationDatabase: applicationGetConnectionDatabase(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

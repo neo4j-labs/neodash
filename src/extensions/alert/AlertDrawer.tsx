@@ -11,16 +11,8 @@ import { parseNodesRecords } from '../../report/ReportQueryRunner';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { setExtensionDatabase } from '../ExtensionsActions';
-import { applicationGetConnectionDatabase } from '../../application/ApplicationSelectors';
 // The sidebar that appears on the left side of the dashboard.
-export const AlertDrawer = ({
-  _extensionSettings,
-  query,
-  database,
-  applicationDatabase,
-  loadDatabaseListFromNeo4j,
-  onDatabaseChanged,
-}) => {
+export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
   const [records, setRecords] = useState([]);
   // List of records parsed from the result
   const [parsedRecords, setParsedRecords] = useState([]);
@@ -35,9 +27,6 @@ export const AlertDrawer = ({
 
   // Setting up list of databases for settings
   useEffect(() => {
-    if (database === '') {
-      onDatabaseChanged(applicationDatabase ? applicationDatabase : 'neo4j');
-    }
     if (!databaseListLoaded) {
       loadDatabaseListFromNeo4j(driver, (result) => {
         let index = result.indexOf('system');
@@ -152,14 +141,10 @@ const mapStateToProps = (state) => ({
   _extensionSettings: getExtensionSettings(state, 'alerts'),
   query: getExtensionQuery(state, 'alerts'),
   database: getExtensionDatabase(state, 'alerts'),
-  applicationDatabase: applicationGetConnectionDatabase(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
-  onDatabaseChanged: (database: any) => {
-    dispatch(setExtensionDatabase('alerts', database));
-  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertDrawer);
