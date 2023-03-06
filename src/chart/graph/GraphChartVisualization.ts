@@ -39,6 +39,7 @@ export interface Link extends GraphEntity {
 /**
  * The set of properties a graph visualization component (and its peripheral components) expects.
  * objects implementing this interface are passed around the different utility functions for the graph visualization.
+ * TODO: Split the `GraphChartVisualizationProps` into sub-interfaces that can be passed down individually.
  */
 export interface GraphChartVisualizationProps {
   /**
@@ -101,6 +102,7 @@ export interface GraphChartVisualizationProps {
   /**
    * The entries in 'interactivity' handle the interactive elements of the visualization.
    * This includes handling click events, showing pop-ups, and more.
+   * TODO: Split up interactivity user-settings and interactivity callbacks/functional variables.
    */
   interactivity: {
     enableExploration: boolean;

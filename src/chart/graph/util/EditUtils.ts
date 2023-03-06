@@ -24,7 +24,7 @@ export const handleNodeEdit = (
   const newLabels = labels.join(':');
 
   props.engine.queryCallback(
-    `MATCH (n)  WHERE id(n) = $id REMOVE n:${oldLabels} SET n:${newLabels} SET n = $properties RETURN n`,
+    `MATCH (n) WHERE id(n) = $id REMOVE n:${oldLabels} SET n:${newLabels} SET n = $properties RETURN n`,
     {
       id: node.id,
       properties: properties,
