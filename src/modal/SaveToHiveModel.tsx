@@ -78,11 +78,11 @@ export const SaveToHiveModel = ({
       </DialogTitle>
       <DialogContent style={{ width: '800px' }}>
         <DialogContentText>
-          This will save your current dashboard to Hive. Use the file dialog to upload your Neo4j .dump file.
+          This will save your current dashboard to Hive. Use the below options for Hive managed or self managed demo DB.
         </DialogContentText>
 
         <Accordion expanded={expandedPanel === 'dump'} onChange={handleAccordionChange('dump')}>
-          <AccordionSummary expandIcon={<ExpandMore />}>DB Dump Upload</AccordionSummary>
+          <AccordionSummary expandIcon={<ExpandMore />}>Hive managed demo DB</AccordionSummary>
           <AccordionDetails>
             <div style={{ height: '100px' }}>
               <Input type='file' name='databasedumpfile' style={{ marginBottom: '3px' }} onChange={changeHandler} />
@@ -118,11 +118,17 @@ export const SaveToHiveModel = ({
         </Accordion>
 
         <Accordion expanded={expandedPanel === 'aura'} onChange={handleAccordionChange('aura')}>
-          <AccordionSummary expandIcon={<ExpandMore />}>Aura DB</AccordionSummary>
+          <AccordionSummary expandIcon={<ExpandMore />}>Self managed or cloud hosted demo DB</AccordionSummary>
           <AccordionDetails>
-            <TextField id='auraConnection' label='Connection URL' variant='outlined' />
-            <TextField id='auraUsername' label='Username' variant='outlined' />
-            <TextField id='auraPassword' label='Password' variant='outlined' />
+            <TextField
+              id='auraConnection'
+              label='Connection URL'
+              variant='outlined'
+              defaultValue='neo4j://localhost:7687'
+            />
+            <TextField id='auraDbName' label='Database' variant='outlined' defaultValue='neo4j' />
+            <TextField id='auraUsername' label='Username' variant='outlined' defaultValue='neo4j' />
+            <TextField id='auraPassword' label='Password' variant='outlined' type='password' />
           </AccordionDetails>
         </Accordion>
 
@@ -140,7 +146,8 @@ export const SaveToHiveModel = ({
               expandedPanel,
               auraConnection.value,
               auraUsername.value,
-              auraPassword.value
+              auraPassword.value,
+              auraDbName.value
             );
             closeDialog({ closeSaveDialog: true });
           }}
@@ -185,7 +192,8 @@ const mapDispatchToProps = (dispatch) => ({
     dbType: any,
     dbConnectionUrl: any,
     dbUsername: any,
-    dbPassword: any
+    dbPassword: any,
+    dbName: any
   ) => {
     dispatch(
       saveDashboardToHiveThunk(
@@ -199,7 +207,8 @@ const mapDispatchToProps = (dispatch) => ({
         dbType,
         dbConnectionUrl,
         dbUsername,
-        dbPassword
+        dbPassword,
+        dbName
       )
     );
   },

@@ -102,7 +102,15 @@ const saveDemoCard = async ({ uuid, name }) => {
   return promise;
 };
 
-const saveDashboardToHiveGraphQL = async ({ dashboard, dbName, dbType, dbConnectionUrl, dbUsername, dbPassword }) => {
+const saveDashboardToHiveGraphQL = async ({
+  dashboard,
+  dbName,
+  dbType,
+  dbConnectionUrl,
+  dbUsername,
+  dbPassword,
+  fileName,
+}) => {
   const promise = new Promise((resolve, reject) => {
     let dashboardCopy = JSON.parse(JSON.stringify(dashboard));
     dashboardCopy.extensions = dashboardCopy.extensions || {};
@@ -125,6 +133,7 @@ const saveDashboardToHiveGraphQL = async ({ dashboard, dbName, dbType, dbConnect
         dbConnectionUrl: dbConnectionUrl,
         dbUsername: dbUsername,
         dbPassword: dbPassword,
+        fileName: fileName,
       },
     };
 
@@ -163,7 +172,8 @@ const saveHiveCard = async (
   dbType,
   dbConnectionUrl,
   dbUsername,
-  dbPassword
+  dbPassword,
+  fileName
 ) => {
   try {
     const dashboardSaveResponse = await saveDashboardToHiveGraphQL({
@@ -173,6 +183,7 @@ const saveHiveCard = async (
       dbConnectionUrl,
       dbUsername,
       dbPassword,
+      fileName,
     });
     const input = dashboardSaveResponse?.variables?.input || {};
     const { title, uuid } = input;
@@ -209,7 +220,8 @@ export const saveDashboardToHiveThunk =
     dbType,
     dbConnectionUrl,
     dbUsername,
-    dbPassword
+    dbPassword,
+    dbName
   ) =>
   async (dispatch: any) => {
     updateSaveToHiveProgress({ flag: 'progress-bar' });
@@ -218,12 +230,13 @@ export const saveDashboardToHiveThunk =
         const hiveinfo = await saveHiveCard(
           dispatch,
           dashboard,
-          'neo4j',
+          dbName,
           overwrite,
           dbType,
           dbConnectionUrl,
           dbUsername,
-          dbPassword
+          dbPassword,
+          '' // fileName
         );
         updateSaveToHiveProgress({
           flag: 'progress-instructions',
@@ -264,7 +277,8 @@ export const saveDashboardToHiveThunk =
                 dbType,
                 dbConnectionUrl,
                 dbUsername,
-                dbPassword
+                dbPassword,
+                selectedFile?.name
               );
               updateSaveToHiveProgress({
                 flag: 'progress-instructions',
