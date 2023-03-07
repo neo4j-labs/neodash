@@ -10,9 +10,9 @@ import AlertNodeCard from './listElement/AlertNodeCard';
 import { parseNodesRecords } from '../../report/ReportQueryRunner';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
-import { setExtensionDatabase } from '../ExtensionsActions';
+
 // The sidebar that appears on the left side of the dashboard.
-export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
+export const AlertDrawer = ({ extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
   const [records, setRecords] = useState([]);
   // List of records parsed from the result
   const [parsedRecords, setParsedRecords] = useState([]);
@@ -25,24 +25,7 @@ export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseL
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
-  // Setting up list of databases for settings
-  useEffect(() => {
-    if (!databaseListLoaded) {
-      loadDatabaseListFromNeo4j(driver, (result) => {
-        let index = result.indexOf('system');
-        if (index > -1) {
-          // only splice array when item is found
-          result.splice(index, 1); // 2nd parameter means remove one item only
-        }
-        setDatabaseList(result);
-        // At the start, set the DB of the drawer to the same db of the whole application
-      });
-      setDatabaseListLoaded(true);
-    }
-  }, [query]);
-
-  // Query runner effect
-  useEffect(() => {
+  const runCypher = () => {
     let useReturnValuesAsFields = true;
     let useNodePropsAsFields = true;
     let queryTimeLimit = 20;
@@ -61,6 +44,26 @@ export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseL
       HARD_ROW_LIMITING,
       queryTimeLimit
     );
+  };
+  // Setting up list of databases for settings
+  useEffect(() => {
+    if (!databaseListLoaded) {
+      loadDatabaseListFromNeo4j(driver, (result) => {
+        let index = result.indexOf('system');
+        if (index > -1) {
+          // only splice array when item is found
+          result.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        setDatabaseList(result);
+        // At the start, set the DB of the drawer to the same db of the whole application
+      });
+      setDatabaseListLoaded(true);
+    }
+  }, [query]);
+
+  // Query runner effect
+  useEffect(() => {
+    runCypher();
   }, [query, database]);
 
   // Record parser effect
@@ -114,7 +117,8 @@ export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseL
           minHeight: '64px',
         }}
       ></div>
-      <AlertDrawerHeader databaseList={databaseList}></AlertDrawerHeader>
+
+      <AlertDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></AlertDrawerHeader>
       {/* TODO: define body here (for now list of clickable cards) */}
       {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
         manageQueryStatus(status, records)
@@ -125,7 +129,7 @@ export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseL
           {parsedRecords.map((record) => {
             return (
               <ListItem>
-                <AlertNodeCard record={record}></AlertNodeCard>
+                <AlertNodeCard record={record} extensionSettings={extensionSettings}></AlertNodeCard>
               </ListItem>
             );
           })}
@@ -138,7 +142,7 @@ export const AlertDrawer = ({ _extensionSettings, query, database, loadDatabaseL
 };
 
 const mapStateToProps = (state) => ({
-  _extensionSettings: getExtensionSettings(state, 'alerts'),
+  extensionSettings: getExtensionSettings(state, 'alerts'),
   query: getExtensionQuery(state, 'alerts'),
   database: getExtensionDatabase(state, 'alerts'),
 });

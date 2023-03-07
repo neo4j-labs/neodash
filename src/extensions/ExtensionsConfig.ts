@@ -2,7 +2,7 @@ import { SELECTION_TYPES } from '../config/CardConfig';
 
 // TODO: define settings for extensions (just alert for now, keep it futureproof)
 // TODO: understand if we want pagination (strange styling)
-export const EXTENSIONS_CONFIG = {
+const EXTENSIONS_CONFIG = {
   alerts: {
     settings: {
       colorProperty: {
@@ -29,3 +29,14 @@ export const EXTENSIONS_CONFIG = {
     },
   },
 };
+
+/**
+ * Function to get the extension config
+ * @param extensionName Name of the desired extension
+ * @returns Predefined fields of configuration for an extension
+ */
+export function getExtensionDefaultConfig(extensionName) {
+  return EXTENSIONS_CONFIG[extensionName] && EXTENSIONS_CONFIG[extensionName].settings
+    ? EXTENSIONS_CONFIG[extensionName].settings
+    : {};
+}

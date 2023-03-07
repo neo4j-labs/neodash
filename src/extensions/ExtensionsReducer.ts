@@ -25,7 +25,9 @@ export const extensionsReducer = (state = initialState, action: { type: any; pay
 
   switch (type) {
     case UPDATE_EXTENSION_SETTINGS: {
-      return payload.extensionsConfig;
+      const { extensionName, settings, extensionsConfig } = payload;
+      extensionsConfig[extensionName].settings = settings;
+      return extensionsConfig;
     }
 
     case UPDATE_EXTENSION_QUERY: {

@@ -7,26 +7,19 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
-import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-import { debounce, DialogContent, MenuItem } from '@material-ui/core';
-import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionsSelectors';
-import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../ExtensionsActions';
-import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import NeoField from '../../component/field/Field';
-import { applicationGetConnectionDatabase } from '../../application/ApplicationSelectors';
-const styles = {
-  dialogPaper: {
-    minHeight: '80vh',
-    maxHeight: '80vh',
-  },
-};
+import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
+import { DialogContent, FormControlLabel, FormGroup, MenuItem, Switch } from '@material-ui/core';
+import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../../ExtensionsSelectors';
+import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../../ExtensionsActions';
+import NeoField from '../../../component/field/Field';
+import { applicationGetConnectionDatabase } from '../../../application/ApplicationSelectors';
+import ExtensionSettingsForm from './ExtensionSettingsForm';
 
 const AlertSettingsModal = ({
   databaseList,
   settingsOpen,
   setSettingsOpen,
-  _extensionSettings,
+  extensionSettings,
   query,
   database,
   onQueryUpdate,
@@ -34,21 +27,36 @@ const AlertSettingsModal = ({
   onDatabaseChanged,
   applicationDatabase,
 }) => {
+  const [queryText, setQueryText] = React.useState(query);
+  const [databaseText, setDatabaseText] = React.useState(database);
+  const [isAdvancedSettingsOpen, setIsAdvancedSettingsOpen] = React.useState(false);
+  const [settingsToSave, setSettingsToSave] = React.useState(extensionSettings);
+
+  /**
+   * Changing the global state only when needed
+   */
   const handleClose = () => {
     setSettingsOpen(false);
-    // TODO: put real settings
-    onSettingsUpdate({ ciao: 'comeStai?' });
-    if (query != queryText) {
+
+    if (JSON.stringify(settingsToSave) !== JSON.stringify(extensionSettings)) {
+      // When saving, all the values that are False in TS ("", False, {}, 0 as a Number) will be filterd out
+      const filtered = Object.keys(settingsToSave)
+        .filter((key) => settingsToSave[key])
+        .reduce((obj, key) => {
+          obj[key] = settingsToSave[key];
+          return obj;
+        }, {});
+
+      onSettingsUpdate(filtered);
+    }
+
+    if (query !== queryText) {
       onQueryUpdate(queryText);
     }
-    if (database != databaseText) {
+    if (database !== databaseText) {
       onDatabaseChanged(databaseText);
     }
   };
-
-  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-  const [queryText, setQueryText] = React.useState(query);
-  const [databaseText, setDatabaseText] = React.useState(database);
 
   useEffect(() => {
     if (databaseText === '') {
@@ -56,6 +64,7 @@ const AlertSettingsModal = ({
       setDatabaseText(firstDb);
     }
   }, []);
+
   return (
     <div>
       {settingsOpen ? (
@@ -116,6 +125,28 @@ const AlertSettingsModal = ({
               >
                 {'This interface needs a list of nodes, the returned value must be called nodes'}
               </p>
+              <FormGroup>
+                <FormControlLabel
+                  style={{ marginLeft: '5px', marginBottom: '10px' }}
+                  control={
+                    <Switch
+                      checked={isAdvancedSettingsOpen}
+                      onChange={(event) => {
+                        setIsAdvancedSettingsOpen(event.target.checked);
+                      }}
+                      color='default'
+                    />
+                  }
+                  labelPlacement='end'
+                  label={<div style={{ fontSize: '12px', color: 'grey' }}>Advanced settings</div>}
+                />
+              </FormGroup>
+              <ExtensionSettingsForm
+                isAdvancedSettingsOpen={isAdvancedSettingsOpen}
+                extensionSettings={settingsToSave}
+                setSettingsToSave={setSettingsToSave}
+                extensionName={'alerts'}
+              ></ExtensionSettingsForm>
             </div>
           </DialogContent>
         </Dialog>
@@ -127,7 +158,7 @@ const AlertSettingsModal = ({
 };
 
 const mapStateToProps = (state) => ({
-  _extensionSettings: getExtensionSettings(state, 'alerts'),
+  extensionSettings: getExtensionSettings(state, 'alerts'),
   query: getExtensionQuery(state, 'alerts'),
   database: getExtensionDatabase(state, 'alerts'),
   applicationDatabase: applicationGetConnectionDatabase(state),

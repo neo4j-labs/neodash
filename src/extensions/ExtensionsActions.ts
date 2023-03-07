@@ -1,3 +1,9 @@
+export const UPDATE_EXTENSION_TITLE = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_TITLE';
+export const setExtensionTitle = (extensionName: string, title: string) => ({
+  type: UPDATE_EXTENSION_TITLE,
+  payload: { extensionName, title },
+});
+
 export const UPDATE_EXTENSION_SETTINGS = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_SETTINGS';
 export const setExtensionSettings = (extensionName: string, settings: any) => ({
   type: UPDATE_EXTENSION_SETTINGS,
@@ -26,10 +32,4 @@ export const UPDATE_EXTENSION_DATABASE = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_
 export const setExtensionDatabase = (extensionName: string, databaseName: string) => ({
   type: UPDATE_EXTENSION_DATABASE,
   payload: { extensionName, databaseName },
-});
-
-export const UPDATE_EXTENSION_TITLE = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_TITLE';
-export const setExtensionTitle = (extensionName: string, title: string) => ({
-  type: UPDATE_EXTENSION_TITLE,
-  payload: { extensionName, title },
 });

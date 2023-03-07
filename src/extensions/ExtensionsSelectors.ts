@@ -1,6 +1,6 @@
 export const getExtensionSettings = (state: any, name: string) => {
   let res = state.dashboard.extensionsConfig[name];
-  return res != undefined ? res : {};
+  return res != undefined && res.settings ? res.settings : {};
 };
 
 export const getExtensionOpened = (state: any, name: string) => {

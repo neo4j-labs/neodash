@@ -31,7 +31,6 @@ const NeoCardSettingsFooter = ({
 
   // Variables related to customizing report settings
   const [customReportStyleModalOpen, setCustomReportStyleModalOpen] = React.useState(false);
-
   const settingToCustomize = 'styleRules';
 
   // Variables related to customizing report actions
@@ -100,7 +99,6 @@ const NeoCardSettingsFooter = ({
         if (disabledDependency != undefined) {
           isDisabled = getDisabled(setting);
         }
-
         return (
           <NeoSetting
             key={setting}
