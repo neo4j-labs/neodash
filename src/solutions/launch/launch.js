@@ -103,7 +103,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
           standaloneDashboardURL: data.uuid,
           standaloneUsername: userName,
           standalonePassword: pasword,
-          isOwner: true,
+          isOwner: data.user == auth.getEmail() ? true : false,
         },
       };
     } catch (e) {
