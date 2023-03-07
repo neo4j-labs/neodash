@@ -11,6 +11,7 @@ import NeoGraphChart from '../../../chart/graph/GraphChart';
 import NeoReport from '../../../report/Report';
 import { connect } from 'react-redux';
 import { getExtensionDatabase } from '../../ExtensionsSelectors';
+import { NeoReportWrapper } from '../../../report/ReportWrapper';
 
 const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen, database }) => {
   const handleClose = () => {
@@ -42,12 +43,12 @@ const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen, database })
               <br />
             </div>
             <div style={{ width: 600, height: 600 }}>
-              <NeoReport
+              <NeoReportWrapper
                 database={database}
                 query={`MATCH (n) WHERE id(n) = ${record.id} OPTIONAL MATCH p=(n)--() RETURN n,p`}
                 ChartType={NeoGraphChart}
                 type={'graph'}
-              ></NeoReport>
+              ></NeoReportWrapper>
             </div>
           </DialogContent>
         </Dialog>
