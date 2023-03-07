@@ -30,6 +30,16 @@ mutation AddDeploymentToSolution($id: ID!, $name: String!, $url: String!) {
   }
 `;
 
+const listUserDashboardsQuery = `query ListUserDashboards($user: String) {
+  dashboards:listUserDashboards(user:$user) {
+    uuid
+    user
+    dbName
+    fileName
+    dbType
+  }
+}`;
+
 const addDeployment = async ({ neoDashUuid, solutionId }) => {
   const baseNeoDashUrl = config('NEODASH_BASE_DEMO_URL');
   const url = `${baseNeoDashUrl}/?hivedashboarduuid=${neoDashUuid}`;
@@ -87,6 +97,36 @@ const saveDemoCard = async ({ uuid, name }) => {
       },
       body: JSON.stringify({
         query: CreateSolutionQuery,
+        variables,
+      }),
+    })
+      .then(handleErrors)
+      .then(async (res) => {
+        const jsonResponse = await res.json();
+        resolve(jsonResponse);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+  return promise;
+};
+
+export const listUserDashboards = async () => {
+  const promise = new Promise((resolve, reject) => {
+    const variables = {
+      user: auth.getEmail(),
+    };
+
+    const uri = config('HIVE_URI');
+    fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: auth.getIdToken() ? `Bearer ${auth.getIdToken()}` : '',
+      },
+      body: JSON.stringify({
+        query: listUserDashboardsQuery,
         variables,
       }),
     })

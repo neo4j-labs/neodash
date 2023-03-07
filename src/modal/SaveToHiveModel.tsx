@@ -20,12 +20,14 @@ import {
   AccordionSummary,
   AccordionDetails,
   TextField,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { getDashboardJson } from './ModalSelectors';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { saveDashboardToHiveThunk } from '../solutions/persistence/SolutionsThunks';
+import { saveDashboardToHiveThunk, listUserDashboards } from '../solutions/persistence/SolutionsThunks';
 import { ExpandMore } from '@material-ui/icons';
 
 /**
@@ -61,6 +63,11 @@ export const SaveToHiveModel = ({
     setExpandedPanel(isExpanded ? panel : false);
   };
 
+  // const [userSavedDashboards, setuserSavedDashboards] = React.useState([]);
+  // if(modalOpen === true && userSavedDashboards.length == 0) {
+  //   listUserDashboards().then(jsonResponse => console.log(setuserSavedDashboards(jsonResponse.data.dashboards)));
+  // }
+
   return (
     <Dialog maxWidth={'lg'} open={modalOpen === true} onClose={closeDialog} aria-labelledby='form-dialog-title'>
       <DialogTitle id='form-dialog-title'>
@@ -85,16 +92,39 @@ export const SaveToHiveModel = ({
           <AccordionSummary expandIcon={<ExpandMore />}>Hive managed demo DB</AccordionSummary>
           <AccordionDetails>
             <div style={{ height: '100px' }}>
-              <Input type='file' name='databasedumpfile' style={{ marginBottom: '3px' }} onChange={changeHandler} />
-              {isSelected && (
-                <DialogContentText>
-                  Currently Selected File: {selectedFile.name}
-                  <span style={{ marginLeft: '2px' }}>
-                    ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB, last modified:{' '}
-                    {selectedFile.lastModifiedDate.toLocaleDateString()})
-                  </span>
-                </DialogContentText>
-              )}
+              {/* <div>
+                <TextField
+                id="standard-select-currency-native"
+                select
+                // label="select any existing demo DB, if relevent"
+                defaultValue=""
+                SelectProps={{
+                  native: true,
+                }}
+                helperText="select any existing demo DB, if relevent"
+                variant="standard"
+              >
+                {userSavedDashboards.length > 0 && userSavedDashboards.map((database) => {
+                if(database.dbType == 'dump'){
+                 return <option key={database.dbName} value={database.dbName}>{database.dbName}({database.fileName})</option>
+                  // return <MenuItem value={database.dbName}>{database.dbName}</MenuItem>;
+                }
+                })}
+
+              </TextField>
+            </div> */}
+              <div>
+                <Input type='file' name='databasedumpfile' style={{ marginBottom: '3px' }} onChange={changeHandler} />
+                {isSelected && (
+                  <DialogContentText>
+                    Currently Selected File: {selectedFile.name}
+                    <span style={{ marginLeft: '2px' }}>
+                      ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB, last modified:{' '}
+                      {selectedFile.lastModifiedDate.toLocaleDateString()})
+                    </span>
+                  </DialogContentText>
+                )}
+              </div>
             </div>
 
             {dashboard?.extensions?.solutionsHive?.dbName && (
