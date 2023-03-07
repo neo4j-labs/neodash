@@ -319,19 +319,13 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
         }}
       />
 
-      <Dialog
-        maxWidth={'lg'}
-        open={saveToHiveProgress.flag.includes('progress')}
-        onClose={() => {
-          setSaveToHiveProgress({ flag: 'close', dashboardUUID: '', solutionId: '', dbName: '' });
-        }}
-        aria-labelledby='form-dialog-title'
-      >
+      <Dialog maxWidth={'lg'} open={saveToHiveProgress.flag.includes('progress')} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>
           Save to Hive Progress
           <IconButton
             onClick={() => {
               setSaveToHiveProgress({ flag: 'close', dashboardUUID: '', solutionId: '', dbName: '' });
+              window.location.href = `http://localhost:3000/?hivedashboarduuid=${saveToHiveProgress.dashboardUUID}`;
             }}
             style={{ padding: '3px', float: 'right' }}
           >
