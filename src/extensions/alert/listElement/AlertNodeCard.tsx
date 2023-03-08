@@ -26,16 +26,18 @@ export const AlertNodeCard = ({ record, extensionSettings }) => {
           setModalOpen(true);
         }}
       >
-        <h1>
-          {' '}
-          {record.properties && record.properties[titleProperty]
-            ? record.properties[titleProperty]
-            : 'unknown title'}{' '}
-        </h1>
-        <h3>
-          {' '}
-          {record.properties && record.properties[bodyProperty] ? record.properties[bodyProperty] : 'unknown body'}{' '}
-        </h3>
+        <CardContent>
+          <h3 style={{ margin: 0 }}>
+            {' '}
+            {record.properties && record.properties[titleProperty]
+              ? record.properties[titleProperty]
+              : 'unknown title'}{' '}
+          </h3>
+          <p style={{ margin: 0 }}>
+            {' '}
+            {record.properties && record.properties[bodyProperty] ? record.properties[bodyProperty] : '...'}{' '}
+          </p>
+        </CardContent>
       </Card>
       <AlertNodeInspectionModal
         record={record}

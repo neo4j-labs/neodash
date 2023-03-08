@@ -12,7 +12,7 @@ import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../compon
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 
 // The sidebar that appears on the left side of the dashboard.
-export const AlertDrawer = ({ extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
+export const AlertDrawer = ({ open, extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
   const [records, setRecords] = useState([]);
   // List of records parsed from the result
   const [parsedRecords, setParsedRecords] = useState([]);
@@ -97,27 +97,18 @@ export const AlertDrawer = ({ extensionSettings, query, database, loadDatabaseLi
   }
   const drawer = (
     <Drawer
-      variant='permanent'
+      variant='persistent'
+      open={open}
+      anchor='left'
       style={{
         position: 'relative',
         overflowX: 'hidden',
-        width: '240px',
+        width: open ? '240px' : '0px',
         transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
         boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
-        height: '800px',
+        marginTop: '113px',
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          overflowX: 'hidden',
-          justifyContent: 'flex-end',
-          padding: '0 8px',
-          minHeight: '64px',
-        }}
-      ></div>
-
       <AlertDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></AlertDrawerHeader>
       {/* TODO: define body here (for now list of clickable cards) */}
       {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
@@ -125,7 +116,7 @@ export const AlertDrawer = ({ extensionSettings, query, database, loadDatabaseLi
       ) : isWrong ? (
         <NoDrawableDataErrorMessage />
       ) : (
-        <List>
+        <List style={{ overflowY: 'scroll', position: 'absolute', top: '40px' }}>
           {parsedRecords.map((record) => {
             return (
               <ListItem>

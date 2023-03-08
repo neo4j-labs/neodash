@@ -28,8 +28,8 @@ import AlertDrawer from '../../extensions/alert/AlertDrawer';
  * @returns
  */
 // TODO: abstract logic
-function renderExtensions() {
-  return <AlertDrawer></AlertDrawer>;
+function renderExtensions(open) {
+  return <AlertDrawer open={open}></AlertDrawer>;
 }
 
 // The sidebar that appears on the left side of the dashboard.
@@ -151,7 +151,7 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {extensionsConfig.alerts && extensionsConfig.alerts.opened ? renderExtensions(open) : <></>}
+      {extensionsConfig.alerts ? renderExtensions(extensionsConfig.alerts.opened) : <></>}
     </>
   );
 };

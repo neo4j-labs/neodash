@@ -29,7 +29,8 @@ export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTi
             <TextField
               id='standard-outlined'
               label=''
-              placeholder='Drawer Name...'
+              style={{ marginLeft: '14px', marginTop: '8px' }}
+              placeholder='Sidebar Name...'
               className={'no-underline large'}
               maxRows={4}
               value={headerTitle}

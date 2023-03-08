@@ -31,11 +31,12 @@ export const EXTENSIONS = {
   },
   alerts: {
     name: 'alerts',
-    label: 'Alerts Inteface',
+    label: 'Node Sidebar',
     author: 'Neo4j Professional Services',
-    image: 'report-actions.png',
+    image: 'https://placekitten.com/1000/500',
     enabled: true,
-    description: 'blablablablablablablalbalblabla.',
+    description:
+      'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
     link: 'https://neo4j.com/professional-services/',
   },
 };

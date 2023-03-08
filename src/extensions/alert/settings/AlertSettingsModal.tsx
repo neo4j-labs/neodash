@@ -14,6 +14,7 @@ import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '.
 import NeoField from '../../../component/field/Field';
 import { applicationGetConnectionDatabase } from '../../../application/ApplicationSelectors';
 import ExtensionSettingsForm from './ExtensionSettingsForm';
+import SaveIcon from '@material-ui/icons/Save';
 
 const AlertSettingsModal = ({
   databaseList,
@@ -72,83 +73,84 @@ const AlertSettingsModal = ({
           maxWidth={'md'}
           scroll={'paper'}
           open={settingsOpen}
-          onClose={handleClose}
+          // onClose={handleClose}
           aria-labelledby='form-dialog-title'
         >
           <DialogTitle id='form-dialog-title'>
-            Settings
+            Node Sidebar Settings
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
               <Badge overlap='rectangular' badgeContent={''}>
-                <CloseIcon id={'extensions-modal-close-button'} />
+                <SaveIcon id={'extensions-modal-close-button'} />
               </Badge>
             </IconButton>
           </DialogTitle>
           <DialogContent>
-            <div>
-              <NeoField
-                select
-                placeholder='neo4j'
-                label='Database'
-                value={databaseText}
-                style={{ width: '47%', maxWidth: '200px' }}
-                choices={databaseList.map((database) => (
-                  <MenuItem key={database} value={database}>
-                    {database}
-                  </MenuItem>
-                ))}
-                onChange={(value) => {
-                  setDatabaseText(value);
-                }}
-              />
-              <></>
-              <br />
-              <br />
-              <NeoCodeEditorComponent
-                value={queryText}
-                editable={true}
-                language={'cypher'}
-                onChange={(value) => {
-                  setQueryText(value);
-                }}
-                placeholder={'Enter Cypher here...'}
-              />
-              <p
-                style={{
-                  color: 'grey',
-                  fontSize: 12,
-                  paddingLeft: '5px',
-                  borderBottom: '1px solid lightgrey',
-                  borderLeft: '1px solid lightgrey',
-                  borderRight: '1px solid lightgrey',
-                  marginTop: '0px',
-                }}
-              >
-                {'This interface needs a list of nodes, the returned value must be called nodes'}
-              </p>
-              <FormGroup>
-                <FormControlLabel
-                  style={{ marginLeft: '5px', marginBottom: '10px' }}
-                  control={
-                    <Switch
-                      checked={isAdvancedSettingsOpen}
-                      onChange={(event) => {
-                        setIsAdvancedSettingsOpen(event.target.checked);
-                      }}
-                      color='default'
-                    />
-                  }
-                  labelPlacement='end'
-                  label={<div style={{ fontSize: '12px', color: 'grey' }}>Advanced settings</div>}
-                />
-              </FormGroup>
-              <ExtensionSettingsForm
-                isAdvancedSettingsOpen={isAdvancedSettingsOpen}
-                extensionSettings={settingsToSave}
-                setSettingsToSave={setSettingsToSave}
-                extensionName={'alerts'}
-              ></ExtensionSettingsForm>
-            </div>
+            <NeoField
+              select
+              placeholder='neo4j'
+              label='Database'
+              value={databaseText}
+              style={{ width: '47%', maxWidth: '200px' }}
+              choices={databaseList.map((database) => (
+                <MenuItem key={database} value={database}>
+                  {database}
+                </MenuItem>
+              ))}
+              onChange={(value) => {
+                setDatabaseText(value);
+              }}
+            />
+            <></>
+            <br />
+            <br />
+            <NeoCodeEditorComponent
+              value={queryText}
+              editable={true}
+              language={'cypher'}
+              style={{ width: '600px', height: 'auto', border: '1px solid lightgray' }}
+              onChange={(value) => {
+                setQueryText(value);
+              }}
+              placeholder={'Enter Cypher here...'}
+            />
+            <p
+              style={{
+                color: 'grey',
+                fontSize: 12,
+                paddingLeft: '5px',
+                borderBottom: '1px solid lightgrey',
+                borderLeft: '1px solid lightgrey',
+                borderRight: '1px solid lightgrey',
+                marginTop: '0px',
+              }}
+            >
+              {'The sidebar expects a list of nodes to be returned. For each node, a card is rendered.'}
+            </p>
           </DialogContent>
+          <div style={{ background: isAdvancedSettingsOpen ? '#f6f6f6' : 'inherit', marginBottom: '10px' }}>
+            <FormGroup>
+              <FormControlLabel
+                style={{ marginLeft: '10px', marginBottom: '10px', borderTop: '1px dashed lightgrey' }}
+                control={
+                  <Switch
+                    checked={isAdvancedSettingsOpen}
+                    onChange={(event) => {
+                      setIsAdvancedSettingsOpen(event.target.checked);
+                    }}
+                    color='default'
+                  />
+                }
+                labelPlacement='end'
+                label={<div style={{ fontSize: '12px', color: 'grey' }}>Advanced settings</div>}
+              />
+            </FormGroup>
+            <ExtensionSettingsForm
+              isAdvancedSettingsOpen={isAdvancedSettingsOpen}
+              extensionSettings={settingsToSave}
+              setSettingsToSave={setSettingsToSave}
+              extensionName={'alerts'}
+            ></ExtensionSettingsForm>
+          </div>
         </Dialog>
       ) : (
         <></>

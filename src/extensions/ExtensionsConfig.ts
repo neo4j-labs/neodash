@@ -11,12 +11,12 @@ const EXTENSIONS_CONFIG = {
         default: 'color',
       },
       titleProperty: {
-        label: 'Name of the property that will be used as title of the card',
+        label: 'Card title property name',
         type: SELECTION_TYPES.TEXT,
         default: 'title',
       },
       bodyProperty: {
-        label: 'Name of the property that will be used as body of the card',
+        label: 'Card body property name',
         type: SELECTION_TYPES.TEXT,
         default: 'description',
       },

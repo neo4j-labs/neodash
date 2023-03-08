@@ -16,7 +16,7 @@ const NeoAlertModal = ({ isOpen, setAlertDrawerOpened }) => {
         <ListItemIcon>
           <ReportIcon />
         </ListItemIcon>
-        <ListItemText primary='Extensions' />
+        <ListItemText primary='Alerts' />
       </ListItem>
     </div>
   );

@@ -25,10 +25,10 @@ export const ExtensionSettingsForm = ({
   };
 
   return isAdvancedSettingsOpen ? (
-    <List>
+    <List style={{ marginLeft: 12, marginRight: 12 }}>
       {Object.keys(allSettings).map((setting) => {
         return (
-          <ListItem>
+          <ListItem style={{ padding: 0 }}>
             <NeoSetting
               key={setting}
               name={setting}
