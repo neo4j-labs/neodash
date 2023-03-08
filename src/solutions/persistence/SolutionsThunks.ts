@@ -85,6 +85,7 @@ const saveDemoCard = async ({ uuid, name }) => {
         domain: 'public',
         image: '',
         github: '',
+        caller: 'NEODASH',
       },
     };
 
