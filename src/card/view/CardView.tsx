@@ -30,6 +30,7 @@ const NeoCardView = ({
   dashboardSettings,
   settings,
   updateReportSetting,
+  createNotification,
   settingsOpen,
   editable,
   onGlobalParameterUpdate,
@@ -169,6 +170,7 @@ const NeoCardView = ({
           setGlobalParameter={onGlobalParameterUpdate}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          createNotification={createNotification}
           queryTimeLimit={dashboardSettings.queryTimeLimit ? dashboardSettings.queryTimeLimit : 20}
           setFields={onFieldsUpdate}
         />

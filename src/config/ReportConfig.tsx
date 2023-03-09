@@ -209,11 +209,23 @@ export const REPORT_TYPES = {
         values: ['force-directed', 'tree', 'radial'],
         default: 'force-directed',
       },
+      enableExploration: {
+        label: 'Enable graph exploration',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      enableEditing: {
+        label: 'Enable graph editing',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       showPropertiesOnHover: {
         label: 'Show pop-up on Hover',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       showPropertiesOnClick: {
         label: 'Show properties on Click',
@@ -230,7 +242,8 @@ export const REPORT_TYPES = {
       drilldownLink: {
         label: 'Drilldown Icon Link',
         type: SELECTION_TYPES.TEXT,
-        default: 'http://bloom.neo4j.io',
+        placeholder: 'http://bloom.neo4j.io',
+        default: '',
       },
       hideSelections: {
         label: 'Hide Property Selection',
@@ -256,6 +269,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      lockable: {
+        label: 'Enable locking node positions',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       autorun: {
         label: 'Auto-run query',
         type: SELECTION_TYPES.LIST,
@@ -265,7 +284,8 @@ export const REPORT_TYPES = {
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
-        default: '{label : url}',
+        placeholder: '{label : url}',
+        default: '',
       },
       refreshRate: {
         label: 'Refresh rate (seconds)',
@@ -876,12 +896,12 @@ export const REPORT_TYPES = {
       defaultRelColor: {
         label: 'Relationship Color',
         type: SELECTION_TYPES.TEXT,
-        default: '#666',
+        default: '#a0a0a0',
       },
       defaultRelWidth: {
         label: 'Relationship Width',
         type: SELECTION_TYPES.NUMBER,
-        default: 3.5,
+        default: 1,
       },
       relColorProp: {
         label: 'Relationship Color Property',
