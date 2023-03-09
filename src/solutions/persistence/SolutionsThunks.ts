@@ -301,6 +301,7 @@ export const saveDashboardToHiveThunk =
           body: formData,
           headers: {
             // Content-Type": ""     // commenting it out so the browser will fill it in for me
+            authorization: auth.getIdToken() ? `Bearer ${auth.getIdToken()}` : '',
           },
         })
           .then(async (response) => {
