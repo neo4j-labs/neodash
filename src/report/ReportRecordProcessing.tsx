@@ -22,6 +22,31 @@ export function extractNodePropertiesFromRecords(records: any) {
   return fields.length > 0 ? fields : [];
 }
 
+/**
+ * Merges an existing set of fields (node labels and their properties) with a new one.
+ * This is used when we explore the graph and want to update the report footer.
+ * @param oldFields a list of string[].
+ * @param newFields  a list of string[].
+ * @returns a list of string[].
+ */
+export function mergeNodePropsFieldsLists(oldFields: any[], newFields: any[]) {
+  const fields = [...oldFields];
+  newFields.forEach((newEntry) => {
+    const label = newEntry[0];
+    const existingEntry = fields.filter((f) => f[0] == label)[0];
+    if (!existingEntry) {
+      fields.push(newEntry);
+    } else {
+      newEntry.slice(1).forEach((element) => {
+        if (!element in existingEntry) {
+          existingEntry.push(element);
+        }
+      });
+    }
+  });
+  return fields;
+}
+
 export function saveNodePropertiesToDictionary(field, fieldsDict) {
   // TODO - instead of doing this discovery ad-hoc, we could also use CALL db.schema.nodeTypeProperties().
   if (field == undefined) {
@@ -62,7 +87,7 @@ const rightRelationship =
 const leftRelationship =
   'polygon(10px 0%, calc(100% - 0%) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 0%) 100%, 10px 100%, 0% calc(100% - 50%), 0% 50%)';
 
-function RenderNode(value, key = 0) {
+export function RenderNode(value, key = 0) {
   return (
     <HtmlTooltip
       key={`${key}-${value.identity}`}
@@ -91,8 +116,28 @@ function RenderNode(value, key = 0) {
         </div>
       }
     >
-      <Chip label={value.labels.length > 0 ? value.labels.join(', ') : 'Node'} />
+      {RenderNodeChip(value.labels.length > 0 ? value.labels.join(', ') : 'Node')}
     </HtmlTooltip>
+  );
+}
+
+export function RenderNodeChip(text, color = 'lightgrey', border = '0px') {
+  return <Chip label={text} style={{ background: color, minWidth: 32, border: border }} />;
+}
+
+export function RenderRelationshipChip(text, direction = undefined, color = 'lightgrey') {
+  return (
+    <Chip
+      style={{
+        background: color,
+        borderRadius: 0,
+        paddingRight: 5,
+        height: 21,
+        paddingLeft: 5,
+        clipPath: direction == undefined ? 'none' : direction ? rightRelationship : leftRelationship,
+      }}
+      label={`${text} `}
+    />
   );
 }
 
@@ -125,13 +170,7 @@ function RenderRelationship(value, key = 0) {
         </div>
       }
     >
-      <Chip
-        style={{
-          borderRadius: 0,
-          clipPath: value.direction == undefined ? 'none' : value.direction ? rightRelationship : leftRelationship,
-        }}
-        label={value.type}
-      />
+      {RenderRelationshipChip(value.type, value.direction)}
     </HtmlTooltip>
   );
 }

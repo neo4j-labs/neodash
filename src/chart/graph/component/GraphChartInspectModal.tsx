@@ -20,6 +20,9 @@ export const formatProperty = (property) => {
   return property;
 };
 
+/**
+ * Renders a pop-up window to inspect a node/relationship properties in a read-only table.
+ */
 export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) => {
   return (
     <div>
