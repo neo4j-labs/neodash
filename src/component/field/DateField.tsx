@@ -14,6 +14,7 @@ const NeoDatePicker = ({ label, value, onChange }) => {
         onChange={(event) => {
           onChange(event);
         }}
+        maxDate={new Date('9999-12-31')}
         renderInput={(params) => (
           <TextField
             variant='outlined'
