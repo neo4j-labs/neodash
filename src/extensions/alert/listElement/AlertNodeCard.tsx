@@ -11,7 +11,7 @@ import { CardContent } from '@material-ui/core';
  * @returns
  */
 // TODO: Understand what to show (probably an option (maybe first three fields by default))
-export const AlertNodeCard = ({ record, extensionSettings }) => {
+export const AlertNodeCard = ({ entity, extensionSettings }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   // TODO: understand how to bind colors
   const colorProperty = extensionSettings.colorProperty ? extensionSettings.colorProperty : 'color';
@@ -29,18 +29,18 @@ export const AlertNodeCard = ({ record, extensionSettings }) => {
         <CardContent>
           <h3 style={{ margin: 0 }}>
             {' '}
-            {record.properties && record.properties[titleProperty]
-              ? record.properties[titleProperty]
+            {entity.properties && entity.properties[titleProperty]
+              ? entity.properties[titleProperty]
               : 'unknown title'}{' '}
           </h3>
           <p style={{ margin: 0 }}>
             {' '}
-            {record.properties && record.properties[bodyProperty] ? record.properties[bodyProperty] : '...'}{' '}
+            {entity.properties && entity.properties[bodyProperty] ? entity.properties[bodyProperty] : '...'}{' '}
           </p>
         </CardContent>
       </Card>
       <AlertNodeInspectionModal
-        record={record}
+        entity={entity}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
       ></AlertNodeInspectionModal>

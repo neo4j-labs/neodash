@@ -8,28 +8,28 @@ import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 import { DialogContent } from '@material-ui/core';
 import NeoGraphChart from '../../../chart/graph/GraphChart';
-import NeoReport from '../../../report/Report';
 import { connect } from 'react-redux';
 import { getExtensionDatabase } from '../../ExtensionsSelectors';
 import { NeoReportWrapper } from '../../../report/ReportWrapper';
+import GraphEntityInspectionTable from '../../../chart/graph/component/GraphEntityInspectionTable';
 
-const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen, database }) => {
+const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database }) => {
   const handleClose = () => {
     setModalOpen(false);
   };
-
   return (
     <div>
       {modalOpen ? (
         <Dialog
           maxWidth={'md'}
+          fullWidth
           scroll={'paper'}
           open={modalOpen}
           onClose={handleClose}
           aria-labelledby='form-dialog-title'
         >
           <DialogTitle id='form-dialog-title'>
-            Settings
+            Labels: {entity.labels.join(', ')}
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
               <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon id={'extensions-modal-close-button'} />
@@ -38,14 +38,16 @@ const AlertNodeInspectionModal = ({ record, modalOpen, setModalOpen, database })
           </DialogTitle>
           <DialogContent>
             <div>
+              <h4>Node Properties</h4>
               <br />
-              <pre>{JSON.stringify(record, null, 2)}</pre>
+              <GraphEntityInspectionTable entity={entity}></GraphEntityInspectionTable>
               <br />
             </div>
-            <div style={{ width: 600, height: 600 }}>
+            <h4>Node Neighborhood</h4>
+            <div style={{ width: '100%', height: 600 }}>
               <NeoReportWrapper
                 database={database}
-                query={`MATCH (n) WHERE id(n) = ${record.id} OPTIONAL MATCH p=(n)--() RETURN n,p`}
+                query={`MATCH (n) WHERE id(n) = ${entity.id} OPTIONAL MATCH p=(n)--() RETURN n,p`}
                 ChartType={NeoGraphChart}
                 type={'graph'}
               ></NeoReportWrapper>

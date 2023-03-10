@@ -1,7 +1,6 @@
-import { Drawer, ListItem, List, Collapse, IconButton, Tooltip, debounce } from '@material-ui/core';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Drawer, ListItem, List } from '@material-ui/core';
+import React, { useContext, useEffect, useState } from 'react';
 import AlertDrawerHeader from './AlertDrawerHeader';
-import { HARD_ROW_LIMITING } from '../../config/ReportConfig';
 import { QueryStatus, recordsAllNodes, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { connect } from 'react-redux';
@@ -128,10 +127,10 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
         <NoDrawableDataErrorMessage />
       ) : (
         <List style={{ overflowY: 'scroll', position: 'absolute', top: '40px' }}>
-          {parsedRecords.map((record) => {
+          {parsedRecords.map((entity) => {
             return (
               <ListItem>
-                <AlertNodeCard record={record} extensionSettings={extensionSettings}></AlertNodeCard>
+                <AlertNodeCard entity={entity} extensionSettings={extensionSettings}></AlertNodeCard>
               </ListItem>
             );
           })}
