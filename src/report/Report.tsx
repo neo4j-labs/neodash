@@ -148,25 +148,28 @@ export const NeoReport = ({
   }, [lastRunTimestamp]);
 
   // Define query callback to allow reports to get extra data on interactions.
-  const queryCallback = useCallback((query, parameters, setRecords) => {
-    runCypherQuery(
-      driver,
-      database,
-      query,
-      parameters,
-      rowLimit,
-      (status) => {
-        status == QueryStatus.NO_DATA ? setRecords([]) : null;
-      },
-      (result) => setRecords(result),
-      () => {},
-      fields,
-      false,
-      false,
-      HARD_ROW_LIMITING,
-      queryTimeLimit
-    );
-  }, []);
+  const queryCallback = useCallback(
+    (query, parameters, setRecords) => {
+      runCypherQuery(
+        driver,
+        database,
+        query,
+        parameters,
+        rowLimit,
+        (status) => {
+          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+        },
+        (result) => setRecords(result),
+        () => {},
+        fields,
+        false,
+        false,
+        HARD_ROW_LIMITING,
+        queryTimeLimit
+      );
+    },
+    [database]
+  );
 
   const reportTypes = getReportTypes(extensions);
 
