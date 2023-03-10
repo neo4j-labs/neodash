@@ -20,6 +20,11 @@ const EXTENSIONS_CONFIG = {
         type: SELECTION_TYPES.TEXT,
         default: 'description',
       },
+      maxRecords: {
+        label: 'Maximum number of records',
+        type: SELECTION_TYPES.NUMBER,
+        default: 100,
+      },
       refreshButtonEnabled: {
         label: 'Refreshable',
         type: SELECTION_TYPES.LIST,

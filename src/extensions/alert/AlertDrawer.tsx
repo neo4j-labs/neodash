@@ -1,7 +1,7 @@
 import { Drawer, ListItem, List, Collapse, IconButton, Tooltip, debounce } from '@material-ui/core';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import AlertDrawerHeader from './AlertDrawerHeader';
-import { HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../../config/ReportConfig';
+import { HARD_ROW_LIMITING } from '../../config/ReportConfig';
 import { QueryStatus, recordsAllNodes, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { connect } from 'react-redux';
@@ -22,6 +22,17 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
   const [isWrong, setIsWrong] = useState(false);
   const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
   const [databaseList, setDatabaseList] = React.useState([]);
+  const [maxRecords, setMaxRecord] = React.useState(
+    extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100
+  );
+
+  // For now the only field that will retrigger the query in the settings is maxRecords
+  useEffect(() => {
+    let tmp = extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100;
+    if (tmp != maxRecords) {
+      setMaxRecord(tmp);
+    }
+  }, [extensionSettings]);
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
@@ -34,14 +45,14 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
       database,
       query,
       {},
-      100,
+      maxRecords,
       setStatus,
       setRecords,
       setFields,
       fields,
       useNodePropsAsFields,
       useReturnValuesAsFields,
-      HARD_ROW_LIMITING,
+      true,
       queryTimeLimit
     );
   };
@@ -64,7 +75,7 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
   // Query runner effect
   useEffect(() => {
     runCypher();
-  }, [query, database]);
+  }, [query, database, maxRecords]);
 
   // Record parser effect
   useEffect(() => {
