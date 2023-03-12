@@ -111,6 +111,12 @@ export const REPORT_TYPES = {
     // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
     disabledDependency: { relationshipParticleSpeed: { dependsOn: 'relationshipParticles', operator: false } },
     settings: {
+      allowDownload: {
+        label: 'Enable CSV Download',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,

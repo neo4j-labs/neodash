@@ -14,7 +14,10 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/GraphUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
-
+import { IconButton, Tooltip } from '@material-ui/core';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import { RenderSubValue } from '../../report/ReportRecordProcessing';
+import { downloadCSV } from '../ChartUtils';
 /**
  * Draws graph data using a force-directed-graph visualization.
  * This visualization is powered by `react-force-graph`.
@@ -26,7 +29,9 @@ const NeoGraphChart = (props: ChartProps) => {
   }
 
   // Retrieve config from advanced settings
+  const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : '#fafafa';
+  const allowDownload = props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
   const nodeSizeProp = props.settings && props.settings.nodeSizeProp ? props.settings.nodeSizeProp : 'size';
   const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : 'color';
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 2;
@@ -64,7 +69,9 @@ const NeoGraphChart = (props: ChartProps) => {
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
   const setNodePositions = (positions) =>
     props.updateReportSetting && props.updateReportSetting('nodePositions', positions);
-
+  const generateSafeColumnKey = (key) => {
+      return key != 'id' ? key : `${key} `;
+    };
   const handleEntityClick = (item) => {
     if (showPropertiesOnClick) {
       setSelectedEntity(item);
@@ -88,9 +95,24 @@ const NeoGraphChart = (props: ChartProps) => {
     }
     props.updateReportSetting && props.updateReportSetting('frozen', value);
   };
+  const { records } = props;
   let icons = parseNodeIconConfig(iconStyle);
   const colorScheme = categoricalColorSchemes[nodeColorScheme];
-
+  const rows = transposed
+    ? records[0].keys.map((key, i) => {
+        return Object.assign(
+          { id: i, Field: key },
+          ...records.map((r, j) => ({
+            [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
+          }))
+        );
+      })
+    : records.map((record, rownumber) => {
+        return Object.assign(
+          { id: rownumber },
+          ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
+        );
+      });
   const generateVisualizationDataGraph = (records) => {
     const extractedGraphFromRecords = buildGraphVisualizationObjectFromRecords(
       records,
@@ -183,6 +205,21 @@ const NeoGraphChart = (props: ChartProps) => {
         {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
+        {allowDownload && rows && rows.length > 0 ? (
+        <Tooltip title='Download CSV' aria-label=''>
+          <IconButton
+            onClick={() => {
+              downloadCSV(rows);
+            }}
+            aria-label='download csv'
+            style={{ bottom: '9px', left: '3px', position: 'absolute' }}
+          >
+            <SaveAltIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></SaveAltIcon>
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <></>
+      )}
       </NeoGraphChartCanvas>
     </div>
   );
