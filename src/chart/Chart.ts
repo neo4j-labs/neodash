@@ -13,4 +13,5 @@ export interface ChartProps {
   queryCallback: (query: string | undefined, parameters: Record<string, any>, setRecords: any) => void; // Callback to query the database with a given set of parameters. Calls 'setReccords' upon completion.
   setGlobalParameter?: (name: string, value: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
+  updateReportSetting?: (name, value) => void; // Callback to update a setting for this report.
 }

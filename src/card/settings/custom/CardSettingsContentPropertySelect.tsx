@@ -55,6 +55,7 @@ const NeoCardSettingsContentPropertySelect = ({
   if (settings.type == undefined) {
     onReportSettingUpdate('type', 'Node Property');
   }
+
   if (!parameterName && settings.entityType && settings.propertyType) {
     const entityAndPropertyType = `neodash_${settings.entityType}_${settings.propertyType}`;
     const formattedParameterId = formatParameterId(settings.id);
@@ -183,10 +184,17 @@ const NeoCardSettingsContentPropertySelect = ({
   }
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
-  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text'];
+  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Date Picker'];
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
+
+  // If the override is off, and the two values differ, set the display value to the original one again.
+  if (overridePropertyDisplayName == false && propertyInputText !== propertyInputDisplayText) {
+    onReportSettingUpdate('propertyTypeDisplay', settings.propertyType);
+    setPropertyInputDisplayText(propertyInputText);
+    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyType);
+  }
 
   return (
     <div>
@@ -212,7 +220,7 @@ const NeoCardSettingsContentPropertySelect = ({
         ))}
       </TextField>
 
-      {settings.type == 'Free Text' ? (
+      {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
         <NeoField
           label={'Name'}
           key={'freetext'}

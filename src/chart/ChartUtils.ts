@@ -1,4 +1,5 @@
 import domtoimage from 'dom-to-image';
+import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
 
 /**
  * Converts a neo4j record entry to a readable string representation.
@@ -136,7 +137,7 @@ export const downloadCSV = (rows) => {
   const element = document.createElement('a');
   let csv = '';
   const headers = Object.keys(rows[0]).slice(1);
-  csv += `${headers.join(', ')}\n`;
+  csv += `${headers.join(',')}\n`;
   rows.forEach((row) => {
     headers.forEach((header) => {
       // Parse value
@@ -145,7 +146,7 @@ export const downloadCSV = (rows) => {
         value = value.low;
       }
       csv += JSON.stringify(value).replaceAll(',', ';');
-      csv += headers.indexOf(header) < headers.length - 1 ? ', ' : '';
+      csv += headers.indexOf(header) < headers.length - 1 ? ',' : '';
     });
     csv += '\n';
   });
@@ -168,6 +169,14 @@ export function replaceDashboardParameters(str, parameters) {
   }
   Object.keys(parameters).forEach((key) => {
     str = str.replaceAll(`$${key}`, parameters[key] !== null ? parameters[key] : '');
+  });
+  return str;
+}
+
+// Replaces all global dashboard parameters inside a string with their values.
+export function replaceDashboardParametersInString(str, parameters) {
+  Object.keys(parameters).forEach((key) => {
+    str = str.replaceAll(`$${key}`, parameters[key]);
   });
   return str;
 }
@@ -322,3 +331,37 @@ export const processHierarchyFromRecords = (records: Record<string, any>[], sele
     }
   }, []);
 };
+
+/**
+ * Wrapper for empty check logic, to prevent calling writing the same code too many times
+ * @param obj
+ * @returns  Returns True if the input is null, undefined or an empty object
+ */
+export const isEmptyObject = (obj: object) => {
+  if (obj == undefined) {
+    return true;
+  }
+  return Object.keys(obj).length == 0;
+};
+
+/**
+ * Checks that the value in input can be casted to Neo4j Bolt Driver Date
+ * @param value
+ * @returns True if it's an object castable to date
+ */
+export function isCastableToNeo4jDate(value: object) {
+  let keys = Object.keys(value);
+  return keys.length == 3 && keys.includes('day') && keys.includes('month') && keys.includes('year');
+}
+
+/**
+ * Casts value in input to Neo4j Date bolt driver. If can't cast, it will throw an error
+ * @param value
+ * @returns Casted value to Neo4j Bolt Driver Date
+ */
+export function castToNeo4jDate(value: object) {
+  if (isCastableToNeo4jDate(value)) {
+    return new Neo4jDate(value.year, value.month, value.day);
+  }
+  throw new Error(`Invalid input for castToNeo4jDate: ${value}`);
+}
