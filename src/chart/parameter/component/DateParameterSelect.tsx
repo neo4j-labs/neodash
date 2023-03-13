@@ -53,12 +53,11 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
           if (!newValue || isNaN(newValue.$y)) {
             return;
           }
-
           if (newValue == null && clearParameterOnFieldClear) {
             setParameterValue(Neo4jDate.fromStandardDate(defaultValue.toDate()));
           } else if (newValue == null) {
             setParameterValue(undefined);
-          } else {
+          } else if (newValue.isValid()) {
             setParameterValue(Neo4jDate.fromStandardDate(newValue.toDate()));
           }
         }}
