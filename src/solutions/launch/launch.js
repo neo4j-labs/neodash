@@ -2,7 +2,7 @@ import auth from '../auth/auth';
 import { config } from '../config/dynamicConfig';
 import { handleErrors } from '../util/util';
 
-const fetchDashboardFromHive = async ({ uuid }) => {
+export const fetchDashboardFromHive = async ({ uuid }) => {
   const promise = new Promise((resolve, reject) => {
     const query = `
             query GetDashboardByUUID ($uuid: ID!) {

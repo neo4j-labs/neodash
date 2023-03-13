@@ -5,6 +5,7 @@ import { NEODASH_VERSION } from '../dashboard/DashboardReducer';
 import {
   loadDashboardFromNeo4jByNameThunk,
   loadDashboardFromNeo4jByUUIDThunk,
+  loadDashboardFromNeo4jByHiveUUIDThunk,
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
@@ -98,16 +99,23 @@ export const createConnectionThunk =
                   setDashboardAfterLoadingFromDatabase
                 )
               );
-            } else {
-              dispatch(
-                loadDashboardFromNeo4jByUUIDThunk(
-                  driver,
-                  application.standaloneDashboardDatabase,
-                  application.dashboardToLoadAfterConnecting,
-                  setDashboardAfterLoadingFromDatabase
-                )
-              );
-            }
+            } else if (window.location.search.includes('hive')) {
+                dispatch(
+                  loadDashboardFromNeo4jByHiveUUIDThunk(
+                    application.dashboardToLoadAfterConnecting,
+                    setDashboardAfterLoadingFromDatabase
+                  )
+                );
+              } else {
+                dispatch(
+                  loadDashboardFromNeo4jByUUIDThunk(
+                    driver,
+                    application.standaloneDashboardDatabase,
+                    application.dashboardToLoadAfterConnecting,
+                    setDashboardAfterLoadingFromDatabase
+                  )
+                );
+              }
             dispatch(setDashboardToLoadAfterConnecting(null));
           }
         } else {
