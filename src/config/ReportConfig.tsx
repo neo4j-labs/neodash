@@ -219,7 +219,7 @@ export const REPORT_TYPES = {
         label: 'Enable graph editing',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       showPropertiesOnHover: {
         label: 'Show pop-up on Hover',
