@@ -63,7 +63,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           title={
             props.interactivity.selectedEntity
               ? expandable
-                ? props.interactivity.selectedEntity.labels
+                ? props.interactivity.selectedEntity.labels.join(', ')
                 : props.interactivity.selectedEntity.type
               : ''
           }
@@ -100,6 +100,11 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               if (!cachedNeighbours) {
                 setCachedNeighbours(true);
                 const id = props.interactivity.selectedEntity?.id;
+                // Virtual relationships do not have any neighbours
+                if (id < 0) {
+                  setNeighbourRelCounts([]);
+                  return;
+                }
                 handleGetNodeRelTypes(id, props.engine, (records) =>
                   setNeighbourRelCounts(mergeDatabaseStatCountsWithCountsInView(id, records, props.data.links))
                 );
