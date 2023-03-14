@@ -28,8 +28,13 @@ import AlertDrawer from '../../extensions/alert/AlertDrawer';
  * @returns
  */
 // TODO: abstract logic
-function renderExtensions(open) {
+function renderExtensionDrawers(open) {
   return <AlertDrawer open={open}></AlertDrawer>;
+}
+
+// TODO: abstract logic
+function renderExtensionModals() {
+  return <NeoAlertModal></NeoAlertModal>;
 }
 
 // The sidebar that appears on the left side of the dashboard.
@@ -128,7 +133,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
-        {extensions.alerts ? <NeoAlertModal></NeoAlertModal> : <></>}
+        {extensions.alerts ? renderExtensionModals() : <></>}
       </List>
       <Divider />
       <List>
@@ -151,7 +156,7 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {extensionsConfig.alerts ? renderExtensions(extensionsConfig.alerts.opened) : <></>}
+      {extensionsConfig.alerts ? renderExtensionDrawers(extensionsConfig.alerts.opened) : <></>}
     </>
   );
 };

@@ -10,8 +10,6 @@ import {
   UPDATE_EXTENSION_TITLE,
 } from './ExtensionsActions';
 
-export const NEODASH_VERSION = '2.2';
-
 export const initialState = {};
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -47,6 +45,8 @@ export const extensionsReducer = (state = initialState, action: { type: any; pay
       const { extensionName, opened, extensionsConfig } = payload;
 
       // Managing first creation
+      // TODO - this is a bit of a funky implementation, lets think if we can come up with a neater way.
+      // perhaps first creation is done when the extension is enabled for the first time.
       if (extensionsConfig[extensionName]) {
         extensionsConfig[extensionName].opened = opened;
       } else {
@@ -71,7 +71,3 @@ export const extensionsReducer = (state = initialState, action: { type: any; pay
     }
   }
 };
-
-function dispatch(_: { type: string; payload: { number: any } }) {
-  throw new Error('Function not implemented.');
-}

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { getExtensionDatabase } from '../../ExtensionsSelectors';
 import { NeoReportWrapper } from '../../../report/ReportWrapper';
 import GraphEntityInspectionTable from '../../../chart/graph/component/GraphEntityInspectionTable';
-import { getSelectionBasedOnFields, setDefaultSelectionBasedOnFields } from '../../../chart/ChartUtils';
+import { getSelectionBasedOnFields } from '../../../chart/ChartUtils';
 
 const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database }) => {
   const [selection, setSelection] = React.useState({});

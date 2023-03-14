@@ -1,7 +1,8 @@
 import { SELECTION_TYPES } from '../config/CardConfig';
 
 // TODO: define settings for extensions (just alert for now, keep it futureproof)
-// TODO: understand if we want pagination (strange styling)
+// TODO: understand if we want pagination (strange styling).
+// TODO: Rename "alerts" to "node sidebar" (generic name).
 const EXTENSIONS_CONFIG = {
   alerts: {
     settings: {

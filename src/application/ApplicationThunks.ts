@@ -385,6 +385,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       )
     );
     dispatch(setConnectionModalOpen(false));
+    // TODO - generalize this, close all drawer-based extensions on app startup.
     dispatch(setExtensionOpen('alerts', false));
 
     // Auto-upgrade the dashboard version if an old version is cached.

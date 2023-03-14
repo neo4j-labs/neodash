@@ -26,7 +26,7 @@ export const initialState = {
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
   extensions: {},
-  extensionsConfig: {},
+  extensionsConfig: {}, // TODO - merge with `extensions` in the 2.3 dashboard format.
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -47,7 +47,7 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     };
   }
 
-  // Settings-specific updates are deferred to the page reducer.
+  // Settings-specific updates are deferred to the settings reducer.
   if (action.type.startsWith('SETTINGS/')) {
     const enrichedPayload = update(payload, { dashboard: state });
     const enrichedAction = { type, payload: enrichedPayload };
@@ -57,7 +57,7 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     };
   }
 
-  // Settings-specific updates are deferred to the page reducer.
+  // Extensions-specific updates are deferred to the extensions reducer.
   if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
     const enrichedPayload = update(payload, { extensionsConfig: state.extensionsConfig });
     const enrichedAction = { type, payload: enrichedPayload };
@@ -117,7 +117,3 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     }
   }
 };
-
-function dispatch(_: { type: string; payload: { number: any } }) {
-  throw new Error('Function not implemented.');
-}

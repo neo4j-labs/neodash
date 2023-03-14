@@ -1,8 +1,7 @@
 import { Record as Neo4jRecord } from 'neo4j-driver';
 
-// Interface for all charts that NeoDash can render.
-// When you extend NeoDash, make sure that your component implements this interface.
 // TODO: define interface for future drawers
+// TODO: This is a "duplicate" of the chart props, they share a lot of common entities. Should be abstracted to common type.
 export interface DrawerProps {
   records: Neo4jRecord[]; // Query output, Neo4j records as returned from the driver.
   extensions?: Record<string, any>; // A dictionary of enabled extensions.

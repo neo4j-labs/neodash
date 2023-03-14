@@ -12,11 +12,10 @@ import {
   updateReportDatabase,
 } from './CardActions';
 import { createNotificationThunk } from '../page/PageThunks';
-import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import isEqual from 'lodash.isequal';
 import { SELECTION_TYPES } from '../config/CardConfig';
-import { getSelectionBasedOnFields, setDefaultSelectionBasedOnFields } from '../chart/ChartUtils';
+import { getSelectionBasedOnFields } from '../chart/ChartUtils';
 
 export const updateReportTitleThunk = (index, title) => (dispatch: any, getState: any) => {
   try {

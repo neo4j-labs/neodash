@@ -1,3 +1,4 @@
+// TODO - perhaps we can guarantee creation or something... lets think some more to avoid this check.
 export const getExtensionSettings = (state: any, name: string) => {
   let res = state.dashboard.extensionsConfig[name];
   return res != undefined && res.settings ? res.settings : {};

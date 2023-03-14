@@ -1,35 +1,36 @@
 export const UPDATE_EXTENSION_TITLE = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_TITLE';
-export const setExtensionTitle = (extensionName: string, title: string) => ({
+export const setExtensionTitle = (extension: string, title: string) => ({
   type: UPDATE_EXTENSION_TITLE,
-  payload: { extensionName, title },
+  // TODO: Simplify naming in the payload for all extension actions.
+  payload: { extensionName: extension, title },
 });
 
 export const UPDATE_EXTENSION_SETTINGS = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_SETTINGS';
-export const setExtensionSettings = (extensionName: string, settings: any) => ({
+export const setExtensionSettings = (extension: string, settings: any) => ({
   type: UPDATE_EXTENSION_SETTINGS,
-  payload: { extensionName, settings },
+  payload: { extensionName: extension, settings },
 });
 
 export const UPDATE_EXTENSION_QUERY = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_QUERY';
-export const setExtensionQuery = (extensionName: string, query: any) => ({
+export const setExtensionQuery = (extension: string, query: any) => ({
   type: UPDATE_EXTENSION_QUERY,
-  payload: { extensionName, query },
+  payload: { extensionName: extension, query },
 });
 
 /**
  * Certain extensions need to be opened to be used (like the alert drawer)
  */
 export const UPDATE_EXTENSION_OPEN = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_OPEN';
-export const setExtensionOpen = (extensionName: string, opened: boolean) => ({
+export const setExtensionOpen = (extension: string, open: boolean) => ({
   type: UPDATE_EXTENSION_OPEN,
-  payload: { extensionName, opened },
+  payload: { extensionName: extension, opened: open },
 });
 
 /**
  * Certain extensions need to be opened to be used (like the alert drawer)
  */
 export const UPDATE_EXTENSION_DATABASE = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_DATABASE';
-export const setExtensionDatabase = (extensionName: string, databaseName: string) => ({
+export const setExtensionDatabase = (extension: string, database: string) => ({
   type: UPDATE_EXTENSION_DATABASE,
-  payload: { extensionName, databaseName },
+  payload: { extensionName: extension, databaseName: database },
 });

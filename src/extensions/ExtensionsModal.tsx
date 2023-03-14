@@ -93,6 +93,7 @@ const NeoExtensionsModal = ({
                               onClick={() => {
                                 if (e.enabled) {
                                   setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
+                                  // TODO - generalize, all drawer-like extensions should be closed
                                   if (e.name === 'alerts') {
                                     setExtensionOpened(e.name, extensions[e.name] == undefined ? false : undefined);
                                   }
@@ -148,7 +149,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setExtensionEnabled: (name, enabled) => dispatch(setExtensionEnabled(name, enabled)),
-  setExtensionOpened: (name, opened) => dispatch(setExtensionOpen(name, opened)),
+  setExtensionOpened: (name, opened) => dispatch(setExtensionOpen(name, opened)), // TODO: align naming
   onExtensionUnavailableTriggered: (name) =>
     dispatch(
       createNotificationThunk(
