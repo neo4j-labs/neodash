@@ -23,19 +23,31 @@ import {
   Select,
   MenuItem,
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { getDashboardJson } from './ModalSelectors';
-import { applicationGetConnection } from '../application/ApplicationSelectors';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { getDashboardJson } from '../../modal/ModalSelectors';
+import { applicationGetConnection } from '../../application/ApplicationSelectors';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { saveDashboardToHiveThunk, listUserDashboards } from '../solutions/persistence/SolutionsThunksRefactor';
+import { saveDashboardToHiveThunk, listUserDashboards } from '../persistence/SolutionsThunksRefactor';
 import { ExpandMore } from '@material-ui/icons';
-import { DatabaseUploadType } from '../solutions/config/SolutionsConstants';
+import { DatabaseUploadType } from '../config/SolutionsConstants';
 
 /**
  * A modal to save the dashboard and database to Hive
  */
 
 const styles = {};
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    height: 224,
+  },
+  tabs: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 export const SaveToHiveModel = ({
   dashboard,
@@ -50,12 +62,19 @@ export const SaveToHiveModel = ({
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+
+  const classes = useStyles();
 
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     setIsSelected(true);
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
   };
 
   const [dbType, setDbType] = useState(DatabaseUploadType.DatabaseUpload);
@@ -76,7 +95,7 @@ export const SaveToHiveModel = ({
   return (
     <Dialog maxWidth={'lg'} open={modalOpen === true} onClose={closeDialog} aria-labelledby='form-dialog-title'>
       <DialogTitle id='form-dialog-title'>
-        Save to Hive
+        Publish to Hive
         <IconButton
           onClick={() => {
             closeDialog(false);
@@ -92,6 +111,30 @@ export const SaveToHiveModel = ({
         <DialogContentText>
           This will save your current dashboard to Hive. Use the below options for Hive managed or self managed demo DB.
         </DialogContentText>
+
+        {/*
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={tabIndex}
+          onChange={handleTabChange}
+          aria-label="Publish to Hive"
+          className={classes.tabs}
+        >        
+          <Tab label="Pick a database" id='publish-to-hive-1' aria-label="Pick a database"/>
+          <Tab label="Configure card" id='publish-to-hive-2' aria-label="Configure card"/>
+          <Tab label="Publish" id='publish-to-hive-3' aria-label="Publish"/>
+        </Tabs>      
+        <TabPanel value={value} index={0}>
+          Item One
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          Item Two
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Item Three
+        </TabPanel>
+        */}
 
         <Accordion
           expanded={expandedPanel === DatabaseUploadType.DatabaseUpload}

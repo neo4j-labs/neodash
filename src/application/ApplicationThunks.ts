@@ -331,12 +331,12 @@ async function getConfigDynamically() {
   // for now putting auth code here
   console.log('This line is logged once.');
   const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
-  console.log('This line is logged twice somehow!');
+  console.log('This line used to be logged twice, before useEffect()');
   if (launchResult.isHandled) {
     return launchResult.config;
   }
   try {
-    return await (await fetch('config.json')).json();
+    return (await fetch('config.json')).json();
   } catch (e) {
     // Config may not be found, for example when we are in Neo4j Desktop.
     // eslint-disable-next-line no-console
@@ -365,7 +365,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
   // };
 
   const config = await getConfigDynamically();
-
   try {
     // Parse the URL parameters to see if there's any deep linking of parameters.
     const queryString = window.location.search;

@@ -144,7 +144,7 @@ export const listUserDashboards = async () => {
   return promise;
 };
 
-const saveDashboardToHiveGraphQL_Old = async ({
+const saveDashboardToHiveGraphQL = async ({
   dashboard,
   dbName,
   dbType,
@@ -218,7 +218,7 @@ const saveHiveCard = async ({
   fileName,
 }) => {
   try {
-    const dashboardSaveResponse = await saveDashboardToHiveGraphQL_Old({
+    const dashboardSaveResponse = await saveDashboardToHiveGraphQL({
       dashboard,
       dbName,
       dbType,
@@ -251,38 +251,31 @@ const saveHiveCard = async ({
 };
 
 export const saveDashboardToHiveThunk =
-  (
-    driver,
+  ({
     selectedFile,
     dashboard,
-    date,
-    user,
     overwrite = false,
     updateSaveToHiveProgress,
     dbType,
     dbConnectionUrl,
     dbUsername,
     dbPassword,
-    dbName
-  ) =>
+    dbName,
+  }) =>
   async (dispatch: any) => {
     updateSaveToHiveProgress({ flag: 'progress-bar' });
-    const saveHiveCardArgs = {
-      dispatch,
-      dashboard,
-      dbName,
-      overwrite,
-      dbType,
-      dbConnectionUrl,
-      dbUsername,
-      dbPassword,
-      fileName,
-    };
     try {
       if (dbType === DatabaseUploadType.NeoConnection) {
         const hiveinfo = await saveHiveCard({
-          ...saveHiveCardArgs,
-          fileName: '',
+          dispatch,
+          dashboard,
+          dbName,
+          overwrite,
+          dbType,
+          dbConnectionUrl,
+          dbUsername,
+          dbPassword,
+          fileName: '', // fileName
         });
         updateSaveToHiveProgress({
           flag: 'progress-instructions',
@@ -316,7 +309,7 @@ export const saveDashboardToHiveThunk =
             let { dbName } = json;
             console.log('dbName: ', dbName);
             try {
-              const hiveinfo = await saveHiveCard(
+              const hiveinfo = await saveHiveCard({
                 dispatch,
                 dashboard,
                 dbName,
@@ -325,8 +318,8 @@ export const saveDashboardToHiveThunk =
                 dbConnectionUrl,
                 dbUsername,
                 dbPassword,
-                selectedFile?.name
-              );
+                fileName: selectedFile?.name,
+              });
               updateSaveToHiveProgress({
                 flag: 'progress-instructions',
                 dashboardUUID: hiveinfo?.uuid,

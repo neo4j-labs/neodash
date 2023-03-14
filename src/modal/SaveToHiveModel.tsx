@@ -27,7 +27,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { getDashboardJson } from './ModalSelectors';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { saveDashboardToHiveThunk, listUserDashboards } from '../solutions/persistence/SolutionsThunksRefactor';
+import { saveDashboardToHiveThunk, listUserDashboards } from '../solutions/persistence/SolutionsThunks';
 import { ExpandMore } from '@material-ui/icons';
 import { DatabaseUploadType } from '../solutions/config/SolutionsConstants';
 

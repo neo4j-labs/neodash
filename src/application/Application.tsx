@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
@@ -88,10 +88,12 @@ const Application = ({
 }) => {
   const [initialized, setInitialized] = React.useState(false);
 
-  if (!initialized) {
-    setInitialized(true);
-    initializeApplication(initialized);
-  }
+  useEffect(() => {
+    if (!initialized) {
+      setInitialized(true);
+      initializeApplication(initialized);
+    }
+  }, [initialized]);
 
   const ref = React.useRef();
 
