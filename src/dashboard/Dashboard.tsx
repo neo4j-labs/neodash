@@ -33,7 +33,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
-
+  const plainTextPassword = applicationSettings.standalonePassword;
   const content = (
     <Neo4jProvider driver={driver}>
       <NeoDashboardConnectionUpdateHandler
@@ -50,13 +50,13 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
       ></NeoDashboardHeader>
       <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: '#fafafa' }}>
         <Container maxWidth='xl' style={{ marginTop: '60px' }}>
-          {applicationSettings.standalonePassword ? (
+          {/* {applicationSettings.standalonePassword ? (
             <div style={{ textAlign: 'center', color: 'red', zIndex: 999, paddingTop: 60, marginBottom: -50 }}>
               Warning: NeoDash is running with a plaintext password in config.json.
             </div>
           ) : (
             <></>
-          )}
+          )} */}
           <NeoPage></NeoPage>
         </Container>
       </main>

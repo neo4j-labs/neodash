@@ -4,6 +4,7 @@ import { addPage, movePage, removePage, resetDashboardState, setDashboard } from
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk } from '../settings/SettingsThunks';
+import { fetchDashboardFromHive } from '../solutions/launch/launch';
 
 // TODO move this to a generic utils file
 export function createUUID() {
@@ -209,6 +210,26 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
   } catch (e) {
     dispatch(createNotificationThunk('Unable to load dashboard to Neo4j', e));
   }
+};
+
+export const loadDashboardFromNeo4jByHiveUUIDThunk = (uuid, callback) => (dispatch: any) => {
+  const loadHiveDash = async () => {
+    try {
+      const hivedash = await fetchDashboardFromHive({ uuid: uuid });
+      if (!hivedash.data.getDashboardByUUID) {
+        dispatch(
+          createNotificationThunk(
+            `Unable to load dashboard from database Hive.`,
+            `A dashboard with UUID '${uuid}' could not be found.`
+          )
+        );
+      }
+      callback(hivedash.data.getDashboardByUUID.content);
+    } catch (e) {
+      dispatch(createNotificationThunk('Unable to load dashboard to Hive', e));
+    }
+  };
+  loadHiveDash();
 };
 
 export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callback) => (dispatch: any) => {

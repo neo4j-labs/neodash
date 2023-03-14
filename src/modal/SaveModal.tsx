@@ -113,6 +113,23 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
     element.click();
   };
 
+  const exportHiveJson = () => {
+    const datajson = {
+      hiveDashboardUrl: `http://localhost:3000/?hivedashboarduuid=${saveToHiveProgress.dashboardUUID}`,
+      hiveCardUrl: `http://localhost:3002/solutions/${saveToHiveProgress.solutionId}`,
+      hiveDbName: saveToHiveProgress.dbName,
+      HiveDbUsername: saveToHiveProgress.dbName?.replaceAll('.', ''),
+      HiveDbPassword: saveToHiveProgress.dbName?.replaceAll('.', ''),
+      dashboardTitle: dashboard.title,
+    };
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(datajson))}`;
+    const link = document.createElement('a');
+    link.href = jsonString;
+    link.download = `${dashboard.title}.json`;
+
+    link.click();
+  };
+
   return (
     <div>
       <ListItem button onClick={handleClickOpen}>
@@ -339,6 +356,13 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
 
           {saveToHiveProgress.flag == 'progress-instructions' && (
             <div>
+              <div>
+                Downlad saved Hive info as{' '}
+                <Button variant='outlined' onClick={exportHiveJson}>
+                  JSON File
+                </Button>
+              </div>
+              <br />
               <div>
                 Hive{' '}
                 <a
