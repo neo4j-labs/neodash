@@ -21,7 +21,12 @@ export const AlertNodeCard = ({ entity, extensionSettings }) => {
   const content = (
     <>
       <Card
-        style={{ height: '120px', width: '200px', cursor: 'pointer' }}
+        style={{
+          height: '120px',
+          width: '200px',
+          cursor: 'pointer',
+          backgroundColor: entity.properties[colorProperty],
+        }}
         onClick={() => {
           setModalOpen(true);
         }}
@@ -31,11 +36,11 @@ export const AlertNodeCard = ({ entity, extensionSettings }) => {
             {' '}
             {entity.properties && entity.properties[titleProperty]
               ? entity.properties[titleProperty]
-              : 'unknown title'}{' '}
+              : '(no title)'}{' '}
           </h3>
           <p style={{ margin: 0 }}>
             {' '}
-            {entity.properties && entity.properties[bodyProperty] ? entity.properties[bodyProperty] : '...'}{' '}
+            {entity.properties && entity.properties[bodyProperty] ? entity.properties[bodyProperty] : '(no value)'}{' '}
           </p>
         </CardContent>
       </Card>

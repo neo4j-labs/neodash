@@ -19,9 +19,9 @@ export const setExtensionQuery = (extensionName: string, query: any) => ({
 /**
  * Certain extensions need to be opened to be used (like the alert drawer)
  */
-export const UPDATE_EXTENSION_OPENED = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_OPENED';
-export const setExtensionOpened = (extensionName: string, opened: boolean) => ({
-  type: UPDATE_EXTENSION_OPENED,
+export const UPDATE_EXTENSION_OPEN = 'DASHBOARD/EXTENSIONS/UPDATE_EXTENSION_OPEN';
+export const setExtensionOpen = (extensionName: string, opened: boolean) => ({
+  type: UPDATE_EXTENSION_OPEN,
   payload: { extensionName, opened },
 });
 

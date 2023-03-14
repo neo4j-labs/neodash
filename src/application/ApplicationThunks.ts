@@ -9,6 +9,7 @@ import {
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
+import { setExtensionOpen } from '../extensions/ExtensionsActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
@@ -384,6 +385,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       )
     );
     dispatch(setConnectionModalOpen(false));
+    dispatch(setExtensionOpen('alerts', false));
 
     // Auto-upgrade the dashboard version if an old version is cached.
     if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {

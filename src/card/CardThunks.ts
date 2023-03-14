@@ -16,6 +16,7 @@ import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import isEqual from 'lodash.isequal';
 import { SELECTION_TYPES } from '../config/CardConfig';
+import { getSelectionBasedOnFields, setDefaultSelectionBasedOnFields } from '../chart/ChartUtils';
 
 export const updateReportTitleThunk = (index, title) => (dispatch: any, getState: any) => {
   try {
@@ -113,24 +114,7 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
             }
           } else if (selectableFields[selection].type == SELECTION_TYPES.NODE_PROPERTIES) {
             // For node property selections, select the most obvious properties of the node to display.
-            const selection = {};
-            fields.forEach((nodeLabelAndProperties) => {
-              const label = nodeLabelAndProperties[0];
-              const properties = nodeLabelAndProperties.slice(1);
-              let selectedProp = oldSelection[label] ? oldSelection[label] : undefined;
-              if (autoAssignSelectedProperties) {
-                DEFAULT_NODE_LABELS.forEach((prop) => {
-                  if (properties.indexOf(prop) !== -1) {
-                    if (selectedProp == undefined) {
-                      selectedProp = prop;
-                    }
-                  }
-                });
-                selection[label] = selectedProp ? selectedProp : '(label)';
-              } else {
-                selection[label] = selectedProp ? selectedProp : '(no label)';
-              }
-            });
+            const selection = getSelectionBasedOnFields(fields, oldSelection, autoAssignSelectedProperties);
             dispatch(updateAllSelections(pagenumber, index, selection));
           } else {
             // Else, default the selection to the Nth item of the result set fields.

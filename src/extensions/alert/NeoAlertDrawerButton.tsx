@@ -2,7 +2,7 @@ import ReportIcon from '@material-ui/icons/Report';
 import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { setExtensionOpened } from '../ExtensionsActions';
+import { setExtensionOpen } from '../ExtensionsActions';
 import { getExtensionOpened } from '../ExtensionsSelectors';
 
 const NeoAlertModal = ({ isOpen, setAlertDrawerOpened }) => {
@@ -27,7 +27,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setAlertDrawerOpened: (opened) => dispatch(setExtensionOpened('alerts', opened)),
+  setAlertDrawerOpened: (open) => dispatch(setExtensionOpen('alerts', open)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoAlertModal);

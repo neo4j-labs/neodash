@@ -33,7 +33,7 @@ export const EXTENSIONS = {
     name: 'alerts',
     label: 'Node Sidebar',
     author: 'Neo4j Professional Services',
-    image: 'https://placekitten.com/1000/500',
+    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png',
     enabled: true,
     description:
       'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',

@@ -4,7 +4,7 @@
 
 import {
   UPDATE_EXTENSION_DATABASE,
-  UPDATE_EXTENSION_OPENED,
+  UPDATE_EXTENSION_OPEN,
   UPDATE_EXTENSION_QUERY,
   UPDATE_EXTENSION_SETTINGS,
   UPDATE_EXTENSION_TITLE,
@@ -42,7 +42,7 @@ export const extensionsReducer = (state = initialState, action: { type: any; pay
       }
       return extensionsConfig;
     }
-    case UPDATE_EXTENSION_OPENED: {
+    case UPDATE_EXTENSION_OPEN: {
       // Setting the extension opened to trigger its rendering
       const { extensionName, opened, extensionsConfig } = payload;
 

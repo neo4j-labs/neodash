@@ -197,6 +197,7 @@ export const downloadComponentAsImage = (ref) => {
 };
 
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
+import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
@@ -364,4 +365,29 @@ export function castToNeo4jDate(value: object) {
     return new Neo4jDate(value.year, value.month, value.day);
   }
   throw new Error(`Invalid input for castToNeo4jDate: ${value}`);
+}
+
+/**
+ * Creates a default selection config for a node-property based chart footer.
+ */
+export function getSelectionBasedOnFields(fields, oldSelection = {}, autoAssignSelectedProperties = true) {
+  const selection = {};
+  fields.forEach((nodeLabelAndProperties) => {
+    const label = nodeLabelAndProperties[0];
+    const properties = nodeLabelAndProperties.slice(1);
+    let selectedProp = oldSelection[label] ? oldSelection[label] : undefined;
+    if (autoAssignSelectedProperties) {
+      DEFAULT_NODE_LABELS.forEach((prop) => {
+        if (properties.indexOf(prop) !== -1) {
+          if (selectedProp == undefined) {
+            selectedProp = prop;
+          }
+        }
+      });
+      selection[label] = selectedProp ? selectedProp : '(label)';
+    } else {
+      selection[label] = selectedProp ? selectedProp : '(no label)';
+    }
+  });
+  return selection;
 }

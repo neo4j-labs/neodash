@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
-import { setExtensionOpened } from './ExtensionsActions';
+import { setExtensionOpen } from './ExtensionsActions';
 
 const NeoExtensionsModal = ({
   extensions,
@@ -148,7 +148,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setExtensionEnabled: (name, enabled) => dispatch(setExtensionEnabled(name, enabled)),
-  setExtensionOpened: (name, opened) => dispatch(setExtensionOpened(name, opened)),
+  setExtensionOpened: (name, opened) => dispatch(setExtensionOpen(name, opened)),
   onExtensionUnavailableTriggered: (name) =>
     dispatch(
       createNotificationThunk(

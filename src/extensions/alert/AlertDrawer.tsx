@@ -95,7 +95,7 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
   function manageQueryStatus(status, records) {
     let message =
       status === QueryStatus.NO_QUERY
-        ? 'The drawer needs a query \n to render the data'
+        ? 'Use the settings (⋮) to \nspecify a query.'
         : status === QueryStatus.NO_DATA
         ? 'Query returned no data'
         : status === QueryStatus.ERROR

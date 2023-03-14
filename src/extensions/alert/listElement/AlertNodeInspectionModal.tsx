@@ -10,8 +10,11 @@ import { connect } from 'react-redux';
 import { getExtensionDatabase } from '../../ExtensionsSelectors';
 import { NeoReportWrapper } from '../../../report/ReportWrapper';
 import GraphEntityInspectionTable from '../../../chart/graph/component/GraphEntityInspectionTable';
+import { getSelectionBasedOnFields, setDefaultSelectionBasedOnFields } from '../../../chart/ChartUtils';
 
 const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database }) => {
+  const [selection, setSelection] = React.useState({});
+
   const handleClose = () => {
     setModalOpen(false);
   };
@@ -27,7 +30,7 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
           aria-labelledby='form-dialog-title'
         >
           <DialogTitle id='form-dialog-title'>
-            Labels: {entity.labels.join(', ')}
+            {entity.labels.join(', ')}
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
               <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon id={'extensions-modal-close-button'} />
@@ -36,15 +39,18 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
           </DialogTitle>
           <DialogContent>
             <div>
-              <h4>Node Properties</h4>
               <br />
               <GraphEntityInspectionTable entity={entity}></GraphEntityInspectionTable>
               <br />
             </div>
-            <h4>Node Neighborhood</h4>
+
             <div style={{ width: '100%', height: 600 }}>
               <NeoReportWrapper
                 database={database}
+                selection={selection}
+                setFields={(fields) => {
+                  setSelection(getSelectionBasedOnFields(fields));
+                }}
                 query={`MATCH (n) WHERE id(n) = ${entity.id} OPTIONAL MATCH p=(n)--() RETURN n,p`}
                 ChartType={NeoGraphChart}
                 type={'graph'}
