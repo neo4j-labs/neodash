@@ -216,7 +216,6 @@ export const loadDashboardFromNeo4jByHiveUUIDThunk = (uuid, callback) => (dispat
   const loadHiveDash = async () => {
     try {
       const hivedash = await fetchDashboardFromHive({ uuid: uuid });
-      console.log(hivedash.data.getDashboardByUUID);
       if (!hivedash.data.getDashboardByUUID) {
         dispatch(
           createNotificationThunk(

@@ -99,23 +99,23 @@ export const createConnectionThunk =
                   setDashboardAfterLoadingFromDatabase
                 )
               );
-            } else if (window.location.search.includes('hive')) {
-                dispatch(
-                  loadDashboardFromNeo4jByHiveUUIDThunk(
-                    application.dashboardToLoadAfterConnecting,
-                    setDashboardAfterLoadingFromDatabase
-                  )
-                );
-              } else {
-                dispatch(
-                  loadDashboardFromNeo4jByUUIDThunk(
-                    driver,
-                    application.standaloneDashboardDatabase,
-                    application.dashboardToLoadAfterConnecting,
-                    setDashboardAfterLoadingFromDatabase
-                  )
-                );
-              }
+            } else if (application.dashboardToLoadAfterConnecting.startsWith('hive:')) {
+              dispatch(
+                loadDashboardFromNeo4jByHiveUUIDThunk(
+                  application.dashboardToLoadAfterConnecting.substring(5),
+                  setDashboardAfterLoadingFromDatabase
+                )
+              );
+            } else {
+              dispatch(
+                loadDashboardFromNeo4jByUUIDThunk(
+                  driver,
+                  application.standaloneDashboardDatabase,
+                  application.dashboardToLoadAfterConnecting,
+                  setDashboardAfterLoadingFromDatabase
+                )
+              );
+            }
             dispatch(setDashboardToLoadAfterConnecting(null));
           }
         } else {
@@ -327,6 +327,21 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
   }
 };
 
+async function getConfigDynamically() {
+  // for now putting auth code here
+  const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
+  if (launchResult.isHandled) {
+    return launchResult.config;
+  } 
+    try {
+      return await (await fetch('config.json')).json();
+    } catch (e) {
+      // Config may not be found, for example when we are in Neo4j Desktop.
+      // eslint-disable-next-line no-console
+      console.log('No config file detected. Setting to safe defaults.');
+    }
+  
+}
 /**
  * Initializes the NeoDash application.
  *
@@ -335,32 +350,22 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
  * Note: this does not work in Neo4j Desktop, so we revert to defaults.
  */
 export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
-  let config = {
-    ssoEnabled: false,
-    ssoDiscoveryUrl: 'http://example.com',
-    standalone: false,
-    standaloneProtocol: 'neo4j',
-    standaloneHost: 'localhost',
-    standalonePort: '7687',
-    standaloneDatabase: 'neo4j',
-    standaloneDashboardName: 'My Dashboard',
-    standaloneDashboardDatabase: 'dashboards',
-    standaloneDashboardURL: '',
-  };
+  // let config = {
+  //   ssoEnabled: false,
+  //   ssoDiscoveryUrl: 'http://example.com',
+  //   standalone: false,
+  //   standaloneProtocol: 'neo4j',
+  //   standaloneHost: 'localhost',
+  //   standalonePort: '7687',
+  //   standaloneDatabase: 'neo4j',
+  //   standaloneDashboardName: 'My Dashboard',
+  //   standaloneDashboardDatabase: 'dashboards',
+  //   standaloneDashboardURL: '',
+  // };
 
-  // for now putting auth code here
-  const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
-  if (launchResult.isHandled) {
-    config = launchResult.config;
-  } else {
-    try {
-      config = await (await fetch('config.json')).json();
-    } catch (e) {
-      // Config may not be found, for example when we are in Neo4j Desktop.
-      // eslint-disable-next-line no-console
-      console.log('No config file detected. Setting to safe defaults.');
-    }
-  }
+  console.log('This line is logged once.');
+  const config = await getConfigDynamically();
+  console.log('This line is logged twice somehow!');
 
   try {
     // Parse the URL parameters to see if there's any deep linking of parameters.
@@ -535,7 +540,10 @@ export const initializeApplicationAsStandaloneThunk =
     dispatch(setAboutModalOpen(false));
     dispatch(setConnected(false));
     dispatch(setWelcomeScreenOpen(false));
-    if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+
+    if (window.location.search.includes('hive')) {
+      dispatch(setDashboardToLoadAfterConnecting(`hive:${config.standaloneDashboardURL}`));
+    } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
       dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
     } else {
       dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
