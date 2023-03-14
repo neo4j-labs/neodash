@@ -329,18 +329,19 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 
 async function getConfigDynamically() {
   // for now putting auth code here
+  console.log('This line is logged once.');
   const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
+  console.log('This line is logged twice somehow!');
   if (launchResult.isHandled) {
     return launchResult.config;
-  } 
-    try {
-      return await (await fetch('config.json')).json();
-    } catch (e) {
-      // Config may not be found, for example when we are in Neo4j Desktop.
-      // eslint-disable-next-line no-console
-      console.log('No config file detected. Setting to safe defaults.');
-    }
-  
+  }
+  try {
+    return await (await fetch('config.json')).json();
+  } catch (e) {
+    // Config may not be found, for example when we are in Neo4j Desktop.
+    // eslint-disable-next-line no-console
+    console.log('No config file detected. Setting to safe defaults.');
+  }
 }
 /**
  * Initializes the NeoDash application.
@@ -363,9 +364,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
   //   standaloneDashboardURL: '',
   // };
 
-  console.log('This line is logged once.');
   const config = await getConfigDynamically();
-  console.log('This line is logged twice somehow!');
 
   try {
     // Parse the URL parameters to see if there's any deep linking of parameters.
