@@ -1,5 +1,6 @@
 import auth from '../auth/auth';
 import { config } from '../config/dynamicConfig';
+import { DatabaseUploadType } from '../config/SolutionsConstants';
 import { handleErrors } from '../util/util';
 
 const fetchDashboardFromHive = async ({ uuid }) => {
@@ -71,7 +72,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
       let dbName = 'neo4j';
       let userName = 'neo4j';
       let pasword;
-      if (data.dbType == 'aura') {
+      if (data.dbType == DatabaseUploadType.NeoConnection) {
         // Extract port, schema and hostname info from connection url
         const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w\.]+):?(\d+)?/);
         port = connectionComps[3] ? connectionComps[3] : '7687';
@@ -80,7 +81,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
         dbName = data.dbName ? data.dbName : 'neo4j';
         userName = data.dbUsername ? data.dbUsername : 'neo4j';
         pasword = data.dbPassword;
-      } else if (data.dbType == 'dump') {
+      } else if (data.dbType == DatabaseUploadType.DatabaseUpload) {
         port = '7687';
         hostName = 'localhost';
         schema = 'neo4j';

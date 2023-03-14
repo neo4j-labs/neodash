@@ -4,6 +4,7 @@ import { config } from '../config/dynamicConfig';
 import auth from '../auth/auth';
 import { handleErrors } from '../util/util';
 import { updateHiveInformation } from './HiveActions';
+import { DatabaseUploadType } from '../config/SolutionsConstants';
 
 const DashboardQuery = `
 mutation UploadDashboard($input: UploadDashboardInput!) {
@@ -143,7 +144,7 @@ export const listUserDashboards = async () => {
   return promise;
 };
 
-const saveDashboardToHiveGraphQL = async ({
+const saveDashboardToHiveGraphQL_Old = async ({
   dashboard,
   dbName,
   dbType,
@@ -205,7 +206,7 @@ const saveDashboardToHiveGraphQL = async ({
   return promise;
 };
 
-const saveHiveCard = async (
+const saveHiveCard = async ({
   dispatch,
   dashboard,
   dbName,
@@ -214,10 +215,10 @@ const saveHiveCard = async (
   dbConnectionUrl,
   dbUsername,
   dbPassword,
-  fileName
-) => {
+  fileName,
+}) => {
   try {
-    const dashboardSaveResponse = await saveDashboardToHiveGraphQL({
+    const dashboardSaveResponse = await saveDashboardToHiveGraphQL_Old({
       dashboard,
       dbName,
       dbType,
@@ -266,26 +267,30 @@ export const saveDashboardToHiveThunk =
   ) =>
   async (dispatch: any) => {
     updateSaveToHiveProgress({ flag: 'progress-bar' });
+    const saveHiveCardArgs = {
+      dispatch,
+      dashboard,
+      dbName,
+      overwrite,
+      dbType,
+      dbConnectionUrl,
+      dbUsername,
+      dbPassword,
+      fileName,
+    };
     try {
-      if (dbType == 'aura') {
-        const hiveinfo = await saveHiveCard(
-          dispatch,
-          dashboard,
-          dbName,
-          overwrite,
-          dbType,
-          dbConnectionUrl,
-          dbUsername,
-          dbPassword,
-          '' // fileName
-        );
+      if (dbType === DatabaseUploadType.NeoConnection) {
+        const hiveinfo = await saveHiveCard({
+          ...saveHiveCardArgs,
+          fileName: '',
+        });
         updateSaveToHiveProgress({
           flag: 'progress-instructions',
           dashboardUUID: hiveinfo?.uuid,
           solutionId: hiveinfo?.solutionId,
         });
         // dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
-      } else if (dbType == 'dump') {
+      } else if (dbType === DatabaseUploadType.DatabaseUpload) {
         const formData = new FormData();
         const uploadUrl = config('FILE_UPLOAD_URL');
         const existingDbName = dashboard?.extensions?.solutionsHive?.dbName;
