@@ -29,4 +29,16 @@ export const EXTENSIONS = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked. To learn more about this extension, reach out to Neo4j Professional Services.',
     link: 'https://neo4j.com/professional-services/',
   },
+  // TODO: Rename "alerts" to "node sidebar" (generic name).
+  alerts: {
+    name: 'alerts',
+    label: 'Node Sidebar',
+    author: 'Neo4j Professional Services',
+    // TODO: Fix placeholder image.
+    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png',
+    enabled: true,
+    description:
+      'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
+    link: 'https://neo4j.com/professional-services/',
+  },
 };

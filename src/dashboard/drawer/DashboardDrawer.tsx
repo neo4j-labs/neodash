@@ -15,11 +15,27 @@ import {
 import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import { getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
+import { getDashboardExtensions, getDashboardExtensionsConfig, getDashboardSettings } from '../DashboardSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
+import NeoAlertModal from '../../extensions/alert/NeoAlertDrawerButton';
+import AlertDrawer from '../../extensions/alert/AlertDrawer';
+
+/**
+ * For each config in extensionConfig, if the extensionConfig is opened, render its component
+ * @returns
+ */
+// TODO: abstract logic
+function renderExtensionDrawers(open) {
+  return <AlertDrawer open={open}></AlertDrawer>;
+}
+
+// TODO: abstract logic
+function renderExtensionModals() {
+  return <NeoAlertModal></NeoAlertModal>;
+}
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
@@ -28,6 +44,7 @@ export const NeoDrawer = ({
   connection,
   dashboardSettings,
   extensions,
+  extensionsConfig,
   updateDashboardSetting,
   handleDrawerClose,
   onAboutModalOpen,
@@ -116,6 +133,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
+        {extensions.alerts ? renderExtensionModals() : <></>}
       </List>
       <Divider />
       <List>
@@ -135,13 +153,19 @@ export const NeoDrawer = ({
       <Divider />
     </Drawer>
   );
-  return content;
+  return (
+    <>
+      {content}
+      {extensionsConfig.alerts ? renderExtensionDrawers(extensionsConfig.alerts.opened) : <></>}
+    </>
+  );
 };
 
 const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   hidden: applicationIsStandalone(state),
   extensions: getDashboardExtensions(state),
+  extensionsConfig: getDashboardExtensionsConfig(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
   connection: applicationGetConnection(state),
 });

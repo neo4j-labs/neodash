@@ -11,14 +11,15 @@ import { Checkbox, Chip, FormControlLabel, ListItem, ListItemIcon, ListItemText,
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
-import { getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
+import { setExtensionOpen } from './ExtensionsActions';
 
 const NeoExtensionsModal = ({
   extensions,
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
+  setExtensionOpened,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -92,6 +93,10 @@ const NeoExtensionsModal = ({
                               onClick={() => {
                                 if (e.enabled) {
                                   setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
+                                  // TODO - generalize, all drawer-like extensions should be closed
+                                  if (e.name === 'alerts') {
+                                    setExtensionOpened(e.name, extensions[e.name] == undefined ? false : undefined);
+                                  }
                                 } else {
                                   onExtensionUnavailableTriggered(e.label);
                                 }
@@ -144,6 +149,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setExtensionEnabled: (name, enabled) => dispatch(setExtensionEnabled(name, enabled)),
+  setExtensionOpened: (name, opened) => dispatch(setExtensionOpen(name, opened)), // TODO: align naming
   onExtensionUnavailableTriggered: (name) =>
     dispatch(
       createNotificationThunk(

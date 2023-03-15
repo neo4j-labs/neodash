@@ -10,4 +10,12 @@ export const getDashboardExtensions = (state: any) => {
   return extensions;
 };
 
+export const getDashboardExtensionsConfig = (state: any) => {
+  const { extensionsConfig } = state.dashboard;
+  if (!extensionsConfig) {
+    return {};
+  }
+  return extensionsConfig;
+};
+
 export const getPages = (state: any) => state.dashboard.pages;

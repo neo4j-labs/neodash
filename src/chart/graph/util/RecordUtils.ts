@@ -3,6 +3,7 @@ import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { assignCurvatureToLink } from './RelUtils';
+import { isNode } from 'neo4j-driver-core/lib/graph-types.js';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -235,4 +236,41 @@ export function injectNewRecordsIntoGraphVisualization(
   );
 
   return { nodes, links, nodesMap, linksMap };
+}
+
+/**
+ * TODO: generalize and fix to be consistent with other parts of the code.
+ * TODO: maybe we shouldn't check if all records are nodes, but instead extract nodes from the records dynamically as the graph chart deos.
+ * @param records List of records got back from the Driver
+ * @param fieldIndex index of the field i want to check that is just nodes
+ * @returns True if all the records are Node Objects
+ */
+export function checkIfAllRecordsAreNodes(records, fieldIndex) {
+  try {
+    let res = records.every((record) => {
+      return record._fields && isNode(record._fields[fieldIndex]);
+    });
+    return res;
+  } catch (error) {
+    // In any case of error, log and continue with false
+    console.error(error);
+    return false;
+  }
+}
+
+/**
+ * TODO - this functionality is duplicated in the graph chart logic.
+ * Ideally, we want to have a Node/Relationship representation indipendent from the return
+ * that the driver gets back.
+ * @param records List of records got from the driver
+ * @returns List of Object that are parsed from the Node object received from the driver
+ */
+export function parseNodeRecordsToDictionaries(records, fieldIndex = 0) {
+  let res = records.map((record) => {
+    let { identity, labels, properties } = record._fields[fieldIndex];
+    // Preventing high/low fields by casting to its primitive type
+    identity = identity.toNumber();
+    return { id: identity, labels: labels, properties: properties };
+  });
+  return res;
 }
