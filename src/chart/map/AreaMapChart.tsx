@@ -97,7 +97,7 @@ const NeoAreaMapChart = (props: ChartProps) => {
     fetch('https://raw.githubusercontent.com/neo4j-labs/neodash-static/main/world_polymap_level_1_entities.json')
       .then((res) => res.json())
       .then((matched) => {
-        let tmp = fromFeatureListToObject(matched.features, 'COMPOSITE_REGION_CODE');
+        let tmp = fromFeatureListToObject(matched.features, 'code');
         setFeatureLevel1(tmp);
       });
   }, []);

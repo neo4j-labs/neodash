@@ -5,44 +5,75 @@ import Button from '@material-ui/core/Button';
 import '../styles/PolygonStyle.css';
 import { categoricalColorSchemes } from '../../../config/ColorConfig';
 
-function getLegendRange(min, max, lenRange) {
-  let diff = (max - min) / lenRange;
+/**
+ * Creates the list of values that will be used for the legend
+ * @param min Minimum of the legend
+ * @param max Maximum of the legend
+ * @param lenRange Number of buckets
+ * @returns List of numbers
+ */
+function getLegendRange(min, max, legendLength) {
+  let diff = (max - min) / legendLength;
   // If the difference is 0 or less (strange that can be less, but you never know)
   // Return only one value
   if (diff <= 0) {
     return [Math.round(min * 100) / 100];
   }
-  return [...Array(lenRange).keys()].map((i) => {
+  return [...Array(legendLength).keys()].map((i) => {
     return Math.round((min + diff * i) * 100) / 100;
   });
 }
 
+/**
+ * Function to return a random string, right now useful to retrigger the GeoJson rendering
+ * @returns A random string
+ */
 function randomString() {
   return `${Math.random().toString(36)}00000000000000000`.slice(2, 16);
 }
 
-// drill down function, to add more logic in future
-function getDrillDown(geoJson, id, features, key) {
-  let data = Object.values(features).filter((x) => {
-    return x.properties[key] === id;
+/**
+ * Function responsible of getting the regions inside a country
+ * @param geoJson geoJson clicked on the UI, if we can't find anything we still show the clicked geoJson
+ * @param features Object that matches an id to it's polygon
+ * @param key Name of the parameter that will be used to match a polygon adn it's components
+ * @returns feature object filtered of the useless objects
+ */
+function getDrillDown(geoJson, features, key) {
+  let id = geoJson.properties[key];
+  let polygonsToKeep = Object.keys(features).filter((polygonId) => {
+    let tmp = features[polygonId];
+    // Some regions can be in different countries (WHO specific use case)
+    let toDrillDown =
+      key === 'SHORT_COUNTRY_CODE' && tmp.properties.POSSIBLE_COUNTRIES
+        ? tmp.properties.POSSIBLE_COUNTRIES.includes(id)
+        : tmp.properties[key] === id;
+    return toDrillDown;
   });
 
   // We don't want to re-render if there is no data in the drillDown
-  if (data.length == 0) {
+  if (polygonsToKeep.length == 0) {
     return [geoJson];
   }
-  return data;
+
+  // Creating a dictionary that is just a filtered version of  features
+  let res = {};
+  polygonsToKeep.map((id) => {
+    res[id] = features[id];
+  });
+  return res;
 }
 
 /**
  * Function used to bind the data from the query with each geojson
- * @param geoData
- * @param geoJsonData
+ * @param geoData Data parsed from the query results
+ * @param geoJsonData geoJson data that needs to be joined with the query results
  * @returns
  */
 function bindDataToMap(geoData, geoJsonData) {
   let newValues = {};
   let listValues = [];
+  console.log(geoData);
   Object.keys(geoData).forEach((key) => {
     let tmp;
     if (geoJsonData[key] != undefined) {
@@ -54,6 +85,7 @@ function bindDataToMap(geoData, geoJsonData) {
       console.log(`Missing key in Polygon Map :  ${key} with value ${geoData[key]}`);
     }
   });
+
   // Deepcopying data to prevent strange behaviors
   let geoJsonData_copy = Object.assign(geoJsonData, {});
   let res = Object.assign(geoJsonData_copy, newValues);
@@ -69,10 +101,12 @@ function bindDataToMap(geoData, geoJsonData) {
 
 // Wraps the boundary logic function
 export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
+  // Keys used for the drill down
+  // (right now only 0 is useful but important to keep in mind that we can add more levels)
   const level0key = 'SHORT_COUNTRY_CODE';
-  const level1key = 'COMPOSITE_REGION_CODE';
-  const isDrillDownEnabled = props.settings && props.settings.mapDrillDown ? props.settings.mapDrillDown : false;
+  const level1key = 'isoCode';
 
+  const isDrillDownEnabled = props.settings && props.settings.mapDrillDown ? props.settings.mapDrillDown : false;
   // Getting the list of colors from the scheme (for now, starting from a scheme, we always get the last color of the scheme)
   const colorScheme =
     props.settings && props.settings.colors
@@ -97,10 +131,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
   useEffect(() => {
     let currentKey =
       state.geoJson != undefined && Object.keys(state.geoJson.properties).includes(level1key) ? level1key : level0key;
-    let tmp =
-      state.geoJson === undefined
-        ? featureLevel0
-        : getDrillDown(state.geoJson, state.geoJson.properties[currentKey], featureLevel1, currentKey);
+    let tmp = state.geoJson === undefined ? featureLevel0 : getDrillDown(state.geoJson, featureLevel1, currentKey);
 
     // Getting the new data and the distribution of the values
     let [newData, minValue, maxValue] = bindDataToMap(data, tmp);
@@ -110,7 +141,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
     setRangeValues({ min: minValue, max: maxValue });
 
     // Getting the new legend numbers
-    let legendRange = minValue && maxValue ? getLegendRange(minValue, maxValue, listColors.length) : [];
+    let legendRange = !isNaN(minValue) && !isNaN(maxValue) ? getLegendRange(minValue, maxValue, listColors.length) : [];
     setLegendRange(legendRange);
 
     // Synchronizing the key with the state key to retrigger rendering
@@ -135,7 +166,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
 
   /**
    * For each polygon, we have a defined style that we want to apply
-   * @param _feature : Features of the polygon
+   * @param _feature : Features of the current polygon
    * @returns A style that will be applied to its polygon
    */
   const geoJSONStyle = (_feature) => {
@@ -147,13 +178,15 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
      * @returns color assigned to the polygon based on it's position in the legend
      */
     function getColor(weight, legendRange, listColors) {
+      console.log(weight);
       let index = legendRange.findIndex((number) => {
         return number >= weight;
       });
       return listColors.slice(index)[0];
     }
-    let weight = _feature.properties.neo_value != undefined ? _feature.properties.neo_value : undefined;
-    let color = weight ? getColor(weight, legendRange, listColors) : 'gray';
+    let color = !isNaN(_feature.properties.neo_value)
+      ? getColor(_feature.properties.neo_value, legendRange, listColors)
+      : 'gray';
     let style = {
       color: '#1f2021',
       weight: 1,
@@ -187,6 +220,12 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
 
   const resetButton = isDrillDownEnabled ? ResetButton() : <></>;
 
+  /**
+   * Creates Legend component
+   * @param colors Color palette selected defined in the ReportSettings
+   * @param legendRange List of numbers that will be used to define the legend buckets
+   * @returns Legend component
+   */
   function Legend(colors, legendRange) {
     return (
       <div className='info legend' style={{ zIndex: 1001, position: 'absolute', bottom: 30, right: 30 }}>
@@ -195,7 +234,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
           return (
             <div>
               <i style={{ background: colors[i] }}> &nbsp;&nbsp; </i>
-              &nbsp; {from} {to ? `- ${to}` : i > 0 ? '+' : ''}
+              &nbsp; {from} {!isNaN(to) ? `- ${to}` : i > 0 ? '+' : ''}
               <br />
             </div>
           );
@@ -203,7 +242,8 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
       </div>
     );
   }
-  const legend = rangeValues.min && rangeValues.min ? Legend(listColors, legendRange) : <></>;
+  // Create a legend only if the values are ready
+  const legend = !(isNaN(rangeValues.min) && isNaN(rangeValues.min)) ? Legend(listColors, legendRange) : <></>;
 
   // We need data or synchronized keys to enable re-render
   if (polygonData.length == 0 || key !== state.key) {
