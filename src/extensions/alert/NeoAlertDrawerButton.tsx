@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setExtensionOpen } from '../ExtensionsActions';
 import { getExtensionOpened } from '../ExtensionsSelectors';
 
+// TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 const NeoAlertModal = ({ isOpen, setAlertDrawerOpened }) => {
   const handleClick = () => {
     setAlertDrawerOpened(!isOpen);

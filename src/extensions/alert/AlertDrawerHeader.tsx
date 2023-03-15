@@ -7,7 +7,10 @@ import { setExtensionTitle } from '../ExtensionsActions';
 import { connect } from 'react-redux';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-// The sidebar that appears on the left side of the dashboard.
+/**
+ * The editable header of the alert drawer, including the title and settings button.
+ * TODO - rename to 'Node Sidebar Header' to match new extension name.
+ */
 export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTitleUpdate, onManualRefreshDrawer }) => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const [headerTitle, setHeaderTitle] = React.useState(title);
@@ -65,6 +68,7 @@ export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTi
 };
 
 const mapStateToProps = (state) => ({
+  // TODO: change 'alerts' to new name.
   title: getExtensionTitle(state, 'alerts'),
   extensionSettings: getExtensionSettings(state, 'alerts'),
 });

@@ -2,14 +2,8 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import AlertNodeInspectionModal from './AlertNodeInspectionModal';
 import { CardContent } from '@material-ui/core';
-/**
- *
- * "colorProperty": "cazzo",
- *      "titleProperty": "ciao",
- *      "bodyProperty": "apdmapwdpoawjdpjwapdjpwajdp",
- *      "refreshButtonEnabled": true
- * @returns
- */
+
+// TODO: This is probably a generic "Node Card" beyond alerts, I would call it something like this.
 // TODO: Understand what to show (probably an option (maybe first three fields by default))
 export const AlertNodeCard = ({ entity, extensionSettings }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -17,7 +11,6 @@ export const AlertNodeCard = ({ entity, extensionSettings }) => {
   const colorProperty = extensionSettings.colorProperty ? extensionSettings.colorProperty : 'color';
   const titleProperty = extensionSettings.titleProperty ? extensionSettings.titleProperty : 'title';
   const bodyProperty = extensionSettings.bodyProperty ? extensionSettings.bodyProperty : 'body';
-  console.log(titleProperty);
   const content = (
     <>
       <Card
@@ -33,13 +26,9 @@ export const AlertNodeCard = ({ entity, extensionSettings }) => {
       >
         <CardContent>
           <h3 style={{ margin: 0 }}>
-            {' '}
-            {entity.properties && entity.properties[titleProperty]
-              ? entity.properties[titleProperty]
-              : '(no title)'}{' '}
+            {entity.properties && entity.properties[titleProperty] ? entity.properties[titleProperty] : '(no title)'}{' '}
           </h3>
           <p style={{ margin: 0 }}>
-            {' '}
             {entity.properties && entity.properties[bodyProperty] ? entity.properties[bodyProperty] : '(no value)'}{' '}
           </p>
         </CardContent>

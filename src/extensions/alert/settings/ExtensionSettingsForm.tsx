@@ -6,16 +6,15 @@ import { getExtensionDefaultConfig } from '../../ExtensionsConfig';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
+// TODO - this is also very similar to the existing settings form in the card settings.
 export const ExtensionSettingsForm = ({
   isAdvancedSettingsOpen,
   setSettingsToSave,
-  extensionName,
   extensionSettings,
   defaultSettings,
 }) => {
-  let _extensionName = extensionName;
   const [reportSettingsText, setReportSettingsText] = React.useState(extensionSettings);
-  const [allSettings, _setAllSettings] = React.useState(defaultSettings);
+  const [allSettings, setAllSettings] = React.useState(defaultSettings);
 
   const updateSpecificExtensionSetting = (field: string, value: any) => {
     const entry = {};

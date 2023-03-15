@@ -1,14 +1,14 @@
 import { Drawer, ListItem, List } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import AlertDrawerHeader from './AlertDrawerHeader';
-import { QueryStatus, recordsAllNodes, runCypherQuery } from '../../report/ReportQueryRunner';
+import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { connect } from 'react-redux';
 import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionsSelectors';
 import AlertNodeCard from './listElement/AlertNodeCard';
-import { parseNodesRecords } from '../../report/ReportQueryRunner';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
+import { checkIfAllRecordsAreNodes, parseNodeRecordsToDictionaries } from '../../chart/graph/util/RecordUtils';
 
 // The sidebar that appears on the left side of the dashboard.
 export const AlertDrawer = ({ open, extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
@@ -18,20 +18,53 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
   // To notice, if the query is not present, we need to notify the user
   const [status, setStatus] = useState(query == undefined ? QueryStatus.NO_QUERY : QueryStatus.RUNNING);
   const [fields, setFields] = useState([]);
-  const [isWrong, setIsWrong] = useState(false);
+  const [hasInvalidQuery, setHasInvalidQuery] = useState(false);
   const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
   const [databaseList, setDatabaseList] = React.useState([]);
   const [maxRecords, setMaxRecord] = React.useState(
     extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100
   );
 
-  // For now the only field that will retrigger the query in the settings is maxRecords
+  // TODO - there is a lot of effects here, perhaps we can simplify.
+  // When the settings are changed, update the max records setting.
   useEffect(() => {
-    let tmp = extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100;
-    if (tmp != maxRecords) {
-      setMaxRecord(tmp);
+    let newMaxRecords = extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100;
+    if (newMaxRecords != maxRecords) {
+      setMaxRecord(newMaxRecords);
     }
   }, [extensionSettings]);
+
+  // On first initialization, load a database list from neo4j to use in the component.
+  useEffect(() => {
+    if (!databaseListLoaded) {
+      loadDatabaseListFromNeo4j(driver, (result) => {
+        let index = result.indexOf('system');
+        if (index > -1) {
+          // only splice array when item is found
+          result.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        setDatabaseList(result);
+        // At the start, set the DB of the drawer to the same db of the whole application
+      });
+      setDatabaseListLoaded(true);
+    }
+  }, []);
+
+  // Re-run the query when the query, database, or record max is updated.
+  useEffect(() => {
+    runCypher();
+  }, [query, database, maxRecords]);
+
+  // When the record or fields lists changed, regenerate the contents of the cards.
+  useEffect(() => {
+    if (!checkIfAllRecordsAreNodes(records, 0) || fields.length > 1) {
+      setParsedRecords([]);
+      setHasInvalidQuery(true);
+    } else {
+      setParsedRecords(parseNodeRecordsToDictionaries(records));
+      setHasInvalidQuery(false);
+    }
+  }, [records, fields]);
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
@@ -55,53 +88,23 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
       queryTimeLimit
     );
   };
-  // Setting up list of databases for settings
-  useEffect(() => {
-    if (!databaseListLoaded) {
-      loadDatabaseListFromNeo4j(driver, (result) => {
-        let index = result.indexOf('system');
-        if (index > -1) {
-          // only splice array when item is found
-          result.splice(index, 1); // 2nd parameter means remove one item only
-        }
-        setDatabaseList(result);
-        // At the start, set the DB of the drawer to the same db of the whole application
-      });
-      setDatabaseListLoaded(true);
-    }
-  }, [query]);
 
-  // Query runner effect
-  useEffect(() => {
-    runCypher();
-  }, [query, database, maxRecords]);
-
-  // Record parser effect
-  useEffect(() => {
-    if (!recordsAllNodes(records, 0) || fields.length > 1) {
-      setParsedRecords([]);
-      setIsWrong(true);
-    } else {
-      setParsedRecords(parseNodesRecords(records));
-      setIsWrong(false);
-    }
-  }, [records, fields]);
   /**
    * Function to create the correct message for the NeoCodeViewerComponent if there is no data to show to the user
    * @param status status of the query
    * @param records records brought back from the data
    * @returns
    */
-  function manageQueryStatus(status, records) {
+  function getDrawerErrorMessage(status, records) {
     let message =
       status === QueryStatus.NO_QUERY
         ? 'Use the settings (⋮) to \nspecify a query.'
         : status === QueryStatus.NO_DATA
-        ? 'Query returned no data'
+        ? 'Query returned no data.'
         : status === QueryStatus.ERROR
         ? records[0] && records[0].error
           ? records[0].error
-          : "An error occurred during the processing of the query \n but the client couldn't get it back"
+          : 'An undefined error occurred during the processing of the query.'
         : '';
     return <NeoCodeViewerComponent value={message} />;
   }
@@ -120,10 +123,10 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
       }}
     >
       <AlertDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></AlertDrawerHeader>
-      {/* TODO: define body here (for now list of clickable cards) */}
+      {/* TODO: define generic body here (for now list of clickable cards) */}
       {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
-        manageQueryStatus(status, records)
-      ) : isWrong ? (
+        getDrawerErrorMessage(status, records)
+      ) : hasInvalidQuery ? (
         <NoDrawableDataErrorMessage />
       ) : (
         <List style={{ overflowY: 'scroll', position: 'absolute', top: '40px' }}>

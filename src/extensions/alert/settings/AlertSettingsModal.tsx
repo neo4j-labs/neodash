@@ -1,10 +1,7 @@
-import ExtensionIcon from '@material-ui/icons/Extension';
-
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
@@ -16,6 +13,11 @@ import { applicationGetConnectionDatabase } from '../../../application/Applicati
 import ExtensionSettingsForm from './ExtensionSettingsForm';
 import SaveIcon from '@material-ui/icons/Save';
 
+/**
+ * TODO: lets also generalize this as a 'pop-uppable report'.
+ * I can see some nice uses of this beyond alerts.
+ * Perhaps we can even extend the Report component or generalize somehow.
+ */
 const AlertSettingsModal = ({
   databaseList,
   settingsOpen,
@@ -40,7 +42,7 @@ const AlertSettingsModal = ({
     setSettingsOpen(false);
 
     if (JSON.stringify(settingsToSave) !== JSON.stringify(extensionSettings)) {
-      // When saving, all the values that are False in TS ("", False, {}, 0 as a Number) will be filterd out
+      // When saving, all the values that are False in TS ("", False, {}, 0 as a Number) will be filtered out
       const filtered = Object.keys(settingsToSave)
         .filter((key) => settingsToSave[key])
         .reduce((obj, key) => {
@@ -59,6 +61,7 @@ const AlertSettingsModal = ({
     }
   };
 
+  // On startup, if no specific database was defined, default to 'neo4j'.
   useEffect(() => {
     if (databaseText === '') {
       let firstDb = applicationDatabase ? applicationDatabase : 'neo4j';
@@ -69,13 +72,7 @@ const AlertSettingsModal = ({
   return (
     <div>
       {settingsOpen ? (
-        <Dialog
-          maxWidth={'md'}
-          scroll={'paper'}
-          open={settingsOpen}
-          // onClose={handleClose}
-          aria-labelledby='form-dialog-title'
-        >
+        <Dialog maxWidth={'md'} scroll={'paper'} open={settingsOpen} aria-labelledby='form-dialog-title'>
           <DialogTitle id='form-dialog-title'>
             Node Sidebar Settings
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
@@ -124,7 +121,7 @@ const AlertSettingsModal = ({
                 marginTop: '0px',
               }}
             >
-              {'The sidebar expects a list of nodes to be returned. For each node, a card is rendered.'}
+              {'The sidebar expects nodes to be returned. For each node, a card is rendered.'}
             </p>
           </DialogContent>
           <div style={{ background: isAdvancedSettingsOpen ? '#f6f6f6' : 'inherit', marginBottom: '10px' }}>
