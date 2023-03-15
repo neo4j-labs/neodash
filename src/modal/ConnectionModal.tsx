@@ -148,7 +148,7 @@ export default function NeoConnectionModal({
           ) : (
             <div></div>
           )}
-          {url.endsWith('neo4j.io') && !protocol.endsWith('+s') ? (
+          {url && url.endsWith('neo4j.io') && !protocol.endsWith('+s') ? (
             <div>
               Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
             </div>

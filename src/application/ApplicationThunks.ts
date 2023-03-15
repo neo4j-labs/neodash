@@ -364,7 +364,15 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
   //   standaloneDashboardURL: '',
   // };
 
+  dispatch(setConnected(false));
+  dispatch(setWelcomeScreenOpen(false));
+
   const config = await getConfigDynamically();
+  // If the config isn't loaded yet, cancel the initialization. This line will be re-executed when the config is there.
+  if (!config) {
+    return;
+  }
+
   try {
     // Parse the URL parameters to see if there's any deep linking of parameters.
     const queryString = window.location.search;
@@ -493,21 +501,48 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 };
 
 // Set up NeoDash to run in editor mode.
-export const initializeApplicationAsEditorThunk = (_, paramsToSetAfterConnecting) => (dispatch: any) => {
+export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConnecting) => (dispatch: any) => {
   const clearNotificationAfterLoad = true;
   dispatch(clearDesktopConnectionProperties());
   dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
   const old = localStorage.getItem('neodash-dashboard');
   dispatch(setOldDashboard(old));
   dispatch(setConnected(false));
-  dispatch(setDashboardToLoadAfterConnecting(null));
+
   dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
   // TODO: this logic around loading/saving/upgrading/migrating dashboards needs a cleanup
   if (Object.keys(paramsToSetAfterConnecting).length > 0) {
     dispatch(setParametersToLoadAfterConnecting(null));
   }
 
-  dispatch(setWelcomeScreenOpen(true));
+  if (config.isOwner == true && config.standalone == false) {
+    if (window.location.search.includes('hive')) {
+      dispatch(setDashboardToLoadAfterConnecting(`hive:${config.standaloneDashboardURL}`));
+    } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+      dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
+    } else {
+      dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
+    }
+
+    // Override for when username and password are specified in the config - automatically connect to the specified URL.
+    if (config.standaloneUsername && config.standalonePassword) {
+      dispatch(
+        createConnectionThunk(
+          config.standaloneProtocol,
+          config.standaloneHost,
+          config.standalonePort,
+          config.standaloneDatabase,
+          config.standaloneUsername,
+          config.standalonePassword
+        )
+      );
+    } else {
+      dispatch(setDashboardToLoadAfterConnecting(null));
+      dispatch(setConnectionModalOpen(true));
+    }
+  } else {
+    dispatch(setWelcomeScreenOpen(true));
+  }
 
   if (clearNotificationAfterLoad) {
     dispatch(clearNotification());

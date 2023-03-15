@@ -66,6 +66,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
     try {
       const response = await fetchDashboardFromHive({ uuid: dashboardUuid });
       const data = response?.data?.getDashboardByUUID;
+
       let port = '7687';
       let hostName;
       let schema = 'neo4j';
@@ -94,7 +95,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
         config: {
           ssoEnabled: false,
           ssoDiscoveryUrl: 'https://example.com',
-          standalone: true,
+          standalone: data.user == auth.getEmail() ? false : true,
           standaloneProtocol: schema,
           standaloneHost: hostName,
           standalonePort: port,
