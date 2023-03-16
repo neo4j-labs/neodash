@@ -32,7 +32,8 @@ import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import SaveToHiveModel from './SaveToHiveModel';
+import SaveToHiveModel from '../solutions/components/SaveToHiveModel';
+// import SaveToHiveModel from './SaveToHiveModel';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -187,6 +188,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           <Button
             component='label'
             onClick={() => {
+              handleClose();
               setSaveToHiveModalOpen(true);
             }}
             style={{ backgroundColor: 'white', marginLeft: '10px' }}
@@ -195,7 +197,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
             size='medium'
             endIcon={<img src='/hive.png' width='24' height='24' />}
           >
-            Save to Hive
+            Publish to Hive
           </Button>
           <br />
           <br />
@@ -338,7 +340,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
 
       <Dialog maxWidth={'lg'} open={saveToHiveProgress.flag.includes('progress')} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>
-          Save to Hive Progress
+          Publish to Hive Progress
           <IconButton
             onClick={() => {
               setSaveToHiveProgress({ flag: 'close', dashboardUUID: '', solutionId: '', dbName: '' });

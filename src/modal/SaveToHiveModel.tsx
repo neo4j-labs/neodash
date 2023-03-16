@@ -76,7 +76,7 @@ export const SaveToHiveModel = ({
   return (
     <Dialog maxWidth={'lg'} open={modalOpen === true} onClose={closeDialog} aria-labelledby='form-dialog-title'>
       <DialogTitle id='form-dialog-title'>
-        Save to Hive
+        Publish to Hive
         <IconButton
           onClick={() => {
             closeDialog(false);

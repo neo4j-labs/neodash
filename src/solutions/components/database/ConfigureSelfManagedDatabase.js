@@ -1,27 +1,27 @@
 // Note: originally copied from ConnectionModal.tsx
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { MenuItem } from '@material-ui/core';
 
-export const ConfigureSelfManagedDatabase = ({ connection }) => {
+export const ConfigureSelfManagedDatabase = (props) => {
+  props = props || {};
+  const connection = props.connection || {};
+  const { setConnection } = props;
   const protocols = ['neo4j', 'neo4j+s', 'neo4j+ssc', 'bolt', 'bolt+s', 'bolt+ssc'];
-  const [protocol, setProtocol] = React.useState(connection.protocol);
-  const [url, setUrl] = React.useState(connection.url);
-  const [port, setPort] = React.useState(connection.port);
-  const [username, setUsername] = React.useState(connection.username);
-  const [password, setPassword] = React.useState(connection.password);
-  const [database, setDatabase] = React.useState(connection.database);
+  const [protocol, setProtocol] = useState(connection.protocol);
+  const [url, setUrl] = useState(connection.url);
+  const [port, setPort] = useState(connection.port);
+  const [username, setUsername] = useState(connection.username);
+  const [password, setPassword] = useState(connection.password);
+  const [database, setDatabase] = useState(connection.database);
 
   // Make sure local vars are updated on external connection updates.
   useEffect(() => {
-    setProtocol(connection.protocol);
-    setUrl(connection.url);
-    setUsername(connection.username);
-    setPassword(connection.password);
-    setPort(connection.port);
-    setDatabase(connection.database);
-  }, [JSON.stringify(connection)]);
+    if (setConnection) {
+      setConnection({ protocol, url, port, username, password, database });
+    }
+  }, [protocol, url, port, username, password, database]);
 
   return (
     <div>
