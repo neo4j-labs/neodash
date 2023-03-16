@@ -124,7 +124,9 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
       // We force a page refresh by resetting the field set for each report. (workaround)
       return {
         ...state,
-        reports: state.reports.map((report) => update(report, { fields: report.fields.concat(['']) })),
+        reports: state.reports.map((report) =>
+          update(report, { fields: report.fields ? report.fields.concat(['']) : [''] })
+        ),
       };
     }
     default: {
