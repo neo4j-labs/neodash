@@ -1,16 +1,12 @@
 // todo
-import React, { useEffect } from 'react';
+import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import Badge from '@material-ui/core/Badge';
-import { Button, Fab, MenuItem, TextField, Typography } from '@material-ui/core';
-import NeoColorPicker from '../../component/field/ColorPicker';
+import { Button, Fab, TextField, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import TuneIcon from '@material-ui/icons/Tune';
-import { Autocomplete } from '@material-ui/lab';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
@@ -24,21 +20,25 @@ interface Step {
   query: string;
 }
 
+function moveElementInArray(array, fromIndex, toIndex) {
+  array.splice(toIndex, 0, array.splice(fromIndex, 1)[0]);
+}
+
 /**
  * The pop-up window used to create and edit workflows.
  */
 export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
   // The rule set defined in this modal is updated whenever the setting value is externally changed.
   const [steps, setSteps] = React.useState([
-    { name: Math.random(), query: 'RETURN false' },
-    { name: Math.random(), query: 'RETURN true' },
+    { name: 'a', query: 'RETURN false' },
+    { name: 'b', query: 'RETURN true' },
   ]);
 
   const handleClose = () => {};
 
   const layout = {
-    ...steps.map((page, index) => {
-      return { x: 0, y: index, i: index, w: 6, h: 1 };
+    ...steps.map((step, index) => {
+      return { x: 0, y: index, i: index + step.name, w: 6, h: 1 };
     }),
   };
 
@@ -98,7 +98,6 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
               </p>
               <div>
                 <hr></hr>
-
                 <ReactGridLayout
                   className='layout'
                   layout={layout}
@@ -106,13 +105,16 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
                   isResizable={false}
                   isDraggable={true}
                   style={{ width: '100%' }}
-                  // onDrag={() => {
-
-                  // }}
-                  // onDragStop={(newLayout, oldPosition, newPosition) => {
-                  //   // Calculate the old and new index of the page that was just dropped.
-                  // }}
-                  // margin={[10, 10]}
+                  draggableHandle='.drag-handle'
+                  onDragStop={(newLayout, oldPosition, newPosition) => {
+                    // inside the steps array, move the entry at index 'oldIndex' to 'newIndex'.
+                    // TODO - this has a small delay when updating the layout somehow.
+                    const oldIndex = oldPosition.y;
+                    const newIndex = newPosition.y;
+                    const newSteps = [...steps];
+                    moveElementInArray(newSteps, oldIndex, newIndex);
+                    setSteps(newSteps);
+                  }}
                   rowHeight={50}
                   compactType={'vertical'}
                 >
@@ -146,7 +148,15 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
                             </Button>
                           </td>
                           <td style={{ width: '5%' }}>
-                            <IconButton size='small' onClick={handleClose} style={{ float: 'right' }}>
+                            <IconButton
+                              size='small'
+                              onClick={() => {
+                                const newSteps = [...steps];
+                                newSteps.splice(i, 1);
+                                setSteps(newSteps);
+                              }}
+                              style={{ float: 'right' }}
+                            >
                               <DeleteIcon
                                 style={{
                                   color: 'grey',
@@ -171,7 +181,7 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
                     aria-label='add'
                     style={{ background: 'white', color: 'black' }}
                     onClick={() => {
-                      const newStep = { name: Math.random(), query: 'return true' };
+                      const newStep = { name: 'c', query: 'return true' };
                       setSteps(steps.concat(newStep));
                     }}
                   >
