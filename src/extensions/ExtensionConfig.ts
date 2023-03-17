@@ -1,3 +1,7 @@
+import { WORKFLOW_ACTION_PREFIX } from './workflows/stateManagement/WorkflowActions';
+import { workflowReducer } from './workflows/stateManagement/WorkflowReducer';
+
+// TODO: define extension config interface
 export const EXTENSIONS = {
   'advanced-charts': {
     name: 'advanced-charts',
@@ -41,4 +45,35 @@ export const EXTENSIONS = {
       'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
     link: 'https://neo4j.com/professional-services/',
   },
+  workflows: {
+    name: 'workflows',
+    label: 'Cypher Workflows',
+    author: 'Neo4j Professional Services',
+    // TODO: Fix placeholder image.
+    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png',
+    enabled: true,
+    reducerPrefix: WORKFLOW_ACTION_PREFIX,
+    reducerObject: workflowReducer,
+    description:
+      'cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese.',
+    link: 'https://neo4j.com/professional-services/',
+  },
 };
+
+/**
+ * At the startup of the application, we want to collect programmatically the mapping between reducer
+ * @returns
+ */
+function getExtensionReducers() {
+  console.log('getting extension reducers');
+  let res = {};
+  Object.values(EXTENSIONS).forEach((conf) => {
+    if (conf.reducerPrefix && conf.reducerObject) {
+      let tmp = { name: conf.name, reducer: conf.reducerObject };
+      res[conf.reducerPrefix] = tmp;
+    }
+  });
+  return res;
+}
+
+export const EXTENSIONS_REDUCERS = getExtensionReducers();

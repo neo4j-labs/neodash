@@ -23,3 +23,7 @@ export const getExtensionTitle = (state: any, name: string) => {
   let res = state.dashboard.extensionsConfig[name];
   return res != undefined && res.title ? res.title : '';
 };
+
+export const getExtensionActiveReducers = (state: any) => {
+  return state.dashboard.extensions.activeReducers;
+};

@@ -470,6 +470,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting));
     }
   } catch (e) {
+    console.log(e);
     dispatch(setWelcomeScreenOpen(false));
     dispatch(
       createNotificationThunk(
