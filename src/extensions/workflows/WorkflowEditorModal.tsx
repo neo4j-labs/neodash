@@ -30,8 +30,8 @@ interface Step {
 export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
   // The rule set defined in this modal is updated whenever the setting value is externally changed.
   const [steps, setSteps] = React.useState([
-    { index: 0, name: 'Adafsjsdoifsad asldfnsdaklf sadf' },
-    { index: 1, name: 'Blorem adsfjdsaf aflsa kss ch' },
+    { name: Math.random(), query: 'RETURN false' },
+    { name: Math.random(), query: 'RETURN true' },
   ]);
 
   const handleClose = () => {};
@@ -61,13 +61,11 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
               <tbody>
                 <tr>
                   <td>
-                    {/* <Badge overlap='rectangular' badgeContent={''}> */}
                     <PlaylistPlayIcon
                       style={{
                         paddingTop: '2px',
                       }}
                     />
-                    {/* </Badge> */}
                   </td>
                   <td style={{ width: '100%' }}>
                     <TextField
@@ -85,9 +83,7 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
 
                   <td>
                     <IconButton onClick={handleClose} style={{ float: 'right' }}>
-                      {/* <Badge overlap='rectangular' badgeContent={''}> */}
                       <CloseIcon />
-                      {/* </Badge> */}
                     </IconButton>
                   </td>
                 </tr>
@@ -146,7 +142,7 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
                               color='default'
                               size='large'
                             >
-                              {step.index}: {step.name}
+                              {step.name}
                             </Button>
                           </td>
                           <td style={{ width: '5%' }}>
@@ -175,7 +171,7 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
                     aria-label='add'
                     style={{ background: 'white', color: 'black' }}
                     onClick={() => {
-                      const newStep = { name: 'C', index: 2 };
+                      const newStep = { name: Math.random(), query: 'return true' };
                       setSteps(steps.concat(newStep));
                     }}
                   >
