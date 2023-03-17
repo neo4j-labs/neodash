@@ -25,5 +25,5 @@ export const getExtensionTitle = (state: any, name: string) => {
 };
 
 export const getExtensionActiveReducers = (state: any) => {
-  return state.dashboard.extensions.activeReducers;
+  return state.dashboard.extensionsConfig.activeReducers;
 };
