@@ -72,24 +72,17 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
       let schema = 'neo4j';
       let dbName = 'neo4j';
       let userName = 'neo4j';
-      let pasword;
-      if (data.dbType == DatabaseUploadType.NeoConnection) {
-        // Extract port, schema and hostname info from connection url
-        const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w\.]+):?(\d+)?/);
-        port = connectionComps[3] ? connectionComps[3] : '7687';
-        hostName = connectionComps[2];
-        schema = connectionComps[1];
-        dbName = data.dbName ? data.dbName : 'neo4j';
-        userName = data.dbUsername ? data.dbUsername : 'neo4j';
-        pasword = data.dbPassword;
-      } else if (data.dbType == DatabaseUploadType.DatabaseUpload) {
-        port = '7687';
-        hostName = 'localhost';
-        schema = 'neo4j';
-        dbName = data.dbName;
-        userName = 'neo4j';
-        pasword = '';
-      }
+      let password;
+
+      // Extract port, schema and hostname info from connection url
+      const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w\.]+):?(\d+)?/);
+      port = connectionComps[3] ? connectionComps[3] : '7687';
+      hostName = connectionComps[2];
+      schema = connectionComps[1];
+      dbName = data.dbName ? data.dbName : 'neo4j';
+      userName = data.dbUsername ? data.dbUsername : 'neo4j';
+      password = data.dbPassword;
+
       return {
         isHandled: true,
         config: {
@@ -104,7 +97,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
           standaloneDashboardDatabase: 'hive',
           standaloneDashboardURL: data.uuid,
           standaloneUsername: userName,
-          standalonePassword: pasword,
+          standalonePassword: password,
           isOwner: data.user == auth.getEmail() ? true : false,
         },
       };

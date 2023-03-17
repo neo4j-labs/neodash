@@ -32,8 +32,7 @@ import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import SaveToHiveModel from '../solutions/components/SaveToHiveModel';
-// import SaveToHiveModel from './SaveToHiveModel';
+import SaveToHiveModal from '../solutions/components/SaveToHiveModal';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -72,12 +71,6 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
   const [saveToHiveModalOpen, setSaveToHiveModalOpen] = React.useState(false);
-  const [saveToHiveProgress, setSaveToHiveProgress] = React.useState({
-    flag: '',
-    dashboardUUID: '',
-    solutionId: '',
-    dbName: '',
-  });
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
   const [dashboardDatabase, setDashboardDatabase] = React.useState('neo4j');
   const [databases, setDatabases] = React.useState(['neo4j']);
@@ -112,23 +105,6 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
     element.download = 'dashboard.json';
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-  };
-
-  const exportHiveJson = () => {
-    const datajson = {
-      hiveDashboardUrl: `http://localhost:3000/?hivedashboarduuid=${saveToHiveProgress.dashboardUUID}`,
-      hiveCardUrl: `http://localhost:3002/solutions/${saveToHiveProgress.solutionId}`,
-      hiveDbName: saveToHiveProgress.dbName,
-      HiveDbUsername: saveToHiveProgress.dbName?.replaceAll('.', ''),
-      HiveDbPassword: saveToHiveProgress.dbName?.replaceAll('.', ''),
-      dashboardTitle: dashboard.title,
-    };
-    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(datajson))}`;
-    const link = document.createElement('a');
-    link.href = jsonString;
-    link.download = `${dashboard.title}.json`;
-
-    link.click();
   };
 
   return (
@@ -188,7 +164,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           <Button
             component='label'
             onClick={() => {
-              handleClose();
+              setSaveModalOpen(false);
               setSaveToHiveModalOpen(true);
             }}
             style={{ backgroundColor: 'white', marginLeft: '10px' }}
@@ -324,11 +300,8 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
-      <SaveToHiveModel
+      <SaveToHiveModal
         modalOpen={saveToHiveModalOpen}
-        updateSaveToHiveProgress={(flag) => {
-          setSaveToHiveProgress(flag);
-        }}
         closeDialog={(options) => {
           options = options || {};
           setSaveToHiveModalOpen(false);
@@ -337,79 +310,6 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           }
         }}
       />
-
-      <Dialog maxWidth={'lg'} open={saveToHiveProgress.flag.includes('progress')} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>
-          Publish to Hive Progress
-          <IconButton
-            onClick={() => {
-              setSaveToHiveProgress({ flag: 'close', dashboardUUID: '', solutionId: '', dbName: '' });
-              window.location.href = `http://localhost:3000/?hivedashboarduuid=${saveToHiveProgress.dashboardUUID}`;
-            }}
-            style={{ padding: '3px', float: 'right' }}
-          >
-            <Badge badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          {saveToHiveProgress.flag == 'progress-bar' && <CircularProgress color='inherit' />}
-
-          {saveToHiveProgress.flag == 'progress-instructions' && (
-            <div>
-              <div>
-                Downlad saved Hive info as{' '}
-                <Button variant='outlined' onClick={exportHiveJson}>
-                  JSON File
-                </Button>
-              </div>
-              <br />
-              <div>
-                Hive{' '}
-                <a
-                  href={`http://localhost:3000/?hivedashboarduuid=${saveToHiveProgress.dashboardUUID}`}
-                  target='_blank'
-                >
-                  dashboard
-                </a>
-              </div>
-              <br />
-              <div>
-                Hive solution{' '}
-                <a href={`http://localhost:3002/solutions/${saveToHiveProgress.solutionId}`} target='_blank'>
-                  card
-                </a>
-              </div>
-              <br />
-              {saveToHiveProgress.dbName && (
-                <div>
-                  <div>
-                    New database {saveToHiveProgress.dbName} and{' '}
-                    <a href={`http://localhost:7474/browser`} target='_blank'>
-                      browser url
-                    </a>
-                  </div>
-                  <br />
-                </div>
-              )}
-              <div>
-                Please update Hive solution{' '}
-                <a href={`http://localhost:3002/solutions/${saveToHiveProgress.solutionId}`} target='_blank'>
-                  card
-                </a>{' '}
-                info for better uses.
-                <ul>
-                  <li>Dashboard image by editing overview &gt; image. Upload image to link and copy the URL to use.</li>
-                  <li>Add demo info by editing documentation in ASCII style</li>
-                  <li>Additional owners by editing permissions</li>
-                  <li>Add usercase and vertical tags by editing overview &gt; tags</li>
-                </ul>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

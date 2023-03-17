@@ -5,7 +5,6 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 export const HIVE_INITIAL_STATE = {
   uuid: '', // _Neodash_Dashboard.uuid in Hive, generated from this application, but used during updates
   dbName: '', // Generated database name when a database is uploaded
-  solutionId: '', // The value of Solution.id in Hive, this is the card that shows up in Hive
 };
 
 /**
@@ -14,7 +13,7 @@ export const HIVE_INITIAL_STATE = {
 export const hiveReducer = (state = HIVE_INITIAL_STATE, action: { type: any; payload: any }) => {
   const { type, payload } = action;
 
-  if (!action.type.startsWith('EXTENSIONS/HIVE/')) {
+  if (!action.type.startsWith('EXTENSIONS/HIVE')) {
     return state.extensions;
   }
 

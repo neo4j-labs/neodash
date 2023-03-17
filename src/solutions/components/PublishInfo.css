@@ -1,0 +1,8 @@
+.publishInfo {
+    display: flex;
+    margin-top: 10px;
+    height: 240px;
+    align-items: center;
+    width: 650px;
+    justify-content: center;
+  }

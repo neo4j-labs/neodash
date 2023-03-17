@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UploadDatabase } from './UploadDatabase';
 import { ConfigureSelfManagedDatabase } from './ConfigureSelfManagedDatabase';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab, Typography } from '@material-ui/core';
 import { TabPanel } from '../tabs/TabPanel';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,7 @@ export const SelectDatabase = (props) => {
         className={classes.tabs}
       >
         <Tab label='Upload database' id='publish-to-hive-1' aria-label='Upload database' />
-        <Tab label='Neo4j Connection' id='publish-to-hive-2' aria-label='Neo4j Connection' />
+        <Tab label='Remote Connection' id='publish-to-hive-2' aria-label='Remote Connection' />
       </Tabs>
       <TabPanel idroot='pick-db-tab' value={tabIndex} index={0}>
         <UploadDatabase setConnection={setConnection} />
@@ -43,6 +43,12 @@ export const SelectDatabase = (props) => {
       <TabPanel idroot='pick-db-tab' value={tabIndex} index={1}>
         <ConfigureSelfManagedDatabase connection={connection} setConnection={setConnection} />
       </TabPanel>
+      <div style={{ width: '600px', marginTop: '5px' }}>
+        <Typography variant='body2'>
+          Use upload database to host your database on Hive. Use Remote Connection if you have an existing Neo4j DB you
+          want to use.
+        </Typography>
+      </div>
     </div>
   );
 };

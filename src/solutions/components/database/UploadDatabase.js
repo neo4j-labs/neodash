@@ -1,6 +1,8 @@
-import { Button, Typography } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import React, { useState } from 'react';
 import { Dropzone } from './Dropzone';
+import { InlineBox } from '../common/Common';
+import './UploadDatabase.css';
 
 export const UploadDatabase = (props) => {
   const { setConnection } = props;
@@ -12,14 +14,14 @@ export const UploadDatabase = (props) => {
     setUploadCompleted(true);
     setFileUploadResponse(uploadInfo);
 
-    const parsedUri = uploadInfo.neo4jDriverUri?.match(/(.+:)\/\/([\w\.]+):?(\d+)?/) || [];
+    const parsedUri = uploadInfo.neo4jDriverUri?.match(/(.+):\/\/([\w\.]+):?(\d+)?/) || [];
 
     setConnection({
-      protocol: parsedUri[0],
-      url: parsedUri[1],
-      port: parsedUri[2],
+      protocol: parsedUri[1],
+      url: parsedUri[2],
+      port: parsedUri[3],
       username: uploadInfo.newDbReaderUser,
-      password: uploadInfo.newDbAdminPassword,
+      password: uploadInfo.newDbReaderPassword,
       database: uploadInfo.dbName,
     });
   };
@@ -27,24 +29,30 @@ export const UploadDatabase = (props) => {
   return (
     <>
       {uploadCompleted ? (
-        <>
-          <Typography>Your database has been uploaded as {fileUploadResponse.dbName}</Typography>
-          <Typography>
+        <ul style={{ lineHeight: '1.8em' }}>
+          <li>
+            Your database has been uploaded as <InlineBox message={fileUploadResponse.dbName} />
+          </li>
+          <li>
             You can access the database here:
-            <a href={fileUploadResponse.neo4jBrowserUri} target='_blank'>
+            <a style={{ marginLeft: '5px' }} href={fileUploadResponse.neo4jBrowserUri} target='_blank'>
               {fileUploadResponse.neo4jBrowserUri}
             </a>
-          </Typography>
-          <Typography>
-            The database admin username and password are:
-            {fileUploadResponse.newDbAdminUser} /{fileUploadResponse.newDbAdminPassword}
-          </Typography>
-          <Typography>IMPORTANT! Please write these credentials down as they are not stored anywhere.</Typography>
-          <Typography>
-            Users of your dashboard will automatically use the read-only account:
-            {fileUploadResponse.newDbReaderUser} /{fileUploadResponse.newDbReaderPassword}
-          </Typography>
-        </>
+          </li>
+          <li>The database admin username and password are:</li>
+          <div>
+            <InlineBox message={fileUploadResponse.newDbAdminUser} />/
+            <InlineBox message={fileUploadResponse.newDbAdminPassword} />
+          </div>
+          <Alert className='credentialsWarning' severity='warning'>
+            IMPORTANT! Please capture the admin credentials as they are not stored anywhere.
+          </Alert>
+          <li>Users of your dashboard will automatically use the read-only account:</li>
+          <div>
+            <InlineBox message={fileUploadResponse.newDbReaderUser} />/
+            <InlineBox message={fileUploadResponse.newDbReaderPassword} />
+          </div>
+        </ul>
       ) : (
         <Dropzone message='Drop a .dump file here, or click to select a file' onUploadComplete={onUploadComplete} />
       )}

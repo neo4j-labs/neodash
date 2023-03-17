@@ -5,23 +5,24 @@ import TextField from '@material-ui/core/TextField';
 import { MenuItem } from '@material-ui/core';
 
 export const ConfigureSelfManagedDatabase = (props) => {
-  props = props || {};
-  const connection = props.connection || {};
-  const { setConnection } = props;
+  const { connection, setConnection } = props;
   const protocols = ['neo4j', 'neo4j+s', 'neo4j+ssc', 'bolt', 'bolt+s', 'bolt+ssc'];
-  const [protocol, setProtocol] = useState(connection.protocol);
-  const [url, setUrl] = useState(connection.url);
-  const [port, setPort] = useState(connection.port);
-  const [username, setUsername] = useState(connection.username);
-  const [password, setPassword] = useState(connection.password);
-  const [database, setDatabase] = useState(connection.database);
 
   // Make sure local vars are updated on external connection updates.
-  useEffect(() => {
-    if (setConnection) {
-      setConnection({ protocol, url, port, username, password, database });
-    }
-  }, [protocol, url, port, username, password, database]);
+  const { protocol, url, port, database, username, password } = connection;
+
+  const updateConnectionInfo = (key) => (value) => {
+    setConnection({
+      ...connection,
+      [key]: value,
+    });
+  };
+  const setProtocol = updateConnectionInfo('protocol');
+  const setUrl = updateConnectionInfo('url');
+  const setPort = updateConnectionInfo('port');
+  const setDatabase = updateConnectionInfo('database');
+  const setUsername = updateConnectionInfo('username');
+  const setPassword = updateConnectionInfo('password');
 
   return (
     <div>
