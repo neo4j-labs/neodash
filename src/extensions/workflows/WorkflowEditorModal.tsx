@@ -10,7 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
-
+import SaveIcon from '@material-ui/icons/Save';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { NeoWorkflowStepSelectionModal } from './WorkflowStepSelectionModal';
 import { WORKFLOW_STEPS } from './WorkflowSteps';
@@ -29,14 +29,12 @@ function moveElementInArray(array, fromIndex, toIndex) {
 /**
  * The pop-up window used to create and edit workflows.
  */
-export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
-  // The rule set defined in this modal is updated whenever the setting value is externally changed.
-  const [steps, setSteps] = React.useState([
-    { key: 'x', name: 'a', query: 'RETURN false' },
-    { key: 'y', name: 'b', query: 'RETURN true' },
-  ]);
+export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName }) => {
+  const [steps, setSteps] = React.useState([]);
 
-  const handleClose = () => {};
+  const handleSave = () => {
+    setOpen(false);
+  };
   const addStep = (key) => {
     const step = WORKFLOW_STEPS[key];
     setSteps(steps.concat(step));
@@ -89,8 +87,8 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
                   </td>
 
                   <td>
-                    <IconButton onClick={handleClose} style={{ float: 'right' }}>
-                      <CloseIcon />
+                    <IconButton onClick={handleSave} style={{ float: 'right' }}>
+                      <SaveIcon />
                     </IconButton>
                   </td>
                 </tr>

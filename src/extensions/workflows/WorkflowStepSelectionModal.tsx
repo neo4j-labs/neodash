@@ -46,8 +46,7 @@ export const NeoWorkflowStepSelectionModal = ({ open, setOpen, addStep }) => {
             size='medium'
             endIcon={<PlayArrow />}
           >
-            {' '}
-            Select{' '}
+            Select
           </Button>
         );
       },
@@ -63,25 +62,20 @@ export const NeoWorkflowStepSelectionModal = ({ open, setOpen, addStep }) => {
       }}
       aria-labelledby='form-dialog-title'
     >
-      {' '}
       <DialogTitle id='form-dialog-title'>
-        {' '}
-        Add Workflow Step{' '}
+        Add Workflow Step
         <IconButton
           onClick={() => {
             setOpen(false);
           }}
           style={{ padding: '3px', float: 'right' }}
         >
-          {' '}
           <Badge overlap='rectangular' badgeContent={''}>
-            {' '}
-            <CloseIcon />{' '}
-          </Badge>{' '}
-        </IconButton>{' '}
-      </DialogTitle>{' '}
+            <CloseIcon />
+          </Badge>
+        </IconButton>
+      </DialogTitle>
       <DialogContent style={{ width: '1100px' }}>
-        {' '}
         <DialogContentText> Select a step to add to the workflow. </DialogContentText>
         <div style={{ height: '380px', borderBottom: '1px solid lightgrey' }}>
           <DataGrid
@@ -94,8 +88,8 @@ export const NeoWorkflowStepSelectionModal = ({ open, setOpen, addStep }) => {
             disableSelectionOnClick
             components={{ ColumnSortedDescendingIcon: () => <></>, ColumnSortedAscendingIcon: () => <></> }}
           />
-        </div>{' '}
-      </DialogContent>{' '}
+        </div>
+      </DialogContent>
     </Dialog>
   );
 };
