@@ -1,8 +1,5 @@
-import {
-  NODE_SIDEBAR_ACTION_PREFIX,
-  NODE_SIDEBAR_EXTENSION_NAME,
-} from './alert/listElement/stateManagement/AlertActions';
-import { alertReducer } from './alert/listElement/stateManagement/AlertReducer';
+import { NODE_SIDEBAR_ACTION_PREFIX, NODE_SIDEBAR_EXTENSION_NAME } from './alert/stateManagement/AlertActions';
+import { alertReducer } from './alert/stateManagement/AlertReducer';
 import { WORKFLOWS_ACTION_PREFIX, WORKFLOWS_EXTENSION_NAME } from './workflows/stateManagement/WorkflowActions';
 import { workflowReducer } from './workflows/stateManagement/WorkflowReducer';
 

@@ -1,5 +1,5 @@
 import { SELECTION_TYPES } from '../../config/CardConfig';
-import { NODE_SIDEBAR_EXTENSION_NAME } from './listElement/stateManagement/AlertActions';
+import { NODE_SIDEBAR_EXTENSION_NAME } from './stateManagement/AlertActions';
 
 // TODO: define settings for extensions (just alert for now, keep it futureproof)
 // TODO: understand if we want pagination (strange styling).

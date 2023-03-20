@@ -6,13 +6,13 @@ import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 import { DialogContent, FormControlLabel, FormGroup, MenuItem, Switch } from '@material-ui/core';
-import { getSidebarDatabase, getSidebarQuery } from '../listElement/stateManagement/AlertSelectors';
+import { getSidebarDatabase, getSidebarQuery } from '../stateManagement/AlertSelectors';
 import {
   NODE_SIDEBAR_EXTENSION_NAME,
   setExtensionDatabase,
   setExtensionQuery,
   setExtensionSettings,
-} from '../listElement/stateManagement/AlertActions';
+} from '../stateManagement/AlertActions';
 import NeoField from '../../../component/field/Field';
 import { applicationGetConnectionDatabase } from '../../../application/ApplicationSelectors';
 import ExtensionSettingsForm from './ExtensionSettingsForm';

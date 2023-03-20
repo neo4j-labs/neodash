@@ -14,7 +14,7 @@ import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
 import { setExtensionReducerEnabled } from './stateManagement/ExtensionActions';
-import { NODE_SIDEBAR_EXTENSION_NAME } from './alert/listElement/stateManagement/AlertActions';
+import { NODE_SIDEBAR_EXTENSION_NAME } from './alert/stateManagement/AlertActions';
 
 const NeoExtensionsModal = ({
   extensions,

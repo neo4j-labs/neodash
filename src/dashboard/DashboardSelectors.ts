@@ -2,6 +2,8 @@ export const getDashboardTitle = (state: any) => state.dashboard.title;
 
 export const getDashboardSettings = (state: any) => state.dashboard.settings;
 
+// TODO: move dashboard selectors for extensions in the correct
+
 export const getDashboardExtensions = (state: any) => {
   const { extensions } = state.dashboard;
   if (!extensions) {

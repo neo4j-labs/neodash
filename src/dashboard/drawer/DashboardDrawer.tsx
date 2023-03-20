@@ -22,7 +22,7 @@ import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import NeoNodeSidebarModal from '../../extensions/alert/NeoAlertDrawerButton';
 import AlertDrawer from '../../extensions/alert/AlertDrawer';
-import { NODE_SIDEBAR_EXTENSION_NAME } from '../../extensions/alert/listElement/stateManagement/AlertActions';
+import { NODE_SIDEBAR_EXTENSION_NAME } from '../../extensions/alert/stateManagement/AlertActions';
 
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component

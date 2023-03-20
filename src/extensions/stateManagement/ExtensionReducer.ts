@@ -25,7 +25,6 @@ export const extensionsReducer = (state = INITIAL_EXTENSIONS_STATE, action: { ty
       ...state,
     };
     newState[name] = reducer(state[name], action);
-    console.log(newState);
     return newState;
   }
 
