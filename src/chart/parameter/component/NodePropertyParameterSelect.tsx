@@ -15,7 +15,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const [extraRecords, setExtraRecords] = React.useState([]);
   // const [inputText, setInputText] = React.useState(props.parameterValue);
   const [inputDisplayText, setInputDisplayText] = React.useState(props.parameterDisplayValue);
-  const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
+  const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), [props.database]);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
   const propertyType = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
@@ -23,7 +23,11 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
 
   // index of the display value in the resulting extra records retrieved by the component when the user types. equals '1' for NeoDash 2.2.2 and later.
-  const displayValueRowIndex = props.compatibilityMode ? 0 : 1;
+  const displayValueRowIndex = props.compatibilityMode
+    ? 0
+    : extraRecords.length == 0
+    ? 0
+    : extraRecords[0].keys.findIndex((e) => e == 'display') || 0;
 
   return (
     <Autocomplete
@@ -57,8 +61,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         }
 
         let newValue = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]
-          ._fields[0];
-        setInputDisplayText(newDisplayValue !== null ? `${newDisplayValue}` : '');
+          ._fields[displayValueRowIndex == 0 ? 1 : 0];
+        setInputDisplayText(newDisplayValue);
         if (newValue && newValue.low) {
           newValue = newValue.low;
         }

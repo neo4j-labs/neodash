@@ -49,11 +49,15 @@ const NeoCardSettingsContentPropertySelect = ({
     );
   }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
+  useEffect(() => {
+    setLabelRecords([]);
+    setPropertyRecords([]);
+  }, [database]);
+
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
   const formatParameterId = (id: string | undefined | null) => {
     const cleanedId = id || '';
-    const formattedId = cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
-    return formattedId;
+    return cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
   };
 
   if (settings.type == undefined) {
@@ -68,20 +72,23 @@ const NeoCardSettingsContentPropertySelect = ({
     onReportSettingUpdate('parameterName', parameterName);
   }
   // Define query callback to allow reports to get extra data on interactions.
-  const queryCallback = useCallback((query, parameters, setRecords) => {
-    debouncedRunCypherQuery(
-      driver,
-      database,
-      query,
-      parameters,
-      10,
-      (status) => {
-        status == QueryStatus.NO_DATA ? setRecords([]) : null;
-      },
-      (result) => setRecords(result),
-      () => {}
-    );
-  }, []);
+  const queryCallback = useCallback(
+    (query, parameters, setRecords) => {
+      debouncedRunCypherQuery(
+        driver,
+        database,
+        query,
+        parameters,
+        10,
+        (status) => {
+          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+        },
+        (result) => setRecords(result),
+        () => {}
+      );
+    },
+    [database]
+  );
 
   function handleParameterTypeUpdate(newValue) {
     onReportSettingUpdate('entityType', undefined);
@@ -188,7 +195,7 @@ const NeoCardSettingsContentPropertySelect = ({
   }
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
-  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query','Date Picker'];
+  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query', 'Date Picker'];
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
