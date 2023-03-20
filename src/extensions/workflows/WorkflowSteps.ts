@@ -1,3 +1,4 @@
+// TODO - define interface
 export const WORKFLOW_STEPS = {
   shortestPath: {
     name: "Yen's Shortest Path",

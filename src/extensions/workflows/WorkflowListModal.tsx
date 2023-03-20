@@ -14,6 +14,7 @@ import { PlayArrow } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { NeoWorkflowRunnerModal } from './WorkflowRunnerModal';
 const styles = {};
 
 // Temporary list of hardcoded workflows
@@ -36,6 +37,9 @@ const workflows = [
 ];
 
 export const NeoWorkflowListModal = ({ open, setOpen }) => {
+  const [editorOpen, setEditorOpen] = React.useState(false);
+  const [runnerOpen, setRunnerOpen] = React.useState(false);
+
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
     { field: 'name', headerName: 'Name', width: 310 },
@@ -45,7 +49,12 @@ export const NeoWorkflowListModal = ({ open, setOpen }) => {
       renderCell: () => {
         return (
           <div>
-            <IconButton onClick={() => {}} style={{ padding: '6px' }}>
+            <IconButton
+              onClick={() => {
+                setRunnerOpen(true);
+              }}
+              style={{ padding: '6px' }}
+            >
               <Badge overlap='rectangular' badgeContent={''}>
                 <PlayArrow />
               </Badge>
@@ -60,7 +69,12 @@ export const NeoWorkflowListModal = ({ open, setOpen }) => {
                 <EditIcon />
               </Badge>
             </IconButton>
-            <IconButton onClick={() => {}} style={{ padding: '6px' }}>
+            <IconButton
+              onClick={() => {
+                alert('Delete workflow');
+              }}
+              style={{ padding: '6px' }}
+            >
               <Badge overlap='rectangular' badgeContent={''}>
                 <DeleteIcon />
               </Badge>
@@ -74,8 +88,6 @@ export const NeoWorkflowListModal = ({ open, setOpen }) => {
   const rows = Object.values(workflows).map((workflow, index) => {
     return { id: index, ...workflow };
   });
-
-  const [editorOpen, setEditorOpen] = React.useState(false);
 
   return (
     <>
@@ -132,6 +144,7 @@ export const NeoWorkflowListModal = ({ open, setOpen }) => {
         name={undefined}
         setName={undefined}
       ></NeoWorkflowEditorModal>
+      <NeoWorkflowRunnerModal open={runnerOpen} setOpen={setRunnerOpen} workflow={undefined} />
     </>
   );
 };
