@@ -146,7 +146,7 @@ export const NeoPage = ({
 
   const content = (
     <div style={{ paddingTop: '52px' }}>
-      <NeoWorkflowEditorModal name='QQQ' open={true} />
+      <NeoWorkflowEditorModal name='My Workflow' open={true} />
       <ResponsiveGridLayout
         draggableHandle='.drag-handle'
         layouts={layouts}

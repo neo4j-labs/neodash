@@ -12,6 +12,8 @@ import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 
 import RGL, { WidthProvider } from 'react-grid-layout';
+import { NeoWorkflowStepSelectionModal } from './WorkflowStepSelectionModal';
+import { WORKFLOW_STEPS } from './WorkflowSteps';
 const ReactGridLayout = WidthProvider(RGL);
 
 interface Step {
@@ -30,11 +32,16 @@ function moveElementInArray(array, fromIndex, toIndex) {
 export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
   // The rule set defined in this modal is updated whenever the setting value is externally changed.
   const [steps, setSteps] = React.useState([
-    { name: 'a', query: 'RETURN false' },
-    { name: 'b', query: 'RETURN true' },
+    { key: 'x', name: 'a', query: 'RETURN false' },
+    { key: 'y', name: 'b', query: 'RETURN true' },
   ]);
 
   const handleClose = () => {};
+  const addStep = (key) => {
+    const step = WORKFLOW_STEPS[key];
+    setSteps(steps.concat(step));
+  };
+  const [addStepModalOpen, setAddStepModalOpen] = React.useState(false);
 
   const layout = {
     ...steps.map((step, index) => {
@@ -181,8 +188,7 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
                     aria-label='add'
                     style={{ background: 'white', color: 'black' }}
                     onClick={() => {
-                      const newStep = { name: 'c', query: 'return true' };
-                      setSteps(steps.concat(newStep));
+                      setAddStepModalOpen(true);
                     }}
                   >
                     <AddIcon />
@@ -195,6 +201,8 @@ export const NeoWorkflowEditorModal = ({ name, setName, open }) => {
       ) : (
         <></>
       )}
+
+      <NeoWorkflowStepSelectionModal open={addStepModalOpen} setOpen={setAddStepModalOpen} addStep={addStep} />
     </div>
   );
 };
