@@ -3,12 +3,16 @@
  */
 
 import { SET_WORKFLOW, DELETE_WORKFLOW, WORKFLOW_ACTION_PREFIX } from './WorkflowActions';
-export const initialState = {};
+export const initialState = {
+  workflowsMap: {},
+  settings: {},
+};
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
 export const workflowReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
+  console.log('ciao1111');
 
   if (!action.type.startsWith(WORKFLOW_ACTION_PREFIX)) {
     return state;
@@ -16,14 +20,28 @@ export const workflowReducer = (state = initialState, action: { type: any; paylo
 
   switch (type) {
     case SET_WORKFLOW: {
-      const { workflow, steps, extensionsConfig } = payload;
-      console.log(SET_WORKFLOW);
-      return extensionsConfig;
+      const { workflowName, steps } = payload;
+      let newState = {
+        ...state,
+      };
+      if (newState.workflowsMap[workflowName]) {
+        newState.workflowsMap[workflowName].steps = steps;
+      } else {
+        newState.workflowsMap[workflowName] = { steps: steps };
+      }
+      console.log(newState);
+      return newState;
     }
     case DELETE_WORKFLOW: {
-      const { workflow, extensionsConfig } = payload;
+      const { workflowName } = payload;
       console.log(DELETE_WORKFLOW);
-      return extensionsConfig;
+      let newState = {
+        ...state,
+      };
+      if (newState.workflowsMap[workflowName]) {
+        delete newState.workflowsMap[workflowName];
+      }
+      return newState;
     }
     default: {
       return state;

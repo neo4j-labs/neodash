@@ -31,9 +31,11 @@ export const extensionsReducer = (state = INITIAL_EXTENSIONS_STATE, action: { ty
     let newState = {
       ...state,
     };
-    newState[name] = reducer(type, payload);
+    newState[name] = reducer(state[name], action);
     return newState;
-  }
+  } 
+    console.log(`${type} not enabled`);
+  
 
   switch (type) {
     case UPDATE_EXTENSION_SETTINGS: {
