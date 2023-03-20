@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import Button from '@material-ui/core/Button';
 import '../styles/PolygonStyle.css';
 import { categoricalColorSchemes } from '../../../config/ColorConfig';
+import { abbreviateNumber } from '../MapUtils';
 
 /**
  * Creates the list of values that will be used for the legend
@@ -93,13 +94,12 @@ function bindDataToMap(geoData, geoJsonData) {
   listValues.sort((a, b) => {
     return a - b;
   });
-
   // Returning the list of features
   return [Object.values(res), listValues[0], listValues.slice(-1)[0]];
 }
 
 // Wraps the boundary logic function
-export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
+export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLevel1 }) => {
   // Keys used for the drill down
   // (right now only 0 is useful but important to keep in mind that we can add more levels)
   const level0key = 'SHORT_COUNTRY_CODE';
@@ -177,6 +177,7 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
      * @returns color assigned to the polygon based on it's position in the legend
      */
     function getColor(weight, legendRange, listColors) {
+      console.log(weight);
       let index = legendRange.findIndex((number) => {
         return number >= weight;
       });
@@ -222,26 +223,36 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
    * Creates Legend component
    * @param colors Color palette selected defined in the ReportSettings
    * @param legendRange List of numbers that will be used to define the legend buckets
+   * @param dimensions dimensions object passed down from AreaMapChart
    * @returns Legend component
    */
-  function Legend(colors, legendRange) {
+  function Legend(colors, legendRange, dimensions) {
     return (
-      <div className='info legend' style={{ zIndex: 1001, position: 'absolute', bottom: 30, right: 30 }}>
+      <div
+        className='info legend'
+        style={{ zIndex: 1001, position: 'absolute', bottom: 30, right: 30, width: dimensions.width * 0.25 }}
+      >
         {legendRange.map((from, i, legendRange) => {
           let to = legendRange[i + 1];
           return (
-            <div>
-              <i style={{ background: colors[i] }}> &nbsp;&nbsp; </i>
-              &nbsp; {from} {!isNaN(to) ? `- ${to}` : i > 0 ? '+' : ''}
-              <br />
-            </div>
+            <>
+              <i style={{ background: colors[i] }}> &nbsp; </i>
+              <p style={{ fontSize: 'medium' }}>
+                {' '}
+                {abbreviateNumber(from, 2)} {!isNaN(to) ? `- ${abbreviateNumber(to, 2)}` : i > 0 ? '+' : ''}{' '}
+              </p>
+            </>
           );
         })}
       </div>
     );
   }
   // Create a legend only if the values are ready
-  const legend = !(isNaN(rangeValues.min) && isNaN(rangeValues.min)) ? Legend(listColors, legendRange) : <></>;
+  const legend = !(isNaN(rangeValues.min) && isNaN(rangeValues.min)) ? (
+    Legend(listColors, legendRange, dimensions)
+  ) : (
+    <></>
+  );
 
   // We need data or synchronized keys to enable re-render
   if (polygonData.length == 0 || key !== state.key) {

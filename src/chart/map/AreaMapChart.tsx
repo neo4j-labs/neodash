@@ -77,6 +77,8 @@ const NeoAreaMapChart = (props: ChartProps) => {
     props.settings && props.settings.attribution
       ? props.settings.attribution
       : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+  const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
+  let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
 
   // Extracting the geoData from the records
   useEffect(() => {
@@ -116,7 +118,7 @@ const NeoAreaMapChart = (props: ChartProps) => {
   if (isReady) {
     return (
       <MapContainer
-        key={`polygon_map${props.fullscreen}`}
+        key={key}
         style={{ width: '100%', height: '100%' }}
         center={[0, 0]}
         zoom={0.5}
@@ -124,7 +126,15 @@ const NeoAreaMapChart = (props: ChartProps) => {
         scrollWheelZoom={false}
       >
         <TileLayer attribution={attribution} url={mapProviderURL} />
-        {<MapBoundary data={data} props={props} featureLevel0={featureLevel0} featureLevel1={featureLevel1} />}
+        {
+          <MapBoundary
+            dimensions={dimensions}
+            data={data}
+            props={props}
+            featureLevel0={featureLevel0}
+            featureLevel1={featureLevel1}
+          />
+        }
       </MapContainer>
     );
   }
