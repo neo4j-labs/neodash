@@ -963,6 +963,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'rgba(0, 0, 0, 0.87)',
       },
+      monospace: {
+        label: 'Use monospace font',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       textAlign: {
         label: 'Horizontal Align',
         type: SELECTION_TYPES.LIST,

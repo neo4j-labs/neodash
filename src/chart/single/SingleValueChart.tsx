@@ -13,6 +13,7 @@ const NeoSingleValueChart = (props: ChartProps) => {
   const color = props.settings && props.settings.color ? props.settings.color : 'rgba(0, 0, 0, 0.87)';
   const textAlign = props.settings && props.settings.textAlign ? props.settings.textAlign : 'left';
   const verticalAlign = props.settings && props.settings.verticalAlign ? props.settings.verticalAlign : 'top';
+  const monospace = props.settings && props.settings.monospace !== undefined ? props.settings.monospace : false;
   const styleRules =
     extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
       ? props.settings.styleRules
@@ -23,6 +24,7 @@ const NeoSingleValueChart = (props: ChartProps) => {
 
   const value = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
   const displayValue = renderValueByType(value);
+
   return (
     <div
       style={{
@@ -38,8 +40,10 @@ const NeoSingleValueChart = (props: ChartProps) => {
         style={{
           display: 'inline-block',
           verticalAlign: verticalAlign,
+          whiteSpace: 'pre',
           marginTop: verticalAlign == 'middle' ? '-72px' : '0px', // go to a "true middle", subtract header height.
           fontSize: fontSize,
+          fontFamily: monospace ? 'monospace' : 'inherit',
           lineHeight: `${fontSize + 8}px`,
           color: evaluateRulesOnNeo4jRecord(records[0], 'text color', color, styleRules),
         }}
