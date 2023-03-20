@@ -20,8 +20,9 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
-import NeoAlertModal from '../../extensions/alert/NeoAlertDrawerButton';
+import NeoNodeSidebarModal from '../../extensions/alert/NeoAlertDrawerButton';
 import AlertDrawer from '../../extensions/alert/AlertDrawer';
+import { NODE_SIDEBAR_EXTENSION_NAME } from '../../extensions/alert/listElement/stateManagement/AlertActions';
 
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
@@ -34,7 +35,7 @@ function renderExtensionDrawers(open) {
 
 // TODO: abstract logic
 function renderExtensionModals() {
-  return <NeoAlertModal></NeoAlertModal>;
+  return <NeoNodeSidebarModal></NeoNodeSidebarModal>;
 }
 
 // The sidebar that appears on the left side of the dashboard.
@@ -133,7 +134,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
-        {extensions.alerts ? renderExtensionModals() : <></>}
+        {extensions[NODE_SIDEBAR_EXTENSION_NAME] ? renderExtensionModals() : <></>}
       </List>
       <Divider />
       <List>
@@ -156,7 +157,11 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {extensionsConfig.alerts ? renderExtensionDrawers(extensionsConfig.alerts.opened) : <></>}
+      {extensionsConfig[NODE_SIDEBAR_EXTENSION_NAME] ? (
+        renderExtensionDrawers(extensionsConfig[NODE_SIDEBAR_EXTENSION_NAME].opened)
+      ) : (
+        <></>
+      )}
     </>
   );
 };

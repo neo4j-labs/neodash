@@ -1,4 +1,9 @@
-import { WORKFLOW_ACTION_PREFIX } from './workflows/stateManagement/WorkflowActions';
+import {
+  NODE_SIDEBAR_ACTION_PREFIX,
+  NODE_SIDEBAR_EXTENSION_NAME,
+} from './alert/listElement/stateManagement/AlertActions';
+import { alertReducer } from './alert/listElement/stateManagement/AlertReducer';
+import { WORKFLOWS_ACTION_PREFIX, WORKFLOWS_EXTENSION_NAME } from './workflows/stateManagement/WorkflowActions';
 import { workflowReducer } from './workflows/stateManagement/WorkflowReducer';
 
 // TODO: define extension config interface
@@ -33,31 +38,34 @@ export const EXTENSIONS = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked. To learn more about this extension, reach out to Neo4j Professional Services.',
     link: 'https://neo4j.com/professional-services/',
   },
-  // TODO: Rename "alerts" to "node sidebar" (generic name).
-  alerts: {
-    name: 'alerts',
-    label: 'Node Sidebar',
-    author: 'Neo4j Professional Services',
-    // TODO: Fix placeholder image.
-    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png',
-    enabled: true,
-    description:
-      'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
-    link: 'https://neo4j.com/professional-services/',
-  },
-  workflows: {
-    name: 'workflows',
-    label: 'Cypher Workflows',
-    author: 'Neo4j Professional Services',
-    // TODO: Fix placeholder image.
-    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png',
-    enabled: true,
-    reducerPrefix: WORKFLOW_ACTION_PREFIX,
-    reducerObject: workflowReducer,
-    description:
-      'cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese.',
-    link: 'https://neo4j.com/professional-services/',
-  },
+};
+// TODO: Rename "alerts" to "node sidebar" (generic name).
+EXTENSIONS[NODE_SIDEBAR_EXTENSION_NAME] = {
+  name: NODE_SIDEBAR_EXTENSION_NAME,
+  label: 'Node Sidebar',
+  author: 'Neo4j Professional Services',
+  // TODO: Fix placeholder image.
+  image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png',
+  enabled: true,
+  reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
+  reducerObject: alertReducer,
+  description:
+    'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
+  link: 'https://neo4j.com/professional-services/',
+};
+
+EXTENSIONS[WORKFLOWS_EXTENSION_NAME] = {
+  name: WORKFLOWS_EXTENSION_NAME,
+  label: 'Cypher Workflows',
+  author: 'Neo4j Professional Services',
+  // TODO: Fix placeholder image.
+  image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png',
+  enabled: true,
+  reducerPrefix: WORKFLOWS_ACTION_PREFIX,
+  reducerObject: workflowReducer,
+  description:
+    'cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese.',
+  link: 'https://neo4j.com/professional-services/',
 };
 
 /**
@@ -65,7 +73,7 @@ export const EXTENSIONS = {
  * @returns
  */
 function getExtensionReducers() {
-  console.log('getting extension reducers');
+  console.log('etting extension reducers');
   let res = {};
   Object.values(EXTENSIONS).forEach((conf) => {
     if (conf.reducerPrefix && conf.reducerObject) {

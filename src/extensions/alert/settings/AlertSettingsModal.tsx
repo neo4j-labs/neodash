@@ -6,12 +6,18 @@ import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 import { DialogContent, FormControlLabel, FormGroup, MenuItem, Switch } from '@material-ui/core';
-import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../../ExtensionsSelectors';
-import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../../ExtensionsActions';
+import { getSidebarDatabase, getSidebarQuery } from '../listElement/stateManagement/AlertSelectors';
+import {
+  NODE_SIDEBAR_EXTENSION_NAME,
+  setExtensionDatabase,
+  setExtensionQuery,
+  setExtensionSettings,
+} from '../listElement/stateManagement/AlertActions';
 import NeoField from '../../../component/field/Field';
 import { applicationGetConnectionDatabase } from '../../../application/ApplicationSelectors';
 import ExtensionSettingsForm from './ExtensionSettingsForm';
 import SaveIcon from '@material-ui/icons/Save';
+import { getExtensionSettings } from '../../stateManagement/ExtensionSelectors';
 
 /**
  * TODO: lets also generalize this as a 'pop-uppable report'.
@@ -145,7 +151,6 @@ const AlertSettingsModal = ({
               isAdvancedSettingsOpen={isAdvancedSettingsOpen}
               extensionSettings={settingsToSave}
               setSettingsToSave={setSettingsToSave}
-              extensionName={'alerts'}
             ></ExtensionSettingsForm>
           </div>
         </Dialog>
@@ -157,17 +162,17 @@ const AlertSettingsModal = ({
 };
 
 const mapStateToProps = (state) => ({
-  extensionSettings: getExtensionSettings(state, 'alerts'),
-  query: getExtensionQuery(state, 'alerts'),
-  database: getExtensionDatabase(state, 'alerts'),
+  extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
+  query: getSidebarQuery(state),
+  database: getSidebarDatabase(state),
   applicationDatabase: applicationGetConnectionDatabase(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onQueryUpdate: (query) => dispatch(setExtensionQuery('alerts', query)),
-  onSettingsUpdate: (settings) => dispatch(setExtensionSettings('alerts', settings)),
+  onQueryUpdate: (query) => dispatch(setExtensionQuery(query)),
+  onSettingsUpdate: (settings) => dispatch(setExtensionSettings(settings)),
   onDatabaseChanged: (database: any) => {
-    dispatch(setExtensionDatabase('alerts', database));
+    dispatch(setExtensionDatabase(database));
   },
 });
 

@@ -2,7 +2,7 @@ import { ListItem, List } from '@material-ui/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import NeoSetting from '../../../component/field/Setting';
-import { getExtensionDefaultConfig } from '../../ExtensionsConfig';
+import { getNodeSidebarDefaultConfig } from '../AlertConfig';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -47,8 +47,8 @@ export const ExtensionSettingsForm = ({
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  defaultSettings: getExtensionDefaultConfig(ownProps.extensionName),
+const mapStateToProps = (_state) => ({
+  defaultSettings: getNodeSidebarDefaultConfig(),
 });
 
 const mapDispatchToProps = (_dispatch) => ({});
