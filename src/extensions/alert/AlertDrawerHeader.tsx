@@ -2,10 +2,11 @@ import { debounce, IconButton, TextField, Tooltip } from '@material-ui/core';
 import React, { useCallback } from 'react';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AlertSettingsModal from './settings/AlertSettingsModal';
-import { getExtensionSettings, getExtensionTitle } from '../ExtensionsSelectors';
-import { setExtensionTitle } from '../ExtensionsActions';
+import { getSidebarTitle } from './listElement/stateManagement/AlertSelectors';
+import { NODE_SIDEBAR_EXTENSION_NAME, setExtensionTitle } from './listElement/stateManagement/AlertActions';
 import { connect } from 'react-redux';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import { getExtensionSettings } from '../stateManagement/ExtensionSelectors';
 
 /**
  * The editable header of the alert drawer, including the title and settings button.
@@ -69,13 +70,13 @@ export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTi
 
 const mapStateToProps = (state) => ({
   // TODO: change 'alerts' to new name.
-  title: getExtensionTitle(state, 'alerts'),
-  extensionSettings: getExtensionSettings(state, 'alerts'),
+  title: getSidebarTitle(state),
+  extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onTitleUpdate: (title: any) => {
-    dispatch(setExtensionTitle('alerts', title));
+    dispatch(setExtensionTitle(title));
   },
 });
 

@@ -7,7 +7,7 @@ import Badge from '@material-ui/core/Badge';
 import { DialogContent } from '@material-ui/core';
 import NeoGraphChart from '../../../chart/graph/GraphChart';
 import { connect } from 'react-redux';
-import { getExtensionDatabase } from '../../ExtensionsSelectors';
+import { getSidebarDatabase } from './stateManagement/AlertSelectors';
 import { NeoReportWrapper } from '../../../report/ReportWrapper';
 import GraphEntityInspectionTable from '../../../chart/graph/component/GraphEntityInspectionTable';
 import { getSelectionBasedOnFields } from '../../../chart/ChartUtils';
@@ -19,6 +19,7 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
   const handleClose = () => {
     setModalOpen(false);
   };
+
   return (
     <div>
       {modalOpen ? (
@@ -68,7 +69,7 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
   );
 };
 const mapStateToProps = (state) => ({
-  database: getExtensionDatabase(state, 'alerts'),
+  database: getSidebarDatabase(state),
 });
 
 const mapDispatchToProps = (_dispatch) => ({});

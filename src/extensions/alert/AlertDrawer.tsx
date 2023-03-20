@@ -4,11 +4,13 @@ import AlertDrawerHeader from './AlertDrawerHeader';
 import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { connect } from 'react-redux';
-import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionsSelectors';
+import { getSidebarDatabase, getSidebarQuery } from './listElement/stateManagement/AlertSelectors';
 import AlertNodeCard from './listElement/AlertNodeCard';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { checkIfAllRecordsAreNodes, parseNodeRecordsToDictionaries } from '../../chart/graph/util/RecordUtils';
+import { getExtensionSettings } from '../stateManagement/ExtensionSelectors';
+import { NODE_SIDEBAR_EXTENSION_NAME } from './listElement/stateManagement/AlertActions';
 
 // The sidebar that appears on the left side of the dashboard.
 export const AlertDrawer = ({ open, extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
@@ -146,9 +148,9 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
 };
 
 const mapStateToProps = (state) => ({
-  extensionSettings: getExtensionSettings(state, 'alerts'),
-  query: getExtensionQuery(state, 'alerts'),
-  database: getExtensionDatabase(state, 'alerts'),
+  extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
+  query: getSidebarQuery(state),
+  database: getSidebarDatabase(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
