@@ -49,7 +49,7 @@
     margin-left: -25px !important;
 }
 
-.autosize .ReactCodeMirror .CodeMirror {
+.autosize .cm-editor {
     height: auto;
 }
 
@@ -196,4 +196,8 @@
 
 .react-grid-layout {
     overflow-x: hidden;
+}
+
+.cm-tooltip-autocomplete {
+    margin-top: 4px;
 }

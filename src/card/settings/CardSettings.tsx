@@ -11,7 +11,6 @@ const NeoCardSettings = ({
   query,
   database, // Current database related to the report
   databaseList, // List of databases the user can choose from ('system' is filtered out)
-  refreshRate,
   width,
   height,
   type,
@@ -21,7 +20,6 @@ const NeoCardSettings = ({
   heightPx,
   extensions, // A set of enabled extensions.
   onQueryUpdate,
-  onRefreshRateUpdate,
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
   onRemovePressed,
   onClonePressed,
@@ -57,7 +55,6 @@ const NeoCardSettings = ({
     <NeoCardSettingsContent
       query={query}
       database={database}
-      refreshRate={refreshRate}
       reportSettings={reportSettings}
       width={width}
       height={height}
@@ -67,7 +64,6 @@ const NeoCardSettings = ({
       onDatabaseChanged={onDatabaseChanged}
       onQueryUpdate={onQueryUpdate}
       onReportSettingUpdate={onReportSettingUpdate}
-      onRefreshRateUpdate={onRefreshRateUpdate}
       onTypeUpdate={onTypeUpdate}
     ></NeoCardSettingsContent>
   ) : (

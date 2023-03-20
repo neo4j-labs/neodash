@@ -14,14 +14,15 @@ import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
-import {connect} from "react-redux";
-import {updateDashboardSetting} from "../settings/SettingsActions";
-import {getPages, getPagesNames} from "../dashboard/DashboardSelectors";
+import { connect } from 'react-redux';
+import { updateDashboardSetting } from '../settings/SettingsActions';
+import { getPages, getPagesNames } from '../dashboard/DashboardSelectors';
 
 export const NeoReport = ({
   pageNames,
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
+  lastRunTimestamp = 0, // Timestamp of the last query run for this report.
   parameters = {}, // A dictionary of parameters to pass into the query.
   disabled = false, // Whether to disable query execution.
   selection = {}, // A selection of return fields to send to the report.
@@ -31,11 +32,11 @@ export const NeoReport = ({
     fields = f;
   }, // The callback to update the set of query fields after query execution.
   setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
-  getGlobalParameter = () => {
+  getGlobalParameter = (_: string) => {
     return '';
   }, // function to get global (cypher) parameters.
+  updateReportSetting = () => {},
   setPage = () => {},
-  refreshRate = 0, // Optionally refresh the report every X seconds.
   dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
   rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
   queryTimeLimit = 20, // Time limit for queries before automatically aborted.
@@ -139,16 +140,16 @@ export const NeoReport = ({
       }
       populateReport();
       // If a refresh rate was specified, set up an interval for re-running the report. (max 24 hrs)
-      if (refreshRate && refreshRate > 0) {
+      if (settings.refreshRate && settings.refreshRate > 0) {
         // @ts-ignore
         setTimer(
           setInterval(() => {
             populateReport(false);
-          }, Math.min(refreshRate, 86400) * 1000.0)
+          }, Math.min(settings.refreshRate, 86400) * 1000.0)
         );
       }
     }
-  }, [disabled, query, JSON.stringify(parameters)]);
+  }, [lastRunTimestamp]);
 
   // Define query callback to allow reports to get extra data on interactions.
   const queryCallback = useCallback((query, parameters, setRecords) => {
@@ -211,8 +212,8 @@ export const NeoReport = ({
     return (
       <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
         <ChartType
-          setPage = {setPage}
-          pageNames = {pageNames}
+          setPage={setPage}
+          pageNames={pageNames}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -223,6 +224,7 @@ export const NeoReport = ({
           queryCallback={queryCallback}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
+          updateReportSetting={updateReportSetting}
         />
       </div>
     );
@@ -246,8 +248,8 @@ export const NeoReport = ({
           </div>
         </div>
         <ChartType
-          setPage = {setPage}
-          pageNames = {pageNames}
+          setPage={setPage}
+          pageNames={pageNames}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -258,6 +260,7 @@ export const NeoReport = ({
           queryCallback={queryCallback}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
+          updateReportSetting={updateReportSetting}
         />
       </div>
     );
@@ -279,19 +282,13 @@ export const NeoReport = ({
   );
 };
 
-
 const mapStateToProps = (state) => ({
   pageNames: getPagesNames(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setPage: (reference:number) => {
-    dispatch(
-        updateDashboardSetting(
-            'pagenumber',
-            reference
-        )
-    );
+  setPage: (reference: number) => {
+    dispatch(updateDashboardSetting('pagenumber', reference));
   },
 });
 

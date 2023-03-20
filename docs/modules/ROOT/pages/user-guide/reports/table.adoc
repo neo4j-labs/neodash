@@ -43,6 +43,8 @@ image::table2.png[Table with nodes / collections]
 rows and columns of the table. This means that each of the returned rows
 from Neo4j will be shown as a column instead of a row.
 
+|Compact Table |on/off |off |When activated, makes the rows half height and increase the number of rows per page accordingly.
+
 |Relative Column Sizes |List of numbers |[1, 1, 1, …] |The relative
 width between each of the columns in the table. For example, if the
 first column should be twice the width of the 2nd and 3rd, this will be

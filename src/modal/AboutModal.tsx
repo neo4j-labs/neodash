@@ -10,7 +10,7 @@ import { Button } from '@material-ui/core';
 import BugReportIcon from '@material-ui/icons/BugReport';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
-  const version = '2.2.1-extended';
+  const version = '2.2.3-extended';
 
   const downloadDebugFile = () => {
     const element = document.createElement('a');
@@ -29,7 +29,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
         <DialogTitle id='form-dialog-title'>
           About NeoDash
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
@@ -46,11 +46,11 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
             <h3 style={{ marginBottom: '5px' }}>Core Features</h3>
             <ul>
               <li>
-                An editor to write and execute
+                An editor to write and execute&nbsp;
                 <a target='_blank' href='https://neo4j.com/developer/cypher/'>
                   Cypher
                 </a>
-                queries.
+                &nbsp;queries.
               </li>
               <li>Use results of your Cypher queries to create tables, bar charts, graph visualizations, and more.</li>
               <li>Style your reports, group them together in pages, and add interactivity between reports.</li>
@@ -65,31 +65,31 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
             <strong>
               (<LibraryBooksIcon style={{ paddingTop: '5px' }} fontSize='small' /> Documentation)
             </strong>
-            button to see some example queries and visualizations.
+            &nbsp;button to see some example queries and visualizations.
             <hr></hr>
             <h3 style={{ marginBottom: '5px' }}>Extending NeoDash</h3>
-            NeoDash is built with React and
+            NeoDash is built with React and&nbsp;
             <a target='_blank' href='https://github.com/adam-cowley/use-neo4j'>
               use-neo4j
             </a>
-            , It uses
+            , It uses&nbsp;
             <a target='_blank' href='https://github.com/neo4j-labs/charts'>
               charts
             </a>
-            to power some of the visualizations, and
+            &nbsp;to power some of the visualizations, and&nbsp;
             <a target='_blank' href='https://www.openstreetmap.org/'>
               openstreetmap
             </a>
-            for the map view.
+            &nbsp;for the map view.
             <br />
-            You can also extend NeoDash with your own visualizations. Check out the developer guide in the
+            You can also extend NeoDash with your own visualizations. Check out the developer guide in the&nbsp;
             <a target='_blank' href='https://github.com/neo4j-labs/neodash/'>
               project repository
             </a>
             .<hr></hr>
             <h3 style={{ marginBottom: '5px' }}>Contact</h3>
-            For suggestions, feature requests and other feedback: create an issue on the
-            <a href='https://github.com/neo4j-labs/neodash'>GitHub repository</a>, or the
+            For suggestions, feature requests and other feedback: create an issue on the&nbsp;
+            <a href='https://github.com/neo4j-labs/neodash'>GitHub repository</a>, or the&nbsp;
             <a
               href={
                 'https://community.neo4j.com/t5/forums/filteredbylabelpage/board-id/integrations/label-name/neodash'
