@@ -73,7 +73,6 @@ function getDrillDown(geoJson, features, key) {
 function bindDataToMap(geoData, geoJsonData) {
   let newValues = {};
   let listValues = [];
-  console.log(geoData);
   Object.keys(geoData).forEach((key) => {
     let tmp;
     if (geoJsonData[key] != undefined) {
@@ -178,7 +177,6 @@ export const MapBoundary = ({ data, props, featureLevel0, featureLevel1 }) => {
      * @returns color assigned to the polygon based on it's position in the legend
      */
     function getColor(weight, legendRange, listColors) {
-      console.log(weight);
       let index = legendRange.findIndex((number) => {
         return number >= weight;
       });
