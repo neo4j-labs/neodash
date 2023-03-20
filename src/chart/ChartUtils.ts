@@ -150,6 +150,7 @@ export const downloadCSV = (rows) => {
     });
     csv += '\n';
   });
+
   const file = new Blob([csv], { type: 'text/plain' });
   element.href = URL.createObjectURL(file);
   element.download = 'table.csv';
