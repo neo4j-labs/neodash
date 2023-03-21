@@ -14,6 +14,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { NeoWorkflowStepSelectionModal } from './WorkflowStepSelectionModal';
 import { WORKFLOW_STEPS } from './WorkflowSteps';
+import { connect } from 'react-redux';
+import { getWorkflowsSteps } from './stateManagement/WorkflowSelectors';
+import { setWorkflow } from './stateManagement/WorkflowActions';
 const ReactGridLayout = WidthProvider(RGL);
 
 interface Step {
@@ -29,10 +32,11 @@ function moveElementInArray(array, fromIndex, toIndex) {
 /**
  * The pop-up window used to create and edit workflows.
  */
-export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName }) => {
-  const [steps, setSteps] = React.useState([]);
+export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName, workflowSteps, setWorkflow }) => {
+  const [steps, setSteps] = React.useState(workflowSteps);
 
   const handleSave = () => {
+    setWorkflow(name, steps);
     setOpen(false);
   };
   const addStep = (key) => {
@@ -40,6 +44,7 @@ export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName }) => {
     setSteps(steps.concat(step));
   };
   const [addStepModalOpen, setAddStepModalOpen] = React.useState(false);
+  console.log(steps);
 
   const layout = {
     ...steps.map((step, index) => {
@@ -205,4 +210,14 @@ export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName }) => {
   );
 };
 
-export default NeoWorkflowEditorModal;
+const mapStateToProps = (state, ownProps) => ({
+  workflowSteps: getWorkflowsSteps(state, ownProps.name),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setWorkflow: (title, steps) => {
+    dispatch(setWorkflow(title, steps));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowEditorModal);

@@ -10,7 +10,7 @@ import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { GRID_COMPACTION_TYPE } from '../config/PageConfig';
 import NeoWorkflowEditorModal from '../extensions/workflows/WorkflowEditorModal';
-import { NeoWorkflowListModal } from '../extensions/workflows/WorkflowListModal';
+import NeoWorkflowListModal from '../extensions/workflows/WorkflowListModal';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -147,7 +147,7 @@ export const NeoPage = ({
 
   const content = (
     <div style={{ paddingTop: '52px' }}>
-      <NeoWorkflowListModal open={true} setOpen={() => true} />
+      <NeoWorkflowListModal open={true} setOpen={() => true}></NeoWorkflowListModal>
       <ResponsiveGridLayout
         draggableHandle='.drag-handle'
         layouts={layouts}

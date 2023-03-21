@@ -15,6 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { NeoWorkflowRunnerModal } from './WorkflowRunnerModal';
+import { getWorkflowsMap } from './stateManagement/WorkflowSelectors';
 const styles = {};
 
 // Temporary list of hardcoded workflows
@@ -36,7 +37,7 @@ const workflows = [
   },
 ];
 
-export const NeoWorkflowListModal = ({ open, setOpen }) => {
+export const NeoWorkflowListModal = ({ open, setOpen, workflowsMap }) => {
   const [editorOpen, setEditorOpen] = React.useState(false);
   const [runnerOpen, setRunnerOpen] = React.useState(false);
 
@@ -85,10 +86,9 @@ export const NeoWorkflowListModal = ({ open, setOpen }) => {
       width: 140,
     },
   ];
-  const rows = Object.values(workflows).map((workflow, index) => {
+  const rows = Object.values(workflowsMap).map((workflow, index) => {
     return { id: index, ...workflow };
   });
-
   return (
     <>
       <Dialog
@@ -141,13 +141,16 @@ export const NeoWorkflowListModal = ({ open, setOpen }) => {
       <NeoWorkflowEditorModal
         open={editorOpen}
         setOpen={setEditorOpen}
-        name={undefined}
+        name={'test'}
         setName={undefined}
       ></NeoWorkflowEditorModal>
       <NeoWorkflowRunnerModal open={runnerOpen} setOpen={setRunnerOpen} workflow={undefined} />
     </>
   );
 };
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  workflowsMap: getWorkflowsMap(state),
+});
+
 const mapDispatchToProps = () => ({});
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowListModal));

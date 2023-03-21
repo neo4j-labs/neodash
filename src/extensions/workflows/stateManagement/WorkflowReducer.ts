@@ -26,6 +26,7 @@ export const workflowReducer = (state = initialState, action: { type: any; paylo
       }
       return newState;
     }
+
     case DELETE_WORKFLOW: {
       const { workflowName } = payload;
       let newState = {

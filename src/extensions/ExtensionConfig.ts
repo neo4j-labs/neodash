@@ -66,16 +66,19 @@ EXTENSIONS[WORKFLOWS_EXTENSION_NAME] = {
 };
 
 /**
- * At the startup of the application, we want to collect programmatically the mapping between reducer
+ * At the startup of the application, we want to collect programmatically the mapping an extension and its reducer
  * @returns
  */
 function getExtensionReducers() {
-  console.log('etting extension reducers');
   let res = {};
   Object.values(EXTENSIONS).forEach((conf) => {
-    if (conf.reducerPrefix && conf.reducerObject) {
-      let tmp = { name: conf.name, reducer: conf.reducerObject };
-      res[conf.reducerPrefix] = tmp;
+    try {
+      if (conf.reducerPrefix && conf.reducerObject) {
+        let tmp = { name: conf.name, reducer: conf.reducerObject };
+        res[conf.reducerPrefix] = tmp;
+      }
+    } catch (e) {
+      console.log(`Something wrong happened during loading the Extension Reducer : ${e}`);
     }
   });
   return res;
