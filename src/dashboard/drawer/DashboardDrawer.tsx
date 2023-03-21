@@ -23,7 +23,8 @@ import { getExampleReports } from '../../extensions/ExtensionUtils';
 import NeoNodeSidebarModal from '../../extensions/alert/NeoAlertDrawerButton';
 import AlertDrawer from '../../extensions/alert/AlertDrawer';
 import { NODE_SIDEBAR_EXTENSION_NAME } from '../../extensions/alert/stateManagement/AlertActions';
-
+import WorkflowDrawerModal from '../../extensions/workflows/WorflowDrawerModal';
+import { WORKFLOWS_EXTENSION_NAME } from '../../extensions/workflows/stateManagement/WorkflowActions';
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
  * @returns
@@ -34,10 +35,13 @@ function renderExtensionDrawers(open) {
 }
 
 // TODO: abstract logic
-function renderExtensionModals() {
+function renderNodeSidebarButton() {
   return <NeoNodeSidebarModal></NeoNodeSidebarModal>;
 }
 
+function renderWorkflowButton() {
+  return <WorkflowDrawerModal></WorkflowDrawerModal>;
+}
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   open,
@@ -134,7 +138,8 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
-        {extensions[NODE_SIDEBAR_EXTENSION_NAME] ? renderExtensionModals() : <></>}
+        {extensions[NODE_SIDEBAR_EXTENSION_NAME] ? renderNodeSidebarButton() : <></>}
+        {extensions[WORKFLOWS_EXTENSION_NAME] ? renderWorkflowButton() : <></>}
       </List>
       <Divider />
       <List>
