@@ -1,5 +1,11 @@
 # build stage
 FROM node:lts-alpine AS build-stage
+# FROM node:19.6.0
+
+ARG SOLUTIONS_PRIVATE_NPM_TOKEN
+COPY .npmrc .npmrc
+RUN cat .npmrc
+RUN echo $SOLUTIONS_PRIVATE_NPM_TOKEN
 
 RUN yarn global add typescript jest
 WORKDIR /usr/local/src/neodash
@@ -11,9 +17,14 @@ WORKDIR /usr/local/src/neodash
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
 
-RUN yarn install
+#RUN yarn install
+RUN npm install --legacy-peer-deps
+#RUN npm install
+RUN rm -f .npmrc
+
 COPY ./ /usr/local/src/neodash
-RUN yarn run build-minimal
+#RUN yarn run build-minimal
+RUN npm run build
 
 # production stage
 FROM nginx:alpine AS neodash
