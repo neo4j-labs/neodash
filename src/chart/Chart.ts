@@ -15,5 +15,4 @@ export interface ChartProps {
   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
   updateReportSetting?: (name, value) => void; // Callback to update a setting for this report.
   setPage?: (reference: number) => void;
-  pageNames?: string[];
 }

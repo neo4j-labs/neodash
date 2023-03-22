@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useDimensions from 'react-cool-dimensions';
 import { ChartProps } from '../Chart';
 import { NeoGraphChartInspectModal } from './component/GraphChartInspectModal';
@@ -14,6 +14,7 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/GraphUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
+import { getPageNames } from '../../extensions/advancedcharts/Utils';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -130,6 +131,8 @@ const NeoGraphChart = (props: ChartProps) => {
     },
   });
 
+  const pageNames = getPageNames();
+
   const chartProps: GraphChartVisualizationProps = {
     data: {
       nodes: data.nodes,
@@ -169,6 +172,8 @@ const NeoGraphChart = (props: ChartProps) => {
       fixNodeAfterDrag: fixNodeAfterDrag,
       handleExpand: handleExpand,
       setGlobalParameter: props.setGlobalParameter,
+      setPage: props.setPage,
+      pageNames: pageNames,
       onNodeClick: (item) => handleEntityClick(item),
       onRelationshipClick: (item) => handleEntityClick(item),
       drilldownLink: drilldownLink,

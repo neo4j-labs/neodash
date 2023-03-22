@@ -14,7 +14,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import Button from '@material-ui/core/Button';
-import { getRule, actionRule } from '../../extensions/advancedcharts/Utils';
+import { getRule, actionRule, getPageNames, action } from '../../extensions/advancedcharts/Utils';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -148,6 +148,8 @@ const NeoTableChart = (props: ChartProps) => {
     ? Math.round(availableRowHeight) - pageSizeReducer
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
+  const pageNames = getPageNames();
+
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
       <Snackbar
@@ -189,16 +191,11 @@ const NeoTableChart = (props: ChartProps) => {
         rows={rows}
         columns={columns}
         columnVisibilityModel={hiddenColumns}
-        onCellClick={(e) => {
-          let rules = getRule(e, actionsRules, 'Click');
-          if (rules !== null) {
-            rules.forEach((rule) => actionRule(rule, e, props, 'table'));
-          }
-        }}
+        onCellClick={(e) => action(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')}
         onCellDoubleClick={(e) => {
           let rules = getRule(e, actionsRules, 'doubleClick');
           if (rules !== null) {
-            rules.forEach((rule) => actionRule(rule, e, props, 'table'));
+            rules.forEach((rule) => actionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
           } else {
             setNotificationOpen(true);
             navigator.clipboard.writeText(e.value);

@@ -16,10 +16,8 @@ import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
 import { connect } from 'react-redux';
 import { updateDashboardSetting } from '../settings/SettingsActions';
-import { getPages, getPagesNames } from '../dashboard/DashboardSelectors';
 
 export const NeoReport = ({
-  pageNames,
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
   lastRunTimestamp = 0, // Timestamp of the last query run for this report.
@@ -213,7 +211,6 @@ export const NeoReport = ({
       <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
         <ChartType
           setPage={setPage}
-          pageNames={pageNames}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -249,7 +246,6 @@ export const NeoReport = ({
         </div>
         <ChartType
           setPage={setPage}
-          pageNames={pageNames}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -282,9 +278,7 @@ export const NeoReport = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  pageNames: getPagesNames(state),
-});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = (dispatch) => ({
   setPage: (reference: number) => {

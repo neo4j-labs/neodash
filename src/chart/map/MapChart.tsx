@@ -399,7 +399,7 @@ const NeoMapChart = (props: ChartProps) => {
                   'Click'
                 );
                 let execRule = Boolean(
-                  rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter
+                  rule !== null && rule[0].customization == 'set variable' && props && props.setGlobalParameter
                 );
                 return (
                   <tr
@@ -407,7 +407,10 @@ const NeoMapChart = (props: ChartProps) => {
                     onClick={() => {
                       if (execRule) {
                         // call thunk for $neodash_customizationValue
-                        props.setGlobalParameter(`neodash_${rule.customizationValue}`, value.properties[k].toString());
+                        props.setGlobalParameter(
+                          `neodash_${rule[0].customizationValue}`,
+                          value.properties[k].toString()
+                        );
                       }
                     }}
                   >

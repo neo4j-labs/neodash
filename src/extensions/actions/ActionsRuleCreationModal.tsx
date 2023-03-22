@@ -8,17 +8,9 @@ import Badge from '@material-ui/core/Badge';
 import { Button, Fab, MenuItem, TextField, Typography } from '@material-ui/core';
 import NeoColorPicker from '../../component/field/ColorPicker';
 import AddIcon from '@material-ui/icons/Add';
-import TuneIcon from '@material-ui/icons/Tune';
 import { Autocomplete } from '@material-ui/lab';
 import StarsIcon from '@material-ui/icons/Stars';
-import {applicationIsStandalone} from "../../application/ApplicationSelectors";
-import {getPages, getPagesNames} from "../../dashboard/DashboardSelectors";
-import {getDashboardIsEditable, getPageNumber} from "../../settings/SettingsSelectors";
-import {connect} from "react-redux";
-import {setDashboardTitle} from "../../dashboard/DashboardActions";
-import {setConnectionModalOpen} from "../../application/ApplicationActions";
-import {updateDashboardSetting} from "../../settings/SettingsActions";
-import {NeoReport} from "../../report/Report";
+import { getPageNames } from '../advancedcharts/Utils';
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = {
   table: [
@@ -61,7 +53,7 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
     },
     {
       value: 'set page',
-      label: 'Page'
+      label: 'Page',
     },
   ],
   map: [
@@ -71,7 +63,7 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
     },
     {
       value: 'set page',
-      label: 'Page'
+      label: 'Page',
     },
   ],
   graph: [
@@ -81,7 +73,7 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
     },
     {
       value: 'set page',
-      label: 'Page'
+      label: 'Page',
     },
   ],
 };
@@ -107,7 +99,6 @@ const getDefaultRule = (type) => {
  * The pop-up window used to build and specify custom styling rules for reports.
  */
 export const NeoCustomReportActionsModal = ({
-  pageNames,
   customReportActionsModalOpen,
   settingName,
   settingValue,
@@ -124,6 +115,7 @@ export const NeoCustomReportActionsModal = ({
     }
   }, [settingValue]);
 
+  const pageNames = getPageNames();
   const handleClose = () => {
     // If no rules are specified, clear the special report setting that holds the customization rules.
     if (rules.length == 0) {
@@ -187,78 +179,71 @@ export const NeoCustomReportActionsModal = ({
   const createFieldVariableSuggestionsFromRule = (rule, type) => {
     let suggestions;
     if (type) {
-      if(rule.customization == "set page"){
-        suggestions = [];
-      }
-      else{
-        suggestions = createFieldVariableSuggestions(rule.condition, true, null).filter((e) =>
-          e.toLowerCase().startsWith(rule.field.toLowerCase())
-        );
-      }
-    } else if(rule.customization == "set page" && pageNames){
-        suggestions = pageNames;
-      }
-      else{
-        suggestions = createFieldVariableSuggestions(rule.condition, false, rule.field).filter((e) =>
-          e.toLowerCase().startsWith(rule.value.toLowerCase())
-        );
-      }
+      suggestions = createFieldVariableSuggestions(rule.condition, true, null).filter((e) =>
+        e.toLowerCase().startsWith(rule.field.toLowerCase())
+      );
+    } else if (rule.customization == 'set page' && pageNames) {
+      suggestions = pageNames;
+    } else {
+      suggestions = createFieldVariableSuggestions(rule.condition, false, rule.field).filter((e) =>
+        e.toLowerCase().startsWith(rule.value.toLowerCase())
+      );
+    }
 
-    suggestions = suggestions.map((e) => (e.split('.')[1] || e));
+    suggestions = suggestions.map((e) => e.split('.')[1] || e);
 
     return suggestions;
   };
 
   const getActionHelper = (rule, index, customization) => {
-    if (customization == "set variable"){
+    if (customization == 'set variable') {
       return (
-          <>
-            <td
-                style={{
-                  paddingLeft: '5px',
-                  paddingRight: '0px',
-                  paddingTop: '5px',
-                  paddingBottom: '5px',
-                }}
-            >
-              <TextField
-                  style={{width: '80px', color: 'black', marginRight: '-5px'}}
-                  disabled={true}
-                  value='$neodash_'>
-              </TextField>
-            </td>
-            <td style={{paddingLeft: '5px', paddingRight: '5px'}}>
-              <TextField
-                  placeholder=''
-                  value={rule.customizationValue}
-                  onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
-              ></TextField>
-            </td>
-          </>
+        <>
+          <td
+            style={{
+              paddingLeft: '5px',
+              paddingRight: '0px',
+              paddingTop: '5px',
+              paddingBottom: '5px',
+            }}
+          >
+            <TextField
+              style={{ width: '80px', color: 'black', marginRight: '-5px' }}
+              disabled={true}
+              value='$neodash_'
+            ></TextField>
+          </td>
+          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+            <TextField
+              placeholder=''
+              value={rule.customizationValue}
+              onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
+            ></TextField>
+          </td>
+        </>
+      );
+    } else if (customization == 'set page') {
+      return (
+        <>
+          <td
+            style={{
+              paddingLeft: '5px',
+              paddingRight: '0px',
+              paddingTop: '5px',
+              paddingBottom: '5px',
+            }}
+          >
+            <TextField
+              style={{ width: '100%', color: 'black', marginRight: '-5px' }}
+              disabled={true}
+              value='name/index'
+            ></TextField>
+          </td>
+        </>
       );
     }
-    else if (customization == "set page"){
-      return (
-          <>
-            <td
-                style={{
-                  paddingLeft: '5px',
-                  paddingRight: '0px',
-                  paddingTop: '5px',
-                  paddingBottom: '5px',
-                }}
-            >
-              <TextField
-                  style={{width: '100%', color: 'black', marginRight: '-5px'}}
-                  disabled={true}
-                  value='name/index'>
-              </TextField>
-            </td>
-          </>
-      );
-    }
-    return "wtf";
-  }
+    return 'wtf';
+  };
 
   return (
     <div>
@@ -479,20 +464,4 @@ export const NeoCustomReportActionsModal = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  pageNames: getPagesNames(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setPage: (reference:number) => {
-    dispatch(
-        updateDashboardSetting(
-            'pagenumber',
-            reference
-        )
-    );
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(NeoCustomReportActionsModal);
-
+export default NeoCustomReportActionsModal;
