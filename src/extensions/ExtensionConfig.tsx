@@ -4,7 +4,20 @@ import { WORKFLOWS_ACTION_PREFIX, WORKFLOWS_EXTENSION_NAME } from './workflows/s
 import { workflowReducer } from './workflows/stateManagement/WorkflowReducer';
 import NeoWorkflowDrawerButton from './workflows/NeoWorflowDrawerButton';
 import NeoAlertDrawerButton from './alert/NeoAlertDrawerButton';
-
+import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
+// TODO: continue document here
+interface Extension {
+  name: string;
+  label: string;
+  author: string;
+  image: string;
+  enabled: string;
+  description: string;
+  link: string;
+  reducerPrefix: string;
+  reducerObject: ReactJSXElement;
+  drawerButton: ReactJSXElement;
+}
 // TODO: define extension config interface
 export const EXTENSIONS = {
   'advanced-charts': {
@@ -93,11 +106,11 @@ function getExtensionReducers() {
  * @returns
  */
 function getExtensionDrawerButtons() {
-  let res = [];
+  let res = {};
   Object.values(EXTENSIONS).forEach((conf) => {
     try {
       if (conf.drawerButton) {
-        res.push(conf.name);
+        res[conf.name] = conf.drawerButton;
       }
     } catch (e) {
       console.log(`Something wrong happened while loading the drawer extension : ${e}`);
@@ -107,4 +120,4 @@ function getExtensionDrawerButtons() {
 }
 
 export const EXTENSIONS_REDUCERS = getExtensionReducers();
-export const EXTENSIONS_DRAWER_BUTTONS_NAMES = getExtensionDrawerButtons();
+export const EXTENSIONS_DRAWER_BUTTONS = getExtensionDrawerButtons();

@@ -18,6 +18,7 @@ export const extensionsReducer = (state = INITIAL_EXTENSIONS_STATE, action: { ty
     return state;
   }
 
+  // Checking if we are receiving an action from an enabled extension
   if (state.activeReducers && state.activeReducers.some((prefix) => type.startsWith(prefix))) {
     let currentPrefix = state.activeReducers.find((prefix) => type.startsWith(prefix));
     let { name, reducer } = EXTENSIONS_REDUCERS[currentPrefix];

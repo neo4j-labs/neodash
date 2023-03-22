@@ -22,7 +22,7 @@ import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import AlertDrawer from '../../extensions/alert/AlertDrawer';
 import { NODE_SIDEBAR_EXTENSION_NAME } from '../../extensions/alert/stateManagement/AlertActions';
-import { EXTENSIONS, EXTENSIONS_DRAWER_BUTTONS_NAMES } from '../../extensions/ExtensionConfig';
+import { EXTENSIONS, EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
@@ -47,16 +47,22 @@ export const NeoDrawer = ({
   onAboutModalOpen,
   resetApplication,
 }) => {
+  /**
+   * Function to render dynamically the buttons in the drawer related to all the extension that
+   * are enabled and present a button (EX: node-sidebar)
+   * @returns JSX element containing all the buttons
+   */
   function renderDrawerExtensionsButton() {
-    const x = (
+    console.log(EXTENSIONS_DRAWER_BUTTONS);
+    const res = (
       <>
-        {EXTENSIONS_DRAWER_BUTTONS_NAMES.map((name) => {
-          const Component = extensions[name] ? EXTENSIONS[name].drawerButton : '';
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
+          const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
           return Component ? <Component /> : <></>;
         })}
       </>
     );
-    return x;
+    return res;
   }
 
   // Override to hide the drawer when the application is in standalone mode.
