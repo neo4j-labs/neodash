@@ -22,7 +22,6 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 
 export const alertReducer = (state = INITIAL_EXTENSIONS_STATE, action: { type: any; payload: any }) => {
   const { type, payload } = action;
-
   switch (type) {
     case UPDATE_EXTENSION_SETTINGS: {
       const { settings } = payload;

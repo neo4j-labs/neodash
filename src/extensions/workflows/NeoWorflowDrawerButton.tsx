@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import NeoWorkflowListModal from './WorkflowListModal';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
-const WorkflowDrawerModal = () => {
+const NeoWorkflowDrawerButton = () => {
   const [open, setOpen] = React.useState(false);
   const handleClick = () => {
     setOpen(true);
@@ -33,4 +33,4 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(WorkflowDrawerModal);
+export default connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowDrawerButton);

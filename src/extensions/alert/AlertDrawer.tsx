@@ -4,16 +4,18 @@ import AlertDrawerHeader from './AlertDrawerHeader';
 import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { connect } from 'react-redux';
-import { getSidebarDatabase, getSidebarQuery } from './stateManagement/AlertSelectors';
+import { getSidebarDatabase, getSidebarOpened, getSidebarQuery } from './stateManagement/AlertSelectors';
 import AlertNodeCard from './listElement/AlertNodeCard';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { checkIfAllRecordsAreNodes, parseNodeRecordsToDictionaries } from '../../chart/graph/util/RecordUtils';
 import { getExtensionSettings } from '../stateManagement/ExtensionSelectors';
 import { NODE_SIDEBAR_EXTENSION_NAME } from './stateManagement/AlertActions';
+import { getDashboardExtensions } from '../../dashboard/DashboardSelectors';
 
 // The sidebar that appears on the left side of the dashboard.
-export const AlertDrawer = ({ open, extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
+export const AlertDrawer = ({ extensions, extensionSettings, query, database, isOpen, loadDatabaseListFromNeo4j }) => {
+  const open = extensions[NODE_SIDEBAR_EXTENSION_NAME] && isOpen ? isOpen : false;
   const [records, setRecords] = useState([]);
   // List of records parsed from the result
   const [parsedRecords, setParsedRecords] = useState([]);
@@ -26,6 +28,7 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
   const [maxRecords, setMaxRecord] = React.useState(
     extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100
   );
+
   // TODO - there is a lot of effects here, perhaps we can simplify.
   // When the settings are changed, update the max records setting.
   useEffect(() => {
@@ -147,9 +150,11 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
 };
 
 const mapStateToProps = (state) => ({
+  extensions: getDashboardExtensions(state),
   extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
   query: getSidebarQuery(state),
   database: getSidebarDatabase(state),
+  isOpen: getSidebarOpened(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

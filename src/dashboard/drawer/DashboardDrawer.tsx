@@ -20,28 +20,20 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
-import NeoNodeSidebarModal from '../../extensions/alert/NeoAlertDrawerButton';
 import AlertDrawer from '../../extensions/alert/AlertDrawer';
 import { NODE_SIDEBAR_EXTENSION_NAME } from '../../extensions/alert/stateManagement/AlertActions';
-import WorkflowDrawerModal from '../../extensions/workflows/WorflowDrawerModal';
-import { WORKFLOWS_EXTENSION_NAME } from '../../extensions/workflows/stateManagement/WorkflowActions';
+import { EXTENSIONS, EXTENSIONS_DRAWER_BUTTONS_NAMES } from '../../extensions/ExtensionConfig';
+
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
  * @returns
  */
 // TODO: abstract logic
-function renderExtensionDrawers(open) {
-  return <AlertDrawer open={open}></AlertDrawer>;
+function renderExtensionDrawers() {
+  return <AlertDrawer></AlertDrawer>;
 }
 
 // TODO: abstract logic
-function renderNodeSidebarButton() {
-  return <NeoNodeSidebarModal></NeoNodeSidebarModal>;
-}
-
-function renderWorkflowButton() {
-  return <WorkflowDrawerModal></WorkflowDrawerModal>;
-}
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   open,
@@ -55,6 +47,18 @@ export const NeoDrawer = ({
   onAboutModalOpen,
   resetApplication,
 }) => {
+  function renderDrawerExtensionsButton() {
+    const x = (
+      <>
+        {EXTENSIONS_DRAWER_BUTTONS_NAMES.map((name) => {
+          const Component = extensions[name] ? EXTENSIONS[name].drawerButton : '';
+          return Component ? <Component /> : <></>;
+        })}
+      </>
+    );
+    return x;
+  }
+
   // Override to hide the drawer when the application is in standalone mode.
   if (hidden) {
     return <></>;
@@ -138,8 +142,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
-        {extensions[NODE_SIDEBAR_EXTENSION_NAME] ? renderNodeSidebarButton() : <></>}
-        {extensions[WORKFLOWS_EXTENSION_NAME] ? renderWorkflowButton() : <></>}
+        {renderDrawerExtensionsButton()}
       </List>
       <Divider />
       <List>
@@ -162,11 +165,7 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {extensionsConfig[NODE_SIDEBAR_EXTENSION_NAME] ? (
-        renderExtensionDrawers(extensionsConfig[NODE_SIDEBAR_EXTENSION_NAME].opened)
-      ) : (
-        <></>
-      )}
+      {extensionsConfig[NODE_SIDEBAR_EXTENSION_NAME] ? renderExtensionDrawers() : <></>}
     </>
   );
 };

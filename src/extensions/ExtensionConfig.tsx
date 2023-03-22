@@ -2,6 +2,8 @@ import { NODE_SIDEBAR_ACTION_PREFIX, NODE_SIDEBAR_EXTENSION_NAME } from './alert
 import { alertReducer } from './alert/stateManagement/AlertReducer';
 import { WORKFLOWS_ACTION_PREFIX, WORKFLOWS_EXTENSION_NAME } from './workflows/stateManagement/WorkflowActions';
 import { workflowReducer } from './workflows/stateManagement/WorkflowReducer';
+import NeoWorkflowDrawerButton from './workflows/NeoWorflowDrawerButton';
+import NeoAlertDrawerButton from './alert/NeoAlertDrawerButton';
 
 // TODO: define extension config interface
 export const EXTENSIONS = {
@@ -46,6 +48,7 @@ EXTENSIONS[NODE_SIDEBAR_EXTENSION_NAME] = {
   enabled: true,
   reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
   reducerObject: alertReducer,
+  drawerButton: NeoAlertDrawerButton,
   description:
     'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
   link: 'https://neo4j.com/professional-services/',
@@ -60,6 +63,7 @@ EXTENSIONS[WORKFLOWS_EXTENSION_NAME] = {
   enabled: true,
   reducerPrefix: WORKFLOWS_ACTION_PREFIX,
   reducerObject: workflowReducer,
+  drawerButton: NeoWorkflowDrawerButton,
   description:
     'cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese.',
   link: 'https://neo4j.com/professional-services/',
@@ -84,4 +88,23 @@ function getExtensionReducers() {
   return res;
 }
 
+/**
+ * At the startup of the application, we want to collect programmatically the buttons that will be in the drawer
+ * @returns
+ */
+function getExtensionDrawerButtons() {
+  let res = [];
+  Object.values(EXTENSIONS).forEach((conf) => {
+    try {
+      if (conf.drawerButton) {
+        res.push(conf.name);
+      }
+    } catch (e) {
+      console.log(`Something wrong happened while loading the drawer extension : ${e}`);
+    }
+  });
+  return res;
+}
+
 export const EXTENSIONS_REDUCERS = getExtensionReducers();
+export const EXTENSIONS_DRAWER_BUTTONS_NAMES = getExtensionDrawerButtons();
