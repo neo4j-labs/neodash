@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
@@ -15,7 +14,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { NeoWorkflowRunnerModal } from './WorkflowRunnerModal';
-import { getWorkflowsMap } from './stateManagement/WorkflowSelectors';
+import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
+import { deleteWorkflow } from './stateManagement/WorkflowActions';
 const styles = {};
 
 // Temporary list of hardcoded workflows
@@ -37,9 +37,18 @@ const workflows = [
   },
 ];
 
-export const NeoWorkflowListModal = ({ open, setOpen, workflowsMap }) => {
+export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkflow }) => {
   const [editorOpen, setEditorOpen] = React.useState(false);
   const [runnerOpen, setRunnerOpen] = React.useState(false);
+  const [rows, setRows] = React.useState([]);
+
+  // TODO: continue binding data to the UI
+  useEffect(() => {
+    let tmp = workflowsList.map((workflow, index) => {
+      return { id: index, ...workflow };
+    });
+    setRows(tmp);
+  }, [workflowsList]);
 
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
@@ -72,7 +81,7 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsMap }) => {
             </IconButton>
             <IconButton
               onClick={() => {
-                alert('Delete workflow');
+                deleteWorkflow(0);
               }}
               style={{ padding: '6px' }}
             >
@@ -86,9 +95,7 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsMap }) => {
       width: 140,
     },
   ];
-  const rows = Object.values(workflowsMap).map((workflow, index) => {
-    return { id: index, ...workflow };
-  });
+
   return (
     <>
       <Dialog
@@ -138,19 +145,18 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsMap }) => {
           </Button>
         </DialogContent>
       </Dialog>
-      <NeoWorkflowEditorModal
-        open={editorOpen}
-        setOpen={setEditorOpen}
-        name={'test'}
-        setName={undefined}
-      ></NeoWorkflowEditorModal>
+      <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={0}></NeoWorkflowEditorModal>
       <NeoWorkflowRunnerModal open={runnerOpen} setOpen={setRunnerOpen} workflow={undefined} />
     </>
   );
 };
 const mapStateToProps = (state) => ({
-  workflowsMap: getWorkflowsMap(state),
+  workflowsList: getWorkflowsList(state),
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  deleteWorkflow: (index) => {
+    dispatch(deleteWorkflow(index));
+  },
+});
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowListModal));

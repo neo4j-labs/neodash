@@ -3,7 +3,6 @@ import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { connect } from 'react-redux';
 import NeoWorkflowListModal from './WorkflowListModal';
-import { TurnedInOutlined } from '@material-ui/icons';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 const WorkflowDrawerModal = () => {

@@ -4,7 +4,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import { Button, Fab, TextField, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -15,8 +14,8 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import { NeoWorkflowStepSelectionModal } from './WorkflowStepSelectionModal';
 import { WORKFLOW_STEPS } from './WorkflowSteps';
 import { connect } from 'react-redux';
-import { getWorkflowsSteps } from './stateManagement/WorkflowSelectors';
-import { setWorkflow } from './stateManagement/WorkflowActions';
+import { getWorkflow } from './stateManagement/WorkflowSelectors';
+import { createWorkflow, updateWorkflowName, updateWorkflowSteps } from './stateManagement/WorkflowActions';
 const ReactGridLayout = WidthProvider(RGL);
 
 interface Step {
@@ -32,11 +31,24 @@ function moveElementInArray(array, fromIndex, toIndex) {
 /**
  * The pop-up window used to create and edit workflows.
  */
-export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName, workflowSteps, setWorkflow }) => {
-  const [steps, setSteps] = React.useState(workflowSteps);
-
+export const NeoWorkflowEditorModal = ({
+  open,
+  setOpen,
+  index,
+  workflow,
+  createWorkflow,
+  updateWorkflowSteps,
+  updateWorkflowName,
+}) => {
+  const [steps, setSteps] = React.useState(workflow.steps ? workflow.steps : []);
+  const [name, setName] = React.useState(workflow.name ? workflow.name : 'My Workflow');
   const handleSave = () => {
-    setWorkflow(name, steps);
+    if (Object.keys(workflow).length > 0) {
+      updateWorkflowSteps(index, steps);
+      updateWorkflowName(index, name);
+    } else {
+      createWorkflow(name, steps);
+    }
     setOpen(false);
   };
   const addStep = (key) => {
@@ -44,7 +56,6 @@ export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName, workflowS
     setSteps(steps.concat(step));
   };
   const [addStepModalOpen, setAddStepModalOpen] = React.useState(false);
-  console.log(steps);
 
   const layout = {
     ...steps.map((step, index) => {
@@ -211,12 +222,18 @@ export const NeoWorkflowEditorModal = ({ open, setOpen, name, setName, workflowS
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  workflowSteps: getWorkflowsSteps(state, ownProps.name),
+  workflow: getWorkflow(state, ownProps.index),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setWorkflow: (title, steps) => {
-    dispatch(setWorkflow(title, steps));
+  createWorkflow: (name, steps) => {
+    dispatch(createWorkflow(name, steps));
+  },
+  updateWorkflowSteps: (index, steps) => {
+    dispatch(updateWorkflowSteps(index, steps));
+  },
+  updateWorkflowName: (index, name) => {
+    dispatch(updateWorkflowName(index, name));
   },
 });
 
