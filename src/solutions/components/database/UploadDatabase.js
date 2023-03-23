@@ -14,7 +14,7 @@ export const UploadDatabase = (props) => {
     setUploadCompleted(true);
     setFileUploadResponse(uploadInfo);
 
-    const parsedUri = uploadInfo.neo4jDriverUri?.match(/(.+):\/\/([\w\.]+):?(\d+)?/) || [];
+    const parsedUri = uploadInfo.neo4jDriverUri?.match(/(.+):\/\/([\w\.\-]+):?(\d+)?/) || [];
 
     setConnection({
       protocol: parsedUri[1],
