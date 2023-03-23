@@ -75,7 +75,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
       let password;
 
       // Extract port, schema and hostname info from connection url
-      const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w\.]+):?(\d+)?/);
+      const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w\.\-]+):?(\d+)?/);
       port = connectionComps[3] ? connectionComps[3] : '7687';
       hostName = connectionComps[2];
       schema = connectionComps[1];
