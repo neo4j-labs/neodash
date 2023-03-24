@@ -4,6 +4,7 @@ import { WORKFLOWS_ACTION_PREFIX, WORKFLOWS_EXTENSION_NAME } from './workflows/s
 import { workflowReducer } from './workflows/stateManagement/WorkflowReducer';
 import NeoWorkflowDrawerButton from './workflows/NeoWorflowDrawerButton';
 import NeoAlertDrawerButton from './alert/NeoAlertDrawerButton';
+import DvrIcon from '@material-ui/icons/Dvr';
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 // TODO: continue document here
 interface Extension {

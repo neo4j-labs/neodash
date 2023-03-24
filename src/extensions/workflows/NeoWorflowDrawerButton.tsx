@@ -1,9 +1,9 @@
-import EmojiNatureIcon from '@material-ui/icons/EmojiNature';
+import DvrIcon from '@material-ui/icons/Dvr';
 import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { connect } from 'react-redux';
 import NeoWorkflowListModal from './WorkflowListModal';
-
+import SlowMotionVideoIcon from '@material-ui/icons/SlowMotionVideo';
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 const NeoWorkflowDrawerButton = () => {
   const [open, setOpen] = React.useState(false);
@@ -13,11 +13,11 @@ const NeoWorkflowDrawerButton = () => {
 
   const button = (
     <div>
-      <ListItem button onClick={handleClick} id='alert-sidebar-button'>
+      <ListItem button onClick={handleClick} id='workflows-sidebar-button'>
         <ListItemIcon>
-          <EmojiNatureIcon />
+          <SlowMotionVideoIcon />
         </ListItemIcon>
-        <ListItemText primary='Alerts' />
+        <ListItemText primary='Workflows' />
       </ListItem>
     </div>
   );
