@@ -25,19 +25,21 @@ const fallbackRenderer = (value) => {
   return JSON.stringify(value);
 };
 
-function renderAsButton(value) {
-  return (
-    <Button
-      style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
-      variant='contained'
-      color='primary'
-    >{`${value.formattedValue}`}</Button>
-  );
+function renderAsButtonWrapper(renderer) {
+  return function renderAsButton(value) {
+    return (
+      <Button
+        style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
+        variant='contained'
+        color='primary'
+      >{`${renderer(value)}`}</Button>
+    );
+  };
 }
 
 function ApplyColumnType(column, value, asAction) {
   const renderer = getRendererForValue(value);
-  const renderCell = asAction ? renderAsButton : renderer.renderValue;
+  const renderCell = asAction ? renderAsButtonWrapper(renderer.renderValue) : renderer.renderValue;
   const columnProperties = renderer
     ? { type: renderer.type, renderCell: renderCell ? renderCell : fallbackRenderer }
     : rendererForType.string;
