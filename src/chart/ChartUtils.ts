@@ -94,6 +94,16 @@ export function valueIsObject(value) {
   return className == 'Object';
 }
 
+export function toNumber({ low, high }) {
+  let res = high;
+
+  for (let i = 0; i < 32; i++) {
+    res *= 2;
+  }
+
+  return low + res;
+}
+
 export function getRecordType(value) {
   // mui data-grid native column types are: 'string' (default),
   // 'number', 'date', 'dateTime', 'boolean' and 'singleSelect'
@@ -122,6 +132,9 @@ export function getRecordType(value) {
   } else if (valueIsArray(value)) {
     return 'array';
   } else if (valueIsObject(value)) {
+    if (!isNaN(toNumber(value))) {
+      return 'objectNumber';
+    }
     return 'object';
   }
 
@@ -167,18 +180,30 @@ export function replaceDashboardParameters(str, parameters) {
   if (!str) {
     return '';
   }
-  Object.keys(parameters).forEach((key) => {
-    str = str.replaceAll(`$${key}`, parameters[key] !== null ? parameters[key] : '');
-  });
-  return str;
-}
+  let rx = /`.([^`]*).`/g;
+  let regexSquareBrackets = /\[(.*?)\]/g;
 
-// Replaces all global dashboard parameters inside a string with their values.
-export function replaceDashboardParametersInString(str, parameters) {
+  const replacer = (match, p1) => {
+    let matches = p1.match(regexSquareBrackets);
+    let param = p1.split('[')[0].replace(`$`, '');
+    let val = parameters[param];
+
+    matches.forEach((m) => {
+      let i = m.replace(/[[\]']+/g, '');
+      i = isNaN(i) ? i.replace(/['"']+/g, '') : Number(i);
+      val = val?.[i] || null;
+    });
+
+    return RenderSubValue(val);
+  };
+
+  let newString = str.replace(rx, replacer);
+
   Object.keys(parameters).forEach((key) => {
-    str = str.replaceAll(`$${key}`, parameters[key]);
+    newString = newString.replaceAll(`$${key}`, parameters[key] !== null ? parameters[key] : '');
   });
-  return str;
+
+  return newString;
 }
 
 /**
@@ -197,6 +222,7 @@ export const downloadComponentAsImage = (ref) => {
 };
 
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
+import { RenderSubValue } from '../report/ReportRecordProcessing';
 
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
