@@ -75,7 +75,7 @@ export interface GraphChartVisualizationProps {
     drilldownLink: string;
     selectedEntity?: GraphEntity;
     setSelectedEntity: any;
-    setPage: any;
+    setPageNumber: any;
     pageNames: [];
   };
   extensions: {

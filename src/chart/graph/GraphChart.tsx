@@ -172,7 +172,7 @@ const NeoGraphChart = (props: ChartProps) => {
       fixNodeAfterDrag: fixNodeAfterDrag,
       handleExpand: handleExpand,
       setGlobalParameter: props.setGlobalParameter,
-      setPage: props.setPage,
+      setPageNumber: props.setPageNumber,
       pageNames: pageNames,
       onNodeClick: (item) => handleEntityClick(item),
       onRelationshipClick: (item) => handleEntityClick(item),

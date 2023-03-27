@@ -58,10 +58,12 @@ export const actionRule = (rule, e, props, type = 'default') => {
       } else {
         props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
       }
-    } else if (rule.customization == 'set page' && props.setPage && props.pageNames) {
+    } else if (rule.customization == 'set page' && props.setPageNumber && props.pageNames) {
       let page = getPageFromPageNames(props.pageNames, rule.value);
       if (page) {
-        props.setPage(page.split('/')[0]);
+        props.setPageNumber(page.split('/')[0]);
+      } else {
+        props.setPageNumber(undefined);
       }
     }
   }
