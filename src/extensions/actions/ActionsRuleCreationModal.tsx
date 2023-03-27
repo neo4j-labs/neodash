@@ -10,7 +10,7 @@ import NeoColorPicker from '../../component/field/ColorPicker';
 import AddIcon from '@material-ui/icons/Add';
 import { Autocomplete } from '@material-ui/lab';
 import StarsIcon from '@material-ui/icons/Stars';
-import { getPageNames } from '../advancedcharts/Utils';
+import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = {
   table: [
@@ -115,7 +115,7 @@ export const NeoCustomReportActionsModal = ({
     }
   }, [settingValue]);
 
-  const pageNames = getPageNames();
+  const pageNames = getPageNumbersAndNamesList();
   const handleClose = () => {
     // If no rules are specified, clear the special report setting that holds the customization rules.
     if (rules.length == 0) {

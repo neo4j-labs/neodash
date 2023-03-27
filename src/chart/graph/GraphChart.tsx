@@ -14,7 +14,7 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/GraphUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
-import { getPageNames } from '../../extensions/advancedcharts/Utils';
+import { getPageNumbersAndNamesList } from '../../extensions/advancedcharts/Utils';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -131,7 +131,7 @@ const NeoGraphChart = (props: ChartProps) => {
     },
   });
 
-  const pageNames = getPageNames();
+  const pageNames = getPageNumbersAndNamesList();
 
   const chartProps: GraphChartVisualizationProps = {
     data: {

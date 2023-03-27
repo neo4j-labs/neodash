@@ -1,6 +1,6 @@
 import { valueIsArray } from '../../chart/ChartUtils';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPagesNames } from '../../dashboard/DashboardSelectors';
+import { getPageNumbersAndNames } from '../../dashboard/DashboardSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 
 export const getRule = (e, rules, type) => {
@@ -24,13 +24,8 @@ const ruleFieldCheck = (ruleValue, value) => {
   return value.trim() == ruleValue.trim();
 };
 
-export const getPageNames = () => {
-  return useSelector(getPagesNames);
-};
-
-export const changePage = (reference) => {
-  const dispatch = useDispatch();
-  dispatch(updateDashboardSetting('pagenumber', reference));
+export const getPageNumbersAndNamesList = () => {
+  return useSelector(getPageNumbersAndNames);
 };
 
 export const getPageFromPageNames = (pageNames, ruleValue) => {

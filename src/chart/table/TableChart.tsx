@@ -14,7 +14,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import Button from '@material-ui/core/Button';
-import { getRule, actionRule, getPageNames, action } from '../../extensions/advancedcharts/Utils';
+import { getRule, actionRule, getPageNumbersAndNamesList, action } from '../../extensions/advancedcharts/Utils';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -150,7 +150,7 @@ const NeoTableChart = (props: ChartProps) => {
     ? Math.round(availableRowHeight) - pageSizeReducer
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
-  const pageNames = getPageNames();
+  const pageNames = getPageNumbersAndNamesList();
 
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>

@@ -7,7 +7,7 @@ import { updateDashboardSetting } from './SettingsActions';
 export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => {
   try {
     if (number == undefined) {
-      throw 'The specified page could not be found.';
+      throw 'The specified page could not be found, was it moved, removed, or renamed?';
     }
     const { pages } = getState().dashboard;
     // Make sure the page number is within bounds.
