@@ -21,8 +21,7 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import AlertDrawer from '../../extensions/alert/AlertDrawer';
-import { NODE_SIDEBAR_EXTENSION_NAME } from '../../extensions/alert/stateManagement/AlertActions';
-import { EXTENSIONS, EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
+import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
@@ -41,7 +40,6 @@ export const NeoDrawer = ({
   connection,
   dashboardSettings,
   extensions,
-  extensionsConfig,
   updateDashboardSetting,
   handleDrawerClose,
   onAboutModalOpen,
@@ -50,10 +48,9 @@ export const NeoDrawer = ({
   /**
    * Function to render dynamically the buttons in the drawer related to all the extension that
    * are enabled and present a button (EX: node-sidebar)
-   * @returns JSX element containing all the buttons
+   * @returns JSX element containing all the buttons related to their enabled extensions
    */
   function renderDrawerExtensionsButton() {
-    console.log(EXTENSIONS_DRAWER_BUTTONS);
     const res = (
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
@@ -91,7 +88,7 @@ export const NeoDrawer = ({
               width: '56px',
             }
       }
-      open={open == true}
+      open={open}
     >
       <div
         style={{
@@ -171,7 +168,7 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {extensionsConfig[NODE_SIDEBAR_EXTENSION_NAME] ? renderExtensionDrawers() : <></>}
+      {renderExtensionDrawers()}
     </>
   );
 };
@@ -180,7 +177,6 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   hidden: applicationIsStandalone(state),
   extensions: getDashboardExtensions(state),
-  extensionsConfig: getDashboardExtensionsConfig(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
   connection: applicationGetConnection(state),
 });
