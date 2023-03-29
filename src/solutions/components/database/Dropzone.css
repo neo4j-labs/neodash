@@ -13,3 +13,22 @@
     align-items: center;    
     flex-flow: column;
 }
+
+.dropzoneShorter {
+    background: #eee;
+    border: 2px dashed lightgray;
+    padding: 10px;
+    margin-top: 5px;
+    width: 600px;
+    height: 115px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    flex-flow: column;
+}
+
+.progessBar {
+    max-width: 600px;
+}

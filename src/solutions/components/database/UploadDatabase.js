@@ -5,7 +5,7 @@ import { InlineBox } from '../common/Common';
 import './UploadDatabase.css';
 
 export const UploadDatabase = (props) => {
-  const { setConnection } = props;
+  const { existingDbName, setConnection } = props;
 
   const [uploadCompleted, setUploadCompleted] = useState(false);
   const [fileUploadResponse, setFileUploadResponse] = useState({});
@@ -26,6 +26,25 @@ export const UploadDatabase = (props) => {
     });
   };
 
+  const getPreInfo = () => {
+    if (existingDbName) {
+      return (
+        <div style={{ display: 'flex', flexFlow: 'column', marginTop: '5px' }}>
+          <Alert severity='warning'>
+            You previously uploaded database <InlineBox message={existingDbName} />. Click Overwrite to overwrite this
+            database when uploading.
+          </Alert>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
+  const getDropzoneMessage = () => {
+    return 'Drop a .dump file here, or click to select a file';
+  };
+
   return (
     <>
       {uploadCompleted ? (
@@ -44,9 +63,11 @@ export const UploadDatabase = (props) => {
             <InlineBox message={fileUploadResponse.newDbAdminUser} />/
             <InlineBox message={fileUploadResponse.newDbAdminPassword} />
           </div>
-          <Alert className='credentialsWarning' severity='warning'>
-            IMPORTANT! Please capture the admin credentials as they are not stored anywhere.
-          </Alert>
+          {!existingDbName && (
+            <Alert className='credentialsWarning' severity='warning'>
+              IMPORTANT! Please capture the admin credentials as they are not stored anywhere.
+            </Alert>
+          )}
           <li>Users of your dashboard will automatically use the read-only account:</li>
           <div>
             <InlineBox message={fileUploadResponse.newDbReaderUser} />/
@@ -54,7 +75,12 @@ export const UploadDatabase = (props) => {
           </div>
         </ul>
       ) : (
-        <Dropzone message='Drop a .dump file here, or click to select a file' onUploadComplete={onUploadComplete} />
+        <Dropzone
+          preInfo={getPreInfo()}
+          existingDbName={existingDbName}
+          message={getDropzoneMessage()}
+          onUploadComplete={onUploadComplete}
+        />
       )}
     </>
   );

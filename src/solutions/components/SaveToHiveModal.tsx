@@ -72,12 +72,14 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
 
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
-  const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
+  // const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
   const [dbConnection, setDbConnection] = useState(connection);
   const [hasPublished, setHasPublished] = useState(false);
   const [solutionId, setSolutionId] = useState(0);
   // console.log('tabIndex: ', tabIndex);
+
+  const existingDbName = existingSolutionId ? connection.database : null;
 
   const lastStep = () => tabIndex === tabCount - 1;
   const firstStep = () => tabIndex === 0;
@@ -146,7 +148,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
       dashboard,
       date: new Date().toISOString(),
       user: dbConnection.username,
-      overwrite: overwriteExistingDashboard,
+      // overwrite: overwriteExistingDashboard,
       progressCallback,
       dbType,
       dbConnectionUrl: getDbConnectionUrl(dbConnection),
@@ -189,7 +191,11 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
               <Tab label='Publish' id='publish-to-hive-3' aria-label='Publish' />
             </Tabs>
             <TabPanel idroot='hive-publish' value={tabIndex} index={0} boxClass={classes.tabPanel}>
-              <SelectDatabase connection={dbConnection} setConnection={setDbConnection} />
+              <SelectDatabase
+                existingDbName={existingDbName}
+                connection={dbConnection}
+                setConnection={setDbConnection}
+              />
             </TabPanel>
             <TabPanel idroot='hive-publish' value={tabIndex} index={1} boxClass={classes.tabPanel}>
               <div style={{ marginTop: '10px' }}>

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SelectDatabase = (props) => {
-  const { connection, setConnection } = props;
+  const { existingDbName, connection, setConnection } = props;
 
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -38,7 +38,7 @@ export const SelectDatabase = (props) => {
         <Tab label='Remote Connection' id='publish-to-hive-2' aria-label='Remote Connection' />
       </Tabs>
       <TabPanel idroot='pick-db-tab' value={tabIndex} index={0}>
-        <UploadDatabase setConnection={setConnection} />
+        <UploadDatabase existingDbName={existingDbName} setConnection={setConnection} />
       </TabPanel>
       <TabPanel idroot='pick-db-tab' value={tabIndex} index={1}>
         <ConfigureSelfManagedDatabase connection={connection} setConnection={setConnection} />

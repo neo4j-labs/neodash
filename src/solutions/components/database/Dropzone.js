@@ -6,6 +6,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import SyncIcon from '@material-ui/icons/Sync';
 import SyncProblemIcon from '@material-ui/icons/SyncProblem';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { Checkbox, FormGroup, FormControlLabel } from '@material-ui/core';
 import './Dropzone.css';
 
 const DEFAULT_MAX_UPLOAD_SIZE = 100 * 1024 * 1024; // 100 MB
@@ -15,7 +16,8 @@ const getMaxSize = () => {
 };
 
 export function Dropzone(props) {
-  const { onUploadComplete } = props;
+  const { preInfo, existingDbName, onUploadComplete } = props;
+  const [overwriteDatabase, setOverwriteDatabase] = React.useState(false);
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState();
@@ -36,8 +38,8 @@ export function Dropzone(props) {
           setIsUploading(true);
           const response = await uploadFile({
             selectedFile: fileToUpload,
-            existingDbName: null,
-            overwrite: false,
+            existingDbName: existingDbName,
+            overwrite: overwriteDatabase,
           });
           setIsUploading(false);
           //console.log("response: " , response);
@@ -57,6 +59,10 @@ export function Dropzone(props) {
       //req.end(callback)
     },
   });
+
+  const handleChange = (event) => {
+    setOverwriteDatabase(event.target.checked);
+  };
 
   let filePath = acceptedFiles.length > 0 ? acceptedFiles[0].path : '';
   let fileStatus = '';
@@ -88,14 +94,27 @@ export function Dropzone(props) {
 
   return (
     <section>
-      <div {...getRootProps({ className: 'dropzone' })}>
+      {preInfo && (
+        <>
+          {preInfo}
+          {existingDbName && (
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox checked={overwriteDatabase} onChange={handleChange} />}
+                label='Overwrite?'
+              />
+            </FormGroup>
+          )}
+        </>
+      )}
+      <div {...getRootProps({ className: preInfo && existingDbName ? 'dropzoneShorter' : 'dropzone' })}>
         <div>
           <input {...getInputProps()} />
-          <p>{props.message}</p>
+          <div>{props.message}</div>
         </div>
         <div style={{ display: 'flex' }}>{fileStatus}</div>
       </div>
-      {isUploading && <LinearProgress />}
+      {isUploading && <LinearProgress className='progessBar' />}
     </section>
   );
 }
