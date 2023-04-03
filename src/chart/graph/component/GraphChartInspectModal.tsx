@@ -1,10 +1,4 @@
-import React, { useCallback } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Badge from '@material-ui/core/Badge';
+import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,6 +6,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { getEntityHeader } from '../util/NodeUtils';
+import { Dialog } from '@neo4j-ndl/react';
+import {} from '@neo4j-ndl/react/icons';
 
 export const formatProperty = (property) => {
   if (property.startsWith('http://') || property.startsWith('https://')) {
@@ -24,23 +20,15 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
   return (
     <div>
       <Dialog
-        maxWidth={'lg'}
+        size='large'
         open={props.interactivity.showPropertyInspector}
         onClose={() => props.interactivity.setPropertyInspectorOpen(false)}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
+        <Dialog.Header id='form-dialog-title'>
           {props.interactivity.selectedEntity ? getEntityHeader(props.interactivity.selectedEntity) : ''}
-          <IconButton
-            onClick={() => props.interactivity.setPropertyInspectorOpen(false)}
-            style={{ padding: '3px', marginLeft: '20px', float: 'right' }}
-          >
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
+        </Dialog.Header>
+        <Dialog.Content>
           {props.interactivity.selectedEntity && (
             <TableContainer>
               <Table size='small'>
@@ -68,7 +56,7 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
               </Table>
             </TableContainer>
           )}
-        </DialogContent>
+        </Dialog.Content>
       </Dialog>
     </div>
   );

@@ -1,28 +1,7 @@
-import React, { useContext } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import {
-  FormControl,
-  InputLabel,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Select,
-  TextareaAutosize,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import React, { useContext, useRef } from 'react';
+import { TextareaAutosize } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import StorageIcon from '@material-ui/icons/Storage';
 import {
   loadDashboardFromNeo4jByUUIDThunk,
   loadDashboardListFromNeo4jThunk,
@@ -31,8 +10,13 @@ import {
 } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { SideNavigationItem } from '@neo4j-ndl/react';
-import { CloudArrowUpIconOutline } from '@neo4j-ndl/react/icons';
+import { SideNavigationItem, Button, Dialog, Dropdown } from '@neo4j-ndl/react';
+import {
+  CloudArrowUpIconOutline,
+  PlayIconSolid,
+  DatabaseAddCircleIcon,
+  DocumentPlusIconOutline,
+} from '@neo4j-ndl/react/icons';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -55,6 +39,7 @@ export const NeoLoadModal = ({
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [dashboardDatabase, setDashboardDatabase] = React.useState('neo4j');
   const [databases, setDatabases] = React.useState(['neo4j']);
+  const loadFromFile = useRef(null);
 
   const handleClickOpen = () => {
     setLoadModalOpen(true);
@@ -90,26 +75,27 @@ export const NeoLoadModal = ({
     { field: 'date', headerName: 'Date', width: 200 },
     { field: 'title', headerName: 'Title', width: 270 },
     { field: 'author', headerName: 'Author', width: 160 },
-    { field: 'version', headerName: 'Version', width: 95 },
+    { field: 'version', headerName: 'Version', width: 85 },
     {
       field: 'load',
       headerName: 'Select',
       renderCell: (c) => {
         return (
           <Button
-            onClick={() => {
+            onClick={(_) => {
               loadDashboardFromNeo4j(driver, dashboardDatabase, c.id, handleDashboardLoadedFromNeo4j);
             }}
-            style={{ float: 'right', backgroundColor: 'white' }}
-            variant='contained'
-            size='medium'
-            endIcon={<PlayArrow />}
+            style={{ float: 'right' }}
+            fill='outlined'
+            color='neutral'
+            floating
           >
             Select
+            <PlayIconSolid className='n-w-6 n-h-6' />
           </Button>
         );
       },
-      width: 120,
+      width: 130,
     },
   ];
 
@@ -119,29 +105,17 @@ export const NeoLoadModal = ({
         Load
       </SideNavigationItem>
 
-      <Dialog maxWidth={'lg'} open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>
-          <SystemUpdateAltIcon
-            style={{
-              height: '30px',
-              paddingTop: '4px',
-              marginBottom: '-8px',
-              marginRight: '5px',
-              paddingBottom: '5px',
-            }}
+      <Dialog size='large' open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <Dialog.Header id='form-dialog-title'>
+          <CloudArrowUpIconOutline
+            className='n-w-6 n-h-6'
+            style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
           />
           Load Dashboard
-          <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent style={{ width: '1000px' }}>
-          {/* <DialogContentText> Paste your dashboard file here to load it into NeoDash.</DialogContentText> */}
-          <div>
+        </Dialog.Header>
+        <Dialog.Content>
+          <div style={{ marginBottom: '10px' }}>
             <Button
-              component='label'
               onClick={() => {
                 loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => {
                   setRows(result);
@@ -151,42 +125,39 @@ export const NeoLoadModal = ({
                   setDatabases(result);
                 });
               }}
-              style={{ marginBottom: '10px', backgroundColor: 'white' }}
-              color='default'
-              variant='contained'
-              size='medium'
-              endIcon={<StorageIcon />}
+              fill='outlined'
+              color='neutral'
+              floating
             >
-              Select From Neo4j
+              Select from Neo4j
+              <DatabaseAddCircleIcon className='n-w-6 n-h-6' />
             </Button>
             <Button
-              component='label'
-              // onClick={(e)=>uploadDashboard(e)}
-              style={{ marginLeft: '10px', backgroundColor: 'white', marginBottom: '10px' }}
-              color='default'
-              variant='contained'
-              size='medium'
-              endIcon={<PostAddIcon />}
+              onClick={(_) => {
+                loadFromFile.current.click();
+              }}
+              fill='outlined'
+              color='neutral'
+              style={{ marginLeft: '10px' }}
+              floating
             >
-              <input type='file' onChange={(e) => uploadDashboard(e)} hidden />
+              <input type='file' ref={loadFromFile} onChange={(e) => uploadDashboard(e)} hidden />
               Select From File
+              <DocumentPlusIconOutline className='n-w-6 n-h-6' />
             </Button>
 
             <Button
               onClick={text.length > 0 ? handleCloseAndLoad : null}
               style={{
-                color: text.length > 0 ? 'white' : 'lightgrey',
                 float: 'right',
-                marginLeft: '10px',
-                marginBottom: '10px',
+                color: text.length > 0 ? 'white' : 'lightgrey',
                 backgroundColor: text.length > 0 ? 'green' : 'white',
               }}
-              color='default'
-              variant='contained'
-              size='medium'
-              endIcon={<PlayArrow />}
+              fill='outlined'
+              floating
             >
               Load Dashboard
+              <PlayIconSolid className='n-w-6 n-h-6' />
             </Button>
           </div>
 
@@ -198,36 +169,19 @@ export const NeoLoadModal = ({
             aria-label=''
             placeholder='Select a dashboard first, then preview it here...'
           />
-        </DialogContent>
-        {/* <DialogActions> */}
-        {/* </DialogActions> */}
+        </Dialog.Content>
       </Dialog>
       <Dialog
-        maxWidth={'lg'}
+        size='large'
         open={loadFromNeo4jModalOpen == true}
         onClose={() => {
           setLoadFromNeo4jModalOpen(false);
         }}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
-          Select From Neo4j
-          <IconButton
-            onClick={() => {
-              setLoadFromNeo4jModalOpen(false);
-            }}
-            style={{ padding: '3px', float: 'right' }}
-          >
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent style={{ width: '900px' }}>
-          <DialogContentText>
-            If dashboards are saved in your current database, choose a dashboard below.
-          </DialogContentText>
-
+        <Dialog.Header id='form-dialog-title'>Select from Neo4j</Dialog.Header>
+        <Dialog.Subtitle>If dashboards are saved in your current database, choose a dashboard below.</Dialog.Subtitle>
+        <Dialog.Content style={{ width: '900px' }}>
           <div style={{ height: '380px', borderBottom: '1px solid lightgrey' }}>
             <DataGrid
               rows={rows}
@@ -241,31 +195,24 @@ export const NeoLoadModal = ({
               }}
             />
           </div>
-          <FormControl style={{ marginTop: '-58px', marginLeft: '10px' }}>
-            <InputLabel id='demo-simple-select-label'>Database</InputLabel>
-            <Select
-              labelId='demo-simple-select-label'
-              id='demo-simple-select'
-              style={{ width: '150px' }}
-              value={dashboardDatabase}
-              onChange={(e) => {
+          <Dropdown
+            id='database'
+            label='Database'
+            type='select'
+            selectProps={{
+              onChange: (newValue) => {
                 setRows([]);
-                setDashboardDatabase(e.target.value);
-                loadDashboardListFromNeo4j(driver, e.target.value, (result) => {
+                setDashboardDatabase(newValue.value);
+                loadDashboardListFromNeo4j(driver, newValue.value, (result) => {
                   setRows(result);
                 });
-              }}
-            >
-              {databases.map((database) => {
-                return (
-                  <MenuItem key={database} value={database}>
-                    {database}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </DialogContent>
+              },
+              options: databases.map((database) => ({ label: database, value: database })),
+              value: { label: dashboardDatabase, value: dashboardDatabase },
+            }}
+            style={{ width: '150px' }}
+          ></Dropdown>
+        </Dialog.Content>
       </Dialog>
     </div>
   );

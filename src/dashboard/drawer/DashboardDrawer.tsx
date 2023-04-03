@@ -40,7 +40,7 @@ export const NeoDrawer = ({
     <div
       style={{
         display: 'flex',
-        zIndex: 1000,
+        zIndex: 1001,
       }}
     >
       <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded}>
