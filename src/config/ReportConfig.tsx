@@ -957,6 +957,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'rgba(0, 0, 0, 0.87)',
       },
+      format: {
+        label: 'Display format',
+        type: SELECTION_TYPES.LIST,
+        values: ['auto', 'json', 'yml'],
+        default: 'auto',
+      },
       monospace: {
         label: 'Use monospace font',
         type: SELECTION_TYPES.LIST,
