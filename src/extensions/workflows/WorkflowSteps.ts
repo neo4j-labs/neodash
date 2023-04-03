@@ -6,7 +6,7 @@ export const WORKFLOW_STEPS = {
     type: 'Pathfinding',
     description:
       "Yen's Shortest Path algorithm computes a number of shortest paths between two nodes. The algorithm is often referred to as Yen's k-Shortest Path algorithm, where k is the number of shortest paths to compute. The algorithm supports weighted graphs with positive relationship weights.",
-    query: 'RETURN false',
+    query: 'UNWIND RANGE(1,10000) as X \n WITH X as Quack2 \n RETURN collect(Quack2)',
   },
   pageRank: {
     name: 'PageRank',
@@ -15,5 +15,12 @@ export const WORKFLOW_STEPS = {
     description:
       'The PageRank algorithm measures the importance of each node within the graph, based on the number incoming relationships and the importance of the corresponding source nodes. The underlying assumption roughly speaking is that a page is only as important as the pages that link to it.',
     query: 'UNWIND RANGE(1,10000) as X \n WITH X as Quack \n RETURN collect(Quack)',
+  },
+  sleepyBoy: {
+    name: 'sleepity sloop',
+    key: 'sleepyBoy',
+    type: 'Sleepity Shloop',
+    description: 'just get some sleep and mushy peas',
+    query: 'CALL apoc.util.sleep(5000) \n MATCH (n) RETURN n LIMIT 100',
   },
 };

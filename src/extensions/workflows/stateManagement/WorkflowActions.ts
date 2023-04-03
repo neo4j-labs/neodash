@@ -39,6 +39,18 @@ export const updateWorkflowName = (index, newWorkflowName) => ({
   payload: { index, newWorkflowName },
 });
 
+export const UPDATE_WORKFLOW_STEP_STATUS = `${WORKFLOWS_ACTION_PREFIX}UPDATE_WORKFLOW_STEP_STATUS`;
+/**
+ * Action to change the status of a step inside a specified workflow
+ * @param index Current name of the workflow
+ * @param stepIndex New name of the workflow
+ * @param status Status of the step, can be in [FAILED, DONE, RUNNING, PENDING, CANCELLED]
+ */
+export const updateWorkflowStepStatus = (index, stepIndex, status) => ({
+  type: UPDATE_WORKFLOW_STEP_STATUS,
+  payload: { index, stepIndex, status },
+});
+
 export const DELETE_WORKFLOW = `${WORKFLOWS_ACTION_PREFIX}DELETE_WORKFLOW`;
 export const deleteWorkflow = (index) => ({
   type: DELETE_WORKFLOW,

@@ -2,7 +2,13 @@
  * Reducers define changes to the application state when a given action
  */
 
-import { SET_WORKFLOW_STEPS, DELETE_WORKFLOW, UPDATE_WORKFLOW_NAME, CREATE_WORKFLOW } from './WorkflowActions';
+import {
+  SET_WORKFLOW_STEPS,
+  DELETE_WORKFLOW,
+  UPDATE_WORKFLOW_NAME,
+  CREATE_WORKFLOW,
+  UPDATE_WORKFLOW_STEP_STATUS,
+} from './WorkflowActions';
 export const initialState = {
   workflowsList: [],
   settings: {},
@@ -43,6 +49,16 @@ export const workflowReducer = (state = initialState, action: { type: any; paylo
       const { index } = payload;
       const newWorkflowsList = [...state.workflowsList];
       newWorkflowsList.splice(index, 1);
+      let newState = {
+        ...state,
+        workflowsList: newWorkflowsList,
+      };
+      return newState;
+    }
+    case UPDATE_WORKFLOW_STEP_STATUS: {
+      const { index, stepIndex, status } = payload;
+      const newWorkflowsList = [...state.workflowsList];
+      newWorkflowsList[index].steps[stepIndex].status = status;
       let newState = {
         ...state,
         workflowsList: newWorkflowsList,

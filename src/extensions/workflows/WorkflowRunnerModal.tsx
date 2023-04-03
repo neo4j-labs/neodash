@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -20,6 +20,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { getWorkflow } from './stateManagement/WorkflowSelectors';
 import { TextareaAutosize } from '@material-ui/core';
 import { runWorkflow } from './util/WorkflowRunner';
+import { updateWorkflowStepStatus } from './stateManagement/WorkflowActions';
+import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 
 const getCompleteIcon = (flipped) => {
   return (
@@ -128,17 +130,36 @@ export enum STEP_STATUS {
   CANCELLED,
 }
 
-export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow }) => {
+export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow, updateWorkflowStepStatus }) => {
+  const database = 'neo4j';
+
   const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
   const [workflowStatus, setWorkflowStatus] = React.useState([]);
+  const [isRunning, setIsRunning] = React.useState(false);
+  const [results, setResults] = React.useState([]);
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   // Reset query runner when the screen is opened or the workflow is changed.
   useEffect(() => {
-    setWorkflowStatus(workflow.steps.map((_) => STEP_STATUS.WAITING));
+    if (workflow && workflow.steps) {
+      console.log(workflow);
+      setWorkflowStatus(workflow.steps.map((_) => STEP_STATUS.WAITING));
 
-    if (open == true) {
-      // trigger workflow runner
-      runWorkflow(workflow, workflowStatus, setWorkflowStatus);
+      if (open == true) {
+        // trigger workflow runner
+        setIsRunning(true);
+        runWorkflow(
+          driver,
+          database,
+          workflow,
+          index,
+          workflowStatus,
+          setWorkflowStatus,
+          setResults,
+          setIsRunning,
+          updateWorkflowStepStatus
+        );
+      }
     }
   }, [workflow, open]);
 
@@ -161,14 +182,18 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow }) => {
     }
     return getErrorIcon(item == expanded);
   };
-
+  function handleClose() {
+    if (isRunning) {
+      alert(`warning here if running - are you sure?${index}`);
+    }
+    setOpen(false);
+  }
   return (
     <Dialog
       maxWidth={'lg'}
       open={open == true}
       onClose={() => {
-        alert(`warning here if running - are you sure?${index}`);
-        setOpen(false);
+        handleClose();
       }}
       aria-labelledby='form-dialog-title'
     >
@@ -176,8 +201,7 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow }) => {
         Running '{workflow.name}'
         <IconButton
           onClick={() => {
-            alert('warning here if running - are you sure?');
-            setOpen(false);
+            handleClose();
           }}
           style={{ padding: '3px', float: 'right' }}
         >
@@ -224,6 +248,8 @@ const mapStateToProps = (state, ownProps) => ({
   workflow: getWorkflow(state, ownProps.index),
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  updateWorkflowStepStatus: (index, stepIndex, status) => dispatch(updateWorkflowStepStatus(index, stepIndex, status)),
+});
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowRunnerModal));

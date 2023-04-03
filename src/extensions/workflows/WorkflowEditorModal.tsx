@@ -40,11 +40,12 @@ export const NeoWorkflowEditorModal = ({
   updateWorkflowSteps,
   updateWorkflowName,
 }) => {
+  const placeholderName = `My Workflow #${index + 1}`;
   const [steps, setSteps] = React.useState(workflow.steps ? workflow.steps : []);
-  const [name, setName] = React.useState(workflow.name ? workflow.name : 'My Workflow');
+  const [name, setName] = React.useState(workflow.name ? workflow.name : placeholderName);
 
   useEffect(() => {
-    setName(workflow.name ? workflow.name : 'My Workflow');
+    setName(workflow.name ? workflow.name : placeholderName);
     setSteps(workflow.steps ? workflow.steps : []);
   }, [index]);
 
