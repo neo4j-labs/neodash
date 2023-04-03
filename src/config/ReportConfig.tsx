@@ -1018,6 +1018,12 @@ export const REPORT_TYPES = {
     allowScrolling: true,
     maxRecords: 500,
     settings: {
+      format: {
+        label: 'Format',
+        type: SELECTION_TYPES.LIST,
+        values: ['json', 'yml'],
+        default: 'json',
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,
