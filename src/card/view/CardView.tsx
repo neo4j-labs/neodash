@@ -3,15 +3,17 @@ import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
-import { CardContent, IconButton } from '@material-ui/core';
+import { CardContent } from '@material-ui/core';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
+
+import { IconButton } from '@neo4j-ndl/react';
+import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 
 const NeoCardView = ({
   title,
@@ -177,13 +179,14 @@ const NeoCardView = ({
       ) : (
         <>
           <IconButton
-            style={{ float: 'right', padding: '4px', marginRight: '12px' }}
+            style={{ float: 'right', marginRight: '9px' }}
             aria-label='run'
-            onClick={() => {
+            onClick={(_) => {
               setActive(true);
             }}
+            clean
           >
-            <PlayCircleFilledIcon />
+            <PlayCircleIconSolid className='n-w-5 n-h-5' />
           </IconButton>
           <NeoCodeEditorComponent
             value={query}

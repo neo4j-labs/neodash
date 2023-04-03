@@ -1,8 +1,4 @@
-import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List, Button } from '@material-ui/core';
 import React from 'react';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../../modal/ShareModal';
@@ -17,123 +13,74 @@ import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../app
 import NeoSettingsModal from '../../settings/SettingsModal';
 import { getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
+import { SideNavigation, SideNavigationList, SideNavigationItem, SideNavigationGroupHeader } from '@neo4j-ndl/react';
+import { BookOpenIconOutline, InformationCircleIconOutline, HomeIconOutline } from '@neo4j-ndl/react/icons';
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
-  open,
   hidden,
   connection,
   dashboardSettings,
   extensions,
   updateDashboardSetting,
-  handleDrawerClose,
   onAboutModalOpen,
   resetApplication,
 }) => {
+  const [expanded, setOnExpanded] = React.useState(false);
+
   // Override to hide the drawer when the application is in standalone mode.
   if (hidden) {
     return <></>;
   }
 
+  const navItemClass = 'n-w-full n-h-full';
   const content = (
-    <Drawer
-      variant='permanent'
-      style={
-        open
-          ? {
-              position: 'relative',
-              overflowX: 'hidden',
-              width: '240px',
-              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-              boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
-            }
-          : {
-              position: 'relative',
-              overflowX: 'hidden',
-              boxShadow: ' 2px 1px 10px 0px rgb(0 0 0 / 12%)',
-
-              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-              width: '56px',
-            }
-      }
-      open={open == true}
+    <div
+      style={{
+        display: 'flex',
+        zIndex: 1000,
+      }}
     >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          overflowX: 'hidden',
-          justifyContent: 'flex-end',
-          padding: '0 8px',
-          minHeight: '64px',
-        }}
-      >
-        <ListItem>
-          <Button
-            component='label'
-            onClick={resetApplication}
-            style={{ backgroundColor: 'white', marginLeft: '-8px' }}
-            color='default'
-            variant='outlined'
-            size='small'
-            startIcon={<ExitToAppIcon />}
-          >
+      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded}>
+        <SideNavigationList>
+          <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
             Menu
-          </Button>
-        </ListItem>
-
-        <IconButton onClick={handleDrawerClose}>
-          <ChevronLeftIcon />
-        </IconButton>
-      </div>
-      <Divider />
-      <div>
-        <ListItem style={{ background: 'white', height: '47px' }}>
-          <ListItemIcon></ListItemIcon>
-          <ListItemText primary='' />
-        </ListItem>
-      </div>
-      <Divider />
-      <List>
-        <div>
+          </SideNavigationItem>
+          <SideNavigationGroupHeader>Manage</SideNavigationGroupHeader>
           <NeoSettingsModal
             dashboardSettings={dashboardSettings}
             updateDashboardSetting={updateDashboardSetting}
+            navItemClass={navItemClass}
           ></NeoSettingsModal>
-          <NeoSaveModal></NeoSaveModal>
-          <NeoLoadModal></NeoLoadModal>
-          <NeoShareModal></NeoShareModal>
-        </div>
-      </List>
-      <Divider />
-      <List>
-        <NeoReportExamplesModal
-          extensions={extensions}
-          examples={getExampleReports(extensions)}
-          database={connection.database}
-        ></NeoReportExamplesModal>
-        <NeoExtensionsModal></NeoExtensionsModal>
-      </List>
-      <Divider />
-      <List>
-        <ListItem button onClick={() => window.open('https://neo4j.com/labs/neodash/2.2/user-guide/', '_blank')}>
-          <ListItemIcon>
-            <LibraryBooksIcon />
-          </ListItemIcon>
-          <ListItemText primary='Documentation' />
-        </ListItem>
-        <ListItem button onClick={onAboutModalOpen}>
-          <ListItemIcon>
-            <InfoOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary='About' />
-        </ListItem>
-      </List>
-      <Divider />
-    </Drawer>
+          <NeoSaveModal navItemClass={navItemClass}></NeoSaveModal>
+          <NeoLoadModal navItemClass={navItemClass}></NeoLoadModal>
+          <NeoShareModal navItemClass={navItemClass}></NeoShareModal>
+          <NeoExtensionsModal navItemClass={navItemClass}></NeoExtensionsModal>
+          <SideNavigationGroupHeader>Learn</SideNavigationGroupHeader>
+          <NeoReportExamplesModal
+            extensions={extensions}
+            examples={getExampleReports(extensions)}
+            database={connection.database}
+            navItemClass={navItemClass}
+          ></NeoReportExamplesModal>
+          <SideNavigationItem
+            href='https://neo4j.com/labs/neodash/2.2/user-guide/'
+            target='_blank'
+            icon={<BookOpenIconOutline className={navItemClass} />}
+          >
+            Documentation
+          </SideNavigationItem>
+          <SideNavigationItem
+            onClick={onAboutModalOpen}
+            icon={<InformationCircleIconOutline className={navItemClass} />}
+          >
+            About
+          </SideNavigationItem>
+        </SideNavigationList>
+      </SideNavigation>
+    </div>
   );
   return content;
 };

@@ -1,6 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { connect } from 'react-redux';
@@ -46,6 +45,7 @@ import { loadDashboardThunk } from '../dashboard/DashboardThunks';
 import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import NeoReportHelpModal from '../modal/ReportHelpModal';
+import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
 
 /**
  * This is the main application component for NeoDash.
@@ -98,7 +98,6 @@ const Application = ({
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
     <div ref={ref} style={{ display: 'flex' }}>
-      <CssBaseline />
       {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
       <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
       {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}

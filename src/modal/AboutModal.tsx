@@ -1,13 +1,6 @@
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import Badge from '@material-ui/core/Badge';
-import { Button } from '@material-ui/core';
-import BugReportIcon from '@material-ui/icons/BugReport';
+import { Button, Dialog } from '@neo4j-ndl/react';
+import { BookOpenIconOutline, BeakerIconOutline } from '@neo4j-ndl/react/icons';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
   const version = '2.2.3';
@@ -25,25 +18,15 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
 
   return (
     <div>
-      <Dialog maxWidth={'lg'} open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>
-          About NeoDash
-          <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <div
-            style={{ color: 'rgba(0, 0, 0, 0.84)' }}
-            class='MuiTypography-root MuiDialogContentText-root MuiTypography-body1 MuiTypography-colorTextSecondary'
-          >
+      <Dialog onClose={handleClose} open={open == true} aria-labelledby='form-dialog-title' size='large'>
+        <Dialog.Header>About NeoDash</Dialog.Header>
+        <Dialog.Content>
+          <div>
             NeoDash is a dashboard builder for the Neo4j graph database.
             <br />
             If you can write Cypher queries, you can build a dashboard in minutes.
             <hr></hr>
-            <h3 style={{ marginBottom: '5px' }}>Core Features</h3>
+            <h4>Core Features</h4>
             <ul>
               <li>
                 An editor to write and execute&nbsp;
@@ -58,16 +41,16 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
             </ul>
             No connectors or data pre-processing needed, it works directly with Neo4j!
             <hr></hr>
-            <h3 style={{ marginBottom: '5px' }}>Getting Started</h3>
+            <h4>Getting Started</h4>
             You will automatically start with an empty dashboard when starting up NeoDash for this first time.
             <br />
             Click the
             <strong>
-              (<LibraryBooksIcon style={{ paddingTop: '5px' }} fontSize='small' /> Documentation)
+              (<BookOpenIconOutline className='n-w-6 n-h-6' style={{ display: 'inline' }} /> Documentation)
             </strong>
             &nbsp;button to see some example queries and visualizations.
             <hr></hr>
-            <h3 style={{ marginBottom: '5px' }}>Extending NeoDash</h3>
+            <h4>Extending NeoDash</h4>
             NeoDash is built with React and&nbsp;
             <a target='_blank' href='https://github.com/adam-cowley/use-neo4j'>
               use-neo4j
@@ -87,7 +70,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
               project repository
             </a>
             .<hr></hr>
-            <h3 style={{ marginBottom: '5px' }}>Contact</h3>
+            <h4>Contact</h4>
             For suggestions, feature requests and other feedback: create an issue on the&nbsp;
             <a href='https://github.com/neo4j-labs/neodash'>GitHub repository</a>, or the&nbsp;
             <a
@@ -104,16 +87,9 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
             <table style={{ width: '100%' }}>
               <tr>
                 <td>
-                  <Button
-                    component='label'
-                    onClick={downloadDebugFile}
-                    style={{ backgroundColor: 'white' }}
-                    color='default'
-                    variant='contained'
-                    size='small'
-                    endIcon={<BugReportIcon />}
-                  >
+                  <Button onClick={downloadDebugFile} fill='outlined' color='neutral' size='small'>
                     Debug Report
+                    <BeakerIconOutline className='n-w-6 n-h-6' />
                   </Button>
                 </td>
                 <td>
@@ -122,7 +98,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
               </tr>
             </table>
           </div>
-        </DialogContent>
+        </Dialog.Content>
       </Dialog>
     </div>
   );

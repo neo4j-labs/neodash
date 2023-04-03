@@ -6,12 +6,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
-import { Grid, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import AssessmentIcon from '@material-ui/icons/Assessment';
+import { SideNavigationItem } from '@neo4j-ndl/react';
+import { ChartBarIconSolid } from '@neo4j-ndl/react/icons';
 
-export const NeoReportExamplesModal = ({ database, examples, extensions }) => {
+export const NeoReportExamplesModal = ({ database, examples, extensions, navItemClass }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -24,12 +26,9 @@ export const NeoReportExamplesModal = ({ database, examples, extensions }) => {
 
   return (
     <div>
-      <ListItem button onClick={handleClickOpen}>
-        <ListItemIcon>
-          <AssessmentIcon />
-        </ListItemIcon>
-        <ListItemText primary='Examples' />
-      </ListItem>
+      <SideNavigationItem onClick={handleClickOpen} icon={<ChartBarIconSolid className={navItemClass} />}>
+        Examples
+      </SideNavigationItem>
 
       {open ? (
         <Dialog maxWidth={'xl'} open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>

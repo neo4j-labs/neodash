@@ -6,13 +6,14 @@ import {
   generateClassDefinitionsBasedOnRules,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { downloadCSV } from '../ChartUtils';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import { IconButton } from '@neo4j-ndl/react';
+import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -149,9 +150,10 @@ const NeoTableChart = (props: ChartProps) => {
               downloadCSV(rows);
             }}
             aria-label='download csv'
-            style={{ bottom: '9px', left: '3px', position: 'absolute' }}
+            style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
+            clean
           >
-            <SaveAltIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></SaveAltIcon>
+            <CloudArrowDownIconOutline className='n-w-6 n-h-6' />
           </IconButton>
         </Tooltip>
       ) : (

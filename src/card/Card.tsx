@@ -16,7 +16,7 @@ import {
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
-import { debounce, Dialog, DialogContent } from '@material-ui/core';
+import { debounce } from '@material-ui/core';
 import {
   getDashboardIsEditable,
   getDatabase,
@@ -30,6 +30,7 @@ import { loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
+import { Dialog } from '@neo4j-ndl/react';
 
 const NeoCard = ({
   index, // index of the card.
@@ -118,7 +119,11 @@ const NeoCard = ({
 
   // TODO - get rid of some of the props-drilling here...
   const component = (
-    <div style={{ height: '100%' }} ref={observe}>
+    <div
+      style={{ height: '100%' }}
+      ref={observe}
+      className='bg-light-neutral-bg-weak overflow-hidden n-shadow-l4 border-2 border-light-neutral-border-strong min-w-max rounded-lg px-4 py-5 sm:p-6'
+    >
       {/* The front of the card, referred to as the 'view' */}
       <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
         <Card ref={ref} style={{ height: '100%' }}>
@@ -199,15 +204,8 @@ const NeoCard = ({
   // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
   if (expanded) {
     return (
-      <Dialog maxWidth={'xl'} ref={ref} open={expanded} aria-labelledby='form-dialog-title'>
-        <DialogContent
-          style={{
-            width: Math.min(1920, document.documentElement.clientWidth - 64),
-            height: document.documentElement.clientHeight,
-          }}
-        >
-          {component}
-        </DialogContent>
+      <Dialog size='large' open={expanded} aria-labelledby='form-dialog-title' style={{ maxWidth: '100%' }}>
+        <Dialog.Content style={{ height: document.documentElement.clientHeight }}>{component}</Dialog.Content>
       </Dialog>
     );
   }

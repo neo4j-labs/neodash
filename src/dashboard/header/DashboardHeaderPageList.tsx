@@ -76,7 +76,7 @@ export const NeoDashboardHeaderPageList = ({
   const content = (
     <Toolbar
       key={2}
-      style={{ zIndex: 1001, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
+      style={{ zIndex: 998, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
     >
       {!standalone ? (
         <div

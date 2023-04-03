@@ -1,20 +1,23 @@
 import React, { useEffect } from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import { Badge, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { Tooltip } from '@material-ui/core';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import ImageIcon from '@material-ui/icons/Image';
 import CloseIcon from '@material-ui/icons/Close';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
+
+import { IconButton } from '@neo4j-ndl/react';
+import {
+  DragIcon,
+  EllipsisVerticalIconOutline,
+  ArrowPathIconOutline,
+  ExpandIcon,
+  ShrinkIcon,
+  CameraIconSolid,
+  InformationCircleIconOutline,
+} from '@neo4j-ndl/react/icons';
 
 const NeoCardViewHeader = ({
   title,
@@ -71,10 +74,9 @@ const NeoCardViewHeader = ({
           <tr>
             {editable ? (
               <td>
-                <DragIndicatorIcon
-                  className='drag-handle'
-                  style={{ color: 'grey', cursor: 'pointer', marginLeft: '-10px', marginRight: '10px' }}
-                ></DragIndicatorIcon>
+                <IconButton clean grouped size='large' style={{ marginTop: '-8px' }}>
+                  <DragIcon className='n-w-6 n-h-6 drag-handle' />
+                </IconButton>
               </td>
             ) : (
               <></>
@@ -112,46 +114,46 @@ const NeoCardViewHeader = ({
   // TODO: all components like buttons should probably be seperate files
   const settingsButton = (
     <Tooltip title='Settings' aria-label='settings'>
-      <IconButton aria-label='settings' onClick={onToggleCardSettings}>
-        <MoreVertIcon />
+      <IconButton aria-label='settings' onClick={onToggleCardSettings} clean size='large'>
+        <EllipsisVerticalIconOutline className='n-w-6 n-h-6' />
       </IconButton>
     </Tooltip>
   );
 
   const refreshButton = (
     <Tooltip title='Refresh' aria-label='refresh'>
-      <IconButton aria-label='refresh' onClick={onManualRefreshCard}>
-        <RefreshIcon />
+      <IconButton aria-label='refresh' onClick={onManualRefreshCard} clean size='large'>
+        <ArrowPathIconOutline className='n-w-6 n-h-6' />
       </IconButton>
     </Tooltip>
   );
 
   const maximizeButton = (
     <Tooltip title='Maximize' aria-label='maximize'>
-      <IconButton aria-label='maximize' onClick={onToggleCardExpand}>
-        <FullscreenIcon />
+      <IconButton aria-label='maximize' onClick={onToggleCardExpand} clean size='large'>
+        <ExpandIcon className='n-w-6 n-h-6' />
       </IconButton>
     </Tooltip>
   );
 
   const unMaximizeButton = (
-    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand}>
-      <FullscreenExit />
+    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand} clean size='large'>
+      <ShrinkIcon className='n-w-6 n-h-6' />
     </IconButton>
   );
 
   const downloadImageButton = (
     <Tooltip title='Download as Image' aria-label='download'>
-      <IconButton onClick={onDownloadImage} aria-label='download csv'>
-        <ImageIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></ImageIcon>
+      <IconButton onClick={onDownloadImage} aria-label='download csv' clean size='large'>
+        <CameraIconSolid className='n-w-6 n-h-6' />
       </IconButton>
     </Tooltip>
   );
 
   const descriptionButton = (
     <Tooltip title='Details' aria-label='details'>
-      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details'>
-        <InfoOutlinedIcon />
+      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details' clean size='large'>
+        <InformationCircleIconOutline />
       </IconButton>
     </Tooltip>
   );

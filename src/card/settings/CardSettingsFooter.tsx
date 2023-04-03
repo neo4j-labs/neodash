@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
+import { FormGroup, Tooltip } from '@material-ui/core';
 import NeoSetting from '../../component/field/Setting';
 import {
   NeoCustomReportStyleModal,
   RULE_BASED_REPORT_CUSTOMIZATIONS,
 } from '../../extensions/styling/StyleRuleCreationModal';
-import TuneIcon from '@material-ui/icons/Tune';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
+import { IconButton, Switch } from '@neo4j-ndl/react';
+import { AdjustmentsHorizontalIconOutline } from '@neo4j-ndl/react/icons';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -124,11 +125,11 @@ const NeoCardSettingsFooter = ({
           <tr>
             <td>
               <FormGroup>
-                <FormControlLabel
-                  style={{ marginLeft: '5px', marginBottom: '10px' }}
-                  control={<Switch checked={reportSettingsOpen} onChange={onToggleReportSettings} color='default' />}
-                  labelPlacement='end'
-                  label={<div style={{ fontSize: '12px', color: 'grey' }}>Advanced settings</div>}
+                <Switch
+                  label='Advanced settings'
+                  checked={reportSettingsOpen}
+                  onChange={onToggleReportSettings}
+                  style={{ marginLeft: '5px' }}
                 />
               </FormGroup>
             </td>
@@ -136,14 +137,14 @@ const NeoCardSettingsFooter = ({
               <td>
                 <Tooltip title='Set rule-based styling' aria-label=''>
                   <IconButton
-                    size='small'
                     style={{ float: 'right', marginRight: '10px' }}
                     aria-label='custom styling'
-                    onClick={() => {
+                    onClick={(_) => {
                       setCustomReportStyleModalOpen(true); // Open the modal.
                     }}
+                    clean
                   >
-                    <TuneIcon></TuneIcon>
+                    <AdjustmentsHorizontalIconOutline className='ndl-icon n-w-6 n-h-6' />
                   </IconButton>
                 </Tooltip>
               </td>

@@ -7,18 +7,21 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
-import { Checkbox, Chip, FormControlLabel, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
+import { Checkbox, Chip, FormControlLabel, Tooltip } from '@material-ui/core';
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
+import { SideNavigationItem } from '@neo4j-ndl/react';
+import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
 
 const NeoExtensionsModal = ({
   extensions,
   setExtensionEnabled,
-  onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
+  onExtensionUnavailableTriggered,
+  navItemClass, // Action to take when the user tries to enable a disabled extension.
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -32,12 +35,13 @@ const NeoExtensionsModal = ({
 
   return (
     <div>
-      <ListItem button onClick={handleClickOpen} id='extensions-sidebar-button'>
-        <ListItemIcon>
-          <ExtensionIcon />
-        </ListItemIcon>
-        <ListItemText primary='Extensions' />
-      </ListItem>
+      <SideNavigationItem
+        id='extensions-sidebar-button'
+        onClick={handleClickOpen}
+        icon={<PuzzlePieceIconSolid className={navItemClass} />}
+      >
+        Extensions
+      </SideNavigationItem>
 
       {open ? (
         <Dialog maxWidth={'md'} open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>

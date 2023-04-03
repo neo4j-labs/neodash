@@ -31,13 +31,15 @@ import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { SELECTION_TYPES } from '../config/CardConfig';
+import { SideNavigationItem } from '@neo4j-ndl/react';
+import { ShareIconOutline } from '@neo4j-ndl/react/icons';
 
 // const shareBaseURL = "http://localhost:3000";
 const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
 const styles = {};
 
-export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j }) => {
+export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j, navItemClass }) => {
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
   const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
   const [loadFromFileModalOpen, setLoadFromFileModalOpen] = React.useState(false);
@@ -103,14 +105,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
 
   return (
     <div>
-      <ListItem button onClick={handleClickOpen}>
-        <ListItemIcon>
-          <IconButton style={{ padding: '0px' }}>
-            <ShareIcon />
-          </IconButton>
-        </ListItemIcon>
-        <ListItemText primary='Share' />
-      </ListItem>
+      <SideNavigationItem onClick={handleClickOpen} icon={<ShareIconOutline className={navItemClass} />}>
+        Share
+      </SideNavigationItem>
 
       <Dialog
         key={1}

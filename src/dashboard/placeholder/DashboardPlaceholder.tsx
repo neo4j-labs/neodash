@@ -1,6 +1,6 @@
-import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from '@material-ui/core';
+import { AppBar, Toolbar, InputBase } from '@material-ui/core';
 import React from 'react';
-import MenuIcon from '@material-ui/icons/Menu';
+import { LoadingSpinner } from '@neo4j-ndl/react';
 
 export const NeoDashboardPlaceholder = ({ connected }) => {
   const content = (
@@ -13,24 +13,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
           transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
         }}
       >
-        <Toolbar style={{ paddingRight: 24, minHeight: '64px', background: '#0B297D', zIndex: 1201 }}>
-          <IconButton
-            edge='start'
-            color='inherit'
-            aria-label='open drawer'
-            style={
-              open
-                ? {
-                    display: 'none',
-                  }
-                : {
-                    marginRight: 36,
-                    marginLeft: -19,
-                  }
-            }
-          >
-            <MenuIcon />
-          </IconButton>
+        <Toolbar style={{ paddingRight: 24, minHeight: '64px', zIndex: 1201 }} className='n-bg-primary-70'>
           <InputBase
             disabled
             id='center-aligned'
@@ -66,18 +49,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
           height: '100%',
         }}
       >
-        <Typography
-          variant='h2'
-          color='textSecondary'
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          {!connected ? <CircularProgress color='inherit' /> : <></>}
-        </Typography>
+        {!connected ? <LoadingSpinner size='large' className='centered' /> : <></>}
       </div>
     </div>
   );

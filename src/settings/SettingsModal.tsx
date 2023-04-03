@@ -7,11 +7,12 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Badge from '@material-ui/core/Badge';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import NeoSetting from '../component/field/Setting';
 import { DASHBOARD_SETTINGS } from '../config/DashboardConfig';
+import { SideNavigationItem } from '@neo4j-ndl/react';
+import { Cog6ToothIconOutline } from '@neo4j-ndl/react/icons';
 
-export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) => {
+export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, navItemClass }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -49,12 +50,9 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
 
   return (
     <div>
-      <ListItem button onClick={handleClickOpen}>
-        <ListItemIcon>
-          <SettingsIcon />
-        </ListItemIcon>
-        <ListItemText primary='Settings' />
-      </ListItem>
+      <SideNavigationItem onClick={handleClickOpen} icon={<Cog6ToothIconOutline className={navItemClass} />}>
+        Settings
+      </SideNavigationItem>
 
       <Dialog maxWidth={'lg'} open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>

@@ -8,6 +8,7 @@ import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import NeoField from '../../../component/field/Field';
 import { getReportTypes } from '../../../extensions/ExtensionUtils';
+import { TextInput, Dropdown } from '@neo4j-ndl/react';
 
 const NeoCardSettingsContentPropertySelect = ({
   type,
@@ -185,6 +186,7 @@ const NeoCardSettingsContentPropertySelect = ({
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
   const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Date Picker'];
+  const selectedType = settings.type ? settings.type : 'Node Property';
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
@@ -201,24 +203,18 @@ const NeoCardSettingsContentPropertySelect = ({
       <p style={{ color: 'grey', fontSize: 12, paddingLeft: '5px', border: '1px solid lightgrey', marginTop: '0px' }}>
         {reportTypes[type].helperText}
       </p>
-      <TextField
-        select={true}
-        autoFocus
+      <Dropdown
         id='type'
-        value={settings.type ? settings.type : 'Node Property'}
-        onChange={(e) => {
-          handleParameterTypeUpdate(e.target.value);
+        selectProps={{
+          onChange: (newValue) => newValue && handleParameterTypeUpdate(newValue.value),
+          options: parameterSelectTypes.map((option) => ({ label: option, value: option })),
+          value: { label: selectedType, value: selectedType },
         }}
         label='Selection Type'
-        type='text'
-        style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
-      >
-        {parameterSelectTypes.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
+        type='select'
+        fluid
+        autoFocus
+      />
 
       {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
         <NeoField

@@ -31,6 +31,8 @@ import {
 } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import { SideNavigationItem } from '@neo4j-ndl/react';
+import { CloudArrowUpIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -44,6 +46,7 @@ export const NeoLoadModal = ({
   loadDatabaseListFromNeo4j,
   loadDashboardFromNeo4j,
   loadDashboardListFromNeo4j,
+  navItemClass,
 }) => {
   const [loadModalOpen, setLoadModalOpen] = React.useState(false);
   const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
@@ -112,14 +115,9 @@ export const NeoLoadModal = ({
 
   return (
     <div>
-      <ListItem button onClick={handleClickOpen}>
-        <ListItemIcon>
-          <IconButton style={{ padding: '0px' }}>
-            <SystemUpdateAltIcon />
-          </IconButton>
-        </ListItemIcon>
-        <ListItemText primary='Load' />
-      </ListItem>
+      <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowUpIconOutline className={navItemClass} />}>
+        Load
+      </SideNavigationItem>
 
       <Dialog maxWidth={'lg'} open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>

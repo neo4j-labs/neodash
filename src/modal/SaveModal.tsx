@@ -13,9 +13,6 @@ import {
   FormControl,
   FormControlLabel,
   InputLabel,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   MenuItem,
   Select,
   TextareaAutosize,
@@ -31,6 +28,8 @@ import StorageIcon from '@material-ui/icons/Storage';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import { SideNavigationItem } from '@neo4j-ndl/react';
+import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -65,7 +64,13 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
   return value;
 };
 
-export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
+export const NeoSaveModal = ({
+  dashboard,
+  connection,
+  saveDashboardToNeo4j,
+  loadDatabaseListFromNeo4j,
+  navItemClass,
+}) => {
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
@@ -106,14 +111,9 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
 
   return (
     <div>
-      <ListItem button onClick={handleClickOpen}>
-        <ListItemIcon>
-          <IconButton style={{ padding: '0px' }}>
-            <SaveIcon />
-          </IconButton>
-        </ListItemIcon>
-        <ListItemText primary='Save' />
-      </ListItem>
+      <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowDownIconOutline className={navItemClass} />}>
+        Save
+      </SideNavigationItem>
 
       <Dialog maxWidth={'lg'} open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>
