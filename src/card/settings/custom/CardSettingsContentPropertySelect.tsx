@@ -230,7 +230,7 @@ const NeoCardSettingsContentPropertySelect = ({
           </MenuItem>
         ))}
       </TextField>
-
+      <br />
       {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
         <NeoField
           label={'Name'}
@@ -282,7 +282,9 @@ const NeoCardSettingsContentPropertySelect = ({
                 marginTop: '0px',
               }}
             >
-              {reportTypes[type] && reportTypes[type].helperText}
+              {
+                'Specify a query that takes a parameter $input (the user typed text) and return a number of rows with a field called `value` (the suggestions).'
+              }
             </p>
           </div>
         </>
