@@ -25,7 +25,7 @@ export enum QueryStatus {
  * @param queryTimeLimit - maximum query time in seconds.
  * @returns
  */
-export function runCypherQuery(
+export async function runCypherQuery(
   driver,
   database = '',
   query = '',
@@ -70,7 +70,7 @@ export function runCypherQuery(
     }
   }
 
-  transaction
+  await transaction
     .run(query, parameters)
     .then((res) => {
       // @ts-ignore

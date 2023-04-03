@@ -11,7 +11,7 @@ async function consoleLogAsync(message: string, other?: any) {
 }
 
 async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
-  runCypherQuery(
+  await runCypherQuery(
     driver,
     database,
     query,
@@ -73,7 +73,7 @@ export async function runWorkflow(
     };
 
     results.push({ records: [], status: STEP_STATUS.RUNNING });
-    let {query} = workflow.steps[index];
+    let { query } = workflow.steps[index];
 
     await runWorkflowStep(driver, database, query, setStatus, setRecords);
     // Added sleep to prevent strange refresh on main screen
