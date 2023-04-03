@@ -77,8 +77,7 @@ EXTENSIONS[WORKFLOWS_EXTENSION_NAME] = {
   reducerPrefix: WORKFLOWS_ACTION_PREFIX,
   reducerObject: workflowReducer,
   drawerButton: NeoWorkflowDrawerButton,
-  description:
-    'cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese cheese.',
+  description: 'An extension to create, manage, and run workflows consisting of Cypher queries.',
   link: 'https://neo4j.com/professional-services/',
 };
 

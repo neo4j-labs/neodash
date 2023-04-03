@@ -13,7 +13,7 @@ import { PlayArrow } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { NeoWorkflowRunnerModal } from './WorkflowRunnerModal';
+import NeoWorkflowRunnerModal from './WorkflowRunnerModal';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { deleteWorkflow } from './stateManagement/WorkflowActions';
 const styles = {};
@@ -131,8 +131,8 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
           </Button>
         </DialogContent>
       </Dialog>
-      <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={index}></NeoWorkflowEditorModal>
-      <NeoWorkflowRunnerModal open={runnerOpen} setOpen={setRunnerOpen} workflow={undefined} />
+      <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={index} />
+      <NeoWorkflowRunnerModal open={runnerOpen} setOpen={setRunnerOpen} index={index} />
     </>
   );
 };

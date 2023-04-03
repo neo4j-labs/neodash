@@ -14,6 +14,6 @@ export const WORKFLOW_STEPS = {
     type: 'Centrality',
     description:
       'The PageRank algorithm measures the importance of each node within the graph, based on the number incoming relationships and the importance of the corresponding source nodes. The underlying assumption roughly speaking is that a page is only as important as the pages that link to it.',
-    query: 'RETURN true',
+    query: 'UNWIND RANGE(1,10000) as X \n WITH X as Quack \n RETURN collect(Quack)',
   },
 };

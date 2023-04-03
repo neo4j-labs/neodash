@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -17,6 +17,66 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import LoopIcon from '@material-ui/icons/Loop';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { getWorkflow } from './stateManagement/WorkflowSelectors';
+import { TextareaAutosize } from '@material-ui/core';
+import { runWorkflow } from './util/WorkflowRunner';
+
+const getCompleteIcon = (flipped) => {
+  return (
+    <CheckCircleIcon
+      style={{
+        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
+        color: '#00aa00',
+      }}
+    />
+  );
+};
+
+const getRunningIcon = () => {
+  return (
+    <LoopIcon
+      color='disabled'
+      style={{
+        transformOrigin: '50% 50%',
+        transform: 'none',
+        animation: 'MuiCircularProgress-keyframes-circular-rotate 1.4s linear infinite',
+      }}
+    />
+  );
+};
+
+const getWaitingIcon = (flipped) => {
+  return (
+    <TimerIcon
+      color='disabled'
+      style={{
+        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
+      }}
+    />
+  );
+};
+
+export const getCancelledIcon = (flipped) => {
+  return (
+    <CancelIcon
+      color='error'
+      style={{
+        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
+      }}
+    />
+  );
+};
+
+export const getErrorIcon = (flipped) => {
+  return (
+    <CancelIcon
+      color='disabled'
+      style={{
+        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
+      }}
+    />
+  );
+};
 
 const Accordion = withStyles({
   root: {
@@ -61,11 +121,46 @@ const AccordionDetails = withStyles((theme) => ({
 
 const styles = {};
 
-export const NeoWorkflowRunnerModal = ({ open, setOpen, workflow }) => {
-  const [expanded, setExpanded] = React.useState<string | false>(false);
+enum STEP_STATUS {
+  WAITING,
+  RUNNING,
+  ERROR,
+  COMPLETE,
+  CANCELLED,
+}
+
+export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow }) => {
+  const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
+  const [workflowStatus, setWorkflowStatus] = React.useState([]);
+
+  // Reset query runner when the screen is opened or the workflow is changed.
+  useEffect(() => {
+    setWorkflowStatus(workflow.steps.map((_) => STEP_STATUS.WAITING));
+
+    if (open == true) {
+      // trigger workflow runner
+      runWorkflow(workflow, workflowStatus, setWorkflowStatus);
+    }
+  }, [workflow, open]);
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<any>, newExpanded: boolean) => {
-    setExpanded(newExpanded ? panel : false);
+    setExpanded(newExpanded ? panel : undefined);
+  };
+
+  const getExpandIcon = (item, expanded) => {
+    if (workflowStatus[index] == STEP_STATUS.COMPLETE) {
+      return getCompleteIcon(item == expanded);
+    }
+    if (workflowStatus[index] == STEP_STATUS.RUNNING) {
+      return getRunningIcon();
+    }
+    if (workflowStatus[index] == STEP_STATUS.WAITING) {
+      return getWaitingIcon(item == expanded);
+    }
+    if (workflowStatus[index] == STEP_STATUS.CANCELLED) {
+      return getCancelledIcon(item == expanded);
+    }
+    return getErrorIcon(item == expanded);
   };
 
   return (
@@ -73,13 +168,13 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, workflow }) => {
       maxWidth={'lg'}
       open={open == true}
       onClose={() => {
-        alert(`warning here if running - are you sure?${workflow}`);
+        alert(`warning here if running - are you sure?${index}`);
         setOpen(false);
       }}
       aria-labelledby='form-dialog-title'
     >
       <DialogTitle id='form-dialog-title'>
-        Running 'My Workflow'
+        Running '{workflow.name}'
         <IconButton
           onClick={() => {
             alert('warning here if running - are you sure?');
@@ -95,106 +190,41 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, workflow }) => {
       <DialogContent style={{ width: '550px' }}>
         <DialogContentText>
           <div>
-            <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-              <AccordionSummary
-                aria-controls='panel1d-content'
-                id='panel1d-header'
-                expandIcon={
-                  <CheckCircleIcon
-                    style={{
-                      transform: expanded === 'panel1' ? 'rotate(180deg)' : 'rotate(0deg)',
-                      color: '#00aa00',
-                    }}
-                  />
-                }
-              >
-                <Typography>PageRank</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                  malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-              <AccordionSummary
-                aria-controls='panel2d-content'
-                id='panel2d-header'
-                expandIcon={
-                  <LoopIcon
-                    color='disabled'
-                    style={{
-                      transformOrigin: '50% 50%',
-                      transform: 'none',
-                      animation: 'MuiCircularProgress-keyframes-circular-rotate 1.4s linear infinite',
-                    }}
-                  />
-                }
-              >
-                <Typography>Shortest Path</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                  malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion square expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-              <AccordionSummary
-                aria-controls='panel3d-content'
-                id='panel3d-header'
-                expandIcon={
-                  <TimerIcon
-                    color='disabled'
-                    style={{
-                      transform: expanded === 'panel3' ? 'rotate(180deg)' : 'rotate(0deg)',
-                    }}
-                  />
-                }
-              >
-                <Typography>Betweenness Centrality</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                  malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion square expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
-              <AccordionSummary
-                aria-controls='panel4d-content'
-                id='panel4d-header'
-                expandIcon={
-                  <CancelIcon
-                    color='error'
-                    style={{
-                      transform: expanded === 'panel4' ? 'rotate(180deg)' : 'rotate(0deg)',
-                    }}
-                  />
-                }
-              >
-                <Typography>Betweenness Centrality</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                  malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
+            {workflow.steps &&
+              workflow.steps.map((step, index) => {
+                return (
+                  <Accordion square expanded={expanded === `panel${  index}`} onChange={handleChange(`panel${  index}`)}>
+                    <AccordionSummary
+                      aria-controls='panel1d-content'
+                      id={`panel${  index}`}
+                      expandIcon={getExpandIcon(`panel${  index}`, expanded)}
+                    >
+                      <Typography>{step.name}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <TextareaAutosize
+                        style={{ width: '100%', height: '80px !important', border: '1px solid lightgray' }}
+                        maxRows={1}
+                        minRows={1}
+                        className={'textinput-linenumbers'}
+                        value={step.query}
+                        aria-label=''
+                        placeholder='Your dashboard JSON should show here'
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
           </div>
         </DialogContentText>
       </DialogContent>
     </Dialog>
   );
 };
-const mapStateToProps = () => ({});
+const mapStateToProps = (state, ownProps) => ({
+  workflow: getWorkflow(state, ownProps.index),
+});
+
 const mapDispatchToProps = () => ({});
+
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowRunnerModal));
