@@ -38,7 +38,6 @@ const getRunningIcon = () => {
       color='disabled'
       style={{
         transformOrigin: '50% 50%',
-        transform: 'none',
         animation: 'MuiCircularProgress-keyframes-circular-rotate 1.4s linear infinite',
       }}
     />
@@ -121,7 +120,7 @@ const AccordionDetails = withStyles((theme) => ({
 
 const styles = {};
 
-enum STEP_STATUS {
+export enum STEP_STATUS {
   WAITING,
   RUNNING,
   ERROR,
@@ -147,7 +146,7 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow }) => {
     setExpanded(newExpanded ? panel : undefined);
   };
 
-  const getExpandIcon = (item, expanded) => {
+  const getExpandIcon = (index, item, expanded) => {
     if (workflowStatus[index] == STEP_STATUS.COMPLETE) {
       return getCompleteIcon(item == expanded);
     }
@@ -193,11 +192,11 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow }) => {
             {workflow.steps &&
               workflow.steps.map((step, index) => {
                 return (
-                  <Accordion square expanded={expanded === `panel${  index}`} onChange={handleChange(`panel${  index}`)}>
+                  <Accordion square expanded={expanded === `panel${index}`} onChange={handleChange(`panel${index}`)}>
                     <AccordionSummary
                       aria-controls='panel1d-content'
-                      id={`panel${  index}`}
-                      expandIcon={getExpandIcon(`panel${  index}`, expanded)}
+                      id={`panel${index}`}
+                      expandIcon={getExpandIcon(index, `panel${index}`, expanded)}
                     >
                       <Typography>{step.name}</Typography>
                     </AccordionSummary>
