@@ -18,49 +18,34 @@ import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { deleteWorkflow } from './stateManagement/WorkflowActions';
 const styles = {};
 
-// Temporary list of hardcoded workflows
-const workflows = [
-  {
-    name: 'My Workflow',
-    steps: [
-      {
-        key: 'pageRank',
-        name: 'PageRank',
-        query: 'RETURN false',
-        description: '...',
-      },
-    ],
-  },
-  {
-    name: 'My Workflow #2',
-    steps: [],
-  },
-];
-
 export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkflow }) => {
   const [editorOpen, setEditorOpen] = React.useState(false);
+  // The index of the selected workflow
+  const [index, setIndex] = React.useState(0);
   const [runnerOpen, setRunnerOpen] = React.useState(false);
   const [rows, setRows] = React.useState([]);
 
   // TODO: continue binding data to the UI
   useEffect(() => {
     let tmp = workflowsList.map((workflow, index) => {
-      return { id: index, ...workflow };
+      return { id: index, name: workflow.name, stepCount: workflow.steps.length };
     });
     setRows(tmp);
-  }, [workflowsList]);
+  }, [JSON.stringify(workflowsList)]);
 
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
-    { field: 'name', headerName: 'Name', width: 310 },
+    { field: 'name', headerName: 'Name', width: 210 },
+    { field: 'stepCount', headerName: 'Steps', width: 100 },
     {
       field: 'actions',
       headerName: 'Actions',
-      renderCell: () => {
+      renderCell: (row) => {
         return (
           <div>
             <IconButton
               onClick={() => {
+                setIndex(row.id);
                 setRunnerOpen(true);
               }}
               style={{ padding: '6px' }}
@@ -71,6 +56,7 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
             </IconButton>
             <IconButton
               onClick={() => {
+                setIndex(row.id);
                 setEditorOpen(true);
               }}
               style={{ padding: '6px' }}
@@ -81,7 +67,7 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
             </IconButton>
             <IconButton
               onClick={() => {
-                deleteWorkflow(0);
+                deleteWorkflow(row.id);
               }}
               style={{ padding: '6px' }}
             >
@@ -124,7 +110,6 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
             <DataGrid
               rows={rows}
               columns={columns}
-              getRowHeight={() => 'auto'}
               pageSize={5}
               sx={{ [`& .${gridClasses.cell}`]: { py: 1 } }}
               rowsPerPageOptions={[5]}
@@ -134,6 +119,7 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
           </div>
           <Button
             onClick={() => {
+              setIndex(workflowsList.length);
               setEditorOpen(true);
             }}
             style={{ float: 'right', backgroundColor: 'white', marginBottom: 10 }}
@@ -145,7 +131,7 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
           </Button>
         </DialogContent>
       </Dialog>
-      <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={0}></NeoWorkflowEditorModal>
+      <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={index}></NeoWorkflowEditorModal>
       <NeoWorkflowRunnerModal open={runnerOpen} setOpen={setRunnerOpen} workflow={undefined} />
     </>
   );

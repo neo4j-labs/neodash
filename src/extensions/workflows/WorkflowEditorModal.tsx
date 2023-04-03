@@ -1,5 +1,5 @@
 // todo
-import React from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -42,6 +42,12 @@ export const NeoWorkflowEditorModal = ({
 }) => {
   const [steps, setSteps] = React.useState(workflow.steps ? workflow.steps : []);
   const [name, setName] = React.useState(workflow.name ? workflow.name : 'My Workflow');
+
+  useEffect(() => {
+    setName(workflow.name ? workflow.name : 'My Workflow');
+    setSteps(workflow.steps ? workflow.steps : []);
+  }, [index]);
+
   const handleSave = () => {
     if (Object.keys(workflow).length > 0) {
       updateWorkflowSteps(index, steps);

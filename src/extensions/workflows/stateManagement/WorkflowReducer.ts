@@ -41,10 +41,12 @@ export const workflowReducer = (state = initialState, action: { type: any; paylo
     }
     case DELETE_WORKFLOW: {
       const { index } = payload;
+      const newWorkflowsList = [...state.workflowsList];
+      newWorkflowsList.splice(index, 1);
       let newState = {
         ...state,
+        workflowsList: newWorkflowsList,
       };
-      newState.workflowsList.splice(index, 1);
       return newState;
     }
     default: {
