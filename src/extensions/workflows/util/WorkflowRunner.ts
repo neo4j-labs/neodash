@@ -1,5 +1,3 @@
-import React, { useContext } from 'react';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { runCypherQuery } from '../../../report/ReportQueryRunner';
 import { STEP_STATUS } from '../NeoWorkflowRunnerModal';
 
@@ -10,7 +8,7 @@ async function sleep(msec) {
 async function consoleLogAsync(message: string, other?: any) {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));
 }
-
+// TODO: detach runCypherQuery method from here and define another method for the workflows
 async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
   await runCypherQuery(
     driver,
@@ -31,7 +29,6 @@ async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
     1000
   );
 }
-
 /**
  * Runs a workflow and calls back whenever the state is updated...
  * @param driver
@@ -44,7 +41,7 @@ async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
  * @param setIsRunning
  * @param updateWorkflowStepStatus Callback to set the status of the single step in the workflow
  */
-export async function runWorkflow(
+export function runWorkflow(
   driver,
   database,
   workflow,
@@ -55,42 +52,64 @@ export async function runWorkflow(
   setIsRunning,
   updateWorkflowStepStatus
 ) {
-  const results: any[] = [];
+  let stop = false;
 
-  const setWorkflowStatusForStep = (stepIndex, status) => {
-    workflowStatus[stepIndex] = status;
-    setWorkflowStatus([...workflowStatus]);
-    updateWorkflowStepStatus(workflowIndex, stepIndex, status);
-  };
+  function abort() {
+    stop = true;
+  }
 
   function handleEnd() {
     setIsRunning(false);
   }
 
-  for (let index = 0; index < workflow.steps.length; index++) {
-    const setRecords = (records) => {
-      results[index].records = records;
+  async function run() {
+    const results: any[] = [];
+
+    const setWorkflowStatusForStep = (stepIndex, status) => {
+      workflowStatus[stepIndex] = status;
+      setWorkflowStatus([...workflowStatus]);
+      updateWorkflowStepStatus(workflowIndex, stepIndex, status);
     };
 
-    const setStatus = (status) => {
-      let possiblePositiveStatus = [5, 6];
-      let newStatus = STEP_STATUS.ERROR;
-      // TODO: manage correcty status attachment
-      if (possiblePositiveStatus.includes(status)) {
-        newStatus = STEP_STATUS.COMPLETE;
+    for (let index = 0; index < workflow.steps.length; index++) {
+      try {
+        if (stop) {
+          throw new Error('Stopped by UI');
+        }
+        const setRecords = (records) => {
+          results[index].records = records;
+        };
+
+        const setStatus = (status) => {
+          let possiblePositiveStatus = [5, 6];
+          let newStatus = STEP_STATUS.ERROR;
+          // TODO: manage correcty status attachment
+          if (possiblePositiveStatus.includes(status)) {
+            newStatus = STEP_STATUS.COMPLETE;
+          }
+          results[index].status = newStatus;
+          setWorkflowStatusForStep(index, newStatus);
+        };
+
+        setWorkflowStatusForStep(index, STEP_STATUS.RUNNING);
+        results.push({ records: [], status: STEP_STATUS.RUNNING });
+        let { query } = workflow.steps[index];
+
+        await runWorkflowStep(driver, database, query, setStatus, setRecords);
+
+        // Added sleep to prevent strange refresh on main screen
+        await sleep(10);
+      } catch (e) {
+        await consoleLogAsync('Error while running a workflow:', e);
+        handleEnd();
+        break;
       }
-      results[index].status = newStatus;
-      setWorkflowStatusForStep(index, newStatus);
-    };
-
-    setWorkflowStatusForStep(index, STEP_STATUS.RUNNING);
-    results.push({ records: [], status: STEP_STATUS.RUNNING });
-    let { query } = workflow.steps[index];
-
-    await runWorkflowStep(driver, database, query, setStatus, setRecords);
-
-    // Added sleep to prevent strange refresh on main screen
-    await sleep(10);
+    }
+    handleEnd();
   }
-  handleEnd();
+
+  return {
+    promise: run(),
+    abort: abort,
+  };
 }

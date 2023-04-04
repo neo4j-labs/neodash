@@ -7,9 +7,12 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { runWorkflow } from './util/WorkflowRunner';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { updateWorkflowStepStatus } from './stateManagement/WorkflowActions';
-import { STEP_STATUS } from './NeoWorkflowRunnerModal';
 
-// TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
+/**
+ * Component that has the responsiblity to run Cypher workflows
+ * @param workflowsList List of currently defined workflows stored in the state
+ * @param updateWorkflowStepStatus Action to change the status of a step
+ */
 const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) => {
   const [open, setOpen] = React.useState(false);
   const [isRunning, setIsRunning] = React.useState(false);
@@ -17,7 +20,8 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
   const [index, setIndex] = React.useState(-1);
   const [runnerModalIsOpen, setRunnerModalIsOpen] = React.useState(false);
   const [results, setResults] = React.useState([]);
-
+  // Object that contains the information regarding the current run
+  const [currentRun, setCurrentRun] = React.useState({});
   // TODO: Attach correctly
   const [database, setDatabase] = React.useState('neo4j');
   const handleClick = () => {
@@ -25,14 +29,16 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
   };
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
-  // Setting the current workflow to run
+  // Effect to trigger a workflow run
   useEffect(() => {
     if (index >= 0 && runnerModalIsOpen) {
       let workflow = workflowsList[index];
 
-      // trigger workflow runner
+      // Keeping the fact that is running, to block some buttons on the UI
       setIsRunning(true);
-      runWorkflow(
+
+      // Inside the run now there is the object to stop it (now it will only stop after the end of a step, we need to understand how to stop completely)
+      let run = runWorkflow(
         driver,
         database,
         workflow,
@@ -43,9 +49,11 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
         setIsRunning,
         updateWorkflowStepStatus
       );
+      setCurrentRun(run);
     }
   }, [index, runnerModalIsOpen]);
 
+  // Button that will show in the Drawer
   const button = (
     <div>
       <ListItem button onClick={handleClick} id='workflows-sidebar-button'>
@@ -71,9 +79,7 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
           runnerModalIsOpen={runnerModalIsOpen}
           setRunnerModalIsOpen={setRunnerModalIsOpen}
           results={results}
-        >
-          {' '}
-        </NeoWorkflowListModal>
+        ></NeoWorkflowListModal>
       ) : (
         <></>
       )}

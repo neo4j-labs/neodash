@@ -155,6 +155,7 @@ export const NeoWorkflowListModal = ({
     </>
   );
 };
+
 const mapStateToProps = (state) => ({
   workflowsList: getWorkflowsList(state),
 });
