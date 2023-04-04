@@ -146,7 +146,8 @@ export const NeoReport = ({
     }
   }, [lastRunTimestamp]);
 
-  // Define query callback to allow reports to get extra data on interactions.
+  // Define query callback to allow reports to get extra data on interactions./
+  // Can retrieve a maximum of 1000 rows at a time.
   const queryCallback = useCallback(
     (query, parameters, setRecords) => {
       runCypherQuery(
@@ -154,7 +155,7 @@ export const NeoReport = ({
         database,
         query,
         parameters,
-        rowLimit,
+        1000,
         (status) => {
           status == QueryStatus.NO_DATA ? setRecords([]) : null;
         },

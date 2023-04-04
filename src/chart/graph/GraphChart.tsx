@@ -45,7 +45,10 @@ const NeoGraphChart = (props: ChartProps) => {
   const handleEntityRightClick = (item, event) => {
     setSelectedEntity(item);
     setContextMenuOpen(true);
-    setClickPosition({ x: event.offsetX, y: event.offsetY });
+    setClickPosition({
+      x: event.offsetX === 0 ? event.layerX : event.offsetX,
+      y: event.offsetY === 0 ? event.layerY : event.offsetY,
+    });
   };
   const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
   const [inspectModalOpen, setInspectModalOpen] = useState(false);
