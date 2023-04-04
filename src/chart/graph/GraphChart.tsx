@@ -14,6 +14,7 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/GraphUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
+import { IconButtonArray } from '@neo4j-ndl/react';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -178,9 +179,15 @@ const NeoGraphChart = (props: ChartProps) => {
   return (
     <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
-        <NeoGraphChartFitViewButton {...chartProps} />
-        {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
-        {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        <IconButtonArray
+          floating
+          orientation='horizontal'
+          style={{ position: 'absolute', bottom: '15px', right: '15px', zIndex: 50 }}
+        >
+          <NeoGraphChartFitViewButton {...chartProps} />
+          {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+          {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        </IconButtonArray>
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
       </NeoGraphChartCanvas>

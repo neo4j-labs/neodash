@@ -1,8 +1,9 @@
 import React from 'react';
-import { CardActions, Checkbox, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { CardActions, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../../config/CardConfig';
+import { Checkbox, Dropdown } from '@neo4j-ndl/react';
 
 const NeoCardViewFooter = ({
   fields,
@@ -27,7 +28,12 @@ const NeoCardViewFooter = ({
   }
   return (
     <CardActions
-      style={{ position: 'relative', paddingLeft: '15px', marginTop: '-5px', overflowX: 'scroll' }}
+      style={{
+        position: 'relative',
+        paddingLeft: '15px',
+        marginTop: selectableFields[selectables[0]].type == SELECTION_TYPES.NODE_PROPERTIES ? '-5px' : '-18px',
+        overflowX: 'scroll',
+      }}
       disableSpacing
     >
       {selectables.map((selectable, index) => {
@@ -99,40 +105,33 @@ const NeoCardViewFooter = ({
             const fieldsToRender = selectionIsMandatory ? sortedFields : sortedFields.concat(['(none)']);
             return (
               <FormControl key={index}>
-                <InputLabel id={selectable}>{selectableFields[selectable].label}</InputLabel>
-                <Select
-                  labelId={selectable}
+                <Dropdown
                   id={selectable}
-                  multiple={selectableFields[selectable].multiple}
-                  style={{ minWidth: 120, marginRight: 20 }}
-                  onChange={(e) => onSelectionUpdate(selectable, e.target.value)}
-                  renderValue={(selected) => (Array.isArray(selected) ? selected.join(', ') : selected)}
-                  value={
-                    selection && selection[selectable]
-                      ? selectableFields[selectable].multiple && !Array.isArray(selection[selectable])
-                        ? [selection[selectable]]
-                        : selection[selectable]
-                      : selectableFields[selectable].multiple
-                      ? selection[selectable] && selection[selectable].length > 0
-                        ? selection[selectable][0]
-                        : []
-                      : '(no data)'
-                  }
-                >
-                  {/* Render choices */}
-                  {fieldsToRender.map((field) => {
-                    return (
-                      <MenuItem key={field} value={field}>
-                        {selectableFields[selectable].multiple && Array.isArray(selection[selectable]) ? (
-                          <Checkbox checked={selection[selectable].indexOf(field) > -1} />
-                        ) : (
-                          <></>
-                        )}
-                        {field}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
+                  label={selectableFields[selectable].label}
+                  type='select'
+                  selectProps={{
+                    onChange: (newValue) =>
+                      (newValue && selectableFields[selectable].multiple
+                        ? onSelectionUpdate(
+                            selectable,
+                            newValue.map((v) => v.value)
+                          )
+                        : onSelectionUpdate(selectable, newValue.value)),
+                    options: fieldsToRender.map((option) => ({ label: option, value: option })),
+                    value: selectableFields[selectable].multiple
+                      ? selection[selectable].map((sel) => ({ label: sel, value: sel }))
+                      : { label: selection[selectable], value: selection[selectable] },
+                    isMulti: selectableFields[selectable].multiple,
+                    menuPortalTarget: document.querySelector('body'),
+                  }}
+                  fluid
+                  style={{
+                    minWidth: selectableFields[selectable].multiple ? 170 : 120,
+                    marginRight: 20,
+                    display: 'inline-block',
+                  }}
+                  placeholder={selectableFields[selectable].multiple ? 'Select (multiple)' : 'Select'}
+                />
               </FormControl>
             );
           }

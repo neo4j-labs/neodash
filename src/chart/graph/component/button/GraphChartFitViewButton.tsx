@@ -1,20 +1,20 @@
 import React from 'react';
 import { Tooltip } from '@material-ui/core';
-import SettingsOverscanIcon from '@material-ui/icons/SettingsOverscan';
 import { GraphChartVisualizationProps } from '../../GraphChartVisualization';
+import { IconButton } from '@neo4j-ndl/react';
+import { FitToScreenIcon } from '@neo4j-ndl/react/icons';
 
 export const NeoGraphChartFitViewButton = (props: GraphChartVisualizationProps) => {
   return (
-    <Tooltip title='Fit graph to view.' aria-label=''>
-      <SettingsOverscanIcon
-        onClick={() => {
-          props.interactivity.zoomToFit();
-          throw `Not Implemented${props}`;
-        }}
-        style={{ fontSize: '1.3rem', opacity: 0.6, bottom: 11, right: 34, position: 'absolute', zIndex: 5 }}
-        color='disabled'
-        fontSize='small'
-      ></SettingsOverscanIcon>
-    </Tooltip>
+    <IconButton aria-label='fit graph to view' size='small' clean grouped>
+      <Tooltip title='Fit graph to view.'>
+        <FitToScreenIcon
+          onClick={() => {
+            props.interactivity.zoomToFit();
+            throw `Not Implemented${props}`;
+          }}
+        />
+      </Tooltip>
+    </IconButton>
   );
 };
