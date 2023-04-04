@@ -1,5 +1,6 @@
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
+import { Dropdown } from '@neo4j-ndl/react';
 
 const textFieldStyle = { width: '155px', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' };
 
@@ -7,7 +8,7 @@ const NeoField = ({
   label,
   value,
   style = textFieldStyle,
-  choices = [<div key={0}></div>],
+  choices = [],
   onChange,
   onClick = () => {},
   numeric = false,
@@ -19,7 +20,21 @@ const NeoField = ({
   multiline = false,
   placeholder = '',
 }) => {
-  return (
+  return select === true ? (
+    <Dropdown
+      label={label}
+      type='select'
+      selectProps={{
+        options: choices,
+        onChange: (newValue) => onChange(newValue.value),
+        value: value != null ? { label: value, value: value } : { label: defaultValue, value: defaultValue },
+      }}
+      style={style}
+      disabled={disabled}
+      helpText={helperText}
+      placeholder={placeholder}
+    ></Dropdown>
+  ) : (
     <TextField
       InputLabelProps={{
         shrink: true,

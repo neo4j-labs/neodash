@@ -1,5 +1,4 @@
 import React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
 import NeoField from './Field';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import NeoColorPicker from './ColorPicker';
@@ -7,7 +6,7 @@ import { SELECTION_TYPES } from '../../config/CardConfig';
 
 const generateListItem = (label, option) => {
   if (typeof option === 'boolean') {
-    return option ? 'on' : 'off';
+    return { label: option ? 'on' : 'off', value: option ? 'on' : 'off' };
   }
   if (label == 'Color Scheme' || label == 'Node Color Scheme') {
     const colorsFull = categoricalColorSchemes[option];
@@ -31,7 +30,14 @@ const generateListItem = (label, option) => {
       </div>
     );
   }
-  return `${option}`;
+  return { label: option, value: option };
+};
+
+const generateValue = (option) => {
+  if (typeof option === 'boolean') {
+    return option ? 'on' : 'off';
+  }
+  return option;
 };
 
 /**
@@ -129,14 +135,10 @@ const NeoSetting = ({
             disabled={disabled}
             helperText={helperText}
             key={label}
-            value={value}
-            defaultValue={defaultValue}
+            value={generateValue(value)}
+            defaultValue={generateValue(defaultValue)}
             style={style}
-            choices={choices.map((option) => (
-              <MenuItem key={option} value={option}>
-                {generateListItem(label, option)}
-              </MenuItem>
-            ))}
+            choices={choices.map((option) => generateListItem(label, option))}
             onClick={(val) => onClick(val)}
             onChange={(val) => onChange(val)}
           />
