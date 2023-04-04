@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -19,9 +19,6 @@ import LoopIcon from '@material-ui/icons/Loop';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { getWorkflow } from './stateManagement/WorkflowSelectors';
 import { TextareaAutosize } from '@material-ui/core';
-import { runWorkflow } from './util/WorkflowRunner';
-import { updateWorkflowStepStatus } from './stateManagement/WorkflowActions';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 
 const getCompleteIcon = (flipped) => {
   return (
@@ -130,38 +127,25 @@ export enum STEP_STATUS {
   CANCELLED,
 }
 
-export const NeoWorkflowRunnerModal = ({ open, setOpen, index, workflow, updateWorkflowStepStatus }) => {
-  const database = 'neo4j';
-
+export const NeoWorkflowRunnerModal = ({
+  open,
+  setOpen,
+  index,
+  isRunning,
+  workflowStatus,
+  setWorkflowStatus,
+  results,
+  workflow,
+}) => {
   const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
-  const [workflowStatus, setWorkflowStatus] = React.useState([]);
-  const [isRunning, setIsRunning] = React.useState(false);
-  const [results, setResults] = React.useState([]);
-  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
-  // Reset query runner when the screen is opened or the workflow is changed.
+  console.log(results);
+  // Refreshing correctly the state of each step while it runs
   useEffect(() => {
-    if (workflow && workflow.steps) {
-      console.log(workflow);
+    if (workflow && workflow.steps && !open && !isRunning) {
       setWorkflowStatus(workflow.steps.map((_) => STEP_STATUS.WAITING));
-
-      if (open == true) {
-        // trigger workflow runner
-        setIsRunning(true);
-        runWorkflow(
-          driver,
-          database,
-          workflow,
-          index,
-          workflowStatus,
-          setWorkflowStatus,
-          setResults,
-          setIsRunning,
-          updateWorkflowStepStatus
-        );
-      }
     }
-  }, [workflow, open]);
+  }, [open, isRunning]);
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<any>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : undefined);
@@ -248,8 +232,6 @@ const mapStateToProps = (state, ownProps) => ({
   workflow: getWorkflow(state, ownProps.index),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  updateWorkflowStepStatus: (index, stepIndex, status) => dispatch(updateWorkflowStepStatus(index, stepIndex, status)),
-});
+const mapDispatchToProps = () => ({});
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowRunnerModal));

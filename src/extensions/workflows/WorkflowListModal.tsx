@@ -13,18 +13,28 @@ import { PlayArrow } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import NeoWorkflowRunnerModal from './WorkflowRunnerModal';
+import NeoWorkflowRunnerModal from './NeoWorkflowRunnerModal';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { deleteWorkflow } from './stateManagement/WorkflowActions';
 const styles = {};
 
-export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkflow }) => {
+export const NeoWorkflowListModal = ({
+  open,
+  setOpen,
+  isRunning,
+  index,
+  setIndex,
+  workflowStatus,
+  setWorkflowStatus,
+  runnerModalIsOpen,
+  setRunnerModalIsOpen,
+  results,
+  workflowsList,
+  deleteWorkflow,
+}) => {
   const [editorOpen, setEditorOpen] = React.useState(false);
   // The index of the selected workflow
-  const [index, setIndex] = React.useState(0);
-  const [runnerOpen, setRunnerOpen] = React.useState(false);
   const [rows, setRows] = React.useState([]);
-
   // TODO: continue binding data to the UI
   useEffect(() => {
     let tmp = workflowsList.map((workflow, index) => {
@@ -45,9 +55,10 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
           <div>
             <IconButton
               onClick={() => {
+                setRunnerModalIsOpen(true);
                 setIndex(row.id);
-                setRunnerOpen(true);
               }}
+              disabled={isRunning}
               style={{ padding: '6px' }}
             >
               <Badge overlap='rectangular' badgeContent={''}>
@@ -132,7 +143,15 @@ export const NeoWorkflowListModal = ({ open, setOpen, workflowsList, deleteWorkf
         </DialogContent>
       </Dialog>
       <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={index} />
-      <NeoWorkflowRunnerModal open={runnerOpen} setOpen={setRunnerOpen} index={index} />
+      <NeoWorkflowRunnerModal
+        open={runnerModalIsOpen}
+        setOpen={setRunnerModalIsOpen}
+        index={index}
+        isRunning={isRunning}
+        workflowStatus={workflowStatus}
+        setWorkflowStatus={setWorkflowStatus}
+        results={results}
+      />
     </>
   );
 };
