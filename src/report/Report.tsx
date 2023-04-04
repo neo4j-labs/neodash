@@ -154,7 +154,7 @@ export const NeoReport = ({
         database,
         query,
         parameters,
-        rowLimit,
+        1000,
         (status) => {
           status == QueryStatus.NO_DATA ? setRecords([]) : null;
         },
