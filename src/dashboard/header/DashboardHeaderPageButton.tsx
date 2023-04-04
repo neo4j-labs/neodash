@@ -69,7 +69,7 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
             <XMarkIconOutline className='n-w-6 n-h-6' />
           </IconButton>
         ) : (
-          <IconButton style={{ opacity: 0 }} aria-label='move left' onClick={(_) => null} clean>
+          <IconButton style={{ opacity: 0 }} aria-label='move left' onClick={() => null} clean>
             <XMarkIconOutline className='n-w-6 n-h-6' />
           </IconButton>
         )}

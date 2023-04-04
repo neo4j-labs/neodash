@@ -990,7 +990,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.12.0":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.12.0", "@babel/runtime@^7.20.13":
   version "7.21.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.21.0.tgz#5b55c9d394e5fcf304909a8b00c07dc217b56673"
   integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
@@ -1058,6 +1058,16 @@
     "@codemirror/view" "^6.6.0"
     "@lezer/common" "^1.0.0"
 
+"@codemirror/autocomplete@^6.4.1":
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/@codemirror/autocomplete/-/autocomplete-6.4.2.tgz#938b25223bd21f97b2a6d85474643355f98b505b"
+  integrity sha512-8WE2xp+D0MpWEv5lZ6zPW1/tf4AGb358T5GWYiKEuCP8MvFfT3tH2mIF9Y2yr2e3KbHuSvsVhosiEyqCpiJhZQ==
+  dependencies:
+    "@codemirror/language" "^6.0.0"
+    "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.6.0"
+    "@lezer/common" "^1.0.0"
+
 "@codemirror/commands@^6.0.0", "@codemirror/commands@^6.1.2":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@codemirror/commands/-/commands-6.1.2.tgz#84fb7d170047c3aeb7b0047ace59510bb19208de"
@@ -1065,6 +1075,16 @@
   dependencies:
     "@codemirror/language" "^6.0.0"
     "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.0.0"
+    "@lezer/common" "^1.0.0"
+
+"@codemirror/commands@^6.2.1":
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/@codemirror/commands/-/commands-6.2.2.tgz#437d9ba275107dbc629f0bfa3b150e0e43f2a218"
+  integrity sha512-s9lPVW7TxXrI/7voZ+HmD/yiAlwAYn9PH5SUVSUhsxXHhv4yl5eZ3KLntSoTynfdgVYM0oIpccQEWRBQgmNZyw==
+  dependencies:
+    "@codemirror/language" "^6.0.0"
+    "@codemirror/state" "^6.2.0"
     "@codemirror/view" "^6.0.0"
     "@lezer/common" "^1.0.0"
 
@@ -1246,6 +1266,18 @@
     "@lezer/lr" "^1.0.0"
     style-mod "^4.0.0"
 
+"@codemirror/language@^6.6.0":
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/language/-/language-6.6.0.tgz#2204407174a38a68053715c19e28ad61f491779f"
+  integrity sha512-cwUd6lzt3MfNYOobdjf14ZkLbJcnv4WtndYaoBkbor/vF+rCNguMPK0IRtvZJG4dsWiaWPcK8x1VijhvSxnstg==
+  dependencies:
+    "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.0.0"
+    "@lezer/common" "^1.0.0"
+    "@lezer/highlight" "^1.0.0"
+    "@lezer/lr" "^1.0.0"
+    style-mod "^4.0.0"
+
 "@codemirror/legacy-modes@^6.1.0":
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/@codemirror/legacy-modes/-/legacy-modes-6.3.1.tgz#77ab3f3db1ce3e47aad7a5baac3a4b12844734a5"
@@ -1276,6 +1308,11 @@
   resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.1.4.tgz#2b654ae233ac4f41ee89ce095509ea35ecdf1031"
   integrity sha512-g+3OJuRylV5qsXuuhrc6Cvs1NQluNioepYMM2fhnpYkNk7NgX+j0AFuevKSVKzTDmDyt9+Puju+zPdHNECzCNQ==
 
+"@codemirror/state@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.2.0.tgz#a0fb08403ced8c2a68d1d0acee926bd20be922f2"
+  integrity sha512-69QXtcrsc3RYtOtd+GsvczJ319udtBf1PTrr2KbLWM/e2CXUPnh0Nz9AUo8WfhSQ7GeL8dPVNUmhQVgpmuaNGA==
+
 "@codemirror/view@^6.0.0", "@codemirror/view@^6.6.0":
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.7.0.tgz#37a9ffafcaab2a1aa90bb17a83e35fd9a7ef9efb"
@@ -1289,6 +1326,15 @@
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.7.1.tgz#370e95d6f001e7f5cadc459807974b4f0a6eb225"
   integrity sha512-kYtS+uqYw/q/0ytYxpkqE1JVuK5NsbmBklWYhwLFTKO9gVuTdh/kDEeZPKorbqHcJ+P+ucrhcsS1czVweOpT2g==
+  dependencies:
+    "@codemirror/state" "^6.1.4"
+    style-mod "^4.0.0"
+    w3c-keyname "^2.2.4"
+
+"@codemirror/view@^6.9.0":
+  version "6.9.3"
+  resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.9.3.tgz#4475dc0ff5d9a55f8144ad7484e7e17416861cce"
+  integrity sha512-BJ5mvEIhFM+SrNwc5X8pLIvMM9ffjkviVbxpg84Xk2OE8ZyKaEbId8kX+nAYEEso7+qnbwsXe1bkAHsasebMow==
   dependencies:
     "@codemirror/state" "^6.1.4"
     style-mod "^4.0.0"
@@ -2005,6 +2051,14 @@
     react-transition-group "^4.4.5"
     rifm "^0.12.1"
 
+"@neo4j-cypher/antlr4-browser@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4-browser/-/antlr4-browser-1.0.0.tgz#bc17fe0f112a21b9ae71d3708897980902ce27d5"
+  integrity sha512-nd9zDNVfJ1npMxqDfYvsuPidmBwQNgwnrii0EQPTc4JNL+YxCFiH3WmrOrxUl2VYcZVhtYZn/aAnkjIiiOBpeA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    antlr4 "4.10.1"
+
 "@neo4j-cypher/antlr4-browser@1.0.0-next.0":
   version "1.0.0-next.0"
   resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4-browser/-/antlr4-browser-1.0.0-next.0.tgz#0736b60d616082ac3ca843f99da5d72f797bfd7c"
@@ -2012,6 +2066,14 @@
   dependencies:
     "@babel/runtime" "^7.20.6"
     antlr4 "4.10.1"
+
+"@neo4j-cypher/antlr4@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4/-/antlr4-1.0.0.tgz#c00e0f23bb5696dda9e46d79011a06c5b763d2cb"
+  integrity sha512-IwHqZMf79Vf+0xNceCoA1cg3B+v90Q/2zngv7kJgEXViuJrDp7d9ocP62Mp28faJ0rrjoSzByj6XK8Sfxu+Iiw==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@neo4j-cypher/antlr4-browser" "1.0.0"
 
 "@neo4j-cypher/antlr4@1.0.0-next.2":
   version "1.0.0-next.2"
@@ -2037,6 +2099,22 @@
     "@lezer/highlight" "^1.1.3"
     "@neo4j-cypher/editor-support" "1.0.0-next.3"
 
+"@neo4j-cypher/codemirror@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/codemirror/-/codemirror-1.0.2.tgz#34721d5955d31822c9fe170984cd0a85f6b59f91"
+  integrity sha512-CVRWtw+dGZ1QIrsojCkbjuH6GTwu9wbcWyyawVfjiXmDs6GrmVd4KnTNMRvTdy15Xfc5abdm9rKw8qBxaEFm0w==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@codemirror/autocomplete" "^6.4.1"
+    "@codemirror/commands" "^6.2.1"
+    "@codemirror/language" "^6.6.0"
+    "@codemirror/lint" "^6.1.0"
+    "@codemirror/search" "^6.2.3"
+    "@codemirror/state" "^6.2.0"
+    "@codemirror/view" "^6.9.0"
+    "@lezer/highlight" "^1.1.3"
+    "@neo4j-cypher/editor-support" "1.0.1"
+
 "@neo4j-cypher/editor-support@1.0.0-next.3":
   version "1.0.0-next.3"
   resolved "https://registry.yarnpkg.com/@neo4j-cypher/editor-support/-/editor-support-1.0.0-next.3.tgz#a8c3c957124329befd2efd4556711a9e559c15dd"
@@ -2045,6 +2123,17 @@
     "@babel/runtime" "^7.20.6"
     "@neo4j-cypher/antlr4" "1.0.0-next.2"
     antlr4 "4.10.1"
+    fuse.js "^6.6.2"
+    lodash.find "^4.6.0"
+    lodash.includes "^4.3.0"
+
+"@neo4j-cypher/editor-support@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/editor-support/-/editor-support-1.0.1.tgz#1449a57d36fb72b30766bd096ccb1fa85477a4f4"
+  integrity sha512-3F4J1YezeNF9zTLdN/bYw+tXgfjGPSvPYHY3GhExTZSoPs4ngPpMpTCUnPDIas5mOs4OF3QlpTrdVjMqk8ryRw==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@neo4j-cypher/antlr4" "1.0.0"
     fuse.js "^6.6.2"
     lodash.find "^4.6.0"
     lodash.includes "^4.3.0"
@@ -2058,19 +2147,28 @@
     "@neo4j-cypher/codemirror" "1.0.0-next.20"
     codemirror "^6.0.1"
 
-"@neo4j-ndl/base@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-1.0.3.tgz#9c0c20feb54ec551f69f479388f6a81065d32228"
-  integrity sha512-FSrlj5swAWHaBSdVy/f6vsZEjbtCUyNEpp1Nr8tqsidYTn8UoL1qBJqi3EEg4AAz7IDKOODQmMwiyzra2JFgVw==
+"@neo4j-cypher/react-codemirror@^1.0.1":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/react-codemirror/-/react-codemirror-1.0.2.tgz#74d2162a20c7a1ac90e8e0898847f362e211559d"
+  integrity sha512-G+qpzxmjzp/PotSzusD5pbvIlCc1r5BcX6jSI2flNo/kt4HUoKiABydaJPdE7QzJnD+rUVhTs6AfVEcC1GbDBA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@neo4j-cypher/codemirror" "1.0.2"
 
-"@neo4j-ndl/react@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@neo4j-ndl/react/-/react-1.0.7.tgz#efa961b034cc6557c15d79cedea078f3b6617066"
-  integrity sha512-Mk2lMszwDcAoG2YX+GCBR3yloWdgjCpeSZEaNNm15NAplRumsxXP9FXsqCHI7wOptYiGMMBL+kg/mhQQB2wiDg==
+"@neo4j-ndl/base@1.1.0", "@neo4j-ndl/base@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-1.1.0.tgz#ea53ee590eb5f0ad4b68441182df7a8c95f4e526"
+  integrity sha512-kLluPa0evum51b4C4s9gbWrLN9LBsW2Yppm9vWkTfRxlC4KwhyMskhj8Wrt42Ggmq1N9lLkoUSJsHo1K8g2vlQ==
+
+"@neo4j-ndl/react@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-ndl/react/-/react-1.1.0.tgz#9b2eada4fc4f4d9059987c0cad5fdf0734d8a4e6"
+  integrity sha512-EF3jIsWAB0t+gqw0myftnGJRbb69ef6WgDfP0xrxUM9nFga4SHIam+kxEXMr7FMrPcvlOY/dFu5vuWkEUbA0GA==
   dependencies:
     "@floating-ui/react-dom-interactions" "^0.12.0"
     "@heroicons/react" "2.0.13"
-    "@neo4j-ndl/base" "^1.0.3"
+    "@neo4j-cypher/react-codemirror" "^1.0.1"
+    "@neo4j-ndl/base" "^1.1.0"
     "@react-aria/focus" "^3.10.1"
     "@tanstack/react-table" "^8.5.22"
     classnames "^2.3.1"

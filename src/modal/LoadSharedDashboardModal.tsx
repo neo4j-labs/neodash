@@ -60,7 +60,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
             Cancel
           </Button>
           <Button
-            onClick={(_) => {
+            onClick={() => {
               onConfirmLoadSharedDashboard();
             }}
             style={{ float: 'right', marginRight: '5px' }}

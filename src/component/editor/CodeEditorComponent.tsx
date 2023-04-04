@@ -10,8 +10,6 @@ const markdownExtensions = [
   }),
 ];
 
-import '@neo4j-cypher/codemirror/css/cypher-codemirror.css';
-
 const NeoCodeEditorComponent = ({
   value,
   onChange,
@@ -36,7 +34,7 @@ const NeoCodeEditorComponent = ({
 
   return (
     <div className={'autosize'} style={style}>
-      <CypherEditor {...editorProps} />
+      <CypherEditor className='ndl-cypher-editor' {...editorProps} />
     </div>
   );
 };

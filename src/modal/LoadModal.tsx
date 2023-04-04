@@ -82,7 +82,7 @@ export const NeoLoadModal = ({
       renderCell: (c) => {
         return (
           <Button
-            onClick={(_) => {
+            onClick={() => {
               loadDashboardFromNeo4j(driver, dashboardDatabase, c.id, handleDashboardLoadedFromNeo4j);
             }}
             style={{ float: 'right' }}
@@ -133,7 +133,7 @@ export const NeoLoadModal = ({
               <DatabaseAddCircleIcon className='n-w-6 n-h-6' />
             </Button>
             <Button
-              onClick={(_) => {
+              onClick={() => {
                 loadFromFile.current.click();
               }}
               fill='outlined'

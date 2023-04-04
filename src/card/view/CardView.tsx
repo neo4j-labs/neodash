@@ -181,7 +181,7 @@ const NeoCardView = ({
           <IconButton
             style={{ float: 'right', marginRight: '9px' }}
             aria-label='run'
-            onClick={(_) => {
+            onClick={() => {
               setActive(true);
             }}
             clean

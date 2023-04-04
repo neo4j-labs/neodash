@@ -94,11 +94,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onAboutModalOpen: (_) => dispatch(setAboutModalOpen(true)),
+  onAboutModalOpen: () => dispatch(setAboutModalOpen(true)),
   updateDashboardSetting: (setting, value) => {
     dispatch(updateDashboardSetting(setting, value));
   },
-  resetApplication: (_) => {
+  resetApplication: () => {
     dispatch(setWelcomeScreenOpen(true));
     dispatch(setConnected(false));
   },

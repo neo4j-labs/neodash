@@ -1,40 +1,21 @@
 import React, { useContext } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import {
-  DialogContentText,
-  Divider,
-  FormControl,
-  InputLabel,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Select,
-  TextareaAutosize,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { DialogContentText, Divider, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import StorageIcon from '@material-ui/icons/Storage';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import ShareIcon from '@material-ui/icons/Share';
 import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { SELECTION_TYPES } from '../config/CardConfig';
-import { SideNavigationItem } from '@neo4j-ndl/react';
-import { ShareIconOutline } from '@neo4j-ndl/react/icons';
+import { SideNavigationItem, Button, Dialog, Dropdown } from '@neo4j-ndl/react';
+import {
+  ShareIconOutline,
+  PlayIconSolid,
+  DocumentCheckIconOutline,
+  DatabaseAddCircleIcon,
+} from '@neo4j-ndl/react/icons';
 
-// const shareBaseURL = "http://localhost:3000";
 const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
 const styles = {};
@@ -90,16 +71,17 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               setShareType('database');
               setLoadFromNeo4jModalOpen(false);
             }}
-            style={{ float: 'right', backgroundColor: 'white' }}
-            variant='contained'
-            size='medium'
-            endIcon={<PlayArrow />}
+            style={{ float: 'right' }}
+            fill='outlined'
+            color='neutral'
+            floating
           >
             Select
+            <PlayIconSolid className='n-w-6 n-h-6' />
           </Button>
         );
       },
-      width: 120,
+      width: 130,
     },
   ];
 
@@ -111,42 +93,30 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
 
       <Dialog
         key={1}
-        maxWidth={'lg'}
+        size='large'
         open={shareModalOpen == true}
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
-          <ShareIcon
-            style={{
-              height: '30px',
-              paddingTop: '4px',
-              marginBottom: '-8px',
-              marginRight: '5px',
-              paddingBottom: '5px',
-            }}
+        <Dialog.Header id='form-dialog-title'>
+          <ShareIconOutline
+            className='n-w-6 n-h-6'
+            style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
           />
           Share Dashboard
-          <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent style={{ width: '1000px' }}>
-          <DialogContentText>
-            This window lets you create a temporary share link for your dashboard. Keep in mind that share links are not
-            intended as a way to publish your dashboard for users, see the&nbsp;
-            <a href='https://neo4j.com/labs/neodash/2.2/user-guide/publishing/'>documentation</a> for more on
-            publishing.
-            <br />
-            <hr />
-            <br />
-            Step 1: Select a dashboard to share.
-            <br />
-            <br />
+        </Dialog.Header>
+        <Dialog.Content>
+          This window lets you create a temporary share link for your dashboard. Keep in mind that share links are not
+          intended as a way to publish your dashboard for users, see the&nbsp;
+          <a href='https://neo4j.com/labs/neodash/2.2/user-guide/publishing/'>documentation</a> for more on publishing.
+          <br />
+          <hr />
+          <br />
+          Step 1: Select a dashboard to share.
+          <br />
+          <br />
+          <div style={{ marginBottom: '10px' }}>
             <Button
-              component='label'
               onClick={() => {
                 loadDashboardListFromNeo4j(driver, dashboardDatabase, (result) => {
                   setShareLink(null);
@@ -154,127 +124,121 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 });
                 setLoadFromNeo4jModalOpen(true);
               }}
-              style={{ marginBottom: '10px', backgroundColor: 'white' }}
-              color='default'
-              variant='contained'
-              size='medium'
-              endIcon={<StorageIcon />}
+              fill='outlined'
+              color='neutral'
+              floating
             >
-              Share From Neo4j
+              Share from Neo4j
+              <DatabaseAddCircleIcon className='n-w-6 n-h-6' />
             </Button>
             <Button
-              component='label'
               onClick={() => {
                 setLoadFromFileModalOpen(true);
               }}
-              style={{ marginBottom: '10px', marginLeft: '10px', backgroundColor: 'white' }}
-              color='default'
-              variant='contained'
-              size='medium'
-              endIcon={<PostAddIcon />}
+              fill='outlined'
+              color='neutral'
+              style={{ marginLeft: '10px' }}
+              floating
             >
-              Share a File
+              Share a file
+              <DocumentCheckIconOutline className='n-w-6 n-h-6' />
             </Button>
-            <br />
-            <b>{shareID ? `Selected dashboard: ${shareName}` : ''}</b>
-          </DialogContentText>
-          <Divider />
+          </div>
+          <b>{shareID ? `Selected dashboard: ${  shareName}` : ''}</b>
+          <hr />
           {shareID ? (
             <>
-              <DialogContentText>
-                <br />
-                Step 2: Configure sharing settings.
-                <br />
-                <br />
-                <NeoSetting
-                  key={'credentials'}
-                  name={'credentials'}
-                  value={shareConnectionDetails}
-                  type={SELECTION_TYPES.LIST}
-                  style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
-                  helperText={'Share the dashboard including your Neo4j credentials.'}
-                  label={'Include Connection Details'}
-                  defaultValue={'No'}
-                  choices={['Yes', 'No']}
-                  onChange={(e) => {
-                    if ((e == 'No') & (shareStandalone == 'Yes')) {
-                      return;
-                    }
-                    setShareLink(null);
-                    setShareConnectionDetails(e);
-                  }}
-                />
-                {shareLocalURL != shareBaseURL ? (
-                  <NeoSetting
-                    key={'standalone'}
-                    name={'standalone'}
-                    value={shareStandalone}
-                    style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
-                    type={SELECTION_TYPES.LIST}
-                    helperText={'Share the dashboard as a standalone webpage, without the NeoDash editor.'}
-                    label={'Standalone Dashboard'}
-                    defaultValue={'No'}
-                    choices={['Yes', 'No']}
-                    onChange={(e) => {
-                      setShareLink(null);
-                      setShareStandalone(e);
-                      if (e == 'Yes') {
-                        setShareConnectionDetails('Yes');
-                      }
-                    }}
-                  />
-                ) : (
-                  <></>
-                )}
-                <NeoSetting
-                  key={'selfHosted'}
-                  name={'selfHosted'}
-                  value={selfHosted}
-                  style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
-                  type={SELECTION_TYPES.LIST}
-                  helperText={
-                    'Share the dashboard using self Hosted Neodash, otherwise neodash.graphapp.io will be used'
+              {' '}
+              (
+              <br />
+              Step 2: Configure sharing settings.
+              <br />
+              <br />
+              <NeoSetting
+                key={'credentials'}
+                name={'credentials'}
+                value={shareConnectionDetails}
+                type={SELECTION_TYPES.LIST}
+                style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
+                helperText={'Share the dashboard including your Neo4j credentials.'}
+                label={'Include Connection Details'}
+                defaultValue={'No'}
+                choices={['Yes', 'No']}
+                onChange={(e) => {
+                  if ((e == 'No') & (shareStandalone == 'Yes')) {
+                    return;
                   }
-                  label={'Self Hosted Dashboard'}
+                  setShareLink(null);
+                  setShareConnectionDetails(e);
+                }}
+              />
+              {shareLocalURL != shareBaseURL ? (
+                <NeoSetting
+                  key={'standalone'}
+                  name={'standalone'}
+                  value={shareStandalone}
+                  style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
+                  type={SELECTION_TYPES.LIST}
+                  helperText={'Share the dashboard as a standalone webpage, without the NeoDash editor.'}
+                  label={'Standalone Dashboard'}
                   defaultValue={'No'}
                   choices={['Yes', 'No']}
                   onChange={(e) => {
                     setShareLink(null);
-                    setSelfHosted(e);
+                    setShareStandalone(e);
+                    if (e == 'Yes') {
+                      setShareConnectionDetails('Yes');
+                    }
                   }}
                 />
-                <Button
-                  component='label'
-                  onClick={() => {
-                    setShareLink(
-                      `${
-                        selfHosted == 'Yes' ? shareLocalURL : shareBaseURL
-                      }/?share&type=${shareType}&id=${encodeURIComponent(
-                        shareID
-                      )}&dashboardDatabase=${encodeURIComponent(dashboardDatabase)}${
-                        shareConnectionDetails == 'Yes'
-                          ? `&credentials=${encodeURIComponent(
-                              `${connection.protocol}://${connection.username}:${connection.password}@${connection.database}:${connection.url}:${connection.port}`
-                            )}`
-                          : ''
-                      }${shareStandalone == 'Yes' ? `&standalone=${shareStandalone}` : ''}`
-                    );
-                  }}
-                  style={{ marginBottom: '10px', backgroundColor: 'white' }}
-                  color='default'
-                  variant='contained'
-                  size='medium'
-                >
-                  Generate Link
-                </Button>
-              </DialogContentText>
-              <Divider />
+              ) : (
+                <></>
+              )}
+              <NeoSetting
+                key={'selfHosted'}
+                name={'selfHosted'}
+                value={selfHosted}
+                style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
+                type={SELECTION_TYPES.LIST}
+                helperText={'Share the dashboard using self Hosted Neodash, otherwise neodash.graphapp.io will be used'}
+                label={'Self Hosted Dashboard'}
+                defaultValue={'No'}
+                choices={['Yes', 'No']}
+                onChange={(e) => {
+                  setShareLink(null);
+                  setSelfHosted(e);
+                }}
+              />
+              <Button
+                onClick={() => {
+                  setShareLink(
+                    `${
+                      selfHosted == 'Yes' ? shareLocalURL : shareBaseURL
+                    }/?share&type=${shareType}&id=${encodeURIComponent(shareID)}&dashboardDatabase=${encodeURIComponent(
+                      dashboardDatabase
+                    )}${
+                      shareConnectionDetails == 'Yes'
+                        ? `&credentials=${encodeURIComponent(
+                            `${connection.protocol}://${connection.username}:${connection.password}@${connection.database}:${connection.url}:${connection.port}`
+                          )}`
+                        : ''
+                    }${shareStandalone == 'Yes' ? `&standalone=${shareStandalone}` : ''}`
+                  );
+                }}
+                fill='outlined'
+                color='neutral'
+                floating
+              >
+                Generate Link
+                <ShareIconOutline className='n-w-6 n-h-6' />
+              </Button>
+              <hr />
             </>
           ) : (
             <></>
           )}
           {shareLink ? (
-            <DialogContentText>
+            <>
               <br />
               Step 3: Use the generated link to view the dashboard:
               <br />
@@ -282,37 +246,23 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 {shareLink}
               </a>
               <br />
-            </DialogContentText>
+            </>
           ) : (
             <></>
           )}
-        </DialogContent>
+        </Dialog.Content>
       </Dialog>
       <Dialog
-        key={2}
-        maxWidth={'lg'}
+        size='large'
         open={loadFromNeo4jModalOpen == true}
         onClose={() => {
           setLoadFromNeo4jModalOpen(false);
         }}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
-          Select From Neo4j
-          <IconButton
-            onClick={() => {
-              setLoadFromNeo4jModalOpen(false);
-            }}
-            style={{ padding: '3px', float: 'right' }}
-          >
-            <Badge badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent style={{ width: '800px' }}>
-          <DialogContentText>Choose a dashboard to share below.</DialogContentText>
-
+        <Dialog.Header id='form-dialog-title'>Select From Neo4j</Dialog.Header>
+        <Dialog.Content style={{ width: '800px' }}>
+          Choose a dashboard to share below.
           <div style={{ height: '380px' }}>
             <DataGrid
               rows={rows}
@@ -326,76 +276,55 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               }}
             />
           </div>
-          <FormControl style={{ marginTop: '-58px', marginLeft: '10px' }}>
-            <InputLabel id='demo-simple-select-label'>Database</InputLabel>
-            <Select
-              labelId='demo-simple-select-label'
-              id='demo-simple-select'
-              style={{ width: '150px' }}
-              value={dashboardDatabase}
-              onChange={(e) => {
+          <Dropdown
+            id='database'
+            label='Database'
+            type='select'
+            selectProps={{
+              onChange: (newValue) => {
                 setRows([]);
-                setDashboardDatabase(e.target.value);
-                loadDashboardListFromNeo4j(driver, e.target.value, (result) => {
+                setDashboardDatabase(newValue.value);
+                loadDashboardListFromNeo4j(driver, newValue.value, (result) => {
                   setRows(result);
                 });
-              }}
-            >
-              {databases.map((database) => {
-                return (
-                  <MenuItem key={database} value={database}>
-                    {database}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </DialogContent>
+              },
+              options: databases.map((database) => ({ label: database, value: database })),
+              value: { label: dashboardDatabase, value: dashboardDatabase },
+            }}
+            style={{ width: '150px' }}
+          ></Dropdown>
+        </Dialog.Content>
       </Dialog>
       <Dialog
-        key={3}
-        maxWidth={'lg'}
+        size='large'
         open={loadFromFileModalOpen == true}
         onClose={() => {
           setLoadFromFileModalOpen(false);
         }}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
-          Select from URL
-          <IconButton
-            onClick={() => {
-              setLoadFromFileModalOpen(false);
+        <Dialog.Header id='form-dialog-title'>Select from URL</Dialog.Header>
+        <Dialog.Content>
+          To share a dashboard file directly, make it accessible{' '}
+          <a target='_blank' href='https://gist.github.com/'>
+            online
+          </a>
+          . Then, paste the direct link here:
+          <NeoSetting
+            key={'url'}
+            name={'url'}
+            value={shareFileURL}
+            style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
+            type={SELECTION_TYPES.TEXT}
+            helperText={'Make sure the URL starts with http:// or https://.'}
+            label={''}
+            defaultValue='https://gist.githubusercontent.com/username/0a78d80567f23072f06e03005cf53bce/raw/f97cc...'
+            onChange={(e) => {
+              setShareFileURL(e);
             }}
-            style={{ padding: '3px', float: 'right' }}
-          >
-            <Badge badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent style={{ width: '1000px' }}>
-          <DialogContentText>
-            To share a dashboard file directly, make it accessible&nbsp;
-            <a target='_blank' href='https://gist.github.com/'>
-              online
-            </a>
-            . Then, paste the direct link here:
-            <NeoSetting
-              key={'url'}
-              name={'url'}
-              value={shareFileURL}
-              style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
-              type={SELECTION_TYPES.TEXT}
-              helperText={'Make sure the URL starts with http:// or https://.'}
-              label={''}
-              defaultValue='https://gist.githubusercontent.com/username/0a78d80567f23072f06e03005cf53bce/raw/f97cc...'
-              onChange={(e) => {
-                setShareFileURL(e);
-              }}
-            />
+          />
+          <div style={{ marginBottom: '10px' }}>
             <Button
-              component='label'
               onClick={() => {
                 setShareID(shareFileURL);
                 setShareName(`${shareFileURL.substring(0, 100)}...`);
@@ -404,15 +333,14 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 setShareFileURL('');
                 setLoadFromFileModalOpen(false);
               }}
-              style={{ marginBottom: '10px', backgroundColor: 'white' }}
-              color='default'
-              variant='contained'
-              size='medium'
+              style={{ marginBottom: '10px' }}
+              color='success'
             >
               Confirm URL
+              <PlayIconSolid className='n-w-6 n-h-6' />
             </Button>
-          </DialogContentText>
-        </DialogContent>
+          </div>
+        </Dialog.Content>
       </Dialog>
     </div>
   );

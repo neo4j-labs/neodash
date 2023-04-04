@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Badge from '@material-ui/core/Badge';
-import { Button, Fab, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Fab, MenuItem, TextField, Typography } from '@material-ui/core';
 import NeoColorPicker from '../../component/field/ColorPicker';
-import AddIcon from '@material-ui/icons/Add';
-import TuneIcon from '@material-ui/icons/Tune';
 import { Autocomplete } from '@material-ui/lab';
+import { IconButton, Button, Dialog } from '@neo4j-ndl/react';
+import {
+  AdjustmentsHorizontalIconOutline,
+  XMarkIconOutline,
+  PlusIconOutline,
+  PlayIconSolid,
+} from '@neo4j-ndl/react/icons';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = [
@@ -187,230 +186,201 @@ export const NeoCustomReportStyleModal = ({
     <div>
       {customReportStyleModalOpen ? (
         <Dialog
-          maxWidth={'xl'}
+          size='large'
           open={customReportStyleModalOpen == true}
-          PaperProps={{
-            style: {
-              overflow: 'inherit',
-            },
-          }}
-          style={{ overflow: 'inherit', overflowY: 'inherit' }}
+          onClose={handleClose}
           aria-labelledby='form-dialog-title'
         >
-          <DialogTitle id='form-dialog-title'>
-            <TuneIcon
-              style={{
-                height: '30px',
-                paddingTop: '4px',
-                marginBottom: '-8px',
-                marginRight: '5px',
-                paddingBottom: '5px',
-              }}
+          <Dialog.Header id='form-dialog-title'>
+            <AdjustmentsHorizontalIconOutline
+              className='n-w-6 n-h-6'
+              style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
             />
             Rule-Based Styling
-            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-              <Badge overlap='rectangular' badgeContent={''}>
-                <CloseIcon />
-              </Badge>
-            </IconButton>
-          </DialogTitle>
-          <div>
-            <DialogContent style={{ overflow: 'inherit' }}>
-              <p>
-                You can define rule-based styling for the report here. <br />
-                Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is
-                applied.
-                <br />
-                {type == 'graph' || type == 'map' ? (
-                  <p>
-                    For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>,
-                    for example: <code>Person.age</code>. This is case-sensentive.
-                  </p>
-                ) : (
-                  <></>
-                )}
-                {type == 'line' || type == 'value' || type == 'bar' || type == 'pie' || type == 'table' ? (
-                  <p>
-                    For <b>{type}</b> reports, the field name should be the exact name of the returned field. <br />
-                    For example, if your query is <code>MATCH (n:Movie) RETURN n.rating as Rating</code>, your field
-                    name is <code>Rating</code>.
-                  </p>
-                ) : (
-                  <></>
-                )}
-              </p>
-              <div>
-                <hr></hr>
+          </Dialog.Header>
+          <Dialog.Content style={{ overflow: 'inherit' }}>
+            <p>
+              You can define rule-based styling for the report here. <br />
+              Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is
+              applied.
+              <br />
+              {type == 'graph' || type == 'map' ? (
+                <p>
+                  For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>,
+                  for example: <code>Person.age</code>. This is case-sensentive.
+                </p>
+              ) : (
+                <></>
+              )}
+              {type == 'line' || type == 'value' || type == 'bar' || type == 'pie' || type == 'table' ? (
+                <p>
+                  For <b>{type}</b> reports, the field name should be the exact name of the returned field. <br />
+                  For example, if your query is <code>MATCH (n:Movie) RETURN n.rating as Rating</code>, your field name
+                  is <code>Rating</code>.
+                </p>
+              ) : (
+                <></>
+              )}
+            </p>
+            <div>
+              <hr></hr>
 
-                <table>
-                  {rules.map((rule, index) => {
-                    return (
-                      <>
-                        <tr>
-                          <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
-                            <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
-                          </td>
-                          <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                            <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}> IF</span>
-                          </td>
-                          <div style={{ border: '2px dashed grey' }}>
-                            <td
-                              style={{
-                                paddingLeft: '5px',
-                                paddingRight: '5px',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
+              <table>
+                {rules.map((rule, index) => {
+                  return (
+                    <>
+                      <tr>
+                        <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
+                          <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
+                        </td>
+                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}> IF</span>
+                        </td>
+                        <div style={{ border: '2px dashed grey' }}>
+                          <td
+                            style={{
+                              paddingLeft: '5px',
+                              paddingRight: '5px',
+                              paddingTop: '5px',
+                              paddingBottom: '5px',
+                            }}
+                          >
+                            <Autocomplete
+                              disableClearable={true}
+                              id='autocomplete-label-type'
+                              noOptionsText='*Specify an exact field name'
+                              options={createFieldVariableSuggestions().filter((e) =>
+                                e.toLowerCase().includes(rule.field.toLowerCase())
+                              )}
+                              value={rule.field ? rule.field : ''}
+                              inputValue={rule.field ? rule.field : ''}
+                              popupIcon={<></>}
+                              style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
+                              onInputChange={(event, value) => {
+                                updateRuleField(index, 'field', value);
                               }}
+                              onChange={(event, newValue) => {
+                                updateRuleField(index, 'field', newValue);
+                              }}
+                              renderInput={(params) => (
+                                <TextField {...params} placeholder='Field name...' InputLabelProps={{ shrink: true }} />
+                              )}
+                            />
+                          </td>
+                          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                            <TextField
+                              select
+                              value={rule.condition}
+                              onChange={(e) => updateRuleField(index, 'condition', e.target.value)}
                             >
-                              <Autocomplete
-                                disableClearable={true}
-                                id='autocomplete-label-type'
-                                noOptionsText='*Specify an exact field name'
-                                options={createFieldVariableSuggestions().filter((e) =>
-                                  e.toLowerCase().includes(rule.field.toLowerCase())
-                                )}
-                                value={rule.field ? rule.field : ''}
-                                inputValue={rule.field ? rule.field : ''}
-                                popupIcon={<></>}
-                                style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
-                                onInputChange={(event, value) => {
-                                  updateRuleField(index, 'field', value);
-                                }}
-                                onChange={(event, newValue) => {
-                                  updateRuleField(index, 'field', newValue);
-                                }}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    placeholder='Field name...'
-                                    InputLabelProps={{ shrink: true }}
-                                  />
-                                )}
-                              />
-                            </td>
-                            <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                              <TextField
-                                select
-                                value={rule.condition}
-                                onChange={(e) => updateRuleField(index, 'condition', e.target.value)}
-                              >
-                                {RULE_CONDITIONS.map((option) => (
+                              {RULE_CONDITIONS.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                  {option.label}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </td>
+                          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                            <TextField
+                              placeholder='Value...'
+                              value={rule.value}
+                              onChange={(e) => updateRuleField(index, 'value', e.target.value)}
+                            ></TextField>
+                          </td>
+                        </div>
+                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>THEN</span>
+                        </td>
+                        <div style={{ border: '2px dashed grey', marginBottom: '5px' }}>
+                          <td
+                            style={{
+                              paddingLeft: '5px',
+                              paddingRight: '5px',
+                              paddingTop: '5px',
+                              paddingBottom: '5px',
+                            }}
+                          >
+                            <TextField
+                              select
+                              value={rule.customization}
+                              onChange={(e) => updateRuleField(index, 'customization', e.target.value)}
+                            >
+                              {RULE_BASED_REPORT_CUSTOMIZATIONS[type] &&
+                                RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => (
                                   <MenuItem key={option.value} value={option.value}>
                                     {option.label}
                                   </MenuItem>
                                 ))}
-                              </TextField>
-                            </td>
-                            <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                              <TextField
-                                placeholder='Value...'
-                                value={rule.value}
-                                onChange={(e) => updateRuleField(index, 'value', e.target.value)}
-                              ></TextField>
-                            </td>
-                          </div>
-                          <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                            <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>THEN</span>
+                            </TextField>
                           </td>
-                          <div style={{ border: '2px dashed grey', marginBottom: '5px' }}>
-                            <td
-                              style={{
-                                paddingLeft: '5px',
-                                paddingRight: '5px',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
-                              }}
-                            >
-                              <TextField
-                                select
-                                value={rule.customization}
-                                onChange={(e) => updateRuleField(index, 'customization', e.target.value)}
-                              >
-                                {RULE_BASED_REPORT_CUSTOMIZATIONS[type] &&
-                                  RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                      {option.label}
-                                    </MenuItem>
-                                  ))}
-                              </TextField>
-                            </td>
-                            <td
-                              style={{
-                                paddingLeft: '5px',
-                                paddingRight: '5px',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
-                              }}
-                            >
-                              <TextField
-                                style={{ width: '20px', color: 'black' }}
-                                disabled={true}
-                                value={'='}
-                              ></TextField>
-                            </td>
-                            <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                              <NeoColorPicker
-                                label=''
-                                defaultValue='black'
-                                key={undefined}
-                                style={undefined}
-                                value={rule.customizationValue}
-                                onChange={(value) => updateRuleField(index, 'customizationValue', value)}
-                              ></NeoColorPicker>
-                            </td>
-                          </div>
-                          <td>
-                            <Fab
-                              size='small'
-                              aria-label='add'
-                              style={{ background: 'black', color: 'white', marginTop: '-6px', marginLeft: '20px' }}
+                          <td
+                            style={{
+                              paddingLeft: '5px',
+                              paddingRight: '5px',
+                              paddingTop: '5px',
+                              paddingBottom: '5px',
+                            }}
+                          >
+                            <TextField
+                              style={{ width: '20px', color: 'black' }}
+                              disabled={true}
+                              value={'='}
+                            ></TextField>
+                          </td>
+                          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                            <NeoColorPicker
+                              label=''
+                              defaultValue='black'
+                              key={undefined}
+                              style={undefined}
+                              value={rule.customizationValue}
+                              onChange={(value) => updateRuleField(index, 'customizationValue', value)}
+                            ></NeoColorPicker>
+                          </td>
+                        </div>
+                        <td>
+                          <IconButton aria-label='remove rule' size='medium' floating>
+                            <XMarkIconOutline
                               onClick={() => {
                                 setRules([...rules.slice(0, index), ...rules.slice(index + 1)]);
                               }}
-                            >
-                              <CloseIcon />
-                            </Fab>
-                          </td>
-                        </tr>
-                      </>
-                    );
-                  })}
+                            />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    </>
+                  );
+                })}
 
-                  <tr>
-                    <td style={{ minWidth: '850px' }} colSpan={5}>
-                      <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
-                        <Fab
-                          size='small'
-                          aria-label='add'
-                          style={{ background: 'white', color: 'black' }}
+                <tr>
+                  <td style={{ borderBottom: '1px solid grey', width: '750px' }} colSpan={5}>
+                    <div style={{ textAlign: 'center', marginBottom: '5px' }}>
+                      <IconButton aria-label='add' size='medium' floating>
+                        <PlusIconOutline
                           onClick={() => {
                             const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0].value);
                             setRules(rules.concat(newRule));
                           }}
-                        >
-                          <AddIcon />
-                        </Fab>
-                      </Typography>
-                    </td>
-                  </tr>
-                </table>
-
-                <hr></hr>
-              </div>
-
-              <Button
-                style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'white' }}
-                color='default'
-                variant='contained'
-                size='large'
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Save
-              </Button>
-            </DialogContent>
-          </div>
+                        />
+                      </IconButton>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onClick={() => {
+                handleClose();
+              }}
+              size='large'
+              floating
+            >
+              Save
+              <PlayIconSolid className='n-w-6 n-h-6' />
+            </Button>
+          </Dialog.Actions>
         </Dialog>
       ) : (
         <></>

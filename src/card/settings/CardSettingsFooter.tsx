@@ -139,7 +139,7 @@ const NeoCardSettingsFooter = ({
                   <IconButton
                     style={{ float: 'right', marginRight: '10px' }}
                     aria-label='custom styling'
-                    onClick={(_) => {
+                    onClick={() => {
                       setCustomReportStyleModalOpen(true); // Open the modal.
                     }}
                     clean
