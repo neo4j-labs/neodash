@@ -45,8 +45,6 @@ const NeoGraphChart = (props: ChartProps) => {
   const handleEntityRightClick = (item, event) => {
     setSelectedEntity(item);
     setContextMenuOpen(true);
-    console.log(event);
-    console.log(event.layerX);
     setClickPosition({
       x: event.offsetX === 0 ? event.layerX : event.offsetX,
       y: event.offsetY === 0 ? event.layerY : event.offsetY,
