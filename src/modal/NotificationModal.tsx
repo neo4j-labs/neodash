@@ -1,10 +1,4 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import PlayArrow from '@material-ui/icons/PlayArrow';
 import { connect } from 'react-redux';
 import {
   applicationHasNotification,
@@ -15,9 +9,8 @@ import {
   getNotificationTitle,
 } from '../application/ApplicationSelectors';
 import { clearNotification, setConnectionModalOpen } from '../application/ApplicationActions';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import CloseIcon from '@material-ui/icons/Close';
+import { IconButton, Dialog } from '@neo4j-ndl/react';
+import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -35,7 +28,7 @@ export const NeoNotificationModal = ({
   return (
     <div>
       <Dialog
-        maxWidth={'lg'}
+        size='large'
         open={open == true}
         onClose={() => {
           if (dismissable) {
@@ -46,8 +39,9 @@ export const NeoNotificationModal = ({
           }
         }}
         aria-labelledby='form-dialog-title'
+        disableCloseButton
       >
-        <DialogTitle id='form-dialog-title'>
+        <Dialog.Header id='form-dialog-title'>
           {title}
           <IconButton
             onClick={() => {
@@ -58,21 +52,14 @@ export const NeoNotificationModal = ({
                 }
               }
             }}
-            style={{ marginLeft: '40px', padding: '3px', float: 'right' }}
+            style={{ float: 'right' }}
+            clean
           >
-            {dismissable ? (
-              <Badge overlap='rectangular' badgeContent={''}>
-                <CloseIcon />
-              </Badge>
-            ) : (
-              <></>
-            )}
+            {dismissable ? <XMarkIconOutline className='n-w-6 n-h-6' /> : <></>}
           </IconButton>
-        </DialogTitle>
+        </Dialog.Header>
 
-        <DialogContent style={{ minWidth: '300px' }}>
-          <DialogContentText>{text && text.toString()}</DialogContentText>
-        </DialogContent>
+        <Dialog.Content style={{ minWidth: '300px' }}>{text && text.toString()}</Dialog.Content>
       </Dialog>
     </div>
   );
