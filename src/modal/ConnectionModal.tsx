@@ -54,54 +54,57 @@ export default function NeoConnectionModal({
         disableCloseButton
       >
         <Dialog.Header id='form-dialog-title'>{standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}</Dialog.Header>
-        <Dialog.Content>
-          <Dropdown
-            id='protocol'
-            label='Protocol'
-            type='select'
-            disabled={standalone}
-            selectProps={{
-              onChange: (newValue) => newValue && setProtocol(newValue.value),
-              options: protocols.map((option) => ({ label: option, value: option })),
-              value: { label: protocol, value: protocol },
-            }}
-            style={{ width: '25%', display: 'inline-block' }}
-            fluid
-          />
-          <div style={{ marginLeft: '2.5%', width: '55%', marginRight: '2.5%', display: 'inline-block' }}>
-            <TextInput
-              id='url'
-              value={url}
+        <Dialog.Content className='n-flex n-flex-col n-gap-token-4'>
+          <div className='n-flex n-flex-row n-flex-wrap'>
+            <div>Testing Wow22</div>
+            <Dropdown
+              id='protocol'
+              label='Protocol'
+              type='select'
               disabled={standalone}
-              onChange={(e) => {
-                // Help the user here a bit by extracting the hostname if they copy paste things in
-                const input = e.target.value;
-                const splitted = input.split('://');
-                const host = splitted[splitted.length - 1].split(':')[0].split('/')[0];
-                setUrl(host);
+              selectProps={{
+                onChange: (newValue) => newValue && setProtocol(newValue.value),
+                options: protocols.map((option) => ({ label: option, value: option })),
+                value: { label: protocol, value: protocol },
               }}
-              label='Hostname'
-              placeholder='localhost'
-              autoFocus
+              style={{ width: '25%', display: 'inline-block' }}
               fluid
             />
-          </div>
-          <div style={{ width: '15%', display: 'inline-block' }}>
-            <TextInput
-              id='port'
-              value={port}
-              disabled={standalone}
-              onChange={(event) => {
-                if (event.target.value.toString().length == 0) {
-                  setPort(event.target.value);
-                } else if (!isNaN(event.target.value)) {
-                  setPort(Number(event.target.value));
-                }
-              }}
-              label='Port'
-              placeholder='7687'
-              fluid
-            />
+            <div style={{ marginLeft: '2.5%', width: '55%', marginRight: '2.5%', display: 'inline-block' }}>
+              <TextInput
+                id='url'
+                value={url}
+                disabled={standalone}
+                onChange={(e) => {
+                  // Help the user here a bit by extracting the hostname if they copy paste things in
+                  const input = e.target.value;
+                  const splitted = input.split('://');
+                  const host = splitted[splitted.length - 1].split(':')[0].split('/')[0];
+                  setUrl(host);
+                }}
+                label='Hostname'
+                placeholder='localhost'
+                autoFocus
+                fluid
+              />
+            </div>
+            <div style={{ width: '15%', display: 'inline-block' }}>
+              <TextInput
+                id='port'
+                value={port}
+                disabled={standalone}
+                onChange={(event) => {
+                  if (event.target.value.toString().length == 0) {
+                    setPort(event.target.value);
+                  } else if (!isNaN(event.target.value)) {
+                    setPort(Number(event.target.value));
+                  }
+                }}
+                label='Port'
+                placeholder='7687'
+                fluid
+              />
+            </div>
           </div>
 
           {window.location.href.startsWith('https') && !(protocol.endsWith('+s') || protocol.endsWith('+scc')) ? (
@@ -113,23 +116,17 @@ export default function NeoConnectionModal({
               </a>
               .
             </div>
-          ) : (
-            <div></div>
-          )}
-          {url == 'localhost' && (protocol.endsWith('+s') || protocol.endsWith('+scc')) ? (
+          ) : null}
+          {url == 'localhost' && (protocol.endsWith('+s') || protocol.endsWith('+scc')) && (
             <div>
               A local host with an encrypted connection will likely not work - try an unencrypted protocol instead.
             </div>
-          ) : (
-            <div></div>
           )}
           {url.endsWith('neo4j.io') && !protocol.endsWith('+s') ? (
             <div>
               Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
             </div>
-          ) : (
-            <div></div>
-          )}
+          ) : null}
           <TextInput
             id='database'
             value={database}
@@ -150,9 +147,7 @@ export default function NeoConnectionModal({
               placeholder='neo4j'
               fluid
             />
-          ) : (
-            <></>
-          )}
+          ) : null}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -171,9 +166,7 @@ export default function NeoConnectionModal({
                 type='password'
                 fluid
               />
-            ) : (
-              <></>
-            )}
+            ) : null}
             {ssoSettings.ssoEnabled ? (
               <Switch
                 label='Use SSO'
@@ -181,9 +174,7 @@ export default function NeoConnectionModal({
                 onChange={() => setSsoVisible(!ssoVisible)}
                 style={{ marginLeft: '5px' }}
               />
-            ) : (
-              <></>
-            )}
+            ) : null}
           </form>
         </Dialog.Content>
         <Dialog.Actions>
@@ -200,7 +191,7 @@ export default function NeoConnectionModal({
               style={{ float: 'right' }}
             >
               Connect
-              <PlayIconOutline className='n-w-6 n-h-6' />
+              <PlayIconOutline className='n-w-4 n-h-4' />
             </Button>
           )}
         </Dialog.Actions>

@@ -1,6 +1,8 @@
-import React from 'react';
-import { Button, Dialog } from '@neo4j-ndl/react';
+import React, { PropsWithChildren } from 'react';
+import { Button, Dialog, Typography } from '@neo4j-ndl/react';
 import { BookOpenIconOutline, BeakerIconOutline } from '@neo4j-ndl/react/icons';
+
+const SectionTitle = ({ children }: PropsWithChildren) => <Typography variant='h5'>{children}</Typography>;
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
   const version = '2.2.3';
@@ -22,7 +24,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
         <Dialog.Header>About NeoDash</Dialog.Header>
         <Dialog.Content>
           <div>
-            NeoDash is a dashboard builder for the Neo4j graph database.
+            <SectionTitle>TestNeoDash is a dashboard builder for the Neo4j graph database.</SectionTitle>
             <br />
             If you can write Cypher queries, you can build a dashboard in minutes.
             <hr></hr>
