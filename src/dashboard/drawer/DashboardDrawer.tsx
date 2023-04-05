@@ -15,26 +15,24 @@ import {
 import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import { getDashboardExtensions, getDashboardExtensionsConfig, getDashboardSettings } from '../DashboardSelectors';
+import { getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
-import NeoAlertModal from '../../extensions/alert/NeoAlertDrawerButton';
-import AlertDrawer from '../../extensions/alert/AlertDrawer';
 
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
  * @returns
  */
 // TODO: abstract logic
-function renderExtensionDrawers(open) {
-  return <AlertDrawer open={open}></AlertDrawer>;
+function renderExtensionDrawers() {
+  return <></>;
 }
 
 // TODO: abstract logic
 function renderExtensionModals() {
-  return <NeoAlertModal></NeoAlertModal>;
+  return <></>;
 }
 
 // The sidebar that appears on the left side of the dashboard.
@@ -44,7 +42,6 @@ export const NeoDrawer = ({
   connection,
   dashboardSettings,
   extensions,
-  extensionsConfig,
   updateDashboardSetting,
   handleDrawerClose,
   onAboutModalOpen,
@@ -133,7 +130,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
-        {extensions.alerts ? renderExtensionModals() : <></>}
+        {/*  renderExtensionModals() */}
       </List>
       <Divider />
       <List>
@@ -156,7 +153,7 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {extensionsConfig.alerts ? renderExtensionDrawers(extensionsConfig.alerts.opened) : <></>}
+      {/*  renderExtensionDrawers() */}
     </>
   );
 };
@@ -165,7 +162,6 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   hidden: applicationIsStandalone(state),
   extensions: getDashboardExtensions(state),
-  extensionsConfig: getDashboardExtensionsConfig(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
   connection: applicationGetConnection(state),
 });

@@ -26,7 +26,6 @@ export const initialState = {
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
   extensions: {},
-  extensionsConfig: {}, // TODO - merge with `extensions` in the 2.3 dashboard format.
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -54,16 +53,6 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     return {
       ...state,
       settings: settingsReducer(state, enrichedAction),
-    };
-  }
-
-  // Extensions-specific updates are deferred to the extensions reducer.
-  if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
-    const enrichedPayload = update(payload, { extensionsConfig: state.extensionsConfig });
-    const enrichedAction = { type, payload: enrichedPayload };
-    return {
-      ...state,
-      extensionsConfig: extensionsReducer(state, enrichedAction),
     };
   }
 
