@@ -14,7 +14,6 @@ import {
   SET_DASHBOARD,
   MOVE_PAGE,
   SET_EXTENSION_ENABLED,
-  SET_EXTENSION_OPENED,
 } from './DashboardActions';
 
 export const NEODASH_VERSION = '2.2';
