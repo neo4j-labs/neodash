@@ -138,8 +138,8 @@ export const NeoWorkflowRunnerModal = ({
   workflow,
 }) => {
   const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
-
   console.log(results);
+  // console.log(results);
   // Refreshing correctly the state of each step while it runs
   useEffect(() => {
     if (workflow && workflow.steps && !open && !isRunning) {

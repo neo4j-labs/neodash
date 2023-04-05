@@ -9,6 +9,7 @@ async function consoleLogAsync(message: string, other?: any) {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));
 }
 // TODO: detach runCypherQuery method from here and define another method for the workflows
+
 async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
   await runCypherQuery(
     driver,
@@ -30,15 +31,15 @@ async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
   );
 }
 /**
- * Runs a workflow and calls back whenever the state is updated...
- * @param driver
- * @param database
- * @param workflow Workflow to run
+ * Runs a workflow and sets the state of each step at their ending
+ * @param driver Neo4j Driver to call the database
+ * @param database Database that will be impacted by the workflow
+ * @param workflow Workflow to run, composed by a list of steps
  * @param workflowIndex Index that identifies a worlflow in the list of workflows
  * @param workflowStatus Status of each step of the workflow
  * @param setWorkflowStatus Callback to set the status of the workflow inside the component calling the function
- * @param setResults
- * @param setIsRunning
+ * @param setResults Callback to set the results and show them to the UI
+ * @param setIsRunning Callback to set if the workflow is running
  * @param updateWorkflowStepStatus Callback to set the status of the single step in the workflow
  */
 export function runWorkflow(
@@ -58,6 +59,9 @@ export function runWorkflow(
     stop = true;
   }
 
+  /**
+   * Function to manage the end
+   */
   function handleEnd() {
     setIsRunning(false);
   }
@@ -70,44 +74,49 @@ export function runWorkflow(
       setWorkflowStatus([...workflowStatus]);
       updateWorkflowStepStatus(workflowIndex, stepIndex, status);
     };
-
-    for (let index = 0; index < workflow.steps.length; index++) {
-      try {
-        if (stop) {
-          throw new Error('Stopped by UI');
-        }
+    try {
+      for (let index = 0; index < workflow.steps.length; index++) {
+        /**
+         * Function passed to the query runner to set the records got from the UI
+         * @param records Records got from the query runner
+         */
         const setRecords = (records) => {
           results[index].records = records;
         };
-
+        /**
+         * Function passed to the query runner to set the status got from the UI
+         * @param records Records got from the query runner
+         */
         const setStatus = (status) => {
           let possiblePositiveStatus = [5, 6];
-          let newStatus = STEP_STATUS.ERROR;
-          // TODO: manage correcty status attachment
-          if (possiblePositiveStatus.includes(status)) {
-            newStatus = STEP_STATUS.COMPLETE;
+          let newStatus = STEP_STATUS.COMPLETE;
+          // if the query is nto completed, throw an error and abort to prevent running the next steps
+          if (!possiblePositiveStatus.includes(status)) {
+            newStatus = STEP_STATUS.ERROR;
+            abort();
           }
           results[index].status = newStatus;
           setWorkflowStatusForStep(index, newStatus);
         };
 
+        if (stop) {
+          throw new Error('Stopped by UI');
+        }
         setWorkflowStatusForStep(index, STEP_STATUS.RUNNING);
         results.push({ records: [], status: STEP_STATUS.RUNNING });
-        let { query } = workflow.steps[index];
 
+        let { query } = workflow.steps[index];
         await runWorkflowStep(driver, database, query, setStatus, setRecords);
 
         // Added sleep to prevent strange refresh on main screen
         await sleep(10);
-      } catch (e) {
-        await consoleLogAsync('Error while running a workflow:', e);
-        handleEnd();
-        break;
       }
+    } catch (e) {
+      await consoleLogAsync('Error while running a workflow:', e);
+    } finally {
+      handleEnd();
     }
-    handleEnd();
   }
-
   return {
     promise: run(),
     abort: abort,

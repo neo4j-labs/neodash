@@ -23,4 +23,11 @@ export const WORKFLOW_STEPS = {
     description: 'just get some sleep and mushy peas',
     query: 'CALL apoc.util.sleep(5000) \n MATCH (n) RETURN n LIMIT 100',
   },
+  errorBoy: {
+    name: 'error fwaH',
+    key: 'errorBoy',
+    type: 'scooby doo',
+    description: 'just get some error and mushy peas',
+    query: 'Mathc (n) REturn n limit 5',
+  },
 };
