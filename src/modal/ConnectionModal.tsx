@@ -26,6 +26,7 @@ export default function NeoConnectionModal({
   connection,
   dismissable = false,
   createConnection,
+  setConnectionProperties,
   onConnectionModalClose,
   onSSOAttempt,
 }) {
@@ -222,7 +223,14 @@ export default function NeoConnectionModal({
               <></>
             )}
             {ssoVisible ? (
-              <SSOLoginButton discoveryAPIUrl={discoveryAPIUrl} onSSOAttempt={onSSOAttempt} />
+              <SSOLoginButton
+                discoveryAPIUrl={discoveryAPIUrl}
+                onSSOAttempt={onSSOAttempt}
+                onClick={() => {
+                  // Remember credentials on click
+                  setConnectionProperties(protocol, url, port, database, '', '');
+                }}
+              />
             ) : (
               <Button
                 type='submit'

@@ -1,6 +1,6 @@
 {
-  "ssoEnabled": true,
-  "ssoDiscoveryUrl": "http://neo4j.iclinicalgraph.net:7687",
+  "ssoEnabled": false,
+  "ssoDiscoveryUrl": "",
   "standalone": false,
   "standaloneProtocol": "neo4j",
   "standaloneHost": "localhost",
