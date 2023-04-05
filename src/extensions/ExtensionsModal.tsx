@@ -19,7 +19,6 @@ const NeoExtensionsModal = ({
   extensions,
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
-  setExtensionOpened,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -93,10 +92,6 @@ const NeoExtensionsModal = ({
                               onClick={() => {
                                 if (e.enabled) {
                                   setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
-                                  // TODO - generalize, all drawer-like extensions should be closed
-                                  if (e.name === 'alerts') {
-                                    setExtensionOpened(e.name, extensions[e.name] == undefined ? false : undefined);
-                                  }
                                 } else {
                                   onExtensionUnavailableTriggered(e.label);
                                 }
