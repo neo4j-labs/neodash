@@ -1,14 +1,6 @@
 /**
- * Reducers define changes to the application state when a given action
+ * Reducers define changes to the application state when a given action is performed.
  */
-
-import {
-  UPDATE_EXTENSION_DATABASE,
-  UPDATE_EXTENSION_OPEN,
-  UPDATE_EXTENSION_QUERY,
-  UPDATE_EXTENSION_SETTINGS,
-  UPDATE_EXTENSION_TITLE,
-} from './ExtensionsActions';
 
 export const initialState = {};
 
