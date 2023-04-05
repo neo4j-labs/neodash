@@ -1,6 +1,6 @@
 {
   "ssoEnabled": false,
-  "ssoDiscoveryUrl": "",
+  "ssoDiscoveryUrl": "https://example.com",
   "standalone": false,
   "standaloneProtocol": "neo4j",
   "standaloneHost": "localhost",
