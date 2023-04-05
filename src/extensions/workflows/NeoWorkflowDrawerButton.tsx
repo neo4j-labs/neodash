@@ -32,6 +32,7 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
   // Effect to trigger a workflow run
   useEffect(() => {
     if (index >= 0 && runnerModalIsOpen) {
+      // Getting the workflow to run from the list of existing workflows
       let workflow = workflowsList[index];
 
       // Keeping the fact that is running, to block some buttons on the UI

@@ -16,18 +16,18 @@ export const WORKFLOW_STEPS = {
       'The PageRank algorithm measures the importance of each node within the graph, based on the number incoming relationships and the importance of the corresponding source nodes. The underlying assumption roughly speaking is that a page is only as important as the pages that link to it.',
     query: 'UNWIND RANGE(1,10000) as X \n WITH X as Quack \n RETURN collect(Quack)',
   },
-  sleepyBoy: {
-    name: 'sleepity sloop',
-    key: 'sleepyBoy',
-    type: 'Sleepity Shloop',
+  longQuery: {
+    name: 'Long Query Example',
+    key: 'longQuery',
+    type: 'Test',
     description: 'just get some sleep and mushy peas',
     query: 'CALL apoc.util.sleep(5000) \n MATCH (n) RETURN n LIMIT 100',
   },
-  errorBoy: {
-    name: 'error fwaH',
-    key: 'errorBoy',
-    type: 'scooby doo',
-    description: 'just get some error and mushy peas',
+  errorQuery: {
+    name: 'Error Example',
+    key: 'errorQuery',
+    type: 'Test2',
+    description: 'Testing the correct behaviour with a query that fails ',
     query: 'Mathc (n) REturn n limit 5',
   },
 };
