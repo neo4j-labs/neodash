@@ -104,7 +104,7 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
   // (right now only 0 is useful but important to keep in mind that we can add more levels)
   const level0key = 'SHORT_COUNTRY_CODE';
   const level1key = 'isoCode';
-
+  const isLegendEnabled = props.settings && props.settings.showLegend != undefined ? props.settings.showLegend : true;
   const isDrillDownEnabled = props.settings && props.settings.mapDrillDown ? props.settings.mapDrillDown : false;
   // Getting the list of colors from the scheme (for now, starting from a scheme, we always get the last color of the scheme)
   const colorScheme =
@@ -262,8 +262,8 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
 
   const geoJsonLayer = (
     <div>
-      {resetButton}
-      {legend}
+      {isDrillDownEnabled ? resetButton : <></>}
+      {isLegendEnabled ? legend : <></>}
       <GeoJSON
         id='polygonId'
         key={state.key}

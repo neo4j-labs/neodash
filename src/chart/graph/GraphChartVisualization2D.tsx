@@ -1,12 +1,16 @@
 import React, { useRef } from 'react';
-import ForceGraph2D, { LinkObject } from 'react-force-graph-2d';
+import ForceGraph2D from 'react-force-graph-2d';
 import { actionRule } from '../../extensions/actions/ActionsRule';
 import { getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
 import { generateNodeCanvasObject } from './util/NodeUtils';
-import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtils';
+import { generateRelCanvasObject } from './util/RelUtils';
 
+/*
+ * TODO: check if makes sense to change zoom logic from panning to buttons
+ * (when i scroll the graphCharts has the priority )
+ */
 export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
   const fgRef: React.MutableRefObject<any> = useRef();
 

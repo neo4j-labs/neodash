@@ -991,12 +991,17 @@ export const REPORT_TYPES = {
         values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
         default: 'YlOrRd',
       },
+      showLegend: {
+        label: 'Show the Color Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       mapDrillDown: {
         label: 'Activates Drill Down',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
-        disabled: true,
       },
       intensityProp: {
         label: 'Intensity Property (for heatmap)',
