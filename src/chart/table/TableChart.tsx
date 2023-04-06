@@ -37,6 +37,7 @@ const NeoTableChart = (props: ChartProps) => {
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
   const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
+  const separator = props.settings && props.settings.separator !== undefined ? props.settings.separator : ',';
   const styleRules = useStyleRules(
     extensionEnabled(props.extensions, 'styling'),
     props.settings.styleRules,
@@ -147,7 +148,7 @@ const NeoTableChart = (props: ChartProps) => {
         <Tooltip title='Download CSV' aria-label=''>
           <IconButton
             onClick={() => {
-              downloadCSV(rows);
+              downloadCSV(rows, separator);
             }}
             aria-label='download csv'
             style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
