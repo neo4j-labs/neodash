@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReportItemContainer } from '../CardStyle';
 import NeoCardSettingsHeader from './CardSettingsHeader';
 import NeoCardSettingsContent from './CardSettingsContent';
 import NeoCardSettingsFooter from './CardSettingsFooter';
@@ -87,10 +86,10 @@ const NeoCardSettings = ({
   return (
     <div className={`card-view ${expanded ? 'expanded' : ''}`} style={{ overflowY: 'auto', height: '100%' }}>
       {cardSettingsHeader}
-      <ReportItemContainer style={{ height: reportHeight, marginTop: '-20px' }}>
+      <div style={{ height: reportHeight, marginTop: '-20px' }}>
         {cardSettingsContent}
         {cardSettingsFooter}
-      </ReportItemContainer>
+      </div>
     </div>
   );
 };

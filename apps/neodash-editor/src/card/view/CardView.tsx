@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
@@ -209,16 +208,14 @@ const NeoCardView = ({
     >
       {reportHeader}
       {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
-      <ReportItemContainer
-        style={{ height: expanded ? (withoutFooter ? 'calc(100% - 69px)' : 'calc(100% - 79px)') : cardHeight }}
-      >
+      <div style={{ height: expanded ? (withoutFooter ? 'calc(100% - 69px)' : 'calc(100% - 79px)') : cardHeight }}>
         {reportTypes[type] ? (
           reportContent
         ) : (
           <NeoCodeViewerComponent value={'Invalid report type. Are you missing an extension?'} />
         )}
         {reportTypes[type] ? reportFooter : <></>}
-      </ReportItemContainer>
+      </div>
     </div>
   );
 };
