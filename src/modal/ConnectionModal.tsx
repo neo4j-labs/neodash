@@ -56,7 +56,6 @@ export default function NeoConnectionModal({
         <Dialog.Header id='form-dialog-title'>{standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}</Dialog.Header>
         <Dialog.Content className='n-flex n-flex-col n-gap-token-4'>
           <div className='n-flex n-flex-row n-flex-wrap'>
-            <div>Testing Wow22</div>
             <Dropdown
               id='protocol'
               label='Protocol'
@@ -191,7 +190,7 @@ export default function NeoConnectionModal({
               style={{ float: 'right' }}
             >
               Connect
-              <PlayIconOutline className='n-w-4 n-h-4' />
+              <PlayIconOutline className='btn-icon-sm' />
             </Button>
           )}
         </Dialog.Actions>

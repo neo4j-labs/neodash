@@ -209,6 +209,7 @@ export const NeoLoadModal = ({
               },
               options: databases.map((database) => ({ label: database, value: database })),
               value: { label: dashboardDatabase, value: dashboardDatabase },
+              menuPlacement: 'auto',
             }}
             style={{ width: '150px' }}
           ></Dropdown>

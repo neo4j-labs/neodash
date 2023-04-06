@@ -11,10 +11,9 @@ import { Checkbox, Chip, FormControlLabel, Tooltip } from '@material-ui/core';
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
-import { getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
-import { SideNavigationItem } from '@neo4j-ndl/react';
+import { Label, SideNavigationItem, TextLink, Typography } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
 
 const NeoExtensionsModal = ({
@@ -44,7 +43,7 @@ const NeoExtensionsModal = ({
       </SideNavigationItem>
 
       {open ? (
-        <Dialog maxWidth={'md'} open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <Dialog maxWidth={'md'} open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
           <DialogTitle id='form-dialog-title'>
             <ExtensionIcon
               style={{
@@ -64,9 +63,9 @@ const NeoExtensionsModal = ({
           </DialogTitle>
           <div>
             <DialogContent>
-              <a target='_blank' href='https://neo4j.com/labs/neodash/2.2/user-guide/extensions/'>
+              <TextLink externalLink target='_blank' href='https://neo4j.com/labs/neodash/2.2/user-guide/extensions/'>
                 Extensions
-              </a>
+              </TextLink>
               &nbsp;are a way of extending the core functionality of NeoDash with custom logic.
               <br />
               This can be a new visualization, extra styling options for an existing visualization, or even a completely
@@ -79,15 +78,14 @@ const NeoExtensionsModal = ({
                     <table>
                       <tr>
                         <td>
-                          <h3>
-                            {e.label}
-                            &nbsp; &nbsp;
-                            {e.enabled ? (
-                              ''
-                            ) : (
-                              <Chip label='Pro Feature' color='primary' size='small' variant='outlined' />
+                          <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
+                            <Typography variant='h3'>{e.label}</Typography>
+                            {e.enabled && (
+                              <Label color='info' fill='outlined'>
+                                Pro Feature
+                              </Label>
                             )}
-                          </h3>
+                          </div>
                         </td>
                         <td style={{ width: 50 }}></td>
                         <td style={{ float: 'right' }}>

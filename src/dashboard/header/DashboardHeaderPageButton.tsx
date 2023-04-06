@@ -64,15 +64,17 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
           background: selected ? 'white' : 'transparent',
         }}
       >
-        {selected && !disabled ? (
-          <IconButton aria-label='move left' onClick={() => setModalOpen(true)} clean>
-            <XMarkIconOutline className='n-w-6 n-h-6' />
-          </IconButton>
-        ) : (
-          <IconButton style={{ opacity: 0 }} aria-label='move left' onClick={() => null} clean>
-            <XMarkIconOutline className='n-w-6 n-h-6' />
-          </IconButton>
-        )}
+        <IconButton
+          size='small'
+          aria-label='move left'
+          onClick={() => {
+            selected && !disabled && setModalOpen(true);
+          }}
+          style={{ opacity: selected && !disabled ? 1 : 0 }}
+          clean
+        >
+          <XMarkIconOutline />
+        </IconButton>
       </div>
       <NeoDeletePageModal modalOpen={modalOpen} onRemove={onRemove} handleClose={handleClose}></NeoDeletePageModal>
     </>

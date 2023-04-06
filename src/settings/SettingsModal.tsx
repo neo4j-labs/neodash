@@ -25,7 +25,6 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
         <div key={setting}>
           <NeoSetting
             key={setting}
-            name={setting}
             value={dashboardSettings[setting]}
             type={settings[setting].type}
             disabled={settings[setting].disabled}

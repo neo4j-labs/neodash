@@ -74,8 +74,8 @@ const NeoCardViewHeader = ({
           <tr>
             {editable ? (
               <td>
-                <IconButton clean grouped size='large' style={{ marginTop: '-8px' }}>
-                  <DragIcon className='n-w-6 n-h-6 drag-handle' />
+                <IconButton clean size='medium'>
+                  <DragIcon className='drag-handle' />
                 </IconButton>
               </td>
             ) : (
@@ -114,45 +114,45 @@ const NeoCardViewHeader = ({
   // TODO: all components like buttons should probably be seperate files
   const settingsButton = (
     <Tooltip title='Settings' aria-label='settings'>
-      <IconButton aria-label='settings' onClick={onToggleCardSettings} clean size='large'>
-        <EllipsisVerticalIconOutline className='n-w-6 n-h-6' />
+      <IconButton aria-label='settings' onClick={onToggleCardSettings} clean size='medium'>
+        <EllipsisVerticalIconOutline />
       </IconButton>
     </Tooltip>
   );
 
   const refreshButton = (
     <Tooltip title='Refresh' aria-label='refresh'>
-      <IconButton aria-label='refresh' onClick={onManualRefreshCard} clean size='large'>
-        <ArrowPathIconOutline className='n-w-6 n-h-6' />
+      <IconButton aria-label='refresh' onClick={onManualRefreshCard} clean size='medium'>
+        <ArrowPathIconOutline />
       </IconButton>
     </Tooltip>
   );
 
   const maximizeButton = (
     <Tooltip title='Maximize' aria-label='maximize'>
-      <IconButton aria-label='maximize' onClick={onToggleCardExpand} clean size='large'>
-        <ExpandIcon className='n-w-6 n-h-6' />
+      <IconButton aria-label='maximize' onClick={onToggleCardExpand} clean size='medium'>
+        <ExpandIcon />
       </IconButton>
     </Tooltip>
   );
 
   const unMaximizeButton = (
-    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand} clean size='large'>
-      <ShrinkIcon className='n-w-6 n-h-6' />
+    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand} clean size='medium'>
+      <ShrinkIcon />
     </IconButton>
   );
 
   const downloadImageButton = (
     <Tooltip title='Download as Image' aria-label='download'>
-      <IconButton onClick={onDownloadImage} aria-label='download csv' clean size='large'>
-        <CameraIconSolid className='n-w-6 n-h-6' />
+      <IconButton onClick={onDownloadImage} aria-label='download csv' clean size='medium'>
+        <CameraIconSolid />
       </IconButton>
     </Tooltip>
   );
 
   const descriptionButton = (
     <Tooltip title='Details' aria-label='details'>
-      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details' clean size='large'>
+      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details' clean size='medium'>
         <InformationCircleIconOutline />
       </IconButton>
     </Tooltip>

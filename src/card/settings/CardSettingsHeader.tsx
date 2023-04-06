@@ -23,13 +23,13 @@ const NeoCardSettingsHeader = ({
 }) => {
   const maximizeButton = (
     <IconButton aria-label='maximize' onClick={onToggleCardExpand}>
-      <ExpandIcon className='n-w-6 n-h-6' />
+      <ExpandIcon />
     </IconButton>
   );
 
   const unMaximizeButton = (
     <IconButton aria-label='un-maximize' onClick={onToggleCardExpand}>
-      <ShrinkIcon className='n-w-6 n-h-6' />
+      <ShrinkIcon />
     </IconButton>
   );
 
@@ -37,22 +37,22 @@ const NeoCardSettingsHeader = ({
     <CardHeader
       avatar={
         <div style={{ marginTop: '-8px', paddingBottom: '1px' }}>
-          <IconButton clean grouped size='large'>
-            <DragIcon className='drag-handle n-w-6 n-h-6' />
+          <IconButton clean size='medium'>
+            <DragIcon className='drag-handle' />
           </IconButton>
           <Tooltip title='Help' aria-label='help'>
-            <IconButton aria-label='help' onClick={onReportHelpButtonPressed} clean size='large'>
-              <QuestionMarkCircleIconOutline className='n-w-6 n-h-6' />
+            <IconButton aria-label='help' onClick={onReportHelpButtonPressed} clean size='medium'>
+              <QuestionMarkCircleIconOutline />
             </IconButton>
           </Tooltip>
           <Tooltip title='Delete' aria-label='delete'>
-            <IconButton style={{ color: 'red' }} aria-label='remove' onClick={onRemovePressed} clean size='large'>
-              <TrashIconOutline className='n-w-6 n-h-6' />
+            <IconButton style={{ color: 'red' }} aria-label='remove' onClick={onRemovePressed} clean size='medium'>
+              <TrashIconOutline />
             </IconButton>
           </Tooltip>
           <Tooltip title='Clone' aria-label='clone'>
-            <IconButton style={{ color: 'green' }} aria-label='clone' onClick={onClonePressed} clean size='large'>
-              <DocumentDuplicateIconOutline className='n-w-6 n-h-6' />
+            <IconButton style={{ color: 'green' }} aria-label='clone' onClick={onClonePressed} clean size='medium'>
+              <DocumentDuplicateIconOutline />
             </IconButton>
           </Tooltip>
         </div>
@@ -68,9 +68,9 @@ const NeoCardSettingsHeader = ({
                 onToggleCardSettings();
               }}
               clean
-              size='large'
+              size='medium'
             >
-              <PlayCircleIconSolid className='n-w-6 n-h-6' />
+              <PlayCircleIconSolid />
             </IconButton>
           </Tooltip>
         </>
