@@ -107,6 +107,7 @@ const NeoAreaMapChart = (props: ChartProps) => {
   if (
     Object.keys(data).length == 0 ||
     !selection ||
+    (selection.index && selection.value && selection.index == selection.value) ||
     props.records == null ||
     props.records.length == 0 ||
     props.records[0].keys == null
