@@ -40,13 +40,13 @@ function randomString() {
  * @param key Name of the parameter that will be used to match a polygon adn it's components
  * @returns feature object filtered of the useless objects
  */
-function getDrillDown(geoJson, features, key) {
+function getDrillDown(geoJson, features, key, keepConflict = false) {
   let id = geoJson.properties[key];
   let polygonsToKeep = Object.keys(features).filter((polygonId) => {
     let tmp = features[polygonId];
     // Some regions can be in different countries (WHO specific use case)
     let toDrillDown =
-      key === 'SHORT_COUNTRY_CODE' && tmp.properties.POSSIBLE_COUNTRIES
+      key === 'SHORT_COUNTRY_CODE' && tmp.properties.POSSIBLE_COUNTRIES && keepConflict
         ? tmp.properties.POSSIBLE_COUNTRIES.includes(id)
         : tmp.properties[key] === id;
     return toDrillDown;
@@ -247,6 +247,7 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
       </div>
     );
   }
+
   // Create a legend only if the values are ready
   const legend = !(isNaN(rangeValues.min) && isNaN(rangeValues.min)) ? (
     Legend(listColors, legendRange, dimensions)

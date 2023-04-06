@@ -39,6 +39,7 @@ function createGeoDictionary(records, selection) {
       console.error(e);
     }
   });
+  console.log(data);
   return data;
 }
 /**
@@ -64,6 +65,8 @@ const NeoAreaMapChart = (props: ChartProps) => {
   // Retrieve config from advanced settings
   const { records } = props;
   const { selection } = props;
+  const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
+  let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
   const [data, setData] = useState({});
   // Two feature levels (ideally we can even more)
   const [featureLevel0, setFeatureLevel0] = useState({});
@@ -77,8 +80,6 @@ const NeoAreaMapChart = (props: ChartProps) => {
     props.settings && props.settings.attribution
       ? props.settings.attribution
       : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-  const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
-  let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
 
   // Extracting the geoData from the records
   useEffect(() => {
@@ -107,7 +108,7 @@ const NeoAreaMapChart = (props: ChartProps) => {
   if (
     Object.keys(data).length == 0 ||
     !selection ||
-    (selection.index && selection.value && selection.index == selection.value) ||
+    selection.index == selection.value ||
     props.records == null ||
     props.records.length == 0 ||
     props.records[0].keys == null
@@ -129,11 +130,11 @@ const NeoAreaMapChart = (props: ChartProps) => {
         <TileLayer attribution={attribution} url={mapProviderURL} />
         {
           <MapBoundary
-            dimensions={dimensions}
             data={data}
             props={props}
             featureLevel0={featureLevel0}
             featureLevel1={featureLevel1}
+            dimensions={dimensions}
           />
         }
       </MapContainer>
