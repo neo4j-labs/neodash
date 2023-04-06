@@ -2,6 +2,7 @@ import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoLineChart from '../chart/line/LineChart';
+import NeoAreaMapChart from '../chart/map/AreaMapChart';
 import NeoMapChart from '../chart/map/MapChart';
 import NeoPieChart from '../chart/pie/PieChart';
 import NeoTableChart from '../chart/table/TableChart';
@@ -223,6 +224,22 @@ RETURN value
     selection: {},
     type: 'map',
     chartType: NeoMapChart,
+  },
+  {
+    title: 'Area Map',
+    description: 'Use dictionaries to visualize entities that are not real nodes and relationships.',
+    exampleQuery: `// To write query 
+                   UNWIND [["IT",5]] as v 
+                   RETURN v[0] as code, v[1] as value`,
+    syntheticQuery: `
+        UNWIND [["IT",5]] as v
+        RETURN v[0] as code, v[1] as value
+        `,
+    settings: { mapDrillDown: true },
+    fields: [],
+    selection: { index: 'code', value: 'value' },
+    type: 'map',
+    chartType: NeoAreaMapChart,
   },
   {
     title: 'iFrame',
