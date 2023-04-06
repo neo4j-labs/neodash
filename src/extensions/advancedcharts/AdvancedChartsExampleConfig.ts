@@ -1,10 +1,10 @@
+import NeoChoroplethMapChart from './chart/choropleth/ChoroplethMapChart';
 import NeoCirclePackingChart from './chart/circlepacking/CirclePackingChart';
 import NeoGaugeChart from './chart/gauge/GaugeChart';
 import NeoSankeyChart from './chart/sankey/SankeyChart';
 import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
-import NeoAreaMapChart from '../../chart/map/AreaMapChart';
 
 export const EXAMPLE_ADVANCED_REPORTS = [
   {
@@ -135,8 +135,8 @@ export const EXAMPLE_ADVANCED_REPORTS = [
     chartType: NeoSankeyChart,
   },
   {
-    title: 'Area Map Chart',
-    description: 'Area Map charts can be used to render geographical based information on geoJson polygons.',
+    title: 'Choropleth Chart',
+    description: 'Choropleth charts can be used to render geographical based information on geoJson polygons.',
     exampleQuery:
       '// How are people distributed in the company per country?\n' +
       "MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),\n" +
@@ -154,10 +154,10 @@ export const EXAMPLE_ADVANCED_REPORTS = [
       '] as x \n' +
       'RETURN x.id as code, x.value as value',
     settings: { colors: 'nivo' },
-    selection: { index: 'code', value: 'value' },
+    selection: { index: 'code', value: 'value', key: 'code' },
     fields: ['code', 'value'],
-    type: 'areamap',
-    chartType: NeoAreaMapChart,
+    type: 'choropleth',
+    chartType: NeoChoroplethMapChart,
   },
   {
     title: 'Radar Chart',
