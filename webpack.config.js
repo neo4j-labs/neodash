@@ -8,7 +8,6 @@ const rules = [
     loader: 'babel-loader',
     options: {
       presets: ['@babel/env'],
-      // plugins: ['react-hot-loader/babel']
     },
   },
   {
@@ -36,11 +35,7 @@ const rules = [
 module.exports = (env) => {
   const production = env.production;
   return {
-    entry: [
-      'react-hot-loader/patch',
-      // 'webpack-hot-middleware/client',
-      './src/index.tsx',
-    ],
+    entry: ['react-hot-loader/patch', './src/index.tsx'],
     mode: production ? 'production' : 'development',
     devtool: production ? undefined : 'inline-source-map',
     module: {
@@ -56,6 +51,5 @@ module.exports = (env) => {
     },
     plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()],
     ignoreWarnings: [/Failed to parse source map/],
-    target: 'web',
   };
 };
