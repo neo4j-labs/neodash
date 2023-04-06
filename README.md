@@ -27,32 +27,32 @@ This project uses `yarn` to install, run, build prettify and apply linting to th
 
 To install dependencies:
 ```
-yarn install
+turbo install
 ```
 
 To run the application in development mode:
 ```
-yarn run dev
+turbo run start
 ```
 
 To build the app for deployment:
 ```
-yarn run build
+turbo run build
 ```
 
 To manually prettify all the project `.ts` and `.tsx` files, run:
 ```
-yarn run format
+turbo run format
 ```
 
 To manually run linting of all your .ts and .tsx files, run:
 ```
-yarn run lint
+turbo run lint
 ```
 
 To manually run linting of all your .ts and .tsx staged files,  run:
 ```
-yarn run lint-staged
+turbo run lint-staged
 ```
 
 See the [Developer Guide](https://neo4j.com/labs/neodash/2.2/developer-guide/) for more on installing, building, and running the application.
