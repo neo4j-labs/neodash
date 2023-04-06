@@ -190,7 +190,7 @@ export default function NeoConnectionModal({
               style={{ float: 'right' }}
             >
               Connect
-              <PlayIconOutline className='btn-icon-sm' />
+              <PlayIconOutline className='btn-icon-sm-r' />
             </Button>
           )}
         </Dialog.Actions>

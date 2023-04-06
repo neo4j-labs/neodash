@@ -3,7 +3,7 @@ import { CardActions, FormControl, InputLabel, MenuItem, Select } from '@materia
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../../config/CardConfig';
-import { Checkbox, Dropdown } from '@neo4j-ndl/react';
+import { Dropdown } from '@neo4j-ndl/react';
 
 const NeoCardViewFooter = ({
   fields,
@@ -131,7 +131,7 @@ const NeoCardViewFooter = ({
                     display: 'inline-block',
                   }}
                   placeholder={selectableFields[selectable].multiple ? 'Select (multiple)' : 'Select'}
-                />
+                ></Dropdown>
               </FormControl>
             );
           }

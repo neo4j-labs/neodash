@@ -18,7 +18,7 @@ export const NeoDeletePageModal = ({ modalOpen, onRemove, handleClose }) => {
           fill='outlined'
           style={{ float: 'right' }}
         >
-          <BackspaceIconOutline className='n-w-6 n-h-6' />
+          <BackspaceIconOutline className='btn-icon-base-l' />
           Cancel
         </Button>
         <Button
@@ -30,7 +30,7 @@ export const NeoDeletePageModal = ({ modalOpen, onRemove, handleClose }) => {
           style={{ float: 'right', marginRight: '5px' }}
         >
           Remove
-          <TrashIconSolid className='n-w-6 n-h-6' />
+          <TrashIconSolid className='btn-icon-base-r' />
         </Button>
       </Dialog.Actions>
     </Dialog>

@@ -9,8 +9,7 @@ import {
   getNotificationTitle,
 } from '../application/ApplicationSelectors';
 import { clearNotification, setConnectionModalOpen } from '../application/ApplicationActions';
-import { IconButton, Dialog } from '@neo4j-ndl/react';
-import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { Dialog } from '@neo4j-ndl/react';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -39,25 +38,9 @@ export const NeoNotificationModal = ({
           }
         }}
         aria-labelledby='form-dialog-title'
-        disableCloseButton
+        disableCloseButton={!dismissable}
       >
-        <Dialog.Header id='form-dialog-title'>
-          {title}
-          <IconButton
-            onClick={() => {
-              if (dismissable) {
-                onNotificationClose();
-                if (openConnectionModalOnClose) {
-                  setConnectionModalOpen();
-                }
-              }
-            }}
-            style={{ float: 'right' }}
-            clean
-          >
-            {dismissable ? <XMarkIconOutline className='n-w-6 n-h-6' /> : <></>}
-          </IconButton>
-        </Dialog.Header>
+        <Dialog.Header id='form-dialog-title'>{title}</Dialog.Header>
 
         <Dialog.Content style={{ minWidth: '300px' }}>{text && text.toString()}</Dialog.Content>
       </Dialog>

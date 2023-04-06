@@ -20,7 +20,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
       <Dialog size='large' open={shareDetails !== undefined} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
           <AdjustmentsVerticalIconOutline
-            className='n-w-6 n-h-6'
+            className='icon-base icon-inline text-r'
             style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
           />
           Loading Dashboard
@@ -56,7 +56,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
             fill='outlined'
             style={{ float: 'right' }}
           >
-            <BackspaceIconOutline className='n-w-6 n-h-6' />
+            <BackspaceIconOutline className='btn-icon-base-l' />
             Cancel
           </Button>
           <Button
@@ -67,7 +67,7 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
             color='success'
           >
             Continue
-            <PlayIconSolid className='n-w-6 n-h-6' />
+            <PlayIconSolid className='btn-icon-base-r' />
           </Button>
         </Dialog.Actions>
       </Dialog>

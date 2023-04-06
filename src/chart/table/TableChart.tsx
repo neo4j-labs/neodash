@@ -154,7 +154,7 @@ const NeoTableChart = (props: ChartProps) => {
             style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
             clean
           >
-            <CloudArrowDownIconOutline className='n-w-6 n-h-6' />
+            <CloudArrowDownIconOutline />
           </IconButton>
         </Tooltip>
       ) : (

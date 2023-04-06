@@ -21,7 +21,7 @@ const NeoAddNewCard = ({ onCreatePressed }) => {
             size='large'
             floating
           >
-            <SquaresPlusIconOutline className='n-w-6 n-h-6' />
+            <SquaresPlusIconOutline />
           </IconButton>
         </CardContent>
       </Card>

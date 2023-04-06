@@ -49,7 +49,7 @@ export const NeoDashboardHeaderTitleBar = ({
             size='large'
             clean
           >
-            <CameraIconSolid className='n-w-6 n-h-6' style={{ color: '#ffffffdd' }} />
+            <CameraIconSolid className='n-text-light-neutral-bg-weak' />
           </IconButton>
         </Tooltip>
       ) : (

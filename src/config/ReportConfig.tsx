@@ -59,7 +59,7 @@ export const REPORT_TYPES = {
         default: false,
       },
       separator: {
-        label: 'CSV Field Seperator',
+        label: 'CSV Field Separator',
         type: SELECTION_TYPES.LIST,
         values: [',', ';', 'tab'],
         default: ',',

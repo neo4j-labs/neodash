@@ -209,6 +209,7 @@ const NeoCardSettingsContentPropertySelect = ({
           onChange: (newValue) => newValue && handleParameterTypeUpdate(newValue.value),
           options: parameterSelectTypes.map((option) => ({ label: option, value: option })),
           value: { label: selectedType, value: selectedType },
+          menuPlacement: 'auto',
         }}
         label='Selection Type'
         type='select'

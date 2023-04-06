@@ -24,7 +24,7 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
               floating
             >
               Delete old dashboard
-              <TrashIconOutline className='n-w-6 n-h-6' />
+              <TrashIconOutline className='btn-icon-base-r' />
             </Button>
             <Button
               onClick={() => {
@@ -38,7 +38,7 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
               floating
             >
               Upgrade
-              <PlayIconSolid className='n-w-6 n-h-6' />
+              <PlayIconSolid className='btn-icon-base-r' />
             </Button>
           </div>
           <TextareaAutosize

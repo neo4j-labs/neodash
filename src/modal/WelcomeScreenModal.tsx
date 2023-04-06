@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from '@material-ui/core';
-import { Button, Dialog } from '@neo4j-ndl/react';
+import { Button, Dialog, TextLink } from '@neo4j-ndl/react';
 import {
   BoltIconSolid,
   ExclamationTriangleIconSolid,
@@ -40,7 +40,7 @@ export const NeoWelcomeScreenModal = ({
       <Dialog size='small' open={welcomeScreenOpen == true} aria-labelledby='form-dialog-title' disableCloseButton>
         <Dialog.Header id='form-dialog-title'>
           NeoDash - Neo4j Dashboard Builder
-          <BoltIconSolid className='n-w-6 n-h-6' color='gold' style={{ float: 'right' }} />
+          <BoltIconSolid className='icon-base' color='gold' style={{ float: 'right' }} />
         </Dialog.Header>
         <Dialog.Content>
           <Tooltip title='Connect to Neo4j and create a new dashboard.' aria-label='create'>
@@ -152,11 +152,15 @@ export const NeoWelcomeScreenModal = ({
             padding: '3rem',
           }}
         >
-          <div style={{ color: 'lightgrey' }}>
+          <div className='n-text-light-neutral-text-weakest'>
             NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated solution?{' '}
-            <a style={{ color: 'white' }} href='https://neo4j.com/professional-services/' target='_blank'>
+            <TextLink
+              href='https://neo4j.com/professional-services/'
+              className='n-text-light-neutral-text-inverse'
+              externalLink
+            >
               Get in touch
-            </a>
+            </TextLink>
             !
           </div>
         </Dialog.Actions>
@@ -166,7 +170,7 @@ export const NeoWelcomeScreenModal = ({
       <Dialog size='small' open={promptOpen == true} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
           Create new dashboard
-          <ExclamationTriangleIconSolid className='n-w-6 n-h-6' color='orange' style={{ float: 'right' }} />
+          <ExclamationTriangleIconSolid className='icon-base' color='orange' style={{ float: 'right' }} />
         </Dialog.Header>
         <Dialog.Content>
           Are you sure you want to create a new dashboard? This will remove your currently cached dashboard.
@@ -181,7 +185,7 @@ export const NeoWelcomeScreenModal = ({
             color='primary'
             fill='outlined'
           >
-            <BackspaceIconOutline className='n-w-6 n-h-6' />
+            <BackspaceIconOutline className='btn-icon-base-l' />
             No
           </Button>
           <Button
@@ -195,7 +199,7 @@ export const NeoWelcomeScreenModal = ({
             color='danger'
           >
             Yes
-            <PlayIconSolid className='n-w-6 n-h-6' />
+            <PlayIconSolid className='btn-icon-base-r' />
           </Button>
         </Dialog.Actions>
       </Dialog>

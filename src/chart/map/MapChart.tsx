@@ -10,6 +10,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import { Typography } from '@neo4j-ndl/react';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -346,9 +347,9 @@ const NeoMapChart = (props: ChartProps) => {
   function createPopupFromRelProperties(value) {
     return (
       <Popup className={'leaflet-custom-rel-popup'}>
-        <h3>
+        <Typography variant='h4'>
           <b>{value.type}</b>
-        </h3>
+        </Typography>
         <table>
           <tbody>
             {Object.keys(value.properties).length == 0 ? (
@@ -374,9 +375,9 @@ const NeoMapChart = (props: ChartProps) => {
   function createPopupFromNodeProperties(value) {
     return (
       <Popup className={'leaflet-custom-node-popup'}>
-        <h3>
+        <Typography variant='h4'>
           <b>{value.labels.length > 0 ? value.labels.map((b) => `${b} `) : '(No labels)'}</b>
-        </h3>
+        </Typography>
         <table>
           <tbody>
             {Object.keys(value.properties).length == 0 ? (

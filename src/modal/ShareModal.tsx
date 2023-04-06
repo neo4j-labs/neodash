@@ -15,6 +15,7 @@ import {
   DocumentCheckIconOutline,
   DatabaseAddCircleIcon,
 } from '@neo4j-ndl/react/icons';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
@@ -77,7 +78,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
             floating
           >
             Select
-            <PlayIconSolid className='n-w-6 n-h-6' />
+            <PlayIconSolid className='btn-icon-base-r' />
           </Button>
         );
       },
@@ -99,10 +100,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         aria-labelledby='form-dialog-title'
       >
         <Dialog.Header id='form-dialog-title'>
-          <ShareIconOutline
-            className='n-w-6 n-h-6'
-            style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
-          />
+          <ShareIconOutline className='icon-base icon-inline text-r' />
           Share Dashboard
         </Dialog.Header>
         <Dialog.Content>
@@ -129,7 +127,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               floating
             >
               Share from Neo4j
-              <DatabaseAddCircleIcon className='n-w-6 n-h-6' />
+              <DatabaseAddCircleIcon className='btn-icon-base-r' />
             </Button>
             <Button
               onClick={() => {
@@ -141,15 +139,14 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               floating
             >
               Share a file
-              <DocumentCheckIconOutline className='n-w-6 n-h-6' />
+              <DocumentCheckIconOutline className='btn-icon-base-r' />
             </Button>
           </div>
-          <b>{shareID ? `Selected dashboard: ${  shareName}` : ''}</b>
+          <b>{shareID ? `Selected dashboard: ${shareName}` : ''}</b>
           <hr />
           {shareID ? (
             <>
               {' '}
-              (
               <br />
               Step 2: Configure sharing settings.
               <br />
@@ -230,7 +227,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                 floating
               >
                 Generate Link
-                <ShareIconOutline className='n-w-6 n-h-6' />
+                <ShareIconOutline className='btn-icon-base-r' />
               </Button>
               <hr />
             </>
@@ -290,6 +287,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               },
               options: databases.map((database) => ({ label: database, value: database })),
               value: { label: dashboardDatabase, value: dashboardDatabase },
+              menuPlacement: 'auto',
             }}
             style={{ width: '150px' }}
           ></Dropdown>
@@ -337,7 +335,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               color='success'
             >
               Confirm URL
-              <PlayIconSolid className='n-w-6 n-h-6' />
+              <PlayIconSolid className='btn-icon-base-r' />
             </Button>
           </div>
         </Dialog.Content>

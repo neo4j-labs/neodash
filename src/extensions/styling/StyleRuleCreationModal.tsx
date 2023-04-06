@@ -192,10 +192,7 @@ export const NeoCustomReportStyleModal = ({
           aria-labelledby='form-dialog-title'
         >
           <Dialog.Header id='form-dialog-title'>
-            <AdjustmentsHorizontalIconOutline
-              className='n-w-6 n-h-6'
-              style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
-            />
+            <AdjustmentsHorizontalIconOutline className='icon-base icon-inline text-r' />
             Rule-Based Styling
           </Dialog.Header>
           <Dialog.Content style={{ overflow: 'inherit' }}>
@@ -378,7 +375,7 @@ export const NeoCustomReportStyleModal = ({
               floating
             >
               Save
-              <PlayIconSolid className='n-w-6 n-h-6' />
+              <PlayIconSolid className='btn-icon-lg-r' />
             </Button>
           </Dialog.Actions>
         </Dialog>

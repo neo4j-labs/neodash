@@ -4,7 +4,7 @@ import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { SideNavigationItem } from '@neo4j-ndl/react';
 import { ChartBarIconSolid } from '@neo4j-ndl/react/icons';
-import { Dialog } from '@neo4j-ndl/react';
+import { Dialog, Typography } from '@neo4j-ndl/react';
 
 export const NeoReportExamplesModal = ({ database, examples, extensions, navItemClass }) => {
   const [open, setOpen] = React.useState(false);
@@ -32,10 +32,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
           style={{ maxWidth: '90%' }}
         >
           <Dialog.Header id='form-dialog-title'>
-            <ChartBarIconSolid
-              className='n-w-6 n-h-6'
-              style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
-            />
+            <ChartBarIconSolid className='icon-base icon-inline text-r' />
             Report Examples
           </Dialog.Header>
           <div>
@@ -44,7 +41,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
               {examples.map((example) => {
                 return (
                   <>
-                    <h3>{example.title}</h3>
+                    <Typography variant='h3'>{example.title}</Typography>
                     {example.description}
                     <br />
                     <br />

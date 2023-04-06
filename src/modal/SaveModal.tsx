@@ -102,10 +102,7 @@ export const NeoSaveModal = ({
 
       <Dialog size='large' open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          <CloudArrowDownIconOutline
-            className='n-w-6 n-h-6'
-            style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
-          />
+          <CloudArrowDownIconOutline className='icon-base icon-inline text-r' />
           Save Dashboard
         </Dialog.Header>
         <Dialog.Content>
@@ -119,11 +116,11 @@ export const NeoSaveModal = ({
               floating
             >
               Save to Neo4j
-              <DatabaseAddCircleIcon className='n-w-6 n-h-6' />
+              <DatabaseAddCircleIcon className='btn-icon-base-r' />
             </Button>
             <Button onClick={downloadDashboard} fill='outlined' color='neutral' style={{ marginLeft: '10px' }} floating>
               Save to file
-              <DocumentArrowDownIconOutline className='n-w-6 n-h-6' />
+              <DocumentArrowDownIconOutline className='btn-icon-base-r' />
             </Button>
           </div>
           <TextareaAutosize
@@ -173,6 +170,7 @@ export const NeoSaveModal = ({
               },
               options: databases.map((database) => ({ label: database, value: database })),
               value: { label: dashboardDatabase, value: dashboardDatabase },
+              menuPlacement: 'auto',
             }}
             style={{ width: '150px', display: 'inline-block' }}
           ></Dropdown>
@@ -189,6 +187,17 @@ export const NeoSaveModal = ({
         <Dialog.Actions>
           <Button
             onClick={() => {
+              setSaveToNeo4jModalOpen(false);
+            }}
+            style={{ float: 'right' }}
+            fill='outlined'
+            floating
+          >
+            <BackspaceIconOutline className='btn-icon-base-l' />
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
               saveDashboardToNeo4j(
                 driver,
                 dashboardDatabase,
@@ -201,22 +210,11 @@ export const NeoSaveModal = ({
               setSaveModalOpen(false);
             }}
             color='success'
-            style={{ float: 'right' }}
+            style={{ float: 'right', marginRight: '10px' }}
             floating
           >
             Save
-            <DatabaseAddCircleIcon className='n-w-6 n-h-6' />
-          </Button>
-          <Button
-            onClick={() => {
-              setSaveToNeo4jModalOpen(false);
-            }}
-            style={{ float: 'right', marginRight: '10px' }}
-            fill='outlined'
-            floating
-          >
-            <BackspaceIconOutline className='n-w-6 n-h-6' />
-            Cancel
+            <DatabaseAddCircleIcon className='btn-icon-base-r' />
           </Button>
         </Dialog.Actions>
       </Dialog>

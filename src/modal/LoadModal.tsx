@@ -91,7 +91,7 @@ export const NeoLoadModal = ({
             floating
           >
             Select
-            <PlayIconSolid className='n-w-6 n-h-6' />
+            <PlayIconSolid className='btn-icon-base-r' />
           </Button>
         );
       },
@@ -107,10 +107,7 @@ export const NeoLoadModal = ({
 
       <Dialog size='large' open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          <CloudArrowUpIconOutline
-            className='n-w-6 n-h-6'
-            style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
-          />
+          <CloudArrowUpIconOutline className='icon-base icon-inline text-r' />
           Load Dashboard
         </Dialog.Header>
         <Dialog.Content>
@@ -130,7 +127,7 @@ export const NeoLoadModal = ({
               floating
             >
               Select from Neo4j
-              <DatabaseAddCircleIcon className='n-w-6 n-h-6' />
+              <DatabaseAddCircleIcon className='btn-icon-base-r' />
             </Button>
             <Button
               onClick={() => {
@@ -143,7 +140,7 @@ export const NeoLoadModal = ({
             >
               <input type='file' ref={loadFromFile} onChange={(e) => uploadDashboard(e)} hidden />
               Select From File
-              <DocumentPlusIconOutline className='n-w-6 n-h-6' />
+              <DocumentPlusIconOutline className='btn-icon-base-r' />
             </Button>
 
             <Button
@@ -157,7 +154,7 @@ export const NeoLoadModal = ({
               floating
             >
               Load Dashboard
-              <PlayIconSolid className='n-w-6 n-h-6' />
+              <PlayIconSolid className='btn-icon-base-r' />
             </Button>
           </div>
 

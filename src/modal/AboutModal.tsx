@@ -59,7 +59,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                 <br />
                 Click the{' '}
                 <strong>
-                  (<BookOpenIconOutline className='n-w-6 n-h-6' style={{ display: 'inline' }} /> Documentation)
+                  (<BookOpenIconOutline className='icon-base icon-inline text-r' /> Documentation)
                 </strong>
                 &nbsp;button to see some example queries and visualizations.
               </Description>
@@ -112,7 +112,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
             <div>
               <Button onClick={downloadDebugFile} fill='outlined' color='neutral' size='small'>
                 Debug Report
-                <BeakerIconOutline className='btn-icon-sm' />
+                <BeakerIconOutline className='btn-icon-sm-r' />
               </Button>
             </div>
             <div>

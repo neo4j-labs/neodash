@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { authRequestForSSO } from 'neo4j-client-sso';
 import { getDiscoveryDataInfo } from './SSOUtils';
 import { ShieldCheckIconOutline } from '@neo4j-ndl/react/icons';
-import { Button } from '@neo4j-ndl/react';
+import { IconButton } from '@neo4j-ndl/react';
 
 export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
   const [savedSSOProviders, setSSOProviders] = useState([]);
@@ -18,7 +18,7 @@ export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
     <>
       {savedSSOProviders?.length ? (
         savedSSOProviders.map((provider) => (
-          <Button
+          <IconButton
             key={provider.id}
             style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'white' }}
             onClick={() => {
@@ -28,9 +28,8 @@ export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
             }}
           >
             Sign in
-            <ShieldCheckIconOutline className='n-w-6 n-h-6' />
-            {/* {provider.name} */}
-          </Button>
+            <ShieldCheckIconOutline className='btn-icon-base-r' />
+          </IconButton>
         ))
       ) : (
         <div>

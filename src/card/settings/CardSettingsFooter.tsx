@@ -144,7 +144,7 @@ const NeoCardSettingsFooter = ({
                     }}
                     clean
                   >
-                    <AdjustmentsHorizontalIconOutline className='ndl-icon n-w-6 n-h-6' />
+                    <AdjustmentsHorizontalIconOutline />
                   </IconButton>
                 </Tooltip>
               </td>

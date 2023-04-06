@@ -48,10 +48,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
 
       <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          <Cog6ToothIconOutline
-            className='n-w-6 n-h-6'
-            style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
-          />
+          <Cog6ToothIconOutline className='icon-base icon-inline text-r' />
           Dashboard Settings
         </Dialog.Header>
         <Dialog.Content>
