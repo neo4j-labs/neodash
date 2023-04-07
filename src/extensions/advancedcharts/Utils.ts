@@ -24,11 +24,18 @@ const ruleFieldCheck = (ruleValue, value) => {
   return value.trim() == ruleValue.trim();
 };
 
+/**
+ * Returns a list of pairs, where each pair represents a page number and a name.
+ */
 export const getPageNumbersAndNamesList = () => {
   return useSelector(getPageNumbersAndNames);
 };
 
+/**
+ * Get the relevant page for a specific action rule.
+ */
 export const getPageFromPageNames = (pageNames, ruleValue) => {
+  // TODO - handle renames and reorders automatically by updating the action logic.
   let page = pageNames.filter((pageNew) => pageNew.split('/')[1] == ruleValue.split('/')[1]);
   if (page.length == 1) {
     return page[0];
@@ -40,9 +47,15 @@ export const getPageFromPageNames = (pageNames, ruleValue) => {
   return null;
 };
 
-export const actionRule = (rule, e, props, type = 'default') => {
+/**
+ *
+ * @param rule  - an action rule as specified by the user {"condition", "field", "value",  "customization", "customizationValue"}
+ * @param e - element to execute the rule on.
+ * @param props - ReportProps object to get callback from to update the state.
+ * @param type - type of rule, currently unused.
+ */
+export const executeActionRule = (rule, e, props, _type = 'default') => {
   if (rule !== null) {
-    let tt = type;
     if (rule.customization == 'set variable' && props && props.setGlobalParameter) {
       // call thunk for $neodash_customizationValue
       let rValue = rule.value == 'id' ? 'id ' : rule.value;
@@ -64,10 +77,18 @@ export const actionRule = (rule, e, props, type = 'default') => {
   }
 };
 
-export const action = (e, actionsRules, props, action, type) => {
+/**
+ * Evaluates and runs actions based on an element based on the rule set defined in the settings.
+ * @param e - the element.
+ * @param actionsRules - the list of rules.
+ * @param props - ChartProps object with callbacks to execute rule.
+ * @param action - the type of action to perform.
+ * @param type - the rule type.
+ */
+export const performActionOnElement = (e, actionsRules, props, action, type = 'default') => {
   let rules = getRule(e, actionsRules, action);
   if (rules !== null) {
-    rules.forEach((rule) => actionRule(rule, e, props, type));
+    rules.forEach((rule) => executeActionRule(rule, e, props, type));
   }
 };
 
