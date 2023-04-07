@@ -1,5 +1,3 @@
-import { MutableRefObject } from 'react';
-
 /**
  * A mapping between human-readable layout names, and the ones used by the library.
  */
@@ -77,6 +75,8 @@ export interface GraphChartVisualizationProps {
     drilldownLink: string;
     selectedEntity?: GraphEntity;
     setSelectedEntity: any;
+    setPageNumber: any;
+    pageNames: [];
   };
   extensions: {
     styleRules: any;

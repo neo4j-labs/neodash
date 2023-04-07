@@ -14,6 +14,9 @@ import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
+import { connect } from 'react-redux';
+import { updateDashboardSetting } from '../settings/SettingsActions';
+import { setPageNumberThunk } from '../settings/SettingsThunks';
 
 export const NeoReport = ({
   database = 'neo4j', // The Neo4j database to run queries onto.
@@ -32,6 +35,7 @@ export const NeoReport = ({
     return '';
   }, // function to get global (cypher) parameters.
   updateReportSetting = () => {},
+  setPageNumber = () => {}, // Callback to update the current page number selected by the user.
   dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
   rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
   queryTimeLimit = 20, // Time limit for queries before automatically aborted.
@@ -207,6 +211,7 @@ export const NeoReport = ({
     return (
       <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
         <ChartType
+          setPageNumber={setPageNumber}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -241,6 +246,7 @@ export const NeoReport = ({
           </div>
         </div>
         <ChartType
+          setPageNumber={setPageNumber}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -273,4 +279,12 @@ export const NeoReport = ({
   );
 };
 
-export default NeoReport;
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = (dispatch) => ({
+  setPageNumber: (index: number) => {
+    dispatch(setPageNumberThunk(index));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoReport);
