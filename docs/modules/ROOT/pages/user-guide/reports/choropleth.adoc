@@ -1,0 +1,69 @@
+= Choropleth
+
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
+
+A Choropleth chart will render geographical data in geoJson polygons
+layout. It takes two fields: 
+
+- *code*: String. This represents the Alpha-3 country code of region to be used. Alpha-2 it's not supported.
+- *value*:  Number. Cardinal data to be used on the chart.
+
+== Examples
+
+=== Basic Choropleth
+
+
+
+
+[source,cypher]
+----
+MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),
+(e)-[:LIVES_IN]->(c:Country)
+WITH c.code as code, count(e) as value
+RETURN code, value
+----
+
+image::choropleth.png[Choropleth Chart]
+
+== Advanced Settings
+
+[width="100%",cols="15%,2%,26%,57%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Enable interactivity |on/off |on |If enabled, turn on animations when a
+user hovers over a polygon.
+
+|Color Scheme |List | |The color scheme to use for the choropleth. Country colors
+will vary according their min to max ratio.
+
+|Polygon border width (px) |number |0 |The width of the border of each
+rectangle.
+
+|Margin Left (px) |number |24 |The margin in pixels on the left side of
+the visualization.
+
+|Margin Right (px) |number |24 |The margin in pixels on the right side
+of the visualization.
+
+|Margin Top (px) |number |24 |The margin in pixels on the top side of
+the visualization.
+
+|Margin Bottom (px) |number |40 |The margin in pixels on the bottom side
+of the visualization.
+
+|Country Code Format |List |iso_a3 |ISO Standard used on country codes.
+
+
+|Projection Scale |number |100 |Projection Scale of the visualization
+
+|Projection x translation |number |0.5 |This parameter will move the center of
+the visualization on the x axis
+
+|Projection y translation |number |0.5 |This parameter will move the center of
+the visualization on the y axis
+
+|Auto-run query |on/off |on |When activated, automatically runs the
+query when the report is displayed. When set to `off', the query is
+displayed and will need to be executed manually.
+|Report Description |markdown text | | When specified, adds another button the report header that opens a pop-up. This pop-up contains the rendered markdown from this setting. 
+|===

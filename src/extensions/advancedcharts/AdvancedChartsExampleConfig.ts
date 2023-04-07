@@ -195,13 +195,25 @@ export const EXAMPLE_ADVANCED_REPORTS = [
   },
   {
     title: 'Area Map',
-    description: 'Use dictionaries to visualize entities that are not real nodes and relationships.',
-    exampleQuery: `// To write query 
-                   UNWIND [["IT",5]] as v 
-                   RETURN v[0] as code, v[1] as value`,
+    description:
+      "The Area Map charts can be used to render geographical based information on geoJson polygons. It's possible to click a polygon to visualize its regions and their related data.",
+    exampleQuery: `
+MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),
+(e)-[:LIVES]->(city:City)-[:IN_COUNTRY]->(country:Country)
+WITH city, country
+CALL {
+    WITH country
+    RETURN country.countryCode as code, count(*) as value
+    UNION
+    WITH city
+    RETURN city.countryCode as code, count(*) as value
+}
+WITH code, sum(value) as totalCount
+RETURN code,totalCount
+    `,
     syntheticQuery: `
-        UNWIND [["IT",5]] as v
-        RETURN v[0] as code, v[1] as value
+        UNWIND [["FR", 1], ["IT", 3], ["FR.32", 1], ["IT.02", 2], ["IT.01", 1]] as v
+        RETURN v[0] as code, v[1] as value 
         `,
     settings: { mapDrillDown: true },
     fields: [],

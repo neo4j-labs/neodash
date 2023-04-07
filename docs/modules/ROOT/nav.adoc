@@ -11,6 +11,7 @@
 *** xref:user-guide/reports/line-chart.adoc[Line Chart]
 *** xref:user-guide/reports/sunburst.adoc[Sunburst]
 *** xref:user-guide/reports/circle-packing.adoc[Circle Packing]
+*** xref:user-guide/reports/choropleth.adoc[Choropleth]
 *** xref:user-guide/reports/treemap.adoc[Treemap]
 *** xref:user-guide/reports/radar.adoc[Radar Chart]
 *** xref:user-guide/reports/sankey.adoc[Sankey Chart]

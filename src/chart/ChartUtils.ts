@@ -199,6 +199,11 @@ export const downloadComponentAsImage = (ref) => {
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
 import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 
+/**
+ * Function to cast a value received from the Neo4j Driver to its TS native type
+ * @param input Value to cast
+ * @returns Value casted to it's native type
+ */
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;

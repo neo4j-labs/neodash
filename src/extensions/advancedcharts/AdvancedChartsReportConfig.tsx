@@ -908,12 +908,9 @@ export const ADVANCED_REPORT_TYPES = {
   },
   //
   /** *
-   * * TODO: move to Neodash Extensions
    * * TODO: An idea here:
-
     For the level zero layers, perhaps we can make the component work agnostically of whether the user is using two or three level country codes.
     E.g. it can apply colouring to germany based on "DE" or "GER", whatever it picks up. That would be a lot easier than providing an advanced setting for it. In the rare case that the user returns both (this will probably never happen), we just choose either.
-
     I'm also thinking about adding three-letter country code support since that is what the choropleth used, so it will make migrating from choropleth to areamap a lot easier for users.
    */
   areamap: {
