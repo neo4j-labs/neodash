@@ -5,6 +5,7 @@ import NeoSankeyChart from './chart/sankey/SankeyChart';
 import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
+import NeoAreaMapChart from './chart/areamap/AreaMapChart';
 
 export const EXAMPLE_ADVANCED_REPORTS = [
   {
@@ -191,6 +192,22 @@ export const EXAMPLE_ADVANCED_REPORTS = [
     fields: ['Skill', 'Lewandowski', 'Messi', 'Ronaldo', 'Benzema', 'Mbappé'],
     type: 'radar',
     chartType: NeoRadarChart,
+  },
+  {
+    title: 'Area Map',
+    description: 'Use dictionaries to visualize entities that are not real nodes and relationships.',
+    exampleQuery: `// To write query 
+                   UNWIND [["IT",5]] as v 
+                   RETURN v[0] as code, v[1] as value`,
+    syntheticQuery: `
+        UNWIND [["IT",5]] as v
+        RETURN v[0] as code, v[1] as value
+        `,
+    settings: { mapDrillDown: true },
+    fields: [],
+    selection: { index: 'code', value: 'value' },
+    type: 'map',
+    chartType: NeoAreaMapChart,
   },
   {
     title: 'Gauge Chart',

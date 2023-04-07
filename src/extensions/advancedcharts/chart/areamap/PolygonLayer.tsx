@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useMap, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Button from '@material-ui/core/Button';
-import '../styles/PolygonStyle.css';
-import { categoricalColorSchemes } from '../../../config/ColorConfig';
-import { abbreviateNumber } from '../MapUtils';
+import './styles/PolygonStyle.css';
+import { categoricalColorSchemes } from '../../../../config/ColorConfig';
+import { abbreviateNumber } from '../../../../chart/map/MapUtils';
 
 /**
  * Creates the list of values that will be used for the legend
