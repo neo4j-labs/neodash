@@ -952,6 +952,12 @@ export const ADVANCED_REPORT_TYPES = {
         values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
         default: 'YlOrRd',
       },
+      kindOfKey: {
+        label: 'Kind of Country Code',
+        type: SELECTION_TYPES.LIST,
+        values: ['Alpha-2', 'Alpha-3'],
+        default: 'Alpha-2',
+      },
       showLegend: {
         label: 'Show the Color Legend',
         type: SELECTION_TYPES.LIST,

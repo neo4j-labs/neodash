@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapBoundary } from './PolygonLayer';
 import { recordToNative } from '../../../../chart/ChartUtils';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
+import { keyLengthToKeyName, regionCodeName } from './styles/constants';
 
 /**
  * Method used to extract geographic data from the records got back by the query
@@ -55,6 +56,8 @@ const NeoAreaMapChart = (props: ChartProps) => {
   const { records } = props;
   const { selection } = props;
   const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
+  const keyLength = props.settings && props.settings.kindOfKey ? props.settings.kindOfKey : 'Alpha-2';
+  console.log(keyLength);
   let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
   const [data, setData] = useState({});
   // Two feature levels (ideally we can even more)
@@ -79,17 +82,17 @@ const NeoAreaMapChart = (props: ChartProps) => {
     fetch('https://raw.githubusercontent.com/neo4j-labs/neodash-static/main/world_polymap_level_0_entities.json')
       .then((res) => res.json())
       .then((matched) => {
-        let tmp = fromFeatureListToObject(matched.features, 'SHORT_COUNTRY_CODE');
+        let tmp = fromFeatureListToObject(matched.features, keyLengthToKeyName[keyLength]);
         setFeatureLevel0(tmp);
         setIsReady(true);
       });
-  }, []);
+  }, [keyLength]);
 
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/neo4j-labs/neodash-static/main/world_polymap_level_1_entities.json')
       .then((res) => res.json())
       .then((matched) => {
-        let tmp = fromFeatureListToObject(matched.features, 'code');
+        let tmp = fromFeatureListToObject(matched.features, regionCodeName);
         setFeatureLevel1(tmp);
       });
   }, []);
