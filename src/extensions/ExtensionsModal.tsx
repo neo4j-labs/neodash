@@ -1,20 +1,13 @@
-import ExtensionIcon from '@material-ui/icons/Extension';
-
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Badge from '@material-ui/core/Badge';
-import { Checkbox, Chip, FormControlLabel, Tooltip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
-import { Label, SideNavigationItem, TextLink, Typography } from '@neo4j-ndl/react';
+import { Dialog, Label, SideNavigationItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
+import { Section, SectionTitle, SectionContent } from '../modal/ModalUtils';
 
 const NeoExtensionsModal = ({
   extensions,
@@ -43,95 +36,89 @@ const NeoExtensionsModal = ({
       </SideNavigationItem>
 
       {open ? (
-        <Dialog maxWidth={'md'} open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-          <DialogTitle id='form-dialog-title'>
-            <ExtensionIcon
-              style={{
-                height: '30px',
-                paddingTop: '4px',
-                marginBottom: '-8px',
-                marginRight: '5px',
-                paddingBottom: '5px',
-              }}
-            />
+        <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+          <Dialog.Header id='form-dialog-title'>
+            <PuzzlePieceIconSolid className='icon-base icon-inline text-r' />
             Extensions
-            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-              <Badge overlap='rectangular' badgeContent={''}>
-                <CloseIcon id={'extensions-modal-close-button'} />
-              </Badge>
-            </IconButton>
-          </DialogTitle>
-          <div>
-            <DialogContent>
-              <TextLink externalLink target='_blank' href='https://neo4j.com/labs/neodash/2.2/user-guide/extensions/'>
-                Extensions
-              </TextLink>
-              &nbsp;are a way of extending the core functionality of NeoDash with custom logic.
-              <br />
-              This can be a new visualization, extra styling options for an existing visualization, or even a completely
-              new logic for the dashboarding engine.
-              <br /> <br />
-              <hr></hr>
-              {Object.values(EXTENSIONS).map((e) => {
+          </Dialog.Header>
+          <Dialog.Content>
+            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
+              <Section>
+                <SectionTitle>
+                  <TextLink
+                    externalLink
+                    target='_blank'
+                    href='https://neo4j.com/labs/neodash/2.2/user-guide/extensions/'
+                  >
+                    Extensions
+                  </TextLink>
+                  &nbsp;are a way of extending the core functionality of NeoDash with custom logic.
+                </SectionTitle>
+                <SectionContent>
+                  This can be a new visualization, extra styling options for an existing visualization, or even a
+                  completely new logic for the dashboarding engine.
+                </SectionContent>
+              </Section>
+
+              {Object.values(EXTENSIONS).map((e, key) => {
                 return (
-                  <div style={{ opacity: e.enabled ? 1.0 : 0.6 }}>
-                    <table>
-                      <tr>
-                        <td>
-                          <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
-                            <Typography variant='h3'>{e.label}</Typography>
-                            {e.enabled && (
-                              <Label color='info' fill='outlined'>
-                                Pro Feature
-                              </Label>
-                            )}
-                          </div>
-                        </td>
-                        <td style={{ width: 50 }}></td>
-                        <td style={{ float: 'right' }}>
-                          <Tooltip title='Enable the extension' aria-label=''>
-                            <FormControlLabel
-                              onClick={() => {
-                                if (e.enabled) {
-                                  setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
-                                } else {
-                                  onExtensionUnavailableTriggered(e.label);
-                                }
-                              }}
-                              control={
+                  <Section key={key}>
+                    <SectionContent>
+                      <div style={{ opacity: e.enabled ? 1.0 : 0.6 }}>
+                        <table>
+                          <tr>
+                            <td>
+                              <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
+                                <Typography variant='h4'>{e.label}</Typography>
+                                {e.enabled && (
+                                  <Label color='info' fill='outlined'>
+                                    Pro Feature
+                                  </Label>
+                                )}
+                              </div>
+                            </td>
+                            <td style={{ width: 50 }}></td>
+                            <td style={{ float: 'right' }}>
+                              <Tooltip title='Enable the extension' aria-label=''>
                                 <Checkbox
                                   id={`checkbox-${e.name}`}
+                                  label='Active'
                                   disabled={!e.enabled}
                                   style={{ fontSize: 'small' }}
                                   checked={extensions[e.name]}
                                   name='enable'
+                                  onClick={() => {
+                                    if (e.enabled) {
+                                      setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
+                                    } else {
+                                      onExtensionUnavailableTriggered(e.label);
+                                    }
+                                  }}
                                 />
-                              }
-                              label={<span color='green'>{'Active'}</span>}
-                            />
-                          </Tooltip>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td valign='top'>
-                          <p>{e.description}</p>
-                          <p>
-                            Author: <a href={e.link}>{e.author}</a>
-                          </p>
-                        </td>
-                        <td></td>
-                        <td>
-                          <br />
-                          <img src={e.image} style={{ width: 400, border: '1px solid grey' }}></img>
-                        </td>
-                      </tr>
-                    </table>
-                    <hr></hr>
-                  </div>
+                              </Tooltip>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td valign='top'>
+                              <p>{e.description}</p>
+                              <p>
+                                Author: <a href={e.link}>{e.author}</a>
+                              </p>
+                            </td>
+                            <td></td>
+                            <td>
+                              <br />
+                              <img src={e.image} style={{ width: 400, border: '1px solid grey' }}></img>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </SectionContent>
+                  </Section>
                 );
               })}
-            </DialogContent>
-          </div>
+            </div>
+          </Dialog.Content>
         </Dialog>
       ) : (
         <></>

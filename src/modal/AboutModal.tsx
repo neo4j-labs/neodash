@@ -1,12 +1,7 @@
-import React, { PropsWithChildren } from 'react';
-import { Button, Dialog, TextLink, Typography } from '@neo4j-ndl/react';
+import React from 'react';
+import { Button, Dialog, TextLink } from '@neo4j-ndl/react';
 import { BookOpenIconOutline, BeakerIconOutline } from '@neo4j-ndl/react/icons';
-
-const SectionTitle = ({ children }: PropsWithChildren) => <Typography variant='h5'>{children}</Typography>;
-const Description = ({ children }: PropsWithChildren) => <Typography variant='body-medium'>{children}</Typography>;
-const Section = ({ children }: PropsWithChildren) => (
-  <div className='n-py-4 n-flex n-flex-col n-gap-token-4'>{children}</div>
-);
+import { Section, SectionTitle, SectionContent } from './ModalUtils';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
   const version = '2.2.3';
@@ -30,11 +25,11 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
           <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
             <Section>
               <SectionTitle>NeoDash is a dashboard builder for the Neo4j graph database.</SectionTitle>
-              <Description>If you can write Cypher queries, you can build a dashboard in minutes.</Description>
+              <SectionContent>If you can write Cypher queries, you can build a dashboard in minutes.</SectionContent>
             </Section>
             <Section>
               <SectionTitle>Core Features</SectionTitle>
-              <Description>
+              <SectionContent>
                 <ul className='n-list-disc n-pl-token-8'>
                   <li>
                     An editor to write and execute&nbsp;
@@ -50,11 +45,11 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                   <li>Save and share your dashboards with your friends.</li>
                 </ul>
                 No connectors or data pre-processing needed, it works directly with Neo4j!
-              </Description>
+              </SectionContent>
             </Section>
             <Section>
               <SectionTitle>Getting Started</SectionTitle>
-              <Description>
+              <SectionContent>
                 You will automatically start with an empty dashboard when starting up NeoDash for this first time.
                 <br />
                 Click the{' '}
@@ -62,11 +57,11 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                   (<BookOpenIconOutline className='icon-base icon-inline text-r' /> Documentation)
                 </strong>
                 &nbsp;button to see some example queries and visualizations.
-              </Description>
+              </SectionContent>
             </Section>
             <Section>
               <SectionTitle>Extending NeoDash</SectionTitle>
-              <Description>
+              <SectionContent>
                 NeoDash is built with React and&nbsp;
                 <TextLink externalLink target='_blank' href='https://github.com/adam-cowley/use-neo4j'>
                   use-neo4j
@@ -86,11 +81,11 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                   project repository
                 </TextLink>
                 .
-              </Description>
+              </SectionContent>
             </Section>
             <Section>
               <SectionTitle>Contact</SectionTitle>
-              <Description>
+              <SectionContent>
                 For suggestions, feature requests and other feedback: create an issue on the&nbsp;
                 <TextLink externalLink target='_blank' href='https://github.com/neo4j-labs/neodash'>
                   GitHub repository
@@ -105,7 +100,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                   Neo4j Community Forums
                 </TextLink>
                 .
-              </Description>
+              </SectionContent>
             </Section>
           </div>
           <div className='n-flex n-flex-row n-justify-between n-mt-token-8'>

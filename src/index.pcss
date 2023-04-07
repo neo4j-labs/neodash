@@ -5,6 +5,7 @@
 /* Create CSS class based components */
 /* https://tailwindcss.com/docs/reusing-styles#extracting-classes-with-apply */
 @layer components {
+  /* Utility functions for buttons */
   .btn-icon-sm-r {
     @apply n-ml-token-2 n-w-4 n-h-4;
   }
@@ -28,6 +29,7 @@
     @apply n-mr-token-4 n-w-8 n-h-8;
   }
 
+  /* Utility functions for icons */
   .icon-base {
     @apply n-w-6 n-h-6;
   }
@@ -47,5 +49,9 @@
   /* Make bullet list points in Markdown card view */
   .card-view ul {
     @apply n-list-disc n-ml-token-7;
+  }
+
+  .ndl-dialog.dialog-xl {
+    max-width: 90%;
   }
 }

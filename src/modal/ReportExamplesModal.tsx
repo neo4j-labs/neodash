@@ -5,6 +5,7 @@ import NeoReport from '../report/Report';
 import { SideNavigationItem } from '@neo4j-ndl/react';
 import { ChartBarIconSolid } from '@neo4j-ndl/react/icons';
 import { Dialog, Typography } from '@neo4j-ndl/react';
+import { Section, SectionTitle, SectionContent } from '../modal/ModalUtils';
 
 export const NeoReportExamplesModal = ({ database, examples, extensions, navItemClass }) => {
   const [open, setOpen] = React.useState(false);
@@ -24,30 +25,23 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
       </SideNavigationItem>
 
       {open ? (
-        <Dialog
-          size='large'
-          open={open == true}
-          onClose={handleClose}
-          aria-labelledby='form-dialog-title'
-          style={{ maxWidth: '90%' }}
-        >
+        <Dialog open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title' className='dialog-xl'>
           <Dialog.Header id='form-dialog-title'>
             <ChartBarIconSolid className='icon-base icon-inline text-r' />
             Report Examples
           </Dialog.Header>
-          <div>
-            <Dialog.Content>
-              <hr></hr>
+          <Dialog.Content>
+            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
               {examples.map((example) => {
                 return (
-                  <>
-                    <Typography variant='h3'>{example.title}</Typography>
-                    {example.description}
-                    <br />
-                    <br />
-                    <Grid container spacing={4}>
-                      <Grid item xs={4}>
-                        <div style={{ width: '400px', border: '0px solid lightgrey' }}>
+                  <Section>
+                    <SectionTitle>
+                      <Typography variant='h4'>{example.title}</Typography>
+                    </SectionTitle>
+                    <SectionContent>
+                      <div className='n-grid n-grid-cols-3 n-gap-8'>
+                        <div className='n-col-span-3'>{example.description}</div>
+                        <div className='n-col-span-1'>
                           <NeoCodeEditorComponent
                             editable={false}
                             placeholder=''
@@ -55,13 +49,11 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
                             language={example.type == 'iframe' ? 'url' : 'cypher'}
                           ></NeoCodeEditorComponent>
                         </div>
-                      </Grid>
 
-                      <Grid item xs={8}>
                         <div
+                          className='n-col-span-2'
                           style={{
                             height: '355px',
-                            width: '800px',
                             overflow: 'hidden',
                             border: '1px solid lightgrey',
                           }}
@@ -80,14 +72,13 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
                             type={example.type}
                           />
                         </div>
-                      </Grid>
-                    </Grid>
-                    <hr></hr>
-                  </>
+                      </div>
+                    </SectionContent>
+                  </Section>
                 );
               })}
-            </Dialog.Content>
-          </div>
+            </div>
+          </Dialog.Content>
         </Dialog>
       ) : (
         <></>

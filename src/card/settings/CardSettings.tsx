@@ -87,7 +87,7 @@ const NeoCardSettings = ({
   return (
     <div className={`card-view ${expanded ? 'expanded' : ''}`} style={{ overflowY: 'auto', height: '100%' }}>
       {cardSettingsHeader}
-      <ReportItemContainer style={{ height: reportHeight, marginTop: '-20px' }}>
+      <ReportItemContainer style={{ height: reportHeight }} className='-n-mt-2'>
         {cardSettingsContent}
         {cardSettingsFooter}
       </ReportItemContainer>

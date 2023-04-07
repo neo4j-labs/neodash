@@ -44,7 +44,7 @@
     "@mui/material": "^5.3.0",
     "@mui/x-data-grid": "5.10.0",
     "@mui/x-date-pickers": "^5.0.17",
-    "@neo4j-cypher/react-codemirror": "^1.0.0-next.21",
+    "@neo4j-cypher/react-codemirror": "^1.0.2",
     "@neo4j-ndl/base": "1.1.0",
     "@neo4j-ndl/react": "1.1.0",
     "@nivo/bar": "^0.80.0",

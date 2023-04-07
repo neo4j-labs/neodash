@@ -16,7 +16,7 @@ const NeoCodeEditorComponent = ({
   placeholder,
   editable = true,
   language = 'cypher',
-  style = { width: '100%', height: 'auto', border: '1px solid lightgray' },
+  style = { border: '1px solid lightgray' },
 }) => {
   const editorProps: CypherEditorProps = {
     cypherLanguage: language === 'cypher',
@@ -33,7 +33,7 @@ const NeoCodeEditorComponent = ({
   };
 
   return (
-    <div className={'autosize'} style={style}>
+    <div style={style}>
       <CypherEditor className='ndl-cypher-editor' {...editorProps} />
     </div>
   );

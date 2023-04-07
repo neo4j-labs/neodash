@@ -124,12 +124,12 @@ const NeoCardSettingsFooter = ({
         <tbody>
           <tr>
             <td>
-              <FormGroup>
+              <FormGroup className='n-mt-2'>
                 <Switch
                   label='Advanced settings'
                   checked={reportSettingsOpen}
                   onChange={onToggleReportSettings}
-                  style={{ marginLeft: '5px' }}
+                  className='n-ml-2'
                 />
               </FormGroup>
             </td>
