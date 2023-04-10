@@ -32,11 +32,15 @@ import { applicationGetConnection } from '../../application/ApplicationSelectors
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { saveDashboardToHiveThunk, listUserDashboards } from '../persistence/SolutionsThunks';
 import { ExpandMore } from '@material-ui/icons';
-import { DatabaseUploadType } from '../config/SolutionsConstants';
+import { DatabaseUploadType, HiveSolutionDomain } from '../config/SolutionsConstants';
 import { SelectDatabase } from './database/SelectDatabase';
 import { TabPanel } from './tabs/TabPanel';
 import { PublishInfo } from './PublishInfo';
 import { getDbConnectionUrl } from '../util/util';
+import { config } from '../config/dynamicConfig';
+import { handleErrors } from '../util/util';
+import auth from '../auth/auth';
+import { GetSolutionById } from './graphql/HiveGraphQL';
 
 /**
  * A modal to save the dashboard and database to Hive
@@ -77,7 +81,59 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
   const [dbConnection, setDbConnection] = useState(connection);
   const [hasPublished, setHasPublished] = useState(false);
   const [solutionId, setSolutionId] = useState(0);
+  const [image, setImage] = useState('');
+  const [domain, setDomain] = useState(HiveSolutionDomain.Private);
   // console.log('tabIndex: ', tabIndex);
+
+  const [hiveSolutionInfoBeenCalled, setHiveSolutionInfoBeenCalled] = useState(false);
+  const [hiveSolutionInfo, setHiveSolutionInfo] = useState({});
+
+  useEffect(() => {
+    const getHiveSolution = async () => {
+      console.log('in getHiveSolution');
+      const uri = config('HIVE_URI');
+      console.log('hive uri is: ', uri);
+      fetch(uri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: auth.getIdToken() ? `Bearer ${auth.getIdToken()}` : '',
+        },
+        body: JSON.stringify({
+          query: GetSolutionById,
+          variables: { id: existingSolutionId },
+        }),
+      })
+        .then(handleErrors)
+        .then(async (res) => {
+          const jsonResponse = await res.json();
+          const solution = jsonResponse?.data?.solution || {};
+          // console.log('Solution info is: ', solution);
+          setHiveSolutionInfo(solution);
+          if (domain !== solution.domain) {
+            setDomain(solution.domain);
+          }
+          if (image !== solution.image) {
+            setImage(solution.image || '');
+          }
+        })
+        .catch((error) => {
+          console.log(`Error fetching Solution info for Solution ID ${existingSolutionId}`, error);
+        });
+    };
+
+    if (!hiveSolutionInfoBeenCalled) {
+      setHiveSolutionInfoBeenCalled(true);
+      if (existingSolutionId) {
+        console.log('Calling getHiveSolution with solutionId: ', existingSolutionId);
+        try {
+          getHiveSolution();
+        } catch (e) {
+          console.log(`Error fetching Solution info for Solution ID ${existingSolutionId}`, e);
+        }
+      }
+    }
+  }, [hiveSolutionInfo, hiveSolutionInfoBeenCalled, existingSolutionId]);
 
   const existingDbName = existingSolutionId ? connection.database : null;
 
@@ -155,6 +211,8 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
       dbUsername: dbConnection.username,
       dbPassword: dbConnection.password,
       dbName: dbConnection.database,
+      domain: domain,
+      image: image,
     });
   };
 
@@ -209,6 +267,8 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
                 connection={dbConnection}
                 solutionId={solutionId}
                 title={title}
+                domain={domain}
+                setDomain={setDomain}
               />
             </TabPanel>
           </div>
@@ -262,6 +322,8 @@ const mapDispatchToProps = (dispatch) => ({
     dbUsername,
     dbPassword,
     dbName,
+    domain,
+    image,
   }) => {
     dispatch(
       saveDashboardToHiveThunk({
@@ -277,6 +339,8 @@ const mapDispatchToProps = (dispatch) => ({
         dbUsername,
         dbPassword,
         dbName,
+        domain,
+        image,
       })
     );
   },

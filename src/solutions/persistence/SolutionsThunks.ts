@@ -64,6 +64,8 @@ const saveDashboardToHiveGraphQL = async ({
   dbUsername,
   dbPassword,
   fileName,
+  domain,
+  image,
 }) => {
   const promise = new Promise((resolve, reject) => {
     let dashboardCopy = JSON.parse(JSON.stringify(dashboard));
@@ -90,8 +92,9 @@ const saveDashboardToHiveGraphQL = async ({
         name: title,
         type: 'neodash',
         // type: 'demo',
-        domain: 'public',
-        image: '',
+        // domain: 'public',
+        domain: domain,
+        image: image,
         github: '',
       },
       deploymentInput: {
@@ -141,7 +144,18 @@ const saveDashboardToHiveGraphQL = async ({
 };
 
 export const saveDashboardToHiveThunk =
-  ({ dashboard, overwrite = false, progressCallback, dbType, dbConnectionUrl, dbUsername, dbPassword, dbName }) =>
+  ({
+    dashboard,
+    overwrite = false,
+    progressCallback,
+    dbType,
+    dbConnectionUrl,
+    dbUsername,
+    dbPassword,
+    dbName,
+    domain,
+    image,
+  }) =>
   async (dispatch: any) => {
     const saveHiveCardArgs = {
       dispatch,
@@ -152,6 +166,8 @@ export const saveDashboardToHiveThunk =
       dbUsername,
       dbPassword,
       dbName,
+      domain,
+      image,
     };
     try {
       const hiveinfo = await saveDashboardToHiveGraphQL({

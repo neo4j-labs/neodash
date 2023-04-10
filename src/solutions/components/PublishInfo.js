@@ -1,12 +1,14 @@
 import React from 'react';
 import { Alert } from '@material-ui/lab';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { config } from '../config/dynamicConfig';
 import { getDbConnectionUrl } from '../util/util';
 import './PublishInfo.css';
+import { HiveSolutionDomain } from '../config/SolutionsConstants';
 
 export const PublishInfo = (props) => {
-  const { hasPublished, solutionId, connection, title } = props;
+  const { hasPublished, solutionId, connection, title, domain, setDomain } = props;
 
   const baseDemoUrl = config('NEODASH_BASE_DEMO_URL');
   const hiveUiSolutionsUrl = config('HIVE_UI');
@@ -32,10 +34,41 @@ export const PublishInfo = (props) => {
     link.click();
   };
 
+  const setDemoVisibility = (event) => {
+    setDomain(event.target.value);
+  };
+
   return (
     <div style={{ marginTop: '10px' }}>
       {!hasPublished ? (
-        <div className='publishInfo'>Click the Publish button to publish to Hive</div>
+        <>
+          <FormControl
+            style={{
+              margin: '10px',
+              display: 'flex',
+              flexFlow: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <FormLabel id='demo-visibility-controlled-radio-buttons-group'>Visibility:</FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby='demo-visibility-controlled-radio-buttons-group'
+              name='controlled-radio-buttons-group'
+              value={domain}
+              onChange={setDemoVisibility}
+              style={{ marginLeft: '15px' }}
+            >
+              <FormControlLabel value={HiveSolutionDomain.Private} control={<Radio />} label='Private' />
+              <FormControlLabel value={HiveSolutionDomain.Public} control={<Radio />} label='Public' />
+            </RadioGroup>
+          </FormControl>
+          <div className='publishInfo'>
+            <Alert className='alert' severity='info'>
+              Click the Publish button to publish to Hive
+            </Alert>
+          </div>
+        </>
       ) : (
         <>
           <Alert className='alert' severity='success'>
