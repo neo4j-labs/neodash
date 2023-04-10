@@ -46,7 +46,7 @@ export const SelectDatabase = (props) => {
       <div style={{ width: '600px', marginTop: '5px' }}>
         <Typography variant='body2'>
           Use upload database to host your database on Hive. Use Remote Connection if you have an existing Neo4j DB you
-          want to use.
+          want to use. Upload only supports Neo4j 5 databases.
         </Typography>
       </div>
     </div>
