@@ -231,20 +231,35 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
     return (
       <div
         className='info legend'
-        style={{ zIndex: 1001, position: 'absolute', bottom: 30, right: 30, width: dimensions.width * 0.25 }}
+        style={{
+          zIndex: 1001,
+          position: 'absolute',
+          bottom: 30,
+          right: 30,
+          minWidth: 110,
+          maxWidth: 180,
+          width: dimensions.width * 0.25,
+        }}
       >
-        {legendRange.map((from, i, legendRange) => {
-          let to = legendRange[i + 1];
-          return (
-            <>
-              <i style={{ background: colors[i] }}> &nbsp; </i>
-              <p style={{ fontSize: 'medium' }}>
-                {' '}
-                {abbreviateNumber(from, 2)} {!isNaN(to) ? `- ${abbreviateNumber(to, 2)}` : i > 0 ? '+' : ''}{' '}
-              </p>
-            </>
-          );
-        })}
+        <table>
+          {legendRange.map((from, i, legendRange) => {
+            let to = legendRange[i + 1];
+            return (
+              <tr>
+                <td>
+                  <i style={{ background: colors[i] }}> &nbsp; </i>
+                </td>
+                <td>
+                  <p style={{ fontSize: 'small', margin: 0, marginTop: 2, overflow: 'hidden', height: 20 }}>
+                    {''}
+                    {abbreviateNumber(from, 2)}
+                    {!isNaN(to) ? `-${abbreviateNumber(to, 2)}` : i > 0 ? '+' : ''}{' '}
+                  </p>
+                </td>
+              </tr>
+            );
+          })}
+        </table>
       </div>
     );
   }
@@ -263,7 +278,7 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
 
   const geoJsonLayer = (
     <div>
-      {isDrillDownEnabled ? resetButton : <></>}
+      {isDrillDownEnabled && state.geoJson !== undefined ? resetButton : <></>}
       {isLegendEnabled ? legend : <></>}
       <GeoJSON
         id='polygonId'

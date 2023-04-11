@@ -948,19 +948,19 @@ export const ADVANCED_REPORT_TYPES = {
         default: 'YlOrRd',
       },
       countryCodeFormat: {
-        label: 'Country Code format',
+        label: 'Country Code Format',
         type: SELECTION_TYPES.LIST,
         values: ['Alpha-2', 'Alpha-3'],
         default: 'Alpha-2',
       },
       showLegend: {
-        label: 'Show the Color Legend',
+        label: 'Color Legend',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
       },
       mapDrillDown: {
-        label: 'Activates Drill Down',
+        label: 'Drilldown Enabled',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
