@@ -1,3 +1,4 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -9,8 +10,9 @@ const rules = [
     options: { presets: ['@babel/env'] },
   },
   {
-    test: /\.css$/,
-    use: ['style-loader', 'css-loader'],
+    test: /\.css$/i,
+    // include: path.resolve(__dirname, 'src'),
+    use: ['style-loader', 'css-loader', 'postcss-loader'],
   },
   {
     test: /\.js$/,
@@ -22,6 +24,16 @@ const rules = [
     test: /.(png|svg|jpe?g|gif|woff2?|ttf|eot)$/,
     use: ['file-loader'],
   },
+];
+
+const plugins = [
+  new webpack.DefinePlugin({ PUBLIC_URL: JSON.stringify('/') }),
+  new HtmlWebpackPlugin({
+    template: 'public/index.html',
+    path: 'dist',
+    filename: 'index.html',
+    // favicon: 'src/favicon.ico'
+  }),
 ];
 
 // TODO - move this config to a dedicated environment file.
@@ -43,7 +55,7 @@ module.exports = (env) => {
       port: 4000,
       hot: true,
     },
-    plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()],
+    plugins: production ? plugins : [new webpack.HotModuleReplacementPlugin(), ...plugins],
     ignoreWarnings: [/Failed to parse source map/],
   };
 };
