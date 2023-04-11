@@ -1,4 +1,4 @@
-import { runCypherQuery } from '../../../report/ReportQueryRunner';
+import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { STEP_STATUS } from '../NeoWorkflowRunnerModal';
 
 async function sleep(msec) {
@@ -74,6 +74,7 @@ export function runWorkflow(
       setWorkflowStatus([...workflowStatus]);
       updateWorkflowStepStatus(workflowIndex, stepIndex, status);
     };
+
     try {
       for (let index = 0; index < workflow.steps.length; index++) {
         /**
@@ -88,7 +89,7 @@ export function runWorkflow(
          * @param records Records got from the query runner
          */
         const setStatus = (status) => {
-          let possiblePositiveStatus = [5, 6];
+          let possiblePositiveStatus = [QueryStatus.NO_DATA, QueryStatus.COMPLETE, QueryStatus.COMPLETE_TRUNCATED];
           let newStatus = STEP_STATUS.COMPLETE;
           // if the query is nto completed, throw an error and abort to prevent running the next steps
           if (!possiblePositiveStatus.includes(status)) {
@@ -115,6 +116,7 @@ export function runWorkflow(
       await consoleLogAsync('Error while running a workflow:', e);
     } finally {
       handleEnd();
+      await consoleLogAsync('Worklow results TO REMOVE:', results);
     }
   }
   return {

@@ -30,4 +30,33 @@ export const WORKFLOW_STEPS = {
     description: 'Testing the correct behaviour with a query that fails ',
     query: 'Mathc (n) REturn n limit 5',
   },
+  cleanGDS: {
+    name: 'Clean GDS in Memory-graph',
+    key: 'cleanGDS',
+    type: 'GDS',
+    description: 'Test for projection ',
+    query: 'call gds.graph.drop("testGraph", False);',
+  },
+  projection: {
+    name: 'Cypher Projection',
+    key: 'projection',
+    type: 'GDS',
+    description: 'Test for projection ',
+    query: 'call gds.graph.project("testGraph", ["Resource","Class"],["annotatedSource","subClassOf"]);',
+  },
+  wcc: {
+    name: 'Weakly Connected Component',
+    key: 'wcc',
+    type: 'GDS',
+    description: 'Test for wcc ',
+    query: 'CALL gds.wcc.mutate("testGraph",{mutateProperty:"testWcc"})',
+  },
+  streamPropertiesResult: {
+    name: 'Stream Created properties',
+    key: 'streamPropertiesResult',
+    type: 'GDS',
+    description: 'Test for wcc stream ',
+    query:
+      'CALL gds.graph.nodeProperties.stream("testGraph","testWcc") yield nodeId, propertyValue return nodeId, propertyValue LIMIT 100',
+  },
 };
