@@ -54,7 +54,7 @@ describe('NeoDash E2E Tests', () => {
     // Check the starter cards
     cy.get('main .react-grid-item:eq(0)').should('contain', 'This is your first dashboard!');
     cy.get('main .react-grid-item:eq(1) .force-graph-container canvas').should('be.visible');
-    cy.get('main .react-grid-item:eq(2) button').should('have.attr', 'aria-label', 'add');
+    cy.get('main .react-grid-item:eq(2) button').should('have.attr', 'aria-label', 'add report');
   });
 
   it('creates a new card', () => {
@@ -66,7 +66,7 @@ describe('NeoDash E2E Tests', () => {
   it('creates a table report', () => {
     cy.get('main .react-grid-item:eq(2) button').click();
     cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
-    cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains('Type').next().should('contain', 'Table');
+    cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders')
@@ -82,41 +82,23 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a bar chart report', () => {
     createReportOfType('Bar Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Category')
-      .next()
-      .should('contain', 'released');
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Value')
-      .next()
-      .should('contain', 'count');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Category"]').should('have.value', 'released');
+    cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'count');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 8);
   });
 
   it('creates a pie chart report', () => {
     createReportOfType('Pie Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Category')
-      .next()
-      .should('contain', 'released');
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Value')
-      .next()
-      .should('contain', 'count');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Category"]').should('have.value', 'released');
+    cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'count');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 3);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > path').should('have.length', 5);
   });
 
   it('creates a line chart report', () => {
     createReportOfType('Line Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('X-value')
-      .next()
-      .should('contain', 'released');
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Y-value')
-      .next()
-      .should('contain', 'count');
+    cy.get('main .react-grid-item:eq(2) #x input[name="X-value"]').should('have.value', 'released');
+    cy.get('main .react-grid-item:eq(2) #value input[name="Y-value"]').should('have.value', 'count');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > line').should(
       'have.length',
@@ -134,7 +116,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span')
       .invoke('text')
       .then((text) => {
-        expect(text).to.be.oneOf(['1999', '1,999']);
+        expect(text).to.be.oneOf(['1999', '1,999', '1 999']);
       });
   });
 
@@ -147,42 +129,24 @@ describe('NeoDash E2E Tests', () => {
   it('creates a sunburst chart report', () => {
     enableAdvancedVisualizations();
     createReportOfType('Sunburst Chart', sunburstChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Path')
-      .next()
-      .should('contain', 'x.path');
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Value')
-      .next()
-      .should('contain', 'x.value');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]').should('have.value', 'x.path');
+    cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'x.value');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(1) > path').should('have.length', 5);
   });
 
   it('creates a circle packing report', () => {
     enableAdvancedVisualizations();
     createReportOfType('Circle Packing', sunburstChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Path')
-      .next()
-      .should('contain', 'x.path');
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Value')
-      .next()
-      .should('contain', 'x.value');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]').should('have.value', 'x.path');
+    cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'x.value');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > circle').should('have.length', 6);
   });
 
   it('creates a tree map report', () => {
     enableAdvancedVisualizations();
     createReportOfType('Treemap', sunburstChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Path')
-      .next()
-      .should('contain', 'x.path');
-    cy.get('main .react-grid-item:eq(2) .MuiCardActions-root .MuiInputLabel-root')
-      .contains('Value')
-      .next()
-      .should('contain', 'x.value');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]').should('have.value', 'x.path');
+    cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'x.value');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6);
   });
 
@@ -201,10 +165,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a parameter select report', () => {
-    cy.get('main .react-grid-item:eq(2) button').click();
-    cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
-    cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains('Type').next().click();
-    cy.contains('Parameter Select').click();
+    selectReportOfType('Parameter Select');
     cy.wait(300);
     cy.get('#autocomplete-label-type').type('Movie');
     cy.get('#autocomplete-label-type-option-0').click();
@@ -265,15 +226,19 @@ function enableAdvancedVisualizations() {
   cy.wait(100);
   cy.get('#checkbox-advanced-charts').click();
   cy.wait(100);
-  cy.get('#extensions-modal-close-button').click();
+  cy.get('.ndl-dialog-close').click();
   cy.wait(200);
 }
 
-function createReportOfType(type, query, fast = false) {
+function selectReportOfType(type) {
   cy.get('main .react-grid-item:eq(2) button').click();
   cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
-  cy.get('main .react-grid-item:eq(2) .MuiInputLabel-root').contains('Type').next().click();
+  cy.get('main .react-grid-item:eq(2) #type').click();
   cy.contains(type).click();
+}
+
+function createReportOfType(type, query, fast = false) {
+  selectReportOfType(type);
   if (fast) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { delay: 1, parseSpecialCharSequences: false });
   } else {
