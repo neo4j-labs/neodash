@@ -56,7 +56,7 @@
           "height": 2,
           "x": 3,
           "y": 2,
-          "type": "areamap",
+          "type": "choropleth",
           "selection": {
             "index": "country",
             "value": "wines",
