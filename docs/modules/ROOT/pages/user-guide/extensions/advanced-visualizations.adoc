@@ -9,7 +9,7 @@ The following visualizations are part of this extension:
 - A link:../../reports/sankey[Sankey Chart] to visualize flows.
 - Three charts to plot hierarchical data (link:../../reports/sunburst[Sunburst], link:../../reports/circle-packing[Circle Packing], link:../../reports/treemap[Treemap])
 - A link:../../reports/gauge-chart[Gauge Chart] to show percentages 
-- An link:../../reports/area-map[Area Map] to visualize numeric, country-data.
+- An link:../../reports/areamap[Area Map] to visualize numeric, country-data.
 - A link:../../reports/radar[Radar Chart] to create a radial view of multiple categoric values.
 
 image::advanced-visualizations.png[Advanced Visualizations]
