@@ -329,7 +329,7 @@ export const NeoCustomReportStyleModal = ({
                               label=''
                               defaultValue='black'
                               key={undefined}
-                              style={undefined}
+                              style={{ width: '200px' }}
                               value={rule.customizationValue}
                               onChange={(value) => updateRuleField(index, 'customizationValue', value)}
                             ></NeoColorPicker>
