@@ -9,7 +9,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { Checkbox, FormGroup, FormControlLabel } from '@material-ui/core';
 import './Dropzone.css';
 
-const DEFAULT_MAX_UPLOAD_SIZE = 100 * 1024 * 1024; // 100 MB
+const DEFAULT_MAX_UPLOAD_SIZE = 1024 * 1024 * 1024; // 1GB
 const getMaxSize = () => {
   let maxSize = parseInt(config('MAX_UPLOAD_SIZE'));
   return isNaN(maxSize) ? DEFAULT_MAX_UPLOAD_SIZE : maxSize;
@@ -22,7 +22,7 @@ export function Dropzone(props) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState();
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { acceptedFiles, fileRejections, getRootProps, getInputProps } = useDropzone({
     /*
         accept: {
             'application/octet-stream': ['.dump']
@@ -58,38 +58,45 @@ export function Dropzone(props) {
 
       //req.end(callback)
     },
+    onDropRejected: async (fileRejections, event) => {
+      setIsUploading(false);
+      setUploadError('Maximum file upload size is 1GB. Larger size file please contact solutions@neo4j.com.');
+    },
   });
 
   const handleChange = (event) => {
     setOverwriteDatabase(event.target.checked);
   };
 
-  let filePath = acceptedFiles.length > 0 ? acceptedFiles[0].path : '';
   let fileStatus = '';
-  if (filePath) {
-    if (uploadError) {
-      fileStatus = (
-        <>
-          <SyncProblemIcon style={{ marginRight: '5px' }} />
-          {uploadError}
-        </>
-      );
-    } else if (isUploading) {
-      fileStatus = (
-        <>
-          <SyncIcon style={{ marginRight: '5px' }} />
-          {`Uploading file ${filePath}`}
-        </>
-      );
-    } else {
-      fileStatus = (
-        <>
-          <CheckCircleIcon style={{ marginRight: '5px' }} />
-          {`Uploaded file ${filePath}`}
-        </>
-      );
+  if (uploadError) {
+    fileStatus = (
+      <>
+        <SyncProblemIcon style={{ marginRight: '5px' }} />
+        {uploadError}
+      </>
+    );
+  } else {
+    let filePath = acceptedFiles.length > 0 ? acceptedFiles[0].path : '';
+    if (filePath) {
+      if (isUploading) {
+        fileStatus = (
+          <>
+            <SyncIcon style={{ marginRight: '5px' }} />
+            {`Uploading file ${filePath}`}
+          </>
+        );
+      } else {
+        fileStatus = (
+          <>
+            <CheckCircleIcon style={{ marginRight: '5px' }} />
+            {`Uploaded file ${filePath}`}
+          </>
+        );
+      }
     }
   }
+
   // for later: file.size
 
   return (
