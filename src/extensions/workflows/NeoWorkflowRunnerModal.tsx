@@ -130,7 +130,7 @@ export enum STEP_STATUS {
 export const NeoWorkflowRunnerModal = ({
   open,
   setOpen,
-  index,
+  _index,
   isRunning,
   workflowStatus,
   setWorkflowStatus,
@@ -167,9 +167,6 @@ export const NeoWorkflowRunnerModal = ({
     return getErrorIcon(item == expanded);
   };
   function handleClose() {
-    if (isRunning) {
-      alert(`warning here if running - are you sure?${index}`);
-    }
     setOpen(false);
   }
   return (

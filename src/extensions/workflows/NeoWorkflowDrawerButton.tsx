@@ -64,7 +64,7 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
     <div>
       <ListItem button onClick={handleClick} id='workflows-sidebar-button'>
         <ListItemIcon>
-          <SlowMotionVideoIcon />
+          <SlowMotionVideoIcon color={isRunning ? 'primary' : 'secondary'} />
         </ListItemIcon>
         <ListItemText primary='Workflows' />
       </ListItem>
