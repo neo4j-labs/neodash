@@ -2,16 +2,13 @@ import React, { useEffect } from 'react';
 import { ChartProps } from '../Chart';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../../chart/ChartUtils';
-import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from 'react-leaflet';
-import { HeatmapLayer } from 'react-leaflet-heatmap-layer-v3';
-import Marker from 'react-leaflet-enhanced-marker';
-import MarkerClusterGroup from 'react-leaflet-cluster';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import Button from '@material-ui/core/Button';
-import { getRule } from '../../extensions/advancedcharts/Utils';
+import { createHeatmap } from './layers/HeatmapLayer';
+import { createMarkers } from './layers/MarkerLayer';
+import { createLines } from './layers/LineLayer';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -33,10 +30,6 @@ const NeoMapChart = (props: ChartProps) => {
     props.settings.styleRules,
     props.getGlobalParameter
   );
-
-  const clusterMarkers =
-    props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
-  const intensityProp = props.settings && props.settings.intensityProp ? props.settings.intensityProp : '';
   const defaultNodeColor = 'grey'; // Color of nodes without labels
   const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
   const mapProviderURL =
@@ -58,8 +51,6 @@ const NeoMapChart = (props: ChartProps) => {
   // Per pixel, scaling factors for the latitude/longitude mapping function.
   const widthScale = 8.55;
   const heightScale = 6.7;
-
-  let markerMarginTop;
 
   let key = `${dimensions.width},${dimensions.height},${data.centerLatitude},${data.centerLongitude},${props.fullscreen}`;
   useEffect(() => {
@@ -241,209 +232,13 @@ const NeoMapChart = (props: ChartProps) => {
     });
   }
 
-  if (layerType == 'markers') {
-    // Render a node label tooltip
-    switch (defaultNodeSize) {
-      case 'large':
-        markerMarginTop = '-5px';
-        break;
-      case 'medium':
-        markerMarginTop = '3px';
-        break;
-      default:
-        markerMarginTop = '6px';
-        break;
-    }
-  }
-
-  const renderNodeLabel = (node) => {
-    const selectedProp = props.selection && props.selection[node.firstLabel];
-    if (selectedProp == '(id)') {
-      return node.id;
-    }
-    if (selectedProp == '(label)') {
-      return node.labels;
-    }
-    if (selectedProp == '(no label)') {
-      return '';
-    }
-    return node.properties[selectedProp] ? node.properties[selectedProp].toString() : '';
-  };
-
-  function createMarkers() {
-    // Create markers to plot on the map
-    let markers = data.nodes
-      .filter((node) => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1]))
-      .map((node, i) => (
-        <Marker
-          position={node.pos}
-          key={i}
-          icon={
-            <div style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop }}>
-              <LocationOnIcon fontSize={node.size}></LocationOnIcon>
-            </div>
-          }
-        >
-          {props.selection && props.selection[node.firstLabel] && props.selection[node.firstLabel] != '(no label)' ? (
-            <Tooltip direction='bottom' permanent className={'leaflet-custom-tooltip'}>
-              {renderNodeLabel(node)}
-            </Tooltip>
-          ) : (
-            <></>
-          )}
-          {createPopupFromNodeProperties(node)}
-        </Marker>
-      ));
-    if (clusterMarkers) {
-      markers = <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>;
-    }
-    return markers;
-  }
-
-  function createLines() {
-    // Create lines to plot on the map.
-    return data.links
-      .filter((link) => link)
-      .map((rel, i) => {
-        if (rel.start && rel.end) {
-          return (
-            <Polyline weight={rel.width} key={i} positions={[rel.start, rel.end]} color={rel.color}>
-              {createPopupFromRelProperties(rel)}
-            </Polyline>
-          );
-        }
-      });
-  }
-
-  function createHeatmap() {
-    // Create Heatmap layer to add on top of the map
-    let points = data.nodes
-      .filter((node) => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1]))
-      .map((node) => [node.pos[0], node.pos[1], intensityProp == '' ? 1 : extractIntensityProperty(node)]);
-    return (
-      <HeatmapLayer
-        fitBoundsOnLoad
-        fitBoundsOnUpdate
-        points={points}
-        longitudeExtractor={(m) => m[1]}
-        latitudeExtractor={(m) => m[0]}
-        intensityExtractor={(m) => parseFloat(m[2])}
-      />
-    );
-  }
-
-  function extractIntensityProperty(node) {
-    // Extract the intensity property from a node.
-    if (node.properties[intensityProp]) {
-      // Parse int from Neo4j Integer type if it has this type
-      // Or return plain value (if already parsed as a standard integer or float)
-      return node.properties[intensityProp].low ?? node.properties[intensityProp];
-    }
-    return 0;
-  }
-
-  // Helper function to convert property values to string for the pop-ups.
-  function convertMapPropertyToString(property) {
-    if (property.srid) {
-      return `(lat:${property.y}, long:${property.x})`;
-    }
-    return property;
-  }
-
-  function createPopupFromRelProperties(value) {
-    return (
-      <Popup className={'leaflet-custom-rel-popup'}>
-        <h3>
-          <b>{value.type}</b>
-        </h3>
-        <table>
-          <tbody>
-            {Object.keys(value.properties).length == 0 ? (
-              <tr>
-                <td>(No properties)</td>
-              </tr>
-            ) : (
-              Object.keys(value.properties).map((k, i) => (
-                <tr key={i}>
-                  <td style={{ marginRight: '10px' }} key={0}>
-                    {k.toString()}:
-                  </td>
-                  <td key={1}>{value.properties[k].toString()}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </Popup>
-    );
-  }
-
-  function createPopupFromNodeProperties(value) {
-    return (
-      <Popup className={'leaflet-custom-node-popup'}>
-        <h3>
-          <b>{value.labels.length > 0 ? value.labels.map((b) => `${b} `) : '(No labels)'}</b>
-        </h3>
-        <table>
-          <tbody>
-            {Object.keys(value.properties).length == 0 ? (
-              <tr>
-                <td>(No properties)</td>
-              </tr>
-            ) : (
-              Object.keys(value.properties).map((k, i) => {
-                // TODO MOVE THIS DEPENDENCY OUT OF THE TOOLTIP GENERATION
-                let rule = getRule(
-                  { field: k.toString(), value: value.properties[k].toString() },
-                  actionsRules,
-                  'Click'
-                );
-                let execRule = Boolean(
-                  rule !== null && rule[0].customization == 'set variable' && props && props.setGlobalParameter
-                );
-                return (
-                  <tr
-                    key={i}
-                    onClick={() => {
-                      if (execRule) {
-                        // call thunk for $neodash_customizationValue
-                        props.setGlobalParameter(
-                          `neodash_${rule[0].customizationValue}`,
-                          value.properties[k].toString()
-                        );
-                      }
-                    }}
-                  >
-                    <td style={{ marginRight: '10px' }} key={0}>
-                      {k.toString()}:
-                    </td>
-                    <td key={1}>
-                      {execRule ? (
-                        <Button
-                          style={{ width: '100%', marginLeft: '10px', marginRight: '10px' }}
-                          variant='contained'
-                          color='primary'
-                        >{`${value.properties[k].toString()}`}</Button>
-                      ) : (
-                        value.properties[k].toString()
-                      )}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </Popup>
-    );
-  }
-
   // TODO this should definitely be refactored as an if/case statement.
-  const markers = layerType == 'markers' ? createMarkers() : '';
-  const lines = layerType == 'markers' ? createLines() : '';
-  const heatmap = layerType == 'heatmap' ? createHeatmap() : '';
-
+  const markers = layerType == 'markers' ? createMarkers(data, props) : '';
+  const lines = layerType == 'markers' ? createLines(data) : '';
+  const heatmap = layerType == 'heatmap' ? createHeatmap(data, props) : '';
   // Draw the component.
+  // Ideally, we want to have one component for each layer on the map, different files
+  // https://stackoverflow.com/questions/69751481/i-want-to-use-useref-to-access-an-element-in-a-reat-leaflet-and-use-the-flyto
   return (
     <MapContainer
       key={key}

@@ -3,6 +3,7 @@ import NeoReport from './Report';
 import { withErrorBoundary, useErrorBoundary } from 'react-use-error-boundary';
 import NeoCodeViewerComponent from '../component/editor/CodeViewerComponent';
 import { updateReportSetting } from '../card/CardActions';
+import { createNotification } from '../application/ApplicationActions';
 
 /**
  * Error boundary wrapping the report object, to ensure that unexpected errors are handled at the report level.
@@ -39,6 +40,7 @@ export const NeoReportWrapper = ({
   setGlobalParameter,
   getGlobalParameter,
   updateReportSetting,
+  createNotification,
   dimensions,
   rowLimit,
   queryTimeLimit,
@@ -62,6 +64,7 @@ export const NeoReportWrapper = ({
         setGlobalParameter={setGlobalParameter}
         getGlobalParameter={getGlobalParameter}
         updateReportSetting={updateReportSetting}
+        createNotification={createNotification}
         dimensions={dimensions}
         rowLimit={rowLimit}
         queryTimeLimit={queryTimeLimit}

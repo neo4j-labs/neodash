@@ -11,7 +11,6 @@ import { Checkbox, Chip, FormControlLabel, ListItem, ListItemIcon, ListItemText,
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
-import { getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
 

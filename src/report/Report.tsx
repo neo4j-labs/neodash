@@ -35,6 +35,7 @@ export const NeoReport = ({
     return '';
   }, // function to get global (cypher) parameters.
   updateReportSetting = () => {},
+  createNotification = () => {},
   setPageNumber = () => {}, // Callback to update the current page number selected by the user.
   dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
   rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
@@ -78,7 +79,6 @@ export const NeoReport = ({
               !reportTypes[type].selection[field].multiple
           )
         : [];
-
     // Take care of multi select fields, they need to be added to the numeric fields too.
     if (reportTypes[type].selection) {
       Object.keys(reportTypes[type].selection).forEach((field) => {
@@ -150,26 +150,30 @@ export const NeoReport = ({
     }
   }, [lastRunTimestamp]);
 
-  // Define query callback to allow reports to get extra data on interactions.
-  const queryCallback = useCallback((query, parameters, setRecords) => {
-    runCypherQuery(
-      driver,
-      database,
-      query,
-      parameters,
-      rowLimit,
-      (status) => {
-        status == QueryStatus.NO_DATA ? setRecords([]) : null;
-      },
-      (result) => setRecords(result),
-      () => {},
-      fields,
-      false,
-      false,
-      HARD_ROW_LIMITING,
-      queryTimeLimit
-    );
-  }, []);
+  // Define query callback to allow reports to get extra data on interactions./
+  // Can retrieve a maximum of 1000 rows at a time.
+  const queryCallback = useCallback(
+    (query, parameters, setRecords) => {
+      runCypherQuery(
+        driver,
+        database,
+        query,
+        parameters,
+        1000,
+        (status) => {
+          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+        },
+        (result) => setRecords(result),
+        () => {},
+        fields,
+        false,
+        false,
+        HARD_ROW_LIMITING,
+        queryTimeLimit
+      );
+    },
+    [database]
+  );
 
   const reportTypes = getReportTypes(extensions);
 
@@ -220,9 +224,12 @@ export const NeoReport = ({
           dimensions={dimensions}
           parameters={parameters}
           queryCallback={queryCallback}
+          createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          fields={fields}
+          setFields={setFields}
         />
       </div>
     );
@@ -255,9 +262,12 @@ export const NeoReport = ({
           dimensions={dimensions}
           parameters={parameters}
           queryCallback={queryCallback}
+          createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          fields={fields}
+          setFields={setFields}
         />
       </div>
     );

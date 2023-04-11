@@ -1,4 +1,31 @@
-import { GraphEntity } from '../GraphChartVisualization';
+export enum Direction {
+  Incoming,
+  Outgoing,
+}
+const update = (state, mutations) => Object.assign({}, state, mutations);
+
+/**
+ * Assigns a computed curvature value to a link in the visualization.
+ * @param link the link object (n)-[e]->(n2)
+ * @param index the index of the link in the list between a pair of nodes.
+ * @param nodePairListLength  the amount of links between (n) and (n2) in the same direction.
+ * @param mirroredNodePairListLength the amount of links between (n) and (n2) in the opposite direction.
+ * @returns the link with an assigned curvature value.
+ */
+export function assignCurvatureToLink(link, index, nodePairListLength, mirroredNodePairListLength) {
+  if (link.source == link.target) {
+    // Self-loop
+    return update(link, { curvature: 0.4 + index / 8 });
+  }
+  // If we have edges from the target to the source, adjust curvatures accordingly.
+  const totalRelsBetweenPair = nodePairListLength + mirroredNodePairListLength;
+  return update(link, {
+    curvature:
+      link.source > link.target
+        ? getCurvature(index, totalRelsBetweenPair)
+        : -getCurvature(index + mirroredNodePairListLength, totalRelsBetweenPair),
+  });
+}
 
 // Function to manually compute edge curvatures for dense node pairs.
 export function getCurvature(index, total) {
@@ -17,6 +44,9 @@ export function getCurvature(index, total) {
     return curvatures[total][index];
   }
 
+  if (isNaN(total)) {
+    return 0;
+  }
   // @ts-ignore
   const arr1 = [...Array(Math.floor(total / 2)).keys()].map((i) => {
     return (i + 1) / (Math.floor(total / 2) + 1);
@@ -66,3 +96,39 @@ export const generateRelCanvasObject = (link: any, ctx: any, relLabelFontSize: a
     ctx.restore();
   }
 };
+
+/**
+ * Recompute curvatures for all links in the visualization.
+ * This is needed when new relationships are added by exploration or graph editing.
+ * TODO - this could be optimized by caching a dictionary instead of transforming the list here...
+ */
+export function recomputeCurvatures(links) {
+  const linksMap = {};
+  links.forEach((link) => {
+    if (linksMap[`${link.source.id},${link.target.id}`] == undefined) {
+      linksMap[`${link.source.id},${link.target.id}`] = [];
+    }
+    linksMap[`${link.source.id},${link.target.id}`].push(link);
+  });
+  const linksList = Object.values(linksMap).map((linkArray) => {
+    return linkArray.map((link, i) => {
+      const mirroredNodePair = linksMap[`${link.target.id},${link.source.id}`];
+      return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);
+    });
+  });
+  return linksList.flat();
+}
+
+/**
+ * Merges two lists of (potententially duplicate) links.
+ */
+export function mergeLinksLists(oldLinks, newLinks) {
+  const links = {};
+  oldLinks.forEach((link) => {
+    links[link.id] = link;
+  });
+  newLinks.forEach((link) => {
+    links[link.id] = link;
+  });
+  return Object.values(links);
+}
