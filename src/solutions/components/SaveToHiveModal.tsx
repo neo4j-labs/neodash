@@ -69,7 +69,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
   // pieces of code pulled from https://www.pluralsight.com/guides/uploading-files-with-reactjs
   // and pieces of code pulled from https://blog.logrocket.com/multer-nodejs-express-upload-file/
 
-  const tabCount = 3;
+  const tabCount = 2;
   const title = dashboard?.title;
   const existingSolutionId = dashboard?.extensions?.solutionsHive?.uuid;
   const initialTabIndex = existingSolutionId ? tabCount - 1 : 0;
@@ -245,8 +245,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
               className={classes.tabs}
             >
               <Tab label='Select database' id='publish-to-hive-1' aria-label='Select database' />
-              <Tab label='Configure card' id='publish-to-hive-2' aria-label='Configure card' />
-              <Tab label='Publish' id='publish-to-hive-3' aria-label='Publish' />
+              <Tab label='Configure and Publish' id='publish-to-hive-2' aria-label='Configure and Publish' />
             </Tabs>
             <TabPanel idroot='hive-publish' value={tabIndex} index={0} boxClass={classes.tabPanel}>
               <SelectDatabase
@@ -256,12 +255,6 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
               />
             </TabPanel>
             <TabPanel idroot='hive-publish' value={tabIndex} index={1} boxClass={classes.tabPanel}>
-              <div style={{ marginTop: '10px' }}>
-                Future: You will be able to configure your demo card here. For now, follow the instructions provided
-                after you publish.
-              </div>
-            </TabPanel>
-            <TabPanel idroot='hive-publish' value={tabIndex} index={2} boxClass={classes.tabPanel}>
               <PublishInfo
                 hasPublished={hasPublished}
                 connection={dbConnection}
