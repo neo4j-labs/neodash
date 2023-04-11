@@ -215,7 +215,7 @@ RETURN code,totalCount
         UNWIND [["FR", 1], ["IT", 3], ["FR.32", 1], ["IT.02", 2], ["IT.01", 1]] as v
         RETURN v[0] as code, v[1] as value 
         `,
-    settings: { mapDrillDown: true },
+    settings: { mapDrillDown: true, showLegend: false },
     fields: [],
     selection: { index: 'code', value: 'value' },
     type: 'map',

@@ -10,9 +10,7 @@ It takes two fields:
 
 == Examples
 
-=== Basic Choropleth
-
-
+=== Basic Area Map
 
 
 [source,cypher]
@@ -30,8 +28,8 @@ CALL {
 WITH code, sum(value) as totalCount
 RETURN code,totalCount
 ----
-// TODO: change image
-image::choropleth.png[Choropleth Chart]
+image::areamap-countries.png[Country Level Visualization]
+image::areamap-regions.png[Example of Drill Down inside a Country]
 
 == Advanced Settings
 
