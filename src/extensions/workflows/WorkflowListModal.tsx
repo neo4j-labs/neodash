@@ -28,6 +28,7 @@ export const NeoWorkflowListModal = ({
   setWorkflowStatus,
   runnerModalIsOpen,
   setRunnerModalIsOpen,
+  currentRunIndex,
   results,
   workflowsList,
   deleteWorkflow,
@@ -58,7 +59,7 @@ export const NeoWorkflowListModal = ({
                 setRunnerModalIsOpen(true);
                 setIndex(row.id);
               }}
-              disabled={isRunning}
+              disabled={isRunning && row.id != currentRunIndex}
               style={{ padding: '6px' }}
             >
               <Badge overlap='rectangular' badgeContent={''}>
@@ -67,10 +68,11 @@ export const NeoWorkflowListModal = ({
             </IconButton>
             <IconButton
               onClick={() => {
-                setIndex(row.id);
                 setEditorOpen(true);
+                setIndex(row.id);
               }}
               style={{ padding: '6px' }}
+              disabled={isRunning && row.id == currentRunIndex}
             >
               <Badge overlap='rectangular' badgeContent={''}>
                 <EditIcon />
@@ -81,6 +83,7 @@ export const NeoWorkflowListModal = ({
                 deleteWorkflow(row.id);
               }}
               style={{ padding: '6px' }}
+              disabled={isRunning && row.id == currentRunIndex}
             >
               <Badge overlap='rectangular' badgeContent={''}>
                 <DeleteIcon />

@@ -22,6 +22,8 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
   const [results, setResults] = React.useState([]);
   // Object that contains the information regarding the current run
   const [currentRun, setCurrentRun] = React.useState({});
+  const [currentRunIndex, setCurrentRunIndex] = React.useState(-1);
+
   // TODO: Attach correctly
   const [database, setDatabase] = React.useState('neo4j');
   const handleClick = () => {
@@ -31,9 +33,12 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
 
   // Effect to trigger a workflow run
   useEffect(() => {
-    if (index >= 0 && runnerModalIsOpen) {
+    if (index >= 0 && runnerModalIsOpen && !isRunning) {
       // Getting the workflow to run from the list of existing workflows
       let workflow = workflowsList[index];
+
+      // Storing the current index that is running to maange UI state
+      setCurrentRunIndex(index);
 
       // Keeping the fact that is running, to block some buttons on the UI
       setIsRunning(true);
@@ -79,6 +84,7 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
           setWorkflowStatus={setWorkflowStatus}
           runnerModalIsOpen={runnerModalIsOpen}
           setRunnerModalIsOpen={setRunnerModalIsOpen}
+          currentRunIndex={currentRunIndex}
           results={results}
         ></NeoWorkflowListModal>
       ) : (
