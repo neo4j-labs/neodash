@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapBoundary } from './PolygonLayer';
 import { recordToNative } from '../../../../chart/ChartUtils';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
-import { keyLengthToKeyName, regionCodeName } from './styles/constants';
+import { keyLengthToKeyName, regionCodeName } from './constants';
 
 /**
  * Method used to extract geographic data from the records got back by the query
@@ -56,7 +56,7 @@ const NeoAreaMapChart = (props: ChartProps) => {
   const { records } = props;
   const { selection } = props;
   const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
-  const keyLength = props.settings && props.settings.kindOfKey ? props.settings.kindOfKey : 'Alpha-2';
+  const keyLength = props.settings && props.settings.countryCodeFormat ? props.settings.countryCodeFormat : 'Alpha-2';
   console.log(keyLength);
   let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
   const [data, setData] = useState({});

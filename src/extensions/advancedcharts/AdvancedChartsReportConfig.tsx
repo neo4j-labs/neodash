@@ -936,11 +936,6 @@ export const ADVANCED_REPORT_TYPES = {
       },
     },
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       providerUrl: {
         label: 'Map Provider URL',
         type: SELECTION_TYPES.TEXT,
@@ -952,8 +947,8 @@ export const ADVANCED_REPORT_TYPES = {
         values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
         default: 'YlOrRd',
       },
-      kindOfKey: {
-        label: 'Kind of Country Code',
+      countryCodeFormat: {
+        label: 'Country Code format',
         type: SELECTION_TYPES.LIST,
         values: ['Alpha-2', 'Alpha-3'],
         default: 'Alpha-2',
@@ -966,17 +961,6 @@ export const ADVANCED_REPORT_TYPES = {
       },
       mapDrillDown: {
         label: 'Activates Drill Down',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      intensityProp: {
-        label: 'Intensity Property (for heatmap)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'intensity',
-      },
-      hideSelections: {
-        label: 'Hide Property Selection',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,

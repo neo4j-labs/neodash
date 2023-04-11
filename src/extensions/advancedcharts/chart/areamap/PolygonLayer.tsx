@@ -44,7 +44,8 @@ function getDrillDown(geoJson, features, key, keepConflict = false) {
   let id = geoJson.properties[key];
   let polygonsToKeep = Object.keys(features).filter((polygonId) => {
     let tmp = features[polygonId];
-    // Some regions can be in different countries (WHO specific use case)
+
+    // Some regions can be disputed between two or more countries
     let toDrillDown =
       key === 'SHORT_COUNTRY_CODE' && tmp.properties.POSSIBLE_COUNTRIES && keepConflict
         ? tmp.properties.POSSIBLE_COUNTRIES.includes(id)

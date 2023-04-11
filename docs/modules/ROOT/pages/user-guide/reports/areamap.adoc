@@ -2,10 +2,10 @@
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
-A Choropleth chart will render geographical data in geoJson polygons
-layout. It takes two fields: 
+The Area Map charts can be used to render geographical based information on geoJson polygons. It's possible to click a polygon to visualize its regions and their related data.
+It takes two fields: 
 
-- *code*: String. This represents the Alpha-3 country code of region to be used. Alpha-2 it's not supported.
+- *code*: String. This represents the country code or regional code that must be binded to the visualization. The map supports Alpha-3 and Alpha-2 country codes (by default Alpha-2). Instead the supported format for the region polygons is ISO 3166.
 - *value*:  Number. Cardinal data to be used on the chart.
 
 == Examples
@@ -18,11 +18,19 @@ layout. It takes two fields:
 [source,cypher]
 ----
 MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),
-(e)-[:LIVES_IN]->(c:Country)
-WITH c.code as code, count(e) as value
-RETURN code, value
+(e)-[:LIVES]->(city:City)-[:IN_COUNTRY]->(country:Country)
+WITH city, country
+CALL {
+    WITH country
+    RETURN country.countryCode as code, count(*) as value
+    UNION
+    WITH city
+    RETURN city.countryCode as code, count(*) as value
+}
+WITH code, sum(value) as totalCount
+RETURN code,totalCount
 ----
-
+// TODO: change image
 image::choropleth.png[Choropleth Chart]
 
 == Advanced Settings
@@ -30,37 +38,16 @@ image::choropleth.png[Choropleth Chart]
 [width="100%",cols="15%,2%,26%,57%",options="header",]
 |===
 |Name |Type |Default Value |Description
-|Enable interactivity |on/off |on |If enabled, turn on animations when a
-user hovers over a polygon.
+|Map Provider URL|Text|https://\{s}.tile.openstreetmap.org/\{z}/\{x}/\{y}.png| When specified, overrides Open Street map provider with a custom map tiles provider.
 
-|Color Scheme |List | |The color scheme to use for the choropleth. Country colors
+|Color Scheme |List | |The color scheme to use for the area map. Country colors
 will vary according their min to max ratio.
 
-|Polygon border width (px) |number |0 |The width of the border of each
-rectangle.
+|Country Code format |List |Alpha-2 |Type of the country code (two/three letters).
 
-|Margin Left (px) |number |24 |The margin in pixels on the left side of
-the visualization.
+|Show the Color Legend |boolean |true |Option to show color legend.
 
-|Margin Right (px) |number |24 |The margin in pixels on the right side
-of the visualization.
-
-|Margin Top (px) |number |24 |The margin in pixels on the top side of
-the visualization.
-
-|Margin Bottom (px) |number |40 |The margin in pixels on the bottom side
-of the visualization.
-
-|Country Code Format |List |iso_a3 |ISO Standard used on country codes.
-
-
-|Projection Scale |number |100 |Projection Scale of the visualization
-
-|Projection x translation |number |0.5 |This parameter will move the center of
-the visualization on the x axis
-
-|Projection y translation |number |0.5 |This parameter will move the center of
-the visualization on the y axis
+|Activates Drill Down |boolean |false |Enable map drilldown to visualize regional data.
 
 |Auto-run query |on/off |on |When activated, automatically runs the
 query when the report is displayed. When set to `off', the query is
