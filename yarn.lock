@@ -2243,7 +2243,12 @@
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/codemirror" "1.0.2"
 
-"@neo4j-ndl/base@1.1.0", "@neo4j-ndl/base@^1.1.0":
+"@neo4j-ndl/base@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-1.1.1.tgz#1af5db77ffc2de66858509f09e7ebdfce33407be"
+  integrity sha512-h4gakIHgLOOGCGIwFxsehimeGel/5R+KK4k5OSTi+koqEmd6e+zpU8C+t0sFHaXgTB1ir7YAwkmwW/kavLWEqQ==
+
+"@neo4j-ndl/base@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-1.1.0.tgz#ea53ee590eb5f0ad4b68441182df7a8c95f4e526"
   integrity sha512-kLluPa0evum51b4C4s9gbWrLN9LBsW2Yppm9vWkTfRxlC4KwhyMskhj8Wrt42Ggmq1N9lLkoUSJsHo1K8g2vlQ==
