@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextareaAutosize, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import {
@@ -101,9 +101,11 @@ export const NeoLoadModal = ({
 
   return (
     <div>
-      <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowUpIconOutline className={navItemClass} />}>
-        Load
-      </SideNavigationItem>
+      <Tooltip title='Load' aria-label='load'>
+        <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowUpIconOutline className={navItemClass} />}>
+          Load
+        </SideNavigationItem>
+      </Tooltip>
 
       <Dialog size='large' open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>

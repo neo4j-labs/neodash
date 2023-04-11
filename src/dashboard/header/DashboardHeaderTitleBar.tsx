@@ -26,7 +26,11 @@ export const NeoDashboardHeaderTitleBar = ({
   }, [dashboardTitle]);
 
   const content = (
-    <Toolbar key={1} className='n-bg-primary-70' style={{ paddingRight: 24, minHeight: '64px', zIndex: 1000 }}>
+    <Toolbar
+      key={1}
+      className='n-bg-primary-70'
+      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', zIndex: 1000 }}
+    >
       <InputBase
         id='center-aligned'
         style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}

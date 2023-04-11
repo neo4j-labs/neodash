@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { SideNavigationItem } from '@neo4j-ndl/react';
@@ -20,9 +20,11 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
 
   return (
     <div>
-      <SideNavigationItem onClick={handleClickOpen} icon={<ChartBarIconSolid className={navItemClass} />}>
-        Examples
-      </SideNavigationItem>
+      <Tooltip title='Examples' aria-label='examples'>
+        <SideNavigationItem onClick={handleClickOpen} icon={<ChartBarIconSolid className={navItemClass} />}>
+          Examples
+        </SideNavigationItem>
+      </Tooltip>
 
       {open ? (
         <Dialog open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title' className='dialog-xl'>

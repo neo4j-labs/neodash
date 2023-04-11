@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DialogContentText, Divider, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { DataGrid } from '@mui/x-data-grid';
@@ -88,9 +88,11 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
 
   return (
     <div>
-      <SideNavigationItem onClick={handleClickOpen} icon={<ShareIconOutline className={navItemClass} />}>
-        Share
-      </SideNavigationItem>
+      <Tooltip title='Share' aria-label='share'>
+        <SideNavigationItem onClick={handleClickOpen} icon={<ShareIconOutline className={navItemClass} />}>
+          Share
+        </SideNavigationItem>
+      </Tooltip>
 
       <Dialog
         key={1}

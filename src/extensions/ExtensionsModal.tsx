@@ -27,13 +27,15 @@ const NeoExtensionsModal = ({
 
   return (
     <div>
-      <SideNavigationItem
-        id='extensions-sidebar-button'
-        onClick={handleClickOpen}
-        icon={<PuzzlePieceIconSolid className={navItemClass} />}
-      >
-        Extensions
-      </SideNavigationItem>
+      <Tooltip title='Extensions' aria-label='extensions'>
+        <SideNavigationItem
+          id='extensions-sidebar-button'
+          onClick={handleClickOpen}
+          icon={<PuzzlePieceIconSolid className={navItemClass} />}
+        >
+          Extensions
+        </SideNavigationItem>
+      </Tooltip>
 
       {open ? (
         <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>

@@ -81,7 +81,7 @@ export const NeoDashboardHeaderPageList = ({
       {!standalone ? (
         <div
           style={{
-            width: open ? '0px' : '64px',
+            width: open ? '0px' : '67px',
             zIndex: open ? 999 : 999,
             transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
             height: '0px',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tooltip } from '@material-ui/core';
 import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../../modal/ShareModal';
@@ -43,11 +44,13 @@ export const NeoDrawer = ({
         zIndex: 1001,
       }}
     >
-      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded}>
+      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l5'>
         <SideNavigationList>
-          <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
-            Menu
-          </SideNavigationItem>
+          <Tooltip title='Menu' aria-label='menu'>
+            <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
+              Menu
+            </SideNavigationItem>
+          </Tooltip>
           <SideNavigationGroupHeader>Manage</SideNavigationGroupHeader>
           <NeoSettingsModal
             dashboardSettings={dashboardSettings}
@@ -65,19 +68,23 @@ export const NeoDrawer = ({
             database={connection.database}
             navItemClass={navItemClass}
           ></NeoReportExamplesModal>
-          <SideNavigationItem
-            href='https://neo4j.com/labs/neodash/2.2/user-guide/'
-            target='_blank'
-            icon={<BookOpenIconOutline className={navItemClass} />}
-          >
-            Documentation
-          </SideNavigationItem>
-          <SideNavigationItem
-            onClick={onAboutModalOpen}
-            icon={<InformationCircleIconOutline className={navItemClass} />}
-          >
-            About
-          </SideNavigationItem>
+          <Tooltip title='Documentation' aria-label='documentation'>
+            <SideNavigationItem
+              href='https://neo4j.com/labs/neodash/2.2/user-guide/'
+              target='_blank'
+              icon={<BookOpenIconOutline className={navItemClass} />}
+            >
+              Documentation
+            </SideNavigationItem>
+          </Tooltip>
+          <Tooltip title='About' aria-label='about'>
+            <SideNavigationItem
+              onClick={onAboutModalOpen}
+              icon={<InformationCircleIconOutline className={navItemClass} />}
+            >
+              About
+            </SideNavigationItem>
+          </Tooltip>
         </SideNavigationList>
       </SideNavigation>
     </div>

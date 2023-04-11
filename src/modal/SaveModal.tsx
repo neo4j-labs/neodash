@@ -96,9 +96,11 @@ export const NeoSaveModal = ({
 
   return (
     <div>
-      <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowDownIconOutline className={navItemClass} />}>
-        Save
-      </SideNavigationItem>
+      <Tooltip title='Save' aria-label='save'>
+        <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowDownIconOutline className={navItemClass} />}>
+          Save
+        </SideNavigationItem>
+      </Tooltip>
 
       <Dialog size='large' open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>

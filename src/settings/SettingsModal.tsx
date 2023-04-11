@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tooltip } from '@material-ui/core';
 import NeoSetting from '../component/field/Setting';
 import { DASHBOARD_SETTINGS } from '../config/DashboardConfig';
 import { SideNavigationItem } from '@neo4j-ndl/react';
@@ -42,9 +43,11 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
 
   return (
     <div>
-      <SideNavigationItem onClick={handleClickOpen} icon={<Cog6ToothIconOutline className={navItemClass} />}>
-        Settings
-      </SideNavigationItem>
+      <Tooltip title='Settings' aria-label='settings'>
+        <SideNavigationItem onClick={handleClickOpen} icon={<Cog6ToothIconOutline className={navItemClass} />}>
+          Settings
+        </SideNavigationItem>
+      </Tooltip>
 
       <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
