@@ -41,11 +41,17 @@ image::areamap-regions.png[Example of Drill Down inside a Country]
 |Color Scheme |List | |The color scheme to use for the area map. Country colors
 will vary according their min to max ratio.
 
-|Country Code format |List |Alpha-2 |Type of the country code (two/three letters).
+|Country Code Format |List |Alpha-2 |Type of the country code (two/three letters).
 
-|Show the Color Legend |boolean |true |Option to show color legend.
+|Color Legend|on/off |on |Option to show color legend.
 
-|Activates Drill Down |boolean |false |Enable map drilldown to visualize regional data.
+|Drilldown Enabled |on/off |off |Enable map drilldown to visualize regional data.
+
+|Refreshable |on/off |off |Enables a refresh button for the report.
+
+|Fullscreen enabled |on/off |off |Enables a fullscreen view button for the report.
+
+|Download image enabled |on/off |off |Enables an image download button for the report.
 
 |Auto-run query |on/off |on |When activated, automatically runs the
 query when the report is displayed. When set to `off', the query is
