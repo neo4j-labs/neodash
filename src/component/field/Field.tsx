@@ -28,6 +28,7 @@ const NeoField = ({
         options: choices,
         onChange: (newValue) => onChange(newValue.value),
         value: value != null ? { label: value, value: value } : { label: defaultValue, value: defaultValue },
+        menuPlacement: 'auto',
       }}
       style={style}
       disabled={disabled}

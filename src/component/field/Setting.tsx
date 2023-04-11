@@ -3,6 +3,7 @@ import NeoField from './Field';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import NeoColorPicker from './ColorPicker';
 import { SELECTION_TYPES } from '../../config/CardConfig';
+import { Label } from '@neo4j-ndl/react';
 
 const generateListItem = (label, option) => {
   if (typeof option === 'boolean') {
@@ -15,20 +16,33 @@ const generateListItem = (label, option) => {
         ? colorsFull.slice(-1)[0]
         : colorsFull
       : colorsFull;
-    return (
-      <div>
-        {Array.isArray(colors)
-          ? colors.map((element) => {
-              return (
-                <span
-                  key={element}
-                  style={{ display: 'inline-block', background: element, width: '18px', height: '18px' }}
-                ></span>
-              );
-            })
-          : `${option}`}
-      </div>
-    );
+    return {
+      label: Array.isArray(colors) ? (
+        <>
+          {colors.map((element) => {
+            return (
+              <span
+                key={element}
+                style={{
+                  display: 'inline-block',
+                  background: element,
+                  width: '18px',
+                  height: '18px',
+                  position: 'relative',
+                  top: '3px',
+                }}
+              ></span>
+            );
+          })}
+          <Label color='info' fill='outlined' className='n-inline-block n-ml-2'>
+            {option}
+          </Label>
+        </>
+      ) : (
+        `${option}`
+      ),
+      value: option,
+    };
   }
   return { label: option, value: option };
 };
