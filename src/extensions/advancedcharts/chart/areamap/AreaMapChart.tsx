@@ -57,7 +57,6 @@ const NeoAreaMapChart = (props: ChartProps) => {
   const { selection } = props;
   const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
   const keyLength = props.settings && props.settings.countryCodeFormat ? props.settings.countryCodeFormat : 'Alpha-2';
-  console.log(keyLength);
   let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
   const [data, setData] = useState({});
   // Two feature levels (ideally we can even more)

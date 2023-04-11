@@ -83,7 +83,7 @@ function bindDataToMap(geoData, geoJsonData) {
       listValues.push(geoData[key]);
       newValues[key] = tmp;
     } else {
-      console.log(`Missing key in Polygon Map :  ${key} with value ${geoData[key]}`);
+      // console.log(`Missing key in Polygon Map :  ${key} with value ${geoData[key]}`);
     }
   });
 
@@ -178,7 +178,6 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
      * @returns color assigned to the polygon based on it's position in the legend
      */
     function getColor(weight, legendRange, listColors) {
-      console.log(weight);
       let index = legendRange.findIndex((number) => {
         return number >= weight;
       });
