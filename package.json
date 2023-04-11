@@ -3,5 +3,13 @@
   "workspaces": [
     "packages/*", 
     "apps/*"
-  ]
+  ],
+  "devDependencies": {
+    "del-cli": "^5.0.0",
+    "turbo": "^1.7.4"
+  },
+  "scripts": {
+    "clean:packages": "del-cli node_modules && del-cli **/*/node_modules",
+    "start:demos": "turbo run start"
+  }
 }
