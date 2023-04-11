@@ -14,6 +14,7 @@ import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 import { getSettings } from '../SettingsUtils';
+import { getPageNumbersAndNamesList } from '../../extensions/advancedcharts/Utils';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -116,6 +117,8 @@ const NeoGraphChart = (props: ChartProps) => {
     },
   });
 
+  const pageNames = getPageNumbersAndNamesList();
+
   const chartProps: GraphChartVisualizationProps = {
     data: {
       nodes: data.nodes,
@@ -178,6 +181,8 @@ const NeoGraphChart = (props: ChartProps) => {
       fixNodeAfterDrag: settings.fixNodeAfterDrag,
       handleExpand: handleExpand,
       setGlobalParameter: props.setGlobalParameter,
+      setPageNumber: props.setPageNumber,
+      pageNames: pageNames,
       onNodeClick: (item) => handleEntityClick(item),
       onNodeRightClick: (item, event) => handleEntityRightClick(item, event),
       onRelationshipClick: (item) => handleEntityClick(item),
