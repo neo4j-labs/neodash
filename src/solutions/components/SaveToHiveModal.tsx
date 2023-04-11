@@ -25,7 +25,7 @@ import {
   Select,
   MenuItem,
 } from '@material-ui/core';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab, Typography } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { getDashboardJson } from '../../modal/ModalSelectors';
 import { applicationGetConnection } from '../../application/ApplicationSelectors';
@@ -290,6 +290,11 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
         >
           Previous
         </Button>
+        <div style={{ float: 'left', marginTop: '20px' }}>
+          <Typography variant='body2' color='textSecondary'>
+            For any issues with Publish to Hive, please contact solutions@neo4j.com
+          </Typography>
+        </div>
       </DialogContent>
       <DialogActions></DialogActions>
     </Dialog>
