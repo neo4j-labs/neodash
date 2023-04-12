@@ -113,18 +113,6 @@ const NeoCardView = ({
     return globalParameters ? globalParameters[key] : undefined;
   };
 
-  // ONLY if the 'actions' extension is enabled, we send 'actionsRules' to the table visualization.
-  const filteredSettings = Object.fromEntries(
-    Object.entries(settings).filter(
-      ([k, _]) =>
-        !(
-          k == 'actionsRules' &&
-          dashboardSettings.extensions != null &&
-          !dashboardSettings.extensions.includes('actions')
-        )
-    )
-  );
-
   const localParameters = getLocalParameters(query);
   useEffect(() => {
     if (!settingsOpen) {

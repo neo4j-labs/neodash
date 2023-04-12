@@ -41,10 +41,7 @@ const NeoMapChart = (props: ChartProps) => {
       ? props.settings.attribution
       : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
-  const actionsRules =
-    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
-      ? props.settings.actionsRules
-      : [];
+  const actionsRules = [];
 
   const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 

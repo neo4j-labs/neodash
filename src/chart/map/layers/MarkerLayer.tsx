@@ -12,10 +12,7 @@ export function createMarkers(data, props) {
   const clusterMarkers =
     props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
-  const actionsRules =
-    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
-      ? props.settings.actionsRules
-      : [];
+  const actionsRules = [];
 
   let markerMarginTop;
   // Render a node label tooltip
@@ -46,38 +43,18 @@ export function createMarkers(data, props) {
             ) : (
               Object.keys(value.properties).map((k, i) => {
                 // TODO MOVE THIS DEPENDENCY OUT OF THE TOOLTIP GENERATION
-                let rule = getRule(
-                  { field: k.toString(), value: value.properties[k].toString() },
-                  actionsRules,
-                  'Click'
-                );
-                let execRule = Boolean(
-                  rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter
-                );
+
                 return (
                   <tr
                     key={i}
                     onClick={() => {
-                      if (execRule) {
-                        // call thunk for $neodash_customizationValue
-                        props.setGlobalParameter(`neodash_${rule.customizationValue}`, value.properties[k].toString());
-                      }
+                      
                     }}
                   >
                     <td style={{ marginRight: '10px' }} key={0}>
                       {k.toString()}:
                     </td>
-                    <td key={1}>
-                      {execRule ? (
-                        <Button
-                          style={{ width: '100%', marginLeft: '10px', marginRight: '10px' }}
-                          variant='contained'
-                          color='primary'
-                        >{`${value.properties[k].toString()}`}</Button>
-                      ) : (
-                        value.properties[k].toString()
-                      )}
-                    </td>
+                    <td key={1}>value.properties[k].toString()</td>
                   </tr>
                 );
               })
