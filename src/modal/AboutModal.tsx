@@ -10,7 +10,7 @@ import { Button } from '@material-ui/core';
 import BugReportIcon from '@material-ui/icons/BugReport';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
-  const version = '2.2.3-extended';
+  const version = '2.2.4';
 
   const downloadDebugFile = () => {
     const element = document.createElement('a');
