@@ -74,7 +74,7 @@ function getDrillDown(geoJson, features, key, keepConflict = false) {
  */
 function bindDataToMap(geoData, geoJsonData) {
   let newValues = {};
-  let listValues: string[] = [];
+  let listValues: any[] = [];
   Object.keys(geoData).forEach((key) => {
     let tmp;
     if (geoJsonData[key] != undefined) {
