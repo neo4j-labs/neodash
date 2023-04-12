@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import SaveIcon from '@material-ui/icons/Save';
+import { createNotificationThunk } from '../page/PageThunks';
 import {
   Checkbox,
   FormControl,
@@ -67,7 +68,7 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
   return value;
 };
 
-export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
+export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j, dispatch }) => {
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
   const [saveToHiveModalOpen, setSaveToHiveModalOpen] = React.useState(false);
@@ -164,8 +165,12 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           <Button
             component='label'
             onClick={() => {
-              setSaveModalOpen(false);
-              setSaveToHiveModalOpen(true);
+              if (!dashboard.title) {
+                dispatch(createNotificationThunk('Dashboard Name Missing', 'Please add dashboard name'));
+              } else {
+                setSaveModalOpen(false);
+                setSaveToHiveModalOpen(true);
+              }
             }}
             style={{ backgroundColor: 'white', marginLeft: '10px' }}
             color='default'
@@ -320,6 +325,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  dispatch,
   saveDashboardToNeo4j: (driver: any, database: string, dashboard: any, date: any, user: any, overwrite: boolean) => {
     dispatch(saveDashboardToNeo4jThunk(driver, database, dashboard, date, user, overwrite));
   },
