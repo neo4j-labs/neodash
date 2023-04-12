@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -8,8 +9,6 @@ import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/Close';
 import TimerIcon from '@material-ui/icons/Timer';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
-
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
@@ -134,18 +133,18 @@ export const NeoWorkflowRunnerModal = ({
   isRunning,
   workflowStatus,
   setWorkflowStatus,
-  results,
+  _results,
+  currentRunIndex,
   workflow,
 }) => {
   const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
-  console.log(results);
   // console.log(results);
   // Refreshing correctly the state of each step while it runs
   useEffect(() => {
     if (workflow && workflow.steps && !open && !isRunning) {
       setWorkflowStatus(workflow.steps.map((_) => STEP_STATUS.WAITING));
     }
-  }, [open, isRunning]);
+  }, [open, currentRunIndex]);
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<any>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : undefined);

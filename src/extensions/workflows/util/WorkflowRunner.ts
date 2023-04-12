@@ -51,19 +51,46 @@ export function runWorkflow(
   setWorkflowStatus,
   setResults,
   setIsRunning,
+  setCurrentWorkflowStatus,
   updateWorkflowStepStatus
 ) {
   let stop = false;
+  let errorMessage = '';
 
-  function abort() {
+  function setErrorMessage(msg) {
+    errorMessage = msg;
+  }
+  function abort(msg) {
+    setErrorMessage(msg);
     stop = true;
   }
 
   /**
-   * Function to manage the end
+   * Function to set the workflow status when it ends.
+   * A workflow can be:
+   * - Completed
+   * - Failed
+   * - Aborted
+   */
+  function setWorkflowFinalStatus() {
+    // Green only if it's really completed
+    if (
+      workflowStatus.findIndex((value) => value != STEP_STATUS.COMPLETE) < 0 &&
+      workflowStatus.length === workflow.steps.length
+    ) {
+      setCurrentWorkflowStatus(STEP_STATUS.COMPLETE);
+    } else if (workflowStatus.includes(STEP_STATUS.ERROR)) {
+        setCurrentWorkflowStatus(STEP_STATUS.ERROR);
+      } else {
+        setCurrentWorkflowStatus(STEP_STATUS.CANCELLED);
+      }
+  }
+  /**
+   * Function to manage the ending of a workflow
    */
   function handleEnd() {
     setIsRunning(false);
+    setWorkflowFinalStatus();
   }
 
   async function run() {
@@ -83,6 +110,9 @@ export function runWorkflow(
          */
         const setRecords = (records) => {
           results[index].records = records;
+          if (records.length === 1 && records[0].error) {
+            setErrorMessage(records[0].error);
+          }
         };
         /**
          * Function passed to the query runner to set the status got from the UI
@@ -91,23 +121,27 @@ export function runWorkflow(
         const setStatus = (status) => {
           let possiblePositiveStatus = [QueryStatus.NO_DATA, QueryStatus.COMPLETE, QueryStatus.COMPLETE_TRUNCATED];
           let newStatus = STEP_STATUS.COMPLETE;
-          // if the query is nto completed, throw an error and abort to prevent running the next steps
+          // if the query is not completed, throw an error and abort to prevent running the next steps
           if (!possiblePositiveStatus.includes(status)) {
             newStatus = STEP_STATUS.ERROR;
-            abort();
+            abort('Something wrong happened during the run of the workflow');
           }
           results[index].status = newStatus;
           setWorkflowStatusForStep(index, newStatus);
         };
 
         if (stop) {
-          throw new Error('Stopped by UI');
+          throw new Error(errorMessage);
         }
+
         setWorkflowStatusForStep(index, STEP_STATUS.RUNNING);
         results.push({ records: [], status: STEP_STATUS.RUNNING });
 
         let { query } = workflow.steps[index];
         await runWorkflowStep(driver, database, query, setStatus, setRecords);
+
+        // Refreshing the result state
+        setResults(results);
 
         // Added sleep to prevent strange refresh on main screen
         await sleep(10);

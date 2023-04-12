@@ -9,11 +9,12 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import NeoWorkflowEditorModal from './WorkflowEditorModal';
 import { Button } from '@material-ui/core';
-import { PlayArrow } from '@material-ui/icons';
+import { PlayArrow, Stop } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import StopIcon from '@material-ui/icons/Stop';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import NeoWorkflowRunnerModal from './NeoWorkflowRunnerModal';
+import NeoWorkflowRunnerModal, { STEP_STATUS } from './NeoWorkflowRunnerModal';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { deleteWorkflow } from './stateManagement/WorkflowActions';
 const styles = {};
@@ -29,10 +30,19 @@ export const NeoWorkflowListModal = ({
   runnerModalIsOpen,
   setRunnerModalIsOpen,
   currentRunIndex,
+  currentWorkflowStatus,
+  currentRun,
   results,
   workflowsList,
   deleteWorkflow,
 }) => {
+  function getStatusMessage() {
+    const messages = {};
+    messages[STEP_STATUS.CANCELLED] = 'Cancelled';
+    messages[STEP_STATUS.ERROR] = 'Error';
+    messages[STEP_STATUS.COMPLETE] = 'Completed';
+    return isRunning ? 'Running' : messages[currentWorkflowStatus] ? messages[currentWorkflowStatus] : '';
+  }
   const [editorOpen, setEditorOpen] = React.useState(false);
   // The index of the selected workflow
   const [rows, setRows] = React.useState([]);
@@ -46,7 +56,24 @@ export const NeoWorkflowListModal = ({
 
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
-    { field: 'name', headerName: 'Name', width: 210 },
+    {
+      field: 'name',
+      headerName: 'Name',
+      renderCell: (row) => {
+        // TODO: find a cool way to show the status here
+        return <div>{row.formattedValue}</div>;
+      },
+      width: 210,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      renderCell: (row) => {
+        // TODO: find a cool way to show the status here
+        return <div>{row.id === currentRunIndex ? getStatusMessage() : ''}</div>;
+      },
+      width: 80,
+    },
     { field: 'stepCount', headerName: 'Steps', width: 100 },
     {
       field: 'actions',
@@ -64,6 +91,17 @@ export const NeoWorkflowListModal = ({
             >
               <Badge overlap='rectangular' badgeContent={''}>
                 <PlayArrow />
+              </Badge>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                currentRun.abort('Stopped by UI');
+              }}
+              disabled={!(isRunning && row.id === currentRunIndex)}
+              style={{ padding: '6px' }}
+            >
+              <Badge overlap='rectangular' badgeContent={''}>
+                <StopIcon />
               </Badge>
             </IconButton>
             <IconButton
@@ -92,7 +130,7 @@ export const NeoWorkflowListModal = ({
           </div>
         );
       },
-      width: 140,
+      width: 160,
     },
   ];
 
@@ -119,7 +157,7 @@ export const NeoWorkflowListModal = ({
             </Badge>
           </IconButton>
         </DialogTitle>
-        <DialogContent style={{ width: '500px' }}>
+        <DialogContent style={{ width: '600px' }}>
           <div style={{ height: '380px' }}>
             <DataGrid
               rows={rows}
@@ -154,6 +192,7 @@ export const NeoWorkflowListModal = ({
         workflowStatus={workflowStatus}
         setWorkflowStatus={setWorkflowStatus}
         results={results}
+        currentRunIndex={currentRunIndex}
       />
     </>
   );

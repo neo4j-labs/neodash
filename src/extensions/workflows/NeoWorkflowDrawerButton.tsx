@@ -7,6 +7,7 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { runWorkflow } from './util/WorkflowRunner';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { updateWorkflowStepStatus } from './stateManagement/WorkflowActions';
+import { STEP_STATUS } from './NeoWorkflowRunnerModal';
 
 /**
  * Component that has the responsiblity to run Cypher workflows
@@ -23,13 +24,31 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
   // Object that contains the information regarding the current run
   const [currentRun, setCurrentRun] = React.useState({});
   const [currentRunIndex, setCurrentRunIndex] = React.useState(-1);
-
+  // Number that represent the status of the workflow (managed by the workflow runner)
+  const [currentWorkflowStatus, setCurrentWorkflowStatus] = React.useState(-1);
   // TODO: Attach correctly
   const [database, setDatabase] = React.useState('neo4j');
   const handleClick = () => {
     setOpen(true);
   };
+
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+  /**
+   * Defines the color representing the status of the workflow runner
+   * - blue : currently running a workflow
+   * - gray : first initialization value or stopped workflow
+   * - green: completed with success
+   * - red: stopped because of an error
+   * @returns
+   */
+  function getButtonColor() {
+    const colors = {};
+    colors[STEP_STATUS.CANCELLED] = 'gray';
+    colors[STEP_STATUS.ERROR] = 'red';
+    colors[STEP_STATUS.COMPLETE] = 'green';
+
+    return isRunning ? 'blue' : colors[currentWorkflowStatus] ? colors[currentWorkflowStatus] : 'gray';
+  }
 
   // Effect to trigger a workflow run
   useEffect(() => {
@@ -53,6 +72,7 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
         setWorkflowStatus,
         setResults,
         setIsRunning,
+        setCurrentWorkflowStatus,
         updateWorkflowStepStatus
       );
       setCurrentRun(run);
@@ -64,7 +84,7 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
     <div>
       <ListItem button onClick={handleClick} id='workflows-sidebar-button'>
         <ListItemIcon>
-          <SlowMotionVideoIcon color={isRunning ? 'primary' : 'secondary'} />
+          <SlowMotionVideoIcon htmlColor={getButtonColor()} />
         </ListItemIcon>
         <ListItemText primary='Workflows' />
       </ListItem>
@@ -85,6 +105,8 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
           runnerModalIsOpen={runnerModalIsOpen}
           setRunnerModalIsOpen={setRunnerModalIsOpen}
           currentRunIndex={currentRunIndex}
+          currentWorkflowStatus={currentWorkflowStatus}
+          currentRun={currentRun}
           results={results}
         ></NeoWorkflowListModal>
       ) : (

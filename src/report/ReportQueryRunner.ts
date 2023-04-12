@@ -102,8 +102,8 @@ export async function runCypherQuery(
         transaction.commit();
         return;
       } else if (records.length > rowLimit) {
-        setRecords(records.slice(0, rowLimit));
         setStatus(QueryStatus.COMPLETE_TRUNCATED);
+        setRecords(records.slice(0, rowLimit));
         // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
         transaction.commit();
         return;
