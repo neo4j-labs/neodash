@@ -1,5 +1,5 @@
 import React from 'react';
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
@@ -196,4 +196,6 @@ const mapDispatchToProps = (dispatch) => ({
   onAboutModalClose: (_) => dispatch(setAboutModalOpen(false)),
 });
 
-export default hot(module)(connect(mapStateToProps, mapDispatchToProps)(Application));
+Application.displayName = 'Application';
+
+export default connect(mapStateToProps, mapDispatchToProps)(hot(Application));
