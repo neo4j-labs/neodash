@@ -124,46 +124,30 @@ export enum STEP_STATUS {
   ERROR,
   COMPLETE,
   CANCELLED,
+  STOPPING,
 }
 
-export const NeoWorkflowRunnerModal = ({
-  open,
-  setOpen,
-  _index,
-  isRunning,
-  workflowStatus,
-  setWorkflowStatus,
-  _results,
-  currentRunIndex,
-  workflow,
-}) => {
+export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStatus, _results, workflow }) => {
   const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
-  // console.log(results);
-  // Refreshing correctly the state of each step while it runs
-  useEffect(() => {
-    if (workflow && workflow.steps && !open && !isRunning) {
-      setWorkflowStatus(workflow.steps.map((_) => STEP_STATUS.WAITING));
-    }
-  }, [open, currentRunIndex]);
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<any>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : undefined);
   };
 
   const getExpandIcon = (index, item, expanded) => {
-    if (workflowStatus[index] == STEP_STATUS.COMPLETE) {
+    if (workflowStepStatus[index] == STEP_STATUS.COMPLETE) {
       return getCompleteIcon(item == expanded);
     }
-    if (workflowStatus[index] == STEP_STATUS.RUNNING) {
+    if (workflowStepStatus[index] == STEP_STATUS.RUNNING) {
       return getRunningIcon();
     }
-    if (workflowStatus[index] == STEP_STATUS.WAITING) {
-      return getWaitingIcon(item == expanded);
+    if (workflowStepStatus[index] == STEP_STATUS.ERROR) {
+      return getErrorIcon(item == expanded);
     }
-    if (workflowStatus[index] == STEP_STATUS.CANCELLED) {
+    if (workflowStepStatus[index] == STEP_STATUS.CANCELLED) {
       return getCancelledIcon(item == expanded);
     }
-    return getErrorIcon(item == expanded);
+    return getWaitingIcon(item == expanded);
   };
   function handleClose() {
     setOpen(false);

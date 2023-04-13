@@ -1,3 +1,4 @@
+import { stepButtonClasses } from '@mui/material';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { STEP_STATUS } from '../NeoWorkflowRunnerModal';
 
@@ -36,33 +37,45 @@ async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
  * @param database Database that will be impacted by the workflow
  * @param workflow Workflow to run, composed by a list of steps
  * @param workflowIndex Index that identifies a worlflow in the list of workflows
- * @param workflowStatus Status of each step of the workflow
- * @param setWorkflowStatus Callback to set the status of the workflow inside the component calling the function
+ * @param workflowStepStatus Status of each step of the workflow
+ * @param setWorkflowStepStatus Callback to set the total status of the workflow inside the component calling the function
  * @param setResults Callback to set the results and show them to the UI
  * @param setIsRunning Callback to set if the workflow is running
  * @param updateWorkflowStepStatus Callback to set the status of the single step in the workflow
  */
 export function runWorkflow(
   driver,
-  workflowDatabase,
   workflow,
+  workflowDatabase,
   workflowIndex,
-  workflowStatus,
-  setWorkflowStatus,
+  workflowStepStatus,
+  setWorkflowStepStatus,
   setResults,
   setIsRunning,
   setCurrentWorkflowStatus,
   updateWorkflowStepStatus
 ) {
+  // True if we want to stop the workflow, False otherwise
   let stop = false;
+  // True if triggered from the UI, False otherwise
+  let stoppedByUser = false;
+  // Message created from the abort function
   let errorMessage = '';
 
   function setErrorMessage(msg) {
     errorMessage = msg;
   }
-  function abort(msg) {
+  /**
+   * Function to stop the run of a workflow.
+   * It will wait the end of the current step to stop the run.
+   * @param msg Message to show in the console
+   * @param fromUI True if triggered from the UI, False otherwise
+   */
+  function abort(msg, fromUI = false) {
     setErrorMessage(msg);
+    setCurrentWorkflowStatus(STEP_STATUS.STOPPING);
     stop = true;
+    stoppedByUser = fromUI;
   }
 
   /**
@@ -70,20 +83,22 @@ export function runWorkflow(
    * A workflow can be:
    * - Completed
    * - Failed
-   * - Aborted
+   * - Cancelled
    */
   function setWorkflowFinalStatus() {
-    // Green only if it's really completed
-    if (
-      workflowStatus.findIndex((value) => value != STEP_STATUS.COMPLETE) < 0 &&
-      workflowStatus.length === workflow.steps.length
-    ) {
-      setCurrentWorkflowStatus(STEP_STATUS.COMPLETE);
-    } else if (workflowStatus.includes(STEP_STATUS.ERROR)) {
-      setCurrentWorkflowStatus(STEP_STATUS.ERROR);
+    let finalStatus = -1;
+
+    if (stop && stoppedByUser) {
+      finalStatus = STEP_STATUS.CANCELLED;
+    } else if (workflowStepStatus.findIndex((value) => value != STEP_STATUS.COMPLETE) < 0) {
+      finalStatus = STEP_STATUS.COMPLETE;
+    } else if (workflowStepStatus.includes(STEP_STATUS.ERROR)) {
+      finalStatus = STEP_STATUS.ERROR;
     } else {
-      setCurrentWorkflowStatus(STEP_STATUS.CANCELLED);
+      finalStatus = STEP_STATUS.CANCELLED;
     }
+
+    setCurrentWorkflowStatus(finalStatus);
   }
   /**
    * Function to manage the ending of a workflow
@@ -96,9 +111,10 @@ export function runWorkflow(
   async function run() {
     const results: any[] = [];
     const database = workflowDatabase;
+
     const setWorkflowStatusForStep = (stepIndex, status) => {
-      workflowStatus[stepIndex] = status;
-      setWorkflowStatus([...workflowStatus]);
+      workflowStepStatus[stepIndex] = status;
+      setWorkflowStepStatus([...workflowStepStatus]);
       updateWorkflowStepStatus(workflowIndex, stepIndex, status);
     };
 

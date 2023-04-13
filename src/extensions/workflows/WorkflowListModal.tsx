@@ -20,6 +20,31 @@ import { deleteWorkflow } from './stateManagement/WorkflowActions';
 import NeoField from '../../component/field/Field';
 const styles = {};
 
+/**
+* Component that shows the list of workflows. From this modal they can:
+ - Create a new workflow
+ - Update an existing workflow 
+ - Delete a workflow
+ - Run a workflow
+* @param open Always set to true when opening the modal
+* @param setOpen Callback to close the modal
+* @param isRunning True if a workflow is currently running, False otherwise
+* @param index Index of the currently selected
+* @param setIndex Callback to set the currently selected index
+* @param workflowDatabase Database selected to run the workflow
+* @param setWorkflowDatabase Callback to set the database that will run the workflow
+* @param databaseList List of possible databases
+* @param workflowStepStatus List that contains, for each step of the running workflow, it's own status
+* @param setWorkflowStepStatus Callback to set the status for each step of the workflow
+* @param runnerModalIsOpen True if the runner modal is open, False otherwise
+* @param setRunnerModalIsOpen Callback to change the state of runnerModalIsOpen
+* @param currentRunIndex Index of the workflow that is currently running
+* @param currentWorkflowStatus Status of the total workflow (Completed, Failed, Cancelled)
+* @param currentRun Object containing the promise if the run and its abort function
+* @param results Results got back from then workflow
+* @param workflowsList List of possible workflows, got from the state
+* @param deleteWorkflow Dispacth to delete a workflow from the stored list
+*/
 export const NeoWorkflowListModal = ({
   open,
   setOpen,
@@ -29,8 +54,8 @@ export const NeoWorkflowListModal = ({
   workflowDatabase,
   setWorkflowDatabase,
   databaseList,
-  workflowStatus,
-  setWorkflowStatus,
+  workflowStepStatus,
+  setWorkflowStepStatus,
   runnerModalIsOpen,
   setRunnerModalIsOpen,
   currentRunIndex,
@@ -49,7 +74,13 @@ export const NeoWorkflowListModal = ({
     messages[STEP_STATUS.CANCELLED] = 'Cancelled';
     messages[STEP_STATUS.ERROR] = 'Error';
     messages[STEP_STATUS.COMPLETE] = 'Completed';
-    return isRunning ? 'Running' : messages[currentWorkflowStatus] ? messages[currentWorkflowStatus] : '';
+    messages[STEP_STATUS.STOPPING] = 'Stopping';
+
+    return isRunning && currentWorkflowStatus != STEP_STATUS.STOPPING
+      ? 'Running'
+      : messages[currentWorkflowStatus]
+      ? messages[currentWorkflowStatus]
+      : '';
   }
   const [editorOpen, setEditorOpen] = React.useState(false);
   // The index of the selected workflow
@@ -95,6 +126,9 @@ export const NeoWorkflowListModal = ({
           <div>
             <IconButton
               onClick={() => {
+                if (!isRunning) {
+                  setWorkflowStepStatus([]);
+                }
                 setRunnerModalIsOpen(true);
                 setIndex(row.id);
               }}
@@ -107,7 +141,7 @@ export const NeoWorkflowListModal = ({
             </IconButton>
             <IconButton
               onClick={() => {
-                currentRun.abort('Stopped by UI');
+                currentRun.abort('Stopped by UI', true);
               }}
               disabled={!(isRunning && row.id === currentRunIndex)}
               style={{ padding: '6px' }}
@@ -216,11 +250,8 @@ export const NeoWorkflowListModal = ({
         open={runnerModalIsOpen}
         setOpen={setRunnerModalIsOpen}
         index={index}
-        isRunning={isRunning}
-        workflowStatus={workflowStatus}
-        setWorkflowStatus={setWorkflowStatus}
+        workflowStepStatus={workflowStepStatus}
         results={results}
-        currentRunIndex={currentRunIndex}
       />
     </>
   );
