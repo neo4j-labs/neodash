@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, DesktopDatePicker } from '@mui/x-date-pickers';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
 
 const NeoDatePicker = ({ label, value, onChange }) => {
   return (
@@ -14,6 +14,7 @@ const NeoDatePicker = ({ label, value, onChange }) => {
         onChange={(event) => {
           onChange(event);
         }}
+        maxDate={new Date('9999-12-31')}
         renderInput={(params) => (
           <TextField
             variant='outlined'

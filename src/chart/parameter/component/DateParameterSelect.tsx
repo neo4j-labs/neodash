@@ -50,15 +50,16 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
         value={inputDate}
         onChange={(newValue) => {
           setInputDate(newValue);
-          if (!newValue || isNaN(newValue.$y)) {
+
+          // Check whether the user has inputted a valid year. If not, do not update the parameter.
+          if (!newValue || isNaN(newValue.$y) || isNaN(newValue.$m) || isNaN(newValue.$d)) {
             return;
           }
-
           if (newValue == null && clearParameterOnFieldClear) {
             setParameterValue(Neo4jDate.fromStandardDate(defaultValue.toDate()));
           } else if (newValue == null) {
             setParameterValue(undefined);
-          } else {
+          } else if (newValue.isValid()) {
             setParameterValue(Neo4jDate.fromStandardDate(newValue.toDate()));
           }
         }}

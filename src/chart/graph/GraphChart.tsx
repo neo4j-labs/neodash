@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useDimensions from 'react-cool-dimensions';
 import { ChartProps } from '../Chart';
 import { NeoGraphChartInspectModal } from './component/GraphChartInspectModal';
-import { useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { NeoGraphChartVisualization2D } from './GraphChartVisualization2D';
 import { NeoGraphChartDeepLinkButton } from './component/button/GraphChartDeepLinkButton';
 import { NeoGraphChartCanvas } from './component/GraphChartCanvas';
@@ -12,12 +10,15 @@ import { NeoGraphChartFitViewButton } from './component/button/GraphChartFitView
 import { buildGraphVisualizationObjectFromRecords } from './util/RecordUtils';
 import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
-import { handleExpand } from './util/GraphUtils';
+import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { IconButton, Tooltip } from '@material-ui/core';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { RenderSubValue } from '../../report/ReportRecordProcessing';
 import { downloadCSV } from '../ChartUtils';
+import { GraphChartContextMenu } from './component/GraphChartContextMenu';
+import { getSettings } from '../SettingsUtils';
+
 /**
  * Draws graph data using a force-directed-graph visualization.
  * This visualization is powered by `react-force-graph`.
@@ -29,91 +30,69 @@ const NeoGraphChart = (props: ChartProps) => {
   }
 
   // Retrieve config from advanced settings
-  const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
-  const backgroundColor = props.settings && props.settings.backgroundColor ? props.settings.backgroundColor : '#fafafa';
-  const allowDownload = props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
-  const nodeSizeProp = props.settings && props.settings.nodeSizeProp ? props.settings.nodeSizeProp : 'size';
-  const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : 'color';
-  const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 2;
-  const relWidthProp = props.settings && props.settings.relWidthProp ? props.settings.relWidthProp : 'width';
-  const relColorProp = props.settings && props.settings.relColorProp ? props.settings.relColorProp : 'color';
-  const defaultRelWidth = props.settings && props.settings.defaultRelWidth ? props.settings.defaultRelWidth : 1;
-  const defaultRelColor = props.settings && props.settings.defaultRelColor ? props.settings.defaultRelColor : '#a0a0a0';
-  const nodeLabelColor = props.settings && props.settings.nodeLabelColor ? props.settings.nodeLabelColor : 'black';
-  const nodeLabelFontSize = props.settings && props.settings.nodeLabelFontSize ? props.settings.nodeLabelFontSize : 3.5;
-  const relLabelFontSize = props.settings && props.settings.relLabelFontSize ? props.settings.relLabelFontSize : 2.75;
-  const relLabelColor = props.settings && props.settings.relLabelColor ? props.settings.relLabelColor : '#a0a0a0';
-  const nodeColorScheme = props.settings && props.settings.nodeColorScheme ? props.settings.nodeColorScheme : 'neodash';
-  const showPropertiesOnHover: boolean =
-    props.settings && props.settings.showPropertiesOnHover !== undefined ? props.settings.showPropertiesOnHover : true;
-  const showPropertiesOnClick =
-    props.settings && props.settings.showPropertiesOnClick !== undefined ? props.settings.showPropertiesOnClick : true;
-  const fixNodeAfterDrag: boolean =
-    props.settings && props.settings.fixNodeAfterDrag !== undefined ? props.settings.fixNodeAfterDrag : true;
-  const layout = props.settings && props.settings.layout !== undefined ? props.settings.layout : 'force-directed';
-  const lockable = props.settings && props.settings.lockable !== undefined ? props.settings.lockable : true;
-  const drilldownLink: string =
-    props.settings && props.settings.drilldownLink !== undefined ? props.settings.drilldownLink : '';
-  const rightClickToExpandNodes = false; // TODO - this isn't working properly yet, disable it.
-  const defaultNodeColor = 'lightgrey'; // Color of nodes without labels
+  const settings = getSettings(props.settings, props.extensions, props.getGlobalParameter);
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
-  const linkDirectionalParticleSpeed =
-    props.settings && props.settings.relationshipParticleSpeed ? props.settings.relationshipParticleSpeed : 0.005; // Speed of particles on relationships.
-  const iconStyle = props.settings && props.settings.iconStyle !== undefined ? props.settings.iconStyle : '';
-  const styleRules = useStyleRules(
-    extensionEnabled(props.extensions, 'styling'),
-    props.settings && props.settings.styleRules,
-    props.getGlobalParameter
-  );
-  const parameters = props.parameters ? props.parameters : {};
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
+  const parameters = props.parameters ? props.parameters : {};
+
   const setNodePositions = (positions) =>
     props.updateReportSetting && props.updateReportSetting('nodePositions', positions);
   const generateSafeColumnKey = (key) => {
-      return key != 'id' ? key : `${key} `;
-    };
+    return key != 'id' ? key : `${key} `;
+  };
   const handleEntityClick = (item) => {
-    if (showPropertiesOnClick) {
-      setSelectedEntity(item);
+    setSelectedEntity(item);
+    setContextMenuOpen(false);
+    if (item !== undefined && settings.showPropertiesOnClick) {
       setInspectModalOpen(true);
     }
+  };
+
+  const handleEntityRightClick = (item, event) => {
+    setSelectedEntity(item);
+    setContextMenuOpen(true);
+    setClickPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
   };
   const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
   const [inspectModalOpen, setInspectModalOpen] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState(undefined);
-  const [firstRun, setFirstRun] = useState(true);
-  let nodes: Record<string, any>[] = {};
-  let nodeLabels = {};
-  let links: Record<string, any>[] = {};
-  let linkTypes = {};
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const [recenterAfterEngineStop, setRecenterAfterEngineStop] = useState(true);
+  const [cooldownTicks, setCooldownTicks] = useState(100);
+
+  let [nodeLabels, setNodeLabels] = useState({});
+  let [linkTypes, setLinkTypes] = useState({});
   const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
-  const [extraRecords, setExtraRecords] = useState([]);
+
   const setLayoutFrozen = (value) => {
     if (value == false) {
-      setFirstRun(true);
+      setCooldownTicks(100);
+      setRecenterAfterEngineStop(true);
       setNodePositions({});
     }
     props.updateReportSetting && props.updateReportSetting('frozen', value);
   };
-  const { records } = props;
-  let icons = parseNodeIconConfig(iconStyle);
-  const colorScheme = categoricalColorSchemes[nodeColorScheme];
-  const rows = transposed
-    ? records[0].keys.map((key, i) => {
-        return Object.assign(
-          { id: i, Field: key },
-          ...records.map((r, j) => ({
-            [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
-          }))
-        );
-      })
-    : records.map((record, rownumber) => {
-        return Object.assign(
-          { id: rownumber },
-          ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
-        );
-      });
-  const generateVisualizationDataGraph = (records) => {
+
+  const setGraph = (nodes, links) => {
+    setData({ nodes: nodes, links: links });
+  };
+  const setNodes = (nodes) => {
+    setData({ nodes: nodes, links: data.links });
+  };
+  const setLinks = (links) => {
+    setData({ nodes: data.nodes, links: links });
+  };
+
+  let icons = parseNodeIconConfig(settings.iconStyle);
+  const colorScheme = categoricalColorSchemes[settings.nodeColorScheme];
+
+  const generateVisualizationDataGraph = (records, _) => {
+    let nodes: Record<string, any>[] = [];
+    let links: Record<string, any>[] = [];
     const extractedGraphFromRecords = buildGraphVisualizationObjectFromRecords(
       records,
       nodes,
@@ -121,25 +100,20 @@ const NeoGraphChart = (props: ChartProps) => {
       nodeLabels,
       linkTypes,
       colorScheme,
-      nodeColorProp,
-      defaultNodeColor,
-      nodeSizeProp,
-      defaultNodeSize,
-      relWidthProp,
-      defaultRelWidth,
-      relColorProp,
-      defaultRelColor,
-      styleRules,
+      settings.nodeColorProp,
+      settings.defaultNodeColor,
+      settings.nodeSizeProp,
+      settings.defaultNodeSize,
+      settings.relWidthProp,
+      settings.defaultRelWidth,
+      settings.relColorProp,
+      settings.defaultRelColor,
+      settings.styleRules,
       nodePositions,
       frozen
     );
     setData(extractedGraphFromRecords);
   };
-
-  // When data is refreshed, rebuild the visualization data.
-  useEffect(() => {
-    generateVisualizationDataGraph(props.records.concat(extraRecords));
-  }, [props.records, extraRecords]);
 
   const { observe, width, height } = useDimensions({
     onResize: ({ observe, unobserve }) => {
@@ -151,75 +125,115 @@ const NeoGraphChart = (props: ChartProps) => {
   const chartProps: GraphChartVisualizationProps = {
     data: {
       nodes: data.nodes,
+      nodeLabels: nodeLabels,
       links: data.links,
+      linkTypes: linkTypes,
       parameters: parameters,
+      setGraph: setGraph,
+      setNodes: setNodes,
+      setLinks: setLinks,
+      setNodeLabels: setNodeLabels,
+      setLinkTypes: setLinkTypes,
     },
     style: {
       width: width,
       height: height,
-      backgroundColor: backgroundColor,
+      backgroundColor: settings.backgroundColor,
       linkDirectionalParticles: linkDirectionalParticles,
-      linkDirectionalParticleSpeed: linkDirectionalParticleSpeed,
-      nodeLabelFontSize: nodeLabelFontSize,
-      nodeLabelColor: nodeLabelColor,
-      relLabelFontSize: relLabelFontSize,
-      relLabelColor: relLabelColor,
-      defaultNodeSize: defaultNodeSize,
+      linkDirectionalParticleSpeed: settings.linkDirectionalParticleSpeed,
+      nodeLabelFontSize: settings.nodeLabelFontSize,
+      nodeLabelColor: settings.nodeLabelColor,
+      relLabelFontSize: settings.relLabelFontSize,
+      relLabelColor: settings.relLabelColor,
+      defaultNodeSize: settings.defaultNodeSize,
       nodeIcons: icons,
+      colorScheme: colorScheme,
+      nodeColorProp: settings.nodeColorProp,
+      defaultNodeColor: settings.defaultNodeColor,
+      nodeSizeProp: settings.nodeSizeProp,
+      relWidthProp: settings.relWidthProp,
+      defaultRelWidth: settings.defaultRelWidth,
+      relColorProp: settings.relColorProp,
+      defaultRelColor: settings.defaultRelColor,
     },
     engine: {
-      layout: layouts[layout],
+      layout: layouts[settings.layout],
       queryCallback: props.queryCallback,
-      setExtraRecords: setExtraRecords,
-      firstRun: firstRun,
-      setFirstRun: setFirstRun,
+      cooldownTicks: cooldownTicks,
+      setCooldownTicks: setCooldownTicks,
       selection: props.selection,
+      setSelection: () => {
+        throw 'NotImplemented';
+      },
+      fields: props.fields,
+      setFields: props.setFields,
+      recenterAfterEngineStop: recenterAfterEngineStop,
+      setRecenterAfterEngineStop: setRecenterAfterEngineStop,
     },
     interactivity: {
+      enableExploration: settings.enableExploration,
+      enableEditing: settings.enableEditing,
       layoutFrozen: frozen,
       setLayoutFrozen: setLayoutFrozen,
       nodePositions: nodePositions,
       setNodePositions: setNodePositions,
-      showPropertiesOnHover: showPropertiesOnHover,
-      showPropertiesOnClick: showPropertiesOnClick,
+      showPropertiesOnHover: settings.showPropertiesOnHover,
+      showPropertiesOnClick: settings.showPropertiesOnClick,
       showPropertyInspector: inspectModalOpen,
       setPropertyInspectorOpen: setInspectModalOpen,
-      fixNodeAfterDrag: fixNodeAfterDrag,
+      fixNodeAfterDrag: settings.fixNodeAfterDrag,
       handleExpand: handleExpand,
+      setGlobalParameter: props.setGlobalParameter,
+      setPageNumber: props.setPageNumber,
+      pageNames: [],
       onNodeClick: (item) => handleEntityClick(item),
+      onNodeRightClick: (item, event) => handleEntityRightClick(item, event),
       onRelationshipClick: (item) => handleEntityClick(item),
-      drilldownLink: drilldownLink,
+      onRelationshipRightClick: (item, event) => handleEntityRightClick(item, event),
+      drilldownLink: settings.drilldownLink,
       selectedEntity: selectedEntity,
       setSelectedEntity: setSelectedEntity,
+      contextMenuOpen: contextMenuOpen,
+      setContextMenuOpen: setContextMenuOpen,
+      clickPosition: clickPosition,
+      setClickPosition: setClickPosition,
+      createNotification: props.createNotification,
     },
     extensions: {
-      styleRules: styleRules,
+      styleRules: settings.styleRules,
+      actionsRules: [],
     },
   };
+
+  // When data is refreshed, rebuild the visualization data.
+  useEffect(() => {
+    generateVisualizationDataGraph(props.records, chartProps);
+  }, [props.records]);
 
   return (
     <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
+        <GraphChartContextMenu {...chartProps} />
         <NeoGraphChartFitViewButton {...chartProps} />
-        {lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
-        {drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+        {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
         {allowDownload && rows && rows.length > 0 ? (
-        <Tooltip title='Download CSV' aria-label=''>
-          <IconButton
-            onClick={() => {
-              downloadCSV(rows);
-            }}
-            aria-label='download csv'
-            style={{ bottom: '9px', left: '3px', position: 'absolute' }}
-          >
-            <SaveAltIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></SaveAltIcon>
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <></>
-      )}
+          <Tooltip title='Download CSV' aria-label=''>
+            <IconButton
+              onClick={() => {
+                downloadCSV(rows);
+              }}
+              aria-label='download csv'
+              style={{ bottom: '9px', left: '3px', position: 'absolute' }}
+            >
+              <SaveAltIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></SaveAltIcon>
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <></>
+        )}
       </NeoGraphChartCanvas>
     </div>
   );
