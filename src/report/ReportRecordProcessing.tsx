@@ -87,10 +87,14 @@ const rightRelationship =
 const leftRelationship =
   'polygon(10px 0%, calc(100% - 0%) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 0%) 100%, 10px 100%, 0% calc(100% - 50%), 0% 50%)';
 
-export function RenderNode(value, key = 0) {
+export function RenderNode(value, hoverable = true) {
+  const chip = RenderNodeChip(value.labels.length > 0 ? value.labels.join(', ') : 'Node');
+  if (!hoverable) {
+    return chip;
+  }
   return (
     <HtmlTooltip
-      key={`${key}-${value.identity}`}
+      key={`${0}-${value.identity}`}
       arrow
       title={
         <div>
@@ -116,7 +120,7 @@ export function RenderNode(value, key = 0) {
         </div>
       }
     >
-      {RenderNodeChip(value.labels.length > 0 ? value.labels.join(', ') : 'Node')}
+      {chip}
     </HtmlTooltip>
   );
 }

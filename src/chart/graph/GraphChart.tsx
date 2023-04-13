@@ -46,8 +46,8 @@ const NeoGraphChart = (props: ChartProps) => {
     setSelectedEntity(item);
     setContextMenuOpen(true);
     setClickPosition({
-      x: event.offsetX === 0 ? event.layerX : event.offsetX,
-      y: event.offsetY === 0 ? event.layerY : event.offsetY,
+      x: event.clientX,
+      y: event.clientY,
     });
   };
   const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;

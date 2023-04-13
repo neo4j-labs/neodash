@@ -12,6 +12,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
+import { createPortal } from 'react-dom';
 
 /**
  * Renders the context menu that is present when a user right clicks on a node or relationship in the graph.
@@ -39,8 +40,8 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
       style={{
         position: 'absolute',
         zIndex: 999,
-        top: Math.min(props.interactivity.clickPosition.y, props.style.height - 200),
-        left: Math.min(props.interactivity.clickPosition.x, props.style.width - 200),
+        top: props.interactivity.clickPosition.y,
+        left: props.interactivity.clickPosition.x,
       }}
     >
       <Card id='basic-menu'>
@@ -111,7 +112,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               }
             }}
           >
-            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}>
               <table>
                 {neighbourRelCounts.length == 0 ? (
                   <tr>
@@ -154,7 +155,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
 
         {props.interactivity.enableEditing && expandable ? (
           <NestedMenuItem label='Create relationship...' nonce={undefined} parentMenuOpen={true}>
-            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}>
               <table>
                 {props.data &&
                   props.data.nodes.map((node) => (
@@ -168,7 +169,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
                           setDialogOpen(true);
                         }}
                       >
-                        <td style={{ width: '150px', overflow: 'hidden' }}>{RenderNode(node)}</td>
+                        <td style={{ width: '150px', overflow: 'hidden' }}>{RenderNode(node, false)}</td>
                         <td style={{ width: 'auto', marginLeft: '15px' }}>
                           {props.engine.selection[node.mainLabel] ? getNodeLabel(props.engine.selection, node) : ''}
                         </td>
@@ -188,7 +189,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   return (
     <>
       <GraphChartEditModal type={editableEntityType} action={action} {...dialogProps} />
-      {props.interactivity.contextMenuOpen ? menu : <></>}
+      {props.interactivity.contextMenuOpen ? createPortal(menu, document.body) : <></>}
     </>
   );
 };

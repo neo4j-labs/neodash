@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Embed test</title>
+</head>
+
+<body>
+    <p>I am an iFrame of the page located at <a href="https://neodash.graphapp.io/embed-test.html" target="_blank">https://neodash.graphapp.io/embed-test.html</a></p> 
+    <p>I'm embedded directly into a dashboard, and dynamically passed the user-made parameter selections.</p>
+    <p>I will not refresh when selections are updated, but, I can see variables change.</p>
+    <p>You can use me to embed external visualizations that are updated together with other charts.</p>
+    <b>Your dashboard variables:</b>
+    <pre></pre>
+    <p>
+ </body>
+
+<script>
+    var pre = document.querySelector('pre');
+    
+    var applyHash = function() {
+        const hashValue = window.location.hash.substr(1);
+        var output = "";
+
+        searchParams = new URLSearchParams(hashValue);
+        searchParams.forEach(function(value, key) {
+            output += key + ": " + value + "\n"
+        });
+        pre.textContent = output;
+    }
+
+    window.onhashchange = applyHash;
+    applyHash();
+</script>
+</html>

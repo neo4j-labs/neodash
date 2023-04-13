@@ -1,0 +1,22 @@
+{
+    "short_name": "NeoDash",
+    "name": "NeoDash",
+    "homepage": "https://github.com/neo4j-labs/neodash/",
+    "neo4jDesktop": {
+        "apiVersion": "^1.2.0"
+    },
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "type": "ico"
+        },
+        {
+            "src": "favicon.png",
+            "type": "png"
+        }
+    ],
+    "start_url": "./index.html",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
+}
