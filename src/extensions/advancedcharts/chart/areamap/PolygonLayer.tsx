@@ -74,7 +74,7 @@ function getDrillDown(geoJson, features, key, keepConflict = false) {
  */
 function bindDataToMap(geoData, geoJsonData) {
   let newValues = {};
-  let listValues = [];
+  let listValues: any[] = [];
   Object.keys(geoData).forEach((key) => {
     let tmp;
     if (geoJsonData[key] != undefined) {
@@ -125,8 +125,9 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
   const [state, setState] = useState({ key: 'firstAll', geoJson: undefined });
   // Key used to prevent race condition
   const [key, setKey] = React.useState('firstAll');
+
   const [legendRange, setLegendRange] = React.useState([]);
-  const [rangeValues, setRangeValues] = React.useState({ min: undefined, max: undefined });
+  const [rangeValues, setRangeValues] = React.useState({ min: NaN, max: NaN });
 
   useEffect(() => {
     let currentKey =
@@ -252,7 +253,7 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
                   <p style={{ fontSize: 'small', margin: 0, marginTop: 2, overflow: 'hidden', height: 20 }}>
                     {''}
                     {abbreviateNumber(from, 2)}
-                    {!isNaN(to) ? `-${abbreviateNumber(to, 2)}` : i > 0 ? '+' : ''}{' '}
+                    {!isNaN(to) ? ` - ${abbreviateNumber(to, 2)}` : i > 0 ? '+' : ''}{' '}
                   </p>
                 </td>
               </tr>
