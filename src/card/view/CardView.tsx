@@ -102,7 +102,9 @@ const NeoCardView = ({
   ) : (
     <></>
   );
-
+  const localParameters = getLocalParameters(
+    `${query  }//${  settings.drilldownLink}` !== undefined ? settings.drilldownLink : ''
+  );
   const reportTypes = getReportTypes(extensions);
   const withoutFooter =
     reportTypes[type] && reportTypes[type].withoutFooter
@@ -113,7 +115,6 @@ const NeoCardView = ({
     return globalParameters ? globalParameters[key] : undefined;
   };
 
-  const localParameters = getLocalParameters(query);
   useEffect(() => {
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
