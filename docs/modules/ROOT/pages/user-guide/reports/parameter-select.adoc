@@ -8,16 +8,17 @@ parameter (e.g. *$neodash_person_name*) dynamically. This means that
 your reports can be created to show different data depending on the
 value of a parameter.
 
-There are three types of parameter select reports: 
+There are four types of parameter select reports: 
 
 - Node property-based selections 
 - Relationship property-based selections 
 - Free text selections
+- Date picker selections
 
 The first two are straightforward for users to understand, as the list
 of choices is auto-populated from Neo4j. The third is a bit more
 complex, as it allows users to enter any text value, but, it gives them
-the complete freedom to enter any value they want.
+the complete freedom to enter any value they want. The final option lets users specify any date, which is then set as a Neo4j date object to be used in Cypher queries.
 
 == Examples
 

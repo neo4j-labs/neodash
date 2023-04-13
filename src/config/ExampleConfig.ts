@@ -95,7 +95,7 @@ export const EXAMPLE_REPORTS = [
           UNWIND data as row
           RETURN row.path as Path
         `,
-    settings: { lockable: false },
+    settings: { lockable: false, enableExploration: false, enableEditing: false },
     fields: [],
     selection: {
       Person: 'name',
@@ -224,6 +224,7 @@ RETURN value
     type: 'map',
     chartType: NeoMapChart,
   },
+
   {
     title: 'iFrame',
     description:

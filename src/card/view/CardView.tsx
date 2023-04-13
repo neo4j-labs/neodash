@@ -30,6 +30,7 @@ const NeoCardView = ({
   dashboardSettings,
   settings,
   updateReportSetting,
+  createNotification,
   settingsOpen,
   editable,
   onGlobalParameterUpdate,
@@ -101,9 +102,10 @@ const NeoCardView = ({
   ) : (
     <></>
   );
-
+  const localParameters = getLocalParameters(
+    `${query}//${settings.drilldownLink}` !== undefined ? settings.drilldownLink : ''
+  );
   const reportTypes = getReportTypes(extensions);
-
   const withoutFooter =
     reportTypes[type] && reportTypes[type].withoutFooter
       ? reportTypes[type].withoutFooter
@@ -113,19 +115,6 @@ const NeoCardView = ({
     return globalParameters ? globalParameters[key] : undefined;
   };
 
-  // ONLY if the 'actions' extension is enabled, we send 'actionsRules' to the table visualization.
-  const filteredSettings = Object.fromEntries(
-    Object.entries(settings).filter(
-      ([k, _]) =>
-        !(
-          k == 'actionsRules' &&
-          dashboardSettings.extensions != null &&
-          !dashboardSettings.extensions.includes('actions')
-        )
-    )
-  );
-
-  const localParameters = getLocalParameters(query);
   useEffect(() => {
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
@@ -149,7 +138,6 @@ const NeoCardView = ({
       : `${reportHeight}px`,
     overflow: 'auto',
   };
-
   const reportContent = (
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (
@@ -171,6 +159,7 @@ const NeoCardView = ({
           setGlobalParameter={onGlobalParameterUpdate}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          createNotification={createNotification}
           queryTimeLimit={dashboardSettings.queryTimeLimit ? dashboardSettings.queryTimeLimit : 20}
           setFields={onFieldsUpdate}
         />
