@@ -44,7 +44,7 @@ async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
  */
 export function runWorkflow(
   driver,
-  database,
+  workflowDatabase,
   workflow,
   workflowIndex,
   workflowStatus,
@@ -80,10 +80,10 @@ export function runWorkflow(
     ) {
       setCurrentWorkflowStatus(STEP_STATUS.COMPLETE);
     } else if (workflowStatus.includes(STEP_STATUS.ERROR)) {
-        setCurrentWorkflowStatus(STEP_STATUS.ERROR);
-      } else {
-        setCurrentWorkflowStatus(STEP_STATUS.CANCELLED);
-      }
+      setCurrentWorkflowStatus(STEP_STATUS.ERROR);
+    } else {
+      setCurrentWorkflowStatus(STEP_STATUS.CANCELLED);
+    }
   }
   /**
    * Function to manage the ending of a workflow
@@ -95,7 +95,7 @@ export function runWorkflow(
 
   async function run() {
     const results: any[] = [];
-
+    const database = workflowDatabase;
     const setWorkflowStatusForStep = (stepIndex, status) => {
       workflowStatus[stepIndex] = status;
       setWorkflowStatus([...workflowStatus]);

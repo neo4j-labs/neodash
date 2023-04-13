@@ -8,13 +8,20 @@ import { runWorkflow } from './util/WorkflowRunner';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { updateWorkflowStepStatus } from './stateManagement/WorkflowActions';
 import { STEP_STATUS } from './NeoWorkflowRunnerModal';
+import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
+import { getDatabase } from '../../settings/SettingsSelectors';
 
 /**
  * Component that has the responsiblity to run Cypher workflows
  * @param workflowsList List of currently defined workflows stored in the state
  * @param updateWorkflowStepStatus Action to change the status of a step
  */
-const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) => {
+const NeoWorkflowDrawerButton = ({
+  workflowsList,
+  connectionDatabase,
+  updateWorkflowStepStatus,
+  loadDatabaseListFromNeo4j,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [isRunning, setIsRunning] = React.useState(false);
   const [workflowStatus, setWorkflowStatus] = React.useState([]);
@@ -27,7 +34,8 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
   // Number that represent the status of the workflow (managed by the workflow runner)
   const [currentWorkflowStatus, setCurrentWorkflowStatus] = React.useState(-1);
   // TODO: Attach correctly
-  const [database, setDatabase] = React.useState('neo4j');
+  const [workflowDatabase, setWorkflowDatabase] = React.useState(connectionDatabase);
+  const [databaseList, setDatabaseList] = React.useState([]);
   const handleClick = () => {
     setOpen(true);
   };
@@ -49,6 +57,17 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
 
     return isRunning ? 'blue' : colors[currentWorkflowStatus] ? colors[currentWorkflowStatus] : 'gray';
   }
+  // Effect to load the list of database when opening the list of workflows
+  useEffect(() => {
+    loadDatabaseListFromNeo4j(driver, (result) => {
+      let index = result.indexOf('system');
+      if (index > -1) {
+        // only splice array when item is found
+        result.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      setDatabaseList(result);
+    });
+  }, [open]);
 
   // Effect to trigger a workflow run
   useEffect(() => {
@@ -58,14 +77,14 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
 
       // Storing the current index that is running to maange UI state
       setCurrentRunIndex(index);
-
+      console.log(workflowDatabase);
       // Keeping the fact that is running, to block some buttons on the UI
       setIsRunning(true);
 
       // Inside the run now there is the object to stop it (now it will only stop after the end of a step, we need to understand how to stop completely)
       let run = runWorkflow(
         driver,
-        database,
+        workflowDatabase, // copying to prevent strange behaviour during run
         workflow,
         index,
         workflowStatus,
@@ -100,6 +119,9 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
           isRunning={isRunning}
           index={index}
           setIndex={setIndex}
+          workflowDatabase={workflowDatabase}
+          setWorkflowDatabase={setWorkflowDatabase}
+          databaseList={databaseList}
           workflowStatus={workflowStatus}
           setWorkflowStatus={setWorkflowStatus}
           runnerModalIsOpen={runnerModalIsOpen}
@@ -118,10 +140,12 @@ const NeoWorkflowDrawerButton = ({ workflowsList, updateWorkflowStepStatus }) =>
 
 const mapStateToProps = (state) => ({
   workflowsList: getWorkflowsList(state),
+  connectionDatabase: getDatabase(state, -1, -1),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateWorkflowStepStatus: (index, stepIndex, status) => dispatch(updateWorkflowStepStatus(index, stepIndex, status)),
+  loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowDrawerButton);

@@ -8,7 +8,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import NeoWorkflowEditorModal from './WorkflowEditorModal';
-import { Button } from '@material-ui/core';
+import { Button, MenuItem } from '@material-ui/core';
 import { PlayArrow, Stop } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -17,6 +17,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import NeoWorkflowRunnerModal, { STEP_STATUS } from './NeoWorkflowRunnerModal';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { deleteWorkflow } from './stateManagement/WorkflowActions';
+import NeoField from '../../component/field/Field';
 const styles = {};
 
 export const NeoWorkflowListModal = ({
@@ -25,6 +26,9 @@ export const NeoWorkflowListModal = ({
   isRunning,
   index,
   setIndex,
+  workflowDatabase,
+  setWorkflowDatabase,
+  databaseList,
   workflowStatus,
   setWorkflowStatus,
   runnerModalIsOpen,
@@ -36,6 +40,10 @@ export const NeoWorkflowListModal = ({
   workflowsList,
   deleteWorkflow,
 }) => {
+  /**
+   * to comment
+   * @returns
+   */
   function getStatusMessage() {
     const messages = {};
     messages[STEP_STATUS.CANCELLED] = 'Cancelled';
@@ -46,6 +54,10 @@ export const NeoWorkflowListModal = ({
   const [editorOpen, setEditorOpen] = React.useState(false);
   // The index of the selected workflow
   const [rows, setRows] = React.useState([]);
+
+  // Text to show on the screen the currently selected database
+  const [databaseText, setDatabaseText] = React.useState(workflowDatabase);
+
   // TODO: continue binding data to the UI
   useEffect(() => {
     let tmp = workflowsList.map((workflow, index) => {
@@ -169,6 +181,22 @@ export const NeoWorkflowListModal = ({
               components={{ ColumnSortedDescendingIcon: () => <></>, ColumnSortedAscendingIcon: () => <></> }}
             />
           </div>
+          <NeoField
+            select
+            placeholder='neo4j'
+            label='Database'
+            value={databaseText}
+            style={{ width: '47%', maxWidth: '200px' }}
+            choices={databaseList.map((database) => (
+              <MenuItem key={database} value={database}>
+                {database}
+              </MenuItem>
+            ))}
+            onChange={(value) => {
+              setDatabaseText(value);
+              setWorkflowDatabase(value);
+            }}
+          />
           <Button
             onClick={() => {
               setIndex(workflowsList.length);
