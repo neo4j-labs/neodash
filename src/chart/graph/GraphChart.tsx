@@ -18,6 +18,7 @@ import { RenderSubValue } from '../../report/ReportRecordProcessing';
 import { downloadCSV } from '../ChartUtils';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 import { getSettings } from '../SettingsUtils';
+import { generateSafeColumnKey } from '../table/TableChart';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -37,9 +38,6 @@ const NeoGraphChart = (props: ChartProps) => {
 
   const setNodePositions = (positions) =>
     props.updateReportSetting && props.updateReportSetting('nodePositions', positions);
-  const generateSafeColumnKey = (key) => {
-    return key != 'id' ? key : `${key} `;
-  };
   const handleEntityClick = (item) => {
     setSelectedEntity(item);
     setContextMenuOpen(false);
@@ -219,10 +217,16 @@ const NeoGraphChart = (props: ChartProps) => {
         {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
-        {allowDownload && rows && rows.length > 0 ? (
+        {settings.allowDownload && props.records && props.records.length > 0 ? (
           <Tooltip title='Download CSV' aria-label=''>
             <IconButton
               onClick={() => {
+                const rows = props.records.map((record, rownumber) => {
+                  return Object.assign(
+                    { id: rownumber },
+                    ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
+                  );
+                });
                 downloadCSV(rows);
               }}
               aria-label='download csv'
