@@ -60,12 +60,6 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      separator: {
-        label: 'CSV Field Seperator',
-        type: SELECTION_TYPES.LIST,
-        values: [',', ';', 'tab'],
-        default: ',',
-      },
       refreshButtonEnabled: {
         label: 'Refreshable',
         type: SELECTION_TYPES.LIST,
@@ -968,6 +962,18 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'rgba(0, 0, 0, 0.87)',
       },
+      format: {
+        label: 'Display format',
+        type: SELECTION_TYPES.LIST,
+        values: ['auto', 'json', 'yml'],
+        default: 'auto',
+      },
+      monospace: {
+        label: 'Use monospace font',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       textAlign: {
         label: 'Horizontal Align',
         type: SELECTION_TYPES.LIST,
@@ -1023,6 +1029,12 @@ export const REPORT_TYPES = {
     allowScrolling: true,
     maxRecords: 500,
     settings: {
+      format: {
+        label: 'Format',
+        type: SELECTION_TYPES.LIST,
+        values: ['json', 'yml'],
+        default: 'json',
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,
