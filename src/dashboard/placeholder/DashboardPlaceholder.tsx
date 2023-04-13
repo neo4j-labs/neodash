@@ -1,8 +1,32 @@
 import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from '@material-ui/core';
 import React from 'react';
+import {
+  APPLY_CUSTOM_BRAND_LOGO,
+  DASHBOARD_HEADER_BRAND_LOGO,
+  DASHBOARD_HEADER_COLOR,
+} from '../../config/ApplicationConfig';
 import MenuIcon from '@material-ui/icons/Menu';
 
 export const NeoDashboardPlaceholder = ({ connected }) => {
+  const defaultToolbarContent = (
+    <>
+      <InputBase
+        disabled
+        id='center-aligned'
+        label='placeholder'
+        style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
+        placeholder='Dashboard Name...'
+        fullWidth
+        maxRows={4}
+        value={'NeoDash ⚡'}
+      />
+    </>
+  );
+
+  const brandedToolbarContent = (
+    <img style={{ height: '54px', marginLeft: 'auto', marginRight: 'auto' }} src={DASHBOARD_HEADER_BRAND_LOGO} />
+  );
+
   const content = (
     <div style={{ zIndex: -99 }}>
       <AppBar
@@ -13,34 +37,8 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
           transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
         }}
       >
-        <Toolbar style={{ paddingRight: 24, minHeight: '64px', background: '#0B297D', zIndex: 1201 }}>
-          <IconButton
-            edge='start'
-            color='inherit'
-            aria-label='open drawer'
-            style={
-              open
-                ? {
-                    display: 'none',
-                  }
-                : {
-                    marginRight: 36,
-                    marginLeft: -19,
-                  }
-            }
-          >
-            <MenuIcon />
-          </IconButton>
-          <InputBase
-            disabled
-            id='center-aligned'
-            label='placeholder'
-            style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
-            placeholder='Dashboard Name...'
-            fullWidth
-            maxRows={4}
-            value={'NeoDash ⚡'}
-          />
+        <Toolbar style={{ paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1201 }}>
+          {APPLY_CUSTOM_BRAND_LOGO ? brandedToolbarContent : defaultToolbarContent}
         </Toolbar>
         <Toolbar
           style={{ zIndex: 10, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}

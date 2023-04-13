@@ -1,8 +1,7 @@
 import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
 import { GraphEntity } from '../GraphChartVisualization';
-import { drawDataURIOnCanvas } from './GraphUtils';
 
-const getNodeLabel = (selection, node) => {
+export const getNodeLabel = (selection, node) => {
   const selectedProp = selection && selection[node.mainLabel];
   if (selectedProp == '(id)') {
     return node.id;
@@ -27,6 +26,13 @@ export const parseNodeIconConfig = (iconStyle) => {
 
 export const getEntityHeader = (entity) => {
   return (entity.labels && entity.labels.join(', ')) || entity.type;
+};
+
+export const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
+  let img = new Image();
+  let prop = defaultNodeSize * 6;
+  img.src = strDataURI;
+  canvas.drawImage(img, node.x - prop / 2, node.y - prop / 2, prop, prop);
 };
 
 export const generateNodeCanvasObject = (
