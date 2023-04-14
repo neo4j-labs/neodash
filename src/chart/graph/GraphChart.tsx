@@ -94,6 +94,7 @@ const NeoGraphChart = (props: ChartProps) => {
       nodeLabels,
       linkTypes,
       colorScheme,
+      props.fields,
       settings.nodeColorProp,
       settings.defaultNodeColor,
       settings.nodeSizeProp,
