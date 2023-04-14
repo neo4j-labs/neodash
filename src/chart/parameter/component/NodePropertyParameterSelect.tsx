@@ -25,7 +25,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   // index of the display value in the resulting extra records retrieved by the component when the user types. equals '1' for NeoDash 2.2.2 and later.
   const displayValueRowIndex = props.compatibilityMode
     ? 0
-    : extraRecords[0]?.keys?.findIndex((e) => e == 'display') || 0;
+    : extraRecords[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
 
   const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
 
