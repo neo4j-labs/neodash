@@ -206,6 +206,13 @@ export function replaceDashboardParameters(str, parameters) {
   return newString;
 }
 
+export function replaceDashboardParametersInString(str, parameters) {
+  Object.keys(parameters).forEach((key) => {
+    str = str.replaceAll(`$${key}`, parameters[key]);
+  });
+  return str;
+}
+
 /**
  * Downloads a screenshot of the element reference passed to it.
  * @param ref The reference to the element to download as an image.
