@@ -254,38 +254,42 @@ const NeoCardSettingsContentPropertySelect = ({
               value={settings?.entityType || ''}
               defaultValue={''}
               placeholder={'Enter a parameter name here...'}
-              style={{ width: 335, marginLeft: '5px', marginTop: '0px' }}
+              style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
               onChange={(value) => {
                 setLabelInputText(value);
                 handleNodeLabelSelectionUpdate(value);
                 handleFreeTextNameSelectionUpdate(value);
               }}
             />
-            <NeoCodeEditorComponent
-              value={queryText}
-              editable={true}
-              language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
-              onChange={(value) => {
-                debouncedQueryUpdate(value);
-                setQueryText(value);
-              }}
-              placeholder={'Enter Cypher here...'}
-            />
-            <p
-              style={{
-                color: 'grey',
-                fontSize: 12,
-                paddingLeft: '5px',
-                borderBottom: '1px solid lightgrey',
-                borderLeft: '1px solid lightgrey',
-                borderRight: '1px solid lightgrey',
-                marginTop: '0px',
-              }}
-            >
-              {
-                'Specify a query that takes a parameter $input (the user typed text) and return a number of rows with a field called `value` (the suggestions).'
-              }
-            </p>
+            <br />
+            <br />
+            <div style={{ display: labelInputText ? 'inherit' : 'none' }}>
+              <NeoCodeEditorComponent
+                value={queryText}
+                editable={true}
+                language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
+                onChange={(value) => {
+                  debouncedQueryUpdate(value);
+                  setQueryText(value);
+                }}
+                placeholder={'Enter Cypher here...'}
+              />
+              <p
+                style={{
+                  color: 'grey',
+                  fontSize: 12,
+                  paddingLeft: '5px',
+                  borderBottom: '1px solid lightgrey',
+                  borderLeft: '1px solid lightgrey',
+                  borderRight: '1px solid lightgrey',
+                  marginTop: '0px',
+                }}
+              >
+                {
+                  'Specify a query that takes a parameter $input (the user typed text) and return a number of rows with a field called `value` (the suggestions).'
+                }
+              </p>
+            </div>
           </div>
         </>
       ) : (
