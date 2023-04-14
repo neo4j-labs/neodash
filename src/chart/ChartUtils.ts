@@ -180,12 +180,12 @@ export function replaceDashboardParameters(str, parameters) {
   if (!str) {
     return '';
   }
-  let rx = /`.([^`]*).`/g;
+  let rx = /`.([^`]*)`/g;
   let regexSquareBrackets = /\[(.*?)\]/g;
 
   const replacer = (match, p1) => {
     let matches = p1.match(regexSquareBrackets);
-    let param = p1.split('[')[0].replace(`$`, '');
+    let param = p1.split('[')[0].replace(`$`, '').trim();
     let val = parameters[param];
 
     matches?.forEach((m) => {
