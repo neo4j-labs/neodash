@@ -186,12 +186,12 @@ export function replaceDashboardParameters(str, parameters) {
   const replacer = (match, p1) => {
     let matches = p1.match(regexSquareBrackets);
     let param = p1.split('[')[0].replace(`$`, '').trim();
-    let val = parameters[param];
+    let val = parameters?.[param] || null;
 
     matches?.forEach((m) => {
       let i = m.replace(/[[\]']+/g, '');
       i = isNaN(i) ? i.replace(/['"']+/g, '') : Number(i);
-      val = val?.[i] || null;
+      val = val ? val[i] : null;
     });
 
     return RenderSubValue(val);
