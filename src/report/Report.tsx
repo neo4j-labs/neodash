@@ -221,7 +221,6 @@ export const NeoReport = ({
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
-          database={database}
         />
       </div>
     );
@@ -256,7 +255,6 @@ export const NeoReport = ({
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
-          database={database}
         />
       </div>
     );

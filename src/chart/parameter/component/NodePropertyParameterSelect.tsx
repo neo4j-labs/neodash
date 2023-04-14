@@ -15,7 +15,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const [extraRecords, setExtraRecords] = React.useState([]);
   // const [inputText, setInputText] = React.useState(props.parameterValue);
   const [inputDisplayText, setInputDisplayText] = React.useState(props.parameterDisplayValue);
-  const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), [props.database]);
+  const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
   const propertyType = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
