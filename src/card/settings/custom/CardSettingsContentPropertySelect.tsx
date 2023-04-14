@@ -189,7 +189,7 @@ const NeoCardSettingsContentPropertySelect = ({
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else {
-      const newQuery = 'RETURN true';
+      const newQuery = query;
       onQueryUpdate(newQuery);
     }
   }
