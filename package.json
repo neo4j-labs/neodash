@@ -1,7 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*", 
+    "packages/*",
     "apps/*"
   ],
   "devDependencies": {
@@ -9,7 +9,7 @@
     "turbo": "^1.7.4"
   },
   "scripts": {
-    "clean:packages": "del-cli node_modules && del-cli **/*/node_modules",
+    "clean:packages": "yarn global add del-cli && del-cli node_modules && del-cli **/*/node_modules",
     "start:demos": "turbo run start"
   }
 }
