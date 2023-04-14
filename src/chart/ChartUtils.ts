@@ -188,7 +188,7 @@ export function replaceDashboardParameters(str, parameters) {
     let param = p1.split('[')[0].replace(`$`, '');
     let val = parameters[param];
 
-    matches.forEach((m) => {
+    matches?.forEach((m) => {
       let i = m.replace(/[[\]']+/g, '');
       i = isNaN(i) ? i.replace(/['"']+/g, '') : Number(i);
       val = val?.[i] || null;
