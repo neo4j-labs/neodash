@@ -27,7 +27,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     ? 0
     : extraRecords.length == 0
     ? 0
-    : extraRecords[0].keys.findIndex((e) => e == 'display') || 0;
+    : extraRecords[0]?.keys?.findIndex((e) => e == 'display') || 0;
 
   return (
     <Autocomplete
