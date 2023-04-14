@@ -29,7 +29,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const allParameters = props.parameters;
 
   // in NeoDash 2.2.1 or earlier, there was no means to have a different display value in the selector. This condition handles that.
-  const compatibilityMode = !query == undefined && !query.includes('as display');
+  const compatibilityMode = !query?.includes('as display') || false;
 
   if (!query || query.trim().length == 0) {
     return <p style={{ margin: '15px' }}>No selection specified.</p>;
