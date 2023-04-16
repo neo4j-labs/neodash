@@ -217,7 +217,13 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
   };
 
   return (
-    <Dialog maxWidth={'lg'} open={modalOpen === true} onClose={closeDialog} aria-labelledby='form-dialog-title'>
+    <Dialog
+      maxWidth={'lg'}
+      open={modalOpen === true}
+      onClose={closeDialog}
+      aria-labelledby='form-dialog-title'
+      onBackdropClick='false'
+    >
       <DialogTitle id='form-dialog-title'>
         Publish to Hive
         <IconButton
