@@ -13,6 +13,7 @@ import { getRendererForValue, rendererForType, RenderSubValue } from '../../repo
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import { WrapText } from '@material-ui/icons';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -158,6 +159,19 @@ const NeoTableChart = (props: ChartProps) => {
         <></>
       )}
       <DataGrid
+        autoHeight={true}
+        sx={{
+          '& .MuiDataGrid-viewport,.MuiDataGrid-row,.MuiDataGrid-renderingZone': {
+            maxHeight: 'fit-content!important',
+          },
+          '& .MuiDataGrid-cell': {
+            flexWrap: 'wrap',
+            overflow: 'scroll',
+            whiteSpace: 'initial!important',
+            display: 'flex!important',
+            alignItems: 'top',
+          },
+        }}
         headerHeight={32}
         rowHeight={tableRowHeight}
         rows={rows}
