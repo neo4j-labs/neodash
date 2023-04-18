@@ -11,7 +11,7 @@
 - Single Value Chart
   - Added support for outputting dictionaries in YML format, and visualizing newlines. (@nielsdejong, #123)
 
-- Area Map (@alfredorubin, #123)
+- Area Map (@alfredorubin, #[401](https://github.com/neo4j-labs/neodash/pull/401))
   - Added a new advanced chart interactive area map visualization for rendering geojson polygons.
   - Assign color scale automatically based on numeric values.
   - For countries we support Alpha-2 and Alpha-3 codes, area codes rendered by ISO 3166 code.
@@ -22,11 +22,11 @@
 
 - Parameter Selector
   - Fixed bug where parameter selector was not using selected database to populate results. (@BennuFire, #123)
-  - Added date picker parameter selector. (@alfredorubin, #123)
+  - Added date picker parameter selector. (@alfredorubin, [#361](https://github.com/neo4j-labs/neodash/pull/361))
   - Added support for injecting custom queries as a populator for parameter selectors. (@BennuFire, #123)
 
 - Table
-  - Added support for customizing the seperator in export CSV. (@alfredorubin, #123)
+  - Added support for customizing the seperator in export CSV. 
   
 - Others
   - Added support for easy configurable branding/color schemes (@jharris4, #123)
