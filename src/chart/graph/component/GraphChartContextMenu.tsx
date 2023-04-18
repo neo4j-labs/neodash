@@ -39,7 +39,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
     <div
       style={{
         position: 'absolute',
-        zIndex: 999,
+        zIndex: 1300,
         top: props.interactivity.clickPosition.y,
         left: props.interactivity.clickPosition.x,
       }}
