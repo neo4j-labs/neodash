@@ -19,6 +19,7 @@ import { downloadCSV } from '../ChartUtils';
 import { generateSafeColumnKey } from '../table/TableChart';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 import { getSettings } from '../SettingsUtils';
+import { getPageNumbersAndNamesList } from '../../extensions/advancedcharts/Utils';
 
 /**
  * Draws graph data using a force-directed-graph visualization.

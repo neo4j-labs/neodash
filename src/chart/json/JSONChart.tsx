@@ -12,7 +12,7 @@ const NeoJSONChart = (props: ChartProps) => {
   const { records, settings } = props;
   const type = settings && settings.format ? settings.format : 'json';
   const value = type == 'json' ? JSON.stringify(records, null, 2) : YAML.stringify(records, null, 2);
-  console.log(type, value);
+
   return (
     <div style={{ marginTop: '0px' }}>
       <TextareaAutosize
