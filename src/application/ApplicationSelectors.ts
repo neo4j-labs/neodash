@@ -29,6 +29,10 @@ export const applicationGetConnection = (state: any) => {
   return state.application.connection;
 };
 
+export const applicationGetConnectionDatabase = (state: any) => {
+  return state.application.connection.database;
+};
+
 export const applicationGetShareDetails = (state: any) => {
   return state.application.shareDetails;
 };

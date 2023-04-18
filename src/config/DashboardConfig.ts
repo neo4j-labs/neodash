@@ -50,4 +50,12 @@ export const DASHBOARD_SETTINGS = {
     helperText:
       "These are the query parameters shared across all reports. You can set these using a 'property select' report.",
   },
+  extensions: {
+    label: 'Extensions',
+    type: SELECTION_TYPES.LIST,
+    multiple: true,
+    values: ['actions'],
+    default: false,
+    hidden: true,
+  },
 };

@@ -7,6 +7,7 @@ import NeoSankeyChart from './chart/sankey/SankeyChart';
 import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
+import NeoAreaMapChart from './chart/areamap/AreaMapChart';
 
 export const ADVANCED_REPORT_TYPES = {
   gauge: {
@@ -868,6 +869,101 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['basicClosed', 'cardinalClosed', 'catmullRomClosed', 'linearClosed'],
         default: 'linearClosed',
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+    },
+  },
+  //
+  /** *
+   * * TODO: An idea here:
+    For the level zero layers, perhaps we can make the component work agnostically of whether the user is using two or three level country codes.
+    E.g. it can apply colouring to germany based on "DE" or "GER", whatever it picks up. That would be a lot easier than providing an advanced setting for it. In the rare case that the user returns both (this will probably never happen), we just choose either.
+    I'm also thinking about adding three-letter country code support since that is what the choropleth used, so it will make migrating from choropleth to areamap a lot easier for users.
+   */
+  areamap: {
+    label: 'Area Map',
+    helperText: (
+      <div>
+        An Area Map expects two fields: a <code>country code / region code</code> (three-letter code) and a
+        <code>value</code>.
+      </div>
+    ),
+    useReturnValuesAsFields: true,
+    maxRecords: 300,
+    component: NeoAreaMapChart,
+    selection: {
+      index: {
+        label: 'Code',
+        type: SELECTION_TYPES.TEXT,
+      },
+      value: {
+        label: 'Value',
+        type: SELECTION_TYPES.NUMBER,
+        key: true,
+      },
+    },
+    settings: {
+      providerUrl: {
+        label: 'Map Provider URL',
+        type: SELECTION_TYPES.TEXT,
+        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      colors: {
+        label: 'Color Scheme',
+        type: SELECTION_TYPES.LIST,
+        values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
+        default: 'YlOrRd',
+      },
+      countryCodeFormat: {
+        label: 'Country Code Format',
+        type: SELECTION_TYPES.LIST,
+        values: ['Alpha-2', 'Alpha-3'],
+        default: 'Alpha-2',
+      },
+      showLegend: {
+        label: 'Color Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      mapDrillDown: {
+        label: 'Drilldown Enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       refreshButtonEnabled: {
         label: 'Refreshable',
