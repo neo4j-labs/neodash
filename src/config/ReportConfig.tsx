@@ -191,6 +191,7 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
+
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -201,6 +202,11 @@ export const REPORT_TYPES = {
         label: 'Speed of the particle animation',
         type: SELECTION_TYPES.NUMBER,
         default: 0.005,
+      },
+      arrowLengthProp: {
+        label: 'Arrow head size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
       },
       layout: {
         label: 'Graph Layout (experimental)',
