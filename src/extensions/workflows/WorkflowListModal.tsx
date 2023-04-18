@@ -138,7 +138,7 @@ export const NeoWorkflowListModal = ({
       width: 60,
       align: 'center',
     },
-    { field: 'stepCount', headerName: 'Steps', width: 100 },
+    { field: 'stepCount', headerName: 'Steps', width: 60 },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -147,7 +147,6 @@ export const NeoWorkflowListModal = ({
           <div>
             <IconButton
               onClick={() => {
-                openRunnerModal(row.id);
                 triggerWorkflowRun(row.id);
               }}
               disabled={isRunning}
@@ -221,7 +220,7 @@ export const NeoWorkflowListModal = ({
             </Badge>
           </IconButton>
         </DialogTitle>
-        <DialogContent style={{ width: '600px' }}>
+        <DialogContent style={{ width: '540px' }}>
           <div style={{ height: '380px' }}>
             <DataGrid
               rows={rows}
