@@ -45,12 +45,7 @@ export function createMarkers(data, props) {
                 // TODO MOVE THIS DEPENDENCY OUT OF THE TOOLTIP GENERATION
 
                 return (
-                  <tr
-                    key={i}
-                    onClick={() => {
-                      
-                    }}
-                  >
+                  <tr key={i} onClick={() => {}}>
                     <td style={{ marginRight: '10px' }} key={0}>
                       {k.toString()}:
                     </td>
