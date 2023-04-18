@@ -36,3 +36,4 @@ This release is a feature-rich package with a variety of new features and bug fi
   - Integrated the official released version of the Neo4j Cypher editor component. ([@jharris4](https://github.com/jharris4), [#365](https://github.com/neo4j-labs/neodash/pull/365))
   - Fixed hot-module replacement inside webpack configuration.  ([@konsalex](https://github.com/konsalex), [#396](https://github.com/neo4j-labs/neodash/pull/396))
   - Fixed husky pre-commit hook not triggering correctly on Windows environments. ([@bastienhubert](https://github.com/bastienhubert), [#342](https://github.com/neo4j-labs/neodash/issues/342))
+  - Add support for using complex objects in markdown, iframes and report titles. ([@BennuFire](https://github.com/bennufire), [#413](https://github.com/neo4j-labs/neodash/pull/413))

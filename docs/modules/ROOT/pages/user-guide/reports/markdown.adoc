@@ -6,6 +6,15 @@ text, to be renderer as rich HTML. This lets you turn your dashboards
 into a storybook with textual descriptions, hyperlinks, images and
 videos.
 
+To use dashboard parameters in Markdown, turn on the `Replace global parameters in Markdown` setting.
+Then, include a variable surrounded by backticks inside the markdown string. For example:
+
+```
+== This is a title
+My variable is equal to `$neodash_person_object['name']`
+```
+
+
 == Examples
 
 === Basic Markdown
