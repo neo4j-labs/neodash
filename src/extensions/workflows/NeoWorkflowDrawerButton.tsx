@@ -29,7 +29,6 @@ const NeoWorkflowDrawerButton = ({
   const [isRunning, setIsRunning] = React.useState(false);
   // For each step of the current workflow, it's status
   const [workflowStepStatus, setWorkflowStepStatus] = React.useState([]);
-  const [index, setIndex] = React.useState(-1);
   const [runnerModalIsOpen, setRunnerModalIsOpen] = React.useState(false);
   const [results, setResults] = React.useState([]);
   // Object that contains the information regarding the current run
@@ -38,6 +37,12 @@ const NeoWorkflowDrawerButton = ({
   // Number that represent the status of the workflow (managed by the workflow runner)
   const [currentWorkflowStatus, setCurrentWorkflowStatus] = React.useState(-1);
 
+  // Runner to we can increase to trigger a workflow run
+  const [runCounter, setRunCounter] = React.useState(0);
+
+  function increaseRunCounter() {
+    setRunCounter(runCounter + 1);
+  }
   // Database that will run the workflow (by default the connection one)
   const [workflowDatabase, setWorkflowDatabase] = React.useState(connectionDatabase);
   const [databaseList, setDatabaseList] = React.useState([]);
@@ -75,12 +80,9 @@ const NeoWorkflowDrawerButton = ({
 
   // Effect to trigger a workflow run
   useEffect(() => {
-    if (index >= 0 && runnerModalIsOpen && !isRunning) {
+    if (currentRunIndex >= 0 && !isRunning) {
       // Getting the workflow to run from the list of existing workflows
-      let workflow = workflowsList[index];
-
-      // Storing the current index that is running to maange UI state
-      setCurrentRunIndex(index);
+      let workflow = workflowsList[currentRunIndex];
 
       // Keeping the fact that is running, to block some buttons on the UI
       setIsRunning(true);
@@ -90,7 +92,7 @@ const NeoWorkflowDrawerButton = ({
         driver,
         workflow,
         workflowDatabase,
-        index,
+        currentRunIndex,
         workflowStepStatus,
         setWorkflowStepStatus,
         setResults,
@@ -100,7 +102,7 @@ const NeoWorkflowDrawerButton = ({
       );
       setCurrentRun(run);
     }
-  }, [index, runnerModalIsOpen]);
+  }, [runCounter]);
 
   // Button that will show in the Drawer
   const button = (
@@ -121,8 +123,6 @@ const NeoWorkflowDrawerButton = ({
           open={true}
           setOpen={setOpen}
           isRunning={isRunning}
-          index={index}
-          setIndex={setIndex}
           workflowDatabase={workflowDatabase}
           setWorkflowDatabase={setWorkflowDatabase}
           databaseList={databaseList}
@@ -131,6 +131,8 @@ const NeoWorkflowDrawerButton = ({
           runnerModalIsOpen={runnerModalIsOpen}
           setRunnerModalIsOpen={setRunnerModalIsOpen}
           currentRunIndex={currentRunIndex}
+          setCurrentRunIndex={setCurrentRunIndex}
+          increaseRunCounter={increaseRunCounter}
           currentWorkflowStatus={currentWorkflowStatus}
           currentRun={currentRun}
           results={results}

@@ -7,73 +7,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/Close';
-import TimerIcon from '@material-ui/icons/Timer';
 import { withStyles } from '@material-ui/core/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
-import LoopIcon from '@material-ui/icons/Loop';
-import CancelIcon from '@material-ui/icons/Cancel';
 import { getWorkflow } from './stateManagement/WorkflowSelectors';
 import { TextareaAutosize } from '@material-ui/core';
-
-const getCompleteIcon = (flipped) => {
-  return (
-    <CheckCircleIcon
-      style={{
-        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
-        color: '#00aa00',
-      }}
-    />
-  );
-};
-
-const getRunningIcon = () => {
-  return (
-    <LoopIcon
-      color='disabled'
-      style={{
-        transformOrigin: '50% 50%',
-        animation: 'MuiCircularProgress-keyframes-circular-rotate 1.4s linear infinite',
-      }}
-    />
-  );
-};
-
-const getWaitingIcon = (flipped) => {
-  return (
-    <TimerIcon
-      color='disabled'
-      style={{
-        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
-      }}
-    />
-  );
-};
-
-export const getCancelledIcon = (flipped) => {
-  return (
-    <CancelIcon
-      color='error'
-      style={{
-        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
-      }}
-    />
-  );
-};
-
-export const getErrorIcon = (flipped) => {
-  return (
-    <CancelIcon
-      color='disabled'
-      style={{
-        transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
-      }}
-    />
-  );
-};
+import { getCancelledIcon, getCompleteIcon, getRunningIcon, getErrorIcon, getWaitingIcon } from './Icons';
 
 const Accordion = withStyles({
   root: {
@@ -149,9 +90,11 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStat
     }
     return getWaitingIcon(item == expanded);
   };
+
   function handleClose() {
     setOpen(false);
   }
+
   return (
     <Dialog
       maxWidth={'lg'}

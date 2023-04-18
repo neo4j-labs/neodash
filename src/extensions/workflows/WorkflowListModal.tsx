@@ -18,6 +18,8 @@ import NeoWorkflowRunnerModal, { STEP_STATUS } from './NeoWorkflowRunnerModal';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { deleteWorkflow } from './stateManagement/WorkflowActions';
 import NeoField from '../../component/field/Field';
+import { getCancelledIcon, getCompleteIcon, getRunningIcon, getErrorIcon, getStoppingIcon } from './Icons';
+
 const styles = {};
 
 /**
@@ -49,8 +51,6 @@ export const NeoWorkflowListModal = ({
   open,
   setOpen,
   isRunning,
-  index,
-  setIndex,
   workflowDatabase,
   setWorkflowDatabase,
   databaseList,
@@ -59,6 +59,8 @@ export const NeoWorkflowListModal = ({
   runnerModalIsOpen,
   setRunnerModalIsOpen,
   currentRunIndex,
+  setCurrentRunIndex,
+  increaseRunCounter,
   currentWorkflowStatus,
   currentRun,
   results,
@@ -71,18 +73,34 @@ export const NeoWorkflowListModal = ({
    */
   function getStatusMessage() {
     const messages = {};
-    messages[STEP_STATUS.CANCELLED] = 'Cancelled';
-    messages[STEP_STATUS.ERROR] = 'Error';
-    messages[STEP_STATUS.COMPLETE] = 'Completed';
-    messages[STEP_STATUS.STOPPING] = 'Stopping';
+    messages[STEP_STATUS.CANCELLED] = getCancelledIcon(false);
+    messages[STEP_STATUS.ERROR] = getErrorIcon(false);
+    messages[STEP_STATUS.COMPLETE] = getCompleteIcon(false);
+    messages[STEP_STATUS.STOPPING] = getStoppingIcon(false);
 
     return isRunning && currentWorkflowStatus != STEP_STATUS.STOPPING
-      ? 'Running'
+      ? getRunningIcon()
       : messages[currentWorkflowStatus]
       ? messages[currentWorkflowStatus]
       : '';
   }
+
+  function openRunnerModal(index) {
+    setRunnerModalIsOpen(true);
+    setIndex(index);
+  }
+
+  function triggerWorkflowRun(index) {
+    setWorkflowStepStatus([]);
+    setCurrentRunIndex(index);
+
+    // Trigger workflow
+    increaseRunCounter();
+  }
+  const [index, setIndex] = React.useState(currentRunIndex);
+
   const [editorOpen, setEditorOpen] = React.useState(false);
+
   // The index of the selected workflow
   const [rows, setRows] = React.useState([]);
 
@@ -113,9 +131,12 @@ export const NeoWorkflowListModal = ({
       headerName: 'Status',
       renderCell: (row) => {
         // TODO: find a cool way to show the status here
-        return <div>{row.id === currentRunIndex ? getStatusMessage() : ''}</div>;
+        return (
+          <div onClick={() => openRunnerModal(row.id)}>{row.id === currentRunIndex ? getStatusMessage() : ''}</div>
+        );
       },
-      width: 80,
+      width: 60,
+      align: 'center',
     },
     { field: 'stepCount', headerName: 'Steps', width: 100 },
     {
@@ -126,13 +147,10 @@ export const NeoWorkflowListModal = ({
           <div>
             <IconButton
               onClick={() => {
-                if (!isRunning) {
-                  setWorkflowStepStatus([]);
-                }
-                setRunnerModalIsOpen(true);
-                setIndex(row.id);
+                openRunnerModal(row.id);
+                triggerWorkflowRun(row.id);
               }}
-              disabled={isRunning && row.id != currentRunIndex}
+              disabled={isRunning}
               style={{ padding: '6px' }}
             >
               <Badge overlap='rectangular' badgeContent={''}>
