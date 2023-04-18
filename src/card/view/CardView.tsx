@@ -103,7 +103,7 @@ const NeoCardView = ({
   ) : (
     <></>
   );
-
+  
   const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
   const withoutFooter =

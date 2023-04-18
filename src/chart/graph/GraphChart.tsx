@@ -12,8 +12,13 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
+import { IconButton, Tooltip } from '@material-ui/core';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import { RenderSubValue } from '../../report/ReportRecordProcessing';
+import { downloadCSV } from '../ChartUtils';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 import { getSettings } from '../SettingsUtils';
+import { generateSafeColumnKey } from '../table/TableChart';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -33,7 +38,6 @@ const NeoGraphChart = (props: ChartProps) => {
 
   const setNodePositions = (positions) =>
     props.updateReportSetting && props.updateReportSetting('nodePositions', positions);
-
   const handleEntityClick = (item) => {
     setSelectedEntity(item);
     setContextMenuOpen(false);
@@ -213,6 +217,27 @@ const NeoGraphChart = (props: ChartProps) => {
         {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
+        {settings.allowDownload && props.records && props.records.length > 0 ? (
+          <Tooltip title='Download CSV' aria-label=''>
+            <IconButton
+              onClick={() => {
+                const rows = props.records.map((record, rownumber) => {
+                  return Object.assign(
+                    { id: rownumber },
+                    ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
+                  );
+                });
+                downloadCSV(rows);
+              }}
+              aria-label='download csv'
+              style={{ bottom: '9px', left: '3px', position: 'absolute' }}
+            >
+              <SaveAltIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></SaveAltIcon>
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <></>
+        )}
       </NeoGraphChartCanvas>
     </div>
   );
