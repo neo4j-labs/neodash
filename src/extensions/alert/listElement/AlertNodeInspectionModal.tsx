@@ -58,6 +58,20 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
                 query={`MATCH (n) WHERE id(n) = ${entity.id} OPTIONAL MATCH p=(n)--() RETURN n,p LIMIT 100`}
                 ChartType={NeoGraphChart}
                 type={'graph'}
+                lastRunTimestamp={undefined}
+                parameters={undefined}
+                disabled={undefined}
+                fields={undefined}
+                settings={undefined}
+                setGlobalParameter={undefined}
+                getGlobalParameter={undefined}
+                updateReportSetting={undefined}
+                createNotification={undefined}
+                dimensions={undefined}
+                rowLimit={undefined}
+                queryTimeLimit={undefined}
+                expanded={undefined}
+                extensions={undefined}
               ></NeoReportWrapper>
             </div>
           </DialogContent>

@@ -4,6 +4,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
+import ShowMoreText from 'react-show-more-text';
 
 export const formatProperty = (property) => {
   if (property.startsWith('http://') || property.startsWith('https://')) {
@@ -35,7 +36,9 @@ export const GraphEntityInspectionTable = ({ entity }) => {
                   <TableCell component='th' scope='row'>
                     {key}
                   </TableCell>
-                  <TableCell align={'left'}>{formatProperty(entity && entity.properties[key].toString())}</TableCell>
+                  <TableCell align={'left'}>
+                    <ShowMoreText>{formatProperty(entity && entity.properties[key].toString())}</ShowMoreText>
+                  </TableCell>
                 </TableRow>
               ))
           )}
