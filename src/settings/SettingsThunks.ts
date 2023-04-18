@@ -1,6 +1,6 @@
 import { setSessionParameters } from '../application/ApplicationActions';
 import { hardResetCardSettings } from '../card/CardActions';
-import { castToNeo4jDate, isCastableToNeo4jDate } from '../chart/ChartUtils';
+import { castToNeo4jDate, isCastableToNeo4jDate, valueIsNode } from '../chart/ChartUtils';
 import { createNotificationThunk } from '../page/PageThunks';
 import { updateDashboardSetting } from './SettingsActions';
 
@@ -29,7 +29,8 @@ export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getSta
     const { settings } = getState().dashboard;
     const parameters = settings.parameters ? settings.parameters : {};
     if (value !== undefined) {
-      parameters[key] = value;
+      let valueFinal = valueIsNode(value) ? Object.assign({}, value) : value;
+      parameters[key] = valueFinal;
     } else {
       delete parameters[key];
     }

@@ -208,7 +208,11 @@ export function replaceDashboardParameters(str, parameters) {
   let newString = str.replace(rx, parameterElementReplacer);
 
   Object.keys(parameters).forEach((key) => {
-    newString = newString.replaceAll(`$${key}`, parameters[key] !== null ? parameters[key] : '');
+    let valueRender = RenderSubValue(parameters[key]);
+    newString = newString.replaceAll(`$${key}`, `${valueRender} `);
+    newString = newString.replaceAll(`$${key},`, `${valueRender},`);
+    newString = newString.replaceAll(`$${key}.`, `${valueRender}.`);
+    newString = newString.replaceAll(`$${key})`, `${valueRender})`);
   });
 
   return newString;
