@@ -13,6 +13,7 @@ import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionCha
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
 
+// TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
 export const HARD_ROW_LIMITING = false;
 
@@ -28,6 +29,7 @@ export const REPORT_TYPES = {
     label: 'Table',
     helperText: 'A table will contain all returned data.',
     component: NeoTableChart,
+    useReturnValuesAsFields: true,
     maxRecords: 1000,
     settings: {
       backgroundColor: {
@@ -189,6 +191,7 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
+
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -200,17 +203,34 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 0.005,
       },
+      arrowLengthProp: {
+        label: 'Arrow head size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
+      },
       layout: {
         label: 'Graph Layout (experimental)',
         type: SELECTION_TYPES.LIST,
         values: ['force-directed', 'tree', 'radial'],
         default: 'force-directed',
       },
+      enableExploration: {
+        label: 'Enable graph exploration',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      enableEditing: {
+        label: 'Enable graph editing',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       showPropertiesOnHover: {
         label: 'Show pop-up on Hover',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       showPropertiesOnClick: {
         label: 'Show properties on Click',
@@ -227,7 +247,14 @@ export const REPORT_TYPES = {
       drilldownLink: {
         label: 'Drilldown Icon Link',
         type: SELECTION_TYPES.TEXT,
-        default: 'http://bloom.neo4j.io',
+        placeholder: 'http://bloom.neo4j.io',
+        default: '',
+      },
+      allowDownload: {
+        label: 'Enable CSV Download',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       hideSelections: {
         label: 'Hide Property Selection',
@@ -253,6 +280,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      lockable: {
+        label: 'Enable locking node positions',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       autorun: {
         label: 'Auto-run query',
         type: SELECTION_TYPES.LIST,
@@ -262,12 +295,19 @@ export const REPORT_TYPES = {
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
-        default: '{label : url}',
+        placeholder: '{label : url}',
+        default: '',
       },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      rightClickToExpandNodes: {
+        label: 'Right Click to Expand Nodes',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       description: {
         label: 'Report Description',
@@ -867,12 +907,12 @@ export const REPORT_TYPES = {
       defaultRelColor: {
         label: 'Relationship Color',
         type: SELECTION_TYPES.TEXT,
-        default: '#666',
+        default: '#a0a0a0',
       },
       defaultRelWidth: {
         label: 'Relationship Width',
         type: SELECTION_TYPES.NUMBER,
-        default: 3.5,
+        default: 1,
       },
       relColorProp: {
         label: 'Relationship Color Property',
@@ -900,34 +940,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       autorun: {
         label: 'Auto-run query',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
       },
       description: {
         label: 'Report Description',
@@ -956,6 +973,18 @@ export const REPORT_TYPES = {
         label: 'Color',
         type: SELECTION_TYPES.TEXT,
         default: 'rgba(0, 0, 0, 0.87)',
+      },
+      format: {
+        label: 'Display format',
+        type: SELECTION_TYPES.LIST,
+        values: ['auto', 'json', 'yml'],
+        default: 'auto',
+      },
+      monospace: {
+        label: 'Use monospace font',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       textAlign: {
         label: 'Horizontal Align',
@@ -1012,6 +1041,12 @@ export const REPORT_TYPES = {
     allowScrolling: true,
     maxRecords: 500,
     settings: {
+      format: {
+        label: 'Format',
+        type: SELECTION_TYPES.LIST,
+        values: ['json', 'yml'],
+        default: 'json',
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,

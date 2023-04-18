@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -28,22 +28,22 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
-    "prepare": "husky install",
     "test": "yarn cypress open",
     "test-headless": "yarn cypress run"
   },
   "keywords": [],
   "author": "Neo4j Labs",
   "dependencies": {
+    "@codemirror/lang-markdown": "^6.0.5",
+    "@codemirror/language-data": "^6.1.0",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
-    "@codemirror/language-data": "^6.1.0",
-    "@codemirror/lang-markdown": "^6.0.5",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.4",
     "@mui/material": "^5.3.0",
     "@mui/x-data-grid": "5.10.0",
-    "@neo4j-cypher/react-codemirror": "^1.0.0-next.21",
+    "@mui/x-date-pickers": "^5.0.17",
+    "@neo4j-cypher/react-codemirror": "^1.0.0",
     "@nivo/bar": "^0.80.0",
     "@nivo/circle-packing": "^0.80.0",
     "@nivo/core": "^0.80.0",
@@ -57,11 +57,13 @@
     "babel-runtime": "^6.26.0",
     "classnames": "^2.3.1",
     "d3-scale-chromatic": "^3.0.0",
+    "dayjs": "^1.11.7",
     "dom-to-image": "^2.6.0",
     "leaflet": "^1.7.1",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
     "material-ui-color-picker": "^3.5.1",
+    "mui-nested-menu": "^3.2.0",
     "neo4j-client-sso": "^1.2.2",
     "react": "^17.0.2",
     "react-cool-dimensions": "^2.0.7",
@@ -80,7 +82,8 @@
     "redux-thunk": "^2.4.1",
     "remark-gfm": "^3.0.1",
     "reselect": "^4.1.5",
-    "use-neo4j": "^0.3.13"
+    "use-neo4j": "^0.3.13",
+    "yaml": "^2.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",

@@ -1,5 +1,6 @@
 import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
+import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
 import { NEODASH_VERSION } from '../dashboard/DashboardReducer';
 import {
@@ -12,6 +13,7 @@ import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
   setPageNumberThunk,
+  updateParametersToNeo4jTypeThunk,
   updateGlobalParametersThunk,
   updateSessionParameterThunk,
 } from '../settings/SettingsThunks';
@@ -406,6 +408,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         );
       }
     }
+    // At the load of a dashboard, we want to ensure correct casting types
+    dispatch(updateParametersToNeo4jTypeThunk());
 
     // SSO - specific case starts here.
     if (state.application.waitForSSO) {
@@ -488,7 +492,13 @@ export const initializeApplicationAsEditorThunk = (_, paramsToSetAfterConnecting
     dispatch(setParametersToLoadAfterConnecting(null));
   }
 
-  dispatch(setWelcomeScreenOpen(true));
+  // Check config to determine which screen is shown by default.
+  if (DEFAULT_SCREEN == Screens.CONNECTION_MODAL) {
+    dispatch(setWelcomeScreenOpen(false));
+    dispatch(setConnectionModalOpen(true));
+  } else if (DEFAULT_SCREEN == Screens.WELCOME_SCREEN) {
+    dispatch(setWelcomeScreenOpen(true));
+  }
 
   if (clearNotificationAfterLoad) {
     dispatch(clearNotification());

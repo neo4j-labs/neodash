@@ -8,8 +8,10 @@ import { debounce, MenuItem, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import NeoField from '../../../component/field/Field';
 import { getReportTypes } from '../../../extensions/ExtensionUtils';
+import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 
 const NeoCardSettingsContentPropertySelect = ({
+  query,
   type,
   database,
   settings,
@@ -24,6 +26,8 @@ const NeoCardSettingsContentPropertySelect = ({
     );
   }
 
+  const [queryText, setQueryText] = React.useState(query);
+  const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
   const { manualPropertyNameSpecification } = settings;
@@ -45,11 +49,15 @@ const NeoCardSettingsContentPropertySelect = ({
     );
   }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
+  useEffect(() => {
+    setLabelRecords([]);
+    setPropertyRecords([]);
+  }, [database]);
+
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
   const formatParameterId = (id: string | undefined | null) => {
     const cleanedId = id || '';
-    const formattedId = cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
-    return formattedId;
+    return cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
   };
 
   if (settings.type == undefined) {
@@ -64,20 +72,23 @@ const NeoCardSettingsContentPropertySelect = ({
     onReportSettingUpdate('parameterName', parameterName);
   }
   // Define query callback to allow reports to get extra data on interactions.
-  const queryCallback = useCallback((query, parameters, setRecords) => {
-    debouncedRunCypherQuery(
-      driver,
-      database,
-      query,
-      parameters,
-      10,
-      (status) => {
-        status == QueryStatus.NO_DATA ? setRecords([]) : null;
-      },
-      (result) => setRecords(result),
-      () => {}
-    );
-  }, []);
+  const queryCallback = useCallback(
+    (query, parameters, setRecords) => {
+      debouncedRunCypherQuery(
+        driver,
+        database,
+        query,
+        parameters,
+        10,
+        (status) => {
+          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+        },
+        (result) => setRecords(result),
+        () => {}
+      );
+    },
+    [database]
+  );
 
   function handleParameterTypeUpdate(newValue) {
     onReportSettingUpdate('entityType', undefined);
@@ -178,13 +189,13 @@ const NeoCardSettingsContentPropertySelect = ({
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
     } else {
-      const newQuery = 'RETURN true';
+      const newQuery = query;
       onQueryUpdate(newQuery);
     }
   }
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
-  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text'];
+  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query', 'Date Picker'];
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
@@ -219,8 +230,8 @@ const NeoCardSettingsContentPropertySelect = ({
           </MenuItem>
         ))}
       </TextField>
-
-      {settings.type == 'Free Text' ? (
+      <br />
+      {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
         <NeoField
           label={'Name'}
           key={'freetext'}
@@ -234,6 +245,53 @@ const NeoCardSettingsContentPropertySelect = ({
             handleFreeTextNameSelectionUpdate(value);
           }}
         />
+      ) : settings.type == 'Custom Query' ? (
+        <>
+          <div>
+            <NeoField
+              label={'Name'}
+              key={'query'}
+              value={settings?.entityType || ''}
+              defaultValue={''}
+              placeholder={'Enter a parameter name here...'}
+              style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
+              onChange={(value) => {
+                setLabelInputText(value);
+                handleNodeLabelSelectionUpdate(value);
+                handleFreeTextNameSelectionUpdate(value);
+              }}
+            />
+            <br />
+            <br />
+            <div style={{ display: labelInputText ? 'inherit' : 'none' }}>
+              <NeoCodeEditorComponent
+                value={queryText}
+                editable={true}
+                language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
+                onChange={(value) => {
+                  debouncedQueryUpdate(value);
+                  setQueryText(value);
+                }}
+                placeholder={'Enter Cypher here...'}
+              />
+              <p
+                style={{
+                  color: 'grey',
+                  fontSize: 12,
+                  paddingLeft: '5px',
+                  borderBottom: '1px solid lightgrey',
+                  borderLeft: '1px solid lightgrey',
+                  borderRight: '1px solid lightgrey',
+                  marginTop: '0px',
+                }}
+              >
+                {
+                  'Specify a query that takes a parameter $input (the user typed text) and return a number of rows with a field called `value` (the suggestions).'
+                }
+              </p>
+            </div>
+          </div>
+        </>
       ) : (
         <>
           <Autocomplete
