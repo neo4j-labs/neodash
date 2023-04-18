@@ -2,7 +2,14 @@ import React from 'react';
 import { Chip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import { getRecordType, valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../chart/ChartUtils';
+import {
+  getRecordType,
+  toNumber,
+  valueIsArray,
+  valueIsNode,
+  valueIsPath,
+  valueIsRelationship,
+} from '../chart/ChartUtils';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -307,6 +314,10 @@ export const rendererForType: any = {
   number: {
     type: 'number',
     renderValue: (c) => RenderNumber(c.value),
+  },
+  objectNumber: {
+    type: 'number',
+    renderValue: (c) => RenderNumber(toNumber(c.value)),
   },
   null: {
     type: 'string',

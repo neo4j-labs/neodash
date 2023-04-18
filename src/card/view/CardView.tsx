@@ -47,6 +47,10 @@ const NeoCardView = ({
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   const getLocalParameters = (parse_string): any => {
+    if (!parse_string || !globalParameters) {
+      return {};
+    }
+
     let re = /(?:^|\W)\$(\w+)(?!\w)/g;
     let match;
 
@@ -59,9 +63,6 @@ const NeoCardView = ({
       localQueryVariables.push(match[1]);
     }
 
-    if (!globalParameters) {
-      return {};
-    }
     return Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
@@ -101,9 +102,8 @@ const NeoCardView = ({
   ) : (
     <></>
   );
-  const localParameters = getLocalParameters(
-    `${query}//${settings.drilldownLink}` !== undefined ? settings.drilldownLink : ''
-  );
+  
+  const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
   const withoutFooter =
     reportTypes[type] && reportTypes[type].withoutFooter
