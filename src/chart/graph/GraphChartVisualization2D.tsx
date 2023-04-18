@@ -42,6 +42,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       onBackgroundClick={() => props.interactivity.onNodeClick(undefined)}
       onBackgroundRightClick={() => props.interactivity.onNodeClick(undefined)}
       linkLineDash={(link) => (link.new ? [2, 1] : null)}
+      linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={props.engine.cooldownTicks}
       onEngineStop={() => {

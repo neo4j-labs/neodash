@@ -204,7 +204,7 @@ export const REPORT_TYPES = {
         default: 0.005,
       },
       arrowLengthProp: {
-        label: 'Length of the directional arrow',
+        label: 'Arrow head size',
         type: SELECTION_TYPES.NUMBER,
         default: 3,
       },

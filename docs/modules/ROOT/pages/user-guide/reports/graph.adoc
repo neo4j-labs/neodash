@@ -91,7 +91,7 @@ directly maps to the width value.
 relationships with animated particles on them, moving in the direction
 of the relationship.
 
-|Length of the directional arrow |Number |3 |Use this to set the length of the directional arrow.
+|Arrow head size |Number |3 |Use this to set the length of the arrow head, size is adjusted automatically.
 If 0, no arrow will be drawn.
 
 |Background Color |Text |#fafafa |The background color of the
