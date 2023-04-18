@@ -9,11 +9,7 @@ import {
 } from '../../extensions/styling/StyleRuleCreationModal';
 import TuneIcon from '@material-ui/icons/Tune';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
-
-import {
-  RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS,
-} from '../../extensions/actions/ActionsRuleCreationModal';
-
+import { RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS } from '../../extensions/actions/ActionsRuleCreationModal';
 import NeoCustomReportActionsModal from '../../extensions/actions/ActionsRuleCreationModal';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import StarsIcon from '@material-ui/icons/Stars';

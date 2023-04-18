@@ -26,7 +26,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       height={props.style.height - 10}
       linkCurvature='curvature'
       backgroundColor={props.style.backgroundColor}
-      linkDirectionalArrowLength={3}
+      linkDirectionalArrowLength={props.style.linkDirectionalArrowLength}
       linkDirectionalArrowRelPos={1}
       dagMode={props.engine.layout}
       linkWidth={(link: any) => link.width}
@@ -50,6 +50,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       onBackgroundClick={() => props.interactivity.onNodeClick(undefined)}
       onBackgroundRightClick={() => props.interactivity.onNodeClick(undefined)}
       linkLineDash={(link) => (link.new ? [2, 1] : null)}
+      linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={props.engine.cooldownTicks}
       onEngineStop={() => {

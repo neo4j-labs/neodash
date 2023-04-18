@@ -191,6 +191,7 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
+
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -201,6 +202,11 @@ export const REPORT_TYPES = {
         label: 'Speed of the particle animation',
         type: SELECTION_TYPES.NUMBER,
         default: 0.005,
+      },
+      arrowLengthProp: {
+        label: 'Arrow head size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
       },
       layout: {
         label: 'Graph Layout (experimental)',
@@ -243,6 +249,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         placeholder: 'http://bloom.neo4j.io',
         default: '',
+      },
+      allowDownload: {
+        label: 'Enable CSV Download',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       hideSelections: {
         label: 'Hide Property Selection',
@@ -962,6 +974,18 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'rgba(0, 0, 0, 0.87)',
       },
+      format: {
+        label: 'Display format',
+        type: SELECTION_TYPES.LIST,
+        values: ['auto', 'json', 'yml'],
+        default: 'auto',
+      },
+      monospace: {
+        label: 'Use monospace font',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       textAlign: {
         label: 'Horizontal Align',
         type: SELECTION_TYPES.LIST,
@@ -1017,6 +1041,12 @@ export const REPORT_TYPES = {
     allowScrolling: true,
     maxRecords: 500,
     settings: {
+      format: {
+        label: 'Format',
+        type: SELECTION_TYPES.LIST,
+        values: ['json', 'yml'],
+        default: 'json',
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,

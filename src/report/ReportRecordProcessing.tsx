@@ -2,7 +2,14 @@ import React from 'react';
 import { Chip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import { getRecordType, valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../chart/ChartUtils';
+import {
+  getRecordType,
+  toNumber,
+  valueIsArray,
+  valueIsNode,
+  valueIsPath,
+  valueIsRelationship,
+} from '../chart/ChartUtils';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -87,10 +94,14 @@ const rightRelationship =
 const leftRelationship =
   'polygon(10px 0%, calc(100% - 0%) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 0%) 100%, 10px 100%, 0% calc(100% - 50%), 0% 50%)';
 
-export function RenderNode(value, key = 0) {
+export function RenderNode(value, hoverable = true) {
+  const chip = RenderNodeChip(value.labels.length > 0 ? value.labels.join(', ') : 'Node');
+  if (!hoverable) {
+    return chip;
+  }
   return (
     <HtmlTooltip
-      key={`${key}-${value.identity}`}
+      key={`${0}-${value.identity}`}
       arrow
       title={
         <div>
@@ -116,7 +127,7 @@ export function RenderNode(value, key = 0) {
         </div>
       }
     >
-      {RenderNodeChip(value.labels.length > 0 ? value.labels.join(', ') : 'Node')}
+      {chip}
     </HtmlTooltip>
   );
 }
@@ -303,6 +314,10 @@ export const rendererForType: any = {
   number: {
     type: 'number',
     renderValue: (c) => RenderNumber(c.value),
+  },
+  objectNumber: {
+    type: 'number',
+    renderValue: (c) => RenderNumber(toNumber(c.value)),
   },
   null: {
     type: 'string',

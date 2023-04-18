@@ -23,7 +23,11 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
 
   // index of the display value in the resulting extra records retrieved by the component when the user types. equals '1' for NeoDash 2.2.2 and later.
-  const displayValueRowIndex = props.compatibilityMode ? 0 : 1;
+  const displayValueRowIndex = props.compatibilityMode
+    ? 0
+    : extraRecords[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
+
+  const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
 
   return (
     <Autocomplete
@@ -57,8 +61,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         }
 
         let newValue = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]
-          ._fields[0];
-        setInputDisplayText(newDisplayValue !== null ? `${newDisplayValue}` : '');
+          ._fields[realValueRowIndex];
+        setInputDisplayText(newDisplayValue);
         if (newValue && newValue.low) {
           newValue = newValue.low;
         }
