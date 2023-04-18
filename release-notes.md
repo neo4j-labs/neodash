@@ -5,7 +5,7 @@
   - Added experimental graph editing - editing nodes and relationships, plus creating relationships between existing nodes. (@nielsdejong, #123)
   - Fixed incorrect assignment of chip colors in graph visualization footer. (@BennuFire, #123)
   - Added experimental CSV download button to graph visualizations (@JonanOribe, #123)
-  - Fixed bug where dashboard parameters were not dynamically injected into drilldown links for the graph visualization.  (@nielsdejong, #123)
+  - Fixed bug where dashboard parameters were not dynamically injected into drilldown links for the graph visualization.  (@nielsdejong, [#123](https://github.com/neo4j-labs/neodash/pull/410))
   - Added setting to customize the size of the arrow head. Set to zero to disable directional rendering. (@BennuFire, #123)
 
 - Single Value Chart
