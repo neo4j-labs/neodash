@@ -28,6 +28,8 @@ const NeoGraphChart = (props: ChartProps) => {
   // Retrieve config from advanced settings
   const settings = getSettings(props.settings, props.extensions, props.getGlobalParameter);
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
+  const arrowLengthProp = props?.settings?.arrowLengthProp ?? 3;
+
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
   const parameters = props.parameters ? props.parameters : {};
 
@@ -134,6 +136,7 @@ const NeoGraphChart = (props: ChartProps) => {
       height: height,
       backgroundColor: settings.backgroundColor,
       linkDirectionalParticles: linkDirectionalParticles,
+      linkDirectionalArrowLength: arrowLengthProp,
       linkDirectionalParticleSpeed: settings.linkDirectionalParticleSpeed,
       nodeLabelFontSize: settings.nodeLabelFontSize,
       nodeLabelColor: settings.nodeLabelColor,

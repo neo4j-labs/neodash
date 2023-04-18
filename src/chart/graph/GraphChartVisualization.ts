@@ -69,6 +69,7 @@ export interface GraphChartVisualizationProps {
     backgroundColor: any;
     linkDirectionalParticles?: number;
     linkDirectionalParticleSpeed: number;
+    linkDirectionalArrowLength: number;
     nodeLabelFontSize: number;
     nodeLabelColor: string;
     relLabelFontSize: number;
