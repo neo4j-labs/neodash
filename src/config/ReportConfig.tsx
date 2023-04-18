@@ -244,6 +244,12 @@ export const REPORT_TYPES = {
         placeholder: 'http://bloom.neo4j.io',
         default: '',
       },
+      allowDownload: {
+        label: 'Enable CSV Download',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       hideSelections: {
         label: 'Hide Property Selection',
         type: SELECTION_TYPES.LIST,

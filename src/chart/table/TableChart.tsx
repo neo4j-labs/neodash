@@ -48,6 +48,10 @@ function ApplyColumnType(column, value) {
   return column;
 }
 
+export const generateSafeColumnKey = (key) => {
+  return key != 'id' ? key : `${key} `;
+};
+
 const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
@@ -82,10 +86,6 @@ const NeoTableChart = (props: ChartProps) => {
   }
 
   const { records } = props;
-
-  const generateSafeColumnKey = (key) => {
-    return key != 'id' ? key : `${key} `;
-  };
 
   const actionableFields = [];
 
