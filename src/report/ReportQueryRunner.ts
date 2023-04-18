@@ -125,18 +125,18 @@ export function runCypherQuery(
             'The transaction has not completed within the specified timeout (dbms.transaction.timeout).'
         )
       ) {
+        setStatus(QueryStatus.TIMED_OUT);
         setRecords([{ error: e.message }]);
         transaction.rollback();
-        setStatus(QueryStatus.TIMED_OUT);
         return e.message;
       }
 
+      setStatus(QueryStatus.ERROR);
       // Process other errors.
       if (setRecords) {
         setRecords([{ error: e.message }]);
       }
       transaction.rollback();
-      setStatus(QueryStatus.ERROR);
       return e.message;
     });
 }

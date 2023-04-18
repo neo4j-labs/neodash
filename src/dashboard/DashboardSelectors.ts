@@ -11,3 +11,11 @@ export const getDashboardExtensions = (state: any) => {
 };
 
 export const getPages = (state: any) => state.dashboard.pages;
+
+export const getPageNumbersAndNames = (state: any) => {
+  let pageNames = state.dashboard.pages.reduce((acc, page, idx) => {
+    acc.push(`${idx}/${page.title}`);
+    return acc;
+  }, []);
+  return pageNames;
+};

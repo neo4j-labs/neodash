@@ -99,6 +99,7 @@ pages:
 - link:radar[Radar Chart] 
 - link:map[Map]
 - link:choropleth[Choropleth Chart] 
+- link:areamap[Area Map] 
 - link:single-value[Single Value] 
 - link:sankey[Sankey Chart] 
 - link:gauge[Gauge Chart]

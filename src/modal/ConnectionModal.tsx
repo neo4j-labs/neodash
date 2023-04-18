@@ -13,6 +13,7 @@ import { FormControlLabel, MenuItem, Switch, Tooltip } from '@material-ui/core';
 import SecurityIcon from '@material-ui/icons/Security';
 import WarningIcon from '@material-ui/icons/Warning';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
+import { CUSTOM_CONNECTION_FOOTER_TEXT } from '../config/ApplicationConfig';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -65,9 +66,9 @@ export default function NeoConnectionModal({
       >
         <DialogTitle id='form-dialog-title'>
           {standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}
-          <IconButton style={{ padding: '0px', float: 'right' }}>
+          <IconButton style={{ padding: '3px', float: 'right' }}>
             <Badge overlap='rectangular' badgeContent={''}>
-              <img style={{ width: '36px', height: '36px' }} src='neo4j-icon-color.png' />
+              <img style={{ width: '36px', height: '36px', marginTop: '-4px' }} src='neo4j-icon-color.png' />
             </Badge>
           </IconButton>
         </DialogTitle>

@@ -1,0 +1,60 @@
+= Area Map
+
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
+
+The Area Map charts can be used to render geographical based information on geoJson polygons. It's possible to click a polygon to visualize its regions and their related data.
+It takes two fields: 
+
+- *code*: String. This represents the country code or regional code that must be binded to the visualization. The map supports Alpha-3 and Alpha-2 country codes (by default Alpha-2). Instead the supported format for the region polygons is ISO 3166.
+- *value*:  Number. Cardinal data to be used on the chart.
+
+== Examples
+
+=== Basic Area Map
+
+
+[source,cypher]
+----
+MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),
+(e)-[:LIVES]->(city:City)-[:IN_COUNTRY]->(country:Country)
+WITH city, country
+CALL {
+    WITH country
+    RETURN country.countryCode as code, count(*) as value
+    UNION
+    WITH city
+    RETURN city.countryCode as code, count(*) as value
+}
+WITH code, sum(value) as totalCount
+RETURN code,totalCount
+----
+image::areamap-countries.png[Country Level Visualization]
+image::areamap-regions.png[Example of Drill Down inside a Country]
+
+== Advanced Settings
+
+[width="100%",cols="15%,2%,26%,57%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|Map Provider URL|Text|https://\{s}.tile.openstreetmap.org/\{z}/\{x}/\{y}.png| When specified, overrides Open Street map provider with a custom map tiles provider.
+
+|Color Scheme |List | |The color scheme to use for the area map. Country colors
+will vary according their min to max ratio.
+
+|Country Code Format |List |Alpha-2 |Type of the country code (two/three letters).
+
+|Color Legend|on/off |on |Option to show color legend.
+
+|Drilldown Enabled |on/off |off |Enable map drilldown to visualize regional data.
+
+|Refreshable |on/off |off |Enables a refresh button for the report.
+
+|Fullscreen enabled |on/off |off |Enables a fullscreen view button for the report.
+
+|Download image enabled |on/off |off |Enables an image download button for the report.
+
+|Auto-run query |on/off |on |When activated, automatically runs the
+query when the report is displayed. When set to `off', the query is
+displayed and will need to be executed manually.
+|Report Description |markdown text | | When specified, adds another button the report header that opens a pop-up. This pop-up contains the rendered markdown from this setting. 
+|===

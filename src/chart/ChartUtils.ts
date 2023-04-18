@@ -61,7 +61,7 @@ const convertPathToString = (pathEntry) => {
 
 /* HELPER FUNCTIONS FOR DETERMINING TYPE OF FIELD RETURNED FROM NEO4J */
 export function valueIsArray(value) {
-  const className = value.__proto__.constructor.name;
+  const className = value !== undefined && value.__proto__.constructor.name;
   return className == 'Array';
 }
 
@@ -132,14 +132,12 @@ export function getRecordType(value) {
 /**
  * Basic function to convert a table row output to a CSV file, and download it.
  * TODO: Make this more robust. Probably the commas should be escaped to ensure the CSV is always valid.
- * seperator should be either ',', ';' or 'tab'
  */
-export const downloadCSV = (rows, seperator) => {
-  const sep = seperator == 'tab' ? '\t' : seperator;
+export const downloadCSV = (rows) => {
   const element = document.createElement('a');
   let csv = '';
   const headers = Object.keys(rows[0]).slice(1);
-  csv += `${headers.join(sep)}\n`;
+  csv += `${headers.join(', ')}\n`;
   rows.forEach((row) => {
     headers.forEach((header) => {
       // Parse value
@@ -147,8 +145,8 @@ export const downloadCSV = (rows, seperator) => {
       if (value && value.low) {
         value = value.low;
       }
-      csv += JSON.stringify(value).replaceAll(sep, sep == ',' ? ';' : ',');
-      csv += headers.indexOf(header) < headers.length - 1 ? sep : '';
+      csv += JSON.stringify(value).replaceAll(',', ';');
+      csv += headers.indexOf(header) < headers.length - 1 ? ', ' : '';
     });
     csv += '\n';
   });
@@ -199,7 +197,13 @@ export const downloadComponentAsImage = (ref) => {
 };
 
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
+import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 
+/**
+ * Function to cast a value received from the Neo4j Driver to its TS native type
+ * @param input Value to cast
+ * @returns Value casted to it's native type
+ */
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;
@@ -366,4 +370,29 @@ export function castToNeo4jDate(value: object) {
     return new Neo4jDate(value.year, value.month, value.day);
   }
   throw new Error(`Invalid input for castToNeo4jDate: ${value}`);
+}
+
+/**
+ * Creates a default selection config for a node-property based chart footer.
+ */
+export function getSelectionBasedOnFields(fields, oldSelection = {}, autoAssignSelectedProperties = true) {
+  const selection = {};
+  fields.forEach((nodeLabelAndProperties) => {
+    const label = nodeLabelAndProperties[0];
+    const properties = nodeLabelAndProperties.slice(1);
+    let selectedProp = oldSelection[label] ? oldSelection[label] : undefined;
+    if (autoAssignSelectedProperties) {
+      DEFAULT_NODE_LABELS.forEach((prop) => {
+        if (properties.indexOf(prop) !== -1) {
+          if (selectedProp == undefined) {
+            selectedProp = prop;
+          }
+        }
+      });
+      selection[label] = selectedProp ? selectedProp : '(label)';
+    } else {
+      selection[label] = selectedProp ? selectedProp : '(no label)';
+    }
+  });
+  return selection;
 }
