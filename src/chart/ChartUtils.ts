@@ -183,11 +183,19 @@ export function replaceDashboardParameters(str, parameters) {
   let rx = /`.([^`]*)`/g;
   let regexSquareBrackets = /\[(.*?)\]/g;
 
-  const replacer = (match, p1) => {
+  /**
+   * Define function to access elements in an array/object type dashboard parameter.
+   * @param _ needed for str.replace(), unused.
+   * @param p1 - the original string.
+   * @returns an updated markdown with injected parameters.
+   */
+  const parameterElementReplacer = (_, p1) => {
+    // Find (in the markdown) occurences of the parameter `$neodash_movie_title[index]` or  `$neodash_movie_title[key]`.
     let matches = p1.match(regexSquareBrackets);
     let param = p1.split('[')[0].replace(`$`, '').trim();
     let val = parameters?.[param] || null;
 
+    // Inject the element at that index/key into the markdown as text.
     matches?.forEach((m) => {
       let i = m.replace(/[[\]']+/g, '');
       i = isNaN(i) ? i.replace(/['"']+/g, '') : Number(i);
@@ -197,7 +205,7 @@ export function replaceDashboardParameters(str, parameters) {
     return RenderSubValue(val);
   };
 
-  let newString = str.replace(rx, replacer);
+  let newString = str.replace(rx, parameterElementReplacer);
 
   Object.keys(parameters).forEach((key) => {
     newString = newString.replaceAll(`$${key}`, parameters[key] !== null ? parameters[key] : '');
