@@ -4,6 +4,7 @@ import DatePickerParameterSelectComponent from './component/DateParameterSelect'
 import NodePropertyParameterSelectComponent from './component/NodePropertyParameterSelect';
 import RelationshipPropertyParameterSelectComponent from './component/RelationshipPropertyParameterSelect';
 import FreeTextParameterSelectComponent from './component/FreeTextParameterSelect';
+import QueryParameterSelectComponent from './component/QueryParameterSelect';
 
 /**
  * A special chart type to define global dashboard parameters that are injected as query parameters into each report.
@@ -28,7 +29,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const allParameters = props.parameters;
 
   // in NeoDash 2.2.1 or earlier, there was no means to have a different display value in the selector. This condition handles that.
-  const compatibilityMode = !query == undefined && !query.includes('as display');
+  const compatibilityMode = !query?.toLowerCase().includes('as display') || false;
 
   if (!query || query.trim().length == 0) {
     return <p style={{ margin: '15px' }}>No selection specified.</p>;
@@ -85,6 +86,22 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   } else if (type == 'Date Picker') {
     return (
       <DatePickerParameterSelectComponent
+        parameterName={parameterName}
+        parameterDisplayName={parameterName}
+        parameterValue={parameterValue}
+        parameterDisplayValue={parameterDisplayValue}
+        setParameterValue={setParameterValue}
+        setParameterDisplayValue={setParameterDisplayValue}
+        query={query}
+        queryCallback={queryCallback}
+        settings={props.settings}
+        allParameters={allParameters}
+        compatibilityMode={compatibilityMode}
+      />
+    );
+  } else if (type == 'Custom Query') {
+    return (
+      <QueryParameterSelectComponent
         parameterName={parameterName}
         parameterDisplayName={parameterName}
         parameterValue={parameterValue}
