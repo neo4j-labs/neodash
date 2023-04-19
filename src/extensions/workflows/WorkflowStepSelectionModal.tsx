@@ -77,11 +77,11 @@ export const NeoWorkflowStepSelectionModal = ({ open, setOpen, addStep }) => {
       </DialogTitle>
       <DialogContent style={{ width: '1100px' }}>
         <DialogContentText> Select a step to add to the workflow. </DialogContentText>
-        <div style={{ height: '380px', borderBottom: '1px solid lightgrey' }}>
+        <div style={{ height: '500px', borderBottom: '1px solid lightgrey' }}>
           <DataGrid
             rows={rows}
             columns={columns}
-            getRowHeight={() => 'auto'}
+            getRowHeight={() => 75}
             pageSize={5}
             sx={{ [`& .${gridClasses.cell}`]: { py: 1 } }}
             rowsPerPageOptions={[5]}

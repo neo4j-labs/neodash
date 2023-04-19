@@ -7,7 +7,7 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { runWorkflow } from './util/WorkflowRunner';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { updateWorkflowStepStatus } from './stateManagement/WorkflowActions';
-import { STEP_STATUS } from './NeoWorkflowRunnerModal';
+import { STEP_STATUS } from './WorkflowRunnerModal';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { getDatabase } from '../../settings/SettingsSelectors';
 

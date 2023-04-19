@@ -14,7 +14,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import StopIcon from '@material-ui/icons/Stop';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import NeoWorkflowRunnerModal, { STEP_STATUS } from './NeoWorkflowRunnerModal';
+import NeoWorkflowRunnerModal, { STEP_STATUS } from './WorkflowRunnerModal';
 import { getWorkflowsList } from './stateManagement/WorkflowSelectors';
 import { deleteWorkflow } from './stateManagement/WorkflowActions';
 import NeoField from '../../component/field/Field';

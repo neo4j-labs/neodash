@@ -13,8 +13,9 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import { getWorkflow } from './stateManagement/WorkflowSelectors';
-import { TextareaAutosize } from '@material-ui/core';
+import { Button, TextareaAutosize } from '@material-ui/core';
 import { getCancelledIcon, getCompleteIcon, getRunningIcon, getErrorIcon, getWaitingIcon } from './Icons';
+import NeoWorkflowRunnerStepDetails from './WorkflowRunnerStepDetails';
 
 const Accordion = withStyles({
   root: {
@@ -68,7 +69,7 @@ export enum STEP_STATUS {
   STOPPING,
 }
 
-export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStatus, _results, workflow }) => {
+export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStatus, results, workflow }) => {
   const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<any>, newExpanded: boolean) => {
@@ -132,15 +133,7 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStat
                       <Typography>{step.name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <TextareaAutosize
-                        style={{ width: '100%', height: '80px !important', border: '1px solid lightgray' }}
-                        maxRows={1}
-                        minRows={1}
-                        className={'textinput-linenumbers'}
-                        value={step.query}
-                        aria-label=''
-                        placeholder='Your dashboard JSON should show here'
-                      />
+                      <NeoWorkflowRunnerStepDetails step={step} result={results[index] ? results[index].records : []} />
                     </AccordionDetails>
                   </Accordion>
                 );

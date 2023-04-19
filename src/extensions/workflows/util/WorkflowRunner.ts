@@ -1,6 +1,6 @@
 import { stepButtonClasses } from '@mui/material';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
-import { STEP_STATUS } from '../NeoWorkflowRunnerModal';
+import { STEP_STATUS } from '../WorkflowRunnerModal';
 
 async function sleep(msec) {
   return new Promise((resolve) => setTimeout(resolve, msec));
@@ -111,6 +111,9 @@ export function runWorkflow(
   async function run() {
     const results: any[] = [];
     const database = workflowDatabase;
+
+    // Clear results on new run
+    setResults([]);
 
     const setWorkflowStatusForStep = (stepIndex, status) => {
       workflowStepStatus[stepIndex] = status;

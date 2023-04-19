@@ -6,7 +6,7 @@ export const WORKFLOW_STEPS = {
     type: 'Pathfinding',
     description:
       "Yen's Shortest Path algorithm computes a number of shortest paths between two nodes. The algorithm is often referred to as Yen's k-Shortest Path algorithm, where k is the number of shortest paths to compute. The algorithm supports weighted graphs with positive relationship weights.",
-    query: 'UNWIND RANGE(1,10000) as X \n WITH X as Quack2 \n RETURN collect(Quack2)',
+    query: 'UNWIND RANGE(1,100) as X \n WITH X as Quack2 \n RETURN Quack2',
   },
   pageRank: {
     name: 'PageRank',

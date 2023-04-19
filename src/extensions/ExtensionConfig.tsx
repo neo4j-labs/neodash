@@ -2,7 +2,7 @@ import { NODE_SIDEBAR_ACTION_PREFIX, NODE_SIDEBAR_EXTENSION_NAME } from './alert
 import { alertReducer } from './alert/stateManagement/AlertReducer';
 import { WORKFLOWS_ACTION_PREFIX, WORKFLOWS_EXTENSION_NAME } from './workflows/stateManagement/WorkflowActions';
 import { workflowReducer } from './workflows/stateManagement/WorkflowReducer';
-import NeoWorkflowDrawerButton from './workflows/NeoWorkflowDrawerButton';
+import NeoWorkflowDrawerButton from './workflows/WorkflowDrawerButton';
 import NeoAlertDrawerButton from './alert/NeoAlertDrawerButton';
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 // TODO: continue document here

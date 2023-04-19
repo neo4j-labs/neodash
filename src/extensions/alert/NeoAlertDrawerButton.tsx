@@ -6,7 +6,7 @@ import { setExtensionOpen } from './stateManagement/AlertActions';
 import { getSidebarOpened } from './stateManagement/AlertSelectors';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
-const NeoNodeSidebarModal = ({ isOpen, setNodeSidebarOpened }) => {
+const NeoNodeSidebarButton = ({ isOpen, setNodeSidebarOpened }) => {
   const handleClick = () => {
     setNodeSidebarOpened(!isOpen);
   };
@@ -31,4 +31,4 @@ const mapDispatchToProps = (dispatch) => ({
   setNodeSidebarOpened: (open) => dispatch(setExtensionOpen(open)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NeoNodeSidebarModal);
+export default connect(mapStateToProps, mapDispatchToProps)(NeoNodeSidebarButton);
