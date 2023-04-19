@@ -182,6 +182,7 @@ export function replaceDashboardParameters(str, parameters) {
   }
   let rx = /`.([^`]*)`/g;
   let regexSquareBrackets = /\[(.*?)\]/g;
+  let rxSimple = /\$neodash_\w*/g;
 
   /**
    * Define function to access elements in an array/object type dashboard parameter.
@@ -205,15 +206,15 @@ export function replaceDashboardParameters(str, parameters) {
     return RenderSubValue(val);
   };
 
-  let newString = str.replace(rx, parameterElementReplacer);
+  const parameterSimpleReplacer = (_) => {
+    let param = _.replace(`$`, '').trim();
+    let val = parameters?.[param] || null;
+    let type = getRecordType(val);
+    let valueRender = type === 'string' ? val : RenderSubValue(val);
+    return valueRender;
+  };
 
-  Object.keys(parameters).forEach((key) => {
-    let valueRender = RenderSubValue(parameters[key]);
-    newString = newString.replaceAll(`$${key} `, `${valueRender} `);
-    newString = newString.replaceAll(`$${key},`, `${valueRender},`);
-    newString = newString.replaceAll(`$${key}.`, `${valueRender}.`);
-    newString = newString.replaceAll(`$${key})`, `${valueRender})`);
-  });
+  let newString = str.replace(rx, parameterElementReplacer).replace(rxSimple, parameterSimpleReplacer);
 
   return newString;
 }
