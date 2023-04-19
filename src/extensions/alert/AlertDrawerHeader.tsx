@@ -2,25 +2,48 @@ import { debounce, IconButton, TextField, Tooltip } from '@material-ui/core';
 import React, { useCallback } from 'react';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AlertSettingsModal from './settings/AlertSettingsModal';
-import { getSidebarTitle } from './stateManagement/AlertSelectors';
+import { getSidebarGlobalParameters, getSidebarTitle } from './stateManagement/AlertSelectors';
 import { NODE_SIDEBAR_EXTENSION_NAME, setExtensionTitle } from './stateManagement/AlertActions';
 import { connect } from 'react-redux';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
 import { getExtensionSettings } from '../stateManagement/ExtensionSelectors';
+import { updateGlobalParameterThunk } from '../../settings/SettingsThunks';
 
 /**
  * The editable header of the alert drawer, including the title and settings button.
  * TODO - rename to 'Node Sidebar Header' to match new extension name.
  */
-export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTitleUpdate, onManualRefreshDrawer }) => {
+export const AlertDrawerHeader = ({
+  databaseList,
+  title,
+  extensionSettings,
+  sidebarGlobalParameters,
+  onTitleUpdate,
+  onGlobalParameterUpdate,
+  onManualRefreshDrawer,
+}) => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const [headerTitle, setHeaderTitle] = React.useState(title);
   const refreshable = extensionSettings.refreshButtonEnabled ? extensionSettings.refreshButtonEnabled : false;
   const debouncedTitleUpdate = useCallback(debounce(onTitleUpdate, 250), []);
+
+  function clearNodeSidebarParameters() {
+    console.log(sidebarGlobalParameters);
+    sidebarGlobalParameters.forEach((key) => onGlobalParameterUpdate(key, undefined));
+  }
   const refreshButton = (
     <Tooltip title='Refresh' aria-label='refresh'>
       <IconButton aria-label='refresh' onClick={onManualRefreshDrawer}>
         <RefreshIcon />
+      </IconButton>
+    </Tooltip>
+  );
+
+  const clearParametersButton = (
+    <Tooltip title='Clear Sidebar Parameters' aria-label='clear'>
+      <IconButton aria-label='clear' onClick={clearNodeSidebarParameters}>
+        <ClearAllIcon />
       </IconButton>
     </Tooltip>
   );
@@ -45,6 +68,7 @@ export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTi
             />
           </td>
           <td>{refreshable ? refreshButton : <></>}</td>
+          <td>{clearParametersButton}</td>
           <td>
             <Tooltip title='Settings' aria-label='settings'>
               <IconButton
@@ -72,11 +96,15 @@ const mapStateToProps = (state) => ({
   // TODO: change 'alerts' to new name.
   title: getSidebarTitle(state),
   extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
+  sidebarGlobalParameters: getSidebarGlobalParameters(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onTitleUpdate: (title: any) => {
     dispatch(setExtensionTitle(title));
+  },
+  onGlobalParameterUpdate: (key: any, value: any) => {
+    dispatch(updateGlobalParameterThunk(key, value));
   },
 });
 
