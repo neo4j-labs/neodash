@@ -1,22 +1,17 @@
-import { ResponsiveLine } from '@nivo/line';
 import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
-import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
+import { recordToNative } from '../ChartUtils';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-
-interface LineChartData {
-  id: string;
-  data: Record<any, any>[];
-}
+import { ResponsiveScatterPlot } from '@nivo/scatterplot';
+import { animated } from '@react-spring/web';
 
 /**
  * Embeds a LineReport (from Charts) into NeoDash.
  */
-const NeoLineChart = (props: ChartProps) => {
+const NeoScatterPlot = (props: ChartProps) => {
   const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
-
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
@@ -30,62 +25,52 @@ const NeoLineChart = (props: ChartProps) => {
   const [parseFormat, setParseFormat] = React.useState('%Y-%m-%dT%H:%M:%SZ');
 
   const settings = props.settings ? props.settings : {};
-
   const colorScheme = settings.colors ? settings.colors : 'set2';
+
+  const pointSize = settings.pointSize ? settings.pointSize : 10;
+  const showGrid = settings.showGrid != undefined ? settings.showGrid : true;
+
   const xScale = settings.xScale ? settings.xScale : 'linear';
   const yScale = settings.yScale ? settings.yScale : 'linear';
+
   const xScaleLogBase = settings.xScaleLogBase ? settings.xScaleLogBase : 10;
   const yScaleLogBase = settings.yScaleLogBase ? settings.yScaleLogBase : 10;
+
   const minXValue = settings.minXValue ? settings.minXValue : 'auto';
   const maxXValue = settings.maxXValue ? settings.maxXValue : 'auto';
   const minYValue = settings.minYValue ? settings.minYValue : 'auto';
   const maxYValue = settings.maxYValue ? settings.maxYValue : 'auto';
+
   const legend = settings.legend != undefined ? settings.legend : false;
   const legendWidth = settings.legendWidth ? settings.legendWidth : 70;
-  const curve = settings.curve ? settings.curve : 'linear';
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 36;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
-  const lineWidth = settings.type == 'scatter' ? 0 : settings.lineWidth || 2;
-  const pointSize = settings.pointSize ? settings.pointSize : 10;
-  const showGrid = settings.showGrid != undefined ? settings.showGrid : true;
+
+  const colorIntensityProp = settings.colorIntensityProp != undefined ? settings.colorIntensityProp : 'intensity';
+
   const xTickValues = settings.xTickValues != undefined ? settings.xTickValues : undefined;
   const xTickTimeValues = settings.xTickTimeValues != undefined ? settings.xTickTimeValues : 'every 1 years';
   const xAxisTimeFormat = settings.xAxisTimeFormat != undefined ? settings.xAxisTimeFormat : '%Y-%m-%dT%H:%M:%SZ';
   const xAxisFormat = settings.xAxisFormat != undefined ? settings.xAxisFormat : undefined;
-
   const xTickRotationAngle = settings.xTickRotationAngle != undefined ? settings.xTickRotationAngle : 0;
   const yTickRotationAngle = settings.yTickRotationAngle != undefined ? settings.yTickRotationAngle : 0;
-  const styleRules = useStyleRules(
-    extensionEnabled(props.extensions, 'styling'),
-    props.settings.styleRules,
-    props.getGlobalParameter
-  );
 
   // Compute line color based on rules - overrides default color scheme completely.
   // For line charts, the line color is overridden if at least one value meets the criteria.
-  const getLineColors = (line) => {
-    const xFieldName = props.selection && props.selection.x;
-    const yFieldName = line.id && line.id.split('(')[1] && line.id.split('(')[1].split(')')[0];
-    let color = 'black';
-    line.data.forEach((entry) => {
-      const data = {};
-      data[xFieldName] = entry[selection.x];
-      data[yFieldName] = entry[selection.value];
-      const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['line color']);
-      if (validRuleIndex !== -1) {
-        color = styleRules[validRuleIndex].customizationValue;
-      }
-    });
-    return color;
+  // TODO: define color gradient with min and max intensity and work on Legend
+  const getNodeColors = (point) => {
+    let {intensity} = point.node.data;
+
+    return intensity > 0.5 ? 'red' : 'green';
   };
 
   if (!selection.value.length) {
     return <p></p>;
   }
 
-  const data: LineChartData[] = selection.value.map((key) => ({
+  const data = selection.value.map((key) => ({
     id: key as string,
     data: [],
   }));
@@ -108,14 +93,15 @@ const NeoLineChart = (props: ChartProps) => {
       let x: any = row.get(selection.x) || 0;
       const y: any = recordToNative(row.get(key)) || 0;
       if (data[index] && !isNaN(y)) {
-        if (isDate(x)) {
-          data[index].data.push({ x, y });
-        } else if (isDateTime(x)) {
+        if (isDateTime(x)) {
           x = new Date(x.toString());
-          data[index].data.push({ x, y });
-        } else {
-          data[index].data.push({ x, y });
         }
+        const intensity: any = row.keys.includes(colorIntensityProp)
+          ? recordToNative(row.get(colorIntensityProp))
+            ? recordToNative(row.get(colorIntensityProp))
+            : 0
+          : 0;
+        data[index].data.push({ x, y, intensity });
       }
     });
   });
@@ -150,7 +136,6 @@ const NeoLineChart = (props: ChartProps) => {
         </div>
       );
     }
-
     const p = chartIsTimeChart ? (isDateTime(data[0].data[0].x) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
 
     setParseFormat(p);
@@ -173,11 +158,24 @@ const NeoLineChart = (props: ChartProps) => {
     );
   }
 
-  // T18:40:32.142+0100
-  // %Y-%m-%dT%H:%M:%SZ
-  const lineViz = (
+  /**
+   * Component to render a custom node (necessary to bind colors to each node)
+   * @param node
+   * @returns Custom circle representing a node
+   */
+  const MyCustomNode = (node) => (
+    <animated.circle
+      cx={node.style.x}
+      cy={node.style.y}
+      r={node.style.size.to((size) => size / 2)}
+      fill={getNodeColors(node)}
+      style={{ mixBlendMode: node.blendMode }}
+    />
+  );
+
+  const scatterPlotViz = (
     <div className='h-full w-full overflow-hidden' style={{ height: '100%' }}>
-      <ResponsiveLine
+      <ResponsiveScatterPlot
         data={data}
         xScale={
           isTimeChart
@@ -193,7 +191,6 @@ const NeoLineChart = (props: ChartProps) => {
             ? { type: yScale, min: minYValue, max: maxYValue, stacked: false, reverse: false }
             : { type: yScale, min: minYValue, max: maxYValue, constant: xScaleLogBase, base: yScaleLogBase }
         }
-        curve={curve}
         enableGridX={showGrid}
         enableGridY={showGrid}
         axisTop={null}
@@ -224,11 +221,8 @@ const NeoLineChart = (props: ChartProps) => {
           tickPadding: 12,
           tickRotation: yTickRotationAngle,
         }}
+        nodeComponent={MyCustomNode}
         pointSize={pointSize}
-        lineWidth={lineWidth}
-        lineColor='black'
-        pointColor='white'
-        colors={styleRules.length >= 1 ? getLineColors : { scheme: colorScheme }}
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}
         pointLabelYOffset={-12}
@@ -266,7 +260,7 @@ const NeoLineChart = (props: ChartProps) => {
       />
     </div>
   );
-  return lineViz;
+  return scatterPlotViz;
 };
 
-export default NeoLineChart;
+export default NeoScatterPlot;
