@@ -8,6 +8,8 @@ import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerCompo
 import { isCyclic } from '../../Utils';
 import { extensionEnabled } from '../../../ExtensionUtils';
 
+const UNWEIGHTED_SANKEY_PROPERTY = 'SANKEY_UNWEIGHTED';
+
 /**
  * Embeds a SankeyChart (from Charts) into NeoDash.
  */
@@ -74,7 +76,16 @@ const NeoSankeyChart = (props: ChartProps) => {
         links[`${value.start.low},${value.end.low}`] = [];
       }
       const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
-      if (value.properties[labelProperty] !== undefined && !isNaN(value.properties[labelProperty])) {
+      if (labelProperty === UNWEIGHTED_SANKEY_PROPERTY) {
+        addItem(links[`${value.start.low},${value.end.low}`], {
+          id: value.identity.low,
+          source: value.start.low,
+          target: value.end.low,
+          type: value.type,
+          properties: value.properties,
+          value: 1,
+        });
+      } else if (value.properties[labelProperty] !== undefined && !isNaN(value.properties[labelProperty])) {
         addItem(links[`${value.start.low},${value.end.low}`], {
           id: value.identity.low,
           source: value.start.low,
