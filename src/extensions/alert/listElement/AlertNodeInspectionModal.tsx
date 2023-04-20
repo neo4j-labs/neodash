@@ -32,6 +32,7 @@ const AlertNodeInspectionModal = ({
 }) => {
   const [selection, setSelection] = React.useState({});
   const [paramList, setParamList] = React.useState([]);
+
   // Page where you can drill drown to
   const drillDownPage = extensionSettings.moveToPage
     ? extensionSettings.moveToPage === 'Current Page'
@@ -41,6 +42,17 @@ const AlertNodeInspectionModal = ({
 
   const handleClose = () => {
     setModalOpen(false);
+  };
+
+  /**
+   * Function that has the responsibility to manage the drill down logic when you click the button
+   */
+  const drillDown = () => {
+    paramList.forEach((nodeParam) => {
+      onGlobalParameterUpdate(`${NODE_SIDEBAR_PARAM_PREFIX}${nodeParam}`, entity.properties[nodeParam]);
+    });
+    handleClose();
+    setPageNumber(drillDownPage);
   };
 
   return (
@@ -90,11 +102,7 @@ const AlertNodeInspectionModal = ({
           </DialogContent>
           <Button
             onClick={() => {
-              paramList.forEach((nodeParam) => {
-                onGlobalParameterUpdate(`${NODE_SIDEBAR_PARAM_PREFIX}${nodeParam}`, entity.properties[nodeParam]);
-              });
-              handleClose();
-              setPageNumber(drillDownPage);
+              drillDown();
             }}
             style={{ float: 'right', backgroundColor: 'white', marginBottom: 10 }}
             variant='contained'
@@ -110,6 +118,7 @@ const AlertNodeInspectionModal = ({
     </div>
   );
 };
+
 const mapStateToProps = (state) => ({
   database: getSidebarDatabase(state),
   extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
@@ -125,4 +134,5 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updateGlobalParameterThunk(key, value));
   },
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(AlertNodeInspectionModal);
