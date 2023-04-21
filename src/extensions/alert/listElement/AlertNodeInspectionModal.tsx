@@ -4,20 +4,55 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
-import { DialogContent } from '@material-ui/core';
+import { Button, DialogContent } from '@material-ui/core';
 import NeoGraphChart from '../../../chart/graph/GraphChart';
 import { connect } from 'react-redux';
-import { getSidebarDatabase } from '../stateManagement/AlertSelectors';
+import { getSidebarDatabase, NODE_SIDEBAR_PARAM_PREFIX } from '../stateManagement/AlertSelectors';
 import { NeoReportWrapper } from '../../../report/ReportWrapper';
 import GraphEntityInspectionTable from '../../../chart/graph/component/GraphEntityInspectionTable';
 import { getSelectionBasedOnFields } from '../../../chart/ChartUtils';
+import { NODE_SIDEBAR_EXTENSION_NAME } from '../stateManagement/AlertActions';
+import { getExtensionSettings } from '../../stateManagement/ExtensionSelectors';
+import PlayArrow from '@material-ui/icons/PlayArrow';
+import { getPageNumber } from '../../../settings/SettingsSelectors';
+import { getPageNumbersAndNames } from '../../../dashboard/DashboardSelectors';
+import { setPageNumberThunk, updateGlobalParameterThunk } from '../../../settings/SettingsThunks';
 
 // TODO: Same as 'Node card`, lets generalize this as a "detailed Node inspect modal".
-const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database }) => {
+const AlertNodeInspectionModal = ({
+  entity,
+  modalOpen,
+  setModalOpen,
+  database,
+  extensionSettings,
+  pageNumber,
+  pagesList,
+  setPageNumber,
+  onGlobalParameterUpdate,
+}) => {
   const [selection, setSelection] = React.useState({});
+  const [paramList, setParamList] = React.useState([]);
+
+  // Page where you can drill drown to
+  const drillDownPage = extensionSettings.moveToPage
+    ? extensionSettings.moveToPage === 'Current Page'
+      ? pageNumber
+      : parseInt(extensionSettings.moveToPage.split('/')[0])
+    : pageNumber;
 
   const handleClose = () => {
     setModalOpen(false);
+  };
+
+  /**
+   * Function that has the responsibility to manage the drill down logic when you click the button
+   */
+  const drillDown = () => {
+    paramList.forEach((nodeParam) => {
+      onGlobalParameterUpdate(`${NODE_SIDEBAR_PARAM_PREFIX}${nodeParam}`, entity.properties[nodeParam]);
+    });
+    handleClose();
+    setPageNumber(drillDownPage);
   };
 
   return (
@@ -42,7 +77,11 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
           <DialogContent>
             <div>
               <br />
-              <GraphEntityInspectionTable entity={entity}></GraphEntityInspectionTable>
+              <GraphEntityInspectionTable
+                entity={entity}
+                hideCheckList={false}
+                setParamList={setParamList}
+              ></GraphEntityInspectionTable>
               <br />
             </div>
 
@@ -58,23 +97,20 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
                 query={`MATCH (n) WHERE id(n) = ${entity.id} OPTIONAL MATCH p=(n)--() RETURN n,p LIMIT 100`}
                 ChartType={NeoGraphChart}
                 type={'graph'}
-                lastRunTimestamp={undefined}
-                parameters={undefined}
-                disabled={undefined}
-                fields={undefined}
-                settings={undefined}
-                setGlobalParameter={undefined}
-                getGlobalParameter={undefined}
-                updateReportSetting={undefined}
-                createNotification={undefined}
-                dimensions={undefined}
-                rowLimit={undefined}
-                queryTimeLimit={undefined}
-                expanded={undefined}
-                extensions={undefined}
               ></NeoReportWrapper>
             </div>
           </DialogContent>
+          <Button
+            onClick={() => {
+              drillDown();
+            }}
+            style={{ float: 'right', backgroundColor: 'white', marginBottom: 10 }}
+            variant='contained'
+            size='medium'
+            endIcon={<PlayArrow />}
+          >
+            {`Go To Page ${pagesList[drillDownPage]}`}
+          </Button>
         </Dialog>
       ) : (
         <></>
@@ -82,9 +118,21 @@ const AlertNodeInspectionModal = ({ entity, modalOpen, setModalOpen, database })
     </div>
   );
 };
+
 const mapStateToProps = (state) => ({
   database: getSidebarDatabase(state),
+  extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
+  pagesList: getPageNumbersAndNames(state),
+  pageNumber: getPageNumber(state),
 });
 
-const mapDispatchToProps = (_dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  setPageNumber: (newIndex: number) => {
+    dispatch(setPageNumberThunk(newIndex));
+  },
+  onGlobalParameterUpdate: (key: any, value: any) => {
+    dispatch(updateGlobalParameterThunk(key, value));
+  },
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(AlertNodeInspectionModal);

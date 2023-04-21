@@ -33,6 +33,13 @@ EXTENSIONS_CONFIG[NODE_SIDEBAR_EXTENSION_NAME] = {
       values: [true, false],
       default: false,
     },
+    moveToPage: {
+      label: 'When clicking the drill down button, the dashboard will set this page as the current one ',
+      type: SELECTION_TYPES.LIST,
+      values: [],
+      default: 'Current Page',
+      needsStateValues: true,
+    },
   },
 };
 
