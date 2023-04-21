@@ -35,7 +35,7 @@
   "keywords": [],
   "author": "Neo4j Labs",
   "dependencies": {
-    "ui-aleks": "*",
+    "aleks-ui": "*",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@codemirror/language-data": "^6.1.0",

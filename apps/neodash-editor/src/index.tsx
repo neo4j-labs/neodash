@@ -22,7 +22,7 @@ const provider = (
   <ReduxProvider store={store}>
     <PersistGate persistor={persister} loading={<div>Loading NeoDash...</div>}>
       <Button />
-      {/* <Application /> */}
+      <Application />
     </PersistGate>
   </ReduxProvider>
 );
