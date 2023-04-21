@@ -852,7 +852,7 @@ export const REPORT_TYPES = {
         multiple: true,
       },
     },
-    maxRecords: 250,
+    maxRecords: 1000,
     settings: {
       backgroundColor: {
         label: 'Background Color',

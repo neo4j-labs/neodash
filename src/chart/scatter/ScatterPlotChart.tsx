@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
-import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { recordToNative } from '../ChartUtils';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import { ResponsiveScatterPlot } from '@nivo/scatterplot';
+import { ResponsiveScatterPlot, ScatterPlot } from '@nivo/scatterplot';
 import { animated } from '@react-spring/web';
+import chroma from 'chroma-js';
 
 /**
  * Embeds a LineReport (from Charts) into NeoDash.
  */
 const NeoScatterPlot = (props: ChartProps) => {
   const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
+
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
@@ -23,6 +23,7 @@ const NeoScatterPlot = (props: ChartProps) => {
 
   const [isTimeChart, setIsTimeChart] = React.useState(false);
   const [parseFormat, setParseFormat] = React.useState('%Y-%m-%dT%H:%M:%SZ');
+  const legendRange = { min: 0, max: 0 };
 
   const settings = props.settings ? props.settings : {};
   const colorScheme = settings.colors ? settings.colors : 'set2';
@@ -56,14 +57,16 @@ const NeoScatterPlot = (props: ChartProps) => {
   const xAxisFormat = settings.xAxisFormat != undefined ? settings.xAxisFormat : undefined;
   const xTickRotationAngle = settings.xTickRotationAngle != undefined ? settings.xTickRotationAngle : 0;
   const yTickRotationAngle = settings.yTickRotationAngle != undefined ? settings.yTickRotationAngle : 0;
+  const colorPicker = chroma.scale(['green', 'yellow', 'red']);
 
   // Compute line color based on rules - overrides default color scheme completely.
   // For line charts, the line color is overridden if at least one value meets the criteria.
   // TODO: define color gradient with min and max intensity and work on Legend
   const getNodeColors = (point) => {
-    let {intensity} = point.node.data;
+    let { intensity } = point.node.data;
 
-    return intensity > 0.5 ? 'red' : 'green';
+    let value = isNaN(intensity) ? 'black' : (intensity - legendRange.min) / (legendRange.max - legendRange.min);
+    return colorPicker(value).toString();
   };
 
   if (!selection.value.length) {
@@ -87,24 +90,39 @@ const NeoScatterPlot = (props: ChartProps) => {
     return isDate(x) || isDateTime(x) || x instanceof Date;
   };
 
+  const intensityList: any[] = [];
+  console.log('adnawondowa');
+
+  // TODO: ideally we want this running only when we load new records and not every resize
   records.forEach((row) => {
+    const intensity: any = row.keys.includes(colorIntensityProp)
+      ? recordToNative(row.get(colorIntensityProp))
+      : undefined;
+
+    if (intensity) {
+      intensityList.push(intensity);
+    }
+
     selection.value.forEach((key) => {
       const index = data.findIndex((item) => (item as Record<string, any>).id === key);
       let x: any = row.get(selection.x) || 0;
-      const y: any = recordToNative(row.get(key)) || 0;
+      let y: any = recordToNative(row.get(key)) || 0;
       if (data[index] && !isNaN(y)) {
         if (isDateTime(x)) {
           x = new Date(x.toString());
         }
-        const intensity: any = row.keys.includes(colorIntensityProp)
-          ? recordToNative(row.get(colorIntensityProp))
-            ? recordToNative(row.get(colorIntensityProp))
-            : 0
-          : 0;
         data[index].data.push({ x, y, intensity });
       }
     });
   });
+
+  // Sorting to get the min and max from list of intesities
+  intensityList.sort((a, b) => {
+    return a - b;
+  });
+
+  legendRange.min = intensityList[0];
+  legendRange.max = intensityList.slice(-1)[0];
 
   // Post-processing validation on the data --> confirm only numeric data was selected by the user.
   let validSelection = true;
@@ -227,36 +245,6 @@ const NeoScatterPlot = (props: ChartProps) => {
         pointBorderColor={{ from: 'serieColor' }}
         pointLabelYOffset={-12}
         useMesh={true}
-        legends={
-          legend
-            ? [
-                {
-                  anchor: 'top-right',
-                  direction: 'row',
-                  justify: false,
-                  translateX: -10,
-                  translateY: -20,
-                  itemsSpacing: 0,
-                  itemDirection: 'right-to-left',
-                  itemWidth: legendWidth,
-                  itemHeight: 20,
-                  itemOpacity: 0.75,
-                  symbolSize: 6,
-                  symbolShape: 'circle',
-                  symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                  effects: [
-                    {
-                      on: 'hover',
-                      style: {
-                        itemBackground: 'rgba(0, 0, 0, .03)',
-                        itemOpacity: 1,
-                      },
-                    },
-                  ],
-                },
-              ]
-            : []
-        }
       />
     </div>
   );
