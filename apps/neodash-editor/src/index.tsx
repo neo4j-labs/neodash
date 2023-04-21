@@ -7,7 +7,7 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import Application from './application/Application';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
-import { Button } from 'ui-aleks';
+import { Button } from 'neodash-core';
 
 /**
  * Set up the NeoDash application and wrap it in the needed providers.

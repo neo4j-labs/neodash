@@ -7,7 +7,10 @@ const rules = [
     test: /\.(js|jsx|ts|tsx)$/,
     exclude: /(node_modules)/,
     loader: 'babel-loader',
-    options: { presets: ['@babel/env'] },
+    options: {
+      rootMode: 'upward',
+      presets: ['@babel/env'],
+    },
   },
   {
     test: /\.css$/i,

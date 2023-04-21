@@ -17,5 +17,5 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["**/src", "packages/ui-aleks"]
+  "include": ["**/src"]
 }
