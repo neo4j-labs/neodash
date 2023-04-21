@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { ChartProps } from '../Chart';
 import { recordToNative } from '../ChartUtils';
-import { ResponsiveScatterPlot } from '@nivo/scatterplot';
+import { ResponsiveScatterPlot, ScatterPlot } from '@nivo/scatterplot';
 import { animated } from '@react-spring/web';
 import chroma from 'chroma-js';
 
@@ -21,24 +21,12 @@ const NeoScatterPlot = (props: ChartProps) => {
     return <div style={{ margin: '15px' }}>No y-axis selected. To view the report, select a value below. </div>;
   }
 
-  if (!selection.value.length) {
-    return <p></p>;
-  }
-
   const [isTimeChart, setIsTimeChart] = React.useState(false);
   const [parseFormat, setParseFormat] = React.useState('%Y-%m-%dT%H:%M:%SZ');
-  const [validSelection, setValidSelection] = React.useState(true);
-  const [data, setData] = React.useState(
-    selection.value.map((key) => ({
-      id: key as string,
-      data: [],
-    }))
-  );
-
-  const [intensityList, setIntensityList] = React.useState<number[]>([]);
-  const [legendRange, setLegendRange] = React.useState({ min: 1, max: 2 });
+  const legendRange = { min: 0, max: 0 };
 
   const settings = props.settings ? props.settings : {};
+  const colorScheme = settings.colors ? settings.colors : 'set2';
 
   const pointSize = settings.pointSize ? settings.pointSize : 10;
   const showGrid = settings.showGrid != undefined ? settings.showGrid : true;
@@ -54,6 +42,8 @@ const NeoScatterPlot = (props: ChartProps) => {
   const minYValue = settings.minYValue ? settings.minYValue : 'auto';
   const maxYValue = settings.maxYValue ? settings.maxYValue : 'auto';
 
+  const legend = settings.legend != undefined ? settings.legend : false;
+  const legendWidth = settings.legendWidth ? settings.legendWidth : 70;
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 36;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
@@ -71,13 +61,22 @@ const NeoScatterPlot = (props: ChartProps) => {
 
   // Compute line color based on rules - overrides default color scheme completely.
   // For line charts, the line color is overridden if at least one value meets the criteria.
-  // TODO:  work on Legend
+  // TODO: define color gradient with min and max intensity and work on Legend
   const getNodeColors = (point) => {
     let { intensity } = point.node.data;
 
     let value = isNaN(intensity) ? 'black' : (intensity - legendRange.min) / (legendRange.max - legendRange.min);
     return colorPicker(value).toString();
   };
+
+  if (!selection.value.length) {
+    return <p></p>;
+  }
+
+  const data = selection.value.map((key) => ({
+    id: key as string,
+    data: [],
+  }));
 
   const isDate = (x) => {
     return x.__isDate__;
@@ -91,61 +90,54 @@ const NeoScatterPlot = (props: ChartProps) => {
     return isDate(x) || isDateTime(x) || x instanceof Date;
   };
 
-  useEffect(() => {
-    let tmp = selection.value.map((key) => ({
-      id: key as string,
-      data: [],
-    }));
+  const intensityList: any[] = [];
+  console.log('adnawondowa');
 
-    let tmpIntensityList: any[] = [];
+  // TODO: ideally we want this running only when we load new records and not every resize
+  records.forEach((row) => {
+    const intensity: any = row.keys.includes(colorIntensityProp)
+      ? recordToNative(row.get(colorIntensityProp))
+      : undefined;
 
-    records.forEach((row) => {
-      const intensity: any = row.keys.includes(colorIntensityProp)
-        ? recordToNative(row.get(colorIntensityProp))
-        : undefined;
+    if (intensity) {
+      intensityList.push(intensity);
+    }
 
-      if (intensity) {
-        tmpIntensityList.push(intensity);
-      }
-
-      selection.value.forEach((key) => {
-        const index = tmp.findIndex((item) => (item as Record<string, any>).id === key);
-        let x: any = row.get(selection.x) || 0;
-        let y: any = recordToNative(row.get(key)) || 0;
-        if (tmp[index] && !isNaN(y)) {
-          if (isDateTime(x)) {
-            x = new Date(x.toString());
-          }
-          tmp[index].data.push({ x, y, intensity });
+    selection.value.forEach((key) => {
+      const index = data.findIndex((item) => (item as Record<string, any>).id === key);
+      let x: any = row.get(selection.x) || 0;
+      let y: any = recordToNative(row.get(key)) || 0;
+      if (data[index] && !isNaN(y)) {
+        if (isDateTime(x)) {
+          x = new Date(x.toString());
         }
-      });
+        data[index].data.push({ x, y, intensity });
+      }
     });
+  });
 
-    setValidSelection(
-      !data.some((selected) => {
-        selected.data.length == 0;
-      })
-    );
-    setData(tmp);
-    setIntensityList(tmpIntensityList);
-  }, [selection]);
+  // Sorting to get the min and max from list of intesities
+  intensityList.sort((a, b) => {
+    return a - b;
+  });
 
-  // Resetting the legend range
-  useEffect(() => {
-    let tmp = [...intensityList].sort((a, b) => {
-      return a - b;
-    });
-    setLegendRange({ min: tmp[0], max: tmp.slice(-1)[0] });
-  }, [intensityList]);
+  legendRange.min = intensityList[0];
+  legendRange.max = intensityList.slice(-1)[0];
 
   // Post-processing validation on the data --> confirm only numeric data was selected by the user.
+  let validSelection = true;
+  data.forEach((selected) => {
+    if (selected.data.length == 0) {
+      validSelection = false;
+    }
+  });
+
   if (!validSelection) {
     return <NoDrawableDataErrorMessage />;
   }
 
   // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
   // Therefore, we now require a manual refresh.
-  // doesn't seem true from testing mmmmmmm
 
   const chartIsTimeChart =
     data[0] !== undefined &&
@@ -154,6 +146,7 @@ const NeoScatterPlot = (props: ChartProps) => {
     isDateTimeOrDate(data[0].data[0].x);
 
   if (isTimeChart !== chartIsTimeChart) {
+    // doesn't seem true from testing mmmmmmm
     if (!chartIsTimeChart) {
       return (
         <div style={{ margin: '15px' }}>
@@ -194,12 +187,14 @@ const NeoScatterPlot = (props: ChartProps) => {
       cy={node.style.y}
       r={node.style.size.to((size) => size / 2)}
       fill={getNodeColors(node)}
+      style={{ mixBlendMode: node.blendMode }}
     />
   );
+
   const scatterPlotViz = (
     <div className='h-full w-full overflow-hidden' style={{ height: '100%' }}>
       <ResponsiveScatterPlot
-        data={[...data]}
+        data={data}
         xScale={
           isTimeChart
             ? { format: parseFormat, type: 'time' }
