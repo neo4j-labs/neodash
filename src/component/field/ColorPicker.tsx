@@ -14,7 +14,7 @@ const NeoColorPicker = ({ label, style, value, onChange, key, defaultValue, plac
       InputProps={{
         value: value ? value : '',
         placeholder: defaultValue,
-        color: value ? value : 'black',
+        color: value ? value : '#ffffff',
       }}
       InputLabelProps={{
         shrink: true,

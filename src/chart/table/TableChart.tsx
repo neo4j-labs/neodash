@@ -179,6 +179,7 @@ const NeoTableChart = (props: ChartProps) => {
             navigator.clipboard.writeText(e.value);
           }}
           pageSize={tablePageSize}
+          rowsPerPageOptions={[5]}
           disableSelectionOnClick
           components={{
             ColumnSortedDescendingIcon: () => <></>,

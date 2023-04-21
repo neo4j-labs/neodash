@@ -187,6 +187,7 @@ export const NeoCustomReportStyleModal = ({
       {customReportStyleModalOpen ? (
         <Dialog
           size='large'
+          style={{ maxWidth: '65rem' }}
           open={customReportStyleModalOpen == true}
           onClose={handleClose}
           aria-labelledby='form-dialog-title'
@@ -236,15 +237,12 @@ export const NeoCustomReportStyleModal = ({
                         <div style={{ border: '2px dashed grey' }}>
                           <td
                             style={{
-                              paddingLeft: '5px',
-                              paddingRight: '5px',
-                              paddingTop: '5px',
-                              paddingBottom: '5px',
+                              padding: '5px',
                             }}
                           >
                             <Autocomplete
                               disableClearable={true}
-                              id={`autocomplete-label-type${  index}`}
+                              id={`autocomplete-label-type${index}`}
                               noOptionsText='*Specify an exact field name'
                               options={createFieldVariableSuggestions().filter((e) =>
                                 e.toLowerCase().includes(rule.field.toLowerCase())
@@ -252,7 +250,7 @@ export const NeoCustomReportStyleModal = ({
                               value={rule.field ? rule.field : ''}
                               inputValue={rule.field ? rule.field : ''}
                               popupIcon={<></>}
-                              style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
+                              style={{ display: 'inline-block', width: 185, marginLeft: '5px' }}
                               onInputChange={(event, value) => {
                                 updateRuleField(index, 'field', value);
                               }}
@@ -264,14 +262,17 @@ export const NeoCustomReportStyleModal = ({
                                   {...params}
                                   placeholder='Field name...'
                                   InputLabelProps={{ shrink: true }}
+                                  style={{ padding: '6px 0 7px' }}
                                   size={'small'}
+                                  variant={'standard'}
                                 />
                               )}
                             />
                           </td>
-                          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                          <td style={{ padding: '5px' }}>
                             <TextField
                               size={'small'}
+                              variant={'standard'}
                               select
                               value={rule.condition}
                               onChange={(e) => updateRuleField(index, 'condition', e.target.value)}
@@ -283,11 +284,12 @@ export const NeoCustomReportStyleModal = ({
                               ))}
                             </TextField>
                           </td>
-                          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                          <td style={{ padding: '5px' }}>
                             <TextField
                               placeholder='Value...'
                               value={rule.value}
                               size={'small'}
+                              variant={'standard'}
                               onChange={(e) => updateRuleField(index, 'value', e.target.value)}
                             ></TextField>
                           </td>
@@ -298,16 +300,15 @@ export const NeoCustomReportStyleModal = ({
                         <div style={{ border: '2px dashed grey', marginBottom: '5px' }}>
                           <td
                             style={{
-                              paddingLeft: '5px',
-                              paddingRight: '5px',
-                              paddingTop: '5px',
-                              paddingBottom: '5px',
+                              padding: '5px',
                             }}
                           >
                             <TextField
                               select
                               value={rule.customization}
                               size={'small'}
+                              variant={'standard'}
+                              style={{ marginLeft: '5px' }}
                               onChange={(e) => updateRuleField(index, 'customization', e.target.value)}
                             >
                               {RULE_BASED_REPORT_CUSTOMIZATIONS[type] &&
@@ -320,10 +321,7 @@ export const NeoCustomReportStyleModal = ({
                           </td>
                           <td
                             style={{
-                              paddingLeft: '5px',
-                              paddingRight: '5px',
-                              paddingTop: '5px',
-                              paddingBottom: '5px',
+                              padding: '5px',
                             }}
                           >
                             <TextField
@@ -331,12 +329,13 @@ export const NeoCustomReportStyleModal = ({
                               disabled={true}
                               value={'='}
                               size={'small'}
+                              variant={'standard'}
                             ></TextField>
                           </td>
-                          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                          <td style={{ padding: '5px' }}>
                             <NeoColorPicker
                               label=''
-                              defaultValue='black'
+                              defaultValue='#ffffff'
                               key={undefined}
                               style={{ width: '200px' }}
                               value={rule.customizationValue}

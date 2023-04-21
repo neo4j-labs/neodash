@@ -71,7 +71,7 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
           style={{ opacity: selected && !disabled ? 1 : 0 }}
           clean
         >
-          <XMarkIconOutline />
+          <XMarkIconOutline aria-label='move left mark' />
         </IconButton>
       </div>
       <NeoDeletePageModal modalOpen={modalOpen} onRemove={onRemove} handleClose={handleClose}></NeoDeletePageModal>

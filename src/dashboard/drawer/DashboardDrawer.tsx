@@ -72,7 +72,8 @@ export const NeoDrawer = ({
             <SideNavigationItem
               href='https://neo4j.com/labs/neodash/2.2/user-guide/'
               target='_blank'
-              icon={<BookOpenIconOutline className={navItemClass} />}
+              icon={<BookOpenIconOutline className={navItemClass} aria-label={'side book'} />}
+              aria-label={'side docs'}
             >
               Documentation
             </SideNavigationItem>
@@ -80,7 +81,8 @@ export const NeoDrawer = ({
           <Tooltip title='About' aria-label='about'>
             <SideNavigationItem
               onClick={onAboutModalOpen}
-              icon={<InformationCircleIconOutline className={navItemClass} />}
+              icon={<InformationCircleIconOutline className={navItemClass} aria-label={'side info'} />}
+              aria-label={'side about'}
             >
               About
             </SideNavigationItem>

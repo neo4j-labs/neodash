@@ -180,6 +180,7 @@ const NeoGraphChart = (props: ChartProps) => {
     <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
         <IconButtonArray
+          aria-label={'graph icon'}
           floating
           orientation='horizontal'
           style={{ position: 'absolute', bottom: '15px', right: '15px', zIndex: 50 }}

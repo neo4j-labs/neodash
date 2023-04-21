@@ -19,6 +19,7 @@ export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
       {savedSSOProviders?.length ? (
         savedSSOProviders.map((provider) => (
           <IconButton
+            aria-label={'sso select'}
             key={provider.id}
             style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'white' }}
             onClick={() => {
@@ -28,7 +29,7 @@ export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
             }}
           >
             Sign in
-            <ShieldCheckIconOutline className='btn-icon-base-r' />
+            <ShieldCheckIconOutline className='btn-icon-base-r' aria-label={'Shield'} />
           </IconButton>
         ))
       ) : (

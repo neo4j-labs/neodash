@@ -30,16 +30,18 @@ export const NeoPage = ({
     return `${pagenumber}:${index}`;
   };
 
-  const defaultLayouts = [
-    {
-      x: 0,
-      y: 0,
-      i: getReportIndex(pagenumber, 999999),
-      w: 3,
-      h: 2,
-      isDraggable: false,
-    },
-  ];
+  const defaultLayouts = {
+    lg: [
+      {
+        x: 0,
+        y: 0,
+        i: getReportIndex(pagenumber, 999999),
+        w: 3,
+        h: 2,
+        isDraggable: false,
+      },
+    ],
+  };
 
   const loadingMessage = <div>Loading card...</div>;
   const [isDragging, setIsDragging] = React.useState(false);

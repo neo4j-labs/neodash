@@ -48,12 +48,13 @@ export const NeoDashboardHeaderTitleBar = ({
       {downloadImageEnabled ? (
         <Tooltip title={'Download Dashboard as Image'}>
           <IconButton
+            aria-label={'camera'}
             style={{ marginRight: '3px', background: '#ffffff22' }}
             onClick={() => onDownloadImage()}
             size='large'
             clean
           >
-            <CameraIconSolid className='n-text-light-neutral-bg-weak' />
+            <CameraIconSolid className='n-text-light-neutral-bg-weak' aria-label={'camera icon'} />
           </IconButton>
         </Tooltip>
       ) : (
@@ -67,6 +68,7 @@ export const NeoDashboardHeaderTitleBar = ({
       >
         <IconButton
           className='logo-btn'
+          aria-label={'connection '}
           style={{ background: '#ffffff22', padding: '3px' }}
           onClick={() => {
             if (!standalone) {

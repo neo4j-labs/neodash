@@ -17,7 +17,7 @@ export const NeoPageAddButton = ({ onClick }) => {
       <Grid style={{ cursor: 'pointer', height: '100%' }} container spacing={1} alignItems='flex-end'>
         <Grid item>
           <IconButton style={{ padding: '5px' }} aria-label='move left' onClick={onClick} clean>
-            <PlusIconOutline />
+            <PlusIconOutline aria-label={'move left plus'} />
           </IconButton>
         </Grid>
       </Grid>

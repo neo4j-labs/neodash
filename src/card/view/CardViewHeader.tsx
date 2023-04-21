@@ -72,7 +72,7 @@ const NeoCardViewHeader = ({
           <tr>
             {editable ? (
               <td>
-                <IconButton className='n-mb-3' clean size='medium'>
+                <IconButton className='n-mb-3' clean size='medium' aria-label={'drag'}>
                   <DragIcon className='drag-handle' />
                 </IconButton>
               </td>
@@ -169,7 +169,11 @@ const NeoCardViewHeader = ({
       >
         <DialogTitle id='form-dialog-title'>
           {title}
-          <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
+          <IconButton
+            onClick={() => setDescriptionModalOpen(false)}
+            style={{ padding: '3px', float: 'right' }}
+            aria-label={'rect badge'}
+          >
             <Badge overlap='rectangular' badgeContent={''}>
               <Close />
             </Badge>

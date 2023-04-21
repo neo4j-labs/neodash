@@ -1,9 +1,9 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableRow } from '@material-ui/core';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { getEntityHeader } from '../util/NodeUtils';
 import { Dialog } from '@neo4j-ndl/react';
-import {} from '@neo4j-ndl/react/icons';
+// import  Dialog from '@material-ui/core/Dialog';
 
 export const formatProperty = (property) => {
   if (property.startsWith('http://') || property.startsWith('https://')) {

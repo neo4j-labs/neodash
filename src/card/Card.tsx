@@ -123,7 +123,7 @@ const NeoCard = ({
       className='bg-light-neutral-bg-weak overflow-hidden n-shadow-l4 border-2 border-light-neutral-border-strong min-w-max rounded-lg px-4 py-5 sm:p-6'
     >
       {/* The front of the card, referred to as the 'view' */}
-      <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
+      <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
         <Card ref={ref} style={{ height: '100%' }}>
           <NeoCardView
             settingsOpen={settingsOpen}
@@ -159,7 +159,7 @@ const NeoCard = ({
         </Card>
       </Collapse>
       {/* The back of the card, referred to as the 'settings' */}
-      <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout}>
+      <Collapse disablestrictmodecompat='true' in={settingsOpen} timeout={collapseTimeout}>
         <Card style={{ height: '100%' }}>
           <NeoCardSettings
             settingsOpen={settingsOpen}

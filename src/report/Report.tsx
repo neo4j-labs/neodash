@@ -220,6 +220,7 @@ export const NeoReport = ({
               aria-label='host'
             >
               <ExclamationTriangleIconSolid
+                aria-label={'Exclamation'}
                 className='icon-base'
                 style={{ zIndex: 999, marginTop: '2px', marginRight: '20px', marginLeft: 'auto', color: 'orange' }}
               />

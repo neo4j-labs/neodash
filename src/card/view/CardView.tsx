@@ -186,7 +186,7 @@ const NeoCardView = ({
             }}
             clean
           >
-            <PlayCircleIconSolid className='n-w-5 n-h-5' />
+            <PlayCircleIconSolid className='n-w-5 n-h-5' aria-label={'play'} />
           </IconButton>
           <NeoCodeEditorComponent
             value={query}

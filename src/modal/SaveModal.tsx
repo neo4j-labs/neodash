@@ -104,7 +104,7 @@ export const NeoSaveModal = ({
 
       <Dialog size='large' open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          <CloudArrowDownIconOutline className='icon-base icon-inline text-r' />
+          <CloudArrowDownIconOutline className='icon-base icon-inline text-r' aria-label={'save cloud'} />
           Save Dashboard
         </Dialog.Header>
         <Dialog.Content>
@@ -122,7 +122,7 @@ export const NeoSaveModal = ({
             </Button>
             <Button onClick={downloadDashboard} fill='outlined' color='neutral' style={{ marginLeft: '10px' }} floating>
               Save to file
-              <DocumentArrowDownIconOutline className='btn-icon-base-r' />
+              <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
             </Button>
           </div>
           <TextareaAutosize
@@ -195,7 +195,7 @@ export const NeoSaveModal = ({
             fill='outlined'
             floating
           >
-            <BackspaceIconOutline className='btn-icon-base-l' />
+            <BackspaceIconOutline className='btn-icon-base-l' aria-label={'save back'} />
             Cancel
           </Button>
           <Button

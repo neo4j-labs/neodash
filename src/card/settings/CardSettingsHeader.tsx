@@ -36,22 +36,22 @@ const NeoCardSettingsHeader = ({
     <CardHeader
       avatar={
         <div style={{ marginTop: '-8px', paddingBottom: '1px' }}>
-          <IconButton clean size='medium'>
-            <DragIcon className='drag-handle' />
+          <IconButton clean size='medium' aria-label={'card drag'}>
+            <DragIcon className='drag-handle' aria-label={'card drag icon'} />
           </IconButton>
           <Tooltip title='Help' aria-label='help'>
             <IconButton aria-label='help' onClick={onReportHelpButtonPressed} clean size='medium'>
-              <QuestionMarkCircleIconOutline />
+              <QuestionMarkCircleIconOutline aria-label={'help mark'} />
             </IconButton>
           </Tooltip>
           <Tooltip title='Delete' aria-label='delete'>
             <IconButton style={{ color: 'red' }} aria-label='remove' onClick={onRemovePressed} clean size='medium'>
-              <TrashIconOutline />
+              <TrashIconOutline aria-label={'remove trash'} />
             </IconButton>
           </Tooltip>
           <Tooltip title='Clone' aria-label='clone'>
             <IconButton style={{ color: 'green' }} aria-label='clone' onClick={onClonePressed} clean size='medium'>
-              <DocumentDuplicateIconOutline />
+              <DocumentDuplicateIconOutline aria-label={'clone docs'} />
             </IconButton>
           </Tooltip>
         </div>
