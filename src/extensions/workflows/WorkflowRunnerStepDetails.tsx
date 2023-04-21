@@ -41,9 +41,9 @@ const NeoWorkflowRunnerStepDetails = ({ step, result }) => {
       <div style={{ width: '100%', height: '500' }}>
         {view == views.QUERY ? (
           <TextareaAutosize
-            style={{ width: '100%', height: '80px !important', border: '1px solid lightgray' }}
-            maxRows={1}
-            minRows={1}
+            style={{ width: '100%', height: '360px !important', border: '1px solid lightgray' }}
+            maxRows={22}
+            minRows={22}
             className={'textinput-linenumbers'}
             value={step.query}
             aria-label=''
@@ -54,7 +54,9 @@ const NeoWorkflowRunnerStepDetails = ({ step, result }) => {
         )}
 
         {view == views.DATA ? (
-          <Chart records={result} dimensions={{ width: 500, height: 500 }} settings={{}} fields={[]}></Chart>
+          <div style={{ height: '380px', width: '100%', marginTop: '0px', marginBottom: '-12px', overflow: 'auto' }}>
+            <Chart records={result} dimensions={{ width: 400, height: 400 }} settings={{}} fields={[]}></Chart>
+          </div>
         ) : (
           <></>
         )}
