@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
-import { InputBase } from '@material-ui/core';
+import { InputBase, Grid } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
-import CloseIcon from '@material-ui/icons/Close';
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
 

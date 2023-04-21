@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { replaceDashboardParametersInString } from '../../../ChartUtils';
 import { GraphChartVisualizationProps } from '../../GraphChartVisualization';
 import { IconButton } from '@neo4j-ndl/react';

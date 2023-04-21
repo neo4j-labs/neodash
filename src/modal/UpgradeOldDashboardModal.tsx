@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextareaAutosize } from '@mui/material';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { TrashIconOutline, PlayIconSolid } from '@neo4j-ndl/react/icons';
 

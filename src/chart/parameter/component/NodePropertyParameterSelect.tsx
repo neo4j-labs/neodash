@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { debounce, TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { debounce, TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {

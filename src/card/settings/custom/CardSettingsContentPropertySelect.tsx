@@ -4,8 +4,7 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { debounce, MenuItem, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, debounce, TextField } from '@mui/material';
 import NeoField from '../../../component/field/Field';
 import { getReportTypes } from '../../../extensions/ExtensionUtils';
 import { TextInput, Dropdown } from '@neo4j-ndl/react';
@@ -215,6 +214,7 @@ const NeoCardSettingsContentPropertySelect = ({
         type='select'
         fluid
         autoFocus
+        style={{ marginTop: '5px' }}
       />
 
       {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
@@ -224,7 +224,7 @@ const NeoCardSettingsContentPropertySelect = ({
           value={settings.entityType ? settings.entityType : ''}
           defaultValue={''}
           placeholder={'Enter a parameter name here...'}
-          style={{ width: 335, marginLeft: '5px', marginTop: '0px' }}
+          style={{ width: 335, marginLeft: '5px', marginTop: '13px' }}
           onChange={(value) => {
             setLabelInputText(value);
             handleNodeLabelSelectionUpdate(value);
@@ -241,7 +241,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 : labelRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
             }
             getOptionLabel={(option) => option || ''}
-            style={{ width: 350, marginLeft: '5px', marginTop: '5px' }}
+            style={{ width: 350, marginLeft: '5px', marginTop: '13px' }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
               setLabelInputText(value);
@@ -261,6 +261,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 );
               }
             }}
+            size={'small'}
             value={settings.entityType ? settings.entityType : undefined}
             onChange={(event, newValue) => handleNodeLabelSelectionUpdate(newValue)}
             renderInput={(params) => (
@@ -283,7 +284,7 @@ const NeoCardSettingsContentPropertySelect = ({
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
                 getOptionLabel={(option) => (option ? option : '')}
-                style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '5px' }}
+                style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '13px' }}
                 inputValue={propertyInputText}
                 onInputChange={(event, value) => {
                   setPropertyInputText(value);
@@ -298,6 +299,7 @@ const NeoCardSettingsContentPropertySelect = ({
                     );
                   }
                 }}
+                size={'small'}
                 value={settings.propertyType}
                 onChange={(event, newValue) => handlePropertyNameSelectionUpdate(newValue)}
                 renderInput={(params) => (
@@ -318,7 +320,7 @@ const NeoCardSettingsContentPropertySelect = ({
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
                   getOptionLabel={(option) => (option ? option : '')}
-                  style={{ display: 'inline-block', width: 170, marginLeft: '10px', marginTop: '5px' }}
+                  style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '13px' }}
                   inputValue={propertyInputDisplayText}
                   onInputChange={(event, value) => {
                     setPropertyInputDisplayText(value);
@@ -351,10 +353,11 @@ const NeoCardSettingsContentPropertySelect = ({
                 label='Number (optional)'
                 disabled={!settings.propertyType}
                 value={settings.id}
-                style={{ width: '170px', marginTop: '5px', marginLeft: '5px' }}
+                style={{ width: '170px', marginTop: '13px', marginLeft: '5px' }}
                 onChange={(value) => {
                   handleIdSelectionUpdate(value);
                 }}
+                size={'small'}
               />
             </>
           ) : (

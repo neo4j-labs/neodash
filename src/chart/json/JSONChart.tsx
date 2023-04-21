@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChartProps } from '../Chart';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextareaAutosize } from '@mui/material';
 /**
  * Renders Neo4j records as their JSON representation.
  */

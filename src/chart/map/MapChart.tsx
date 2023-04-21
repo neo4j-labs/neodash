@@ -6,7 +6,7 @@ import { MapContainer, Polyline, Popup, TileLayer, Tooltip } from 'react-leaflet
 import { HeatmapLayer } from 'react-leaflet-heatmap-layer-v3';
 import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import { LocationOn } from '@mui/icons-material';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
@@ -274,7 +274,7 @@ const NeoMapChart = (props: ChartProps) => {
           key={i}
           icon={
             <div style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop }}>
-              <LocationOnIcon fontSize={node.size}></LocationOnIcon>
+              <LocationOn fontSize={node.size}></LocationOn>
             </div>
           }
         >

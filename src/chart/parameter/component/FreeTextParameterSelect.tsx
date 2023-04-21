@@ -1,5 +1,4 @@
-import { debounce } from '@material-ui/core';
-import CircularProgress from '@mui/material/CircularProgress';
+import { debounce, CircularProgress } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
 import { ParameterSelectProps } from './ParameterSelect';
 import NeoField from '../../../component/field/Field';

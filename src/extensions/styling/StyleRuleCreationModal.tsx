@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import { Fab, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Autocomplete, TextField, MenuItem } from '@mui/material';
 import NeoColorPicker from '../../component/field/ColorPicker';
-import { Autocomplete } from '@material-ui/lab';
 import { IconButton, Button, Dialog } from '@neo4j-ndl/react';
 import {
   AdjustmentsHorizontalIconOutline,
@@ -9,6 +8,7 @@ import {
   PlusIconOutline,
   PlayIconSolid,
 } from '@neo4j-ndl/react/icons';
+import { withStyles } from '@mui/styles';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = [
@@ -192,7 +192,7 @@ export const NeoCustomReportStyleModal = ({
           aria-labelledby='form-dialog-title'
         >
           <Dialog.Header id='form-dialog-title'>
-            <AdjustmentsHorizontalIconOutline className='icon-base icon-inline text-r' />
+            <AdjustmentsHorizontalIconOutline className='icon-base icon-inline text-r' aria-label={'Adjust'} />
             Rule-Based Styling
           </Dialog.Header>
           <Dialog.Content style={{ overflow: 'inherit' }}>
@@ -223,9 +223,9 @@ export const NeoCustomReportStyleModal = ({
               <hr></hr>
 
               <table>
-                {rules.map((rule, index) => {
-                  return (
-                    <>
+                <tbody>
+                  {rules.map((rule, index) => {
+                    return (
                       <tr>
                         <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
                           <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
@@ -244,7 +244,7 @@ export const NeoCustomReportStyleModal = ({
                           >
                             <Autocomplete
                               disableClearable={true}
-                              id='autocomplete-label-type'
+                              id={`autocomplete-label-type${  index}`}
                               noOptionsText='*Specify an exact field name'
                               options={createFieldVariableSuggestions().filter((e) =>
                                 e.toLowerCase().includes(rule.field.toLowerCase())
@@ -260,12 +260,18 @@ export const NeoCustomReportStyleModal = ({
                                 updateRuleField(index, 'field', newValue);
                               }}
                               renderInput={(params) => (
-                                <TextField {...params} placeholder='Field name...' InputLabelProps={{ shrink: true }} />
+                                <TextField
+                                  {...params}
+                                  placeholder='Field name...'
+                                  InputLabelProps={{ shrink: true }}
+                                  size={'small'}
+                                />
                               )}
                             />
                           </td>
                           <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
                             <TextField
+                              size={'small'}
                               select
                               value={rule.condition}
                               onChange={(e) => updateRuleField(index, 'condition', e.target.value)}
@@ -281,6 +287,7 @@ export const NeoCustomReportStyleModal = ({
                             <TextField
                               placeholder='Value...'
                               value={rule.value}
+                              size={'small'}
                               onChange={(e) => updateRuleField(index, 'value', e.target.value)}
                             ></TextField>
                           </td>
@@ -300,6 +307,7 @@ export const NeoCustomReportStyleModal = ({
                             <TextField
                               select
                               value={rule.customization}
+                              size={'small'}
                               onChange={(e) => updateRuleField(index, 'customization', e.target.value)}
                             >
                               {RULE_BASED_REPORT_CUSTOMIZATIONS[type] &&
@@ -322,6 +330,7 @@ export const NeoCustomReportStyleModal = ({
                               style={{ width: '20px', color: 'black' }}
                               disabled={true}
                               value={'='}
+                              size={'small'}
                             ></TextField>
                           </td>
                           <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
@@ -336,33 +345,39 @@ export const NeoCustomReportStyleModal = ({
                           </td>
                         </div>
                         <td>
-                          <IconButton aria-label='remove rule' size='medium' floating>
-                            <XMarkIconOutline
-                              onClick={() => {
-                                setRules([...rules.slice(0, index), ...rules.slice(index + 1)]);
-                              }}
-                            />
+                          <IconButton
+                            aria-label='remove rule'
+                            size='medium'
+                            floating
+                            onClick={() => {
+                              setRules([...rules.slice(0, index), ...rules.slice(index + 1)]);
+                            }}
+                          >
+                            <XMarkIconOutline />
                           </IconButton>
                         </td>
                       </tr>
-                    </>
-                  );
-                })}
+                    );
+                  })}
 
-                <tr>
-                  <td style={{ borderBottom: '1px solid grey', width: '750px' }} colSpan={5}>
-                    <div style={{ textAlign: 'center', marginBottom: '5px' }}>
-                      <IconButton aria-label='add' size='medium' floating>
-                        <PlusIconOutline
+                  <tr>
+                    <td style={{ borderBottom: '1px solid grey', width: '750px' }} colSpan={5}>
+                      <div style={{ textAlign: 'center', marginBottom: '5px' }}>
+                        <IconButton
+                          aria-label='add'
+                          size='medium'
+                          floating
                           onClick={() => {
                             const newRule = getDefaultRule(RULE_BASED_REPORT_CUSTOMIZATIONS[type][0].value);
                             setRules(rules.concat(newRule));
                           }}
-                        />
-                      </IconButton>
-                    </div>
-                  </td>
-                </tr>
+                        >
+                          <PlusIconOutline />
+                        </IconButton>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </Dialog.Content>
@@ -386,4 +401,4 @@ export const NeoCustomReportStyleModal = ({
   );
 };
 
-export default NeoCustomReportStyleModal;
+export default withStyles({})(NeoCustomReportStyleModal);

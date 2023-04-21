@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { FormGroup, Tooltip } from '@material-ui/core';
+import { FormGroup, Tooltip } from '@mui/material';
 import NeoSetting from '../../component/field/Setting';
 import {
   NeoCustomReportStyleModal,

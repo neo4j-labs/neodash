@@ -3,7 +3,7 @@ import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import NeoReport from '../../report/Report';
-import { CardContent } from '@material-ui/core';
+import { CardContent } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';

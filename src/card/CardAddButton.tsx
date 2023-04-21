@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardContent } from '@material-ui/core';
+import { Card, CardContent } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
 import { SquaresPlusIconOutline } from '@neo4j-ndl/react/icons';
 

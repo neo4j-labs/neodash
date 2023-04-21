@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { PlayIconSolid, AdjustmentsVerticalIconOutline, BackspaceIconOutline } from '@neo4j-ndl/react/icons';

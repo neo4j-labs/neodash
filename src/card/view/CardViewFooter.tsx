@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardActions, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { CardActions, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../../config/CardConfig';
@@ -31,7 +31,7 @@ const NeoCardViewFooter = ({
       style={{
         position: 'relative',
         paddingLeft: '15px',
-        marginTop: selectableFields[selectables[0]].type == SELECTION_TYPES.NODE_PROPERTIES ? '-5px' : '-18px',
+        marginTop: selectableFields[selectables[0]].type == SELECTION_TYPES.NODE_PROPERTIES ? '-5px' : '-23px',
         overflowX: 'scroll',
       }}
       disableSpacing
@@ -63,7 +63,7 @@ const NeoCardViewFooter = ({
                   ? categoricalColorSchemes[nodeColorScheme][i % totalColors]
                   : 'lightgrey';
               return (
-                <FormControl key={nodeLabel}>
+                <FormControl key={nodeLabel} size={'small'}>
                   <InputLabel style={{ paddingLeft: '10px' }} id={nodeLabel}>
                     {nodeLabel}
                   </InputLabel>
@@ -104,7 +104,7 @@ const NeoCardViewFooter = ({
 
             const fieldsToRender = selectionIsMandatory ? sortedFields : sortedFields.concat(['(none)']);
             return (
-              <FormControl key={index}>
+              <FormControl key={index} size={'small'}>
                 <Dropdown
                   id={selectable}
                   label={selectableFields[selectable].label}

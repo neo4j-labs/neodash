@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { SideNavigationItem } from '@neo4j-ndl/react';

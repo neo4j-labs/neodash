@@ -39,13 +39,17 @@
   padding-right: 10px !important;
 }
 
+.MuiFormControl-root {
+  padding-top: 8px !important;
+}
+
 .large input {
   font-size: 20px;
   margin-top: -6px;
 }
 
 .MuiChip-root {
-  border-radius: 16px;
+  border-radius: 16px !important;
 }
 
 .CodeMirror-lint-message-error {

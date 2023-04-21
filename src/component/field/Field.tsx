@@ -1,4 +1,4 @@
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import React from 'react';
 import { Dropdown } from '@neo4j-ndl/react';
 
@@ -19,6 +19,7 @@ const NeoField = ({
   defaultValue = undefined,
   multiline = false,
   placeholder = '',
+  size = 'small',
 }) => {
   return select === true ? (
     <Dropdown
@@ -34,6 +35,7 @@ const NeoField = ({
       disabled={disabled}
       helpText={helperText}
       placeholder={placeholder}
+      size={size}
     ></Dropdown>
   ) : (
     <TextField
@@ -66,6 +68,7 @@ const NeoField = ({
         }
       }}
       placeholder={placeholder}
+      size={size}
     >
       {choices}
     </TextField>

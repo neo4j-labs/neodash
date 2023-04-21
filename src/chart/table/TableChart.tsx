@@ -6,19 +6,26 @@ import {
   generateClassDefinitionsBasedOnRules,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, Snackbar } from '@mui/material';
 import { downloadCSV } from '../ChartUtils';
 import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+
+import { Close } from '@mui/icons-material';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { IconButton } from '@neo4j-ndl/react';
 import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "'Nunito Sans', sans-serif !important",
+  },
+});
 
 function ApplyColumnType(column, value) {
   const renderer = getRendererForValue(value);
@@ -125,68 +132,70 @@ const NeoTableChart = (props: ChartProps) => {
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
   return (
-    <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        open={notificationOpen}
-        autoHideDuration={2000}
-        onClose={() => setNotificationOpen(false)}
-        message='Value copied to clipboard.'
-        action={
-          <React.Fragment>
-            <IconButton size='small' aria-label='close' color='inherit' onClick={() => setNotificationOpen(false)}>
-              <CloseIcon fontSize='small' />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
+    <ThemeProvider theme={theme}>
+      <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={notificationOpen}
+          autoHideDuration={2000}
+          onClose={() => setNotificationOpen(false)}
+          message='Value copied to clipboard.'
+          action={
+            <React.Fragment>
+              <IconButton size='small' aria-label='close' color='inherit' onClick={() => setNotificationOpen(false)}>
+                <Close fontSize='small' />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
 
-      {allowDownload && rows && rows.length > 0 ? (
-        <Tooltip title='Download CSV' aria-label=''>
-          <IconButton
-            onClick={() => {
-              downloadCSV(rows, separator);
-            }}
-            aria-label='download csv'
-            style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
-            clean
-          >
-            <CloudArrowDownIconOutline />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <></>
-      )}
-      <DataGrid
-        headerHeight={32}
-        rowHeight={tableRowHeight}
-        rows={rows}
-        columns={columns}
-        columnVisibilityModel={hiddenColumns}
-        onCellDoubleClick={(e) => {
-          setNotificationOpen(true);
-          navigator.clipboard.writeText(e.value);
-        }}
-        pageSize={tablePageSize}
-        disableSelectionOnClick
-        components={{
-          ColumnSortedDescendingIcon: () => <></>,
-          ColumnSortedAscendingIcon: () => <></>,
-        }}
-        getRowClassName={(params) => {
-          return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
-        }}
-        getCellClassName={(params) => {
-          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
-            'cell color',
-            'cell text color',
-          ])}`;
-        }}
-      />
-    </div>
+        {allowDownload && rows && rows.length > 0 ? (
+          <Tooltip title='Download CSV' aria-label=''>
+            <IconButton
+              onClick={() => {
+                downloadCSV(rows, separator);
+              }}
+              aria-label='download csv'
+              style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
+              clean
+            >
+              <CloudArrowDownIconOutline />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <></>
+        )}
+        <DataGrid
+          headerHeight={32}
+          rowHeight={tableRowHeight}
+          rows={rows}
+          columns={columns}
+          columnVisibilityModel={hiddenColumns}
+          onCellDoubleClick={(e) => {
+            setNotificationOpen(true);
+            navigator.clipboard.writeText(e.value);
+          }}
+          pageSize={tablePageSize}
+          disableSelectionOnClick
+          components={{
+            ColumnSortedDescendingIcon: () => <></>,
+            ColumnSortedAscendingIcon: () => <></>,
+          }}
+          getRowClassName={(params) => {
+            return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+          }}
+          getCellClassName={(params) => {
+            return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
+              'cell color',
+              'cell text color',
+            ])}`;
+          }}
+        />
+      </div>
+    </ThemeProvider>
   );
 };
 

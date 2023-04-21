@@ -1,4 +1,4 @@
-import { Toolbar, Badge, InputBase, Tooltip } from '@material-ui/core';
+import { Toolbar, Badge, InputBase, Tooltip } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import debounce from 'lodash/debounce';

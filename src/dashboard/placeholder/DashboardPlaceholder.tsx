@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, InputBase } from '@material-ui/core';
+import { AppBar, Toolbar, InputBase } from '@mui/material';
 import React from 'react';
 import { LoadingSpinner } from '@neo4j-ndl/react';
 

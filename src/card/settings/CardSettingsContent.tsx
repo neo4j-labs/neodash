@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import CardContent from '@material-ui/core/CardContent';
+import CardContent from '@mui/material/CardContent';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
@@ -44,8 +44,7 @@ const NeoCardSettingsContent = ({
         type='select'
         selectProps={{
           onChange: (newValue) =>
-            newValue &&
-            onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value)),
+            newValue && onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value)),
           options: Object.keys(reportTypes).map((option) => ({
             label: reportTypes[option].label,
             value: reportTypes[option].label,

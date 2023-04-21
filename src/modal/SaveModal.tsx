@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { FormControl, TextareaAutosize, Tooltip } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { FormControl, TextareaAutosize, Tooltip } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { getDashboardJson } from './ModalSelectors';
 import { valueIsArray, valueIsObject } from '../chart/ChartUtils';

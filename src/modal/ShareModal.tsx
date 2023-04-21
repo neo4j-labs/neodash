@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Tooltip } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Tooltip } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';

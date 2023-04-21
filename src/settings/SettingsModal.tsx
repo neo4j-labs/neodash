@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import NeoSetting from '../component/field/Setting';
 import { DASHBOARD_SETTINGS } from '../config/DashboardConfig';
 import { SideNavigationItem } from '@neo4j-ndl/react';

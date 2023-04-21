@@ -1,6 +1,5 @@
 import React from 'react';
-import CardHeader from '@material-ui/core/CardHeader';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, CardHeader } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
 import {
   ExpandIcon,

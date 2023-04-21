@@ -4,7 +4,7 @@ import NeoAddCard from '../card/CardAddButton';
 import NeoCard from '../card/Card';
 import { getReports } from './PageSelectors';
 import { addReportThunk, removeReportThunk, updatePageLayoutThunk, cloneReportThunk } from './PageThunks';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { getDashboardIsEditable, getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 import { Responsive, WidthProvider } from 'react-grid-layout';

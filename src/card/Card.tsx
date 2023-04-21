@@ -1,5 +1,4 @@
-import Card from '@material-ui/core/Card';
-import Collapse from '@material-ui/core/Collapse';
+import { Card, Collapse, debounce } from '@mui/material';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import NeoCardSettings from './settings/CardSettings';
 import NeoCardView from './view/CardView';
@@ -16,7 +15,6 @@ import {
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
-import { debounce } from '@material-ui/core';
 import {
   getDashboardIsEditable,
   getDatabase,

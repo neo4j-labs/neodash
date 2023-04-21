@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
-import { TextareaAutosize, Tooltip } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { TextareaAutosize, Tooltip } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import {
   loadDashboardFromNeo4jByUUIDThunk,

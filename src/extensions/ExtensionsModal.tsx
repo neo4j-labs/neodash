@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';

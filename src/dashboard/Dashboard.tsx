@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import NeoPage from '../page/Page';
-import Container from '@material-ui/core/Container';
+import { Container } from '@mui/material';
 import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
 import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';

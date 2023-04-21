@@ -1,4 +1,4 @@
-import { Toolbar } from '@material-ui/core';
+import { Toolbar } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
 import NeoPageButton from './DashboardHeaderPageButton';
 import NeoPageAddButton from './DashboardHeaderPageAddButton';

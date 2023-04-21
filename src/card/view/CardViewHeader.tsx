@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
-import CardHeader from '@material-ui/core/CardHeader';
-import { Badge, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import { Badge, CardHeader, Dialog, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { Tooltip } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { Close } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
@@ -101,6 +99,9 @@ const NeoCardViewHeader = ({
                   setText(event.target.value);
                   debouncedTitleUpdate(event.target.value);
                 }}
+                size={'small'}
+                style={{ paddingTop: '0px important!' }}
+                variant={'standard'}
               />
             </td>
           </tr>
@@ -170,7 +171,7 @@ const NeoCardViewHeader = ({
           {title}
           <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
             <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
+              <Close />
             </Badge>
           </IconButton>
         </DialogTitle>

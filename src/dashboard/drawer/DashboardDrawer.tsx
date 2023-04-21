@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../../modal/ShareModal';

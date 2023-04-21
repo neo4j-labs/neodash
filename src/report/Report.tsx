@@ -1,11 +1,11 @@
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { QueryStatus, runCypherQuery } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../config/ReportConfig';
-import { MoreVert } from '@material-ui/icons';
+import { MoreVert } from '@mui/icons-material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
