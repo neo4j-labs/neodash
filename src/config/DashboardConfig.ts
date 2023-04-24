@@ -37,6 +37,12 @@ export const DASHBOARD_SETTINGS = {
     default: 'bottom-right',
     helperText: 'These are the resize handle options shared across all reports. ',
   },
+  darkLuma: {
+    label: 'Luma Threshold',
+    type: SELECTION_TYPES.NUMBER,
+    default: 25,
+    helperText: 'Background colors under this threshold will be considered as dark',
+  },
   pagenumber: {
     label: 'Page Number',
     type: SELECTION_TYPES.NUMBER,
