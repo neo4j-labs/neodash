@@ -3,6 +3,8 @@ import { hot } from 'react-hot-loader/root';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
+import { ThemeProvider } from '@material-ui/styles';
+import { lightTheme } from '../component/theme/Themes';
 import { connect } from 'react-redux';
 import {
   applicationGetConnection,
@@ -89,6 +91,10 @@ const Application = ({
   const [initialized, setInitialized] = React.useState(false);
 
   if (!initialized) {
+    // Tell Neo4j Desktop to disable capturing right clicking
+    window.neo4jDesktopApi &&
+      window.neo4jDesktopApi.showMenuOnRightClick &&
+      window.neo4jDesktopApi.showMenuOnRightClick(false);
     setInitialized(true);
     initializeApplication(initialized);
   }
@@ -97,48 +103,50 @@ const Application = ({
 
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
-    <div ref={ref} style={{ display: 'flex' }}>
-      <CssBaseline />
-      {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
-      <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
-      {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
-      {/* TODO - move all models into a pop-ups (or modals) component. */}
-      <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
-      <NeoConnectionModal
-        open={connectionModalOpen}
-        dismissable={connected}
-        connection={connection}
-        ssoSettings={ssoSettings}
-        standalone={standaloneSettings.standalone}
-        standaloneSettings={standaloneSettings}
-        createConnection={createConnection}
-        onSSOAttempt={onSSOAttempt}
-        onConnectionModalClose={onConnectionModalClose}
-      ></NeoConnectionModal>
-      <NeoWelcomeScreenModal
-        welcomeScreenOpen={welcomeScreenOpen}
-        setWelcomeScreenOpen={setWelcomeScreenOpen}
-        hasCachedDashboard={hasCachedDashboard}
-        hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
-        onConnectionModalOpen={onConnectionModalOpen}
-        createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
-        onAboutModalOpen={onAboutModalOpen}
-        resetDashboard={resetDashboard}
-      ></NeoWelcomeScreenModal>
-      <NeoUpgradeOldDashboardModal
-        open={oldDashboard}
-        text={oldDashboard}
-        loadDashboard={loadDashboard}
-        clearOldDashboard={clearOldDashboard}
-      />
-      <NeoLoadSharedDashboardModal
-        shareDetails={shareDetails}
-        onResetShareDetails={onResetShareDetails}
-        onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
-      />
-      <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
-      <NeoNotificationModal></NeoNotificationModal>
-    </div>
+    <ThemeProvider theme={lightTheme}>
+      <div ref={ref} style={{ display: 'flex' }}>
+        <CssBaseline />
+        {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
+        <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
+        {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
+        {/* TODO - move all models into a pop-ups (or modals) component. */}
+        <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
+        <NeoConnectionModal
+          open={connectionModalOpen}
+          dismissable={connected}
+          connection={connection}
+          ssoSettings={ssoSettings}
+          standalone={standaloneSettings.standalone}
+          standaloneSettings={standaloneSettings}
+          createConnection={createConnection}
+          onSSOAttempt={onSSOAttempt}
+          onConnectionModalClose={onConnectionModalClose}
+        ></NeoConnectionModal>
+        <NeoWelcomeScreenModal
+          welcomeScreenOpen={welcomeScreenOpen}
+          setWelcomeScreenOpen={setWelcomeScreenOpen}
+          hasCachedDashboard={hasCachedDashboard}
+          hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
+          onConnectionModalOpen={onConnectionModalOpen}
+          createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
+          onAboutModalOpen={onAboutModalOpen}
+          resetDashboard={resetDashboard}
+        ></NeoWelcomeScreenModal>
+        <NeoUpgradeOldDashboardModal
+          open={oldDashboard}
+          text={oldDashboard}
+          loadDashboard={loadDashboard}
+          clearOldDashboard={clearOldDashboard}
+        />
+        <NeoLoadSharedDashboardModal
+          shareDetails={shareDetails}
+          onResetShareDetails={onResetShareDetails}
+          onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
+        />
+        <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
+        <NeoNotificationModal></NeoNotificationModal>
+      </div>
+    </ThemeProvider>
   );
 };
 
