@@ -223,7 +223,7 @@ export function injectNewRecordsIntoGraphVisualization(
     props.data.nodeLabels,
     props.data.linkTypes,
     props.style.colorScheme,
-    props.engine.fields,
+    mergedFields,
     props.style.nodeColorProp,
     props.style.defaultNodeColor,
     props.style.nodeSizeProp,
