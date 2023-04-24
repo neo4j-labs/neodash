@@ -7,7 +7,7 @@
     color: white !important;
 }
 
-.no-underline .MuiInput-underline::before {
+.no-underline [class*='MuiInput-underline-']::before{
     border-bottom: none;
 }
 
