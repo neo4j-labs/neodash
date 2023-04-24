@@ -16,9 +16,10 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { RenderSubValue } from '../../report/ReportRecordProcessing';
 import { downloadCSV } from '../ChartUtils';
+import { generateSafeColumnKey } from '../table/TableChart';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 import { getSettings } from '../SettingsUtils';
-import { generateSafeColumnKey } from '../table/TableChart';
+import { getPageNumbersAndNamesList } from '../../extensions/advancedcharts/Utils';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -34,7 +35,6 @@ const NeoGraphChart = (props: ChartProps) => {
   const settings = getSettings(props.settings, props.extensions, props.getGlobalParameter);
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
   const arrowLengthProp = props?.settings?.arrowLengthProp ?? 3;
-
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
   const parameters = props.parameters ? props.parameters : {};
 
@@ -123,6 +123,8 @@ const NeoGraphChart = (props: ChartProps) => {
     },
   });
 
+  const pageNames = getPageNumbersAndNamesList();
+
   const chartProps: GraphChartVisualizationProps = {
     data: {
       nodes: data.nodes,
@@ -187,7 +189,7 @@ const NeoGraphChart = (props: ChartProps) => {
       handleExpand: handleExpand,
       setGlobalParameter: props.setGlobalParameter,
       setPageNumber: props.setPageNumber,
-      pageNames: [],
+      pageNames: pageNames,
       onNodeClick: (item) => handleEntityClick(item),
       onNodeRightClick: (item, event) => handleEntityRightClick(item, event),
       onRelationshipClick: (item) => handleEntityClick(item),
@@ -203,7 +205,7 @@ const NeoGraphChart = (props: ChartProps) => {
     },
     extensions: {
       styleRules: settings.styleRules,
-      actionsRules: [],
+      actionsRules: settings.actionsRules,
     },
   };
 

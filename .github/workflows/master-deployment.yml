@@ -1,8 +1,9 @@
 name: Test/Deploy Master
 
 on:
- push:
-   branches: [ master ]
+  push:
+    branches: [ master ]
+
 
 jobs:
  build-test:
