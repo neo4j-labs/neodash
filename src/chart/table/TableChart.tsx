@@ -166,7 +166,7 @@ const NeoTableChart = (props: ChartProps) => {
           },
           '& .MuiDataGrid-cell': {
             flexWrap: 'wrap',
-            overflow: 'scroll',
+            overflow: 'auto',
             whiteSpace: 'initial!important',
             display: 'flex!important',
             alignItems: 'top',
