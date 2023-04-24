@@ -11,6 +11,8 @@ import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtil
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
+import { ThemeProvider } from '@material-ui/styles';
+import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
 
 const NeoCardView = ({
   title,
@@ -70,22 +72,30 @@ const NeoCardView = ({
 
   // @ts-ignore
   const reportHeader = (
-    <NeoCardViewHeader
-      title={title}
-      editable={editable}
-      description={settings.description}
-      fullscreenEnabled={settings.fullscreenEnabled}
-      downloadImageEnabled={settings.downloadImageEnabled}
-      refreshButtonEnabled={settings.refreshButtonEnabled}
-      onTitleUpdate={onTitleUpdate}
-      onToggleCardSettings={onToggleCardSettings}
-      onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
-      settings={settings}
-      onDownloadImage={onDownloadImage}
-      onToggleCardExpand={onToggleCardExpand}
-      expanded={expanded}
-      parameters={getLocalParameters(title)}
-    ></NeoCardViewHeader>
+    <ThemeProvider
+      theme={
+        settings.backgroundColor && luma(settings.backgroundColor) < dashboardSettings.darkLuma
+          ? darkHeaderTheme
+          : lightTheme
+      }
+    >
+      <NeoCardViewHeader
+        title={title}
+        editable={editable}
+        description={settings.description}
+        fullscreenEnabled={settings.fullscreenEnabled}
+        downloadImageEnabled={settings.downloadImageEnabled}
+        refreshButtonEnabled={settings.refreshButtonEnabled}
+        onTitleUpdate={onTitleUpdate}
+        onToggleCardSettings={onToggleCardSettings}
+        onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
+        settings={settings}
+        onDownloadImage={onDownloadImage}
+        onToggleCardExpand={onToggleCardExpand}
+        expanded={expanded}
+        parameters={getLocalParameters(title)}
+      ></NeoCardViewHeader>
+    </ThemeProvider>
   );
 
   // @ts-ignore
@@ -102,7 +112,7 @@ const NeoCardView = ({
   ) : (
     <></>
   );
-  
+
   const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
   const withoutFooter =
