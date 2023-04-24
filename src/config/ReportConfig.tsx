@@ -1237,7 +1237,7 @@ export const REPORT_TYPES = {
         label: 'Replace global parameters in Markdown',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: false,
+        default: true,
       },
       fullscreenEnabled: {
         label: 'Fullscreen enabled',
