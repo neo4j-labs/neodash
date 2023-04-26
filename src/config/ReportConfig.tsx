@@ -13,7 +13,7 @@ import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
 import NeoAreaMapChart from '../chart/map/AreaMapChart';
 import NeoLineChart from '../chart/line/LineChart';
-import NeoScatterPlot from '../chart/scatter/backupTest';
+import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -849,10 +849,9 @@ export const REPORT_TYPES = {
         label: 'Y-value',
         type: SELECTION_TYPES.NUMBER,
         key: true,
-        multiple: true,
       },
     },
-    maxRecords: 250,
+    maxRecords: 500,
     settings: {
       backgroundColor: {
         label: 'Background Color',

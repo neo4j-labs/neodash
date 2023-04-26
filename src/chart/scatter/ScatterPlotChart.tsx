@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { ChartProps } from '../Chart';
 import { recordToNative } from '../ChartUtils';
@@ -28,12 +28,10 @@ const NeoScatterPlot = (props: ChartProps) => {
   const [isTimeChart, setIsTimeChart] = React.useState(false);
   const [parseFormat, setParseFormat] = React.useState('%Y-%m-%dT%H:%M:%SZ');
   const [validSelection, setValidSelection] = React.useState(true);
-  const [data, setData] = React.useState(
-    selection.value.map((key) => ({
-      id: key as string,
-      data: [],
-    }))
-  );
+  const [data, setData] = React.useState({
+    id: selection.value as string,
+    data: [] as any[],
+  });
 
   const [intensityList, setIntensityList] = React.useState<number[]>([]);
   const [legendRange, setLegendRange] = React.useState({ min: 1, max: 2 });
@@ -67,7 +65,7 @@ const NeoScatterPlot = (props: ChartProps) => {
   const xAxisFormat = settings.xAxisFormat != undefined ? settings.xAxisFormat : undefined;
   const xTickRotationAngle = settings.xTickRotationAngle != undefined ? settings.xTickRotationAngle : 0;
   const yTickRotationAngle = settings.yTickRotationAngle != undefined ? settings.yTickRotationAngle : 0;
-  const colorPicker = chroma.scale(['green', 'yellow', 'red']);
+  const colorPicker = chroma.scale('Spectral');
 
   // Compute line color based on rules - overrides default color scheme completely.
   // For line charts, the line color is overridden if at least one value meets the criteria.
@@ -92,10 +90,11 @@ const NeoScatterPlot = (props: ChartProps) => {
   };
 
   useEffect(() => {
-    let tmp = selection.value.map((key) => ({
-      id: key as string,
-      data: [],
-    }));
+    let key = selection.value as string;
+    let tmp = {
+      id: key,
+      data: [] as any[],
+    };
 
     let tmpIntensityList: any[] = [];
 
@@ -108,25 +107,18 @@ const NeoScatterPlot = (props: ChartProps) => {
         tmpIntensityList.push(intensity);
       }
 
-      selection.value.forEach((key) => {
-        const index = tmp.findIndex((item) => (item as Record<string, any>).id === key);
-        let x: any = row.get(selection.x) || 0;
-        let y: any = recordToNative(row.get(key)) || 0;
-        if (tmp[index] && !isNaN(y)) {
-          if (isDateTime(x)) {
-            x = new Date(x.toString());
-          }
-          tmp[index].data.push({ x, y, intensity });
+      let x: any = row.get(selection.x) || 0;
+      let y: any = recordToNative(row.get(key)) || 0;
+      if (!isNaN(y)) {
+        if (isDateTime(x)) {
+          x = new Date(x.toString());
         }
-      });
+        tmp.data.push({ x, y, intensity });
+      }
     });
 
-    setValidSelection(
-      !data.some((selected) => {
-        selected.data.length == 0;
-      })
-    );
     setData(tmp);
+    setValidSelection(tmp.data.length > 0);
     setIntensityList(tmpIntensityList);
   }, [selection]);
 
@@ -135,6 +127,7 @@ const NeoScatterPlot = (props: ChartProps) => {
     let tmp = [...intensityList].sort((a, b) => {
       return a - b;
     });
+
     setLegendRange({ min: tmp[0], max: tmp.slice(-1)[0] });
   }, [intensityList]);
 
@@ -148,10 +141,11 @@ const NeoScatterPlot = (props: ChartProps) => {
   // doesn't seem true from testing mmmmmmm
 
   const chartIsTimeChart =
-    data[0] !== undefined &&
-    data[0].data[0] !== undefined &&
-    data[0].data[0].x !== undefined &&
-    isDateTimeOrDate(data[0].data[0].x);
+    data !== undefined &&
+    data.data !== undefined &&
+    data.data[0] !== undefined &&
+    data.data[0].x !== undefined &&
+    isDateTimeOrDate(data.data[0].x);
 
   if (isTimeChart !== chartIsTimeChart) {
     if (!chartIsTimeChart) {
@@ -188,18 +182,37 @@ const NeoScatterPlot = (props: ChartProps) => {
    * @param node
    * @returns Custom circle representing a node
    */
-  const MyCustomNode = (node) => (
-    <animated.circle
-      cx={node.style.x}
-      cy={node.style.y}
-      r={node.style.size.to((size) => size / 2)}
-      fill={getNodeColors(node)}
-    />
-  );
+  const MyCustomNode = (node) => {
+    return (
+      <animated.circle
+        cx={node.style.x}
+        cy={node.style.y}
+        r={node.style.size.to((size) => size / 2)}
+        fill={getNodeColors(node)}
+      />
+    );
+  };
+
+  const colorLegend = () => {
+    return (
+      <div
+        style={{
+          backgroundImage: `linear-gradient(to right, ${colorPicker(0)} , ${colorPicker(1)})`,
+          minHeight: '100%',
+          height: '100%',
+          width: '15%',
+          display: 'inline-block',
+        }}
+      >
+        henlo
+      </div>
+    );
+  };
   const scatterPlotViz = (
-    <div className='h-full w-full overflow-hidden' style={{ height: '100%' }}>
+    <div style={{ width: '85%', height: '100%', display: 'inline-block' }}>
       <ResponsiveScatterPlot
-        data={[...data]}
+        data={[data]}
+        key={`${selection.value}`}
         xScale={
           isTimeChart
             ? { format: parseFormat, type: 'time' }
@@ -218,6 +231,7 @@ const NeoScatterPlot = (props: ChartProps) => {
         enableGridY={showGrid}
         axisTop={null}
         axisRight={null}
+        indexBy={'y'}
         axisBottom={
           isTimeChart
             ? {
@@ -253,7 +267,15 @@ const NeoScatterPlot = (props: ChartProps) => {
       />
     </div>
   );
-  return scatterPlotViz;
+
+  const finalViz = (
+    <>
+      {scatterPlotViz}
+      {colorLegend()}
+    </>
+  );
+
+  return finalViz;
 };
 
 export default NeoScatterPlot;
