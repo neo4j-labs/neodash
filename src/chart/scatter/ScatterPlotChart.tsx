@@ -65,11 +65,10 @@ const NeoScatterPlot = (props: ChartProps) => {
   const xAxisFormat = settings.xAxisFormat != undefined ? settings.xAxisFormat : undefined;
   const xTickRotationAngle = settings.xTickRotationAngle != undefined ? settings.xTickRotationAngle : 0;
   const yTickRotationAngle = settings.yTickRotationAngle != undefined ? settings.yTickRotationAngle : 0;
+  // TODO: attach to tooltip
+  const labelProp = settings.labelProp != undefined ? settings.labelProp : 'label';
   const colorPicker = chroma.scale('Spectral');
 
-  // Compute line color based on rules - overrides default color scheme completely.
-  // For line charts, the line color is overridden if at least one value meets the criteria.
-  // TODO:  work on Legend
   const getNodeColors = (point) => {
     let { intensity } = point.node.data;
 
@@ -192,24 +191,22 @@ const NeoScatterPlot = (props: ChartProps) => {
       />
     );
   };
-
+  // TODO:  work on Legend
   const colorLegend = () => {
     return (
       <div
         style={{
-          backgroundImage: `linear-gradient(to right, ${colorPicker(0)} , ${colorPicker(1)})`,
-          minHeight: '100%',
+          backgroundImage: `linear-gradient(0deg, ${colorPicker(0)} , ${colorPicker(1)})`,
           height: '100%',
-          width: '15%',
-          display: 'inline-block',
+          width: '8%',
+          float: 'right',
         }}
-      >
-        henlo
-      </div>
+      ></div>
     );
   };
+
   const scatterPlotViz = (
-    <div style={{ width: '85%', height: '100%', display: 'inline-block' }}>
+    <div style={{ width: '92%', height: '100%', float: 'left' }}>
       <ResponsiveScatterPlot
         data={[data]}
         key={`${selection.value}`}

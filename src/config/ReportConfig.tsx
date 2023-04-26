@@ -858,16 +858,15 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.COLOR,
         default: '#fafafa',
       },
-      colors: {
-        label: 'Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
-        default: 'set2',
-      },
       colorIntensityProp: {
         label: 'Name of the field used to add color based on intensity',
         type: SELECTION_TYPES.TEXT,
         default: 'intensity',
+      },
+      labelProp: {
+        label: 'Property used as label',
+        type: SELECTION_TYPES.TEXT,
+        default: 'label',
       },
       legend: {
         label: 'Show Legend',
