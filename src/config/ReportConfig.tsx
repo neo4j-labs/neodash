@@ -829,15 +829,14 @@ export const REPORT_TYPES = {
       },
     },
   },
-  // TODO: refactor
   scatterPlot: {
     label: 'Scatter Plot',
     component: NeoScatterPlot,
     useReturnValuesAsFields: true,
     helperText: (
       <div>
-        A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value
-        can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
+        A ScatterPlot chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code>{' '}
+        value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
       </div>
     ),
     selection: {
@@ -851,7 +850,7 @@ export const REPORT_TYPES = {
         key: true,
       },
     },
-    maxRecords: 500,
+    maxRecords: 2000,
     settings: {
       backgroundColor: {
         label: 'Background Color',

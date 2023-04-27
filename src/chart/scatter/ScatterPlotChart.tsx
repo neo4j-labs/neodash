@@ -1,13 +1,21 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { ChartProps } from '../Chart';
 import { recordToNative } from '../ChartUtils';
-import { ResponsiveScatterPlot } from '@nivo/scatterplot';
+import { ResponsiveScatterPlot, ResponsiveScatterPlotCanvas } from '@nivo/scatterplot';
 import { animated } from '@react-spring/web';
 import chroma from 'chroma-js';
 
 /**
- * Embeds a LineReport (from Charts) into NeoDash.
+ * TODO to wrap up component
+ * 1. style component tooltip
+ * 2. style component legend
+ * 3. check how we can add color palette selection in the options
+ * 4. re-test everything
+ */
+
+/**
+ * Embeds a Nivo ResponsiveScatterPlot and a ResponsiveScatterPlotCanvas (from Charts) into NeoDash.
  */
 const NeoScatterPlot = (props: ChartProps) => {
   const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
@@ -15,6 +23,7 @@ const NeoScatterPlot = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
+
   const { records, selection } = props;
 
   if (!selection || !selection.value || selection.value.length == 0) {
@@ -25,6 +34,7 @@ const NeoScatterPlot = (props: ChartProps) => {
     return <p></p>;
   }
 
+  const [keepLegend, setKeepLegend] = React.useState(false);
   const [isTimeChart, setIsTimeChart] = React.useState(false);
   const [parseFormat, setParseFormat] = React.useState('%Y-%m-%dT%H:%M:%SZ');
   const [validSelection, setValidSelection] = React.useState(true);
@@ -37,6 +47,10 @@ const NeoScatterPlot = (props: ChartProps) => {
   const [legendRange, setLegendRange] = React.useState({ min: 1, max: 2 });
 
   const settings = props.settings ? props.settings : {};
+
+  const colorIntensityProp = settings.colorIntensityProp != undefined ? settings.colorIntensityProp : 'intensity';
+  const labelProp = settings.labelProp != undefined ? settings.labelProp : 'label';
+  const colorPicker = chroma.scale('Spectral');
 
   const pointSize = settings.pointSize ? settings.pointSize : 10;
   const showGrid = settings.showGrid != undefined ? settings.showGrid : true;
@@ -57,24 +71,12 @@ const NeoScatterPlot = (props: ChartProps) => {
   const marginTop = settings.marginTop ? settings.marginTop : 24;
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
 
-  const colorIntensityProp = settings.colorIntensityProp != undefined ? settings.colorIntensityProp : 'intensity';
-
   const xTickValues = settings.xTickValues != undefined ? settings.xTickValues : undefined;
   const xTickTimeValues = settings.xTickTimeValues != undefined ? settings.xTickTimeValues : 'every 1 years';
   const xAxisTimeFormat = settings.xAxisTimeFormat != undefined ? settings.xAxisTimeFormat : '%Y-%m-%dT%H:%M:%SZ';
   const xAxisFormat = settings.xAxisFormat != undefined ? settings.xAxisFormat : undefined;
   const xTickRotationAngle = settings.xTickRotationAngle != undefined ? settings.xTickRotationAngle : 0;
   const yTickRotationAngle = settings.yTickRotationAngle != undefined ? settings.yTickRotationAngle : 0;
-  // TODO: attach to tooltip
-  const labelProp = settings.labelProp != undefined ? settings.labelProp : 'label';
-  const colorPicker = chroma.scale('Spectral');
-
-  const getNodeColors = (point) => {
-    let { intensity } = point.node.data;
-
-    let value = isNaN(intensity) ? 'black' : (intensity - legendRange.min) / (legendRange.max - legendRange.min);
-    return colorPicker(value).toString();
-  };
 
   const isDate = (x) => {
     return x.__isDate__;
@@ -88,6 +90,7 @@ const NeoScatterPlot = (props: ChartProps) => {
     return isDate(x) || isDateTime(x) || x instanceof Date;
   };
 
+  // Effect used to recalculate the values at each selection change
   useEffect(() => {
     let key = selection.value as string;
     let tmp = {
@@ -102,8 +105,13 @@ const NeoScatterPlot = (props: ChartProps) => {
         ? recordToNative(row.get(colorIntensityProp))
         : undefined;
 
+      const label: any = row.keys.includes(labelProp) ? recordToNative(row.get(labelProp)) : undefined;
+
       if (intensity) {
         tmpIntensityList.push(intensity);
+        if (!keepLegend) {
+          setKeepLegend(true);
+        }
       }
 
       let x: any = row.get(selection.x) || 0;
@@ -112,14 +120,14 @@ const NeoScatterPlot = (props: ChartProps) => {
         if (isDateTime(x)) {
           x = new Date(x.toString());
         }
-        tmp.data.push({ x, y, intensity });
+        tmp.data.push({ x, y, intensity, label });
       }
     });
 
     setData(tmp);
     setValidSelection(tmp.data.length > 0);
     setIntensityList(tmpIntensityList);
-  }, [selection]);
+  }, [records, selection]);
 
   // Resetting the legend range
   useEffect(() => {
@@ -154,8 +162,8 @@ const NeoScatterPlot = (props: ChartProps) => {
         </div>
       );
     }
-    const p = chartIsTimeChart ? (isDateTime(data[0].data[0].x) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
 
+    const p = chartIsTimeChart ? (isDateTime(data.data[0].x) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
     setParseFormat(p);
     setIsTimeChart(chartIsTimeChart);
   }
@@ -177,6 +185,40 @@ const NeoScatterPlot = (props: ChartProps) => {
   }
 
   /**
+   * Color gradient showing the possible colors binded to the viz
+   * @returns Legend based on the intensity
+   */
+  const colorLegend = () => {
+    return (
+      <div
+        style={{
+          backgroundImage: `linear-gradient(0deg, ${[...Array(11)].map((_, i) => colorPicker(i / 10)).join(', ')})`,
+          height: '100%',
+          width: '8%',
+          float: 'right',
+        }}
+      ></div>
+    );
+  };
+
+  /**
+   * Given a point in input, gets a color using the colorPicker function based on chroma.js.
+   * @param node A point inside the chart
+   * @returns A color based on the intensity value on the node
+   */
+  const getNodeColor = (node) => {
+    let { intensity } = node.data;
+    if (isNaN(intensity)) {
+      return 'green';
+    }
+    // The input is normalized before passing it inside the colorPicker function
+    let value =
+      legendRange.max === legendRange.min ? 0.3 : (intensity - legendRange.min) / (legendRange.max - legendRange.min);
+
+    return colorPicker(value).toString();
+  };
+
+  /**
    * Component to render a custom node (necessary to bind colors to each node)
    * @param node
    * @returns Custom circle representing a node
@@ -187,27 +229,50 @@ const NeoScatterPlot = (props: ChartProps) => {
         cx={node.style.x}
         cy={node.style.y}
         r={node.style.size.to((size) => size / 2)}
-        fill={getNodeColors(node)}
+        fill={getNodeColor(node.node)}
       />
     );
   };
-  // TODO:  work on Legend
-  const colorLegend = () => {
+
+  /**
+   * Used to render a node
+   * @param ctx
+   * @param node
+   */
+  const renderNode = (ctx, node) => {
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, node.size / 2, 0, 2 * Math.PI);
+    ctx.fillStyle = getNodeColor(node);
+    ctx.fill();
+  };
+
+  /**
+   * Component to render a custom tooltip
+   * @param node Current selected node
+   * @returns Tooltip generated for that node
+   */
+  const customToolTip = (node) => {
     return (
-      <div
-        style={{
-          backgroundImage: `linear-gradient(0deg, ${colorPicker(0)} , ${colorPicker(1)})`,
-          height: '100%',
-          width: '8%',
-          float: 'right',
-        }}
-      ></div>
+      <div style={{ color: node.color, background: '#333', padding: '12px 16px' }}>
+        <strong>{node.data.label ? `${labelProp}: ${node.data.label} ` : ''}</strong>
+
+        {node.data.label ? <br /> : <></>}
+        {`x: ${node.formattedX}`}
+        <br />
+        {`y: ${node.formattedY}`}
+        <br />
+        <strong>{node.data.intensity ? `${colorIntensityProp}: ${node.data.intensity}` : ''}</strong>
+        {}
+      </div>
     );
   };
 
+  // If the query returns too many nodes, pass to a Canvas verison of the chart (scales easier than a normal plot)
+  const ComponentType = data.data.length <= 300 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
+
   const scatterPlotViz = (
-    <div style={{ width: '92%', height: '100%', float: 'left' }}>
-      <ResponsiveScatterPlot
+    <div style={{ minWidth: `${!keepLegend ? '100%' : '92%'}`, height: '100%', float: 'left', display: 'flex' }}>
+      <ComponentType
         data={[data]}
         key={`${selection.value}`}
         xScale={
@@ -261,6 +326,8 @@ const NeoScatterPlot = (props: ChartProps) => {
         pointBorderColor={{ from: 'serieColor' }}
         pointLabelYOffset={-12}
         useMesh={true}
+        tooltip={(node) => customToolTip(node.node)}
+        renderNode={renderNode}
       />
     </div>
   );
@@ -268,7 +335,7 @@ const NeoScatterPlot = (props: ChartProps) => {
   const finalViz = (
     <>
       {scatterPlotViz}
-      {colorLegend()}
+      {keepLegend ? colorLegend() : <></>}
     </>
   );
 
