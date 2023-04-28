@@ -422,6 +422,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(setWelcomeScreenOpen(false));
       const success = await initializeSSO(config.ssoDiscoveryUrl, (credentials) => {
         if (standalone) {
+          // Redirected from SSO and running in viewer mode, merge retrieved config with hardcoded credentials.
           dispatch(
             setConnectionProperties(
               config.standaloneProtocol,
@@ -442,6 +443,31 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               credentials.password
             )
           );
+        } else {
+          // Redirected from SSO and running in editor mode, merge retrieved config with existing details.
+          dispatch(
+            setConnectionProperties(
+              state.application.connection.protocol,
+              state.application.connection.url,
+              state.application.connection.port,
+              state.application.connection.database,
+              credentials.username,
+              credentials.password
+            )
+          );
+          dispatch(
+            createConnectionThunk(
+              state.application.connection.protocol,
+              state.application.connection.url,
+              state.application.connection.port,
+              state.application.connection.database,
+              credentials.username,
+              credentials.password
+            )
+          );
+        }
+
+        if (standalone) {
           if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
             dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
           } else {
