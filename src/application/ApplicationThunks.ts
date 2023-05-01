@@ -9,7 +9,7 @@ import {
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
-import { setExtensionOpen } from '../extensions/ExtensionsActions';
+import { setExtensionSidebarOpen } from '../extensions/sidebar/state/SidebarActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
@@ -386,7 +386,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     );
     dispatch(setConnectionModalOpen(false));
     // TODO - generalize this, close all drawer-based extensions on app startup.
-    dispatch(setExtensionOpen('alerts', false));
+    dispatch(setExtensionSidebarOpen(false));
 
     // Auto-upgrade the dashboard version if an old version is cached.
     if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
@@ -496,6 +496,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting));
     }
   } catch (e) {
+    console.log(e);
     dispatch(setWelcomeScreenOpen(false));
     dispatch(
       createNotificationThunk(

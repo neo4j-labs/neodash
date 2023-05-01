@@ -1,10 +1,8 @@
-import { SELECTION_TYPES } from '../config/CardConfig';
+import { SELECTION_TYPES } from '../../config/CardConfig';
 
-// TODO: define settings for extensions (just alert for now, keep it futureproof)
 // TODO: understand if we want pagination (strange styling).
-// TODO: Rename "alerts" to "node sidebar" (generic name).
 const EXTENSIONS_CONFIG = {
-  alerts: {
+  'node-sidebar': {
     settings: {
       colorProperty: {
         label: 'Card Color Property',
@@ -32,6 +30,25 @@ const EXTENSIONS_CONFIG = {
         values: [true, false],
         default: false,
       },
+      resetParametersEnabled: {
+        label: 'Enable Reset Parameters',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      drilldownEnabled: {
+        label: 'Enable Drilldown',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      moveToPage: {
+        label: 'Drilldown to Page',
+        type: SELECTION_TYPES.LIST,
+        values: [],
+        default: 'Current Page',
+        needsStateValues: true,
+      },
     },
   },
 };
@@ -41,8 +58,8 @@ const EXTENSIONS_CONFIG = {
  * @param extensionName Name of the desired extension
  * @returns Predefined fields of configuration for an extension
  */
-export function getExtensionDefaultConfig(extensionName) {
-  return EXTENSIONS_CONFIG[extensionName] && EXTENSIONS_CONFIG[extensionName].settings
-    ? EXTENSIONS_CONFIG[extensionName].settings
+export function getNodeSidebarDefaultConfig() {
+  return EXTENSIONS_CONFIG['node-sidebar'] && EXTENSIONS_CONFIG['node-sidebar'].settings
+    ? EXTENSIONS_CONFIG['node-sidebar'].settings
     : {};
 }

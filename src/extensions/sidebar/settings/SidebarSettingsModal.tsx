@@ -6,19 +6,19 @@ import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 import { DialogContent, FormControlLabel, FormGroup, MenuItem, Switch } from '@material-ui/core';
-import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../../ExtensionsSelectors';
-import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../../ExtensionsActions';
+import { getSidebarDatabase, getSidebarQuery } from '../state/SidebarSelectors';
+import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../state/SidebarActions';
 import NeoField from '../../../component/field/Field';
 import { applicationGetConnectionDatabase } from '../../../application/ApplicationSelectors';
-import ExtensionSettingsForm from './ExtensionSettingsForm';
+import ExtensionSettingsForm from './SidebarSettingsForm';
 import SaveIcon from '@material-ui/icons/Save';
+import { getExtensionSettings } from '../../state/ExtensionSelectors';
 
 /**
  * TODO: lets also generalize this as a 'pop-uppable report'.
- * I can see some nice uses of this beyond alerts.
  * Perhaps we can even extend the Report component or generalize somehow.
  */
-const AlertSettingsModal = ({
+const SidebarSettingsModal = ({
   databaseList,
   settingsOpen,
   setSettingsOpen,
@@ -145,7 +145,6 @@ const AlertSettingsModal = ({
               isAdvancedSettingsOpen={isAdvancedSettingsOpen}
               extensionSettings={settingsToSave}
               setSettingsToSave={setSettingsToSave}
-              extensionName={'alerts'}
             ></ExtensionSettingsForm>
           </div>
         </Dialog>
@@ -157,18 +156,18 @@ const AlertSettingsModal = ({
 };
 
 const mapStateToProps = (state) => ({
-  extensionSettings: getExtensionSettings(state, 'alerts'),
-  query: getExtensionQuery(state, 'alerts'),
-  database: getExtensionDatabase(state, 'alerts'),
+  extensionSettings: getExtensionSettings(state, 'node-sidebar'),
+  query: getSidebarQuery(state),
+  database: getSidebarDatabase(state),
   applicationDatabase: applicationGetConnectionDatabase(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onQueryUpdate: (query) => dispatch(setExtensionQuery('alerts', query)),
-  onSettingsUpdate: (settings) => dispatch(setExtensionSettings('alerts', settings)),
+  onQueryUpdate: (query) => dispatch(setExtensionQuery(query)),
+  onSettingsUpdate: (settings) => dispatch(setExtensionSettings(settings)),
   onDatabaseChanged: (database: any) => {
-    dispatch(setExtensionDatabase('alerts', database));
+    dispatch(setExtensionDatabase(database));
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlertSettingsModal);
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarSettingsModal);

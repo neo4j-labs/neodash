@@ -25,7 +25,7 @@ export enum QueryStatus {
  * @param queryTimeLimit - maximum query time in seconds.
  * @returns
  */
-export function runCypherQuery(
+export async function runCypherQuery(
   driver,
   database = '',
   query = '',
@@ -70,7 +70,7 @@ export function runCypherQuery(
     }
   }
 
-  transaction
+  await transaction
     .run(query, parameters)
     .then((res) => {
       // @ts-ignore
@@ -102,8 +102,8 @@ export function runCypherQuery(
         transaction.commit();
         return;
       } else if (records.length > rowLimit) {
-        setRecords(records.slice(0, rowLimit));
         setStatus(QueryStatus.COMPLETE_TRUNCATED);
+        setRecords(records.slice(0, rowLimit));
         // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
         transaction.commit();
         return;

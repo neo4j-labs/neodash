@@ -2,7 +2,8 @@ import { ListItem, List } from '@material-ui/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import NeoSetting from '../../../component/field/Setting';
-import { getExtensionDefaultConfig } from '../../ExtensionsConfig';
+import { getPageNumbersAndNames } from '../../../dashboard/DashboardSelectors';
+import { getNodeSidebarDefaultConfig } from '../SidebarConfig';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -12,9 +13,24 @@ export const ExtensionSettingsForm = ({
   setSettingsToSave,
   extensionSettings,
   defaultSettings,
+  pagesList,
 }) => {
   const [reportSettingsText, setReportSettingsText] = React.useState(extensionSettings);
-  const [allSettings, setAllSettings] = React.useState(defaultSettings);
+
+  /**
+   * Given a setting name in input, return the state value needed to
+   * fill the choices in the advanced settings
+   * @param setting Name of the settings
+   * @returns Values got from the state
+   */
+  function getSettingChoices(setting) {
+    let choices;
+    if (setting === 'moveToPage') {
+      choices = [...pagesList];
+      choices.unshift(defaultSettings[setting].default);
+    }
+    return choices;
+  }
 
   const updateSpecificExtensionSetting = (field: string, value: any) => {
     const entry = {};
@@ -25,7 +41,13 @@ export const ExtensionSettingsForm = ({
 
   return isAdvancedSettingsOpen ? (
     <List style={{ marginLeft: 12, marginRight: 12 }}>
-      {Object.keys(allSettings).map((setting) => {
+      {Object.keys(defaultSettings).map((setting) => {
+        let choices = defaultSettings[setting].values;
+
+        // Some settings need to get their choices from the application state
+        if (defaultSettings[setting].needsStateValues) {
+          choices = getSettingChoices(setting);
+        }
         return (
           <ListItem style={{ padding: 0 }}>
             <NeoSetting
@@ -35,7 +57,7 @@ export const ExtensionSettingsForm = ({
               type={defaultSettings[setting].type}
               label={defaultSettings[setting].label}
               defaultValue={defaultSettings[setting].default}
-              choices={defaultSettings[setting].values}
+              choices={choices}
               onChange={(e) => updateSpecificExtensionSetting(setting, e)}
             />
           </ListItem>
@@ -47,8 +69,9 @@ export const ExtensionSettingsForm = ({
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  defaultSettings: getExtensionDefaultConfig(ownProps.extensionName),
+const mapStateToProps = (state) => ({
+  defaultSettings: getNodeSidebarDefaultConfig(),
+  pagesList: getPageNumbersAndNames(state),
 });
 
 const mapDispatchToProps = (_dispatch) => ({});

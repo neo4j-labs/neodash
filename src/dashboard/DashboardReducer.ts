@@ -3,9 +3,10 @@
  */
 
 import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
-import { extensionsReducer } from '../extensions/ExtensionsReducer';
+import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/state/ExtensionReducer';
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
+
 import {
   CREATE_PAGE,
   REMOVE_PAGE,
@@ -14,7 +15,6 @@ import {
   SET_DASHBOARD,
   MOVE_PAGE,
   SET_EXTENSION_ENABLED,
-  SET_EXTENSION_OPENED,
 } from './DashboardActions';
 
 export const NEODASH_VERSION = '2.2';
@@ -26,7 +26,7 @@ export const initialState = {
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
   extensions: {},
-  extensionsConfig: {}, // TODO - merge with `extensions` in the 2.3 dashboard format.
+  extensionsConfig: INITIAL_EXTENSIONS_STATE, // TODO - merge with `extensions` in the 2.3 dashboard format.
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -59,11 +59,9 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
 
   // Extensions-specific updates are deferred to the extensions reducer.
   if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
-    const enrichedPayload = update(payload, { extensionsConfig: state.extensionsConfig });
-    const enrichedAction = { type, payload: enrichedPayload };
     return {
       ...state,
-      extensionsConfig: extensionsReducer(state, enrichedAction),
+      extensionsConfig: extensionsReducer(state.extensionsConfig, action),
     };
   }
 

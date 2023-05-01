@@ -1,25 +1,48 @@
 import { debounce, IconButton, TextField, Tooltip } from '@material-ui/core';
 import React, { useCallback } from 'react';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AlertSettingsModal from './settings/AlertSettingsModal';
-import { getExtensionSettings, getExtensionTitle } from '../ExtensionsSelectors';
-import { setExtensionTitle } from '../ExtensionsActions';
+import SidebarSettingsModal from './settings/SidebarSettingsModal';
+import { getSidebarGlobalParameters, getSidebarTitle } from './state/SidebarSelectors';
+import { setExtensionTitle } from './state/SidebarActions';
 import { connect } from 'react-redux';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
+import { getExtensionSettings } from '../state/ExtensionSelectors';
+import { updateGlobalParameterThunk } from '../../settings/SettingsThunks';
 
 /**
- * The editable header of the alert drawer, including the title and settings button.
+ * The editable header of the drawer, including the title and settings button.
  * TODO - rename to 'Node Sidebar Header' to match new extension name.
  */
-export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTitleUpdate, onManualRefreshDrawer }) => {
+export const SidebarDrawerHeader = ({
+  databaseList,
+  title,
+  extensionSettings,
+  sidebarGlobalParameters,
+  onTitleUpdate,
+  onGlobalParameterUpdate,
+  onManualRefreshDrawer,
+}) => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const [headerTitle, setHeaderTitle] = React.useState(title);
   const refreshable = extensionSettings.refreshButtonEnabled ? extensionSettings.refreshButtonEnabled : false;
   const debouncedTitleUpdate = useCallback(debounce(onTitleUpdate, 250), []);
+
+  function clearNodeSidebarParameters() {
+    sidebarGlobalParameters.forEach((key) => onGlobalParameterUpdate(key, undefined));
+  }
   const refreshButton = (
     <Tooltip title='Refresh' aria-label='refresh'>
       <IconButton aria-label='refresh' onClick={onManualRefreshDrawer}>
         <RefreshIcon />
+      </IconButton>
+    </Tooltip>
+  );
+
+  const clearParametersButton = (
+    <Tooltip title='Clear Sidebar Parameters' aria-label='clear'>
+      <IconButton aria-label='clear' onClick={clearNodeSidebarParameters}>
+        <ClearAllIcon />
       </IconButton>
     </Tooltip>
   );
@@ -44,6 +67,7 @@ export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTi
             />
           </td>
           <td>{refreshable ? refreshButton : <></>}</td>
+          <td>{extensionSettings.resetParametersEnabled ? clearParametersButton : <></>}</td>
           <td>
             <Tooltip title='Settings' aria-label='settings'>
               <IconButton
@@ -55,11 +79,11 @@ export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTi
                 <MoreVertIcon />
               </IconButton>
             </Tooltip>
-            <AlertSettingsModal
+            <SidebarSettingsModal
               databaseList={databaseList}
               settingsOpen={settingsOpen}
               setSettingsOpen={setSettingsOpen}
-            ></AlertSettingsModal>
+            ></SidebarSettingsModal>
           </td>
         </tr>
       </tbody>
@@ -68,15 +92,18 @@ export const AlertDrawerHeader = ({ databaseList, title, extensionSettings, onTi
 };
 
 const mapStateToProps = (state) => ({
-  // TODO: change 'alerts' to new name.
-  title: getExtensionTitle(state, 'alerts'),
-  extensionSettings: getExtensionSettings(state, 'alerts'),
+  title: getSidebarTitle(state),
+  extensionSettings: getExtensionSettings(state, 'node-sidebar'),
+  sidebarGlobalParameters: getSidebarGlobalParameters(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onTitleUpdate: (title: any) => {
-    dispatch(setExtensionTitle('alerts', title));
+    dispatch(setExtensionTitle(title));
+  },
+  onGlobalParameterUpdate: (key: any, value: any) => {
+    dispatch(updateGlobalParameterThunk(key, value));
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlertDrawerHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarDrawerHeader);

@@ -39,7 +39,7 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, action: { type: 
       return update(settings, entry);
     }
     default: {
-      return state;
+      return state.settings;
     }
   }
 };
