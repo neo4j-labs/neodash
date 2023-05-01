@@ -2,8 +2,6 @@ import { Button, TextareaAutosize } from '@material-ui/core';
 import React from 'react';
 import { REPORT_TYPES } from '../../../config/ReportConfig';
 
-const textFieldStyle = { width: '155px', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' };
-
 enum views {
   QUERY,
   DATA,

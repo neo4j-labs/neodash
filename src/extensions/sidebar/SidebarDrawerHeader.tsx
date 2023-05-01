@@ -29,7 +29,6 @@ export const SidebarDrawerHeader = ({
   const debouncedTitleUpdate = useCallback(debounce(onTitleUpdate, 250), []);
 
   function clearNodeSidebarParameters() {
-    console.log(sidebarGlobalParameters);
     sidebarGlobalParameters.forEach((key) => onGlobalParameterUpdate(key, undefined));
   }
   const refreshButton = (

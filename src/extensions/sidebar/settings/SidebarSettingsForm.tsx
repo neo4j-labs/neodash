@@ -23,13 +23,13 @@ export const ExtensionSettingsForm = ({
    * @param setting Name of the settings
    * @returns Values got from the state
    */
-  function getValuesFromState(setting) {
-    let res;
+  function getSettingChoices(setting) {
+    let choices;
     if (setting === 'moveToPage') {
-      res = [...pagesList];
-      res.unshift(defaultSettings[setting].default);
+      choices = [...pagesList];
+      choices.unshift(defaultSettings[setting].default);
     }
-    return res;
+    return choices;
   }
 
   const updateSpecificExtensionSetting = (field: string, value: any) => {
@@ -46,7 +46,7 @@ export const ExtensionSettingsForm = ({
 
         // Some settings need to get their choices from the application state
         if (defaultSettings[setting].needsStateValues) {
-          choices = getValuesFromState(setting);
+          choices = getSettingChoices(setting);
         }
         return (
           <ListItem style={{ padding: 0 }}>

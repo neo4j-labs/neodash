@@ -34,7 +34,7 @@ const EXTENSIONS_CONFIG = {
         label: 'Enable Reset Parameters',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       drilldownEnabled: {
         label: 'Enable Drilldown',

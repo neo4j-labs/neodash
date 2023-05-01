@@ -67,10 +67,6 @@ export const NeoWorkflowListModal = ({
   workflowsList,
   deleteWorkflow,
 }) => {
-  /**
-   * to comment
-   * @returns
-   */
   function getStatusMessage() {
     const messages = {};
     messages[STEP_STATUS.CANCELLED] = getCancelledIcon(false);

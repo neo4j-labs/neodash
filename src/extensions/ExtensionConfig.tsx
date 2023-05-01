@@ -84,18 +84,18 @@ export const EXTENSIONS = {
  * @returns
  */
 function getExtensionReducers() {
-  let recuders = {};
+  let reducers = {};
   Object.values(EXTENSIONS).forEach((extension) => {
     try {
       if (extension.reducerPrefix && extension.reducerObject) {
         let reducer = { name: extension.name, reducer: extension.reducerObject };
-        recuders[extension.reducerPrefix] = reducer;
+        reducers[extension.reducerPrefix] = reducer;
       }
     } catch (e) {
       console.log(`Something wrong happened while loading the Extension Reducer: ${e}`);
     }
   });
-  return recuders;
+  return reducers;
 }
 
 /**

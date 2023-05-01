@@ -8,8 +8,8 @@ async function sleep(msec) {
 async function consoleLogAsync(message: string, other?: any) {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));
 }
-// TODO: detach runCypherQuery method from here and define another method for the workflows
 
+// TODO: detach runCypherQuery method from here and define another method for the workflows
 async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
   await runCypherQuery(
     driver,
@@ -168,7 +168,7 @@ export function runWorkflow(
       await consoleLogAsync('Error while running a workflow:', e);
     } finally {
       handleEnd();
-      await consoleLogAsync('Worklow results TO REMOVE:', results);
+      await consoleLogAsync('Workflow results to be removed:', results);
     }
   }
   return {

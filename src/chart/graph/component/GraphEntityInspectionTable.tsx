@@ -16,17 +16,15 @@ export const formatProperty = (property) => {
 
 /**
  * Component to render node/relationship properties in a table format
- * @param entity
- * @param setParamList function to set the list of checked value inside the compoenent calling GraphEntityInspectionTable
  */
 export const GraphEntityInspectionTable = ({
   entity,
-  setParamList = (_value) => {
+  setSelectedParameters = (_value) => {
     console.log('undefined function in GraphEntityInspectionTable');
   },
-  hideCheckList = true,
+  checklistEnabled = false,
 }) => {
-  const [checkedList, setCheckedList] = React.useState<string[]>([]);
+  const [checkedParameters, setCheckedParameters] = React.useState<string[]>([]);
   const hasPropertyToShow = Object.keys(entity.properties).length > 0;
   if (!entity) {
     return <></>;
@@ -34,22 +32,22 @@ export const GraphEntityInspectionTable = ({
 
   /**
    * Function to manage the click
-   * @param paramName
+   * @param parameter
    * @param checked
    */
-  function manageCheck(paramName, checked) {
-    let tmp = [...checkedList];
+  function handleCheckboxClick(parameter, checked) {
+    let newCheckedParameters = [...checkedParameters];
     if (checked) {
-      tmp.push(paramName);
+      newCheckedParameters.push(parameter);
     } else {
-      const index = tmp.indexOf(paramName);
+      const index = newCheckedParameters.indexOf(parameter);
       if (index > -1) {
-        tmp.splice(index, 1);
+        newCheckedParameters.splice(index, 1);
       }
     }
-    if (setParamList) {
-      setCheckedList(tmp);
-      setParamList(tmp);
+    if (setSelectedParameters) {
+      setCheckedParameters(newCheckedParameters);
+      setSelectedParameters(newCheckedParameters);
     }
   }
 
@@ -61,7 +59,7 @@ export const GraphEntityInspectionTable = ({
             <TableRow>
               <TableCell align='left'>Property</TableCell>
               <TableCell align='left'>Value</TableCell>
-              {!hideCheckList ? <TableCell align='center'>Select Property</TableCell> : <></>}
+              {checklistEnabled ? <TableCell align='center'>Select Property</TableCell> : <></>}
             </TableRow>
           </TableHead>
         ) : (
@@ -81,12 +79,12 @@ export const GraphEntityInspectionTable = ({
                   <TableCell align={'left'}>
                     <ShowMoreText lines={2}>{formatProperty(entity && entity.properties[key].toString())}</ShowMoreText>
                   </TableCell>
-                  {!hideCheckList ? (
+                  {checklistEnabled ? (
                     <TableCell align={'center'}>
                       <Checkbox
                         color='default'
                         onChange={(event) => {
-                          manageCheck(key, event.target.checked);
+                          handleCheckboxClick(key, event.target.checked);
                         }}
                       />
                     </TableCell>

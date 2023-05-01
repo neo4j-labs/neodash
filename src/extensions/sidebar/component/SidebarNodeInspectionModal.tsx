@@ -30,9 +30,9 @@ const SidebarNodeInspectionModal = ({
   onGlobalParameterUpdate,
 }) => {
   const [selection, setSelection] = React.useState({});
-  const [paramList, setParamList] = React.useState([]);
+  const [selectedParameters, setSelectedParameters] = React.useState([]);
 
-  // Page where you can drill drown to
+  // Get page to drill down to, if enabled
   const drillDownPage = extensionSettings.moveToPage
     ? extensionSettings.moveToPage === 'Current Page'
       ? pageNumber
@@ -46,8 +46,8 @@ const SidebarNodeInspectionModal = ({
   /**
    * Function that has the responsibility to manage the drill down logic when you click the button
    */
-  const drillDown = () => {
-    paramList.forEach((nodeParam) => {
+  const handleDrilldown = () => {
+    selectedParameters.forEach((nodeParam) => {
       onGlobalParameterUpdate(`${NODE_SIDEBAR_PARAM_PREFIX}${nodeParam}`, entity.properties[nodeParam]);
     });
     handleClose();
@@ -78,8 +78,8 @@ const SidebarNodeInspectionModal = ({
               <br />
               <GraphEntityInspectionTable
                 entity={entity}
-                hideCheckList={!extensionSettings.drilldownEnabled}
-                setParamList={setParamList}
+                checklistEnabled={extensionSettings.drilldownEnabled}
+                setSelectedParameters={setSelectedParameters}
               ></GraphEntityInspectionTable>
               <br />
             </div>
@@ -102,7 +102,7 @@ const SidebarNodeInspectionModal = ({
           {extensionSettings.drilldownEnabled ? (
             <Button
               onClick={() => {
-                drillDown();
+                handleDrilldown();
               }}
               style={{ float: 'right', backgroundColor: 'white', marginBottom: 10 }}
               variant='contained'

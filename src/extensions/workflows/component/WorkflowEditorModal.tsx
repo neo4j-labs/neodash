@@ -1,4 +1,3 @@
-// todo
 import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -17,12 +16,6 @@ import { connect } from 'react-redux';
 import { getWorkflow } from '../state/WorkflowSelectors';
 import { createWorkflow, updateWorkflowName, updateWorkflowSteps } from '../state/WorkflowActions';
 const ReactGridLayout = WidthProvider(RGL);
-
-interface Step {
-  name: string;
-  index: number;
-  query: string;
-}
 
 function moveElementInArray(array, fromIndex, toIndex) {
   array.splice(toIndex, 0, array.splice(fromIndex, 1)[0]);
@@ -58,6 +51,7 @@ export const NeoWorkflowEditorModal = ({
     }
     setOpen(false);
   };
+
   const addStep = (key) => {
     const step = WORKFLOW_STEPS[key];
     setSteps(steps.concat(step));

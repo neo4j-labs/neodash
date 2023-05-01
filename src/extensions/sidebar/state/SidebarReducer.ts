@@ -10,7 +10,7 @@ import {
   UPDATE_EXTENSION_TITLE,
 } from './SidebarActions';
 
-export const INITIAL_EXTENSIONS_STATE = {
+export const INITIAL_EXTENSION_STATE = {
   settings: {},
   query: '',
   database: '',
@@ -20,7 +20,7 @@ export const INITIAL_EXTENSIONS_STATE = {
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
-export const sidebarReducer = (state = INITIAL_EXTENSIONS_STATE, action: { type: any; payload: any }) => {
+export const sidebarReducer = (state = INITIAL_EXTENSION_STATE, action: { type: any; payload: any }) => {
   const { type, payload } = action;
   switch (type) {
     case UPDATE_EXTENSION_SETTINGS: {

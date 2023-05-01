@@ -9,6 +9,7 @@ import {
   CREATE_WORKFLOW,
   UPDATE_WORKFLOW_STEP_STATUS,
 } from './WorkflowActions';
+
 export const initialState = {
   workflowsList: [],
   settings: {},

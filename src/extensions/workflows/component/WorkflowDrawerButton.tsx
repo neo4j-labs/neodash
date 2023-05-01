@@ -16,15 +16,10 @@ import { getDatabase } from '../../../settings/SettingsSelectors';
  * The component will run the workflow in background, so we can continue
  * to use the application while the workflow runs. The button will change color based on
  * the status of the current workflow
- * @param workflowsList List of currently defined workflows stored in the state
+ * @param workflows List of currently defined workflows stored in the state
  * @param updateWorkflowStepStatus Action to change the status of a step
  */
-const NeoWorkflowDrawerButton = ({
-  workflowsList,
-  connectionDatabase,
-  updateWorkflowStepStatus,
-  loadDatabaseListFromNeo4j,
-}) => {
+const NeoWorkflowDrawerButton = ({ workflows, database, updateWorkflowStepStatus, loadDatabaseListFromNeo4j }) => {
   const [open, setOpen] = React.useState(false);
   const [isRunning, setIsRunning] = React.useState(false);
   // For each step of the current workflow, it's status
@@ -43,8 +38,8 @@ const NeoWorkflowDrawerButton = ({
   function increaseRunCounter() {
     setRunCounter(runCounter + 1);
   }
-  // Database that will run the workflow (by default the connection one)
-  const [workflowDatabase, setWorkflowDatabase] = React.useState(connectionDatabase);
+  // Database that will run the workflow (by default the one specified at connection time)
+  const [workflowDatabase, setWorkflowDatabase] = React.useState(database);
   const [databaseList, setDatabaseList] = React.useState([]);
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -82,7 +77,7 @@ const NeoWorkflowDrawerButton = ({
   useEffect(() => {
     if (currentRunIndex >= 0 && !isRunning) {
       // Getting the workflow to run from the list of existing workflows
-      let workflow = workflowsList[currentRunIndex];
+      let workflow = workflows[currentRunIndex];
 
       // Keeping the fact that is running, to block some buttons on the UI
       setIsRunning(true);
@@ -145,8 +140,8 @@ const NeoWorkflowDrawerButton = ({
 };
 
 const mapStateToProps = (state) => ({
-  workflowsList: getWorkflowsList(state),
-  connectionDatabase: getDatabase(state, -1, -1),
+  workflows: getWorkflowsList(state),
+  database: getDatabase(state, -1, -1),
 });
 
 const mapDispatchToProps = (dispatch) => ({
