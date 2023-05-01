@@ -835,7 +835,7 @@ export const REPORT_TYPES = {
     useReturnValuesAsFields: true,
     helperText: (
       <div>
-        A ScatterPlot chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code>{' '}
+        A Scatter plot chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code>
         value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
       </div>
     ),
@@ -858,12 +858,12 @@ export const REPORT_TYPES = {
         default: '#fafafa',
       },
       colorIntensityProp: {
-        label: 'Name of the field used to add color based on intensity',
+        label: 'Intensity value field',
         type: SELECTION_TYPES.TEXT,
         default: 'intensity',
       },
       labelProp: {
-        label: 'Property used as label',
+        label: 'Point label field',
         type: SELECTION_TYPES.TEXT,
         default: 'label',
       },
@@ -874,14 +874,14 @@ export const REPORT_TYPES = {
         default: false,
       },
       legendWidth: {
-        label: 'Legend Label Width (px)',
+        label: 'Legend Width (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 100,
+        default: 20,
       },
       xScale: {
         label: 'X Scale',
         type: SELECTION_TYPES.LIST,
-        values: ['linear', 'log', 'point'],
+        values: ['linear', 'log'],
         default: 'linear',
       },
       yScale: {
@@ -944,7 +944,7 @@ export const REPORT_TYPES = {
       pointSize: {
         label: 'Point Radius (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 10,
+        default: 9,
       },
       marginLeft: {
         label: 'Margin Left (px)',

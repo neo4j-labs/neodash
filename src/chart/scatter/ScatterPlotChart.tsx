@@ -7,15 +7,7 @@ import { animated } from '@react-spring/web';
 import chroma from 'chroma-js';
 
 /**
- * TODO to wrap up component
- * 1. style component tooltip
- * 2. style component legend
- * 3. check how we can add color palette selection in the options
- * 4. re-test everything
- */
-
-/**
- * Embeds a Nivo ResponsiveScatterPlot and a ResponsiveScatterPlotCanvas (from Charts) into NeoDash.
+ * Embeds a Nivo ResponsiveScatterPlot and a ResponsiveScatterPlotCanvas into NeoDash.
  */
 const NeoScatterPlot = (props: ChartProps) => {
   const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
@@ -43,18 +35,19 @@ const NeoScatterPlot = (props: ChartProps) => {
     data: [] as any[],
   });
 
-  const [intensityList, setIntensityList] = React.useState<number[]>([]);
+  const [intensities, setIntensities] = React.useState<number[]>([]);
   const [legendRange, setLegendRange] = React.useState({ min: 1, max: 2 });
 
   const settings = props.settings ? props.settings : {};
 
   const colorIntensityProp = settings.colorIntensityProp != undefined ? settings.colorIntensityProp : 'intensity';
   const labelProp = settings.labelProp != undefined ? settings.labelProp : 'label';
-  const colorPicker = chroma.scale('Spectral');
+  const colorScale = chroma.scale('Spectral');
 
   const pointSize = settings.pointSize ? settings.pointSize : 10;
   const showGrid = settings.showGrid != undefined ? settings.showGrid : true;
-
+  const showLegend = settings.legend !== undefined ? settings.legend : false;
+  const legendWidth = settings.legendWidth !== undefined ? settings.legendWidth : 20;
   const xScale = settings.xScale ? settings.xScale : 'linear';
   const yScale = settings.yScale ? settings.yScale : 'linear';
 
@@ -90,15 +83,16 @@ const NeoScatterPlot = (props: ChartProps) => {
     return isDate(x) || isDateTime(x) || x instanceof Date;
   };
 
-  // Effect used to recalculate the values at each selection change
+  // Effect used to recalculate the values at each selection change.
+  // This prevents the app doing computations on each re-render.
   useEffect(() => {
     let key = selection.value as string;
-    let tmp = {
+    let processed = {
       id: key,
       data: [] as any[],
     };
 
-    let tmpIntensityList: any[] = [];
+    let newIntensities: any[] = [];
 
     records.forEach((row) => {
       const intensity: any = row.keys.includes(colorIntensityProp)
@@ -108,7 +102,7 @@ const NeoScatterPlot = (props: ChartProps) => {
       const label: any = row.keys.includes(labelProp) ? recordToNative(row.get(labelProp)) : undefined;
 
       if (intensity) {
-        tmpIntensityList.push(intensity);
+        newIntensities.push(intensity);
         if (!keepLegend) {
           setKeepLegend(true);
         }
@@ -120,23 +114,23 @@ const NeoScatterPlot = (props: ChartProps) => {
         if (isDateTime(x)) {
           x = new Date(x.toString());
         }
-        tmp.data.push({ x, y, intensity, label });
+        processed.data.push({ x, y, intensity, label });
       }
     });
 
-    setData(tmp);
-    setValidSelection(tmp.data.length > 0);
-    setIntensityList(tmpIntensityList);
+    setData(processed);
+    setValidSelection(processed.data.length > 0);
+    setIntensities(newIntensities);
   }, [records, selection]);
 
   // Resetting the legend range
   useEffect(() => {
-    let tmp = [...intensityList].sort((a, b) => {
+    let sortedIntensities = [...intensities].sort((a, b) => {
       return a - b;
     });
 
-    setLegendRange({ min: tmp[0], max: tmp.slice(-1)[0] });
-  }, [intensityList]);
+    setLegendRange({ min: sortedIntensities[0], max: sortedIntensities.slice(-1)[0] });
+  }, [intensities]);
 
   // Post-processing validation on the data --> confirm only numeric data was selected by the user.
   if (!validSelection) {
@@ -188,13 +182,16 @@ const NeoScatterPlot = (props: ChartProps) => {
    * Color gradient showing the possible colors binded to the viz
    * @returns Legend based on the intensity
    */
-  const colorLegend = () => {
+  const generateColorLegend = () => {
     return (
       <div
         style={{
-          backgroundImage: `linear-gradient(0deg, ${[...Array(11)].map((_, i) => colorPicker(i / 10)).join(', ')})`,
-          height: '100%',
-          width: '8%',
+          backgroundImage: `linear-gradient(0deg, ${[...Array(11)].map((_, i) => colorScale(i / 10)).join(', ')})`,
+          height: props.dimensions.height - marginBottom - marginTop - 100,
+          marginTop: 20,
+          marginBottom: 50,
+          marginRight: 10,
+          width: legendWidth,
           float: 'right',
         }}
       ></div>
@@ -215,7 +212,7 @@ const NeoScatterPlot = (props: ChartProps) => {
     let value =
       legendRange.max === legendRange.min ? 0.3 : (intensity - legendRange.min) / (legendRange.max - legendRange.min);
 
-    return colorPicker(value).toString();
+    return colorScale(value).toString();
   };
 
   /**
@@ -223,7 +220,7 @@ const NeoScatterPlot = (props: ChartProps) => {
    * @param node
    * @returns Custom circle representing a node
    */
-  const MyCustomNode = (node) => {
+  const getCanvasNode = (node) => {
     return (
       <animated.circle
         cx={node.style.x}
@@ -251,18 +248,17 @@ const NeoScatterPlot = (props: ChartProps) => {
    * @param node Current selected node
    * @returns Tooltip generated for that node
    */
-  const customToolTip = (node) => {
+  const generateTooltip = (node) => {
     return (
-      <div style={{ color: node.color, background: '#333', padding: '12px 16px' }}>
+      <div style={{ color: 'black', background: 'white', border: '1px solid black', padding: '12px 16px' }}>
         <strong>{node.data.label ? `${labelProp}: ${node.data.label} ` : ''}</strong>
-
+        <br />
+        <strong>{node.data.intensity ? `${colorIntensityProp}: ${node.data.intensity}` : ''}</strong>
         {node.data.label ? <br /> : <></>}
         {`x: ${node.formattedX}`}
         <br />
         {`y: ${node.formattedY}`}
         <br />
-        <strong>{node.data.intensity ? `${colorIntensityProp}: ${node.data.intensity}` : ''}</strong>
-        {}
       </div>
     );
   };
@@ -270,8 +266,15 @@ const NeoScatterPlot = (props: ChartProps) => {
   // If the query returns too many nodes, pass to a Canvas verison of the chart (scales easier than a normal plot)
   const ComponentType = data.data.length <= 300 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
 
-  const scatterPlotViz = (
-    <div style={{ minWidth: `${!keepLegend ? '100%' : '92%'}`, height: '100%', float: 'left', display: 'flex' }}>
+  const scatterplot = (
+    <div
+      style={{
+        width: !keepLegend ? '100%' : props.dimensions.width - legendWidth - 10,
+        height: '100%',
+        float: 'left',
+        display: 'flex',
+      }}
+    >
       <ComponentType
         data={[data]}
         key={`${selection.value}`}
@@ -320,26 +323,25 @@ const NeoScatterPlot = (props: ChartProps) => {
           tickPadding: 12,
           tickRotation: yTickRotationAngle,
         }}
-        nodeComponent={MyCustomNode}
-        pointSize={pointSize}
+        nodeComponent={getCanvasNode}
+        nodeSize={pointSize}
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}
         pointLabelYOffset={-12}
-        useMesh={true}
-        tooltip={(node) => customToolTip(node.node)}
+        tooltip={(node) => generateTooltip(node.node)}
         renderNode={renderNode}
       />
     </div>
   );
 
-  const finalViz = (
+  const visualization = (
     <>
-      {scatterPlotViz}
-      {keepLegend ? colorLegend() : <></>}
+      {scatterplot}
+      {showLegend && keepLegend ? generateColorLegend() : <></>}
     </>
   );
 
-  return finalViz;
+  return visualization;
 };
 
 export default NeoScatterPlot;
