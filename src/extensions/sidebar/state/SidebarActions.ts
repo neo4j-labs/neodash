@@ -20,7 +20,7 @@ export const setExtensionQuery = (query: any) => ({
 });
 
 export const UPDATE_EXTENSION_OPEN = `${NODE_SIDEBAR_ACTION_PREFIX}UPDATE_EXTENSION_OPEN`;
-export const setExtensionOpen = (open: boolean) => ({
+export const setExtensionSidebarOpen = (open: boolean) => ({
   type: UPDATE_EXTENSION_OPEN,
   payload: { opened: open },
 });

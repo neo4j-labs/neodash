@@ -2,7 +2,7 @@ import ReportIcon from '@material-ui/icons/Report';
 import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { setExtensionOpen } from './state/SidebarActions';
+import { setExtensionSidebarOpen } from './state/SidebarActions';
 import { getSidebarOpened } from './state/SidebarSelectors';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
@@ -28,7 +28,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setNodeSidebarOpened: (open) => dispatch(setExtensionOpen(open)),
+  setNodeSidebarOpened: (open) => dispatch(setExtensionSidebarOpen(open)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoNodeSidebarButton);
