@@ -13,13 +13,13 @@ import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
-import { setExtensionOpen } from './ExtensionsActions';
+import { setExtensionReducerEnabled } from './state/ExtensionActions';
 
 const NeoExtensionsModal = ({
   extensions,
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
-  setExtensionOpened,
+  setExtensionReducerEnabled,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -91,14 +91,17 @@ const NeoExtensionsModal = ({
                           <Tooltip title='Enable the extension' aria-label=''>
                             <FormControlLabel
                               onClick={() => {
+                                let active = extensions[e.name] == undefined ? true : undefined;
                                 if (e.enabled) {
-                                  setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
-                                  // TODO - generalize, all drawer-like extensions should be closed
-                                  if (e.name === 'alerts') {
-                                    setExtensionOpened(e.name, extensions[e.name] == undefined ? false : undefined);
+                                  setExtensionEnabled(e.name, active);
+                                  if (e.reducerPrefix) {
+                                    setExtensionReducerEnabled(e.reducerPrefix, active);
                                   }
                                 } else {
                                   onExtensionUnavailableTriggered(e.label);
+                                  if (e.reducerPrefix) {
+                                    setExtensionReducerEnabled(e.reducerPrefix, active);
+                                  }
                                 }
                               }}
                               control={
@@ -149,7 +152,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setExtensionEnabled: (name, enabled) => dispatch(setExtensionEnabled(name, enabled)),
-  setExtensionOpened: (name, opened) => dispatch(setExtensionOpen(name, opened)), // TODO: align naming
+  setExtensionReducerEnabled: (name, enabled) => dispatch(setExtensionReducerEnabled(name, enabled)),
   onExtensionUnavailableTriggered: (name) =>
     dispatch(
       createNotificationThunk(

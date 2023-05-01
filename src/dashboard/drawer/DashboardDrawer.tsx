@@ -20,23 +20,19 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
-import NeoAlertModal from '../../extensions/alert/NeoAlertDrawerButton';
-import AlertDrawer from '../../extensions/alert/AlertDrawer';
+import NodeSidebarDrawer from '../../extensions/sidebar/SidebarDrawer';
+import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 /**
  * For each config in extensionConfig, if the extensionConfig is opened, render its component
  * @returns
  */
 // TODO: abstract logic
-function renderExtensionDrawers(open) {
-  return <AlertDrawer open={open}></AlertDrawer>;
+function renderExtensionDrawers() {
+  return <NodeSidebarDrawer></NodeSidebarDrawer>;
 }
 
 // TODO: abstract logic
-function renderExtensionModals() {
-  return <NeoAlertModal></NeoAlertModal>;
-}
-
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   open,
@@ -44,12 +40,28 @@ export const NeoDrawer = ({
   connection,
   dashboardSettings,
   extensions,
-  extensionsConfig,
   updateDashboardSetting,
   handleDrawerClose,
   onAboutModalOpen,
   resetApplication,
 }) => {
+  /**
+   * Function to render dynamically the buttons in the drawer related to all the extension that
+   * are enabled and present a button (EX: node-sidebar)
+   * @returns JSX element containing all the buttons related to their enabled extensions
+   */
+  function renderDrawerExtensionsButton() {
+    const res = (
+      <>
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
+          const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
+          return Component ? <Component /> : <></>;
+        })}
+      </>
+    );
+    return res;
+  }
+
   // Override to hide the drawer when the application is in standalone mode.
   if (hidden) {
     return <></>;
@@ -76,7 +88,7 @@ export const NeoDrawer = ({
               width: '56px',
             }
       }
-      open={open == true}
+      open={open}
     >
       <div
         style={{
@@ -133,7 +145,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
-        {extensions.alerts ? renderExtensionModals() : <></>}
+        {renderDrawerExtensionsButton()}
       </List>
       <Divider />
       <List>
@@ -156,7 +168,7 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {extensionsConfig.alerts ? renderExtensionDrawers(extensionsConfig.alerts.opened) : <></>}
+      {renderExtensionDrawers()}
     </>
   );
 };
@@ -165,7 +177,6 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   hidden: applicationIsStandalone(state),
   extensions: getDashboardExtensions(state),
-  extensionsConfig: getDashboardExtensionsConfig(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
   connection: applicationGetConnection(state),
 });

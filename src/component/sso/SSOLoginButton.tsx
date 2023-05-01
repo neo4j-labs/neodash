@@ -4,7 +4,7 @@ import { getDiscoveryDataInfo } from './SSOUtils';
 import { Button } from '@material-ui/core';
 import SecurityIcon from '@material-ui/icons/Security';
 
-export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
+export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt, onClick }) => {
   const [savedSSOProviders, setSSOProviders] = useState([]);
 
   useEffect(() => {
@@ -22,7 +22,9 @@ export const SSOLoginButton = ({ discoveryAPIUrl, onSSOAttempt }) => {
             key={provider.id}
             style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'white' }}
             onClick={() => {
+              // TODO - if we have SSO credentials cached, try and use those first, if fail, do a call to the SSO provider.
               const selectedSSOProvider = savedSSOProviders.find(({ id }) => id === provider.id);
+              onClick();
               onSSOAttempt();
               authRequestForSSO(selectedSSOProvider);
             }}

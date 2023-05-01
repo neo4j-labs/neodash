@@ -1,17 +1,27 @@
 import { Drawer, ListItem, List } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
-import AlertDrawerHeader from './AlertDrawerHeader';
+import SidebarDrawerHeader from './SidebarDrawerHeader';
 import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { connect } from 'react-redux';
-import { getExtensionDatabase, getExtensionQuery, getExtensionSettings } from '../ExtensionsSelectors';
-import AlertNodeCard from './listElement/AlertNodeCard';
+import { getSidebarDatabase, getSidebarOpened, getSidebarQuery } from './state/SidebarSelectors';
+import SidebarNodeCard from './component/SidebarNodeCard';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks';
 import { checkIfAllRecordsAreNodes, parseNodeRecordsToDictionaries } from '../../chart/graph/util/RecordUtils';
+import { getExtensionSettings } from '../state/ExtensionSelectors';
+import { getDashboardExtensions } from '../../dashboard/DashboardSelectors';
 
 // The sidebar that appears on the left side of the dashboard.
-export const AlertDrawer = ({ open, extensionSettings, query, database, loadDatabaseListFromNeo4j }) => {
+export const NodeSidebarDrawer = ({
+  extensions,
+  extensionSettings,
+  query,
+  database,
+  isOpen,
+  loadDatabaseListFromNeo4j,
+}) => {
+  const open = extensions['node-sidebar'] && isOpen ? isOpen : false;
   const [records, setRecords] = useState([]);
   // List of records parsed from the result
   const [parsedRecords, setParsedRecords] = useState([]);
@@ -122,7 +132,7 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
         marginTop: '113px',
       }}
     >
-      <AlertDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></AlertDrawerHeader>
+      <SidebarDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></SidebarDrawerHeader>
       {/* TODO: define generic body here (for now list of clickable cards) */}
       {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
         getDrawerErrorMessage(status, records)
@@ -133,7 +143,7 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
           {parsedRecords.map((entity) => {
             return (
               <ListItem>
-                <AlertNodeCard entity={entity} extensionSettings={extensionSettings}></AlertNodeCard>
+                <SidebarNodeCard entity={entity} extensionSettings={extensionSettings}></SidebarNodeCard>
               </ListItem>
             );
           })}
@@ -146,13 +156,15 @@ export const AlertDrawer = ({ open, extensionSettings, query, database, loadData
 };
 
 const mapStateToProps = (state) => ({
-  extensionSettings: getExtensionSettings(state, 'alerts'),
-  query: getExtensionQuery(state, 'alerts'),
-  database: getExtensionDatabase(state, 'alerts'),
+  extensions: getDashboardExtensions(state),
+  extensionSettings: getExtensionSettings(state, 'node-sidebar'),
+  query: getSidebarQuery(state),
+  database: getSidebarDatabase(state),
+  isOpen: getSidebarOpened(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlertDrawer);
+export default connect(mapStateToProps, mapDispatchToProps)(NodeSidebarDrawer);
