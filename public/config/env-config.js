@@ -27,15 +27,14 @@
 */
 
 window._dynamicEnv_ = {
-  REACT_APP_HIVE_URI: 'http://localhost:4001/graphql',
-  REACT_APP_HIVE_UI: 'http://localhost:3002/solutions',
-  REACT_APP_SOLUTION: 'neodash',
   REACT_APP_AUTH_DOMAIN: 'dev-o8s8b52y.auth0.com',
   REACT_APP_AUTH_CLIENT_ID: '3OOrQh3TYyNOT8Y0AeE2tWek3wX0PAef',
   REACT_APP_AUTH_METHOD: 'auth0',
-  REACT_APP_SOLUTION_BASE_URL_IN_HIVE: 'http://localhost:3000',
-  REACT_APP_NEODASH_BASE_DEMO_URL: 'http://localhost:3000',
   REACT_APP_AUTH_CALLBACK: 'http://localhost:3000/callback',
   REACT_APP_AUTH_LOGOUT_URL: 'http%3A%2F%2Flocalhost:3000',
   REACT_APP_FILE_UPLOAD_URL: 'http://localhost:4002/upload',
+  REACT_APP_NEODASH_BASE_DEMO_URL: 'http://localhost:3000',
+  REACT_APP_GALLERY_GRAPHQL_URL: 'http://localhost:4001/graphql',
+  REACT_APP_GALLERY_UI_URL: 'http://localhost:3002/solutions',
+  REACT_APP_VERIFY_ACCESS: true,
 };

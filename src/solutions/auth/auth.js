@@ -16,7 +16,7 @@
  * https://github.com/Neo4jSolutions
  */
 
-import { Auth } from '@neo4j_solutions/solutions-auth-lib';
+import { Auth } from './authLib';
 import { config } from '../config/dynamicConfig';
 
 const auth = new Auth({
@@ -25,12 +25,16 @@ const auth = new Auth({
   clientID: config('AUTH_CLIENT_ID'),
   redirectUri: config('AUTH_CALLBACK'),
   authMethod: config('AUTH_METHOD'),
-  demoUser: 'neodash@neo4j.com',
-  hiveInfo: {
-    hiveUri: config('HIVE_URI'),
-    hiveUi: config('HIVE_UI'),
-    hiveSolutionBaseUrl: config('SOLUTION_BASE_URL_IN_HIVE'),
-    solutionName: config('SOLUTION'),
+  galleryInfo: {
+    // the graphql api of the gallery, e.g. https://your.domain.com/neodashgallery/graphql
+    galleryGraphQLUrl: config('GALLERY_GRAPHQL_URL'),
+    // the graphql ui of the gallery, e.g. https://your.domain.com/neodashgallery
+    galleryUiUrl: config('GALLERY_UI_URL'),
+    // the base uri that you use to launch the neodash ui, e.g. https://your.domain.com/neodash
+    neoDashBaseUrl: config('NEODASH_BASE_DEMO_URL'),
+    // set this to true to call the graphql endpoing verifyDemoAccess to confirm the user is
+    //  authorized to run the demo
+    verifyAccess: config('VERIFY_ACCESS'),
   },
 });
 export default auth;
