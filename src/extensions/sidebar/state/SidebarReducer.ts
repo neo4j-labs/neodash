@@ -8,7 +8,7 @@ import {
   UPDATE_EXTENSION_QUERY,
   UPDATE_EXTENSION_SETTINGS,
   UPDATE_EXTENSION_TITLE,
-} from './AlertActions';
+} from './SidebarActions';
 
 export const INITIAL_EXTENSIONS_STATE = {
   settings: {},
@@ -20,7 +20,7 @@ export const INITIAL_EXTENSIONS_STATE = {
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
-export const alertReducer = (state = INITIAL_EXTENSIONS_STATE, action: { type: any; payload: any }) => {
+export const sidebarReducer = (state = INITIAL_EXTENSIONS_STATE, action: { type: any; payload: any }) => {
   const { type, payload } = action;
   switch (type) {
     case UPDATE_EXTENSION_SETTINGS: {

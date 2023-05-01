@@ -1,5 +1,5 @@
 export const NODE_SIDEBAR_ACTION_PREFIX = 'DASHBOARD/EXTENSIONS/NODE_SIDEBAR/';
-export const NODE_SIDEBAR_EXTENSION_NAME = 'node-sidebar';
+
 export const UPDATE_EXTENSION_TITLE = `${NODE_SIDEBAR_ACTION_PREFIX}UPDATE_EXTENSION_TITLE`;
 export const setExtensionTitle = (title: string) => ({
   type: UPDATE_EXTENSION_TITLE,

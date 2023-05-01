@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import NeoSetting from '../../../component/field/Setting';
 import { getPageNumbersAndNames } from '../../../dashboard/DashboardSelectors';
-import { getNodeSidebarDefaultConfig } from '../AlertConfig';
+import { getNodeSidebarDefaultConfig } from '../SidebarConfig';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 

@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
-import { setExtensionReducerEnabled } from './stateManagement/ExtensionActions';
+import { setExtensionReducerEnabled } from './state/ExtensionActions';
 
 const NeoExtensionsModal = ({
   extensions,

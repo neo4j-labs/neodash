@@ -20,7 +20,7 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
-import AlertDrawer from '../../extensions/alert/AlertDrawer';
+import NodeSidebarDrawer from '../../extensions/sidebar/SidebarDrawer';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 /**
@@ -29,7 +29,7 @@ import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
  */
 // TODO: abstract logic
 function renderExtensionDrawers() {
-  return <AlertDrawer></AlertDrawer>;
+  return <NodeSidebarDrawer></NodeSidebarDrawer>;
 }
 
 // TODO: abstract logic

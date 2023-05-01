@@ -3,7 +3,7 @@
  */
 
 import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
-import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/stateManagement/ExtensionReducer';
+import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/state/ExtensionReducer';
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
 

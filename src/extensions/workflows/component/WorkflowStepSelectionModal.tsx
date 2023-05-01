@@ -12,8 +12,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { DataGrid } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { WORKFLOW_STEPS } from './WorkflowSteps';
-import { Box } from '@mui/material'; /** * A modal to save a dashboard as a JSON text string. * The button to open the modal is intended to use in a drawer at the side of the page. */
+import { WORKFLOW_STEPS } from '../WorkflowSteps';
+
 const styles = {};
 export const NeoWorkflowStepSelectionModal = ({ open, setOpen, addStep }) => {
   const rows = Object.values(WORKFLOW_STEPS).map((step, index) => {

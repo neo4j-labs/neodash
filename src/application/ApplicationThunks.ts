@@ -9,7 +9,7 @@ import {
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
-import { setExtensionOpen } from '../extensions/alert/stateManagement/AlertActions';
+import { setExtensionOpen } from '../extensions/sidebar/state/SidebarActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {

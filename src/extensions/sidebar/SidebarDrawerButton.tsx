@@ -2,8 +2,8 @@ import ReportIcon from '@material-ui/icons/Report';
 import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { setExtensionOpen } from './stateManagement/AlertActions';
-import { getSidebarOpened } from './stateManagement/AlertSelectors';
+import { setExtensionOpen } from './state/SidebarActions';
+import { getSidebarOpened } from './state/SidebarSelectors';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 const NeoNodeSidebarButton = ({ isOpen, setNodeSidebarOpened }) => {
@@ -13,7 +13,7 @@ const NeoNodeSidebarButton = ({ isOpen, setNodeSidebarOpened }) => {
 
   return (
     <div>
-      <ListItem button onClick={handleClick} id='alert-sidebar-button'>
+      <ListItem button onClick={handleClick} id='sidebar-button'>
         <ListItemIcon>
           <ReportIcon />
         </ListItemIcon>

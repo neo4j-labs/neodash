@@ -1,8 +1,6 @@
 import { Button, TextareaAutosize } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import React from 'react';
-import { NeoTableChart } from '../../chart/table/TableChart';
-import { REPORT_TYPES } from '../../config/ReportConfig';
+import { REPORT_TYPES } from '../../../config/ReportConfig';
 
 const textFieldStyle = { width: '155px', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' };
 

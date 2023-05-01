@@ -6,25 +6,19 @@ import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 import { DialogContent, FormControlLabel, FormGroup, MenuItem, Switch } from '@material-ui/core';
-import { getSidebarDatabase, getSidebarQuery } from '../stateManagement/AlertSelectors';
-import {
-  NODE_SIDEBAR_EXTENSION_NAME,
-  setExtensionDatabase,
-  setExtensionQuery,
-  setExtensionSettings,
-} from '../stateManagement/AlertActions';
+import { getSidebarDatabase, getSidebarQuery } from '../state/SidebarSelectors';
+import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../state/SidebarActions';
 import NeoField from '../../../component/field/Field';
 import { applicationGetConnectionDatabase } from '../../../application/ApplicationSelectors';
-import ExtensionSettingsForm from './ExtensionSettingsForm';
+import ExtensionSettingsForm from './SidebarSettingsForm';
 import SaveIcon from '@material-ui/icons/Save';
-import { getExtensionSettings } from '../../stateManagement/ExtensionSelectors';
+import { getExtensionSettings } from '../../state/ExtensionSelectors';
 
 /**
  * TODO: lets also generalize this as a 'pop-uppable report'.
- * I can see some nice uses of this beyond alerts.
  * Perhaps we can even extend the Report component or generalize somehow.
  */
-const AlertSettingsModal = ({
+const SidebarSettingsModal = ({
   databaseList,
   settingsOpen,
   setSettingsOpen,
@@ -162,7 +156,7 @@ const AlertSettingsModal = ({
 };
 
 const mapStateToProps = (state) => ({
-  extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
+  extensionSettings: getExtensionSettings(state, 'node-sidebar'),
   query: getSidebarQuery(state),
   database: getSidebarDatabase(state),
   applicationDatabase: applicationGetConnectionDatabase(state),
@@ -176,4 +170,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlertSettingsModal);
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarSettingsModal);

@@ -1,6 +1,5 @@
-import { stepButtonClasses } from '@mui/material';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
-import { STEP_STATUS } from '../WorkflowRunnerModal';
+import { STEP_STATUS } from '../component/WorkflowRunnerModal';
 
 async function sleep(msec) {
   return new Promise((resolve) => setTimeout(resolve, msec));

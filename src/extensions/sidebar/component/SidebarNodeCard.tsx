@@ -1,11 +1,10 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import AlertNodeInspectionModal from './AlertNodeInspectionModal';
+import SidebarNodeInspectionModal from './SidebarNodeInspectionModal';
 import { CardContent } from '@material-ui/core';
 
-// TODO: This is probably a generic "Node Card" beyond alerts, I would call it something like this.
 // TODO: Understand what to show (probably an option (maybe first three fields by default))
-export const AlertNodeCard = ({ entity, extensionSettings }) => {
+export const SidebarNodeCard = ({ entity, extensionSettings }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   // TODO: understand how to bind colors
   const colorProperty = extensionSettings.colorProperty ? extensionSettings.colorProperty : 'color';
@@ -34,14 +33,14 @@ export const AlertNodeCard = ({ entity, extensionSettings }) => {
           </p>
         </CardContent>
       </Card>
-      <AlertNodeInspectionModal
+      <SidebarNodeInspectionModal
         entity={entity}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-      ></AlertNodeInspectionModal>
+      ></SidebarNodeInspectionModal>
     </>
   );
   return content;
 };
 
-export default AlertNodeCard;
+export default SidebarNodeCard;

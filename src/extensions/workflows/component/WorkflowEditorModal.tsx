@@ -12,10 +12,10 @@ import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import SaveIcon from '@material-ui/icons/Save';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { NeoWorkflowStepSelectionModal } from './WorkflowStepSelectionModal';
-import { WORKFLOW_STEPS } from './WorkflowSteps';
+import { WORKFLOW_STEPS } from '../WorkflowSteps';
 import { connect } from 'react-redux';
-import { getWorkflow } from './stateManagement/WorkflowSelectors';
-import { createWorkflow, updateWorkflowName, updateWorkflowSteps } from './stateManagement/WorkflowActions';
+import { getWorkflow } from '../state/WorkflowSelectors';
+import { createWorkflow, updateWorkflowName, updateWorkflowSteps } from '../state/WorkflowActions';
 const ReactGridLayout = WidthProvider(RGL);
 
 interface Step {

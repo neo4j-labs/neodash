@@ -1,20 +1,20 @@
 import { debounce, IconButton, TextField, Tooltip } from '@material-ui/core';
 import React, { useCallback } from 'react';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AlertSettingsModal from './settings/AlertSettingsModal';
-import { getSidebarGlobalParameters, getSidebarTitle } from './stateManagement/AlertSelectors';
-import { NODE_SIDEBAR_EXTENSION_NAME, setExtensionTitle } from './stateManagement/AlertActions';
+import SidebarSettingsModal from './settings/SidebarSettingsModal';
+import { getSidebarGlobalParameters, getSidebarTitle } from './state/SidebarSelectors';
+import { setExtensionTitle } from './state/SidebarActions';
 import { connect } from 'react-redux';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
-import { getExtensionSettings } from '../stateManagement/ExtensionSelectors';
+import { getExtensionSettings } from '../state/ExtensionSelectors';
 import { updateGlobalParameterThunk } from '../../settings/SettingsThunks';
 
 /**
- * The editable header of the alert drawer, including the title and settings button.
+ * The editable header of the drawer, including the title and settings button.
  * TODO - rename to 'Node Sidebar Header' to match new extension name.
  */
-export const AlertDrawerHeader = ({
+export const SidebarDrawerHeader = ({
   databaseList,
   title,
   extensionSettings,
@@ -68,7 +68,7 @@ export const AlertDrawerHeader = ({
             />
           </td>
           <td>{refreshable ? refreshButton : <></>}</td>
-          <td>{clearParametersButton}</td>
+          <td>{extensionSettings.resetParametersEnabled ? clearParametersButton : <></>}</td>
           <td>
             <Tooltip title='Settings' aria-label='settings'>
               <IconButton
@@ -80,11 +80,11 @@ export const AlertDrawerHeader = ({
                 <MoreVertIcon />
               </IconButton>
             </Tooltip>
-            <AlertSettingsModal
+            <SidebarSettingsModal
               databaseList={databaseList}
               settingsOpen={settingsOpen}
               setSettingsOpen={setSettingsOpen}
-            ></AlertSettingsModal>
+            ></SidebarSettingsModal>
           </td>
         </tr>
       </tbody>
@@ -93,9 +93,8 @@ export const AlertDrawerHeader = ({
 };
 
 const mapStateToProps = (state) => ({
-  // TODO: change 'alerts' to new name.
   title: getSidebarTitle(state),
-  extensionSettings: getExtensionSettings(state, NODE_SIDEBAR_EXTENSION_NAME),
+  extensionSettings: getExtensionSettings(state, 'node-sidebar'),
   sidebarGlobalParameters: getSidebarGlobalParameters(state),
 });
 
@@ -108,4 +107,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlertDrawerHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarDrawerHeader);

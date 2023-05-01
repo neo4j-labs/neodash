@@ -12,7 +12,7 @@ import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
-import { getWorkflow } from './stateManagement/WorkflowSelectors';
+import { getWorkflow } from '../state/WorkflowSelectors';
 import { Button, TextareaAutosize } from '@material-ui/core';
 import { getCancelledIcon, getCompleteIcon, getRunningIcon, getErrorIcon, getWaitingIcon } from './Icons';
 import NeoWorkflowRunnerStepDetails from './WorkflowRunnerStepDetails';
