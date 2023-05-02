@@ -51,7 +51,7 @@ and will need to be executed manually.
 
 == Rule-Based Styling
 
-Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
+Using the link:../../extensions/rule-based-styling/[Rule-Based Styling] menu, the
 following style rules can be applied to the map: 
 
 - The color of the text.
