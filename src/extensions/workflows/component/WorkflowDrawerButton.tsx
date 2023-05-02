@@ -9,7 +9,7 @@ import { getWorkflowsList } from '../state/WorkflowSelectors';
 import { updateWorkflowStepStatus } from '../state/WorkflowActions';
 import { STEP_STATUS } from './WorkflowRunnerModal';
 import { loadDatabaseListFromNeo4jThunk } from '../../../dashboard/DashboardThunks';
-import { getDatabase } from '../../../settings/SettingsSelectors';
+import { getDatabase, getGlobalParameters } from '../../../settings/SettingsSelectors';
 
 /**
  * Component that has the responsiblity to run Cypher workflows.
@@ -19,7 +19,13 @@ import { getDatabase } from '../../../settings/SettingsSelectors';
  * @param workflows List of currently defined workflows stored in the state
  * @param updateWorkflowStepStatus Action to change the status of a step
  */
-const NeoWorkflowDrawerButton = ({ workflows, database, updateWorkflowStepStatus, loadDatabaseListFromNeo4j }) => {
+const NeoWorkflowDrawerButton = ({
+  workflows,
+  database,
+  parameters,
+  updateWorkflowStepStatus,
+  loadDatabaseListFromNeo4j,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [isRunning, setIsRunning] = React.useState(false);
   // For each step of the current workflow, it's status
@@ -86,6 +92,7 @@ const NeoWorkflowDrawerButton = ({ workflows, database, updateWorkflowStepStatus
       let run = runWorkflow(
         driver,
         workflow,
+        parameters,
         workflowDatabase,
         currentRunIndex,
         workflowStepStatus,
@@ -141,6 +148,7 @@ const NeoWorkflowDrawerButton = ({ workflows, database, updateWorkflowStepStatus
 
 const mapStateToProps = (state) => ({
   workflows: getWorkflowsList(state),
+  parameters: getGlobalParameters(state),
   database: getDatabase(state, -1, -1),
 });
 

@@ -21,7 +21,7 @@ export const NeoWorkflowStepSelectionModal = ({ open, setOpen, addStep }) => {
   });
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
-    { field: 'name', headerName: 'Name', width: 160 },
+    { field: 'name', headerName: 'Name', width: 200 },
     { field: 'type', headerName: 'Type', width: 120 },
     {
       field: 'description',

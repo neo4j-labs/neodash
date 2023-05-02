@@ -10,12 +10,12 @@ async function consoleLogAsync(message: string, other?: any) {
 }
 
 // TODO: detach runCypherQuery method from here and define another method for the workflows
-async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
+async function runWorkflowStep(driver, database, query, parameters, setStatus, setRecords) {
   await runCypherQuery(
     driver,
     database,
     query,
-    {},
+    parameters,
     1000,
     setStatus,
     setRecords,
@@ -45,6 +45,7 @@ async function runWorkflowStep(driver, database, query, setStatus, setRecords) {
 export function runWorkflow(
   driver,
   workflow,
+  parameters,
   workflowDatabase,
   workflowIndex,
   workflowStepStatus,
@@ -156,7 +157,7 @@ export function runWorkflow(
         results.push({ records: [], status: STEP_STATUS.RUNNING });
 
         let { query } = workflow.steps[index];
-        await runWorkflowStep(driver, database, query, setStatus, setRecords);
+        await runWorkflowStep(driver, database, query, parameters, setStatus, setRecords);
 
         // Refreshing the result state
         setResults(results);
