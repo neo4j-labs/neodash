@@ -56,7 +56,10 @@ import { handleNeoDashLaunch } from '../solutions/launch/launch';
 export const createConnectionThunk =
   (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
-      const driver = createDriver(protocol, url, port, username, password);
+      const config = {
+        encrypted: url != 'localhost',
+      };
+      const driver = createDriver(protocol, url, port, username, password, config);
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
