@@ -132,7 +132,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           />
           Save Dashboard
           <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
@@ -209,7 +209,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
             }}
             style={{ padding: '3px', float: 'right' }}
           >
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>
@@ -247,7 +247,11 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
               onChange={(e) => setDashboardDatabase(e.target.value)}
             >
               {databases.map((database) => {
-                return <MenuItem value={database}>{database}</MenuItem>;
+                return (
+                  <MenuItem key={database} value={database}>
+                    {database}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>

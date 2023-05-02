@@ -44,4 +44,4 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 USER nginx
 EXPOSE 5005
 HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
-LABEL version="2.2.1"
+LABEL version="2.2.5"

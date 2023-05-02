@@ -1,22 +1,6 @@
-## NeoDash 2.2.1
-This update provides a number of usability improves over the 2.2.0 release.
-In addition, it entails various improvements to the codebase, including security patches on the dependencies.
-
-Table:
-- Column names prefixed with `__` are now hidden in the table view.
-  
-Map:
-- Added documentation for adding a custom map provider.
-
-Parameter selector:
-- Added support for boolean parameters.
-
-Editor:
-- Parameters are now automatically replaced **inside report titles**.
-- Image downloads now include the report title alongside the visualization.
-
-Others:
-- Applied security patches for dependencies.
-- Set test container for release pipeline to fixed version of Neo4j.
-- Aligned code style / linting with Neo4j product standards.
-- Updated Docker setup to inject `standaloneDashboardURL` into the application config.
+## NeoDash 2.2.5
+This is a minor release with some small bug fixes, directly following the 2.2.4 release.
+- Fixed replacement rules for parameters in iFrames/Markdown reports. [#417](https://github.com/neo4j-labs/neodash/pull/417)
+- Added automatic header text color switch for reports with a dark background [#420](https://github.com/neo4j-labs/neodash/pull/420)
+- Fixed handling right click events (for graph exploration) in Neo4j Desktop [#415](https://github.com/neo4j-labs/neodash/pull/415).
+- Added support for unweighted Sankey charts [#419](https://github.com/neo4j-labs/neodash/pull/419)

@@ -24,7 +24,7 @@ import { getDynamicConfigValue } from '../config/dynamicConfig';
 class Callback extends Component {
   async componentDidMount() {
     await auth.handleAuthentication({ caller: 'callback' });
-    window.location.replace(getDynamicConfigValue('REACT_APP_SOLUTION_BASE_URL_IN_HIVE'));
+    window.location.replace(getDynamicConfigValue('REACT_APP_NEODASH_BASE_DEMO_URL'));
   }
 
   render() {

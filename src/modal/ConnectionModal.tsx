@@ -13,6 +13,7 @@ import { FormControlLabel, MenuItem, Switch, Tooltip } from '@material-ui/core';
 import SecurityIcon from '@material-ui/icons/Security';
 import WarningIcon from '@material-ui/icons/Warning';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
+import { CUSTOM_CONNECTION_FOOTER_TEXT } from '../config/ApplicationConfig';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -66,8 +67,8 @@ export default function NeoConnectionModal({
         <DialogTitle id='form-dialog-title'>
           {standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}
           <IconButton style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
-              <img style={{ width: '36px', height: '36px' }} src='neo4j-icon-color.png' />
+            <Badge overlap='rectangular' badgeContent={''}>
+              <img style={{ width: '36px', height: '36px', marginTop: '-4px' }} src='neo4j-icon-color.png' />
             </Badge>
           </IconButton>
         </DialogTitle>
@@ -256,15 +257,16 @@ export default function NeoConnectionModal({
               </DialogContentText>
             ) : (
               <DialogContentText style={{ color: 'lightgrey' }}>
-                Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in
+                Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own
+                in&nbsp;
                 <a style={{ color: 'white' }} href='https://neo4j.com/download/'>
                   Neo4j Desktop
                 </a>
-                , or try the
+                , or try the&nbsp;
                 <a style={{ color: 'white' }} href='https://console.neo4j.io/'>
                   Neo4j Aura
                 </a>
-                free tier.
+                &nbsp;free tier.
               </DialogContentText>
             )}
           </DialogContent>

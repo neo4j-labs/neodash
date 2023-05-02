@@ -1,7 +1,11 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
-import { evaluateRulesOnDict, generateClassDefinitionsBasedOnRules } from '../../extensions/styling/StyleRuleEvaluator';
+import {
+  evaluateRulesOnDict,
+  generateClassDefinitionsBasedOnRules,
+  useStyleRules,
+} from '../../extensions/styling/StyleRuleEvaluator';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { downloadCSV } from '../ChartUtils';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
@@ -9,33 +13,58 @@ import { getRendererForValue, rendererForType, RenderSubValue } from '../../repo
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import Button from '@material-ui/core/Button';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 
+const fallbackRenderer = (value) => {
+  return JSON.stringify(value);
+};
+
+function renderAsButtonWrapper(renderer) {
+  return function renderAsButton(value) {
+    return (
+      <Button
+        style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
+        variant='contained'
+        color='primary'
+      >{`${renderer(value)}`}</Button>
+    );
+  };
+}
+
 function ApplyColumnType(column, value) {
   const renderer = getRendererForValue(value);
+  const renderCell = renderer.renderValue;
   const columnProperties = renderer
-    ? { type: renderer.type, renderCell: renderer.renderValue }
-    : // TODO: this should probably be a function
-      rendererForType.string;
+    ? { type: renderer.type, renderCell: renderCell ? renderCell : fallbackRenderer }
+    : rendererForType.string;
   if (columnProperties) {
     column = { ...column, ...columnProperties };
   }
   return column;
 }
 
+export const generateSafeColumnKey = (key) => {
+  return key != 'id' ? key : `${key} `;
+};
+
 const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
+
+  const actionsRules = [];
   const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
-  const styleRules =
-    extensionEnabled(props.extensions, 'styling') && props.settings && props.settings.styleRules
-      ? props.settings.styleRules
-      : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
+
   const [notificationOpen, setNotificationOpen] = React.useState(false);
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
@@ -58,9 +87,8 @@ const NeoTableChart = (props: ChartProps) => {
 
   const { records } = props;
 
-  const generateSafeColumnKey = (key) => {
-    return key != 'id' ? key : `${key} `;
-  };
+  const actionableFields = [];
+
   const columns = transposed
     ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
         const value = key;
@@ -157,6 +185,7 @@ const NeoTableChart = (props: ChartProps) => {
         rows={rows}
         columns={columns}
         columnVisibilityModel={hiddenColumns}
+        onCellClick={() => false}
         onCellDoubleClick={(e) => {
           setNotificationOpen(true);
           navigator.clipboard.writeText(e.value);

@@ -6,7 +6,7 @@ NeoDash is an open source tool for visualizing your Neo4j data. It lets you grou
 
 Neodash supports presenting your data as tables, graphs, bar charts, line charts, maps and more. It contains a Cypher editor to directly write the Cypher queries that populate the reports. You can save dashboards to your database, and share them with others.
 
-## Running NeoDash
+## Try NeoDash
 You can run NeoDash in one of three ways:
 
 1. You can install NeoDash into Neo4j Desktop from the [graph app gallery](https://install.graphapp.io). NeoDash will automatically connect to your active database.
@@ -20,31 +20,57 @@ docker run -it --rm -p 5005:5005 neo4jlabs/neodash
 
 > Windows users may need to prefix the `docker run` command with `winpty`.
 
-See the [Developer Guide](https://neo4j.com/labs/neodash/2.1/developer-guide/) for more on installing, building, and running the application.
 
-## Coding practices
-In order to improve the code quality, we added a Prettier and a Linter to this repository.
 
-### Behavior
+## Build and Run
+This project uses `yarn` to install, run, build prettify and apply linting to the code.
+
+To install dependencies:
+```
+yarn install
+```
+
+To run the application in development mode:
+```
+yarn run dev
+```
+
+To build the app for deployment:
+```
+yarn run build
+```
+
+To manually prettify all the project `.ts` and `.tsx` files, run:
+```
+yarn run format
+```
+
+To manually run linting of all your .ts and .tsx files, run:
+```
+yarn run lint
+```
+
+To manually run linting of all your .ts and .tsx staged files,  run:
+```
+yarn run lint-staged
+```
+
+See the [Developer Guide](https://neo4j.com/labs/neodash/2.2/developer-guide/) for more on installing, building, and running the application.
+
+### Pre-Commit Hook
 While commiting, a pre-commit hook will be executed in order to prettify and run the Linter on your staged files. Linter warnings are currently accepted. The commands executed by this hook can be found in /.lintstagedrc.json.
 
 There is also a dedicated linting step in the Github project pipeline in order to catch each potential inconsistency.
 
-**Don't hesitate to setup your IDE formatting feature to use the Prettier module and our defined rules (.prettierrc.json).**
+> Don't hesitate to setup your IDE formatting feature to use the Prettier module and our defined rules (.prettierrc.json).
 
-### Manual execution
-If you want to **manually prettify all the project .ts and .tsx files**, you can run `yarn run format`.
-
-If you wan to **manually run linting of all your .ts and .tsx files**, you can run `yarn run lint`.
-
-If you wan to **manually run linting of all your .ts and .tsx staged files**, you can run `yarn run lint-staged`.
 
 ## User Guide
 NeoDash comes with built-in examples of dashboards and reports. For more details on the types of reports and how to customize them, see the [User Guide](
-https://neo4j.com/labs/neodash/2.1/user-guide/).
+https://neo4j.com/labs/neodash/2.2/user-guide/).
 
 ## Publish Dashboards
-After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://neo4j.com/labs/neodash/2.1/user-guide/publishing/) for more on publishing dashboards.
+After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://neo4j.com/labs/neodash/2.2/user-guide/publishing/) for more on publishing dashboards.
 
 
 ## Questions / Suggestions

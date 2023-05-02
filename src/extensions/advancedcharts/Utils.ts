@@ -1,3 +1,45 @@
+import { valueIsArray } from '../../chart/ChartUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPageNumbersAndNames } from '../../dashboard/DashboardSelectors';
+import { updateDashboardSetting } from '../../settings/SettingsActions';
+
+export const getRule = (e, rules, type) => {
+  let r = getRuleWithFieldPropertyName(e, rules, type, null);
+  return r || null;
+};
+
+export const getRuleWithFieldPropertyName = (e, rules, type, fieldPropertyName) => {
+  let f = fieldPropertyName == null ? 'field' : fieldPropertyName;
+  let r = rules.filter((rule) => rule.condition && rule.condition == type && ruleFieldCheck(rule.field, e[f]));
+  if (r.length == 0) {
+    return null;
+  }
+  return r;
+};
+
+const ruleFieldCheck = (ruleValue, value) => {
+  if (valueIsArray(value)) {
+    return value.includes(ruleValue);
+  }
+  return value.trim() == ruleValue.trim();
+};
+
+export const unassign = (target, source) => {
+  Object.keys(source).forEach((key) => {
+    delete target[key];
+  });
+};
+
+export const merge = (oldData, newData, operation) => {
+  if (operation) {
+    return Object.assign({}, newData, oldData);
+  }
+  unassign(oldData, newData);
+  return oldData;
+};
+
+export const update = (state, mutations) => Object.assign({}, state, mutations);
+
 function isCyclicUtil(i, visited, recStack, adj) {
   // Mark the current node as visited and
   // part of recursion stack

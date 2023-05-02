@@ -1,5 +1,4 @@
 = Parameter Select
-
 Parameter select reports provide you with an easy way to add
 interactivity into your dashboards.
 
@@ -8,30 +7,43 @@ parameter (e.g. *$neodash_person_name*) dynamically. This means that
 your reports can be created to show different data depending on the
 value of a parameter.
 
-There are three types of parameter select reports: 
+There are five types of parameter select reports: 
 
 - Node property-based selections 
 - Relationship property-based selections 
 - Free text selections
+- Date picker selections
+- Custom query selections
 
-The first two are straightforward for users to understand, as the list
-of choices is auto-populated from Neo4j. The third is a bit more
-complex, as it allows users to enter any text value, but, it gives them
-the complete freedom to enter any value they want.
 
 == Examples
 
 === Node Property Select
+A node property selector lets users choose a property from a node with a given label, to be used as a parameter in the dashboard.
 
 image::select.png[Node Property Select]
 
 === Relationship Property Select
+A relationship property selector lets users choose a property from a relationship with a given type, to be used as a parameter in the dashboard.
 
 image::select2.png[Relationship Property Select]
 
 === Free Text Select
+A free text selectors lets users enter any string value, which can then be used as a parameter inside dashboard queries.
 
 image::select3.png[Free Text Select]
+
+== Date Select
+A date selector lets users specify dates using a calendar widget, or by entering a date format.
+
+image::select4.png[Free Text Select]
+
+== Custom Query Select
+A custom query selectors lets you specify a custom selector widget, where user suggestions are populated based on an `$input` variable that is passed down into your custom query.
+
+image::select5.png[Custom Query Select]
+
+
 
 == Advanced Settings
 

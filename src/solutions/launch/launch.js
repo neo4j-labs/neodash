@@ -22,7 +22,7 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
                 }
             }	 
         `;
-    const uri = config('HIVE_URI');
+    const uri = config('GALLERY_GRAPHQL_URL');
     fetch(uri, {
       method: 'POST',
       headers: {

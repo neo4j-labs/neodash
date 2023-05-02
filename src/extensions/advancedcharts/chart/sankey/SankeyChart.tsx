@@ -3,9 +3,12 @@ import { ResponsiveSankey } from '@nivo/sankey';
 import { ChartProps } from '../../../../chart/Chart';
 import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../../../chart/ChartUtils';
 import { categoricalColorSchemes } from '../../../../config/ColorConfig';
-import { evaluateRulesOnDict, evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
+import { evaluateRulesOnDict, evaluateRulesOnNode, useStyleRules } from '../../../styling/StyleRuleEvaluator';
 import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
 import { isCyclic } from '../../Utils';
+import { extensionEnabled } from '../../../ExtensionUtils';
+
+const UNWEIGHTED_SANKEY_PROPERTY = 'SANKEY_UNWEIGHTED';
 
 /**
  * Embeds a SankeyChart (from Charts) into NeoDash.
@@ -31,7 +34,11 @@ const NeoSankeyChart = (props: ChartProps) => {
   const nodeThickness = settings.nodeThickness ? settings.nodeThickness : 12;
   const nodeSpacing = settings.nodeSpacing ? settings.nodeSpacing : 12;
 
-  const styleRules = settings && settings.styleRules ? settings.styleRules : [];
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
 
   // TODO this line is duplicated in a lot of places, should be in an utils file
   const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -69,7 +76,16 @@ const NeoSankeyChart = (props: ChartProps) => {
         links[`${value.start.low},${value.end.low}`] = [];
       }
       const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
-      if (value.properties[labelProperty] !== undefined && !isNaN(value.properties[labelProperty])) {
+      if (labelProperty === UNWEIGHTED_SANKEY_PROPERTY) {
+        addItem(links[`${value.start.low},${value.end.low}`], {
+          id: value.identity.low,
+          source: value.start.low,
+          target: value.end.low,
+          type: value.type,
+          properties: value.properties,
+          value: 1,
+        });
+      } else if (value.properties[labelProperty] !== undefined && !isNaN(value.properties[labelProperty])) {
         addItem(links[`${value.start.low},${value.end.low}`], {
           id: value.identity.low,
           source: value.start.low,

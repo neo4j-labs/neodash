@@ -11,7 +11,6 @@ import { Checkbox, Chip, FormControlLabel, ListItem, ListItemIcon, ListItemText,
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
-import { getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
 
@@ -53,7 +52,7 @@ const NeoExtensionsModal = ({
             />
             Extensions
             <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-              <Badge badgeContent={''}>
+              <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon id={'extensions-modal-close-button'} />
               </Badge>
             </IconButton>
@@ -63,7 +62,7 @@ const NeoExtensionsModal = ({
               <a target='_blank' href='https://neo4j.com/labs/neodash/2.2/user-guide/extensions/'>
                 Extensions
               </a>
-              are a way of extending the core functionality of NeoDash with custom logic.
+              &nbsp;are a way of extending the core functionality of NeoDash with custom logic.
               <br />
               This can be a new visualization, extra styling options for an existing visualization, or even a completely
               new logic for the dashboarding engine.
@@ -105,7 +104,7 @@ const NeoExtensionsModal = ({
                                   name='enable'
                                 />
                               }
-                              label={<span color='green'>{extensions[e.name] ? 'Active  ' : 'Disabled'}</span>}
+                              label={<span color='green'>{'Active'}</span>}
                             />
                           </Tooltip>
                         </td>

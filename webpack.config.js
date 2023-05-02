@@ -56,5 +56,6 @@ module.exports = (env) => {
             process: { env: {} },
           }),
         ],
+    ignoreWarnings: [/Failed to parse source map/],
   };
 };

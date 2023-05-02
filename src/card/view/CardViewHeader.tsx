@@ -15,6 +15,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import CloseIcon from '@material-ui/icons/Close';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
+import { replaceDashboardParameters } from '../../chart/ChartUtils';
 
 const NeoCardViewHeader = ({
   title,
@@ -37,13 +38,8 @@ const NeoCardViewHeader = ({
   const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
 
   function replaceParamsOnString(s, p) {
-    let parsed = `${s} `;
-    for (const [key, value] of Object.entries(p)) {
-      // TODO: make this a regex.
-      parsed = parsed.replace(`$${key} `, `${value} `);
-      parsed = parsed.replace(`$${key},`, `${value},`);
-      parsed = parsed.replace(`$${key}.`, `${value}.`);
-    }
+    let parsed: string;
+    parsed = replaceDashboardParameters(s, p);
     return parsed;
   }
 
@@ -94,7 +90,7 @@ const NeoCardViewHeader = ({
                 placeholder='Report name...'
                 fullWidth
                 maxRows={4}
-                value={editing ? text : parsedText}
+                value={editing ? text : parsedText !== ' ' ? parsedText : ''}
                 onChange={(event) => {
                   setText(event.target.value);
                   debouncedTitleUpdate(event.target.value);
@@ -167,7 +163,7 @@ const NeoCardViewHeader = ({
         <DialogTitle id='form-dialog-title'>
           {title}
           <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
-            <Badge badgeContent={''}>
+            <Badge overlap='rectangular' badgeContent={''}>
               <CloseIcon />
             </Badge>
           </IconButton>

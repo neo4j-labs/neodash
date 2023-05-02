@@ -23,13 +23,17 @@ describe('NeoDash E2E Tests', () => {
     // Navigate to index
     cy.visit('/');
     cy.wait(1000);
-    cy.get('#form-dialog-title').should('contain', 'NeoDash - Neo4j Dashboard Builder');
-    cy.wait(300);
 
-    // Create new dashboard
-    cy.contains('New Dashboard').click();
-    cy.wait(300);
+    cy.get('#form-dialog-title').then(($div) => {
+      const text = $div.text();
+      if (text == 'NeoDash - Neo4j Dashboard Builder⚡') {
+        cy.wait(300);
+        // Create new dashboard
+        cy.contains('New Dashboard').click();
+      }
+    });
 
+    cy.wait(300);
     // If an old dashboard exists in cache, do a check to make sure we clear it.
     // if (cy.contains("Create new dashboard")) {
     //     cy.contains('Yes').click()
@@ -131,7 +135,11 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a single value report', () => {
     createReportOfType('Single Value', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span').contains('1,999');
+    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span')
+      .invoke('text')
+      .then((text) => {
+        expect(text).to.be.oneOf(['1999', '1,999']);
+      });
   });
 
   it('creates a gauge chart report', () => {

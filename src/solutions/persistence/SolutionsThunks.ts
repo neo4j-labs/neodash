@@ -31,7 +31,7 @@ export const listUserDashboards = async () => {
       user: auth.getEmail(),
     };
 
-    const uri = config('HIVE_URI');
+    const uri = config('GALLERY_GRAPHQL_URL');
     fetch(uri, {
       method: 'POST',
       headers: {
@@ -116,7 +116,7 @@ const saveDashboardToHiveGraphQL = async ({
       },
     };
 
-    const uri = config('HIVE_URI');
+    const uri = config('GALLERY_GRAPHQL_URL');
     fetch(uri, {
       method: 'POST',
       headers: {

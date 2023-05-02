@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
-import NeoReport from '../../report/Report';
 import { CardContent, IconButton } from '@material-ui/core';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { getReportTypes } from '../../extensions/ExtensionUtils';
+import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
+import { NeoReportWrapper } from '../../report/ReportWrapper';
+import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
+import { ThemeProvider } from '@material-ui/styles';
+import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
 
 const NeoCardView = ({
   title,
@@ -27,6 +30,8 @@ const NeoCardView = ({
   selection,
   dashboardSettings,
   settings,
+  updateReportSetting,
+  createNotification,
   settingsOpen,
   editable,
   onGlobalParameterUpdate,
@@ -40,19 +45,26 @@ const NeoCardView = ({
   const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
   const ref = React.useRef();
+
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   const getLocalParameters = (parse_string): any => {
+    if (!parse_string || !globalParameters) {
+      return {};
+    }
+
     let re = /(?:^|\W)\$(\w+)(?!\w)/g;
     let match;
-    let localQueryVariables: string[] = [];
+
+    // If the report styling extension is enabled, extend the list of local (relevant) parameters with those used by the style rules.
+    const styleRules = settings.styleRules ? settings.styleRules : [];
+    const styleParams = extensionEnabled(extensions, 'styling') ? identifyStyleRuleParameters(styleRules) : [];
+
+    let localQueryVariables: string[] = [...styleParams];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);
     }
 
-    if (!globalParameters) {
-      return {};
-    }
     return Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
@@ -60,22 +72,30 @@ const NeoCardView = ({
 
   // @ts-ignore
   const reportHeader = (
-    <NeoCardViewHeader
-      title={title}
-      editable={editable}
-      description={settings.description}
-      fullscreenEnabled={settings.fullscreenEnabled}
-      downloadImageEnabled={settings.downloadImageEnabled}
-      refreshButtonEnabled={settings.refreshButtonEnabled}
-      onTitleUpdate={onTitleUpdate}
-      onToggleCardSettings={onToggleCardSettings}
-      onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
-      settings={settings}
-      onDownloadImage={onDownloadImage}
-      onToggleCardExpand={onToggleCardExpand}
-      expanded={expanded}
-      parameters={getLocalParameters(title)}
-    ></NeoCardViewHeader>
+    <ThemeProvider
+      theme={
+        settings.backgroundColor && luma(settings.backgroundColor) < dashboardSettings.darkLuma
+          ? darkHeaderTheme
+          : lightTheme
+      }
+    >
+      <NeoCardViewHeader
+        title={title}
+        editable={editable}
+        description={settings.description}
+        fullscreenEnabled={settings.fullscreenEnabled}
+        downloadImageEnabled={settings.downloadImageEnabled}
+        refreshButtonEnabled={settings.refreshButtonEnabled}
+        onTitleUpdate={onTitleUpdate}
+        onToggleCardSettings={onToggleCardSettings}
+        onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
+        settings={settings}
+        onDownloadImage={onDownloadImage}
+        onToggleCardExpand={onToggleCardExpand}
+        expanded={expanded}
+        parameters={getLocalParameters(title)}
+      ></NeoCardViewHeader>
+    </ThemeProvider>
   );
 
   // @ts-ignore
@@ -93,8 +113,8 @@ const NeoCardView = ({
     <></>
   );
 
+  const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
-
   const withoutFooter =
     reportTypes[type] && reportTypes[type].withoutFooter
       ? reportTypes[type].withoutFooter
@@ -104,19 +124,6 @@ const NeoCardView = ({
     return globalParameters ? globalParameters[key] : undefined;
   };
 
-  // ONLY if the 'actions' extension is enabled, we send 'actionsRules' to the table visualization.
-  const filteredSettings = Object.fromEntries(
-    Object.entries(settings).filter(
-      ([k, _]) =>
-        !(
-          k == 'actionsRules' &&
-          dashboardSettings.extensions != null &&
-          !dashboardSettings.extensions.includes('actions')
-        )
-    )
-  );
-
-  const localParameters = getLocalParameters(query);
   useEffect(() => {
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
@@ -140,11 +147,10 @@ const NeoCardView = ({
       : `${reportHeight}px`,
     overflow: 'auto',
   };
-
   const reportContent = (
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (
-        <NeoReport
+        <NeoReportWrapper
           query={query}
           database={database}
           parameters={localParameters}
@@ -161,6 +167,8 @@ const NeoCardView = ({
           ChartType={reportTypes[type] && reportTypes[type].component}
           setGlobalParameter={onGlobalParameterUpdate}
           getGlobalParameter={getGlobalParameter}
+          updateReportSetting={updateReportSetting}
+          createNotification={createNotification}
           queryTimeLimit={dashboardSettings.queryTimeLimit ? dashboardSettings.queryTimeLimit : 20}
           setFields={onFieldsUpdate}
         />

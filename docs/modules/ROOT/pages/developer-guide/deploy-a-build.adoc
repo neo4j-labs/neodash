@@ -1,0 +1,41 @@
+= Deploy a Build
+If you have a pre-built NeoDash application, you can easily deploy it on an any webserver.
+A NeoDash build is "just" a collection of HTML, CSS and JavaScript files, so it can run virtually anywhere.
+
+This guide walks you through the process of deploying a NeoDash build onto your own webserver.
+
+== 1. Prepare the files
+First, check that you have the correct files.
+We typically provide builds as either a zip file or tarball with the following naming convention: 
+`neodash-2.X.X.zip` or `neodash-2.X.X.tar.gz`.
+
+For zip files, open up the terminal and run:
+```bash
+unzip neodash-2.X.X.zip
+```
+
+For tar.gz files, open up the terminal and run:
+```bash
+tar -xf neodash-2.X.X.tar.gz
+```
+
+After running either of these, you should now have a folder `neodash-2.X.X` in the current directory.
+
+== 2. Edit Configuration (Optional)
+This is an optional step if you want to configure optional settings for your NeoDash deployment (e.g. SSO or standalone mode).
+
+1. Inside the folder you just unzipped, open up `config.json`. 
+2. Edit this file to modify your link:../configuration[Configuration] settings.
+3. Save the file.
+
+== 3. Move the tarball/zip to your webserver
+Finally, copy the files to the correct folder on your webserver.
+Depending on the webserver type and version, this could be different directory.
+As an example - to copy the files to an nginx webserver using `scp`:
+
+```bash
+scp neodash-2.2.5 username@host:/usr/share/nginx/html
+```
+
+NeoDash should now be visible by visiting your (sub)domain in the browser.
+ Can't see the application? Check that the webserver user has read-permissions on the files you copied into the HTML directory.

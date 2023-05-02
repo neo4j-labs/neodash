@@ -11,7 +11,7 @@ export const PublishInfo = (props) => {
   const { hasPublished, solutionId, connection, title, domain, setDomain } = props;
 
   const baseDemoUrl = config('NEODASH_BASE_DEMO_URL');
-  const hiveUiSolutionsUrl = config('HIVE_UI');
+  const hiveUiSolutionsUrl = config('GALLERY_UI_URL');
 
   const neoDashDemoUrl = `${baseDemoUrl}/?hivedashboarduuid=${solutionId}`;
   const hiveCardUrl = `${hiveUiSolutionsUrl}/${solutionId}`;

@@ -3,7 +3,7 @@ import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard } from './DashboardActions';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
-import { updateGlobalParametersThunk } from '../settings/SettingsThunks';
+import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { fetchDashboardFromHive } from '../solutions/launch/launch';
 
 // TODO move this to a generic utils file
@@ -131,10 +131,13 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
         }
       });
     });
+
     dispatch(setDashboard(dashboard));
     const { application } = getState();
+
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
     dispatch(setParametersToLoadAfterConnecting(null));
+    dispatch(updateParametersToNeo4jTypeThunk());
   } catch (e) {
     dispatch(createNotificationThunk('Unable to load dashboard', e));
   }

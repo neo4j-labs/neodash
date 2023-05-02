@@ -21,6 +21,20 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 
+/**
+ * For each config in extensionConfig, if the extensionConfig is opened, render its component
+ * @returns
+ */
+// TODO: abstract logic
+function renderExtensionDrawers() {
+  return <></>;
+}
+
+// TODO: abstract logic
+function renderExtensionModals() {
+  return <></>;
+}
+
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   open,
@@ -116,6 +130,7 @@ export const NeoDrawer = ({
           database={connection.database}
         ></NeoReportExamplesModal>
         <NeoExtensionsModal></NeoExtensionsModal>
+        {/*  renderExtensionModals() */}
       </List>
       <Divider />
       <List>
@@ -135,7 +150,12 @@ export const NeoDrawer = ({
       <Divider />
     </Drawer>
   );
-  return content;
+  return (
+    <>
+      {content}
+      {/*  renderExtensionDrawers() */}
+    </>
+  );
 };
 
 const mapStateToProps = (state) => ({

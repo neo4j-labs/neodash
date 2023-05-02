@@ -91,7 +91,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
   useEffect(() => {
     const getHiveSolution = async () => {
       console.log('in getHiveSolution');
-      const uri = config('HIVE_URI');
+      const uri = config('GALLERY_GRAPHQL_URL');
       console.log('hive uri is: ', uri);
       fetch(uri, {
         method: 'POST',
