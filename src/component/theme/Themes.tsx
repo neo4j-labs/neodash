@@ -6,12 +6,30 @@ export const lightTheme = createTheme({
   typography: {
     fontFamily: "'Nunito Sans', sans-serif !important",
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 1200,
+      lg: 1536,
+      xl: 1920,
+    },
+  },
 });
 
 export const darkHeaderTheme = createTheme({
   palette: {
     text: {
       primary: '#ffffff',
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 1200,
+      lg: 1536,
+      xl: 1920,
     },
   },
 });
