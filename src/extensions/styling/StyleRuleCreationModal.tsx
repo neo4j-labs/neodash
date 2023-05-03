@@ -205,7 +205,7 @@ export const NeoCustomReportStyleModal = ({
               {type == 'graph' || type == 'map' ? (
                 <p>
                   For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>,
-                  for example: <code>Person.age</code>. This is case-sensentive.
+                  for example: <code>Person.age</code>. This is case-sensitive.
                 </p>
               ) : (
                 <></>
@@ -360,7 +360,7 @@ export const NeoCustomReportStyleModal = ({
                   })}
 
                   <tr>
-                    <td style={{ borderBottom: '1px solid grey', width: '750px' }} colSpan={5}>
+                    <td style={{ width: '750px' }} colSpan={5}>
                       <div style={{ textAlign: 'center', marginBottom: '5px' }}>
                         <IconButton
                           aria-label='add'
