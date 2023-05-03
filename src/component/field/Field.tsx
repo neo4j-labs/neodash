@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField';
 import React from 'react';
-import { Dropdown } from '@neo4j-ndl/react';
+import { Dropdown, TextInput } from '@neo4j-ndl/react';
 
 const textFieldStyle = { width: '155px', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' };
 
@@ -38,19 +38,19 @@ const NeoField = ({
       size={size}
     ></Dropdown>
   ) : (
-    <TextField
+    <TextInput
       InputLabelProps={{
         shrink: true,
       }}
-      select={select}
       style={style}
       key={label}
       variant={variant}
       label={label}
-      helperText={helperText}
+      helpText={helperText}
       disabled={disabled}
       value={value != null ? value : defaultValue}
       multiline={multiline}
+      fluid
       onClick={(e) => {
         onClick(e.target.textContent);
       }}
@@ -69,9 +69,7 @@ const NeoField = ({
       }}
       placeholder={placeholder}
       size={size}
-    >
-      {choices}
-    </TextField>
+    ></TextInput>
   );
 };
 

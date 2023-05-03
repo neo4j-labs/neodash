@@ -132,10 +132,10 @@ export function getRecordType(value) {
 /**
  * Basic function to convert a table row output to a CSV file, and download it.
  * TODO: Make this more robust. Probably the commas should be escaped to ensure the CSV is always valid.
- * seperator should be either ',', ';' or 'tab'
+ * separator should be either ',', ';' or 'tab'
  */
-export const downloadCSV = (rows, seperator) => {
-  const sep = seperator == 'tab' ? '\t' : seperator;
+export const downloadCSV = (rows, separator) => {
+  const sep = separator == 'tab' ? '\t' : separator;
   const element = document.createElement('a');
   let csv = '';
   const headers = Object.keys(rows[0]).slice(1);
