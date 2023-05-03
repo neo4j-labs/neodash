@@ -63,10 +63,8 @@ const NeoCardViewFooter = ({
                   ? categoricalColorSchemes[nodeColorScheme][i % totalColors]
                   : 'lightgrey';
               return (
-                <FormControl key={nodeLabel} size={'small'}>
-                  <InputLabel style={{ paddingLeft: '10px' }} id={nodeLabel}>
-                    {nodeLabel}
-                  </InputLabel>
+                <FormControl key={nodeLabel} size={'small'} variant='standard'>
+                  <InputLabel id={nodeLabel}>{nodeLabel}</InputLabel>
                   <Select
                     labelId={nodeLabel}
                     id={nodeLabel}
