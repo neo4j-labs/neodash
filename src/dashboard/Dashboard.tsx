@@ -19,12 +19,17 @@ import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  let driverConfig = {};
+  if (connection.url == 'localhost') {
+    driverConfig = { encrypted: false };
+  }
   const driver = createDriver(
     connection.protocol,
     connection.url,
     connection.port,
     connection.username,
-    connection.password
+    connection.password,
+    driverConfig
   );
 
   const handleDrawerOpen = () => {

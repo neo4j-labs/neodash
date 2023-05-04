@@ -130,7 +130,9 @@ export default function NeoConnectionModal({
             type='text'
           />
 
-          {window.location.href.startsWith('https') && !(protocol.endsWith('+s') || protocol.endsWith('+scc')) ? (
+          {window.location.href.startsWith('https') &&
+          !(protocol.endsWith('+s') || protocol.endsWith('+scc')) &&
+          url !== 'localhost' ? (
             <div>
               You're running NeoDash from a secure (https) webpage. You can't connect to a Neo4j database with an
               unencrypted protocol. Change the protocol, or use NeoDash using http instead: &nbsp;

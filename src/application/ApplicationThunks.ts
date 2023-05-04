@@ -58,7 +58,11 @@ import { handleNeoDashLaunch } from '../solutions/launch/launch';
 export const createConnectionThunk =
   (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
-      const driver = createDriver(protocol, url, port, username, password);
+      let driverConfig = {};
+      if (url == 'localhost') {
+        driverConfig = { encrypted: false };
+      }
+      const driver = createDriver(protocol, url, port, username, password, driverConfig);
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
@@ -547,11 +551,11 @@ export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConne
       dispatch(setConnectionModalOpen(true));
     }
   } else if (DEFAULT_SCREEN == Screens.CONNECTION_MODAL) {
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setConnectionModalOpen(true));
-    } else if (DEFAULT_SCREEN == Screens.WELCOME_SCREEN) {
-      dispatch(setWelcomeScreenOpen(true));
-    }
+    dispatch(setWelcomeScreenOpen(false));
+    dispatch(setConnectionModalOpen(true));
+  } else if (DEFAULT_SCREEN == Screens.WELCOME_SCREEN) {
+    dispatch(setWelcomeScreenOpen(true));
+  }
 
   if (clearNotificationAfterLoad) {
     dispatch(clearNotification());
