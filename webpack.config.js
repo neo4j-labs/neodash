@@ -48,7 +48,11 @@ module.exports = (env) => {
       },
     },
     plugins: production
-      ? []
+      ? [
+          new webpack.DefinePlugin({
+            process: { env: {} },
+          }),
+        ]
       : [
           new webpack.HotModuleReplacementPlugin(),
           // https://stackoverflow.com/questions/70368760/react-uncaught-referenceerror-process-is-not-defined
