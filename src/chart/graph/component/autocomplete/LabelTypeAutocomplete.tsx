@@ -1,5 +1,5 @@
 import React from 'react';
-import { Autocomplete } from '@material-ui/lab';
+import Autocomplete from '@mui/material/Autocomplete';
 import { Fab, TextField, Typography } from '@material-ui/core';
 import { EditType } from '../GraphChartEditModal';
 

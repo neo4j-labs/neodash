@@ -82,10 +82,7 @@ export const NeoDashboardHeaderTitleBar = ({
           size='large'
           clean
         >
-          <img
-            style={{ width: DASHBOARD_BUTTON_IMAGE_SIZE, height: DASHBOARD_BUTTON_IMAGE_SIZE }}
-            src={DASHBOARD_BUTTON_IMAGE}
-          />
+          <img style={{ width: DASHBOARD_BUTTON_IMAGE_SIZE }} src={DASHBOARD_BUTTON_IMAGE} />
         </IconButton>
       </Tooltip>
     </Toolbar>

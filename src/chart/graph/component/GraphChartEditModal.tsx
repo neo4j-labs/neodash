@@ -7,10 +7,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@mui/material/Button';
 import { Badge, IconButton } from '@material-ui/core';
 import { Fab, TextField, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { Autocomplete } from '@material-ui/lab';
-import CloseIcon from '@material-ui/icons/Close';
-import PlayArrow from '@material-ui/icons/PlayArrow';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import PlayArrow from '@mui/icons-material/PlayArrow';
 import { LabelTypeAutocomplete } from './autocomplete/LabelTypeAutocomplete';
 import { DeletePropertyButton } from './button/modal/DeletePropertyButton';
 import {
