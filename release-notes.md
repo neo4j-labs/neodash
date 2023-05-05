@@ -1,8 +1,6 @@
-## NeoDash 2.2.3
-This releases fixes a small set of bugs that slipped through the 2.2.3 release, and adds some minor features:
-- Added support for scatter plots by overriding a parameter in the line chart.
-- Added the ability to use dashboard parameter as filters in custom parameter selector queries.
-- Fixed breaking bug in parameter selector settings causing a white-screen error.
-- Fixed auto-coloring of bar charts (resolved back to logic of 2.2.1 and earlier).
-- Added a quick fix for automatically resetting the parameter display value when the property display override is toggled.
-- Upversioned outdated dashboards and in the NeoDash Gallery.
+## NeoDash 2.2.5
+This is a minor release with some small bug fixes, directly following the 2.2.4 release.
+- Fixed replacement rules for parameters in iFrames/Markdown reports. [#417](https://github.com/neo4j-labs/neodash/pull/417)
+- Added automatic header text color switch for reports with a dark background [#420](https://github.com/neo4j-labs/neodash/pull/420)
+- Fixed handling right click events (for graph exploration) in Neo4j Desktop [#415](https://github.com/neo4j-labs/neodash/pull/415).
+- Added support for unweighted Sankey charts [#419](https://github.com/neo4j-labs/neodash/pull/419)

@@ -4,6 +4,9 @@ import { Tooltip } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
 import { LockOpenIconSolid, LockClosedIconSolid } from '@neo4j-ndl/react/icons';
 
+/**
+ * Renders a button that can be used to 'lock' = freeze the current graph layout by disabling the force layout.
+ */
 export const NeoGraphChartLockButton = (props: GraphChartVisualizationProps) => {
   return (
     <IconButton aria-label='Lock graph layout icon' size='small' clean grouped>

@@ -4,6 +4,11 @@ import { connect } from 'react-redux';
 import debounce from 'lodash/debounce';
 import { IconButton } from '@neo4j-ndl/react';
 import { CameraIconSolid } from '@neo4j-ndl/react/icons';
+import {
+  DASHBOARD_BUTTON_IMAGE,
+  DASHBOARD_BUTTON_IMAGE_SIZE,
+  DASHBOARD_HEADER_COLOR,
+} from '../../config/ApplicationConfig';
 
 export const NeoDashboardHeaderTitleBar = ({
   dashboardTitle,
@@ -28,8 +33,7 @@ export const NeoDashboardHeaderTitleBar = ({
   const content = (
     <Toolbar
       key={1}
-      className='n-bg-primary-70'
-      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', zIndex: 1000 }}
+      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1000 }}
     >
       <InputBase
         id='center-aligned'
@@ -78,7 +82,10 @@ export const NeoDashboardHeaderTitleBar = ({
           size='large'
           clean
         >
-          <img src='neo4j-icon.png' />
+          <img
+            style={{ width: DASHBOARD_BUTTON_IMAGE_SIZE, height: DASHBOARD_BUTTON_IMAGE_SIZE }}
+            src={DASHBOARD_BUTTON_IMAGE}
+          />
         </IconButton>
       </Tooltip>
     </Toolbar>

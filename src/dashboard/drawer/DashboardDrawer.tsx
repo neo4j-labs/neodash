@@ -19,6 +19,20 @@ import { getExampleReports } from '../../extensions/ExtensionUtils';
 import { SideNavigation, SideNavigationList, SideNavigationItem, SideNavigationGroupHeader } from '@neo4j-ndl/react';
 import { BookOpenIconOutline, InformationCircleIconOutline, HomeIconOutline } from '@neo4j-ndl/react/icons';
 
+/**
+ * For each config in extensionConfig, if the extensionConfig is opened, render its component
+ * @returns
+ */
+// TODO: abstract logic
+function renderExtensionDrawers() {
+  return <></>;
+}
+
+// TODO: abstract logic
+function renderExtensionModals() {
+  return <></>;
+}
+
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   hidden,
@@ -91,7 +105,12 @@ export const NeoDrawer = ({
       </SideNavigation>
     </div>
   );
-  return content;
+  return (
+    <>
+      {content}
+      {/*  renderExtensionDrawers() */}
+    </>
+  );
 };
 
 const mapStateToProps = (state) => ({

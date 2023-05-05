@@ -37,6 +37,12 @@ export const DASHBOARD_SETTINGS = {
     default: 'bottom-right',
     helperText: 'These are the resize handle options shared across all reports. ',
   },
+  darkLuma: {
+    label: 'Luma Threshold',
+    type: SELECTION_TYPES.NUMBER,
+    default: 25,
+    helperText: 'Background colors under this threshold will be considered as dark',
+  },
   pagenumber: {
     label: 'Page Number',
     type: SELECTION_TYPES.NUMBER,
@@ -49,5 +55,13 @@ export const DASHBOARD_SETTINGS = {
     disabled: true,
     helperText:
       "These are the query parameters shared across all reports. You can set these using a 'property select' report.",
+  },
+  extensions: {
+    label: 'Extensions',
+    type: SELECTION_TYPES.LIST,
+    multiple: true,
+    values: ['actions'],
+    default: false,
+    hidden: true,
   },
 };

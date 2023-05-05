@@ -1,27 +1,22 @@
 import React, { useRef } from 'react';
-import ForceGraph2D, { LinkObject } from 'react-force-graph-2d';
+import ForceGraph2D from 'react-force-graph-2d';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
-import { handleExpand } from './util/GraphUtils';
 import { generateNodeCanvasObject } from './util/NodeUtils';
-import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtils';
+import { generateRelCanvasObject } from './util/RelUtils';
 
+/*
+ * TODO: check if makes sense to change zoom logic from panning to buttons
+ * (when i scroll the graphCharts has the priority )
+ */
 export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
-  const fgRef = useRef();
+  const fgRef: React.MutableRefObject<any> = useRef();
 
-  const [isDragging, setIsDragging] = React.useState(false);
-  const getCooldownTicks = () => {
-    if (props.engine.firstRun) {
-      return 100;
-    } else if (isDragging) {
-      return 1;
-    }
-    return 0;
-  };
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
-  props.interactivity.zoomToFit = () => fgRef.current.zoomToFit(400);
+  props.interactivity.zoomToFit = () => fgRef.current && fgRef.current.zoomToFit(400);
+
   return (
     <ForceGraph2D
       ref={fgRef}
@@ -29,30 +24,44 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       height={props.style.height - 10}
       linkCurvature='curvature'
       backgroundColor={props.style.backgroundColor}
-      linkDirectionalArrowLength={3}
+      linkDirectionalArrowLength={props.style.linkDirectionalArrowLength}
       linkDirectionalArrowRelPos={1}
       dagMode={props.engine.layout}
       linkWidth={(link: any) => link.width}
       linkLabel={(link: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(link)}</div>` : '')}
       nodeLabel={(node: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(node)}</div>` : '')}
       nodeVal={(node: any) => node.size}
-      onNodeClick={(item) => props.interactivity.onNodeClick(item)}
-      onLinkClick={(item) => props.interactivity.onRelationshipClick(item)}
-      onNodeRightClick={(node) => handleExpand(node, props.engine.queryCallback, props.engine.setExtraRecords)}
+      onNodeClick={(item) => {
+        props.interactivity.onNodeClick(item);
+      }}
+      onLinkClick={(item) => {
+        props.interactivity.onRelationshipClick(item);
+      }}
+      onNodeRightClick={(node, event) => props.interactivity.onNodeRightClick(node, event)}
+      onLinkRightClick={(link, event) => props.interactivity.onRelationshipRightClick(link, event)}
+      onBackgroundClick={() => props.interactivity.onNodeClick(undefined)}
+      onBackgroundRightClick={() => props.interactivity.onNodeClick(undefined)}
+      linkLineDash={(link) => (link.new ? [2, 1] : null)}
       linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
-      cooldownTicks={getCooldownTicks()}
+      cooldownTicks={props.engine.cooldownTicks}
       onEngineStop={() => {
-        if (props.engine.firstRun) {
+        props.engine.setCooldownTicks(0);
+        if (props.engine.recenterAfterEngineStop) {
           fgRef.current.zoomToFit(400);
-          props.engine.setFirstRun(false);
+          props.engine.setRecenterAfterEngineStop(false);
         }
       }}
+      onZoom={() => {
+        props.interactivity.setContextMenuOpen(false);
+      }}
       onNodeDrag={() => {
-        setIsDragging(true);
+        props.interactivity.setContextMenuOpen(false);
+        props.engine.setCooldownTicks(1);
+        props.engine.setRecenterAfterEngineStop(false);
       }}
       onNodeDragEnd={(node) => {
-        setIsDragging(false);
+        props.engine.setCooldownTicks(0);
         if (props.interactivity.fixNodeAfterDrag) {
           node.fx = node.x;
           node.fy = node.y;

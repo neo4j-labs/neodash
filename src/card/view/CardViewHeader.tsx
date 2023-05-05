@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { Close } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
+import { replaceDashboardParameters } from '../../chart/ChartUtils';
 
 import { IconButton } from '@neo4j-ndl/react';
 import {
@@ -38,13 +39,8 @@ const NeoCardViewHeader = ({
   const [descriptionModalOpen, setDescriptionModalOpen] = React.useState(false);
 
   function replaceParamsOnString(s, p) {
-    let parsed = `${s} `;
-    for (const [key, value] of Object.entries(p)) {
-      // TODO: make this a regex.
-      parsed = parsed.replace(`$${key} `, `${value} `);
-      parsed = parsed.replace(`$${key},`, `${value},`);
-      parsed = parsed.replace(`$${key}.`, `${value}.`);
-    }
+    let parsed: string;
+    parsed = replaceDashboardParameters(s, p);
     return parsed;
   }
 

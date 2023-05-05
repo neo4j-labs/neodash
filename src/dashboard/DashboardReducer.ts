@@ -2,6 +2,7 @@
  * Reducers define changes to the application state when a given action
  */
 
+import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
 import {
@@ -17,7 +18,7 @@ import {
 export const NEODASH_VERSION = '2.2';
 
 export const initialState = {
-  title: '',
+  title: DEFAULT_DASHBOARD_TITLE,
   version: NEODASH_VERSION,
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],
@@ -43,7 +44,7 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     };
   }
 
-  // Settings-specific updates are deferred to the page reducer.
+  // Settings-specific updates are deferred to the settings reducer.
   if (action.type.startsWith('SETTINGS/')) {
     const enrichedPayload = update(payload, { dashboard: state });
     const enrichedAction = { type, payload: enrichedPayload };
@@ -103,7 +104,3 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     }
   }
 };
-
-function dispatch(_: { type: string; payload: { number: any } }) {
-  throw new Error('Function not implemented.');
-}

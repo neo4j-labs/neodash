@@ -1,6 +1,9 @@
 import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
+import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
-import { getCurvature } from './RelUtils';
+import { GraphChartVisualizationProps } from '../GraphChartVisualization';
+import { assignCurvatureToLink } from './RelUtils';
+import { isNode } from 'neo4j-driver-core/lib/graph-types.js';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -120,12 +123,13 @@ function extractGraphEntitiesFromField(
 }
 
 export function buildGraphVisualizationObjectFromRecords(
-  records: Record<string, any>[],
+  records: any[], // Neo4jRecord[],
   nodes: Record<string, any>[],
   links: Record<string, any>[],
   nodeLabels: Record<string, any>,
   linkTypes: Record<string, any>,
   colorScheme: any,
+  fields: any,
   nodeColorProperty: any,
   defaultNodeColor: any,
   nodeSizeProperty: any,
@@ -162,29 +166,14 @@ export function buildGraphVisualizationObjectFromRecords(
   // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
   const linksList = Object.values(links).map((linkArray) => {
     return linkArray.map((link, i) => {
-      if (link.source == link.target) {
-        // Self-loop
-        return update(link, { curvature: 0.4 + i / 8 });
-      }
-      // If we also have edges from the target to the source, adjust curvatures accordingly.
       const mirroredNodePair = links[`${link.target},${link.source}`];
-      if (!mirroredNodePair) {
-        return update(link, { curvature: getCurvature(i, linkArray.length) });
-      }
-      return update(link, {
-        curvature:
-          (link.source > link.target ? 1 : -1) *
-          getCurvature(
-            link.source > link.target ? i : i + mirroredNodePair.length,
-            link.length + mirroredNodePair.length
-          ),
-      });
+      return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);
     });
   });
 
   // Assign proper colors to nodes.
   const totalColors = colorScheme ? colorScheme.length : 0;
-  const nodeLabelsList = Object.keys(nodeLabels);
+  const nodeLabelsList = fields.map((e) => e[0]);
   const nodesList = Object.values(nodes).map((node) => {
     // First try to assign a node a color if it has a property specifying the color.
     let assignedColor = node.properties[nodeColorProperty]
@@ -202,4 +191,88 @@ export function buildGraphVisualizationObjectFromRecords(
     nodes: nodesList,
     links: linksList.flat(),
   };
+}
+
+/**
+ * Utility function to inject new records into an existing visualization while it already exists.
+ * This is used to enable graph interactivity (e.g. exploration, editing).
+ * @param records a new set of Neo4j records.
+ * @param props properties of the existing graph visualization.
+ */
+export function injectNewRecordsIntoGraphVisualization(
+  records: any[], // Neo4jRecord[],
+  props: GraphChartVisualizationProps
+) {
+  // We should probably just maintain these in the state...
+  const nodesMap = {};
+  props.data.nodes.forEach((node) => {
+    nodesMap[node.id] = node;
+  });
+  const linksMap = {};
+  props.data.links.forEach((link) => {
+    linksMap[link.id] = link;
+  });
+  const newFields = extractNodePropertiesFromRecords(records);
+  const mergedFields = mergeNodePropsFieldsLists(props.engine.fields, newFields);
+  props.engine.setFields(mergedFields);
+
+  const { nodes, links } = buildGraphVisualizationObjectFromRecords(
+    records,
+    { ...nodesMap },
+    {},
+    props.data.nodeLabels,
+    props.data.linkTypes,
+    props.style.colorScheme,
+    mergedFields,
+    props.style.nodeColorProp,
+    props.style.defaultNodeColor,
+    props.style.nodeSizeProp,
+    props.style.defaultNodeSize,
+    props.style.relWidthProp,
+    props.style.defaultRelWidth,
+    props.style.relColorProp,
+    props.style.defaultRelColor,
+    props.extensions.styleRules,
+    props.interactivity.nodePositions,
+    props.interactivity.layoutFrozen
+  );
+
+  return { nodes, links, nodesMap, linksMap };
+}
+
+/**
+ * TODO: generalize and fix to be consistent with other parts of the code.
+ * TODO: maybe we shouldn't check if all records are nodes, but instead extract nodes from the records dynamically as the graph chart deos.
+ * @param records List of records got back from the Driver
+ * @param fieldIndex index of the field i want to check that is just nodes
+ * @returns True if all the records are Node Objects
+ */
+export function checkIfAllRecordsAreNodes(records, fieldIndex) {
+  try {
+    let res = records.every((record) => {
+      return record._fields && isNode(record._fields[fieldIndex]);
+    });
+    return res;
+  } catch (error) {
+    // In any case of error, log and continue with false
+    console.error(error);
+    return false;
+  }
+}
+
+/**
+ * TODO - this functionality is duplicated in the graph chart logic.
+ * Ideally, we want to have a Node/Relationship representation indipendent from the return
+ * that the driver gets back.
+ * @param records List of records got from the driver
+ * @returns List of Object that are parsed from the Node object received from the driver
+ */
+export function parseNodeRecordsToDictionaries(records, fieldIndex = 0) {
+  let res = records.map((record) => {
+    let { identity, labels, properties } = record._fields[fieldIndex];
+    // Preventing high/low fields by casting to its primitive type
+    identity = identity.toNumber();
+    return { id: identity, labels: labels, properties: properties };
+  });
+  return res;
 }

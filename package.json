@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.2.3",
+  "version": "2.2.5",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -28,7 +28,6 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
-    "prepare": "husky install",
     "test": "yarn cypress open",
     "test-headless": "yarn cypress run"
   },
@@ -65,6 +64,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
     "material-ui-color-picker": "^3.5.1",
+    "mui-nested-menu": "^3.2.0",
     "neo4j-client-sso": "^1.2.2",
     "postcss": "^8.4.21",
     "postcss-loader": "^7.2.4",
@@ -87,7 +87,8 @@
     "remark-gfm": "^3.0.1",
     "reselect": "^4.1.5",
     "tailwindcss": "^3.3.1",
-    "use-neo4j": "^0.3.13"
+    "use-neo4j": "^0.3.13",
+    "yaml": "^2.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",

@@ -13,6 +13,9 @@ import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
 import { LoadingSpinner } from '@neo4j-ndl/react';
 import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
+import { connect } from 'react-redux';
+import { updateDashboardSetting } from '../settings/SettingsActions';
+import { setPageNumberThunk } from '../settings/SettingsThunks';
 
 export const NeoReport = ({
   database = 'neo4j', // The Neo4j database to run queries onto.
@@ -31,6 +34,8 @@ export const NeoReport = ({
     return '';
   }, // function to get global (cypher) parameters.
   updateReportSetting = () => {},
+  createNotification = () => {},
+  setPageNumber = () => {}, // Callback to update the current page number selected by the user.
   dimensions = { width: 300, height: 300 }, // Size of the report in pixels.
   rowLimit = DEFAULT_ROW_LIMIT, // The maximum number of records to render.
   queryTimeLimit = 20, // Time limit for queries before automatically aborted.
@@ -73,7 +78,6 @@ export const NeoReport = ({
               !reportTypes[type].selection[field].multiple
           )
         : [];
-
     // Take care of multi select fields, they need to be added to the numeric fields too.
     if (reportTypes[type].selection) {
       Object.keys(reportTypes[type].selection).forEach((field) => {
@@ -146,25 +150,29 @@ export const NeoReport = ({
   }, [lastRunTimestamp]);
 
   // Define query callback to allow reports to get extra data on interactions.
-  const queryCallback = useCallback((query, parameters, setRecords) => {
-    runCypherQuery(
-      driver,
-      database,
-      query,
-      parameters,
-      rowLimit,
-      (status) => {
-        status == QueryStatus.NO_DATA ? setRecords([]) : null;
-      },
-      (result) => setRecords(result),
-      () => {},
-      fields,
-      false,
-      false,
-      HARD_ROW_LIMITING,
-      queryTimeLimit
-    );
-  }, []);
+  // Can retrieve a maximum of 1000 rows at a time.
+  const queryCallback = useCallback(
+    (query, parameters, setRecords) => {
+      runCypherQuery(
+        driver,
+        database,
+        query,
+        parameters,
+        1000,
+        (status) => {
+          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+        },
+        (result) => setRecords(result),
+        () => {},
+        fields,
+        false,
+        false,
+        HARD_ROW_LIMITING,
+        queryTimeLimit
+      );
+    },
+    [database]
+  );
 
   const reportTypes = getReportTypes(extensions);
 
@@ -192,6 +200,7 @@ export const NeoReport = ({
     return (
       <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
         <ChartType
+          setPageNumber={setPageNumber}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -200,9 +209,12 @@ export const NeoReport = ({
           dimensions={dimensions}
           parameters={parameters}
           queryCallback={queryCallback}
+          createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          fields={fields}
+          setFields={setFields}
         />
       </div>
     );
@@ -228,6 +240,7 @@ export const NeoReport = ({
           </div>
         </div>
         <ChartType
+          setPageNumber={setPageNumber}
           records={records}
           extensions={extensions}
           selection={selection}
@@ -236,9 +249,12 @@ export const NeoReport = ({
           dimensions={dimensions}
           parameters={parameters}
           queryCallback={queryCallback}
+          createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
           getGlobalParameter={getGlobalParameter}
           updateReportSetting={updateReportSetting}
+          fields={fields}
+          setFields={setFields}
         />
       </div>
     );
@@ -260,4 +276,12 @@ export const NeoReport = ({
   );
 };
 
-export default NeoReport;
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = (dispatch) => ({
+  setPageNumber: (index: number) => {
+    dispatch(setPageNumberThunk(index));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoReport);

@@ -43,6 +43,9 @@ const NeoCardViewFooter = ({
         if (selectableFields[selectable].type == SELECTION_TYPES.NODE_PROPERTIES) {
           // Only show optional selections if we explicitly allow it.
           if (showOptionalSelections || selectionIsMandatory) {
+            const totalColors = categoricalColorSchemes[nodeColorScheme]
+              ? categoricalColorSchemes[nodeColorScheme].length
+              : 0;
             const fieldSelections = fields.map((field, i) => {
               // TODO logically, it should be the last element in the field (node labels) array, as that is typically
               // the most specific node label when we have multi-labels
@@ -55,9 +58,6 @@ const NeoCardViewFooter = ({
                 '(id)',
                 '(no label)',
               ]);
-              const totalColors = categoricalColorSchemes[nodeColorScheme]
-                ? categoricalColorSchemes[nodeColorScheme].length
-                : 0;
               const color =
                 totalColors > 0 && !ignoreLabelColors
                   ? categoricalColorSchemes[nodeColorScheme][i % totalColors]

@@ -29,6 +29,7 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import { Dialog } from '@neo4j-ndl/react';
+import { createNotificationThunk } from '../page/PageThunks';
 
 const NeoCard = ({
   index, // index of the card.
@@ -52,6 +53,7 @@ const NeoCard = ({
   onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
   onDatabaseChanged, // action to take when the user changes the database related to the card
   loadDatabaseListFromNeo4j, // Thunk to get the list of databases
+  createNotification, // Thunk to create a global notification pop-up.
 }) => {
   // Will be used to fetch the list of current databases
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -132,6 +134,7 @@ const NeoCard = ({
             extensions={extensions}
             settings={report.settings ? report.settings : {}}
             updateReportSetting={(name, value) => onReportSettingUpdate(index, name, value)}
+            createNotification={(title, message) => createNotification(title, message)}
             type={report.type}
             database={database}
             active={active}
@@ -255,6 +258,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onDatabaseChanged: (index: any, database: any) => {
     dispatch(updateReportDatabaseThunk(index, database));
+  },
+  createNotification: (title: any, message: any) => {
+    dispatch(createNotificationThunk(title, message));
   },
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
