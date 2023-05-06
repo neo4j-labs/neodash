@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import { Card, CardHeader, IconButton } from '@material-ui/core';
+import { Card, CardHeader, IconButton } from '@mui/material';
 import { NestedMenuItem, IconMenuItem } from 'mui-nested-menu';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';

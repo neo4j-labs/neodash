@@ -31,7 +31,13 @@ const NeoCardViewFooter = ({
       style={{
         position: 'relative',
         paddingLeft: '15px',
-        marginTop: selectableFields[selectables[0]].type == SELECTION_TYPES.NODE_PROPERTIES ? '-5px' : '-23px',
+        marginTop:
+          selectableFields &&
+          selectables &&
+          selectables[0] &&
+          selectableFields[selectables[0]].type == SELECTION_TYPES.NODE_PROPERTIES
+            ? '-5px'
+            : '-23px',
         overflowX: 'scroll',
       }}
       disableSpacing

@@ -13,7 +13,7 @@ import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { IconButtonArray } from '@neo4j-ndl/react';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { IconButton, Tooltip } from '@mui/material';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { RenderSubValue } from '../../report/ReportRecordProcessing';
 import { downloadCSV } from '../ChartUtils';

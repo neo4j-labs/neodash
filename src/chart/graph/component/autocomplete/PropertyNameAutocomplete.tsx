@@ -1,6 +1,6 @@
 import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Fab, TextField, Typography } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 /**
  * Renders an auto-complete text field for property identifiers.
