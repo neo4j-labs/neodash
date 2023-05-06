@@ -34,9 +34,9 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
           </Dialog.Header>
           <Dialog.Content>
             <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
-              {examples.map((example) => {
+              {examples.map((example, index) => {
                 return (
-                  <Section>
+                  <Section key={`example-${  index}`}>
                     <SectionTitle>
                       <Typography variant='h4'>{example.title}</Typography>
                     </SectionTitle>

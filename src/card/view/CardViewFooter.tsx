@@ -1,9 +1,9 @@
 import React from 'react';
-import { CardActions, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
+import { CardActions, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../../config/CardConfig';
-import { Dropdown } from '@neo4j-ndl/react';
+import { Dropdown, Label } from '@neo4j-ndl/react';
 
 const NeoCardViewFooter = ({
   fields,

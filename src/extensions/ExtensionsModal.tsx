@@ -68,51 +68,53 @@ const NeoExtensionsModal = ({
                     <SectionContent>
                       <div style={{ opacity: e.enabled ? 1.0 : 0.6 }}>
                         <table>
-                          <tr>
-                            <td>
-                              <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
-                                <Typography variant='h4'>{e.label}</Typography>
-                                {e.enabled && (
-                                  <Label color='info' fill='outlined'>
-                                    Pro Feature
-                                  </Label>
-                                )}
-                              </div>
-                            </td>
-                            <td style={{ width: 50 }}></td>
-                            <td style={{ float: 'right' }}>
-                              <Tooltip title='Enable the extension' aria-label=''>
-                                <Checkbox
-                                  id={`checkbox-${e.name}`}
-                                  label='Active'
-                                  disabled={!e.enabled}
-                                  style={{ fontSize: 'small' }}
-                                  checked={extensions[e.name]}
-                                  name='enable'
-                                  onClick={() => {
-                                    if (e.enabled) {
-                                      setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
-                                    } else {
-                                      onExtensionUnavailableTriggered(e.label);
-                                    }
-                                  }}
-                                />
-                              </Tooltip>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td valign='top'>
-                              <p>{e.description}</p>
-                              <p>
-                                Author: <a href={e.link}>{e.author}</a>
-                              </p>
-                            </td>
-                            <td></td>
-                            <td>
-                              <br />
-                              <img src={e.image} style={{ width: 400, border: '1px solid grey' }}></img>
-                            </td>
-                          </tr>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
+                                  <Typography variant='h4'>{e.label}</Typography>
+                                  {e.enabled && (
+                                    <Label color='info' fill='outlined'>
+                                      Pro Feature
+                                    </Label>
+                                  )}
+                                </div>
+                              </td>
+                              <td style={{ width: 50 }}></td>
+                              <td style={{ float: 'right' }}>
+                                <Tooltip title='Enable the extension' aria-label=''>
+                                  <Checkbox
+                                    id={`checkbox-${e.name}`}
+                                    label='Active'
+                                    disabled={!e.enabled}
+                                    style={{ fontSize: 'small' }}
+                                    checked={extensions[e.name]}
+                                    name='enable'
+                                    onClick={() => {
+                                      if (e.enabled) {
+                                        setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
+                                      } else {
+                                        onExtensionUnavailableTriggered(e.label);
+                                      }
+                                    }}
+                                  />
+                                </Tooltip>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td valign='top'>
+                                <p>{e.description}</p>
+                                <p>
+                                  Author: <a href={e.link}>{e.author}</a>
+                                </p>
+                              </td>
+                              <td></td>
+                              <td>
+                                <br />
+                                <img src={e.image} style={{ width: 400, border: '1px solid grey' }}></img>
+                              </td>
+                            </tr>
+                          </tbody>
                         </table>
                       </div>
                     </SectionContent>
