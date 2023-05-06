@@ -116,7 +116,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               <table>
                 <tbody>
                   {neighbourRelCounts.length == 0 ? (
-                    <tr>
+                    <tr key={'ctxMenuItemTr1Default'}>
                       <td style={{ paddingLeft: 15, minWidth: '250px' }}> No relationships...</td>
                     </tr>
                   ) : (
@@ -126,9 +126,9 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
                     neighbourRelCounts.map((item, index) => {
                       const dir = item[1] == 'any' ? undefined : item[1] == 'out';
                       return (
-                        <tr key={`ctxMenuItemTr${  index}`}>
+                        <tr key={`ctxMenuItemTr1-${index}`}>
                           <MenuItem
-                            key={`ctxMenuItem${  index}`}
+                            key={`ctxMenuItem1-${index}`}
                             onClick={() => {
                               props.interactivity.setContextMenuOpen(false);
                               handleExpand(props.interactivity.selectedEntity.id, item[0], item[1], props);
@@ -160,25 +160,28 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           <NestedMenuItem label='Create relationship...' nonce={undefined} parentMenuOpen={true}>
             <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}>
               <table>
-                {props.data &&
-                  props.data.nodes.map((node) => (
-                    <tr>
-                      <MenuItem
-                        onClick={() => {
-                          setEditableEntityType(EditType.Relationship);
-                          setAction(EditAction.Create);
-                          setEditableEntity(node);
-                          props.interactivity.setContextMenuOpen(false);
-                          setDialogOpen(true);
-                        }}
-                      >
-                        <td style={{ width: '150px', overflow: 'hidden' }}>{RenderNode(node, false)}</td>
-                        <td style={{ width: 'auto', marginLeft: '15px' }}>
-                          {props.engine.selection[node.mainLabel] ? getNodeLabel(props.engine.selection, node) : ''}
-                        </td>
-                      </MenuItem>
-                    </tr>
-                  ))}
+                <tbody>
+                  {props.data &&
+                    props.data.nodes.map((node, index) => (
+                      <tr key={`ctxMenuItemTr2-${  index}`}>
+                        <MenuItem
+                          key={`ctxMenuItem2-${  index}`}
+                          onClick={() => {
+                            setEditableEntityType(EditType.Relationship);
+                            setAction(EditAction.Create);
+                            setEditableEntity(node);
+                            props.interactivity.setContextMenuOpen(false);
+                            setDialogOpen(true);
+                          }}
+                        >
+                          <td style={{ width: '150px', overflow: 'hidden' }}>{RenderNode(node, false)}</td>
+                          <td style={{ width: 'auto', marginLeft: '15px' }}>
+                            {props.engine.selection[node.mainLabel] ? getNodeLabel(props.engine.selection, node) : ''}
+                          </td>
+                        </MenuItem>
+                      </tr>
+                    ))}
+                </tbody>
               </table>
             </div>
           </NestedMenuItem>
