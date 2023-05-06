@@ -22,7 +22,7 @@ export const DeletePropertyButton = ({ onClick, key }) => {
       }}
       onClick={onClick}
     >
-      <CloseIcon />
+      <CloseIcon key={`icon${  key}`} />
     </Fab>
   );
 };

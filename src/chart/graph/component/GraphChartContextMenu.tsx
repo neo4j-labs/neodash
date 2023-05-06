@@ -114,38 +114,41 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           >
             <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}>
               <table>
-                {neighbourRelCounts.length == 0 ? (
-                  <tr>
-                    <td style={{ paddingLeft: 15, minWidth: '250px' }}> No relationships...</td>
-                  </tr>
-                ) : (
-                  <></>
-                )}
-                {neighbourRelCounts.length > 0 &&
-                  neighbourRelCounts.map((item) => {
-                    const dir = item[1] == 'any' ? undefined : item[1] == 'out';
-                    return (
-                      <tr>
-                        <MenuItem
-                          onClick={() => {
-                            props.interactivity.setContextMenuOpen(false);
-                            handleExpand(props.interactivity.selectedEntity.id, item[0], item[1], props);
-                            setDialogOpen(false);
-                            setCachedNeighbours(false);
-                          }}
-                        >
-                          <td style={{ minWidth: '250px', overflow: 'hidden' }}>
-                            {RenderNodeChip(props.interactivity.selectedEntity.labels, '#fff', '1px solid lightgrey')}
-                            &nbsp;
-                            {RenderRelationshipChip(item[0], dir, '#dedede')}
-                            &nbsp;
-                            {RenderNodeChip('...', '#fff', '1px solid lightgrey')}
-                          </td>
-                          <td style={{ width: 'auto', marginLeft: '15px' }}>{item[2]}</td>
-                        </MenuItem>
-                      </tr>
-                    );
-                  })}
+                <tbody>
+                  {neighbourRelCounts.length == 0 ? (
+                    <tr>
+                      <td style={{ paddingLeft: 15, minWidth: '250px' }}> No relationships...</td>
+                    </tr>
+                  ) : (
+                    <></>
+                  )}
+                  {neighbourRelCounts.length > 0 &&
+                    neighbourRelCounts.map((item, index) => {
+                      const dir = item[1] == 'any' ? undefined : item[1] == 'out';
+                      return (
+                        <tr key={`ctxMenuItemTr${  index}`}>
+                          <MenuItem
+                            key={`ctxMenuItem${  index}`}
+                            onClick={() => {
+                              props.interactivity.setContextMenuOpen(false);
+                              handleExpand(props.interactivity.selectedEntity.id, item[0], item[1], props);
+                              setDialogOpen(false);
+                              setCachedNeighbours(false);
+                            }}
+                          >
+                            <td style={{ minWidth: '250px', overflow: 'hidden' }}>
+                              {RenderNodeChip(props.interactivity.selectedEntity.labels, '#fff', '1px solid lightgrey')}
+                              &nbsp;
+                              {RenderRelationshipChip(item[0], dir, '#dedede')}
+                              &nbsp;
+                              {RenderNodeChip('...', '#fff', '1px solid lightgrey')}
+                            </td>
+                            <td style={{ width: 'auto', marginLeft: '15px' }}>{item[2]}</td>
+                          </MenuItem>
+                        </tr>
+                      );
+                    })}
+                </tbody>
               </table>
             </div>
           </NestedMenuItem>
