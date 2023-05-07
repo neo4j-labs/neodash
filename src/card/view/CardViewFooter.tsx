@@ -36,7 +36,7 @@ const NeoCardViewFooter = ({
           selectables &&
           selectables[0] &&
           selectableFields[selectables[0]].type == SELECTION_TYPES.NODE_PROPERTIES
-            ? '-5px'
+            ? '0px'
             : '-23px',
         overflowX: 'scroll',
       }}
