@@ -21,6 +21,7 @@ export const darkHeaderTheme = createTheme({
   palette: {
     text: {
       primary: '#ffffff',
+      secondary: '#ffffff',
     },
   },
   breakpoints: {

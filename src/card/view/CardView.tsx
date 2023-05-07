@@ -76,7 +76,7 @@ const NeoCardView = ({
   const reportHeader = (
     <ThemeProvider
       theme={
-        settings.backgroundColor && luma(settings.backgroundColor) < dashboardSettings.darkLuma
+        settings.backgroundColor && luma(settings.backgroundColor) < (dashboardSettings.darkLuma || 40)
           ? darkHeaderTheme
           : lightTheme
       }
