@@ -39,7 +39,7 @@ describe('NeoDash E2E Tests', () => {
     //     cy.contains('Yes').click()
     // }
 
-    cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j');
+    cy.get('#form-dialog-title').should('contain', 'NeoDash - Neo4j Dashboard Builder');
 
     // Connect to Neo4j database
     // cy.get('#protocol').click()
