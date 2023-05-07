@@ -10,7 +10,7 @@ import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtil
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
 
 import { IconButton } from '@neo4j-ndl/react';
