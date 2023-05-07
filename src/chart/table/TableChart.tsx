@@ -101,6 +101,7 @@ const NeoTableChart = (props: ChartProps) => {
         const value = key;
         return ApplyColumnType(
           {
+            key: `col-key-${  i}`,
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
@@ -115,6 +116,7 @@ const NeoTableChart = (props: ChartProps) => {
         const value = records[0].get(key);
         return ApplyColumnType(
           {
+            key: `col-key-${  i}`,
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
@@ -189,6 +191,7 @@ const NeoTableChart = (props: ChartProps) => {
           <></>
         )}
         <DataGrid
+          key={'tableKey'}
           headerHeight={32}
           rowHeight={tableRowHeight}
           rows={rows}
@@ -199,7 +202,7 @@ const NeoTableChart = (props: ChartProps) => {
             setNotificationOpen(true);
             navigator.clipboard.writeText(e.value);
           }}
-          pageSize={tablePageSize}
+          pageSize={tablePageSize > 0 ? tablePageSize : 5}
           rowsPerPageOptions={[5]}
           disableSelectionOnClick
           components={{

@@ -36,10 +36,8 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
             <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
               {examples.map((example, index) => {
                 return (
-                  <Section key={`example-${  index}`}>
-                    <SectionTitle>
-                      <Typography variant='h4'>{example.title}</Typography>
-                    </SectionTitle>
+                  <Section key={`example-${index}`}>
+                    <SectionTitle>{example.title}</SectionTitle>
                     <SectionContent>
                       <div className='n-grid n-grid-cols-3 n-gap-8'>
                         <div className='n-col-span-3'>{example.description}</div>
