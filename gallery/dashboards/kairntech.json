@@ -1,0 +1,265 @@
+{
+  "title": "Biomedical Knowledge Graph",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_protein_name": "DRD2",
+      "neodash_protein_name_display": "DRD2",
+      "neodash_disease_name": "Schizophrenia",
+      "neodash_disease_name_display": "Schizophrenia",
+      "neodash_disease_name_2": "Inflammation",
+      "neodash_disease_name_2_display": "Inflammation"
+    }
+  },
+  "pages": [
+    {
+      "title": "Proteins Relationships",
+      "reports": [
+        {
+          "title": "Select a protein",
+          "query": "MATCH (n:`PROTEIN`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 2,
+          "height": 8,
+          "x": 0,
+          "y": 2,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "PROTEIN",
+            "propertyType": "name",
+            "propertyTypeDisplay": "name",
+            "parameterName": "neodash_protein_name",
+            "helperText": "Protein"
+          }
+        },
+        {
+          "title": "Proteins",
+          "query": "MATCH (p:PROTEIN)\nRETURN  p.name as Name, p.wikidataid as URL\n\n\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Diseases for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)--(p2:DISEASE)\nWHERE p.name = $neodash_protein_name\nRETURN path",
+          "width": 5,
+          "height": 2,
+          "x": 2,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "PROTEIN": "name",
+            "DISEASE": "name"
+          },
+          "settings": {
+            "nodePositions": {},
+            "hideSelections": true
+          }
+        },
+        {
+          "title": "Disease Relationships for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)<-[r]-(p2:DISEASE)\nWHERE p.name = $neodash_protein_name\nRETURN COLLECT( p2.name) as Diseases, type(r) as `Type of Relationship`, r.strength as `Number of publications`\nORDER BY `Number of publications` DESC\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 7,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Substances for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)--(p2:SUBSTANCE)\nWHERE p.name = $neodash_protein_name\nRETURN path\n\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 2,
+          "y": 4,
+          "type": "graph",
+          "selection": {
+            "PROTEIN": "name",
+            "SUBSTANCE": "name"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeColorScheme": "neodash",
+            "styleRules": [
+              {
+                "field": "SUBSTANCE.name",
+                "condition": "!=",
+                "value": "abvc",
+                "customization": "node color",
+                "customizationValue": "#8bbae8"
+              }
+            ],
+            "hideSelections": true
+          }
+        },
+        {
+          "title": "Substance Relationships for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)<-[r]-(p2:SUBSTANCE)\nWHERE p.name = $neodash_protein_name\nRETURN COLLECT( p2.name) as Diseases, type(r) as `Type of Relationship`, r.strength as `Number of publications`\nORDER BY `Number of publications` DESC\n\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 7,
+          "y": 4,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Biological Processes for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)--(p2:BIOPROCESS)\nWHERE p.name = $neodash_protein_name\nRETURN path\n\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 2,
+          "y": 6,
+          "type": "graph",
+          "selection": {
+            "PROTEIN": "name",
+            "BIOPROCESS": "name"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeColorScheme": "neodash",
+            "styleRules": [
+              {
+                "field": "SUBSTANCE.name",
+                "condition": "!=",
+                "value": "abvc",
+                "customization": "node color",
+                "customizationValue": "#8bbae8"
+              }
+            ],
+            "hideSelections": true
+          }
+        },
+        {
+          "title": "Biological Process Relationships for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)<-[r]-(p2:BIOPROCESS)\nWHERE p.name = $neodash_protein_name\nRETURN COLLECT( p2.name) as Diseases, type(r) as `Type of Relationship`, r.strength as `Number of publications`\nORDER BY `Number of publications` DESC\n\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 7,
+          "y": 6,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Connected Proteins for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)--(p2:PROTEIN)\nWHERE p.name = $neodash_protein_name\nRETURN path\n\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 2,
+          "y": 8,
+          "type": "graph",
+          "selection": {
+            "PROTEIN": "name"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeColorScheme": "neodash",
+            "styleRules": [
+              {
+                "field": "SUBSTANCE.name",
+                "condition": "!=",
+                "value": "abvc",
+                "customization": "node color",
+                "customizationValue": "#8bbae8"
+              }
+            ],
+            "hideSelections": true
+          }
+        },
+        {
+          "title": "Protein Relationships for $neodash_protein_name",
+          "query": "MATCH path=(p:PROTEIN)<-[r]-(p2:PROTEIN)\nWHERE p.name = $neodash_protein_name\nRETURN COLLECT( p2.name) as Diseases, type(r) as `Type of Relationship`, r.strength as `Number of publications`\nORDER BY `Number of publications` DESC\n\n\n",
+          "width": 5,
+          "height": 2,
+          "x": 7,
+          "y": 8,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {}
+          }
+        }
+      ]
+    },
+    {
+      "title": "Disease Relationships",
+      "reports": [
+        {
+          "title": "Select a disease",
+          "query": "MATCH (n:`DISEASE`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "entityType": "DISEASE",
+            "propertyType": "name",
+            "propertyTypeDisplay": "name",
+            "parameterName": "neodash_disease_name"
+          }
+        },
+        {
+          "title": "How are these linked (multi-hop) through similar relationships?",
+          "query": "MATCH path=(p:DISEASE)-[r]-(p2:DISEASE)-[r2]-(p3:DISEASE)\nWHERE p.name = $neodash_disease_name AND p3.name = $neodash_disease_name_2\nAND type(r) = type(r2)\n//AND toInteger(r.strength) > 1 AND toInteger(r2.strength) > 1\nRETURN  p, \n apoc.create.vRelationship(p, type(r)+' ('+ r.strength +')', properties(r), p2),\np2,\n apoc.create.vRelationship(p2, type(r2)+' ('+ r2.strength +')', properties(r2), p3),\np3\n\n",
+          "width": 9,
+          "height": 4,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "DISEASE": "name"
+          },
+          "settings": {
+            "nodePositions": {}
+          }
+        },
+        {
+          "title": "Select another disease",
+          "query": "MATCH (n:`DISEASE`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "entityType": "DISEASE",
+            "propertyType": "name",
+            "propertyTypeDisplay": "name",
+            "parameterName": "neodash_disease_name_2",
+            "id": "2"
+          }
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "styling": true
+  }
+}
