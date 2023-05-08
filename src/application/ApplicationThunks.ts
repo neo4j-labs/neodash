@@ -191,6 +191,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
 
+    dispatch(setWelcomeScreenOpen(false));
+
     //  Parse the URL parameters to see if there's any deep linking of parameters.
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
@@ -198,6 +200,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         paramsToSetAfterConnecting[key] = value;
       }
     });
+
     if (Object.keys(paramsToSetAfterConnecting).length > 0) {
       dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
     }
@@ -247,6 +250,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             skipConfirmation
           )
         );
+
         window.history.pushState({}, document.title, '/');
       } else {
         dispatch(setConnectionModalOpen(false));
@@ -295,6 +299,7 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
       dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
       dispatch(setStandaloneDashboardDatabase(shareDetails.database));
     }
+
     if (shareDetails.url) {
       dispatch(
         createConnectionThunk(

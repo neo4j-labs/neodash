@@ -43,6 +43,7 @@ export const setWelcomeScreenOpen = (open: boolean) => ({
   type: SET_WELCOME_SCREEN_OPEN,
   payload: { open },
 });
+
 export const SET_CONNECTION_PROPERTIES = 'APPLICATION/SET_CONNECTION_PROPERTIES';
 export const setConnectionProperties = (
   protocol: string,

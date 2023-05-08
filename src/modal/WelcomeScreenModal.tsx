@@ -22,6 +22,7 @@ export const NeoWelcomeScreenModal = ({
   onAboutModalOpen,
 }) => {
   const [promptOpen, setPromptOpen] = React.useState(false);
+
   const handleOpen = () => {
     setWelcomeScreenOpen(true);
   };
