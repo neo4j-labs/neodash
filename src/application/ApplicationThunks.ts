@@ -207,6 +207,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const type = urlParams.get('type');
       const standalone = urlParams.get('standalone') == 'Yes';
       const dashboardDatabase = urlParams.get('dashboardDatabase');
+      const skipConfirmation = urlParams.get('skipConfirmation');
+
       if (urlParams.get('credentials')) {
         const connection = decodeURIComponent(urlParams.get('credentials'));
         const protocol = connection.split('://')[0];
@@ -241,7 +243,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             database,
             username,
             password,
-            dashboardDatabase
+            dashboardDatabase,
+            skipConfirmation
           )
         );
         window.history.pushState({}, document.title, '/');
@@ -251,6 +254,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           setShareDetailsFromUrl(
             type,
             id,
+            undefined,
             undefined,
             undefined,
             undefined,
@@ -283,6 +287,7 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
   try {
     const state = getState();
     const { shareDetails } = state.application;
+
     dispatch(setWelcomeScreenOpen(false));
     dispatch(setDashboardToLoadAfterConnecting(shareDetails.id));
 
@@ -365,8 +370,10 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     }
 
     dispatch(setSSOEnabled(config.ssoEnabled, config.ssoDiscoveryUrl));
+
     const state = getState();
     const { standalone } = config;
+
     dispatch(
       setStandaloneEnabled(
         standalone,

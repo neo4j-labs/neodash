@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
@@ -115,16 +115,20 @@ const Application = ({
         onSSOAttempt={onSSOAttempt}
         onConnectionModalClose={onConnectionModalClose}
       ></NeoConnectionModal>
-      <NeoWelcomeScreenModal
-        welcomeScreenOpen={welcomeScreenOpen}
-        setWelcomeScreenOpen={setWelcomeScreenOpen}
-        hasCachedDashboard={hasCachedDashboard}
-        hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
-        onConnectionModalOpen={onConnectionModalOpen}
-        createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
-        onAboutModalOpen={onAboutModalOpen}
-        resetDashboard={resetDashboard}
-      ></NeoWelcomeScreenModal>
+      {welcomeScreenOpen == true ? (
+        <></>
+      ) : (
+        <NeoWelcomeScreenModal
+          welcomeScreenOpen={welcomeScreenOpen}
+          setWelcomeScreenOpen={setWelcomeScreenOpen}
+          hasCachedDashboard={hasCachedDashboard}
+          hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
+          onConnectionModalOpen={onConnectionModalOpen}
+          createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
+          onAboutModalOpen={onAboutModalOpen}
+          resetDashboard={resetDashboard}
+        ></NeoWelcomeScreenModal>
+      )}
       <NeoUpgradeOldDashboardModal
         open={oldDashboard}
         text={oldDashboard}
@@ -187,7 +191,9 @@ const mapDispatchToProps = (dispatch) => ({
   onSSOAttempt: (_) => {
     dispatch(setWaitForSSO(true));
   },
-  onConfirmLoadSharedDashboard: (_) => dispatch(onConfirmLoadSharedDashboardThunk()),
+  onConfirmLoadSharedDashboard: (_) => {
+    dispatch(onConfirmLoadSharedDashboardThunk());
+  },
   onConnectionModalOpen: (_) => dispatch(setConnectionModalOpen(true)),
   onConnectionModalClose: (_) => dispatch(setConnectionModalOpen(false)),
   onReportHelpModalClose: (_) => dispatch(setReportHelpModalOpen(false)),

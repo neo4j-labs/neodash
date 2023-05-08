@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -28,89 +28,102 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
     onResetShareDetails();
   };
 
+  useEffect(() => {
+    if (shareDetails)
+      {if (shareDetails.skipConfirmation) {
+        onConfirmLoadSharedDashboard();
+      }}
+  }, [shareDetails]);
+
   return (
     <div>
-      <Dialog maxWidth={'lg'} open={shareDetails !== undefined} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>
-          <DashboardIcon
-            style={{
-              height: '30px',
-              paddingTop: '4px',
-              marginBottom: '-8px',
-              marginRight: '5px',
-              paddingBottom: '5px',
-            }}
-          />
-          Loading Dashboard
-          <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {shareDetails !== undefined ? (
-              <>
-                You are loading a Neo4j dashboard.
-                <br />
-                {shareDetails && shareDetails.url ? (
+      {shareDetails && shareDetails.skipConfirmation === true ? (
+        <></>
+      ) : (
+        <div>
+          <Dialog maxWidth={'lg'} open={shareDetails !== undefined} aria-labelledby='form-dialog-title'>
+            <DialogTitle id='form-dialog-title'>
+              <DashboardIcon
+                style={{
+                  height: '30px',
+                  paddingTop: '4px',
+                  marginBottom: '-8px',
+                  marginRight: '5px',
+                  paddingBottom: '5px',
+                }}
+              />
+              Loading Dashboard
+              <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
+                <Badge overlap='rectangular' badgeContent={''}>
+                  <CloseIcon />
+                </Badge>
+              </IconButton>
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {shareDetails !== undefined ? (
                   <>
-                    You will be connected to <b>{shareDetails && shareDetails.url}</b>.
+                    You are loading a Neo4j dashboard.
+                    <br />
+                    {shareDetails && shareDetails.url ? (
+                      <>
+                        You will be connected to <b>{shareDetails && shareDetails.url}</b>.
+                      </>
+                    ) : (
+                      <>You will still need to specify a connection manually.</>
+                    )}
+                    <br /> <br />
+                    This will override your current dashboard (if any). Continue?
                   </>
                 ) : (
-                  <>You will still need to specify a connection manually.</>
+                  <>
+                    <br />
+                    <br />
+                    <br />
+                  </>
                 )}
-                <br /> <br />
-                This will override your current dashboard (if any). Continue?
-              </>
-            ) : (
-              <>
                 <br />
                 <br />
                 <br />
-              </>
-            )}
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <Button
-              component='label'
-              onClick={() => {
-                onConfirmLoadSharedDashboard();
-              }}
-              style={{ backgroundColor: 'white', marginTop: '20px', float: 'right' }}
-              color='default'
-              variant='contained'
-              endIcon={<PlayArrow />}
-              size='medium'
-            >
-              Continue
-            </Button>
-            <Button
-              component='label'
-              onClick={handleClose}
-              style={{ float: 'right', marginTop: '20px', marginRight: '10px', backgroundColor: 'white' }}
-              color='default'
-              variant='contained'
-              size='medium'
-            >
-              Cancel
-            </Button>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions></DialogActions>
-      </Dialog>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <Button
+                  component='label'
+                  onClick={() => {
+                    onConfirmLoadSharedDashboard();
+                  }}
+                  style={{ backgroundColor: 'white', marginTop: '20px', float: 'right' }}
+                  color='default'
+                  variant='contained'
+                  endIcon={<PlayArrow />}
+                  size='medium'
+                >
+                  Continue
+                </Button>
+                <Button
+                  component='label'
+                  onClick={handleClose}
+                  style={{ float: 'right', marginTop: '20px', marginRight: '10px', backgroundColor: 'white' }}
+                  color='default'
+                  variant='contained'
+                  size='medium'
+                >
+                  Cancel
+                </Button>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions></DialogActions>
+          </Dialog>
+        </div>
+      )}
     </div>
   );
 };
