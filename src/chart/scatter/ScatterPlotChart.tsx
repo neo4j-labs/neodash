@@ -263,8 +263,13 @@ const NeoScatterPlot = (props: ChartProps) => {
     );
   };
 
+  // Fixing canvas bug, from https://github.com/plouc/nivo/issues/2162
+  HTMLCanvasElement.prototype.getBBox = function tooltipMapper() {
+    return { width: this.offsetWidth, height: this.offsetHeight };
+  };
+
   // If the query returns too many nodes, pass to a Canvas verison of the chart (scales easier than a normal plot)
-  const ComponentType = data.data.length <= 400 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
+  const ComponentType = data.data.length <= 50 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
 
   const scatterplot = (
     <div
