@@ -149,7 +149,6 @@ const NeoWorkflowDrawerButton = ({
 const mapStateToProps = (state) => ({
   workflows: getWorkflowsList(state),
   parameters: getGlobalParameters(state),
-  database: getDatabase(state, -1, -1),
 });
 
 const mapDispatchToProps = (dispatch) => ({

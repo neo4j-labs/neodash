@@ -132,7 +132,11 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStat
                       <Typography>{step.name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <NeoWorkflowRunnerStepDetails step={step} result={results[index] ? results[index].records : []} />
+                      <NeoWorkflowRunnerStepDetails
+                        step={step}
+                        records={results[index] ? results[index].records : []}
+                        status={workflowStepStatus[index]}
+                      />
                     </AccordionDetails>
                   </Accordion>
                 );

@@ -50,8 +50,8 @@ const NeoBarChart = (props: ChartProps) => {
         const idx = data.findIndex((item) => item.index === index);
 
         const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
-        const value = recordToNative(row.get(selection.value));
-
+        const rawValue = recordToNative(row.get(selection.value));
+        const value = rawValue !== null ? rawValue : 0.0000001;
         if (isNaN(value)) {
           return data;
         }
@@ -202,7 +202,7 @@ const NeoBarChart = (props: ChartProps) => {
     );
   };
   // TODO: Get rid of duplicate pie slice names...
-
+  console.log(data);
   const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
   return (
     <ResponsiveBar

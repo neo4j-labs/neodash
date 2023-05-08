@@ -264,7 +264,7 @@ const NeoScatterPlot = (props: ChartProps) => {
   };
 
   // If the query returns too many nodes, pass to a Canvas verison of the chart (scales easier than a normal plot)
-  const ComponentType = data.data.length <= 300 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
+  const ComponentType = data.data.length <= 400 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
 
   const scatterplot = (
     <div

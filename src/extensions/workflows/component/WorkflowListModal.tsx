@@ -233,7 +233,7 @@ export const NeoWorkflowListModal = ({
             placeholder='neo4j'
             label='Database'
             value={databaseText}
-            style={{ width: '47%', maxWidth: '200px' }}
+            style={{ width: '47%', maxWidth: '200px', marginTop: '-13px' }}
             choices={databaseList.map((database) => (
               <MenuItem key={database} value={database}>
                 {database}

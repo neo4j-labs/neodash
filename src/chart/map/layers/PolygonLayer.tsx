@@ -177,7 +177,6 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
      * @returns color assigned to the polygon based on it's position in the legend
      */
     function getColor(weight, legendRange, listColors) {
-      console.log(weight);
       let index = legendRange.findIndex((number) => {
         return number >= weight;
       });
