@@ -82,7 +82,7 @@ function bindDataToMap(geoData, geoJsonData) {
       listValues.push(geoData[key]);
       newValues[key] = tmp;
     } else {
-      console.log(`Missing key in Polygon Map :  ${key} with value ${geoData[key]}`);
+      // console.log(`Missing key in Polygon Map :  ${key} with value ${geoData[key]}`);
     }
   });
 

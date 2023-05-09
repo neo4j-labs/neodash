@@ -202,7 +202,6 @@ const NeoBarChart = (props: ChartProps) => {
     );
   };
   // TODO: Get rid of duplicate pie slice names...
-  console.log(data);
   const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
   return (
     <ResponsiveBar
