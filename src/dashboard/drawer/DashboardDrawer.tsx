@@ -28,8 +28,8 @@ import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
  * @returns
  */
 // TODO: abstract logic
-function renderExtensionDrawers() {
-  return <NodeSidebarDrawer></NodeSidebarDrawer>;
+function renderExtensionDrawers(database) {
+  return <NodeSidebarDrawer database={database}></NodeSidebarDrawer>;
 }
 
 // TODO: abstract logic
@@ -55,7 +55,7 @@ export const NeoDrawer = ({
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return Component ? <Component /> : <></>;
+          return Component ? <Component database={connection.database} /> : <></>;
         })}
       </>
     );
@@ -168,7 +168,7 @@ export const NeoDrawer = ({
   return (
     <>
       {content}
-      {renderExtensionDrawers()}
+      {renderExtensionDrawers(connection.database)}
     </>
   );
 };

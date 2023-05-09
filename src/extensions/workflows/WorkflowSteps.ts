@@ -1,67 +1,119 @@
 // TODO - define interface
 export const WORKFLOW_STEPS = {
   tsne1: {
-    name: 'Label Nodes for t-SNE',
+    name: 'Project Mention Meld Graph',
     key: 'tsne1',
     type: 't-SNE',
     description: '...',
-    query: `MATCH (d:MentionMeld {code: $neodash_mentionmeld_code})
-    WHERE datetime(toString($neodash_end_date)) - duration($neodash_period) < d.start <= datetime(toString($neodash_end_date))
-    OPTIONAL MATCH (d)-[r:mentioned]->(x:Category)
-    WITH collect(DISTINCT d) AS dnodes, collect(DISTINCT x) AS xnodes
-    CALL apoc.create.addLabels(apoc.coll.flatten([dnodes, xnodes]), [$neodash_labelstring]) YIELD node
-    RETURN count(node)`,
+    query: `
+    // Project graph
+      CALL {
+          MATCH (mm:MentionMeld {code: $neodash_mentionmeld_code})-[r:PREVIOUS]->(mm2:MentionMeld)
+          WHERE datetime(toString($neodash_end_date)) - duration($neodash_period) < mm.start <= datetime(toString($neodash_end_date))
+          AND datetime(toString($neodash_end_date)) - duration($neodash_period) < mm2.start <= datetime(toString($neodash_end_date))
+          RETURN mm AS source, mm2 AS target, r
+          UNION ALL
+          MATCH (mm:MentionMeld {code: $neodash_mentionmeld_code})-[r:mentioned]->(x:Category)
+          WHERE datetime(toString($neodash_end_date)) - duration($neodash_period) < mm.start <= datetime(toString($neodash_end_date))
+          RETURN mm AS source, x AS target, r
+      }
+      WITH gds.alpha.graph.project($neodash_gdsname, source, target,
+        {sourceNodeLabels: labels(source),
+        targetNodeLabels: labels(target)},
+        {relationshipType: type(r),
+        properties: CASE WHEN type(r) = 'mentioned' THEN {n: r.n} ELSE {n: r.weight} END},
+        {undirectedRelationshipTypes: ['mentioned']}) AS graph
+      RETURN graph
+    `,
   },
 
   tsne2: {
-    name: 'Project Graph for t-SNE',
-    key: 'tsne2',
-    type: 't-SNE',
-    description: '...',
-    query: `CALL gds.graph.project($neodash_gdsname, $neodash_labelstring, {mentioned: {orientation: 'UNDIRECTED', properties: 'n'}, PREVIOUS: {orientation: 'NATURAL', properties: {n: {defaultValue: 1.0, property: 'weight'}}}});
-      `,
-  },
-
-  tsne3: {
     name: 'Calculate Embeddings for t-SNE',
-    key: 'tsne3',
+    key: 'tsne2',
     type: 't-SNE',
     description: '...',
     query: `CALL gds.fastRP.mutate($neodash_gdsname, {mutateProperty: 'embed0', embeddingDimension: 128, relationshipWeightProperty: 'n', iterationWeights: [1.0, 1.0, 1.0]})`,
   },
 
-  tsne4: {
+  tsne3: {
     name: 'Run t-SNE',
-    key: 'tsne4',
+    key: 'tsne3',
     type: 't-SNE',
     description: '...',
-    query: `CALL apoc.load.jsonParams('http://localhost:8001/tsne', {method: "PUT"},
-      apoc.convert.toJson({xproperty: 'start', yproperty: 'embed0',
-      db: {NEO4J_DATABASE: 'poc.eios201909to202009', NEO4J_URI: "neo4j+s://dev-kg-who-ewaa.graphapp.io:7687", NEO4J_USERNAME: 'neo4j'},
-      graphname: $neodash_gdsname,
-      nodelabel: ['MentionMeld', $neodash_labelstring]}))
-      YIELD value
-      MERGE (t:TSNE {date: value.X, x: value.x_tSNE, y: value.y_tSNE, nodeId: value.nodeId})
-      WITH t
-      MATCH (d:MentionMeld {code: $neodash_mentionmeld_code, start: datetime(toString($neodash_end_date))})
-      MERGE (t)-[:CALCULATED]->(d)`,
+    query: `CALL apoc.load.jsonParams('http://localhost:8001/tsne2', {method: "PUT"},
+    apoc.convert.toJson({xproperty: 'start', yproperty: 'embed0',
+    db: {NEO4J_DATABASE: 'poc.eios201909to202009', NEO4J_URI: "neo4j+s://dev-kg-who-ewaa.graphapp.io:7687", NEO4J_USERNAME: 'neo4j'},
+    graphname: $neodash_gdsname,
+    perplexity: 30,
+    nodelabel: ['MentionMeld']}))
+    YIELD value
+    MERGE (t:TSNE {date: value.X, x: value.x_tSNE, y: value.y_tSNE, nodeId: value.nodeId})
+    WITH t, value
+    MATCH (d:MentionMeld {code: $neodash_mentionmeld_code, start: datetime(toString($neodash_end_date))})
+    MERGE (t)-[:CALCULATED]->(d)
+    RETURN value`,
   },
 
-  tsne5: {
-    name: 'Drop Graph for t-SNE',
-    key: 'tsne5',
+  tsne4: {
+    name: 'Drop Mention Meld Graph',
+    key: 'tsne4',
     type: 't-SNE',
     description: '...',
     query: `CALL gds.graph.drop($neodash_gdsname) YIELD graphName`,
   },
 
-  tsne6: {
-    name: 'Remove labels for t-SNE',
-    key: 'tsne6',
-    type: 't-SNE',
+  anomalyEmbedding1: {
+    name: 'Anomaly Embedding 1',
+    key: 'anomalyEmbedding1',
+    type: 'Anomaly Detection',
     description: '...',
-    query: `MATCH (n:MentionMeld|Category) WHERE $neodash_labelstring IN labels(n)
-      CALL apoc.create.removeLabels(n, [$neodash_labelstring]) YIELD node RETURN count(node)`,
+    query: `CALL gds.fastRP.mutate($neodash_gdsname, {mutateProperty: 'embed1', embeddingDimension: 128, relationshipWeightProperty: 'n', iterationWeights: [1.0, 1.0, 1.0]})`,
+  },
+
+  anomalyEmbedding2: {
+    name: 'Anomaly Embedding 2',
+    key: 'anomalyEmbedding2',
+    type: 'Anomaly Detection',
+    description: '...',
+    query: `CALL gds.fastRP.mutate($neodash_gdsname, {mutateProperty: 'embed2', embeddingDimension: 128, relationshipWeightProperty: 'n', iterationWeights: [1.0, 1.0, 1.0]})`,
+  },
+  anomalyEmbedding3: {
+    name: 'Anomaly Embedding 3',
+    key: 'anomalyEmbedding3',
+    type: 'Anomaly Detection',
+    description: '...',
+    query: `CALL gds.fastRP.mutate($neodash_gdsname, {mutateProperty: 'embed3', embeddingDimension: 128, relationshipWeightProperty: 'n', iterationWeights: [1.0, 1.0, 1.0]})`,
+  },
+  anomalyEmbedding4: {
+    name: 'Anomaly Embedding 4',
+    key: 'anomalyEmbedding4',
+    type: 'Anomaly Detection',
+    description: '...',
+    query: `CALL gds.fastRP.mutate($neodash_gdsname, {mutateProperty: 'embed4', embeddingDimension: 128, relationshipWeightProperty: 'n', iterationWeights: [1.0, 1.0, 1.0]})`,
+  },
+  anomalyEmbedding5: {
+    name: 'Anomaly Embedding 5',
+    key: 'anomalyEmbedding5',
+    type: 'Anomaly Detection',
+    description: '...',
+    query: `CALL gds.fastRP.mutate($neodash_gdsname, {mutateProperty: 'embed5', embeddingDimension: 128, relationshipWeightProperty: 'n', iterationWeights: [1.0, 1.0, 1.0]})`,
+  },
+  anomalyAlgorithm: {
+    name: 'Anomaly Detection Algorithm',
+    key: 'anomalyAlgorithm',
+    type: 'Anomaly Detection',
+    description: '...',
+    query: `
+    CALL apoc.load.jsonParams('http://localhost:8001/anomaly2', {method: "PUT"},
+apoc.convert.toJson({xproperty: 'start', yproperty: ['embed1', 'embed2', 'embed3', 'embed4', 'embed5'],
+db: {NEO4J_DATABASE: 'poc.eios201909to202009', NEO4J_URI: "neo4j+s://dev-kg-who-ewaa.graphapp.io:7687", NEO4J_USERNAME: 'neo4j'},
+graphname: $neodash_gdsname,
+nodelabel: ['MentionMeld'],
+algorithm: ['ECOD', 'LOF', 'IForest', 'OCSVM', 'LODA', 'CBLOF', 'PCA', 'HBOS', 'KNN']}))
+yield value 
+MERGE (a:AnalysisAD {code: $neodash_mentionmeld_code, period: $neodash_period, gdsname: $neodash_gdsname, end_date: $neodash_end_date, date: datetime(value.X)})
+SET a.LOF = value.LOF, a.ECOD = value.ECOD, a.LODA = value.LODA, a.KNN = value.KNN, a.CBLOF = value.CBLOF, a.IForest = value.IForest, a.OCSVM = value.OCSVM, a.PCA = value.PCA, a.HBOS = value.HBOS 
+RETURN value`,
   },
 
   shortestPath: {

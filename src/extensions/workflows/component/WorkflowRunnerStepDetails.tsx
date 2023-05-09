@@ -1,13 +1,15 @@
 import { Button, TextareaAutosize } from '@material-ui/core';
 import React from 'react';
 import { REPORT_TYPES } from '../../../config/ReportConfig';
+import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponent';
+import { STEP_STATUS } from './WorkflowRunnerModal';
 
 enum views {
   QUERY,
   DATA,
 }
 
-const NeoWorkflowRunnerStepDetails = ({ step, result }) => {
+const NeoWorkflowRunnerStepDetails = ({ step, records, status }) => {
   const [view, setView] = React.useState(views.QUERY);
   const Chart = REPORT_TYPES.table.component;
   return (
@@ -21,7 +23,7 @@ const NeoWorkflowRunnerStepDetails = ({ step, result }) => {
           variant='contained'
           size='small'
         >
-          Data
+          {status == STEP_STATUS.ERROR ? 'Error' : 'Data'}
         </Button>
         <Button
           onClick={() => {
@@ -51,7 +53,14 @@ const NeoWorkflowRunnerStepDetails = ({ step, result }) => {
 
         {view == views.DATA ? (
           <div style={{ height: '380px', width: '100%', marginTop: '0px', marginBottom: '-12px', overflow: 'auto' }}>
-            <Chart records={result} dimensions={{ width: 400, height: 400 }} settings={{}} fields={[]}></Chart>
+            {status == STEP_STATUS.ERROR ? (
+              <NeoCodeViewerComponent
+                value={records && records[0] && records[0].error && records[0].error}
+                placeholder={'Unknown query error, check the browser console.'}
+              />
+            ) : (
+              <Chart records={records} dimensions={{ width: 400, height: 400 }} settings={{}} fields={[]}></Chart>
+            )}
           </div>
         ) : (
           <></>
