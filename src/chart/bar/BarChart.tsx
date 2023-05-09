@@ -1,4 +1,4 @@
-import { ResponsiveBar } from '@nivo/bar';
+import { ResponsiveBar, ResponsiveBarCanvas } from '@nivo/bar';
 import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
@@ -29,55 +29,65 @@ const NeoBarChart = (props: ChartProps) => {
     }, 1);
     return () => clearTimeout(timeOutId);
   }, [props.selection]);
+
+  const { records, selection } = props;
+
+  const [keys, setKeys] = React.useState({});
+  const [data, setData] = React.useState<Record<string, any>[]>([]);
+
+  useEffect(() => {
+    console.log('get_Data');
+    let tmpKeys = {};
+    let tmpData: Record<string, any>[] = records
+      .reduce((data: Record<string, any>[], row: Record<string, any>) => {
+        try {
+          if (!selection || !selection.index || !selection.value) {
+            return data;
+          }
+          const index = convertRecordObjectToString(row.get(selection.index));
+          const idx = data.findIndex((item) => item.index === index);
+
+          const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
+          const rawValue = recordToNative(row.get(selection.value));
+          const value = rawValue !== null ? rawValue : 0.0000001;
+          if (isNaN(value)) {
+            return data;
+          }
+          tmpKeys[key] = true;
+
+          if (idx > -1) {
+            data[idx][key] = value;
+          } else {
+            data.push({ index, [key]: value });
+          }
+          return data;
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          return [];
+        }
+      }, [])
+      .map((row) => {
+        Object.keys(tmpKeys).forEach((key) => {
+          // eslint-disable-next-line no-prototype-builtins
+          if (!row.hasOwnProperty(key)) {
+            row[key] = 0;
+          }
+        });
+        return row;
+      });
+
+    setKeys(tmpKeys);
+    setData(tmpData);
+  }, [selection]);
+
   if (loading) {
     return <></>;
   }
 
-  const { records, selection } = props;
-
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
-
-  const keys = {};
-  const data: Record<string, any>[] = records
-    .reduce((data: Record<string, any>[], row: Record<string, any>) => {
-      try {
-        if (!selection || !selection.index || !selection.value) {
-          return data;
-        }
-        const index = convertRecordObjectToString(row.get(selection.index));
-        const idx = data.findIndex((item) => item.index === index);
-
-        const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
-        const rawValue = recordToNative(row.get(selection.value));
-        const value = rawValue !== null ? rawValue : 0.0000001;
-        if (isNaN(value)) {
-          return data;
-        }
-        keys[key] = true;
-
-        if (idx > -1) {
-          data[idx][key] = value;
-        } else {
-          data.push({ index, [key]: value });
-        }
-        return data;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        return [];
-      }
-    }, [])
-    .map((row) => {
-      Object.keys(keys).forEach((key) => {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!row.hasOwnProperty(key)) {
-          row[key] = 0;
-        }
-      });
-      return row;
-    });
 
   const settings = props.settings ? props.settings : {};
   const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
@@ -201,14 +211,22 @@ const NeoBarChart = (props: ChartProps) => {
       </g>
     );
   };
+
+  // Fixing canvas bug, from https://github.com/plouc/nivo/issues/2162
+  HTMLCanvasElement.prototype.getBBox = function tooltipMapper() {
+    return { width: this.offsetWidth, height: this.offsetHeight };
+  };
+
   // TODO: Get rid of duplicate pie slice names...
   const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
-  return (
-    <ResponsiveBar
+  const ComponentyType = data.length > 30 ? ResponsiveBarCanvas : ResponsiveBar;
+  const chart = (
+    <ComponentyType
+      data={data}
+      key={`${selection.index}___${selection.value}`}
       layout={layout}
       groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
       enableLabel={enableLabel}
-      data={data}
       keys={Object.keys(keys)}
       indexBy='index'
       margin={{
@@ -269,6 +287,9 @@ const NeoBarChart = (props: ChartProps) => {
       animate={false}
     />
   );
+
+  console.log('re-render');
+  return chart;
 };
 
 export default NeoBarChart;
