@@ -21,12 +21,12 @@ export const NeoWorkflowStepSelectionModal = ({ open, setOpen, addStep }) => {
   });
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
-    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'name', headerName: 'Name', width: 250 },
     { field: 'type', headerName: 'Type', width: 120 },
     {
       field: 'description',
       headerName: 'Description',
-      width: 650,
+      width: 550,
       renderCell: (c) => {
         return <div style={{ lineHeight: 'normal', whiteSpace: 'break-spaces' }}>{c.formattedValue}</div>;
       },
