@@ -31,6 +31,7 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import { createNotificationThunk } from '../page/PageThunks';
+import { OpenAiClient } from '../extensions/nlp-query/OpenAiManager';
 
 const NeoCard = ({
   index, // index of the card.
@@ -58,11 +59,18 @@ const NeoCard = ({
 }) => {
   // Will be used to fetch the list of current databases
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-
   const [databaseList, setDatabaseList] = React.useState([database]);
   const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
-
+  // History not kept cause of the local state, if i change page is gonna reset the memory, to fix
+  const [messages, setMessages] = React.useState([]);
   const ref = React.useRef();
+  const [openAiClient, setOpenAiClient] = React.useState(
+    new OpenAiClient(dashboardSettings.openAiKey, [...messages], setMessages)
+  );
+  // fetching the list of databases from neo4j, filtering out the 'system' db
+  useEffect(() => {
+    dashboardSettings.openAiKey ?? openAiClient.updateApiKey(dashboardSettings.openAiKey);
+  }, [dashboardSettings.openAiKey]);
 
   // fetching the list of databases from neo4j, filtering out the 'system' db
   useEffect(() => {
@@ -173,6 +181,7 @@ const NeoCard = ({
             type={report.type}
             expanded={expanded}
             extensions={extensions}
+            openAiClient={openAiClient}
             dashboardSettings={dashboardSettings}
             onToggleCardExpand={onToggleCardExpand}
             setActive={setActive}

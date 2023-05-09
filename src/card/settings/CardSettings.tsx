@@ -19,6 +19,7 @@ const NeoCardSettings = ({
   fields,
   heightPx,
   extensions, // A set of enabled extensions.
+  openAiClient,
   onQueryUpdate,
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
   onRemovePressed,
@@ -59,6 +60,7 @@ const NeoCardSettings = ({
       width={width}
       height={height}
       type={type}
+      openAiClient={openAiClient}
       extensions={extensions}
       databaseList={databaseList}
       onDatabaseChanged={onDatabaseChanged}

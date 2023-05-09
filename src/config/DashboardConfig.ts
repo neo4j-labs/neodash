@@ -43,6 +43,13 @@ export const DASHBOARD_SETTINGS = {
     default: 25,
     helperText: 'Background colors under this threshold will be considered as dark',
   },
+  openAiKey: {
+    label: 'Open Ai API Key',
+    type: SELECTION_TYPES.TEXT,
+    disabled: false,
+    default: '',
+    helperText: 'Insert here your api key to start using GPT4 to create queries.',
+  },
   pagenumber: {
     label: 'Page Number',
     type: SELECTION_TYPES.NUMBER,

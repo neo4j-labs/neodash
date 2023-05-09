@@ -48,7 +48,6 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
         ))}
     </div>
   );
-
   return (
     <div>
       <ListItem button onClick={handleClickOpen}>

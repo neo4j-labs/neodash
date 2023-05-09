@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
+import { FormControlLabel, FormGroup, Switch } from '@material-ui/core';
 
 const NeoCardSettingsContent = ({
   query,
@@ -13,6 +14,7 @@ const NeoCardSettingsContent = ({
   databaseList, // List of databases the user can choose from ('system' is filtered out)
   reportSettings,
   type,
+  openAiClient,
   extensions,
   onQueryUpdate,
   onReportSettingUpdate,
@@ -22,17 +24,25 @@ const NeoCardSettingsContent = ({
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const [queryText, setQueryText] = React.useState(query);
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-
   // State to manage the current database entry inside the form
   const [databaseText, setDatabaseText] = React.useState(database);
   const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
 
+  const [openAiEnabled, setOpenAiEnabled] = React.useState(false);
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
     if (query !== queryText) {
       setQueryText(query);
     }
   }, [query]);
+
+  useEffect(() => {
+    // Reset text to the dashboard state when the page gets reorganized.
+    console.log('cardSettingsContent', openAiClient);
+    if (openAiEnabled && openAiClient) {
+      openAiClient.chatCompletion(query, setQueryText);
+    }
+  }, [openAiEnabled]);
 
   const reportTypes = getReportTypes(extensions);
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
@@ -110,6 +120,25 @@ const NeoCardSettingsContent = ({
           >
             {reportTypes[type] && reportTypes[type].helperText}
           </p>
+
+          <FormGroup>
+            <FormControlLabel
+              style={{ marginLeft: '5px', marginBottom: '10px' }}
+              control={
+                <Switch
+                  checked={openAiEnabled}
+                  onChange={(_) => {
+                    setOpenAiEnabled(!openAiEnabled);
+                  }}
+                  color='default'
+                />
+              }
+              labelPlacement='end'
+              label={
+                <div style={{ fontSize: '12px', color: 'grey' }}>NLP Query, if enabled triggers, just for test</div>
+              }
+            />
+          </FormGroup>
         </div>
       )}
     </CardContent>
