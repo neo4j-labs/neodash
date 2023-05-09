@@ -3,12 +3,7 @@ import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import {
-  evaluateRulesOnDict,
-  styleRulesReplaceParams,
-  identifyStyleRuleParameters,
-  useStyleRules,
-} from '../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 
@@ -36,9 +31,8 @@ const NeoBarChart = (props: ChartProps) => {
   const [data, setData] = React.useState<Record<string, any>[]>([]);
 
   useEffect(() => {
-    console.log('get_Data');
-    let tmpKeys = {};
-    let tmpData: Record<string, any>[] = records
+    let newKeys = {};
+    let newData: Record<string, any>[] = records
       .reduce((data: Record<string, any>[], row: Record<string, any>) => {
         try {
           if (!selection || !selection.index || !selection.value) {
@@ -53,7 +47,7 @@ const NeoBarChart = (props: ChartProps) => {
           if (isNaN(value)) {
             return data;
           }
-          tmpKeys[key] = true;
+          newKeys[key] = true;
 
           if (idx > -1) {
             data[idx][key] = value;
@@ -68,7 +62,7 @@ const NeoBarChart = (props: ChartProps) => {
         }
       }, [])
       .map((row) => {
-        Object.keys(tmpKeys).forEach((key) => {
+        Object.keys(newKeys).forEach((key) => {
           // eslint-disable-next-line no-prototype-builtins
           if (!row.hasOwnProperty(key)) {
             row[key] = 0;
@@ -77,8 +71,8 @@ const NeoBarChart = (props: ChartProps) => {
         return row;
       });
 
-    setKeys(tmpKeys);
-    setData(tmpData);
+    setKeys(newKeys);
+    setData(newData);
   }, [selection]);
 
   if (loading) {
@@ -217,11 +211,10 @@ const NeoBarChart = (props: ChartProps) => {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
 
-  // TODO: Get rid of duplicate pie slice names...
   const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
-  const ComponentyType = data.length > 30 ? ResponsiveBarCanvas : ResponsiveBar;
+  const BarChartComponent = data.length > 30 ? ResponsiveBarCanvas : ResponsiveBar;
   const chart = (
-    <ComponentyType
+    <BarChartComponent
       data={data}
       key={`${selection.index}___${selection.value}`}
       layout={layout}
@@ -288,7 +281,6 @@ const NeoBarChart = (props: ChartProps) => {
     />
   );
 
-  console.log('re-render');
   return chart;
 };
 
