@@ -21,6 +21,7 @@ import { setPageNumberThunk } from '../settings/SettingsThunks';
 export const NeoReport = ({
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
+  openAiClient = undefined, // Runner for GPT
   lastRunTimestamp = 0, // Timestamp of the last query run for this report.
   parameters = {}, // A dictionary of parameters to pass into the query.
   disabled = false, // Whether to disable query execution.
@@ -48,6 +49,8 @@ export const NeoReport = ({
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
+  const [openAiCounter, setOpenAiCounter] = React.useState(0);
+
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   if (!driver) {
     throw new Error(
@@ -57,7 +60,7 @@ export const NeoReport = ({
 
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
-  const populateReport = (debounced = true) => {
+  const populateReport = (query, debounced = true) => {
     // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
     const reportTypes = getReportTypes(extensions);
 
@@ -137,13 +140,24 @@ export const NeoReport = ({
       if (query.trim() == '') {
         setStatus(QueryStatus.NO_QUERY);
       }
-      populateReport();
+
+      const gptEnabled = settings.gptQuery == true;
+      if (gptEnabled) {
+        setStatus(QueryStatus.TRANSLATING);
+        openAiClient.chatCompletion(query, (output) => {
+          updateReportSetting('description', `#### OpenAI Generated Cypher Query: \n\n  \`\`\`${  output  } \`\`\``);
+          populateReport(output);
+        });
+      } else {
+        populateReport(query);
+      }
+
       // If a refresh rate was specified, set up an interval for re-running the report. (max 24 hrs)
       if (settings.refreshRate && settings.refreshRate > 0) {
         // @ts-ignore
         setTimer(
           setInterval(() => {
-            populateReport(false);
+            populateReport(query, false);
           }, Math.min(settings.refreshRate, 86400) * 1000.0)
         );
       }
@@ -202,6 +216,29 @@ export const NeoReport = ({
         }}
       >
         <CircularProgress color='inherit' />
+        <br />
+        <p style={{ fontSize: 12 }}>Running Cypher...</p>
+      </Typography>
+    );
+  } else if (status == QueryStatus.TRANSLATING) {
+    return (
+      <Typography
+        variant='h2'
+        color='textSecondary'
+        style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateY(-50%) translateX(-50%)',
+          top: '50%',
+          textAlign: 'center',
+        }}
+      >
+        <img
+          style={{ width: 40, animation: 'pulse 2s infinite' }}
+          src='https://seeklogo.com/images/O/open-ai-logo-8B9BFEDC26-seeklogo.com.png'
+        ></img>
+        <br />
+        <p style={{ fontSize: 12 }}>Calling GPT-3.5-Turbo...</p>
       </Typography>
     );
   } else if (status == QueryStatus.NO_DATA) {

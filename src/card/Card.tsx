@@ -157,6 +157,7 @@ const NeoCard = ({
             setActive={setActive}
             onDownloadImage={() => downloadComponentAsImage(ref)}
             query={report.query}
+            openAiClient={openAiClient}
             globalParameters={globalParameters}
             fields={report.fields ? report.fields : []}
             selection={report.selection}

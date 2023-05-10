@@ -6,7 +6,8 @@ import { useCallback } from 'react';
 import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
-import { Button, FormControlLabel, FormGroup, Switch } from '@material-ui/core';
+import { Button, FormControlLabel, FormGroup, Grid, Switch } from '@material-ui/core';
+import { updateReportSetting } from '../CardActions';
 
 const NeoCardSettingsContent = ({
   query,
@@ -14,7 +15,6 @@ const NeoCardSettingsContent = ({
   databaseList, // List of databases the user can choose from ('system' is filtered out)
   reportSettings,
   type,
-  openAiClient,
   extensions,
   onQueryUpdate,
   onReportSettingUpdate,
@@ -28,8 +28,8 @@ const NeoCardSettingsContent = ({
   const [databaseText, setDatabaseText] = React.useState(database);
   const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
 
-  const [openAiCounter, setOpenAiCounter] = React.useState(0);
-  const [openAiEnabled, setOpenAiEnabled] = React.useState(false);
+  // const [openAiCounter, setOpenAiCounter] = React.useState(0);
+  // const [openAiEnabled, setOpenAiEnabled] = React.useState(false);
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
     if (query !== queryText) {
@@ -37,15 +37,32 @@ const NeoCardSettingsContent = ({
     }
   }, [query]);
 
-  useEffect(() => {
-    // Reset text to the dashboard state when the page gets reorganized.
-    if (openAiEnabled && openAiClient) {
-      openAiClient.chatCompletion(query, setQueryText);
-    }
-  }, [openAiCounter]);
+  // useEffect(() => {
+  //   // Reset text to the dashboard state when the page gets reorganized.
+  //   if (openAiEnabled && openAiClient) {
+  //     openAiClient.chatCompletion(query, setQueryText);
+  //   }
+  // }, [openAiCounter]);
 
   const reportTypes = getReportTypes(extensions);
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
+  const gptEnabled = reportSettings.gptQuery == true;
+  const switchComponent = (
+    <Switch
+      checked={gptEnabled}
+      onChange={(_) => {
+        onReportSettingUpdate('gptQuery', !gptEnabled);
+      }}
+      color='default'
+    />
+  );
+  const languageControl = (
+    <Grid component='label' container alignItems='center' spacing={0}>
+      <Grid item>Cypher</Grid>
+      <Grid item>{switchComponent}</Grid>
+      <Grid item>English</Grid>
+    </Grid>
+  );
 
   return (
     <CardContent style={{ paddingTop: '10px', paddingBottom: '10px' }}>
@@ -97,58 +114,52 @@ const NeoCardSettingsContent = ({
         />
       ) : (
         <div>
-          <NeoCodeEditorComponent
-            value={queryText}
-            editable={true}
-            language={
-              (reportTypes[type] && reportTypes[type].inputMode) || openAiEnabled
-                ? reportTypes[type].inputMode
-                : 'cypher'
-            }
-            onChange={(value) => {
-              debouncedQueryUpdate(value);
-              setQueryText(value);
-            }}
-            placeholder={'Enter Cypher here...'}
-          />
-          <p
-            style={{
-              color: 'grey',
-              fontSize: 12,
-              paddingLeft: '5px',
-              borderBottom: '1px solid lightgrey',
-              borderLeft: '1px solid lightgrey',
-              borderRight: '1px solid lightgrey',
-              marginTop: '0px',
-            }}
-          >
-            {reportTypes[type] && reportTypes[type].helperText}
-          </p>
+          <FormGroup>
+            <FormControlLabel style={{ marginLeft: '5px', marginBottom: '10px' }} control={languageControl} />
+          </FormGroup>
+          <div>
+            <div style={{}}>
+              <NeoCodeEditorComponent
+                value={queryText}
+                editable={true}
+                language={
+                  gptEnabled
+                    ? 'text'
+                    : reportTypes[type] && reportTypes[type].inputMode
+                    ? reportTypes[type].inputMode
+                    : 'cypher'
+                }
+                onChange={(value) => {
+                  debouncedQueryUpdate(value);
+                  setQueryText(value);
+                }}
+                placeholder={'Enter Cypher here...'}
+              />
+              <p
+                style={{
+                  color: 'grey',
+                  fontSize: 12,
+                  paddingLeft: '5px',
+                  borderBottom: '1px solid lightgrey',
+                  borderLeft: '1px solid lightgrey',
+                  borderRight: '1px solid lightgrey',
+                  marginTop: '0px',
+                }}
+              >
+                {reportTypes[type] && reportTypes[type].helperText}
+              </p>
+            </div>
+          </div>
         </div>
       )}
-      <FormGroup>
-        <FormControlLabel
-          style={{ marginLeft: '5px', marginBottom: '10px' }}
-          control={
-            <Switch
-              checked={openAiEnabled}
-              onChange={(_) => {
-                setOpenAiEnabled(!openAiEnabled);
-              }}
-              color='default'
-            />
-          }
-          labelPlacement='end'
-          label={<div style={{ fontSize: '12px', color: 'grey' }}>NLP Query</div>}
-        />
-      </FormGroup>
-      {openAiEnabled ? (
-        <Button variant='contained' onClick={() => setOpenAiCounter(openAiCounter + 1)}>
-          ask chatgpt
-        </Button>
-      ) : (
-        <></>
-      )}
+
+      {/* {openAiEnabled ? (
+            <Button variant='contained' onClick={() => setOpenAiCounter(openAiCounter + 1)}>
+              ask chatgpt
+            </Button>
+          ) : (
+            <></>
+          )} */}
     </CardContent>
   );
 };

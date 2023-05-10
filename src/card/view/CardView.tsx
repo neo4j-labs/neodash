@@ -18,6 +18,7 @@ const NeoCardView = ({
   title,
   database,
   query,
+  openAiClient,
   globalParameters,
   widthPx,
   heightPx,
@@ -153,6 +154,7 @@ const NeoCardView = ({
         <NeoReportWrapper
           query={query}
           database={database}
+          openAiClient={openAiClient}
           parameters={localParameters}
           lastRunTimestamp={lastRunTimestamp}
           extensions={extensions}

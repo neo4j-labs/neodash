@@ -30,6 +30,7 @@ const ErrorBoundary = withErrorBoundary(({ children, resetTrigger }) => {
 export const NeoReportWrapper = ({
   database,
   query,
+  openAiClient,
   lastRunTimestamp,
   parameters,
   disabled,
@@ -54,6 +55,7 @@ export const NeoReportWrapper = ({
       <NeoReport
         database={database}
         query={query}
+        openAiClient={openAiClient}
         lastRunTimestamp={lastRunTimestamp}
         parameters={parameters}
         disabled={disabled}
