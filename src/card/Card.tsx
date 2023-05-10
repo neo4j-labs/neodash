@@ -32,6 +32,7 @@ import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import { createNotificationThunk } from '../page/PageThunks';
 import { OpenAiClient } from '../extensions/nlp-query/OpenAiManager';
+import { REPORT_TYPES } from '../config/ReportConfig';
 
 const NeoCard = ({
   index, // index of the card.
@@ -65,12 +66,22 @@ const NeoCard = ({
   const [messages, setMessages] = React.useState([]);
   const ref = React.useRef();
   const [openAiClient, setOpenAiClient] = React.useState(
-    new OpenAiClient(dashboardSettings.openAiKey, [...messages], setMessages)
+    new OpenAiClient(dashboardSettings.openAiKey, [...messages], setMessages, driver, database, report.type)
   );
+
   // fetching the list of databases from neo4j, filtering out the 'system' db
   useEffect(() => {
-    dashboardSettings.openAiKey ?? openAiClient.updateApiKey(dashboardSettings.openAiKey);
+    openAiClient.updateApiKey(dashboardSettings.openAiKey);
   }, [dashboardSettings.openAiKey]);
+
+  useEffect(() => {
+    openAiClient.database = database;
+    openAiClient.resetClient();
+  }, [database]);
+
+  useEffect(() => {
+    openAiClient.updateReportType(report.type);
+  }, [report.type]);
 
   // fetching the list of databases from neo4j, filtering out the 'system' db
   useEffect(() => {

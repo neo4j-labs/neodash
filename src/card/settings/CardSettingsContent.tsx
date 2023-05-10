@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
-import { FormControlLabel, FormGroup, Switch } from '@material-ui/core';
+import { Button, FormControlLabel, FormGroup, Switch } from '@material-ui/core';
 
 const NeoCardSettingsContent = ({
   query,
@@ -28,6 +28,7 @@ const NeoCardSettingsContent = ({
   const [databaseText, setDatabaseText] = React.useState(database);
   const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
 
+  const [openAiCounter, setOpenAiCounter] = React.useState(0);
   const [openAiEnabled, setOpenAiEnabled] = React.useState(false);
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -38,11 +39,10 @@ const NeoCardSettingsContent = ({
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
-    console.log('cardSettingsContent', openAiClient);
     if (openAiEnabled && openAiClient) {
       openAiClient.chatCompletion(query, setQueryText);
     }
-  }, [openAiEnabled]);
+  }, [openAiCounter]);
 
   const reportTypes = getReportTypes(extensions);
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
@@ -100,7 +100,11 @@ const NeoCardSettingsContent = ({
           <NeoCodeEditorComponent
             value={queryText}
             editable={true}
-            language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
+            language={
+              (reportTypes[type] && reportTypes[type].inputMode) || openAiEnabled
+                ? reportTypes[type].inputMode
+                : 'cypher'
+            }
             onChange={(value) => {
               debouncedQueryUpdate(value);
               setQueryText(value);
@@ -120,26 +124,30 @@ const NeoCardSettingsContent = ({
           >
             {reportTypes[type] && reportTypes[type].helperText}
           </p>
-
-          <FormGroup>
-            <FormControlLabel
-              style={{ marginLeft: '5px', marginBottom: '10px' }}
-              control={
-                <Switch
-                  checked={openAiEnabled}
-                  onChange={(_) => {
-                    setOpenAiEnabled(!openAiEnabled);
-                  }}
-                  color='default'
-                />
-              }
-              labelPlacement='end'
-              label={
-                <div style={{ fontSize: '12px', color: 'grey' }}>NLP Query, if enabled triggers, just for test</div>
-              }
-            />
-          </FormGroup>
         </div>
+      )}
+      <FormGroup>
+        <FormControlLabel
+          style={{ marginLeft: '5px', marginBottom: '10px' }}
+          control={
+            <Switch
+              checked={openAiEnabled}
+              onChange={(_) => {
+                setOpenAiEnabled(!openAiEnabled);
+              }}
+              color='default'
+            />
+          }
+          labelPlacement='end'
+          label={<div style={{ fontSize: '12px', color: 'grey' }}>NLP Query</div>}
+        />
+      </FormGroup>
+      {openAiEnabled ? (
+        <Button variant='contained' onClick={() => setOpenAiCounter(openAiCounter + 1)}>
+          ask chatgpt
+        </Button>
+      ) : (
+        <></>
       )}
     </CardContent>
   );
