@@ -9,12 +9,12 @@ export const WORKFLOW_STEPS = {
     // Project graph
       CALL {
           MATCH (mm:MentionMeld {code: $neodash_mentionmeld_code})-[r:PREVIOUS]->(mm2:MentionMeld)
-          WHERE datetime(toString($neodash_end_date)) - duration($neodash_period) < mm.start <= datetime(toString($neodash_end_date))
-          AND datetime(toString($neodash_end_date)) - duration($neodash_period) < mm2.start <= datetime(toString($neodash_end_date))
+          WHERE datetime(toString($neodash_end_date)) - duration($neodash_tsne_period) < mm.start <= datetime(toString($neodash_end_date))
+          AND datetime(toString($neodash_end_date)) - duration($neodash_tsne_period) < mm2.start <= datetime(toString($neodash_end_date))
           RETURN mm AS source, mm2 AS target, r
           UNION ALL
           MATCH (mm:MentionMeld {code: $neodash_mentionmeld_code})-[r:mentioned]->(x:Category)
-          WHERE datetime(toString($neodash_end_date)) - duration($neodash_period) < mm.start <= datetime(toString($neodash_end_date))
+          WHERE datetime(toString($neodash_end_date)) - duration($neodash_tsne_period) < mm.start <= datetime(toString($neodash_end_date))
           RETURN mm AS source, x AS target, r
       }
       WITH gds.alpha.graph.project($neodash_gdsname, source, target,
@@ -44,13 +44,10 @@ export const WORKFLOW_STEPS = {
     apoc.convert.toJson({xproperty: 'start', yproperty: 'embed0',
     db: {NEO4J_DATABASE: 'poc.eios201909to202009', NEO4J_URI: "neo4j+s://dev-kg-who-ewaa.graphapp.io:7687", NEO4J_USERNAME: 'neo4j'},
     graphname: $neodash_gdsname,
-    perplexity: 30,
     nodelabel: ['MentionMeld']}))
     YIELD value
-    MERGE (t:TSNE {date: value.X, x: value.x_tSNE, y: value.y_tSNE, nodeId: value.nodeId})
-    WITH t, value
-    MATCH (d:MentionMeld {code: $neodash_mentionmeld_code, start: datetime(toString($neodash_end_date))})
-    MERGE (t)-[:CALCULATED]->(d)
+    MERGE (a:AnalysisTSNE {code: $neodash_mentionmeld_code, period: $neodash_tsne_period, gdsname: $neodash_gdsname, end_date: $neodash_end_date, date: datetime(value.X)})
+    SET a.x = value.x_tSNE, a.y = value.y_tSNE, a.nodeId = value.nodeId
     RETURN value`,
   },
 
