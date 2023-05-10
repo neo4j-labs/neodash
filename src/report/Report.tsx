@@ -145,7 +145,7 @@ export const NeoReport = ({
       if (gptEnabled) {
         setStatus(QueryStatus.TRANSLATING);
         openAiClient.chatCompletion(query, (output) => {
-          updateReportSetting('description', `#### OpenAI Generated Cypher Query: \n\n  \`\`\`${  output  } \`\`\``);
+          updateReportSetting('description', `#### OpenAI Generated Cypher Query: \n\n${  output}`);
           populateReport(output);
         });
       } else {
