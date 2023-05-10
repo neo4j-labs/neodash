@@ -196,6 +196,7 @@ const NeoCardSettingsContentPropertySelect = ({
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
   const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query', 'Date Picker'];
+  const selectedType = settings.type ? settings.type : 'Node Property';
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
