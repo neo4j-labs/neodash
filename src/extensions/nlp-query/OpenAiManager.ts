@@ -131,7 +131,7 @@ export class OpenAiClient {
   }
 
   addUserMessage(content) {
-    let finalMessage = `${content  }Report type: ${this.reportType}` + `Plain cypher code, no explanations.`;
+    let finalMessage = `${content}. Report type: ${this.reportType}. Plain cypher code, no explanations.`;
     this.messages.push({ role: 'user', content: finalMessage });
   }
 
@@ -150,7 +150,6 @@ export class OpenAiClient {
       console.log(res);
     }
   ) {
-    await consoleLogAsync('this', this);
     try {
       if (this.messages.length == 0) {
         if (this.schemaText) {
