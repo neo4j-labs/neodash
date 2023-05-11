@@ -8,6 +8,7 @@ import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Button, FormControlLabel, FormGroup, Grid, Switch } from '@material-ui/core';
 import { updateReportSetting } from '../CardActions';
+import { settingsReducer } from '../../settings/SettingsReducer';
 
 const NeoCardSettingsContent = ({
   query,
@@ -21,8 +22,15 @@ const NeoCardSettingsContent = ({
   onTypeUpdate,
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
 }) => {
+  useEffect(() => {
+    // Reset text to the dashboard state when the page gets reorganized.
+    onReportSettingUpdate('gptQuery', false);
+  }, []);
+
   // Ensure that we only trigger a text update event after the user has stopped typing.
-  const [queryText, setQueryText] = React.useState(query);
+  const [queryText, setQueryText] = React.useState(
+    query === reportSettings.openAiLastMessage ? reportSettings.openAiQuery : query
+  );
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
   // State to manage the current database entry inside the form
   const [databaseText, setDatabaseText] = React.useState(database);
@@ -32,19 +40,18 @@ const NeoCardSettingsContent = ({
   // const [openAiEnabled, setOpenAiEnabled] = React.useState(false);
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
+    // !query === reportSettings.openAiLastMessage to prevent strange starting behaviour
     if (query !== queryText) {
-      setQueryText(query);
+      if (!query === reportSettings.openAiLastMessage) {
+        setQueryText(query);
+      } else {
+        setQueryText(reportSettings.openAiQuery);
+      }
     }
   }, [query]);
 
-  // useEffect(() => {
-  //   // Reset text to the dashboard state when the page gets reorganized.
-  //   if (openAiEnabled && openAiClient) {
-  //     openAiClient.chatCompletion(query, setQueryText);
-  //   }
-  // }, [openAiCounter]);
-
   const reportTypes = getReportTypes(extensions);
+
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
   const gptEnabled = reportSettings.gptQuery == true;
   const switchComponent = (
@@ -52,6 +59,13 @@ const NeoCardSettingsContent = ({
       checked={gptEnabled}
       onChange={(_) => {
         onReportSettingUpdate('gptQuery', !gptEnabled);
+        let value = '';
+        if (gptEnabled) {
+          value = reportSettings.openAiQuery ? reportSettings.openAiQuery : '';
+        } else {
+          value = reportSettings.openAiLastMessage ? reportSettings.openAiLastMessage : '';
+        }
+        setQueryText(value);
       }}
       color='default'
     />
@@ -132,6 +146,9 @@ const NeoCardSettingsContent = ({
                 onChange={(value) => {
                   debouncedQueryUpdate(value);
                   setQueryText(value);
+                  if (gptEnabled && !reportSettings.toUpdate) {
+                    onReportSettingUpdate('toUpdate', true);
+                  }
                 }}
                 placeholder={'Enter Cypher here...'}
               />

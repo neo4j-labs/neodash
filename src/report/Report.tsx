@@ -140,15 +140,26 @@ export const NeoReport = ({
       if (query.trim() == '') {
         setStatus(QueryStatus.NO_QUERY);
       }
-
       const gptEnabled = settings.gptQuery == true;
-      if (gptEnabled) {
+      const toUpdate = settings.toUpdate == true;
+
+      if (gptEnabled && toUpdate && settings.openAiLastMessage !== query) {
+        console.log(1);
         setStatus(QueryStatus.TRANSLATING);
         openAiClient.chatCompletion(query, (output) => {
-          updateReportSetting('description', `#### OpenAI Generated Cypher Query: \n\n${  output}`);
+          updateReportSetting('openAiLastMessage', query);
+          updateReportSetting('description', `#### OpenAI Generated Cypher Query: \n\n${output}`);
+          updateReportSetting('openAiQuery', output);
+          updateReportSetting('gptQuery', false);
+          updateReportSetting('toUpdate', false);
+
           populateReport(output);
         });
+      } else if ((!toUpdate || settings.openAiLastMessage === query) && settings.openAiQuery) {
+        console.log(2);
+        populateReport(settings.openAiQuery);
       } else {
+        console.log(3);
         populateReport(query);
       }
 
