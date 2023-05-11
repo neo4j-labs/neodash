@@ -36,8 +36,6 @@ const NeoCardSettingsContent = ({
   const [databaseText, setDatabaseText] = React.useState(database);
   const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
 
-  // const [openAiCounter, setOpenAiCounter] = React.useState(0);
-  // const [openAiEnabled, setOpenAiEnabled] = React.useState(false);
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
     // !query === reportSettings.openAiLastMessage to prevent strange starting behaviour

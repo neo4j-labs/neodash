@@ -15,7 +15,6 @@ import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
 import { connect } from 'react-redux';
-import { updateDashboardSetting } from '../settings/SettingsActions';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 
 export const NeoReport = ({
@@ -152,14 +151,13 @@ export const NeoReport = ({
           updateReportSetting('openAiQuery', output);
           updateReportSetting('gptQuery', false);
           updateReportSetting('toUpdate', false);
-
           populateReport(output);
         });
       } else if ((!toUpdate || settings.openAiLastMessage === query) && settings.openAiQuery) {
-        console.log(2);
-        populateReport(settings.openAiQuery);
+        populateReport(settings.openAiLastMessage === query ? settings.openAiQuery : query);
       } else {
         console.log(3);
+
         populateReport(query);
       }
 

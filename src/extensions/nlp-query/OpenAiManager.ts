@@ -1,6 +1,6 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
 import { REPORT_TYPES } from '../../config/ReportConfig';
-import { nodePropsQuery, relPropsQuery, relQuery } from './queries';
+import { nodePropsQuery, relPropsQuery, relQuery, reportTypesToDesc } from './queries';
 
 const consoleLogAsync = async (message: string, other?: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));
@@ -115,7 +115,7 @@ export class OpenAiClient {
     The Cypher RETURN clause must contained certain variables, based on the report type asked for.
     Report types :
     Table - Multiple variables representing property values of nodes and relationships.
-    Graph - Multiple variables representing property values of nodes and relationships or the node objects and relationship objects.
+    Graph - Multiple variables representing nodes objects and relationships objects inside the graph.
     Bar Chart - Two variables named category(a String value) and value(numeric value).
     Line Chart - Two numeric variables named x and y.
     Sunburst - Two variables named Path(list of strings) and value(a numerical value).
@@ -144,7 +144,9 @@ export class OpenAiClient {
   }
 
   addUserMessage(content) {
-    let finalMessage = `${content}. Report type: ${this.reportType}. Plain cypher code, no explanations and no unrequired symbols.`;
+    let finalMessage = `${content}. The Cypher RETURN clause must contained certain variables, in this case ${
+      reportTypesToDesc[this.reportType]
+    } Plain cypher code, no explanations and no unrequired symbols. Remember to respect the schema. `;
     this.messages.push({ role: 'user', content: finalMessage });
   }
 

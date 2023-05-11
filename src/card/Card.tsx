@@ -81,6 +81,7 @@ const NeoCard = ({
 
   useEffect(() => {
     openAiClient.updateReportType(report.type);
+    openAiClient.messages = [];
   }, [report.type]);
 
   // fetching the list of databases from neo4j, filtering out the 'system' db
