@@ -35,6 +35,8 @@ import {
   setWaitForSSO,
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
+  setSkipConfirmation,
+  setInitializedState,
 } from './ApplicationActions';
 
 /**
@@ -51,6 +53,7 @@ import {
  * @param username - Neo4j username.
  * @param password - Neo4j password.
  */
+
 export const createConnectionThunk =
   (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
@@ -186,10 +189,31 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any)
  * On application startup, check the URL to see if we are loading a shared dashboard.
  * If yes, decode the URL parameters and set the application state accordingly, so that it can be loaded later.
  */
-export const handleSharedDashboardsThunk = () => (dispatch: any) => {
+export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
+  const state = getState();
+
   try {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+
+    console.log('Initial State: ');
+    console.log(getState().application.skipConfirmation);
+
+    if (urlParams.get('skipConfirmation') === 'Yes' || getState().application.skipConfirmation === true) {
+      console.log('SKIP CONFIRMATION IS SET');
+      dispatch(setSkipConfirmation(true));
+      console.log('STATE IS: ');
+      console.log(getState().application.skipConfirmation);
+      dispatch(setWelcomeScreenOpen(false));
+    } else if (getState().application.skipConfirmation !== true && urlParams.get('skipConfirmation') !== 'Yes') {
+      console.log('SKIP CONFIRMATION IS NOT SET TO YES');
+      dispatch(setSkipConfirmation(false));
+      console.log('STATE IS: ');
+      console.log(getState().application.skipConfirmation);
+      dispatch(setWelcomeScreenOpen(true));
+    } else {
+      debugger;
+    }
 
     //  Parse the URL parameters to see if there's any deep linking of parameters.
     const paramsToSetAfterConnecting = {};
@@ -227,6 +251,11 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           dispatch(setConnectionModalOpen(true));
           // window.history.pushState({}, document.title, "/");
           return;
+        }
+
+        if (getState().application.skipConfirmation === true) {
+          console.log('SETTING WELCOME SCREEN TO FALSE');
+          dispatch(setWelcomeScreenOpen(false));
         }
 
         dispatch(setConnectionModalOpen(false));
@@ -487,8 +516,6 @@ export const initializeApplicationAsEditorThunk = (_, paramsToSetAfterConnecting
   if (Object.keys(paramsToSetAfterConnecting).length > 0) {
     dispatch(setParametersToLoadAfterConnecting(null));
   }
-
-  dispatch(setWelcomeScreenOpen(true));
 
   if (clearNotificationAfterLoad) {
     dispatch(clearNotification());

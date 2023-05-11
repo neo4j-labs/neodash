@@ -18,6 +18,7 @@ import {
   applicationGetStandaloneSettings,
   applicationGetSsoSettings,
   applicationHasReportHelpModalOpen,
+  applicationGetInitializedState,
 } from '../application/ApplicationSelectors';
 import {
   createConnectionThunk,
@@ -31,8 +32,10 @@ import {
   setAboutModalOpen,
   setConnected,
   setConnectionModalOpen,
+  setInitializedState,
   setOldDashboard,
   setReportHelpModalOpen,
+  setSkipConfirmation,
   setWaitForSSO,
   setWelcomeScreenOpen,
 } from '../application/ApplicationActions';
@@ -89,6 +92,7 @@ const Application = ({
   const [initialized, setInitialized] = React.useState(false);
 
   if (!initialized) {
+    //  setSkipConfirmation(false);
     setInitialized(true);
     initializeApplication(initialized);
   }
@@ -143,6 +147,7 @@ const Application = ({
 };
 
 const mapStateToProps = (state) => ({
+  newInitialized: applicationGetInitializedState(state),
   connected: applicationIsConnected(state),
   connection: applicationGetConnection(state),
   shareDetails: applicationGetShareDetails(state),

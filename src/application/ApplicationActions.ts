@@ -2,6 +2,12 @@
  * This file contains all state-changing actions relevant for the main application.
  */
 
+export const SET_INITIALIZED_STATE = 'APPLICATION/SET_INITIALIZED_STATE';
+export const setInitializedState = (initialized: boolean) => ({
+  type: SET_INITIALIZED_STATE,
+  payload: { initialized },
+});
+
 export const CLEAR_NOTIFICATION = 'APPLICATION/CLEAR_NOTIFICATION';
 export const clearNotification = () => ({
   type: CLEAR_NOTIFICATION,
@@ -170,6 +176,14 @@ export const setWaitForSSO = (wait: boolean) => ({
   type: SET_WAIT_FOR_SSO,
   payload: { wait },
 });
+
+export const SET_SKIP_CONFIRMATION = 'APPLICATION/SET_SKIP_CONFIRMATION';
+export const setSkipConfirmation = (skipConfirmation: boolean) => {
+  return {
+    type: SET_SKIP_CONFIRMATION,
+    payload: { skipConfirmation },
+  };
+};
 
 export const SET_SESSION_PARAMETERS = 'APPLICATION/SET_SESSION_PARAMETERS';
 export const setSessionParameters = (parameters: any) => ({

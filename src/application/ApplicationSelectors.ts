@@ -4,7 +4,9 @@ import isEqual from 'lodash.isequal';
 /**
  * Selectors define a way to retrieve parts of the global application state for a sub-component.
  */
-
+export const applicationGetInitializedState = (state: any) => {
+  return state.application.initialized;
+};
 export const applicationHasNotification = (state: any) => {
   return state.application.notificationMessage != null;
 };
@@ -101,4 +103,8 @@ export const applicationGetDebugState = (state: any) => {
     copy.application.desktopConnection.password = '************';
   }
   return copy;
+};
+
+export const applicationSkipConfirmation = (state: any) => {
+  return state.application.skipConfirmation;
 };

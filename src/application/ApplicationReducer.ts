@@ -13,11 +13,13 @@ import {
   SET_CONNECTION_PROPERTIES,
   SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING,
   SET_DESKTOP_CONNECTION_PROPERTIES,
+  SET_INITIALIZED_STATE,
   SET_OLD_DASHBOARD,
   SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING,
   SET_REPORT_HELP_MODAL_OPEN,
   SET_SESSION_PARAMETERS,
   SET_SHARE_DETAILS_FROM_URL,
+  SET_SKIP_CONFIRMATION,
   SET_SSO_ENABLED,
   SET_STANDALONE_DASHBOARD_DATEBASE,
   SET_STANDALONE_ENABLED,
@@ -58,6 +60,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
 
   // Application state updates are handled here.
   switch (type) {
+    case SET_INITIALIZED_STATE: {
+      const { initialized } = payload;
+      state = update(state, { initialized });
+      return state;
+    }
     case CREATE_NOTIFICATION: {
       const { title, message } = payload;
       state = update(state, { notificationTitle: title, notificationMessage: message });
@@ -211,6 +218,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
           dashboardDatabase: dashboardDatabase,
         },
       });
+      return state;
+    }
+    case SET_SKIP_CONFIRMATION: {
+      const { skipConfirmation } = payload;
+      state = update(state, { skipConfirmation: skipConfirmation });
       return state;
     }
     default: {

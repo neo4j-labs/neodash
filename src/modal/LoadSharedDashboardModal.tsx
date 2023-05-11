@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,8 +14,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import { setSkipConfirmation } from '../application/ApplicationActions';
+import { applicationSkipConfirmation } from '../application/ApplicationSelectors';
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
@@ -27,6 +29,10 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
   const handleClose = () => {
     onResetShareDetails();
   };
+
+  useEffect(() => {
+    onConfirmLoadSharedDashboard();
+  }, [shareDetails]);
 
   return (
     <div>
@@ -115,7 +121,9 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
   );
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = () => ({
+  skipConfirmation: applicationSkipConfirmation,
+});
 
 const mapDispatchToProps = () => ({});
 
