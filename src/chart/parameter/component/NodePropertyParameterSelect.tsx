@@ -44,7 +44,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         setInputDisplayText(value !== null ? `${value}` : '');
         debouncedQueryCallback(props.query, { input: `${value}`, ...allParameters }, setExtraRecords);
       }}
-      getOptionSelected={(option, value) => {
+      isOptionEqualToValue={(option, value) => {
         return (option && option.toString()) === (value && value.toString());
       }}
       value={props.parameterDisplayValue !== null ? `${props.parameterDisplayValue}` : ''}
