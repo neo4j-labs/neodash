@@ -144,7 +144,7 @@ export class OpenAiClient {
   }
 
   addUserMessage(content) {
-    let finalMessage = `${content}. Report type: ${this.reportType}. Plain cypher code, no explanations.`;
+    let finalMessage = `${content}. Report type: ${this.reportType}. Plain cypher code, no explanations and no unrequired symbols.`;
     this.messages.push({ role: 'user', content: finalMessage });
   }
 
@@ -179,6 +179,7 @@ export class OpenAiClient {
           model: 'gpt-3.5-turbo',
           messages: this.messages,
         });
+
         // If the status is correct
         if (
           completion.status == 200 &&
@@ -200,7 +201,7 @@ export class OpenAiClient {
       await consoleLogAsync('error during query', error);
     } finally {
       // TODO: trigger availability of the card (we should stop clicking on the card to prevent strange misconfigurations here)
-      await consoleLogAsync('done', 'done');
+      await consoleLogAsync('done', this);
     }
   }
 }
