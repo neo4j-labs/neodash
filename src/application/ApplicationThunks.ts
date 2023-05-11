@@ -199,20 +199,25 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
     console.log('Initial State: ');
     console.log(getState().application.skipConfirmation);
 
-    if (urlParams.get('skipConfirmation') === 'Yes' || getState().application.skipConfirmation === true) {
+    // TODO: Ugly function. Refactor with minimal logic.
+    if (
+      urlParams.get('skipConfirmation') === 'Yes' &&
+      getState().application.initialized === true &&
+      getState().application.skipConfirmation !== true
+    ) {
       console.log('SKIP CONFIRMATION IS SET');
       dispatch(setSkipConfirmation(true));
       console.log('STATE IS: ');
       console.log(getState().application.skipConfirmation);
       dispatch(setWelcomeScreenOpen(false));
-    } else if (getState().application.skipConfirmation !== true && urlParams.get('skipConfirmation') !== 'Yes') {
+    } else if (getState().application.skipConfirmation !== true) {
       console.log('SKIP CONFIRMATION IS NOT SET TO YES');
       dispatch(setSkipConfirmation(false));
       console.log('STATE IS: ');
       console.log(getState().application.skipConfirmation);
       dispatch(setWelcomeScreenOpen(true));
     } else {
-      debugger;
+      console.error('Unhandled case in handleSharedDashboardsThunk skipConfirmation parsing. Please check logic.');
     }
 
     //  Parse the URL parameters to see if there's any deep linking of parameters.

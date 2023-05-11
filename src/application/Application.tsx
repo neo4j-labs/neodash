@@ -19,6 +19,7 @@ import {
   applicationGetSsoSettings,
   applicationHasReportHelpModalOpen,
   applicationGetInitializedState,
+  applicationSkipConfirmation,
 } from '../application/ApplicationSelectors';
 import {
   createConnectionThunk,
@@ -46,7 +47,7 @@ import Dashboard from '../dashboard/Dashboard';
 import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
-import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
+import NeoLoadSharedDashboardModal from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import NeoReportHelpModal from '../modal/ReportHelpModal';
 
@@ -88,12 +89,15 @@ const Application = ({
   onConnectionModalOpen,
   onConnectionModalClose,
   onSSOAttempt,
+  skipConfirmation,
+  setSkipConfirmation,
 }) => {
   const [initialized, setInitialized] = React.useState(false);
 
   if (!initialized) {
-    //  setSkipConfirmation(false);
+    setSkipConfirmation(false);
     setInitialized(true);
+    console.log(skipConfirmation);
     initializeApplication(initialized);
   }
 
@@ -136,6 +140,7 @@ const Application = ({
         clearOldDashboard={clearOldDashboard}
       />
       <NeoLoadSharedDashboardModal
+        skipConfirmation={false}
         shareDetails={shareDetails}
         onResetShareDetails={onResetShareDetails}
         onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
@@ -163,6 +168,7 @@ const mapStateToProps = (state) => ({
     return applicationGetDebugState(state);
   }, // TODO - change this to be variable instead of a function?
   hasNeo4jDesktopConnection: applicationHasNeo4jDesktopConnection(state),
+  skipConfirmation: applicationSkipConfirmation(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -199,6 +205,7 @@ const mapDispatchToProps = (dispatch) => ({
   onAboutModalOpen: (_) => dispatch(setAboutModalOpen(true)),
   setWelcomeScreenOpen: (open) => dispatch(setWelcomeScreenOpen(open)),
   onAboutModalClose: (_) => dispatch(setAboutModalOpen(false)),
+  setSkipConfirmation: (flag) => dispatch(setSkipConfirmation(flag)),
 });
 
 export default hot(module)(connect(mapStateToProps, mapDispatchToProps)(Application));

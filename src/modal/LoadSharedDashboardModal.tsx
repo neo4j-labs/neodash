@@ -14,9 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import { setSkipConfirmation } from '../application/ApplicationActions';
 import { applicationSkipConfirmation } from '../application/ApplicationSelectors';
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -25,14 +24,21 @@ import { applicationSkipConfirmation } from '../application/ApplicationSelectors
 
 const styles = {};
 
-export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails, onConfirmLoadSharedDashboard }) => {
+export const NeoLoadSharedDashboardModal = ({
+  skipConfirmation,
+  shareDetails,
+  onResetShareDetails,
+  onConfirmLoadSharedDashboard,
+}) => {
   const handleClose = () => {
     onResetShareDetails();
   };
 
   useEffect(() => {
-    onConfirmLoadSharedDashboard();
-  }, [shareDetails]);
+    if (skipConfirmation === true) {
+      onConfirmLoadSharedDashboard();
+    }
+  }, [shareDetails, skipConfirmation]);
 
   return (
     <div>
@@ -121,8 +127,11 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
   );
 };
 
-const mapStateToProps = () => ({
-  skipConfirmation: applicationSkipConfirmation,
+const mapStateToProps = (state, ownProps) => ({
+  skipConfirmation: applicationSkipConfirmation(state),
+  shareDetails: ownProps.shareDetails,
+  onResetShareDetails: ownProps.onResetShareDetails,
+  onConfirmLoadDashboard: ownProps.onConfirmLoadSharedDashboard,
 });
 
 const mapDispatchToProps = () => ({});

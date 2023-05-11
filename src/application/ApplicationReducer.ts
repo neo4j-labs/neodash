@@ -223,6 +223,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
     case SET_SKIP_CONFIRMATION: {
       const { skipConfirmation } = payload;
       state = update(state, { skipConfirmation: skipConfirmation });
+      debugger;
       return state;
     }
     default: {
