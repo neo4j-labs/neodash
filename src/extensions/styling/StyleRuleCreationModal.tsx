@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Autocomplete, TextField, MenuItem } from '@mui/material';
 import NeoColorPicker from '../../component/field/ColorPicker';
-import { IconButton, Button, Dialog } from '@neo4j-ndl/react';
+import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
 import {
   AdjustmentsHorizontalIconOutline,
   XMarkIconOutline,
@@ -186,8 +186,7 @@ export const NeoCustomReportStyleModal = ({
     <div>
       {customReportStyleModalOpen ? (
         <Dialog
-          size='large'
-          style={{ maxWidth: '65rem' }}
+          className='dialog-xl'
           open={customReportStyleModalOpen == true}
           onClose={handleClose}
           aria-labelledby='form-dialog-title'
@@ -228,18 +227,14 @@ export const NeoCustomReportStyleModal = ({
                   {rules.map((rule, index) => {
                     return (
                       <tr>
-                        <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
-                          <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
+                        <td style={{ paddingLeft: '2px', paddingRight: '2px', width: '2.5%' }}>
+                          <span style={{ color: 'black' }}>{index + 1}.</span>
                         </td>
-                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}> IF</span>
+                        <td style={{ width: '2.5%' }}>
+                          <span style={{ fontWeight: 'bold', color: 'black' }}> IF</span>
                         </td>
-                        <div style={{ border: '2px dashed grey' }}>
-                          <td
-                            style={{
-                              padding: '5px',
-                            }}
-                          >
+                        <td style={{ padding: '5px', width: '40%' }}>
+                          <div style={{ border: '2px dashed grey' }} className='n-flex n-flex-row n-flex-wrap n-p-1'>
                             <Autocomplete
                               disableClearable={true}
                               id={`autocomplete-label-type${index}`}
@@ -250,7 +245,7 @@ export const NeoCustomReportStyleModal = ({
                               value={rule.field ? rule.field : ''}
                               inputValue={rule.field ? rule.field : ''}
                               popupIcon={<></>}
-                              style={{ display: 'inline-block', width: 185, marginLeft: '5px' }}
+                              style={{ display: 'inline-block', width: '38%' }}
                               onInputChange={(event, value) => {
                                 updateRuleField(index, 'field', value);
                               }}
@@ -268,82 +263,67 @@ export const NeoCustomReportStyleModal = ({
                                 />
                               )}
                             />
-                          </td>
-                          <td style={{ padding: '5px' }}>
-                            <TextField
-                              size={'small'}
-                              variant={'standard'}
-                              select
-                              value={rule.condition}
-                              onChange={(e) => updateRuleField(index, 'condition', e.target.value)}
-                            >
-                              {RULE_CONDITIONS.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                  {option.label}
-                                </MenuItem>
-                              ))}
-                            </TextField>
-                          </td>
-                          <td style={{ padding: '5px' }}>
-                            <TextField
-                              placeholder='Value...'
-                              value={rule.value}
-                              size={'small'}
-                              variant={'standard'}
-                              onChange={(e) => updateRuleField(index, 'value', e.target.value)}
-                            ></TextField>
-                          </td>
-                        </div>
-                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>THEN</span>
+                            <Dropdown
+                              type='select'
+                              selectProps={{
+                                onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
+                                options: RULE_CONDITIONS.map((option) => ({
+                                  label: option.label,
+                                  value: option.value,
+                                })),
+                                value: { label: rule.condition, value: rule.condition },
+                              }}
+                              style={{ marginLeft: '1%', width: '20%', display: 'inline-block' }}
+                              fluid
+                            />
+                            <div style={{ marginLeft: '1%', width: '40%', display: 'inline-block' }}>
+                              <TextInput
+                                placeholder='Value...'
+                                value={rule.value}
+                                onChange={(e) => updateRuleField(index, 'value', e.target.value)}
+                                fluid
+                              ></TextInput>
+                            </div>
+                          </div>
                         </td>
-                        <div style={{ border: '2px dashed grey', marginBottom: '5px' }}>
-                          <td
-                            style={{
-                              padding: '5px',
-                            }}
-                          >
-                            <TextField
-                              select
-                              value={rule.customization}
-                              size={'small'}
-                              variant={'standard'}
-                              style={{ marginLeft: '5px' }}
-                              onChange={(e) => updateRuleField(index, 'customization', e.target.value)}
-                            >
-                              {RULE_BASED_REPORT_CUSTOMIZATIONS[type] &&
-                                RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => (
-                                  <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                  </MenuItem>
-                                ))}
-                            </TextField>
-                          </td>
-                          <td
-                            style={{
-                              padding: '5px',
-                            }}
-                          >
-                            <TextField
-                              style={{ width: '20px', color: 'black' }}
-                              disabled={true}
-                              value={'='}
-                              size={'small'}
-                              variant={'standard'}
-                            ></TextField>
-                          </td>
-                          <td style={{ padding: '5px' }}>
-                            <NeoColorPicker
-                              label=''
-                              defaultValue='#ffffff'
-                              key={undefined}
-                              style={{ width: '200px' }}
-                              value={rule.customizationValue}
-                              onChange={(value) => updateRuleField(index, 'customizationValue', value)}
-                            ></NeoColorPicker>
-                          </td>
-                        </div>
-                        <td>
+                        <td style={{ paddingLeft: '20px', paddingRight: '20px', width: '2.5%' }}>
+                          <span style={{ fontWeight: 'bold', color: 'black' }}>THEN</span>
+                        </td>
+                        <td style={{ padding: '5px', width: '40%' }}>
+                          <div style={{ border: '2px dashed grey' }} className='n-flex n-flex-row n-flex-wrap n-p-1'>
+                            <Dropdown
+                              type='select'
+                              selectProps={{
+                                onChange: (newValue) => updateRuleField(index, 'customization', newValue.value),
+                                options: RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => ({
+                                  label: option.label,
+                                  value: option.value,
+                                })),
+                                value: {
+                                  label: RULE_BASED_REPORT_CUSTOMIZATIONS[type].find(
+                                    (el) => el.value === rule.customization
+                                  ).label,
+                                  value: rule.customization,
+                                },
+                              }}
+                              style={{ width: '40%', display: 'inline-block' }}
+                              fluid
+                            />
+                            <div style={{ marginLeft: '1%', width: '13%', display: 'inline-block' }}>
+                              <TextInput disabled={true} value={'='} fluid></TextInput>
+                            </div>
+                            <div style={{ marginLeft: '1%', width: '45%', display: 'inline-block' }}>
+                              <NeoColorPicker
+                                label=''
+                                defaultValue='#ffffff'
+                                key={undefined}
+                                value={rule.customizationValue}
+                                onChange={(value) => updateRuleField(index, 'customizationValue', value)}
+                              ></NeoColorPicker>
+                            </div>
+                          </div>
+                        </td>
+                        <td style={{ width: '2.5%' }}>
                           <IconButton
                             aria-label='remove rule'
                             size='medium'
@@ -360,7 +340,7 @@ export const NeoCustomReportStyleModal = ({
                   })}
 
                   <tr>
-                    <td style={{ width: '750px' }} colSpan={5}>
+                    <td colSpan={5}>
                       <div style={{ textAlign: 'center', marginBottom: '5px' }}>
                         <IconButton
                           aria-label='add'
