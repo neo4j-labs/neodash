@@ -252,7 +252,9 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
         );
 
         if (getState().application.shareDetails.skipConfirmation === true) {
-          dispatch(onConfirmLoadSharedDashboardThunk());
+          setTimeout(() => {
+            dispatch(onConfirmLoadSharedDashboardThunk());
+          }, 20);
         }
 
         window.history.pushState({}, document.title, '/');

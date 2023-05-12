@@ -3,6 +3,7 @@ import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { PlayIconSolid, AdjustmentsVerticalIconOutline, BackspaceIconOutline } from '@neo4j-ndl/react/icons';
+
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
