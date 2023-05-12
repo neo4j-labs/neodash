@@ -17,7 +17,11 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
 
   return (
     <div>
-      <Dialog size='large' open={shareDetails !== undefined} aria-labelledby='form-dialog-title'>
+      <Dialog
+        size='large'
+        open={shareDetails !== undefined && shareDetails.skipConfirmation === false}
+        aria-labelledby='form-dialog-title'
+      >
         <Dialog.Header id='form-dialog-title'>
           <AdjustmentsVerticalIconOutline
             className='icon-base icon-inline text-r'
@@ -77,6 +81,6 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = () => {};
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadSharedDashboardModal));

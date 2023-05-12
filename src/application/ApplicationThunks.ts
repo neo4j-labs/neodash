@@ -189,7 +189,7 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any)
  * On application startup, check the URL to see if we are loading a shared dashboard.
  * If yes, decode the URL parameters and set the application state accordingly, so that it can be loaded later.
  */
-export const handleSharedDashboardsThunk = () => (dispatch: any) => {
+export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
   try {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -209,6 +209,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const id = decodeURIComponent(urlParams.get('id'));
       const type = urlParams.get('type');
       const standalone = urlParams.get('standalone') == 'Yes';
+      const skipConfirmation = urlParams.get('skipConfirmation') == 'Yes';
+
       const dashboardDatabase = urlParams.get('dashboardDatabase');
       if (urlParams.get('credentials')) {
         const connection = decodeURIComponent(urlParams.get('credentials'));
@@ -244,12 +246,19 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             database,
             username,
             password,
-            dashboardDatabase
+            dashboardDatabase,
+            skipConfirmation
           )
         );
+
+        if (getState().application.shareDetails.skipConfirmation === true) {
+          dispatch(onConfirmLoadSharedDashboardThunk());
+        }
+
         window.history.pushState({}, document.title, '/');
       } else {
         dispatch(setConnectionModalOpen(false));
+        dispatch(setWelcomeScreenOpen(false));
         dispatch(
           setShareDetailsFromUrl(
             type,
@@ -261,7 +270,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             undefined,
             undefined,
             undefined,
-            undefined
+            undefined,
+            false
           )
         );
         window.history.pushState({}, document.title, '/');
@@ -270,6 +280,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       // dispatch(resetShareDetails());
     }
   } catch (e) {
+    console.log(e);
+    debugger;
     dispatch(
       createNotificationThunk(
         'Unable to load shared dashboard',

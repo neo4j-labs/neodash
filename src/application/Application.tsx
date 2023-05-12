@@ -43,7 +43,7 @@ import Dashboard from '../dashboard/Dashboard';
 import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
-import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
+import NeoLoadSharedDashboardModal from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import NeoReportHelpModal from '../modal/ReportHelpModal';
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
