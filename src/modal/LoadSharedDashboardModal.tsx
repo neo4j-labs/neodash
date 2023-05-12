@@ -17,7 +17,7 @@ import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import { applicationGetShareDetails } from '../application/ApplicationSelectors';
-import { setWelcomeScreenOpen } from '../application/ApplicationActions';
+import { clearNotification, setStandaloneMode, setWelcomeScreenOpen } from '../application/ApplicationActions';
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
@@ -29,8 +29,6 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
   const handleClose = () => {
     onResetShareDetails();
   };
-
-  useEffect(() => {});
 
   return (
     <div>
