@@ -113,10 +113,23 @@ export const setShareDetailsFromUrl = (
   database: string,
   username: string,
   password: string,
-  dashboardDatabase: string
+  dashboardDatabase: string,
+  skipConfirmation: boolean
 ) => ({
   type: SET_SHARE_DETAILS_FROM_URL,
-  payload: { type, id, standalone, protocol, url, port, database, username, password, dashboardDatabase },
+  payload: {
+    type,
+    id,
+    standalone,
+    protocol,
+    url,
+    port,
+    database,
+    username,
+    password,
+    dashboardDatabase,
+    skipConfirmation,
+  },
 });
 
 export const SET_STANDALONE_ENABLED = 'APPLICATION/SET_STANDALONE_ENABLED';

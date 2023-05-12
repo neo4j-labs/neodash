@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -16,6 +16,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import { applicationGetShareDetails } from '../application/ApplicationSelectors';
+import { setWelcomeScreenOpen } from '../application/ApplicationActions';
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
@@ -28,9 +30,15 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
     onResetShareDetails();
   };
 
+  useEffect(() => {});
+
   return (
     <div>
-      <Dialog maxWidth={'lg'} open={shareDetails !== undefined} aria-labelledby='form-dialog-title'>
+      <Dialog
+        maxWidth={'lg'}
+        open={shareDetails !== undefined && shareDetails.skipConfirmation === false}
+        aria-labelledby='form-dialog-title'
+      >
         <DialogTitle id='form-dialog-title'>
           <DashboardIcon
             style={{
@@ -117,6 +125,6 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = () => {};
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadSharedDashboardModal));
