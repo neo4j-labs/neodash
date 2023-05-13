@@ -252,7 +252,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
           setTimeout(() => {
             dispatch(setWelcomeScreenOpen(false));
             dispatch(onConfirmLoadSharedDashboardThunk());
-          }, 30);
+          }, 100);
         }
 
         window.history.pushState({}, document.title, '/');
