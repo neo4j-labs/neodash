@@ -94,6 +94,16 @@ export function valueIsObject(value) {
   return className == 'Object';
 }
 
+export function toNumber({ low, high }) {
+  let res = high;
+
+  for (let i = 0; i < 32; i++) {
+    res *= 2;
+  }
+
+  return low + res;
+}
+
 export function getRecordType(value) {
   // mui data-grid native column types are: 'string' (default),
   // 'number', 'date', 'dateTime', 'boolean' and 'singleSelect'
@@ -122,6 +132,9 @@ export function getRecordType(value) {
   } else if (valueIsArray(value)) {
     return 'array';
   } else if (valueIsObject(value)) {
+    if (!isNaN(toNumber(value))) {
+      return 'objectNumber';
+    }
     return 'object';
   }
 
@@ -167,13 +180,45 @@ export function replaceDashboardParameters(str, parameters) {
   if (!str) {
     return '';
   }
-  Object.keys(parameters).forEach((key) => {
-    str = str.replaceAll(`$${key}`, parameters[key] !== null ? parameters[key] : '');
-  });
-  return str;
+  let rx = /`.([^`]*)`/g;
+  let regexSquareBrackets = /\[(.*?)\]/g;
+  let rxSimple = /\$neodash_\w*/g;
+
+  /**
+   * Define function to access elements in an array/object type dashboard parameter.
+   * @param _ needed for str.replace(), unused.
+   * @param p1 - the original string.
+   * @returns an updated markdown with injected parameters.
+   */
+  const parameterElementReplacer = (_, p1) => {
+    // Find (in the markdown) occurences of the parameter `$neodash_movie_title[index]` or  `$neodash_movie_title[key]`.
+    let matches = p1.match(regexSquareBrackets);
+    let param = p1.split('[')[0].replace(`$`, '').trim();
+    let val = parameters?.[param] || null;
+
+    // Inject the element at that index/key into the markdown as text.
+    matches?.forEach((m) => {
+      let i = m.replace(/[[\]']+/g, '');
+      i = isNaN(i) ? i.replace(/['"']+/g, '') : Number(i);
+      val = val ? val[i] : null;
+    });
+
+    return RenderSubValue(val);
+  };
+
+  const parameterSimpleReplacer = (_) => {
+    let param = _.replace(`$`, '').trim();
+    let val = parameters?.[param] || null;
+    let type = getRecordType(val);
+    let valueRender = type === 'string' ? val : RenderSubValue(val);
+    return valueRender;
+  };
+
+  let newString = str.replace(rx, parameterElementReplacer).replace(rxSimple, parameterSimpleReplacer);
+
+  return newString;
 }
 
-// Replaces all global dashboard parameters inside a string with their values.
 export function replaceDashboardParametersInString(str, parameters) {
   Object.keys(parameters).forEach((key) => {
     str = str.replaceAll(`$${key}`, parameters[key]);
@@ -197,8 +242,14 @@ export const downloadComponentAsImage = (ref) => {
 };
 
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
+import { RenderSubValue } from '../report/ReportRecordProcessing';
 import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 
+/**
+ * Function to cast a value received from the Neo4j Driver to its TS native type
+ * @param input Value to cast
+ * @returns Value casted to it's native type
+ */
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;

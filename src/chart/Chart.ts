@@ -27,4 +27,5 @@ export interface ChartProps {
 export interface Neo4jSchema {
   nodeLabels: string[]; // list of node labels.
   relationshipTypes: string[]; // list of relationship types.
+  setPageNumber?: (index: number) => void; // Callback to update the currently selected page of the dashboard.
 }

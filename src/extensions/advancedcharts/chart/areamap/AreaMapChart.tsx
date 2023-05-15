@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ChartProps } from '../Chart';
+import { ChartProps } from '../../../../chart/Chart';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapBoundary } from './layers/PolygonLayer';
-import { recordToNative } from '../ChartUtils';
-import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
-
-const ISO_3166_2_regex =
-  '^(A(D|E|F|G|I|L|M|N|O|R|S|T|Q|U|W|X|Z)|B(A|B|D|E|F|G|H|I|J|L|M|N|O|R|S|T|V|W|Y|Z)|C(A|C|D|F|G|H|I|K|L|M|N|O|R|U|V|X|Y|Z)|D(E|J|K|M|O|Z)|E(C|E|G|H|R|S|T)|F(I|J|K|M|O|R)|G(A|B|D|E|F|G|H|I|L|M|N|P|Q|R|S|T|U|W|Y)|H(K|M|N|R|T|U)|I(D|E|Q|L|M|N|O|R|S|T)|J(E|M|O|P)|K(E|G|H|I|M|N|P|R|W|Y|Z)|L(A|B|C|I|K|R|S|T|U|V|Y)|M(A|C|D|E|F|G|H|K|L|M|N|O|Q|P|R|S|T|U|V|W|X|Y|Z)|N(A|C|E|F|G|I|L|O|P|R|U|Z)|OM|P(A|E|F|G|H|K|L|M|N|R|S|T|W|Y)|QA|R(E|O|S|U|W)|S(A|B|C|D|E|G|H|I|J|K|L|M|N|O|R|T|V|Y|Z)|T(C|D|F|G|H|J|K|L|M|N|O|R|T|V|W|Z)|U(A|G|M|S|Y|Z)|V(A|C|E|G|I|N|U)|W(F|S)|Y(E|T)|Z(A|M|W))$';
+import { MapBoundary } from './PolygonLayer';
+import { recordToNative } from '../../../../chart/ChartUtils';
+import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
+import { keyLengthToKeyName, regionCodeName } from './constants';
 
 /**
  * Method used to extract geographic data from the records got back by the query
@@ -22,17 +20,10 @@ function createGeoDictionary(records, selection) {
     try {
       const index = recordToNative(row.get(selection.index));
       const value = recordToNative(row.get(selection.value));
-      if (
-        !index ||
-        value == undefined ||
-        isNaN(value) ||
-        typeof index !== 'string' ||
-        String(index).match(ISO_3166_2_regex)?.length == 0
-      ) {
+      if (!index || value == undefined || isNaN(value) || typeof index !== 'string') {
         return;
         // throw "Invalid selection for area map chart. Ensure a three letter country code is retrieved together with a value."
       }
-
       data[index] = value;
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -64,6 +55,9 @@ const NeoAreaMapChart = (props: ChartProps) => {
   // Retrieve config from advanced settings
   const { records } = props;
   const { selection } = props;
+  const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
+  const keyLength = props.settings && props.settings.countryCodeFormat ? props.settings.countryCodeFormat : 'Alpha-2';
+  let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
   const [data, setData] = useState({});
   // Two feature levels (ideally we can even more)
   const [featureLevel0, setFeatureLevel0] = useState({});
@@ -77,8 +71,6 @@ const NeoAreaMapChart = (props: ChartProps) => {
     props.settings && props.settings.attribution
       ? props.settings.attribution
       : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-  const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
-  let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
 
   // Extracting the geoData from the records
   useEffect(() => {
@@ -89,17 +81,17 @@ const NeoAreaMapChart = (props: ChartProps) => {
     fetch('https://raw.githubusercontent.com/neo4j-labs/neodash-static/main/world_polymap_level_0_entities.json')
       .then((res) => res.json())
       .then((matched) => {
-        let tmp = fromFeatureListToObject(matched.features, 'SHORT_COUNTRY_CODE');
+        let tmp = fromFeatureListToObject(matched.features, keyLengthToKeyName[keyLength]);
         setFeatureLevel0(tmp);
         setIsReady(true);
       });
-  }, []);
+  }, [keyLength]);
 
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/neo4j-labs/neodash-static/main/world_polymap_level_1_entities.json')
       .then((res) => res.json())
       .then((matched) => {
-        let tmp = fromFeatureListToObject(matched.features, 'code');
+        let tmp = fromFeatureListToObject(matched.features, regionCodeName);
         setFeatureLevel1(tmp);
       });
   }, []);
@@ -107,6 +99,7 @@ const NeoAreaMapChart = (props: ChartProps) => {
   if (
     Object.keys(data).length == 0 ||
     !selection ||
+    selection.index == selection.value ||
     props.records == null ||
     props.records.length == 0 ||
     props.records[0].keys == null
@@ -128,11 +121,11 @@ const NeoAreaMapChart = (props: ChartProps) => {
         <TileLayer attribution={attribution} url={mapProviderURL} />
         {
           <MapBoundary
-            dimensions={dimensions}
             data={data}
             props={props}
             featureLevel0={featureLevel0}
             featureLevel1={featureLevel1}
+            dimensions={dimensions}
           />
         }
       </MapContainer>

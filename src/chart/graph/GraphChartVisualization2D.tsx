@@ -1,12 +1,16 @@
 import React, { useRef } from 'react';
-import ForceGraph2D, { LinkObject } from 'react-force-graph-2d';
+import ForceGraph2D from 'react-force-graph-2d';
 import { actionRule } from '../../extensions/actions/ActionsRule';
-import { getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
+import { executeActionRule, getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
 import { generateNodeCanvasObject } from './util/NodeUtils';
-import { generateRelCanvasObject, selfLoopRotationDegrees } from './util/RelUtils';
+import { generateRelCanvasObject } from './util/RelUtils';
 
+/*
+ * TODO: check if makes sense to change zoom logic from panning to buttons
+ * (when i scroll the graphCharts has the priority )
+ */
 export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
   const fgRef: React.MutableRefObject<any> = useRef();
 
@@ -22,7 +26,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       height={props.style.height - 10}
       linkCurvature='curvature'
       backgroundColor={props.style.backgroundColor}
-      linkDirectionalArrowLength={3}
+      linkDirectionalArrowLength={props.style.linkDirectionalArrowLength}
       linkDirectionalArrowRelPos={1}
       dagMode={props.engine.layout}
       linkWidth={(link: any) => link.width}
@@ -32,13 +36,13 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       onNodeClick={(item) => {
         let rules = getRuleWithFieldPropertyName(item, props.extensions.actionsRules, 'onNodeClick', 'labels');
         rules != null
-          ? rules.forEach((rule) => actionRule(rule, item, props.interactivity.setGlobalParameter))
+          ? rules.forEach((rule) => executeActionRule(rule, item, { ...props.interactivity }))
           : props.interactivity.onNodeClick(item);
       }}
       onLinkClick={(item) => {
         let rules = getRuleWithFieldPropertyName(item, props.extensions.actionsRules, 'onLinkClick', 'type');
         rules != null
-          ? rules.forEach((rule) => actionRule(rule, item, props.interactivity.setGlobalParameter))
+          ? rules.forEach((rule) => executeActionRule(rule, item, props.interactivity.setGlobalParameter))
           : props.interactivity.onRelationshipClick(item);
       }}
       onNodeRightClick={(node, event) => props.interactivity.onNodeRightClick(node, event)}
@@ -46,6 +50,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       onBackgroundClick={() => props.interactivity.onNodeClick(undefined)}
       onBackgroundRightClick={() => props.interactivity.onNodeClick(undefined)}
       linkLineDash={(link) => (link.new ? [2, 1] : null)}
+      linkDirectionalParticles={props.style.linkDirectionalParticles}
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={props.engine.cooldownTicks}
       onEngineStop={() => {

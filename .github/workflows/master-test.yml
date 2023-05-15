@@ -1,8 +1,8 @@
-name: Test Develop
+name: Test Master
 
 on:
  pull_request:
-   branches: [ develop ]
+   branches: [ master ]
 
 jobs:
  build-test:

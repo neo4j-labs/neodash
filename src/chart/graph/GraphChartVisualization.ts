@@ -69,6 +69,7 @@ export interface GraphChartVisualizationProps {
     backgroundColor: any;
     linkDirectionalParticles?: number;
     linkDirectionalParticleSpeed: number;
+    linkDirectionalArrowLength: number;
     nodeLabelFontSize: number;
     nodeLabelColor: string;
     relLabelFontSize: number;
@@ -131,6 +132,8 @@ export interface GraphChartVisualizationProps {
     setContextMenuOpen: (boolean) => void;
     clickPosition: Record<string, any>;
     setClickPosition: (pos) => void;
+    setPageNumber: any;
+    pageNames: [];
   };
   /**
    * entries in 'extensions' let users plug in extra functionality into the visualization based on enabled plugins.

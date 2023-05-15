@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
-import NeoReport from '../../report/Report';
 import { CardContent, IconButton } from '@material-ui/core';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
@@ -12,6 +11,8 @@ import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtil
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
+import { ThemeProvider } from '@material-ui/styles';
+import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
 
 const NeoCardView = ({
   title,
@@ -48,6 +49,10 @@ const NeoCardView = ({
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   const getLocalParameters = (parse_string): any => {
+    if (!parse_string || !globalParameters) {
+      return {};
+    }
+
     let re = /(?:^|\W)\$(\w+)(?!\w)/g;
     let match;
 
@@ -60,9 +65,6 @@ const NeoCardView = ({
       localQueryVariables.push(match[1]);
     }
 
-    if (!globalParameters) {
-      return {};
-    }
     return Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
@@ -70,22 +72,30 @@ const NeoCardView = ({
 
   // @ts-ignore
   const reportHeader = (
-    <NeoCardViewHeader
-      title={title}
-      editable={editable}
-      description={settings.description}
-      fullscreenEnabled={settings.fullscreenEnabled}
-      downloadImageEnabled={settings.downloadImageEnabled}
-      refreshButtonEnabled={settings.refreshButtonEnabled}
-      onTitleUpdate={onTitleUpdate}
-      onToggleCardSettings={onToggleCardSettings}
-      onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
-      settings={settings}
-      onDownloadImage={onDownloadImage}
-      onToggleCardExpand={onToggleCardExpand}
-      expanded={expanded}
-      parameters={getLocalParameters(title)}
-    ></NeoCardViewHeader>
+    <ThemeProvider
+      theme={
+        settings.backgroundColor && luma(settings.backgroundColor) < dashboardSettings.darkLuma
+          ? darkHeaderTheme
+          : lightTheme
+      }
+    >
+      <NeoCardViewHeader
+        title={title}
+        editable={editable}
+        description={settings.description}
+        fullscreenEnabled={settings.fullscreenEnabled}
+        downloadImageEnabled={settings.downloadImageEnabled}
+        refreshButtonEnabled={settings.refreshButtonEnabled}
+        onTitleUpdate={onTitleUpdate}
+        onToggleCardSettings={onToggleCardSettings}
+        onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
+        settings={settings}
+        onDownloadImage={onDownloadImage}
+        onToggleCardExpand={onToggleCardExpand}
+        expanded={expanded}
+        parameters={getLocalParameters(title)}
+      ></NeoCardViewHeader>
+    </ThemeProvider>
   );
 
   // @ts-ignore
@@ -103,6 +113,7 @@ const NeoCardView = ({
     <></>
   );
 
+  const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
   const withoutFooter =
     reportTypes[type] && reportTypes[type].withoutFooter
@@ -113,19 +124,6 @@ const NeoCardView = ({
     return globalParameters ? globalParameters[key] : undefined;
   };
 
-  // ONLY if the 'actions' extension is enabled, we send 'actionsRules' to the table visualization.
-  const filteredSettings = Object.fromEntries(
-    Object.entries(settings).filter(
-      ([k, _]) =>
-        !(
-          k == 'actionsRules' &&
-          dashboardSettings.extensions != null &&
-          !dashboardSettings.extensions.includes('actions')
-        )
-    )
-  );
-
-  const localParameters = getLocalParameters(query);
   useEffect(() => {
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());

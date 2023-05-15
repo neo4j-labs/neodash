@@ -129,6 +129,7 @@ export function buildGraphVisualizationObjectFromRecords(
   nodeLabels: Record<string, any>,
   linkTypes: Record<string, any>,
   colorScheme: any,
+  fields: any,
   nodeColorProperty: any,
   defaultNodeColor: any,
   nodeSizeProperty: any,
@@ -172,7 +173,7 @@ export function buildGraphVisualizationObjectFromRecords(
 
   // Assign proper colors to nodes.
   const totalColors = colorScheme ? colorScheme.length : 0;
-  const nodeLabelsList = Object.keys(nodeLabels);
+  const nodeLabelsList = fields.map((e) => e[0]);
   const nodesList = Object.values(nodes).map((node) => {
     // First try to assign a node a color if it has a property specifying the color.
     let assignedColor = node.properties[nodeColorProperty]
@@ -222,6 +223,7 @@ export function injectNewRecordsIntoGraphVisualization(
     props.data.nodeLabels,
     props.data.linkTypes,
     props.style.colorScheme,
+    mergedFields,
     props.style.nodeColorProp,
     props.style.defaultNodeColor,
     props.style.nodeSizeProp,

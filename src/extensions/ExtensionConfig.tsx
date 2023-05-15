@@ -12,16 +12,16 @@ interface Extension {
   label: string;
   author: string;
   image: string;
-  enabled: string;
+  enabled: boolean;
   description: string;
   link: string;
-  reducerPrefix: string;
-  reducerObject: ReactJSXElement;
-  drawerButton: ReactJSXElement;
+  reducerPrefix?: string;
+  reducerObject?: any;
+  drawerButton?: JSX.Element;
 }
 
 // TODO: define extension config interface
-export const EXTENSIONS = {
+export const EXTENSIONS: Record<string, Extension> = {
   'advanced-charts': {
     name: 'advanced-charts',
     label: 'Advanced Visualizations',

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useMap, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Button from '@material-ui/core/Button';
-import '../styles/PolygonStyle.css';
-import { categoricalColorSchemes } from '../../../config/ColorConfig';
-import { abbreviateNumber } from '../MapUtils';
+import './styles/PolygonStyle.css';
+import { categoricalColorSchemes } from '../../../../config/ColorConfig';
+import { abbreviateNumber } from '../../../../chart/map/MapUtils';
 
 /**
  * Creates the list of values that will be used for the legend
@@ -40,13 +40,14 @@ function randomString() {
  * @param key Name of the parameter that will be used to match a polygon adn it's components
  * @returns feature object filtered of the useless objects
  */
-function getDrillDown(geoJson, features, key) {
+function getDrillDown(geoJson, features, key, keepConflict = false) {
   let id = geoJson.properties[key];
   let polygonsToKeep = Object.keys(features).filter((polygonId) => {
     let tmp = features[polygonId];
-    // Some regions can be in different countries (WHO specific use case)
+
+    // Some regions can be disputed between two or more countries
     let toDrillDown =
-      key === 'SHORT_COUNTRY_CODE' && tmp.properties.POSSIBLE_COUNTRIES
+      key === 'SHORT_COUNTRY_CODE' && tmp.properties.POSSIBLE_COUNTRIES && keepConflict
         ? tmp.properties.POSSIBLE_COUNTRIES.includes(id)
         : tmp.properties[key] === id;
     return toDrillDown;
@@ -73,7 +74,7 @@ function getDrillDown(geoJson, features, key) {
  */
 function bindDataToMap(geoData, geoJsonData) {
   let newValues = {};
-  let listValues = [];
+  let listValues: any[] = [];
   Object.keys(geoData).forEach((key) => {
     let tmp;
     if (geoJsonData[key] != undefined) {
@@ -104,7 +105,7 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
   // (right now only 0 is useful but important to keep in mind that we can add more levels)
   const level0key = 'SHORT_COUNTRY_CODE';
   const level1key = 'isoCode';
-
+  const isLegendEnabled = props.settings && props.settings.showLegend != undefined ? props.settings.showLegend : true;
   const isDrillDownEnabled = props.settings && props.settings.mapDrillDown ? props.settings.mapDrillDown : false;
   // Getting the list of colors from the scheme (for now, starting from a scheme, we always get the last color of the scheme)
   const colorScheme =
@@ -124,8 +125,9 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
   const [state, setState] = useState({ key: 'firstAll', geoJson: undefined });
   // Key used to prevent race condition
   const [key, setKey] = React.useState('firstAll');
+
   const [legendRange, setLegendRange] = React.useState([]);
-  const [rangeValues, setRangeValues] = React.useState({ min: undefined, max: undefined });
+  const [rangeValues, setRangeValues] = React.useState({ min: NaN, max: NaN });
 
   useEffect(() => {
     let currentKey =
@@ -229,23 +231,39 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
     return (
       <div
         className='info legend'
-        style={{ zIndex: 1001, position: 'absolute', bottom: 30, right: 30, width: dimensions.width * 0.25 }}
+        style={{
+          zIndex: 1001,
+          position: 'absolute',
+          bottom: 30,
+          right: 30,
+          minWidth: 110,
+          maxWidth: 180,
+          width: dimensions.width * 0.25,
+        }}
       >
-        {legendRange.map((from, i, legendRange) => {
-          let to = legendRange[i + 1];
-          return (
-            <>
-              <i style={{ background: colors[i] }}> &nbsp; </i>
-              <p style={{ fontSize: 'medium' }}>
-                {' '}
-                {abbreviateNumber(from, 2)} {!isNaN(to) ? `- ${abbreviateNumber(to, 2)}` : i > 0 ? '+' : ''}{' '}
-              </p>
-            </>
-          );
-        })}
+        <table>
+          {legendRange.map((from, i, legendRange) => {
+            let to = legendRange[i + 1];
+            return (
+              <tr>
+                <td>
+                  <i style={{ background: colors[i] }}> &nbsp; </i>
+                </td>
+                <td>
+                  <p style={{ fontSize: 'small', margin: 0, marginTop: 2, overflow: 'hidden', height: 20 }}>
+                    {''}
+                    {abbreviateNumber(from, 2)}
+                    {!isNaN(to) ? ` - ${abbreviateNumber(to, 2)}` : i > 0 ? '+' : ''}{' '}
+                  </p>
+                </td>
+              </tr>
+            );
+          })}
+        </table>
       </div>
     );
   }
+
   // Create a legend only if the values are ready
   const legend = !(isNaN(rangeValues.min) && isNaN(rangeValues.min)) ? (
     Legend(listColors, legendRange, dimensions)
@@ -260,8 +278,8 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
 
   const geoJsonLayer = (
     <div>
-      {resetButton}
-      {legend}
+      {isDrillDownEnabled && state.geoJson !== undefined ? resetButton : <></>}
+      {isLegendEnabled ? legend : <></>}
       <GeoJSON
         id='polygonId'
         key={state.key}

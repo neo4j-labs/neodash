@@ -11,7 +11,6 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
-import NeoAreaMapChart from '../chart/map/AreaMapChart';
 import NeoLineChart from '../chart/line/LineChart';
 import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
 
@@ -193,6 +192,7 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
+
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -203,6 +203,11 @@ export const REPORT_TYPES = {
         label: 'Speed of the particle animation',
         type: SELECTION_TYPES.NUMBER,
         default: 0.005,
+      },
+      arrowLengthProp: {
+        label: 'Arrow head size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
       },
       layout: {
         label: 'Graph Layout (experimental)',
@@ -245,6 +250,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         placeholder: 'http://bloom.neo4j.io',
         default: '',
+      },
+      allowDownload: {
+        label: 'Enable CSV Download',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       hideSelections: {
         label: 'Hide Property Selection',
@@ -1116,109 +1127,6 @@ export const REPORT_TYPES = {
       },
     },
   },
-  //
-  /** *
-   * * TODO: move to Neodash Extensions
-   * * TODO: An idea here:
-
-    For the level zero layers, perhaps we can make the component work agnostically of whether the user is using two or three level country codes.
-    E.g. it can apply colouring to germany based on "DE" or "GER", whatever it picks up. That would be a lot easier than providing an advanced setting for it. In the rare case that the user returns both (this will probably never happen), we just choose either.
-
-    I'm also thinking about adding three-letter country code support since that is what the choropleth used, so it will make migrating from choropleth to areamap a lot easier for users.
-   */
-  areamap: {
-    label: 'Area Map',
-    helperText: (
-      <div>
-        An Area Map expects two fields: a <code>country code / region code</code> (three-letter code) and a
-        <code>value</code>.
-      </div>
-    ),
-    useReturnValuesAsFields: true,
-    maxRecords: 300,
-    component: NeoAreaMapChart,
-    selection: {
-      index: {
-        label: 'Code',
-        type: SELECTION_TYPES.TEXT,
-      },
-      value: {
-        label: 'Value',
-        type: SELECTION_TYPES.NUMBER,
-        key: true,
-      },
-    },
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      providerUrl: {
-        label: 'Map Provider URL',
-        type: SELECTION_TYPES.TEXT,
-        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      },
-      colors: {
-        label: 'Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
-        default: 'YlOrRd',
-      },
-      mapDrillDown: {
-        label: 'Activates Drill Down',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-        disabled: true,
-      },
-      intensityProp: {
-        label: 'Intensity Property (for heatmap)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'intensity',
-      },
-      hideSelections: {
-        label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-    },
-  },
   value: {
     label: 'Single Value',
     helperText: 'This report will show only the first value of the first row returned.',
@@ -1239,6 +1147,18 @@ export const REPORT_TYPES = {
         label: 'Color',
         type: SELECTION_TYPES.TEXT,
         default: 'rgba(0, 0, 0, 0.87)',
+      },
+      format: {
+        label: 'Display format',
+        type: SELECTION_TYPES.LIST,
+        values: ['auto', 'json', 'yml'],
+        default: 'auto',
+      },
+      monospace: {
+        label: 'Use monospace font',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       textAlign: {
         label: 'Horizontal Align',
@@ -1295,6 +1215,12 @@ export const REPORT_TYPES = {
     allowScrolling: true,
     maxRecords: 500,
     settings: {
+      format: {
+        label: 'Format',
+        type: SELECTION_TYPES.LIST,
+        values: ['json', 'yml'],
+        default: 'json',
+      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,
@@ -1485,7 +1411,7 @@ export const REPORT_TYPES = {
         label: 'Replace global parameters in Markdown',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: false,
+        default: true,
       },
       fullscreenEnabled: {
         label: 'Fullscreen enabled',

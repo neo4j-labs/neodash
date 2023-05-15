@@ -14,7 +14,12 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import Button from '@material-ui/core/Button';
-import { getRule } from '../../extensions/advancedcharts/Utils';
+import {
+  getRule,
+  executeActionRule,
+  getPageNumbersAndNamesList,
+  performActionOnElement,
+} from '../../extensions/advancedcharts/Utils';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -25,19 +30,21 @@ const fallbackRenderer = (value) => {
   return JSON.stringify(value);
 };
 
-function renderAsButton(value) {
-  return (
-    <Button
-      style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
-      variant='contained'
-      color='primary'
-    >{`${value.formattedValue}`}</Button>
-  );
+function renderAsButtonWrapper(renderer) {
+  return function renderAsButton(value) {
+    return (
+      <Button
+        style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
+        variant='contained'
+        color='primary'
+      >{`${renderer(value)}`}</Button>
+    );
+  };
 }
 
 function ApplyColumnType(column, value, asAction) {
   const renderer = getRendererForValue(value);
-  const renderCell = asAction ? renderAsButton : renderer.renderValue;
+  const renderCell = asAction ? renderAsButtonWrapper(renderer.renderValue) : renderer.renderValue;
   const columnProperties = renderer
     ? { type: renderer.type, renderCell: renderCell ? renderCell : fallbackRenderer }
     : rendererForType.string;
@@ -46,6 +53,10 @@ function ApplyColumnType(column, value, asAction) {
   }
   return column;
 }
+
+export const generateSafeColumnKey = (key) => {
+  return key != 'id' ? key : `${key} `;
+};
 
 export const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
@@ -143,21 +154,12 @@ export const NeoTableChart = (props: ChartProps) => {
         );
       });
 
-  function actionRule(rule, e) {
-    if (rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter) {
-      // call thunk for $neodash_customizationValue
-      let rValue = rule.value == 'id' ? 'id ' : rule.value;
-      if (rValue != '' && e.row[rValue]) {
-        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.row[rValue]);
-      } else {
-        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
-      }
-    }
-  }
   const availableRowHeight = (props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight;
   const tablePageSize = compact
     ? Math.round(availableRowHeight) - pageSizeReducer
     : Math.floor(availableRowHeight) - pageSizeReducer;
+
+  const pageNames = getPageNumbersAndNamesList();
 
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
@@ -200,14 +202,13 @@ export const NeoTableChart = (props: ChartProps) => {
         rows={rows}
         columns={columns}
         columnVisibilityModel={hiddenColumns}
-        onCellClick={(e) => {
-          let rule = getRule(e, actionsRules, 'Click');
-          actionRule(rule, e);
-        }}
+        onCellClick={(e) =>
+          performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
+        }
         onCellDoubleClick={(e) => {
-          let rule = getRule(e, actionsRules, 'doubleClick');
-          if (rule !== null) {
-            actionRule(rule, e);
+          let rules = getRule(e, actionsRules, 'doubleClick');
+          if (rules !== null) {
+            rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
           } else {
             setNotificationOpen(true);
             navigator.clipboard.writeText(e.value);

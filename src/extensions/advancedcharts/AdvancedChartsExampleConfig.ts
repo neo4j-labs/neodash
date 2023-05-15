@@ -1,10 +1,11 @@
+import NeoChoroplethMapChart from './chart/choropleth/ChoroplethMapChart';
 import NeoCirclePackingChart from './chart/circlepacking/CirclePackingChart';
 import NeoGaugeChart from './chart/gauge/GaugeChart';
 import NeoSankeyChart from './chart/sankey/SankeyChart';
 import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
-import NeoAreaMapChart from '../../chart/map/AreaMapChart';
+import NeoAreaMapChart from './chart/areamap/AreaMapChart';
 
 export const EXAMPLE_ADVANCED_REPORTS = [
   {
@@ -135,8 +136,8 @@ export const EXAMPLE_ADVANCED_REPORTS = [
     chartType: NeoSankeyChart,
   },
   {
-    title: 'Area Map Chart',
-    description: 'Area Map charts can be used to render geographical based information on geoJson polygons.',
+    title: 'Choropleth Chart',
+    description: 'Choropleth charts can be used to render geographical based information on geoJson polygons.',
     exampleQuery:
       '// How are people distributed in the company per country?\n' +
       "MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),\n" +
@@ -154,10 +155,10 @@ export const EXAMPLE_ADVANCED_REPORTS = [
       '] as x \n' +
       'RETURN x.id as code, x.value as value',
     settings: { colors: 'nivo' },
-    selection: { index: 'code', value: 'value' },
+    selection: { index: 'code', value: 'value', key: 'code' },
     fields: ['code', 'value'],
-    type: 'areamap',
-    chartType: NeoAreaMapChart,
+    type: 'choropleth',
+    chartType: NeoChoroplethMapChart,
   },
   {
     title: 'Radar Chart',
@@ -191,6 +192,34 @@ export const EXAMPLE_ADVANCED_REPORTS = [
     fields: ['Skill', 'Lewandowski', 'Messi', 'Ronaldo', 'Benzema', 'Mbappé'],
     type: 'radar',
     chartType: NeoRadarChart,
+  },
+  {
+    title: 'Area Map',
+    description:
+      "The Area Map charts can be used to render geographical based information on geoJson polygons. It's possible to click a polygon to visualize its regions and their related data.",
+    exampleQuery: `
+MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),
+(e)-[:LIVES]->(city:City)-[:IN_COUNTRY]->(country:Country)
+WITH city, country
+CALL {
+    WITH country
+    RETURN country.countryCode as code, count(*) as value
+    UNION
+    WITH city
+    RETURN city.countryCode as code, count(*) as value
+}
+WITH code, sum(value) as totalCount
+RETURN code,totalCount
+    `,
+    syntheticQuery: `
+        UNWIND [["FR", 1], ["IT", 3], ["FR.32", 1], ["IT.02", 2], ["IT.01", 1]] as v
+        RETURN v[0] as code, v[1] as value 
+        `,
+    settings: { mapDrillDown: true, showLegend: false },
+    fields: [],
+    selection: { index: 'code', value: 'value' },
+    type: 'map',
+    chartType: NeoAreaMapChart,
   },
   {
     title: 'Gauge Chart',

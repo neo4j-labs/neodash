@@ -15,7 +15,7 @@ import {
 import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import { getDashboardExtensions, getDashboardExtensionsConfig, getDashboardSettings } from '../DashboardSelectors';
+import { getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
@@ -33,6 +33,10 @@ function renderExtensionDrawers(database) {
 }
 
 // TODO: abstract logic
+function renderExtensionModals() {
+  return <></>;
+}
+
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
   open,

@@ -1,11 +1,13 @@
 import React from 'react';
 import { SELECTION_TYPES } from '../../config/CardConfig';
+import NeoChoroplethMapChart from './chart/choropleth/ChoroplethMapChart';
 import NeoCirclePackingChart from './chart/circlepacking/CirclePackingChart';
 import NeoGaugeChart from './chart/gauge/GaugeChart';
 import NeoSankeyChart from './chart/sankey/SankeyChart';
 import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
+import NeoAreaMapChart from './chart/areamap/AreaMapChart';
 
 export const ADVANCED_REPORT_TYPES = {
   gauge: {
@@ -601,6 +603,144 @@ export const ADVANCED_REPORT_TYPES = {
       },
     },
   },
+  choropleth: {
+    label: 'Choropleth Map',
+    component: NeoChoroplethMapChart,
+    useReturnValuesAsFields: true,
+    helperText: (
+      <div>
+        A Choropleth Map chart expects two fields: a <code>country code</code> (three-letter code) and a
+        <code>value</code>.
+      </div>
+    ),
+    selection: {
+      index: {
+        label: 'Code',
+        type: SELECTION_TYPES.TEXT,
+      },
+      value: {
+        label: 'Value',
+        type: SELECTION_TYPES.NUMBER,
+        key: true,
+      },
+      key: {
+        label: 'code',
+        type: SELECTION_TYPES.TEXT,
+        optional: true,
+      },
+    },
+    maxRecords: 300,
+    settings: {
+      matchAccessor: {
+        label: 'Country code format',
+        type: SELECTION_TYPES.LIST,
+        values: ['iso_a3', 'iso_a2', 'iso_n3'],
+        default: 'iso_a3',
+      },
+      backgroundColor: {
+        label: 'Background Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#fafafa',
+      },
+      interactive: {
+        label: 'Enable Interactivity',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      legend: {
+        label: 'Show Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      colors: {
+        label: 'Color Scheme',
+        type: SELECTION_TYPES.LIST,
+        values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
+        default: 'nivo',
+      },
+      borderWidth: {
+        label: 'Polygon Border Width (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      marginLeft: {
+        label: 'Margin Left (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 24,
+      },
+      marginRight: {
+        label: 'Margin Right (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 24,
+      },
+      marginTop: {
+        label: 'Margin Top (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 24,
+      },
+      marginBottom: {
+        label: 'Margin Bottom (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 40,
+      },
+      projectionScale: {
+        label: 'Projection Scale',
+        type: SELECTION_TYPES.NUMBER,
+        default: 100,
+      },
+      projectionTranslationX: {
+        label: 'Projection X translation',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.5,
+      },
+      projectionTranslationY: {
+        label: 'Projection Y translation',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.5,
+      },
+      labelProperty: {
+        label: 'Tooltip Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'properties.name',
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+    },
+  },
   radar: {
     label: 'Radar Chart',
     component: NeoRadarChart,
@@ -729,6 +869,101 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['basicClosed', 'cardinalClosed', 'catmullRomClosed', 'linearClosed'],
         default: 'linearClosed',
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+    },
+  },
+  //
+  /** *
+   * * TODO: An idea here:
+    For the level zero layers, perhaps we can make the component work agnostically of whether the user is using two or three level country codes.
+    E.g. it can apply colouring to germany based on "DE" or "GER", whatever it picks up. That would be a lot easier than providing an advanced setting for it. In the rare case that the user returns both (this will probably never happen), we just choose either.
+    I'm also thinking about adding three-letter country code support since that is what the choropleth used, so it will make migrating from choropleth to areamap a lot easier for users.
+   */
+  areamap: {
+    label: 'Area Map',
+    helperText: (
+      <div>
+        An Area Map expects two fields: a <code>country code / region code</code> (three-letter code) and a
+        <code>value</code>.
+      </div>
+    ),
+    useReturnValuesAsFields: true,
+    maxRecords: 300,
+    component: NeoAreaMapChart,
+    selection: {
+      index: {
+        label: 'Code',
+        type: SELECTION_TYPES.TEXT,
+      },
+      value: {
+        label: 'Value',
+        type: SELECTION_TYPES.NUMBER,
+        key: true,
+      },
+    },
+    settings: {
+      providerUrl: {
+        label: 'Map Provider URL',
+        type: SELECTION_TYPES.TEXT,
+        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      colors: {
+        label: 'Color Scheme',
+        type: SELECTION_TYPES.LIST,
+        values: ['nivo', 'BrBG', 'RdYlGn', 'YlOrRd', 'greens'],
+        default: 'YlOrRd',
+      },
+      countryCodeFormat: {
+        label: 'Country Code Format',
+        type: SELECTION_TYPES.LIST,
+        values: ['Alpha-2', 'Alpha-3'],
+        default: 'Alpha-2',
+      },
+      showLegend: {
+        label: 'Color Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      mapDrillDown: {
+        label: 'Drilldown Enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       refreshButtonEnabled: {
         label: 'Refreshable',
