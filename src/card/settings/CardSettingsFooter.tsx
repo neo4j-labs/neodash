@@ -134,7 +134,7 @@ const NeoCardSettingsFooter = ({
         <tbody>
           <tr>
             <td>
-              <FormGroup className='n-mt-2'>
+              <FormGroup className='n-my-2'>
                 <Switch
                   label='Advanced settings'
                   checked={reportSettingsOpen}
