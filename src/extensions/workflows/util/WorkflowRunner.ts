@@ -169,7 +169,6 @@ export function runWorkflow(
       await consoleLogAsync('Error while running a workflow:', e);
     } finally {
       handleEnd();
-      await consoleLogAsync('Workflow results to be removed:', results);
     }
   }
   return {

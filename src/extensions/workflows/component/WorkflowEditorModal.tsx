@@ -10,7 +10,7 @@ import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import SaveIcon from '@material-ui/icons/Save';
 import RGL, { WidthProvider } from 'react-grid-layout';
-import { NeoWorkflowStepSelectionModal } from './WorkflowStepSelectionModal';
+import { NeoWorkflowStepEditorModal } from './WorkflowStepEditorModal';
 import { WORKFLOW_STEPS } from '../WorkflowSteps';
 import { connect } from 'react-redux';
 import { getWorkflow } from '../state/WorkflowSelectors';
@@ -36,6 +36,8 @@ export const NeoWorkflowEditorModal = ({
   const placeholderName = `My Workflow #${index + 1}`;
   const [steps, setSteps] = React.useState(workflow.steps ? workflow.steps : []);
   const [name, setName] = React.useState(workflow.name ? workflow.name : placeholderName);
+  const [currentStep, setCurrentStep] = React.useState({ name: '', query: '' });
+  const [currentIndex, setCurrentIndex] = React.useState(-1);
 
   useEffect(() => {
     setName(workflow.name ? workflow.name : placeholderName);
@@ -52,10 +54,25 @@ export const NeoWorkflowEditorModal = ({
     setOpen(false);
   };
 
-  const addStep = (key) => {
-    const step = WORKFLOW_STEPS[key];
+  const addEmptyStep = () => {
+    const step = { name: `Step #${steps.length + 1}`, query: '' };
+    setCurrentStep(step);
+    setCurrentIndex(steps.length);
     setSteps(steps.concat(step));
   };
+
+  const updateStep = (stepIndex, name, query) => {
+    let tmp = [...steps];
+    const step = { name: name, query: query };
+    if (query) {
+      tmp[stepIndex] = step;
+    } else {
+      tmp.splice(stepIndex, 1);
+    }
+    setSteps(tmp);
+    setCurrentIndex(-1);
+  };
+
   const [addStepModalOpen, setAddStepModalOpen] = React.useState(false);
 
   const layout = {
@@ -63,7 +80,6 @@ export const NeoWorkflowEditorModal = ({
       return { x: 0, y: index, i: index + step.name, w: 6, h: 1 };
     }),
   };
-
   return (
     <div>
       {open ? (
@@ -165,6 +181,11 @@ export const NeoWorkflowEditorModal = ({
                               style={{ width: '100%', marginTop: '5px', backgroundColor: 'white' }}
                               color='default'
                               size='large'
+                              onClick={() => {
+                                setCurrentIndex(i);
+                                setCurrentStep(steps[i]);
+                                setAddStepModalOpen(true);
+                              }}
                             >
                               {step.name}
                             </Button>
@@ -203,6 +224,7 @@ export const NeoWorkflowEditorModal = ({
                     aria-label='add'
                     style={{ background: 'white', color: 'black' }}
                     onClick={() => {
+                      addEmptyStep();
                       setAddStepModalOpen(true);
                     }}
                   >
@@ -217,7 +239,14 @@ export const NeoWorkflowEditorModal = ({
         <></>
       )}
 
-      <NeoWorkflowStepSelectionModal open={addStepModalOpen} setOpen={setAddStepModalOpen} addStep={addStep} />
+      <NeoWorkflowStepEditorModal
+        index={currentIndex}
+        stepName={currentStep.name}
+        query={currentStep.query}
+        open={addStepModalOpen}
+        setOpen={setAddStepModalOpen}
+        updateStep={updateStep}
+      />
     </div>
   );
 };
