@@ -32,6 +32,7 @@ const NeoCardViewFooter = ({
         position: 'relative',
         paddingLeft: '15px',
         overflowX: 'scroll',
+        paddingBottom: '15px',
       }}
       disableSpacing
     >
