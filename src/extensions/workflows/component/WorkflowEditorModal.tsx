@@ -11,7 +11,6 @@ import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import SaveIcon from '@material-ui/icons/Save';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { NeoWorkflowStepEditorModal } from './WorkflowStepEditorModal';
-import { WORKFLOW_STEPS } from '../WorkflowSteps';
 import { connect } from 'react-redux';
 import { getWorkflow } from '../state/WorkflowSelectors';
 import { createWorkflow, updateWorkflowName, updateWorkflowSteps } from '../state/WorkflowActions';
