@@ -238,14 +238,18 @@ export const NeoWorkflowEditorModal = ({
         <></>
       )}
 
-      <NeoWorkflowStepEditorModal
-        index={currentIndex}
-        stepName={currentStep.name}
-        query={currentStep.query}
-        open={addStepModalOpen}
-        setOpen={setAddStepModalOpen}
-        updateStep={updateStep}
-      />
+      {addStepModalOpen ? (
+        <NeoWorkflowStepEditorModal
+          index={currentIndex}
+          stepName={currentStep.name}
+          query={currentStep.query}
+          open={addStepModalOpen}
+          setOpen={setAddStepModalOpen}
+          updateStep={updateStep}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

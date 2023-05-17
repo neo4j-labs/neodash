@@ -24,17 +24,13 @@ import NodeSidebarDrawer from '../../extensions/sidebar/SidebarDrawer';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 /**
- * For each config in extensionConfig, if the extensionConfig is opened, render its component
+ * For each config in extensionConfig, if the extensionConfig is opened, render its component.
+ * Right now it's just for the node sidebar, to abstract probably.
  * @returns
  */
-// TODO: abstract logic
+// TODO: abstract logic to work with any new drawer
 function renderExtensionDrawers(database) {
   return <NodeSidebarDrawer database={database}></NodeSidebarDrawer>;
-}
-
-// TODO: abstract logic
-function renderExtensionModals() {
-  return <></>;
 }
 
 // The sidebar that appears on the left side of the dashboard.

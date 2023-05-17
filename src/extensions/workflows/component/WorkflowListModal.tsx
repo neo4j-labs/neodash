@@ -258,14 +258,18 @@ export const NeoWorkflowListModal = ({
           </Button>
         </DialogContent>
       </Dialog>
-      <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={index} />
-      <NeoWorkflowRunnerModal
-        open={runnerModalIsOpen}
-        setOpen={setRunnerModalIsOpen}
-        index={index}
-        workflowStepStatus={workflowStepStatus}
-        results={results}
-      />
+      {editorOpen ? <NeoWorkflowEditorModal open={editorOpen} setOpen={setEditorOpen} index={index} /> : <></>}
+      {runnerModalIsOpen ? (
+        <NeoWorkflowRunnerModal
+          open={runnerModalIsOpen}
+          setOpen={setRunnerModalIsOpen}
+          index={index}
+          workflowStepStatus={workflowStepStatus}
+          results={results}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

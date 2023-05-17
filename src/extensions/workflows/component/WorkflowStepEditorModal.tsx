@@ -14,7 +14,6 @@ import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 
 const styles = {};
 export const NeoWorkflowStepEditorModal = ({ index, stepName, query, open, setOpen, updateStep }) => {
-  console.log('INPUT', index, stepName, query);
   const [name, setName] = React.useState(stepName);
   const [queryText, setQueryText] = React.useState(query);
   const handleClose = () => {
