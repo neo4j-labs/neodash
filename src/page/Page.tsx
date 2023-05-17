@@ -4,7 +4,7 @@ import NeoAddCard from '../card/CardAddButton';
 import NeoCard from '../card/Card';
 import { getReports } from './PageSelectors';
 import { addReportThunk, removeReportThunk, updatePageLayoutThunk, cloneReportThunk } from './PageThunks';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { getDashboardIsEditable, getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -30,16 +30,18 @@ export const NeoPage = ({
     return `${pagenumber}:${index}`;
   };
 
-  const defaultLayouts = [
-    {
-      x: 0,
-      y: 0,
-      i: getReportIndex(pagenumber, 999999),
-      w: 3,
-      h: 2,
-      isDraggable: false,
-    },
-  ];
+  const defaultLayouts = {
+    lg: [
+      {
+        x: 0,
+        y: 0,
+        i: getReportIndex(pagenumber, 999999),
+        w: 3,
+        h: 2,
+        isDraggable: false,
+      },
+    ],
+  };
 
   const loadingMessage = <div>Loading card...</div>;
   const [isDragging, setIsDragging] = React.useState(false);

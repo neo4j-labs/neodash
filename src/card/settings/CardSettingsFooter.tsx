@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@material-ui/core';
+import { FormGroup, Tooltip } from '@mui/material';
 import NeoSetting from '../../component/field/Setting';
 import {
   NeoCustomReportStyleModal,
   RULE_BASED_REPORT_CUSTOMIZATIONS,
 } from '../../extensions/styling/StyleRuleCreationModal';
-import TuneIcon from '@material-ui/icons/Tune';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
-import StarsIcon from '@material-ui/icons/Stars';
+import { IconButton, Switch } from '@neo4j-ndl/react';
+import { AdjustmentsHorizontalIconOutline } from '@neo4j-ndl/react/icons';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -134,12 +134,12 @@ const NeoCardSettingsFooter = ({
         <tbody>
           <tr>
             <td>
-              <FormGroup>
-                <FormControlLabel
-                  style={{ marginLeft: '5px', marginBottom: '10px' }}
-                  control={<Switch checked={reportSettingsOpen} onChange={onToggleReportSettings} color='default' />}
-                  labelPlacement='end'
-                  label={<div style={{ fontSize: '12px', color: 'grey' }}>Advanced settings</div>}
+              <FormGroup className='n-my-2'>
+                <Switch
+                  label='Advanced settings'
+                  checked={reportSettingsOpen}
+                  onChange={onToggleReportSettings}
+                  className='n-ml-2'
                 />
               </FormGroup>
             </td>
@@ -147,14 +147,14 @@ const NeoCardSettingsFooter = ({
               {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling ? (
                 <Tooltip title='Set rule-based styling' aria-label=''>
                   <IconButton
-                    size='small'
                     style={{ float: 'right', marginRight: '10px' }}
                     aria-label='custom styling'
                     onClick={() => {
                       setCustomReportStyleModalOpen(true); // Open the modal.
                     }}
+                    clean
                   >
-                    <TuneIcon></TuneIcon>
+                    <AdjustmentsHorizontalIconOutline />
                   </IconButton>
                 </Tooltip>
               ) : (

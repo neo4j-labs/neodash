@@ -1,4 +1,4 @@
-export const CARD_FOOTER_HEIGHT = 64;
+export const CARD_FOOTER_HEIGHT = 88;
 export const CARD_HEADER_HEIGHT = 72;
 
 export const enum SELECTION_TYPES {

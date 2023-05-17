@@ -7,8 +7,8 @@ import {
   flatten,
 } from '../../../../chart/ChartUtils';
 import { ResponsiveSunburst } from '@nivo/sunburst';
-import { Tooltip } from '@material-ui/core';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { Tooltip } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 /**
@@ -68,7 +68,7 @@ const NeoSunburstChart = (props: ChartProps) => {
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
           <Tooltip title='Reset' aria-label='reset'>
-            <RefreshIcon
+            <Refresh
               onClick={() => {
                 setData(commonProperties.data);
                 setRefreshable(false);
@@ -85,7 +85,7 @@ const NeoSunburstChart = (props: ChartProps) => {
               }}
               color='disabled'
               fontSize='small'
-            ></RefreshIcon>
+            ></Refresh>
           </Tooltip>
         ) : (
           <div></div>
