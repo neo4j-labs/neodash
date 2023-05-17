@@ -55,7 +55,7 @@ const NeoCardView = ({
       return {};
     }
 
-    let re = /(?:^|\W)\$(\w+)(?!\w)/g;
+    let re = /(?:^|\W|%20)\$(\w+)(?!\w)/g;
     let match;
 
     // If the report styling extension is enabled, extend the list of local (relevant) parameters with those used by the style rules.
