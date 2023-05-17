@@ -71,7 +71,7 @@ risk, as it exposes the Neo4j username to anyone who can access the
 NeoDash deployment.
 
 |standaloneDashboardName |string |My Dashboard |The exact name
-(case-sensentive) of the dashboard to be loaded when running in
+(case-sensitive) of the dashboard to be loaded when running in
 standalone mode. This must be a dashboard that is saved as a node in the
 graph.
 

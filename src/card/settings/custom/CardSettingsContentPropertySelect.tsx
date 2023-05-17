@@ -4,10 +4,10 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { debounce, MenuItem, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, debounce, TextField } from '@mui/material';
 import NeoField from '../../../component/field/Field';
 import { getReportTypes } from '../../../extensions/ExtensionUtils';
+import { Dropdown } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 
 const NeoCardSettingsContentPropertySelect = ({
@@ -198,6 +198,7 @@ const NeoCardSettingsContentPropertySelect = ({
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
   const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query', 'Date Picker'];
+  const selectedType = settings.type ? settings.type : 'Node Property';
   const reportTypes = getReportTypes(extensions);
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
@@ -214,25 +215,21 @@ const NeoCardSettingsContentPropertySelect = ({
       <p style={{ color: 'grey', fontSize: 12, paddingLeft: '5px', border: '1px solid lightgrey', marginTop: '0px' }}>
         {reportTypes[type].helperText}
       </p>
-      <TextField
-        select={true}
-        autoFocus
+      <Dropdown
         id='type'
-        value={settings.type ? settings.type : 'Node Property'}
-        onChange={(e) => {
-          handleParameterTypeUpdate(e.target.value);
+        selectProps={{
+          onChange: (newValue) => newValue && handleParameterTypeUpdate(newValue.value),
+          options: parameterSelectTypes.map((option) => ({ label: option, value: option })),
+          value: { label: selectedType, value: selectedType },
+          menuPlacement: 'auto',
         }}
         label='Selection Type'
-        type='text'
-        style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
-      >
-        {parameterSelectTypes.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
-      <br />
+        type='select'
+        fluid
+        autoFocus
+        style={{ marginTop: '5px' }}
+      />
+
       {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
         <NeoField
           label={'Name'}
@@ -240,7 +237,7 @@ const NeoCardSettingsContentPropertySelect = ({
           value={settings.entityType ? settings.entityType : ''}
           defaultValue={''}
           placeholder={'Enter a parameter name here...'}
-          style={{ width: 335, marginLeft: '5px', marginTop: '0px' }}
+          style={{ width: 335, marginLeft: '5px', marginTop: '13px' }}
           onChange={(value) => {
             setLabelInputText(value);
             handleNodeLabelSelectionUpdate(value);
@@ -304,7 +301,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 : labelRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
             }
             getOptionLabel={(option) => option || ''}
-            style={{ width: 350, marginLeft: '5px', marginTop: '5px' }}
+            style={{ width: 350, marginLeft: '5px', marginTop: '13px' }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
               setLabelInputText(value);
@@ -324,6 +321,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 );
               }
             }}
+            size={'small'}
             value={settings.entityType ? settings.entityType : undefined}
             onChange={(event, newValue) => handleNodeLabelSelectionUpdate(newValue)}
             renderInput={(params) => (
@@ -346,7 +344,7 @@ const NeoCardSettingsContentPropertySelect = ({
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
                 getOptionLabel={(option) => (option ? option : '')}
-                style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '5px' }}
+                style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '13px' }}
                 inputValue={propertyInputText}
                 onInputChange={(event, value) => {
                   setPropertyInputText(value);
@@ -361,6 +359,7 @@ const NeoCardSettingsContentPropertySelect = ({
                     );
                   }
                 }}
+                size={'small'}
                 value={settings.propertyType}
                 onChange={(event, newValue) => handlePropertyNameSelectionUpdate(newValue)}
                 renderInput={(params) => (
@@ -381,7 +380,7 @@ const NeoCardSettingsContentPropertySelect = ({
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
                   getOptionLabel={(option) => (option ? option : '')}
-                  style={{ display: 'inline-block', width: 170, marginLeft: '10px', marginTop: '5px' }}
+                  style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '13px' }}
                   inputValue={propertyInputDisplayText}
                   onInputChange={(event, value) => {
                     setPropertyInputDisplayText(value);
@@ -414,10 +413,11 @@ const NeoCardSettingsContentPropertySelect = ({
                 label='Number (optional)'
                 disabled={!settings.propertyType}
                 value={settings.id}
-                style={{ width: '170px', marginTop: '5px', marginLeft: '5px' }}
+                style={{ width: '170px', marginTop: '13px', marginLeft: '5px' }}
                 onChange={(value) => {
                   handleIdSelectionUpdate(value);
                 }}
+                size={'small'}
               />
             </>
           ) : (

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import NeoPage from '../page/Page';
-import Container from '@material-ui/core/Container';
+import { Container } from '@mui/material';
 import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
 import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
@@ -19,6 +19,7 @@ import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+
   const driver = createDriver(
     connection.protocol,
     connection.url,

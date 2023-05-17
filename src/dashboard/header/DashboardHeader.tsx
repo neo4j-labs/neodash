@@ -1,4 +1,4 @@
-import { AppBar } from '@material-ui/core';
+import { AppBar } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle, addPage, removePage } from '../DashboardActions';

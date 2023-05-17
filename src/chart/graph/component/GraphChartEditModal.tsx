@@ -1,16 +1,11 @@
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@mui/material/Button';
-import { Badge, IconButton } from '@material-ui/core';
-import { Fab, TextField, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { Autocomplete } from '@material-ui/lab';
-import CloseIcon from '@material-ui/icons/Close';
-import PlayArrow from '@material-ui/icons/PlayArrow';
+import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Badge, Button, IconButton } from '@mui/material';
+import { Fab, TextField, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import PlayArrow from '@mui/icons-material/PlayArrow';
 import { LabelTypeAutocomplete } from './autocomplete/LabelTypeAutocomplete';
 import { DeletePropertyButton } from './button/modal/DeletePropertyButton';
 import {
@@ -132,16 +127,16 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
           <h4>Properties</h4>
 
           <table>
-            {properties.map((property, index) => {
-              const disabled = !(
-                typeof property.value == 'string' ||
-                typeof property.value == 'number' ||
-                property.value.toNumber !== undefined
-              );
+            <tbody>
+              {properties.map((property, index) => {
+                const disabled = !(
+                  typeof property.value == 'string' ||
+                  typeof property.value == 'number' ||
+                  property.value.toNumber !== undefined
+                );
 
-              return (
-                <>
-                  <tr style={{ height: 40 }}>
+                return (
+                  <tr key={`trEditProp${index}`} style={{ height: 40 }}>
                     <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
                       <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
                     </td>
@@ -160,6 +155,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                     </td>
                     <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
                       <TextField
+                        key={`txtFieldEditProp${index}`}
                         style={{ width: '100%' }}
                         placeholder='Value...'
                         disabled={disabled}
@@ -174,6 +170,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
 
                     <td>
                       <DeletePropertyButton
+                        key={`deletePropBtn${index}`}
                         onClick={() => {
                           setProperties([...properties.slice(0, index), ...properties.slice(index + 1)]);
                           setPropertyInputTexts([
@@ -184,30 +181,32 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                       />
                     </td>
                   </tr>
-                </>
-              );
-            })}
+                );
+              })}
 
-            <tr>
-              <td style={{ minWidth: '450px' }} colSpan={4}>
-                <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
-                  <Fab
-                    size='small'
-                    aria-label='add'
-                    style={{ background: 'white', color: 'black' }}
-                    onClick={() => {
-                      const newProperty = { name: '', value: '' };
-                      setProperties(properties.concat(newProperty));
-                    }}
-                  >
-                    <AddIcon />
-                  </Fab>
-                </Typography>
-              </td>
-            </tr>
+              <tr key={'trEditButtons'}>
+                <td style={{ minWidth: '450px' }} colSpan={4}>
+                  <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
+                    <Fab
+                      key={'btnAddProp'}
+                      size='small'
+                      aria-label='add'
+                      style={{ background: 'white', color: 'black' }}
+                      onClick={() => {
+                        const newProperty = { name: '', value: '' };
+                        setProperties(properties.concat(newProperty));
+                      }}
+                    >
+                      <AddIcon />
+                    </Fab>
+                  </Typography>
+                </td>
+              </tr>
+            </tbody>
           </table>
           <hr />
           <Button
+            key={'btnEditProp'}
             style={{ marginBottom: '10px' }}
             disabled={label === undefined || label == '' || labelInputText !== label}
             onClick={() => {
