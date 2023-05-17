@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import { useState } from 'react';
-import { Tooltip } from '@material-ui/core';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { Tooltip } from '@mui/material';
+import Refresh from '@mui/icons-material/Refresh';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import {
@@ -69,7 +69,7 @@ const NeoCirclePackingChart = (props: ChartProps) => {
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
           <Tooltip title='Reset' aria-label='reset'>
-            <RefreshIcon
+            <Refresh
               onClick={() => {
                 setData(commonProperties.data);
                 setRefreshable(false);
@@ -86,7 +86,7 @@ const NeoCirclePackingChart = (props: ChartProps) => {
               }}
               color='disabled'
               fontSize='small'
-            ></RefreshIcon>
+            ></Refresh>
           </Tooltip>
         ) : (
           <div></div>

@@ -1,9 +1,9 @@
-import { Toolbar, IconButton, Badge, InputBase, Tooltip } from '@material-ui/core';
+import { Toolbar, Badge, InputBase, Tooltip } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
-import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from 'react-redux';
 import debounce from 'lodash/debounce';
-import ImageIcon from '@material-ui/icons/Image';
+import { IconButton } from '@neo4j-ndl/react';
+import { CameraIconSolid } from '@neo4j-ndl/react/icons';
 import {
   DASHBOARD_BUTTON_IMAGE,
   DASHBOARD_BUTTON_IMAGE_SIZE,
@@ -14,12 +14,10 @@ export const NeoDashboardHeaderTitleBar = ({
   dashboardTitle,
   downloadImageEnabled,
   onDownloadImage,
-  open,
   setDashboardTitle,
   connection,
   editable,
   standalone,
-  handleDrawerOpen,
   onConnectionModalOpen,
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
@@ -33,29 +31,10 @@ export const NeoDashboardHeaderTitleBar = ({
   }, [dashboardTitle]);
 
   const content = (
-    <Toolbar key={1} style={{ paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1201 }}>
-      {!standalone ? (
-        <IconButton
-          edge='start'
-          color='inherit'
-          aria-label='open drawer'
-          onClick={handleDrawerOpen}
-          style={
-            open
-              ? {
-                  display: 'none',
-                }
-              : {
-                  marginRight: 36,
-                  marginLeft: -19,
-                }
-          }
-        >
-          <MenuIcon />
-        </IconButton>
-      ) : (
-        <></>
-      )}
+    <Toolbar
+      key={1}
+      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1000 }}
+    >
       <InputBase
         id='center-aligned'
         style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
@@ -73,13 +52,13 @@ export const NeoDashboardHeaderTitleBar = ({
       {downloadImageEnabled ? (
         <Tooltip title={'Download Dashboard as Image'}>
           <IconButton
-            style={{ background: '#ffffff22', padding: '3px', marginRight: '3px' }}
+            aria-label={'camera'}
+            style={{ marginRight: '3px', background: '#ffffff22' }}
             onClick={() => onDownloadImage()}
+            size='large'
+            clean
           >
-            <ImageIcon
-              style={{ padding: 6, color: '#ffffffdd', width: '36px', height: '36px', fontSize: '1.3rem', zIndex: 5 }}
-              fontSize='small'
-            ></ImageIcon>
+            <CameraIconSolid className='n-text-light-neutral-bg-weak' aria-label={'camera icon'} />
           </IconButton>
         </Tooltip>
       ) : (
@@ -92,19 +71,18 @@ export const NeoDashboardHeaderTitleBar = ({
         aria-label='host'
       >
         <IconButton
+          className='logo-btn'
+          aria-label={'connection '}
           style={{ background: '#ffffff22', padding: '3px' }}
           onClick={() => {
             if (!standalone) {
               onConnectionModalOpen();
             }
           }}
+          size='large'
+          clean
         >
-          <Badge overlap='rectangular' badgeContent={''}>
-            <img
-              style={{ width: DASHBOARD_BUTTON_IMAGE_SIZE, height: DASHBOARD_BUTTON_IMAGE_SIZE }}
-              src={DASHBOARD_BUTTON_IMAGE}
-            />
-          </Badge>
+          <img style={{ width: DASHBOARD_BUTTON_IMAGE_SIZE }} src={DASHBOARD_BUTTON_IMAGE} />
         </IconButton>
       </Tooltip>
     </Toolbar>
