@@ -19,12 +19,12 @@ export const getDatabase = (state: any, pageNumber: number, cardIndex: number) =
   }
   if (
     state.dashboard.pages[pageNumber] == undefined ||
-    state.dashboard.pages[pageNumber].reports[cardIndex] == undefined
+    state.dashboard.pages[pageNumber].reports.find((o) => o.index === cardIndex) == undefined
   ) {
     // TODO - use DMBS default database instead of neo4j.
     return 'neo4j';
   }
-  const reportDatabase = state.dashboard.pages[pageNumber].reports[cardIndex].database;
+  const reportDatabase = state.dashboard.pages[pageNumber].reports.find((o) => o.index === cardIndex).database;
   if (reportDatabase !== undefined) {
     return reportDatabase;
   }

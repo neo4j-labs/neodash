@@ -78,7 +78,7 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
     const { extensions } = state.dashboard;
-    const oldReport = state.dashboard.pages[pagenumber].reports[index];
+    const oldReport = state.dashboard.pages[pagenumber].reports.find((o) => o.index === index);
     if (!oldReport) {
       return;
     }
@@ -157,7 +157,7 @@ export const updateReportSettingThunk = (index, setting, value) => (dispatch: an
 
     // If we disable optional selections (e.g. grouping), we reset these selections to their none value.
     if (setting == 'showOptionalSelections' && value == false) {
-      const reportType = state.dashboard.pages[pagenumber].reports[index].type;
+      const reportType = state.dashboard.pages[pagenumber].reports.find((o) => o.index === index).type;
       const reportTypes = getReportTypes(extensions);
       const selectableFields = reportTypes[reportType].selection;
       const optionalSelectables = selectableFields

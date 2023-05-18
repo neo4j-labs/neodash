@@ -65,7 +65,10 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
       ...state,
       reports: [
         ...state.reports.filter((o) => o.index !== index),
-        cardReducer(state.reports.filter((o) => o.index == index)[0], action),
+        cardReducer(
+          state.reports.find((o) => o.index === index),
+          action
+        ),
       ],
     };
   }

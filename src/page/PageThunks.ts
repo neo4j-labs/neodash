@@ -34,7 +34,7 @@ export const cloneReportThunk = (index: number, x: number, y: number) => (dispat
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    const data = { ...state.dashboard.pages[pagenumber].reports[index] };
+    const data = { ...state.dashboard.pages[pagenumber].reports.find((o) => o.index === index) };
     data.settingsOpen = false;
     dispatch(addReportThunk(x, y, data.width, data.height, data));
   } catch (e) {
