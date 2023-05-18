@@ -342,14 +342,11 @@ export const flatten = (data) =>
 export const processHierarchyFromRecords = (records: Record<string, any>[], selection: any) => {
   return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
     try {
-      // const index = recordToNative(row.get('index'));
-      // const key = recordToNative(row.get('key'));
-      // const value = recordToNative(row.get('value'));
-
       const index = recordToNative(row.get(selection.index));
       // const idx = data.findIndex(item => item.index === index)
       // const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
       const value = recordToNative(row.get(selection.value));
+      const label = recordToNative(row.get(selection.key));
       if (!Array.isArray(index) || isNaN(value)) {
         throw 'Invalid data format selected for hierarchy report.';
       }
@@ -375,6 +372,7 @@ export const processHierarchyFromRecords = (records: Record<string, any>[], sele
         }
       }
       holder.loc = value;
+      holder.label = label || value;
       return data;
     } catch (e) {
       // eslint-disable-next-line no-console

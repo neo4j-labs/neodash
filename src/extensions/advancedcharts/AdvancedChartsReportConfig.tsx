@@ -382,9 +382,8 @@ export const ADVANCED_REPORT_TYPES = {
         key: true,
       },
       key: {
-        label: 'Inline',
-        type: SELECTION_TYPES.LIST,
-        optional: true,
+        label: 'Label',
+        type: SELECTION_TYPES.TEXT,
       },
     },
     maxRecords: 3000,

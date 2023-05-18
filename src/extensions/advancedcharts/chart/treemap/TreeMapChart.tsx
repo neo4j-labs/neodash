@@ -60,7 +60,7 @@ const NeoTreeMapChart = (props: ChartProps) => {
    * @returns a string (label).
    */
   const getLabelForNode = (n) => {
-    return n.formattedValue;
+    return n.data.label;
   };
 
   // Final sanity check - only draw the visualization if we are sure the data is there and formatted correctly.
