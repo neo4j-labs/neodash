@@ -87,10 +87,11 @@ export const NeoWorkflowEditorModal = ({
           open={open}
           PaperProps={{
             style: {
-              overflow: 'inherit',
+              overflow: 'auto',
+              maxHeight: '800px',
             },
           }}
-          style={{ overflow: 'inherit', overflowY: 'inherit' }}
+          style={{ overflow: 'auto' }}
           aria-labelledby='form-dialog-title'
         >
           <DialogTitle id='form-dialog-title'>
@@ -128,7 +129,7 @@ export const NeoWorkflowEditorModal = ({
             </table>
           </DialogTitle>
           <div>
-            <DialogContent style={{ overflow: 'inherit', paddingTop: 0 }}>
+            <DialogContent style={{ overflow: 'auto', paddingTop: 0 }}>
               <p style={{ marginTop: 0 }}>
                 You can define a workflow here. A workflow consists of one or more steps that together create an
                 analytical pipeline.
@@ -141,7 +142,7 @@ export const NeoWorkflowEditorModal = ({
                   cols={1}
                   isResizable={false}
                   isDraggable={true}
-                  style={{ width: '100%' }}
+                  style={{ width: '100%', overflow: 'auto' }}
                   draggableHandle='.drag-handle'
                   onDragStop={(newLayout, oldPosition, newPosition) => {
                     // inside the steps array, move the entry at index 'oldIndex' to 'newIndex'.

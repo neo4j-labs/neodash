@@ -68,7 +68,7 @@ export enum STEP_STATUS {
   STOPPING,
 }
 
-export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStatus, results, workflow }) => {
+export const NeoWorkflowRunnerModal = ({ open, setOpen, workflowStepStatus, results, workflow }) => {
   const [expanded, setExpanded] = React.useState<string | undefined>(undefined);
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<any>, newExpanded: boolean) => {

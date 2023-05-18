@@ -108,6 +108,9 @@ export function runWorkflow(
     setWorkflowFinalStatus();
   }
 
+  /**
+   * Function that runs the logic of running every step.
+   */
   async function run() {
     const results: any[] = [];
     const database = workflowDatabase;
@@ -133,6 +136,7 @@ export function runWorkflow(
             setErrorMessage(records[0].error);
           }
         };
+
         /**
          * Function passed to the query runner to set the status got from the UI
          * @param records Records got from the query runner
@@ -162,7 +166,7 @@ export function runWorkflow(
         // Refreshing the result state
         setResults(results);
 
-        // Added sleep to prevent strange refresh on main screen
+        // Added sleep to prevent super fast refresh on UI
         await sleep(10);
       }
     } catch (e) {

@@ -263,7 +263,6 @@ export const NeoWorkflowListModal = ({
         <NeoWorkflowRunnerModal
           open={runnerModalIsOpen}
           setOpen={setRunnerModalIsOpen}
-          index={index}
           workflowStepStatus={workflowStepStatus}
           results={results}
         />
