@@ -26,7 +26,7 @@ export const NeoPage = ({
   isLoaded = true, // Whether the page is loaded and the cards can be displayed.
   onPageLayoutUpdate = () => {}, // action to take when the page layout is updated.
 }) => {
-  const getReportIndex = (pagenumber: number, index: number) => {
+  const getReportIndex = (pagenumber: number, index: number | string) => {
     return `${pagenumber}:${index}`;
   };
 
@@ -103,16 +103,17 @@ export const NeoPage = ({
     setLayouts({
       // @ts-ignore
       lg: [
-        ...reports.map((report, index) => {
+        ...reports.map((report) => {
           return {
-            x: report.x !== undefined ? report.x : 0,
-            y: report.y !== undefined ? report.y : 0,
-            i: getReportIndex(pagenumber, index),
-            w: report.width !== undefined ? Math.max(parseInt(report.width), 2) : 3,
-            h: report.height !== undefined ? Math.max(parseInt(report.height), 1) : 2,
+            x: report.x || 0,
+            y: report.y || 0,
+            i: getReportIndex(pagenumber, report.index),
+            w: Math.max(parseInt(report.width), 2) || 3,
+            h: Math.max(parseInt(report.height), 1) || 2,
             minW: 2,
             minH: 1,
             resizeHandles: availableHandles(),
+            isDraggable: true,
           };
         }),
         {
@@ -179,13 +180,13 @@ export const NeoPage = ({
           onPageLayoutUpdate(newLayout);
         }}
       >
-        {reports.map((report, index) => {
+        {reports.map((report) => {
           const w = 12;
           // @ts-ignore
           return (
             <Grid
-              index={getReportIndex(pagenumber, index)}
-              key={getReportIndex(pagenumber, index)}
+              index={getReportIndex(pagenumber, report.index)}
+              key={getReportIndex(pagenumber, report.index)}
               style={{ paddingBottom: '6px' }}
               item
               xs={Math.min(w * 4, 12)}
@@ -195,8 +196,8 @@ export const NeoPage = ({
               xl={Math.min(w, 12)}
             >
               <NeoCard
-                index={index}
-                key={getReportIndex(pagenumber, index)}
+                index={report.index}
+                key={getReportIndex(pagenumber, report.index)}
                 dashboardSettings={dashboardSettings}
                 onRemovePressed={onRemovePressed}
                 onClonePressed={(index) => {

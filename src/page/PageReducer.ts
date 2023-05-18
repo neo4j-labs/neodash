@@ -6,6 +6,7 @@ import {
   FORCE_REFRESH_PAGE,
   UPDATE_ALL_CARD_POSITIONS_IN_PAGE,
 } from './PageActions';
+import { createUUID } from '../dashboard/DashboardThunks';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -14,6 +15,7 @@ export const FIRST_PAGE_INITIAL_STATE = {
   title: 'Main Page',
   reports: [
     {
+      index: createUUID(),
       title: 'Hi there 👋',
       query:
         '**This is your first dashboard!** \n \nYou can click (⋮) to edit this report, or add a new report to get started. You can run any Cypher query directly from each report and render data in a variety of formats. \n \nTip: try _renaming_ this report by editing the title text. You can also edit the dashboard header at the top of the screen.\n\n\n',
@@ -26,6 +28,7 @@ export const FIRST_PAGE_INITIAL_STATE = {
       settings: {},
     },
     {
+      index: createUUID(),
       title: '',
       query: 'MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n',
       width: 3,
@@ -61,9 +64,8 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
     return {
       ...state,
       reports: [
-        ...state.reports.slice(0, index),
-        cardReducer(state.reports[index], action),
-        ...state.reports.slice(index + 1),
+        ...state.reports.filter((o) => o.index !== index),
+        cardReducer(state.reports.filter((o) => o.index == index)[0], action),
       ],
     };
   }
@@ -81,18 +83,12 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
     case REMOVE_REPORT: {
       // Removes the card at a given index on a selected page number.
       const { index } = payload;
-      const cardsInFront = state.reports.slice(0, index);
-      const cardsBehind = state.reports.slice(index + 1);
+      let cards = state.reports.filter((o) => o.index !== index);
+      // cards.forEach(c => c.collapseTimeout = 0 );
 
-      // if there's card after the removed card, it will take it's place.
-      // We make sure that the transition is disabled in this case.
-      if (cardsBehind.length > 0) {
-        // @ts-ignore
-        cardsBehind[0].collapseTimeout = 0;
-      }
       return {
         ...state,
-        reports: cardsInFront.concat(cardsBehind),
+        reports: cards,
       };
     }
     case UPDATE_ALL_CARD_POSITIONS_IN_PAGE: {

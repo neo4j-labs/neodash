@@ -14,6 +14,7 @@ import {
   UPDATE_REPORT_DATABASE,
 } from './CardActions';
 import { TOGGLE_CARD_SETTINGS } from './CardActions';
+import { createUUID } from '../dashboard/DashboardThunks';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -22,6 +23,7 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
  */
 
 export const CARD_INITIAL_STATE = {
+  index: createUUID(),
   title: '',
   query: '\n\n\n',
   settingsOpen: false,
