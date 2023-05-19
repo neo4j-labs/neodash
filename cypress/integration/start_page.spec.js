@@ -18,22 +18,25 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('NeoDash E2E Tests', () => {
   beforeEach(() => {
-    cy.clearLocalStorage();
     cy.viewport(1920, 1080);
     // Navigate to index
-    cy.visit('/');
+    cy.visit('/', {
+      onBeforeLoad(win) {
+        win.localStorage.clear();
+      },
+    });
     cy.wait(1000);
 
     cy.get('#form-dialog-title').then(($div) => {
       const text = $div.text();
       if (text == 'NeoDash - Neo4j Dashboard Builder') {
-        cy.wait(300);
+        cy.wait(500);
         // Create new dashboard
         cy.contains('New Dashboard').click();
       }
     });
 
-    cy.wait(300);
+    cy.wait(500);
     // If an old dashboard exists in cache, do a check to make sure we clear it.
     // if (cy.contains("Create new dashboard")) {
     //     cy.contains('Yes').click()
@@ -71,6 +74,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) button').click();
     cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
+    cy.wait(200);
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders')
@@ -111,7 +115,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a map chart report', () => {
-    createReportOfType('Map', mapChartCypherQuery);
+    createReportOfType('Map', mapChartCypherQuery, true);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path').should('have.length', 5);
   });
 
@@ -170,10 +174,10 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a parameter select report', () => {
     selectReportOfType('Parameter Select');
-    cy.wait(300);
+    cy.wait(500);
     cy.get('#autocomplete-label-type').type('Movie');
     cy.get('#autocomplete-label-type-option-0').click();
-    cy.wait(300);
+    cy.wait(500);
     cy.get('#autocomplete-property').type('title');
     cy.get('#autocomplete-property-option-0').click();
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
@@ -236,8 +240,11 @@ function enableAdvancedVisualizations() {
 
 function selectReportOfType(type) {
   cy.get('main .react-grid-item:eq(2) button').click();
+  cy.wait(500);
   cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
+  cy.wait(100);
   cy.get('main .react-grid-item:eq(2) #type').click();
+  cy.wait(100);
   cy.contains(type).click();
 }
 
@@ -248,6 +255,6 @@ function createReportOfType(type, query, fast = false) {
   } else {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
-
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
+  cy.wait(200);
 }
