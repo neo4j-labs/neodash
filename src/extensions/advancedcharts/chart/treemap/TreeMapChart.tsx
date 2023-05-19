@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react';
 import { ResponsiveTreeMap } from '@nivo/treemap';
-import {
-  checkResultKeys,
-  mutateName,
-  processHierarchyFromRecords,
-  findObject,
-  flatten,
-} from '../../../../chart/ChartUtils';
+import { mutateName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
 import { useState } from 'react';
 import { Tooltip } from '@mui/material';
 import { Refresh } from '@mui/icons-material';

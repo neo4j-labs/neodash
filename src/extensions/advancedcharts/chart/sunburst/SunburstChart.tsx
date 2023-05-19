@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  checkResultKeys,
   mutateName as mutateHierarchyNameIntoDisplayName,
   processHierarchyFromRecords,
   findObject,
   flatten,
+  mutateName,
 } from '../../../../chart/ChartUtils';
 import { ResponsiveSunburst } from '@nivo/sunburst';
 import { Tooltip } from '@mui/material';
@@ -20,31 +20,31 @@ const NeoSunburstChart = (props: ChartProps) => {
   }
   const { records } = props;
   const { selection } = props;
-  useEffect(() => {
-    setData(commonProperties.data);
-  }, [props.selection]);
-
+  const [data, setData] = useState(commonProperties.data);
+  const [commonProperties, setCommonProperties] = useState({ data: { name: 'Total', children: [] } });
   const [refreshable, setRefreshable] = useState(false);
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
 
-  const dataPre = processHierarchyFromRecords(records, selection);
-  dataPre.forEach((currentNode) => mutateHierarchyNameIntoDisplayName(currentNode));
+  useEffect(() => {
+    let dataPre = processHierarchyFromRecords(records, selection);
+    dataPre.forEach((currentNode) => mutateName(currentNode));
+    setCommonProperties({ data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } });
+  }, [records]);
+
+  useEffect(() => {
+    setData(commonProperties.data);
+  }, [props.selection, commonProperties]);
 
   // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.
   // Where a user give us just the tree starting one hop away from the root.
   // as Nivo needs a common root, so in that case, we create it for them.
-  const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } };
-
-  const [data, setData] = useState(commonProperties.data);
-
   if (data == undefined) {
     setData(commonProperties.data);
   }
 
-  const [back, setBack] = useState(false);
   const settings = props.settings ? props.settings : {};
   const legendHeight = 20;
   const marginRight = settings.marginRight ? settings.marginRight : 24;
