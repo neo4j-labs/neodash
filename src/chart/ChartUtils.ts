@@ -342,10 +342,6 @@ export const flatten = (data) =>
 export const processHierarchyFromRecords = (records: Record<string, any>[], selection: any) => {
   return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
     try {
-      // const index = recordToNative(row.get('index'));
-      // const key = recordToNative(row.get('key'));
-      // const value = recordToNative(row.get('value'));
-
       const index = recordToNative(row.get(selection.index));
       // const idx = data.findIndex(item => item.index === index)
       // const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
