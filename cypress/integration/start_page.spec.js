@@ -74,7 +74,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) button').click();
     cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
-    cy.wait(200);
+    cy.wait(1000);
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders')
@@ -256,5 +256,5 @@ function createReportOfType(type, query, fast = false) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-  cy.wait(1000);
+  cy.wait(2000);
 }
