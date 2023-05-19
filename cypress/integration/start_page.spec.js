@@ -256,5 +256,5 @@ function createReportOfType(type, query, fast = false) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-  cy.wait(200);
+  cy.wait(1000);
 }
