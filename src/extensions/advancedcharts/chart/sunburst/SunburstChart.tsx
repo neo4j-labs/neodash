@@ -20,7 +20,7 @@ const NeoSunburstChart = (props: ChartProps) => {
   }
   const { records } = props;
   const { selection } = props;
-  const [data, setData] = useState(commonProperties.data);
+  const [data, setData] = useState(undefined);
   const [commonProperties, setCommonProperties] = useState({ data: { name: 'Total', children: [] } });
   const [refreshable, setRefreshable] = useState(false);
 
