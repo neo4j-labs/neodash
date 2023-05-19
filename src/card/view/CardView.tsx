@@ -49,6 +49,7 @@ const NeoCardView = ({
   const ref = React.useRef();
 
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
+  const [queryChange, setQueryChange] = useState(false);
 
   const getLocalParameters = (parse_string): any => {
     if (!parse_string || !globalParameters) {
@@ -130,7 +131,18 @@ const NeoCardView = ({
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
     }
-  }, [settingsOpen, query, JSON.stringify(localParameters)]);
+  }, [JSON.stringify(localParameters)]);
+
+  useEffect(() => {
+    if (!settingsOpen && queryChange) {
+      setLastRunTimestamp(Date.now());
+    }
+    setQueryChange(false);
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    setQueryChange(true);
+  }, [query]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
