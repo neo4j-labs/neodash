@@ -2,6 +2,8 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import SidebarNodeInspectionModal from './SidebarNodeInspectionModal';
 import { CardContent } from '@material-ui/core';
+import { recordToNative } from '../../../chart/ChartUtils';
+import { renderValueByType } from '../../../report/ReportRecordProcessing';
 
 // TODO: Understand what to show (probably an option (maybe first three fields by default))
 export const SidebarNodeCard = ({ entity, extensionSettings }) => {
@@ -26,10 +28,14 @@ export const SidebarNodeCard = ({ entity, extensionSettings }) => {
       >
         <CardContent>
           <h3 style={{ margin: 0 }}>
-            {entity.properties && entity.properties[titleProperty] ? entity.properties[titleProperty] : '(no title)'}{' '}
+            {entity.properties && entity.properties[titleProperty]
+              ? renderValueByType(entity.properties[titleProperty])
+              : '(no title)'}{' '}
           </h3>
           <p style={{ margin: 0 }}>
-            {entity.properties && entity.properties[bodyProperty] ? entity.properties[bodyProperty] : '(no value)'}{' '}
+            {entity.properties && entity.properties[bodyProperty]
+              ? renderValueByType(entity.properties[bodyProperty])
+              : '(no value)'}{' '}
           </p>
         </CardContent>
       </Card>
