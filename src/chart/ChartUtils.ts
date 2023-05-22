@@ -94,7 +94,11 @@ export function valueIsObject(value) {
   return className == 'Object';
 }
 
-export function toNumber({ low, high }) {
+export function toNumber(ref) {
+  if (ref === undefined) {
+    return ref;
+  }
+  let { low, high } = ref;
   let res = high;
 
   for (let i = 0; i < 32; i++) {
