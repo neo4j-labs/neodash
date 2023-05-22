@@ -26,7 +26,7 @@ export const NeoPage = ({
   isLoaded = true, // Whether the page is loaded and the cards can be displayed.
   onPageLayoutUpdate = () => {}, // action to take when the page layout is updated.
 }) => {
-  const getReportIndex = (pagenumber: number, index: number | string) => {
+  const getReportIndex = (pagenumber: number, index: string) => {
     return `${pagenumber}:${index}`;
   };
 
@@ -35,7 +35,7 @@ export const NeoPage = ({
       {
         x: 0,
         y: 0,
-        i: getReportIndex(pagenumber, 999999),
+        i: getReportIndex(pagenumber, '999999'),
         w: 3,
         h: 2,
         isDraggable: false,
@@ -46,7 +46,7 @@ export const NeoPage = ({
   const loadingMessage = <div>Loading card...</div>;
   const [isDragging, setIsDragging] = React.useState(false);
   const [layouts, setLayouts] = React.useState(defaultLayouts);
-  const [lastElement, setLastElement] = React.useState(<div key={getReportIndex(pagenumber, 999999)}></div>);
+  const [lastElement, setLastElement] = React.useState(<div key={getReportIndex(pagenumber, '999999')}></div>);
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
   const availableHandles = () => {
@@ -119,7 +119,7 @@ export const NeoPage = ({
         {
           x: x,
           y: y,
-          i: getReportIndex(pagenumber, 999999),
+          i: getReportIndex(pagenumber, '999999'),
           w: 3,
           h: 2,
           minW: 3,
@@ -130,7 +130,7 @@ export const NeoPage = ({
       ],
     });
     setLastElement(
-      <Grid style={{ paddingBottom: '6px' }} key={getReportIndex(pagenumber, 999999)}>
+      <Grid style={{ paddingBottom: '6px' }} key={getReportIndex(pagenumber, '999999')}>
         <NeoAddCard
           onCreatePressed={() => {
             const { x, y } = getAddCardButtonPosition();
@@ -182,7 +182,7 @@ export const NeoPage = ({
       >
         {reports.map((report) => {
           const w = 12;
-          const {id} = report;
+          const { id } = report;
           // @ts-ignore
           return (
             <Grid
@@ -209,7 +209,7 @@ export const NeoPage = ({
             </Grid>
           );
         })}
-        {editable && !isDragging ? lastElement : <div key={getReportIndex(pagenumber, 999999)}></div>}
+        {editable && !isDragging ? lastElement : <div key={getReportIndex(pagenumber, '999999')}></div>}
       </ResponsiveGridLayout>
     </div>
   );
