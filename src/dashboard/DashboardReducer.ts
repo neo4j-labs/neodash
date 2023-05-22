@@ -15,11 +15,12 @@ import {
   SET_EXTENSION_ENABLED,
 } from './DashboardActions';
 
-export const NEODASH_VERSION = '2.2';
+export const NEODASH_VERSION = '2.3';
 
 export const initialState = {
   title: DEFAULT_DASHBOARD_TITLE,
   version: NEODASH_VERSION,
+
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
@@ -27,6 +28,7 @@ export const initialState = {
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
+console.log('TETST');
 
 export const dashboardReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
