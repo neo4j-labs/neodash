@@ -15,7 +15,7 @@ export const FIRST_PAGE_INITIAL_STATE = {
   title: 'Main Page',
   reports: [
     {
-      index: createUUID(),
+      id: createUUID(),
       title: 'Hi there 👋',
       query:
         '**This is your first dashboard!** \n \nYou can click (⋮) to edit this report, or add a new report to get started. You can run any Cypher query directly from each report and render data in a variety of formats. \n \nTip: try _renaming_ this report by editing the title text. You can also edit the dashboard header at the top of the screen.\n\n\n',
@@ -28,7 +28,7 @@ export const FIRST_PAGE_INITIAL_STATE = {
       settings: {},
     },
     {
-      index: createUUID(),
+      id: createUUID(),
       title: '',
       query: 'MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n',
       width: 3,
@@ -60,13 +60,13 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
   }
   // Updates a report at a given page and index.
   if (action.type.startsWith('PAGE/CARD/')) {
-    const { index } = payload;
+    const { reportId } = payload;
     return {
       ...state,
       reports: [
-        ...state.reports.filter((o) => o.index !== index),
+        ...state.reports.filter((o) => o.id !== reportId),
         cardReducer(
-          state.reports.find((o) => o.index === index),
+          state.reports.find((o) => o.id === reportId),
           action
         ),
       ],
@@ -85,10 +85,9 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
     }
     case REMOVE_REPORT: {
       // Removes the card at a given index on a selected page number.
-      const { index } = payload;
-      let cards = state.reports.filter((o) => o.index !== index);
+      const { reportId } = payload;
+      let cards = state.reports.filter((o) => o.id !== reportId);
       // cards.forEach(c => c.collapseTimeout = 0 );
-
       return {
         ...state,
         reports: cards,

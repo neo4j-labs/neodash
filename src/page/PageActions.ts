@@ -5,9 +5,9 @@ export const createReport = (pagenumber: number, report: any) => ({
 });
 
 export const REMOVE_REPORT = 'PAGE/REMOVE_REPORT';
-export const removeReport = (pagenumber: number, index: any) => ({
+export const removeReport = (pagenumber: number, reportId: any) => ({
   type: REMOVE_REPORT,
-  payload: { pagenumber, index },
+  payload: { pagenumber, reportId },
 });
 
 export const UPDATE_ALL_CARD_POSITIONS_IN_PAGE = 'PAGE/UPDATE_ALL_CARD_POSITIONS_IN_PAGE';

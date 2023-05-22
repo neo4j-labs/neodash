@@ -3,85 +3,85 @@
  */
 
 export const TOGGLE_CARD_SETTINGS = 'PAGE/CARD/TOGGLE_CARD_SETTINGS';
-export const toggleCardSettings = (pagenumber: any, index: any, open: any) => ({
+export const toggleCardSettings = (pagenumber: any, reportId: any, open: any) => ({
   type: TOGGLE_CARD_SETTINGS,
-  payload: { pagenumber, index, open },
+  payload: { pagenumber, reportId, open },
 });
 
 export const HARD_RESET_CARD_SETTINGS = 'PAGE/CARD/HARD_RESET_CARD_SETTINGS';
-export const hardResetCardSettings = (pagenumber: any, index: any) => ({
+export const hardResetCardSettings = (pagenumber: any, reportId: any) => ({
   type: HARD_RESET_CARD_SETTINGS,
-  payload: { pagenumber, index },
+  payload: { pagenumber, reportId },
 });
 
 export const UPDATE_REPORT_TITLE = 'PAGE/CARD/UPDATE_REPORT_TITLE';
-export const updateReportTitle = (pagenumber: number, index: number, title: any) => ({
+export const updateReportTitle = (pagenumber: number, reportId: number, title: any) => ({
   type: UPDATE_REPORT_TITLE,
-  payload: { pagenumber, index, title },
+  payload: { pagenumber, reportId, title },
 });
 
 export const UPDATE_REPORT_SIZE = 'PAGE/CARD/UPDATE_REPORT_SIZE';
-export const updateReportSize = (pagenumber: number, index: number, width: any, height: any) => ({
+export const updateReportSize = (pagenumber: number, reportId: number, width: any, height: any) => ({
   type: UPDATE_REPORT_SIZE,
-  payload: { pagenumber, index, width, height },
+  payload: { pagenumber, reportId, width, height },
 });
 
 export const UPDATE_REPORT_QUERY = 'PAGE/CARD/UPDATE_REPORT_QUERY';
-export const updateReportQuery = (pagenumber: number, index: number, query: any) => ({
+export const updateReportQuery = (pagenumber: number, reportId: number, query: any) => ({
   type: UPDATE_REPORT_QUERY,
-  payload: { pagenumber, index, query },
+  payload: { pagenumber, reportId, query },
 });
 
 export const UPDATE_CYPHER_PARAMETERS = 'PAGE/CARD/UPDATE_CYPHER_PARAMETERS';
-export const updateCypherParameters = (pagenumber: number, index: number, parameters: any) => ({
+export const updateCypherParameters = (pagenumber: number, reportId: number, parameters: any) => ({
   type: UPDATE_CYPHER_PARAMETERS,
-  payload: { pagenumber, index, parameters },
+  payload: { pagenumber, reportId, parameters },
 });
 
 export const UPDATE_REPORT_TYPE = 'PAGE/CARD/UPDATE_REPORT_TYPE';
-export const updateReportType = (pagenumber: number, index: number, type: any) => ({
+export const updateReportType = (pagenumber: number, reportId: number, type: any) => ({
   type: UPDATE_REPORT_TYPE,
-  payload: { pagenumber, index, type },
+  payload: { pagenumber, reportId, type },
 });
 
 export const UPDATE_FIELDS = 'PAGE/CARD/UPDATE_FIELDS';
-export const updateFields = (pagenumber: number, index: number, fields: any) => ({
+export const updateFields = (pagenumber: number, reportId: number, fields: any) => ({
   type: UPDATE_FIELDS,
-  payload: { pagenumber, index, fields },
+  payload: { pagenumber, reportId, fields },
 });
 
 export const UPDATE_SELECTION = 'PAGE/CARD/UPDATE_SELECTION';
-export const updateSelection = (pagenumber: number, index: number, selectable: any, field: any) => ({
+export const updateSelection = (pagenumber: number, reportId: number, selectable: any, field: any) => ({
   type: UPDATE_SELECTION,
-  payload: { pagenumber, index, selectable, field },
+  payload: { pagenumber, reportId, selectable, field },
 });
 
 export const UPDATE_ALL_SELECTIONS = 'PAGE/CARD/UPDATE_ALL_SELECTIONS';
-export const updateAllSelections = (pagenumber: number, index: number, selections: any) => ({
+export const updateAllSelections = (pagenumber: number, reportId: number, selections: any) => ({
   type: UPDATE_ALL_SELECTIONS,
-  payload: { pagenumber, index, selections },
+  payload: { pagenumber, reportId, selections },
 });
 
 export const CLEAR_SELECTION = 'PAGE/CARD/CLEAR_SELECTION';
-export const clearSelection = (pagenumber: number, index: number) => ({
+export const clearSelection = (pagenumber: number, reportId: number) => ({
   type: CLEAR_SELECTION,
-  payload: { pagenumber, index },
+  payload: { pagenumber, reportId },
 });
 
 export const UPDATE_REPORT_SETTING = 'PAGE/CARD/UPDATE_REPORT_SETTING';
-export const updateReportSetting = (pagenumber: number, index: number, setting: any, value: any) => ({
+export const updateReportSetting = (pagenumber: number, reportId: number, setting: any, value: any) => ({
   type: UPDATE_REPORT_SETTING,
-  payload: { pagenumber, index, setting, value },
+  payload: { pagenumber, reportId, setting, value },
 });
 
 export const TOGGLE_REPORT_SETTINGS = 'PAGE/CARD/TOGGLE_REPORT_SETTINGS';
-export const toggleReportSettings = (index: any) => ({
+export const toggleReportSettings = (reportId: any) => ({
   type: TOGGLE_REPORT_SETTINGS,
-  payload: { index },
+  payload: { reportId },
 });
 
 export const UPDATE_REPORT_DATABASE = 'PAGE/CARD/UPDATE_REPORT_DATABASE';
-export const updateReportDatabase = (pagenumber: number, index: number, database: any) => ({
+export const updateReportDatabase = (pagenumber: number, reportId: number, database: any) => ({
   type: UPDATE_REPORT_DATABASE,
-  payload: { pagenumber, index, database },
+  payload: { pagenumber, reportId, database },
 });

@@ -11,7 +11,7 @@ export const addReportThunk =
   (x: number, y: number, width: number, height: number, data: any) => (dispatch: any, getState: any) => {
     try {
       const initialState = data !== undefined ? data : CARD_INITIAL_STATE;
-      const report = { ...initialState, x: x, y: y, width: width, height: height, index: createUUID() };
+      const report = { ...initialState, x: x, y: y, width: width, height: height, id: createUUID() };
       const state = getState();
       const { pagenumber } = state.dashboard.settings;
       dispatch(createReport(pagenumber, report));
@@ -20,21 +20,21 @@ export const addReportThunk =
     }
   };
 
-export const removeReportThunk = (index: number) => (dispatch: any, getState: any) => {
+export const removeReportThunk = (reportId: number) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(removeReport(pagenumber, index));
+    dispatch(removeReport(pagenumber, reportId));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot remove report', e));
   }
 };
 
-export const cloneReportThunk = (index: number, x: number, y: number) => (dispatch: any, getState: any) => {
+export const cloneReportThunk = (reportId: number, x: number, y: number) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    const data = { ...state.dashboard.pages[pagenumber].reports.find((o) => o.index === index) };
+    const data = { ...state.dashboard.pages[pagenumber].reports.find((o) => o.id === reportId) };
     data.settingsOpen = false;
     dispatch(addReportThunk(x, y, data.width, data.height, data));
   } catch (e) {

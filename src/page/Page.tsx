@@ -107,7 +107,7 @@ export const NeoPage = ({
           return {
             x: report.x || 0,
             y: report.y || 0,
-            i: getReportIndex(pagenumber, report.index),
+            i: getReportIndex(pagenumber, report.id),
             w: Math.max(parseInt(report.width), 2) || 3,
             h: Math.max(parseInt(report.height), 1) || 2,
             minW: 2,
@@ -182,11 +182,12 @@ export const NeoPage = ({
       >
         {reports.map((report) => {
           const w = 12;
+          const {id} = report;
           // @ts-ignore
           return (
             <Grid
-              index={getReportIndex(pagenumber, report.index)}
-              key={getReportIndex(pagenumber, report.index)}
+              index={getReportIndex(pagenumber, id)}
+              key={getReportIndex(pagenumber, id)}
               style={{ paddingBottom: '6px' }}
               item
               xs={Math.min(w * 4, 12)}
@@ -196,13 +197,13 @@ export const NeoPage = ({
               xl={Math.min(w, 12)}
             >
               <NeoCard
-                index={report.index}
-                key={getReportIndex(pagenumber, report.index)}
+                reportId={id}
+                key={getReportIndex(pagenumber, id)}
                 dashboardSettings={dashboardSettings}
                 onRemovePressed={onRemovePressed}
-                onClonePressed={(index) => {
+                onClonePressed={(reportId) => {
                   const { x, y } = getAddCardButtonPosition();
-                  onClonePressed(index, x, y);
+                  onClonePressed(reportId, x, y);
                 }}
               />
             </Grid>
@@ -224,8 +225,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onRemovePressed: (index) => dispatch(removeReportThunk(index)),
-  onClonePressed: (index, x, y) => dispatch(cloneReportThunk(index, x, y)),
+  onRemovePressed: (reportId) => dispatch(removeReportThunk(reportId)),
+  onClonePressed: (reportId, x, y) => dispatch(cloneReportThunk(reportId, x, y)),
   onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height, undefined)),
   onPageLayoutUpdate: (layout) => dispatch(updatePageLayoutThunk(layout)),
 });

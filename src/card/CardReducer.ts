@@ -23,7 +23,7 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
  */
 
 export const CARD_INITIAL_STATE = {
-  index: createUUID(),
+  id: createUUID(),
   title: '',
   query: '\n\n\n',
   settingsOpen: false,
