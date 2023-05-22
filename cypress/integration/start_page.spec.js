@@ -25,7 +25,8 @@ describe('NeoDash E2E Tests', () => {
         win.localStorage.clear();
       },
     });
-    cy.wait(1000);
+
+    cy.get('#form-dialog-title', { timeout: 2000 }).should('be.visible');
 
     cy.get('#form-dialog-title').then(($div) => {
       const text = $div.text();
@@ -74,7 +75,6 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) button').click();
     cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
-    cy.wait(1000);
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders')
@@ -230,31 +230,26 @@ describe('NeoDash E2E Tests', () => {
 });
 
 function enableAdvancedVisualizations() {
-  cy.get('#extensions-sidebar-button').click();
-  cy.wait(100);
-  cy.get('#checkbox-advanced-charts').click();
-  cy.wait(100);
-  cy.get('.ndl-dialog-close').click();
+  cy.get('#extensions-sidebar-button').should('be.visible').click();
+  cy.get('#checkbox-advanced-charts').should('be.visible').click();
+  cy.get('.ndl-dialog-close').should('be.visible').click();
   cy.wait(200);
 }
 
 function selectReportOfType(type) {
-  cy.get('main .react-grid-item:eq(2) button').click();
-  cy.wait(500);
-  cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
-  cy.wait(100);
-  cy.get('main .react-grid-item:eq(2) #type').click();
-  cy.wait(100);
+  cy.get('main .react-grid-item:eq(2) button').should('be.visible').click();
+  cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]', { timeout: 2000 }).should('be.visible').click();
+  cy.get('main .react-grid-item:eq(2) #type', { timeout: 2000 }).should('be.visible').click();
   cy.contains(type).click();
 }
 
 function createReportOfType(type, query, fast = false) {
   selectReportOfType(type);
+  //cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').should('be.');
   if (fast) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { delay: 1, parseSpecialCharSequences: false });
   } else {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-  cy.wait(2000);
 }
