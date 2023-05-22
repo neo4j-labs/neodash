@@ -49,8 +49,14 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      columnWidthsType: {
+        label: 'Relative / Fixed',
+        type: SELECTION_TYPES.LIST,
+        values: ['Relative', 'Fixed'],
+		default: 'Relative',
+      },
       columnWidths: {
-        label: 'Relative Column Sizes',
+        label: 'Relative/Fixed Column Sizes',
         type: SELECTION_TYPES.TEXT,
         default: '[1, 1, 1, ...]',
       },
