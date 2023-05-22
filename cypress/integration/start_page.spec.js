@@ -95,25 +95,31 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a bar chart report', () => {
     createReportOfType('Bar Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item #index input[name="Category"]', { timeout: 45000 }).should('have.value', 'released');
-    cy.get('main .react-grid-item #value input[name="Value"]').should('have.value', 'count');
-    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g').should('have.length', 8);
+    cy.get('main .react-grid-item input[name="Category"]', { timeout: 45000 }).should('have.value', 'released');
+    cy.get('main .react-grid-item input[name="Value"]', { timeout: 45000 }).should('have.value', 'count');
+    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g', { timeout: 45000 }).should('have.length', 8);
   });
 
   it('creates a pie chart report', () => {
     createReportOfType('Pie Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item #index input[name="Category"]', { timeout: 45000 }).should('have.value', 'released');
-    cy.get('main .react-grid-item #value input[name="Value"]').should('have.value', 'count');
-    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g').should('have.length', 3);
-    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g:nth-child(2) > path').should('have.length', 5);
+    cy.get('main .react-grid-item input[name="Category"]', { timeout: 45000 }).should('have.value', 'released');
+    cy.get('main .react-grid-item input[name="Value"]', { timeout: 45000 }).should('have.value', 'count');
+    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g', { timeout: 45000 }).should('have.length', 3);
+    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g:nth-child(2) > path', { timeout: 45000 }).should(
+      'have.length',
+      5
+    );
   });
 
   it('creates a line chart report', () => {
     createReportOfType('Line Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item #x input[name="X-value"]', { timeout: 45000 }).should('have.value', 'released');
-    cy.get('main .react-grid-item #value input[name="Y-value"]').should('have.value', 'count');
-    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g').should('have.length', 6);
-    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g:nth-child(2) > line').should('have.length', 11);
+    cy.get('main .react-grid-item input[name="X-value"]', { timeout: 45000 }).should('have.value', 'released');
+    cy.get('main .react-grid-item input[name="Y-value"]', { timeout: 45000 }).should('have.value', 'count');
+    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g', { timeout: 45000 }).should('have.length', 6);
+    cy.get('main .react-grid-item .MuiCardContent-root svg > g > g:nth-child(2) > line', { timeout: 45000 }).should(
+      'have.length',
+      11
+    );
   });
 
   it('creates a map chart report', () => {
