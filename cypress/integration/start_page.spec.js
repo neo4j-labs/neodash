@@ -63,14 +63,20 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a new card', () => {
-    cy.get('main .react-grid-item:eq(2) button').click();
+    cy.get('main .react-grid-item:eq(2)  button[aria-label="add report"]').click();
     cy.get('main .react-grid-item:eq(2)').should('contain', 'No query specified.');
   });
 
   // Test each type of card
   it('creates a table report', () => {
-    cy.get('main .react-grid-item:eq(2) button').click();
-    cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]').click();
+    cy.get('main .react-grid-item button[aria-label="add report"]').should('be.visible').click();
+    cy.get('main .react-grid-item')
+      .contains('No query specified.')
+      .parentsUntil('.react-grid-item')
+      .find('button[aria-label="settings"]', { timeout: 2000 })
+      .should('be.visible')
+      .click();
+
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
@@ -249,8 +255,13 @@ function enableAdvancedVisualizations() {
 }
 
 function selectReportOfType(type) {
-  cy.get('main .react-grid-item:eq(2) button').should('be.visible').click();
-  cy.get('main .react-grid-item:eq(2) button[aria-label="settings"]', { timeout: 2000 }).should('be.visible').click();
+  cy.get('main .react-grid-item button[aria-label="add report"]').should('be.visible').click();
+  cy.get('main .react-grid-item')
+    .contains('No query specified.')
+    .parentsUntil('.react-grid-item')
+    .find('button[aria-label="settings"]', { timeout: 2000 })
+    .should('be.visible')
+    .click();
   cy.get('main .react-grid-item:eq(2) #type', { timeout: 2000 }).should('be.visible').click();
   cy.contains(type).click();
 }
