@@ -268,6 +268,7 @@ function selectReportOfType(type) {
 }
 
 function createReportOfType(type, query, fast = false) {
+  cy.get('main .react-grid-item .ndl-spin', { timeout: 30000 }).should('not.exist');
   selectReportOfType(type);
   if (fast) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { delay: 1, parseSpecialCharSequences: false });
@@ -275,5 +276,5 @@ function createReportOfType(type, query, fast = false) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-  cy.get('main .react-grid-item:eq(2) .ndl-spin', { timeout: 30000 }).should('not.exist');
+  cy.get('main .react-grid-item .ndl-spin', { timeout: 30000 }).should('not.exist');
 }
