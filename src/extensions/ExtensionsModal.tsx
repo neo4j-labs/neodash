@@ -94,11 +94,15 @@ const NeoExtensionsModal = ({
                                 let active = extensions[e.name] == undefined ? true : undefined;
                                 if (e.enabled) {
                                   setExtensionEnabled(e.name, active);
+
+                                  // Subscribing the reducer binded to the newly enabled extension
+                                  // to the extensionReducer
                                   if (e.reducerPrefix) {
                                     setExtensionReducerEnabled(e.reducerPrefix, active);
                                   }
                                 } else {
                                   onExtensionUnavailableTriggered(e.label);
+                                  // If an extension presents a reducer, we need to unbind it from the extension reducer
                                   if (e.reducerPrefix) {
                                     setExtensionReducerEnabled(e.reducerPrefix, active);
                                   }
