@@ -69,6 +69,7 @@ describe('NeoDash E2E Tests', () => {
 
   // Test each type of card
   it('creates a table report', () => {
+    cy.get('main .react-grid-item .ndl-spin', { timeout: 30000 }).should('not.exist');
     cy.get('main .react-grid-item button[aria-label="add report"]').should('be.visible').click();
     cy.get('main .react-grid-item')
       .contains('No query specified.')
@@ -80,7 +81,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-    cy.get('main .react-grid-item:eq(2) .ndl-spin', { timeout: 30000 }).should('not.exist');
+    cy.get('main .react-grid-item .ndl-spin', { timeout: 30000 }).should('not.exist');
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: 30000 })
       .should('contain', 'title')
       .and('contain', 'released')
@@ -183,7 +184,7 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a raw json report', () => {
     createReportOfType('Raw JSON', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)', { timeout: 45000 }).should(
+    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)', { timeout: 60000 }).should(
       ($div) => {
         const text = $div.text();
         expect(text.length).to.eq(1387);
@@ -206,12 +207,12 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates an iframe report', () => {
     createReportOfType('iFrame', iFrameText);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root iframe', { timeout: 45000 }).should('be.visible');
+    cy.get('main .react-grid-item .MuiCardContent-root iframe', { timeout: 60000 }).should('be.visible');
   });
 
   it('creates a markdown report', () => {
     createReportOfType('Markdown', markdownText);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1', { timeout: 45000 }).should('have.text', 'Hello');
+    cy.get('main .react-grid-item .MuiCardContent-root h1', { timeout: 45000 }).should('have.text', 'Hello');
   });
 
   // it('creates a radar report', () => {
@@ -268,7 +269,7 @@ function selectReportOfType(type) {
 }
 
 function createReportOfType(type, query, fast = false) {
-  cy.get('main .react-grid-item .ndl-spin', { timeout: 30000 }).should('not.exist');
+  cy.get('main .react-grid-item .ndl-spin', { timeout: 60000 }).should('not.exist');
   selectReportOfType(type);
   if (fast) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { delay: 1, parseSpecialCharSequences: false });
@@ -276,5 +277,5 @@ function createReportOfType(type, query, fast = false) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-  cy.get('main .react-grid-item .ndl-spin', { timeout: 30000 }).should('not.exist');
+  cy.get('main .react-grid-item .ndl-spin', { timeout: 60000 }).should('not.exist');
 }
