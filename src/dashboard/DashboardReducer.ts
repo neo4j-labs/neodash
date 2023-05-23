@@ -3,8 +3,10 @@
  */
 
 import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
+import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/state/ExtensionReducer';
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
+
 import {
   CREATE_PAGE,
   REMOVE_PAGE,
@@ -24,6 +26,7 @@ export const initialState = {
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
   extensions: {},
+  extensionsConfig: INITIAL_EXTENSIONS_STATE, // TODO - merge with `extensions` in the 2.3 dashboard format.
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -51,6 +54,14 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     return {
       ...state,
       settings: settingsReducer(state, enrichedAction),
+    };
+  }
+
+  // Extensions-specific updates are deferred to the extensions reducer.
+  if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
+    return {
+      ...state,
+      extensionsConfig: extensionsReducer(state.extensionsConfig, action),
     };
   }
 

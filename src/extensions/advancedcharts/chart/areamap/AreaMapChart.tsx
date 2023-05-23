@@ -32,6 +32,7 @@ function createGeoDictionary(records, selection) {
   });
   return data;
 }
+
 /**
  * To speed up the binding process, let's reduce the list into a object to use the index access
  * @param features
@@ -48,6 +49,7 @@ function fromFeatureListToObject(features, desiredLevel) {
   });
   return res;
 }
+
 /**
  * Renders Neo4j Records inside a GeoJSON map.
  */
@@ -57,11 +59,15 @@ const NeoAreaMapChart = (props: ChartProps) => {
   const { selection } = props;
   const dimensions = props.dimensions ? props.dimensions : { width: 100, height: 100 };
   const keyLength = props.settings && props.settings.countryCodeFormat ? props.settings.countryCodeFormat : 'Alpha-2';
+
+  // Key used to refresh the visualization
   let key = `${dimensions.width},${dimensions.height},${props.fullscreen}`;
   const [data, setData] = useState({});
-  // Two feature levels (ideally we can even more)
+
+  // Two feature levels (ideally we can extend this too)
   const [featureLevel0, setFeatureLevel0] = useState({});
   const [featureLevel1, setFeatureLevel1] = useState({});
+
   const [isReady, setIsReady] = useState(false);
   const mapProviderURL =
     props.settings && props.settings.providerUrl

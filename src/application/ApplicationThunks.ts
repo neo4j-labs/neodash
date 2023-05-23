@@ -9,6 +9,7 @@ import {
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
+import { setExtensionSidebarOpen } from '../extensions/sidebar/state/SidebarActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
@@ -384,6 +385,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       )
     );
     dispatch(setConnectionModalOpen(false));
+    // TODO - generalize this, close all drawer-based extensions on app startup.
+    dispatch(setExtensionSidebarOpen(false));
 
     // Auto-upgrade the dashboard version if an old version is cached.
     if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
@@ -419,6 +422,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(setWelcomeScreenOpen(false));
       const success = await initializeSSO(config.ssoDiscoveryUrl, (credentials) => {
         if (standalone) {
+          // Redirected from SSO and running in viewer mode, merge retrieved config with hardcoded credentials.
           dispatch(
             setConnectionProperties(
               config.standaloneProtocol,
@@ -439,6 +443,31 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               credentials.password
             )
           );
+        } else {
+          // Redirected from SSO and running in editor mode, merge retrieved config with existing details.
+          dispatch(
+            setConnectionProperties(
+              state.application.connection.protocol,
+              state.application.connection.url,
+              state.application.connection.port,
+              state.application.connection.database,
+              credentials.username,
+              credentials.password
+            )
+          );
+          dispatch(
+            createConnectionThunk(
+              state.application.connection.protocol,
+              state.application.connection.url,
+              state.application.connection.port,
+              state.application.connection.database,
+              credentials.username,
+              credentials.password
+            )
+          );
+        }
+
+        if (standalone) {
           if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
             dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
           } else {
@@ -467,6 +496,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting));
     }
   } catch (e) {
+    console.log(e);
     dispatch(setWelcomeScreenOpen(false));
     dispatch(
       createNotificationThunk(

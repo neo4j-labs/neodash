@@ -15,7 +15,6 @@ import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
 import { connect } from 'react-redux';
-import { updateDashboardSetting } from '../settings/SettingsActions';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 
 export const NeoReport = ({

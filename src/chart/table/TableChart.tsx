@@ -58,7 +58,7 @@ export const generateSafeColumnKey = (key) => {
   return key != 'id' ? key : `${key} `;
 };
 
-const NeoTableChart = (props: ChartProps) => {
+export const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;

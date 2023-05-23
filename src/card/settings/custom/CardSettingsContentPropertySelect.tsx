@@ -188,9 +188,11 @@ const NeoCardSettingsContentPropertySelect = ({
         ` n.\`${propertyTypeDisplaySanitized}\` as display ` +
         `ORDER BY size(toString(value)) ASC LIMIT ${limit}`;
       onQueryUpdate(newQuery);
-    } else {
+    } else if (settings.type == 'Custom Query') {
       const newQuery = query;
       onQueryUpdate(newQuery);
+    } else {
+      onQueryUpdate('RETURN true;');
     }
   }
 

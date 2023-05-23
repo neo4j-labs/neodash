@@ -13,11 +13,13 @@ import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
+import { setExtensionReducerEnabled } from './state/ExtensionActions';
 
 const NeoExtensionsModal = ({
   extensions,
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
+  setExtensionReducerEnabled,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -89,10 +91,21 @@ const NeoExtensionsModal = ({
                           <Tooltip title='Enable the extension' aria-label=''>
                             <FormControlLabel
                               onClick={() => {
+                                let active = extensions[e.name] == undefined ? true : undefined;
                                 if (e.enabled) {
-                                  setExtensionEnabled(e.name, extensions[e.name] == undefined ? true : undefined);
+                                  setExtensionEnabled(e.name, active);
+
+                                  // Subscribing the reducer binded to the newly enabled extension
+                                  // to the extensionReducer
+                                  if (e.reducerPrefix) {
+                                    setExtensionReducerEnabled(e.reducerPrefix, active);
+                                  }
                                 } else {
                                   onExtensionUnavailableTriggered(e.label);
+                                  // If an extension presents a reducer, we need to unbind it from the extension reducer
+                                  if (e.reducerPrefix) {
+                                    setExtensionReducerEnabled(e.reducerPrefix, active);
+                                  }
                                 }
                               }}
                               control={
@@ -143,6 +156,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setExtensionEnabled: (name, enabled) => dispatch(setExtensionEnabled(name, enabled)),
+  setExtensionReducerEnabled: (name, enabled) => dispatch(setExtensionReducerEnabled(name, enabled)),
   onExtensionUnavailableTriggered: (name) =>
     dispatch(
       createNotificationThunk(

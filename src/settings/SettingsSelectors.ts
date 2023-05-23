@@ -25,6 +25,7 @@ export const getDatabase = (state: any, pageNumber: number, cardIndex: number) =
     return 'neo4j';
   }
   const reportDatabase = state.dashboard.pages[pageNumber].reports[cardIndex].database;
+
   if (reportDatabase !== undefined) {
     return reportDatabase;
   }

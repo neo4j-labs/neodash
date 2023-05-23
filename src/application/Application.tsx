@@ -33,6 +33,7 @@ import {
   setAboutModalOpen,
   setConnected,
   setConnectionModalOpen,
+  setConnectionProperties,
   setOldDashboard,
   setReportHelpModalOpen,
   setWaitForSSO,
@@ -74,6 +75,7 @@ const Application = ({
   shareDetails,
   createConnection,
   createConnectionFromDesktopIntegration,
+  setConnectionDetails,
   onResetShareDetails,
   onConfirmLoadSharedDashboard,
   initializeApplication,
@@ -120,6 +122,7 @@ const Application = ({
           standaloneSettings={standaloneSettings}
           createConnection={createConnection}
           onSSOAttempt={onSSOAttempt}
+          setConnectionProperties={setConnectionDetails}
           onConnectionModalClose={onConnectionModalClose}
         ></NeoConnectionModal>
         <NeoWelcomeScreenModal
@@ -194,6 +197,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onSSOAttempt: (_) => {
     dispatch(setWaitForSSO(true));
+  },
+  setConnectionDetails: (protocol, url, port, database, username, password) => {
+    dispatch(setConnectionProperties(protocol, url, port, database, username, password));
   },
   onConfirmLoadSharedDashboard: (_) => dispatch(onConfirmLoadSharedDashboardThunk()),
   onConnectionModalOpen: (_) => dispatch(setConnectionModalOpen(true)),

@@ -4,7 +4,6 @@ import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoJSONChart from '../chart/json/JSONChart';
-import NeoLineChart from '../chart/line/LineChart';
 import NeoMapChart from '../chart/map/MapChart';
 import NeoPieChart from '../chart/pie/PieChart';
 import NeoTableChart from '../chart/table/TableChart';
@@ -12,6 +11,8 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
+import NeoLineChart from '../chart/line/LineChart';
+import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -676,12 +677,6 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      type: {
-        label: 'Plot Type',
-        type: SELECTION_TYPES.LIST,
-        values: ['line', 'scatter'],
-        default: 'line',
-      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,
@@ -802,6 +797,185 @@ export const REPORT_TYPES = {
         label: 'Legend Label Width (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 100,
+      },
+      hideSelections: {
+        label: 'Hide Property Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+    },
+  },
+  scatterPlot: {
+    label: 'Scatter Plot',
+    component: NeoScatterPlot,
+    useReturnValuesAsFields: true,
+    helperText: (
+      <div>
+        A Scatter plot chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code>
+        value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
+      </div>
+    ),
+    selection: {
+      x: {
+        label: 'X-value',
+        type: SELECTION_TYPES.NUMBER_OR_DATETIME,
+      },
+      value: {
+        label: 'Y-value',
+        type: SELECTION_TYPES.NUMBER,
+        key: true,
+      },
+    },
+    maxRecords: 2000,
+    settings: {
+      backgroundColor: {
+        label: 'Background Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#fafafa',
+      },
+      colorIntensityProp: {
+        label: 'Intensity value field',
+        type: SELECTION_TYPES.TEXT,
+        default: 'intensity',
+      },
+      labelProp: {
+        label: 'Point label field',
+        type: SELECTION_TYPES.TEXT,
+        default: 'label',
+      },
+      legend: {
+        label: 'Show Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      legendWidth: {
+        label: 'Legend Width (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 20,
+      },
+      xScale: {
+        label: 'X Scale',
+        type: SELECTION_TYPES.LIST,
+        values: ['linear', 'log'],
+        default: 'linear',
+      },
+      yScale: {
+        label: 'Y Scale',
+        type: SELECTION_TYPES.LIST,
+        values: ['linear', 'log'],
+        default: 'linear',
+      },
+      minXValue: {
+        label: 'Min X Value',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
+      },
+      maxXValue: {
+        label: 'Max X Value',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
+      },
+      minYValue: {
+        label: 'Min Y Value',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
+      },
+      maxYValue: {
+        label: 'Max Y Value',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
+      },
+      xTickValues: {
+        label: 'X-axis Tick Count (Approximate)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
+      },
+      xAxisTimeFormat: {
+        label: 'X-axis Format (Time chart)',
+        type: SELECTION_TYPES.TEXT,
+        default: '%Y-%m-%dT%H:%M:%SZ',
+      },
+      xTickTimeValues: {
+        label: 'X-axis Tick Size (Time chart)',
+        type: SELECTION_TYPES.TEXT,
+        default: 'every 1 year',
+      },
+      xTickRotationAngle: {
+        label: 'X-axis Tick Rotation (Degrees)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      yTickRotationAngle: {
+        label: 'Y-axis Tick Rotation (Degrees)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      showGrid: {
+        label: 'Show Grid',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      pointSize: {
+        label: 'Point Radius (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 9,
+      },
+      marginLeft: {
+        label: 'Margin Left (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 50,
+      },
+      marginRight: {
+        label: 'Margin Right (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 24,
+      },
+      marginTop: {
+        label: 'Margin Top (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 24,
+      },
+      marginBottom: {
+        label: 'Margin Bottom (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 40,
       },
       hideSelections: {
         label: 'Hide Property Selection',
