@@ -134,7 +134,7 @@ const NeoLineChart = (props: ChartProps) => {
 
   // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
   // Therefore, we now require a manual refresh.
-
+  // TODO - check if this is still true with latest Nivo version.
   const chartIsTimeChart =
     data[0] !== undefined &&
     data[0].data[0] !== undefined &&
@@ -142,7 +142,6 @@ const NeoLineChart = (props: ChartProps) => {
     isDateTimeOrDate(data[0].data[0].x);
 
   if (isTimeChart !== chartIsTimeChart) {
-    // doesn't seem true from testing mmmmmmm
     if (!chartIsTimeChart) {
       return (
         <div style={{ margin: '15px' }}>
