@@ -78,6 +78,7 @@ describe('NeoDash E2E Tests', () => {
 
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
+    cy.wait(400);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: WAITING_TIME })
       .should('contain', 'title')
@@ -204,8 +205,8 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a raw json report', () => {
-    createReportOfType('Raw JSON', barChartCypherQuery);
     checkInitialState();
+    createReportOfType('Raw JSON', barChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)', { timeout: 45000 }).should(
       ($div) => {
         const text = $div.text();
@@ -301,6 +302,7 @@ function createReportOfType(type, query, fast = false) {
   } else {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
+  cy.wait(400);
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
 }
 
