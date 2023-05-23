@@ -31,7 +31,7 @@ export const NodeSidebarDrawer = ({
   const [hasInvalidQuery, setHasInvalidQuery] = useState(false);
   const [databaseListLoaded, setDatabaseListLoaded] = React.useState(false);
   const [databaseList, setDatabaseList] = React.useState([]);
-  const [maxRecords, setMaxRecord] = React.useState(
+  const [maxRecords, setMaxRecords] = React.useState(
     extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100
   );
 
@@ -40,7 +40,7 @@ export const NodeSidebarDrawer = ({
   useEffect(() => {
     let newMaxRecords = extensionSettings && extensionSettings.maxRecords ? extensionSettings.maxRecords : 100;
     if (newMaxRecords != maxRecords) {
-      setMaxRecord(newMaxRecords);
+      setMaxRecords(newMaxRecords);
     }
   }, [extensionSettings]);
 
