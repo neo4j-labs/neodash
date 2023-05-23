@@ -12,7 +12,7 @@ export const SidebarNodeCard = ({ entity, extensionSettings }) => {
   const colorProperty = extensionSettings.colorProperty ? extensionSettings.colorProperty : 'color';
   const titleProperty = extensionSettings.titleProperty ? extensionSettings.titleProperty : 'title';
   const bodyProperty = extensionSettings.bodyProperty ? extensionSettings.bodyProperty : 'body';
-  // TODO: in content the must be casted to prevent crashing (ex: try to assign a date to one of the card properties)
+
   const content = (
     <>
       <Card
