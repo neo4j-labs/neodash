@@ -2,6 +2,7 @@
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
+  projectId: 'a8nh14',
   video: false,
   e2e: {
     supportFile: false,

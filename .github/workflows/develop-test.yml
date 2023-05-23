@@ -33,3 +33,6 @@ jobs:
         start: yarn run dev
         wait-on: 'http://localhost:3000'
         browser: chrome
+        CYPRESS_RECORD_KEY: 4737836d-3dd9-4903-bcf6-24c5e4d81c6c
+        CYPRESS_PROJECT_ID: a8nh14
+
