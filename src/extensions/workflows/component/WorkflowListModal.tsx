@@ -16,8 +16,6 @@ import NeoField from '../../../component/field/Field';
 import { getCancelledIcon, getCompleteIcon, getRunningIcon, getErrorIcon, getStoppingIcon } from './Icons';
 import { Badge, Button, Dialog, DialogContent, DialogTitle, IconButton, MenuItem } from '@mui/material';
 
-const styles = {};
-
 /**
 * Component that shows the list of workflows. From this modal they can:
  - Create a new workflow
@@ -230,11 +228,9 @@ export const NeoWorkflowListModal = ({
             label='Database'
             value={databaseText}
             style={{ width: '47%', maxWidth: '200px', marginTop: '-13px' }}
-            choices={databaseList.map((database) => (
-              <MenuItem key={database} value={database}>
-                {database}
-              </MenuItem>
-            ))}
+            choices={databaseList.map((database) => {
+              return { label: database, value: database };
+            })}
             onChange={(value) => {
               setDatabaseText(value);
               setWorkflowDatabase(value);
@@ -245,7 +241,7 @@ export const NeoWorkflowListModal = ({
               setIndex(workflowsList.length);
               setEditorOpen(true);
             }}
-            style={{ float: 'right', backgroundColor: 'white', marginBottom: 10 }}
+            style={{ float: 'right', marginBottom: 10 }}
             variant='contained'
             size='medium'
             endIcon={<PlayArrow />}
@@ -279,4 +275,5 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(deleteWorkflow(index));
   },
 });
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowListModal));
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowListModal);

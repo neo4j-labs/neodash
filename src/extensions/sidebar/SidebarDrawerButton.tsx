@@ -6,7 +6,7 @@ import { getSidebarOpened } from './state/SidebarSelectors';
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
-const NeoNodeSidebarButton = ({ isOpen, setNodeSidebarOpened }) => {
+const NeoNodeSidebarButton = ({ navItemClass, isOpen, setNodeSidebarOpened }) => {
   const handleClick = () => {
     setNodeSidebarOpened(!isOpen);
   };
@@ -15,7 +15,7 @@ const NeoNodeSidebarButton = ({ isOpen, setNodeSidebarOpened }) => {
     <div>
       <ListItem button onClick={handleClick} id='sidebar-button'>
         <ListItemIcon>
-          <ReportIcon />
+          <ReportIcon className={navItemClass} />
         </ListItemIcon>
         <ListItemText primary='Alerts' />
       </ListItem>
