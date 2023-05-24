@@ -47,7 +47,7 @@ export function createMarkers(data, props) {
                     <td style={{ marginRight: '10px' }} key={0}>
                       {k.toString()}:
                     </td>
-                    <td key={1}>value.properties[k].toString()</td>
+                    <td key={1}>{value.properties[k].toString()}</td>
                   </tr>
                 );
               })
@@ -97,6 +97,12 @@ export function createMarkers(data, props) {
     ));
   if (clusterMarkers) {
     markers = <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>;
+  } else {
+    markers = (
+      <MarkerClusterGroup chunkedLoading maxClusterRadius={5}>
+        {markers}
+      </MarkerClusterGroup>
+    );
   }
   return markers;
 }
