@@ -197,13 +197,13 @@ export const NeoPage = ({
               xl={Math.min(w, 12)}
             >
               <NeoCard
-                reportId={id}
+                id={id}
                 key={getReportIndex(pagenumber, id)}
                 dashboardSettings={dashboardSettings}
                 onRemovePressed={onRemovePressed}
-                onClonePressed={(reportId) => {
+                onClonePressed={(id) => {
                   const { x, y } = getAddCardButtonPosition();
-                  onClonePressed(reportId, x, y);
+                  onClonePressed(id, x, y);
                 }}
               />
             </Grid>
@@ -225,8 +225,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onRemovePressed: (reportId) => dispatch(removeReportThunk(reportId)),
-  onClonePressed: (reportId, x, y) => dispatch(cloneReportThunk(reportId, x, y)),
+  onRemovePressed: (id) => dispatch(removeReportThunk(id)),
+  onClonePressed: (id, x, y) => dispatch(cloneReportThunk(id, x, y)),
   onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height, undefined)),
   onPageLayoutUpdate: (layout) => dispatch(updatePageLayoutThunk(layout)),
 });

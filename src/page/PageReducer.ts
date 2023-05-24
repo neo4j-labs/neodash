@@ -60,13 +60,13 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
   }
   // Updates a report at a given page and index.
   if (action.type.startsWith('PAGE/CARD/')) {
-    const { reportId } = payload;
+    const { id } = payload;
     return {
       ...state,
       reports: [
-        ...state.reports.filter((o) => o.id !== reportId),
+        ...state.reports.filter((o) => o.id !== id),
         cardReducer(
-          state.reports.find((o) => o.id === reportId),
+          state.reports.find((o) => o.id === id),
           action
         ),
       ],
@@ -85,8 +85,8 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
     }
     case REMOVE_REPORT: {
       // Removes the card at a given index on a selected page number.
-      const { reportId } = payload;
-      let cards = state.reports.filter((o) => o.id !== reportId);
+      const { id } = payload;
+      let cards = state.reports.filter((o) => o.id !== id);
       // cards.forEach(c => c.collapseTimeout = 0 );
       return {
         ...state,

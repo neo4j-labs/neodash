@@ -20,21 +20,21 @@ export const addReportThunk =
     }
   };
 
-export const removeReportThunk = (reportId: number) => (dispatch: any, getState: any) => {
+export const removeReportThunk = (id: number) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(removeReport(pagenumber, reportId));
+    dispatch(removeReport(pagenumber, id));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot remove report', e));
   }
 };
 
-export const cloneReportThunk = (reportId: number, x: number, y: number) => (dispatch: any, getState: any) => {
+export const cloneReportThunk = (id: string, x: number, y: number) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    const data = { ...state.dashboard.pages[pagenumber].reports.find((o) => o.id === reportId) };
+    const data = { ...state.dashboard.pages[pagenumber].reports.find((o) => o.id === id) };
     data.settingsOpen = false;
     dispatch(addReportThunk(x, y, data.width, data.height, data));
   } catch (e) {
