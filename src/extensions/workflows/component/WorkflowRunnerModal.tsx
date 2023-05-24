@@ -1,22 +1,17 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import CloseIcon from '@material-ui/icons/Close';
-import { withStyles } from '@material-ui/core/styles';
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@mui/styles';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import { getWorkflow } from '../state/WorkflowSelectors';
 import { getCancelledIcon, getCompleteIcon, getRunningIcon, getErrorIcon, getWaitingIcon } from './Icons';
 import NeoWorkflowRunnerStepDetails from './WorkflowRunnerStepDetails';
+import { Badge, Dialog, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 
-const Accordion = withStyles({
+const NeoAccordion = withStyles({
   root: {
     border: '1px solid rgba(0, 0, 0, .1)',
     boxShadow: 'none',
@@ -31,9 +26,9 @@ const Accordion = withStyles({
     },
   },
   expanded: {},
-})(MuiAccordion);
+})(Accordion);
 
-const AccordionSummary = withStyles({
+const NeoAccordionSummary = withStyles({
   root: {
     backgroundColor: 'rgba(0, 0, 0, .03)',
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
@@ -49,13 +44,13 @@ const AccordionSummary = withStyles({
     },
   },
   expanded: {},
-})(MuiAccordionSummary);
+})(AccordionSummary);
 
-const AccordionDetails = withStyles((theme) => ({
+const NeoAccordionDetails = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
   },
-}))(MuiAccordionDetails);
+}))(AccordionDetails);
 
 const styles = {};
 
@@ -123,22 +118,22 @@ export const NeoWorkflowRunnerModal = ({ open, setOpen, _index, workflowStepStat
             {workflow.steps &&
               workflow.steps.map((step, index) => {
                 return (
-                  <Accordion square expanded={expanded === `panel${index}`} onChange={handleChange(`panel${index}`)}>
-                    <AccordionSummary
+                  <NeoAccordion square expanded={expanded === `panel${index}`} onChange={handleChange(`panel${index}`)}>
+                    <NeoAccordionSummary
                       aria-controls='panel1d-content'
                       id={`panel${index}`}
                       expandIcon={getExpandIcon(index, `panel${index}`, expanded)}
                     >
                       <Typography>{step.name}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
+                    </NeoAccordionSummary>
+                    <NeoAccordionDetails>
                       <NeoWorkflowRunnerStepDetails
                         step={step}
                         records={results[index] ? results[index].records : []}
                         status={workflowStepStatus[index]}
                       />
-                    </AccordionDetails>
-                  </Accordion>
+                    </NeoAccordionDetails>
+                  </NeoAccordion>
                 );
               })}
           </div>

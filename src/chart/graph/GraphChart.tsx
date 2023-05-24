@@ -12,8 +12,9 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
-import { IconButton, Tooltip } from '@material-ui/core';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import { IconButtonArray } from '@neo4j-ndl/react';
+import { IconButton, Tooltip } from '@mui/material';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { RenderSubValue } from '../../report/ReportRecordProcessing';
 import { downloadCSV } from '../ChartUtils';
 import { generateSafeColumnKey } from '../table/TableChart';
@@ -217,10 +218,17 @@ const NeoGraphChart = (props: ChartProps) => {
   return (
     <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
-        <GraphChartContextMenu {...chartProps} />
-        <NeoGraphChartFitViewButton {...chartProps} />
-        {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
-        {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        <IconButtonArray
+          aria-label={'graph icon'}
+          floating
+          orientation='horizontal'
+          style={{ position: 'absolute', bottom: '15px', right: '15px', zIndex: 50 }}
+        >
+          <GraphChartContextMenu {...chartProps} />
+          <NeoGraphChartFitViewButton {...chartProps} />
+          {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+          {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        </IconButtonArray>
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
         {settings.allowDownload && props.records && props.records.length > 0 ? (

@@ -1,16 +1,10 @@
 import React, { useEffect } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
-import SaveIcon from '@material-ui/icons/Save';
-import { TextField } from '@material-ui/core';
-import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
+import { Badge, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import SaveIcon from '@mui/icons-material/Save';
+import { withStyles } from '@mui/styles';
 
 const styles = {};
 export const NeoWorkflowStepEditorModal = ({ index, stepName, query, open, setOpen, updateStep }) => {

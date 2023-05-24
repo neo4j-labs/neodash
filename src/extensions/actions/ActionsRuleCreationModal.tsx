@@ -1,16 +1,22 @@
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Badge from '@material-ui/core/Badge';
-import { Button, Fab, MenuItem, TextField, Typography } from '@material-ui/core';
-import NeoColorPicker from '../../component/field/ColorPicker';
-import AddIcon from '@material-ui/icons/Add';
-import { Autocomplete } from '@material-ui/lab';
-import StarsIcon from '@material-ui/icons/Stars';
+import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import StarsIcon from '@mui/icons-material/Stars';
+
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
+import {
+  Autocomplete,
+  Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  IconButton,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material';
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = {
   table: [

@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { connect } from 'react-redux';
 import NeoWorkflowListModal from './WorkflowListModal';
-import SlowMotionVideoIcon from '@material-ui/icons/SlowMotionVideo';
+import SlowMotionVideoIcon from '@mui/icons-material/SlowMotionVideo';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { runWorkflow } from '../util/WorkflowRunner';
 import { getWorkflowsList } from '../state/WorkflowSelectors';
@@ -10,6 +9,7 @@ import { updateWorkflowStepStatus } from '../state/WorkflowActions';
 import { STEP_STATUS } from './WorkflowRunnerModal';
 import { loadDatabaseListFromNeo4jThunk } from '../../../dashboard/DashboardThunks';
 import { getDatabase, getGlobalParameters } from '../../../settings/SettingsSelectors';
+import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
 /**
  * Component that has the responsiblity to run Cypher workflows.

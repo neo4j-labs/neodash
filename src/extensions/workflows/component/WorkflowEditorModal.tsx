@@ -1,19 +1,15 @@
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import { Button, Fab, TextField, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
-import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
-import SaveIcon from '@material-ui/icons/Save';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import SaveIcon from '@mui/icons-material/Save';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { NeoWorkflowStepEditorModal } from './WorkflowStepEditorModal';
 import { connect } from 'react-redux';
 import { getWorkflow } from '../state/WorkflowSelectors';
 import { createWorkflow, updateWorkflowName, updateWorkflowSteps } from '../state/WorkflowActions';
+import { Button, Dialog, DialogContent, DialogTitle, Fab, IconButton, TextField, Typography } from '@mui/material';
 const ReactGridLayout = WidthProvider(RGL);
 
 function moveElementInArray(array, fromIndex, toIndex) {

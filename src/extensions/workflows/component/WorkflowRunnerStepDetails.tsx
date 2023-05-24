@@ -1,8 +1,8 @@
-import { Button, TextareaAutosize } from '@material-ui/core';
 import React from 'react';
 import { REPORT_TYPES } from '../../../config/ReportConfig';
 import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponent';
 import { STEP_STATUS } from './WorkflowRunnerModal';
+import { Button, TextareaAutosize } from '@mui/material';
 
 enum views {
   QUERY,

@@ -1,18 +1,24 @@
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
-import { DialogContent, FormControlLabel, FormGroup, MenuItem, Switch } from '@material-ui/core';
 import { getSidebarDatabase, getSidebarQuery } from '../state/SidebarSelectors';
 import { setExtensionDatabase, setExtensionQuery, setExtensionSettings } from '../state/SidebarActions';
 import NeoField from '../../../component/field/Field';
 import { applicationGetConnectionDatabase } from '../../../application/ApplicationSelectors';
 import ExtensionSettingsForm from './SidebarSettingsForm';
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from '@mui/icons-material/Save';
 import { getExtensionSettings } from '../../state/ExtensionSelectors';
+import {
+  Badge,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  MenuItem,
+  Switch,
+} from '@mui/material';
 
 /**
  * TODO: lets also generalize this as a 'pop-uppable report'.

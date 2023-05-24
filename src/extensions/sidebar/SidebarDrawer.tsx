@@ -1,4 +1,3 @@
-import { Drawer, ListItem, List } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import SidebarDrawerHeader from './SidebarDrawerHeader';
 import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
@@ -11,6 +10,7 @@ import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks'
 import { checkIfAllRecordsAreNodes, parseNodeRecordsToDictionaries } from '../../chart/graph/util/RecordUtils';
 import { getExtensionSettings } from '../state/ExtensionSelectors';
 import { getDashboardExtensions } from '../../dashboard/DashboardSelectors';
+import { Drawer, List, ListItem } from '@mui/material';
 
 // The sidebar that appears on the left side of the dashboard.
 export const NodeSidebarDrawer = ({

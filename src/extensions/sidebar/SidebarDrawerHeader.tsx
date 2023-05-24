@@ -1,14 +1,14 @@
-import { debounce, IconButton, TextField, Tooltip } from '@material-ui/core';
 import React, { useCallback } from 'react';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SidebarSettingsModal from './settings/SidebarSettingsModal';
 import { getSidebarGlobalParameters, getSidebarTitle } from './state/SidebarSelectors';
 import { setExtensionTitle } from './state/SidebarActions';
 import { connect } from 'react-redux';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import ClearAllIcon from '@material-ui/icons/ClearAll';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import ClearAllIcon from '@mui/icons-material/ClearAll';
 import { getExtensionSettings } from '../state/ExtensionSelectors';
 import { updateGlobalParameterThunk } from '../../settings/SettingsThunks';
+import { IconButton, TextField, Tooltip, debounce } from '@mui/material';
 
 /**
  * The editable header of the drawer, including the title and settings button.

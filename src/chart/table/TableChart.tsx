@@ -6,14 +6,14 @@ import {
   generateClassDefinitionsBasedOnRules,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { Tooltip, Snackbar } from '@mui/material';
 import { downloadCSV } from '../ChartUtils';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+
+import { Close } from '@mui/icons-material';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import Button from '@material-ui/core/Button';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+
 import {
   getRule,
   executeActionRule,
@@ -21,11 +21,21 @@ import {
   performActionOnElement,
 } from '../../extensions/advancedcharts/Utils';
 
+import { IconButton } from '@neo4j-ndl/react';
+import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 
+const theme = createTheme({
+  typography: {
+    fontFamily: "'Nunito Sans', sans-serif !important",
+  },
+});
 const fallbackRenderer = (value) => {
   return JSON.stringify(value);
 };
@@ -107,6 +117,7 @@ export const NeoTableChart = (props: ChartProps) => {
         const value = key;
         return ApplyColumnType(
           {
+            key: `col-key-${i}`,
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
@@ -122,6 +133,7 @@ export const NeoTableChart = (props: ChartProps) => {
         const value = records[0].get(key);
         return ApplyColumnType(
           {
+            key: `col-key-${i}`,
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
@@ -162,75 +174,81 @@ export const NeoTableChart = (props: ChartProps) => {
   const pageNames = getPageNumbersAndNamesList();
 
   return (
-    <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        open={notificationOpen}
-        autoHideDuration={2000}
-        onClose={() => setNotificationOpen(false)}
-        message='Value copied to clipboard.'
-        action={
-          <React.Fragment>
-            <IconButton size='small' aria-label='close' color='inherit' onClick={() => setNotificationOpen(false)}>
-              <CloseIcon fontSize='small' />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
-
-      {allowDownload && rows && rows.length > 0 ? (
-        <Tooltip title='Download CSV' aria-label=''>
-          <IconButton
-            onClick={() => {
-              downloadCSV(rows);
-            }}
-            aria-label='download csv'
-            style={{ bottom: '9px', left: '3px', position: 'absolute' }}
-          >
-            <SaveAltIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></SaveAltIcon>
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <></>
-      )}
-      <DataGrid
-        headerHeight={32}
-        rowHeight={tableRowHeight}
-        rows={rows}
-        columns={columns}
-        columnVisibilityModel={hiddenColumns}
-        onCellClick={(e) =>
-          performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
-        }
-        onCellDoubleClick={(e) => {
-          let rules = getRule(e, actionsRules, 'doubleClick');
-          if (rules !== null) {
-            rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
-          } else {
-            setNotificationOpen(true);
-            navigator.clipboard.writeText(e.value);
+    <ThemeProvider theme={theme}>
+      <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={notificationOpen}
+          autoHideDuration={2000}
+          onClose={() => setNotificationOpen(false)}
+          message='Value copied to clipboard.'
+          action={
+            <React.Fragment>
+              <IconButton size='small' aria-label='close' color='inherit' onClick={() => setNotificationOpen(false)}>
+                <Close fontSize='small' />
+              </IconButton>
+            </React.Fragment>
           }
-        }}
-        pageSize={tablePageSize}
-        disableSelectionOnClick
-        components={{
-          ColumnSortedDescendingIcon: () => <></>,
-          ColumnSortedAscendingIcon: () => <></>,
-        }}
-        getRowClassName={(params) => {
-          return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
-        }}
-        getCellClassName={(params) => {
-          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
-            'cell color',
-            'cell text color',
-          ])}`;
-        }}
-      />
-    </div>
+        />
+
+        {allowDownload && rows && rows.length > 0 ? (
+          <Tooltip title='Download CSV' aria-label=''>
+            <IconButton
+              onClick={() => {
+                downloadCSV(rows);
+              }}
+              aria-label='download csv'
+              style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
+              clean
+            >
+              <CloudArrowDownIconOutline />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <></>
+        )}
+
+        <DataGrid
+          key={'tableKey'}
+          headerHeight={32}
+          rowHeight={tableRowHeight}
+          rows={rows}
+          columns={columns}
+          columnVisibilityModel={hiddenColumns}
+          onCellClick={(e) =>
+            performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
+          }
+          onCellDoubleClick={(e) => {
+            let rules = getRule(e, actionsRules, 'doubleClick');
+            if (rules !== null) {
+              rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
+            } else {
+              setNotificationOpen(true);
+              navigator.clipboard.writeText(e.value);
+            }
+          }}
+          pageSize={tablePageSize > 0 ? tablePageSize : 5}
+          rowsPerPageOptions={[5]}
+          disableSelectionOnClick
+          components={{
+            ColumnSortedDescendingIcon: () => <></>,
+            ColumnSortedAscendingIcon: () => <></>,
+          }}
+          getRowClassName={(params) => {
+            return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+          }}
+          getCellClassName={(params) => {
+            return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
+              'cell color',
+              'cell text color',
+            ])}`;
+          }}
+        />
+      </div>
+    </ThemeProvider>
   );
 };
 

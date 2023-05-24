@@ -1,9 +1,9 @@
-import { ListItem, List } from '@material-ui/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import NeoSetting from '../../../component/field/Setting';
 import { getPageNumbersAndNames } from '../../../dashboard/DashboardSelectors';
 import { getNodeSidebarDefaultConfig } from '../SidebarConfig';
+import { List, ListItem } from '@mui/material';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 

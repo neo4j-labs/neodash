@@ -1,24 +1,20 @@
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import CloseIcon from '@material-ui/icons/Close';
-import { withStyles } from '@material-ui/core/styles';
+
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import NeoWorkflowEditorModal from './WorkflowEditorModal';
-import { Button, MenuItem } from '@material-ui/core';
-import { PlayArrow, Stop } from '@material-ui/icons';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import StopIcon from '@material-ui/icons/Stop';
+import { PlayArrow, Stop } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
+import StopIcon from '@mui/icons-material/Stop';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import NeoWorkflowRunnerModal, { STEP_STATUS } from './WorkflowRunnerModal';
 import { getWorkflowsList } from '../state/WorkflowSelectors';
 import { deleteWorkflow } from '../state/WorkflowActions';
 import NeoField from '../../../component/field/Field';
 import { getCancelledIcon, getCompleteIcon, getRunningIcon, getErrorIcon, getStoppingIcon } from './Icons';
+import { Badge, Button, Dialog, DialogContent, DialogTitle, IconButton, MenuItem } from '@mui/material';
 
 const styles = {};
 

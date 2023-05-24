@@ -1,11 +1,11 @@
 import React from 'react';
 import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import LocationOn from '@mui/icons-material/LocationOn';
 import 'leaflet/dist/leaflet.css';
 import { Popup, Tooltip } from 'react-leaflet';
+import { Typography } from '@neo4j-ndl/react';
 import { extensionEnabled } from '../../../extensions/ExtensionUtils';
-import Button from '@material-ui/core/Button';
 import { getRule } from '../../../extensions/advancedcharts/Utils';
 
 export function createMarkers(data, props) {
@@ -34,9 +34,9 @@ export function createMarkers(data, props) {
   function createPopupFromNodeProperties(value) {
     return (
       <Popup className={'leaflet-custom-node-popup'}>
-        <h3>
+        <Typography variant='h4'>
           <b>{value.labels.length > 0 ? value.labels.map((b) => `${b} `) : '(No labels)'}</b>
-        </h3>
+        </Typography>
         <table>
           <tbody>
             {Object.keys(value.properties).length == 0 ? (
@@ -78,6 +78,7 @@ export function createMarkers(data, props) {
                         value.properties[k].toString()
                       )}
                     </td>
+                    <td key={1}>{value.properties[k].toString()}</td>
                   </tr>
                 );
               })
@@ -111,7 +112,7 @@ export function createMarkers(data, props) {
         key={i}
         icon={
           <div style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop }}>
-            <LocationOnIcon fontSize={node.size}></LocationOnIcon>
+            <LocationOn fontSize={node.size}></LocationOn>
           </div>
         }
       >
@@ -127,6 +128,12 @@ export function createMarkers(data, props) {
     ));
   if (clusterMarkers) {
     markers = <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>;
+  } else {
+    markers = (
+      <MarkerClusterGroup chunkedLoading maxClusterRadius={5}>
+        {markers}
+      </MarkerClusterGroup>
+    );
   }
   return markers;
 }

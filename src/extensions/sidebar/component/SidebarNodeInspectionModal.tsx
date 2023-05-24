@@ -1,10 +1,6 @@
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Badge from '@material-ui/core/Badge';
-import { Button, DialogContent } from '@material-ui/core';
+
+import CloseIcon from '@mui/icons-material/Close';
 import NeoGraphChart from '../../../chart/graph/GraphChart';
 import { connect } from 'react-redux';
 import { getSidebarDatabase, NODE_SIDEBAR_PARAM_PREFIX } from '../state/SidebarSelectors';
@@ -12,10 +8,11 @@ import { NeoReportWrapper } from '../../../report/ReportWrapper';
 import GraphEntityInspectionTable from '../../../chart/graph/component/GraphEntityInspectionTable';
 import { getSelectionBasedOnFields } from '../../../chart/ChartUtils';
 import { getExtensionSettings } from '../../state/ExtensionSelectors';
-import PlayArrow from '@material-ui/icons/PlayArrow';
 import { getPageNumber } from '../../../settings/SettingsSelectors';
 import { getPageNumbersAndNames } from '../../../dashboard/DashboardSelectors';
 import { setPageNumberThunk, updateGlobalParameterThunk } from '../../../settings/SettingsThunks';
+import { Badge, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { PlayArrow } from '@mui/icons-material';
 
 // TODO: Same as 'Node card`, lets generalize this as a "detailed Node inspect modal".
 const SidebarNodeInspectionModal = ({

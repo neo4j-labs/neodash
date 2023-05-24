@@ -3,7 +3,7 @@ import React from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
-import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
+import { convertRecordObjectToString, recordToNative, toNumber } from '../ChartUtils';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 interface LineChartData {
@@ -134,12 +134,10 @@ const NeoLineChart = (props: ChartProps) => {
 
   // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
   // Therefore, we now require a manual refresh.
-  // TODO - check if this is still true with latest Nivo version.
-  const chartIsTimeChart =
-    data[0] !== undefined &&
-    data[0].data[0] !== undefined &&
-    data[0].data[0].x !== undefined &&
-    isDateTimeOrDate(data[0].data[0].x);
+
+  let timeRef = data[0]?.data[0]?.x || undefined;
+  timeRef = !isNaN(toNumber(timeRef)) ? toNumber(timeRef) : timeRef;
+  const chartIsTimeChart = timeRef !== undefined && isDateTimeOrDate(timeRef);
 
   if (isTimeChart !== chartIsTimeChart) {
     if (!chartIsTimeChart) {
@@ -150,7 +148,7 @@ const NeoLineChart = (props: ChartProps) => {
       );
     }
 
-    const p = chartIsTimeChart ? (isDateTime(data[0].data[0].x) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
+    const p = chartIsTimeChart ? (isDateTime(timeRef) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
 
     setParseFormat(p);
     setIsTimeChart(chartIsTimeChart);

@@ -1,9 +1,7 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
 import SidebarNodeInspectionModal from './SidebarNodeInspectionModal';
-import { CardContent } from '@material-ui/core';
-import { recordToNative } from '../../../chart/ChartUtils';
 import { renderValueByType } from '../../../report/ReportRecordProcessing';
+import { Card, CardContent } from '@mui/material';
 
 // TODO: Understand what to show (probably an option (maybe first three fields by default))
 export const SidebarNodeCard = ({ entity, extensionSettings }) => {

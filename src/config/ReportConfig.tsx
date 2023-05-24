@@ -440,7 +440,7 @@ export const REPORT_TYPES = {
       marginBottom: {
         label: 'Margin Bottom (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 40,
+        default: 45,
       },
       legendWidth: {
         label: 'Legend Width (px)',

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
-import TimerIcon from '@material-ui/icons/Timer';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import LoopIcon from '@material-ui/icons/Loop';
-import CancelIcon from '@material-ui/icons/Cancel';
-import PanToolIcon from '@material-ui/icons/PanTool';
+import TimerIcon from '@mui/icons-material/Timer';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import LoopIcon from '@mui/icons-material/Loop';
+import CancelIcon from '@mui/icons-material/Cancel';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import { Tooltip } from '@mui/material';
 
 export const getStoppingIcon = (flipped) => {
   return (
