@@ -1,4 +1,5 @@
 {
   "DASHBOARD_HEADER_BRAND_LOGO": "logo_petrol_lightsand_1170.png",
-  "APPLY_CUSTOM_BRAND_LOGO": false
+  "APPLY_CUSTOM_BRAND_LOGO": true,
+  "DASHBOARD_HEADER_COLOR": "#F3F3F0"
 }
