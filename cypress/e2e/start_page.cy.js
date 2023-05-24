@@ -10,6 +10,7 @@ import {
   gaugeChartCypherQuery,
 } from '../fixtures/cypher_queries';
 
+const WAITING_TIME = 20000;
 // Ignore warnings that may appear when using the Cypress dev server
 Cypress.on('uncaught:exception', (err, runnable) => {
   console.log(err, runnable);
@@ -56,19 +57,17 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('initializes the dashboard', () => {
-    // Check the starter cards
-    cy.get('main .react-grid-item:eq(0)').should('contain', 'This is your first dashboard!');
-    cy.get('main .react-grid-item:eq(1) .force-graph-container canvas').should('be.visible');
-    cy.get('main .react-grid-item:eq(2) button').should('have.attr', 'aria-label', 'add report');
+    checkInitialState();
   });
 
   it('creates a new card', () => {
-    cy.get('main .react-grid-item:eq(2)  button[aria-label="add report"]').click();
-    cy.get('main .react-grid-item:eq(2)').should('contain', 'No query specified.');
+    checkInitialState();
+    createCard();
   });
 
   // Test each type of card
   it('creates a table report', () => {
+    checkInitialState();
     cy.get('main .react-grid-item button[aria-label="add report"]').should('be.visible').click();
     cy.get('main .react-grid-item')
       .contains('No query specified.')
@@ -79,9 +78,9 @@ describe('NeoDash E2E Tests', () => {
 
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
+    cy.wait(400);
     cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-    cy.get('main .react-grid-item:eq(2) .ndl-spin', { timeout: 30000 }).should('not.exist');
-    cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: 30000 })
+    cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: WAITING_TIME })
       .should('contain', 'title')
       .and('contain', 'released')
       .and('not.contain', '__id');
@@ -93,8 +92,9 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a bar chart report', () => {
+    checkInitialState();
     createReportOfType('Bar Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) #index input[name="Category"]', { timeout: 45000 }).should(
+    cy.get('main .react-grid-item:eq(2) #index input[name="Category"]', { timeout: WAITING_TIME }).should(
       'have.value',
       'released'
     );
@@ -103,8 +103,9 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a pie chart report', () => {
+    checkInitialState();
     createReportOfType('Pie Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) #index input[name="Category"]', { timeout: 45000 }).should(
+    cy.get('main .react-grid-item:eq(2) #index input[name="Category"]', { timeout: WAITING_TIME }).should(
       'have.value',
       'released'
     );
@@ -114,8 +115,12 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a line chart report', () => {
+    checkInitialState();
     createReportOfType('Line Chart', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) #x input[name="X-value"]', { timeout: 45000 }).should('have.value', 'released');
+    cy.get('main .react-grid-item:eq(2) #x input[name="X-value"]', { timeout: WAITING_TIME }).should(
+      'have.value',
+      'released'
+    );
     cy.get('main .react-grid-item:eq(2) #value input[name="Y-value"]').should('have.value', 'count');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > line').should(
@@ -125,16 +130,20 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a map chart report', () => {
+    checkInitialState();
     createReportOfType('Map', mapChartCypherQuery, true);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path', { timeout: 45000 }).should(
+    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path', { timeout: WAITING_TIME }).should(
       'have.length',
       5
     );
   });
 
   it('creates a single value report', () => {
+    checkInitialState();
     createReportOfType('Single Value', barChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span', { timeout: 45000 })
+    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span', {
+      timeout: WAITING_TIME,
+    })
       .invoke('text')
       .then((text) => {
         expect(text).to.be.oneOf(['1999', '1,999', '1 999']);
@@ -143,38 +152,52 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a gauge chart report', () => {
     enableAdvancedVisualizations();
+    checkInitialState();
     createReportOfType('Gauge Chart', gaugeChartCypherQuery);
-    cy.get('.text-group > text', { timeout: 45000 }).contains('69');
+    cy.get('.text-group > text', { timeout: WAITING_TIME }).contains('69');
   });
 
   it('creates a sunburst chart report', () => {
     enableAdvancedVisualizations();
+    checkInitialState();
     createReportOfType('Sunburst Chart', sunburstChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: 45000 }).should('have.value', 'x.path');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: WAITING_TIME }).should(
+      'have.value',
+      'x.path'
+    );
     cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'x.value');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(1) > path').should('have.length', 5);
   });
 
   it('creates a circle packing report', () => {
     enableAdvancedVisualizations();
+    checkInitialState();
     createReportOfType('Circle Packing', sunburstChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: 45000 }).should('have.value', 'x.path');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: WAITING_TIME }).should(
+      'have.value',
+      'x.path'
+    );
     cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'x.value');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > circle').should('have.length', 6);
   });
 
   it('creates a tree map report', () => {
     enableAdvancedVisualizations();
+    checkInitialState();
     createReportOfType('Treemap', sunburstChartCypherQuery);
-    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: 45000 }).should('have.value', 'x.path');
+    cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: WAITING_TIME }).should(
+      'have.value',
+      'x.path'
+    );
     cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'x.value');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 6);
   });
 
   it('creates a sankey chart report', () => {
     enableAdvancedVisualizations();
+    checkInitialState();
     createReportOfType('Sankey Chart', sankeyChartCypherQuery, true);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path', { timeout: 45000 }).should(
+    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path', { timeout: WAITING_TIME }).should(
       'have.attr',
       'fill-opacity',
       0.5
@@ -182,6 +205,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a raw json report', () => {
+    checkInitialState();
     createReportOfType('Raw JSON', barChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)', { timeout: 45000 }).should(
       ($div) => {
@@ -192,6 +216,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a parameter select report', () => {
+    checkInitialState();
     selectReportOfType('Parameter Select');
     cy.wait(500);
     cy.get('#autocomplete-label-type').type('Movie');
@@ -205,11 +230,13 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates an iframe report', () => {
+    checkInitialState();
     createReportOfType('iFrame', iFrameText);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root iframe', { timeout: 45000 }).should('be.visible');
   });
 
   it('creates a markdown report', () => {
+    checkInitialState();
     createReportOfType('Markdown', markdownText);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1', { timeout: 45000 }).should('have.text', 'Hello');
   });
@@ -265,6 +292,7 @@ function selectReportOfType(type) {
     .click();
   cy.get('main .react-grid-item:eq(2) #type', { timeout: 2000 }).should('be.visible').click();
   cy.contains(type).click();
+  cy.wait(100);
 }
 
 function createReportOfType(type, query, fast = false) {
@@ -274,6 +302,19 @@ function createReportOfType(type, query, fast = false) {
   } else {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
+  cy.wait(400);
   cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
-  cy.get('main .react-grid-item:eq(2) .ndl-spin', { timeout: 30000 }).should('not.exist');
+}
+
+function checkInitialState() {
+  // Check the starter cards
+  cy.get('main .react-grid-item:eq(0)').should('contain', 'This is your first dashboard!');
+  cy.get('main .react-grid-item:eq(1) .force-graph-container canvas').should('be.visible');
+  cy.get('main .react-grid-item:eq(2) button').should('have.attr', 'aria-label', 'add report');
+}
+
+function createCard() {
+  // Check the starter cards
+  cy.get('main .react-grid-item:eq(2)  button[aria-label="add report"]').click();
+  cy.get('main .react-grid-item:eq(2)').should('contain', 'No query specified.');
 }

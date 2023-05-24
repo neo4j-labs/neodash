@@ -32,8 +32,8 @@ import { Dialog } from '@neo4j-ndl/react';
 import { createNotificationThunk } from '../page/PageThunks';
 
 const NeoCard = ({
-  index, // index of the card.
-  report, // state of the card, retrieved based on card index.
+  reportId, // reportId of the card.
+  report, // state of the card, retrieved based on card reportId.
   editable, // whether the card is editable.
   database, // the neo4j database that the card is running against.
   extensions, // A set of enabled extensions.
@@ -94,7 +94,7 @@ const NeoCard = ({
   const onToggleCardExpand = () => {
     // When we re-minimize a card, close the settings to avoid position issues.
     if (expanded && settingsOpen) {
-      onToggleCardSettings(index, false);
+      onToggleCardSettings(reportId, false);
     }
     setExpanded(!expanded);
   };
@@ -133,7 +133,7 @@ const NeoCard = ({
             dashboardSettings={dashboardSettings}
             extensions={extensions}
             settings={report.settings ? report.settings : {}}
-            updateReportSetting={(name, value) => onReportSettingUpdate(index, name, value)}
+            updateReportSetting={(name, value) => onReportSettingUpdate(reportId, name, value)}
             createNotification={(title, message) => createNotification(title, message)}
             type={report.type}
             database={database}
@@ -150,13 +150,13 @@ const NeoCard = ({
             expanded={expanded}
             onToggleCardExpand={onToggleCardExpand}
             onGlobalParameterUpdate={onGlobalParameterUpdate}
-            onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
-            onTitleUpdate={(title) => onTitleUpdate(index, title)}
-            onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
+            onSelectionUpdate={(selectable, field) => onSelectionUpdate(reportId, selectable, field)}
+            onTitleUpdate={(title) => onTitleUpdate(reportId, title)}
+            onFieldsUpdate={(fields) => onFieldsUpdate(reportId, fields)}
             onToggleCardSettings={() => {
               setSettingsOpen(true);
               setCollapseTimeout('auto');
-              debouncedOnToggleCardSettings(index, true);
+              debouncedOnToggleCardSettings(reportId, true);
             }}
           />
         </Card>
@@ -181,19 +181,19 @@ const NeoCard = ({
             setActive={setActive}
             reportSettings={report.settings}
             reportSettingsOpen={report.advancedSettingsOpen}
-            onQueryUpdate={(query) => onQueryUpdate(index, query)}
-            onDatabaseChanged={(database) => onDatabaseChanged(index, database)}
-            onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
-            onTypeUpdate={(type) => onTypeUpdate(index, type)}
+            onQueryUpdate={(query) => onQueryUpdate(reportId, query)}
+            onDatabaseChanged={(database) => onDatabaseChanged(reportId, database)}
+            onReportSettingUpdate={(setting, value) => onReportSettingUpdate(reportId, setting, value)}
+            onTypeUpdate={(type) => onTypeUpdate(reportId, type)}
             onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
-            onRemovePressed={() => onRemovePressed(index)}
-            onClonePressed={() => onClonePressed(index)}
+            onRemovePressed={() => onRemovePressed(reportId)}
+            onClonePressed={() => onClonePressed(reportId)}
             onToggleCardSettings={() => {
               setSettingsOpen(false);
               setCollapseTimeout('auto');
-              debouncedOnToggleCardSettings(index, false);
+              debouncedOnToggleCardSettings(reportId, false);
             }}
-            onToggleReportSettings={() => onToggleReportSettings(index)}
+            onToggleReportSettings={() => onToggleReportSettings(reportId)}
           />
         </Card>
       </Collapse>
@@ -214,50 +214,50 @@ const NeoCard = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  report: getReportState(state, ownProps.index),
+  report: getReportState(state, ownProps.reportId),
   extensions: getDashboardExtensions(state),
   editable: getDashboardIsEditable(state),
   database: getDatabase(
     state,
     ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined,
-    ownProps.index
+    ownProps.reportId
   ),
   globalParameters: { ...getGlobalParameters(state), ...getSessionParameters(state) },
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTitleUpdate: (index: any, title: any) => {
-    dispatch(updateReportTitleThunk(index, title));
+  onTitleUpdate: (reportId: any, title: any) => {
+    dispatch(updateReportTitleThunk(reportId, title));
   },
-  onQueryUpdate: (index: any, query: any) => {
-    dispatch(updateReportQueryThunk(index, query));
+  onQueryUpdate: (reportId: any, query: any) => {
+    dispatch(updateReportQueryThunk(reportId, query));
   },
-  onTypeUpdate: (index: any, type: any) => {
-    dispatch(updateReportTypeThunk(index, type));
+  onTypeUpdate: (reportId: any, type: any) => {
+    dispatch(updateReportTypeThunk(reportId, type));
   },
-  onReportSettingUpdate: (index: any, setting: any, value: any) => {
-    dispatch(updateReportSettingThunk(index, setting, value));
+  onReportSettingUpdate: (reportId: any, setting: any, value: any) => {
+    dispatch(updateReportSettingThunk(reportId, setting, value));
   },
-  onFieldsUpdate: (index: any, fields: any) => {
-    dispatch(updateFieldsThunk(index, fields));
+  onFieldsUpdate: (reportId: any, fields: any) => {
+    dispatch(updateFieldsThunk(reportId, fields));
   },
   onGlobalParameterUpdate: (key: any, value: any) => {
     dispatch(updateGlobalParameterThunk(key, value));
   },
-  onSelectionUpdate: (index: any, selectable: any, field: any) => {
-    dispatch(updateSelectionThunk(index, selectable, field));
+  onSelectionUpdate: (reportId: any, selectable: any, field: any) => {
+    dispatch(updateSelectionThunk(reportId, selectable, field));
   },
-  onToggleCardSettings: (index: any, open: any) => {
-    dispatch(toggleCardSettingsThunk(index, open));
+  onToggleCardSettings: (reportId: any, open: any) => {
+    dispatch(toggleCardSettingsThunk(reportId, open));
   },
   onReportHelpButtonPressed: () => {
     dispatch(setReportHelpModalOpen(true));
   },
-  onToggleReportSettings: (index: any) => {
-    dispatch(toggleReportSettings(index));
+  onToggleReportSettings: (reportId: any) => {
+    dispatch(toggleReportSettings(reportId));
   },
-  onDatabaseChanged: (index: any, database: any) => {
-    dispatch(updateReportDatabaseThunk(index, database));
+  onDatabaseChanged: (reportId: any, database: any) => {
+    dispatch(updateReportDatabaseThunk(reportId, database));
   },
   createNotification: (title: any, message: any) => {
     dispatch(createNotificationThunk(title, message));

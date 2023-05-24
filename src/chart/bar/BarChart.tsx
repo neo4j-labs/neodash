@@ -22,62 +22,13 @@ const NeoBarChart = (props: ChartProps) => {
    * The code fragment below is a workaround for a bug in nivo > 0.73 causing bar charts to re-render very slowly.
    */
   const [loading, setLoading] = React.useState(false);
-  useEffect(() => {
-    setLoading(true);
-    const timeOutId = setTimeout(() => {
-      setLoading(false);
-    }, 1);
-    return () => clearTimeout(timeOutId);
-  }, [props.selection]);
-  if (loading) {
-    return <></>;
-  }
-
+  const [data, setData] = React.useState([]);
+  const [keys, setKeys] = React.useState({});
   const { records, selection } = props;
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
-
-  const keys = {};
-  const data: Record<string, any>[] = records
-    .reduce((data: Record<string, any>[], row: Record<string, any>) => {
-      try {
-        if (!selection || !selection.index || !selection.value) {
-          return data;
-        }
-        const index = convertRecordObjectToString(row.get(selection.index));
-        const idx = data.findIndex((item) => item.index === index);
-
-        const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
-        const value = recordToNative(row.get(selection.value));
-
-        if (isNaN(value)) {
-          return data;
-        }
-        keys[key] = true;
-
-        if (idx > -1) {
-          data[idx][key] = value;
-        } else {
-          data.push({ index, [key]: value });
-        }
-        return data;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        return [];
-      }
-    }, [])
-    .map((row) => {
-      Object.keys(keys).forEach((key) => {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!row.hasOwnProperty(key)) {
-          row[key] = 0;
-        }
-      });
-      return row;
-    });
 
   const settings = props.settings ? props.settings : {};
   const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
@@ -107,7 +58,6 @@ const NeoBarChart = (props: ChartProps) => {
   );
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
-
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
     let { data, id } = bar;
@@ -129,10 +79,6 @@ const NeoBarChart = (props: ChartProps) => {
     }
     return chartColorsByScheme[colorIndex];
   };
-
-  if (data.length == 0) {
-    return <NoDrawableDataErrorMessage />;
-  }
 
   const BarComponent = ({ bar, borderColor }) => {
     let shade = false;
@@ -201,9 +147,71 @@ const NeoBarChart = (props: ChartProps) => {
       </g>
     );
   };
+
+  useEffect(() => {
+    setLoading(true);
+    const timeOutId = setTimeout(() => {
+      setLoading(false);
+    }, 1);
+    return () => clearTimeout(timeOutId);
+  }, [props.selection]);
+
+  useEffect(() => {
+    let keysEffect = {};
+    let dataRaw = records
+      .reduce((data: Record<string, any>[], row: Record<string, any>) => {
+        try {
+          if (!selection || !selection.index || !selection.value) {
+            return data;
+          }
+          const index = convertRecordObjectToString(row.get(selection.index));
+          const idx = data.findIndex((item) => item.index === index);
+
+          const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
+          const value = recordToNative(row.get(selection.value));
+
+          if (isNaN(value)) {
+            return data;
+          }
+          keysEffect[key] = true;
+
+          if (idx > -1) {
+            data[idx][key] = value;
+          } else {
+            data.push({ index, [key]: value });
+          }
+          return data;
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          return [];
+        }
+      }, [])
+      .map((row) => {
+        Object.keys(keysEffect).forEach((key) => {
+          // eslint-disable-next-line no-prototype-builtins
+          if (!row.hasOwnProperty(key)) {
+            row[key] = 0;
+          }
+        });
+        return row;
+      });
+    setKeys(keysEffect);
+    setData(dataRaw);
+  }, [selection, records]);
+
+  if (loading) {
+    return <></>;
+  }
+
+  if (data.length == 0) {
+    return <NoDrawableDataErrorMessage />;
+  }
+
   // TODO: Get rid of duplicate pie slice names...
 
   const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
+
   return (
     <ResponsiveBar
       layout={layout}

@@ -17,11 +17,11 @@ import isEqual from 'lodash.isequal';
 import { SELECTION_TYPES } from '../config/CardConfig';
 import { getSelectionBasedOnFields } from '../chart/ChartUtils';
 
-export const updateReportTitleThunk = (index, title) => (dispatch: any, getState: any) => {
+export const updateReportTitleThunk = (reportId, title) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(updateReportTitle(pagenumber, index, title));
+    dispatch(updateReportTitle(pagenumber, reportId, title));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update report title', e));
   }
@@ -30,55 +30,55 @@ export const updateReportTitleThunk = (index, title) => (dispatch: any, getState
 /*
 Thunk used to update the database used from a report
 */
-export const updateReportDatabaseThunk = (index, database) => (dispatch: any, getState: any) => {
+export const updateReportDatabaseThunk = (reportId, database) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(updateReportDatabase(pagenumber, index, database));
+    dispatch(updateReportDatabase(pagenumber, reportId, database));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update report database', e));
   }
 };
 
-export const updateReportQueryThunk = (index, query) => (dispatch: any, getState: any) => {
+export const updateReportQueryThunk = (reportId, query) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(updateReportQuery(pagenumber, index, query));
+    dispatch(updateReportQuery(pagenumber, reportId, query));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update query', e));
   }
 };
 
-export const updateCypherParametersThunk = (index, parameters) => (dispatch: any, getState: any) => {
+export const updateCypherParametersThunk = (reportId, parameters) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(updateCypherParameters(pagenumber, index, parameters));
+    dispatch(updateCypherParameters(pagenumber, reportId, parameters));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update cypher parameters rate', e));
   }
 };
 
-export const updateReportTypeThunk = (index, type) => (dispatch: any, getState: any) => {
+export const updateReportTypeThunk = (reportId, type) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
 
-    dispatch(updateReportType(pagenumber, index, type));
-    dispatch(updateFields(pagenumber, index, []));
-    dispatch(clearSelection(pagenumber, index));
+    dispatch(updateReportType(pagenumber, reportId, type));
+    dispatch(updateFields(pagenumber, reportId, []));
+    dispatch(clearSelection(pagenumber, reportId));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update report type', e));
   }
 };
 
-export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: any) => {
+export const updateFieldsThunk = (reportId, fields) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
     const { extensions } = state.dashboard;
-    const oldReport = state.dashboard.pages[pagenumber].reports.find((o) => o.index === index);
+    const oldReport = state.dashboard.pages[pagenumber].reports.find((o) => o.id === reportId);
     if (!oldReport) {
       return;
     }
@@ -100,56 +100,56 @@ export const updateFieldsThunk = (index, fields) => (dispatch: any, getState: an
         } else if (selectableFields[selection].optional) {
           // If the fields change, always set optional selections to none.
           if (selectableFields[selection].multiple) {
-            dispatch(updateSelection(pagenumber, index, selection, ['(none)']));
+            dispatch(updateSelection(pagenumber, reportId, selection, ['(none)']));
           } else {
-            dispatch(updateSelection(pagenumber, index, selection, '(none)'));
+            dispatch(updateSelection(pagenumber, reportId, selection, '(none)'));
           }
         } else if (fields.length > 0) {
           // For multi selections, select the Nth item of the result fields as a single item array.
           if (selectableFields[selection].multiple) {
             // only update if the old selection no longer covers the new set of fields...
             if (!oldSelection[selection] || !oldSelection[selection].every((v) => fields.includes(v))) {
-              dispatch(updateSelection(pagenumber, index, selection, [fields[Math.min(i, fields.length - 1)]]));
+              dispatch(updateSelection(pagenumber, reportId, selection, [fields[Math.min(i, fields.length - 1)]]));
             }
           } else if (selectableFields[selection].type == SELECTION_TYPES.NODE_PROPERTIES) {
             // For node property selections, select the most obvious properties of the node to display.
             const selection = getSelectionBasedOnFields(fields, oldSelection, autoAssignSelectedProperties);
-            dispatch(updateAllSelections(pagenumber, index, selection));
+            dispatch(updateAllSelections(pagenumber, reportId, selection));
           } else {
             // Else, default the selection to the Nth item of the result set fields.
-            dispatch(updateSelection(pagenumber, index, selection, fields[Math.min(i, fields.length - 1)]));
+            dispatch(updateSelection(pagenumber, reportId, selection, fields[Math.min(i, fields.length - 1)]));
           }
         }
       });
       // Set the new set of fields for the report so that we may select them.
-      dispatch(updateFields(pagenumber, index, fields));
+      dispatch(updateFields(pagenumber, reportId, fields));
     }
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update report fields', e));
   }
 };
 
-export const updateSelectionThunk = (index, selectable, field) => (dispatch: any, getState: any) => {
+export const updateSelectionThunk = (reportId, selectable, field) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(updateSelection(pagenumber, index, selectable, field));
+    dispatch(updateSelection(pagenumber, reportId, selectable, field));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update report selection', e));
   }
 };
 
-export const toggleCardSettingsThunk = (index, open) => (dispatch: any, getState: any) => {
+export const toggleCardSettingsThunk = (reportId, open) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    dispatch(toggleCardSettings(pagenumber, index, open));
+    dispatch(toggleCardSettings(pagenumber, reportId, open));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot open card settings', e));
   }
 };
 
-export const updateReportSettingThunk = (index, setting, value) => (dispatch: any, getState: any) => {
+export const updateReportSettingThunk = (reportId, setting, value) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { extensions } = state.dashboard;
@@ -157,17 +157,17 @@ export const updateReportSettingThunk = (index, setting, value) => (dispatch: an
 
     // If we disable optional selections (e.g. grouping), we reset these selections to their none value.
     if (setting == 'showOptionalSelections' && value == false) {
-      const reportType = state.dashboard.pages[pagenumber].reports.find((o) => o.index === index).type;
+      const reportType = state.dashboard.pages[pagenumber].reports.find((o) => o.id === reportId).type;
       const reportTypes = getReportTypes(extensions);
       const selectableFields = reportTypes[reportType].selection;
       const optionalSelectables = selectableFields
         ? Object.keys(selectableFields).filter((key) => selectableFields[key].optional)
         : [];
       optionalSelectables.forEach((selection) => {
-        dispatch(updateSelection(pagenumber, index, selection, '(none)'));
+        dispatch(updateSelection(pagenumber, reportId, selection, '(none)'));
       });
     }
-    dispatch(updateReportSetting(pagenumber, index, setting, value));
+    dispatch(updateReportSetting(pagenumber, reportId, setting, value));
   } catch (e) {
     dispatch(createNotificationThunk('Error when updating report settings', e));
   }

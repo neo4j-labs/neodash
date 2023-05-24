@@ -312,7 +312,7 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
   if (origin == '2.2' && target == '2.3') {
     dashboard.pages.forEach((p) => {
       p.reports.forEach((r) => {
-        r.index = createUUID();
+        r.id = createUUID();
       });
     });
     dashboard.version = '2.3';
