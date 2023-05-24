@@ -1,5 +1,4 @@
 import React from 'react';
-import { hot } from 'react-hot-loader/root';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { connect } from 'react-redux';
@@ -205,4 +204,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 Application.displayName = 'Application';
 
-export default connect(mapStateToProps, mapDispatchToProps)(hot(Application));
+export default connect(mapStateToProps, mapDispatchToProps)(Application);
