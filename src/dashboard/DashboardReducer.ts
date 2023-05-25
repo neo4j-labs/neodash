@@ -28,7 +28,6 @@ export const initialState = {
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
-console.log('TETST');
 
 export const dashboardReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
