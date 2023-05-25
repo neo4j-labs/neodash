@@ -47,7 +47,7 @@ const NeoSankeyChart = (props: ChartProps) => {
 
   useEffect(() => {
     buildVisualizationDictionaryFromRecords(props.records);
-  }, []);
+  }, [props.records]);
 
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
