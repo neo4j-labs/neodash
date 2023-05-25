@@ -186,7 +186,6 @@ export const NeoPage = ({
           // @ts-ignore
           return (
             <Grid
-              index={getReportIndex(pagenumber, id)}
               key={getReportIndex(pagenumber, id)}
               style={{ paddingBottom: '6px' }}
               item

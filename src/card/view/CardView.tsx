@@ -49,6 +49,9 @@ const NeoCardView = ({
   const ref = React.useRef();
 
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
+
+  // TODO : selectorChange should handle every case where query execution needs to be re-executed
+  // e.g. Change of query, type, some advanced settings...
   const [selectorChange, setSelectorChange] = useState(false);
 
   const getLocalParameters = (parse_string): any => {
