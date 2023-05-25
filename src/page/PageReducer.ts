@@ -61,14 +61,13 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
   // Updates a report at a given page and index.
   if (action.type.startsWith('PAGE/CARD/')) {
     const { id } = payload;
+    const index = state.reports.findIndex((o) => o.id === id);
     return {
       ...state,
       reports: [
-        ...state.reports.filter((o) => o.id !== id),
-        cardReducer(
-          state.reports.find((o) => o.id === id),
-          action
-        ),
+        ...state.reports.slice(0, index),
+        cardReducer(state.reports[index], action),
+        ...state.reports.slice(index + 1),
       ],
     };
   }

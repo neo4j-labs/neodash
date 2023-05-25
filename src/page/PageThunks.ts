@@ -20,7 +20,7 @@ export const addReportThunk =
     }
   };
 
-export const removeReportThunk = (id: number) => (dispatch: any, getState: any) => {
+export const removeReportThunk = (id: string) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
