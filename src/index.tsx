@@ -18,8 +18,7 @@ const store = configureStore();
 // @ts-ignore - persist state in browser cache.
 const persister = persistStore(store);
 
-const styleConfig = await StyleConfig.getInstance();
-styleConfig.applyCSS();
+await StyleConfig.getInstance();
 
 /** Wrap the application in a redux provider / browser cache persistance gate **/
 const provider = (

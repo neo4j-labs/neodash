@@ -10,8 +10,12 @@ import {
   DASHBOARD_BUTTON_IMAGE_SIZE,
   DASHBOARD_HEADER_BRAND_LOGO,
   DASHBOARD_HEADER_COLOR,
+  DASHBOARD_HEADER_BUTTON_COLOR,
+  DASHBOARD_HEADER_TITLE_COLOR,
 } from '../../config/ApplicationConfig';
-import { luma } from '../../component/theme/Themes';
+import StyleConfig from '../../config/StyleConfig';
+
+await StyleConfig.getInstance();
 
 const brandedToolbarContent = (
   <img style={{ height: '54px', marginLeft: 'auto', marginRight: 'auto' }} src={DASHBOARD_HEADER_BRAND_LOGO} />
@@ -49,9 +53,9 @@ export const NeoDashboardHeaderTitleBar = ({
           textAlign: 'center',
           fontSize: '22px',
           flexGrow: 1,
-          color: luma(DASHBOARD_HEADER_COLOR) < 50 ? 'white' : 'black',
+          color: DASHBOARD_HEADER_TITLE_COLOR,
         }}
-        placeholder='aDashboard Name...'
+        placeholder='Dashboard Name...'
         fullWidth
         maxRows={4}
         value={dashboardTitleText}
@@ -66,7 +70,7 @@ export const NeoDashboardHeaderTitleBar = ({
         <Tooltip title={'Download Dashboard as Image'}>
           <IconButton
             aria-label={'camera'}
-            style={{ marginRight: '3px', background: '#ffffff22' }}
+            style={{ marginRight: '3px', background: DASHBOARD_HEADER_BUTTON_COLOR }}
             onClick={() => onDownloadImage()}
             size='large'
             clean
@@ -86,7 +90,7 @@ export const NeoDashboardHeaderTitleBar = ({
         <IconButton
           className='logo-btn'
           aria-label={'connection '}
-          style={{ background: '#ffffff22', padding: '3px' }}
+          style={{ background: DASHBOARD_HEADER_BUTTON_COLOR, padding: '3px' }}
           onClick={() => {
             if (!standalone) {
               onConnectionModalOpen();

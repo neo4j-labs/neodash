@@ -1,3 +1,5 @@
+import { rgbaToHex } from '../chart/Utils';
+
 export default class StyleConfig {
   private static instance: StyleConfig;
 
@@ -25,6 +27,7 @@ export default class StyleConfig {
   static async create() {
     const o = new StyleConfig();
     await o.initialize();
+    o.applyCSS();
     return o;
   }
 
@@ -33,5 +36,11 @@ export default class StyleConfig {
     for (const [key, value] of Object.entries(rules)) {
       document.documentElement.style.setProperty(key, value);
     }
+  }
+
+  public complementColor(color: string) {
+    const hexColor = rgbaToHex(document.documentElement.style.getPropertyValue(color));
+    const complementColor = (0xFFFFFF - parseInt(hexColor.replace('#', ''), 16)).toString(16);
+    return `#${  complementColor}`;
   }
 }

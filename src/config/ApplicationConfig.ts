@@ -15,6 +15,10 @@ export const DASHBOARD_BUTTON_IMAGE = 'neo4j-icon.png'; // 'neo4j-icon.png'
 export const DASHBOARD_BUTTON_IMAGE_SIZE = 32; // 32;
 export const DASHBOARD_HEADER_COLOR = styleConfig?.style?.DASHBOARD_HEADER_COLOR || '#0B297D'; // '#0B297D'
 
+export const DASHBOARD_HEADER_BUTTON_COLOR = styleConfig?.style?.DASHBOARD_HEADER_BUTTON_COLOR || '#FFFFFF22'; // '#FFFFFF22'
+
+export const DASHBOARD_HEADER_TITLE_COLOR = styleConfig?.style?.DASHBOARD_HEADER_TITLE_COLOR || '#FFFFFF'; // '#FFFFFF'
+
 export const APPLY_CUSTOM_BRAND_LOGO = styleConfig?.style?.APPLY_CUSTOM_BRAND_LOGO || false; // false
 export const DASHBOARD_HEADER_BRAND_LOGO = styleConfig?.style?.DASHBOARD_HEADER_BRAND_LOGO || 'logo.png';
 
