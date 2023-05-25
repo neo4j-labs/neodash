@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react';
 import { ResponsiveTreeMap } from '@nivo/treemap';
-import {
-  checkResultKeys,
-  mutateName,
-  processHierarchyFromRecords,
-  findObject,
-  flatten,
-} from '../../../../chart/ChartUtils';
+import { mutateName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
 import { useState } from 'react';
 import { Tooltip } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
@@ -23,22 +17,26 @@ const NeoTreeMapChart = (props: ChartProps) => {
   const { records } = props;
   const { selection } = props;
   const [data, setData] = useState(undefined);
-  useEffect(() => {
-    setData(commonProperties.data);
-  }, [props.selection]);
+  const [commonProperties, setCommonProperties] = useState({ data: { name: 'Total', children: [] } });
   const [refreshable, setRefreshable] = useState(false);
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
 
-  const dataPre = processHierarchyFromRecords(records, selection);
-  dataPre.forEach((currentNode) => mutateName(currentNode));
+  useEffect(() => {
+    let dataPre = processHierarchyFromRecords(records, selection);
+    dataPre.forEach((currentNode) => mutateName(currentNode));
+    setCommonProperties({ data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } });
+  }, [records]);
+
+  useEffect(() => {
+    setData(commonProperties.data);
+  }, [props.selection, commonProperties]);
 
   // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.
   // Where a user give us just the tree starting one hop away from the root.
   // as Nivo needs a common root, so in that case, we create it for them.
-  const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } };
   if (data == undefined) {
     setData(commonProperties.data);
   }

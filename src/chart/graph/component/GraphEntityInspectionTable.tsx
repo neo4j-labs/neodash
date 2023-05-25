@@ -22,7 +22,11 @@ export const GraphEntityInspectionTable = ({ entity }) => {
       <Table size='small'>
         <TableBody>
           {Object.keys(entity.properties).length == 0 ? (
-            <i>(No properties)</i>
+            <TableRow key='empty-row'>
+              <TableCell component='th' scope='row'>
+                (No properties)
+              </TableCell>
+            </TableRow>
           ) : (
             Object.keys(entity.properties)
               .sort()

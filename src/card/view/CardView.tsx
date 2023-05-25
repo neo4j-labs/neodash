@@ -50,6 +50,10 @@ const NeoCardView = ({
 
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
+  // TODO : selectorChange should handle every case where query execution needs to be re-executed
+  // e.g. Change of query, type, some advanced settings...
+  const [selectorChange, setSelectorChange] = useState(false);
+
   const getLocalParameters = (parse_string): any => {
     if (!parse_string || !globalParameters) {
       return {};
@@ -130,7 +134,18 @@ const NeoCardView = ({
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
     }
-  }, [settingsOpen, query, JSON.stringify(localParameters)]);
+  }, [JSON.stringify(localParameters)]);
+
+  useEffect(() => {
+    if (!settingsOpen && selectorChange) {
+      setLastRunTimestamp(Date.now());
+    }
+    setSelectorChange(false);
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    setSelectorChange(true);
+  }, [query, type]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
