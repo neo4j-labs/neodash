@@ -120,6 +120,7 @@ const NeoCardViewFooter = ({
                       ? selection[selectable].map((sel) => ({ label: sel, value: sel }))
                       : { label: selection[selectable], value: selection[selectable] },
                     isMulti: selectableFields[selectable].multiple,
+                    isClearable: false,
                     menuPortalTarget: document.querySelector('body'),
                   }}
                   fluid
