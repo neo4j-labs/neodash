@@ -101,7 +101,7 @@ const NeoTableChart = (props: ChartProps) => {
         const value = key;
         return ApplyColumnType(
           {
-            key: `col-key-${  i}`,
+            key: `col-key-${i}`,
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
@@ -116,7 +116,7 @@ const NeoTableChart = (props: ChartProps) => {
         const value = records[0].get(key);
         return ApplyColumnType(
           {
-            key: `col-key-${  i}`,
+            key: `col-key-${i}`,
             field: generateSafeColumnKey(key),
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
@@ -203,7 +203,7 @@ const NeoTableChart = (props: ChartProps) => {
             navigator.clipboard.writeText(e.value);
           }}
           pageSize={tablePageSize > 0 ? tablePageSize : 5}
-          rowsPerPageOptions={[5]}
+          rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}
           disableSelectionOnClick
           components={{
             ColumnSortedDescendingIcon: () => <></>,
