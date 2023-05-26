@@ -138,7 +138,7 @@ const NeoCardView = ({
   }, [JSON.stringify(localParameters)]);
 
   useEffect(() => {
-    if (!settingsOpen) {
+    if (!settingsOpen && (selectorChange || type === 'select')) {
       setLastRunTimestamp(Date.now());
     }
     setSelectorChange(false);
