@@ -25,8 +25,7 @@ export const initialState = {
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
-  extensions: {},
-  extensionsConfig: INITIAL_EXTENSIONS_STATE, // TODO - merge with `extensions` in the 2.3 dashboard format.
+  extensions: INITIAL_EXTENSIONS_STATE, // TODO - merge with `extensions` in the 2.3 dashboard format.
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -61,7 +60,7 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
   if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
     return {
       ...state,
-      extensionsConfig: extensionsReducer(state.extensionsConfig, action),
+      extensions: extensionsReducer(state.extensions, action),
     };
   }
 
@@ -81,7 +80,8 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     case SET_EXTENSION_ENABLED: {
       const { name, enabled } = payload;
       const extensions = state.extensions ? { ...state.extensions } : {};
-      extensions[name] = enabled;
+      // If the extension was enabled before, remember the old settings and toggle the 'active' switch.
+      extensions[name] = extensions[name] == undefined ? { active: enabled } : { ...extensions[name], active: enabled };
       return { ...state, extensions: extensions };
     }
     case CREATE_PAGE: {

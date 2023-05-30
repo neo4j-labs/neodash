@@ -6,6 +6,7 @@ import { EXTENSIONS_REDUCERS } from '../ExtensionConfig';
 import { SET_EXTENSION_REDUCER_ENABLED } from './ExtensionActions';
 
 export const INITIAL_EXTENSIONS_STATE = {
+  active: true,
   activeReducers: [],
 };
 

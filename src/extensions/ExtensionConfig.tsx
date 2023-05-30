@@ -49,7 +49,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     image: 'report-actions.png',
     enabled: true,
     description:
-      'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked. To learn more about this extension, reach out to Neo4j Professional Services.',
+      'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked.',
     link: 'https://neo4j.com/professional-services/',
   },
   'node-sidebar': {
@@ -57,7 +57,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     label: 'Node Sidebar',
     author: 'Neo4j Professional Services',
     image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-    enabled: true,
+    enabled: false,
     reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
     reducerObject: sidebarReducer,
     drawerButton: SidebarDrawerButton,
@@ -70,11 +70,12 @@ export const EXTENSIONS: Record<string, Extension> = {
     label: 'Cypher Workflows',
     author: 'Neo4j Professional Services',
     image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-    enabled: true,
+    enabled: false,
     reducerPrefix: WORKFLOWS_ACTION_PREFIX,
     reducerObject: workflowReducer,
     drawerButton: NeoWorkflowDrawerButton,
-    description: 'An extension to create, manage, and run workflows consisting of Cypher queries.',
+    description:
+      'An extension to create, manage, and run workflows consisting of Cypher queries. Workflows can be used to run ETL flows, complex query chains, or run graph data science workloads.',
     link: 'https://neo4j.com/professional-services/',
   },
 };

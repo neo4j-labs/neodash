@@ -1,8 +1,8 @@
 export const getExtensionActiveReducers = (state: any) => {
-  return state.dashboard.extensionsConfig && state.dashboard.extensionsConfig.activeReducers;
+  return state.dashboard.extensions && state.dashboard.extensions.activeReducers;
 };
 
 export const getExtensionSettings = (state: any, name: string) => {
-  let res = state.dashboard.extensionsConfig && state.dashboard.extensionsConfig[name];
+  let res = state.dashboard.extensions && state.dashboard.extensions[name];
   return res != undefined && res.settings ? res.settings : {};
 };

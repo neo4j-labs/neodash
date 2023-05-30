@@ -298,8 +298,12 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
   if (origin == '2.1' && target == '2.2') {
     // In 2.1, extensions were enabled by default. Therefore if we migrate, enable them.
     dashboard.extensions = {
-      'advanced-charts': true,
-      styling: true,
+      'advanced-charts': {
+        active: true,
+      },
+      styling: {
+        active: true,
+      },
     };
     dashboard.version = '2.2';
     return dashboard;

@@ -56,11 +56,9 @@ const NeoExtensionsModal = ({
                   >
                     Extensions
                   </TextLink>
-                  &nbsp;are a way of extending the core functionality of NeoDash with custom logic.
-                </SectionContent>
-                <SectionContent>
-                  This can be a new visualization, extra styling options for an existing visualization, or even a
-                  completely new logic for the dashboarding engine.
+                  &nbsp;are a way of extending the core functionality of NeoDash with custom logic. This can be a new
+                  visualization, extra styling options for an existing visualization, or even a completely new logic for
+                  the dashboarding engine.
                 </SectionContent>
               </Section>
 
@@ -77,7 +75,7 @@ const NeoExtensionsModal = ({
                                   <Typography variant='h4'>{e.label}</Typography>
                                   {e.enabled && e.author == 'Neo4j Professional Services' && (
                                     <Label color='info' fill='outlined'>
-                                      Neo4j Professional Services
+                                      Expert
                                     </Label>
                                   )}
                                 </div>
@@ -117,6 +115,7 @@ const NeoExtensionsModal = ({
                             <tr>
                               <td valign='top'>
                                 <p>{e.description}</p>
+                                <br />
                                 <p>
                                   Author: <a href={e.link}>{e.author}</a>
                                 </p>
@@ -157,7 +156,7 @@ const mapDispatchToProps = (dispatch) => ({
         `Extension '${name}' Unavailable`,
         // eslint-disable-next-line no-multi-str
         'This extension is not available in this version of NeoDash.\n  \
-     To learn more about professional extensions, check out the project documentation.'
+     To learn more about expert extensions, check out the project documentation.'
       )
     ),
 });

@@ -118,7 +118,7 @@ const NeoCardSettingsFooter = ({
   // TODO - Make the extensions more pluggable and dynamic, instead of hardcoded here.
   return (
     <div>
-      {extensions.styling ? (
+      {extensions.styling && extensions.styling.active ? (
         <NeoCustomReportStyleModal
           settingName={settingToCustomize}
           settingValue={reportSettings[settingToCustomize]}
@@ -132,7 +132,7 @@ const NeoCardSettingsFooter = ({
         <></>
       )}
 
-      {extensions.actions ? (
+      {extensions.actions && extensions.actions.active ? (
         <NeoCustomReportActionsModal
           settingName={actionsToCustomize}
           settingValue={reportSettings[actionsToCustomize]}
@@ -166,7 +166,7 @@ const NeoCardSettingsFooter = ({
               </FormGroup>
             </td>
             <td>
-              {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling ? (
+              {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling && extensions.styling.active ? (
                 <Tooltip title='Set rule-based styling' aria-label=''>
                   <IconButton
                     style={{ float: 'right', marginRight: '10px' }}
@@ -182,7 +182,7 @@ const NeoCardSettingsFooter = ({
               ) : (
                 <></>
               )}
-              {extensions.actions && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ? (
+              {extensions.actions && extensions.actions.active && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ? (
                 <Tooltip title='Set report actions' aria-label=''>
                   <IconButton
                     size='small'
