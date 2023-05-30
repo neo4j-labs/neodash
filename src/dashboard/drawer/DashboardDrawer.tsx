@@ -41,6 +41,8 @@ export const NeoDrawer = ({
   onAboutModalOpen,
   resetApplication,
 }) => {
+  const navItemClass = 'n-w-full n-h-full';
+
   /**
    * Function to render dynamically the buttons in the drawer related to all the extension that
    * are enabled and present a button (EX: node-sidebar)
@@ -51,7 +53,7 @@ export const NeoDrawer = ({
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return Component ? <Component database={connection.database} /> : <></>;
+          return Component ? <Component database={connection.database} navItemClass={navItemClass} /> : <></>;
         })}
       </>
     );
@@ -64,7 +66,6 @@ export const NeoDrawer = ({
     return <></>;
   }
 
-  const navItemClass = 'n-w-full n-h-full';
   const content = (
     <div
       style={{
