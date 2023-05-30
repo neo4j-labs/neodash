@@ -11,9 +11,8 @@ import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS } from '../../extensions/actions/ActionsRuleCreationModal';
 import NeoCustomReportActionsModal from '../../extensions/actions/ActionsRuleCreationModal';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import StarsIcon from '@mui/icons-material/Stars';
+import { AdjustmentsHorizontalIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
 import { IconButton, Switch } from '@neo4j-ndl/react';
-import { AdjustmentsHorizontalIconOutline } from '@neo4j-ndl/react/icons';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -185,14 +184,14 @@ const NeoCardSettingsFooter = ({
               {extensions.actions && extensions.actions.active && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ? (
                 <Tooltip title='Set report actions' aria-label=''>
                   <IconButton
-                    size='small'
-                    style={{ float: 'right', marginRight: '10px' }}
+                    style={{ float: 'right' }}
                     aria-label='custom actions'
+                    clean
                     onClick={() => {
                       setCustomReportActionsModalOpen(true); // Open the modal.
                     }}
                   >
-                    <StarsIcon></StarsIcon>
+                    <SparklesIconOutline />
                   </IconButton>
                 </Tooltip>
               ) : (

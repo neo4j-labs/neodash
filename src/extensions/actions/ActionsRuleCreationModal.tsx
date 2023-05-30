@@ -2,21 +2,17 @@ import React, { useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import StarsIcon from '@mui/icons-material/Stars';
-
-import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import {
-  Autocomplete,
-  Badge,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Fab,
-  IconButton,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@mui/material';
+  AdjustmentsHorizontalIconOutline,
+  XMarkIconOutline,
+  PlusIconOutline,
+  PlayIconSolid,
+  SparklesIconOutline,
+} from '@neo4j-ndl/react/icons';
+import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
+import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
+import { Autocomplete, TextField } from '@mui/material';
+
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = {
   table: [
@@ -213,18 +209,18 @@ export const NeoCustomReportActionsModal = ({
               paddingBottom: '5px',
             }}
           >
-            <TextField
-              style={{ width: '80px', color: 'black', marginRight: '-5px' }}
+            <TextInput
+              style={{ width: '90px', color: 'black', marginRight: '-5px' }}
               disabled={true}
               value='$neodash_'
-            ></TextField>
+            ></TextInput>
           </td>
           <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-            <TextField
+            <TextInput
               placeholder=''
               value={rule.customizationValue}
               onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
-            ></TextField>
+            ></TextInput>
           </td>
         </>
       );
@@ -239,11 +235,11 @@ export const NeoCustomReportActionsModal = ({
               paddingBottom: '5px',
             }}
           >
-            <TextField
+            <TextInput
               style={{ width: '100%', color: 'black', marginRight: '-5px' }}
               disabled={true}
               value='name/index'
-            ></TextField>
+            ></TextInput>
           </td>
         </>
       );
@@ -255,213 +251,190 @@ export const NeoCustomReportActionsModal = ({
     <div>
       {customReportActionsModalOpen ? (
         <Dialog
-          maxWidth={'xl'}
+          className='dialog-xl'
           open={customReportActionsModalOpen == true}
-          PaperProps={{
-            style: {
-              overflow: 'inherit',
-            },
-          }}
+          onClose={handleClose}
           style={{ overflow: 'inherit', overflowY: 'inherit' }}
           aria-labelledby='form-dialog-title'
         >
-          <DialogTitle id='form-dialog-title'>
-            <StarsIcon
-              style={{
-                height: '30px',
-                paddingTop: '4px',
-                marginBottom: '-8px',
-                marginRight: '5px',
-                paddingBottom: '5px',
-              }}
-            />
+          <Dialog.Header id='form-dialog-title'>
+            <SparklesIconOutline className='icon-base icon-inline text-r' aria-label={'Adjust'} />
             Report Actions
-            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-              <Badge badgeContent={''}>
-                <CloseIcon />
-              </Badge>
-            </IconButton>
-          </DialogTitle>
-          <div>
-            <DialogContent style={{ overflow: 'inherit' }}>
-              <p>You can define actions for the report here. </p>
-              <p>
-                Report actions enable you to create conditional logic in the dashboard, for example, setting a parameter
-                dynamically based on a 'node click' or 'table click'.
-              </p>
-              <p>For more on report actions, see the documentation.</p>
-              <div>
-                <hr></hr>
+          </Dialog.Header>
+          <Dialog.Content style={{ overflow: 'inherit' }}>
+            <p>You can define actions for the report here. </p>
+            <p>
+              Report actions enable you to create conditional logic in the dashboard, for example, setting a parameter
+              dynamically based on a 'node click' or 'table click'.
+            </p>
+            <p>For more on report actions, see the documentation.</p>
+            <div>
+              <hr></hr>
 
-                <table>
-                  {rules.map((rule, index) => {
-                    return (
-                      <>
-                        <tr>
-                          <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
-                            <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
-                          </td>
-                          <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                            <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}> ON</span>
-                          </td>
-                          <div style={{ border: '2px dashed grey' }}>
-                            <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                              <TextField
-                                select
-                                value={rule.condition}
-                                onChange={(e) => updateRuleField(index, 'condition', e.target.value)}
-                              >
-                                {RULE_CONDITIONS[type] &&
-                                  RULE_CONDITIONS[type].map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                      {option.label}
-                                    </MenuItem>
-                                  ))}
-                              </TextField>
-                            </td>
-                            <td>
-                              <Autocomplete
-                                disableClearable={true}
-                                id='autocomplete-label-type'
-                                noOptionsText='*Specify an exact field name'
-                                options={createFieldVariableSuggestionsFromRule(rule, true)}
-                                value={rule.field ? rule.field : ''}
-                                inputValue={rule.field ? rule.field : ''}
-                                popupIcon={<></>}
-                                style={{ display: 'inline-block', width: 100, marginLeft: '5px', marginTop: '5px' }}
-                                onInputChange={(event, value) => {
-                                  updateRuleField(index, 'field', value);
-                                }}
-                                onChange={(event, newValue) => {
-                                  updateRuleField(index, 'field', newValue);
-                                }}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    placeholder='Field name...'
-                                    InputLabelProps={{ shrink: true }}
-                                  />
-                                )}
-                              />
-                            </td>
-                          </div>
-                          <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                            <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>SET</span>
-                          </td>
-                          <div style={{ border: '2px dashed grey', marginBottom: '5px' }}>
-                            <td
-                              style={{
-                                paddingLeft: '5px',
-                                paddingRight: '5px',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
+              <table>
+                {rules.map((rule, index) => {
+                  return (
+                    <>
+                      <tr>
+                        <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
+                          <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
+                        </td>
+                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}> ON</span>
+                        </td>
+                        <div style={{ border: '2px dashed grey' }}>
+                          <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                            <Dropdown
+                              type='select'
+                              fluid
+                              style={{ marginLeft: '1%', display: 'inline-block' }}
+                              selectProps={{
+                                onChange: () => updateRuleField(index, 'condition', newValue.value),
+                                options:
+                                  RULE_CONDITIONS[type] &&
+                                  RULE_CONDITIONS[type].map((option) => ({
+                                    label: option.label,
+                                    value: option.value,
+                                  })),
+                                value: { label: rule.condition, value: rule.condition },
                               }}
-                            >
-                              <TextField
-                                select
-                                value={rule.customization}
-                                onChange={(e) => updateRuleField(index, 'customization', e.target.value)}
-                              >
-                                {RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] &&
-                                  RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type].map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                      {option.label}
-                                    </MenuItem>
-                                  ))}
-                              </TextField>
-                            </td>
-                            {getActionHelper(rule, index, rules[index].customization)}
-                          </div>
-
-                          <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                            <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>TO</span>
+                            ></Dropdown>
                           </td>
-                          <div style={{ border: '2px dashed grey' }}>
-                            <td
-                              style={{
-                                paddingLeft: '5px',
-                                paddingRight: '5px',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
-                              }}
-                            >
-                              <Autocomplete
-                                disableClearable={true}
-                                id='autocomplete-label-type'
-                                noOptionsText='*Specify an exact field name'
-                                options={createFieldVariableSuggestionsFromRule(rule, false)}
-                                value={rule.value || ''}
-                                inputValue={rule.value || ''}
-                                popupIcon={<></>}
-                                style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
-                                onInputChange={(event, value) => {
-                                  updateRuleField(index, 'value', value);
-                                }}
-                                onChange={(event, newValue) => {
-                                  updateRuleField(index, 'value', newValue);
-                                }}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    placeholder='Field name...'
-                                    InputLabelProps={{ shrink: true }}
-                                  />
-                                )}
-                              />
-                            </td>
-                          </div>
-
                           <td>
-                            <Fab
-                              size='small'
-                              aria-label='add'
-                              style={{ background: 'black', color: 'white', marginTop: '-6px', marginLeft: '20px' }}
-                              onClick={() => {
-                                setRules([...rules.slice(0, index), ...rules.slice(index + 1)]);
+                            <Autocomplete
+                              disableClearable={true}
+                              id='autocomplete-label-type'
+                              noOptionsText='*Specify an exact field name'
+                              options={createFieldVariableSuggestionsFromRule(rule, true)}
+                              value={rule.field ? rule.field : ''}
+                              inputValue={rule.field ? rule.field : ''}
+                              popupIcon={<></>}
+                              style={{ display: 'inline-block', width: 100, marginLeft: '5px', marginTop: '5px' }}
+                              onInputChange={(event, value) => {
+                                updateRuleField(index, 'field', value);
                               }}
-                            >
-                              <CloseIcon />
-                            </Fab>
+                              onChange={(event, newValue) => {
+                                updateRuleField(index, 'field', newValue);
+                              }}
+                              renderInput={(params) => (
+                                <TextField {...params} placeholder='Field name...' InputLabelProps={{ shrink: true }} />
+                              )}
+                            />
                           </td>
-                          <hr />
-                        </tr>
-                      </>
-                    );
-                  })}
+                        </div>
+                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>SET</span>
+                        </td>
+                        <div style={{ border: '2px dashed grey', marginBottom: '5px' }}>
+                          <td
+                            style={{
+                              paddingLeft: '5px',
+                              paddingRight: '5px',
+                              paddingTop: '5px',
+                              paddingBottom: '5px',
+                            }}
+                          >
+                            <Dropdown
+                              type='select'
+                              fluid
+                              selectProps={{
+                                onChange: () => updateRuleField(index, 'customization', newValue.value),
+                                options:
+                                  RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] &&
+                                  RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type].map((option) => ({
+                                    label: option.label,
+                                    value: option.value,
+                                  })),
+                                value: { label: rule.label, value: rule.value },
+                              }}
+                            ></Dropdown>
+                          </td>
+                          {getActionHelper(rule, index, rules[index].customization)}
+                        </div>
 
-                  <tr>
-                    <td style={{ borderBottom: '1px solid grey', width: '1000px' }} colSpan={8}>
-                      <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
-                        <Fab
-                          size='small'
-                          aria-label='add'
-                          style={{ background: 'white', color: 'black' }}
-                          onClick={() => {
-                            const newRule = getDefaultRule(type);
-                            setRules(rules.concat(newRule));
-                          }}
-                        >
-                          <AddIcon />
-                        </Fab>
-                      </Typography>
-                    </td>
-                  </tr>
-                </table>
-              </div>
+                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>TO</span>
+                        </td>
+                        <div style={{ border: '2px dashed grey' }}>
+                          <td
+                            style={{
+                              paddingLeft: '5px',
+                              paddingRight: '5px',
+                              paddingTop: '5px',
+                              paddingBottom: '5px',
+                            }}
+                          >
+                            <Autocomplete
+                              disableClearable={true}
+                              id='autocomplete-label-type'
+                              noOptionsText='*Specify an exact field name'
+                              options={createFieldVariableSuggestionsFromRule(rule, false)}
+                              value={rule.value || ''}
+                              inputValue={rule.value || ''}
+                              popupIcon={<></>}
+                              style={{ display: 'inline-block', width: 185, marginLeft: '5px', marginTop: '5px' }}
+                              onInputChange={(event, value) => {
+                                updateRuleField(index, 'value', value);
+                              }}
+                              onChange={(event, newValue) => {
+                                updateRuleField(index, 'value', newValue);
+                              }}
+                              renderInput={(params) => (
+                                <TextField {...params} placeholder='Field name...' InputLabelProps={{ shrink: true }} />
+                              )}
+                            />
+                          </td>
+                        </div>
 
-              <Button
-                style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'white' }}
-                color='default'
-                variant='contained'
-                size='large'
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Save
-              </Button>
-            </DialogContent>
-          </div>
+                        <td style={{ width: '2.5%' }}>
+                          <IconButton
+                            aria-label='remove rule'
+                            size='medium'
+                            floating
+                            onClick={() => {
+                              setRules([...rules.slice(0, index), ...rules.slice(index + 1)]);
+                            }}
+                          >
+                            <XMarkIconOutline />
+                          </IconButton>
+                        </td>
+                        <hr />
+                      </tr>
+                    </>
+                  );
+                })}
+
+                <tr>
+                  <td colSpan={5}>
+                    <div style={{ textAlign: 'center', marginBottom: '5px' }}>
+                      <IconButton
+                        aria-label='add'
+                        size='medium'
+                        floating
+                        onClick={() => {
+                          const newRule = getDefaultRule(type);
+                          setRules(rules.concat(newRule));
+                        }}
+                      >
+                        <PlusIconOutline />
+                      </IconButton>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <Button
+              onClick={() => {
+                handleClose();
+              }}
+              size='large'
+              floating
+            >
+              Save
+              <SparklesIconOutline className='btn-icon-lg-r' />
+            </Button>
+          </Dialog.Content>
         </Dialog>
       ) : (
         <></>
