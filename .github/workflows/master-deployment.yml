@@ -80,7 +80,7 @@ build-docker:
       context: .
       file: ./Dockerfile
       push: true
-      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.2.5
+      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.3.0
  deploy-gallery:
    runs-on: ubuntu-latest
    strategy:
