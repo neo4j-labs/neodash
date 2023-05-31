@@ -4,7 +4,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import LocationOn from '@mui/icons-material/LocationOn';
 import 'leaflet/dist/leaflet.css';
 import { Popup, Tooltip } from 'react-leaflet';
-import { Typography } from '@neo4j-ndl/react';
+import { Button, Typography } from '@neo4j-ndl/react';
 import { extensionEnabled } from '../../../extensions/ExtensionUtils';
 import { getRule } from '../../../extensions/advancedcharts/Utils';
 
@@ -51,9 +51,13 @@ export function createMarkers(data, props) {
                   actionsRules,
                   'Click'
                 );
-                let execRule = Boolean(
-                  rule !== null && rule.customization == 'set variable' && props && props.setGlobalParameter
-                );
+                let execRule =
+                  rule !== null &&
+                  rule[0] !== null &&
+                  rule[0].customization == 'set variable' &&
+                  props &&
+                  props.setGlobalParameter;
+
                 return (
                   <tr
                     key={i}
@@ -71,14 +75,21 @@ export function createMarkers(data, props) {
                       {execRule ? (
                         <Button
                           style={{ width: '100%', marginLeft: '10px', marginRight: '10px' }}
-                          variant='contained'
                           color='primary'
+                          onClick={() => {
+                            if (execRule) {
+                              // call thunk for $neodash_customizationValue
+                              props.setGlobalParameter(
+                                `neodash_${rule[0].customizationValue}`,
+                                value.properties[k].toString()
+                              );
+                            }
+                          }}
                         >{`${value.properties[k].toString()}`}</Button>
                       ) : (
                         value.properties[k].toString()
                       )}
                     </td>
-                    <td key={1}>{value.properties[k].toString()}</td>
                   </tr>
                 );
               })

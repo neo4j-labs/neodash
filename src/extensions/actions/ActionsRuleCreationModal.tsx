@@ -210,7 +210,7 @@ export const NeoCustomReportActionsModal = ({
             }}
           >
             <TextInput
-              style={{ width: '90px', color: 'black', marginRight: '-5px' }}
+              style={{ width: '100px', color: 'black', marginRight: '-5px' }}
               disabled={true}
               value='$neodash_'
             ></TextInput>
