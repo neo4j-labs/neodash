@@ -455,16 +455,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               credentials.password
             )
           );
-          dispatch(
-            createConnectionThunk(
-              state.application.connection.protocol,
-              state.application.connection.url,
-              state.application.connection.port,
-              state.application.connection.database,
-              credentials.username,
-              credentials.password
-            )
-          );
         }
 
         if (standalone) {
