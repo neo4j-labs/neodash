@@ -273,6 +273,10 @@ export const NeoCustomReportActionsModal = ({
 
               <table>
                 {rules.map((rule, index) => {
+                  const ruleType = RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type].find(
+                    (el) => el.value === rule.customization
+                  );
+                  const ruleTrigger = RULE_CONDITIONS[type].find((el) => el.value === rule.condition);
                   return (
                     <>
                       <tr>
@@ -287,16 +291,16 @@ export const NeoCustomReportActionsModal = ({
                             <Dropdown
                               type='select'
                               fluid
-                              style={{ marginLeft: '1%', display: 'inline-block' }}
+                              style={{ marginLeft: '1%', display: 'inline-block', width: '200px' }}
                               selectProps={{
-                                onChange: () => updateRuleField(index, 'condition', newValue.value),
+                                onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
                                 options:
                                   RULE_CONDITIONS[type] &&
                                   RULE_CONDITIONS[type].map((option) => ({
                                     label: option.label,
                                     value: option.value,
                                   })),
-                                value: { label: rule.condition, value: rule.condition },
+                                value: { label: ruleTrigger ? ruleTrigger.label : '', value: rule.condition },
                               }}
                             ></Dropdown>
                           </td>
@@ -309,7 +313,7 @@ export const NeoCustomReportActionsModal = ({
                               value={rule.field ? rule.field : ''}
                               inputValue={rule.field ? rule.field : ''}
                               popupIcon={<></>}
-                              style={{ display: 'inline-block', width: 100, marginLeft: '5px', marginTop: '5px' }}
+                              style={{ width: 150, padding: 0 }}
                               onInputChange={(event, value) => {
                                 updateRuleField(index, 'field', value);
                               }}
@@ -317,7 +321,12 @@ export const NeoCustomReportActionsModal = ({
                                 updateRuleField(index, 'field', newValue);
                               }}
                               renderInput={(params) => (
-                                <TextField {...params} placeholder='Field name...' InputLabelProps={{ shrink: true }} />
+                                <TextField
+                                  {...params}
+                                  placeholder='Field name...'
+                                  style={{ padding: 0 }}
+                                  InputLabelProps={{ shrink: true }}
+                                />
                               )}
                             />
                           </td>
@@ -336,16 +345,17 @@ export const NeoCustomReportActionsModal = ({
                           >
                             <Dropdown
                               type='select'
+                              style={{ width: '150px', display: 'inline-block' }}
                               fluid
                               selectProps={{
-                                onChange: () => updateRuleField(index, 'customization', newValue.value),
+                                onChange: (newValue) => updateRuleField(index, 'customization', newValue.value),
                                 options:
                                   RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] &&
                                   RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type].map((option) => ({
                                     label: option.label,
                                     value: option.value,
                                   })),
-                                value: { label: rule.label, value: rule.value },
+                                value: { label: ruleType ? ruleType.label : '', value: rule.customization },
                               }}
                             ></Dropdown>
                           </td>
