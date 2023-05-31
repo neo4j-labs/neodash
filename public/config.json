@@ -1,5 +1,5 @@
 {
-  "ssoEnabled": false,
+  "ssoEnabled": true,
   "ssoDiscoveryUrl": "https://example.com",
   "standalone": false,
   "standaloneProtocol": "neo4j",

@@ -167,17 +167,21 @@ export default function NeoConnectionModal({
               />
             ) : null}
             {ssoSettings.ssoEnabled ? (
-              <Switch
-                label='Use SSO'
-                checked={ssoVisible}
-                onChange={() => setSsoVisible(!ssoVisible)}
-                style={{ marginLeft: '5px' }}
-              />
+              <div style={{ marginTop: 10 }}>
+                <Switch
+                  label='Use SSO'
+                  checked={ssoVisible}
+                  onChange={() => setSsoVisible(!ssoVisible)}
+                  style={{ marginLeft: '5px' }}
+                />
+              </div>
             ) : (
               <></>
             )}
             {ssoVisible ? (
               <SSOLoginButton
+                hostname={url}
+                port={port}
                 discoveryAPIUrl={discoveryAPIUrl}
                 onSSOAttempt={onSSOAttempt}
                 onClick={() => {

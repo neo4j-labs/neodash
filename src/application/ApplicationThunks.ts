@@ -366,9 +366,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(setPageNumberThunk(parseInt(page)));
       }
     }
-
-    dispatch(setSSOEnabled(config.ssoEnabled, config.ssoDiscoveryUrl));
     const state = getState();
+    dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
+
     const { standalone } = config;
     dispatch(
       setStandaloneEnabled(
@@ -420,7 +420,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(setAboutModalOpen(false));
       dispatch(setConnected(false));
       dispatch(setWelcomeScreenOpen(false));
-      const success = await initializeSSO(config.ssoDiscoveryUrl, (credentials) => {
+      const success = await initializeSSO(state.application.cachedSSODiscoveryUrl, (credentials) => {
         if (standalone) {
           // Redirected from SSO and running in viewer mode, merge retrieved config with hardcoded credentials.
           dispatch(
@@ -478,7 +478,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       });
       dispatch(setWaitForSSO(false));
       if (!success) {
-        alert('Unable to connect using SSO');
+        alert('Unable to connect using SSO. See the browser console for more details.');
         dispatch(
           createNotificationThunk(
             'Unable to connect using SSO',

@@ -28,6 +28,7 @@ import {
   clearNotification,
   resetShareDetails,
   setAboutModalOpen,
+  setCachedSSODiscoveryUrl,
   setConnected,
   setConnectionModalOpen,
   setConnectionProperties,
@@ -194,8 +195,9 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setWelcomeScreenOpen(true));
     dispatch(resetShareDetails());
   },
-  onSSOAttempt: (_) => {
+  onSSOAttempt: (discoveryUrlValidated) => {
     dispatch(setWaitForSSO(true));
+    dispatch(setCachedSSODiscoveryUrl(discoveryUrlValidated));
   },
   setConnectionDetails: (protocol, url, port, database, username, password) => {
     dispatch(setConnectionProperties(protocol, url, port, database, username, password));
