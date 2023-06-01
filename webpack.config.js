@@ -37,7 +37,7 @@ module.exports = (env) => {
   return {
     entry: ['react-hot-loader/patch', './src/index.tsx'],
     mode: production ? 'production' : 'development',
-    devtool: production ? undefined : 'inline-source-map',
+    devtool: production ? undefined : 'source-map',
     module: {
       rules: rules,
     },

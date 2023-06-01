@@ -105,7 +105,7 @@ const NeoCardSettingsContent = ({
             }}
             placeholder={'Enter Cypher here...'}
           />
-          <p
+          <div
             style={{
               color: 'grey',
               fontSize: 12,
@@ -117,7 +117,7 @@ const NeoCardSettingsContent = ({
             }}
           >
             {reportTypes[type] && reportTypes[type].helperText}
-          </p>
+          </div>
         </div>
       )}
     </CardContent>

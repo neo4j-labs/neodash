@@ -26,8 +26,8 @@ export const NeoPage = ({
   isLoaded = true, // Whether the page is loaded and the cards can be displayed.
   onPageLayoutUpdate = () => {}, // action to take when the page layout is updated.
 }) => {
-  const getReportIndex = (pagenumber: number, index: number) => {
-    return `${pagenumber}:${index}`;
+  const getReportKey = (pagenumber: number, id: string) => {
+    return `${pagenumber}:${id}`;
   };
 
   const defaultLayouts = {
@@ -35,7 +35,7 @@ export const NeoPage = ({
       {
         x: 0,
         y: 0,
-        i: getReportIndex(pagenumber, 999999),
+        i: getReportKey(pagenumber, '999999'),
         w: 3,
         h: 2,
         isDraggable: false,
@@ -46,7 +46,7 @@ export const NeoPage = ({
   const loadingMessage = <div>Loading card...</div>;
   const [isDragging, setIsDragging] = React.useState(false);
   const [layouts, setLayouts] = React.useState(defaultLayouts);
-  const [lastElement, setLastElement] = React.useState(<div key={getReportIndex(pagenumber, 999999)}></div>);
+  const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
   const availableHandles = () => {
@@ -103,22 +103,23 @@ export const NeoPage = ({
     setLayouts({
       // @ts-ignore
       lg: [
-        ...reports.map((report, index) => {
+        ...reports.map((report) => {
           return {
-            x: report.x !== undefined ? report.x : 0,
-            y: report.y !== undefined ? report.y : 0,
-            i: getReportIndex(pagenumber, index),
-            w: report.width !== undefined ? Math.max(parseInt(report.width), 2) : 3,
-            h: report.height !== undefined ? Math.max(parseInt(report.height), 1) : 2,
+            x: report.x || 0,
+            y: report.y || 0,
+            i: getReportKey(pagenumber, report.id),
+            w: Math.max(parseInt(report.width), 2) || 3,
+            h: Math.max(parseInt(report.height), 1) || 2,
             minW: 2,
             minH: 1,
             resizeHandles: availableHandles(),
+            isDraggable: true,
           };
         }),
         {
           x: x,
           y: y,
-          i: getReportIndex(pagenumber, 999999),
+          i: getReportKey(pagenumber, '999999'),
           w: 3,
           h: 2,
           minW: 3,
@@ -129,7 +130,7 @@ export const NeoPage = ({
       ],
     });
     setLastElement(
-      <Grid style={{ paddingBottom: '6px' }} key={getReportIndex(pagenumber, 999999)}>
+      <Grid style={{ paddingBottom: '6px' }} key={getReportKey(pagenumber, '999999')}>
         <NeoAddCard
           onCreatePressed={() => {
             const { x, y } = getAddCardButtonPosition();
@@ -179,13 +180,13 @@ export const NeoPage = ({
           onPageLayoutUpdate(newLayout);
         }}
       >
-        {reports.map((report, index) => {
+        {reports.map((report) => {
           const w = 12;
+          const { id } = report;
           // @ts-ignore
           return (
             <Grid
-              index={getReportIndex(pagenumber, index)}
-              key={getReportIndex(pagenumber, index)}
+              key={getReportKey(pagenumber, id)}
               style={{ paddingBottom: '6px' }}
               item
               xs={Math.min(w * 4, 12)}
@@ -195,19 +196,19 @@ export const NeoPage = ({
               xl={Math.min(w, 12)}
             >
               <NeoCard
-                index={index}
-                key={getReportIndex(pagenumber, index)}
+                id={id}
+                key={getReportKey(pagenumber, id)}
                 dashboardSettings={dashboardSettings}
                 onRemovePressed={onRemovePressed}
-                onClonePressed={(index) => {
+                onClonePressed={(id) => {
                   const { x, y } = getAddCardButtonPosition();
-                  onClonePressed(index, x, y);
+                  onClonePressed(id, x, y);
                 }}
               />
             </Grid>
           );
         })}
-        {editable && !isDragging ? lastElement : <div key={getReportIndex(pagenumber, 999999)}></div>}
+        {editable && !isDragging ? lastElement : <div key={getReportKey(pagenumber, '999999')}></div>}
       </ResponsiveGridLayout>
     </div>
   );
@@ -223,8 +224,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onRemovePressed: (index) => dispatch(removeReportThunk(index)),
-  onClonePressed: (index, x, y) => dispatch(cloneReportThunk(index, x, y)),
+  onRemovePressed: (id) => dispatch(removeReportThunk(id)),
+  onClonePressed: (id, x, y) => dispatch(cloneReportThunk(id, x, y)),
   onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height, undefined)),
   onPageLayoutUpdate: (layout) => dispatch(updatePageLayoutThunk(layout)),
 });

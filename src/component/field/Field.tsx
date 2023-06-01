@@ -46,7 +46,7 @@ const NeoField = ({
         helpText={helperText}
         disabled={disabled}
         value={value != null ? value : defaultValue}
-        multiline={multiline}
+        multiline={multiline.toString()}
         fluid
         onClick={(e) => {
           onClick(e.target.textContent);

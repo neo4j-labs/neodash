@@ -61,8 +61,12 @@ export const GraphEntityInspectionTable = ({
           <></>
         )}
         <TableBody>
-          {!hasPropertyToShow ? (
-            <i>(No properties)</i>
+          {Object.keys(entity.properties).length == 0 ? (
+            <TableRow key='empty-row'>
+              <TableCell component='th' scope='row'>
+                (No properties)
+              </TableCell>
+            </TableRow>
           ) : (
             Object.keys(entity.properties)
               .sort()

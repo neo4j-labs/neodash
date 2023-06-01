@@ -1,5 +1,5 @@
 import { ResponsivePie } from '@nivo/pie';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
@@ -18,47 +18,56 @@ const NeoPieChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
 
-  const keys = {};
-  const data: Record<string, any>[] = records
-    .reduce((data: Record<string, any>[], row: Record<string, any>) => {
-      try {
-        if (!selection || !selection.index || !selection.value) {
+  const buildFromRecords = (records) => {
+    let keys = {};
+    let dataRaw = records
+      .reduce((dataR: Record<string, any>[], row: Record<string, any>) => {
+        try {
+          if (!selection || !selection.index || !selection.value) {
+            return dataR;
+          }
+
+          const index = convertRecordObjectToString(row.get(selection.index));
+          const idx = dataR.findIndex((item) => item.index === index);
+          const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
+          const value = recordToNative(row.get(selection.value));
+
+          if (isNaN(value)) {
+            return dataR;
+          }
+          keys[key] = true;
+
+          if (idx > -1) {
+            data[idx][key] = value;
+          } else {
+            data.push({ id: index, label: index, value: value });
+          }
+
           return data;
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          return [];
         }
+      }, [])
+      .map((row) => {
+        Object.keys(keys).forEach((key) => {
+          // eslint-disable-next-line no-prototype-builtins
+          if (!row.hasOwnProperty(key)) {
+            row[key] = 0;
+          }
+        });
 
-        const index = convertRecordObjectToString(row.get(selection.index));
-        const idx = data.findIndex((item) => item.index === index);
-        const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
-        const value = recordToNative(row.get(selection.value));
-
-        if (isNaN(value)) {
-          return data;
-        }
-        keys[key] = true;
-
-        if (idx > -1) {
-          data[idx][key] = value;
-        } else {
-          data.push({ id: index, label: index, value: value });
-        }
-
-        return data;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        return [];
-      }
-    }, [])
-    .map((row) => {
-      Object.keys(keys).forEach((key) => {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!row.hasOwnProperty(key)) {
-          row[key] = 0;
-        }
+        return row;
       });
+    return dataRaw;
+  };
 
-      return row;
-    });
+  const [data, setData] = React.useState([]);
+
+  useEffect(() => {
+    setData(buildFromRecords(records));
+  }, [selection, records]);
 
   const settings = props.settings ? props.settings : {};
   const legendHeight = 20;
