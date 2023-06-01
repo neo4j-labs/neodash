@@ -5,6 +5,9 @@ import { workflowReducer } from './workflows/state/WorkflowReducer';
 import NeoWorkflowDrawerButton from './workflows/component/WorkflowDrawerButton';
 import SidebarDrawerButton from './sidebar/SidebarDrawerButton';
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
+import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
+import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
+import QueryTranslator from './query-translator/QueryTranslator';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -18,6 +21,7 @@ interface Extension {
   reducerPrefix?: string;
   reducerObject?: any;
   drawerButton?: JSX.Element;
+  settingsModal?: JSX.Element;
 }
 
 // TODO: define extension config interface
@@ -77,6 +81,18 @@ export const EXTENSIONS: Record<string, Extension> = {
     description: 'An extension to create, manage, and run workflows consisting of Cypher queries.',
     link: 'https://neo4j.com/professional-services/',
   },
+  'query-translator': {
+    name: 'query-translator',
+    label: 'Query Translator',
+    author: 'Neo4j Professional Services',
+    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
+    enabled: true,
+    reducerPrefix: QUERY_TRANSLATOR_ACTION_PREFIX,
+    reducerObject: queryTranslatorReducer,
+    settingsModal: QueryTranslator,
+    description: 'ask queries in natural language (available only in english).',
+    link: 'https://neo4j.com/professional-services/',
+  },
 };
 
 /**
@@ -116,5 +132,24 @@ function getExtensionDrawerButtons() {
   return buttons;
 }
 
+/**
+ * At the start of the application, we want to collect programmatically the extensions that need to be added inside the SettingsModal.
+ * @returns
+ */
+function getExtensionSettingsModal() {
+  let modals = {};
+  Object.values(EXTENSIONS).forEach((extension) => {
+    try {
+      if (extension.settingsModal) {
+        modals[extension.name] = extension.settingsModal;
+      }
+    } catch (e) {
+      console.log(`Something wrong happened while loading the Extensions settings modals  : ${e}`);
+    }
+  });
+  return modals;
+}
+
 export const EXTENSIONS_REDUCERS = getExtensionReducers();
 export const EXTENSIONS_DRAWER_BUTTONS = getExtensionDrawerButtons();
+export const EXTENSIONS_SETTINGS_MODALS = getExtensionSettingsModal();

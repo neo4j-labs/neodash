@@ -85,6 +85,7 @@ export const NeoDrawer = ({
             dashboardSettings={dashboardSettings}
             updateDashboardSetting={updateDashboardSetting}
             navItemClass={navItemClass}
+            extensions={extensions}
           ></NeoSettingsModal>
 
           <NeoSaveModal navItemClass={navItemClass}></NeoSaveModal>
