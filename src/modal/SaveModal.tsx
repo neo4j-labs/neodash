@@ -83,7 +83,10 @@ export const NeoSaveModal = ({
     'settingsOpen',
     'advancedSettingsOpen',
     'collapseTimeout',
+    'modelClient',
+    'history',
   ]);
+
   const dashboardString = JSON.stringify(filteredDashboard, null, 2);
   const downloadDashboard = () => {
     const element = document.createElement('a');
