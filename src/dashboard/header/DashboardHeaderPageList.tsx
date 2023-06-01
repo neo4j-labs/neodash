@@ -13,6 +13,7 @@ import { setPageNumberThunk } from '../../settings/SettingsThunks';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import RGL, { WidthProvider } from 'react-grid-layout';
+import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../../config/ApplicationConfig';
 const ReactGridLayout = WidthProvider(RGL);
 
 /**
@@ -76,7 +77,13 @@ export const NeoDashboardHeaderPageList = ({
   const content = (
     <Toolbar
       key={2}
-      style={{ zIndex: 998, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
+      style={{
+        zIndex: 998,
+        minHeight: '50px',
+        paddingLeft: '0px',
+        paddingRight: '0px',
+        background: DASHBOARD_PAGE_LIST_COLOR,
+      }}
     >
       {!standalone ? (
         <div
@@ -85,7 +92,7 @@ export const NeoDashboardHeaderPageList = ({
             zIndex: open ? 999 : 999,
             transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
             height: '0px',
-            background: 'white',
+            background: DASHBOARD_PAGE_LIST_COLOR,
           }}
         ></div>
       ) : (
@@ -123,7 +130,7 @@ export const NeoDashboardHeaderPageList = ({
           zIndex: -112,
           overflowY: 'hidden',
           overflowX: 'hidden',
-          background: 'rgba(240,240,240)',
+          background: DASHBOARD_PAGE_LIST_COLOR,
           padding: 0,
           margin: 0,
           boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
@@ -139,8 +146,8 @@ export const NeoDashboardHeaderPageList = ({
           <div
             key={i}
             style={{
-              background: 'grey',
-              backgroundColor: pagenumber == i ? 'white' : 'inherit',
+              background: DASHBOARD_PAGE_LIST_COLOR,
+              backgroundColor: pagenumber == i ? DASHBOARD_PAGE_LIST_ACTIVE_COLOR : 'inherit',
               display: 'inline-block',
               height: '100%',
               padding: 0,

@@ -54,6 +54,7 @@ export const NeoDashboardHeaderTitleBar = ({
           fontSize: '22px',
           flexGrow: 1,
           color: DASHBOARD_HEADER_TITLE_COLOR,
+          fontWeight: 'bold',
         }}
         placeholder='Dashboard Name...'
         fullWidth
