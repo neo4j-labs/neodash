@@ -5,8 +5,10 @@ import { getApiKey, getClientSettings, getModelProvider } from './state/QueryTra
 import { Button } from '@neo4j-ndl/react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import QueryTranslatorSettingsModal from './settings/QueryTranslatorSettingsModal';
+import { getModelClientObject } from './QueryTranslatorConfig';
+import { queryTranslationThunk } from './state/QueryTranslatorThunks';
 /**
- * TODO:
+ * //TODO:
  * 1. The query translator should handle all the requests from the cards to the client
  * 2. When changing the modeltype, reset all the history of messages
  * 3. create system message from here to prevent fucking all up during the thunk, o each modelProvider change and at the start pull all the db schema
@@ -17,13 +19,15 @@ export const QueryTranslator = ({
   modelProvider,
   clientSettings,
   _deleteAllMessageHistory,
-  _setGlobalModelClient,
+  setGlobalModelClient,
+  queryTranslation,
 }) => {
   const [open, setOpen] = React.useState(false);
   // When changing provider, i will reset all the messages to prevent strage results
   useEffect(() => {
     if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
-      console.log(`henlo ${[modelProvider, apiKey, JSON.stringify(clientSettings)]}`);
+      setGlobalModelClient(getModelClientObject(modelProvider, clientSettings));
+      queryTranslation(0, 0, 'hello', 'graph');
     }
   }, [modelProvider, apiKey, clientSettings]);
 
@@ -57,6 +61,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setGlobalModelClient: (modelClient) => {
     dispatch(setGlobalModelClient(modelClient));
+  },
+  queryTranslation: (pageIndex, cardIndex, message, reportType) => {
+    dispatch(queryTranslationThunk(pageIndex, cardIndex, message, reportType));
   },
 });
 

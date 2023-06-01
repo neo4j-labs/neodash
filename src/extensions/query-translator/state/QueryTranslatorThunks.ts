@@ -13,15 +13,15 @@ const consoleLogAsync = async (message: string, other?: any) => {
  * @returns
  */
 export const queryTranslationThunk =
-  (pageIndex, cardIndex, message, reportType) => async (dispatch: any, getState: any) => {
+  (pageIndex, cardIndex, _message, _reportType) => async (dispatch: any, getState: any) => {
     const state = getState();
-    const modelClient = getModelClient(state);
+    const _modelClient = getModelClient(state);
     // if (!modelClient){
 
     // }
-    const messageHistory = getHistoryPerCard(state, pageIndex, cardIndex);
+    const _messageHistory = getHistoryPerCard(state, pageIndex, cardIndex);
     try {
-      modelClient.chatCompletion(message, reportType, messageHistory);
+      // modelClient.chatCompletion(message, reportType, messageHistory);
     } catch (e) {
       await consoleLogAsync(
         `Something wrong happened while calling the model client for the card number ${cardIndex} inside the page ${pageIndex}: \n`,

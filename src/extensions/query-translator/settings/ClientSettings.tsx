@@ -1,35 +1,41 @@
 import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { debounce, List, ListItem } from '@mui/material';
-import { getModelProviderObject, getQueryTranslatorDefaultConfig } from '../QueryTranslatorConfig';
+import { getModelClientObject, getQueryTranslatorDefaultConfig } from '../QueryTranslatorConfig';
 import { getClientSettings } from '../state/QueryTranslatorSelector';
 import NeoSetting from '../../../component/field/Setting';
-import { settingsReducer } from '../../../settings/SettingsReducer';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
-// TODO - this is also very similar to the existing settings form in the card settings.
+// TODO: the following
+// 1. the settings modal should save only when all the required fields are defined and we can correctly authenticate
 export const ClientSettings = ({ modelProvider, settingState, setSettingsState }) => {
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
   const [localSettings, setLocalSettings] = React.useState(settingState);
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [localClient, setLocalClient] = React.useState(undefined);
   const [settingChoices, setSettingChoices] = React.useState({});
 
-  const updateSpecificSettingChoices = (field: string, value: any) => {
+  /**
+   * Method used to update a certain field inside a state object.
+   * @param field Name of the field to update
+   * @param value Value to set for the specified field
+   * @param stateObj Object to update
+   * @param setFunction Function used to update stateObj
+   */
+  const updateSpecificFieldInStateObject = (field: string, value: any, stateObj, setFunction) => {
     const entry = {};
     entry[field] = value;
-    setSettingChoices(update(settingChoices, entry));
+    setFunction(update(stateObj, entry));
   };
 
-  const updateSpecificExtensionSetting = (field: string, value: any, local = false) => {
-    const entry = {};
-    entry[field] = value;
-    local ? setLocalSettings(update(localSettings, entry)) : setSettingsState(update(settingState, entry));
-  };
-  const debouncedUpdateSpecificExtensionSetting = useCallback(debounce(updateSpecificExtensionSetting, 500), []);
+  const debouncedUpdateSpecificFieldInStateObject = useCallback(debounce(updateSpecificFieldInStateObject, 500), []);
 
+  /**
+   * Function used from each setting to understand if it needs to be disabled
+   * @param setting Name of the setting to check
+   * @returns False if not disabled, otherwise True
+   */
   function checkIfDisabled(setting) {
     let tmp = defaultSettings[setting];
     if (tmp.required || isAuthenticated) {
@@ -38,31 +44,36 @@ export const ClientSettings = ({ modelProvider, settingState, setSettingsState }
     return !requiredSettings.every((e) => settingState[e]);
   }
 
+  // Effect used to authenticate the client when the apiKey changed
   useEffect(() => {
-    let clientObject = getModelProviderObject(modelProvider, settingState);
+    let clientObject = getModelClientObject(modelProvider, settingState);
     clientObject.authenticate(setIsAuthenticated);
   }, [settingState.apiKey]);
 
+  // Effect used to trigger the population of the settings when the user inserts a correct apiKey
   useEffect(() => {
-    let localClientTmp = getModelProviderObject(modelProvider, settingState);
-    if (isAuthenticated) {
-      setLocalClient(localClientTmp);
-    }
+    let localClientTmp = getModelClientObject(modelProvider, settingState);
     let tmpSettingsChoices = {};
     Object.keys(defaultSettings).map((setting) => {
       tmpSettingsChoices[setting] = setChoices(setting, localClientTmp);
     });
   }, [isAuthenticated]);
 
-  function setChoices(setting, localClientTmp) {
+  /**
+   * Function used to handle the definition of the choices param inside the settings form.
+   * If needed, it will get the choices from the client
+   * @param setting Name of the setting that we need to populate
+   * @param modelClient Client to call the AI model
+   */
+  function setChoices(setting, modelClient) {
     let choices = defaultSettings[setting].values ? defaultSettings[setting].values : [];
     let { methodFromClient } = defaultSettings[setting];
     if (methodFromClient && isAuthenticated) {
-      localClientTmp[methodFromClient]().then((value) => {
-        updateSpecificSettingChoices(setting, value);
+      modelClient[methodFromClient]().then((value) => {
+        updateSpecificFieldInStateObject(setting, value, settingChoices, setSettingChoices);
       });
     } else {
-      updateSpecificSettingChoices(setting, choices);
+      updateSpecificFieldInStateObject(setting, choices, settingChoices, setSettingChoices);
     }
   }
 
@@ -78,14 +89,18 @@ export const ClientSettings = ({ modelProvider, settingState, setSettingsState }
               value={localSettings[setting]}
               disabled={disabled}
               type={defaultSettings[setting].type}
-              label={`${defaultSettings[setting].label} - ${
-                setting == 'apiKey' ? (isAuthenticated ? '( Authenticated )' : '( Not Authenticated )') : ''
-              }`}
+              label={
+                // TODO: change this label for api to a button that verifies the auth,
+                // if verified, then show the other options.(should be verified for all REQUIRED options in defaultConfig)
+                `${defaultSettings[setting].label} - ${
+                  setting == 'apiKey' ? (isAuthenticated ? '( Authenticated )' : '( Not Authenticated )') : ''
+                }`
+              }
               defaultValue={defaultSettings[setting].default}
               choices={settingChoices[setting] ? settingChoices[setting] : []}
               onChange={(e) => {
-                updateSpecificExtensionSetting(setting, e, true);
-                debouncedUpdateSpecificExtensionSetting(setting, e);
+                updateSpecificFieldInStateObject(setting, e, localSettings, setLocalSettings);
+                debouncedUpdateSpecificFieldInStateObject(setting, e, settingState, setSettingsState);
               }}
             />
           </ListItem>

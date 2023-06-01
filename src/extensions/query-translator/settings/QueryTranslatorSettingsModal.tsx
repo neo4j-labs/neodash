@@ -12,15 +12,15 @@ import ClientSettings from './ClientSettings';
 export const QueryTranslatorSettingsModal = ({
   open,
   setOpen,
-  apiKey,
   modelProvider,
   clientSettings,
   updateClientSettings,
   updateModelProvider,
 }) => {
   const [modelProviderState, setModelProviderState] = React.useState(modelProvider);
-  const [apiKeyState, setApiKeyState] = React.useState(apiKey);
   const [settingsState, setSettingsState] = React.useState(clientSettings);
+
+  // TODO: a user shouldn't be able to save a configuration if it's not correct and it didn't fill all the requirements
   const handleClose = () => {
     updateModelProvider(modelProviderState);
     updateClientSettings(settingsState);
@@ -66,7 +66,6 @@ export const QueryTranslatorSettingsModal = ({
   );
 };
 const mapStateToProps = (state) => ({
-  apiKey: getApiKey(state),
   clientSettings: getClientSettings(state),
   modelProvider: getModelProvider(state),
 });

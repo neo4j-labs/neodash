@@ -90,7 +90,7 @@ export function getQueryTranslatorDefaultConfig(providerName) {
  * @param settings Dictionary that will be unpacked by the client itself
  * @returns Client object related to the provider
  */
-export function getModelProviderObject(modelProvider, settings) {
+export function getModelClientObject(modelProvider, settings) {
   let modelProviderClass = QUERY_TRANSLATOR_CONFIG.availableClients[modelProvider].clientClass;
   return new modelProviderClass(settings);
 }
