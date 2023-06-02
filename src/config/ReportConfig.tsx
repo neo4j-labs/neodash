@@ -12,6 +12,7 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
+import ImageChart from '../chart/image/ImageChart';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -1258,6 +1259,13 @@ export const REPORT_TYPES = {
       },
     },
   },
+  image: {
+    label: "Image",
+    helperText: "I show any image",
+    component: ImageChart,
+    maxRecords: 10,
+    settings: {}
+  }
 };
 
 // Default node labels to display when rendering a node in a graph visualization.
