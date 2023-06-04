@@ -111,7 +111,6 @@ const NeoBarChart = (props: ChartProps) => {
   );
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
-
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
     let { data, id } = bar;
@@ -133,10 +132,6 @@ const NeoBarChart = (props: ChartProps) => {
     }
     return chartColorsByScheme[colorIndex];
   };
-
-  if (data.length == 0) {
-    return <NoDrawableDataErrorMessage />;
-  }
 
   const BarComponent = ({ bar, borderColor }) => {
     let shade = false;

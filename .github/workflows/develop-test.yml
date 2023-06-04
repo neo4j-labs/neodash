@@ -27,8 +27,11 @@ jobs:
    - name: Eslint check
      run: yarn run lint
    - name: Cypress run
-     uses: cypress-io/github-action@v2
+     uses: cypress-io/github-action@v4
      with:
         build: yarn run build
         start: yarn run dev
         wait-on: 'http://localhost:3000'
+        browser: chrome
+
+
