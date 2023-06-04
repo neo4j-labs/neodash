@@ -171,6 +171,12 @@ export const setWaitForSSO = (wait: boolean) => ({
   payload: { wait },
 });
 
+export const SET_CACHED_SSO_DISCOVERY_URL = 'APPLICATION/SET_CACHED_SSO_DISCOVERY_URL';
+export const setCachedSSODiscoveryUrl = (url: string) => ({
+  type: SET_CACHED_SSO_DISCOVERY_URL,
+  payload: { url },
+});
+
 export const SET_SESSION_PARAMETERS = 'APPLICATION/SET_SESSION_PARAMETERS';
 export const setSessionParameters = (parameters: any) => ({
   type: SET_SESSION_PARAMETERS,

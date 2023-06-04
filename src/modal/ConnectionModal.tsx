@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
 import { Button, Dialog, Switch, TextInput, Dropdown } from '@neo4j-ndl/react';
 import { PlayIconOutline } from '@neo4j-ndl/react/icons';
-
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
@@ -14,6 +13,7 @@ export default function NeoConnectionModal({
   connection,
   dismissable = false,
   createConnection,
+  setConnectionProperties,
   onConnectionModalClose,
   onSSOAttempt,
 }) {
@@ -167,33 +167,46 @@ export default function NeoConnectionModal({
               />
             ) : null}
             {ssoSettings.ssoEnabled ? (
-              <Switch
-                label='Use SSO'
-                checked={ssoVisible}
-                onChange={() => setSsoVisible(!ssoVisible)}
-                style={{ marginLeft: '5px' }}
+              <div style={{ marginTop: 10 }}>
+                <Switch
+                  label='Use SSO'
+                  checked={ssoVisible}
+                  onChange={() => setSsoVisible(!ssoVisible)}
+                  style={{ marginLeft: '5px' }}
+                />
+              </div>
+            ) : (
+              <></>
+            )}
+            {ssoVisible ? (
+              <SSOLoginButton
+                hostname={url}
+                port={port}
+                discoveryAPIUrl={discoveryAPIUrl}
+                onSSOAttempt={onSSOAttempt}
+                onClick={() => {
+                  // Remember credentials on click
+                  setConnectionProperties(protocol, url, port, database, '', '');
+                }}
               />
-            ) : null}
+            ) : (
+              <Button
+                type='submit'
+                onClick={(e) => {
+                  e.preventDefault();
+                  onConnectionModalClose();
+                  createConnection(protocol, url, port, database, username, password);
+                }}
+                style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'blue' }}
+                variant='contained'
+                size='large'
+                endIcon={<PlayIconOutline />}
+              >
+                Connect
+              </Button>
+            )}
           </form>
         </Dialog.Content>
-        <Dialog.Actions>
-          {ssoVisible ? (
-            <SSOLoginButton discoveryAPIUrl={discoveryAPIUrl} onSSOAttempt={onSSOAttempt} />
-          ) : (
-            <Button
-              type='submit'
-              onClick={(e) => {
-                e.preventDefault();
-                onConnectionModalClose();
-                createConnection(protocol, url, port, database, username, password);
-              }}
-              style={{ float: 'right' }}
-            >
-              Connect
-              <PlayIconOutline className='btn-icon-sm-r' aria-label={'Play'} />
-            </Button>
-          )}
-        </Dialog.Actions>
         <Dialog.Actions
           style={{
             background: '#555',

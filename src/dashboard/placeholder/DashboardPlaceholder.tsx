@@ -11,10 +11,9 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
   const defaultToolbarContent = (
     <>
       <InputBase
-        disabled
         id='center-aligned'
         label='placeholder'
-        style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
+        style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white !important' }}
         placeholder='Dashboard Name...'
         fullWidth
         maxRows={4}
