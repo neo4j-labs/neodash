@@ -101,7 +101,7 @@ export const NeoDrawer = ({
           {renderDrawerExtensionsButton()}
           <Tooltip title='Documentation' aria-label='documentation'>
             <SideNavigationItem
-              href='https://neo4j.com/labs/neodash/2.2/user-guide/'
+              href='https://neo4j.com/labs/neodash/2.3/user-guide/'
               target='_blank'
               icon={<BookOpenIconOutline className={navItemClass} aria-label={'side book'} />}
               aria-label={'side docs'}

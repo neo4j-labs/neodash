@@ -115,6 +115,7 @@ const NeoCardSettingsFooter = ({
   );
 
   // TODO - Make the extensions more pluggable and dynamic, instead of hardcoded here.
+  // ^ keep modals at a higher level in the object hierarchy instead of injecting in the footer.
   return (
     <div>
       {extensions.styling && extensions.styling.active ? (
