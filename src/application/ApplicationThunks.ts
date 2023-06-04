@@ -410,6 +410,16 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
           )
         );
       }
+      if (state.dashboard.version == '2.2') {
+        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.2', '2.3');
+        dispatch(setDashboard(upgradedDashboard));
+        dispatch(
+          createNotificationThunk(
+            'Successfully upgraded dashboard',
+            'Your old dashboard was migrated to version 2.3. You might need to refresh this page.'
+          )
+        );
+      }
     }
     // At the load of a dashboard, we want to ensure correct casting types
     dispatch(updateParametersToNeo4jTypeThunk());
