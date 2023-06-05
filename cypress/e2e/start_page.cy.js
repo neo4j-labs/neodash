@@ -278,7 +278,7 @@ describe('NeoDash E2E Tests', () => {
 function enableAdvancedVisualizations() {
   cy.get('#extensions-sidebar-button').should('be.visible').click();
   cy.get('#checkbox-advanced-charts').should('be.visible').click();
-  cy.get('.ndl-dialog-close').should('be.visible').click();
+  cy.get('.ndl-dialog-close').scrollIntoView().should('be.visible').click();
   cy.wait(200);
 }
 
