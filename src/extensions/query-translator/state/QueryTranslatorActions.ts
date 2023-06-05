@@ -23,14 +23,18 @@ export const setGlobalModelClient = (modelClient) => ({
 export const UPDATE_MESSAGE_HISTORY = `${QUERY_TRANSLATOR_ACTION_PREFIX}UPDATE_EXTENSION_TITLE`;
 /**
  * Action to add a new message to the history
- * @param message Object defined as {user: string, message: string}
+ * @param history History of messages between a card and the model
  * @param pageIndex Index of the page related to the card
  * @param cardIndex Index of the card inside the page
  * @returns
  */
-export const updateMessageHistory = (message: ChatCompletionRequestMessage, pageIndex: number, cardIndex: number) => ({
+export const updateMessageHistory = (
+  cardHistory: ChatCompletionRequestMessage[],
+  pageIndex: number,
+  cardIndex: number
+) => ({
   type: UPDATE_MESSAGE_HISTORY,
-  payload: { message, pageIndex, cardIndex },
+  payload: { cardHistory, pageIndex, cardIndex },
 });
 
 export const DELETE_MESSAGE_HISTORY = `${QUERY_TRANSLATOR_ACTION_PREFIX}DELETE_MESSAGE_HISTORY`;

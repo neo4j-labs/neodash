@@ -10,6 +10,7 @@ export const queryTranslatorExtensionName = 'query-translator';
 const checkExtensionConfig = (state: any) => {
   return state.dashboard.extensionsConfig && state.dashboard.extensionsConfig[queryTranslatorExtensionName];
 };
+
 export const getHistory = (state: any) => {
   let history = checkExtensionConfig(state) && state.dashboard.extensionsConfig[queryTranslatorExtensionName].history;
   return history != undefined && history ? history : {};
@@ -17,7 +18,7 @@ export const getHistory = (state: any) => {
 
 export const getModelClient = (state: any) => {
   let modelClient =
-    checkExtensionConfig(state) && state.dashboard.extensionsConfig[queryTranslatorExtensionName].getModelClient;
+    checkExtensionConfig(state) && state.dashboard.extensionsConfig[queryTranslatorExtensionName].modelClient;
   return modelClient != undefined && modelClient ? modelClient : undefined;
 };
 

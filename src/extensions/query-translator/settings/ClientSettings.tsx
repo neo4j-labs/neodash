@@ -4,6 +4,7 @@ import { debounce, List, ListItem } from '@mui/material';
 import { getModelClientObject, getQueryTranslatorDefaultConfig } from '../QueryTranslatorConfig';
 import { getClientSettings } from '../state/QueryTranslatorSelector';
 import NeoSetting from '../../../component/field/Setting';
+import { setGlobalModelClient } from '../state/QueryTranslatorActions';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -45,6 +46,7 @@ export const ClientSettings = ({ modelProvider, settingState, setSettingsState }
   }
 
   // Effect used to authenticate the client when the apiKey changed
+  // TODO: change to modelClientInitializationThunk when having a button to set the state globally and not only local as right now
   useEffect(() => {
     let clientObject = getModelClientObject(modelProvider, settingState);
     clientObject.authenticate(setIsAuthenticated);
@@ -53,6 +55,11 @@ export const ClientSettings = ({ modelProvider, settingState, setSettingsState }
   // Effect used to trigger the population of the settings when the user inserts a correct apiKey
   useEffect(() => {
     let localClientTmp = getModelClientObject(modelProvider, settingState);
+    if (isAuthenticated) {
+      setGlobalModelClient(localClientTmp);
+    } else {
+      setGlobalModelClient(undefined);
+    }
     let tmpSettingsChoices = {};
     Object.keys(defaultSettings).map((setting) => {
       tmpSettingsChoices[setting] = setChoices(setting, localClientTmp);
@@ -115,6 +122,10 @@ const mapStateToProps = (state) => ({
   settings: getClientSettings(state),
 });
 
-const mapDispatchToProps = (_dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  setGlobalModelClient: (modelClient) => {
+    dispatch(setGlobalModelClient(modelClient));
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientSettings);

@@ -40,3 +40,5 @@ export const reportTypesToDesc = {
   'Raw JSON': 'The Cypher query must return a JSON object that will be displayed as raw JSON data.',
   'Pie Chart': 'Two variables named category and value.',
 };
+
+export const MAX_NUM_VALIDATION = 5;

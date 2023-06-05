@@ -1,6 +1,5 @@
-import { TroubleshootOutlined } from '@mui/icons-material';
-import { Configuration, OpenAIApi } from 'openai';
-import { nodePropsQuery, relPropsQuery, relQuery, reportTypesToDesc } from '../const';
+import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
+import { nodePropsQuery, MAX_NUM_VALIDATION, relPropsQuery, relQuery, reportTypesToDesc } from '../const';
 import { ModelClient } from '../ModelClient';
 
 const consoleLogAsync = async (message: string, other?: any) => {
@@ -14,9 +13,7 @@ export class OpenAiClient implements ModelClient {
 
   listAvailableModels: string[];
 
-  createSystemMessage!: any;
-
-  validateQuery!: any;
+  createSystemMessage: any;
 
   modelClient!: OpenAIApi;
 
@@ -24,10 +21,27 @@ export class OpenAiClient implements ModelClient {
 
   constructor(settings) {
     this.apiKey = settings.apiKey;
+    this.modelType = settings.modelType;
     this.listAvailableModels = [];
     this.setModelClient();
   }
 
+  async validateQuery(query, database) {
+    let isValid = false;
+    let errorMessage = '';
+    try {
+      let res = await this.queryDatabase(`EXPLAIN ${query}`, database);
+      isValid = true;
+    } catch (e) {
+      isValid = false;
+      errorMessage = e.message;
+    }
+    return [isValid, errorMessage];
+  }
+
+  /**
+   * Function used to create the OpenAiApi object.
+   * */
   setModelClient() {
     const configuration = new Configuration({
       apiKey: this.apiKey,
@@ -35,9 +49,20 @@ export class OpenAiClient implements ModelClient {
     this.modelClient = new OpenAIApi(configuration);
   }
 
-  async authenticate(setIsAuthenticated) {
+  /**
+   *
+   * @param setIsAuthenticated If defined, is a function used to set the authentication result (for example, set function of a state variable)
+   * @returns True if we client can authenticate, False otherwise
+   */
+  async authenticate(
+    setIsAuthenticated = (boolean) => {
+      let x = boolean;
+    }
+  ) {
     try {
       let tmp = await this.getListModels();
+      // Can be used in async mode without awaiting
+      // by passing down a function to set the authentication result
       setIsAuthenticated(tmp.length > 0);
       return tmp.length > 0;
     } catch (e) {
@@ -46,6 +71,10 @@ export class OpenAiClient implements ModelClient {
     }
   }
 
+  /**
+   *  Used also to check authentication
+   * @returns list of models available for this client
+   */
   async getListModels() {
     let res;
     try {
@@ -68,6 +97,10 @@ export class OpenAiClient implements ModelClient {
       apiKey: apiKey,
     });
     this.modelClient = new OpenAIApi(configuration);
+  }
+
+  setDriver(driver) {
+    this.driver = driver;
   }
 
   setListAvailableModels(listModels) {
@@ -107,16 +140,20 @@ export class OpenAiClient implements ModelClient {
         return elems;
       })
       .catch(async (e) => {
-        await consoleLogAsync(`Error while running ${query}`, e);
+        throw e;
       });
     return res;
   }
 
   async generateSchema(database) {
-    let nodeProps = await this.queryDatabase(nodePropsQuery, database);
-    let relProps = await this.queryDatabase(relPropsQuery, database);
-    let rels = await this.queryDatabase(relQuery, database);
-    return this.createSchemaText(nodeProps, relProps, rels);
+    try {
+      let nodeProps = await this.queryDatabase(nodePropsQuery, database);
+      let relProps = await this.queryDatabase(relPropsQuery, database);
+      let rels = await this.queryDatabase(relQuery, database);
+      return this.createSchemaText(nodeProps, relProps, rels);
+    } catch (e) {
+      throw Error(`Couldn't generate schema due to: ${e.message}`);
+    }
   }
 
   getSystemMessage(schemaText) {
@@ -150,64 +187,74 @@ export class OpenAiClient implements ModelClient {
   }
 
   // TODO: adapt to the new structure, no more persisting inside the object, passign everything down
-  addUserMessage(content, reportType) {
-    let finalMessage = `${content}. The Cypher RETURN clause must contained certain variables, in this case ${reportTypesToDesc[reportType]} Plain cypher code, no explanations and no unrequired symbols. Remember to respect the schema. `;
-    return { role: 'user', content: finalMessage };
+  addUserMessage(content, reportType, plain = false) {
+    let finalMessage = `${content}. The Cypher RETURN clause must contained certain variables, in this case ${reportTypesToDesc[reportType]} Plain cypher code, no explanations and no unrequired symbols. Remember to respect the schema. Please remove any comment or explanation  from your result `;
+    return { role: ChatCompletionRequestMessageRoleEnum.User, content: plain ? content : finalMessage };
   }
 
   addSystemMessage(content) {
-    return { role: 'assistant', content: content };
+    return { role: ChatCompletionRequestMessageRoleEnum.Assistant, content: content };
   }
 
-  // updateMessageHistory(message) {
-  //   this.messages.push(message);
-  //   this.setMessages(this.messages);
-  // }
+  addErrorMessage(error) {
+    let finalMessage = `Please fix the query accordingly to this error: ${error}. Plain cypher code, no comments and no explanations and no unrequired symbols. Remember to respect the schema. Please remove any comment or explanation  from your result`;
+    return { role: ChatCompletionRequestMessageRoleEnum.User, content: finalMessage };
+  }
 
-  async chatCompletion(
-    content,
-    messages,
-    database,
-    reportType,
-    setResponse = (res) => {
-      console.log(res);
-    }
-  ) {
+  async chatCompletion(history) {
+    const completion = await this.modelClient.createChatCompletion({
+      model: this.modelType,
+      messages: history,
+    });
+    // If the status is correct
+    if (completion.status == 200 && completion.data && completion.data.choices && completion.data.choices[0].message) {
+      let { message } = completion.data.choices[0];
+      return message;
+    } 
+      throw Error(`Request returned with status: ${completion.status}`);
+    
+  }
+
+  async queryTranslation(inputMessage, history, database, reportType) {
+    // Creating a copy of the history
+    let newHistory: ChatCompletionRequestMessage[] = [...history];
+
     try {
-      if (messages.length == 0) {
+      if (history.length == 0) {
         let schema = await this.generateSchema(database);
-        this.addSystemMessage(this.getSystemMessage(schema));
+        newHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
       }
-      if (this.apiKey) {
-        this.addUserMessage(content, reportType);
 
-        const completion = await this.modelClient.createChatCompletion({
-          model: this.modelType,
-          messages: messages,
-        });
+      let tmpHistory = [...newHistory];
+      tmpHistory.push(this.addUserMessage(inputMessage, reportType));
 
-        // If the status is correct
-        if (
-          completion.status == 200 &&
-          completion.data &&
-          completion.data.choices &&
-          completion.data.choices[0].message
-        ) {
-          let { message } = completion.data.choices[0];
-          this.updateMessageHistory(message);
-          setResponse(message.content);
+      let retries = 0;
+      let isValidated = false;
+      let errorMessage = '';
+      // Creating a tmp history to prevent updating the history with erroneous messages
+      // While is not validated and we didn't exceed the maximum retry number
+      while (!isValidated && retries < MAX_NUM_VALIDATION) {
+        retries += 1;
+        // Get the answer to the question
+        let newMessage = await this.chatCompletion(tmpHistory);
+        tmpHistory.push(newMessage);
+        // and try to validate it
+        let res = await this.validateQuery(newMessage.content, database);
+        isValidated = res[0];
+        errorMessage = res[1];
+        if (!isValidated) {
+          tmpHistory.push(this.addErrorMessage(errorMessage));
         } else {
-          throw Error(`Request returned with status: ${completion.status}`);
+          newHistory.push(this.addUserMessage(inputMessage, reportType, true));
+          newHistory.push(newMessage);
         }
-      } else {
-        throw Error('api key not present');
+      }
+      if (!isValidated) {
+        throw Error(`The model couldn't translate your request: ${inputMessage}`);
       }
     } catch (error) {
-      setResponse(!this.apiKey ? 'key not present' : `${error}`);
       await consoleLogAsync('error during query', error);
-    } finally {
-      // TODO: trigger availability of the card (we should stop clicking on the card to prevent strange misconfigurations here)
-      await consoleLogAsync('done', this);
     }
+    return newHistory;
   }
 }
