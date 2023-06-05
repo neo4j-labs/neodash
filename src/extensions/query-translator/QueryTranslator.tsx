@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { deleteAllMessageHistory, setGlobalModelClient } from './state/QueryTranslatorActions';
+import { deleteAllMessageHistory, deleteMessageHistory, setGlobalModelClient } from './state/QueryTranslatorActions';
 import { getApiKey, getClientSettings, getModelProvider } from './state/QueryTranslatorSelector';
 import { Button } from '@neo4j-ndl/react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import QueryTranslatorSettingsModal from './settings/QueryTranslatorSettingsModal';
 import { getModelClientObject } from './QueryTranslatorConfig';
 import { queryTranslationThunk } from './state/QueryTranslatorThunks';
+import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 /**
  * //TODO:
  * 1. The query translator should handle all the requests from the cards to the client
@@ -21,13 +22,16 @@ export const QueryTranslator = ({
   _deleteAllMessageHistory,
   setGlobalModelClient,
   queryTranslation,
+  _deleteMessageHistory,
 }) => {
   const [open, setOpen] = React.useState(false);
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+
   // When changing provider, i will reset all the messages to prevent strage results
   useEffect(() => {
+    setGlobalModelClient(undefined);
     if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
-      setGlobalModelClient(getModelClientObject(modelProvider, clientSettings));
-      queryTranslation(0, 0, 'hello', 'graph');
+      queryTranslation(0, 0, 'give me any query', 'Table', driver);
     }
   }, [modelProvider, apiKey, clientSettings]);
 
@@ -62,8 +66,11 @@ const mapDispatchToProps = (dispatch) => ({
   setGlobalModelClient: (modelClient) => {
     dispatch(setGlobalModelClient(modelClient));
   },
-  queryTranslation: (pageIndex, cardIndex, message, reportType) => {
-    dispatch(queryTranslationThunk(pageIndex, cardIndex, message, reportType));
+  queryTranslation: (pagenumber, cardIndex, message, reportType, driver) => {
+    dispatch(queryTranslationThunk(pagenumber, cardIndex, message, reportType, driver));
+  },
+  deleteMessageHistory: (pagenumber, cardIndex) => {
+    dispatch(deleteMessageHistory(pagenumber, cardIndex));
   },
 });
 

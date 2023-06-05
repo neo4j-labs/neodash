@@ -41,12 +41,15 @@ export const queryTranslatorReducer = (state = INITIAL_EXTENSION_STATE, action: 
       return state;
     }
     case UPDATE_MESSAGE_HISTORY: {
-      const { message, pageIndex, cardIndex } = payload;
+      const { cardHistory, pageIndex, cardIndex } = payload;
       let newHistory = { ...state.history };
-      const history = newHistory[pageIndex] && newHistory[pageIndex][cardIndex] ? newHistory[pageIndex][cardIndex] : [];
-      // For now we always append a message to the history
-      history.push(message);
-      newHistory[pageIndex][cardIndex] = history;
+
+      if (newHistory && !newHistory[pageIndex]) {
+        newHistory[pageIndex] = {};
+        newHistory[pageIndex][cardIndex] = cardHistory;
+      } else {
+        newHistory[pageIndex][cardIndex] = cardHistory;
+      }
       state = update(state, { history: newHistory });
       return state;
     }
