@@ -125,7 +125,7 @@ export const evaluateRulesOnLink = (link, customization, defaultValue, rules) =>
           const ruleValue = rule.value;
           const realValue = link.properties[property];
           if (evaluateCondition(realValue, rule.condition, ruleValue)) {
-            str = '#fefefe';
+            str = rule.customizationValue;
           }
         }
       });
