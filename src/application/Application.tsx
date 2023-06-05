@@ -27,8 +27,10 @@ import {
   clearNotification,
   resetShareDetails,
   setAboutModalOpen,
+  setCachedSSODiscoveryUrl,
   setConnected,
   setConnectionModalOpen,
+  setConnectionProperties,
   setOldDashboard,
   setReportHelpModalOpen,
   setWaitForSSO,
@@ -73,6 +75,7 @@ const Application = ({
   shareDetails,
   createConnection,
   createConnectionFromDesktopIntegration,
+  setConnectionDetails,
   onResetShareDetails,
   onConfirmLoadSharedDashboard,
   initializeApplication,
@@ -118,6 +121,7 @@ const Application = ({
           standaloneSettings={standaloneSettings}
           createConnection={createConnection}
           onSSOAttempt={onSSOAttempt}
+          setConnectionProperties={setConnectionDetails}
           onConnectionModalClose={onConnectionModalClose}
         ></NeoConnectionModal>
         <NeoWelcomeScreenModal
@@ -190,8 +194,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setWelcomeScreenOpen(true));
     dispatch(resetShareDetails());
   },
-  onSSOAttempt: (_) => {
+  onSSOAttempt: (discoveryUrlValidated) => {
     dispatch(setWaitForSSO(true));
+    dispatch(setCachedSSODiscoveryUrl(discoveryUrlValidated));
+  },
+  setConnectionDetails: (protocol, url, port, database, username, password) => {
+    dispatch(setConnectionProperties(protocol, url, port, database, username, password));
   },
   onConfirmLoadSharedDashboard: (_) => dispatch(onConfirmLoadSharedDashboardThunk()),
   onConnectionModalOpen: (_) => dispatch(setConnectionModalOpen(true)),

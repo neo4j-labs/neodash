@@ -8,8 +8,11 @@ import {
   RULE_BASED_REPORT_CUSTOMIZATIONS,
 } from '../../extensions/styling/StyleRuleCreationModal';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
+import { RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS } from '../../extensions/actions/ActionsRuleCreationModal';
+import NeoCustomReportActionsModal from '../../extensions/actions/ActionsRuleCreationModal';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import { AdjustmentsHorizontalIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
 import { IconButton, Switch } from '@neo4j-ndl/react';
-import { AdjustmentsHorizontalIconOutline } from '@neo4j-ndl/react/icons';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -27,6 +30,10 @@ const NeoCardSettingsFooter = ({
   // Variables related to customizing report settings
   const [customReportStyleModalOpen, setCustomReportStyleModalOpen] = React.useState(false);
   const settingToCustomize = 'styleRules';
+
+  // Variables related to customizing report actions
+  const [customReportActionsModalOpen, setCustomReportActionsModalOpen] = React.useState(false);
+  const actionsToCustomize = 'actionsRules';
 
   const debouncedReportSettingUpdate = useCallback(debounce(onReportSettingUpdate, 250), []);
 
@@ -108,9 +115,10 @@ const NeoCardSettingsFooter = ({
   );
 
   // TODO - Make the extensions more pluggable and dynamic, instead of hardcoded here.
+  // ^ keep modals at a higher level in the object hierarchy instead of injecting in the footer.
   return (
     <div>
-      {extensions.styling ? (
+      {extensions.styling && extensions.styling.active ? (
         <NeoCustomReportStyleModal
           settingName={settingToCustomize}
           settingValue={reportSettings[settingToCustomize]}
@@ -120,6 +128,20 @@ const NeoCardSettingsFooter = ({
           setCustomReportStyleModalOpen={setCustomReportStyleModalOpen}
           onReportSettingUpdate={onReportSettingUpdate}
         ></NeoCustomReportStyleModal>
+      ) : (
+        <></>
+      )}
+
+      {extensions.actions && extensions.actions.active ? (
+        <NeoCustomReportActionsModal
+          settingName={actionsToCustomize}
+          settingValue={reportSettings[actionsToCustomize]}
+          type={type}
+          fields={fields}
+          customReportActionsModalOpen={customReportActionsModalOpen}
+          setCustomReportActionsModalOpen={setCustomReportActionsModalOpen}
+          onReportSettingUpdate={onReportSettingUpdate}
+        ></NeoCustomReportActionsModal>
       ) : (
         <></>
       )}
@@ -144,7 +166,7 @@ const NeoCardSettingsFooter = ({
               </FormGroup>
             </td>
             <td>
-              {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling ? (
+              {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling && extensions.styling.active ? (
                 <Tooltip title='Set rule-based styling' aria-label=''>
                   <IconButton
                     style={{ float: 'right', marginRight: '10px' }}
@@ -155,6 +177,22 @@ const NeoCardSettingsFooter = ({
                     clean
                   >
                     <AdjustmentsHorizontalIconOutline />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <></>
+              )}
+              {extensions.actions && extensions.actions.active && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ? (
+                <Tooltip title='Set report actions' aria-label=''>
+                  <IconButton
+                    style={{ float: 'right' }}
+                    aria-label='custom actions'
+                    clean
+                    onClick={() => {
+                      setCustomReportActionsModalOpen(true); // Open the modal.
+                    }}
+                  >
+                    <SparklesIconOutline />
                   </IconButton>
                 </Tooltip>
               ) : (

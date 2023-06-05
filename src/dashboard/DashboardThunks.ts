@@ -123,7 +123,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
       dispatch(
         createNotificationThunk(
           'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.3. You might need to refresh this page.'
+          'Your old dashboard was migrated to version 2.3. You might need to refresh this page and reactivate extensions.'
         )
       );
       return;
@@ -315,7 +315,17 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
         r.id = createUUID();
       });
     });
+
+    dashboard.extensions = {
+      'advanced-charts': {
+        active: true,
+      },
+      styling: {
+        active: true,
+      },
+    };
     dashboard.version = '2.3';
+
     return dashboard;
   }
   if (origin == '2.1' && target == '2.2') {
