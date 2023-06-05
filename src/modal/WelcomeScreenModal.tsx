@@ -169,8 +169,8 @@ export const NeoWelcomeScreenModal = ({
       {/* Prompt when creating new dashboard with existing cache */}
       <Dialog size='small' open={promptOpen == true} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          Create new dashboard
-          <ExclamationTriangleIconSolid className='icon-base' color='orange' style={{ float: 'right' }} />
+          Create New Dashboard
+          {/* <ExclamationTriangleIconSolid className='icon-base' color='orange' style={{ float: 'right' }} /> */}
         </Dialog.Header>
         <Dialog.Content>
           Are you sure you want to create a new dashboard? This will remove your currently cached dashboard.
