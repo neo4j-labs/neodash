@@ -33,7 +33,8 @@ export const NeoDashboardHeaderTitleBar = ({
   const content = (
     <Toolbar
       key={1}
-      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1000 }}
+      className='n-z-20'
+      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR }}
     >
       <InputBase
         id='center-aligned'

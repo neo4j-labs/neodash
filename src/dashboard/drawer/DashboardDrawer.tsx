@@ -68,9 +68,9 @@ export const NeoDrawer = ({
 
   const content = (
     <div
+      className='n-z-30'
       style={{
         display: 'flex',
-        zIndex: 1001,
       }}
     >
       <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l5'>

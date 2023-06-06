@@ -232,8 +232,8 @@ export const NeoReport = ({
             >
               <ExclamationTriangleIconSolid
                 aria-label={'Exclamation'}
-                className='icon-base'
-                style={{ zIndex: 999, marginTop: '2px', marginRight: '20px', marginLeft: 'auto', color: 'orange' }}
+                className='icon-base n-z-10'
+                style={{ marginTop: '2px', marginRight: '20px', marginLeft: 'auto', color: 'orange' }}
               />
             </Tooltip>
           </div>

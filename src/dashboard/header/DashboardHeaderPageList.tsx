@@ -76,13 +76,14 @@ export const NeoDashboardHeaderPageList = ({
   const content = (
     <Toolbar
       key={2}
-      style={{ zIndex: 998, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
+      className='n-z-20'
+      style={{ minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
     >
       {!standalone ? (
         <div
+          className='n-z-30'
           style={{
             width: open ? '0px' : '67px',
-            zIndex: open ? 999 : 999,
             transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
             height: '0px',
             background: 'white',
@@ -92,7 +93,7 @@ export const NeoDashboardHeaderPageList = ({
         <></>
       )}
       <ReactGridLayout
-        className='layout'
+        className='layout -n-z-50'
         layout={layout}
         isResizable={false}
         isDraggable={editable}
@@ -120,7 +121,6 @@ export const NeoDashboardHeaderPageList = ({
         style={{
           width: '100%',
           height: '47px',
-          zIndex: -112,
           overflowY: 'hidden',
           overflowX: 'hidden',
           background: 'rgba(240,240,240)',

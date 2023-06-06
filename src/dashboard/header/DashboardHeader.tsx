@@ -39,17 +39,16 @@ export const NeoDashboardHeader = ({
   const content = (
     <AppBar
       position='absolute'
+      className='n-z-20'
       style={
         open
           ? {
-              zIndex: 'auto',
               boxShadow: 'none',
               marginLeft: drawerWidth,
               width: `calc(100% - ${drawerWidth}px)`,
               transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
             }
           : {
-              zIndex: 'auto',
               boxShadow: 'none',
               width: `calc(100%)`,
               transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
