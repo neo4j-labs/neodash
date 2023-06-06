@@ -12,10 +12,10 @@ import {
 } from './QueryTranslatorActions';
 
 export const INITIAL_EXTENSION_STATE = {
-  modelProvider: '',
-  history: {},
-  modelClient: '',
-  settings: {},
+  modelProvider: '', // Name of the provider (defined in the config)
+  history: {}, // Objects that keeps, for every card, their history (to move to session store)
+  modelClient: '', // Object to connect with the model API (to move to session store)
+  settings: {}, // Settings needed by the client to operate
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);

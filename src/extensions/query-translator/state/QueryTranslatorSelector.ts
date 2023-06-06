@@ -15,6 +15,14 @@ export const getModelProvider = (state: any) => {
   return modelProvider != undefined && modelProvider ? modelProvider : '';
 };
 
+/**
+ * The extension keeps, during one session, the client to connect to the model API.
+ * The client is kept only during the session, so every refresh it is deleted.
+ * @param state Current state of the session
+ * @param pageIndex Index of the page where the card lives
+ * @param cardIndex Index that identifies the card inside the page
+ * @returns history of messages between the user and the model within the context of that card (defaulted to undefined)
+ */
 export const getModelClient = (state: any) => {
   let modelClient =
     checkExtensionConfig(state) && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME].modelClient;
@@ -22,11 +30,12 @@ export const getModelClient = (state: any) => {
 };
 
 /**
- * The extension keeps, during one session, the history of messages between a user and a model
+ * The extension keeps, during one session, the history of messages between a user and a model.
+ * The history is kept only during the session, so every refresh it is deleted.
  * @param state Current state of the session
  * @param pageIndex Index of the page where the card lives
  * @param cardIndex Index that identifies the card inside the page
- * @returns history of messages between the user and the model within the context of that card
+ * @returns history of messages between the user and the model within the context of that card (defaulted to [])
  */
 export const getHistoryPerCard = (state: any, pageIndex, cardIndex) => {
   let history = getHistory(state);

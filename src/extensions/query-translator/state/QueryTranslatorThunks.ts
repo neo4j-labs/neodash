@@ -1,3 +1,4 @@
+import { updateReportQueryThunk } from '../../../card/CardThunks';
 import { getDatabase } from '../../../settings/SettingsSelectors';
 import { ModelClient } from '../modelClients/ModelClient';
 import { getModelClientObject } from '../QueryTranslatorConfig';
@@ -21,6 +22,7 @@ const modelClientInitializationThunk =
   ) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
+
     // Fetching the client properties from the state
     let modelProvider = getModelProvider(state);
     let settings = getClientSettings(state);
@@ -49,6 +51,7 @@ const getModelClientThunk = () => async (dispatch: any, getState: any) => {
   const state = getState();
   let modelClient = getModelClient(state);
 
+  // If not persisted in the current session, try to initialize a new model
   if (!modelClient) {
     let newClient = await dispatch(modelClientInitializationThunk());
     if (newClient) {
@@ -68,25 +71,37 @@ const getModelClientThunk = () => async (dispatch: any, getState: any) => {
  */
 export const queryTranslationThunk =
   (pagenumber, cardId, message, reportType, driver) => async (dispatch: any, getState: any) => {
+    let query;
     try {
       const state = getState();
       const database = getDatabase(state, pagenumber, cardId);
 
       // Retrieving the model client from the state
       let client: ModelClient = await dispatch(getModelClientThunk());
-      client.setDriver(driver);
+      if (client) {
+        // If missing, pass down the driver to persist it inside the client
+        if (!client.driver) {
+          client.setDriver(driver);
+        }
 
-      const messageHistory = getHistoryPerCard(state, pagenumber, cardId);
-      let newMessages = await client.queryTranslation(message, messageHistory, database, reportType);
+        const messageHistory = getHistoryPerCard(state, pagenumber, cardId);
+        let translationRes = await client.queryTranslation(message, messageHistory, database, reportType);
+        query = translationRes[0];
+        let newHistory = translationRes[1];
 
-      // The history will be updated only if the length is different (otherwise, it's the same history)
-      if (messageHistory.length < newMessages.length) {
-        dispatch(updateMessageHistory(newMessages, pagenumber, cardId));
+        // The history will be updated only if the length is different (otherwise, it's the same history)
+        if (messageHistory.length < newHistory.length && query) {
+          dispatch(updateMessageHistory(newHistory, pagenumber, cardId));
+          dispatch(updateReportQueryThunk(cardId, query));
+        }
+      } else {
+        throw new Error("Couldn't get the Model Client for the translation, please check your credentials.");
       }
     } catch (e) {
       await consoleLogAsync(
         `Something wrong happened while calling the model client for the card number ${cardId} inside the page ${pagenumber}: \n`,
         { e }
       );
+      throw e;
     }
   };

@@ -28,11 +28,7 @@ export const UPDATE_MESSAGE_HISTORY = `${QUERY_TRANSLATOR_ACTION_PREFIX}UPDATE_E
  * @param cardIndex Index of the card inside the page
  * @returns
  */
-export const updateMessageHistory = (
-  cardHistory: ChatCompletionRequestMessage[],
-  pageIndex: number,
-  cardIndex: number
-) => ({
+export const updateMessageHistory = (cardHistory: any[], pageIndex: number, cardIndex: number) => ({
   type: UPDATE_MESSAGE_HISTORY,
   payload: { cardHistory, pageIndex, cardIndex },
 });

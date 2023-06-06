@@ -3,10 +3,18 @@ import { ModelClient } from './modelClients/ModelClient';
 import { OpenAiClient } from './modelClients/OpenAiClient';
 import { VertexAiClient } from './modelClients/VertexAiClient';
 
+interface ClientSettingEntry {
+  label: string;
+  type: SELECTION_TYPES;
+  default: any;
+  required?: boolean; // Required for authentication, the user should insert all the required fields before trying to authenticate
+  methodFromClient?: string; // String that contains the name of the client function to call to retrieve the data needed to fill the option
+}
+
 interface ClientSettings {
-  apiKey: any;
-  modelType: any;
-  region?: any;
+  apiKey: ClientSettingEntry;
+  modelType: ClientSettingEntry;
+  region?: ClientSettingEntry;
 }
 
 interface ClientConfig {

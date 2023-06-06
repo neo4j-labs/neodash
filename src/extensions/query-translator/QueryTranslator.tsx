@@ -33,9 +33,12 @@ export const QueryTranslator = ({
   }, []);
 
   // When changing provider, i will reset all the messages to prevent strage results
+  // TODO: remove this effect is just for testing
   useEffect(() => {
     if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
-      queryTranslation(0, '2afa79af-9ac2-4473-b424-47db58db46af', 'give me any query', 'Table', driver);
+      [].forEach((cardId) => {
+        queryTranslation(0, cardId, 'give me any query', 'Table', driver);
+      });
     }
   }, [modelProvider, apiKey, clientSettings]);
 
@@ -50,7 +53,7 @@ export const QueryTranslator = ({
   const component = (
     <div>
       {button}
-      {open ? <QueryTranslatorSettingsModal open={open} setOpen={setOpen}></QueryTranslatorSettingsModal> : <></>}
+      {open ? <QueryTranslatorSettingsModal open={open} setOpen={setOpen} /> : <></>}
     </div>
   );
 

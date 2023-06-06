@@ -58,9 +58,8 @@ export abstract class ModelClient {
           throw e;
         });
       return res;
-    } 
-      throw new Error('Driver not present');
-    
+    }
+    throw new Error('Driver not present');
   }
 
   createSchemaText(nodeProps, relProps, rels) {
@@ -98,6 +97,11 @@ export abstract class ModelClient {
     this.driver = driver;
   }
 
+  getMessageContent(_message: any) {
+    notImplementedError('getMessageContent');
+    return '';
+  }
+
   /**
    * Method responsible to ask the model to translate the message.
    * @param inputMessage
@@ -113,6 +117,7 @@ export abstract class ModelClient {
     // Creating a tmp history to prevent updating the history with erroneous messages
     let tmpHistory = [...newHistory];
     let schema = '';
+    let query = '';
     try {
       // If empty, the first message will be the task definition
       if (tmpHistory.length == 0) {
@@ -130,11 +135,11 @@ export abstract class ModelClient {
         retries += 1;
 
         // Get the answer to the question
-        let newMessage = await this.chatCompletion(tmpHistory);
-        tmpHistory.push(newMessage);
+        let modelAnswer = await this.chatCompletion(tmpHistory);
+        tmpHistory.push(modelAnswer);
 
         // and try to validate it
-        let validationResult = await this.validateQuery(newMessage, database);
+        let validationResult = await this.validateQuery(modelAnswer, database);
         isValidated = validationResult[0];
         errorMessage = validationResult[1];
         if (!isValidated) {
@@ -144,7 +149,8 @@ export abstract class ModelClient {
             newHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
           }
           newHistory.push(this.addUserMessage(inputMessage, reportType, true));
-          newHistory.push(newMessage);
+          newHistory.push(modelAnswer);
+          query = this.getMessageContent(modelAnswer);
         }
       }
       if (!isValidated) {
@@ -153,7 +159,7 @@ export abstract class ModelClient {
     } catch (error) {
       await consoleLogAsync('error during query', error);
     }
-    return newHistory;
+    return [query, newHistory];
   }
 
   async validateQuery(_message, _database) {

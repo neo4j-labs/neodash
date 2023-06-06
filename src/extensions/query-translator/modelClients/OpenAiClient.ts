@@ -1,4 +1,4 @@
-import { ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
+import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
 import { reportTypesToDesc } from './const';
 import { ModelClient } from './ModelClient';
 
@@ -122,6 +122,10 @@ export class OpenAiClient extends ModelClient {
   addErrorMessage(error) {
     let finalMessage = `Please fix the query accordingly to this error: ${error}. Plain cypher code, no comments and no explanations and no unrequired symbols. Remember to respect the schema. Please remove any comment or explanation  from your result`;
     return { role: ChatCompletionRequestMessageRoleEnum.User, content: finalMessage };
+  }
+
+  getMessageContent(message: ChatCompletionRequestMessage) {
+    return message.content;
   }
 
   async chatCompletion(history) {
