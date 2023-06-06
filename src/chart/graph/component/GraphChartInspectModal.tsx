@@ -18,7 +18,12 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
       <Dialog
         maxWidth={'lg'}
         open={props.interactivity.showPropertyInspector}
-        onClose={() => props.interactivity.setPropertyInspectorOpen(false)}
+        onClose={() => {
+            props.interactivity.setPropertyInspectorOpen(false)
+            console.log("here")
+            console.log(props.interactivity.selectedEntity?.id)
+          }
+        }
         aria-labelledby='form-dialog-title'
       >
         <DialogTitle id='form-dialog-title'>

@@ -33,6 +33,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       nodeVal={(node: any) => node.size}
       onNodeClick={(item) => {
         props.interactivity.onNodeClick(item);
+        props.interactivity.setGlobalParameter?.("main_selected_node", item.id);
       }}
       onLinkClick={(item) => {
         props.interactivity.onRelationshipClick(item);

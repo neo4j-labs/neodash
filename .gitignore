@@ -1,3 +1,4 @@
+*.credential
 .idea
 *.iml
 *.pem

@@ -35,7 +35,10 @@ module.exports = (env) => {
     module: {
       rules: rules,
     },
-    resolve: { extensions: ['*', '.js', '.jsx', '.ts', '.tsx'] },
+    resolve: { 
+      extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
+      fallback: {"fs": false}
+    },
     output: {
       filename: 'bundle.js',
     },

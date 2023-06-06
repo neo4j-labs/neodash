@@ -12,7 +12,8 @@ import NeoSingleValueChart from '../chart/single/SingleValueChart';
 import NeoParameterSelectionChart from '../chart/parameter/ParameterSelectionChart';
 import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
-import ImageChart from '../chart/image/ImageChart';
+import AttachmentChart from '../chart/attachment/AttachmentChart';
+import DataSourceChart from '../chart/datasource/DataSource';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -1259,11 +1260,18 @@ export const REPORT_TYPES = {
       },
     },
   },
-  image: {
-    label: "Image",
-    helperText: "I show any image",
-    component: ImageChart,
-    maxRecords: 10,
+  attachment: {
+    label: "Attachment",
+    helperText: "I show the content following the endpoint of an attachment",
+    component: AttachmentChart,
+    maxRecords: 1,
+    settings: {}
+  },
+  datasource: {
+    label: "DataSource",
+    helperText: "I show the content following the endpoint of a data source",
+    component: DataSourceChart,
+    maxRecords: 1,
     settings: {}
   }
 };
