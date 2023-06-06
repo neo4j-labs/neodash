@@ -5,6 +5,7 @@ const textFieldStyle = { width: '155px', marginBottom: '10px', marginRight: '10p
 
 const NeoField = ({
   label,
+  valueLabel,
   value,
   style = textFieldStyle,
   choices = [],
@@ -15,6 +16,7 @@ const NeoField = ({
   disabled = undefined,
   variant = undefined,
   helperText = undefined,
+  defaultValueLabel = undefined,
   defaultValue = undefined,
   multiline = false,
   placeholder = '',
@@ -28,7 +30,8 @@ const NeoField = ({
         selectProps={{
           options: choices,
           onChange: (newValue) => onChange(newValue.value),
-          value: value != null ? { label: value, value: value } : { label: defaultValue, value: defaultValue },
+          value:
+            value != null ? { label: valueLabel, value: value } : { label: defaultValueLabel, value: defaultValue },
           menuPlacement: 'auto',
         }}
         disabled={disabled}
