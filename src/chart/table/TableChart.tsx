@@ -214,19 +214,19 @@ export const NeoTableChart = (props: ChartProps) => {
         <DataGrid
           key={'tableKey'}
           autoHeight={true}
-          sx={{
-            '& .MuiDataGrid-viewport,.MuiDataGrid-row,.MuiDataGrid-renderingZone': {
-              maxHeight: 'fit-content!important',
-            },
-            '& .MuiDataGrid-cell': {
-              flexWrap: 'wrap',
-              overflow: 'auto',
-              whiteSpace: 'initial!important',
-              display: 'flex!important',
-              alignItems: 'top',
-            },
-          }},          
-	  headerHeight={32}
+          // sx={{
+          //   '& .MuiDataGrid-viewport,.MuiDataGrid-row,.MuiDataGrid-renderingZone': {
+          //     maxHeight: 'fit-content!important',
+          //   },
+          //   '& .MuiDataGrid-cell': {
+          //     flexWrap: 'wrap',
+          //     overflow: 'auto',
+          //     whiteSpace: 'initial!important',
+          //     display: 'flex!important',
+          //     alignItems: 'top',
+          //   },
+          // }}
+          headerHeight={32}
           rowHeight={tableRowHeight}
           rows={rows}
           columns={columns}
