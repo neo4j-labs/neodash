@@ -39,17 +39,17 @@ const NeoCardSettingsHeader = ({
           <IconButton clean size='medium' aria-label={'card drag'} className='n-relative -n-left-3'>
             <DragIcon className='drag-handle' aria-label={'card drag icon'} />
           </IconButton>
-          <Tooltip title='Help' aria-label='help'>
+          <Tooltip title='Help' aria-label='help' disableInteractive>
             <IconButton aria-label='help' onClick={onReportHelpButtonPressed} clean size='medium'>
               <QuestionMarkCircleIconOutline aria-label={'help mark'} />
             </IconButton>
           </Tooltip>
-          <Tooltip title='Delete' aria-label='delete'>
+          <Tooltip title='Delete' aria-label='delete' disableInteractive>
             <IconButton style={{ color: 'red' }} aria-label='remove' onClick={onRemovePressed} clean size='medium'>
               <TrashIconOutline aria-label={'remove trash'} />
             </IconButton>
           </Tooltip>
-          <Tooltip title='Clone' aria-label='clone'>
+          <Tooltip title='Clone' aria-label='clone' disableInteractive>
             <IconButton style={{ color: 'green' }} aria-label='clone' onClick={onClonePressed} clean size='medium'>
               <DocumentDuplicateIconOutline aria-label={'clone docs'} />
             </IconButton>
@@ -59,7 +59,7 @@ const NeoCardSettingsHeader = ({
       action={
         <>
           {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
-          <Tooltip title='Save' aria-label='save'>
+          <Tooltip title='Save' aria-label='save' disableInteractive>
             <IconButton
               aria-label='save'
               onClick={(e) => {

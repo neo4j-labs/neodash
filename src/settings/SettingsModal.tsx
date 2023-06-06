@@ -45,7 +45,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
 
   return (
     <div>
-      <Tooltip title='Settings' aria-label='settings'>
+      <Tooltip title='Settings' aria-label='settings' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<Cog6ToothIconOutline className={navItemClass} />}>
           Settings
         </SideNavigationItem>

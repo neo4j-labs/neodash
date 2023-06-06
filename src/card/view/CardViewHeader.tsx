@@ -110,7 +110,7 @@ const NeoCardViewHeader = ({
 
   // TODO: all components like buttons should probably be seperate files
   const settingsButton = (
-    <Tooltip title='Settings' aria-label='settings'>
+    <Tooltip title='Settings' aria-label='settings' disableInteractive>
       <IconButton aria-label='settings' onClick={onToggleCardSettings} clean size='medium'>
         <EllipsisVerticalIconOutline />
       </IconButton>
@@ -118,7 +118,7 @@ const NeoCardViewHeader = ({
   );
 
   const refreshButton = (
-    <Tooltip title='Refresh' aria-label='refresh'>
+    <Tooltip title='Refresh' aria-label='refresh' disableInteractive>
       <IconButton aria-label='refresh' onClick={onManualRefreshCard} clean size='medium'>
         <ArrowPathIconOutline />
       </IconButton>
@@ -126,7 +126,7 @@ const NeoCardViewHeader = ({
   );
 
   const maximizeButton = (
-    <Tooltip title='Maximize' aria-label='maximize'>
+    <Tooltip title='Maximize' aria-label='maximize' disableInteractive>
       <IconButton aria-label='maximize' onClick={onToggleCardExpand} clean size='medium'>
         <ExpandIcon />
       </IconButton>
@@ -140,7 +140,7 @@ const NeoCardViewHeader = ({
   );
 
   const downloadImageButton = (
-    <Tooltip title='Download as Image' aria-label='download'>
+    <Tooltip title='Download as Image' aria-label='download' disableInteractive>
       <IconButton onClick={onDownloadImage} aria-label='download csv' clean size='medium'>
         <CameraIconSolid />
       </IconButton>
@@ -148,7 +148,7 @@ const NeoCardViewHeader = ({
   );
 
   const descriptionButton = (
-    <Tooltip title='Details' aria-label='details'>
+    <Tooltip title='Details' aria-label='details' disableInteractive>
       <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details' clean size='medium'>
         <InformationCircleIconOutline />
       </IconButton>

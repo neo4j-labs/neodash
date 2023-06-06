@@ -75,7 +75,7 @@ export const NeoDrawer = ({
     >
       <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l5'>
         <SideNavigationList>
-          <Tooltip title='Menu' aria-label='menu'>
+          <Tooltip title='Menu' aria-label='menu' disableInteractive>
             <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
               Menu
             </SideNavigationItem>
@@ -99,7 +99,7 @@ export const NeoDrawer = ({
             navItemClass={navItemClass}
           ></NeoReportExamplesModal>
           {renderDrawerExtensionsButton()}
-          <Tooltip title='Documentation' aria-label='documentation'>
+          <Tooltip title='Documentation' aria-label='documentation' disableInteractive>
             <SideNavigationItem
               href='https://neo4j.com/labs/neodash/2.3/user-guide/'
               target='_blank'
@@ -109,7 +109,7 @@ export const NeoDrawer = ({
               Documentation
             </SideNavigationItem>
           </Tooltip>
-          <Tooltip title='About' aria-label='about'>
+          <Tooltip title='About' aria-label='about' disableInteractive>
             <SideNavigationItem
               onClick={onAboutModalOpen}
               icon={<InformationCircleIconOutline className={navItemClass} aria-label={'side info'} />}

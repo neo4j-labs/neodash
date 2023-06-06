@@ -194,7 +194,7 @@ export const NeoTableChart = (props: ChartProps) => {
         />
 
         {allowDownload && rows && rows.length > 0 ? (
-          <Tooltip title='Download CSV' aria-label=''>
+          <Tooltip title='Download CSV' aria-label='' disableInteractive>
             <IconButton
               onClick={() => {
                 downloadCSV(rows);

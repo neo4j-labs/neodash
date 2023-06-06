@@ -29,7 +29,7 @@ const NeoExtensionsModal = ({
 
   return (
     <div>
-      <Tooltip title='Extensions' aria-label='extensions'>
+      <Tooltip title='Extensions' aria-label='extensions' disableInteractive>
         <SideNavigationItem
           id='extensions-sidebar-button'
           onClick={handleClickOpen}
@@ -82,7 +82,7 @@ const NeoExtensionsModal = ({
                               </td>
                               <td style={{ width: 50 }}></td>
                               <td style={{ float: 'right' }}>
-                                <Tooltip title='Enable the extension' aria-label=''>
+                                <Tooltip title='Enable the extension' aria-label='' disableInteractive>
                                   <Checkbox
                                     id={`checkbox-${e.name}`}
                                     label='Active'

@@ -96,7 +96,7 @@ export const NeoSaveModal = ({
 
   return (
     <div>
-      <Tooltip title='Save' aria-label='save'>
+      <Tooltip title='Save' aria-label='save' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowDownIconOutline className={navItemClass} />}>
           Save
         </SideNavigationItem>
@@ -177,7 +177,7 @@ export const NeoSaveModal = ({
             style={{ width: '150px', display: 'inline-block' }}
           ></Dropdown>
           <FormControl style={{ marginTop: '35px', marginLeft: '25px' }}>
-            <Tooltip title='Overwrite dashboard(s) with the same name.' aria-label=''>
+            <Tooltip title='Overwrite dashboard(s) with the same name.' aria-label='' disableInteractive>
               <Checkbox
                 checked={overwriteExistingDashboard}
                 onChange={() => setOverwriteExistingDashboard(!overwriteExistingDashboard)}

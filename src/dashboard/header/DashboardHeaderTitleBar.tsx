@@ -51,7 +51,7 @@ export const NeoDashboardHeaderTitleBar = ({
         }}
       />
       {downloadImageEnabled ? (
-        <Tooltip title={'Download Dashboard as Image'}>
+        <Tooltip title={'Download Dashboard as Image'} disableInteractive>
           <IconButton
             aria-label={'camera'}
             style={{ marginRight: '3px', background: '#ffffff22' }}
@@ -70,6 +70,7 @@ export const NeoDashboardHeaderTitleBar = ({
         title={`${connection.protocol}://${connection.url}:${connection.port}`}
         placement='left'
         aria-label='host'
+        disableInteractive
       >
         <IconButton
           className='logo-btn'

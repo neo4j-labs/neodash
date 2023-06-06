@@ -11,7 +11,7 @@ export const NeoGraphChartLockButton = (props: GraphChartVisualizationProps) => 
   return (
     <IconButton aria-label='Lock graph layout icon' size='small' clean grouped>
       {props.interactivity.layoutFrozen ? (
-        <Tooltip title='Toggle dynamic graph layout.' aria-label='unlock graph layout'>
+        <Tooltip title='Toggle dynamic graph layout.' aria-label='unlock graph layout' disableInteractive>
           <LockClosedIconSolid
             onClick={() => {
               props.interactivity.setLayoutFrozen(false);
@@ -19,7 +19,7 @@ export const NeoGraphChartLockButton = (props: GraphChartVisualizationProps) => 
           />
         </Tooltip>
       ) : (
-        <Tooltip title='Toggle fixed graph layout.' aria-label='lock graph layout'>
+        <Tooltip title='Toggle fixed graph layout.' aria-label='lock graph layout' disableInteractive>
           <LockOpenIconSolid
             onClick={() => {
               if (props.interactivity.nodePositions == undefined) {

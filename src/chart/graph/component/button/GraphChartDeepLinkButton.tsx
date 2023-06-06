@@ -18,7 +18,7 @@ export const NeoGraphChartDeepLinkButton = (props: GraphChartVisualizationProps)
       href={replaceDashboardParametersInString(props.interactivity.drilldownLink, props.data.parameters)}
       target='_blank'
     >
-      <Tooltip title='Investigate'>
+      <Tooltip title='Investigate' disableInteractive>
         <MagnifyingGlassIconOutline />
       </Tooltip>
     </IconButton>

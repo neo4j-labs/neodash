@@ -43,7 +43,7 @@ export const NeoWelcomeScreenModal = ({
           <BoltIconSolid className='icon-base' color='gold' style={{ float: 'right' }} />
         </Dialog.Header>
         <Dialog.Content>
-          <Tooltip title='Connect to Neo4j and create a new dashboard.' aria-label='create'>
+          <Tooltip title='Connect to Neo4j and create a new dashboard.' aria-label='create' disableInteractive>
             <Button
               onClick={() => {
                 if (hasCachedDashboard) {
@@ -63,7 +63,7 @@ export const NeoWelcomeScreenModal = ({
             </Button>
           </Tooltip>
 
-          <Tooltip title='Load the existing dashboard from cache (if it exists).' aria-label='load'>
+          <Tooltip title='Load the existing dashboard from cache (if it exists).' aria-label='load' disableInteractive>
             {hasCachedDashboard ? (
               <Button
                 onClick={() => {
@@ -90,7 +90,7 @@ export const NeoWelcomeScreenModal = ({
             )}
           </Tooltip>
           {hasNeo4jDesktopConnection ? (
-            <Tooltip title='Connect to an active database in Neo4j Desktop.' aria-label='connect'>
+            <Tooltip title='Connect to an active database in Neo4j Desktop.' aria-label='connect' disableInteractive>
               <Button
                 onClick={() => {
                   handleClose();
@@ -117,7 +117,7 @@ export const NeoWelcomeScreenModal = ({
             </Button>
           )}
 
-          <Tooltip title='View a gallery of live examples.' aria-label='demo'>
+          <Tooltip title='View a gallery of live examples.' aria-label='demo' disableInteractive>
             <Button
               target='_blank'
               href='https://neodash-gallery.graphapp.io'
@@ -130,7 +130,7 @@ export const NeoWelcomeScreenModal = ({
             </Button>
           </Tooltip>
 
-          <Tooltip title='Show information about this application.' aria-label=''>
+          <Tooltip title='Show information about this application.' aria-label='' disableInteractive>
             <Button
               onClick={onAboutModalOpen}
               style={{ marginTop: '10px', width: '100%' }}

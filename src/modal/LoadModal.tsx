@@ -101,7 +101,7 @@ export const NeoLoadModal = ({
 
   return (
     <div>
-      <Tooltip title='Load' aria-label='load'>
+      <Tooltip title='Load' aria-label='load' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowUpIconOutline className={navItemClass} />}>
           Load
         </SideNavigationItem>

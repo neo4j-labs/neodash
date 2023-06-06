@@ -232,7 +232,7 @@ const NeoGraphChart = (props: ChartProps) => {
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
         {settings.allowDownload && props.records && props.records.length > 0 ? (
           <IconButtonArray floating orientation='horizontal' className='n-z-10 n-absolute n-bottom-2 n-left-4'>
-            <Tooltip title='Download CSV.' aria-label={'download csv'}>
+            <Tooltip title='Download CSV.' aria-label={'download csv'} disableInteractive>
               <IconButton aria-label='download csv' size='small' clean grouped>
                 <CloudArrowDownIconOutline
                   onClick={() => {

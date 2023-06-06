@@ -9,7 +9,7 @@ import { FitToScreenIcon } from '@neo4j-ndl/react/icons';
  */
 export const NeoGraphChartFitViewButton = (props: GraphChartVisualizationProps) => {
   return (
-    <Tooltip title='Fit graph to view.' aria-label={'fit to screen'}>
+    <Tooltip title='Fit graph to view.' aria-label={'fit to screen'} disableInteractive>
       <IconButton aria-label='fit graph to view' size='small' clean grouped>
         <FitToScreenIcon
           onClick={() => {
