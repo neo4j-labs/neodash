@@ -68,8 +68,8 @@ const NeoCardViewHeader = ({
           <tr>
             {editable ? (
               <td>
-                <IconButton className='n-mb-3 n-relative -n-left-3' clean size='medium' aria-label={'drag'}>
-                  <DragIcon className='drag-handle' />
+                <IconButton className='n-mb-3 n-relative -n-left-3 drag-handle' clean size='medium' aria-label={'drag'}>
+                  <DragIcon />
                 </IconButton>
               </td>
             ) : (

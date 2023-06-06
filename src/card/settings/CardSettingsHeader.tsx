@@ -36,8 +36,8 @@ const NeoCardSettingsHeader = ({
     <CardHeader
       avatar={
         <div style={{ marginTop: '-8px', paddingBottom: '1px' }}>
-          <IconButton clean size='medium' aria-label={'card drag'} className='n-relative -n-left-3'>
-            <DragIcon className='drag-handle' aria-label={'card drag icon'} />
+          <IconButton clean size='medium' aria-label={'card drag'} className='n-relative -n-left-3 drag-handle'>
+            <DragIcon aria-label={'card drag icon'} />
           </IconButton>
           <Tooltip title='Help' aria-label='help' disableInteractive>
             <IconButton aria-label='help' onClick={onReportHelpButtonPressed} clean size='medium'>
