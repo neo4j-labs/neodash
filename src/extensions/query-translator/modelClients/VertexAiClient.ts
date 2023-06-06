@@ -1,7 +1,7 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
-import { REPORT_TYPES } from '../../../../config/ReportConfig';
-import { nodePropsQuery, relPropsQuery, relQuery, reportTypesToDesc } from '../const';
-import { ModelClient } from '../ModelClient';
+import { REPORT_TYPES } from '../../../config/ReportConfig';
+import { nodePropsQuery, relPropsQuery, relQuery, reportTypesToDesc } from './const';
+import { ModelClient } from './ModelClient';
 
 const consoleLogAsync = async (message: string, other?: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));

@@ -1,7 +1,7 @@
 import { SELECTION_TYPES } from '../../config/CardConfig';
 import { ModelClient } from './modelClients/ModelClient';
-import { OpenAiClient } from './modelClients/OpenAi/OpenAiClient';
-import { VertexAiClient } from './modelClients/VertexAi/VertexAiClient';
+import { OpenAiClient } from './modelClients/OpenAiClient';
+import { VertexAiClient } from './modelClients/VertexAiClient';
 
 interface ClientSettings {
   apiKey: any;

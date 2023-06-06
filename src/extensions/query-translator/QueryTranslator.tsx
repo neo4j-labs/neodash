@@ -19,7 +19,7 @@ export const QueryTranslator = ({
   apiKey,
   modelProvider,
   clientSettings,
-  _deleteAllMessageHistory,
+  deleteAllMessageHistory,
   setGlobalModelClient,
   queryTranslation,
   _deleteMessageHistory,
@@ -30,6 +30,7 @@ export const QueryTranslator = ({
   // When changing provider, i will reset all the messages to prevent strage results
   useEffect(() => {
     setGlobalModelClient(undefined);
+    deleteAllMessageHistory();
     if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
       queryTranslation(0, 0, 'give me any query', 'Table', driver);
     }

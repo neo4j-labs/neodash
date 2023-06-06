@@ -63,7 +63,6 @@ export const queryTranslationThunk =
     try {
       const state = getState();
       const database = getDatabase(state, pagenumber, cardIndex);
-
       let client: ModelClient = await dispatch(getModelClientThunk());
       client.setDriver(driver);
 
