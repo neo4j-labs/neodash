@@ -214,6 +214,7 @@ export const NeoTableChart = (props: ChartProps) => {
         <DataGrid
           key={'tableKey'}
           autoHeight={true}
+          style={{ height: '300px', overflow: 'auto' }}
           // sx={{
           //   '& .MuiDataGrid-viewport,.MuiDataGrid-row,.MuiDataGrid-renderingZone': {
           //     maxHeight: 'fit-content!important',

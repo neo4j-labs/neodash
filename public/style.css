@@ -102,6 +102,18 @@
 .neodash-card-editable-false .react-resizable-handle {
   display: none;
 }
+/* 
+.MuiDataGrid-viewport.MuiDataGrid-row.MuiDataGrid-renderingZone {
+  max-height: fit-content !important;
+}
+
+.MuiDataGrid-cell {
+  flex-wrap: wrap;
+  overflow: auto;
+  white-space: initial !important;
+  display: flex !important;
+  align-items: top;
+} */
 
 .react-grid-item > .react-resizable-handle.react-resizable-handle-se {
   cursor: nwse-resize !important;
