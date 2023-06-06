@@ -87,7 +87,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
 
   return (
     <div>
-      <Tooltip title='Share' aria-label='share'>
+      <Tooltip title='Share' aria-label='share' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<ShareIconOutline className={navItemClass} />}>
           Share
         </SideNavigationItem>

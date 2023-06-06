@@ -32,7 +32,7 @@ export const SidebarDrawerHeader = ({
     sidebarGlobalParameters.forEach((key) => onGlobalParameterUpdate(key, undefined));
   }
   const refreshButton = (
-    <Tooltip title='Refresh' aria-label='refresh'>
+    <Tooltip title='Refresh' aria-label='refresh' disableInteractive>
       <IconButton aria-label='refresh' onClick={onManualRefreshDrawer}>
         <RefreshIcon />
       </IconButton>
@@ -40,7 +40,7 @@ export const SidebarDrawerHeader = ({
   );
 
   const clearParametersButton = (
-    <Tooltip title='Clear Sidebar Parameters' aria-label='clear'>
+    <Tooltip title='Clear Sidebar Parameters' aria-label='clear' disableInteractive>
       <IconButton aria-label='clear' onClick={clearNodeSidebarParameters}>
         <ClearAllIcon />
       </IconButton>
@@ -69,7 +69,7 @@ export const SidebarDrawerHeader = ({
           <td>{refreshable ? refreshButton : <></>}</td>
           <td>{extensionSettings.resetParametersEnabled ? clearParametersButton : <></>}</td>
           <td>
-            <Tooltip title='Settings' aria-label='settings'>
+            <Tooltip title='Settings' aria-label='settings' disableInteractive>
               <IconButton
                 aria-label='settings'
                 onClick={() => {

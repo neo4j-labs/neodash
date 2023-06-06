@@ -229,6 +229,7 @@ export const NeoReport = ({
               title={`Over ${rowLimit} row(s) were returned, results have been truncated.`}
               placement='left'
               aria-label='host'
+              disableInteractive
             >
               <ExclamationTriangleIconSolid
                 aria-label={'Exclamation'}

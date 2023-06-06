@@ -8,7 +8,7 @@ import { Tooltip } from '@mui/material';
 
 export const getStoppingIcon = (flipped) => {
   return (
-    <Tooltip title='Stopping' aria-label='stopping'>
+    <Tooltip title='Stopping' aria-label='stopping' disableInteractive>
       <PanToolIcon
         style={{
           transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -20,7 +20,7 @@ export const getStoppingIcon = (flipped) => {
 };
 export const getCompleteIcon = (flipped) => {
   return (
-    <Tooltip title='Completed' aria-label='completed'>
+    <Tooltip title='Completed' aria-label='completed' disableInteractive>
       <CheckCircleIcon
         style={{
           transform: flipped ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -33,7 +33,7 @@ export const getCompleteIcon = (flipped) => {
 
 export const getRunningIcon = () => {
   return (
-    <Tooltip title='Running' aria-label='running'>
+    <Tooltip title='Running' aria-label='running' disableInteractive>
       <LoopIcon
         color='disabled'
         style={{
@@ -47,7 +47,7 @@ export const getRunningIcon = () => {
 
 export const getWaitingIcon = (flipped) => {
   return (
-    <Tooltip title='Waiting' aria-label='waiting'>
+    <Tooltip title='Waiting' aria-label='waiting' disableInteractive>
       <TimerIcon
         color='disabled'
         style={{
@@ -60,7 +60,7 @@ export const getWaitingIcon = (flipped) => {
 
 export const getCancelledIcon = (flipped) => {
   return (
-    <Tooltip title='Cancelled' aria-label='cancelled'>
+    <Tooltip title='Cancelled' aria-label='cancelled' disableInteractive>
       <CancelIcon
         color='disabled'
         style={{
@@ -73,7 +73,7 @@ export const getCancelledIcon = (flipped) => {
 
 export const getErrorIcon = (flipped) => {
   return (
-    <Tooltip title='Error' aria-label='error'>
+    <Tooltip title='Error' aria-label='error' disableInteractive>
       <CancelIcon
         color='error'
         style={{

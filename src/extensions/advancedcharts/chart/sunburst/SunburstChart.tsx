@@ -67,7 +67,7 @@ const NeoSunburstChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title='Reset' aria-label='reset'>
+          <Tooltip title='Reset' aria-label='reset' disableInteractive>
             <Refresh
               onClick={() => {
                 setData(commonProperties.data);
