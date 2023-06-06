@@ -35,9 +35,9 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                 <ul className='n-list-disc n-pl-token-8'>
                   <li>
                     An editor to write and execute&nbsp;
-                    <a target='_blank' href='https://neo4j.com/developer/cypher/'>
+                    <TextLink externalLink target='_blank' href='https://neo4j.com/developer/cypher/'>
                       Cypher
-                    </a>
+                    </TextLink>
                     &nbsp;queries.
                   </li>
                   <li>
@@ -91,7 +91,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
                 <TextLink target='_blank' href='https://github.com/neo4j-labs/neodash'>
                   GitHub repository
                 </TextLink>{' '}
-                , or the
+                , or the{' '}
                 <TextLink
                   href={
                     'https://community.neo4j.com/t5/forums/filteredbylabelpage/board-id/integrations/label-name/neodash'

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Dialog } from '@neo4j-ndl/react';
-import { BookOpenIconOutline } from '@neo4j-ndl/react/icons';
+import { Dialog, TextLink } from '@neo4j-ndl/react';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -14,9 +13,9 @@ export const NeoReportHelpModal = ({ open, handleClose }) => {
         A report is the smallest building block of your dashboard. Each report runs a single Cypher query that loads
         data from your database. By changing the report type, different visualizations can be created for the data. See
         the{' '}
-        <a href='https://neo4j.com/labs/neodash/2.3/user-guide/reports/' target='_blank'>
+        <TextLink externalLink href='https://neo4j.com/labs/neodash/2.3/user-guide/reports/' target='_blank'>
           Documentation
-        </a>
+        </TextLink>
         for more on reports.
         <br></br>
         <br></br>

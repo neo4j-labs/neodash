@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chip, Tooltip } from '@mui/material';
-import { GraphLabel } from '@neo4j-ndl/react';
+import { GraphLabel, TextLink } from '@neo4j-ndl/react';
 import { withStyles } from '@mui/styles';
 import {
   getRecordType,
@@ -217,9 +217,9 @@ function RenderString(value) {
   const str = value ? value.toString() : '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
-      <a target='_blank' href={str}>
+      <TextLink externalLink target='_blank' href={str}>
         {str}
-      </a>
+      </TextLink>
     );
   }
   return str;
