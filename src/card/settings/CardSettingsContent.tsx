@@ -37,7 +37,7 @@ const NeoCardSettingsContent = ({
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
 
   return (
-    <CardContent style={{ paddingTop: '10px', paddingBottom: '10px' }}>
+    <CardContent className='n-py-2'>
       <Dropdown
         id='type'
         label='Type'

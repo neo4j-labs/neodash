@@ -67,7 +67,7 @@ const NeoCardSettings = ({
       onTypeUpdate={onTypeUpdate}
     ></NeoCardSettingsContent>
   ) : (
-    <CardContent style={{ paddingTop: '10px', paddingBottom: '10px' }} />
+    <CardContent className='n-py-2' />
   );
 
   const cardSettingsFooter = settingsOpen ? (
@@ -85,7 +85,7 @@ const NeoCardSettings = ({
   );
 
   return (
-    <div className={`card-view ${expanded ? 'expanded' : ''}`} style={{ overflowY: 'auto', height: '100%' }}>
+    <div className={`card-view ${expanded ? 'expanded' : ''} n-overflow-y-auto n-h-full`}>
       {cardSettingsHeader}
       <ReportItemContainer style={{ height: reportHeight }} className='-n-mt-2'>
         {cardSettingsContent}
