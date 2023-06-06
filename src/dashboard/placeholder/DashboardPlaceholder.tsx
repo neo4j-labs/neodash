@@ -48,7 +48,6 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
               height: '48px',
               background: 'rgba(240,240,240)',
               boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
-              borderBottom: '1px solid lightgrey',
             }}
           ></div>
         </Toolbar>

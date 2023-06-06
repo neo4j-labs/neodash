@@ -50,7 +50,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
         handleDrawerOpen={handleDrawerOpen}
       ></NeoDashboardHeader>
       <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: '#fafafa' }}>
-        <Container maxWidth='xl' style={{ marginTop: '60px' }}>
+        <Container maxWidth='xl' style={{ marginTop: '62px' }}>
           {applicationSettings.standalonePassword ? (
             <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
               Warning: NeoDash is running with a plaintext password in config.json.

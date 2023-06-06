@@ -126,8 +126,7 @@ export const NeoDashboardHeaderPageList = ({
           background: 'rgba(240,240,240)',
           padding: 0,
           margin: 0,
-          boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
-          borderBottom: '1px solid lightgrey',
+          boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 15%)',
         }}
         margin={[0, 0]}
         maxRows={1}
