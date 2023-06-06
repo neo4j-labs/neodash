@@ -75,6 +75,7 @@ const NeoCirclePackingChart = (props: ChartProps) => {
                 setData(commonProperties.data);
                 setRefreshable(false);
               }}
+              className='n-z-10'
               style={{
                 fontSize: '1.3rem',
                 opacity: 0.6,
@@ -82,7 +83,6 @@ const NeoCirclePackingChart = (props: ChartProps) => {
                 right: 12,
                 position: 'absolute',
                 borderRadius: '12px',
-                zIndex: 5,
                 background: '#eee',
               }}
               color='disabled'

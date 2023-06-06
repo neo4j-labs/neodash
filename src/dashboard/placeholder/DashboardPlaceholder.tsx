@@ -27,28 +27,25 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
   );
 
   const content = (
-    <div style={{ zIndex: -99 }}>
+    <div className='-n-z-60'>
       <AppBar
         position='absolute'
+        className='n-z-auto'
         style={{
-          zIndex: 'auto',
           boxShadow: 'none',
-          transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
         }}
       >
-        <Toolbar style={{ paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1201 }}>
+        <Toolbar className='n-z-20 n-pr-6' style={{ background: DASHBOARD_HEADER_COLOR }}>
           {APPLY_CUSTOM_BRAND_LOGO ? brandedToolbarContent : defaultToolbarContent}
         </Toolbar>
         <Toolbar
-          style={{ zIndex: 10, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
+          className='n-z-10 n-px-0 n-bg-danger-10'
+          style={{ minHeight: '50px', paddingLeft: '0px', paddingRight: '0px' }}
         >
           <div
+            className='-n-z-50 n-w-full'
             style={{
-              width: '100%',
-              zIndex: -112,
               height: '48px',
-              overflowX: 'hidden',
-              overflowY: 'auto',
               background: 'rgba(240,240,240)',
               boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
               borderBottom: '1px solid lightgrey',
@@ -56,13 +53,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
           ></div>
         </Toolbar>
       </AppBar>
-      <div
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-        }}
-      >
+      <div className='n-absolute n-w-full n-h-full'>
         {!connected ? <LoadingSpinner size='large' className='centered' /> : <></>}
       </div>
     </div>

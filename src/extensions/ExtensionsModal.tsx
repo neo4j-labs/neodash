@@ -8,7 +8,7 @@ import { setExtensionEnabled } from '../dashboard/DashboardActions';
 import { setExtensionReducerEnabled } from './state/ExtensionActions';
 import { Dialog, Label, SideNavigationItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
-import { Section, SectionTitle, SectionContent } from '../modal/ModalUtils';
+import { Section, SectionContent } from '../modal/ModalUtils';
 
 const NeoExtensionsModal = ({
   extensions,
@@ -117,7 +117,10 @@ const NeoExtensionsModal = ({
                                 <p>{e.description}</p>
                                 <br />
                                 <p>
-                                  Author: <a href={e.link}>{e.author}</a>
+                                  Author:{' '}
+                                  <TextLink externalLink href={e.link}>
+                                    {e.author}
+                                  </TextLink>
                                 </p>
                               </td>
                               <td></td>

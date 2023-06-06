@@ -12,7 +12,6 @@ import { getRendererForValue, rendererForType, RenderSubValue } from '../../repo
 
 import { Close } from '@mui/icons-material';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 import {
   getRule,
@@ -201,7 +200,7 @@ export const NeoTableChart = (props: ChartProps) => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
+              className='n-absolute n-z-10 n-bottom-4 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />

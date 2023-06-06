@@ -1,10 +1,15 @@
 import React from 'react';
 import ShowMoreText from 'react-show-more-text';
 import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { TextLink } from '@neo4j-ndl/react';
 
 export const formatProperty = (property) => {
   if (property.startsWith('http://') || property.startsWith('https://')) {
-    return <a href={property}>{property}</a>;
+    return (
+      <TextLink externalLink href={property}>
+        {property}
+      </TextLink>
+    );
   }
   return property;
 };

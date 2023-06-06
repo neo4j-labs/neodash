@@ -197,12 +197,11 @@ export default function NeoConnectionModal({
                   onConnectionModalClose();
                   createConnection(protocol, url, port, database, username, password);
                 }}
-                style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'blue' }}
-                variant='contained'
+                style={{ float: 'right', marginTop: '20px', marginBottom: '20px' }}
                 size='large'
-                endIcon={<PlayIconOutline />}
               >
                 Connect
+                <PlayIconOutline className='btn-icon-base-r' />
               </Button>
             )}
           </form>
