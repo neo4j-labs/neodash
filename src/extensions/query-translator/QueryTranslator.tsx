@@ -5,7 +5,6 @@ import { getApiKey, getClientSettings, getModelProvider } from './state/QueryTra
 import { Button } from '@neo4j-ndl/react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import QueryTranslatorSettingsModal from './settings/QueryTranslatorSettingsModal';
-import { getModelClientObject } from './QueryTranslatorConfig';
 import { queryTranslationThunk } from './state/QueryTranslatorThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 /**
@@ -19,7 +18,7 @@ export const QueryTranslator = ({
   apiKey,
   modelProvider,
   clientSettings,
-  deleteAllMessageHistory,
+  _deleteAllMessageHistory,
   setGlobalModelClient,
   queryTranslation,
   _deleteMessageHistory,
@@ -29,10 +28,14 @@ export const QueryTranslator = ({
 
   // When changing provider, i will reset all the messages to prevent strage results
   useEffect(() => {
+    // TODO: can't recast correctly the model client when refreshing the session, it should be removed at every session restart
     setGlobalModelClient(undefined);
-    deleteAllMessageHistory();
+  }, []);
+
+  // When changing provider, i will reset all the messages to prevent strage results
+  useEffect(() => {
     if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
-      queryTranslation(0, 0, 'give me any query', 'Table', driver);
+      queryTranslation(0, '2afa79af-9ac2-4473-b424-47db58db46af', 'give me any query', 'Table', driver);
     }
   }, [modelProvider, apiKey, clientSettings]);
 

@@ -9,7 +9,8 @@ const consoleLogAsync = async (message: string, other?: any) => {
 };
 
 /**
- * Thunk used to initialize the client model.
+ * Thunk used to initialize the client model. To inizialize the client, we need to check that
+ * it can authenticate to it's service by calling its authenticate function
  * @returns True if the client is created, otherwise False
  */
 const modelClientInitializationThunk =
@@ -20,11 +21,17 @@ const modelClientInitializationThunk =
   ) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
+    // Fetching the client properties from the state
     let modelProvider = getModelProvider(state);
     let settings = getClientSettings(state);
     if (modelProvider && settings) {
+      // Getting the correct ModelClient object
       let tmpClient = getModelClientObject(modelProvider, settings);
+
+      // Try authentication
       let isAuthenticated = await tmpClient.authenticate(setIsAuthenticated);
+
+      // If the authentication runs smoothly, store the client inside the application state
       if (isAuthenticated) {
         dispatch(setGlobalModelClient(tmpClient));
         return tmpClient;
@@ -34,7 +41,8 @@ const modelClientInitializationThunk =
   };
 
 /**
- * Wrapper to recreate the model client if it doesn't exists
+ * Wrapper to get the model client from the state if already exists, otherwise it will recreate it and check that
+ * the authentication still works
  * @returns An instance of the model client
  */
 const getModelClientThunk = () => async (dispatch: any, getState: any) => {
@@ -51,30 +59,33 @@ const getModelClientThunk = () => async (dispatch: any, getState: any) => {
 };
 
 /**
- * Method to handle the request to a model client for a query translation.
+ * Thunk used to handle the request to a model client for a query translation.
  * @param pagenumber Index of the page where the card lives
- * @param cardIndex Index that identifies a card inside its page
+ * @param cardId Index that identifies a card inside its page
  * @param message Message inserted by the user
- * @param setQuery Function to set the query inside the card (i don't think i need this one)
- * @returns
+ * @param reportType Type of report used by the card calling the thunk
+ * @param driver Neo4j Driver used to fetch the schema from the database
  */
 export const queryTranslationThunk =
-  (pagenumber, cardIndex, message, reportType, driver) => async (dispatch: any, getState: any) => {
+  (pagenumber, cardId, message, reportType, driver) => async (dispatch: any, getState: any) => {
     try {
       const state = getState();
-      const database = getDatabase(state, pagenumber, cardIndex);
+      const database = getDatabase(state, pagenumber, cardId);
+
+      // Retrieving the model client from the state
       let client: ModelClient = await dispatch(getModelClientThunk());
       client.setDriver(driver);
 
-      const messageHistory = getHistoryPerCard(state, pagenumber, cardIndex);
+      const messageHistory = getHistoryPerCard(state, pagenumber, cardId);
       let newMessages = await client.queryTranslation(message, messageHistory, database, reportType);
-      consoleLogAsync('newHistory', newMessages);
-      if (message.length !== newMessages.length) {
-        dispatch(updateMessageHistory(newMessages, pagenumber, cardIndex));
+
+      // The history will be updated only if the length is different (otherwise, it's the same history)
+      if (messageHistory.length < newMessages.length) {
+        dispatch(updateMessageHistory(newMessages, pagenumber, cardId));
       }
     } catch (e) {
       await consoleLogAsync(
-        `Something wrong happened while calling the model client for the card number ${cardIndex} inside the page ${pagenumber}: \n`,
+        `Something wrong happened while calling the model client for the card number ${cardId} inside the page ${pagenumber}: \n`,
         { e }
       );
     }

@@ -1,5 +1,5 @@
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
-import { nodePropsQuery, MAX_NUM_VALIDATION, relPropsQuery, relQuery, reportTypesToDesc } from './const';
+import { ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
+import { reportTypesToDesc } from './const';
 import { ModelClient } from './ModelClient';
 
 const consoleLogAsync = async (message: string, other?: any) => {

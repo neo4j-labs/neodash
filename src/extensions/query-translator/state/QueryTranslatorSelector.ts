@@ -1,24 +1,23 @@
-export const queryTranslatorExtensionName = 'query-translator';
-
-/**
- * The extension keeps, during one session, the history of messages between a user and a model.
- * This method serves to get all the messages.
- * @param state Current state of the session
- * @returns history of messages between the user and the model within the context of that card
- */
+export const QUERY_TRANSLATOR_EXTENSION_NAME = 'query-translator';
 
 const checkExtensionConfig = (state: any) => {
-  return state.dashboard.extensionsConfig && state.dashboard.extensionsConfig[queryTranslatorExtensionName];
+  return state.dashboard.extensions && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME];
 };
 
 export const getHistory = (state: any) => {
-  let history = checkExtensionConfig(state) && state.dashboard.extensionsConfig[queryTranslatorExtensionName].history;
+  let history = checkExtensionConfig(state) && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME].history;
   return history != undefined && history ? history : {};
+};
+
+export const getModelProvider = (state: any) => {
+  let modelProvider =
+    checkExtensionConfig(state) && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME].modelProvider;
+  return modelProvider != undefined && modelProvider ? modelProvider : '';
 };
 
 export const getModelClient = (state: any) => {
   let modelClient =
-    checkExtensionConfig(state) && state.dashboard.extensionsConfig[queryTranslatorExtensionName].modelClient;
+    checkExtensionConfig(state) && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME].modelClient;
   return modelClient != undefined && modelClient ? modelClient : undefined;
 };
 
@@ -37,7 +36,7 @@ export const getHistoryPerCard = (state: any, pageIndex, cardIndex) => {
 
 export const getClientSettings = (state: any) => {
   let clientSettings =
-    checkExtensionConfig(state) && state.dashboard.extensionsConfig[queryTranslatorExtensionName].settings;
+    checkExtensionConfig(state) && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME].settings;
   return clientSettings != undefined && clientSettings ? clientSettings : {};
 };
 
@@ -45,10 +44,4 @@ export const getApiKey = (state: any) => {
   let settings = getClientSettings(state);
 
   return settings.apiKey != undefined && settings.apiKey ? settings.apiKey : '';
-};
-
-export const getModelProvider = (state: any) => {
-  let modelProvider =
-    checkExtensionConfig(state) && state.dashboard.extensionsConfig[queryTranslatorExtensionName].modelProvider;
-  return modelProvider != undefined && modelProvider ? modelProvider : '';
 };

@@ -32,25 +32,35 @@ export abstract class ModelClient {
     notImplementedError('setModelClient');
   }
 
+  /**
+   * Function to query the db directly from the client
+   * @param query Query to run
+   * @param database Selected database
+   * @returns The records results if the query runs correctly, otherwise the function will throw an error
+   */
   async queryDatabase(query, database) {
-    const session = this.driver.session({ database: database });
-    const transaction = session.beginTransaction({ timeout: 20 * 1000, connectionTimeout: 2000 });
+    if (this.driver) {
+      const session = this.driver.session({ database: database });
+      const transaction = session.beginTransaction({ timeout: 20 * 1000, connectionTimeout: 2000 });
 
-    let res = await transaction
-      .run(query, undefined)
-      .then((res) => {
-        const { records } = res;
-        let elems = records.map((elem) => {
-          return elem.toObject()[elem.keys[0]];
+      let res = await transaction
+        .run(query, undefined)
+        .then((res) => {
+          const { records } = res;
+          let elems = records.map((elem) => {
+            return elem.toObject()[elem.keys[0]];
+          });
+          records.length > 0 ?? elems.unshift(records[0].keys);
+          transaction.commit();
+          return elems;
+        })
+        .catch(async (e) => {
+          throw e;
         });
-        records.length > 0 ?? elems.unshift(records[0].keys);
-        transaction.commit();
-        return elems;
-      })
-      .catch(async (e) => {
-        throw e;
-      });
-    return res;
+      return res;
+    } 
+      throw new Error('Driver not present');
+    
   }
 
   createSchemaText(nodeProps, relProps, rels) {
@@ -84,46 +94,55 @@ export abstract class ModelClient {
     `;
   }
 
-  async validateQuery(_message, _database) {
-    notImplementedError('validateQuery');
-  }
-
   setDriver(driver: any) {
     this.driver = driver;
   }
 
+  /**
+   * Method responsible to ask the model to translate the message.
+   * @param inputMessage
+   * @param history History of messages exchanged between a card and the model client
+   * @param database Databased used from the report, it will be used to fetch the schema
+   * @param reportType Type of report asking that requires the translation
+   * @returns The new history to assign to the card. If there was no possibility of validating the query, the
+   * method will return the same history passed in input
+   */
   async queryTranslation(inputMessage, history, database, reportType) {
     // Creating a copy of the history
     let newHistory = [...history];
-
+    // Creating a tmp history to prevent updating the history with erroneous messages
+    let tmpHistory = [...newHistory];
+    let schema = '';
     try {
-      if (history.length == 0) {
-        let schema = await this.generateSchema(database);
-        newHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
+      // If empty, the first message will be the task definition
+      if (tmpHistory.length == 0) {
+        schema = await this.generateSchema(database);
+        tmpHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
       }
-
-      let tmpHistory = [...newHistory];
       tmpHistory.push(this.addUserMessage(inputMessage, reportType));
 
       let retries = 0;
       let isValidated = false;
       let errorMessage = '';
-      // Creating a tmp history to prevent updating the history with erroneous messages
+
       // While is not validated and we didn't exceed the maximum retry number
       while (!isValidated && retries < MAX_NUM_VALIDATION) {
         retries += 1;
+
         // Get the answer to the question
         let newMessage = await this.chatCompletion(tmpHistory);
         tmpHistory.push(newMessage);
-        await consoleLogAsync(`tmpHistory step: ${retries}`, tmpHistory);
 
         // and try to validate it
-        let res = await this.validateQuery(newMessage, database);
-        isValidated = res[0];
-        errorMessage = res[1];
+        let validationResult = await this.validateQuery(newMessage, database);
+        isValidated = validationResult[0];
+        errorMessage = validationResult[1];
         if (!isValidated) {
           tmpHistory.push(this.addErrorMessage(errorMessage));
         } else {
+          if (newHistory.length == 0 && schema) {
+            newHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
+          }
           newHistory.push(this.addUserMessage(inputMessage, reportType, true));
           newHistory.push(newMessage);
         }
@@ -135,6 +154,10 @@ export abstract class ModelClient {
       await consoleLogAsync('error during query', error);
     }
     return newHistory;
+  }
+
+  async validateQuery(_message, _database) {
+    notImplementedError('validateQuery');
   }
 
   async chatCompletion(_history) {
