@@ -1,4 +1,4 @@
-import { Toolbar } from '@material-ui/core';
+import { Toolbar } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
 import NeoPageButton from './DashboardHeaderPageButton';
 import NeoPageAddButton from './DashboardHeaderPageAddButton';
@@ -76,12 +76,12 @@ export const NeoDashboardHeaderPageList = ({
   const content = (
     <Toolbar
       key={2}
-      style={{ zIndex: 1001, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
+      style={{ zIndex: 998, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
     >
       {!standalone ? (
         <div
           style={{
-            width: open ? '0px' : '57px',
+            width: open ? '0px' : '67px',
             zIndex: open ? 999 : 999,
             transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
             height: '0px',

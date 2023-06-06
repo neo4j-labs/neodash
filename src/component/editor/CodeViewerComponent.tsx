@@ -1,4 +1,4 @@
-import { TextareaAutosize } from '@material-ui/core';
+import { TextareaAutosize } from '@mui/material';
 import React from 'react';
 
 /**
