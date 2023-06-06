@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardContent, Typography, Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Card, CardContent } from '@mui/material';
+import { IconButton } from '@neo4j-ndl/react';
+import { SquaresPlusIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * Button to add a new report to the current page.
@@ -11,18 +12,17 @@ const NeoAddNewCard = ({ onCreatePressed }) => {
     <div>
       <Card style={{ background: '#e0e0e0' }}>
         <CardContent style={{ height: '429px' }}>
-          <Typography variant='h2' color='textSecondary' style={{ paddingTop: '155px', textAlign: 'center' }}>
-            <Fab
-              size='medium'
-              className={'blue-grey'}
-              aria-label='add'
-              onClick={() => {
-                onCreatePressed();
-              }}
-            >
-              <AddIcon />
-            </Fab>
-          </Typography>
+          <IconButton
+            aria-label='add report'
+            className='centered'
+            onClick={() => {
+              onCreatePressed();
+            }}
+            size='large'
+            floating
+          >
+            <SquaresPlusIconOutline />
+          </IconButton>
         </CardContent>
       </Card>
     </div>

@@ -1,8 +1,6 @@
 import React from 'react';
 import { ChartProps } from '../Chart';
-import { TextareaAutosize } from '@material-ui/core';
-import { CardContent, Chip, IconButton, Tooltip } from '@material-ui/core';
-import WarningIcon from '@material-ui/icons/Warning';
+import { TextareaAutosize } from '@mui/material';
 import YAML from 'yaml';
 
 /**

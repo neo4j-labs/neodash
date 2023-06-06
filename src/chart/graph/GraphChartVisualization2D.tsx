@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
+import { actionRule } from '../../extensions/actions/ActionsRule';
+import { executeActionRule, getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
 import { generateNodeCanvasObject } from './util/NodeUtils';
@@ -32,10 +34,16 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       nodeLabel={(node: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(node)}</div>` : '')}
       nodeVal={(node: any) => node.size}
       onNodeClick={(item) => {
-        props.interactivity.onNodeClick(item);
+        let rules = getRuleWithFieldPropertyName(item, props.extensions.actionsRules, 'onNodeClick', 'labels');
+        rules != null
+          ? rules.forEach((rule) => executeActionRule(rule, item, { ...props.interactivity }))
+          : props.interactivity.onNodeClick(item);
       }}
       onLinkClick={(item) => {
-        props.interactivity.onRelationshipClick(item);
+        let rules = getRuleWithFieldPropertyName(item, props.extensions.actionsRules, 'onLinkClick', 'type');
+        rules != null
+          ? rules.forEach((rule) => executeActionRule(rule, item, props.interactivity.setGlobalParameter))
+          : props.interactivity.onRelationshipClick(item);
       }}
       onNodeRightClick={(node, event) => props.interactivity.onNodeRightClick(node, event)}
       onLinkRightClick={(link, event) => props.interactivity.onRelationshipRightClick(link, event)}

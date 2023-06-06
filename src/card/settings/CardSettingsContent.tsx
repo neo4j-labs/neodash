@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import CardContent from '@material-ui/core/CardContent';
-import MenuItem from '@material-ui/core/MenuItem';
+import CardContent from '@mui/material/CardContent';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import NeoField from '../../component/field/Field';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
+import { Dropdown } from '@neo4j-ndl/react';
 
 const NeoCardSettingsContent = ({
   query,
@@ -39,35 +38,44 @@ const NeoCardSettingsContent = ({
 
   return (
     <CardContent style={{ paddingTop: '10px', paddingBottom: '10px' }}>
-      <NeoField
-        select
-        label={'Type'}
-        value={type}
-        style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px' }}
-        onChange={(value) => onTypeUpdate(value)}
-        choices={Object.keys(reportTypes).map((option) => (
-          <MenuItem key={option} value={option}>
-            {reportTypes[option].label}
-          </MenuItem>
-        ))}
+      <Dropdown
+        id='type'
+        label='Type'
+        type='select'
+        selectProps={{
+          onChange: (newValue) =>
+            newValue && onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value)),
+          options: Object.keys(reportTypes).map((option) => ({
+            label: reportTypes[option].label,
+            value: reportTypes[option].label,
+          })),
+          value: { label: reportTypes[type].label, value: reportTypes[type].label },
+          menuPortalTarget: document.querySelector('body'),
+        }}
+        fluid
+        style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
       />
 
       {reportTypes[type] && reportTypes[type].disableDatabaseSelector == undefined ? (
-        <NeoField
-          select
-          placeholder='neo4j'
+        <Dropdown
+          id='databaseSelector'
           label='Database'
-          value={databaseText}
-          style={{ width: '47%', maxWidth: '200px' }}
-          choices={databaseList.map((database) => (
-            <MenuItem key={database} value={database}>
-              {database}
-            </MenuItem>
-          ))}
-          onChange={(value) => {
-            setDatabaseText(value);
-            debouncedDatabaseUpdate(value);
+          placeholder='neo4j'
+          type='select'
+          selectProps={{
+            onChange: (newValue) => {
+              newValue && setDatabaseText(newValue.value);
+              newValue && debouncedDatabaseUpdate(newValue.value);
+            },
+            options: databaseList.map((database) => ({
+              label: database,
+              value: database,
+            })),
+            value: { label: databaseText, value: databaseText },
+            menuPortalTarget: document.querySelector('body'),
           }}
+          fluid
+          style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
         />
       ) : (
         <></>
@@ -97,7 +105,7 @@ const NeoCardSettingsContent = ({
             }}
             placeholder={'Enter Cypher here...'}
           />
-          <p
+          <div
             style={{
               color: 'grey',
               fontSize: 12,
@@ -109,7 +117,7 @@ const NeoCardSettingsContent = ({
             }}
           >
             {reportTypes[type] && reportTypes[type].helperText}
-          </p>
+          </div>
         </div>
       )}
     </CardContent>

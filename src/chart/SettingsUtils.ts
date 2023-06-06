@@ -29,6 +29,7 @@ export const getSettings = (
     userSettings && userSettings.styleRules,
     getGlobalParameter
   );
-
+  settings.actionsRules =
+    extensionEnabled(extensions, 'actions') && settings && userSettings.actionsRules ? userSettings.actionsRules : [];
   return settings;
 };
