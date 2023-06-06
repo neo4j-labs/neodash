@@ -73,7 +73,7 @@ export const NeoDrawer = ({
         display: 'flex',
       }}
     >
-      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l5'>
+      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l4'>
         <SideNavigationList>
           <Tooltip title='Menu' aria-label='menu' disableInteractive>
             <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
