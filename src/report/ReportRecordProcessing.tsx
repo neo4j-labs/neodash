@@ -9,6 +9,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
+import { renderCellExpand } from '../component/misc/DataGridExpandedRenderer';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -217,6 +218,7 @@ function RenderString(value) {
       </a>
     );
   }
+  console.log(str);
   return str;
 }
 
