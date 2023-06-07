@@ -12,7 +12,7 @@ export const DASHBOARD_SETTINGS = {
   queryTimeLimit: {
     label: 'Maximum Query Time (seconds)',
     type: SELECTION_TYPES.NUMBER,
-    default: 20,
+    default: 45,
     helperText: 'The maximum time a report is allowed to run before automatically aborted.',
   },
   downloadImageEnabled: {

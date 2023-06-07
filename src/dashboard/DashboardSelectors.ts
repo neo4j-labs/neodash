@@ -7,7 +7,8 @@ export const getDashboardExtensions = (state: any) => {
   if (!extensions) {
     return {};
   }
-  return extensions;
+
+  return Object.fromEntries(Object.entries(extensions).filter(([_, v]) => v.active));
 };
 
 export const getPages = (state: any) => state.dashboard.pages;

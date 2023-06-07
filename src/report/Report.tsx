@@ -1,21 +1,19 @@
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import WarningIcon from '@material-ui/icons/Warning';
 import { QueryStatus, runCypherQuery } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { Typography } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../config/ReportConfig';
-import { MoreVert } from '@material-ui/icons';
+import { MoreVert } from '@mui/icons-material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
+import { LoadingSpinner } from '@neo4j-ndl/react';
+import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
-import { updateDashboardSetting } from '../settings/SettingsActions';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 
 export const NeoReport = ({
@@ -189,21 +187,7 @@ export const NeoReport = ({
       </div>
     );
   } else if (status == QueryStatus.RUNNING) {
-    return (
-      <Typography
-        variant='h2'
-        color='textSecondary'
-        style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateY(-50%) translateX(-50%)',
-          top: '50%',
-          textAlign: 'center',
-        }}
-      >
-        <CircularProgress color='inherit' />
-      </Typography>
-    );
+    return <LoadingSpinner size='large' className='centered' />;
   } else if (status == QueryStatus.NO_DATA) {
     return <NeoCodeViewerComponent value={'Query returned no data.'} />;
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
@@ -246,7 +230,9 @@ export const NeoReport = ({
               placement='left'
               aria-label='host'
             >
-              <WarningIcon
+              <ExclamationTriangleIconSolid
+                aria-label={'Exclamation'}
+                className='icon-base'
                 style={{ zIndex: 999, marginTop: '2px', marginRight: '20px', marginLeft: 'auto', color: 'orange' }}
               />
             </Tooltip>

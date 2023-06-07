@@ -1,7 +1,6 @@
 import React from 'react';
-import { Chip } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
+import { Chip, Tooltip } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import {
   getRecordType,
   toNumber,
@@ -10,6 +9,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
+import { renderCellExpand } from '../component/misc/DataGridExpandedRenderer';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -218,6 +218,7 @@ function RenderString(value) {
       </a>
     );
   }
+  console.log(str);
   return str;
 }
 

@@ -1,20 +1,19 @@
-import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from '@material-ui/core';
+import { AppBar, Toolbar, InputBase } from '@mui/material';
 import React from 'react';
+import { LoadingSpinner } from '@neo4j-ndl/react';
 import {
   APPLY_CUSTOM_BRAND_LOGO,
   DASHBOARD_HEADER_BRAND_LOGO,
   DASHBOARD_HEADER_COLOR,
 } from '../../config/ApplicationConfig';
-import MenuIcon from '@material-ui/icons/Menu';
 
 export const NeoDashboardPlaceholder = ({ connected }) => {
   const defaultToolbarContent = (
     <>
       <InputBase
-        disabled
         id='center-aligned'
         label='placeholder'
-        style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
+        style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white !important' }}
         placeholder='Dashboard Name...'
         fullWidth
         maxRows={4}
@@ -64,18 +63,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
           height: '100%',
         }}
       >
-        <Typography
-          variant='h2'
-          color='textSecondary'
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          {!connected ? <CircularProgress color='inherit' /> : <></>}
-        </Typography>
+        {!connected ? <LoadingSpinner size='large' className='centered' /> : <></>}
       </div>
     </div>
   );

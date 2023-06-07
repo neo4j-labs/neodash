@@ -115,7 +115,21 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
       );
       return;
     }
-    if (dashboard.version != '2.2') {
+
+    if (dashboard.version == '2.2') {
+      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.2', '2.3');
+      dispatch(setDashboard(upgradedDashboard));
+      dispatch(setWelcomeScreenOpen(false));
+      dispatch(
+        createNotificationThunk(
+          'Successfully upgraded dashboard',
+          'Your old dashboard was migrated to version 2.3. You might need to refresh this page and reactivate extensions.'
+        )
+      );
+      return;
+    }
+
+    if (dashboard.version != '2.3') {
       throw `Invalid dashboard version: ${dashboard.version}. Try restarting the application, or retrieve your cached dashboard using a debug report.`;
     }
 
@@ -295,6 +309,25 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
 };
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
+  if (origin == '2.2' && target == '2.3') {
+    dashboard.pages.forEach((p) => {
+      p.reports.forEach((r) => {
+        r.id = createUUID();
+      });
+    });
+
+    dashboard.extensions = {
+      'advanced-charts': {
+        active: true,
+      },
+      styling: {
+        active: true,
+      },
+    };
+    dashboard.version = '2.3';
+
+    return dashboard;
+  }
   if (origin == '2.1' && target == '2.2') {
     // In 2.1, extensions were enabled by default. Therefore if we migrate, enable them.
     dashboard.extensions = {

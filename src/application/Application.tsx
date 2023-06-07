@@ -1,10 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
-import { ThemeProvider } from '@material-ui/styles';
-import { lightTheme } from '../component/theme/Themes';
 import { connect } from 'react-redux';
 import {
   applicationGetConnection,
@@ -31,8 +28,10 @@ import {
   clearNotification,
   resetShareDetails,
   setAboutModalOpen,
+  setCachedSSODiscoveryUrl,
   setConnected,
   setConnectionModalOpen,
+  setConnectionProperties,
   setOldDashboard,
   setReportHelpModalOpen,
   setWaitForSSO,
@@ -45,9 +44,12 @@ import Dashboard from '../dashboard/Dashboard';
 import NeoAboutModal from '../modal/AboutModal';
 import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
-import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
+import NeoLoadSharedDashboardModal from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import NeoReportHelpModal from '../modal/ReportHelpModal';
+import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
+import { ThemeProvider } from '@mui/material/styles';
+import lightTheme from '../component/theme/Themes';
 
 /**
  * This is the main application component for NeoDash.
@@ -74,6 +76,7 @@ const Application = ({
   shareDetails,
   createConnection,
   createConnectionFromDesktopIntegration,
+  setConnectionDetails,
   onResetShareDetails,
   onConfirmLoadSharedDashboard,
   initializeApplication,
@@ -105,7 +108,6 @@ const Application = ({
   return (
     <ThemeProvider theme={lightTheme}>
       <div ref={ref} style={{ display: 'flex' }}>
-        <CssBaseline />
         {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
         <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
         {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
@@ -120,6 +122,7 @@ const Application = ({
           standaloneSettings={standaloneSettings}
           createConnection={createConnection}
           onSSOAttempt={onSSOAttempt}
+          setConnectionProperties={setConnectionDetails}
           onConnectionModalClose={onConnectionModalClose}
         ></NeoConnectionModal>
         <NeoWelcomeScreenModal
@@ -192,8 +195,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setWelcomeScreenOpen(true));
     dispatch(resetShareDetails());
   },
-  onSSOAttempt: (_) => {
+  onSSOAttempt: (discoveryUrlValidated) => {
     dispatch(setWaitForSSO(true));
+    dispatch(setCachedSSODiscoveryUrl(discoveryUrlValidated));
+  },
+  setConnectionDetails: (protocol, url, port, database, username, password) => {
+    dispatch(setConnectionProperties(protocol, url, port, database, username, password));
   },
   onConfirmLoadSharedDashboard: (_) => dispatch(onConfirmLoadSharedDashboardThunk()),
   onConnectionModalOpen: (_) => dispatch(setConnectionModalOpen(true)),

@@ -9,6 +9,7 @@ import {
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
+import { setExtensionSidebarOpen } from '../extensions/sidebar/state/SidebarActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
@@ -188,7 +189,7 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any)
  * On application startup, check the URL to see if we are loading a shared dashboard.
  * If yes, decode the URL parameters and set the application state accordingly, so that it can be loaded later.
  */
-export const handleSharedDashboardsThunk = () => (dispatch: any) => {
+export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
   try {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -208,6 +209,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const id = decodeURIComponent(urlParams.get('id'));
       const type = urlParams.get('type');
       const standalone = urlParams.get('standalone') == 'Yes';
+      const skipConfirmation = urlParams.get('skipConfirmation') == 'Yes';
+
       const dashboardDatabase = urlParams.get('dashboardDatabase');
       if (urlParams.get('credentials')) {
         const connection = decodeURIComponent(urlParams.get('credentials'));
@@ -243,12 +246,22 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             database,
             username,
             password,
-            dashboardDatabase
+            dashboardDatabase,
+            skipConfirmation
           )
         );
+
+        if (getState().application.shareDetails.skipConfirmation === true) {
+          setTimeout(() => {
+            dispatch(setWelcomeScreenOpen(false));
+            dispatch(onConfirmLoadSharedDashboardThunk());
+          }, 100);
+        }
+
         window.history.pushState({}, document.title, '/');
       } else {
         dispatch(setConnectionModalOpen(false));
+        dispatch(setWelcomeScreenOpen(false));
         dispatch(
           setShareDetailsFromUrl(
             type,
@@ -260,7 +273,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             undefined,
             undefined,
             undefined,
-            undefined
+            undefined,
+            false
           )
         );
         window.history.pushState({}, document.title, '/');
@@ -269,6 +283,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       // dispatch(resetShareDetails());
     }
   } catch (e) {
+    console.log(e);
+    debugger;
     dispatch(
       createNotificationThunk(
         'Unable to load shared dashboard',
@@ -365,9 +381,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         dispatch(setPageNumberThunk(parseInt(page)));
       }
     }
-
-    dispatch(setSSOEnabled(config.ssoEnabled, config.ssoDiscoveryUrl));
     const state = getState();
+    dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
+
     const { standalone } = config;
     dispatch(
       setStandaloneEnabled(
@@ -384,6 +400,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       )
     );
     dispatch(setConnectionModalOpen(false));
+    // TODO - generalize this, close all drawer-based extensions on app startup.
+    dispatch(setExtensionSidebarOpen(false));
 
     // Auto-upgrade the dashboard version if an old version is cached.
     if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
@@ -407,6 +425,16 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
           )
         );
       }
+      if (state.dashboard.version == '2.2') {
+        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.2', '2.3');
+        dispatch(setDashboard(upgradedDashboard));
+        dispatch(
+          createNotificationThunk(
+            'Successfully upgraded dashboard',
+            'Your old dashboard was migrated to version 2.3. You might need to refresh this page.'
+          )
+        );
+      }
     }
     // At the load of a dashboard, we want to ensure correct casting types
     dispatch(updateParametersToNeo4jTypeThunk());
@@ -417,8 +445,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(setAboutModalOpen(false));
       dispatch(setConnected(false));
       dispatch(setWelcomeScreenOpen(false));
-      const success = await initializeSSO(config.ssoDiscoveryUrl, (credentials) => {
+      const success = await initializeSSO(state.application.cachedSSODiscoveryUrl, (credentials) => {
         if (standalone) {
+          // Redirected from SSO and running in viewer mode, merge retrieved config with hardcoded credentials.
           dispatch(
             setConnectionProperties(
               config.standaloneProtocol,
@@ -439,6 +468,21 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               credentials.password
             )
           );
+        } else {
+          // Redirected from SSO and running in editor mode, merge retrieved config with existing details.
+          dispatch(
+            setConnectionProperties(
+              state.application.connection.protocol,
+              state.application.connection.url,
+              state.application.connection.port,
+              state.application.connection.database,
+              credentials.username,
+              credentials.password
+            )
+          );
+        }
+
+        if (standalone) {
           if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
             dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
           } else {
@@ -449,7 +493,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       });
       dispatch(setWaitForSSO(false));
       if (!success) {
-        alert('Unable to connect using SSO');
+        alert('Unable to connect using SSO. See the browser console for more details.');
         dispatch(
           createNotificationThunk(
             'Unable to connect using SSO',
@@ -467,6 +511,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(initializeApplicationAsEditorThunk(config, paramsToSetAfterConnecting));
     }
   } catch (e) {
+    console.log(e);
     dispatch(setWelcomeScreenOpen(false));
     dispatch(
       createNotificationThunk(

@@ -1,4 +1,4 @@
-import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnNode, evaluateRulesOnLink } from '../../../extensions/styling/StyleRuleEvaluator';
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
@@ -166,6 +166,15 @@ export function buildGraphVisualizationObjectFromRecords(
   // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
   const linksList = Object.values(links).map((linkArray) => {
     return linkArray.map((link, i) => {
+      let defaultColor = link.color;
+
+      // Working code but link color doesn't update
+      let evaluatedColor = evaluateRulesOnLink(link, 'relationship color', defaultColor, styleRules);
+      console.log(evaluatedColor);
+      if (evaluatedColor !== defaultColor) {
+        link.color = evaluatedColor ? evaluatedColor : defaultColor;
+        console.log(link.color);
+      }
       const mirroredNodePair = links[`${link.target},${link.source}`];
       return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);
     });

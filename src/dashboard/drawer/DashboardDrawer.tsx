@@ -1,8 +1,5 @@
-import { Drawer, ListItem, IconButton, Divider, ListItemIcon, ListItemText, List, Button } from '@material-ui/core';
 import React from 'react';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { Tooltip } from '@mui/material';
 import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../../modal/ShareModal';
@@ -17,143 +14,118 @@ import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../app
 import NeoSettingsModal from '../../settings/SettingsModal';
 import { getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
+import NodeSidebarDrawer from '../../extensions/sidebar/SidebarDrawer';
+import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
+import { SideNavigation, SideNavigationList, SideNavigationItem, SideNavigationGroupHeader } from '@neo4j-ndl/react';
+import { BookOpenIconOutline, InformationCircleIconOutline, HomeIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
- * For each config in extensionConfig, if the extensionConfig is opened, render its component
+ * For each config in extensionConfig, if the extensionConfig is opened, render its component.
+ * Right now it's just for the node sidebar, to abstract probably.
  * @returns
  */
-// TODO: abstract logic
-function renderExtensionDrawers() {
-  return <></>;
-}
-
-// TODO: abstract logic
-function renderExtensionModals() {
-  return <></>;
+// TODO: abstract logic to work with any new drawer
+function renderExtensionDrawers(database) {
+  return <NodeSidebarDrawer database={database}></NodeSidebarDrawer>;
 }
 
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({
-  open,
   hidden,
   connection,
   dashboardSettings,
   extensions,
   updateDashboardSetting,
-  handleDrawerClose,
   onAboutModalOpen,
   resetApplication,
 }) => {
+  const navItemClass = 'n-w-full n-h-full';
+
+  /**
+   * Function to render dynamically the buttons in the drawer related to all the extension that
+   * are enabled and present a button (EX: node-sidebar)
+   * @returns JSX element containing all the buttons related to their enabled extensions
+   */
+  function renderDrawerExtensionsButton() {
+    const res = (
+      <>
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
+          const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
+          return Component ? <Component database={connection.database} navItemClass={navItemClass} /> : <></>;
+        })}
+      </>
+    );
+    return res;
+  }
+  const [expanded, setOnExpanded] = React.useState(false);
+
   // Override to hide the drawer when the application is in standalone mode.
   if (hidden) {
     return <></>;
   }
 
   const content = (
-    <Drawer
-      variant='permanent'
-      style={
-        open
-          ? {
-              position: 'relative',
-              overflowX: 'hidden',
-              width: '240px',
-              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-              boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
-            }
-          : {
-              position: 'relative',
-              overflowX: 'hidden',
-              boxShadow: ' 2px 1px 10px 0px rgb(0 0 0 / 12%)',
-
-              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-              width: '56px',
-            }
-      }
-      open={open == true}
+    <div
+      style={{
+        display: 'flex',
+        zIndex: 1001,
+      }}
     >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          overflowX: 'hidden',
-          justifyContent: 'flex-end',
-          padding: '0 8px',
-          minHeight: '64px',
-        }}
-      >
-        <ListItem>
-          <Button
-            component='label'
-            onClick={resetApplication}
-            style={{ backgroundColor: 'white', marginLeft: '-8px' }}
-            color='default'
-            variant='outlined'
-            size='small'
-            startIcon={<ExitToAppIcon />}
-          >
-            Menu
-          </Button>
-        </ListItem>
-
-        <IconButton onClick={handleDrawerClose}>
-          <ChevronLeftIcon />
-        </IconButton>
-      </div>
-      <Divider />
-      <div>
-        <ListItem style={{ background: 'white', height: '47px' }}>
-          <ListItemIcon></ListItemIcon>
-          <ListItemText primary='' />
-        </ListItem>
-      </div>
-      <Divider />
-      <List>
-        <div>
+      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l5'>
+        <SideNavigationList>
+          <Tooltip title='Menu' aria-label='menu'>
+            <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
+              Menu
+            </SideNavigationItem>
+          </Tooltip>
+          <SideNavigationGroupHeader>Manage</SideNavigationGroupHeader>
           <NeoSettingsModal
             dashboardSettings={dashboardSettings}
             updateDashboardSetting={updateDashboardSetting}
+            navItemClass={navItemClass}
           ></NeoSettingsModal>
-          <NeoSaveModal></NeoSaveModal>
-          <NeoLoadModal></NeoLoadModal>
-          <NeoShareModal></NeoShareModal>
-        </div>
-      </List>
-      <Divider />
-      <List>
-        <NeoReportExamplesModal
-          extensions={extensions}
-          examples={getExampleReports(extensions)}
-          database={connection.database}
-        ></NeoReportExamplesModal>
-        <NeoExtensionsModal></NeoExtensionsModal>
-        {/*  renderExtensionModals() */}
-      </List>
-      <Divider />
-      <List>
-        <ListItem button onClick={() => window.open('https://neo4j.com/labs/neodash/2.2/user-guide/', '_blank')}>
-          <ListItemIcon>
-            <LibraryBooksIcon />
-          </ListItemIcon>
-          <ListItemText primary='Documentation' />
-        </ListItem>
-        <ListItem button onClick={onAboutModalOpen}>
-          <ListItemIcon>
-            <InfoOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary='About' />
-        </ListItem>
-      </List>
-      <Divider />
-    </Drawer>
+
+          <NeoSaveModal navItemClass={navItemClass}></NeoSaveModal>
+          <NeoLoadModal navItemClass={navItemClass}></NeoLoadModal>
+          <NeoShareModal navItemClass={navItemClass}></NeoShareModal>
+          <NeoExtensionsModal navItemClass={navItemClass}></NeoExtensionsModal>
+          <SideNavigationGroupHeader>Learn</SideNavigationGroupHeader>
+          <NeoReportExamplesModal
+            extensions={extensions}
+            examples={getExampleReports(extensions)}
+            database={connection.database}
+            navItemClass={navItemClass}
+          ></NeoReportExamplesModal>
+          {renderDrawerExtensionsButton()}
+          <Tooltip title='Documentation' aria-label='documentation'>
+            <SideNavigationItem
+              href='https://neo4j.com/labs/neodash/2.3/user-guide/'
+              target='_blank'
+              icon={<BookOpenIconOutline className={navItemClass} aria-label={'side book'} />}
+              aria-label={'side docs'}
+            >
+              Documentation
+            </SideNavigationItem>
+          </Tooltip>
+          <Tooltip title='About' aria-label='about'>
+            <SideNavigationItem
+              onClick={onAboutModalOpen}
+              icon={<InformationCircleIconOutline className={navItemClass} aria-label={'side info'} />}
+              aria-label={'side about'}
+            >
+              About
+            </SideNavigationItem>
+          </Tooltip>
+        </SideNavigationList>
+      </SideNavigation>
+    </div>
   );
   return (
     <>
       {content}
-      {/*  renderExtensionDrawers() */}
+      {renderExtensionDrawers(connection.database)}
     </>
   );
 };
@@ -167,11 +139,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onAboutModalOpen: (_) => dispatch(setAboutModalOpen(true)),
+  onAboutModalOpen: () => dispatch(setAboutModalOpen(true)),
   updateDashboardSetting: (setting, value) => {
     dispatch(updateDashboardSetting(setting, value));
   },
-  resetApplication: (_) => {
+  resetApplication: () => {
     dispatch(setWelcomeScreenOpen(true));
     dispatch(setConnected(false));
   },
