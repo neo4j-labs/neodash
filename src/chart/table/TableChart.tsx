@@ -95,6 +95,8 @@ export const NeoTableChart = (props: ChartProps) => {
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
   const pageSizeReducer = compact ? 3 : 1;
 
+  const columnWidthsType =
+    props.settings && props.settings.columnWidthsType ? props.settings.columnWidthsType : 'Relative (%)';
   let columnWidths = null;
   try {
     columnWidths = props.settings && props.settings.columnWidths && JSON.parse(props.settings.columnWidths);
@@ -131,6 +133,21 @@ export const NeoTableChart = (props: ChartProps) => {
       })
     : records[0].keys.map((key, i) => {
         const value = records[0].get(key);
+        if (columnWidthsType == 'Relative (%)') {
+          return ApplyColumnType(
+            {
+              key: `col-key-${i}`,
+              field: generateSafeColumnKey(key),
+              headerName: generateSafeColumnKey(key),
+              headerClassName: 'table-small-header',
+              disableColumnSelector: true,
+              flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+              disableClickEventBubbling: true,
+            },
+            value,
+            actionableFields.includes(key)
+          );
+        }
         return ApplyColumnType(
           {
             key: `col-key-${i}`,
@@ -138,7 +155,7 @@ export const NeoTableChart = (props: ChartProps) => {
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
             disableColumnSelector: true,
-            flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+            width: columnWidths && i < columnWidths.length ? columnWidths[i] : 100,
             disableClickEventBubbling: true,
           },
           value,
