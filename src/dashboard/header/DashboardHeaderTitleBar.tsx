@@ -15,10 +15,7 @@ export const NeoDashboardHeaderTitleBar = ({
   downloadImageEnabled,
   onDownloadImage,
   setDashboardTitle,
-  connection,
   editable,
-  standalone,
-  onConnectionModalOpen,
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const debouncedDashboardTitleUpdate = useCallback(debounce(setDashboardTitle, 250), []);

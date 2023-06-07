@@ -104,7 +104,7 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
 export function renderCellExpand(params: GridRenderCellParams<any, string>) {
   const stringifiedObj = params.value
     ? JSON.stringify(params.value)
-        .replaceAll(',', ', ') //TODO: Consolidate to a regex
+        .replaceAll(',', ', ') // TODO: Consolidate to a regex
         .replaceAll(']', '')
         .replaceAll('[', '')
         .replaceAll('"', '')

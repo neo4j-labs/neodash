@@ -120,6 +120,7 @@ export const evaluateRulesOnLink = (link, customization, defaultValue, rules) =>
   for (const [index, rule] of rules.entries()) {
     // Only look at rules relevant to the target customization.
     if (rule.customization == customization && link.type == rule.field.split('.')[0]) {
+      // eslint-disable-next-line no-loop-func
       Object.keys(link.properties).forEach((property) => {
         if (property === rule.field.split('.')[1]) {
           const ruleValue = rule.value;
