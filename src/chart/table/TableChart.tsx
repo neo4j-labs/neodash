@@ -12,6 +12,15 @@ import { getRendererForValue, rendererForType, RenderSubValue } from '../../repo
 
 import { Close } from '@mui/icons-material';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+
+import {
+  getRule,
+  executeActionRule,
+  getPageNumbersAndNamesList,
+  performActionOnElement,
+} from '../../extensions/advancedcharts/Utils';
+
 import { IconButton } from '@neo4j-ndl/react';
 import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -43,9 +52,9 @@ function renderAsButtonWrapper(renderer) {
   };
 }
 
-function ApplyColumnType(column, value) {
+function ApplyColumnType(column, value, asAction) {
   const renderer = getRendererForValue(value);
-  const renderCell = renderer.renderValue;
+  const renderCell = asAction ? renderAsButtonWrapper(renderer.renderValue) : renderer.renderValue;
   const columnProperties = renderer
     ? { type: renderer.type, renderCell: renderCell ? renderCell : fallbackRenderer }
     : rendererForType.string;
@@ -59,12 +68,15 @@ export const generateSafeColumnKey = (key) => {
   return key != 'id' ? key : `${key} `;
 };
 
-const NeoTableChart = (props: ChartProps) => {
+export const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
 
-  const actionsRules = [];
+  const actionsRules =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
   const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
   const styleRules = useStyleRules(
     extensionEnabled(props.extensions, 'styling'),
@@ -83,6 +95,8 @@ const NeoTableChart = (props: ChartProps) => {
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
   const pageSizeReducer = compact ? 3 : 1;
 
+  const columnWidthsType =
+    props.settings && props.settings.columnWidthsType ? props.settings.columnWidthsType : 'Relative (%)';
   let columnWidths = null;
   try {
     columnWidths = props.settings && props.settings.columnWidths && JSON.parse(props.settings.columnWidths);
@@ -94,7 +108,11 @@ const NeoTableChart = (props: ChartProps) => {
 
   const { records } = props;
 
-  const actionableFields = [];
+  const generateSafeColumnKey = (key) => {
+    return key != 'id' ? key : `${key} `;
+  };
+
+  const actionableFields = actionsRules.map((r) => r.field);
 
   const columns = transposed
     ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
@@ -109,11 +127,27 @@ const NeoTableChart = (props: ChartProps) => {
             flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
             disableClickEventBubbling: true,
           },
-          value
+          value,
+          actionableFields.includes(key)
         );
       })
     : records[0].keys.map((key, i) => {
         const value = records[0].get(key);
+        if (columnWidthsType == 'Relative (%)') {
+          return ApplyColumnType(
+            {
+              key: `col-key-${i}`,
+              field: generateSafeColumnKey(key),
+              headerName: generateSafeColumnKey(key),
+              headerClassName: 'table-small-header',
+              disableColumnSelector: true,
+              flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+              disableClickEventBubbling: true,
+            },
+            value,
+            actionableFields.includes(key)
+          );
+        }
         return ApplyColumnType(
           {
             key: `col-key-${i}`,
@@ -121,10 +155,11 @@ const NeoTableChart = (props: ChartProps) => {
             headerName: generateSafeColumnKey(key),
             headerClassName: 'table-small-header',
             disableColumnSelector: true,
-            flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+            width: columnWidths && i < columnWidths.length ? columnWidths[i] : 100,
             disableClickEventBubbling: true,
           },
-          value
+          value,
+          actionableFields.includes(key)
         );
       });
   const hiddenColumns = Object.assign(
@@ -152,6 +187,8 @@ const NeoTableChart = (props: ChartProps) => {
   const tablePageSize = compact
     ? Math.round(availableRowHeight) - pageSizeReducer
     : Math.floor(availableRowHeight) - pageSizeReducer;
+
+  const pageNames = getPageNumbersAndNamesList();
 
   return (
     <ThemeProvider theme={theme}>
@@ -190,6 +227,7 @@ const NeoTableChart = (props: ChartProps) => {
         ) : (
           <></>
         )}
+
         <DataGrid
           key={'tableKey'}
           headerHeight={32}
@@ -197,10 +235,17 @@ const NeoTableChart = (props: ChartProps) => {
           rows={rows}
           columns={columns}
           columnVisibilityModel={hiddenColumns}
-          onCellClick={() => false}
+          onCellClick={(e) =>
+            performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
+          }
           onCellDoubleClick={(e) => {
-            setNotificationOpen(true);
-            navigator.clipboard.writeText(e.value);
+            let rules = getRule(e, actionsRules, 'doubleClick');
+            if (rules !== null) {
+              rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
+            } else {
+              setNotificationOpen(true);
+              navigator.clipboard.writeText(e.value);
+            }
           }}
           pageSize={tablePageSize > 0 ? tablePageSize : 5}
           rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}

@@ -225,13 +225,16 @@ export const NeoCustomReportStyleModal = ({
               <table>
                 <tbody>
                   {rules.map((rule, index) => {
+                    const ruleType = RULE_BASED_REPORT_CUSTOMIZATIONS[type].find(
+                      (el) => el.value === rule.customization
+                    );
                     return (
                       <tr>
                         <td style={{ paddingLeft: '2px', paddingRight: '2px', width: '2.5%' }}>
                           <span style={{ color: 'black' }}>{index + 1}.</span>
                         </td>
                         <td style={{ width: '2.5%' }}>
-                          <span style={{ fontWeight: 'bold', color: 'black' }}> IF</span>
+                          <span style={{ fontWeight: 'bold', color: 'black' }}>IF</span>
                         </td>
                         <td style={{ padding: '5px', width: '40%' }}>
                           <div style={{ border: '2px dashed grey' }} className='n-flex n-flex-row n-flex-wrap n-p-1'>
@@ -300,9 +303,7 @@ export const NeoCustomReportStyleModal = ({
                                   value: option.value,
                                 })),
                                 value: {
-                                  label: RULE_BASED_REPORT_CUSTOMIZATIONS[type].find(
-                                    (el) => el.value === rule.customization
-                                  ).label,
+                                  label: ruleType ? ruleType.label : '',
                                   value: rule.customization,
                                 },
                               }}

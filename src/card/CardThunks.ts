@@ -77,8 +77,9 @@ export const updateFieldsThunk = (id, fields) => (dispatch: any, getState: any) 
   try {
     const state = getState();
     const { pagenumber } = state.dashboard.settings;
-    const { extensions } = state.dashboard;
+    const extensions = Object.fromEntries(Object.entries(state.dashboard.extensions).filter(([_, v]) => v.active));
     const oldReport = state.dashboard.pages[pagenumber].reports.find((o) => o.id === id);
+
     if (!oldReport) {
       return;
     }
@@ -152,7 +153,7 @@ export const toggleCardSettingsThunk = (id, open) => (dispatch: any, getState: a
 export const updateReportSettingThunk = (id, setting, value) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
-    const { extensions } = state.dashboard;
+    const extensions = Object.fromEntries(Object.entries(state.dashboard.extensions).filter(([_, v]) => v.active));
     const { pagenumber } = state.dashboard.settings;
 
     // If we disable optional selections (e.g. grouping), we reset these selections to their none value.

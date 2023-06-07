@@ -21,6 +21,8 @@ interface LineChartData {
  * Embeds a LineReport (from Charts) into NeoDash.
  */
 const NeoLineChart = (props: ChartProps) => {
+  const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
+
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
@@ -172,14 +174,7 @@ const NeoLineChart = (props: ChartProps) => {
     validateXTickTimeValues[0] != 'every' ||
     !Number.isInteger(parseFloat(validateXTickTimeValues[1])) ||
     parseFloat(validateXTickTimeValues[1]) <= 0 ||
-    (validateXTickTimeValues[2] != 'years' &&
-      validateXTickTimeValues[2] != 'months' &&
-      validateXTickTimeValues[2] != 'weeks' &&
-      validateXTickTimeValues[2] != 'days' &&
-      validateXTickTimeValues[2] != 'hours' &&
-      validateXTickTimeValues[2] != 'minutes' &&
-      validateXTickTimeValues[2] != 'seconds' &&
-      validateXTickTimeValues[2] != 'milliseconds')
+    !POSSIBLE_TIME_FORMATS.includes(validateXTickTimeValues[2])
   ) {
     return (
       <code style={{ margin: '10px' }}>

@@ -27,7 +27,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
       </Tooltip>
 
       {open ? (
-        <Dialog open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title' className='dialog-xxl'>
+        <Dialog open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title' className='dialog-xl'>
           <Dialog.Header id='form-dialog-title'>
             <ChartBarIconSolid className='icon-base icon-inline text-r' />
             Report Examples
