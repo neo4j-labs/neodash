@@ -53,7 +53,7 @@ export const REPORT_TYPES = {
         label: 'Column Widths Specification',
         type: SELECTION_TYPES.LIST,
         values: ['Relative (%)', 'Fixed (px)'],
-        default: 'Relative',
+        default: 'Relative (%)',
       },
       columnWidths: {
         label: 'Relative/Fixed Column Sizes',
