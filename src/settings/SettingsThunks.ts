@@ -16,8 +16,8 @@ export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => 
     // Make sure that we don't have weird transitions with the settings popups.
 
     const page = pages[number];
-    page.reports.map((report, i) => {
-      dispatch(hardResetCardSettings(number, i));
+    page.reports.map((report) => {
+      dispatch(hardResetCardSettings(number, report.id));
     });
   } catch (e) {
     dispatch(createNotificationThunk('Unable to set page number', e));

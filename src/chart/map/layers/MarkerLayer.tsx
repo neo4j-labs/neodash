@@ -4,13 +4,18 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import LocationOn from '@mui/icons-material/LocationOn';
 import 'leaflet/dist/leaflet.css';
 import { Popup, Tooltip } from 'react-leaflet';
-import { Typography } from '@neo4j-ndl/react';
+import { Button, Typography } from '@neo4j-ndl/react';
+import { extensionEnabled } from '../../../extensions/ExtensionUtils';
+import { getRule } from '../../../extensions/advancedcharts/Utils';
 
 export function createMarkers(data, props) {
   const clusterMarkers =
     props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
-  const actionsRules = [];
+  const actionsRules =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
 
   let markerMarginTop;
   // Render a node label tooltip
@@ -41,13 +46,50 @@ export function createMarkers(data, props) {
             ) : (
               Object.keys(value.properties).map((k, i) => {
                 // TODO MOVE THIS DEPENDENCY OUT OF THE TOOLTIP GENERATION
+                let rule = getRule(
+                  { field: k.toString(), value: value.properties[k].toString() },
+                  actionsRules,
+                  'Click'
+                );
+                let execRule =
+                  rule !== null &&
+                  rule[0] !== null &&
+                  rule[0].customization == 'set variable' &&
+                  props &&
+                  props.setGlobalParameter;
 
                 return (
-                  <tr key={i} onClick={() => {}}>
+                  <tr
+                    key={i}
+                    onClick={() => {
+                      if (execRule) {
+                        // call thunk for $neodash_customizationValue
+                        props.setGlobalParameter(`neodash_${rule.customizationValue}`, value.properties[k].toString());
+                      }
+                    }}
+                  >
                     <td style={{ marginRight: '10px' }} key={0}>
                       {k.toString()}:
                     </td>
-                    <td key={1}>{value.properties[k].toString()}</td>
+                    <td key={1}>
+                      {execRule ? (
+                        <Button
+                          style={{ width: '100%', marginLeft: '10px', marginRight: '10px' }}
+                          color='primary'
+                          onClick={() => {
+                            if (execRule) {
+                              // call thunk for $neodash_customizationValue
+                              props.setGlobalParameter(
+                                `neodash_${rule[0].customizationValue}`,
+                                value.properties[k].toString()
+                              );
+                            }
+                          }}
+                        >{`${value.properties[k].toString()}`}</Button>
+                      ) : (
+                        value.properties[k].toString()
+                      )}
+                    </td>
                   </tr>
                 );
               })

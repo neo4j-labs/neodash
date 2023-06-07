@@ -14,7 +14,6 @@ import { SELECTION_TYPES } from '../config/CardConfig';
 import { LoadingSpinner } from '@neo4j-ndl/react';
 import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
-import { updateDashboardSetting } from '../settings/SettingsActions';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 
 export const NeoReport = ({

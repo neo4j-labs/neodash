@@ -5,12 +5,12 @@ import { ADVANCED_REPORT_TYPES } from './advancedcharts/AdvancedChartsReportConf
 
 // Components can call this to check if any extension is enabled. For example, to decide whether to all rule-based styling.
 export const extensionEnabled = (extensions, name) => {
-  return extensions && extensions[name];
+  return extensions && extensions[name] && extensions[name].active;
 };
 
 // Tell the application what charts are available, dynmically, based on the selected extensions.
 export const getReportTypes = (extensions) => {
-  if (extensions && extensions['advanced-charts']) {
+  if (extensions && extensions['advanced-charts'] && extensions['advanced-charts'].active) {
     return { ...REPORT_TYPES, ...ADVANCED_REPORT_TYPES };
   }
   return REPORT_TYPES;
@@ -18,7 +18,7 @@ export const getReportTypes = (extensions) => {
 
 // Tell the application what examples are available, dynmically, based on the selected extensions.
 export const getExampleReports = (extensions) => {
-  if (extensions && extensions['advanced-charts']) {
+  if (extensions && extensions['advanced-charts'] && extensions['advanced-charts'].active) {
     return [...EXAMPLE_REPORTS, ...EXAMPLE_ADVANCED_REPORTS];
   }
   return EXAMPLE_REPORTS;

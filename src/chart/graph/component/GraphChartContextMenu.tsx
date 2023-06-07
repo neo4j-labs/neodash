@@ -163,9 +163,9 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
                 <tbody>
                   {props.data &&
                     props.data.nodes.map((node, index) => (
-                      <tr key={`ctxMenuItemTr2-${  index}`}>
+                      <tr key={`ctxMenuItemTr2-${index}`}>
                         <MenuItem
-                          key={`ctxMenuItem2-${  index}`}
+                          key={`ctxMenuItem2-${index}`}
                           onClick={() => {
                             setEditableEntityType(EditType.Relationship);
                             setAction(EditAction.Create);

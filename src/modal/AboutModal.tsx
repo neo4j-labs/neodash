@@ -4,7 +4,7 @@ import { BookOpenIconOutline, BeakerIconOutline } from '@neo4j-ndl/react/icons';
 import { Section, SectionTitle, SectionContent } from './ModalUtils';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
-  const version = '2.2.5';
+  const version = '2.3.0';
 
   const downloadDebugFile = () => {
     const element = document.createElement('a');
@@ -24,8 +24,10 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
         <Dialog.Content>
           <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
             <Section>
-              <SectionTitle>NeoDash is a dashboard builder for the Neo4j graph database.</SectionTitle>
-              <SectionContent>If you can write Cypher queries, you can build a dashboard in minutes.</SectionContent>
+              <SectionContent>
+                NeoDash is a dashboard builder for the Neo4j graph database. With NeoDash, all you need to do is write
+                Cypher queries, and you can build a dashboard in minutes.
+              </SectionContent>
             </Section>
             <Section>
               <SectionTitle>Core Features</SectionTitle>
@@ -63,21 +65,20 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
               <SectionTitle>Extending NeoDash</SectionTitle>
               <SectionContent>
                 NeoDash is built with React and&nbsp;
-                <TextLink externalLink target='_blank' href='https://github.com/adam-cowley/use-neo4j'>
+                <TextLink target='_blank' href='https://github.com/adam-cowley/use-neo4j'>
                   use-neo4j
                 </TextLink>
                 , It uses{' '}
-                <TextLink externalLink target='_blank' href='https://github.com/neo4j-labs/charts'>
+                <TextLink target='_blank' href='https://github.com/neo4j-labs/charts'>
                   charts
                 </TextLink>{' '}
                 to power some of the visualizations, and&nbsp;
-                <TextLink externalLink target='_blank' href='https://www.openstreetmap.org/'>
+                <TextLink target='_blank' href='https://www.openstreetmap.org/'>
                   openstreetmap
                 </TextLink>{' '}
-                for the map view.
-                <br />
-                You can also extend NeoDash with your own visualizations. Check out the developer guide in the{' '}
-                <TextLink externalLink target='_blank' href='https://github.com/neo4j-labs/neodash/'>
+                for the map view. You can also extend NeoDash with your own visualizations. Check out the developer
+                guide in the{' '}
+                <TextLink target='_blank' href='https://github.com/neo4j-labs/neodash/'>
                   project repository
                 </TextLink>
                 .
@@ -87,12 +88,11 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
               <SectionTitle>Contact</SectionTitle>
               <SectionContent>
                 For suggestions, feature requests and other feedback: create an issue on the&nbsp;
-                <TextLink externalLink target='_blank' href='https://github.com/neo4j-labs/neodash'>
+                <TextLink target='_blank' href='https://github.com/neo4j-labs/neodash'>
                   GitHub repository
                 </TextLink>{' '}
                 , or the
                 <TextLink
-                  externalLink
                   href={
                     'https://community.neo4j.com/t5/forums/filteredbylabelpage/board-id/integrations/label-name/neodash'
                   }
