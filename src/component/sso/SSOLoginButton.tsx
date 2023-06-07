@@ -9,13 +9,13 @@ export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, 
   const [discoveryUrlValidated, setDiscoveryUrlValidated] = useState(undefined);
   const attemptManualSSOProviderRetrieval = () => {
     // Do an extra check to see if the hostname provides some SSO provider configuration.
-    getDiscoveryDataInfo(`https://${  hostname  }:${  port}`)
+    getDiscoveryDataInfo(`https://${hostname}:${port}`)
       .then((mergedSSOProviders) => {
         setSSOProviders(mergedSSOProviders);
         if (mergedSSOProviders.length == 0) {
           setDiscoveryUrlValidated(undefined);
         } else {
-          setDiscoveryUrlValidated(`https://${  hostname  }:${  port}`);
+          setDiscoveryUrlValidated(`https://${hostname}:${port}`);
         }
       })
       // eslint-disable-next-line no-console
