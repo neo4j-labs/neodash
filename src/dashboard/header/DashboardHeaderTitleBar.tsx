@@ -65,7 +65,7 @@ export const NeoDashboardHeaderTitleBar = ({
         <></>
       )}
 
-      <Tooltip
+      {/* <Tooltip
         title={`${connection.protocol}://${connection.url}:${connection.port}`}
         placement='left'
         aria-label='host'
@@ -82,7 +82,7 @@ export const NeoDashboardHeaderTitleBar = ({
           size='large'
           clean
         ></IconButton>
-      </Tooltip>
+      </Tooltip> */}
     </Toolbar>
   );
   return content;
