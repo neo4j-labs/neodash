@@ -25,6 +25,7 @@ import { IconButton } from '@neo4j-ndl/react';
 import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { renderCellExpand } from '../../component/misc/DataGridExpandedRenderer';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
@@ -61,6 +62,7 @@ function ApplyColumnType(column, value, asAction) {
   if (columnProperties) {
     column = { ...column, ...columnProperties };
   }
+  column.renderCell = (obj) => renderCellExpand(obj);
   return column;
 }
 
@@ -214,7 +216,8 @@ export const NeoTableChart = (props: ChartProps) => {
         <DataGrid
           key={'tableKey'}
           autoHeight={true}
-          style={{ height: '300px', overflow: 'auto' }}
+          // rowHeight={tableRowHeight}
+          // TODO: Bring this back in if it works. autoHeight is not ideal solution
           // sx={{
           //   '& .MuiDataGrid-viewport,.MuiDataGrid-row,.MuiDataGrid-renderingZone': {
           //     maxHeight: 'fit-content!important',
@@ -228,7 +231,6 @@ export const NeoTableChart = (props: ChartProps) => {
           //   },
           // }}
           headerHeight={32}
-          rowHeight={tableRowHeight}
           rows={rows}
           columns={columns}
           columnVisibilityModel={hiddenColumns}
