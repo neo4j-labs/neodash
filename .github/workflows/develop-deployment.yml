@@ -71,6 +71,7 @@ jobs:
           path: /tmp/neodash-mbenz.tar
 
   deploy-develop:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
