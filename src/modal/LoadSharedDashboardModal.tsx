@@ -82,6 +82,6 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = () => {};
+const mapDispatchToProps = () => ({});
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadSharedDashboardModal));
