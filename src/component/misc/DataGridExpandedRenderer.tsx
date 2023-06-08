@@ -41,6 +41,8 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
       // IE11, Edge (prior to using Bink?) use 'Esc'
       if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
         setShowFullCell(false);
+      } else if (nativeEvent.key.toLocaleLowerCase() === 'c' && (nativeEvent.ctrlKey || nativeEvent.metaKey === true)) {
+        navigator.clipboard.writeText(value);
       }
     }
 
