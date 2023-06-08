@@ -55,11 +55,11 @@ jobs:
           name: mbenz-neodash
       - name: Creating Neo4j Container
         run: |
-          chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
-          ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          chmod +x /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/docker-neo4j.sh
+          /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/docker-neo4j.sh
           sleep 30s
-          chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
-          ./scripts/docker-neo4j-initializer/start-movies-db.sh
+          chmod +x /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/start-movies-db.sh
+          /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/start-movies-db.sh
       - run: yarn install
       - name: Eslint check
         run: yarn run lint
