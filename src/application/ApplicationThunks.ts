@@ -189,7 +189,7 @@ export const setDatabaseFromNeo4jDesktopIntegrationThunk = () => (dispatch: any)
  * On application startup, check the URL to see if we are loading a shared dashboard.
  * If yes, decode the URL parameters and set the application state accordingly, so that it can be loaded later.
  */
-export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
+export const handleSharedDashboardsThunk = () => (dispatch: any) => {
   try {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -251,16 +251,14 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
           )
         );
 
-        if (getState().application.shareDetails.skipConfirmation === true) {
-          setTimeout(() => {
-            dispatch(onConfirmLoadSharedDashboardThunk());
-          }, 20);
+        if (skipConfirmation === true) {
+          dispatch(onConfirmLoadSharedDashboardThunk());
         }
 
         window.history.pushState({}, document.title, '/');
       } else {
         dispatch(setConnectionModalOpen(false));
-        dispatch(setWelcomeScreenOpen(false));
+        // dispatch(setWelcomeScreenOpen(false));
         dispatch(
           setShareDetailsFromUrl(
             type,
