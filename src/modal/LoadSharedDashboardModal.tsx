@@ -15,9 +15,8 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import { applicationGetShareDetails } from '../application/ApplicationSelectors';
-import { clearNotification, setStandaloneMode, setWelcomeScreenOpen } from '../application/ApplicationActions';
+import { Button, Dialog } from '@neo4j-ndl/react';
+import { PlayIconSolid, AdjustmentsVerticalIconOutline, BackspaceIconOutline } from '@neo4j-ndl/react/icons';
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
@@ -33,89 +32,62 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
   return (
     <div>
       <Dialog
-        maxWidth={'lg'}
+        size='large'
         open={shareDetails !== undefined && shareDetails.skipConfirmation === false}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
-          <DashboardIcon
-            style={{
-              height: '30px',
-              paddingTop: '4px',
-              marginBottom: '-8px',
-              marginRight: '5px',
-              paddingBottom: '5px',
-            }}
+        <Dialog.Header id='form-dialog-title'>
+          <AdjustmentsVerticalIconOutline
+            className='icon-base icon-inline text-r'
+            style={{ display: 'inline', marginRight: '5px', marginBottom: '5px' }}
           />
           Loading Dashboard
-          <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {shareDetails !== undefined ? (
-              <>
-                You are loading a Neo4j dashboard.
-                <br />
-                {shareDetails && shareDetails.url ? (
-                  <>
-                    You will be connected to <b>{shareDetails && shareDetails.url}</b>.
-                  </>
-                ) : (
-                  <>You will still need to specify a connection manually.</>
-                )}
-                <br /> <br />
-                This will override your current dashboard (if any). Continue?
-              </>
-            ) : (
-              <>
-                <br />
-                <br />
-                <br />
-              </>
-            )}
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <Button
-              component='label'
-              onClick={() => {
-                onConfirmLoadSharedDashboard();
-              }}
-              style={{ backgroundColor: 'white', marginTop: '20px', float: 'right' }}
-              color='default'
-              variant='contained'
-              endIcon={<PlayArrow />}
-              size='medium'
-            >
-              Continue
-            </Button>
-            <Button
-              component='label'
-              onClick={handleClose}
-              style={{ float: 'right', marginTop: '20px', marginRight: '10px', backgroundColor: 'white' }}
-              color='default'
-              variant='contained'
-              size='medium'
-            >
-              Cancel
-            </Button>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions></DialogActions>
+        </Dialog.Header>
+        <Dialog.Content>
+          {shareDetails !== undefined ? (
+            <>
+              You are loading a Neo4j dashboard.
+              <br />
+              {shareDetails && shareDetails.url ? (
+                <>
+                  You will be connected to <b>{shareDetails && shareDetails.url}</b>.
+                </>
+              ) : (
+                <>You will still need to specify a connection manually.</>
+              )}
+              <br /> <br />
+              This will override your current dashboard (if any). Continue?
+            </>
+          ) : (
+            <>
+              <br />
+              <br />
+              <br />
+            </>
+          )}
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button
+            onClick={() => {
+              handleClose();
+            }}
+            fill='outlined'
+            style={{ float: 'right' }}
+          >
+            <BackspaceIconOutline className='btn-icon-base-l' />
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              onConfirmLoadSharedDashboard();
+            }}
+            style={{ float: 'right', marginRight: '5px' }}
+            color='success'
+          >
+            Continue
+            <PlayIconSolid className='btn-icon-base-r' />
+          </Button>
+        </Dialog.Actions>
       </Dialog>
     </div>
   );
@@ -123,6 +95,6 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = () => {};
+const mapDispatchToProps = () => ({});
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadSharedDashboardModal));
