@@ -5,6 +5,71 @@ on:
     branches: [develop]
 
 jobs:
+  build:
+    name: Build Docker Image from Develop Branch
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            updatepath.azurecr.io/neodash-mbenz
+          tags: |
+            type=ref
+            type=sha
+
+      - name: Checkout Develop Branch
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Creating Neo4j Container
+        run: |
+          chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          sleep 30s
+          chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
+          ./scripts/docker-neo4j-initializer/start-movies-db.sh
+
+      - run: yarn install
+      - name: Eslint check
+        run: yarn run lint
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v4
+        with:
+          build: yarn run build
+          start: yarn run dev
+          wait-on: 'http://localhost:3000'
+          browser: chrome
+
+      - name: Removing Docs Folder
+        run: rm -rf docs
+
+      - name: Build and export
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: neodash-mbenz:latest
+          outputs: type=docker,dest=/tmp/neodash-mbenz.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload Docker Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: neodash-mbenz
+          path: /tmp/neodash-mbenz.tar
+
   deploy-develop:
     runs-on: ubuntu-latest
     steps:
