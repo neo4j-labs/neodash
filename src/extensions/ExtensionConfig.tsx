@@ -9,6 +9,7 @@ import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTr
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
 import QueryTranslatorButton from './query-translator/component/QueryTranslator';
 import TranslatorButton from './query-translator/component/TranslatorButton';
+import { NeoLanguageToggleSwitch } from './query-translator/component/LanguageToggleSwitch';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -22,6 +23,7 @@ interface Extension {
   reducerPrefix?: string;
   reducerObject?: any;
   drawerButton?: JSX.Element;
+  cardSettingsComponent?: JSX.Element;
   settingsModal?: JSX.Element;
 }
 
@@ -91,9 +93,10 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     reducerPrefix: QUERY_TRANSLATOR_ACTION_PREFIX,
     reducerObject: queryTranslatorReducer,
+    cardSettingsComponent: NeoLanguageToggleSwitch,
     drawerButton: QueryTranslatorButton,
     description:
-      'Use natural language to generate Cypher queries in NeoDash. Connect your own LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.',
+      'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.',
     link: 'https://neo4j.com/professional-services/',
   },
 };
@@ -136,6 +139,23 @@ function getExtensionDrawerButtons() {
 }
 
 /**
+ * Gets components to inject inside the card settings content, before the Cypher query box.
+ */
+export function getExtensionCardSettingsComponents() {
+  let components = {};
+  Object.values(EXTENSIONS).forEach((extension) => {
+    try {
+      if (extension.cardSettingsComponent) {
+        components[extension.name] = extension.cardSettingsComponent;
+      }
+    } catch (e) {
+      console.log(`Something wrong happened while loading the extension components. : ${e}`);
+    }
+  });
+  return components;
+}
+
+/**
  * At the start of the application, we want to collect programmatically the extensions that need to be added inside the SettingsModal.
  * @returns
  */
@@ -156,3 +176,4 @@ function getExtensionSettingsModal() {
 export const EXTENSIONS_REDUCERS = getExtensionReducers();
 export const EXTENSIONS_DRAWER_BUTTONS = getExtensionDrawerButtons();
 export const EXTENSIONS_SETTINGS_MODALS = getExtensionSettingsModal();
+export const EXTENSIONS_CARD_SETTINGS_COMPONENTS = getExtensionCardSettingsComponents();
