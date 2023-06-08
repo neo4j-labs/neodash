@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { debounce, List, ListItem } from '@mui/material';
 import { getModelClientObject, getQueryTranslatorDefaultConfig } from '../QueryTranslatorConfig';
-import { getClientSettings } from '../state/QueryTranslatorSelector';
+import { getQueryTranslatorSettings } from '../state/QueryTranslatorSelector';
 import NeoSetting from '../../../component/field/Setting';
 import {
   deleteAllMessageHistory,
@@ -10,16 +10,7 @@ import {
   setGlobalModelClient,
   setModelProvider,
 } from '../state/QueryTranslatorActions';
-import {
-  ExpandIcon,
-  ShrinkIcon,
-  DragIcon,
-  QuestionMarkCircleIconOutline,
-  TrashIconOutline,
-  DocumentDuplicateIconOutline,
-  PlayCircleIconSolid,
-  CheckCircleIconSolid,
-} from '@neo4j-ndl/react/icons';
+import { PlayCircleIconSolid, CheckCircleIconSolid } from '@neo4j-ndl/react/icons';
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 
@@ -102,12 +93,12 @@ export const ClientSettings = ({
     }
   }
 
+  // Prevent authentication if all required fields are not full (EX: look at checkIfDisabled)
   const authButton = (
     <IconButton
       aria-label='connect'
       onClick={(e) => {
         e.preventDefault();
-        console.log('Clicked auth button...');
         updateModelProvider(modelProvider);
         updateClientSettings(settingState);
         authenticate(setIsAuthenticated);
@@ -167,7 +158,7 @@ export const ClientSettings = ({
 };
 
 const mapStateToProps = (state) => ({
-  settings: getClientSettings(state),
+  settings: getQueryTranslatorSettings(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

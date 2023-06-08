@@ -2,8 +2,13 @@ import { updateReportQueryThunk } from '../../../card/CardThunks';
 import { getDatabase } from '../../../settings/SettingsSelectors';
 import { ModelClient } from '../clients/ModelClient';
 import { getModelClientObject } from '../QueryTranslatorConfig';
-import { setGlobalModelClient, updateMessageHistory } from './QueryTranslatorActions';
-import { getClientSettings, getHistoryPerCard, getModelClient, getModelProvider } from './QueryTranslatorSelector';
+import { setGlobalModelClient, updateLastMessage, updateMessageHistory } from './QueryTranslatorActions';
+import {
+  getQueryTranslatorSettings,
+  getHistoryPerCard,
+  getModelClient,
+  getModelProvider,
+} from './QueryTranslatorSelector';
 
 const consoleLogAsync = async (message: string, other?: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));
@@ -25,7 +30,7 @@ export const modelClientInitializationThunk =
 
     // Fetching the client properties from the state
     let modelProvider = getModelProvider(state);
-    let settings = getClientSettings(state);
+    let settings = getQueryTranslatorSettings(state);
     // console.log(modelProvider, settings)
     if (modelProvider && settings) {
       // Getting the correct ModelClient object
@@ -71,12 +76,22 @@ const getModelClientThunk = () => async (dispatch: any, getState: any) => {
  * @param driver Neo4j Driver used to fetch the schema from the database
  */
 export const queryTranslationThunk =
-  (pagenumber, cardId, message, reportType, driver) => async (dispatch: any, getState: any) => {
+  (
+    pagenumber,
+    cardId,
+    message,
+    reportType,
+    driver,
+    setErrorMessage = (e) => {
+      console.log(e);
+    }
+  ) =>
+  async (dispatch: any, getState: any) => {
     let query;
     try {
       const state = getState();
       const database = getDatabase(state, pagenumber, cardId);
-
+      dispatch(updateLastMessage(message, pagenumber, cardId));
       // Retrieving the model client from the state
       let client: ModelClient = await dispatch(getModelClientThunk());
       if (client) {
@@ -89,7 +104,7 @@ export const queryTranslationThunk =
         let translationRes = await client.queryTranslation(message, messageHistory, database, reportType);
         query = translationRes[0];
         let newHistory = translationRes[1];
-
+        await consoleLogAsync('eho', newHistory);
         // The history will be updated only if the length is different (otherwise, it's the same history)
         if (messageHistory.length < newHistory.length && query) {
           dispatch(updateMessageHistory(newHistory, pagenumber, cardId));
@@ -103,6 +118,6 @@ export const queryTranslationThunk =
         `Something wrong happened while calling the model client for the card number ${cardId} inside the page ${pagenumber}: \n`,
         { e }
       );
-      throw e;
+      setErrorMessage(e);
     }
   };

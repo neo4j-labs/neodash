@@ -9,6 +9,7 @@ import {
   DELETE_ALL_MESSAGE_HISTORY,
   SET_GLOBAL_MODEL_CLIENT,
   SET_CLIENT_SETTINGS,
+  UPDATE_LAST_MESSAGE,
 } from './QueryTranslatorActions';
 
 export const INITIAL_EXTENSION_STATE = {
@@ -16,6 +17,7 @@ export const INITIAL_EXTENSION_STATE = {
   history: {}, // Objects that keeps, for every card, their history (to move to session store)
   modelClient: '', // Object to connect with the model API (to move to session store)
   settings: {}, // Settings needed by the client to operate
+  lastMessages: {},
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -41,23 +43,35 @@ export const queryTranslatorReducer = (state = INITIAL_EXTENSION_STATE, action: 
       return state;
     }
     case UPDATE_MESSAGE_HISTORY: {
-      const { cardHistory, pageIndex, cardIndex } = payload;
+      const { cardHistory, pagenumber, cardId } = payload;
       let newHistory = { ...state.history };
 
-      if (newHistory && !newHistory[pageIndex]) {
-        newHistory[pageIndex] = {};
-        newHistory[pageIndex][cardIndex] = cardHistory;
+      if (newHistory && !newHistory[pagenumber]) {
+        newHistory[pagenumber] = {};
+        newHistory[pagenumber][cardId] = cardHistory;
       } else {
-        newHistory[pageIndex][cardIndex] = cardHistory;
+        newHistory[pagenumber][cardId] = cardHistory;
       }
       state = update(state, { history: newHistory });
       return state;
     }
+    case UPDATE_LAST_MESSAGE: {
+      const { message, pagenumber, cardId } = payload;
+      let newLastMessages = { ...state.lastMessages };
+      if (newLastMessages && !newLastMessages[pagenumber]) {
+        newLastMessages[pagenumber] = {};
+        newLastMessages[pagenumber][cardId] = message;
+      } else {
+        newLastMessages[pagenumber][cardId] = message;
+      }
+      state = update(state, { lastMessages: newLastMessages });
+      return state;
+    }
     case DELETE_MESSAGE_HISTORY: {
-      const { pageIndex, cardIndex } = payload;
+      const { pagenumber, cardId } = payload;
       let newHistory = { ...state.history };
-      if (newHistory && newHistory[pageIndex] && newHistory[pageIndex][cardIndex]) {
-        delete newHistory[pageIndex][cardIndex];
+      if (newHistory && newHistory[pagenumber] && newHistory[pagenumber][cardId]) {
+        delete newHistory[pagenumber][cardId];
         state = update(state, { history: newHistory });
       }
       return state;

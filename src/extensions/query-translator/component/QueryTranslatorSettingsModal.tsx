@@ -1,14 +1,12 @@
-import { Badge, IconButton } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { setClientSettings, setModelProvider } from '../state/QueryTranslatorActions';
-import { getApiKey, getClientSettings, getModelProvider } from '../state/QueryTranslatorSelector';
-import SaveIcon from '@mui/icons-material/Save';
+import { getQueryTranslatorSettings, getModelProvider } from '../state/QueryTranslatorSelector';
 import { SELECTION_TYPES } from '../../../config/CardConfig';
 import NeoSetting from '../../../component/field/Setting';
 import { QUERY_TRANSLATOR_CONFIG } from '../QueryTranslatorConfig';
 import ClientSettings from './ClientSettings';
-import { Button, Dialog } from '@neo4j-ndl/react';
+import { Dialog } from '@neo4j-ndl/react';
 
 export const QueryTranslatorSettingsModal = ({
   open,
@@ -59,7 +57,7 @@ export const QueryTranslatorSettingsModal = ({
   );
 };
 const mapStateToProps = (state) => ({
-  clientSettings: getClientSettings(state),
+  clientSettings: getQueryTranslatorSettings(state),
   modelProvider: getModelProvider(state),
 });
 
