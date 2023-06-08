@@ -62,7 +62,7 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
         alignItems: 'center',
         lineHeight: '24px',
         width: '100%',
-        height: '100%',
+        height: 'fit-content!imporant!',
         position: 'relative',
         display: 'flex',
       }}
@@ -70,7 +70,7 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
       <Box
         ref={cellDiv}
         sx={{
-          height: '100%',
+          height: 'fit-content!imporant!',
           width,
           display: '-webkit-box',
           position: 'absolute',

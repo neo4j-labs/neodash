@@ -36,9 +36,12 @@
   "dependencies": {
     "@codemirror/lang-markdown": "^6.1.1",
     "@codemirror/language-data": "^6.3.1",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.3",
     "@mui/styles": "^5.12.3",
+    "@mui/system": "^5.13.2",
     "@mui/x-data-grid": "5.17.26",
     "@mui/x-date-pickers": "^5.0.17",
     "@neo4j-cypher/react-codemirror": "^1.0.2",
