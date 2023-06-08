@@ -24,21 +24,23 @@ jobs:
           tags: |
             type=ref,event=pr
             type=sha
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+      - name: Removing Docs Folder
+        run: rm -rf docs
       - name: Build and export
         uses: docker/build-push-action@v4
         with:
-          context: '{ { defaultContext } }'
+          context: .
+          file: ./Dockerfile
           tags: mbenz-neodash:latest
           outputs: type=docker,dest=/tmp/mbenz-neodash.tar
-
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: mbenz-neodash
           path: /tmp/mbenz-neodash.tar
 
-    #   - name: Checkout
-    #     uses: actions/checkout@v2
     #   - name: Use Node.js ${{ matrix.node-version }}
     #     uses: actions/setup-node@v1
     #     with:
