@@ -215,8 +215,8 @@ export const NeoTableChart = (props: ChartProps) => {
 
         <DataGrid
           key={'tableKey'}
-          autoHeight={!compact} // Only use autoheight if compact is not specified
-          rowHeight={compact ? tableRowHeight : undefined}
+          autoHeight={true} // Only use autoheight if compact is not specified
+          // rowHeight={compact ? tableRowHeight : undefined}
           // TODO: Bring this back in if it works. autoHeight is not ideal solution
           // sx={{
           //   '& .MuiDataGrid-viewport,.MuiDataGrid-row,.MuiDataGrid-renderingZone': {
