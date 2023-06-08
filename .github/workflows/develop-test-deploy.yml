@@ -45,7 +45,7 @@ jobs:
           path: /tmp/mbenz-neodash.tar
 
   test-develop:
-    name: Code Quality Check
+    name: Code quality checks
     needs: build
     runs-on: ubuntu-latest
     steps:
