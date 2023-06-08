@@ -46,7 +46,7 @@ export const QueryTranslatorButton = ({
 
   const button = (
     <div>
-      <Tooltip title='Query Translator' aria-label='examples'>
+      <Tooltip title='Natural Language Queries' aria-label='examples'>
         <SideNavigationItem
           onClick={() => setOpen(true)}
           icon={
@@ -55,7 +55,7 @@ export const QueryTranslatorButton = ({
             />
           }
         >
-          Query Translator
+          Natural Language Queries
         </SideNavigationItem>
       </Tooltip>
     </div>
