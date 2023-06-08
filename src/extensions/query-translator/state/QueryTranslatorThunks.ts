@@ -1,6 +1,6 @@
 import { updateReportQueryThunk } from '../../../card/CardThunks';
 import { getDatabase } from '../../../settings/SettingsSelectors';
-import { ModelClient } from '../modelClients/ModelClient';
+import { ModelClient } from '../clients/ModelClient';
 import { getModelClientObject } from '../QueryTranslatorConfig';
 import { setGlobalModelClient, updateMessageHistory } from './QueryTranslatorActions';
 import { getClientSettings, getHistoryPerCard, getModelClient, getModelProvider } from './QueryTranslatorSelector';
@@ -14,10 +14,10 @@ const consoleLogAsync = async (message: string, other?: any) => {
  * it can authenticate to it's service by calling its authenticate function
  * @returns True if the client is created, otherwise False
  */
-const modelClientInitializationThunk =
+export const modelClientInitializationThunk =
   (
     setIsAuthenticated = (boolean) => {
-      let x = boolean;
+      return boolean;
     }
   ) =>
   async (dispatch: any, getState: any) => {
@@ -26,6 +26,7 @@ const modelClientInitializationThunk =
     // Fetching the client properties from the state
     let modelProvider = getModelProvider(state);
     let settings = getClientSettings(state);
+    // console.log(modelProvider, settings)
     if (modelProvider && settings) {
       // Getting the correct ModelClient object
       let tmpClient = getModelClientObject(modelProvider, settings);

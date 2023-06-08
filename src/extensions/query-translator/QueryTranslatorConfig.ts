@@ -1,13 +1,14 @@
 import { SELECTION_TYPES } from '../../config/CardConfig';
-import { ModelClient } from './modelClients/ModelClient';
-import { OpenAiClient } from './modelClients/OpenAiClient';
-import { VertexAiClient } from './modelClients/VertexAiClient';
+import { ModelClient } from './clients/ModelClient';
+import { OpenAiClient } from './clients/OpenAiClient';
+import { VertexAiClient } from './clients/VertexAiClient';
 
 interface ClientSettingEntry {
   label: string;
   type: SELECTION_TYPES;
   default: any;
-  required?: boolean; // Required for authentication, the user should insert all the required fields before trying to authenticate
+  authentication?: boolean; // Required for authentication, the user should insert all the required fields before trying to authenticate
+  hasAuthButton?: boolean; // Append a button at the end of the selector to trigger an auth request.
   methodFromClient?: string; // String that contains the name of the client function to call to retrieve the data needed to fill the option
 }
 
@@ -25,7 +26,7 @@ interface ClientConfig {
 }
 
 interface AvailableClients {
-  openAi: ClientConfig;
+  OpenAI: ClientConfig;
   vertexAi: ClientConfig;
 }
 
@@ -35,21 +36,23 @@ interface QueryTranslatorConfig {
 
 export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
   availableClients: {
-    openAi: {
-      clientName: 'openAi',
+    OpenAI: {
+      clientName: 'OpenAI',
       clientClass: OpenAiClient,
       settings: {
         apiKey: {
-          label: 'Api Key to authenticate the client',
+          label: 'OpenAI API Key',
           type: SELECTION_TYPES.TEXT,
           default: '',
-          required: true,
+          hasAuthButton: true,
+          authentication: true,
         },
         modelType: {
-          label: 'Select from the possible model types',
+          label: 'Model',
           type: SELECTION_TYPES.LIST,
           methodFromClient: 'getListModels',
           default: '',
+          authentication: false,
         },
       },
     },
@@ -99,6 +102,10 @@ export function getQueryTranslatorDefaultConfig(providerName) {
  * @returns Client object related to the provider
  */
 export function getModelClientObject(modelProvider, settings) {
-  let modelProviderClass = QUERY_TRANSLATOR_CONFIG.availableClients[modelProvider].clientClass;
+  let providerDetails = QUERY_TRANSLATOR_CONFIG.availableClients[modelProvider];
+  if (providerDetails === undefined) {
+    throw Error(`Invalid provider name${  modelProvider}`);
+  }
+  let modelProviderClass = providerDetails.clientClass;
   return new modelProviderClass(settings);
 }

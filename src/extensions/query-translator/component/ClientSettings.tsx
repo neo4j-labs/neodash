@@ -4,13 +4,38 @@ import { debounce, List, ListItem } from '@mui/material';
 import { getModelClientObject, getQueryTranslatorDefaultConfig } from '../QueryTranslatorConfig';
 import { getClientSettings } from '../state/QueryTranslatorSelector';
 import NeoSetting from '../../../component/field/Setting';
-import { setGlobalModelClient } from '../state/QueryTranslatorActions';
+import {
+  deleteAllMessageHistory,
+  setClientSettings,
+  setGlobalModelClient,
+  setModelProvider,
+} from '../state/QueryTranslatorActions';
+import {
+  ExpandIcon,
+  ShrinkIcon,
+  DragIcon,
+  QuestionMarkCircleIconOutline,
+  TrashIconOutline,
+  DocumentDuplicateIconOutline,
+  PlayCircleIconSolid,
+  CheckCircleIconSolid,
+} from '@neo4j-ndl/react/icons';
+import { Button, IconButton } from '@neo4j-ndl/react';
+import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
 // TODO: the following
 // 1. the settings modal should save only when all the required fields are defined and we can correctly authenticate
-export const ClientSettings = ({ modelProvider, settingState, setSettingsState }) => {
+export const ClientSettings = ({
+  modelProvider,
+  settingState,
+  setSettingsState,
+  authenticate,
+  updateModelProvider,
+  updateClientSettings,
+  deleteAllMessageHistory,
+}) => {
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
   const [localSettings, setLocalSettings] = React.useState(settingState);
@@ -45,13 +70,6 @@ export const ClientSettings = ({ modelProvider, settingState, setSettingsState }
     return !requiredSettings.every((e) => settingState[e]);
   }
 
-  // Effect used to authenticate the client when the apiKey changed
-  // TODO: change to modelClientInitializationThunk when having a button to set the state globally and not only local as right now
-  useEffect(() => {
-    let clientObject = getModelClientObject(modelProvider, settingState);
-    clientObject.authenticate(setIsAuthenticated);
-  }, [settingState.apiKey]);
-
   // Effect used to trigger the population of the settings when the user inserts a correct apiKey
   useEffect(() => {
     let localClientTmp = getModelClientObject(modelProvider, settingState);
@@ -84,35 +102,65 @@ export const ClientSettings = ({ modelProvider, settingState, setSettingsState }
     }
   }
 
+  const authButton = (
+    <IconButton
+      aria-label='connect'
+      onClick={(e) => {
+        e.preventDefault();
+        console.log('Clicked auth button...');
+        updateModelProvider(modelProvider);
+        updateClientSettings(settingState);
+        authenticate(setIsAuthenticated);
+      }}
+      clean
+      style={{ marginTop: 24, marginRight: 28, color: 'white', backgroundColor: !isAuthenticated ? 'orange' : 'green' }}
+      size='medium'
+    >
+      {!isAuthenticated ? <PlayCircleIconSolid color='white' /> : <CheckCircleIconSolid></CheckCircleIconSolid>}
+    </IconButton>
+  );
+
   const component = (
-    <List style={{ marginLeft: 12, marginRight: 12 }}>
-      {Object.keys(defaultSettings).map((setting) => {
-        let disabled = checkIfDisabled(setting);
-        return (
-          <ListItem style={{ padding: 0 }}>
-            <NeoSetting
-              key={setting}
-              name={setting}
-              value={localSettings[setting]}
-              disabled={disabled}
-              type={defaultSettings[setting].type}
-              label={
-                // TODO: change this label for api to a button that verifies the auth,
-                // if verified, then show the other options.(should be verified for all REQUIRED options in defaultConfig)
-                `${defaultSettings[setting].label} - ${
-                  setting == 'apiKey' ? (isAuthenticated ? '( Authenticated )' : '( Not Authenticated )') : ''
-                }`
-              }
-              defaultValue={defaultSettings[setting].default}
-              choices={settingChoices[setting] ? settingChoices[setting] : []}
-              onChange={(e) => {
-                updateSpecificFieldInStateObject(setting, e, localSettings, setLocalSettings);
-                debouncedUpdateSpecificFieldInStateObject(setting, e, settingState, setSettingsState);
-              }}
-            />
-          </ListItem>
-        );
-      })}
+    <List style={{ marginLeft: 0, marginRight: 0 }}>
+      {/* Only render the base settings (required for auth) if no authentication is available. */}
+      {Object.keys(defaultSettings)
+        .filter((setting) => defaultSettings[setting].authentication == true || isAuthenticated)
+        .map((setting) => {
+          let disabled = checkIfDisabled(setting);
+          return (
+            <ListItem style={{ padding: 0 }}>
+              <NeoSetting
+                key={setting}
+                style={{ marginLeft: 0, marginRight: 0 }}
+                name={setting}
+                value={localSettings[setting]}
+                disabled={disabled}
+                type={defaultSettings[setting].type}
+                label={defaultSettings[setting].label}
+                defaultValue={defaultSettings[setting].default}
+                choices={settingChoices[setting] ? settingChoices[setting] : []}
+                onChange={(e) => {
+                  updateSpecificFieldInStateObject(setting, e, localSettings, setLocalSettings);
+                  debouncedUpdateSpecificFieldInStateObject(setting, e, settingState, setSettingsState);
+
+                  if (defaultSettings[setting].hasAuthButton) {
+                    setIsAuthenticated(false);
+                  }
+                }}
+              />
+              {/* TODO: Only show auth button if all required fields are filled in. */}
+              {defaultSettings[setting].hasAuthButton == true ? authButton : <></>}
+            </ListItem>
+          );
+        })}
+      <br />
+      {isAuthenticated ? (
+        <Button onClick={() => deleteAllMessageHistory()} style={{ float: 'right', marginRight: '30px' }}>
+          Delete Model History
+        </Button>
+      ) : (
+        <></>
+      )}
     </List>
   );
   return component;
@@ -125,6 +173,18 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setGlobalModelClient: (modelClient) => {
     dispatch(setGlobalModelClient(modelClient));
+  },
+  authenticate: (setIsAuthenticated) => {
+    dispatch(modelClientInitializationThunk(setIsAuthenticated));
+  },
+  updateModelProvider: (modelProviderState) => {
+    dispatch(setModelProvider(modelProviderState));
+  },
+  updateClientSettings: (settingState) => {
+    dispatch(setClientSettings(settingState));
+  },
+  deleteAllMessageHistory: () => {
+    dispatch(deleteAllMessageHistory());
   },
 });
 

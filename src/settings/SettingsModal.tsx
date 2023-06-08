@@ -5,21 +5,8 @@ import { DASHBOARD_SETTINGS } from '../config/DashboardConfig';
 import { SideNavigationItem } from '@neo4j-ndl/react';
 import { Cog6ToothIconOutline } from '@neo4j-ndl/react/icons';
 import { Dialog } from '@neo4j-ndl/react';
-import { EXTENSIONS_SETTINGS_MODALS } from '../extensions/ExtensionConfig';
 
-export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, navItemClass, extensions }) => {
-  function getExtensionSettingsModal() {
-    const res = (
-      <>
-        {Object.keys(EXTENSIONS_SETTINGS_MODALS).map((name) => {
-          const Component = extensions[name] ? EXTENSIONS_SETTINGS_MODALS[name] : '';
-          return Component ? <Component /> : <></>;
-        })}
-      </>
-    );
-    return res;
-  }
-
+export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, navItemClass }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -31,7 +18,6 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
   };
 
   const settings = DASHBOARD_SETTINGS;
-  const extensionSettings = getExtensionSettingsModal();
   // Else, build the advanced settings view.
   const advancedDashboardSettings = (
     <div style={{ marginLeft: '-10px' }}>
@@ -74,7 +60,6 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
           <br />
           <br />
           {advancedDashboardSettings}
-          {extensionSettings}
           <br />
         </Dialog.Content>
       </Dialog>

@@ -7,7 +7,8 @@ import SidebarDrawerButton from './sidebar/SidebarDrawerButton';
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
-import QueryTranslator from './query-translator/QueryTranslator';
+import QueryTranslatorButton from './query-translator/component/QueryTranslator';
+import TranslatorButton from './query-translator/component/TranslatorButton';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -61,7 +62,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     label: 'Node Sidebar',
     author: 'Neo4j Professional Services',
     image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-    enabled: false,
+    enabled: true,
     reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
     reducerObject: sidebarReducer,
     drawerButton: SidebarDrawerButton,
@@ -84,13 +85,13 @@ export const EXTENSIONS: Record<string, Extension> = {
   },
   'query-translator': {
     name: 'query-translator',
-    label: 'Query Translator',
+    label: 'Natural Language Queries',
     author: 'Neo4j Professional Services',
     image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
     enabled: true,
     reducerPrefix: QUERY_TRANSLATOR_ACTION_PREFIX,
     reducerObject: queryTranslatorReducer,
-    settingsModal: QueryTranslator,
+    drawerButton: QueryTranslatorButton,
     description: 'ask queries in natural language (available only in english).',
     link: 'https://neo4j.com/professional-services/',
   },

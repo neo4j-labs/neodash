@@ -189,7 +189,7 @@ export abstract class ModelClient {
 }
 
 // to see if i need this
-export enum ModelOperationState {
+export enum ModelConnectionState {
   RUNNING,
   DONE,
   ERROR,

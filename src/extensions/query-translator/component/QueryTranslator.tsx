@@ -1,12 +1,14 @@
 import React, { useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { deleteAllMessageHistory, deleteMessageHistory, setGlobalModelClient } from './state/QueryTranslatorActions';
-import { getApiKey, getClientSettings, getModelProvider } from './state/QueryTranslatorSelector';
-import { Button } from '@neo4j-ndl/react';
+import { deleteAllMessageHistory, deleteMessageHistory, setGlobalModelClient } from '../state/QueryTranslatorActions';
+import { getApiKey, getClientSettings, getModelProvider } from '../state/QueryTranslatorSelector';
+import { Button, SideNavigationItem } from '@neo4j-ndl/react';
 import TranslateIcon from '@mui/icons-material/Translate';
-import QueryTranslatorSettingsModal from './settings/QueryTranslatorSettingsModal';
-import { queryTranslationThunk } from './state/QueryTranslatorThunks';
+import QueryTranslatorSettingsModal from './QueryTranslatorSettingsModal';
+import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import { Tooltip } from '@mui/material';
+import { ChatBubbleOvalLeftIconOutline, LanguageIconSolid } from '@neo4j-ndl/react/icons';
 /**
  * //TODO:
  * 1. The query translator should handle all the requests from the cards to the client
@@ -14,7 +16,7 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
  * 3. create system message from here to prevent fucking all up during the thunk, o each modelProvider change and at the start pull all the db schema
  */
 
-export const QueryTranslator = ({
+export const QueryTranslatorButton = ({
   apiKey,
   modelProvider,
   clientSettings,
@@ -44,9 +46,18 @@ export const QueryTranslator = ({
 
   const button = (
     <div>
-      <Button onClick={() => setOpen(true)} id='query-translator-button'>
-        <TranslateIcon />
-      </Button>
+      <Tooltip title='Query Translator' aria-label='examples'>
+        <SideNavigationItem
+          onClick={() => setOpen(true)}
+          icon={
+            <LanguageIconSolid
+            // className={navItemClass}
+            />
+          }
+        >
+          Query Translator
+        </SideNavigationItem>
+      </Tooltip>
     </div>
   );
 
@@ -81,4 +92,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(QueryTranslator);
+export default connect(mapStateToProps, mapDispatchToProps)(QueryTranslatorButton);

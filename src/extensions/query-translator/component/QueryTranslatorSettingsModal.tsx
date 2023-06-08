@@ -1,4 +1,4 @@
-import { Badge, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Badge, IconButton } from '@mui/material';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setClientSettings, setModelProvider } from '../state/QueryTranslatorActions';
@@ -8,6 +8,7 @@ import { SELECTION_TYPES } from '../../../config/CardConfig';
 import NeoSetting from '../../../component/field/Setting';
 import { QUERY_TRANSLATOR_CONFIG } from '../QueryTranslatorConfig';
 import ClientSettings from './ClientSettings';
+import { Button, Dialog } from '@neo4j-ndl/react';
 
 export const QueryTranslatorSettingsModal = ({
   open,
@@ -28,40 +29,32 @@ export const QueryTranslatorSettingsModal = ({
   };
 
   return (
-    <Dialog maxWidth={'md'} scroll={'paper'} open={open} aria-labelledby='form-dialog-title'>
-      <DialogTitle id='form-dialog-title'>
-        Henlo
-        <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
-          <Badge overlap='rectangular' badgeContent={''}>
-            <SaveIcon id={'extensions-modal-close-button'} />
-          </Badge>
-        </IconButton>
-      </DialogTitle>
-
-      <DialogContent style={{ width: '750px' }}>
-        <div>
-          Select your model provider:
-          <NeoSetting
-            key={'Model Provider'}
-            name={'Model Provider'}
-            label={'Model Provider'}
-            value={modelProviderState}
-            type={SELECTION_TYPES.LIST}
-            choices={Object.keys(QUERY_TRANSLATOR_CONFIG.availableClients)}
-            onChange={(e) => setModelProviderState(e)}
+    <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      <Dialog.Header id='form-dialog-title'>LLM-Powered Natural Language Queries</Dialog.Header>
+      <Dialog.Content>
+        This extensions lets you create reports with natural language. Your queries (in English) are translated to
+        Cypher by a LLM provider of your choice.
+        <br />
+        <NeoSetting
+          style={{ marginLeft: 0, marginRight: 0 }}
+          key={'Model Provider'}
+          name={'Model Provider'}
+          label={'Model Provider'}
+          value={modelProviderState}
+          type={SELECTION_TYPES.LIST}
+          choices={Object.keys(QUERY_TRANSLATOR_CONFIG.availableClients)}
+          onChange={(e) => setModelProviderState(e)}
+        />
+        {modelProviderState ? (
+          <ClientSettings
+            modelProvider={modelProviderState}
+            settingState={settingsState}
+            setSettingsState={setSettingsState}
           />
-          <br />
-          {modelProviderState ? (
-            <ClientSettings
-              modelProvider={modelProviderState}
-              settingState={settingsState}
-              setSettingsState={setSettingsState}
-            />
-          ) : (
-            <>Select one of the available clients.</>
-          )}
-        </div>
-      </DialogContent>
+        ) : (
+          <>Select one of the available clients.</>
+        )}
+      </Dialog.Content>
     </Dialog>
   );
 };
