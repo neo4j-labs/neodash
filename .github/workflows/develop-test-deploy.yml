@@ -27,6 +27,27 @@ jobs:
             type=sha
       - name: Checkout Source Code
         uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Creating Neo4j Container
+        run: |
+          chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          sleep 30s
+          chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
+          ./scripts/docker-neo4j-initializer/start-movies-db.sh
+      - run: yarn install
+      - name: Eslint check
+        run: yarn run lint
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v4
+        with:
+          build: yarn run build
+          start: yarn run dev
+          wait-on: 'http://localhost:3000'
+          browser: chrome
       - name: Removing Docs Folder
         run: rm -rf docs
       - name: Build and export
@@ -43,30 +64,3 @@ jobs:
         with:
           name: mbenz-neodash
           path: /tmp/mbenz-neodash.tar
-
-  test-develop:
-    name: Code quality checks
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Docker Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: mbenz-neodash
-      - name: Creating Neo4j Container
-        run: |
-          chmod +x /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/docker-neo4j.sh
-          /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/docker-neo4j.sh
-          sleep 30s
-          chmod +x /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/start-movies-db.sh
-          /home/runner/work/neodash/neodash/scripts/docker-neo4j-initializer/start-movies-db.sh
-      - run: yarn install
-      - name: Eslint check
-        run: yarn run lint
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          build: yarn run build
-          start: yarn run dev
-          wait-on: 'http://localhost:3000'
-          browser: chrome
