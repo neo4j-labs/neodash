@@ -22,7 +22,7 @@ jobs:
           images: |
             updatepath.azurecr.io/neodash-mbenz
           tags: |
-            type=ref
+            type=ref, event=branch
             type=sha
 
       - name: Checkout Develop Branch
