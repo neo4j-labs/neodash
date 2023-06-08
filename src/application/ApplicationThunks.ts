@@ -282,8 +282,6 @@ export const handleSharedDashboardsThunk = () => (dispatch: any, getState) => {
       // dispatch(resetShareDetails());
     }
   } catch (e) {
-    console.log(e);
-    debugger;
     dispatch(
       createNotificationThunk(
         'Unable to load shared dashboard',
