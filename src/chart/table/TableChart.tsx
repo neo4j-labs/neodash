@@ -214,8 +214,9 @@ export const NeoTableChart = (props: ChartProps) => {
         )}
 
         <DataGrid
+          getRowHeight={() => 'auto'}
           key={'tableKey'}
-          autoHeight={true} // Only use autoheight if compact is not specified
+          // autoHeight={true} // Only use autoheight if compact is not specified
           // rowHeight={compact ? tableRowHeight : undefined}
           // TODO: Bring this back in if it works. autoHeight is not ideal solution
           // sx={{
