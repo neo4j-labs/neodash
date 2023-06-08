@@ -209,6 +209,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const id = decodeURIComponent(urlParams.get('id'));
       const type = urlParams.get('type');
       const standalone = urlParams.get('standalone') == 'Yes';
+      const skipConfirmation = urlParams.get('skipConfirmation') == 'Yes';
+
       const dashboardDatabase = urlParams.get('dashboardDatabase');
       if (urlParams.get('credentials')) {
         const connection = decodeURIComponent(urlParams.get('credentials'));
@@ -244,12 +246,19 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             database,
             username,
             password,
-            dashboardDatabase
+            dashboardDatabase,
+            skipConfirmation
           )
         );
+
+        if (skipConfirmation === true) {
+          dispatch(onConfirmLoadSharedDashboardThunk());
+        }
+
         window.history.pushState({}, document.title, '/');
       } else {
         dispatch(setConnectionModalOpen(false));
+        // dispatch(setWelcomeScreenOpen(false));
         dispatch(
           setShareDetailsFromUrl(
             type,
@@ -261,7 +270,8 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             undefined,
             undefined,
             undefined,
-            undefined
+            undefined,
+            false
           )
         );
         window.history.pushState({}, document.title, '/');
