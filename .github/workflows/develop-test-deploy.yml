@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build Docker Image from Source Code
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,11 +36,40 @@ jobs:
           file: ./Dockerfile
           tags: mbenz-neodash:latest
           outputs: type=docker,dest=/tmp/mbenz-neodash.tar
-      - name: Upload artifact
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Upload Docker Artifact
         uses: actions/upload-artifact@v3
         with:
           name: mbenz-neodash
           path: /tmp/mbenz-neodash.tar
+
+  test-develop:
+    name: Code Quality Check
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Docker Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: mbenz-neodash
+      - name: Creating Neo4j Container
+        run: |
+          chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          sleep 30s
+          chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
+          ./scripts/docker-neo4j-initializer/start-movies-db.sh
+      - run: yarn install
+      - name: Eslint check
+        run: yarn run lint
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          build: yarn run build
+          start: yarn run dev
+          wait-on: 'http://localhost:3000'
+          browser: chrome
 
     #   - name: Use Node.js ${{ matrix.node-version }}
     #     uses: actions/setup-node@v1
