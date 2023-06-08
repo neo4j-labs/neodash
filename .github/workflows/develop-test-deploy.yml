@@ -22,7 +22,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            updatepath.azurecr.io/mbenz-neodash
+            updatepath.azurecr.io/neodash-mbenz
           tags: |
             type=ref,event=pr
             type=sha
@@ -61,13 +61,38 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: mbenz-neodash:latest
-          outputs: type=docker,dest=/tmp/mbenz-neodash.tar
+          tags: neodash-mbenz:latest
+          outputs: type=docker,dest=/tmp/neodash-mbenz.tar
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Upload Docker Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: mbenz-neodash
-          path: /tmp/mbenz-neodash.tar
+          name: neodash-mbenz
+          path: /tmp/neodash-mbenz.tar
+
+  use:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: neodash-mbenz
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/neodash-mbenz.tar
+          docker image ls -a
+      - name: 'Azure ACR Login'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Push Image
+        run: |
+          docker push updatepath.azurecr.io/neodash-mbenz
