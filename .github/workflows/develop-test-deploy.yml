@@ -24,10 +24,6 @@ jobs:
           tags: |
             type=ref,event=pr
             type=sha
-      - name: Show Files
-        run: |
-          ls -R && echo pwd && ls -R /
-        shell: bash
       - name: Build and export
         uses: docker/build-push-action@v4
         with:
