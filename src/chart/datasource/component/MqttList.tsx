@@ -25,10 +25,10 @@ export const MqttList = (props: MqttListProperties) => {
   const [messages, setMessages] = useState<string[]>([])
 
   const pushOneMessage = (message: string) => {
-    alert(messages)
+    // alert(messages)
     const latestMessages: string[] = []
     latestMessages.push(message.toString())
-    alert(messages)
+    // alert(messages)
     messages.forEach(x => {
       if (latestMessages.length < 5) {
         latestMessages.push(x)

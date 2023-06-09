@@ -15,11 +15,14 @@ user name: neo4j, password: sindit-neo4j
 
 If the database is empty, copy the content in samples/sample-data.cypher and past it into the query box, then execute the query.
 
+## Install dependencies
+``` yarn install ```
+
 ## Start up
 ```yarn run dev```
 Open the dashboard in browser: http://localhost:3000, choose "Existing Dashboard". In the opened dialog, choose neo4j database from localhost, 7687 (should be the default one). Same user name and password as above.
 
-
+# Original README from NeoDash
 
 ## NeoDash - Neo4j Dashboard Builder
 NeoDash is an open source tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
