@@ -40,7 +40,11 @@ export const MqttList = (props: MqttListProperties) => {
 
   useEffect(() => {
     if(! clientExisted){
-      const client = mqtt.connect({host:'localhost', port: 1883, connectTimeout: 1000})
+      const client = mqtt.connect({
+        host: props.host,
+        port: props.port, 
+        connectTimeout: 10 * 1000
+      })
       
       client.on('connect', () => {
         alert('connected')
