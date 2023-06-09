@@ -104,6 +104,7 @@ export const queryTranslationThunk =
         let translationRes = await client.queryTranslation(message, messageHistory, database, reportType);
         query = translationRes[0];
         let newHistory = translationRes[1];
+        await consoleLogAsync('apwmda0owj', newHistory);
         // The history will be updated only if the length is different (otherwise, it's the same history)
         if (messageHistory.length < newHistory.length && query) {
           dispatch(updateMessageHistory(newHistory, pagenumber, cardId));

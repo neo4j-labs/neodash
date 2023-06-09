@@ -1,5 +1,10 @@
-export const QUERY_TRANSLATOR_EXTENSION_NAME = 'query-translator';
+import { getSessionStorageValue } from '../../../sessionState/SessionStorageSelectors';
 
+export const QUERY_TRANSLATOR_HISTORY_PREFIX = 'query_translator_history__';
+export const QUERY_TRANSLATOR_EXTENSION_NAME = 'query-translator';
+export const getSessionStorageHistoryKey = (pagenumber, cardIndex) => {
+  return `${QUERY_TRANSLATOR_HISTORY_PREFIX}__${pagenumber}__${cardIndex}`;
+};
 const checkExtensionConfig = (state: any) => {
   return state.dashboard.extensions && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME];
 };
@@ -46,12 +51,12 @@ export const getModelClient = (state: any) => {
  * The history is kept only during the session, so every refresh it is deleted.
  * @param state Current state of the session
  * @param pagenumber Index of the page where the card lives
- * @param cardIndex Index that identifies the card inside the page
+ * @param cardId Index that identifies the card inside the page
  * @returns history of messages between the user and the model within the context of that card (defaulted to [])
  */
-export const getHistoryPerCard = (state: any, pagenumber, cardIndex) => {
-  let history = getHistory(state);
-  let cardHistory = history[pagenumber] && history[pagenumber][cardIndex];
+export const getHistoryPerCard = (state: any, pagenumber, cardId) => {
+  let tmpKey = getSessionStorageHistoryKey(pagenumber, cardId);
+  let cardHistory = getSessionStorageValue(state, tmpKey);
   return cardHistory != undefined && cardHistory ? cardHistory : [];
 };
 

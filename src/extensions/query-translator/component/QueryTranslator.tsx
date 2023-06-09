@@ -36,7 +36,7 @@ export const QueryTranslatorButton = ({
   useEffect(() => {
     try {
       if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
-        ['d7e3f139-9c03-445a-846e-c6b6eb7787b2'].forEach((cardId) => {
+        ['eb204bd5-7dd1-4cb4-9a34-111976db0b0e', '4d017b2f-261a-4d21-a187-ab8cce6ec31d'].forEach((cardId) => {
           queryTranslation(0, cardId, 'give me any query', 'Table', driver);
         });
       }

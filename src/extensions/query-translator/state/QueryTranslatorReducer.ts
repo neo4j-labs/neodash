@@ -3,10 +3,7 @@
  */
 
 import {
-  UPDATE_MESSAGE_HISTORY,
-  DELETE_MESSAGE_HISTORY,
   SET_MODEL_PROVIDER,
-  DELETE_ALL_MESSAGE_HISTORY,
   SET_GLOBAL_MODEL_CLIENT,
   SET_CLIENT_SETTINGS,
   UPDATE_LAST_MESSAGE,
@@ -42,19 +39,6 @@ export const queryTranslatorReducer = (state = INITIAL_EXTENSION_STATE, action: 
       state = update(state, { modelClient: modelClient });
       return state;
     }
-    case UPDATE_MESSAGE_HISTORY: {
-      const { cardHistory, pagenumber, cardId } = payload;
-      let newHistory = { ...state.history };
-
-      if (newHistory && !newHistory[pagenumber]) {
-        newHistory[pagenumber] = {};
-        newHistory[pagenumber][cardId] = cardHistory;
-      } else {
-        newHistory[pagenumber][cardId] = cardHistory;
-      }
-      state = update(state, { history: newHistory });
-      return state;
-    }
     case UPDATE_LAST_MESSAGE: {
       const { message, pagenumber, cardId } = payload;
       let newLastMessages = { ...state.lastMessages };
@@ -65,19 +49,6 @@ export const queryTranslatorReducer = (state = INITIAL_EXTENSION_STATE, action: 
         newLastMessages[pagenumber][cardId] = message;
       }
       state = update(state, { lastMessages: newLastMessages });
-      return state;
-    }
-    case DELETE_MESSAGE_HISTORY: {
-      const { pagenumber, cardId } = payload;
-      let newHistory = { ...state.history };
-      if (newHistory && newHistory[pagenumber] && newHistory[pagenumber][cardId]) {
-        delete newHistory[pagenumber][cardId];
-        state = update(state, { history: newHistory });
-      }
-      return state;
-    }
-    case DELETE_ALL_MESSAGE_HISTORY: {
-      state = update(state, { history: {} });
       return state;
     }
     default: {

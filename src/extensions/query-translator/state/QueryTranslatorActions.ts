@@ -1,5 +1,16 @@
+import {
+  deleteAllKeysInSessionStorageWithPrefix,
+  deleteSessionStorageValue,
+  DELETE_ALL_KEYS_WITH_PREFIX_SESSION_STORAGE,
+  DELETE_VALUE_SESSION_STORAGE,
+  SESSION_STORAGE_PREFIX,
+  setSessionStorageValue,
+  STORE_VALUE_SESSION_STORAGE,
+} from '../../../sessionState/SessionStorageActions';
+import { getSessionStorageHistoryKey, QUERY_TRANSLATOR_HISTORY_PREFIX } from './QueryTranslatorSelector';
+
 export const QUERY_TRANSLATOR_ACTION_PREFIX = 'DASHBOARD/EXTENSIONS/QUERY_TRANSLATOR/';
-export const QUERY_TRANSLATOR_TEMPORARY_ACTION_PREFIX = 'DASHBOARD/EXTENSIONS/QUERY_TRANSLATOR/TEMPORARY';
+export const QUERY_TRANSLATOR_SESSION_STORAGE_ACTION_PREFIX = `DASHBOARD/EXTENSIONS/QUERY_TRANSLATOR/${SESSION_STORAGE_PREFIX}/`;
 
 export const SET_MODEL_PROVIDER = `${QUERY_TRANSLATOR_ACTION_PREFIX}SET_MODEL_PROVIDER`;
 export const setModelProvider = (modelProvider) => ({
@@ -19,19 +30,6 @@ export const setGlobalModelClient = (modelClient) => ({
   payload: { modelClient },
 });
 
-export const UPDATE_MESSAGE_HISTORY = `${QUERY_TRANSLATOR_ACTION_PREFIX}UPDATE_EXTENSION_TITLE`;
-/**
- * Action to add a new message to the history
- * @param history History of messages between a card and the model
- * @param pagenumber Index of the page related to the card
- * @param cardId Id of the card inside the page
- * @returns
- */
-export const updateMessageHistory = (cardHistory: any[], pagenumber: number, cardId: string) => ({
-  type: UPDATE_MESSAGE_HISTORY,
-  payload: { cardHistory, pagenumber, cardId },
-});
-
 export const UPDATE_LAST_MESSAGE = `${QUERY_TRANSLATOR_ACTION_PREFIX}UPDATE_LAST_MESSAGE`;
 /**
  * Action to store the last message sent between a user and the query translator
@@ -45,14 +43,18 @@ export const updateLastMessage = (message: string, pagenumber: number, cardId: s
   payload: { message, pagenumber, cardId },
 });
 
-export const DELETE_MESSAGE_HISTORY = `${QUERY_TRANSLATOR_ACTION_PREFIX}DELETE_MESSAGE_HISTORY`;
-export const deleteMessageHistory = (pagenumber: number, cardId: string) => ({
-  type: DELETE_MESSAGE_HISTORY,
-  payload: { pagenumber, cardId },
-});
+/**
+ * Action to add a new message to the history
+ * @param history History of messages between a card and the model
+ * @param pagenumber Index of the page related to the card
+ * @param cardId Id of the card inside the page
+ * @returns
+ */
 
-export const DELETE_ALL_MESSAGE_HISTORY = `${QUERY_TRANSLATOR_ACTION_PREFIX}DELETE_ALL_MESSAGE_HISTORY`;
-export const deleteAllMessageHistory = () => ({
-  type: DELETE_ALL_MESSAGE_HISTORY,
-  payload: {},
-});
+export const updateMessageHistory = (cardHistory: any[], pagenumber: number, cardId: string) =>
+  setSessionStorageValue(getSessionStorageHistoryKey(pagenumber, cardId), cardHistory);
+
+export const deleteMessageHistory = (pagenumber: number, cardId: string) =>
+  deleteSessionStorageValue(getSessionStorageHistoryKey(pagenumber, cardId));
+
+export const deleteAllMessageHistory = () => deleteAllKeysInSessionStorageWithPrefix(QUERY_TRANSLATOR_HISTORY_PREFIX);
