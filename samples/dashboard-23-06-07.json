@@ -2,14 +2,14 @@
   "title": "DYNABIC - MADT - FERRO",
   "version": "2.2",
   "settings": {
-    "pagenumber": 1,
+    "pagenumber": 0,
     "editable": true,
     "fullscreenEnabled": false,
     "parameters": {
       "neodash_annotation_endpoint": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg/1920px-Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg",
       "neodash_annotation_endpoint_display": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg/1920px-Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg",
-      "neodash_asset_layer": "Functional",
-      "neodash_asset_layer_display": "Functional",
+      "neodash_asset_layer": "Physical",
+      "neodash_asset_layer_display": "Physical",
       "main_selected_node": 11
     }
   },
@@ -37,8 +37,8 @@
           "y": 0,
           "type": "graph",
           "selection": {
-            "ASSET": "name",
             "ATTACHMENT": "name",
+            "ASSET": "name",
             "DATASOURCE": "name"
           },
           "settings": {
@@ -104,8 +104,8 @@
           "y": 1,
           "type": "map",
           "selection": {
-            "ASSET": "name",
             "ATTACHMENT": "name",
+            "ASSET": "name",
             "DATASOURCE": "name"
           },
           "settings": {}
@@ -118,6 +118,17 @@
           "x": 7,
           "y": 3,
           "type": "datasource",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "",
+          "query": "\n\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 4,
+          "type": "attachment",
           "selection": {},
           "settings": {}
         }
@@ -152,8 +163,7 @@
           "y": 0,
           "type": "graph",
           "selection": {
-            "ASSET": "name",
-            "ATTACHMENT": "name"
+            "ASSET": "name"
           },
           "settings": {}
         }
