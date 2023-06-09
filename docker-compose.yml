@@ -1,0 +1,44 @@
+version: '2.4'
+
+networks:
+  # Required for the devcontainer
+  sindit_network:
+    name: sindit_network
+
+services:
+  sindit_influx_db:
+    extends:
+      file: docker-compose.databases.yml
+      service: sindit_influx_db
+    networks:
+      - sindit_network
+    ports:
+      - '8086:8086'
+
+  sindit_neo4j_kg:
+    extends:
+      file: docker-compose.databases.yml
+      service: sindit_neo4j_kg
+    networks:
+      - sindit_network
+    ports:
+      - 7474:7474
+      - 7687:7687
+
+  sindit_minio_s3:
+    extends:
+      file: docker-compose.databases.yml
+      service: sindit_minio_s3
+    networks:
+      - sindit_network
+    ports:
+      - "9000:9000"
+      - "9099:9099"
+
+volumes:
+  sindit-minio-s3-volume:
+  sindit-neo4j-conf-volume:
+  sindit-neo4j-logs-volume:
+  sindit-neo4j-data-volume:
+  sindit-influx-db-data-volume:
+  sindit-influx-db-config-volume:

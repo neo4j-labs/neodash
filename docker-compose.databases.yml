@@ -1,0 +1,85 @@
+version: '2.4'
+
+services:
+  sindit_influx_db:
+    image: influxdb:2.2
+    hostname: sindit-influx-db
+    container_name: sindit_influx_db
+    restart: unless-stopped
+    mem_limit: 1G
+
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=sindit_influxdb
+      - DOCKER_INFLUXDB_INIT_PASSWORD=sindit_influxdb
+      - DOCKER_INFLUXDB_INIT_ORG=sindit
+      - DOCKER_INFLUXDB_INIT_BUCKET=sindit
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=sindit_influxdb_admin_token
+    volumes:
+      - sindit-influx-db-data-volume:/var/lib/influxdb2
+      - sindit-influx-db-config-volume:/etc/influxdb2
+    healthcheck:
+      test: "influx ping"
+      interval: 5s
+      timeout: 30s
+      retries: 5
+
+  sindit_neo4j_kg:
+    image: neo4j:4.4-community
+    hostname: sindit-neo4j-kg
+    container_name: sindit_neo4j_kg
+    mem_limit: 4G
+    restart: unless-stopped
+
+    volumes:
+      - sindit-neo4j-conf-volume:/var/lib/neo4j/conf/
+      - sindit-neo4j-logs-volume:/logs
+      - sindit-neo4j-data-volume:/data
+    healthcheck:
+      test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
+      interval: 10s
+      timeout: 2s
+      retries: 10
+    environment:
+      - NEO4J_AUTH=neo4j/sindit-neo4j
+      - NEO4JLABS_PLUGINS=["apoc", "graph-algorithms"]
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*,gds.*
+      - NEO4J_dbms_security_procedures_whitelist=apoc.*,algo.*,gds.*
+      - NEO4J_dbms.security.procedures.allowlist=gds.*
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_dbms_shell_enabled=true
+
+  sindit_minio_s3:
+    image: minio/minio
+    hostname: sindit-minio-s3
+    container_name: sindit_minio_s3
+    mem_limit: 1G
+    restart: unless-stopped
+    volumes:
+      - sindit-minio-s3-volume:/data
+    environment:
+      MINIO_ACCESS_KEY: sindit_minio_access_key
+      MINIO_SECRET_KEY: sindit_minio_secret_key
+
+      MINIO_ROOT_USER: sindit_minio
+      MINIO_ROOT_PASSWORD: sindit_minio
+    command: server --address 0.0.0.0:9000 --console-address ":9099" /data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://127.0.0.1:9000/minio/health/live"
+        ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+volumes:
+  sindit-minio-s3-volume:
+  sindit-neo4j-conf-volume:
+  sindit-neo4j-logs-volume:
+  sindit-neo4j-data-volume:
+  sindit-influx-db-data-volume:
+  sindit-influx-db-config-volume:

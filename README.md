@@ -1,3 +1,25 @@
+#MADT4BC: Multi-Aspect Digital Twin for Business Continuity
+
+## Installation
+node version v20.2.0
+yarn version 1.22.19
+
+## Preparation
+Launch databases in docker:
+```bash 
+docker compose up
+```
+
+Open Neo4j Browser at http://localhost:7474
+user name: neo4j, password: sindit-neo4j
+
+If the database is empty, copy the content in samples/sample-data.cypher and past it into the query box, then execute the query.
+
+## Start up
+```yarn run dev```
+Open the dashboard in browser: http://localhost:3000, choose "Existing Dashboard". In the opened dialog, choose neo4j database from localhost, 7687 (should be the default one). Same user name and password as above.
+
+
 
 ## NeoDash - Neo4j Dashboard Builder
 NeoDash is an open source tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
@@ -80,3 +102,13 @@ If you have any questions about NeoDash, please reach out to the maintainers:
 - Create a post on the Neo4j [Community Forum](https://community.neo4j.com/).
 
 > NeoDash is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. If you have a need for a commercial agreement around training, custom extensions or other services, please contact the [Neo4j Professional Services](https://neo4j.com/professional-services/) team.
+
+
+#DYNABIC pending features
+
+
+1. Attachment chart
+1.1 PDF support
+2. Datasource chart
+2.1 MQTT support
+2.2 Time series data
