@@ -20,7 +20,7 @@ Double-clicking on a table cell will copy that cell's value to the user's clipbo
 
 ....
 MATCH (n:Movie)<-[:ACTED_IN]-(p:Person)
-RETURN n.title, n.released, count(p) as actors
+RETURN n.title AS Title, n.released AS Released, count(p) as Actors
 ....
 
 image::table1.png[Basic Table]
