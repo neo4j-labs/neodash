@@ -162,18 +162,16 @@ export function buildGraphVisualizationObjectFromRecords(
       );
     });
   });
-  // Assign proper curvatures to relationships.
-  // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
+  // Assign proper curvatures and colors to relationships.
+  // Assigning curvature is needed for pairs of nodes that have multiple relationships between them, or self-loops.
   const linksList = Object.values(links).map((linkArray) => {
     return linkArray.map((link, i) => {
       let defaultColor = link.color;
 
-      // Working code but link color doesn't update
+      // Assign color from json based on style rule evaluation if specified
       let evaluatedColor = evaluateRulesOnLink(link, 'relationship color', defaultColor, styleRules);
-      console.log(evaluatedColor);
       if (evaluatedColor !== defaultColor) {
         link.color = evaluatedColor ? evaluatedColor : defaultColor;
-        console.log(link.color);
       }
       const mirroredNodePair = links[`${link.target},${link.source}`];
       return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);

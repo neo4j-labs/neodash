@@ -120,6 +120,8 @@ export const evaluateRulesOnLink = (link, customization, defaultValue, rules) =>
   for (const [index, rule] of rules.entries()) {
     // Only look at rules relevant to the target customization.
     if (rule.customization == customization && link.type == rule.field.split('.')[0]) {
+      // eslint-disable is needed for the warning that variable declared outside loop is modified inside it.
+      // We don't have a issue here as its synchronous code and not asynchrnous for this to be an issue.s
       // eslint-disable-next-line no-loop-func
       Object.keys(link.properties).forEach((property) => {
         if (property === rule.field.split('.')[1]) {
