@@ -23,16 +23,15 @@ const DataSourceChart = (props: ChartProps) => {
 
   return (
     <div>
-      { nodetype}
+      { nodetype }
       { nodetype == 'rest' &&
         <RestGet endpoint={node.properties['endpoint']} />
       }
       { nodetype == 'mqtt' &&
         
         <MqttList 
-          host={node.properties['host']}
+          endpoint={node.properties['endpoint']}
           topic={node.properties['topic']}
-          port={node.properties['port']}
         />
       }
     </div>

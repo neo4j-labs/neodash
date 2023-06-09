@@ -14,9 +14,8 @@ function SimpleList(props: { messages: string[] }) {
 }
 
 export interface MqttListProperties {
-  host: string;
+  endpoint: string;
   topic: string;
-  port: number;
 }
 
 export const MqttList = (props: MqttListProperties) => {
@@ -25,30 +24,25 @@ export const MqttList = (props: MqttListProperties) => {
   const [messages, setMessages] = useState<string[]>([])
 
   const pushOneMessage = (message: string) => {
-    // alert(messages)
-    const latestMessages: string[] = []
-    latestMessages.push(message.toString())
-    // alert(messages)
-    messages.forEach(x => {
-      if (latestMessages.length < 5) {
-        latestMessages.push(x)
-      }
-    })
-    
-    setMessages(latestMessages)
+    setMessages(msgs=>[message, ...msgs.slice(0,4)])
   }
 
   useEffect(() => {
     if(! clientExisted){
-      const client = mqtt.connect({
-        host: props.host,
-        port: props.port, 
-        connectTimeout: 10 * 1000
-      })
+      // const client = mqtt.connect({
+      //   host: props.host,
+      //   port: props.port, 
+      //   connectTimeout: 10 * 1000
+      // })
+      // const client = mqtt.connect({
+      //   host: props.host,
+      //   port: 8000, 
+      //   connectTimeout: 10 * 1000
+      // })
+      const client = mqtt.connect(props.endpoint, { clientId:`client_${Date.now().toString()}`, keepalive: 0 })
       
       client.on('connect', () => {
-        alert('connected')
-        pushOneMessage(`connected to ${props.host}`)
+        pushOneMessage(`connected to ${props.endpoint}`)
         client.subscribe(props.topic);
       });
       client.on('error', (err) => {
@@ -65,7 +59,7 @@ export const MqttList = (props: MqttListProperties) => {
       });
 
       setClientExisted(true)
-      pushOneMessage(`one instance: ${client.reconnecting}`)
+      pushOneMessage(`one instance: ${client.options.toString()}`)
     }
  
   });
