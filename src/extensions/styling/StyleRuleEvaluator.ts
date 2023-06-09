@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import { extensionEnabled } from '../ExtensionUtils';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * Evaluates the specified rule set on a row returned by the Neo4j driver.
@@ -107,6 +107,32 @@ export const evaluateRulesOnNode = (node, customization, defaultValue, rules) =>
     }
   }
   return defaultValue;
+};
+
+// TODO: Refactor to reduce duplication.
+export const evaluateRulesOnLink = (link, customization, defaultValue, rules) => {
+  let str = '';
+
+  if (!link || !customization || !rules) {
+    return defaultValue;
+  }
+
+  for (const [index, rule] of rules.entries()) {
+    // Only look at rules relevant to the target customization.
+    if (rule.customization == customization && link.type == rule.field.split('.')[0]) {
+      // eslint-disable-next-line no-loop-func
+      Object.keys(link.properties).forEach((property) => {
+        if (property === rule.field.split('.')[1]) {
+          const ruleValue = rule.value;
+          const realValue = link.properties[property];
+          if (evaluateCondition(realValue, rule.condition, ruleValue)) {
+            str = rule.customizationValue;
+          }
+        }
+      });
+    }
+  }
+  return str !== '' ? str : defaultValue;
 };
 
 /**
