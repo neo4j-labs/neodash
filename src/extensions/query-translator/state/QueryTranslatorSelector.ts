@@ -1,7 +1,11 @@
 import { getSessionStorageValue } from '../../../sessionStorage/SessionStorageSelectors';
 
-export const QUERY_TRANSLATOR_HISTORY_PREFIX = 'query_translator_history__';
 export const QUERY_TRANSLATOR_EXTENSION_NAME = 'query-translator';
+export const QUERY_TRANSLATOR_HISTORY_PREFIX = `${QUERY_TRANSLATOR_EXTENSION_NAME}_history__`;
+
+/**
+ * Creates a new composite key for RW operations against the SessionStorage.
+ */
 export const getSessionStorageHistoryKey = (pagenumber, cardId) => {
   return `${QUERY_TRANSLATOR_HISTORY_PREFIX}__${pagenumber}__${cardId}`;
 };
