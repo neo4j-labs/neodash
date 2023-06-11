@@ -49,7 +49,7 @@ import NeoReportHelpModal from '../modal/ReportHelpModal';
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
 import { ThemeProvider } from '@mui/material/styles';
 import lightTheme from '../component/theme/Themes';
-import { resetSessionStorage } from '../sessionState/SessionStorageActions';
+import { resetSessionStorage } from '../sessionStorage/SessionStorageActions';
 
 /**
  * This is the main application component for NeoDash.

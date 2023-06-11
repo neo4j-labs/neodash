@@ -1,12 +1,9 @@
 import {
   deleteAllKeysInSessionStorageWithPrefix,
   deleteSessionStorageValue,
-  DELETE_ALL_KEYS_WITH_PREFIX_SESSION_STORAGE,
-  DELETE_VALUE_SESSION_STORAGE,
   SESSION_STORAGE_PREFIX,
   setSessionStorageValue,
-  STORE_VALUE_SESSION_STORAGE,
-} from '../../../sessionState/SessionStorageActions';
+} from '../../../sessionStorage/SessionStorageActions';
 import { getSessionStorageHistoryKey, QUERY_TRANSLATOR_HISTORY_PREFIX } from './QueryTranslatorSelector';
 
 export const QUERY_TRANSLATOR_ACTION_PREFIX = 'DASHBOARD/EXTENSIONS/QUERY_TRANSLATOR/';
