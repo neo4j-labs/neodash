@@ -82,7 +82,10 @@ export const queryTranslationThunk =
     message,
     reportType,
     driver,
-    setErrorMessage = (e) => {
+    onComplete = (e) => {
+      console.log(e);
+    },
+    onError = (e) => {
       console.log(e);
     }
   ) =>
@@ -109,6 +112,7 @@ export const queryTranslationThunk =
         if (messageHistory.length < newHistory.length && query) {
           dispatch(updateMessageHistory(newHistory, pagenumber, cardId));
           dispatch(updateReportQueryThunk(cardId, query));
+          onComplete(query);
         }
       } else {
         throw new Error("Couldn't get the Model Client for the translation, please check your credentials.");
@@ -118,6 +122,6 @@ export const queryTranslationThunk =
         `Something wrong happened while calling the model client for the card number ${cardId} inside the page ${pagenumber}: \n`,
         { e }
       );
-      setErrorMessage(e);
+      onError(e);
     }
   };

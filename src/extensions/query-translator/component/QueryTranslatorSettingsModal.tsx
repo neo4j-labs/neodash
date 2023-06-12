@@ -33,6 +33,14 @@ export const QueryTranslatorSettingsModal = ({
         This extensions lets you create reports with natural language. Your queries (in English) are translated to
         Cypher by a LLM provider of your choice.
         <br />
+        <br />
+        Keep in mind that the following data will be sent to a external API:
+        <ul>
+          <li>- Your database schema, including label names, relationship types, and property keys.</li>
+          <li>- Any natural language question that a user writes.</li>
+        </ul>
+        <br />
+        <br />
         <NeoSetting
           style={{ marginLeft: 0, marginRight: 0 }}
           key={'Model Provider'}

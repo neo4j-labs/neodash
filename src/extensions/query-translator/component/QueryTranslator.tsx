@@ -4,7 +4,6 @@ import { deleteAllMessageHistory, deleteMessageHistory, setGlobalModelClient } f
 import { getApiKey, getQueryTranslatorSettings, getModelProvider } from '../state/QueryTranslatorSelector';
 import { SideNavigationItem } from '@neo4j-ndl/react';
 import QueryTranslatorSettingsModal from './QueryTranslatorSettingsModal';
-import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { Tooltip } from '@mui/material';
 import { LanguageIconSolid } from '@neo4j-ndl/react/icons';
@@ -63,9 +62,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setGlobalModelClient: (modelClient) => {
     dispatch(setGlobalModelClient(modelClient));
-  },
-  queryTranslation: (pagenumber, cardIndex, message, reportType, driver) => {
-    dispatch(queryTranslationThunk(pagenumber, cardIndex, message, reportType, driver));
   },
 });
 

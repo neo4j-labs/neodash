@@ -11,6 +11,7 @@ import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import debounce from 'lodash/debounce';
 import { updateLastMessage } from '../state/QueryTranslatorActions';
+import { createNotification } from '../../../application/ApplicationActions';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 export const NeoOverrideCardQueryEditor = ({
@@ -22,6 +23,7 @@ export const NeoOverrideCardQueryEditor = ({
   updateCypherQuery,
   translateQuery,
   updateEnglishQuery,
+  displayError,
 }) => {
   enum Language {
     ENGLISH,
@@ -29,6 +31,7 @@ export const NeoOverrideCardQueryEditor = ({
   }
 
   const [language, setLanguage] = React.useState(Language.CYPHER);
+  const [runningTranslation, setRunningTranslation] = React.useState(false);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);
 
@@ -68,34 +71,58 @@ export const NeoOverrideCardQueryEditor = ({
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
+  function triggerTranslation() {
+    setRunningTranslation(true);
+    translateQuery(
+      pagenumber,
+      reportId,
+      englishQuestion,
+      reportType,
+      driver,
+      () => {
+        setRunningTranslation(false);
+      },
+      (e) => {
+        setRunningTranslation(false);
+        console.log(e);
+        displayError(e);
+      }
+    );
+  }
+
   return (
     <div>
-      <table style={{ marginBottom: 5 }}>
-        <tr>
-          <td>Cypher</td>
-          <td>
-            <Switch
-              style={{ backgroundColor: 'grey' }}
-              checked={language == Language.ENGLISH}
-              onChange={() => {
-                if (language == Language.ENGLISH) {
-                  // Trigger a translation
-                  translateQuery(pagenumber, reportId, englishQuestion, reportType, driver);
-                  setLanguage(Language.CYPHER);
-                } else {
-                  setLanguage(Language.ENGLISH);
-                }
-              }}
-              className='n-ml-2'
-            />
-          </td>
-          <td>&nbsp; English</td>
-        </tr>
-      </table>
-      {language == Language.CYPHER ? cypherEditor : englishEditor}
-      <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>
-        {reportTypes[reportType] && reportTypes[reportType].helperText}
-      </div>
+      {runningTranslation ? (
+        <>Running...</>
+      ) : (
+        <>
+          <table style={{ marginBottom: 5 }}>
+            <tr>
+              <td>Cypher</td>
+              <td>
+                <Switch
+                  style={{ backgroundColor: 'grey' }}
+                  checked={language == Language.ENGLISH}
+                  onChange={() => {
+                    if (language == Language.ENGLISH) {
+                      triggerTranslation();
+                      setLanguage(Language.CYPHER);
+                    } else {
+                      setLanguage(Language.ENGLISH);
+                    }
+                  }}
+                  className='n-ml-2'
+                />
+              </td>
+              <td>&nbsp; English</td>
+            </tr>
+          </table>
+          {language == Language.CYPHER ? cypherEditor : englishEditor}
+          <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>
+            {reportTypes[reportType] && reportTypes[reportType].helperText}
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -103,11 +130,14 @@ export const NeoOverrideCardQueryEditor = ({
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = (dispatch) => ({
-  translateQuery: (pagenumber, reportId, text, reportType, driver) => {
-    dispatch(queryTranslationThunk(pagenumber, reportId, text, reportType, driver));
+  translateQuery: (pagenumber, reportId, text, reportType, driver, onComplete, onError) => {
+    dispatch(queryTranslationThunk(pagenumber, reportId, text, reportType, driver, onComplete, onError));
   },
   updateEnglishQuery: (pagenumber, reportId, message) => {
     dispatch(updateLastMessage(message, pagenumber, reportId));
+  },
+  displayError: (message) => {
+    dispatch(createNotification('Error when translating the natural language query', message));
   },
 });
 
