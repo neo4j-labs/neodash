@@ -117,7 +117,5 @@ export function renderCellExpand(params: GridRenderCellParams<any, string>, line
         .replaceAll('"', '')
     : '';
 
-  console.log(stringifiedObj);
-
   return <GridCellExpand value={stringifiedObj || ''} width={params.colDef.computedWidth} />;
 }
