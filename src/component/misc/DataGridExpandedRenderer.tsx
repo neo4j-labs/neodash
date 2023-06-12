@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { Paper, Popper, Typography } from '@mui/material';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { string } from 'prop-types';
+import { useEffect } from 'react';
 
 interface GridCellExpandProps {
   value: string;
@@ -105,12 +106,15 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
 });
 
 export function renderCellExpand(params: GridRenderCellParams<any, string>, lineBreakAfterListEntry: boolean) {
-  if (params.value?.low) {
-    params.value = params.value.low;
-  }
+  let [value, setValue] = React.useState(params.value);
+  useEffect(() => {
+    if (value?.low) {
+      setValue(value.low);
+    }
+  }, [params]);
 
-  const stringifiedObj = params.value
-    ? JSON.stringify(params.value)
+  const stringifiedObj = value
+    ? JSON.stringify(value)
         .replaceAll(',', lineBreakAfterListEntry ? '\r\n' : ', ') // TODO: Consolidate to a regex
         .replaceAll(']', '')
         .replaceAll('[', '')
