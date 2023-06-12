@@ -23,33 +23,20 @@ const NeoCardSettingsContent = ({
   onTypeUpdate,
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
 }) => {
-  // Store a generic dictionary of query text variables in a dictionary, where the key is the language.
-  const [queryTexts, setQueryTexts] = React.useState({ Cypher: query });
+  // Ensure that we only trigger a text update event after the user has stopped typing.
+  const [queryText, setQueryText] = React.useState(query);
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
 
   // State to manage the current database entry inside the form
   const [databaseText, setDatabaseText] = React.useState(database);
   const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
 
-  const [languageName, setLanguageName] = React.useState('Cypher');
-
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
-    if (query !== queryTexts.Cypher) {
-      const newQueryTexts = { ...queryTexts };
-      newQueryTexts.Cypher = query;
-      setQueryTexts(newQueryTexts);
+    if (query !== queryText) {
+      setQueryText(query);
     }
   }, [query]);
-
-  useEffect(() => {
-    // Reset text to the dashboard state when the page gets reorganized.
-    if (reportSettings.naturalLanguageQuery !== queryTexts.English) {
-      const newQueryTexts = { ...queryTexts };
-      newQueryTexts.English = reportSettings.naturalLanguageQuery;
-      setQueryTexts(newQueryTexts);
-    }
-  }, [reportSettings.naturalLanguageQuery]);
 
   const reportTypes = getReportTypes(extensions);
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
@@ -67,7 +54,7 @@ const NeoCardSettingsContent = ({
       <>
         {Object.keys(EXTENSIONS_CARD_SETTINGS_COMPONENT).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_CARD_SETTINGS_COMPONENT[name] : '';
-          return Component ? <Component setLanguageName={setLanguageName} /> : <></>;
+          return Component ? <Component xyz={undefined} /> : <></>;
         })}
       </>
     );
@@ -77,21 +64,14 @@ const NeoCardSettingsContent = ({
   const defaultQueryBoxComponent = (
     <>
       <NeoCodeEditorComponent
-        value={queryTexts[languageName]}
+        value={queryText}
         editable={true}
         language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
         onChange={(value) => {
-          if (languageName == 'Cypher') {
-            debouncedQueryUpdate(value);
-          } else {
-            onReportSettingUpdate('naturalLanguageQuery', value);
-          }
-
-          const newQueryText = { ...queryTexts };
-          newQueryText[languageName] = value;
-          setQueryTexts(newQueryText);
+          debouncedQueryUpdate(value);
+          setQueryText(value);
         }}
-        placeholder={`Enter ${languageName} here...`}
+        placeholder={`Enter Cypher here...`}
       />
       <div
         style={{

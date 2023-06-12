@@ -5,7 +5,7 @@ import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { IconButton, Switch } from '@neo4j-ndl/react';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
-export const NeoLanguageToggleSwitch = ({ setLanguageName }) => {
+export const NeoLanguageToggleSwitch = () => {
   enum Language {
     ENGLISH,
     CYPHER,
@@ -25,10 +25,8 @@ export const NeoLanguageToggleSwitch = ({ setLanguageName }) => {
               onChange={() => {
                 if (language == Language.ENGLISH) {
                   setLanguage(Language.CYPHER);
-                  setLanguageName('Cypher');
                 } else {
                   setLanguage(Language.ENGLISH);
-                  setLanguageName('English');
                 }
               }}
               className='n-ml-2'
