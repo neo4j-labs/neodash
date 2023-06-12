@@ -100,7 +100,7 @@ export const NeoOverrideCardQueryEditor = ({
             src='https://seeklogo.com/images/O/open-ai-logo-8B9BFEDC26-seeklogo.com.png'
           ></img>
           <br />
-          <span style={{ fontSize: 12 }}>Calling GPT-3.5-Turbo...</span>
+          <span style={{ fontSize: 12 }}>Calling OpenAI...</span>
         </div>
       ) : (
         <>

@@ -10,7 +10,7 @@ import {
   setGlobalModelClient,
   setModelProvider,
 } from '../state/QueryTranslatorActions';
-import { PlayCircleIconSolid, CheckCircleIconSolid } from '@neo4j-ndl/react/icons';
+import { PlayCircleIconSolid, CheckCircleIconSolid, PlayIconSolid } from '@neo4j-ndl/react/icons';
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 
@@ -26,6 +26,7 @@ export const ClientSettings = ({
   updateModelProvider,
   updateClientSettings,
   deleteAllMessageHistory,
+  setOpen,
 }) => {
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
@@ -146,9 +147,21 @@ export const ClientSettings = ({
         })}
       <br />
       {isAuthenticated ? (
-        <Button onClick={() => deleteAllMessageHistory()} style={{ float: 'right', marginRight: '30px' }}>
-          Delete Model History
-        </Button>
+        <>
+          <Button
+            style={{ float: 'right', marginRight: '30px' }}
+            onClick={() => {
+              setOpen(false);
+            }}
+            floating
+          >
+            Start Querying
+            <PlayIconSolid className='btn-icon-base-r' />
+          </Button>
+          <Button fill='outlined' onClick={() => deleteAllMessageHistory()}>
+            Delete Model History
+          </Button>
+        </>
       ) : (
         <></>
       )}

@@ -53,6 +53,7 @@ export const QueryTranslatorSettingsModal = ({
         />
         {modelProviderState ? (
           <ClientSettings
+            setOpen={setOpen}
             modelProvider={modelProviderState}
             settingState={settingsState}
             setSettingsState={setSettingsState}
