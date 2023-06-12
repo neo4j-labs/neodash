@@ -14,6 +14,8 @@ import {
 } from '../../extensions/ExtensionConfig';
 
 const NeoCardSettingsContent = ({
+  pagenumber,
+  reportId,
   query,
   database, // Current report database
   databaseList, // List of databases the user can choose from ('system' is filtered out)
@@ -63,6 +65,8 @@ const NeoCardSettingsContent = ({
           const Component = extensions[name] ? EXTENSIONS_CARD_SETTINGS_COMPONENT[name] : '';
           return Component ? (
             <Component
+              pagenumber={pagenumber}
+              reportId={reportId}
               reportType={type}
               extensions={extensions}
               cypherQuery={queryText}

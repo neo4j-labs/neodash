@@ -165,6 +165,8 @@ const NeoCard = ({
       <Collapse disablestrictmodecompat='true' in={settingsOpen} timeout={collapseTimeout}>
         <Card style={{ height: '100%' }}>
           <NeoCardSettings
+            pagenumber={dashboardSettings.pagenumber}
+            reportId={id}
             settingsOpen={settingsOpen}
             query={report.query}
             database={database}

@@ -16,14 +16,7 @@ import { getReports } from '../../../page/PageSelectors';
  * 3. create system message from here to prevent fucking all up during the thunk, o each modelProvider change and at the start pull all the db schema
  */
 
-export const QueryTranslatorButton = ({
-  apiKey,
-  modelProvider,
-  clientSettings,
-  reports, // TODO: REMOVE IT JUST FOR TEST
-  setGlobalModelClient,
-  queryTranslation,
-}) => {
+export const QueryTranslatorButton = ({ setGlobalModelClient }) => {
   const [open, setOpen] = React.useState(false);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
@@ -32,22 +25,6 @@ export const QueryTranslatorButton = ({
     // TODO: can't recast correctly the model client when refreshing the session, it should be removed at every session restart
     setGlobalModelClient(undefined);
   }, []);
-
-  // When changing provider, i will reset all the messages to prevent strage results
-  // TODO: remove this effect is just for testing
-  useEffect(() => {
-    try {
-      if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
-        reports
-          .map((card) => card.id)
-          .forEach((cardId) => {
-            queryTranslation(0, cardId, 'give me any query', 'Table', driver);
-          });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }, [modelProvider, apiKey, clientSettings]);
 
   const button = (
     <div>
