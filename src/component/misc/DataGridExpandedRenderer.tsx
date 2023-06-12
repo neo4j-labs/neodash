@@ -104,11 +104,6 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
 });
 
 export function renderCellExpand(params: GridRenderCellParams<any, string>) {
-  // TODO: Refactor the whole thing
-  if (params.value && params.value.low) {
-    params.value = params.value.low;
-  }
-
   const stringifiedObj = params.value
     ? JSON.stringify(params.value)
         .replaceAll(',', ', ') // TODO: Consolidate to a regex
