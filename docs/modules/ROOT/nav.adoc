@@ -39,6 +39,7 @@
 ** xref:developer-guide/design.adoc[Design]
 ** xref:developer-guide/adding-visualizations.adoc[Adding Visualizations]
 ** xref:developer-guide/state-management.adoc[State Management]
+** xref:developer-guide/session-storage.adoc[Session Storage]
 ** xref:developer-guide/testing.adoc[Testing]
 ** xref:developer-guide/contributing.adoc[Contributing]
 
