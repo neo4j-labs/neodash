@@ -158,6 +158,7 @@ export abstract class ModelClient {
       }
     } catch (error) {
       await consoleLogAsync('error during query', error);
+      throw error;
     }
     return [query, newHistory];
   }
