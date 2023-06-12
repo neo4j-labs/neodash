@@ -41,6 +41,42 @@ export const reportTypesToDesc = {
   'Pie Chart': 'Two variables named category and value.',
 };
 
+export const reportExampleQueries = {
+  Table: 'MATCH (n:Movie)<-[:ACTED_IN]-(p:Person) RETURN n.title, n.released, count(p) as actors',
+  Graph: `MATCH (p:Person)-[a:ACTED_IN]->(m:Movie) WHERE m.title = 'The Matrix' RETURN p, a, m`,
+  'Bar Chart': 'MATCH (p:Person)-[e]->(m:Movie) RETURN m.title as Title, COUNT(p) as People',
+  'Line Chart': 'MATCH (p:Person) RETURN (p.born/10)*10 as Decade, COUNT(p) as People ORDER BY Decade ASC',
+  Sunburst: `MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department) WITH nodes(path) as no WITH no, last(no) as leaf WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val RETURN result, val`,
+  'Circle Packing': `MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department) WITH nodes(path) as no WITH no, last(no) as leaf WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val RETURN result, val`,
+  Choropleth: `MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),(e)-[:LIVES_IN]->(c:Country) WITH c.code as code, count(e) as value RETURN code, value`,
+  'Area Map': `MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),
+  (e)-[:LIVES]->(city:City)-[:IN_COUNTRY]->(country:Country)
+  WITH city, country
+  CALL {
+      WITH country
+      RETURN country.countryCode as code, count(*) as value
+      UNION
+      WITH city
+      RETURN city.countryCode as code, count(*) as value
+  }
+  WITH code, sum(value) as totalCount
+  RETURN code,totalCount`,
+  Treemap: `MATCH path=(:Company{name:'NeoDash'})-[:HAS_DEPARTMENT*]->(:Department) WITH nodes(path) as no WITH no, last(no) as leaf WITH  [n IN no[..-1] | n.name] AS result, sum(leaf.employees) as val RETURN result, val`,
+  'Radar Chart': `MATCH (s:Skill) 
+  MATCH (:Player{name:"Messi"})-[h1:HAS_SKILL]->(s) 
+  MATCH (:Player{name:"Mbappe"})-[h2:HAS_SKILL]->(s) 
+  MATCH (:Player{name:"Benzema"})-[h3:HAS_SKILL]->(s) 
+  MATCH (:Player{name:"C Ronaldo"})-[h4:HAS_SKILL]->(s) 
+  MATCH (:Player{name:"Lewandowski"})-[h5:HAS_SKILL]->(s) 
+  RETURN s.name as Skill, h1.value as Messi, h2.value as Mbappe, h3.value as Benzema,  h4.value as Ronaldo, h5.value as Lewandowski`,
+  'Sankey Chart': 'MATCH (p:Person)-[r:RATES]->(m:Movie) RETURN p, r, m',
+  Map: 'MATCH (b:Brewery) RETURN b',
+  'Single Value': 'MATCH (n) RETURN COUNT(n)',
+  'Gauge Chart': 'MATCH (c:CPU) WHERE c.id = 1 RETURN c.load_percentage * 100',
+  'Raw JSON': 'MATCH (n) RETURN COUNT(n)',
+  'Pie Chart': 'Match (n:Person)-[e]->(m:Movie) RETURN m.title as Title, COUNT(p) as People LIMIT 10',
+};
+
 export const TASK_DEFINITION = `Task: Generate Cypher queries to query a Neo4j graph database based on the provided schema definition. These queries will be used inside NeoDash reports.
 Documentation for NeoDash is here : https://neo4j.com/labs/neodash/2.2/
 Instructions:
