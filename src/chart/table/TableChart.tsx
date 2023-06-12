@@ -238,19 +238,6 @@ export const NeoTableChart = (props: ChartProps) => {
           key={'tableKey'}
           // autoHeight={true} // Only use autoheight if compact is not specified
           // rowHeight={compact ? tableRowHeight : undefined}
-          // TODO: Bring this back in if it works. autoHeight is not ideal solution
-          // sx={{
-          //   '& .MuiDataGrid-viewport,.MuiDataGrid-row,.MuiDataGrid-renderingZone': {
-          //     maxHeight: 'fit-content!important',
-          //   },
-          //   '& .MuiDataGrid-cell': {
-          //     flexWrap: 'wrap',
-          //     overflow: 'auto',
-          //     whiteSpace: 'initial!important',
-          //     display: 'flex!important',
-          //     alignItems: 'top',
-          //   },
-          // }}
           headerHeight={32}
           rows={rows}
           columns={columns}

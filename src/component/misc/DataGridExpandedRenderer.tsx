@@ -105,6 +105,10 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
 });
 
 export function renderCellExpand(params: GridRenderCellParams<any, string>, lineBreakAfterListEntry: boolean) {
+  if (params.value?.low) {
+    params.value = params.value.low;
+  }
+
   const stringifiedObj = params.value
     ? JSON.stringify(params.value)
         .replaceAll(',', lineBreakAfterListEntry ? '\r\n' : ', ') // TODO: Consolidate to a regex
