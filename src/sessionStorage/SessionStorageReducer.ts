@@ -22,7 +22,6 @@ export const sessionStorageReducer = (state = initialState, action: { type: any;
     }
     case STORE_VALUE_SESSION_STORAGE: {
       const { key, value } = payload;
-      console.log(payload);
       let newValue = {};
       newValue[key] = value;
       return update(state, newValue);
@@ -31,7 +30,6 @@ export const sessionStorageReducer = (state = initialState, action: { type: any;
     case DELETE_VALUE_SESSION_STORAGE: {
       const { key } = payload;
       let newState = { ...state };
-      console.log(key);
       delete newState[key];
       return newState;
     }
