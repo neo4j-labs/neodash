@@ -102,7 +102,6 @@ export const queryTranslationThunk =
         if (!client.driver) {
           client.setDriver(driver);
         }
-
         const messageHistory = getHistoryPerCard(state, pagenumber, cardId);
         let translationRes = await client.queryTranslation(message, messageHistory, database, reportType);
         query = translationRes[0];
