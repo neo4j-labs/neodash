@@ -323,6 +323,8 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
       styling: {
         active: true,
       },
+      active: true,
+      activeReducers: [],
     };
     dashboard.version = '2.3';
 

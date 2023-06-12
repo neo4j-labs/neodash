@@ -8,6 +8,7 @@ import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { Tooltip } from '@mui/material';
 import { LanguageIconSolid } from '@neo4j-ndl/react/icons';
+import { getReports } from '../../../page/PageSelectors';
 /**
  * //TODO:
  * 1. The query translator should handle all the requests from the cards to the client
@@ -19,6 +20,7 @@ export const QueryTranslatorButton = ({
   apiKey,
   modelProvider,
   clientSettings,
+  reports, // TODO: REMOVE IT JUST FOR TEST
   setGlobalModelClient,
   queryTranslation,
 }) => {
@@ -36,9 +38,11 @@ export const QueryTranslatorButton = ({
   useEffect(() => {
     try {
       if (modelProvider && apiKey && Object.keys(clientSettings).length > 0) {
-        ['eb204bd5-7dd1-4cb4-9a34-111976db0b0e', '4d017b2f-261a-4d21-a187-ab8cce6ec31d'].forEach((cardId) => {
-          queryTranslation(0, cardId, 'give me any query', 'Table', driver);
-        });
+        reports
+          .map((card) => card.id)
+          .forEach((cardId) => {
+            queryTranslation(0, cardId, 'give me any query', 'Table', driver);
+          });
       }
     } catch (e) {
       console.log(e);
@@ -76,6 +80,7 @@ const mapStateToProps = (state) => ({
   apiKey: getApiKey(state),
   modelProvider: getModelProvider(state),
   clientSettings: getQueryTranslatorSettings(state),
+  reports: getReports(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
