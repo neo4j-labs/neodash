@@ -53,7 +53,7 @@ function renderAsButtonWrapper(renderer) {
   };
 }
 
-function ApplyColumnType(column, value, asAction) {
+function ApplyColumnType(column, value, asAction, line) {
   const renderer = getRendererForValue(value);
   const renderCell = asAction ? renderAsButtonWrapper(renderer.renderValue) : renderer.renderValue;
   const columnProperties = renderer
@@ -62,7 +62,7 @@ function ApplyColumnType(column, value, asAction) {
   if (columnProperties) {
     column = { ...column, ...columnProperties };
   }
-  column.renderCell = (obj) => renderCellExpand(obj);
+  column.renderCell = (obj) => renderCellExpand(obj, lineBreaksAfterListEntry);
   return column;
 }
 
@@ -72,6 +72,8 @@ export const generateSafeColumnKey = (key) => {
 
 export const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
+  const lineBreaksAfterListEntry = props.settings && props.settings.lineBreaksAfterListEntry;
+
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
 
@@ -130,7 +132,8 @@ export const NeoTableChart = (props: ChartProps) => {
             disableClickEventBubbling: true,
           },
           value,
-          actionableFields.includes(key)
+          actionableFields.includes(key),
+          lineBreaksAfterListEntry
         );
       })
     : records[0].keys.map((key, i) => {
@@ -147,7 +150,8 @@ export const NeoTableChart = (props: ChartProps) => {
               disableClickEventBubbling: true,
             },
             value,
-            actionableFields.includes(key)
+            actionableFields.includes(key),
+            lineBreaksAfterListEntry
           );
         }
         return ApplyColumnType(
@@ -161,7 +165,8 @@ export const NeoTableChart = (props: ChartProps) => {
             disableClickEventBubbling: true,
           },
           value,
-          actionableFields.includes(key)
+          actionableFields.includes(key),
+          lineBreaksAfterListEntry
         );
       });
   const hiddenColumns = Object.assign(

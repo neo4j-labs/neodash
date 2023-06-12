@@ -103,7 +103,8 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
   );
 });
 
-export function renderCellExpand(params: GridRenderCellParams<any, string>) {
+export function renderCellExpand(params: GridRenderCellParams<any, string>, lineBreaksAfterListEntry: boolean) {
+  console.log(lineBreaksAfterListEntry);
   // TODO: Refactor the whole thing
   if (params.value && params.value.low) {
     params.value = params.value.low;
