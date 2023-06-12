@@ -93,7 +93,15 @@ export const NeoOverrideCardQueryEditor = ({
   return (
     <div>
       {runningTranslation ? (
-        <>Running...</>
+        <div style={{ width: '100%', height: 150, textAlign: 'center', display: 'block', border: '1px solid grey' }}>
+          <br />
+          <img
+            style={{ width: 40, animation: 'pulse 2s infinite', marginLeft: 'auto', marginRight: 'auto' }}
+            src='https://seeklogo.com/images/O/open-ai-logo-8B9BFEDC26-seeklogo.com.png'
+          ></img>
+          <br />
+          <span style={{ fontSize: 12 }}>Calling GPT-3.5-Turbo...</span>
+        </div>
       ) : (
         <>
           <table style={{ marginBottom: 5 }}>
