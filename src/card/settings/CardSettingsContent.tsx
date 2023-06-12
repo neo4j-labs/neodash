@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import CardContent from '@mui/material/CardContent';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
+import NeoCodeEditorComponent, {
+  DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
+} from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
-import { NeoLanguageToggleSwitch } from '../../extensions/query-translator/component/LanguageToggleSwitch';
+import { NeoOverrideCardQueryEditor } from '../../extensions/query-translator/component/OverrideCardQueryEditor';
 import {
   EXTENSIONS_CARD_SETTINGS_COMPONENT,
   getExtensionCardSettingsComponents,
@@ -49,12 +51,26 @@ const NeoCardSettingsContent = ({
     );
   }
 
+  function updateCypherQuery(value) {
+    debouncedQueryUpdate(value);
+    setQueryText(value);
+  }
+
   function renderExtensionsComponents() {
     const res = (
       <>
         {Object.keys(EXTENSIONS_CARD_SETTINGS_COMPONENT).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_CARD_SETTINGS_COMPONENT[name] : '';
-          return Component ? <Component xyz={undefined} /> : <></>;
+          return Component ? (
+            <Component
+              reportType={type}
+              extensions={extensions}
+              cypherQuery={queryText}
+              updateCypherQuery={updateCypherQuery}
+            />
+          ) : (
+            <></>
+          );
         })}
       </>
     );
@@ -68,24 +84,11 @@ const NeoCardSettingsContent = ({
         editable={true}
         language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
         onChange={(value) => {
-          debouncedQueryUpdate(value);
-          setQueryText(value);
+          updateCypherQuery(value);
         }}
         placeholder={`Enter Cypher here...`}
       />
-      <div
-        style={{
-          color: 'grey',
-          fontSize: 12,
-          paddingLeft: '5px',
-          borderBottom: '1px solid lightgrey',
-          borderLeft: '1px solid lightgrey',
-          borderRight: '1px solid lightgrey',
-          marginTop: '0px',
-        }}
-      >
-        {reportTypes[type] && reportTypes[type].helperText}
-      </div>
+      <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>{reportTypes[type] && reportTypes[type].helperText}</div>
     </>
   );
 

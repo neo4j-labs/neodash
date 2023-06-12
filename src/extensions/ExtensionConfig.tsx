@@ -8,7 +8,7 @@ import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
 import QueryTranslatorButton from './query-translator/component/QueryTranslator';
-import { NeoLanguageToggleSwitch } from './query-translator/component/LanguageToggleSwitch';
+import { NeoOverrideCardQueryEditor } from './query-translator/component/OverrideCardQueryEditor';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -92,7 +92,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     reducerPrefix: QUERY_TRANSLATOR_ACTION_PREFIX,
     reducerObject: queryTranslatorReducer,
-    cardSettingsComponent: NeoLanguageToggleSwitch,
+    cardSettingsComponent: NeoOverrideCardQueryEditor,
     drawerButton: QueryTranslatorButton,
     description:
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.',
