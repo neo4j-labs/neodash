@@ -7,7 +7,7 @@ import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
 import { NeoLanguageToggleSwitch } from '../../extensions/query-translator/component/LanguageToggleSwitch';
 import {
-  EXTENSIONS_CARD_SETTINGS_COMPONENTS,
+  EXTENSIONS_CARD_SETTINGS_COMPONENT,
   getExtensionCardSettingsComponents,
 } from '../../extensions/ExtensionConfig';
 
@@ -54,17 +54,60 @@ const NeoCardSettingsContent = ({
   const reportTypes = getReportTypes(extensions);
   const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
 
+  function hasExtensionComponents() {
+    return (
+      Object.keys(EXTENSIONS_CARD_SETTINGS_COMPONENT).filter(
+        (name) => extensions[name] && EXTENSIONS_CARD_SETTINGS_COMPONENT[name]
+      ).length > 0
+    );
+  }
+
   function renderExtensionsComponents() {
     const res = (
       <>
-        {Object.keys(EXTENSIONS_CARD_SETTINGS_COMPONENTS).map((name) => {
-          const Component = extensions[name] ? EXTENSIONS_CARD_SETTINGS_COMPONENTS[name] : '';
+        {Object.keys(EXTENSIONS_CARD_SETTINGS_COMPONENT).map((name) => {
+          const Component = extensions[name] ? EXTENSIONS_CARD_SETTINGS_COMPONENT[name] : '';
           return Component ? <Component setLanguageName={setLanguageName} /> : <></>;
         })}
       </>
     );
     return res;
   }
+
+  const defaultQueryBoxComponent = (
+    <>
+      <NeoCodeEditorComponent
+        value={queryTexts[languageName]}
+        editable={true}
+        language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
+        onChange={(value) => {
+          if (languageName == 'Cypher') {
+            debouncedQueryUpdate(value);
+          } else {
+            onReportSettingUpdate('naturalLanguageQuery', value);
+          }
+
+          const newQueryText = { ...queryTexts };
+          newQueryText[languageName] = value;
+          setQueryTexts(newQueryText);
+        }}
+        placeholder={`Enter ${languageName} here...`}
+      />
+      <div
+        style={{
+          color: 'grey',
+          fontSize: 12,
+          paddingLeft: '5px',
+          borderBottom: '1px solid lightgrey',
+          borderLeft: '1px solid lightgrey',
+          borderRight: '1px solid lightgrey',
+          marginTop: '0px',
+        }}
+      >
+        {reportTypes[type] && reportTypes[type].helperText}
+      </div>
+    </>
+  );
 
   return (
     <CardContent style={{ paddingTop: '10px', paddingBottom: '10px' }}>
@@ -124,39 +167,7 @@ const NeoCardSettingsContent = ({
           onQueryUpdate={onQueryUpdate}
         />
       ) : (
-        <div>
-          {renderExtensionsComponents()}
-          <NeoCodeEditorComponent
-            value={queryTexts[languageName]}
-            editable={true}
-            language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
-            onChange={(value) => {
-              if (languageName == 'Cypher') {
-                debouncedQueryUpdate(value);
-              } else {
-                onReportSettingUpdate('naturalLanguageQuery', value);
-              }
-
-              const newQueryText = { ...queryTexts };
-              newQueryText[languageName] = value;
-              setQueryTexts(newQueryText);
-            }}
-            placeholder={`Enter ${  languageName  } here...`}
-          />
-          <div
-            style={{
-              color: 'grey',
-              fontSize: 12,
-              paddingLeft: '5px',
-              borderBottom: '1px solid lightgrey',
-              borderLeft: '1px solid lightgrey',
-              borderRight: '1px solid lightgrey',
-              marginTop: '0px',
-            }}
-          >
-            {reportTypes[type] && reportTypes[type].helperText}
-          </div>
-        </div>
+        <div>{hasExtensionComponents() ? renderExtensionsComponents() : defaultQueryBoxComponent}</div>
       )}
     </CardContent>
   );
