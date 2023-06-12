@@ -8,7 +8,6 @@ import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
 import QueryTranslatorButton from './query-translator/component/QueryTranslator';
-import TranslatorButton from './query-translator/component/TranslatorButton';
 import { NeoLanguageToggleSwitch } from './query-translator/component/LanguageToggleSwitch';
 
 // TODO: continue documenting interface
@@ -176,4 +175,4 @@ function getExtensionSettingsModal() {
 export const EXTENSIONS_REDUCERS = getExtensionReducers();
 export const EXTENSIONS_DRAWER_BUTTONS = getExtensionDrawerButtons();
 export const EXTENSIONS_SETTINGS_MODALS = getExtensionSettingsModal();
-export const EXTENSIONS_CARD_SETTINGS_COMPONENTS = getExtensionCardSettingsComponents();
+export const EXTENSIONS_CARD_SETTINGS_COMPONENT = getExtensionCardSettingsComponents();
