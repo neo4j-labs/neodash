@@ -28,7 +28,6 @@ export const NeoOverrideCardQueryEditor = ({
     CYPHER,
   }
 
-  console.log(pagenumber, reportId);
   const [language, setLanguage] = React.useState(Language.CYPHER);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);

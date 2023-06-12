@@ -7,7 +7,6 @@ import NeoCodeEditorComponent, {
 } from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
-import { NeoOverrideCardQueryEditor } from '../../extensions/query-translator/component/OverrideCardQueryEditor';
 import {
   EXTENSIONS_CARD_SETTINGS_COMPONENT,
   getExtensionCardSettingsComponents,

@@ -8,7 +8,7 @@ import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
 import QueryTranslatorButton from './query-translator/component/QueryTranslator';
-import { NeoOverrideCardQueryEditor } from './query-translator/component/OverrideCardQueryEditor';
+import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
 
 // TODO: continue documenting interface
 interface Extension {
