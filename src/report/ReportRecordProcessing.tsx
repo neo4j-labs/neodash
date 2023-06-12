@@ -218,7 +218,6 @@ function RenderString(value) {
       </a>
     );
   }
-  console.log(str);
   return str;
 }
 

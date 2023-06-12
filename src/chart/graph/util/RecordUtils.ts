@@ -170,10 +170,8 @@ export function buildGraphVisualizationObjectFromRecords(
 
       // Working code but link color doesn't update
       let evaluatedColor = evaluateRulesOnLink(link, 'relationship color', defaultColor, styleRules);
-      console.log(evaluatedColor);
       if (evaluatedColor !== defaultColor) {
         link.color = evaluatedColor ? evaluatedColor : defaultColor;
-        console.log(link.color);
       }
       const mirroredNodePair = links[`${link.target},${link.source}`];
       return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);

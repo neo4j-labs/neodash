@@ -62,7 +62,7 @@ function ApplyColumnType(column, value, asAction) {
   if (columnProperties) {
     column = { ...column, ...columnProperties };
   }
-  column.renderCell = (obj) => renderCellExpand(obj);
+  column.renderCell = (obj) => renderCellExpand(obj, column.lineBreakAfterListEntry);
   return column;
 }
 
@@ -114,8 +114,9 @@ export const NeoTableChart = (props: ChartProps) => {
     return key != 'id' ? key : `${key} `;
   };
 
-  const actionableFields = actionsRules.map((r) => r.field);
+  const lineBreakColumns: string[] = props.settings?.lineBreaksAfterListEntry;
 
+  const actionableFields = actionsRules.map((r) => r.field);
   const columns = transposed
     ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
         const value = key;
@@ -145,6 +146,7 @@ export const NeoTableChart = (props: ChartProps) => {
               disableColumnSelector: true,
               flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
               disableClickEventBubbling: true,
+              lineBreakAfterListEntry: lineBreakColumns?.includes(key.toString()),
             },
             value,
             actionableFields.includes(key)
@@ -159,6 +161,7 @@ export const NeoTableChart = (props: ChartProps) => {
             disableColumnSelector: true,
             width: columnWidths && i < columnWidths.length ? columnWidths[i] : 100,
             disableClickEventBubbling: true,
+            lineBreakAfterListEntry: lineBreakColumns?.includes(key.toString()),
           },
           value,
           actionableFields.includes(key)

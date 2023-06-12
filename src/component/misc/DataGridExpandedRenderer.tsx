@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { Paper, Popper, Typography } from '@mui/material';
 import { GridRenderCellParams } from '@mui/x-data-grid';
+import { string } from 'prop-types';
 
 interface GridCellExpandProps {
   value: string;
@@ -93,7 +94,7 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
       {showPopper && (
         <Popper open={showFullCell && anchorEl !== null} anchorEl={anchorEl} style={{ width, marginLeft: -17 }}>
           <Paper elevation={1} style={{ minHeight: wrapper.current!.offsetHeight - 3 }}>
-            <Typography variant='body2' style={{ padding: 8 }}>
+            <Typography variant='body2' style={{ padding: 8, whiteSpace: 'pre-line' }}>
               {value}
             </Typography>
           </Paper>
@@ -103,13 +104,16 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
   );
 });
 
-export function renderCellExpand(params: GridRenderCellParams<any, string>) {
+export function renderCellExpand(params: GridRenderCellParams<any, string>, lineBreakAfterListEntry: boolean) {
   const stringifiedObj = params.value
     ? JSON.stringify(params.value)
-        .replaceAll(',', ', ') // TODO: Consolidate to a regex
+        .replaceAll(',', lineBreakAfterListEntry ? '\r\n' : ', ') // TODO: Consolidate to a regex
         .replaceAll(']', '')
         .replaceAll('[', '')
         .replaceAll('"', '')
     : '';
+
+  console.log(stringifiedObj);
+
   return <GridCellExpand value={stringifiedObj || ''} width={params.colDef.computedWidth} />;
 }
