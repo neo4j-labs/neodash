@@ -108,10 +108,19 @@ export abstract class ModelClient {
    * @param history History of messages exchanged between a card and the model client
    * @param database Databased used from the report, it will be used to fetch the schema
    * @param reportType Type of report asking that requires the translation
+   * @param setValidationStep Function to set the current validation step outside the function
    * @returns The new history to assign to the card. If there was no possibility of validating the query, the
    * method will return the same history passed in input
    */
-  async queryTranslation(inputMessage, history, database, reportType) {
+  async queryTranslation(
+    inputMessage,
+    history,
+    database,
+    reportType,
+    setValidationStep = (value) => {
+      let x = value;
+    }
+  ) {
     // Creating a copy of the history
     let newHistory = [...history];
     // Creating a tmp history to prevent updating the history with erroneous messages
@@ -133,6 +142,7 @@ export abstract class ModelClient {
       // While is not validated and we didn't exceed the maximum retry number
       while (!isValidated && retries < MAX_NUM_VALIDATION) {
         retries += 1;
+        setValidationStep(retries);
 
         // Get the answer to the question
         let modelAnswer = await this.chatCompletion(tmpHistory);
@@ -142,6 +152,8 @@ export abstract class ModelClient {
         let validationResult = await this.validateQuery(modelAnswer, database);
         isValidated = validationResult[0];
         errorMessage = validationResult[1];
+
+        // If you can't validate the query, send the model a message to try to fix it
         if (!isValidated) {
           tmpHistory.push(this.addErrorMessage(errorMessage));
         } else {
@@ -157,7 +169,7 @@ export abstract class ModelClient {
         throw Error(`The model couldn't translate your request: ${inputMessage}`);
       }
     } catch (error) {
-      await consoleLogAsync('error during query', error);
+      await consoleLogAsync('Error during query', error);
       throw error;
     }
     return [query, newHistory];
@@ -171,7 +183,6 @@ export abstract class ModelClient {
     notImplementedError('chatCompletion');
   }
 
-  // TODO: adapt to the new structure, no more persisting inside the object, passign everything down
   addUserMessage(_content, _reportType, _plain = false) {
     notImplementedError('addUserMessage');
   }

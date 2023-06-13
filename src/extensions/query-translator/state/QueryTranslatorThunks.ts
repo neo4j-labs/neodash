@@ -74,6 +74,10 @@ const getModelClientThunk = () => async (dispatch: any, getState: any) => {
  * @param message Message inserted by the user
  * @param reportType Type of report used by the card calling the thunk
  * @param driver Neo4j Driver used to fetch the schema from the database
+ * @param onComplete Function used to bring the query back to the calling component
+ * @param onError Function used to bring the error back to the calling component
+ * @param setValidationStep  Function used to bring the current validation step counter
+ *  back to the calling component
  */
 export const queryTranslationThunk =
   (
@@ -86,6 +90,9 @@ export const queryTranslationThunk =
       console.log(e);
     },
     onError = (e) => {
+      console.log(e);
+    },
+    setValidationStep = (e) => {
       console.log(e);
     }
   ) =>
@@ -102,8 +109,15 @@ export const queryTranslationThunk =
         if (!client.driver) {
           client.setDriver(driver);
         }
+        await consoleLogAsync('modelClient', client);
         const messageHistory = getHistoryPerCard(state, pagenumber, cardId);
-        let translationRes = await client.queryTranslation(message, messageHistory, database, reportType);
+        let translationRes = await client.queryTranslation(
+          message,
+          messageHistory,
+          database,
+          reportType,
+          setValidationStep
+        );
         query = translationRes[0];
         let newHistory = translationRes[1];
         await consoleLogAsync('apwmda0owj', newHistory);
