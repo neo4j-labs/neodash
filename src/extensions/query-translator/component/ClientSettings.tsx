@@ -146,7 +146,7 @@ export const ClientSettings = ({
           );
         })}
       <br />
-      {isAuthenticated ? (
+      {isAuthenticated && Object.keys(defaultSettings).every((n) => localSettings[n] !== undefined) ? (
         <>
           <Button
             style={{ float: 'right', marginRight: '30px' }}
