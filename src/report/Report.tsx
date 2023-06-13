@@ -15,6 +15,7 @@ import { LoadingSpinner } from '@neo4j-ndl/react';
 import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
+import { EXTENSIONS } from '../extensions/ExtensionConfig';
 
 export const NeoReport = ({
   database = 'neo4j', // The Neo4j database to run queries onto.
@@ -89,6 +90,15 @@ export const NeoReport = ({
     const useNodePropsAsFields = reportTypes[type].useNodePropsAsFields == true;
     const useReturnValuesAsFields = reportTypes[type].useReturnValuesAsFields == true;
 
+    // Dynamically run injected extension functions before the report is populated.
+    Object.keys(extensions)
+      .filter((e) => extensions[e].active && EXTENSIONS[e].prepopulateReportFunction !== null)
+      .forEach((e) => {
+        // TODO: Pass in something here (?) and use the callback to update the query before running the execution of the report population.
+        EXTENSIONS[e].prepopulateReportFunction('hello', () => {});
+      });
+
+    // const prePopulationFunctions = extensions/
     if (debounced) {
       setStatus(QueryStatus.RUNNING);
       debouncedRunCypherQuery(

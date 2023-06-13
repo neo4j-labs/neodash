@@ -9,6 +9,7 @@ import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTr
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
 import QueryTranslatorButton from './query-translator/component/QueryTranslator';
 import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
+import { translateQuery } from './query-translator/util/Util';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -24,6 +25,7 @@ interface Extension {
   drawerButton?: JSX.Element;
   cardSettingsComponent?: JSX.Element;
   settingsModal?: JSX.Element;
+  prepopulateReportFunction: any; // function
 }
 
 // TODO: define extension config interface
@@ -93,6 +95,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     reducerPrefix: QUERY_TRANSLATOR_ACTION_PREFIX,
     reducerObject: queryTranslatorReducer,
     cardSettingsComponent: NeoOverrideCardQueryEditor,
+    prepopulateReportFunction: translateQuery,
     drawerButton: QueryTranslatorButton,
     description:
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.',
