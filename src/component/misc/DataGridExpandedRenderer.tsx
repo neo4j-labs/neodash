@@ -115,7 +115,7 @@ export function renderCellExpand(params: GridRenderCellParams<any, string>, line
 
   const stringifiedObj = value
     ? JSON.stringify(value)
-        .replaceAll(',', lineBreakAfterListEntry ? '\r\n' : ', ') // TODO: Consolidate to a regex
+        .replaceAll(',', lineBreakAfterListEntry ? ',\r\n' : ', ') // TODO: Consolidate to a regex
         .replaceAll(']', '')
         .replaceAll('[', '')
         .replaceAll('"', '')
