@@ -29,6 +29,7 @@
 *** xref:user-guide/extensions/advanced-visualizations.adoc[Advanced Visualizations]
 *** xref:user-guide/extensions/rule-based-styling.adoc[Rule-Based Styling]
 *** xref:user-guide/extensions/report-actions.adoc[Report Actions]
+*** xref:user-guide/extensions/natural-language-queries.adoc[Natural Language Queries]
 ** xref:user-guide/faq.adoc[FAQ]
 * xref:developer-guide/index.adoc[Developer Guide]
 ** xref:developer-guide/build-and-run.adoc[Build & Run]

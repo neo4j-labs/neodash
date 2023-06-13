@@ -16,7 +16,8 @@ The currently available extensions in NeoDash are:
 
 - link:advanced-visualizations[Advanced Visualizations]
 - link:rule-based-styling[Rule-based Styling]
-- link:report-actions[Report Actions (Pro)]
+- link:report-actions[Report Actions]
+- link:natural-language-queries[Natural Language Queries]
 
 == Types of Extensions
 

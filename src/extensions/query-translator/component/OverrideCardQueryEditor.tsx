@@ -127,7 +127,20 @@ export const NeoOverrideCardQueryEditor = ({
           </table>
           {language == Language.CYPHER ? cypherEditor : englishEditor}
           <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>
-            {reportTypes[reportType] && reportTypes[reportType].helperText}
+            {language == Language.ENGLISH ? (
+              <>
+                For prompting tips, check out the{' '}
+                <a
+                  style={{ textDecoration: 'underline' }}
+                  href='https://neo4j.com/labs/neodash/2.3/user-guide/extensions/natural-language-queries/'
+                >
+                  Documentation
+                </a>
+                .
+              </>
+            ) : (
+              reportTypes[reportType] && reportTypes[reportType].helperText
+            )}
           </div>
         </>
       )}
