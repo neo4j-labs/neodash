@@ -136,18 +136,20 @@ export const NeoOverrideCardQueryEditor = ({
               <td style={{ width: 70 }}>&nbsp; English</td>
               <td style={{ width: '100px', float: 'right' }}>
                 {/* Only show translation button if there's something new to translate */}
-                {language == Language.ENGLISH && prepopulateExtensionName !== undefined ? (
+                {language == Language.ENGLISH ? (
                   <Button
                     fill='outlined'
+                    disabled={prepopulateExtensionName == undefined}
                     style={{ float: 'right' }}
                     onClick={() => {
-                      triggerTranslation();
-                      setLanguage(Language.CYPHER);
-                      deletePrepopulationReportFunction(reportId);
+                      if (prepopulateExtensionName !== undefined) {
+                        triggerTranslation();
+                        setLanguage(Language.CYPHER);
+                        deletePrepopulationReportFunction(reportId);
+                      }
                     }}
                   >
                     Translate
-                    {/* <LanguageIconOutline className='btn-icon-base-r' aria-label={'translate'} /> */}
                   </Button>
                 ) : (
                   <></>
