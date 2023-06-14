@@ -19,7 +19,11 @@ Once the Natural Language Queries extension is configured, you can start using i
 2. In the report settings, you will find a toggle switch located above the editor. This switch allows you to toggle between Cypher and English languages.
 3. Since you have enabled the extension and authenticated by providing your API key, you can switch to the English language mode.
 4. Start formulating your queries in plain English, using natural language expressions to describe the data you want to retrieve.
-5. Once you have composed your query, click the "Submit" button to generate and execute the corresponding Cypher query.
+5. After composing your query, you have two options for further actions:
+
+* Translate: By clicking the "Translate" button, your query will be translated into Cypher using the Language Model. The translated Cypher query will be displayed in the editor when you toggle to the Cypher view. 
+This allows you to review and modify the generated Cypher query before execution.
+* Run: If you wish to directly execute the query and view the results, click the "Run" button in the top right corner. The execution of the query will depend on the selected report type, and the results will be displayed accordingly.
 
 
 
