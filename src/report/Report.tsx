@@ -94,10 +94,53 @@ export const NeoReport = ({
     const useNodePropsAsFields = reportTypes[type].useNodePropsAsFields == true;
     const useReturnValuesAsFields = reportTypes[type].useReturnValuesAsFields == true;
 
+    // Logic to run a query
+    const executeQuery = (newQuery) => {
+      if (debounced) {
+        setStatus(QueryStatus.RUNNING);
+        debouncedRunCypherQuery(
+          driver,
+          database,
+          newQuery,
+          parameters,
+          rowLimit,
+          setStatus,
+          setRecords,
+          setFields,
+          fields,
+          useNodePropsAsFields,
+          useReturnValuesAsFields,
+          HARD_ROW_LIMITING,
+          queryTimeLimit
+        );
+      } else {
+        runCypherQuery(
+          driver,
+          database,
+          newQuery,
+          parameters,
+          rowLimit,
+          setStatus,
+          setRecords,
+          setFields,
+          fields,
+          useNodePropsAsFields,
+          useReturnValuesAsFields,
+          HARD_ROW_LIMITING,
+          queryTimeLimit
+        );
+      }
+    };
+
     // Dynamically run injected extension functions before the report is populated.
-    Object.keys(extensions)
-      .filter((e) => extensions[e].active && EXTENSIONS[e].prepopulateReportFunction !== null)
-      .forEach((e) => {
+    // If a custom prepopulating function is present...
+    //  ... Await for the prepopulating function to complete before running the (normal) query logic.
+    const prepopulationFunctions = Object.keys(extensions).filter(
+      (e) => extensions[e].active && EXTENSIONS[e].prepopulateReportFunction !== null
+    );
+
+    if (prepopulationFunctions.length > 0) {
+      prepopulationFunctions.forEach((e) => {
         EXTENSIONS[e].prepopulateReportFunction(
           driver,
           getCustomDispatcher(),
@@ -106,44 +149,12 @@ export const NeoReport = ({
           type,
           extensions,
           (result) => {
-            alert(result);
+            executeQuery(result);
           }
         );
       });
-
-    if (debounced) {
-      setStatus(QueryStatus.RUNNING);
-      debouncedRunCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        rowLimit,
-        setStatus,
-        setRecords,
-        setFields,
-        fields,
-        useNodePropsAsFields,
-        useReturnValuesAsFields,
-        HARD_ROW_LIMITING,
-        queryTimeLimit
-      );
     } else {
-      runCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        rowLimit,
-        setStatus,
-        setRecords,
-        setFields,
-        fields,
-        useNodePropsAsFields,
-        useReturnValuesAsFields,
-        HARD_ROW_LIMITING,
-        queryTimeLimit
-      );
+      executeQuery(query);
     }
   };
 
