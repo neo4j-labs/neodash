@@ -2,7 +2,7 @@ import ReportIcon from '@mui/icons-material/Report';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { IconButton, Switch } from '@neo4j-ndl/react';
+import { Button, IconButton, Switch } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent, {
   DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
 } from '../../../component/editor/CodeEditorComponent';
@@ -106,7 +106,7 @@ export const NeoOverrideCardQueryEditor = ({
         <div style={{ height: 150, border: '1px solid grey' }}>{GPT_LOADING_ICON}</div>
       ) : (
         <>
-          <table style={{ marginBottom: 5 }}>
+          <table style={{ marginBottom: 5, width: '100%' }}>
             <tr>
               <td>Cypher</td>
               <td>
@@ -115,7 +115,7 @@ export const NeoOverrideCardQueryEditor = ({
                   checked={language == Language.ENGLISH}
                   onChange={() => {
                     if (language == Language.ENGLISH) {
-                      triggerTranslation();
+                      // triggerTranslation();
                       setLanguage(Language.CYPHER);
                     } else {
                       setLanguage(Language.ENGLISH);
@@ -125,6 +125,23 @@ export const NeoOverrideCardQueryEditor = ({
                 />
               </td>
               <td>&nbsp; English</td>
+              <td style={{ width: '300px' }}></td>
+              <td style={{ width: '100px' }}>
+                {language == Language.ENGLISH ? (
+                  <Button
+                    fill='outlined'
+                    style={{ float: 'right' }}
+                    onClick={() => {
+                      triggerTranslation();
+                      setLanguage(Language.CYPHER);
+                    }}
+                  >
+                    Translate
+                  </Button>
+                ) : (
+                  <></>
+                )}
+              </td>
             </tr>
           </table>
           {language == Language.CYPHER ? cypherEditor : englishEditor}

@@ -60,7 +60,7 @@ const NeoCardSettingsHeader = ({
       action={
         <>
           {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
-          <Tooltip title='Close' aria-label='save'>
+          <Tooltip title='Run' aria-label='save'>
             <IconButton
               aria-label='save'
               onClick={(e) => {
@@ -70,7 +70,7 @@ const NeoCardSettingsHeader = ({
               clean
               size='medium'
             >
-              <EllipsisVerticalIconOutline />
+              <PlayCircleIconSolid />
             </IconButton>
           </Tooltip>
         </>

@@ -137,12 +137,12 @@ export const NeoReport = ({
 
     setStatus(QueryStatus.RUNNING);
 
-    // Dynamically run injected extension functions before the report is populated.
-    // If a custom prepopulating function is present...
+    // If a custom prepopulating function is present in the session storage...
     //  ... Await for the prepopulating function to complete before running the (normal) query logic.
-    const relevantExtensions = Object.keys(extensions).filter(
-      (e) => extensions[e].active && EXTENSIONS[e].prepopulateReportFunction !== null
-    );
+    // Else just run the normal query.
+    // Finally, remove the prepopulating function from session storage.
+
+    const relevantExtensions = sessioknStorage[['closeButtonTrigger', pagenumber, id]];
 
     if (relevantExtensions.length > 0) {
       relevantExtensions.forEach((e) => {
