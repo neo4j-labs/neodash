@@ -26,7 +26,7 @@ export const ClientSettings = ({
   updateModelProvider,
   updateClientSettings,
   deleteAllMessageHistory,
-  setOpen,
+  handleClose,
 }) => {
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
@@ -151,7 +151,7 @@ export const ClientSettings = ({
           <Button
             style={{ float: 'right', marginRight: '30px' }}
             onClick={() => {
-              setOpen(false);
+              handleClose();
             }}
             floating
           >

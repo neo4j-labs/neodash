@@ -33,12 +33,6 @@ export const queryTranslatorReducer = (state = INITIAL_EXTENSION_STATE, action: 
       state = update(state, { settings: settings });
       return state;
     }
-    // Object used globally to run async tasks
-    case SET_GLOBAL_MODEL_CLIENT: {
-      const { modelClient } = payload;
-      state = update(state, { modelClient: modelClient });
-      return state;
-    }
     case UPDATE_LAST_MESSAGE: {
       const { message, pagenumber, cardId } = payload;
       let newLastMessages = { ...state.lastMessages };

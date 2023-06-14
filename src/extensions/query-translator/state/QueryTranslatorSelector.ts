@@ -9,6 +9,11 @@ export const QUERY_TRANSLATOR_HISTORY_PREFIX = `${QUERY_TRANSLATOR_EXTENSION_NAM
 export const getSessionStorageHistoryKey = (pagenumber, cardId) => {
   return `${QUERY_TRANSLATOR_HISTORY_PREFIX}__${pagenumber}__${cardId}`;
 };
+/**
+ * Returns a key for RW operations against the SessionStorage.
+ */
+export const getModelClientSessionStorageKey = () => 'query_translator_model_client_tmp';
+
 const checkExtensionConfig = (state: any) => {
   return state.dashboard.extensions && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME];
 };
@@ -40,13 +45,10 @@ export const getModelProvider = (state: any) => {
  * The extension keeps, during one session, the client to connect to the model API.
  * The client is kept only during the session, so every refresh it is deleted.
  * @param state Current state of the session
- * @param pageIndex Index of the page where the card lives
- * @param cardIndex Index that identifies the card inside the page
- * @returns history of messages between the user and the model within the context of that card (defaulted to undefined)
+ * @returns Current model client
  */
 export const getModelClient = (state: any) => {
-  let modelClient =
-    checkExtensionConfig(state) && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME].modelClient;
+  let modelClient = getSessionStorageValue(state, getModelClientSessionStorageKey());
   return modelClient != undefined && modelClient ? modelClient : undefined;
 };
 

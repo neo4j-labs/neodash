@@ -4,7 +4,11 @@ import {
   SESSION_STORAGE_PREFIX,
   setSessionStorageValue,
 } from '../../../sessionStorage/SessionStorageActions';
-import { getSessionStorageHistoryKey, QUERY_TRANSLATOR_HISTORY_PREFIX } from './QueryTranslatorSelector';
+import {
+  getModelClientSessionStorageKey,
+  getSessionStorageHistoryKey,
+  QUERY_TRANSLATOR_HISTORY_PREFIX,
+} from './QueryTranslatorSelector';
 
 export const QUERY_TRANSLATOR_ACTION_PREFIX = 'DASHBOARD/EXTENSIONS/QUERY_TRANSLATOR/';
 export const QUERY_TRANSLATOR_SESSION_STORAGE_ACTION_PREFIX = `DASHBOARD/EXTENSIONS/QUERY_TRANSLATOR/${SESSION_STORAGE_PREFIX}/`;
@@ -22,10 +26,8 @@ export const setClientSettings = (settings) => ({
 });
 
 export const SET_GLOBAL_MODEL_CLIENT = `${QUERY_TRANSLATOR_ACTION_PREFIX}SET_GLOBAL_MODEL_CLIENT`;
-export const setGlobalModelClient = (modelClient) => ({
-  type: SET_GLOBAL_MODEL_CLIENT,
-  payload: { modelClient },
-});
+export const setGlobalModelClient = (modelClient) =>
+  setSessionStorageValue(getModelClientSessionStorageKey(), modelClient);
 
 export const UPDATE_LAST_MESSAGE = `${QUERY_TRANSLATOR_ACTION_PREFIX}UPDATE_LAST_MESSAGE`;
 /**

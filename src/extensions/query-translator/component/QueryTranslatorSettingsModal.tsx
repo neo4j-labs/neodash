@@ -7,6 +7,7 @@ import NeoSetting from '../../../component/field/Setting';
 import { QUERY_TRANSLATOR_CONFIG } from '../QueryTranslatorConfig';
 import ClientSettings from './ClientSettings';
 import { Dialog } from '@neo4j-ndl/react';
+import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 
 export const QueryTranslatorSettingsModal = ({
   open,
@@ -15,19 +16,26 @@ export const QueryTranslatorSettingsModal = ({
   clientSettings,
   updateClientSettings,
   updateModelProvider,
+  initializeModelClient,
 }) => {
   const [modelProviderState, setModelProviderState] = React.useState(modelProvider);
   const [settingsState, setSettingsState] = React.useState(clientSettings);
 
   // TODO: a user shouldn't be able to save a configuration if it's not correct and it didn't fill all the requirements
-  const handleClose = () => {
+  // DONE: by moving the storing logic only inside the start querying button
+  const handleCloseWithSave = () => {
     updateModelProvider(modelProviderState);
     updateClientSettings(settingsState);
+    setOpen(false);
+    initializeModelClient();
+  };
+
+  const handleCloseWithoutSave = () => {
     setOpen(false);
   };
 
   return (
-    <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+    <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
       <Dialog.Header id='form-dialog-title'>LLM-Powered Natural Language Queries</Dialog.Header>
       <Dialog.Content>
         This extensions lets you create reports with natural language. Your queries (in English) are translated to
@@ -53,7 +61,7 @@ export const QueryTranslatorSettingsModal = ({
         />
         {modelProviderState ? (
           <ClientSettings
-            setOpen={setOpen}
+            handleClose={handleCloseWithSave}
             modelProvider={modelProviderState}
             settingState={settingsState}
             setSettingsState={setSettingsState}
@@ -73,6 +81,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   updateClientSettings: (settings) => dispatch(setClientSettings(settings)),
   updateModelProvider: (modelProvider) => dispatch(setModelProvider(modelProvider)),
+  initializeModelClient: (setIsAuthenticated) => {
+    dispatch(modelClientInitializationThunk(setIsAuthenticated));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(QueryTranslatorSettingsModal);
