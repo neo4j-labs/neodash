@@ -1,4 +1,5 @@
 import { createNotification } from '../../../application/ApplicationActions';
+import { updateReportQueryThunk } from '../../../card/CardThunks';
 import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 
 /**
@@ -7,9 +8,22 @@ import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 export function translateQuery(driver, dispatch, pagenumber, id, extensions, setResult) {
   // TODO get english question from extensions config.
   // TODO - only trigger the translation if the latest english wasn't already translated, or if the english query is ''.
+  console.log(extensions);
   dispatch(
-    queryTranslationThunk(pagenumber, id, 'show me a movie with tom hanks', 'table', driver, setResult, (error) => {
-      dispatch(createNotification('Error when translating the natural language query', error));
-    })
+    queryTranslationThunk(
+      pagenumber,
+      id,
+      'show me a movie with tom hanks',
+      'table',
+      driver,
+      (result) => {
+        alert(result);
+        // dispatch(updateReportQueryThunk(id, result));
+        setResult(result);
+      },
+      (error) => {
+        dispatch(createNotification('Error when translating the natural language query', error));
+      }
+    )
   );
 }
