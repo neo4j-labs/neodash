@@ -77,7 +77,7 @@ export class OpenAiClient extends ModelClient {
       }
       let req = await this.modelClient.listModels();
       // Extracting the names
-      res = req.data.data.map((x) => x.id).filter((x) => x.includes('gpt-3.5'));
+      res = req.data.data.map((x) => x.id).filter((x) => x.includes('gpt-'));
     } catch (e) {
       consoleLogAsync('Error while loading the model list: ', e);
       res = [];
@@ -114,8 +114,8 @@ export class OpenAiClient extends ModelClient {
 */
   // TODO: adapt to the new structure, no more persisting inside the object, passign everything down
   addUserMessage(content, reportType, plain = false) {
-  let queryExample = reportExampleQueries[reportType];
-  let finalMessage = `${content}. Please use the following query structure as an example for ${reportTypesToDesc[reportType]}:
+    let queryExample = reportExampleQueries[reportType];
+    let finalMessage = `${content}. Please use the following query structure as an example for ${reportTypesToDesc[reportType]}:
   ${queryExample} 
   Remember to respect the schema and remove any unnecessary comments or explanations from your result.`;
     return { role: ChatCompletionRequestMessageRoleEnum.User, content: plain ? content : finalMessage };
@@ -130,7 +130,7 @@ export class OpenAiClient extends ModelClient {
   }
 
   addErrorMessage(error) {
-    //let finalMessage = `Please fix the query accordingly to this error: ${error}. Plain cypher code, no comments and no explanations and no unrequired symbols. Remember to respect the schema. Please remove any comment or explanation  from your result`;
+    // let finalMessage = `Please fix the query accordingly to this error: ${error}. Plain cypher code, no comments and no explanations and no unrequired symbols. Remember to respect the schema. Please remove any comment or explanation  from your result`;
     let finalMessage = `Error: ${error}. Please correct the query based on the provided error message. Ensure the query follows the expected format, adheres to the schema, and does not contain any comments, explanations, or unnecessary symbols. Please remove any comments or explanations from the query result.`;
     return { role: ChatCompletionRequestMessageRoleEnum.User, content: finalMessage };
   }

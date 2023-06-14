@@ -142,7 +142,7 @@ export const NeoReport = ({
     // Else just run the normal query.
     // Finally, remove the prepopulating function from session storage.
 
-    const relevantExtensions = sessioknStorage[['closeButtonTrigger', pagenumber, id]];
+    const relevantExtensions = []; // sessioknStorage[['closeButtonTrigger', pagenumber, id]];
 
     if (relevantExtensions.length > 0) {
       relevantExtensions.forEach((e) => {
