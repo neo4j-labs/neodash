@@ -13,6 +13,7 @@ import debounce from 'lodash/debounce';
 import { updateLastMessage } from '../state/QueryTranslatorActions';
 import { createNotification } from '../../../application/ApplicationActions';
 import { getLastMessage } from '../state/QueryTranslatorSelector';
+import { GPT_LOADING_ICON } from './LoadingIcon';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 export const NeoOverrideCardQueryEditor = ({
@@ -102,15 +103,7 @@ export const NeoOverrideCardQueryEditor = ({
   return (
     <div>
       {runningTranslation ? (
-        <div style={{ width: '100%', height: 150, textAlign: 'center', display: 'block', border: '1px solid grey' }}>
-          <br />
-          <img
-            style={{ width: 40, animation: 'pulse 2s infinite', marginLeft: 'auto', marginRight: 'auto' }}
-            src='https://seeklogo.com/images/O/open-ai-logo-8B9BFEDC26-seeklogo.com.png'
-          ></img>
-          <br />
-          <span style={{ fontSize: 12 }}>Calling OpenAI...</span>
-        </div>
+        <div style={{ height: 150, border: '1px solid grey' }}>{GPT_LOADING_ICON}</div>
       ) : (
         <>
           <table style={{ marginBottom: 5 }}>

@@ -18,6 +18,8 @@ import { setPageNumberThunk } from '../settings/SettingsThunks';
 import { EXTENSIONS } from '../extensions/ExtensionConfig';
 import { getPageNumber } from '../settings/SettingsSelectors';
 
+const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
+
 export const NeoReport = ({
   pagenumber = '', // page number that the report is on.
   id = '', // ID of the report / card.
@@ -52,6 +54,7 @@ export const NeoReport = ({
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+  const [loadingIcon, setLoadingIcon] = React.useState(DEFAULT_LOADING_ICON);
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
@@ -96,8 +99,8 @@ export const NeoReport = ({
 
     // Logic to run a query
     const executeQuery = (newQuery) => {
+      setLoadingIcon(DEFAULT_LOADING_ICON);
       if (debounced) {
-        setStatus(QueryStatus.RUNNING);
         debouncedRunCypherQuery(
           driver,
           database,
@@ -132,15 +135,18 @@ export const NeoReport = ({
       }
     };
 
+    setStatus(QueryStatus.RUNNING);
+
     // Dynamically run injected extension functions before the report is populated.
     // If a custom prepopulating function is present...
     //  ... Await for the prepopulating function to complete before running the (normal) query logic.
-    const prepopulationFunctions = Object.keys(extensions).filter(
+    const relevantExtensions = Object.keys(extensions).filter(
       (e) => extensions[e].active && EXTENSIONS[e].prepopulateReportFunction !== null
     );
 
-    if (prepopulationFunctions.length > 0) {
-      prepopulationFunctions.forEach((e) => {
+    if (relevantExtensions.length > 0) {
+      relevantExtensions.forEach((e) => {
+        setLoadingIcon(EXTENSIONS[e].customLoadingIcon);
         EXTENSIONS[e].prepopulateReportFunction(
           driver,
           getCustomDispatcher(),
@@ -220,7 +226,7 @@ export const NeoReport = ({
       </div>
     );
   } else if (status == QueryStatus.RUNNING) {
-    return <LoadingSpinner size='large' className='centered' />;
+    return loadingIcon;
   } else if (status == QueryStatus.NO_DATA) {
     return <NeoCodeViewerComponent value={'Query returned no data.'} />;
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
