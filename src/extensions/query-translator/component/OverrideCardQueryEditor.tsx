@@ -1,8 +1,6 @@
-import ReportIcon from '@mui/icons-material/Report';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Button, IconButton, Switch } from '@neo4j-ndl/react';
+import { Button, Switch } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent, {
   DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
 } from '../../../component/editor/CodeEditorComponent';
@@ -14,6 +12,10 @@ import { updateLastMessage } from '../state/QueryTranslatorActions';
 import { createNotification } from '../../../application/ApplicationActions';
 import { getLastMessage } from '../state/QueryTranslatorSelector';
 import { GPT_LOADING_ICON } from './LoadingIcon';
+import {
+  deleteSessionStoragePrepopulationReportFunction,
+  setSessionStoragePrepopulationReportFunction,
+} from '../../state/ExtensionActions';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 export const NeoOverrideCardQueryEditor = ({
@@ -27,6 +29,8 @@ export const NeoOverrideCardQueryEditor = ({
   translateQuery,
   updateEnglishQuery,
   displayError,
+  setPrepopulationReportFunction,
+  deletePrepopulationReportFunction,
 }) => {
   enum Language {
     ENGLISH,
@@ -115,10 +119,11 @@ export const NeoOverrideCardQueryEditor = ({
                   checked={language == Language.ENGLISH}
                   onChange={() => {
                     if (language == Language.ENGLISH) {
-                      // triggerTranslation();
                       setLanguage(Language.CYPHER);
+                      deletePrepopulationReportFunction(pagenumber, reportId);
                     } else {
                       setLanguage(Language.ENGLISH);
+                      setPrepopulationReportFunction(pagenumber, reportId);
                     }
                   }}
                   className='n-ml-2'
@@ -134,6 +139,7 @@ export const NeoOverrideCardQueryEditor = ({
                     onClick={() => {
                       triggerTranslation();
                       setLanguage(Language.CYPHER);
+                      deletePrepopulationReportFunction(reportId);
                     }}
                   >
                     Translate
@@ -180,6 +186,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   displayError: (message) => {
     dispatch(createNotification('Error when translating the natural language query', message));
+  },
+  setPrepopulationReportFunction: (reportId) => {
+    dispatch(setSessionStoragePrepopulationReportFunction(reportId, 'query-translator'));
+  },
+  deletePrepopulationReportFunction: (reportId) => {
+    dispatch(deleteSessionStoragePrepopulationReportFunction(reportId));
   },
 });
 

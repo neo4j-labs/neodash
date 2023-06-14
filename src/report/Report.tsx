@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 import { EXTENSIONS } from '../extensions/ExtensionConfig';
 import { getPageNumber } from '../settings/SettingsSelectors';
+import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSelectors';
 
 const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -49,6 +50,7 @@ export const NeoReport = ({
   extensions = {}, // A set of enabled extensions.
   getCustomDispatcher = () => {},
   ChartType = NeoTableChart, // The report component to render with the query results.
+  prepopulateExtensionName,
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -141,24 +143,19 @@ export const NeoReport = ({
     //  ... Await for the prepopulating function to complete before running the (normal) query logic.
     // Else just run the normal query.
     // Finally, remove the prepopulating function from session storage.
-
-    const relevantExtensions = []; // sessioknStorage[['closeButtonTrigger', pagenumber, id]];
-
-    if (relevantExtensions.length > 0) {
-      relevantExtensions.forEach((e) => {
-        setLoadingIcon(EXTENSIONS[e].customLoadingIcon);
-        EXTENSIONS[e].prepopulateReportFunction(
-          driver,
-          getCustomDispatcher(),
-          pagenumber,
-          id,
-          type,
-          extensions,
-          (result) => {
-            executeQuery(result);
-          }
-        );
-      });
+    if (prepopulateExtensionName) {
+      setLoadingIcon(EXTENSIONS[prepopulateExtensionName].customLoadingIcon);
+      EXTENSIONS[prepopulateExtensionName].prepopulateReportFunction(
+        driver,
+        getCustomDispatcher(),
+        pagenumber,
+        id,
+        type,
+        extensions,
+        (result) => {
+          executeQuery(result);
+        }
+      );
     } else {
       executeQuery(query);
     }
@@ -314,8 +311,9 @@ export const NeoReport = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
   pagenumber: getPageNumber(state),
+  prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
 });
 
 const mapDispatchToProps = (dispatch) => ({

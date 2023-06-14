@@ -31,7 +31,7 @@ export const modelClientInitializationThunk =
     // Fetching the client properties from the state
     let modelProvider = getModelProvider(state);
     let settings = getQueryTranslatorSettings(state);
-    // console.log(modelProvider, settings)
+
     if (modelProvider && settings) {
       // Getting the correct ModelClient object
       let tmpClient = getModelClientObject(modelProvider, settings);

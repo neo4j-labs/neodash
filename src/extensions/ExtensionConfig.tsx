@@ -1,10 +1,3 @@
-import { NODE_SIDEBAR_ACTION_PREFIX } from './sidebar/state/SidebarActions';
-import { sidebarReducer } from './sidebar/state/SidebarReducer';
-import { WORKFLOWS_ACTION_PREFIX } from './workflows/state/WorkflowActions';
-import { workflowReducer } from './workflows/state/WorkflowReducer';
-import NeoWorkflowDrawerButton from './workflows/component/WorkflowDrawerButton';
-import SidebarDrawerButton from './sidebar/SidebarDrawerButton';
-import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
 import QueryTranslatorButton from './query-translator/component/QueryTranslator';
@@ -27,7 +20,7 @@ interface Extension {
   cardSettingsComponent?: JSX.Element;
   settingsModal?: JSX.Element;
   prepopulateReportFunction?: any; // function
-  customLoadingIcon: JSX.Element;
+  customLoadingIcon?: JSX.Element;
 }
 
 // TODO: define extension config interface
@@ -178,7 +171,26 @@ function getExtensionSettingsModal() {
   return modals;
 }
 
+/**
+ * At the start of the application, we want to collect programmatically the extensions that need to be added inside the SettingsModal.
+ * @returns
+ */
+function getExtensionPrepopulateReportFunction() {
+  let prepopulateFunctions = {};
+  Object.values(EXTENSIONS).forEach((extension) => {
+    try {
+      if (extension.prepopulateReportFunction) {
+        prepopulateFunctions[extension.name] = extension.prepopulateReportFunction;
+      }
+    } catch (e) {
+      console.log(`Something wrong happened while loading the Extensions Prepolulation Report functions  : ${e}`);
+    }
+  });
+  return prepopulateFunctions;
+}
+
 export const EXTENSIONS_REDUCERS = getExtensionReducers();
 export const EXTENSIONS_DRAWER_BUTTONS = getExtensionDrawerButtons();
 export const EXTENSIONS_SETTINGS_MODALS = getExtensionSettingsModal();
 export const EXTENSIONS_CARD_SETTINGS_COMPONENT = getExtensionCardSettingsComponents();
+export const EXTENSION_PREPOPULATE_REPORT_FUNCTION = getExtensionPrepopulateReportFunction();
