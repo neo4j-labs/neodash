@@ -28,6 +28,7 @@ const ErrorBoundary = withErrorBoundary(({ children, resetTrigger }) => {
 });
 
 export const NeoReportWrapper = ({
+  id,
   database,
   query,
   lastRunTimestamp,
@@ -52,6 +53,7 @@ export const NeoReportWrapper = ({
   return (
     <ErrorBoundary resetTrigger={disabled}>
       <NeoReport
+        id={id}
         database={database}
         query={query}
         lastRunTimestamp={lastRunTimestamp}

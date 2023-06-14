@@ -16,8 +16,11 @@ import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 import { EXTENSIONS } from '../extensions/ExtensionConfig';
+import { getPageNumber } from '../settings/SettingsSelectors';
 
 export const NeoReport = ({
+  pagenumber = '', // page number that the report is on.
+  id = '', // ID of the report / card.
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
   lastRunTimestamp = 0, // Timestamp of the last query run for this report.
@@ -42,6 +45,7 @@ export const NeoReport = ({
   type = 'table', // The type of report as a string.
   expanded = false, // whether the report is visualized in a fullscreen view.
   extensions = {}, // A set of enabled extensions.
+  getCustomDispatcher = () => {},
   ChartType = NeoTableChart, // The report component to render with the query results.
 }) => {
   const [records, setRecords] = useState(null);
@@ -94,8 +98,9 @@ export const NeoReport = ({
     Object.keys(extensions)
       .filter((e) => extensions[e].active && EXTENSIONS[e].prepopulateReportFunction !== null)
       .forEach((e) => {
-        // TODO: Pass in something here (?) and use the callback to update the query before running the execution of the report population.
-        EXTENSIONS[e].prepopulateReportFunction('hello', () => {});
+        EXTENSIONS[e].prepopulateReportFunction(driver, getCustomDispatcher(), pagenumber, id, {}, (result) => {
+          alert(result);
+        });
       });
 
     // const prePopulationFunctions = extensions/
@@ -285,11 +290,16 @@ export const NeoReport = ({
   );
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  pagenumber: getPageNumber(state),
+});
 
 const mapDispatchToProps = (dispatch) => ({
   setPageNumber: (index: number) => {
     dispatch(setPageNumberThunk(index));
+  },
+  getCustomDispatcher: () => {
+    return dispatch;
   },
 });
 

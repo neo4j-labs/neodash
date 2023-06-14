@@ -128,7 +128,9 @@ export const queryTranslationThunk =
           onComplete(query);
         }
       } else {
-        throw new Error("Couldn't get the Model Client for the translation, please check your credentials.");
+        throw new Error(
+          'Could not start client for the natural language translation, please check that you have an API key configured in the extension settings.'
+        );
       }
     } catch (e) {
       await consoleLogAsync(

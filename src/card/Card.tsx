@@ -128,6 +128,7 @@ const NeoCard = ({
       <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
         <Card ref={ref} style={{ height: '100%' }}>
           <NeoCardView
+            id={id}
             settingsOpen={settingsOpen}
             editable={editable}
             dashboardSettings={dashboardSettings}
