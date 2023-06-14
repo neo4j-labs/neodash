@@ -103,7 +103,6 @@ export const NeoReport = ({
         });
       });
 
-    // const prePopulationFunctions = extensions/
     if (debounced) {
       setStatus(QueryStatus.RUNNING);
       debouncedRunCypherQuery(
