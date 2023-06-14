@@ -76,7 +76,7 @@ const getModelClientThunk = () => async (dispatch: any, getState: any) => {
  * @param driver Neo4j Driver used to fetch the schema from the database
  * @param onComplete Function used to bring the query back to the calling component
  * @param onError Function used to bring the error back to the calling component
- * @param setValidationStep  Function used to bring the current validation step counter
+ * @param onRetry  Function used to bring the current validation step counter
  *  back to the calling component
  */
 export const queryTranslationThunk =
@@ -92,7 +92,7 @@ export const queryTranslationThunk =
     onError = (e) => {
       console.log(e);
     },
-    setValidationStep = (e) => {
+    onRetry = (e) => {
       console.log(e);
     }
   ) =>
@@ -110,13 +110,7 @@ export const queryTranslationThunk =
           client.setDriver(driver);
         }
         const messageHistory = getHistoryPerCard(state, pagenumber, cardId);
-        let translationRes = await client.queryTranslation(
-          message,
-          messageHistory,
-          database,
-          reportType,
-          setValidationStep
-        );
+        let translationRes = await client.queryTranslation(message, messageHistory, database, reportType, onRetry);
         query = translationRes[0];
         let newHistory = translationRes[1];
         // The history will be updated only if the length is different (otherwise, it's the same history)

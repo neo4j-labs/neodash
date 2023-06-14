@@ -9,7 +9,6 @@ import {
   TrashIconOutline,
   DocumentDuplicateIconOutline,
   PlayCircleIconSolid,
-  EllipsisVerticalIconOutline,
 } from '@neo4j-ndl/react/icons';
 
 const NeoCardSettingsHeader = ({
@@ -60,7 +59,7 @@ const NeoCardSettingsHeader = ({
       action={
         <>
           {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
-          <Tooltip title='Run' aria-label='save'>
+          <Tooltip title='Run' aria-label='run'>
             <IconButton
               aria-label='save'
               onClick={(e) => {

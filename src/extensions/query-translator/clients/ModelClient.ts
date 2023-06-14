@@ -117,7 +117,7 @@ export abstract class ModelClient {
     history,
     database,
     reportType,
-    setValidationStep = (value) => {
+    onRetry = (value) => {
       let x = value;
     }
   ) {
@@ -142,7 +142,7 @@ export abstract class ModelClient {
       // While is not validated and we didn't exceed the maximum retry number
       while (!isValidated && retries < MAX_NUM_VALIDATION) {
         retries += 1;
-        setValidationStep(retries);
+        onRetry(retries);
 
         // Get the answer to the question
         let modelAnswer = await this.chatCompletion(tmpHistory);

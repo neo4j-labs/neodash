@@ -16,6 +16,8 @@ import {
   deleteSessionStoragePrepopulationReportFunction,
   setSessionStoragePrepopulationReportFunction,
 } from '../../state/ExtensionActions';
+import { getPrepopulateReportExtension } from '../../state/ExtensionSelectors';
+import { LanguageIconOutline } from '@neo4j-ndl/react/icons';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 export const NeoOverrideCardQueryEditor = ({
@@ -29,6 +31,7 @@ export const NeoOverrideCardQueryEditor = ({
   translateQuery,
   updateEnglishQuery,
   displayError,
+  prepopulateExtensionName,
   setPrepopulationReportFunction,
   deletePrepopulationReportFunction,
 }) => {
@@ -76,6 +79,7 @@ export const NeoOverrideCardQueryEditor = ({
         editable={true}
         language={'english'}
         onChange={(value) => {
+          setPrepopulationReportFunction(reportId);
           updateEnglishQuestion(value);
         }}
         placeholder={`Enter English here...`}
@@ -112,27 +116,27 @@ export const NeoOverrideCardQueryEditor = ({
         <>
           <table style={{ marginBottom: 5, width: '100%' }}>
             <tr>
-              <td>Cypher</td>
-              <td>
+              <td style={{ width: 50 }}>Cypher</td>
+              <td style={{ width: 50 }}>
                 <Switch
                   style={{ backgroundColor: 'grey' }}
                   checked={language == Language.ENGLISH}
                   onChange={() => {
                     if (language == Language.ENGLISH) {
                       setLanguage(Language.CYPHER);
-                      deletePrepopulationReportFunction(pagenumber, reportId);
+                      deletePrepopulationReportFunction(reportId);
                     } else {
                       setLanguage(Language.ENGLISH);
-                      setPrepopulationReportFunction(pagenumber, reportId);
+                      // setPrepopulationReportFunction(reportId);
                     }
                   }}
                   className='n-ml-2'
                 />
               </td>
-              <td>&nbsp; English</td>
-              <td style={{ width: '300px' }}></td>
-              <td style={{ width: '100px' }}>
-                {language == Language.ENGLISH ? (
+              <td style={{ width: 70 }}>&nbsp; English</td>
+              <td style={{ width: '100px', float: 'right' }}>
+                {/* Only show translation button if there's something new to translate */}
+                {language == Language.ENGLISH && prepopulateExtensionName !== undefined ? (
                   <Button
                     fill='outlined'
                     style={{ float: 'right' }}
@@ -143,6 +147,7 @@ export const NeoOverrideCardQueryEditor = ({
                     }}
                   >
                     Translate
+                    {/* <LanguageIconOutline className='btn-icon-base-r' aria-label={'translate'} /> */}
                   </Button>
                 ) : (
                   <></>
@@ -154,12 +159,13 @@ export const NeoOverrideCardQueryEditor = ({
           <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>
             {language == Language.ENGLISH ? (
               <>
-                For prompting tips, check out the{' '}
+                For best results, use a descriptive question. See also the{' '}
                 <a
+                  target='_blank'
                   style={{ textDecoration: 'underline' }}
                   href='https://neo4j.com/labs/neodash/2.3/user-guide/extensions/natural-language-queries/'
                 >
-                  Documentation
+                  documentation
                 </a>
                 .
               </>
@@ -175,11 +181,12 @@ export const NeoOverrideCardQueryEditor = ({
 
 const mapStateToProps = (state, ownProps) => ({
   lastMessage: getLastMessage(state, ownProps.pagenumber, ownProps.reportId),
+  prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.reportId),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  translateQuery: (pagenumber, reportId, text, reportType, driver, onComplete, onError) => {
-    dispatch(queryTranslationThunk(pagenumber, reportId, text, reportType, driver, onComplete, onError));
+  translateQuery: (pagenumber, reportId, text, reportType, driver, onComplete, onError, onRetry) => {
+    dispatch(queryTranslationThunk(pagenumber, reportId, text, reportType, driver, onComplete, onError, onRetry));
   },
   updateEnglishQuery: (pagenumber, reportId, message) => {
     dispatch(updateLastMessage(message, pagenumber, reportId));

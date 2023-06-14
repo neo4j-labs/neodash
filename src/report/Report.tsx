@@ -18,6 +18,7 @@ import { setPageNumberThunk } from '../settings/SettingsThunks';
 import { EXTENSIONS } from '../extensions/ExtensionConfig';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSelectors';
+import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 
 const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -51,6 +52,7 @@ export const NeoReport = ({
   getCustomDispatcher = () => {},
   ChartType = NeoTableChart, // The report component to render with the query results.
   prepopulateExtensionName,
+  deletePrepopulationReportFunction,
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -144,6 +146,7 @@ export const NeoReport = ({
     // Else just run the normal query.
     // Finally, remove the prepopulating function from session storage.
     if (prepopulateExtensionName) {
+      deletePrepopulationReportFunction(id);
       setLoadingIcon(EXTENSIONS[prepopulateExtensionName].customLoadingIcon);
       EXTENSIONS[prepopulateExtensionName].prepopulateReportFunction(
         driver,
@@ -319,6 +322,9 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch) => ({
   setPageNumber: (index: number) => {
     dispatch(setPageNumberThunk(index));
+  },
+  deletePrepopulationReportFunction: (id) => {
+    dispatch(deleteSessionStoragePrepopulationReportFunction(id));
   },
   getCustomDispatcher: () => {
     return dispatch;
