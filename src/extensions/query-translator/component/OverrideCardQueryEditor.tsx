@@ -1,5 +1,5 @@
 import ReportIcon from '@mui/icons-material/Report';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { IconButton, Switch } from '@neo4j-ndl/react';
@@ -12,6 +12,7 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import debounce from 'lodash/debounce';
 import { updateLastMessage } from '../state/QueryTranslatorActions';
 import { createNotification } from '../../../application/ApplicationActions';
+import { getLastMessage } from '../state/QueryTranslatorSelector';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 export const NeoOverrideCardQueryEditor = ({
@@ -21,6 +22,7 @@ export const NeoOverrideCardQueryEditor = ({
   extensions,
   reportType,
   updateCypherQuery,
+  lastMessage,
   translateQuery,
   updateEnglishQuery,
   displayError,
@@ -34,6 +36,13 @@ export const NeoOverrideCardQueryEditor = ({
   const [runningTranslation, setRunningTranslation] = React.useState(false);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);
+
+  useEffect(() => {
+    // Reset text to the dashboard state when the page gets reorganized.
+    if (lastMessage !== englishQuestion) {
+      setEnglishQuestion(lastMessage);
+    }
+  }, [lastMessage]);
 
   const reportTypes = getReportTypes(extensions);
 
@@ -56,7 +65,7 @@ export const NeoOverrideCardQueryEditor = ({
 
   // To prevent a bug with the code editor component, we wrap it in an extra enclosing bracket.
   const englishEditor = (
-    <>
+    <div>
       <NeoCodeEditorComponent
         value={englishQuestion}
         editable={true}
@@ -66,7 +75,7 @@ export const NeoOverrideCardQueryEditor = ({
         }}
         placeholder={`Enter English here...`}
       />
-    </>
+    </div>
   );
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -148,7 +157,9 @@ export const NeoOverrideCardQueryEditor = ({
   );
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state, ownProps) => ({
+  lastMessage: getLastMessage(state, ownProps.pagenumber, ownProps.reportId),
+});
 
 const mapDispatchToProps = (dispatch) => ({
   translateQuery: (pagenumber, reportId, text, reportType, driver, onComplete, onError) => {

@@ -98,9 +98,17 @@ export const NeoReport = ({
     Object.keys(extensions)
       .filter((e) => extensions[e].active && EXTENSIONS[e].prepopulateReportFunction !== null)
       .forEach((e) => {
-        EXTENSIONS[e].prepopulateReportFunction(driver, getCustomDispatcher(), pagenumber, id, extensions, (result) => {
-          alert(result);
-        });
+        EXTENSIONS[e].prepopulateReportFunction(
+          driver,
+          getCustomDispatcher(),
+          pagenumber,
+          id,
+          type,
+          extensions,
+          (result) => {
+            alert(result);
+          }
+        );
       });
 
     if (debounced) {

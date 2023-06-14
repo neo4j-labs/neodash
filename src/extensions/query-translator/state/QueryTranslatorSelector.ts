@@ -68,13 +68,13 @@ export const getHistoryPerCard = (state: any, pagenumber, cardId) => {
  * We persist the last message sent from the user to the model.
  * @param state State of the application
  * @param pagenumber Number of the page where the card lives
- * @param cardIndex Unique identifier of the card
+ * @param id Unique identifier of the card
  * @returns
  */
-export const getLastMessage = (state: any, pagenumber, cardIndex) => {
+export const getLastMessage = (state: any, pagenumber, id) => {
   let messages = getLastMessages(state);
-  let lastMessage = messages[pagenumber] && messages[pagenumber][cardIndex];
-  return lastMessage != undefined && lastMessage ? lastMessage : [];
+  let lastMessage = messages[pagenumber] && messages[pagenumber][id];
+  return lastMessage !== undefined ? lastMessage : '';
 };
 
 export const getApiKey = (state: any) => {
