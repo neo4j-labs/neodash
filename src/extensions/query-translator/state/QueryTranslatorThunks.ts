@@ -1,6 +1,7 @@
 import { updateReportQueryThunk } from '../../../card/CardThunks';
 import { getDatabase } from '../../../settings/SettingsSelectors';
 import { ModelClient } from '../clients/ModelClient';
+import { Status } from '../component/ClientSettings';
 import { getModelClientObject } from '../QueryTranslatorConfig';
 import { setGlobalModelClient, updateLastMessage, updateMessageHistory } from './QueryTranslatorActions';
 import {
@@ -21,8 +22,8 @@ const consoleLogAsync = async (message: string, other?: any) => {
  */
 export const modelClientInitializationThunk =
   (
-    setIsAuthenticated = (boolean) => {
-      return boolean;
+    setIsAuthenticated = () => {
+      return Status.ERROR;
     }
   ) =>
   async (dispatch: any, getState: any) => {

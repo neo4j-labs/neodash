@@ -1,6 +1,7 @@
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
 import { reportTypesToDesc, reportExampleQueries } from './const';
 import { ModelClient } from './ModelClient';
+import { Status } from '../component/ClientSettings';
 
 const consoleLogAsync = async (message: string, other?: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));
@@ -57,7 +58,7 @@ export class OpenAiClient extends ModelClient {
       let tmp = await this.getListModels();
       // Can be used in async mode without awaiting
       // by passing down a function to set the authentication result
-      setIsAuthenticated(tmp.length > 0);
+      setIsAuthenticated(tmp.length > 0 ? Status.AUTHENTICATED : Status.ERROR);
       return tmp.length > 0;
     } catch (e) {
       consoleLogAsync('Authentication went wrong: ', e);

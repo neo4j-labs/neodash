@@ -10,11 +10,22 @@ import {
   setGlobalModelClient,
   setModelProvider,
 } from '../state/QueryTranslatorActions';
-import { PlayCircleIconSolid, CheckCircleIconSolid, PlayIconSolid } from '@neo4j-ndl/react/icons';
+import {
+  PlayCircleIconSolid,
+  CheckCircleIconSolid,
+  PlayIconSolid,
+  ExclamationTriangleIconSolid,
+} from '@neo4j-ndl/react/icons';
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
+
+export enum Status {
+  NOT_AUTHENTICATED,
+  AUTHENTICATED,
+  ERROR,
+}
 
 // TODO: the following
 // 1. the settings modal should save only when all the required fields are defined and we can correctly authenticate
@@ -31,7 +42,8 @@ export const ClientSettings = ({
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
   const [localSettings, setLocalSettings] = React.useState(settingState);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+  const [status, setStatus] = React.useState(Status.NOT_AUTHENTICATED);
   const [settingChoices, setSettingChoices] = React.useState({});
 
   /**
@@ -56,7 +68,7 @@ export const ClientSettings = ({
    */
   function checkIfDisabled(setting) {
     let tmp = defaultSettings[setting];
-    if (tmp.required || isAuthenticated) {
+    if (tmp.required || status == Status.AUTHENTICATED) {
       return false;
     }
     return !requiredSettings.every((e) => settingState[e]);
@@ -65,7 +77,7 @@ export const ClientSettings = ({
   // Effect used to trigger the population of the settings when the user inserts a correct apiKey
   useEffect(() => {
     let localClientTmp = getModelClientObject(modelProvider, settingState);
-    if (isAuthenticated) {
+    if (status == Status.AUTHENTICATED) {
       setGlobalModelClient(localClientTmp);
     } else {
       setGlobalModelClient(undefined);
@@ -74,7 +86,7 @@ export const ClientSettings = ({
     Object.keys(defaultSettings).map((setting) => {
       tmpSettingsChoices[setting] = setChoices(setting, localClientTmp);
     });
-  }, [isAuthenticated]);
+  }, [status]);
 
   /**
    * Function used to handle the definition of the choices param inside the settings form.
@@ -85,7 +97,7 @@ export const ClientSettings = ({
   function setChoices(setting, modelClient) {
     let choices = defaultSettings[setting].values ? defaultSettings[setting].values : [];
     let { methodFromClient } = defaultSettings[setting];
-    if (methodFromClient && isAuthenticated) {
+    if (methodFromClient && status == Status.AUTHENTICATED) {
       modelClient[methodFromClient]().then((value) => {
         updateSpecificFieldInStateObject(setting, value, settingChoices, setSettingChoices);
       });
@@ -93,6 +105,15 @@ export const ClientSettings = ({
       updateSpecificFieldInStateObject(setting, choices, settingChoices, setSettingChoices);
     }
   }
+
+  const getBackgroundColor = (status) => {
+    if (status == Status.AUTHENTICATED) {
+      return 'green';
+    } else if (status == Status.NOT_AUTHENTICATED) {
+      return 'orange';
+    }
+    return 'red';
+  };
 
   // Prevent authentication if all required fields are not full (EX: look at checkIfDisabled)
   const authButton = (
@@ -102,13 +123,24 @@ export const ClientSettings = ({
         e.preventDefault();
         updateModelProvider(modelProvider);
         updateClientSettings(settingState);
-        authenticate(setIsAuthenticated);
+        authenticate(setStatus);
       }}
       clean
-      style={{ marginTop: 24, marginRight: 28, color: 'white', backgroundColor: !isAuthenticated ? 'orange' : 'green' }}
+      style={{
+        marginTop: 24,
+        marginRight: 28,
+        color: 'white',
+        backgroundColor: getBackgroundColor(status),
+      }}
       size='medium'
     >
-      {!isAuthenticated ? <PlayCircleIconSolid color='white' /> : <CheckCircleIconSolid></CheckCircleIconSolid>}
+      {status == Status.AUTHENTICATED ? (
+        <CheckCircleIconSolid />
+      ) : status == Status.NOT_AUTHENTICATED ? (
+        <PlayCircleIconSolid color='white' />
+      ) : (
+        <ExclamationTriangleIconSolid />
+      )}
     </IconButton>
   );
 
@@ -116,7 +148,7 @@ export const ClientSettings = ({
     <List style={{ marginLeft: 0, marginRight: 0 }}>
       {/* Only render the base settings (required for auth) if no authentication is available. */}
       {Object.keys(defaultSettings)
-        .filter((setting) => defaultSettings[setting].authentication == true || isAuthenticated)
+        .filter((setting) => defaultSettings[setting].authentication == true || status == Status.AUTHENTICATED)
         .map((setting) => {
           let disabled = checkIfDisabled(setting);
           return (
@@ -136,7 +168,7 @@ export const ClientSettings = ({
                   debouncedUpdateSpecificFieldInStateObject(setting, e, settingState, setSettingsState);
 
                   if (defaultSettings[setting].hasAuthButton) {
-                    setIsAuthenticated(false);
+                    setStatus(Status.NOT_AUTHENTICATED);
                   }
                 }}
               />
@@ -146,7 +178,7 @@ export const ClientSettings = ({
           );
         })}
       <br />
-      {isAuthenticated && Object.keys(defaultSettings).every((n) => localSettings[n] !== undefined) ? (
+      {status == Status.AUTHENTICATED && Object.keys(defaultSettings).every((n) => localSettings[n] !== undefined) ? (
         <>
           <Button
             style={{ float: 'right', marginRight: '30px' }}
