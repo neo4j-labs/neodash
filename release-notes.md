@@ -1,6 +1,15 @@
-## NeoDash 2.2.5
-This is a minor release with some small bug fixes, directly following the 2.2.4 release.
-- Fixed replacement rules for parameters in iFrames/Markdown reports. [#417](https://github.com/neo4j-labs/neodash/pull/417)
-- Added automatic header text color switch for reports with a dark background [#420](https://github.com/neo4j-labs/neodash/pull/420)
-- Fixed handling right click events (for graph exploration) in Neo4j Desktop [#415](https://github.com/neo4j-labs/neodash/pull/415).
-- Added support for unweighted Sankey charts [#419](https://github.com/neo4j-labs/neodash/pull/419)
+## NeoDash 2.3.0
+NeoDash 2.3 is out! This release brings a brand new look-and-feel, improved speed for large dashboards, and a new extension for querying Neo4j with natural language (using LLMs).
+
+Key features:
+- Write [**Natural Language Queries**](docs link) and use OpenAI to generate Cypher queries for your visualizations.
+- UI updated to use the **[Neo4j Design Language](link)**, giving NeoDash a similar look-and-feel to other Neo4j tools.
+- Customize branding, colors dynamically with a new [style configuration file](link).
+  
+Others:
+- Fixed issues with date picker / free-text parameter sometimes not working correctly.
+- Documentations Broken links and quality (@Pierre)
+- Replaced 'Pro Extensions' by 'Expert Extensions'.
+- Fixed issue where parameters were not set from the URL.
+- Added option to specify absolute width for table columns (in pixels) @8Rav3n
+
