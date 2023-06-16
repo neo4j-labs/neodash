@@ -10,7 +10,7 @@ import { SquaresPlusIconOutline } from '@neo4j-ndl/react/icons';
 const NeoAddNewCard = ({ onCreatePressed }) => {
   return (
     <div>
-      <Card className='n-bg-dark-neutral-text-weaker'>
+      <Card className='n-bg-dark-neutral-text-weak'>
         <CardContent style={{ height: '429px' }}>
           <IconButton
             aria-label='add report'
