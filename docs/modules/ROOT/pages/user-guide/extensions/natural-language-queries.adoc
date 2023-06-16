@@ -1,4 +1,7 @@
-= Natural Language Queries
+= Natural Language Query Generation in NeoDash!
+Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.
+
+== Natural Language Queries
 Natural Language Queries feature allows users to interact with NeoDash using natural language to generate Cypher queries for querying Neo4j graph databases. 
 This integration leverages Language Models (LLMs) to interpret user inputs and generate Cypher queries based on the provided schema definition.
 
@@ -7,10 +10,13 @@ To enable Natural Language Queries in NeoDash, follow these configuration steps:
 
 1. Open NeoDash and navigate to the "Extensions" section in the left sidebar.
 2. Locate the "Natural Language Queries" extension and click on it to activate it.
-3. Once activated, a new button will appear in the sidebar. Click on the button to open the configuration window.
+3. Once activated, a new button will appear in the sidebar(see image below). Click on the button to open the configuration window.
 4. In the configuration window, you will be prompted to provide the necessary information to connect to the Language Model (LLM). Enter the model provider, API key, and select the desired model to use.
 5. After providing the required information, click on the "Start Querying" button to finalize the configuration.
 
+image::extensionbutton.png[Extension Button enables Natural Language Queries button in the sidebar]
+
+image::llmconfiguration.png[Configuration settings for the Natural Language Queries extension]
 
 == Usage
 Once the Natural Language Queries extension is configured, you can start using it in your NeoDash reports. Here's how:
@@ -25,7 +31,16 @@ Once the Natural Language Queries extension is configured, you can start using i
 This allows you to review and modify the generated Cypher query before execution.
 * Run: If you wish to directly execute the query and view the results, click the "Run" button in the top right corner. The execution of the query will depend on the selected report type, and the results will be displayed accordingly.
 
+image::englisheditor.png[Example of the English editor in NeoDash]
 
+=== Here is how it works behind the scenes:
+* Retrieve the Schema: The system prompts at the beginning of the interaction to retrieve the database schema. This ensures that the generated queries adhere to the provided schema and available relationship types and properties.
+
+* Prompting in English: Once the schema is retrieved, you can start prompting your queries in plain English. NeoDash, powered by the LLM, will interpret your English query and generate the corresponding Cypher query based on the provided schema.
+
+* Automatic Query Generation: NeoDash automatically generates the Cypher queries for you, taking into account the report type you specified. Whether it's a table, graph, bar chart, line chart, or any other supported report type, the generated queries will retrieve the necessary data based on the report requirements.
+
+* Retry Logic: To enhance the reliability of the generated queries, we have implemented retry logic. If there is any issue or error during the query generation process, the system will attempt to retry three times as a maximum and provide a valid query to ensure smooth query execution.
 
 == Prompting Tips
 
