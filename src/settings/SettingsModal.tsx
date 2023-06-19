@@ -18,7 +18,6 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
   };
 
   const settings = DASHBOARD_SETTINGS;
-
   // Else, build the advanced settings view.
   const advancedDashboardSettings = (
     <div style={{ marginLeft: '-10px' }}>
@@ -61,6 +60,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
           <br />
           <br />
           {advancedDashboardSettings}
+          <br />
         </Dialog.Content>
       </Dialog>
     </div>

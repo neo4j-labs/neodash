@@ -59,7 +59,7 @@ const NeoCardSettingsHeader = ({
       action={
         <>
           {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
-          <Tooltip title='Save' aria-label='save'>
+          <Tooltip title='Run' aria-label='run'>
             <IconButton
               aria-label='save'
               onClick={(e) => {

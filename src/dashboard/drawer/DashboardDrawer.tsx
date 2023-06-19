@@ -48,7 +48,7 @@ export const NeoDrawer = ({
    * are enabled and present a button (EX: node-sidebar)
    * @returns JSX element containing all the buttons related to their enabled extensions
    */
-  function renderDrawerExtensionsButton() {
+  function renderDrawerExtensionsButtons() {
     const res = (
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
@@ -85,12 +85,14 @@ export const NeoDrawer = ({
             dashboardSettings={dashboardSettings}
             updateDashboardSetting={updateDashboardSetting}
             navItemClass={navItemClass}
+            extensions={extensions}
           ></NeoSettingsModal>
 
           <NeoSaveModal navItemClass={navItemClass}></NeoSaveModal>
           <NeoLoadModal navItemClass={navItemClass}></NeoLoadModal>
           <NeoShareModal navItemClass={navItemClass}></NeoShareModal>
           <NeoExtensionsModal navItemClass={navItemClass}></NeoExtensionsModal>
+          {renderDrawerExtensionsButtons()}
           <SideNavigationGroupHeader>Learn</SideNavigationGroupHeader>
           <NeoReportExamplesModal
             extensions={extensions}
@@ -98,7 +100,7 @@ export const NeoDrawer = ({
             database={connection.database}
             navItemClass={navItemClass}
           ></NeoReportExamplesModal>
-          {renderDrawerExtensionsButton()}
+
           <Tooltip title='Documentation' aria-label='documentation'>
             <SideNavigationItem
               href='https://neo4j.com/labs/neodash/2.3/user-guide/'

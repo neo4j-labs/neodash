@@ -84,6 +84,7 @@ const SidebarNodeInspectionModal = ({
             <div style={{ width: '100%', height: 600 }}>
               {/* TODO: add missing parameters or make them optional in NeoReportWrapper */}
               <NeoReportWrapper
+                id={'sidebar'}
                 database={database}
                 selection={selection}
                 setFields={(fields) => {

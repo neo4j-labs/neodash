@@ -8,6 +8,8 @@ import { CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 
 const NeoCardSettings = ({
   settingsOpen,
+  pagenumber,
+  reportId,
   query,
   database, // Current database related to the report
   databaseList, // List of databases the user can choose from ('system' is filtered out)
@@ -53,6 +55,8 @@ const NeoCardSettings = ({
   // TODO - instead of hiding everything based on settingsopen, only hide the components that slow down render (cypher editor)
   const cardSettingsContent = settingsOpen ? (
     <NeoCardSettingsContent
+      pagenumber={pagenumber}
+      reportId={reportId}
       query={query}
       database={database}
       reportSettings={reportSettings}

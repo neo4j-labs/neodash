@@ -17,6 +17,7 @@ import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 
 const NeoCardView = ({
+  id,
   title,
   database,
   query,
@@ -137,7 +138,7 @@ const NeoCardView = ({
   }, [JSON.stringify(localParameters)]);
 
   useEffect(() => {
-    if (!settingsOpen && selectorChange) {
+    if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
     }
     setSelectorChange(false);
@@ -168,6 +169,7 @@ const NeoCardView = ({
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (
         <NeoReportWrapper
+          id={id}
           query={query}
           database={database}
           parameters={localParameters}
