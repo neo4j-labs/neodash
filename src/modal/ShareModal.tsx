@@ -57,7 +57,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
     { field: 'date', headerName: 'Date', width: 200 },
-    { field: 'title', headerName: 'Title', width: 270 },
+    { field: 'title', headerName: 'Title', width: 370 },
     { field: 'author', headerName: 'Author', width: 160 },
     {
       field: 'load',
@@ -262,7 +262,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         aria-labelledby='form-dialog-title'
       >
         <Dialog.Header id='form-dialog-title'>Select From Neo4j</Dialog.Header>
-        <Dialog.Content style={{ width: '800px' }}>
+        <Dialog.Content style={{ width: '900px' }}>
           Choose a dashboard to share below.
           <div style={{ height: '380px' }}>
             <DataGrid

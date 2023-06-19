@@ -26,7 +26,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
 const TABLE_HEADER_HEIGHT = 32;
-const TABLE_FOOTER_HEIGHT = 52;
+const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 

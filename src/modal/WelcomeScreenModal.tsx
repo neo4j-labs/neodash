@@ -196,7 +196,7 @@ export const NeoWelcomeScreenModal = ({
               onConnectionModalOpen();
             }}
             style={{ marginTop: '10px', float: 'right', marginRight: '5px' }}
-            color='danger'
+            color='primary'
           >
             Yes
             <PlayIconSolid className='btn-icon-base-r' />
