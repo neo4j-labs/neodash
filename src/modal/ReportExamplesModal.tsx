@@ -59,6 +59,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
                           }}
                         >
                           <NeoReport
+                            id={index}
                             query={example.syntheticQuery}
                             database={database}
                             disabled={!open}

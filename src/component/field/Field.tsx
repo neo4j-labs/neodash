@@ -33,8 +33,8 @@ const NeoField = ({
           value:
             value != null ? { label: valueLabel, value: value } : { label: defaultValueLabel, value: defaultValue },
           menuPlacement: 'auto',
+          isDisabled: disabled,
         }}
-        disabled={disabled}
         helpText={helperText}
         placeholder={placeholder}
         size={size}

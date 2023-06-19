@@ -114,6 +114,7 @@ const NeoExtensionsModal = ({
                             </tr>
                             <tr>
                               <td valign='top'>
+                                <br />
                                 <p>{e.description}</p>
                                 <br />
                                 <p>
@@ -124,9 +125,9 @@ const NeoExtensionsModal = ({
                                 </p>
                               </td>
                               <td></td>
-                              <td>
+                              <td style={{ width: 300 }}>
                                 <br />
-                                <img src={e.image} style={{ width: 400, border: '1px solid grey' }}></img>
+                                <img src={e.image} style={{ border: '1px solid grey', width: '100%' }}></img>
                               </td>
                             </tr>
                           </tbody>

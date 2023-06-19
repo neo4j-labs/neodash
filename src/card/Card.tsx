@@ -127,6 +127,7 @@ const NeoCard = ({
       <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} className='n-h-full'>
         <Card ref={ref} className='n-h-full'>
           <NeoCardView
+            id={id}
             settingsOpen={settingsOpen}
             editable={editable}
             dashboardSettings={dashboardSettings}
@@ -164,6 +165,8 @@ const NeoCard = ({
       <Collapse disablestrictmodecompat='true' in={settingsOpen} timeout={collapseTimeout}>
         <Card className='n-h-full'>
           <NeoCardSettings
+            pagenumber={dashboardSettings.pagenumber}
+            reportId={id}
             settingsOpen={settingsOpen}
             query={report.query}
             database={database}

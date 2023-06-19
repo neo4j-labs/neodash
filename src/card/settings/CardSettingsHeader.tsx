@@ -59,9 +59,9 @@ const NeoCardSettingsHeader = ({
       action={
         <>
           {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
-          <Tooltip title='Save' aria-label='save' disableInteractive>
+          <Tooltip title='Run' aria-label='run' disableInteractive>
             <IconButton
-              aria-label='save'
+              aria-label='run'
               onClick={(e) => {
                 e.preventDefault();
                 onToggleCardSettings();
