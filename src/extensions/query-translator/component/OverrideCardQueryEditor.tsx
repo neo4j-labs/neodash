@@ -17,7 +17,6 @@ import {
   setSessionStoragePrepopulationReportFunction,
 } from '../../state/ExtensionActions';
 import { getPrepopulateReportExtension } from '../../state/ExtensionSelectors';
-import { LanguageIconOutline } from '@neo4j-ndl/react/icons';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
 export const NeoOverrideCardQueryEditor = ({
@@ -127,7 +126,6 @@ export const NeoOverrideCardQueryEditor = ({
                       deletePrepopulationReportFunction(reportId);
                     } else {
                       setLanguage(Language.ENGLISH);
-                      // setPrepopulationReportFunction(reportId);
                     }
                   }}
                   className='n-ml-2'

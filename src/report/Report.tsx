@@ -146,7 +146,6 @@ export const NeoReport = ({
     // Else just run the normal query.
     // Finally, remove the prepopulating function from session storage.
     if (prepopulateExtensionName) {
-      deletePrepopulationReportFunction(id);
       setLoadingIcon(EXTENSIONS[prepopulateExtensionName].customLoadingIcon);
       EXTENSIONS[prepopulateExtensionName].prepopulateReportFunction(
         driver,
@@ -159,6 +158,7 @@ export const NeoReport = ({
           executeQuery(result);
         }
       );
+      deletePrepopulationReportFunction(id);
     } else {
       executeQuery(query);
     }
