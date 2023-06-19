@@ -1,6 +1,8 @@
 import { SELECTION_TYPES } from '../../config/CardConfig';
 import { ModelClient } from './clients/ModelClient';
-import { OpenAiClient } from './clients/OpenAiClient';
+import { OpenAiClient } from './clients/OpenAi/OpenAiClient';
+
+// TODO: implement VertexAiClient
 import { VertexAiClient } from './clients/VertexAiClient';
 
 interface ClientSettingEntry {
@@ -104,7 +106,7 @@ export function getQueryTranslatorDefaultConfig(providerName) {
 export function getModelClientObject(modelProvider, settings) {
   let providerDetails = QUERY_TRANSLATOR_CONFIG.availableClients[modelProvider];
   if (providerDetails === undefined) {
-    throw Error(`Invalid provider name${  modelProvider}`);
+    throw Error(`Invalid provider name${modelProvider}`);
   }
   let modelProviderClass = providerDetails.clientClass;
   return new modelProviderClass(settings);

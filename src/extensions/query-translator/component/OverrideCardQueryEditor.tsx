@@ -10,7 +10,7 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import debounce from 'lodash/debounce';
 import { updateLastMessage } from '../state/QueryTranslatorActions';
 import { createNotification } from '../../../application/ApplicationActions';
-import { getLastMessage } from '../state/QueryTranslatorSelector';
+import { getLastMessage, QUERY_TRANSLATOR_EXTENSION_NAME } from '../state/QueryTranslatorSelector';
 import { GPT_LOADING_ICON } from './LoadingIcon';
 import {
   deleteSessionStoragePrepopulationReportFunction,
@@ -195,7 +195,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(createNotification('Error when translating the natural language query', message));
   },
   setPrepopulationReportFunction: (reportId) => {
-    dispatch(setSessionStoragePrepopulationReportFunction(reportId, 'query-translator'));
+    dispatch(setSessionStoragePrepopulationReportFunction(reportId, QUERY_TRANSLATOR_EXTENSION_NAME));
   },
   deletePrepopulationReportFunction: (reportId) => {
     dispatch(deleteSessionStoragePrepopulationReportFunction(reportId));

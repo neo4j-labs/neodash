@@ -83,7 +83,7 @@ export const NeoSaveModal = ({
     'settingsOpen',
     'advancedSettingsOpen',
     'collapseTimeout',
-    'modelClient',
+    'apiKey', // Added for query-translator extension
   ]);
 
   const dashboardString = JSON.stringify(filteredDashboard, null, 2);

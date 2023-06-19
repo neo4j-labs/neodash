@@ -1,7 +1,7 @@
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
-import { reportTypesToDesc, reportExampleQueries } from './const';
-import { ModelClient } from './ModelClient';
-import { Status } from '../component/ClientSettings';
+import { reportTypesToDesc, reportExampleQueries } from '../const';
+import { ModelClient } from '../ModelClient';
+import { Status } from '../../component/ClientSettings';
 
 const consoleLogAsync = async (message: string, other?: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));
@@ -106,14 +106,13 @@ export class OpenAiClient extends ModelClient {
     this.modelType = modelType;
   }
 
-  // TODO: adapt to the new structure, no more persisting inside the object, passign everything down
-  /* addUserMessage(content, reportType, plain = false) {
-    // let finalMessage = `${content}. The Cypher RETURN clause must contained certain variables, in this case ${reportTypesToDesc[reportType]} Plain cypher code, no explanations and no unrequired symbols. Remember to respect the schema. Please remove any comment or explanation  from your result `;
-    let finalMessage = `User Query: ${content}. Generate a Cypher query that retrieves data for ${reportTypesToDesc[reportType]}. Ensure the query adheres to the provided schema and follows the expected format. Please remove any comments, explanations, or unnecessary symbols from the query result.`;
-    return { role: ChatCompletionRequestMessageRoleEnum.User, content: plain ? content : finalMessage };
-  }
-*/
-  // TODO: adapt to the new structure, no more persisting inside the object, passign everything down
+  /**
+   * Function used to create a message sent from the user to the model.
+   * @param content Content of the message (the message wrote from the UI)
+   * @param reportType Type of report needed
+   * @param plain If True, return content itself, otherwise the message with all the prompting needed.
+   * @returns
+   */
   addUserMessage(content, reportType, plain = false) {
     let queryExample = reportExampleQueries[reportType];
     let finalMessage = `${content}. Please use the following query structure as an example for ${reportTypesToDesc[reportType]}:

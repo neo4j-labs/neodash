@@ -2,12 +2,7 @@
  * Reducers define changes to the application state when a given action
  */
 
-import {
-  SET_MODEL_PROVIDER,
-  SET_GLOBAL_MODEL_CLIENT,
-  SET_CLIENT_SETTINGS,
-  UPDATE_LAST_MESSAGE,
-} from './QueryTranslatorActions';
+import { SET_MODEL_PROVIDER, SET_CLIENT_SETTINGS, UPDATE_LAST_MESSAGE } from './QueryTranslatorActions';
 
 export const INITIAL_EXTENSION_STATE = {
   modelProvider: '', // Name of the provider (defined in the config)
