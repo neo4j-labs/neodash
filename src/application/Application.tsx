@@ -1,5 +1,4 @@
-import React from 'react';
-import { hot } from 'react-hot-loader/root';
+import React, { useEffect } from 'react';
 import NeoNotificationModal from '../modal/NotificationModal';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { connect } from 'react-redux';
@@ -93,14 +92,16 @@ const Application = ({
 }) => {
   const [initialized, setInitialized] = React.useState(false);
 
-  if (!initialized) {
-    // Tell Neo4j Desktop to disable capturing right clicking
-    window.neo4jDesktopApi &&
-      window.neo4jDesktopApi.showMenuOnRightClick &&
-      window.neo4jDesktopApi.showMenuOnRightClick(false);
-    setInitialized(true);
-    initializeApplication(initialized);
-  }
+  useEffect(() => {
+    if (!initialized) {
+      // Tell Neo4j Desktop to disable capturing right clicking
+      window.neo4jDesktopApi &&
+        window.neo4jDesktopApi.showMenuOnRightClick &&
+        window.neo4jDesktopApi.showMenuOnRightClick(false);
+      setInitialized(true);
+      initializeApplication(initialized);
+    }
+  }, []);
 
   const ref = React.useRef();
 
@@ -213,4 +214,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 Application.displayName = 'Application';
 
-export default connect(mapStateToProps, mapDispatchToProps)(hot(Application));
+export default connect(mapStateToProps, mapDispatchToProps)(Application);

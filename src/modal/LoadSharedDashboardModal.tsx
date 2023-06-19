@@ -3,6 +3,7 @@ import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { PlayIconSolid, AdjustmentsVerticalIconOutline, BackspaceIconOutline } from '@neo4j-ndl/react/icons';
+
 /**
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
@@ -17,7 +18,11 @@ export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails,
 
   return (
     <div>
-      <Dialog size='large' open={shareDetails !== undefined} aria-labelledby='form-dialog-title'>
+      <Dialog
+        size='large'
+        open={shareDetails !== undefined && shareDetails.skipConfirmation === false}
+        aria-labelledby='form-dialog-title'
+      >
         <Dialog.Header id='form-dialog-title'>
           <AdjustmentsVerticalIconOutline
             className='icon-base icon-inline text-r'

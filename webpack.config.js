@@ -1,6 +1,4 @@
-const path = require('path');
-const webpack = require('webpack');
-
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const rules = [
   {
     test: /\.(js|jsx|ts|tsx)$/,
@@ -8,6 +6,7 @@ const rules = [
     loader: 'babel-loader',
     options: {
       presets: ['@babel/env'],
+      //plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean),
     },
   },
   {
@@ -35,7 +34,10 @@ const rules = [
 module.exports = (env) => {
   const production = env.production;
   return {
-    entry: ['react-hot-loader/patch', './src/index.tsx'],
+    experiments: {
+      topLevelAwait: true,
+    },
+    entry: ['./src/index.tsx'],
     mode: production ? 'production' : 'development',
     devtool: production ? undefined : 'source-map',
     module: {
@@ -49,7 +51,7 @@ module.exports = (env) => {
       port: 3000,
       hot: true,
     },
-    plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()],
+    plugins: production ? [] : [new ReactRefreshWebpackPlugin()],
     ignoreWarnings: [/Failed to parse source map/],
   };
 };

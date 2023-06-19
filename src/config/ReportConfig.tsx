@@ -45,13 +45,19 @@ export const REPORT_TYPES = {
         default: false,
       },
       compact: {
-        label: 'Compact table',
+        label: 'Compact Table',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
+      columnWidthsType: {
+        label: 'Column Widths Specification',
+        type: SELECTION_TYPES.LIST,
+        values: ['Relative (%)', 'Fixed (px)'],
+        default: 'Relative (%)',
+      },
       columnWidths: {
-        label: 'Relative Column Sizes',
+        label: 'Relative/Fixed Column Sizes',
         type: SELECTION_TYPES.TEXT,
         default: '[1, 1, 1, ...]',
       },

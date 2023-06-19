@@ -3,6 +3,7 @@ import { InputBase, Grid } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { DASHBOARD_PAGE_LIST_COLOR } from '../../config/ApplicationConfig';
 
 export const NeoPageButton = ({ title, disabled = false, selected = false, onSelect, onRemove, onTitleUpdate }) => {
   // TODO - debounce page title update
@@ -59,7 +60,6 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
           top: 5,
           right: 0,
           paddingRight: 3,
-          background: selected ? 'white' : 'transparent',
         }}
       >
         <IconButton
