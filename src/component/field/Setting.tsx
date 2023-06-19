@@ -7,7 +7,7 @@ import { Label } from '@neo4j-ndl/react';
 
 const generateListItem = (label, option) => {
   if (typeof option === 'boolean') {
-    return { label: option ? 'on' : 'off', value: option ? 'on' : 'off' };
+    return { label: option ? 'on' : 'off', value: Boolean(option) };
   }
   if (label == 'Color Scheme' || label == 'Node Color Scheme') {
     const colorsFull = categoricalColorSchemes[option];
@@ -47,9 +47,16 @@ const generateListItem = (label, option) => {
   return { label: option, value: option };
 };
 
-const generateValue = (option) => {
+const generateValueLabel = (option) => {
   if (typeof option === 'boolean') {
     return option ? 'on' : 'off';
+  }
+  return option;
+};
+
+const generateValue = (option) => {
+  if (typeof option === 'boolean') {
+    return Boolean(option);
   }
   return option;
 };
@@ -149,7 +156,9 @@ const NeoSetting = ({
             disabled={disabled}
             helperText={helperText}
             key={label}
+            valueLabel={generateValueLabel(value)}
             value={generateValue(value)}
+            defaultValueLabel={generateValueLabel(defaultValue)}
             defaultValue={generateValue(defaultValue)}
             style={style}
             choices={choices.map((option) => generateListItem(label, option))}

@@ -73,7 +73,7 @@ export const NeoLoadModal = ({
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
     { field: 'date', headerName: 'Date', width: 200 },
-    { field: 'title', headerName: 'Title', width: 270 },
+    { field: 'title', headerName: 'Title', width: 300 },
     { field: 'author', headerName: 'Author', width: 160 },
     { field: 'version', headerName: 'Version', width: 85 },
     {
@@ -101,7 +101,7 @@ export const NeoLoadModal = ({
 
   return (
     <div>
-      <Tooltip title='Load' aria-label='load'>
+      <Tooltip title='Load' aria-label='load' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowUpIconOutline className={navItemClass} />}>
           Load
         </SideNavigationItem>
@@ -210,7 +210,7 @@ export const NeoLoadModal = ({
               value: { label: dashboardDatabase, value: dashboardDatabase },
               menuPlacement: 'auto',
             }}
-            style={{ width: '150px' }}
+            style={{ width: '150px', marginTop: '-65px' }}
           ></Dropdown>
         </Dialog.Content>
       </Dialog>

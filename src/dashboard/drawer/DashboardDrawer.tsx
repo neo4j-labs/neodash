@@ -68,14 +68,14 @@ export const NeoDrawer = ({
 
   const content = (
     <div
+      className='n-z-30'
       style={{
         display: 'flex',
-        zIndex: 1001,
       }}
     >
-      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l5'>
+      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l4'>
         <SideNavigationList>
-          <Tooltip title='Menu' aria-label='menu'>
+          <Tooltip title='Menu' aria-label='menu' disableInteractive>
             <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
               Menu
             </SideNavigationItem>
@@ -100,8 +100,7 @@ export const NeoDrawer = ({
             database={connection.database}
             navItemClass={navItemClass}
           ></NeoReportExamplesModal>
-
-          <Tooltip title='Documentation' aria-label='documentation'>
+          <Tooltip title='Documentation' aria-label='documentation' disableInteractive>
             <SideNavigationItem
               href='https://neo4j.com/labs/neodash/2.3/user-guide/'
               target='_blank'
@@ -111,7 +110,7 @@ export const NeoDrawer = ({
               Documentation
             </SideNavigationItem>
           </Tooltip>
-          <Tooltip title='About' aria-label='about'>
+          <Tooltip title='About' aria-label='about' disableInteractive>
             <SideNavigationItem
               onClick={onAboutModalOpen}
               icon={<InformationCircleIconOutline className={navItemClass} aria-label={'side info'} />}

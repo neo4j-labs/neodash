@@ -109,7 +109,7 @@ const Application = ({
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
     <ThemeProvider theme={lightTheme}>
-      <div ref={ref} style={{ display: 'flex' }}>
+      <div ref={ref} className='n-flex'>
         {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
         <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
         {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}

@@ -17,10 +17,9 @@ layout. It takes two fields:
 
 [source,cypher]
 ----
-MATCH (:Company{name:'NeoDash'})-[:HAS_DEPARTMENT]->(:Department)<-[:IN_DEPARTMENT]-(e:Employee),
-(e)-[:LIVES_IN]->(c:Country)
-WITH c.code as code, count(e) as value
-RETURN code, value
+MATCH p=(n:Wine)-[:IS_FROM|PART_OF*]->(c:Country)
+WITH DISTINCT c.iso3 as country, count(DISTINCT n) as wines
+RETURN country, wines
 ----
 
 image::choropleth.png[Choropleth Chart]

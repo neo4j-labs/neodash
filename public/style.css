@@ -35,8 +35,8 @@
 }
 
 .MuiContainer-root {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 .MuiFormControl-root {
@@ -93,7 +93,7 @@
 .react-resizable-handle {
   bottom: 1px !important;
   opacity: 0.5;
-  color: rgb(199, 199, 199);
+  color: rgb(222, 222, 222);
 }
 
 .MuiDataGrid-footerContainer {
@@ -122,6 +122,11 @@
 
 .MuiDataGrid-virtualScroller {
   overflow-y: hidden !important;
+}
+
+.MuiCard-root {
+  box-shadow: 0 0 #0000,0 0 #0000,var(--tw-shadow) !important;
+  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow) !important;
 }
 
 .MuiCardHeader-content .MuiInputBase-root.Mui-disabled {
@@ -172,6 +177,7 @@
   text-align: center;
 }
 
+
 .card-view.expanded {
   position: absolute;
   top: 0;
@@ -197,6 +203,11 @@
 
 .cm-tooltip-autocomplete {
   margin-top: 4px;
+}
+
+.card-view .MuiTablePagination-root {
+  margin-top: -40px;
+
 }
 
 @keyframes pulse {

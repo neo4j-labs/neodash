@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
-import { Button, Dialog, Switch, TextInput, Dropdown } from '@neo4j-ndl/react';
+import { Button, Dialog, Switch, TextInput, Dropdown, TextLink } from '@neo4j-ndl/react';
 import { PlayIconOutline } from '@neo4j-ndl/react/icons';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -110,9 +110,9 @@ export default function NeoConnectionModal({
             <div>
               You're running NeoDash from a secure (https) webpage. You can't connect to a Neo4j database with an
               unencrypted protocol. Change the protocol, or use NeoDash using http instead: &nbsp;
-              <a href={window.location.href.replace('https://', 'http://')}>
+              <TextLink href={window.location.href.replace('https://', 'http://')}>
                 {window.location.href.replace('https://', 'http://')}
-              </a>
+              </TextLink>
               .
             </div>
           ) : null}
@@ -197,12 +197,11 @@ export default function NeoConnectionModal({
                   onConnectionModalClose();
                   createConnection(protocol, url, port, database, username, password);
                 }}
-                style={{ float: 'right', marginTop: '20px', marginBottom: '20px', backgroundColor: 'blue' }}
-                variant='contained'
+                style={{ float: 'right', marginTop: '20px', marginBottom: '20px' }}
                 size='large'
-                endIcon={<PlayIconOutline />}
               >
                 Connect
+                <PlayIconOutline className='btn-icon-base-r' />
               </Button>
             )}
           </form>
@@ -230,13 +229,13 @@ export default function NeoConnectionModal({
           ) : (
             <div style={{ color: 'lightgrey' }}>
               Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in&nbsp;
-              <a style={{ color: 'white' }} href='https://neo4j.com/download/'>
+              <TextLink externalLink className='n-text-light-neutral-text-inverse' href='https://neo4j.com/download/'>
                 Neo4j Desktop
-              </a>
+              </TextLink>
               , or try the&nbsp;
-              <a style={{ color: 'white' }} href='https://console.neo4j.io/'>
+              <TextLink externalLink className='n-text-light-neutral-text-inverse' href='https://console.neo4j.io/'>
                 Neo4j Aura
-              </a>
+              </TextLink>
               &nbsp;free tier.
             </div>
           )}

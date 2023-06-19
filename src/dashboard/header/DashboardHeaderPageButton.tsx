@@ -23,7 +23,7 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
 
   const content = (
     <>
-      <Grid style={{ height: '100%' }} onClick={onSelect} container spacing={1} alignItems='flex-end'>
+      <Grid className='n-h-full' onClick={onSelect} container spacing={1} alignItems='flex-end'>
         <Grid item key={1} style={{ width: '100%' }}>
           <InputBase
             value={titleText}

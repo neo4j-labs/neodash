@@ -187,7 +187,7 @@ const NeoLineChart = (props: ChartProps) => {
   // T18:40:32.142+0100
   // %Y-%m-%dT%H:%M:%SZ
   const lineViz = (
-    <div className='h-full w-full overflow-hidden' style={{ height: '100%' }}>
+    <div className='n-h-full n-w-full overflow-hidden'>
       <ResponsiveLine
         data={data}
         xScale={

@@ -40,7 +40,7 @@ export default class StyleConfig {
 
   public complementColor(color: string) {
     const hexColor = rgbaToHex(document.documentElement.style.getPropertyValue(color));
-    const complementColor = (0xFFFFFF - parseInt(hexColor.replace('#', ''), 16)).toString(16);
-    return `#${  complementColor}`;
+    const complementColor = (0xffffff - parseInt(hexColor.replace('#', ''), 16)).toString(16);
+    return `#${complementColor}`;
   }
 }

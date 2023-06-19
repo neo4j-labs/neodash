@@ -25,8 +25,8 @@ image::bar.png[Basic Table]
 
 [source,cypher]
 ----
-Match (n:Person)-[e]->(m:Movie)
-RETURN m.title, COUNT(p) as People, type(e) as Role
+Match (p:Person)-[e]->(m:Movie)
+RETURN m.title AS Title, COUNT(p) as People, type(e) as Role
 ----
 
 image::barstacked.png[Basic Table]

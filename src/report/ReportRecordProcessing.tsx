@@ -1,5 +1,6 @@
 import React from 'react';
 import { Chip, Tooltip } from '@mui/material';
+import { GraphLabel, TextLink } from '@neo4j-ndl/react';
 import { withStyles } from '@mui/styles';
 import {
   getRecordType,
@@ -132,7 +133,11 @@ export function RenderNode(value, hoverable = true) {
 }
 
 export function RenderNodeChip(text, color = 'lightgrey', border = '0px') {
-  return <Chip label={text} style={{ background: color, minWidth: 32, border: border }} />;
+  return (
+    <GraphLabel type='node' color={color} style={{ border: border }}>
+      {text}
+    </GraphLabel>
+  );
 }
 
 export function RenderRelationshipChip(text, direction = undefined, color = 'lightgrey') {
@@ -146,7 +151,7 @@ export function RenderRelationshipChip(text, direction = undefined, color = 'lig
         paddingLeft: 5,
         clipPath: direction == undefined ? 'none' : direction ? rightRelationship : leftRelationship,
       }}
-      label={`${text} `}
+      label={text}
     />
   );
 }
@@ -212,9 +217,9 @@ function RenderString(value) {
   const str = value ? value.toString() : '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
-      <a target='_blank' href={str}>
+      <TextLink externalLink target='_blank' href={str}>
         {str}
-      </a>
+      </TextLink>
     );
   }
   return str;

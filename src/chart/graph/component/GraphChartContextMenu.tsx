@@ -1,9 +1,10 @@
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import { Card, CardHeader, IconButton } from '@mui/material';
+import { Card, CardHeader } from '@mui/material';
+import { IconButton } from '@neo4j-ndl/react';
+import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import { NestedMenuItem, IconMenuItem } from 'mui-nested-menu';
-import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { RenderNode, RenderNodeChip, RenderRelationshipChip } from '../../../report/ReportRecordProcessing';
 import { getNodeLabel } from '../util/NodeUtils';
@@ -37,27 +38,19 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
 
   const menu = (
     <div
+      className='n-absolute n-z-60'
       style={{
-        position: 'absolute',
-        zIndex: 1300,
         top: props.interactivity.clickPosition.y,
         left: props.interactivity.clickPosition.x,
       }}
     >
       <Card id='basic-menu'>
         <CardHeader
-          style={{ marginTop: '-6px', marginBottom: '-8px', color: 'black' }}
+          className='-n-mx-1'
+          style={{ color: 'black' }}
           action={
-            <IconButton
-              aria-label='close'
-              style={{
-                padding: '4px',
-                marginLeft: '20px',
-                marginTop: '7px',
-              }}
-              onClick={handleClose}
-            >
-              <CloseIcon />
+            <IconButton aria-label='close' className='n-p-1 n-ml-5 n-mt-1' onClick={handleClose} clean>
+              <XMarkIconOutline />
             </IconButton>
           }
           titleTypographyProps={{ variant: 'h6' }}

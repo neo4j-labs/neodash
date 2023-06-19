@@ -25,13 +25,10 @@ The currently available extensions in NeoDash are:
 Core Extensions are available as part of the open-source NeoDash project.
 These are available to use for free anywhere - Neo4j Desktop, public NeoDash deployments, and self-hosted NeoDash deployments.
 
-=== 2. Pro Extensions
-Pro Extensions are built by the Neo4j Professional Services team. These extensions are available to try out for free:
-
-1. In link:https://install.graphapp.io[NeoDash in Neo4j Desktop]
-2. On link:https://neodash.graphapp.io[the Online Demo Environment]
-
-If you would like to use a pro extension in a self-hosted NeoDash environment, and have an Enterprise Neo4j License, reach out to link:mailto:ps_emea_pmo@neotechnology.com[Neo4j Professional Services] to discuss a commercial agreement.
+=== 2. Expert Extensions
+Expert Extensions are built by the Neo4j Professional Services team.
+These extensions push NeoDash to the next level, by providing extra functionality to create interactive graph applications.
+Reach out to link:mailto:emea_pmo@neotechnology.com[Neo4j Professional Services] if you are interested in a customized / new expert extension for your use-case.
 
 === 3. Custom Extensions
 Custom Extensions are self-built extensions that you can plug into the project.

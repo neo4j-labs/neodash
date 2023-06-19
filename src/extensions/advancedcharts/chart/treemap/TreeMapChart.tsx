@@ -69,12 +69,13 @@ const NeoTreeMapChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title='Reset' aria-label='reset'>
+          <Tooltip title='Reset' aria-label='reset' disableInteractive>
             <Refresh
               onClick={() => {
                 setData(commonProperties.data);
                 setRefreshable(false);
               }}
+              className='n-z-10'
               style={{
                 fontSize: '1.3rem',
                 opacity: 0.6,
@@ -82,7 +83,6 @@ const NeoTreeMapChart = (props: ChartProps) => {
                 right: 12,
                 position: 'absolute',
                 borderRadius: '12px',
-                zIndex: 5,
                 background: '#eee',
               }}
               color='disabled'
