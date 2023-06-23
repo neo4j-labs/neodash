@@ -8,7 +8,7 @@ import { setExtensionEnabled } from '../dashboard/DashboardActions';
 import { setExtensionReducerEnabled } from './state/ExtensionActions';
 import { Dialog, Label, SideNavigationItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
-import { Section, SectionTitle, SectionContent } from '../modal/ModalUtils';
+import { Section, SectionContent } from '../modal/ModalUtils';
 
 const NeoExtensionsModal = ({
   extensions,
@@ -29,7 +29,7 @@ const NeoExtensionsModal = ({
 
   return (
     <div>
-      <Tooltip title='Extensions' aria-label='extensions'>
+      <Tooltip title='Extensions' aria-label='extensions' disableInteractive>
         <SideNavigationItem
           id='extensions-sidebar-button'
           onClick={handleClickOpen}
@@ -82,7 +82,7 @@ const NeoExtensionsModal = ({
                               </td>
                               <td style={{ width: 50 }}></td>
                               <td style={{ float: 'right' }}>
-                                <Tooltip title='Enable the extension' aria-label=''>
+                                <Tooltip title='Enable the extension' aria-label='' disableInteractive>
                                   <Checkbox
                                     id={`checkbox-${e.name}`}
                                     label='Active'
@@ -114,16 +114,20 @@ const NeoExtensionsModal = ({
                             </tr>
                             <tr>
                               <td valign='top'>
+                                <br />
                                 <p>{e.description}</p>
                                 <br />
                                 <p>
-                                  Author: <a href={e.link}>{e.author}</a>
+                                  Author:{' '}
+                                  <TextLink externalLink href={e.link}>
+                                    {e.author}
+                                  </TextLink>
                                 </p>
                               </td>
                               <td></td>
-                              <td>
+                              <td style={{ width: 300 }}>
                                 <br />
-                                <img src={e.image} style={{ width: 400, border: '1px solid grey' }}></img>
+                                <img src={e.image} style={{ border: '1px solid grey', width: '100%' }}></img>
                               </td>
                             </tr>
                           </tbody>

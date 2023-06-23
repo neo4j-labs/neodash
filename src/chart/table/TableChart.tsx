@@ -12,7 +12,6 @@ import { getRendererForValue, rendererForType, RenderSubValue } from '../../repo
 
 import { Close } from '@mui/icons-material';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 import {
   getRule,
@@ -27,7 +26,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
 const TABLE_HEADER_HEIGHT = 32;
-const TABLE_FOOTER_HEIGHT = 52;
+const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 
@@ -212,13 +211,13 @@ export const NeoTableChart = (props: ChartProps) => {
         />
 
         {allowDownload && rows && rows.length > 0 ? (
-          <Tooltip title='Download CSV' aria-label=''>
+          <Tooltip title='Download CSV' aria-label='' disableInteractive>
             <IconButton
               onClick={() => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              style={{ bottom: '9px', left: '3px', position: 'absolute', zIndex: 50 }}
+              className='n-absolute n-z-10 n-bottom-4 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />

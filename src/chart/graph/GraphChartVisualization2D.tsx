@@ -23,7 +23,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
     <ForceGraph2D
       ref={fgRef}
       width={props.style.width - 20}
-      height={props.style.height - 10}
+      height={props.style.height}
       linkCurvature='curvature'
       backgroundColor={props.style.backgroundColor}
       linkDirectionalArrowLength={props.style.linkDirectionalArrowLength}

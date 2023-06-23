@@ -44,7 +44,8 @@ export const NeoDashboardHeaderTitleBar = ({
   const content = (
     <Toolbar
       key={1}
-      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1000 }}
+      className='n-z-20'
+      style={{ paddingLeft: 88, paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR }}
     >
       {APPLY_CUSTOM_BRAND_LOGO ? brandedToolbarContent : <></>}
       <InputBase
@@ -68,7 +69,7 @@ export const NeoDashboardHeaderTitleBar = ({
         }}
       />
       {downloadImageEnabled ? (
-        <Tooltip title={'Download Dashboard as Image'}>
+        <Tooltip title={'Download Dashboard as Image'} disableInteractive>
           <IconButton
             aria-label={'camera'}
             style={{ marginRight: '3px', background: DASHBOARD_HEADER_BUTTON_COLOR }}
@@ -87,6 +88,7 @@ export const NeoDashboardHeaderTitleBar = ({
         title={`${connection.protocol}://${connection.url}:${connection.port}`}
         placement='left'
         aria-label='host'
+        disableInteractive
       >
         <IconButton
           className='logo-btn'

@@ -20,7 +20,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
 
   return (
     <div>
-      <Tooltip title='Examples' aria-label='examples'>
+      <Tooltip title='Examples' aria-label='examples' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<ChartBarIconSolid className={navItemClass} />}>
           Examples
         </SideNavigationItem>
@@ -59,6 +59,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
                           }}
                         >
                           <NeoReport
+                            id={index}
                             query={example.syntheticQuery}
                             database={database}
                             disabled={!open}

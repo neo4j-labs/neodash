@@ -5,6 +5,11 @@
 /* Create CSS class based components */
 /* https://tailwindcss.com/docs/reusing-styles#extracting-classes-with-apply */
 @layer components {
+  /* Override Mui default z-index */
+  .MuiAppBar-root.n-z-20 {
+    z-index: 20 !important;
+  }
+
   /* Utility functions for buttons */
   .btn-icon-sm-r {
     @apply n-ml-token-2 n-w-4 n-h-4;
@@ -57,5 +62,9 @@
 
   .ndl-dialog.dialog-xxl {
     max-width: 90%;
+  }
+
+  .n-bg-dark-neutral-text-weak {
+    background-color: rgb(196 200 205 / var(--tw-bg-opacity)) !important;
   }
 }

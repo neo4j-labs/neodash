@@ -102,7 +102,7 @@ This release marks the official arrival of **[Extensions](https://neo4j.com/labs
 NeoDash 2.2 comes with three in-built extensions.
 - **Rule-Based Styling**
 - **Advanced Visualizations**: These provide a means to enable complex visualizations in a dashboard. These were previously available as Radar charts, Treemaps, Circle Packing reports, Sankey charts, Choropleth and a Gauge Chart).
-- **Report Actions**: Which let you create interactivity in dashboards, using the output of one report as input for another visualization. (Pro Extension)
+- **Report Actions**: Which let you create interactivity in dashboards, using the output of one report as input for another visualization. (Expert Extension)
 
 You can enable extensions by clicking the 🧩 icon on the left sidebar of the screen.
 

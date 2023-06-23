@@ -8,14 +8,13 @@ import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { SELECTION_TYPES } from '../config/CardConfig';
-import { SideNavigationItem, Button, Dialog, Dropdown } from '@neo4j-ndl/react';
+import { SideNavigationItem, Button, Dialog, Dropdown, TextLink } from '@neo4j-ndl/react';
 import {
   ShareIconOutline,
   PlayIconSolid,
   DocumentCheckIconOutline,
   DatabaseAddCircleIcon,
 } from '@neo4j-ndl/react/icons';
-import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
@@ -58,7 +57,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
   const columns = [
     { field: 'id', hide: true, headerName: 'ID', width: 150 },
     { field: 'date', headerName: 'Date', width: 200 },
-    { field: 'title', headerName: 'Title', width: 270 },
+    { field: 'title', headerName: 'Title', width: 370 },
     { field: 'author', headerName: 'Author', width: 160 },
     {
       field: 'load',
@@ -88,7 +87,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
 
   return (
     <div>
-      <Tooltip title='Share' aria-label='share'>
+      <Tooltip title='Share' aria-label='share' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<ShareIconOutline className={navItemClass} />}>
           Share
         </SideNavigationItem>
@@ -108,7 +107,10 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         <Dialog.Content>
           This window lets you create a temporary share link for your dashboard. Keep in mind that share links are not
           intended as a way to publish your dashboard for users, see the&nbsp;
-          <a href='https://neo4j.com/labs/neodash/2.3/user-guide/publishing/'>documentation</a> for more on publishing.
+          <TextLink externalLink href='https://neo4j.com/labs/neodash/2.3/user-guide/publishing/'>
+            documentation
+          </TextLink>{' '}
+          for more on publishing.
           <br />
           <hr />
           <br />
@@ -241,9 +243,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
               <br />
               Step 3: Use the generated link to view the dashboard:
               <br />
-              <a href={shareLink} target='_blank'>
+              <TextLink externalLink href={shareLink} target='_blank'>
                 {shareLink}
-              </a>
+              </TextLink>
               <br />
             </>
           ) : (
@@ -260,7 +262,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         aria-labelledby='form-dialog-title'
       >
         <Dialog.Header id='form-dialog-title'>Select From Neo4j</Dialog.Header>
-        <Dialog.Content style={{ width: '800px' }}>
+        <Dialog.Content style={{ width: '900px' }}>
           Choose a dashboard to share below.
           <div style={{ height: '380px' }}>
             <DataGrid
@@ -306,9 +308,9 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         <Dialog.Header id='form-dialog-title'>Select from URL</Dialog.Header>
         <Dialog.Content>
           To share a dashboard file directly, make it accessible{' '}
-          <a target='_blank' href='https://gist.github.com/'>
+          <TextLink externalLink target='_blank' href='https://gist.github.com/'>
             online
-          </a>
+          </TextLink>
           . Then, paste the direct link here:
           <NeoSetting
             key={'url'}

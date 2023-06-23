@@ -48,7 +48,7 @@ export const NeoDrawer = ({
    * are enabled and present a button (EX: node-sidebar)
    * @returns JSX element containing all the buttons related to their enabled extensions
    */
-  function renderDrawerExtensionsButton() {
+  function renderDrawerExtensionsButtons() {
     const res = (
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
@@ -68,14 +68,14 @@ export const NeoDrawer = ({
 
   const content = (
     <div
+      className='n-z-30'
       style={{
         display: 'flex',
-        zIndex: 1001,
       }}
     >
-      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l5'>
+      <SideNavigation iconMenu expanded={expanded} onExpandedChange={setOnExpanded} className='n-shadow-l4'>
         <SideNavigationList>
-          <Tooltip title='Menu' aria-label='menu'>
+          <Tooltip title='Menu' aria-label='menu' disableInteractive>
             <SideNavigationItem onClick={resetApplication} icon={<HomeIconOutline className={navItemClass} />}>
               Menu
             </SideNavigationItem>
@@ -85,12 +85,14 @@ export const NeoDrawer = ({
             dashboardSettings={dashboardSettings}
             updateDashboardSetting={updateDashboardSetting}
             navItemClass={navItemClass}
+            extensions={extensions}
           ></NeoSettingsModal>
 
           <NeoSaveModal navItemClass={navItemClass}></NeoSaveModal>
           <NeoLoadModal navItemClass={navItemClass}></NeoLoadModal>
           <NeoShareModal navItemClass={navItemClass}></NeoShareModal>
           <NeoExtensionsModal navItemClass={navItemClass}></NeoExtensionsModal>
+          {renderDrawerExtensionsButtons()}
           <SideNavigationGroupHeader>Learn</SideNavigationGroupHeader>
           <NeoReportExamplesModal
             extensions={extensions}
@@ -98,8 +100,7 @@ export const NeoDrawer = ({
             database={connection.database}
             navItemClass={navItemClass}
           ></NeoReportExamplesModal>
-          {renderDrawerExtensionsButton()}
-          <Tooltip title='Documentation' aria-label='documentation'>
+          <Tooltip title='Documentation' aria-label='documentation' disableInteractive>
             <SideNavigationItem
               href='https://neo4j.com/labs/neodash/2.3/user-guide/'
               target='_blank'
@@ -109,7 +110,7 @@ export const NeoDrawer = ({
               Documentation
             </SideNavigationItem>
           </Tooltip>
-          <Tooltip title='About' aria-label='about'>
+          <Tooltip title='About' aria-label='about' disableInteractive>
             <SideNavigationItem
               onClick={onAboutModalOpen}
               icon={<InformationCircleIconOutline className={navItemClass} aria-label={'side info'} />}

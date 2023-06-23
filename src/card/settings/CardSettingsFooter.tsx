@@ -167,7 +167,7 @@ const NeoCardSettingsFooter = ({
             </td>
             <td>
               {RULE_BASED_REPORT_CUSTOMIZATIONS[type] && extensions.styling && extensions.styling.active ? (
-                <Tooltip title='Set rule-based styling' aria-label=''>
+                <Tooltip title='Set rule-based styling' aria-label='' disableInteractive>
                   <IconButton
                     style={{ float: 'right', marginRight: '10px' }}
                     aria-label='custom styling'
@@ -183,7 +183,7 @@ const NeoCardSettingsFooter = ({
                 <></>
               )}
               {extensions.actions && extensions.actions.active && RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] ? (
-                <Tooltip title='Set report actions' aria-label=''>
+                <Tooltip title='Set report actions' aria-label='' disableInteractive>
                   <IconButton
                     style={{ float: 'right' }}
                     aria-label='custom actions'

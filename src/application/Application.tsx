@@ -49,6 +49,7 @@ import NeoReportHelpModal from '../modal/ReportHelpModal';
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
 import { ThemeProvider } from '@mui/material/styles';
 import lightTheme from '../component/theme/Themes';
+import { resetSessionStorage } from '../sessionStorage/SessionStorageActions';
 
 /**
  * This is the main application component for NeoDash.
@@ -108,7 +109,7 @@ const Application = ({
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
     <ThemeProvider theme={lightTheme}>
-      <div ref={ref} style={{ display: 'flex' }}>
+      <div ref={ref} className='n-flex'>
         {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
         <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
         {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
@@ -175,6 +176,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   createConnection: (protocol, url, port, database, username, password) => {
     dispatch(setConnected(false));
+    dispatch(resetSessionStorage());
     dispatch(createConnectionThunk(protocol, url, port, database, username, password));
   },
   createConnectionFromDesktopIntegration: () => {

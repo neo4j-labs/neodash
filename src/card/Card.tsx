@@ -120,14 +120,14 @@ const NeoCard = ({
   // TODO - get rid of some of the props-drilling here...
   const component = (
     <div
-      style={{ height: '100%' }}
       ref={observe}
-      className='bg-light-neutral-bg-weak overflow-hidden n-shadow-l4 border-2 border-light-neutral-border-strong min-w-max rounded-lg px-4 py-5 sm:p-6'
+      className='bg-light-neutral-bg-weak overflow-hidden n-shadow-l4 border-2 border-light-neutral-border-strong min-w-max rounded-lg px-4 py-5 sm:p-6 n-h-full'
     >
       {/* The front of the card, referred to as the 'view' */}
-      <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
-        <Card ref={ref} style={{ height: '100%' }}>
+      <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} className='n-h-full'>
+        <Card ref={ref} className='n-h-full'>
           <NeoCardView
+            id={id}
             settingsOpen={settingsOpen}
             editable={editable}
             dashboardSettings={dashboardSettings}
@@ -163,8 +163,10 @@ const NeoCard = ({
       </Collapse>
       {/* The back of the card, referred to as the 'settings' */}
       <Collapse disablestrictmodecompat='true' in={settingsOpen} timeout={collapseTimeout}>
-        <Card style={{ height: '100%' }}>
+        <Card className='n-h-full'>
           <NeoCardSettings
+            pagenumber={dashboardSettings.pagenumber}
+            reportId={id}
             settingsOpen={settingsOpen}
             query={report.query}
             database={database}

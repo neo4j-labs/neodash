@@ -79,7 +79,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.wait(400);
-    cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
+    cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: WAITING_TIME })
       .should('contain', 'title')
       .and('contain', 'released')
@@ -224,7 +224,7 @@ describe('NeoDash E2E Tests', () => {
     cy.wait(500);
     cy.get('#autocomplete-property').type('title');
     cy.get('#autocomplete-property-option-0').click();
-    cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
+    cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
     cy.get('#autocomplete').type('The Matrix');
     cy.get('#autocomplete-option-0').click();
   });
@@ -303,7 +303,7 @@ function createReportOfType(type, query, fast = false) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.wait(400);
-  cy.get('main .react-grid-item:eq(2) button[aria-label="save"]').click();
+  cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
 }
 
 function checkInitialState() {

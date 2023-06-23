@@ -18,7 +18,6 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
   };
 
   const settings = DASHBOARD_SETTINGS;
-
   // Else, build the advanced settings view.
   const advancedDashboardSettings = (
     <div style={{ marginLeft: '-10px' }}>
@@ -45,7 +44,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
 
   return (
     <div>
-      <Tooltip title='Settings' aria-label='settings'>
+      <Tooltip title='Settings' aria-label='settings' disableInteractive>
         <SideNavigationItem onClick={handleClickOpen} icon={<Cog6ToothIconOutline className={navItemClass} />}>
           Settings
         </SideNavigationItem>
@@ -61,6 +60,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
           <br />
           <br />
           {advancedDashboardSettings}
+          <br />
         </Dialog.Content>
       </Dialog>
     </div>

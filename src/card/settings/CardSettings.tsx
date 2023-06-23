@@ -8,6 +8,8 @@ import { CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 
 const NeoCardSettings = ({
   settingsOpen,
+  pagenumber,
+  reportId,
   query,
   database, // Current database related to the report
   databaseList, // List of databases the user can choose from ('system' is filtered out)
@@ -53,6 +55,8 @@ const NeoCardSettings = ({
   // TODO - instead of hiding everything based on settingsopen, only hide the components that slow down render (cypher editor)
   const cardSettingsContent = settingsOpen ? (
     <NeoCardSettingsContent
+      pagenumber={pagenumber}
+      reportId={reportId}
       query={query}
       database={database}
       reportSettings={reportSettings}
@@ -67,7 +71,7 @@ const NeoCardSettings = ({
       onTypeUpdate={onTypeUpdate}
     ></NeoCardSettingsContent>
   ) : (
-    <CardContent style={{ paddingTop: '10px', paddingBottom: '10px' }} />
+    <CardContent className='n-py-2' />
   );
 
   const cardSettingsFooter = settingsOpen ? (
@@ -85,7 +89,7 @@ const NeoCardSettings = ({
   );
 
   return (
-    <div className={`card-view ${expanded ? 'expanded' : ''}`} style={{ overflowY: 'auto', height: '100%' }}>
+    <div className={`card-view ${expanded ? 'expanded' : ''} n-overflow-y-auto n-h-full`}>
       {cardSettingsHeader}
       <ReportItemContainer style={{ height: reportHeight }} className='-n-mt-2'>
         {cardSettingsContent}

@@ -128,7 +128,7 @@ export function createMarkers(data, props) {
         }
       >
         {props.selection && props.selection[node.firstLabel] && props.selection[node.firstLabel] != '(no label)' ? (
-          <Tooltip direction='bottom' permanent className={'leaflet-custom-tooltip'}>
+          <Tooltip direction='bottom' permanent className={'leaflet-custom-tooltip'} disableInteractive>
             {renderNodeLabel(node)}
           </Tooltip>
         ) : (
