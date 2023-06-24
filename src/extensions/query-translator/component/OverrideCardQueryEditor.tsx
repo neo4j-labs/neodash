@@ -110,7 +110,7 @@ export const NeoOverrideCardQueryEditor = ({
   return (
     <div>
       {runningTranslation ? (
-        <div style={{ height: 150, border: '1px solid grey' }}>{GPT_LOADING_ICON}</div>
+        <div style={{ height: 150, border: '1px solid grey', position: 'relative' }}>{GPT_LOADING_ICON}</div>
       ) : (
         <>
           <table style={{ marginBottom: 5, width: '100%' }}>

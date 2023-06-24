@@ -167,7 +167,9 @@ export abstract class ModelClient {
         }
       }
       if (!isValidated) {
-        throw Error(`The model couldn't translate your request: ${inputMessage}`);
+        throw Error(
+          `The model could not translate your question to valid Cypher: '${inputMessage}'.  Try writing a more descriptive question, explicitly calling out the node labels, relationship types, and property names.`
+        );
       }
     } catch (error) {
       await consoleLogAsync('Error during query', error);
