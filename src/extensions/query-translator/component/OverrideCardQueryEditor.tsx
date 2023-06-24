@@ -81,7 +81,7 @@ export const NeoOverrideCardQueryEditor = ({
           setPrepopulationReportFunction(reportId);
           updateEnglishQuestion(value);
         }}
-        style={{ border: '1px dashed black' }}
+        style={{ border: '1px dashed darkgrey' }}
         placeholder={`Enter English here...`}
       />
     </div>
@@ -164,9 +164,9 @@ export const NeoOverrideCardQueryEditor = ({
                 : {
                     ...DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
                     // color: '#006FD6',
-                    borderBottom: '1px dashed black',
-                    borderLeft: '1px dashed black',
-                    borderRight: '1px dashed black',
+                    borderBottom: '1px dashed darkgrey',
+                    borderLeft: '1px dashed darkgrey',
+                    borderRight: '1px dashed darkgrey',
                   }
             }
           >
