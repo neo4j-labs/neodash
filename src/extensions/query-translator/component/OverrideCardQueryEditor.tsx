@@ -81,6 +81,7 @@ export const NeoOverrideCardQueryEditor = ({
           setPrepopulationReportFunction(reportId);
           updateEnglishQuestion(value);
         }}
+        style={{ border: '1px solid #006FD6' }}
         placeholder={`Enter English here...`}
       />
     </div>
@@ -156,7 +157,19 @@ export const NeoOverrideCardQueryEditor = ({
             </tr>
           </table>
           {language == Language.CYPHER ? cypherEditor : englishEditor}
-          <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>
+          <div
+            style={
+              language == Language.CYPHER
+                ? DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE
+                : {
+                    ...DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
+                    color: '#006FD6',
+                    borderBottom: '1px solid #006FD6',
+                    borderLeft: '1px solid #006FD6',
+                    borderRight: '1px solid #006FD6',
+                  }
+            }
+          >
             {language == Language.ENGLISH ? (
               <>
                 For best results, use a descriptive question. See also the{' '}
