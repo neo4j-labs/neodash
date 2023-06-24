@@ -76,12 +76,12 @@ export const NeoOverrideCardQueryEditor = ({
       <NeoCodeEditorComponent
         value={englishQuestion}
         editable={true}
-        language={'english'}
+        language={'markdown'}
         onChange={(value) => {
           setPrepopulationReportFunction(reportId);
           updateEnglishQuestion(value);
         }}
-        style={{ border: '1px solid #006FD6' }}
+        style={{ border: '1px dashed black' }}
         placeholder={`Enter English here...`}
       />
     </div>
@@ -111,7 +111,7 @@ export const NeoOverrideCardQueryEditor = ({
   return (
     <div>
       {runningTranslation ? (
-        <div style={{ height: 150, border: '1px solid grey', position: 'relative' }}>{GPT_LOADING_ICON}</div>
+        <div style={{ height: 150, border: '1px dashed grey', position: 'relative' }}>{GPT_LOADING_ICON}</div>
       ) : (
         <>
           <table style={{ marginBottom: 5, width: '100%' }}>
@@ -163,10 +163,10 @@ export const NeoOverrideCardQueryEditor = ({
                 ? DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE
                 : {
                     ...DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
-                    color: '#006FD6',
-                    borderBottom: '1px solid #006FD6',
-                    borderLeft: '1px solid #006FD6',
-                    borderRight: '1px solid #006FD6',
+                    // color: '#006FD6',
+                    borderBottom: '1px dashed black',
+                    borderLeft: '1px dashed black',
+                    borderRight: '1px dashed black',
                   }
             }
           >
