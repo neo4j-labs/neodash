@@ -1,0 +1,1857 @@
+{
+  "title": "NTG6 HU - Read",
+  "version": "2.3",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": true,
+    "parameters": {
+      "neodash_ntg6_hu_sw_title_100": "E871.1",
+      "neodash_ntg6_hu_sw_title_200": "",
+      "neodash_ntg6_hu_sw_title_201": "E905.3",
+      "neodash_ntg6_hu_hw_title_300": "D9",
+      "neodash_ntg6_hu_sw_title_301": "E871.1",
+      "neodash_model_line_title_302": "213M",
+      "neodash_ntg6_hu_sw_title_303": "E871.1",
+      "neodash_ntg6_hu_hw_title_304": "D9",
+      "neodash_ntg6_hu_sw_title_400": "E221.0",
+      "neodash_ntg6_hu_sw_title_401": "E223.0",
+      "neodash_release_to_show_all_sws_500": "FUP3",
+      "neodash_ntg6_hu_sw_title_600": "E870.1",
+      "neodash_ntg6_hu_line_title_601": "High",
+      "neodash_ntg6_hu_market_title_602": "ECE",
+      "neodash_ntg6_hu_sw_title_200_display": "",
+      "neodash_ntg6_hu_sw_title_400_display": "E221.0",
+      "neodash_ntg6_hu_sw_title_401_display": "E223.0",
+      "neodash_ntg6_hu_sw_title_600_display": "E870.1",
+      "neodash_ntg6_hu_sw_title_100_display": "E871.1"
+    }
+  },
+  "pages": [
+    {
+      "title": "SW version details",
+      "reports": [
+        {
+          "title": "Select SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 4,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "NTG6_HU_SW",
+            "helperText": "SW version to be shown",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_100"
+          },
+          "id": "55f2379f-769a-44b6-ae7d-2f6cb5ac5983"
+        },
+        {
+          "title": "Runs on HW",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_100})-[e:RUNS_ON]-(m:NTG6_HU_HW) RETURN n, e, m",
+          "width": 3,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title",
+            "NTG6_HU_HW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "legendDefinition": [
+              {
+                "enabled": true,
+                "entries": [
+                  { "type": "node", "color": "#5097AB", "meaning": "SW version", "textColor": "#FFFFFF" },
+                  { "type": "edge", "color": "#EFE289", "meaning": "HW version", "textColor": "#000000" }
+                ]
+              }
+            ],
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "RUNS_ON.hwPartNumbersHigh",
+                "condition": "contains",
+                "value": "HEADUNIT",
+                "customization": "relationship color",
+                "customizationValue": "#79AEBF"
+              }
+            ]
+          },
+          "id": "02a27662-34ba-4940-b14b-0cc92705a0a8"
+        },
+        {
+          "title": "Used in model lines",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_100})-[e:USED_IN_MODEL_LINE]-(m:MODEL_LINE) RETURN n, e, m",
+          "width": 3,
+          "height": 2,
+          "x": 3,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title",
+            "MODEL_LINE": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "MODEL_LINE.title",
+                "condition": "!=",
+                "value": "ignoreMe",
+                "customization": "node color",
+                "customizationValue": "#F2E394"
+              }
+            ]
+          },
+          "id": "db2cfe7f-0843-43df-8aaa-e13972b90565"
+        },
+        {
+          "title": "All SWs directly updating to it",
+          "query": "MATCH (n:NTG6_HU_SW)-[e:UPDATES_TO]-(m:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_100}) WHERE (n)-[e]->(m) RETURN n, e, m",
+          "width": 3,
+          "height": 2,
+          "x": 6,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "UPDATES_TO.updateStatus",
+                "condition": "contains",
+                "value": "Qualification in progress",
+                "customization": "relationship color",
+                "customizationValue": "#ffff00"
+              },
+              {
+                "field": "UPDATES_TO.updateStatus",
+                "condition": "contains",
+                "value": "Update successfully tested",
+                "customization": "relationship color",
+                "customizationValue": "#00ff00"
+              }
+            ]
+          },
+          "id": "caf89279-69f9-496f-bed6-4f1e3d723978"
+        },
+        {
+          "title": "All SWs updating to it",
+          "query": "MATCH path = (from:NTG6_HU_SW)-[:UPDATES_TO*]->(to:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_100}), (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_100}) RETURN DISTINCT *",
+          "width": 3,
+          "height": 2,
+          "x": 9,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "UPDATES_TO.updateStatus",
+                "condition": "contains",
+                "value": "Qualification in progress",
+                "customization": "relationship color",
+                "customizationValue": "#ffff00"
+              },
+              {
+                "field": "UPDATES_TO.updateStatus",
+                "condition": "contains",
+                "value": "Update successfully tested",
+                "customization": "relationship color",
+                "customizationValue": "#00ff00"
+              }
+            ]
+          },
+          "id": "4c3708b7-f472-4736-b7c2-5b3628161c4f"
+        },
+        {
+          "title": "All SWs it directly updates to",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_100})-[e:UPDATES_TO]->(m) WHERE (n)-[e]->(m) OR n.title=$neodash_ntg6_hu_sw_title_100 RETURN n, e, m",
+          "width": 3,
+          "height": 2,
+          "x": 6,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "UPDATES_TO.updateStatus",
+                "condition": "contains",
+                "value": "Qualification in progress",
+                "customization": "relationship color",
+                "customizationValue": "#ffff00"
+              },
+              {
+                "field": "UPDATES_TO.updateStatus",
+                "condition": "contains",
+                "value": "Update successfully tested",
+                "customization": "relationship color",
+                "customizationValue": "#00ff00"
+              }
+            ]
+          },
+          "id": "afb992cc-c0c9-47fc-9ee7-e5b339f30cb2"
+        },
+        {
+          "title": "All SWs it updates to",
+          "query": "MATCH path = (from:NTG6_HU_SW{title:$neodash_ntg6_hu_sw_title_100})-[:UPDATES_TO*]->(to:NTG6_HU_SW), (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_100}) RETURN DISTINCT *",
+          "width": 3,
+          "height": 2,
+          "x": 9,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              }
+            ]
+          },
+          "id": "9314f1c5-4bd3-432a-b250-1142c3c929d8"
+        },
+        {
+          "title": "Properties",
+          "query": "MATCH (n:NTG6_HU_SW) WHERE n.title=$neodash_ntg6_hu_sw_title_100 RETURN n.title AS Title, n.sgenComment AS `SGen comment`, n.release AS Release, n.productionSW AS `Production SW`, n.fieldSW AS `Field SW`, n.otaSW AS `OTA SW`, n.vehicles AS Vehicles, n.huMarkets AS Markets, n.tvDevice AS `TV device`, n.notes AS Notes",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 4,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 3, 1, 1, 1, 1, 1, 1, 1, 4]",
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "4af3fa71-6e80-45ba-b707-034669110eb7"
+        },
+        {
+          "title": "China properties",
+          "query": "MATCH (n:NTG6_HU_SW) WHERE n.title=$neodash_ntg6_hu_sw_title_100 RETURN n.cnBranch AS `CN branch`, n.productionSWCN AS `Production SW CN`, n.fieldSWCN AS `Field SW CN`, n.otaSWCN AS `OTA SW CN`",
+          "width": 6,
+          "height": 1,
+          "x": 0,
+          "y": 5,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 1]",
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "a62479cc-c0c2-48af-a030-a72bd6ba7138"
+        },
+        {
+          "title": "Coding data versions",
+          "query": "MATCH (n:NTG6_HU_SW) WHERE n.title=$neodash_ntg6_hu_sw_title_100 RETURN n.codingDataVersionEntry AS `Coding data version Entry`, n.codingDataVersionMid AS `Coding data version Mid`, n.codingDataVersionHigh AS `Coding data version High`",
+          "width": 6,
+          "height": 1,
+          "x": 6,
+          "y": 5,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1]",
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "16cd07e8-467d-4f75-bec1-cec5f6d154d2"
+        }
+      ]
+    },
+    {
+      "title": "SW update relationship details",
+      "reports": [
+        {
+          "title": "Select start SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "entityType": "NTG6_HU_SW",
+            "helperText": "SW version to start with",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_200"
+          },
+          "id": "c9dd644f-2807-4338-abb5-d83275ecbf83"
+        },
+        {
+          "title": "Select end SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 9,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "helperText": "SW version to end with",
+            "entityType": "NTG6_HU_SW",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_201"
+          },
+          "id": "8e339652-6e7f-44f2-8e2e-28a42c939c94"
+        },
+        {
+          "title": "SW update relationship",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_200})-[e]-(m:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_201}) RETURN n, e, m",
+          "width": 6,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              }
+            ]
+          },
+          "id": "401798f8-7c65-4242-9d88-f5d7e04e4d74"
+        },
+        {
+          "title": "SW relationship details",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_200})-[e]-(m:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_201}) RETURN e.updateStatus AS `Update status`, e.updateStatusCN AS `Update status CN`, e.campaignStatus AS `Campaign status`, e.campaignStatusCN AS `Campaign status CN`, e.size AS Size, e.campaignMarkets AS Markets, e.otaVariantCoding AS `OTA variant coding`, e.bootloaderRequired AS `Bootloader required`, e.tvDevicesOnly AS `TV devices only`, e.rolloutCostsTBD AS `Rollout costs tbd`, e.notes AS Notes",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "columnWidths": "[2, 2, 2, 2, 3, 2, 1, 1, 1, 1, 4]",
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "d598c3a1-fa68-42f0-8153-93a27a55a7b2"
+        }
+      ]
+    },
+    {
+      "title": "Dependencies",
+      "reports": [
+        {
+          "title": "Select HW version",
+          "query": "MATCH (n:`NTG6_HU_HW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "entityType": "NTG6_HU_HW",
+            "helperText": "HW version to show all SWs running on it",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_hw_title_300"
+          },
+          "id": "07fc50db-04bd-4871-81aa-eaa5848d6eb2"
+        },
+        {
+          "title": "All SWs running on it",
+          "query": "MATCH (n:NTG6_HU_SW)-[e:RUNS_ON]->(m:NTG6_HU_HW {title:$neodash_ntg6_hu_hw_title_300}) WHERE (n)-[e]->(m) RETURN n, e, m",
+          "width": 9,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title",
+            "NTG6_HU_HW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 3,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_HW.title",
+                "condition": "!=",
+                "value": "ignoreMe",
+                "customization": "node color",
+                "customizationValue": "#588C7E"
+              }
+            ]
+          },
+          "id": "3c7039fb-1192-4f5d-ad81-7060c4e029aa"
+        },
+        {
+          "title": "Select SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 2,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "helperText": "SW version to show used in model line relationship",
+            "entityType": "NTG6_HU_SW",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_301"
+          },
+          "id": "f01bc60b-d27b-44a0-b0c1-f3ae5bfe3435"
+        },
+        {
+          "title": "Select model line",
+          "query": "MATCH (n:`MODEL_LINE`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 9,
+          "y": 2,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "helperText": "Model line to show used in model line relationship",
+            "entityType": "MODEL_LINE",
+            "propertyType": "title",
+            "parameterName": "neodash_model_line_title_302"
+          },
+          "id": "3226b910-30c0-491a-9bf6-913a9699cd87"
+        },
+        {
+          "title": "Used in model line relationship",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_301})-[e:USED_IN_MODEL_LINE]->(m:MODEL_LINE {title:$neodash_model_line_title_302}) WHERE (n)-[e]->(m) RETURN n, e, m",
+          "width": 6,
+          "height": 1,
+          "x": 3,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title",
+            "MODEL_LINE": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "MODEL_LINE.title",
+                "condition": "!=",
+                "value": "ignoreMe",
+                "customization": "node color",
+                "customizationValue": "#F2E394"
+              }
+            ]
+          },
+          "id": "e94a54dd-a181-4849-b0fb-d03a19fd6c6d"
+        },
+        {
+          "title": "Used in model line relationship details",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_301})-[e:USED_IN_MODEL_LINE]->(m:MODEL_LINE {title:$neodash_model_line_title_302}) WHERE (n)-[e]->(m) RETURN e.introductionTime AS `Introduction time`, e.huLines AS `HU lines`, e.markets AS Markets, e.partNumbersEntry AS `Part numbers Entry`, e.partNumbersMid AS `Part numbers Mid`, e.partNumbersHigh AS `Part numbers High`, e.testRelease AS `Test release`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 3,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[2, 2, 3, 8, 8, 8, 2]",
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "refreshRate": 10,
+            "lineBreaksAfterListEntry": ["Markets"]
+          },
+          "id": "1f54c763-ef25-4db4-b474-8c61cc46ee96"
+        },
+        {
+          "title": "Select SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 4,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "helperText": "SW version to show runs on relationship",
+            "entityType": "NTG6_HU_SW",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_303"
+          },
+          "id": "ce387d13-e687-46d7-95fa-ebf4eea9fea4"
+        },
+        {
+          "title": "Select HW version",
+          "query": "MATCH (n:`NTG6_HU_HW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 9,
+          "y": 4,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "helperText": "HW version to show runs on relationship",
+            "entityType": "NTG6_HU_HW",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_hw_title_304"
+          },
+          "id": "2831fde7-0be0-4a07-95f6-396d8fc4ff85"
+        },
+        {
+          "title": "Runs on relationship",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_303})-[e:RUNS_ON]->(m:NTG6_HU_HW {title:$neodash_ntg6_hu_hw_title_304}) WHERE (n)-[e]->(m) RETURN n, e, m",
+          "width": 6,
+          "height": 1,
+          "x": 3,
+          "y": 4,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title",
+            "NTG6_HU_HW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_HW.title",
+                "condition": "!=",
+                "value": "ignoreMe",
+                "customization": "node color",
+                "customizationValue": "#588C7E"
+              }
+            ]
+          },
+          "id": "c409a9d4-34a4-46de-8dea-4f4f412ffb6c"
+        },
+        {
+          "title": "Runs on relationship details",
+          "query": "MATCH (n:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_303})-[e:RUNS_ON]->(m:NTG6_HU_HW {title:$neodash_ntg6_hu_hw_title_304}) WHERE (n)-[e]->(m) RETURN e.markets AS `Markets`, e.hwPartNumbersEntry AS `HW part numbers Entry`, e.hwPartNumbersMid AS `HW part numbers Mid`, e.hwPartNumbersHigh AS `HW part numbers High`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 5,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[1, 4, 4, 4]",
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "384cdf69-d543-4265-af4d-dd7780fb1e1f"
+        }
+      ]
+    },
+    {
+      "title": "Shortest path",
+      "reports": [
+        {
+          "title": "Select start SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "entityType": "NTG6_HU_SW",
+            "helperText": "SW version to start with",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_400"
+          },
+          "id": "7781909c-88f9-40eb-9ce9-9026cc0c3abe"
+        },
+        {
+          "title": "Start SW runs on HW",
+          "query": "MATCH (n:NTG6_HU_SW)-[e:RUNS_ON]->(m:NTG6_HU_HW) WHERE n.title = $neodash_ntg6_hu_sw_title_400 RETURN m.title AS `HW version` ORDER BY m.title",
+          "width": 3,
+          "height": 3,
+          "x": 0,
+          "y": 1,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1]",
+            "compact": true,
+            "refreshButtonEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "27fd7eb5-277f-454f-817e-d14e08d2879e"
+        },
+        {
+          "title": "Select end SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) \nWHERE toLower(toString(n.`title`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`title` as value,  n.`title` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 1,
+          "x": 9,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "type": "Node Property",
+            "helperText": "SW version to end with",
+            "entityType": "NTG6_HU_SW",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_401"
+          },
+          "id": "cfb9977f-293b-4b87-9328-b9b129deb9af"
+        },
+        {
+          "title": "End SW runs on HW",
+          "query": "MATCH (n:NTG6_HU_SW)-[e:RUNS_ON]->(m:NTG6_HU_HW) WHERE n.title = $neodash_ntg6_hu_sw_title_401 RETURN m.title AS `HW version` ORDER BY m.title",
+          "width": 3,
+          "height": 3,
+          "x": 9,
+          "y": 1,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1]",
+            "compact": true,
+            "refreshButtonEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "0c45bf86-12cb-49cc-8037-ade208cf42fc"
+        },
+        {
+          "title": "Shortest path",
+          "query": "MATCH path=shortestPath((source:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_400})-[:UPDATES_TO*]->(target:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_401})) RETURN path",
+          "width": 6,
+          "height": 3,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              }
+            ],
+            "frozen": false
+          },
+          "id": "51058833-ac5d-4145-a533-c0403246ecd3"
+        },
+        {
+          "title": "Common HW along the path (if any)",
+          "query": "MATCH path=shortestPath((source:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_400})-[:UPDATES_TO*]->(target:NTG6_HU_SW {title:$neodash_ntg6_hu_sw_title_401})), (m:NTG6_HU_HW) WHERE ALL (x IN nodes(path) WHERE (x)-[:RUNS_ON]->(m)) RETURN DISTINCT m.title AS `HW version` ORDER BY m.title",
+          "width": 6,
+          "height": 1,
+          "x": 3,
+          "y": 3,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1]",
+            "compact": true,
+            "refreshButtonEnabled": true,
+            "refreshRate": 10
+          },
+          "id": "ff2a06ce-d1ca-4167-a645-5991400decd5"
+        }
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "reports": [
+        {
+          "title": "All running campaigns",
+          "query": "MATCH (n:NTG6_HU_SW)-[e:UPDATES_TO]->(m:NTG6_HU_SW) WHERE e.campaignStatus='Currently running OTA update campaign' OR e.campaignStatus='Currently running' RETURN n, e, m",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              }
+            ]
+          },
+          "id": "baa29246-0744-47e3-8493-f4ff77ad892f"
+        },
+        {
+          "title": "Pick release to show all SWs",
+          "query": "MATCH (n:`NTG6_HU_RELEASE`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Release to show all SWs",
+            "helperText": "SOP, FUP1, FUP2, FUP3 or FUP4",
+            "propertyType": "title",
+            "parameterName": "neodash_release_to_show_all_sws_500"
+          },
+          "id": "3f5351ec-9374-4a30-ac84-ec4e2ca2e0bb"
+        },
+        {
+          "title": "All connected SWs of the release",
+          "query": "MATCH (a:NTG6_HU_SW)-[e:UPDATES_TO]->(b:NTG6_HU_SW) WHERE $neodash_release_to_show_all_sws_500 IN ['SOP', 'FUP1', 'FUP2', 'FUP3', 'FUP4'] AND a.release = $neodash_release_to_show_all_sws_500 + ' SW release' AND b.release = $neodash_release_to_show_all_sws_500 + ' SW release' RETURN a, e, b",
+          "width": 9,
+          "height": 2,
+          "x": 3,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "NTG6_HU_SW": "title"
+          },
+          "settings": {
+            "nodePositions": {},
+            "nodeLabelFontSize": 3,
+            "relLabelFontSize": 2,
+            "backgroundColor": "#ffffff",
+            "hideSelections": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "styleRules": [
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "SOP",
+                "customization": "node color",
+                "customizationValue": "#A6CAD8"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP1",
+                "customization": "node color",
+                "customizationValue": "#79AEBF"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP2",
+                "customization": "node color",
+                "customizationValue": "#5097AB"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node color",
+                "customizationValue": "#007A93"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP3",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node color",
+                "customizationValue": "#00677F"
+              },
+              {
+                "field": "NTG6_HU_SW.release",
+                "condition": "contains",
+                "value": "FUP4",
+                "customization": "node label color",
+                "customizationValue": "#ffffff"
+              }
+            ]
+          },
+          "id": "10950949-0231-4244-a687-874bca8f4232"
+        }
+      ]
+    },
+    {
+      "title": "SW modules",
+      "reports": [
+        {
+          "title": "Select SW version",
+          "query": "MATCH (n:`NTG6_HU_SW`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 4,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "NTG6_HU_SW",
+            "helperText": "SW version to show modules",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_sw_title_600"
+          },
+          "id": "8ecaade3-14da-4942-8467-639797414c71"
+        },
+        {
+          "title": "Select HU line",
+          "query": "MATCH (n:`NTG6_HU_LINE`) \nWHERE toLower(toString(n.`title`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`title` as value,  n.`title` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 4,
+          "height": 1,
+          "x": 4,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "NTG6_HU_LINE",
+            "helperText": "HU line to show modules (Entry, Mid, or High)",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_line_title_601"
+          },
+          "id": "b1813a08-40ee-40e8-a52d-bab6910963a0"
+        },
+        {
+          "title": "Select market",
+          "query": "MATCH (n:`NTG6_HU_MARKET`) WHERE toLower(toString(n.`title`)) CONTAINS toLower($input) RETURN DISTINCT n.`title` as value LIMIT 5",
+          "width": 4,
+          "height": 1,
+          "x": 8,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "NTG6_HU_MARKET",
+            "helperText": "Market to show modules (ECE, USA, Asia, or Japan)",
+            "propertyType": "title",
+            "parameterName": "neodash_ntg6_hu_market_title_602"
+          },
+          "id": "d587f5a8-f63b-4fbe-aaec-b65e6f1fb97e"
+        },
+        {
+          "title": "HW",
+          "query": "MATCH (n:NTG6_HU_MODULE_HW)-[e:HAS_MODULE_HW_PARTNUMBER]->(m:NTG6_HU_MODULE_HW_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.hwVersion AS `HW version`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 1,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "e75b778a-11e2-477b-b18f-d9795a5d3d04"
+        },
+        {
+          "title": "BOOT",
+          "query": "MATCH (n:NTG6_HU_MODULE_BOOT)-[e:HAS_MODULE_BOOT_PARTNUMBER]->(m:NTG6_HU_MODULE_BOOT_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 3,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "67d290a8-bd50-4efc-966a-0a915ad0d557"
+        },
+        {
+          "title": "BASE",
+          "query": "MATCH (n:NTG6_HU_MODULE_BASE)-[e:HAS_MODULE_BASE_PARTNUMBER]->(m:NTG6_HU_MODULE_BASE_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 4,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "3148bae1-71ee-4c08-97ef-d1dd136d5be0"
+        },
+        {
+          "title": "CODE",
+          "query": "MATCH (n:NTG6_HU_MODULE_CODE)-[e:HAS_MODULE_CODE_PARTNUMBER]->(m:NTG6_HU_MODULE_CODE_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 5,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "2f4666f1-9e2f-4403-a9e4-1aa61860173d"
+        },
+        {
+          "title": "USC",
+          "query": "MATCH (n:NTG6_HU_MODULE_USC)-[e:HAS_MODULE_USC_PARTNUMBER]->(m:NTG6_HU_MODULE_USC_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 6,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "c57b678d-0ed4-4ee0-8ee0-281fc7975faf"
+        },
+        {
+          "title": "SW_HMI",
+          "query": "MATCH (n:NTG6_HU_MODULE_SW_HMI)-[e:HAS_MODULE_SW_HMI_PARTNUMBER]->(m:NTG6_HU_MODULE_SW_HMI_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 7,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "423148e7-9136-41c8-838d-aac0c6579bd3"
+        },
+        {
+          "title": "HMI_DATA",
+          "query": "MATCH (n:NTG6_HU_MODULE_HMI_DATA)-[e:HAS_MODULE_HMI_DATA_PARTNUMBER]->(m:NTG6_HU_MODULE_HMI_DATA_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 8,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "9413f2df-2a1a-4f29-aadd-fe7cc5dd6782"
+        },
+        {
+          "title": "SND_DATA1",
+          "query": "MATCH (n:NTG6_HU_MODULE_SND_DATA1)-[e:HAS_MODULE_SND_DATA1_PARTNUMBER]->(m:NTG6_HU_MODULE_SND_DATA1_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 10,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "34c76b6b-c7e1-48ad-ba3c-f065e9872bfe"
+        },
+        {
+          "title": "SND_DATA2",
+          "query": "MATCH (n:NTG6_HU_MODULE_SND_DATA2)-[e:HAS_MODULE_SND_DATA2_PARTNUMBER]->(m:NTG6_HU_MODULE_SND_DATA2_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 11,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "a4cc6481-3410-4312-962d-f0090560e914"
+        },
+        {
+          "title": "DOM",
+          "query": "MATCH (n:NTG6_HU_MODULE_DOM)-[e:HAS_MODULE_DOM_PARTNUMBER]->(m:NTG6_HU_MODULE_DOM_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 12,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "a22de19f-9ebc-4962-ae83-b834e2aad105"
+        },
+        {
+          "title": "SW_NAV",
+          "query": "MATCH (n:NTG6_HU_MODULE_SW_NAV)-[e:HAS_MODULE_SW_NAV_PARTNUMBER]->(m:NTG6_HU_MODULE_SW_NAV_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 13,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "61b26407-acb4-4052-9b8f-4237b8f3d921"
+        },
+        {
+          "title": "SDS_DATA1",
+          "query": "MATCH (n:NTG6_HU_MODULE_SDS_DATA1)-[e:HAS_MODULE_SDS_DATA1_PARTNUMBER]->(m:NTG6_HU_MODULE_SDS_DATA1_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 14,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "66ff69d1-1f1b-4701-8181-5802e4409680"
+        },
+        {
+          "title": "SDS_DATA2",
+          "query": "MATCH (n:NTG6_HU_MODULE_SDS_DATA2)-[e:HAS_MODULE_SDS_DATA2_PARTNUMBER]->(m:NTG6_HU_MODULE_SDS_DATA2_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 15,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "fa9d8072-c5a4-43c0-a762-fab3426ce7b3"
+        },
+        {
+          "title": "A.COMF_DATA",
+          "query": "MATCH (n:NTG6_HU_MODULE_A_COMF_DATA)-[e:HAS_MODULE_A_COMF_DATA_PARTNUMBER]->(m:NTG6_HU_MODULE_A_COMF_DATA_PARTNUMBER) WHERE n.title = $neodash_ntg6_hu_sw_title_600 AND $neodash_ntg6_hu_line_title_601 IN m.huLines AND $neodash_ntg6_hu_market_title_602 IN m.markets RETURN m.partNumber AS `Part number`, m.ywp AS `Year/week.patch`, m.huLines AS `HU lines`, m.dialogName AS `Dialog name`, m.markets AS Markets, m.modelLines AS `Model lines`",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 16,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "nodePositions": {},
+            "fontSize": 20,
+            "type": "Node Property",
+            "columnWidths": "[1, 1, 1, 3, 2, 4]",
+            "compact": true,
+            "allowDownload": true,
+            "refreshButtonEnabled": true,
+            "fullscreenEnabled": true
+          },
+          "id": "666f85b6-0dad-4573-b829-77131edadaa0"
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "advanced-charts": {
+      "active": true
+    },
+    "styling": {
+      "active": true
+    }
+  }
+}
