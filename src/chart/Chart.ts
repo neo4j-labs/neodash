@@ -5,6 +5,7 @@ import { Record as Neo4jRecord } from 'neo4j-driver';
  * When you extend NeoDash, make sure that your component implements this interface.
  */
 export interface ChartProps {
+  legendDefinition?: object;
   records: Neo4jRecord[]; // Query output, Neo4j records as returned from the driver.
   extensions?: Record<string, any>; // A dictionary of enabled extensions.
   selection?: Record<string, any>; // A dictionary with the selection made in the report footer.

@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 
 export const NeoReport = ({
+  legendDefinition = {},
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
   lastRunTimestamp = 0, // Timestamp of the last query run for this report.
@@ -199,6 +200,7 @@ export const NeoReport = ({
     return (
       <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
         <ChartType
+          legendDefinition={legendDefinition}
           setPageNumber={setPageNumber}
           records={records}
           extensions={extensions}
@@ -239,6 +241,7 @@ export const NeoReport = ({
           </div>
         </div>
         <ChartType
+          legendDefinition={legendDefinition}
           setPageNumber={setPageNumber}
           records={records}
           extensions={extensions}

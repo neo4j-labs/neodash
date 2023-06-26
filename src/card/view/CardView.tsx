@@ -17,6 +17,7 @@ import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 
 const NeoCardView = ({
+  legendDefinition,
   title,
   database,
   query,
@@ -168,6 +169,7 @@ const NeoCardView = ({
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (
         <NeoReportWrapper
+          legendDefinition={legendDefinition}
           query={query}
           database={database}
           parameters={localParameters}

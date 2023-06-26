@@ -48,6 +48,7 @@ export interface GraphChartVisualizationProps {
    * The data dictionary can be updated by calling any of the functions in the data entry.
    */
   data: {
+    legendDefinition: object;
     nodes: Node[];
     nodeLabels: Record<string, any>;
     links: Link[];

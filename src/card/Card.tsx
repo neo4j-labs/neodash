@@ -102,6 +102,9 @@ const NeoCard = ({
   const [active, setActive] = React.useState(
     report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true
   );
+  const [legendDefinition, setLegendDefinition] = React.useState(
+    report.settings && report.settings.legendDefinition !== undefined ? report.settings.legendDefinition : {}
+  );
 
   useEffect(() => {
     if (!report.settingsOpen) {
@@ -117,6 +120,13 @@ const NeoCard = ({
     setCollapseTimeout(report.collapseTimeout);
   }, [report.collapseTimeout]);
 
+  useEffect(() => {
+    if (!report.settings.legendDefinition) {
+      return;
+    }
+    setLegendDefinition(report.settings?.legendDefinition);
+  }, [report.settings.legendDefinition]);
+
   // TODO - get rid of some of the props-drilling here...
   const component = (
     <div
@@ -128,6 +138,7 @@ const NeoCard = ({
       <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
         <Card ref={ref} style={{ height: '100%' }}>
           <NeoCardView
+            legendDefinition={legendDefinition}
             settingsOpen={settingsOpen}
             editable={editable}
             dashboardSettings={dashboardSettings}
