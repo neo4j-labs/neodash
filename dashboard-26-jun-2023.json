@@ -74,8 +74,8 @@
               {
                 "enabled": true,
                 "entries": [
-                  { "type": "node", "color": "#5097AB", "meaning": "SW version", "textColor": "#FFFFFF" },
-                  { "type": "edge", "color": "#EFE289", "meaning": "HW version", "textColor": "#000000" }
+                  { "type": "node", "color": "#EFE289", "meaning": "SW version", "textColor": "#000000" },
+                  { "type": "edge", "color": "#4caf50", "meaning": "HW version", "textColor": "#000000" }
                 ]
               }
             ],

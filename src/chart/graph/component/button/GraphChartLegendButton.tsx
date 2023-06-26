@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Chip, Icon, List, ListItem, ListItemText, Popover, Stack, Tooltip, Typography } from '@mui/material';
+import { List, ListItem, ListItemText, Popover, Tooltip, Typography } from '@mui/material';
 import { GraphChartVisualizationProps } from '../../GraphChartVisualization';
 import { IconButton } from '@neo4j-ndl/react';
 import { CircleIcon, QueueListIconSolid } from '@neo4j-ndl/react/icons';
+import { ArrowForwardRounded } from '@mui/icons-material';
 
 /**
  * Renders an icon on the bottom-right of the graph visualization to fit the current graph to the user's view.
@@ -11,30 +12,20 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const [legendOpen, setLegendOpen] = React.useState(false);
-
+  const [legendEnabled, setLegendEnabled] = React.useState(false);
   const [legendEntries, setLegendEntries] = React.useState(props.data.legendDefinition);
 
   React.useEffect(() => {
-    let legendEntryList = [];
+    let legendEntryList: object[] = [];
 
     Object.values(props.data.legendDefinition).forEach((legendDefinition) => {
-      if (legendDefinition.enabled === true) {
-        legendDefinition.entries.forEach((entry) => {
-          legendEntryList.push(entry);
-        });
+      if (legendDefinition.enabled === true && legendDefinition.entries.length > 0) {
+        setLegendEnabled(true);
+        legendDefinition.entries.forEach((entry) => legendEntryList.push(entry));
       }
       setLegendEntries(legendEntryList);
     });
   }, [props.data.legendDefinition]);
-  // React.useEffect(() => {
-  //   let legendEntryList = [];
-  //   if (props.data.legendDefinition.enabled) {
-  //     props.data.legendDefinition.entries.forEach((entry) => {
-  //       legendEntryList.push(entry.meaning);
-  //     });
-  //     setLegendEntries(legendEntryList);
-  //   }
-  // }, [props.data.legendDefinition]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,15 +39,55 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
 
   const getNodeLegend = (legendEntries) => {
     return legendEntries.length > 0 ? (
-      <List>
+      <List dense={true} disablePadding={true}>
         {legendEntries.map((entry) => {
           return (
-            <ListItem>
-              <Box
+            <ListItem
+              alignItems='center'
+              disablePadding={true}
+              disableGutters={true}
+              style={{ marginLeft: '0.2rem', marginRight: '0.5rem' }}
+            >
+              <Typography
+                padding-left='0.5rem'
+                variant='h4'
+                sx={{
+                  width: '1.5rem',
+                  display: entry.type === 'node' ? 'flex' : 'none',
+                  alignItems: 'center',
+                }}
+              >
+                <CircleIcon color={entry.color} />
+              </Typography>
+              <Typography
+                padding-left='0.5rem'
+                variant='h4'
+                sx={{ width: '1.5rem', display: entry.type === 'edge' ? 'flex' : 'none', alignItems: 'center' }}
+              >
+                <ArrowForwardRounded htmlColor={entry.color} />
+              </Typography>
+              <ListItemText
+                sx={{ paddingLeft: '0.5rem' }}
+                primary={entry.meaning}
+                primaryTypographyProps={{
+                  color: entry.textColor,
+                }}
+              />
+              <ListItemText
+                secondary={`(${entry.type})`}
+                secondaryTypographyProps={{
+                  color: entry.textColor,
+                  display: 'inline',
+                  variant: 'body2',
+                }}
+              />
+              {/* <Box
                 component='span'
                 sx={{
                   p: 2,
                   backgroundColor: entry.color,
+                  padding: 0,
+                  margin: 0,
                 }}
               >
                 <ListItemText
@@ -69,13 +100,7 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
                     color: entry.textColor,
                   }}
                 ></ListItemText>
-              </Box>
-              {/* <Stack direction='row' spacing='1pt'>
-                <ListItemText primary={entry.meaning} secondary={entry.type}></ListItemText>
-                <Icon>
-                  <CircleIcon color={entry.color} />
-                </Icon>
-              </Stack> */}
+              </Box>*/}
             </ListItem>
           );
         })}
@@ -87,7 +112,14 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
   return (
     <Tooltip title='Show legend' aria-label={'show legend'}>
       <>
-        <IconButton aria-label='show legend' size='small' clean grouped onClick={handleClick}>
+        <IconButton
+          aria-label='show legend'
+          size='small'
+          clean
+          grouped
+          onClick={handleClick}
+          style={{ display: !legendEnabled ? 'none' : '' }}
+        >
           <QueueListIconSolid />
         </IconButton>
         <Popover
@@ -99,7 +131,19 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
             horizontal: 'left',
           }}
         >
-          <Typography sx={{ p: 1 }}>LEGEND</Typography>
+          <Typography
+            align='center'
+            variant='subtitle2'
+            gutterBottom={false}
+            sx={{
+              p: 1,
+              padding: 0,
+              marginTop: '0.2rem',
+              fontWeight: 'bold',
+            }}
+          >
+            LEGEND
+          </Typography>
           {getNodeLegend(legendEntries)}
         </Popover>
       </>
