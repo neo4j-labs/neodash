@@ -496,6 +496,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
           )
         );
       } else {
+        setConnected(true);
         return;
       }
     }
