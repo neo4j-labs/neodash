@@ -39,7 +39,7 @@ export const NeoWelcomeScreenModal = ({
     <div>
       <Dialog size='small' open={welcomeScreenOpen == true} aria-labelledby='form-dialog-title' disableCloseButton>
         <Dialog.Header id='form-dialog-title'>
-          NeoDash - Neo4j Dashboard Builder 3
+          NeoDash - Neo4j Dashboard Builder
           <BoltIconSolid className='icon-base' color='gold' style={{ float: 'right' }} />
         </Dialog.Header>
         <Dialog.Content>

@@ -475,6 +475,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               credentials.password
             )
           );
+          dispatch(setConnected(true));
         }
 
         if (standalone) {
@@ -496,7 +497,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
           )
         );
       } else {
-        dispatch(setConnected(true));
         return;
       }
     }
