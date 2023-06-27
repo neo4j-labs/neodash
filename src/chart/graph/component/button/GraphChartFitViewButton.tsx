@@ -14,7 +14,6 @@ export const NeoGraphChartFitViewButton = (props: GraphChartVisualizationProps) 
         <FitToScreenIcon
           onClick={() => {
             props.interactivity.zoomToFit();
-            throw `Not Implemented${props}`;
           }}
         />
       </IconButton>
