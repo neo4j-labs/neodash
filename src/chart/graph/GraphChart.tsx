@@ -220,7 +220,6 @@ const NeoGraphChart = (props: ChartProps) => {
   return (
     <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
-        <NeoGraphChartLegendButton {...chartProps}></NeoGraphChartLegendButton>
         <IconButtonArray
           aria-label={'graph icon'}
           floating
@@ -228,6 +227,7 @@ const NeoGraphChart = (props: ChartProps) => {
           style={{ position: 'absolute', bottom: '15px', right: '15px', zIndex: 50 }}
         >
           <GraphChartContextMenu {...chartProps} />
+          <NeoGraphChartLegendButton {...chartProps}></NeoGraphChartLegendButton>
           <NeoGraphChartFitViewButton {...chartProps} />
           {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
           {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}

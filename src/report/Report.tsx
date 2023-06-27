@@ -216,7 +216,7 @@ export const NeoReport = ({
           updateReportSetting={updateReportSetting}
           fields={fields}
           setFields={setFields}
-        />
+        />x
       </div>
     );
   } else if (status == QueryStatus.COMPLETE_TRUNCATED) {

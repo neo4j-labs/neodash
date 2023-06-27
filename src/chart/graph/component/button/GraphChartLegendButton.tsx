@@ -71,16 +71,17 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
                 primary={entry.meaning}
                 primaryTypographyProps={{
                   color: entry.textColor,
+                  variant: 'body2',
                 }}
-              />
-              <ListItemText
                 secondary={`(${entry.type})`}
                 secondaryTypographyProps={{
                   color: entry.textColor,
                   display: 'inline',
-                  variant: 'body2',
+                  variant: 'caption',
+                  alignItems: 'flex-end',
                 }}
               />
+
               {/* <Box
                 component='span'
                 sx={{
@@ -117,7 +118,7 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
         clean
         grouped
         onClick={handleClick}
-        style={{ display: !legendEnabled ? 'none' : '', position: 'absolute', zIndex: '50' }}
+        style={{ display: !legendEnabled ? 'none' : '' }}
       >
         <Tooltip title='Show legend' aria-label={'show Legend'}>
           <QueueListIconSolid />
@@ -149,7 +150,11 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'bottom',
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'center',
           horizontal: 'left',
         }}
       >

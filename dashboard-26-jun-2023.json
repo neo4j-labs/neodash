@@ -422,9 +422,9 @@
               {
                 "enabled": true,
                 "entries": [
-                  { "type": "node", "color": "#EFE289", "meaning": "SW version", "textColor": "#000000" },
+                  { "type": "node", "color": "#00677F", "meaning": "SW version", "textColor": "#000000" },
                   { "type": "edge", "color": "#00ff00", "meaning": "Updates Qualified", "textColor": "#000000" },
-                  { "type": "edge", "color": "#00ffff", "meaning": "Qualification in Progress", "textColor": "#000000" }
+                  { "type": "edge", "color": "#ffff00", "meaning": "Qualification in Progress", "textColor": "#000000" }
                 ]
               }
             ],
