@@ -93,16 +93,16 @@ const Application = ({
 }) => {
   const [initialized, setInitialized] = React.useState(false);
 
-  if (!initialized) {
+  /* if (!initialized) {
     // Tell Neo4j Desktop to disable capturing right clicking
     window.neo4jDesktopApi &&
       window.neo4jDesktopApi.showMenuOnRightClick &&
       window.neo4jDesktopApi.showMenuOnRightClick(false);
     setInitialized(true);
     initializeApplication(initialized);
-  }
+  }*/
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (!initialized) {
       // Tell Neo4j Desktop to disable capturing right clicking
       window.neo4jDesktopApi &&
@@ -111,7 +111,7 @@ const Application = ({
       setInitialized(true);
       initializeApplication(initialized);
     }
-  }, []);*/
+  }, []);
 
   const ref = React.useRef();
 
