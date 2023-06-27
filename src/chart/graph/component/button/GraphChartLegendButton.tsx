@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListItemText, Popover, Tooltip, Typography } from '@mui/material';
+import { Box, Button, List, ListItem, ListItemText, Popover, Tooltip, Typography } from '@mui/material';
 import { GraphChartVisualizationProps } from '../../GraphChartVisualization';
 import { IconButton } from '@neo4j-ndl/react';
 import { CircleIcon, QueueListIconSolid } from '@neo4j-ndl/react/icons';
@@ -110,43 +110,64 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
     );
   };
   return (
-    <Tooltip title='Show legend' aria-label={'show legend'}>
-      <>
-        <IconButton
-          aria-label='show legend'
-          size='small'
-          clean
-          grouped
-          onClick={handleClick}
-          style={{ display: !legendEnabled ? 'none' : '' }}
-        >
+    <>
+      <IconButton
+        aria-label='show legend'
+        size='small'
+        clean
+        grouped
+        onClick={handleClick}
+        style={{ display: !legendEnabled ? 'none' : '', position: 'absolute', zIndex: '50' }}
+      >
+        <Tooltip title='Show legend' aria-label={'show Legend'}>
           <QueueListIconSolid />
-        </IconButton>
-        <Popover
-          open={legendOpen}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-          <Typography
-            align='center'
-            variant='subtitle2'
-            gutterBottom={false}
+        </Tooltip>
+      </IconButton>
+      {/* <Button
+        color='primary'
+        size='small'
+        onClick={handleClick}
+        style={{ display: !legendEnabled ? 'none' : '', position: 'absolute', marginTop: '0px', zIndex: '50' }}
+      >
+        <Tooltip title='Show legend' aria-label={'show Legend'}>
+          <Box
             sx={{
-              p: 1,
-              padding: 0,
-              marginTop: '0.2rem',
-              fontWeight: 'bold',
+              paddingRight: '2pt',
+              paddingLeft: '2pt',
+              borderColor: '#EAECEE',
+              borderWidth: '1pt',
+              typography: 'subtitle2',
+              textTransform: 'capitalize',
             }}
           >
-            LEGEND
-          </Typography>
-          {getNodeLegend(legendEntries)}
-        </Popover>
-      </>
-    </Tooltip>
+            Legend
+          </Box>
+        </Tooltip>
+      </Button> */}
+      <Popover
+        open={legendOpen}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography
+          align='center'
+          variant='subtitle2'
+          gutterBottom={false}
+          sx={{
+            p: 1,
+            padding: 0,
+            marginTop: '0.2rem',
+            fontWeight: 'bold',
+          }}
+        >
+          LEGEND
+        </Typography>
+        {getNodeLegend(legendEntries)}
+      </Popover>
+    </>
   );
 };

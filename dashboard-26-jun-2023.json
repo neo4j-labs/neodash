@@ -418,6 +418,16 @@
             "refreshButtonEnabled": true,
             "fullscreenEnabled": true,
             "downloadImageEnabled": true,
+            "legendDefinition": [
+              {
+                "enabled": true,
+                "entries": [
+                  { "type": "node", "color": "#EFE289", "meaning": "SW version", "textColor": "#000000" },
+                  { "type": "edge", "color": "#00ff00", "meaning": "Updates Qualified", "textColor": "#000000" },
+                  { "type": "edge", "color": "#00ffff", "meaning": "Qualification in Progress", "textColor": "#000000" }
+                ]
+              }
+            ],
             "styleRules": [
               {
                 "field": "NTG6_HU_SW.release",
