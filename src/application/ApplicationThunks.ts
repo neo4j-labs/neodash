@@ -496,7 +496,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
           )
         );
       } else {
-        // return;
+        return;
       }
     }
 
