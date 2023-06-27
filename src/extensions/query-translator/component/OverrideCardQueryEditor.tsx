@@ -18,7 +18,7 @@ import {
 } from '../../state/ExtensionActions';
 import { getPrepopulateReportExtension } from '../../state/ExtensionSelectors';
 
-// TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
+// TODO: right now if we change the database in the cardSelector, it should forgot the card history
 export const NeoOverrideCardQueryEditor = ({
   pagenumber,
   reportId,
@@ -27,10 +27,10 @@ export const NeoOverrideCardQueryEditor = ({
   reportType,
   updateCypherQuery,
   lastMessage,
+  prepopulateExtensionName,
   translateQuery,
   updateEnglishQuery,
   displayError,
-  prepopulateExtensionName,
   setPrepopulationReportFunction,
   deletePrepopulationReportFunction,
 }) => {
