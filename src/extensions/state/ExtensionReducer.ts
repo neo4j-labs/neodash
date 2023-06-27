@@ -1,7 +1,3 @@
-/**
- * Reducers define changes to the application state when a given action
- */
-
 import { EXTENSIONS_REDUCERS } from '../ExtensionConfig';
 import { SET_EXTENSION_REDUCER_ENABLED } from './ExtensionActions';
 
