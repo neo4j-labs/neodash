@@ -73,13 +73,6 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
                   color: entry.textColor,
                   variant: 'body2',
                 }}
-                secondary={`(${entry.type})`}
-                secondaryTypographyProps={{
-                  color: entry.textColor,
-                  display: 'inline',
-                  variant: 'caption',
-                  alignItems: 'flex-end',
-                }}
               />
 
               {/* <Box
@@ -112,7 +105,7 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
   };
   return (
     <>
-      <IconButton
+      {/* <IconButton
         aria-label='show legend'
         size='small'
         clean
@@ -123,12 +116,19 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
         <Tooltip title='Show legend' aria-label={'show Legend'}>
           <QueueListIconSolid />
         </Tooltip>
-      </IconButton>
-      {/* <Button
+      </IconButton> */}
+      <Button
         color='primary'
         size='small'
         onClick={handleClick}
-        style={{ display: !legendEnabled ? 'none' : '', position: 'absolute', marginTop: '0px', zIndex: '50' }}
+        style={{
+          display: !legendEnabled ? 'none' : '',
+          position: 'absolute',
+          background: 'white',
+          bottom: '15px',
+          left: '0px',
+          zIndex: '50',
+        }}
       >
         <Tooltip title='Show legend' aria-label={'show Legend'}>
           <Box
@@ -144,17 +144,17 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
             Legend
           </Box>
         </Tooltip>
-      </Button> */}
+      </Button>
       <Popover
         open={legendOpen}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
         transformOrigin={{
-          vertical: 'center',
+          vertical: 'top',
           horizontal: 'left',
         }}
       >

@@ -13,7 +13,7 @@ import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { IconButtonArray } from '@neo4j-ndl/react';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, Stack, Tooltip } from '@mui/material';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { RenderSubValue } from '../../report/ReportRecordProcessing';
 import { downloadCSV } from '../ChartUtils';
@@ -220,18 +220,20 @@ const NeoGraphChart = (props: ChartProps) => {
   return (
     <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
-        <IconButtonArray
-          aria-label={'graph icon'}
-          floating
-          orientation='horizontal'
-          style={{ position: 'absolute', bottom: '15px', right: '15px', zIndex: 50 }}
-        >
-          <GraphChartContextMenu {...chartProps} />
+        <Stack direction={'row'}>
           <NeoGraphChartLegendButton {...chartProps}></NeoGraphChartLegendButton>
-          <NeoGraphChartFitViewButton {...chartProps} />
-          {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
-          {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
-        </IconButtonArray>
+          <IconButtonArray
+            aria-label={'graph icon'}
+            floating
+            orientation='horizontal'
+            style={{ position: 'absolute', bottom: '15px', right: '15px', zIndex: 50 }}
+          >
+            <GraphChartContextMenu {...chartProps} />
+            <NeoGraphChartFitViewButton {...chartProps} />
+            {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+            {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+          </IconButtonArray>
+        </Stack>
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
         {settings.allowDownload && props.records && props.records.length > 0 ? (
