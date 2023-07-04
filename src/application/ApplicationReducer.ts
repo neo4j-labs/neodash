@@ -9,6 +9,7 @@ import {
   CREATE_NOTIFICATION,
   RESET_SHARE_DETAILS,
   SET_ABOUT_MODAL_OPEN,
+  SET_CACHED_SSO_DISCOVERY_URL,
   SET_CONNECTED,
   SET_CONNECTION_MODAL_OPEN,
   SET_CONNECTION_PROPERTIES,
@@ -196,8 +197,25 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       state = update(state, { shareDetails: undefined });
       return state;
     }
+    case SET_CACHED_SSO_DISCOVERY_URL: {
+      const { url } = payload;
+      state = update(state, { cachedSSODiscoveryUrl: url });
+      return state;
+    }
     case SET_SHARE_DETAILS_FROM_URL: {
-      const { type, id, standalone, protocol, url, port, database, username, password, dashboardDatabase } = payload;
+      const {
+        type,
+        id,
+        standalone,
+        protocol,
+        url,
+        port,
+        database,
+        username,
+        password,
+        dashboardDatabase,
+        skipConfirmation,
+      } = payload;
       state = update(state, {
         shareDetails: {
           type: type,
@@ -210,6 +228,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
           username: username,
           password: password,
           dashboardDatabase: dashboardDatabase,
+          skipConfirmation: skipConfirmation,
         },
       });
       return state;

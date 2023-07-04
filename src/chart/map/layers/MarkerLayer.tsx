@@ -1,18 +1,21 @@
 import React from 'react';
 import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import LocationOn from '@mui/icons-material/LocationOn';
 import 'leaflet/dist/leaflet.css';
 import { Popup, Tooltip } from 'react-leaflet';
+import { Button, Typography } from '@neo4j-ndl/react';
 import { extensionEnabled } from '../../../extensions/ExtensionUtils';
-import Button from '@material-ui/core/Button';
 import { getRule } from '../../../extensions/advancedcharts/Utils';
 
 export function createMarkers(data, props) {
   const clusterMarkers =
     props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
-  const actionsRules = [];
+  const actionsRules =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
 
   let markerMarginTop;
   // Render a node label tooltip
@@ -31,9 +34,9 @@ export function createMarkers(data, props) {
   function createPopupFromNodeProperties(value) {
     return (
       <Popup className={'leaflet-custom-node-popup'}>
-        <h3>
+        <Typography variant='h4'>
           <b>{value.labels.length > 0 ? value.labels.map((b) => `${b} `) : '(No labels)'}</b>
-        </h3>
+        </Typography>
         <table>
           <tbody>
             {Object.keys(value.properties).length == 0 ? (
@@ -43,13 +46,50 @@ export function createMarkers(data, props) {
             ) : (
               Object.keys(value.properties).map((k, i) => {
                 // TODO MOVE THIS DEPENDENCY OUT OF THE TOOLTIP GENERATION
+                let rule = getRule(
+                  { field: k.toString(), value: value.properties[k].toString() },
+                  actionsRules,
+                  'Click'
+                );
+                let execRule =
+                  rule !== null &&
+                  rule[0] !== null &&
+                  rule[0].customization == 'set variable' &&
+                  props &&
+                  props.setGlobalParameter;
 
                 return (
-                  <tr key={i} onClick={() => {}}>
+                  <tr
+                    key={i}
+                    onClick={() => {
+                      if (execRule) {
+                        // call thunk for $neodash_customizationValue
+                        props.setGlobalParameter(`neodash_${rule.customizationValue}`, value.properties[k].toString());
+                      }
+                    }}
+                  >
                     <td style={{ marginRight: '10px' }} key={0}>
                       {k.toString()}:
                     </td>
-                    <td key={1}>value.properties[k].toString()</td>
+                    <td key={1}>
+                      {execRule ? (
+                        <Button
+                          style={{ width: '100%', marginLeft: '10px', marginRight: '10px' }}
+                          color='primary'
+                          onClick={() => {
+                            if (execRule) {
+                              // call thunk for $neodash_customizationValue
+                              props.setGlobalParameter(
+                                `neodash_${rule[0].customizationValue}`,
+                                value.properties[k].toString()
+                              );
+                            }
+                          }}
+                        >{`${value.properties[k].toString()}`}</Button>
+                      ) : (
+                        value.properties[k].toString()
+                      )}
+                    </td>
                   </tr>
                 );
               })
@@ -83,12 +123,12 @@ export function createMarkers(data, props) {
         key={i}
         icon={
           <div style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop }}>
-            <LocationOnIcon fontSize={node.size}></LocationOnIcon>
+            <LocationOn fontSize={node.size}></LocationOn>
           </div>
         }
       >
         {props.selection && props.selection[node.firstLabel] && props.selection[node.firstLabel] != '(no label)' ? (
-          <Tooltip direction='bottom' permanent className={'leaflet-custom-tooltip'}>
+          <Tooltip direction='bottom' permanent className={'leaflet-custom-tooltip'} disableInteractive>
             {renderNodeLabel(node)}
           </Tooltip>
         ) : (
@@ -99,6 +139,12 @@ export function createMarkers(data, props) {
     ));
   if (clusterMarkers) {
     markers = <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>;
+  } else {
+    markers = (
+      <MarkerClusterGroup chunkedLoading maxClusterRadius={5}>
+        {markers}
+      </MarkerClusterGroup>
+    );
   }
   return markers;
 }

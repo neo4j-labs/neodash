@@ -1,5 +1,4 @@
-import Card from '@material-ui/core/Card';
-import Collapse from '@material-ui/core/Collapse';
+import { Card, Collapse, debounce } from '@mui/material';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import NeoCardSettings from './settings/CardSettings';
 import NeoCardView from './view/CardView';
@@ -16,7 +15,6 @@ import {
 } from './CardThunks';
 import { toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
-import { debounce, Dialog, DialogContent } from '@material-ui/core';
 import {
   getDashboardIsEditable,
   getDatabase,
@@ -30,11 +28,12 @@ import { loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
+import { Dialog } from '@neo4j-ndl/react';
 import { createNotificationThunk } from '../page/PageThunks';
 
 const NeoCard = ({
-  index, // index of the card.
-  report, // state of the card, retrieved based on card index.
+  id, // id of the card.
+  report, // state of the card, retrieved based on card id.
   editable, // whether the card is editable.
   database, // the neo4j database that the card is running against.
   extensions, // A set of enabled extensions.
@@ -95,7 +94,7 @@ const NeoCard = ({
   const onToggleCardExpand = () => {
     // When we re-minimize a card, close the settings to avoid position issues.
     if (expanded && settingsOpen) {
-      onToggleCardSettings(index, false);
+      onToggleCardSettings(id, false);
     }
     setExpanded(!expanded);
   };
@@ -120,17 +119,21 @@ const NeoCard = ({
 
   // TODO - get rid of some of the props-drilling here...
   const component = (
-    <div style={{ height: '100%' }} ref={observe}>
+    <div
+      ref={observe}
+      className='bg-light-neutral-bg-weak overflow-hidden n-shadow-l4 border-2 border-light-neutral-border-strong min-w-max rounded-lg px-4 py-5 sm:p-6 n-h-full'
+    >
       {/* The front of the card, referred to as the 'view' */}
-      <Collapse disableStrictModeCompat in={!settingsOpen} timeout={collapseTimeout} style={{ height: '100%' }}>
-        <Card ref={ref} style={{ height: '100%' }}>
+      <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} className='n-h-full'>
+        <Card ref={ref} className='n-h-full'>
           <NeoCardView
+            id={id}
             settingsOpen={settingsOpen}
             editable={editable}
             dashboardSettings={dashboardSettings}
             extensions={extensions}
             settings={report.settings ? report.settings : {}}
-            updateReportSetting={(name, value) => onReportSettingUpdate(index, name, value)}
+            updateReportSetting={(name, value) => onReportSettingUpdate(id, name, value)}
             createNotification={(title, message) => createNotification(title, message)}
             type={report.type}
             database={database}
@@ -147,21 +150,23 @@ const NeoCard = ({
             expanded={expanded}
             onToggleCardExpand={onToggleCardExpand}
             onGlobalParameterUpdate={onGlobalParameterUpdate}
-            onSelectionUpdate={(selectable, field) => onSelectionUpdate(index, selectable, field)}
-            onTitleUpdate={(title) => onTitleUpdate(index, title)}
-            onFieldsUpdate={(fields) => onFieldsUpdate(index, fields)}
+            onSelectionUpdate={(selectable, field) => onSelectionUpdate(id, selectable, field)}
+            onTitleUpdate={(title) => onTitleUpdate(id, title)}
+            onFieldsUpdate={(fields) => onFieldsUpdate(id, fields)}
             onToggleCardSettings={() => {
               setSettingsOpen(true);
               setCollapseTimeout('auto');
-              debouncedOnToggleCardSettings(index, true);
+              debouncedOnToggleCardSettings(id, true);
             }}
           />
         </Card>
       </Collapse>
       {/* The back of the card, referred to as the 'settings' */}
-      <Collapse disableStrictModeCompat in={settingsOpen} timeout={collapseTimeout}>
-        <Card style={{ height: '100%' }}>
+      <Collapse disablestrictmodecompat='true' in={settingsOpen} timeout={collapseTimeout}>
+        <Card className='n-h-full'>
           <NeoCardSettings
+            pagenumber={dashboardSettings.pagenumber}
+            reportId={id}
             settingsOpen={settingsOpen}
             query={report.query}
             database={database}
@@ -178,19 +183,19 @@ const NeoCard = ({
             setActive={setActive}
             reportSettings={report.settings}
             reportSettingsOpen={report.advancedSettingsOpen}
-            onQueryUpdate={(query) => onQueryUpdate(index, query)}
-            onDatabaseChanged={(database) => onDatabaseChanged(index, database)}
-            onReportSettingUpdate={(setting, value) => onReportSettingUpdate(index, setting, value)}
-            onTypeUpdate={(type) => onTypeUpdate(index, type)}
+            onQueryUpdate={(query) => onQueryUpdate(id, query)}
+            onDatabaseChanged={(database) => onDatabaseChanged(id, database)}
+            onReportSettingUpdate={(setting, value) => onReportSettingUpdate(id, setting, value)}
+            onTypeUpdate={(type) => onTypeUpdate(id, type)}
             onReportHelpButtonPressed={() => onReportHelpButtonPressed()}
-            onRemovePressed={() => onRemovePressed(index)}
-            onClonePressed={() => onClonePressed(index)}
+            onRemovePressed={() => onRemovePressed(id)}
+            onClonePressed={() => onClonePressed(id)}
             onToggleCardSettings={() => {
               setSettingsOpen(false);
               setCollapseTimeout('auto');
-              debouncedOnToggleCardSettings(index, false);
+              debouncedOnToggleCardSettings(id, false);
             }}
-            onToggleReportSettings={() => onToggleReportSettings(index)}
+            onToggleReportSettings={() => onToggleReportSettings(id)}
           />
         </Card>
       </Collapse>
@@ -202,15 +207,8 @@ const NeoCard = ({
   // Look into React Portals: https://stackoverflow.com/questions/61432878/how-to-render-child-component-outside-of-its-parent-component-dom-hierarchy
   if (expanded) {
     return (
-      <Dialog maxWidth={'xl'} ref={ref} open={expanded} aria-labelledby='form-dialog-title'>
-        <DialogContent
-          style={{
-            width: Math.min(1920, document.documentElement.clientWidth - 64),
-            height: document.documentElement.clientHeight,
-          }}
-        >
-          {component}
-        </DialogContent>
+      <Dialog size='large' open={expanded} aria-labelledby='form-dialog-title' style={{ maxWidth: '100%' }}>
+        <Dialog.Content style={{ height: document.documentElement.clientHeight }}>{component}</Dialog.Content>
       </Dialog>
     );
   }
@@ -218,50 +216,50 @@ const NeoCard = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  report: getReportState(state, ownProps.index),
+  report: getReportState(state, ownProps.id),
   extensions: getDashboardExtensions(state),
   editable: getDashboardIsEditable(state),
   database: getDatabase(
     state,
     ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined,
-    ownProps.index
+    ownProps.id
   ),
   globalParameters: { ...getGlobalParameters(state), ...getSessionParameters(state) },
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTitleUpdate: (index: any, title: any) => {
-    dispatch(updateReportTitleThunk(index, title));
+  onTitleUpdate: (id: any, title: any) => {
+    dispatch(updateReportTitleThunk(id, title));
   },
-  onQueryUpdate: (index: any, query: any) => {
-    dispatch(updateReportQueryThunk(index, query));
+  onQueryUpdate: (id: any, query: any) => {
+    dispatch(updateReportQueryThunk(id, query));
   },
-  onTypeUpdate: (index: any, type: any) => {
-    dispatch(updateReportTypeThunk(index, type));
+  onTypeUpdate: (id: any, type: any) => {
+    dispatch(updateReportTypeThunk(id, type));
   },
-  onReportSettingUpdate: (index: any, setting: any, value: any) => {
-    dispatch(updateReportSettingThunk(index, setting, value));
+  onReportSettingUpdate: (id: any, setting: any, value: any) => {
+    dispatch(updateReportSettingThunk(id, setting, value));
   },
-  onFieldsUpdate: (index: any, fields: any) => {
-    dispatch(updateFieldsThunk(index, fields));
+  onFieldsUpdate: (id: any, fields: any) => {
+    dispatch(updateFieldsThunk(id, fields));
   },
   onGlobalParameterUpdate: (key: any, value: any) => {
     dispatch(updateGlobalParameterThunk(key, value));
   },
-  onSelectionUpdate: (index: any, selectable: any, field: any) => {
-    dispatch(updateSelectionThunk(index, selectable, field));
+  onSelectionUpdate: (id: any, selectable: any, field: any) => {
+    dispatch(updateSelectionThunk(id, selectable, field));
   },
-  onToggleCardSettings: (index: any, open: any) => {
-    dispatch(toggleCardSettingsThunk(index, open));
+  onToggleCardSettings: (id: any, open: any) => {
+    dispatch(toggleCardSettingsThunk(id, open));
   },
   onReportHelpButtonPressed: () => {
     dispatch(setReportHelpModalOpen(true));
   },
-  onToggleReportSettings: (index: any) => {
-    dispatch(toggleReportSettings(index));
+  onToggleReportSettings: (id: any) => {
+    dispatch(toggleReportSettings(id));
   },
-  onDatabaseChanged: (index: any, database: any) => {
-    dispatch(updateReportDatabaseThunk(index, database));
+  onDatabaseChanged: (id: any, database: any) => {
+    dispatch(updateReportDatabaseThunk(id, database));
   },
   createNotification: (title: any, message: any) => {
     dispatch(createNotificationThunk(title, message));

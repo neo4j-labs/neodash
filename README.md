@@ -55,7 +55,7 @@ To manually run linting of all your .ts and .tsx staged files,  run:
 yarn run lint-staged
 ```
 
-See the [Developer Guide](https://neo4j.com/labs/neodash/2.2/developer-guide/) for more on installing, building, and running the application.
+See the [Developer Guide](https://neo4j.com/labs/neodash/2.3/developer-guide/) for more on installing, building, and running the application.
 
 ### Pre-Commit Hook
 While commiting, a pre-commit hook will be executed in order to prettify and run the Linter on your staged files. Linter warnings are currently accepted. The commands executed by this hook can be found in /.lintstagedrc.json.
@@ -67,10 +67,10 @@ There is also a dedicated linting step in the Github project pipeline in order t
 
 ## User Guide
 NeoDash comes with built-in examples of dashboards and reports. For more details on the types of reports and how to customize them, see the [User Guide](
-https://neo4j.com/labs/neodash/2.2/user-guide/).
+https://neo4j.com/labs/neodash/2.3/user-guide/).
 
 ## Publish Dashboards
-After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://neo4j.com/labs/neodash/2.2/user-guide/publishing/) for more on publishing dashboards.
+After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://neo4j.com/labs/neodash/2.3/user-guide/publishing/) for more on publishing dashboards.
 
 
 ## Questions / Suggestions

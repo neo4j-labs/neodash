@@ -1,18 +1,15 @@
 import React, { useEffect } from 'react';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import { useState } from 'react';
-import { Tooltip } from '@material-ui/core';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { Tooltip } from '@mui/material';
+import Refresh from '@mui/icons-material/Refresh';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
-import {
-  checkResultKeys,
-  mutateName,
-  processHierarchyFromRecords,
-  findObject,
-  flatten,
-} from '../../../../chart/ChartUtils';
+import { mutateName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
 
+/**
+ * Embeds a CirclePackaging (from Charts) into NeoDash.
+ */
 const NeoCirclePackingChart = (props: ChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
@@ -20,22 +17,26 @@ const NeoCirclePackingChart = (props: ChartProps) => {
   const { records } = props;
   const { selection } = props;
   const [data, setData] = useState(undefined);
-  useEffect(() => {
-    setData(commonProperties.data);
-  }, [props.selection]);
+  const [commonProperties, setCommonProperties] = useState({ data: { name: 'Total', children: [] } });
   const [refreshable, setRefreshable] = useState(false);
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
 
-  const dataPre = processHierarchyFromRecords(records, selection);
-  dataPre.forEach((currentNode) => mutateName(currentNode));
+  useEffect(() => {
+    let dataPre = processHierarchyFromRecords(records, selection);
+    dataPre.forEach((currentNode) => mutateName(currentNode));
+    setCommonProperties({ data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } });
+  }, [records]);
+
+  useEffect(() => {
+    setData(commonProperties.data);
+  }, [props.selection, commonProperties]);
 
   // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.
   // Where a user give us just the tree starting one hop away from the root.
   // as Nivo needs a common root, so in that case, we create it for them.
-  const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } };
   if (data == undefined) {
     setData(commonProperties.data);
   }
@@ -68,12 +69,13 @@ const NeoCirclePackingChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title='Reset' aria-label='reset'>
-            <RefreshIcon
+          <Tooltip title='Reset' aria-label='reset' disableInteractive>
+            <Refresh
               onClick={() => {
                 setData(commonProperties.data);
                 setRefreshable(false);
               }}
+              className='n-z-10'
               style={{
                 fontSize: '1.3rem',
                 opacity: 0.6,
@@ -81,12 +83,11 @@ const NeoCirclePackingChart = (props: ChartProps) => {
                 right: 12,
                 position: 'absolute',
                 borderRadius: '12px',
-                zIndex: 5,
                 background: '#eee',
               }}
               color='disabled'
               fontSize='small'
-            ></RefreshIcon>
+            ></Refresh>
           </Tooltip>
         ) : (
           <div></div>

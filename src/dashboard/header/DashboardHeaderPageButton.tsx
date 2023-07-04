@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
-import { IconButton, InputBase } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { InputBase, Grid } from '@mui/material';
+import { IconButton } from '@neo4j-ndl/react';
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
+import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { DASHBOARD_PAGE_LIST_COLOR } from '../../config/ApplicationConfig';
 
 export const NeoPageButton = ({ title, disabled = false, selected = false, onSelect, onRemove, onTitleUpdate }) => {
   // TODO - debounce page title update
@@ -22,7 +23,7 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
 
   const content = (
     <>
-      <Grid style={{ height: '100%' }} onClick={onSelect} container spacing={1} alignItems='flex-end'>
+      <Grid className='n-h-full' onClick={onSelect} container spacing={1} alignItems='flex-end'>
         <Grid item key={1} style={{ width: '100%' }}>
           <InputBase
             value={titleText}
@@ -59,28 +60,19 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
           top: 5,
           right: 0,
           paddingRight: 3,
-          background: selected ? 'white' : 'transparent',
         }}
       >
-        {selected && !disabled ? (
-          <IconButton
-            size='medium'
-            style={{ padding: '5px', color: 'white' }}
-            aria-label='move left'
-            onClick={() => setModalOpen(true)}
-          >
-            <CloseIcon color='disabled' />
-          </IconButton>
-        ) : (
-          <IconButton
-            size='medium'
-            style={{ opacity: 0, padding: '5px', color: 'white' }}
-            aria-label='move left'
-            onClick={() => null}
-          >
-            <CloseIcon color='disabled' />
-          </IconButton>
-        )}
+        <IconButton
+          size='small'
+          aria-label='move left'
+          onClick={() => {
+            selected && !disabled && setModalOpen(true);
+          }}
+          style={{ opacity: selected && !disabled ? 1 : 0 }}
+          clean
+        >
+          <XMarkIconOutline aria-label='move left mark' />
+        </IconButton>
       </div>
       <NeoDeletePageModal modalOpen={modalOpen} onRemove={onRemove} handleClose={handleClose}></NeoDeletePageModal>
     </>

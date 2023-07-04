@@ -7,6 +7,8 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import Application from './application/Application';
 import '/node_modules/react-grid-layout/css/styles.css';
 import '/node_modules/react-resizable/css/styles.css';
+import './index.pcss';
+import StyleConfig from './config/StyleConfig';
 
 /**
  * Set up the NeoDash application and wrap it in the needed providers.
@@ -15,6 +17,8 @@ const store = configureStore();
 
 // @ts-ignore - persist state in browser cache.
 const persister = persistStore(store);
+
+await StyleConfig.getInstance();
 
 /** Wrap the application in a redux provider / browser cache persistance gate **/
 const provider = (

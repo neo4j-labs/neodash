@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import NeoPage from '../page/Page';
-import Container from '@material-ui/core/Container';
+import { Container } from '@mui/material';
 import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
 import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
@@ -19,6 +19,7 @@ import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+
   const driver = createDriver(
     connection.protocol,
     connection.url,
@@ -49,9 +50,9 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
         handleDrawerOpen={handleDrawerOpen}
       ></NeoDashboardHeader>
       <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: '#fafafa' }}>
-        <Container maxWidth='xl' style={{ marginTop: '60px' }}>
+        <Container maxWidth='xl' style={{ marginTop: '62px' }}>
           {applicationSettings.standalonePassword ? (
-            <div style={{ textAlign: 'center', color: 'red', zIndex: 999, paddingTop: 60, marginBottom: -50 }}>
+            <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
               Warning: NeoDash is running with a plaintext password in config.json.
             </div>
           ) : (

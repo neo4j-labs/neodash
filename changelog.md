@@ -1,6 +1,6 @@
 ## NeoDash 2.2.5
 This is a minor release with some small bug fixes, directly following the 2.2.4 release.
-- Fixed replacement rules for parameters in iFrames/Markdown reports. [#17](https://github.com/neo4j-labs/neodash/pull/417)
+- Fixed replacement rules for parameters in iFrames/Markdown reports. [#417](https://github.com/neo4j-labs/neodash/pull/417)
 - Added automatic header text color switch for reports with a dark background [#420](https://github.com/neo4j-labs/neodash/pull/420)
 - Fixed handling right click events (for graph exploration) in Neo4j Desktop [#415](https://github.com/neo4j-labs/neodash/pull/415).
 - Added support for unweighted Sankey charts [#419](https://github.com/neo4j-labs/neodash/pull/419)
@@ -102,7 +102,7 @@ This release marks the official arrival of **[Extensions](https://neo4j.com/labs
 NeoDash 2.2 comes with three in-built extensions.
 - **Rule-Based Styling**
 - **Advanced Visualizations**: These provide a means to enable complex visualizations in a dashboard. These were previously available as Radar charts, Treemaps, Circle Packing reports, Sankey charts, Choropleth and a Gauge Chart).
-- **Report Actions**: Which let you create interactivity in dashboards, using the output of one report as input for another visualization. (Pro Extension)
+- **Report Actions**: Which let you create interactivity in dashboards, using the output of one report as input for another visualization. (Expert Extension)
 
 You can enable extensions by clicking the 🧩 icon on the left sidebar of the screen.
 

@@ -1,14 +1,15 @@
 import React from 'react';
 import { Polyline, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Typography } from '@neo4j-ndl/react';
 
 export function createLines(data) {
   function createPopupFromRelProperties(value) {
     return (
       <Popup className={'leaflet-custom-rel-popup'}>
-        <h3>
+        <Typography variant='h4'>
           <b>{value.type}</b>
-        </h3>
+        </Typography>
         <table>
           <tbody>
             {Object.keys(value.properties).length == 0 ? (
