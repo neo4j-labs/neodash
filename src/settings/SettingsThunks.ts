@@ -92,7 +92,7 @@ export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: 
     Object.keys(parameters).forEach((key) => {
       if (isCastableToNeo4jDate(parameters[key])) {
         parameters[key] = castToNeo4jDate(parameters[key]);
-      } else if (parameters[key] === undefined) {
+      } else if (parameters[key] == undefined) {
         delete parameters[key];
       }
     });
