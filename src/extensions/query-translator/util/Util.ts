@@ -1,4 +1,5 @@
 import { createNotification } from '../../../application/ApplicationActions';
+import { toggleCardSettingsThunk } from '../../../card/CardThunks';
 import { QUERY_TRANSLATOR_EXTENSION_NAME } from '../state/QueryTranslatorSelector';
 import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 
@@ -32,7 +33,10 @@ export function translateQuery(driver, dispatch, pagenumber, id, reportType, ext
           setResult(result);
         },
         (error) => {
+          // when on error - reopen the settings to avoid an infinitely looping loading screen
+          // TODO - still set the cypher query even though it fails
           dispatch(createNotification('Error when translating the natural language query', error));
+          dispatch(toggleCardSettingsThunk(id, true));
         }
       )
     );
