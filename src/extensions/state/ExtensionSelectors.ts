@@ -2,6 +2,12 @@ import { getSessionStorageValue } from '../../sessionStorage/SessionStorageSelec
 
 export const getPrepopulationReportExtensionSessionStorageKey = (cardId) => `prepopulation_report_extension__${cardId}`;
 
+/**
+ * An Extension can define a function to run before (prepopulate) the report itself
+ * @param state State of the application
+ * @param cardId Unique Id of the card running the report
+ * @returns Name of the Extension to use to fetch the prepopulation function
+ */
 export const getPrepopulateReportExtension = (state: any, cardId: string) => {
   return getSessionStorageValue(state, getPrepopulationReportExtensionSessionStorageKey(cardId));
 };
