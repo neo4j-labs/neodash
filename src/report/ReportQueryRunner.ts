@@ -13,6 +13,7 @@ export enum QueryStatus {
   ERROR, // Something broke, likely the cypher query is invalid.
 }
 
+// TODO: create a readOnly version of this method or inject a property
 /**
  * Runs a Cypher query using the specified driver.
  * @param driver - an instance of a Neo4j driver.
