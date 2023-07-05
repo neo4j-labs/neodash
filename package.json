@@ -55,6 +55,7 @@
     "@nivo/scatterplot": "^0.83.0",
     "@nivo/sunburst": "^0.82.1",
     "@nivo/treemap": "^0.82.1",
+    "@sentry/react": "^7.57.0",
     "babel-runtime": "^6.26.0",
     "chroma-js": "^2.4.2",
     "classnames": "^2.3.1",
