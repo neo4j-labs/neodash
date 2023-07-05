@@ -162,8 +162,8 @@ const NeoSetting = ({
             defaultValue={generateValue(defaultValue)}
             style={style}
             choices={choices.map((option) => generateListItem(label, option))}
-            onClick={(val) => onClick(val)}
-            onChange={(val) => onChange(val)}
+            onClick={(val) => onClick(val.value)}
+            onChange={(val) => onChange(val.value)}
           />
         </div>
       );

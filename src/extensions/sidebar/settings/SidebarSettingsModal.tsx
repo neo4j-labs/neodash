@@ -100,7 +100,7 @@ const SidebarSettingsModal = ({
                 </MenuItem>
               ))}
               onChange={(value) => {
-                setDatabaseText(value);
+                setDatabaseText(value.value);
               }}
             />
             <></>

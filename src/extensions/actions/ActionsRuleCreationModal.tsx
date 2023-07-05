@@ -1,17 +1,9 @@
 import React, { useEffect } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
-import StarsIcon from '@mui/icons-material/Stars';
-import {
-  AdjustmentsHorizontalIconOutline,
-  XMarkIconOutline,
-  PlusIconOutline,
-  PlayIconSolid,
-  SparklesIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { XMarkIconOutline, PlusIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
 import { Autocomplete, TextField } from '@mui/material';
+import NeoField from '../../component/field/Field';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = {
@@ -280,30 +272,30 @@ export const NeoCustomReportActionsModal = ({
                   return (
                     <>
                       <tr>
-                        <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
-                          <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
+                        <td className='n-px-1'>
+                          <span className='n-w-12'>{index + 1}.</span>
                         </td>
-                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}> ON</span>
+                        <td className='n-px-5'>
+                          <span className='n-font-bold n-w-12'> ON</span>
                         </td>
                         <td>
                           <div style={{ border: '2px dashed grey' }}>
-                            <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                              <Dropdown
-                                type='select'
+                            <td className='n-px-1'>
+                              <NeoField
+                                select
+                                valueLabel={ruleTrigger ? ruleTrigger.label : ''}
+                                value={rule.condition}
+                                choices={
+                                  RULE_CONDITIONS[type] &&
+                                  RULE_CONDITIONS[type].map((option) => ({
+                                    label: option.label,
+                                    value: option.value,
+                                  }))
+                                }
+                                onChange={(newValue) => updateRuleField(index, 'condition', newValue.value)}
+                                className='n-w-48 n-ml-1'
                                 fluid
-                                style={{ marginLeft: '1%', display: 'inline-block', width: '200px' }}
-                                selectProps={{
-                                  onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
-                                  options:
-                                    RULE_CONDITIONS[type] &&
-                                    RULE_CONDITIONS[type].map((option) => ({
-                                      label: option.label,
-                                      value: option.value,
-                                    })),
-                                  value: { label: ruleTrigger ? ruleTrigger.label : '', value: rule.condition },
-                                }}
-                              ></Dropdown>
+                              />
                             </td>
                             <td className='n-align-top'>
                               <Autocomplete
@@ -334,41 +326,34 @@ export const NeoCustomReportActionsModal = ({
                             </td>
                           </div>
                         </td>
-                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>SET</span>
+                        <td className='n-px-5'>
+                          <span className='n-font-bold n-w-12'>SET</span>
                         </td>
                         <td>
                           <div style={{ border: '2px dashed grey', marginBottom: '5px' }}>
-                            <td
-                              style={{
-                                paddingLeft: '5px',
-                                paddingRight: '5px',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
-                              }}
-                            >
-                              <Dropdown
-                                type='select'
-                                style={{ width: '150px', display: 'inline-block' }}
+                            <td className='n-p-1'>
+                              <NeoField
+                                select
+                                valueLabel={ruleType ? ruleType.label : ''}
+                                value={rule.customization}
+                                choices={
+                                  RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] &&
+                                  RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type].map((option) => ({
+                                    label: option.label,
+                                    value: option.value,
+                                  }))
+                                }
+                                onChange={(newValue) => updateRuleField(index, 'customization', newValue.value)}
+                                className='n-w-36'
                                 fluid
-                                selectProps={{
-                                  onChange: (newValue) => updateRuleField(index, 'customization', newValue.value),
-                                  options:
-                                    RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type] &&
-                                    RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type].map((option) => ({
-                                      label: option.label,
-                                      value: option.value,
-                                    })),
-                                  value: { label: ruleType ? ruleType.label : '', value: rule.customization },
-                                }}
-                              ></Dropdown>
+                              />
                             </td>
                             {getActionHelper(rule, index, rules[index].customization)}
                           </div>
                         </td>
 
-                        <td style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                          <span style={{ fontWeight: 'bold', color: 'black', width: '50px' }}>TO</span>
+                        <td className='n-px-5'>
+                          <span className='n-font-bold n-w-12'>TO</span>
                         </td>
                         <td>
                           <div style={{ border: '2px dashed grey' }}>

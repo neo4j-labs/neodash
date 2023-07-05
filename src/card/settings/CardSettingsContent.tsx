@@ -6,11 +6,11 @@ import NeoCodeEditorComponent, {
   DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
 } from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
-import { Dropdown } from '@neo4j-ndl/react';
 import {
   EXTENSIONS_CARD_SETTINGS_COMPONENT,
   getExtensionCardSettingsComponents,
 } from '../../extensions/ExtensionConfig';
+import NeoField from '../../component/field/Field';
 
 const NeoCardSettingsContent = ({
   pagenumber,
@@ -97,44 +97,41 @@ const NeoCardSettingsContent = ({
 
   return (
     <CardContent className='n-py-2'>
-      <Dropdown
+      <NeoField
+        select
         id='type'
         label='Type'
-        type='select'
-        selectProps={{
-          onChange: (newValue) =>
-            newValue && onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value)),
-          options: Object.keys(reportTypes).map((option) => ({
-            label: reportTypes[option].label,
-            value: reportTypes[option].label,
-          })),
-          value: { label: reportTypes[type].label, value: reportTypes[type].label },
-          menuPortalTarget: document.querySelector('body'),
-        }}
-        fluid
-        style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
+        valueLabel={reportTypes[type].label}
+        value={reportTypes[type].label}
+        choices={Object.keys(reportTypes).map((option) => ({
+          label: reportTypes[option].label,
+          value: reportTypes[option].label,
+        }))}
+        onChange={(newValue) =>
+          newValue && onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value))
+        }
+        menuPortalTarget={document.querySelector('body')}
+        className='n-mr-2 n-w-5/12 n-max-w-xs n-inline-block n-w'
       />
 
       {reportTypes[type] && reportTypes[type].disableDatabaseSelector == undefined ? (
-        <Dropdown
+        <NeoField
+          select
           id='databaseSelector'
           label='Database'
           placeholder='neo4j'
-          type='select'
-          selectProps={{
-            onChange: (newValue) => {
-              newValue && setDatabaseText(newValue.value);
-              newValue && debouncedDatabaseUpdate(newValue.value);
-            },
-            options: databaseList.map((database) => ({
-              label: database,
-              value: database,
-            })),
-            value: { label: databaseText, value: databaseText },
-            menuPortalTarget: document.querySelector('body'),
+          valueLabel={databaseText}
+          value={databaseText}
+          choices={databaseList.map((database) => ({
+            label: database,
+            value: database,
+          }))}
+          onChange={(newValue) => {
+            newValue && setDatabaseText(newValue.value);
+            newValue && debouncedDatabaseUpdate(newValue.value);
           }}
-          fluid
-          style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
+          menuPortalTarget={document.querySelector('body')}
+          className='n-mr-2 n-w-5/12 n-max-w-xs n-inline-block n-w'
         />
       ) : (
         <></>

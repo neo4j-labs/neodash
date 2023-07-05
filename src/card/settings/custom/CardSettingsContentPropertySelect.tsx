@@ -212,22 +212,20 @@ const NeoCardSettingsContentPropertySelect = ({
 
   return (
     <div>
-      <p style={{ color: 'grey', fontSize: 12, paddingLeft: '5px', border: '1px solid lightgrey', marginTop: '0px' }}>
+      <p className='n-text-light-neutral-text-weaker n-text-xs n-px-1 n-border-2 n-border-solid n-border-light-neutral-border-strong'>
         {reportTypes[type].helperText}
       </p>
-      <Dropdown
+      <NeoField
+        select
         id='type'
-        selectProps={{
-          onChange: (newValue) => newValue && handleParameterTypeUpdate(newValue.value),
-          options: parameterSelectTypes.map((option) => ({ label: option, value: option })),
-          value: { label: selectedType, value: selectedType },
-          menuPlacement: 'auto',
-        }}
         label='Selection Type'
-        type='select'
-        fluid
-        autoFocus
-        style={{ marginTop: '5px' }}
+        valueLabel={selectedType}
+        value={selectedType}
+        choices={parameterSelectTypes.map((option) => ({ label: option, value: option }))}
+        onChange={(newValue) => newValue && handleParameterTypeUpdate(newValue.value)}
+        fluid={true}
+        menuPortalTarget={document.querySelector('body')}
+        className='n-mt-1'
       />
 
       {settings.type == 'Free Text' || settings.type == 'Date Picker' ? (
