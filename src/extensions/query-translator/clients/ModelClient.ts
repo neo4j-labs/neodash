@@ -148,7 +148,6 @@ export abstract class ModelClient {
         let modelAnswer = await this.chatCompletion(tmpHistory);
         tmpHistory.push(modelAnswer);
 
-        await consoleLogAsync('tmpHistory', tmpHistory);
         // and try to validate it
         let validationResult = await this.validateQuery(modelAnswer, database);
         isValidated = validationResult[0];
