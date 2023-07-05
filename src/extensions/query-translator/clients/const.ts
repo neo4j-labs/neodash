@@ -102,3 +102,22 @@ Raw JSON - The Cypher query must return a JSON object that will be displayed as 
 Pie Chart - Two variables named category and value.`;
 
 export const MAX_NUM_VALIDATION = 1;
+
+/**
+ * Function to create, from the relQuery result, the patterns
+ * @param rels Result got from relQuery query
+ * @returns A string containing all the possible patterns
+ */
+export function createRelPattern(rels) {
+  let res: string[] = [];
+  try {
+    // For each relationship
+    rels.forEach((rel) => {
+      // For each possible target
+      rel.target.forEach((trg) => res.push(`(:${rel.source})-[:${rel.relationship}]->(:${trg})`));
+    });
+    return res.join(',');
+  } catch (e) {
+    console.log(e);
+  }
+}
