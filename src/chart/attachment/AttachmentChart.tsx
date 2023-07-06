@@ -26,8 +26,15 @@ const AttachmentChart = (props: ChartProps) => {
           src={node.properties['endpoint']}
         /> 
       }
+      { node.properties['type'] == 'pdf' &&
+        <object
+          style={{ width: '100%', border: 'none', marginBottom: '-5px', height: '100%', overflow: 'hidden' }}
+          data={node.properties['endpoint']}
+        ></object>
+      }
     </div>
   );
 };
 
 export default AttachmentChart;
+

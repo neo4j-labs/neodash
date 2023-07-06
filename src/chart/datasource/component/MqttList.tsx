@@ -4,7 +4,7 @@ import mqtt from "precompiled-mqtt";
 
 
 function SimpleList(props: { messages: string[] }) {
-  const messages = props.messages
+  const messages = props.messages;
   const listItems = messages.map((msg) =>
     <li> {msg} </li>
   )
@@ -20,8 +20,8 @@ export interface MqttListProperties {
 
 export const MqttList = (props: MqttListProperties) => {
 
-  const [clientExisted, setClientExisted] = useState(false)
-  const [messages, setMessages] = useState<string[]>([])
+  const [clientExisted, setClientExisted] = useState(false);
+  const [messages, setMessages] = useState<string[]>([]);
 
   const pushOneMessage = (message: string) => {
     setMessages(msgs=>[message, ...msgs.slice(0,4)])
@@ -29,16 +29,6 @@ export const MqttList = (props: MqttListProperties) => {
 
   useEffect(() => {
     if(! clientExisted){
-      // const client = mqtt.connect({
-      //   host: props.host,
-      //   port: props.port, 
-      //   connectTimeout: 10 * 1000
-      // })
-      // const client = mqtt.connect({
-      //   host: props.host,
-      //   port: 8000, 
-      //   connectTimeout: 10 * 1000
-      // })
       const client = mqtt.connect(props.endpoint, { clientId:`client_${Date.now().toString()}`, keepalive: 0 })
       
       client.on('connect', () => {
@@ -55,7 +45,6 @@ export const MqttList = (props: MqttListProperties) => {
       });
       client.on('message', (topic, message) => {
         pushOneMessage(message.toString())
-
       });
 
       setClientExisted(true)

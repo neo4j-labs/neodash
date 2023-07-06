@@ -5,7 +5,7 @@ UNWIND [{_id:2, properties:{date:datetime('2023-06-02T12:49:59.542Z'), title:"",
 CREATE (n:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`: row._id}) SET n += row.properties SET n:_Neodash_Dashboard;
 UNWIND [{_id:4, properties:{name:"Scada", layer:"Functional"}}, {_id:5, properties:{name:"pmv1", layer:"Functional"}}, {_id:6, properties:{name:"pmv2", layer:"Functional"}}, {_id:7, properties:{latitude:59.654037, name:"Server1", layer:"Physical", longitude:10.741301}}, {_id:8, properties:{latitude:59.629083, name:"Switch1", layer:"Physical", longitude:10.7361537}}, {_id:9, properties:{latitude:59.606961, name:"Switch2", layer:"Physical", longitude:10.735244}}] AS row
 CREATE (n:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`: row._id}) SET n += row.properties SET n:ASSET;
-UNWIND [{_id:10, properties:{endpoint:"https://httpbin.org/get", name:"testrest", type:"rest"}}, {_id:11, properties:{endpoint:"wss://test.mosquitto.org:8081/", topic:"whatever/top/it/is", type:"mqtt"}}] AS row
+UNWIND [{_id:10, properties:{endpoint:"https://httpbin.org/get", name:"testrest", type:"rest"}}, {_id:11, properties:{endpoint:"wss://test.mosquitto.org:8081/", topic:"whatever/top/it/is", name:"Events", type:"mqtt"}}] AS row
 CREATE (n:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`: row._id}) SET n += row.properties SET n:DATASOURCE;
 UNWIND [{start: {_id:0}, end: {_id:4}, properties:{}}, {start: {_id:1}, end: {_id:5}, properties:{}}] AS row
 MATCH (start:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`: row.start._id})
