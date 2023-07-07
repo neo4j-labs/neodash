@@ -306,6 +306,9 @@ function createReportOfType(type, query, fast = false) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.wait(400);
+
+  cy.get('main .react-grid-item:eq(2)').contains('Advanced settings').click();
+
   cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
 }
 
