@@ -79,6 +79,9 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.wait(400);
+
+    cy.get('main .react-grid-item:eq(2)').contains('Advanced settings').click();
+
     cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: WAITING_TIME })
       .should('contain', 'title')
