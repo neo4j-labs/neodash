@@ -39,7 +39,7 @@ module.exports = (env) => {
     },
     entry: ['./src/index.tsx'],
     mode: production ? 'production' : 'development',
-    devtool: production ? undefined : 'source-map',
+    devtool: production ? undefined : 'inline-source-map',
     module: {
       rules: rules,
     },

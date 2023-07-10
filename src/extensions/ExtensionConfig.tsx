@@ -4,6 +4,9 @@ import QueryTranslatorButton from './query-translator/component/QueryTranslator'
 import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
 import { translateQuery } from './query-translator/util/Util';
 import { GPT_LOADING_ICON } from './query-translator/component/LoadingIcon';
+import { QUERY_BUILDER_ACTION_PREFIX } from './querybuilder/state/QueryBuilderActions';
+import { queryBuilderReducer } from './querybuilder/state/QueryBuilderReducer';
+import QueryBuilderButton from './querybuilder/component/QueryBuilder';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -62,7 +65,7 @@ export const EXTENSIONS: Record<string, Extension> = {
   //   image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
   //   enabled: true,
   //   reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
-  //   reducerObject: sidebarReducer,
+  //   reducerObject: queryBuilderReducer,
   //   drawerButton: SidebarDrawerButton,
   //   description:
   //     'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
@@ -93,6 +96,22 @@ export const EXTENSIONS: Record<string, Extension> = {
     prepopulateReportFunction: translateQuery,
     customLoadingIcon: GPT_LOADING_ICON,
     drawerButton: QueryTranslatorButton,
+    description:
+      'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.',
+    link: 'https://neo4j.com/professional-services/',
+  },
+  'query-builder': {
+    name: 'query-builder',
+    label: 'Experimental Query Builder',
+    author: 'Neo4j Professional Services',
+    image: 'translator.png',
+    enabled: true,
+    reducerPrefix: QUERY_BUILDER_ACTION_PREFIX,
+    reducerObject: queryBuilderReducer,
+    // cardSettingsComponent: NeoOverrideCardQueryEditor,
+    // prepopulateReportFunction: translateQuery,
+    // customLoadingIcon: GPT_LOADING_ICON,
+    drawerButton: QueryBuilderButton,
     description:
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.',
     link: 'https://neo4j.com/professional-services/',
