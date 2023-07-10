@@ -38,7 +38,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         )
         .sort()}
       getOptionLabel={(option) => (option ? option.toString() : '')}
-      style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
+      style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '6.5px' }}
       inputValue={inputDisplayText !== null ? `${inputDisplayText}` : ''}
       onInputChange={(event, value) => {
         setInputDisplayText(value !== null ? `${value}` : '');
