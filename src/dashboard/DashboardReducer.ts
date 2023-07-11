@@ -26,7 +26,7 @@ export const initialState = {
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
-  extensions: INITIAL_EXTENSIONS_STATE, // TODO - merge with `extensions` in the 2.3 dashboard format.
+  extensions: INITIAL_EXTENSIONS_STATE,
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);

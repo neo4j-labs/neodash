@@ -244,7 +244,7 @@ export const NeoCustomReportActionsModal = ({
         </>
       );
     }
-    return 'wtf';
+    return undefined;
   };
 
   return (

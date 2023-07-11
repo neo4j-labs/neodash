@@ -846,6 +846,7 @@ export const REPORT_TYPES = {
       },
     },
   },
+  // TODO - move to advanced visualization.
   // scatterPlot: {
   //   label: 'Scatter Plot',
   //   component: NeoScatterPlot,
