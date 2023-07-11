@@ -148,7 +148,6 @@ export abstract class ModelClient {
         let modelAnswer = await this.chatCompletion(tmpHistory);
         tmpHistory.push(modelAnswer);
 
-        await consoleLogAsync('tmpHistory', tmpHistory);
         // and try to validate it
         let validationResult = await this.validateQuery(modelAnswer, database);
         isValidated = validationResult[0];
@@ -167,7 +166,9 @@ export abstract class ModelClient {
         }
       }
       if (!isValidated) {
-        throw Error(`The model couldn't translate your request: ${inputMessage}`);
+        throw Error(
+          `The model could not translate your question to valid Cypher: '${inputMessage}'.  Try writing a more descriptive question, explicitly calling out the node labels, relationship types, and property names.`
+        );
       }
     } catch (error) {
       await consoleLogAsync('Error during query', error);

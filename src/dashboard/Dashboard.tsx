@@ -3,30 +3,29 @@ import NeoPage from '../page/Page';
 import { Container } from '@mui/material';
 import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
-import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
-import {
-  applicationGetConnection,
-  applicationGetStandaloneSettings,
-  applicationHasAboutModalOpen,
-} from '../application/ApplicationSelectors';
+import { createDriver, Neo4jProvider } from 'use-neo4j';
+import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
-import { createNotification } from '../application/ApplicationActions';
 import { createNotificationThunk } from '../page/PageThunks';
-import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [driver, setDriver] = React.useState(undefined);
 
-  const driver = createDriver(
-    connection.protocol,
-    connection.url,
-    connection.port,
-    connection.username,
-    connection.password
-  );
+  // If no driver is yet instantiated, create a new one.
+  if (driver == undefined) {
+    const newDriver = createDriver(
+      connection.protocol,
+      connection.url,
+      connection.port,
+      connection.username,
+      connection.password
+    );
+    setDriver(newDriver);
+  }
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
