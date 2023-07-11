@@ -113,10 +113,23 @@ export const setShareDetailsFromUrl = (
   database: string,
   username: string,
   password: string,
-  dashboardDatabase: string
+  dashboardDatabase: string,
+  skipConfirmation: boolean
 ) => ({
   type: SET_SHARE_DETAILS_FROM_URL,
-  payload: { type, id, standalone, protocol, url, port, database, username, password, dashboardDatabase },
+  payload: {
+    type,
+    id,
+    standalone,
+    protocol,
+    url,
+    port,
+    database,
+    username,
+    password,
+    dashboardDatabase,
+    skipConfirmation,
+  },
 });
 
 export const SET_STANDALONE_ENABLED = 'APPLICATION/SET_STANDALONE_ENABLED';
@@ -169,6 +182,12 @@ export const SET_WAIT_FOR_SSO = 'APPLICATION/SET_WAIT_FOR_SSO';
 export const setWaitForSSO = (wait: boolean) => ({
   type: SET_WAIT_FOR_SSO,
   payload: { wait },
+});
+
+export const SET_CACHED_SSO_DISCOVERY_URL = 'APPLICATION/SET_CACHED_SSO_DISCOVERY_URL';
+export const setCachedSSODiscoveryUrl = (url: string) => ({
+  type: SET_CACHED_SSO_DISCOVERY_URL,
+  payload: { url },
 });
 
 export const SET_SESSION_PARAMETERS = 'APPLICATION/SET_SESSION_PARAMETERS';

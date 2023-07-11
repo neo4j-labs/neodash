@@ -39,4 +39,3 @@ Report Actions are available for the following report types:
 - Graphs
 - Maps
 
-> This **Pro Extension** is free to try out in Neo4j Desktop, and the link:https://neodash.graphapp.io[NeoDash Demo Environment]. To use it in a self-hosted environment, reach out to link:mailto:ps_emea_pmo@neotechnology.com[Neo4j Professional Services] for a commercial agreement. 

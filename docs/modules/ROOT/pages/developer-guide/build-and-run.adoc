@@ -35,6 +35,10 @@ Pull the latest image from Docker Hub to run the application locally:
 # Run the application on http://localhost:5005
 docker pull neo4jlabs/neodash:latest
 docker run -it --rm -p 5005:5005 neo4jlabs/neodash
+
+# If you want to run on a custom port, set an environment variable
+export NGINX_PORT=5008
+docker run -it --rm -e NGINX_PORT=5008 -p 5008:5008 neo4jlabs/neodash
 ....
 
 ____

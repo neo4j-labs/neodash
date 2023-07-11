@@ -1,9 +1,15 @@
 import { ResponsiveLine } from '@nivo/line';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
-import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
+import {
+  convertRecordObjectToString,
+  mutateName,
+  processHierarchyFromRecords,
+  recordToNative,
+  toNumber,
+} from '../ChartUtils';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 interface LineChartData {
@@ -15,6 +21,8 @@ interface LineChartData {
  * Embeds a LineReport (from Charts) into NeoDash.
  */
 const NeoLineChart = (props: ChartProps) => {
+  const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
+
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
@@ -25,7 +33,10 @@ const NeoLineChart = (props: ChartProps) => {
   }
 
   const [isTimeChart, setIsTimeChart] = React.useState(false);
+  const [validSelection, setValidSelection] = React.useState(true);
+
   const [parseFormat, setParseFormat] = React.useState('%Y-%m-%dT%H:%M:%SZ');
+  const [data, setData] = React.useState([]);
 
   const settings = props.settings ? props.settings : {};
 
@@ -83,11 +94,6 @@ const NeoLineChart = (props: ChartProps) => {
     return <p></p>;
   }
 
-  const data: LineChartData[] = selection.value.map((key) => ({
-    id: key as string,
-    data: [],
-  }));
-
   const isDate = (x) => {
     return x.__isDate__;
   };
@@ -100,45 +106,57 @@ const NeoLineChart = (props: ChartProps) => {
     return isDate(x) || isDateTime(x) || x instanceof Date;
   };
 
-  records.forEach((row) => {
-    selection.value.forEach((key) => {
-      const index = data.findIndex((item) => (item as Record<string, any>).id === key);
-      let x: any = row.get(selection.x) || 0;
-      const y: any = recordToNative(row.get(key)) || 0;
-      if (data[index] && !isNaN(y)) {
-        if (isDate(x)) {
-          data[index].data.push({ x, y });
-        } else if (isDateTime(x)) {
-          x = new Date(x.toString());
-          data[index].data.push({ x, y });
-        } else {
-          data[index].data.push({ x, y });
+  useEffect(() => {
+    const dataRaw: LineChartData[] = selection.value.map((key) => ({
+      id: key as string,
+      data: [],
+    }));
+
+    records.forEach((row) => {
+      selection.value.forEach((key) => {
+        const index = dataRaw.findIndex((item) => (item as Record<string, any>).id === key);
+        let x: any = row.get(selection.x) || 0;
+        const y: any = recordToNative(row.get(key)) || 0;
+        if (dataRaw[index] && !isNaN(y)) {
+          if (isDate(x)) {
+            dataRaw[index].data.push({ x, y });
+          } else if (isDateTime(x)) {
+            x = new Date(x.toString());
+            dataRaw[index].data.push({ x, y });
+          } else {
+            dataRaw[index].data.push({ x, y });
+          }
         }
+      });
+    });
+
+    setData(dataRaw);
+  }, [records, selection]);
+
+  useEffect(() => {
+    let validSelectionRaw = true;
+    data.forEach((selected) => {
+      if (selected.data.length == 0) {
+        validSelectionRaw = false;
       }
     });
-  });
+    setValidSelection(validSelectionRaw);
 
-  // Post-processing validation on the data --> confirm only numeric data was selected by the user.
-  let validSelection = true;
-  data.forEach((selected) => {
-    if (selected.data.length == 0) {
-      validSelection = false;
+    let timeRef = data[0]?.data[0]?.x || undefined;
+    timeRef = !isNaN(toNumber(timeRef)) ? toNumber(timeRef) : timeRef;
+    const chartIsTimeChart = timeRef !== undefined && isDateTimeOrDate(timeRef);
+    if (isTimeChart !== chartIsTimeChart) {
+      const p = chartIsTimeChart ? (isDateTime(timeRef) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
+
+      setParseFormat(p);
+      setIsTimeChart(chartIsTimeChart);
     }
-  });
-
-  if (!validSelection) {
-    return <NoDrawableDataErrorMessage />;
-  }
+  }, [data]);
 
   // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
   // Therefore, we now require a manual refresh.
-
-  const chartIsTimeChart =
-    data[0] !== undefined &&
-    data[0].data[0] !== undefined &&
-    data[0].data[0].x !== undefined &&
-    isDateTimeOrDate(data[0].data[0].x);
-
+  let timeRef = data[0]?.data[0]?.x || undefined;
+  const chartIsTimeChart = timeRef !== undefined && isDateTimeOrDate(timeRef);
   if (isTimeChart !== chartIsTimeChart) {
     if (!chartIsTimeChart) {
       return (
@@ -147,11 +165,10 @@ const NeoLineChart = (props: ChartProps) => {
         </div>
       );
     }
+  }
 
-    const p = chartIsTimeChart ? (isDateTime(data[0].data[0].x) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
-
-    setParseFormat(p);
-    setIsTimeChart(chartIsTimeChart);
+  if (!validSelection) {
+    return <NoDrawableDataErrorMessage />;
   }
 
   const validateXTickTimeValues = xTickTimeValues.split(' ');
@@ -160,14 +177,7 @@ const NeoLineChart = (props: ChartProps) => {
     validateXTickTimeValues[0] != 'every' ||
     !Number.isInteger(parseFloat(validateXTickTimeValues[1])) ||
     parseFloat(validateXTickTimeValues[1]) <= 0 ||
-    (validateXTickTimeValues[2] != 'years' &&
-      validateXTickTimeValues[2] != 'months' &&
-      validateXTickTimeValues[2] != 'weeks' &&
-      validateXTickTimeValues[2] != 'days' &&
-      validateXTickTimeValues[2] != 'hours' &&
-      validateXTickTimeValues[2] != 'minutes' &&
-      validateXTickTimeValues[2] != 'seconds' &&
-      validateXTickTimeValues[2] != 'milliseconds')
+    !POSSIBLE_TIME_FORMATS.includes(validateXTickTimeValues[2])
   ) {
     return (
       <code style={{ margin: '10px' }}>
@@ -180,7 +190,7 @@ const NeoLineChart = (props: ChartProps) => {
   // T18:40:32.142+0100
   // %Y-%m-%dT%H:%M:%SZ
   const lineViz = (
-    <div className='h-full w-full overflow-hidden' style={{ height: '100%' }}>
+    <div className='n-h-full n-w-full overflow-hidden'>
       <ResponsiveLine
         data={data}
         xScale={

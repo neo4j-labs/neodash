@@ -1,24 +1,30 @@
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import WarningIcon from '@material-ui/icons/Warning';
 import { QueryStatus, runCypherQuery } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { Typography } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../config/ReportConfig';
-import { MoreVert } from '@material-ui/icons';
+import { MoreVert } from '@mui/icons-material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
+import { LoadingSpinner } from '@neo4j-ndl/react';
+import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
-import { updateDashboardSetting } from '../settings/SettingsActions';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
+import { EXTENSIONS } from '../extensions/ExtensionConfig';
+import { getPageNumber } from '../settings/SettingsSelectors';
+import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSelectors';
+import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
+
+const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
 export const NeoReport = ({
+  pagenumber = '', // page number that the report is on.
+  id = '', // ID of the report / card.
   database = 'neo4j', // The Neo4j database to run queries onto.
   query = '', // The Cypher query used to populate the report.
   lastRunTimestamp = 0, // Timestamp of the last query run for this report.
@@ -43,12 +49,16 @@ export const NeoReport = ({
   type = 'table', // The type of report as a string.
   expanded = false, // whether the report is visualized in a fullscreen view.
   extensions = {}, // A set of enabled extensions.
+  getCustomDispatcher = () => {},
   ChartType = NeoTableChart, // The report component to render with the query results.
+  prepopulateExtensionName,
+  deletePrepopulationReportFunction,
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+  const [loadingIcon, setLoadingIcon] = React.useState(DEFAULT_LOADING_ICON);
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
@@ -91,39 +101,66 @@ export const NeoReport = ({
     const useNodePropsAsFields = reportTypes[type].useNodePropsAsFields == true;
     const useReturnValuesAsFields = reportTypes[type].useReturnValuesAsFields == true;
 
-    if (debounced) {
-      setStatus(QueryStatus.RUNNING);
-      debouncedRunCypherQuery(
+    // Logic to run a query
+    const executeQuery = (newQuery) => {
+      setLoadingIcon(DEFAULT_LOADING_ICON);
+      if (debounced) {
+        debouncedRunCypherQuery(
+          driver,
+          database,
+          newQuery,
+          parameters,
+          rowLimit,
+          setStatus,
+          setRecords,
+          setFields,
+          fields,
+          useNodePropsAsFields,
+          useReturnValuesAsFields,
+          HARD_ROW_LIMITING,
+          queryTimeLimit
+        );
+      } else {
+        runCypherQuery(
+          driver,
+          database,
+          newQuery,
+          parameters,
+          rowLimit,
+          setStatus,
+          setRecords,
+          setFields,
+          fields,
+          useNodePropsAsFields,
+          useReturnValuesAsFields,
+          HARD_ROW_LIMITING,
+          queryTimeLimit
+        );
+      }
+    };
+
+    setStatus(QueryStatus.RUNNING);
+
+    // If a custom prepopulating function is present in the session storage...
+    //  ... Await for the prepopulating function to complete before running the (normal) query logic.
+    // Else just run the normal query.
+    // Finally, remove the prepopulating function from session storage.
+    if (prepopulateExtensionName) {
+      setLoadingIcon(EXTENSIONS[prepopulateExtensionName].customLoadingIcon);
+      EXTENSIONS[prepopulateExtensionName].prepopulateReportFunction(
         driver,
-        database,
-        query,
-        parameters,
-        rowLimit,
-        setStatus,
-        setRecords,
-        setFields,
-        fields,
-        useNodePropsAsFields,
-        useReturnValuesAsFields,
-        HARD_ROW_LIMITING,
-        queryTimeLimit
+        getCustomDispatcher(),
+        pagenumber,
+        id,
+        type,
+        extensions,
+        (result) => {
+          executeQuery(result);
+        }
       );
+      deletePrepopulationReportFunction(id);
     } else {
-      runCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        rowLimit,
-        setStatus,
-        setRecords,
-        setFields,
-        fields,
-        useNodePropsAsFields,
-        useReturnValuesAsFields,
-        HARD_ROW_LIMITING,
-        queryTimeLimit
-      );
+      executeQuery(query);
     }
   };
 
@@ -189,21 +226,7 @@ export const NeoReport = ({
       </div>
     );
   } else if (status == QueryStatus.RUNNING) {
-    return (
-      <Typography
-        variant='h2'
-        color='textSecondary'
-        style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateY(-50%) translateX(-50%)',
-          top: '50%',
-          textAlign: 'center',
-        }}
-      >
-        <CircularProgress color='inherit' />
-      </Typography>
-    );
+    return loadingIcon;
   } else if (status == QueryStatus.NO_DATA) {
     return <NeoCodeViewerComponent value={'Query returned no data.'} />;
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
@@ -245,9 +268,12 @@ export const NeoReport = ({
               title={`Over ${rowLimit} row(s) were returned, results have been truncated.`}
               placement='left'
               aria-label='host'
+              disableInteractive
             >
-              <WarningIcon
-                style={{ zIndex: 999, marginTop: '2px', marginRight: '20px', marginLeft: 'auto', color: 'orange' }}
+              <ExclamationTriangleIconSolid
+                aria-label={'Exclamation'}
+                className='icon-base n-z-10'
+                style={{ marginTop: '2px', marginRight: '20px', marginLeft: 'auto', color: 'orange' }}
               />
             </Tooltip>
           </div>
@@ -289,11 +315,20 @@ export const NeoReport = ({
   );
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state, ownProps) => ({
+  pagenumber: getPageNumber(state),
+  prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
+});
 
 const mapDispatchToProps = (dispatch) => ({
   setPageNumber: (index: number) => {
     dispatch(setPageNumberThunk(index));
+  },
+  deletePrepopulationReportFunction: (id) => {
+    dispatch(deleteSessionStoragePrepopulationReportFunction(id));
+  },
+  getCustomDispatcher: () => {
+    return dispatch;
   },
 });
 

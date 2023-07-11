@@ -12,13 +12,14 @@ import { parseNodeIconConfig } from './util/NodeUtils';
 import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
-import { IconButton, Tooltip } from '@material-ui/core';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
-import { RenderSubValue } from '../../report/ReportRecordProcessing';
+import { IconButtonArray, IconButton } from '@neo4j-ndl/react';
+import { Tooltip } from '@mui/material';
 import { downloadCSV } from '../ChartUtils';
+import { generateSafeColumnKey } from '../table/TableChart';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 import { getSettings } from '../SettingsUtils';
-import { generateSafeColumnKey } from '../table/TableChart';
+import { getPageNumbersAndNamesList } from '../../extensions/advancedcharts/Utils';
+import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -34,7 +35,6 @@ const NeoGraphChart = (props: ChartProps) => {
   const settings = getSettings(props.settings, props.extensions, props.getGlobalParameter);
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
   const arrowLengthProp = props?.settings?.arrowLengthProp ?? 3;
-
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
   const parameters = props.parameters ? props.parameters : {};
 
@@ -123,6 +123,8 @@ const NeoGraphChart = (props: ChartProps) => {
     },
   });
 
+  const pageNames = getPageNumbersAndNamesList();
+
   const chartProps: GraphChartVisualizationProps = {
     data: {
       nodes: data.nodes,
@@ -187,7 +189,7 @@ const NeoGraphChart = (props: ChartProps) => {
       handleExpand: handleExpand,
       setGlobalParameter: props.setGlobalParameter,
       setPageNumber: props.setPageNumber,
-      pageNames: [],
+      pageNames: pageNames,
       onNodeClick: (item) => handleEntityClick(item),
       onNodeRightClick: (item, event) => handleEntityRightClick(item, event),
       onRelationshipClick: (item) => handleEntityClick(item),
@@ -203,7 +205,7 @@ const NeoGraphChart = (props: ChartProps) => {
     },
     extensions: {
       styleRules: settings.styleRules,
-      actionsRules: [],
+      actionsRules: settings.actionsRules,
     },
   };
 
@@ -213,32 +215,39 @@ const NeoGraphChart = (props: ChartProps) => {
   }, [props.records]);
 
   return (
-    <div ref={observe} style={{ width: '100%', height: '100%' }}>
+    <div ref={observe} style={{ width: '100%', height: '95%' }}>
       <NeoGraphChartCanvas>
-        <GraphChartContextMenu {...chartProps} />
-        <NeoGraphChartFitViewButton {...chartProps} />
-        {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
-        {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        <IconButtonArray
+          aria-label={'graph icon'}
+          floating
+          orientation='horizontal'
+          className='n-z-10 n-absolute n-bottom-2 n-right-4'
+        >
+          <GraphChartContextMenu {...chartProps} />
+          <NeoGraphChartFitViewButton {...chartProps} />
+          {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+          {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+        </IconButtonArray>
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
         {settings.allowDownload && props.records && props.records.length > 0 ? (
-          <Tooltip title='Download CSV' aria-label=''>
-            <IconButton
-              onClick={() => {
-                const rows = props.records.map((record, rownumber) => {
-                  return Object.assign(
-                    { id: rownumber },
-                    ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
-                  );
-                });
-                downloadCSV(rows);
-              }}
-              aria-label='download csv'
-              style={{ bottom: '9px', left: '3px', position: 'absolute' }}
-            >
-              <SaveAltIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></SaveAltIcon>
-            </IconButton>
-          </Tooltip>
+          <IconButtonArray floating orientation='horizontal' className='n-z-10 n-absolute n-bottom-2 n-left-4'>
+            <Tooltip title='Download CSV.' aria-label={'download csv'} disableInteractive>
+              <IconButton aria-label='download csv' size='small' clean grouped>
+                <CloudArrowDownIconOutline
+                  onClick={() => {
+                    const rows = props.records.map((record, rownumber) => {
+                      return Object.assign(
+                        { id: rownumber },
+                        ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
+                      );
+                    });
+                    downloadCSV(rows);
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          </IconButtonArray>
         ) : (
           <></>
         )}

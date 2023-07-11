@@ -3,8 +3,10 @@
  */
 
 import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
+import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/state/ExtensionReducer';
 import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
+
 import {
   CREATE_PAGE,
   REMOVE_PAGE,
@@ -15,15 +17,16 @@ import {
   SET_EXTENSION_ENABLED,
 } from './DashboardActions';
 
-export const NEODASH_VERSION = '2.2';
+export const NEODASH_VERSION = '2.3';
 
 export const initialState = {
   title: DEFAULT_DASHBOARD_TITLE,
   version: NEODASH_VERSION,
+
   settings: SETTINGS_INITIAL_STATE,
   pages: [FIRST_PAGE_INITIAL_STATE],
   parameters: {},
-  extensions: {},
+  extensions: INITIAL_EXTENSIONS_STATE,
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -54,6 +57,14 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     };
   }
 
+  // Extensions-specific updates are deferred to the extensions reducer.
+  if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
+    return {
+      ...state,
+      extensions: extensionsReducer(state.extensions, action),
+    };
+  }
+
   // Global dashboard updates are handled here.
   switch (type) {
     case RESET_DASHBOARD_STATE: {
@@ -70,7 +81,8 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     case SET_EXTENSION_ENABLED: {
       const { name, enabled } = payload;
       const extensions = state.extensions ? { ...state.extensions } : {};
-      extensions[name] = enabled;
+      // If the extension was enabled before, remember the old settings and toggle the 'active' switch.
+      extensions[name] = extensions[name] == undefined ? { active: enabled } : { ...extensions[name], active: enabled };
       return { ...state, extensions: extensions };
     }
     case CREATE_PAGE: {

@@ -1,27 +1,25 @@
 import React from 'react';
-import ColorPicker from 'material-ui-color-picker';
+import { ColorPicker } from 'mui-color';
 
-const NeoColorPicker = ({ label, style, value, onChange, key, defaultValue, placeholder = '' }) => {
+const NeoColorPicker = ({ value, onChange, defaultValue, label, style }) => {
   return (
-    <ColorPicker
-      floatingLabelText={label}
-      name={label}
-      style={style}
-      key={key}
-      placeholder={placeholder}
-      defaultValue={defaultValue}
-      internalValue={value}
-      InputProps={{
-        value: value ? value : '',
-        placeholder: defaultValue,
-        color: value ? value : 'black',
-      }}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      value={value}
-      onChange={onChange}
-    />
+    <div style={style}>
+      <div className='ndl-form-item ndl-type-text ndl-small'>
+        <label htmlFor={label} className='ndl-form-item-label ndl-fluid'>
+          <div className='ndl-input-wrapper'>
+            <ColorPicker
+              key={label}
+              defaultValue={defaultValue}
+              value={value}
+              onChange={(e) => onChange(e.css.backgroundColor)}
+            />
+          </div>
+          <div className='ndl-form-item-wrapper'>
+            <span className='ndl-form-label-text'>{label}</span>
+          </div>
+        </label>
+      </div>
+    </div>
   );
 };
 

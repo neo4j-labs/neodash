@@ -1,31 +1,31 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import NeoPage from '../page/Page';
-import Container from '@material-ui/core/Container';
+import { Container } from '@mui/material';
 import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
-import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
-import {
-  applicationGetConnection,
-  applicationGetStandaloneSettings,
-  applicationHasAboutModalOpen,
-} from '../application/ApplicationSelectors';
+import { createDriver, Neo4jProvider } from 'use-neo4j';
+import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
-import { createNotification } from '../application/ApplicationActions';
 import { createNotificationThunk } from '../page/PageThunks';
-import { downloadComponentAsImage } from '../chart/ChartUtils';
 
 const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const driver = createDriver(
-    connection.protocol,
-    connection.url,
-    connection.port,
-    connection.username,
-    connection.password
-  );
+  const [driver, setDriver] = React.useState(undefined);
+
+  // If no driver is yet instantiated, create a new one.
+  if (driver == undefined) {
+    const newDriver = createDriver(
+      connection.protocol,
+      connection.url,
+      connection.port,
+      connection.username,
+      connection.password
+    );
+    setDriver(newDriver);
+  }
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -49,9 +49,9 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
         handleDrawerOpen={handleDrawerOpen}
       ></NeoDashboardHeader>
       <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: '#fafafa' }}>
-        <Container maxWidth='xl' style={{ marginTop: '60px' }}>
+        <Container maxWidth='xl' style={{ marginTop: '62px' }}>
           {applicationSettings.standalonePassword ? (
-            <div style={{ textAlign: 'center', color: 'red', zIndex: 999, paddingTop: 60, marginBottom: -50 }}>
+            <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
               Warning: NeoDash is running with a plaintext password in config.json.
             </div>
           ) : (
