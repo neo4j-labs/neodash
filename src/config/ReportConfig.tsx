@@ -1056,6 +1056,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      separateOverlappingMarkers: {
+        label: 'Seperate Overlapping Markers',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       nodeColorScheme: {
         label: 'Node Color Scheme',
         type: SELECTION_TYPES.LIST,

@@ -11,6 +11,11 @@ import { getRule } from '../../../extensions/advancedcharts/Utils';
 export function createMarkers(data, props) {
   const clusterMarkers =
     props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
+  const separateOverlappingMarkers =
+    props.settings && typeof props.settings.separateOverlappingMarkers !== 'undefined'
+      ? props.settings.separateOverlappingMarkers
+      : true;
+
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
   const actionsRules =
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
@@ -141,7 +146,7 @@ export function createMarkers(data, props) {
     markers = <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>;
   } else {
     markers = (
-      <MarkerClusterGroup chunkedLoading maxClusterRadius={5}>
+      <MarkerClusterGroup chunkedLoading maxClusterRadius={separateOverlappingMarkers ? 5 : 0}>
         {markers}
       </MarkerClusterGroup>
     );
