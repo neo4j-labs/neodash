@@ -4,6 +4,7 @@ import { OpenAiClient } from './clients/OpenAi/OpenAiClient';
 
 // TODO: implement VertexAiClient
 import { VertexAiClient } from './clients/VertexAiClient';
+import { AzureOpenAiClient } from './clients/AzureOpenAi/AzureOpenAiClient';
 
 interface ClientSettingEntry {
   label: string;
@@ -44,6 +45,33 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
       settings: {
         apiKey: {
           label: 'OpenAI API Key',
+          type: SELECTION_TYPES.TEXT,
+          default: '',
+          hasAuthButton: true,
+          authentication: true,
+        },
+        modelType: {
+          label: 'Model',
+          type: SELECTION_TYPES.LIST,
+          methodFromClient: 'getListModels',
+          default: '',
+          authentication: false,
+        },
+      },
+    },
+    AzureOpenAI: {
+      clientName: 'AzureOpenAI',
+      clientClass: AzureOpenAiClient,
+      settings: {
+        apiKey: {
+          label: 'AzureOpenAI API Key /Subscription Key',
+          type: SELECTION_TYPES.TEXT,
+          default: '',
+          hasAuthButton: false,
+          authentication: true,
+        },
+        endpoint: {
+          label: 'AzureOpenAI EndPoint',
           type: SELECTION_TYPES.TEXT,
           default: '',
           hasAuthButton: true,

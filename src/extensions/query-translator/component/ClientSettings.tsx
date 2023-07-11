@@ -118,6 +118,7 @@ export const ClientSettings = ({
   // Prevent authentication if all required fields are not full (EX: look at checkIfDisabled)
   const authButton = (
     <IconButton
+      key={'auth-setting'}
       aria-label='connect'
       onClick={(e) => {
         e.preventDefault();
@@ -152,7 +153,7 @@ export const ClientSettings = ({
         .map((setting) => {
           let disabled = checkIfDisabled(setting);
           return (
-            <ListItem style={{ padding: 0 }}>
+            <ListItem key={`list-${  setting}`} style={{ padding: 0 }}>
               <NeoSetting
                 key={setting}
                 style={{ marginLeft: 0, marginRight: 0 }}
