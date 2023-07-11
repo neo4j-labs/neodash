@@ -142,27 +142,30 @@ const NeoLineChart = (props: ChartProps) => {
     });
     setValidSelection(validSelectionRaw);
 
-    // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
-    // Therefore, we now require a manual refresh.
     let timeRef = data[0]?.data[0]?.x || undefined;
     timeRef = !isNaN(toNumber(timeRef)) ? toNumber(timeRef) : timeRef;
     const chartIsTimeChart = timeRef !== undefined && isDateTimeOrDate(timeRef);
-
     if (isTimeChart !== chartIsTimeChart) {
-      if (!chartIsTimeChart) {
-        return (
-          <div style={{ margin: '15px' }}>
-            Line chart switched from time-axis to number-axis. Please re-run the report to see your changes.
-          </div>
-        );
-      }
-
       const p = chartIsTimeChart ? (isDateTime(timeRef) ? '%Y-%m-%dT%H:%M:%SZ' : '%Y-%m-%d') : '';
 
       setParseFormat(p);
       setIsTimeChart(chartIsTimeChart);
     }
   }, [data]);
+
+  // TODO - Nivo has a bug that, when we switch from a time-axis to a number axis, the visualization breaks.
+  // Therefore, we now require a manual refresh.
+  let timeRef = data[0]?.data[0]?.x || undefined;
+  const chartIsTimeChart = timeRef !== undefined && isDateTimeOrDate(timeRef);
+  if (isTimeChart !== chartIsTimeChart) {
+    if (!chartIsTimeChart) {
+      return (
+        <div style={{ margin: '15px' }}>
+          Line chart switched from time-axis to number-axis. Please re-run the report to see your changes.
+        </div>
+      );
+    }
+  }
 
   if (!validSelection) {
     return <NoDrawableDataErrorMessage />;

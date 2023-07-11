@@ -846,6 +846,7 @@ export const REPORT_TYPES = {
       },
     },
   },
+  // TODO - move to advanced visualization.
   // scatterPlot: {
   //   label: 'Scatter Plot',
   //   component: NeoScatterPlot,
@@ -1054,6 +1055,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      separateOverlappingMarkers: {
+        label: 'Seperate Overlapping Markers',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
       },
       nodeColorScheme: {
         label: 'Node Color Scheme',

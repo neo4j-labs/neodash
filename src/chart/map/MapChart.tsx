@@ -249,7 +249,7 @@ const NeoMapChart = (props: ChartProps) => {
       scrollWheelZoom={false}
     >
       {heatmap}
-      <TileLayer attribution={attribution} url={mapProviderURL} />
+      <TileLayer attribution={attribution} url={mapProviderURL ? mapProviderURL : ''} />
       {markers}
       {lines}
     </MapContainer>
