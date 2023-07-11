@@ -192,7 +192,10 @@ export const NeoCustomReportActionsModal = ({
       );
     }
 
-    suggestions = suggestions.map((e) => e.split('.')[1] || e);
+    // When we are accessing node properties (not page names), parse the node label + property pair to only show properties.
+    if (rule.customization !== 'set page') {
+      suggestions = suggestions.map((e) => e.split('.')[1] || e);
+    }
 
     return suggestions;
   };
