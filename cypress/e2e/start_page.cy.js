@@ -51,7 +51,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('#url').clear().type('localhost');
     // cy.get('#database').type('neo4j')
     cy.get('#dbusername').clear().type('neo4j');
-    cy.get('#dbpassword').type('test');
+    cy.get('#dbpassword').type('test1234');
     cy.get('button').contains('Connect').click();
     cy.wait(100);
   });
@@ -79,6 +79,9 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) #type input[name="Type"]').should('have.value', 'Table');
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(tableCypherQuery);
     cy.wait(400);
+
+    cy.get('main .react-grid-item:eq(2)').contains('Advanced settings').click();
+
     cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: WAITING_TIME })
       .should('contain', 'title')
@@ -303,6 +306,9 @@ function createReportOfType(type, query, fast = false) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
   }
   cy.wait(400);
+
+  cy.get('main .react-grid-item:eq(2)').contains('Advanced settings').click();
+
   cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
 }
 
