@@ -16,7 +16,7 @@ Sentry.init({
   integrations: [
     new Sentry.BrowserTracing({
       // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-      tracePropagationTargets: ['localhost', /^https:\/\/neodash\.graphapp\.io/],
+      tracePropagationTargets: ['localhost', /^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
     }),
     new Sentry.Replay(),
   ],

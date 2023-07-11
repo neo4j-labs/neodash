@@ -9,17 +9,16 @@ import {
 
 export const NeoDashboardPlaceholder = ({ connected }) => {
   const defaultToolbarContent = (
-    <>
-      <InputBase
-        id='center-aligned'
-        label='placeholder'
-        style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white !important' }}
-        placeholder='Dashboard Name...'
-        fullWidth
-        maxRows={4}
-        value={'NeoDash ⚡'}
-      />
-    </>
+    <InputBase
+      id='center-aligned'
+      label='placeholder'
+      className='white-text'
+      style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1 }}
+      placeholder='Dashboard Name...'
+      fullWidth
+      maxRows={4}
+      value={'NeoDash ⚡'}
+    />
   );
 
   const brandedToolbarContent = (
@@ -35,7 +34,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
           boxShadow: 'none',
         }}
       >
-        <Toolbar className='n-z-20 n-pr-6' style={{ background: DASHBOARD_HEADER_COLOR }}>
+        <Toolbar className='n-z-20 n-pr-6' style={{ background: DASHBOARD_HEADER_COLOR, color: 'white !important' }}>
           {APPLY_CUSTOM_BRAND_LOGO ? brandedToolbarContent : defaultToolbarContent}
         </Toolbar>
         <Toolbar
