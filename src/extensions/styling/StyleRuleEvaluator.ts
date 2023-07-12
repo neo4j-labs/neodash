@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { extensionEnabled } from '../ExtensionUtils';
 import React, { useEffect } from 'react';
 
@@ -148,7 +148,7 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
 };
 
 /**
- * Uses the material-ui `makeStyles` functionality to generate classes for each of the rules.
+ * Uses the mui `makeStyles` functionality to generate classes for each of the rules.
  * This is used for styling table rows and columns.
  */
 export const generateClassDefinitionsBasedOnRules = (rules) => {

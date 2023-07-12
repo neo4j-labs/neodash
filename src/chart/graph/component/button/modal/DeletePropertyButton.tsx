@@ -1,13 +1,14 @@
 import React from 'react';
-import { Fab, TextField, Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { Fab } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 /**
  * Returns a button to delete a property entry from the table inside the GraphChartEditModal.
  */
-export const DeletePropertyButton = ({ onClick }) => {
+export const DeletePropertyButton = ({ onClick, key }) => {
   return (
     <Fab
+      key={key}
       size='small'
       aria-label='remove'
       style={{
@@ -21,7 +22,7 @@ export const DeletePropertyButton = ({ onClick }) => {
       }}
       onClick={onClick}
     >
-      <CloseIcon />
+      <CloseIcon key={`icon${key}`} />
     </Fab>
   );
 };

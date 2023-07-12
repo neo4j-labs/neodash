@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
-  checkResultKeys,
   mutateName as mutateHierarchyNameIntoDisplayName,
   processHierarchyFromRecords,
   findObject,
   flatten,
+  mutateName,
 } from '../../../../chart/ChartUtils';
 import { ResponsiveSunburst } from '@nivo/sunburst';
-import { Tooltip } from '@material-ui/core';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { Tooltip } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 /**
@@ -20,31 +20,31 @@ const NeoSunburstChart = (props: ChartProps) => {
   }
   const { records } = props;
   const { selection } = props;
-  useEffect(() => {
-    setData(commonProperties.data);
-  }, [props.selection]);
-
+  const [data, setData] = useState(undefined);
+  const [commonProperties, setCommonProperties] = useState({ data: { name: 'Total', children: [] } });
   const [refreshable, setRefreshable] = useState(false);
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
 
-  const dataPre = processHierarchyFromRecords(records, selection);
-  dataPre.forEach((currentNode) => mutateHierarchyNameIntoDisplayName(currentNode));
+  useEffect(() => {
+    let dataPre = processHierarchyFromRecords(records, selection);
+    dataPre.forEach((currentNode) => mutateName(currentNode));
+    setCommonProperties({ data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } });
+  }, [records]);
+
+  useEffect(() => {
+    setData(commonProperties.data);
+  }, [props.selection, commonProperties]);
 
   // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.
   // Where a user give us just the tree starting one hop away from the root.
   // as Nivo needs a common root, so in that case, we create it for them.
-  const commonProperties = { data: dataPre.length == 1 ? dataPre[0] : { name: 'Total', children: dataPre } };
-
-  const [data, setData] = useState(commonProperties.data);
-
   if (data == undefined) {
     setData(commonProperties.data);
   }
 
-  const [back, setBack] = useState(false);
   const settings = props.settings ? props.settings : {};
   const legendHeight = 20;
   const marginRight = settings.marginRight ? settings.marginRight : 24;
@@ -67,12 +67,13 @@ const NeoSunburstChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title='Reset' aria-label='reset'>
-            <RefreshIcon
+          <Tooltip title='Reset' aria-label='reset' disableInteractive>
+            <Refresh
               onClick={() => {
                 setData(commonProperties.data);
                 setRefreshable(false);
               }}
+              className='n-z-10'
               style={{
                 fontSize: '1.3rem',
                 opacity: 0.6,
@@ -80,12 +81,11 @@ const NeoSunburstChart = (props: ChartProps) => {
                 right: 12,
                 position: 'absolute',
                 borderRadius: '12px',
-                zIndex: 5,
                 background: '#eee',
               }}
               color='disabled'
               fontSize='small'
-            ></RefreshIcon>
+            ></Refresh>
           </Tooltip>
         ) : (
           <div></div>

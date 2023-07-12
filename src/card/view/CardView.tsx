@@ -2,19 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
-import { CardContent, IconButton } from '@material-ui/core';
+import { CardContent } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
 
+import { IconButton } from '@neo4j-ndl/react';
+import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
+
 const NeoCardView = ({
+  id,
   title,
   database,
   query,
@@ -42,18 +45,22 @@ const NeoCardView = ({
   expanded,
   onToggleCardExpand,
 }) => {
-  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 13;
-  const cardHeight = heightPx - CARD_FOOTER_HEIGHT;
+  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 22;
+  const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
   const ref = React.useRef();
 
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
+
+  // TODO : selectorChange should handle every case where query execution needs to be re-executed
+  // e.g. Change of query, type, some advanced settings...
+  const [selectorChange, setSelectorChange] = useState(false);
 
   const getLocalParameters = (parse_string): any => {
     if (!parse_string || !globalParameters) {
       return {};
     }
 
-    let re = /(?:^|\W)\$(\w+)(?!\w)/g;
+    let re = /(?:^|\W|%20)\$(\w+)(?!\w)/g;
     let match;
 
     // If the report styling extension is enabled, extend the list of local (relevant) parameters with those used by the style rules.
@@ -74,7 +81,7 @@ const NeoCardView = ({
   const reportHeader = (
     <ThemeProvider
       theme={
-        settings.backgroundColor && luma(settings.backgroundColor) < dashboardSettings.darkLuma
+        settings.backgroundColor && luma(settings.backgroundColor) < (dashboardSettings.darkLuma || 40)
           ? darkHeaderTheme
           : lightTheme
       }
@@ -128,7 +135,18 @@ const NeoCardView = ({
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
     }
-  }, [settingsOpen, query, JSON.stringify(localParameters)]);
+  }, [JSON.stringify(localParameters)]);
+
+  useEffect(() => {
+    if (!settingsOpen) {
+      setLastRunTimestamp(Date.now());
+    }
+    setSelectorChange(false);
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    setSelectorChange(true);
+  }, [query, type]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
@@ -151,6 +169,7 @@ const NeoCardView = ({
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (
         <NeoReportWrapper
+          id={id}
           query={query}
           database={database}
           parameters={localParameters}
@@ -175,13 +194,14 @@ const NeoCardView = ({
       ) : (
         <>
           <IconButton
-            style={{ float: 'right', padding: '4px', marginRight: '12px' }}
+            style={{ float: 'right', marginRight: '9px' }}
             aria-label='run'
             onClick={() => {
               setActive(true);
             }}
+            clean
           >
-            <PlayCircleFilledIcon />
+            <PlayCircleIconSolid className='n-w-5 n-h-5' aria-label={'play'} />
           </IconButton>
           <NeoCodeEditorComponent
             value={query}
@@ -210,7 +230,7 @@ const NeoCardView = ({
       {reportHeader}
       {/* if there's no selection for this report, we don't have a footer, so the report can be taller. */}
       <ReportItemContainer
-        style={{ height: expanded ? (withoutFooter ? 'calc(100% - 69px)' : 'calc(100% - 79px)') : cardHeight }}
+        style={{ height: expanded ? (withoutFooter ? 'calc(100% - 69px)' : 'calc(100% - 49px)') : cardHeight }}
       >
         {reportTypes[type] ? (
           reportContent

@@ -16,7 +16,7 @@ value of the pie. See *Advanced Settings* for more information.
 
 [source,cypher]
 ----
-Match (n:Person)-[e]->(m:Movie)
+Match (p:Person)-[e]->(m:Movie)
 RETURN m.title as Title, COUNT(p) as People
 LIMIT 8
 ----

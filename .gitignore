@@ -13,8 +13,7 @@ target
 
 # testing
 /coverage
-cypress/plugins
-cypress/support
+/.nyc_output
 cypress/videos
 
 # production

@@ -1,5 +1,5 @@
 server {
-    listen       5005;
+    listen       ${NGINX_PORT};
     server_name  localhost;
     include      mime.types;
     location / {

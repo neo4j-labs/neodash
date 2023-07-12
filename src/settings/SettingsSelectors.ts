@@ -12,19 +12,19 @@ The database related to a card is, at its start, the same as the one defined ins
 a user can modify the database that is used by a card with a new option inside the card itself.
 TODO: too overloaded, define two different functions based on the scope (global db or card specific db)
  */
-export const getDatabase = (state: any, pageNumber: number, cardIndex: number) => {
-  if (state == undefined || pageNumber == undefined || cardIndex == undefined) {
+export const getDatabase = (state: any, pagenumber: number, id: number) => {
+  if (state == undefined || pagenumber == undefined || id == undefined) {
     // TODO - use DMBS default database instead of neo4j.
     return 'neo4j';
   }
   if (
-    state.dashboard.pages[pageNumber] == undefined ||
-    state.dashboard.pages[pageNumber].reports[cardIndex] == undefined
+    state.dashboard.pages[pagenumber] == undefined ||
+    state.dashboard.pages[pagenumber].reports.find((o) => o.id === id) == undefined
   ) {
     // TODO - use DMBS default database instead of neo4j.
     return 'neo4j';
   }
-  const reportDatabase = state.dashboard.pages[pageNumber].reports[cardIndex].database;
+  const reportDatabase = state.dashboard.pages[pagenumber].reports.find((o) => o.id === id).database;
   if (reportDatabase !== undefined) {
     return reportDatabase;
   }

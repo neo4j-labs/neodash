@@ -1,0 +1,12 @@
+= Workflows
+
+Introducing an advanced extension for creating, managing, and running workflows with Cypher queries. Simplify ETL flows, execute complex query chains, and run graph data science workloads effortlessly from Neodash.
+
+== Enable the extension
+
+== Create a Workflow
+
+== Create a new step in the workflow
+
+== Check status
+

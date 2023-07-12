@@ -1,14 +1,15 @@
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
-import { Card, CardHeader, IconButton } from '@material-ui/core';
+import { Card, CardHeader } from '@mui/material';
+import { IconButton } from '@neo4j-ndl/react';
+import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import { NestedMenuItem, IconMenuItem } from 'mui-nested-menu';
-import CloseIcon from '@material-ui/icons/Close';
-import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from '@mui/icons-material/Search';
 import { RenderNode, RenderNodeChip, RenderRelationshipChip } from '../../../report/ReportRecordProcessing';
 import { getNodeLabel } from '../util/NodeUtils';
 import { EditAction, EditType, GraphChartEditModal } from './GraphChartEditModal';
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
@@ -37,27 +38,19 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
 
   const menu = (
     <div
+      className='n-absolute n-z-60'
       style={{
-        position: 'absolute',
-        zIndex: 1300,
         top: props.interactivity.clickPosition.y,
         left: props.interactivity.clickPosition.x,
       }}
     >
       <Card id='basic-menu'>
         <CardHeader
-          style={{ marginTop: '-6px', marginBottom: '-8px', color: 'black' }}
+          className='-n-mx-1'
+          style={{ color: 'black' }}
           action={
-            <IconButton
-              aria-label='close'
-              style={{
-                padding: '4px',
-                marginLeft: '20px',
-                marginTop: '7px',
-              }}
-              onClick={handleClose}
-            >
-              <CloseIcon />
+            <IconButton aria-label='close' className='n-p-1 n-ml-5 n-mt-1' onClick={handleClose} clean>
+              <XMarkIconOutline />
             </IconButton>
           }
           titleTypographyProps={{ variant: 'h6' }}
@@ -114,38 +107,41 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           >
             <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}>
               <table>
-                {neighbourRelCounts.length == 0 ? (
-                  <tr>
-                    <td style={{ paddingLeft: 15, minWidth: '250px' }}> No relationships...</td>
-                  </tr>
-                ) : (
-                  <></>
-                )}
-                {neighbourRelCounts.length > 0 &&
-                  neighbourRelCounts.map((item) => {
-                    const dir = item[1] == 'any' ? undefined : item[1] == 'out';
-                    return (
-                      <tr>
-                        <MenuItem
-                          onClick={() => {
-                            props.interactivity.setContextMenuOpen(false);
-                            handleExpand(props.interactivity.selectedEntity.id, item[0], item[1], props);
-                            setDialogOpen(false);
-                            setCachedNeighbours(false);
-                          }}
-                        >
-                          <td style={{ minWidth: '250px', overflow: 'hidden' }}>
-                            {RenderNodeChip(props.interactivity.selectedEntity.labels, '#fff', '1px solid lightgrey')}
-                            &nbsp;
-                            {RenderRelationshipChip(item[0], dir, '#dedede')}
-                            &nbsp;
-                            {RenderNodeChip('...', '#fff', '1px solid lightgrey')}
-                          </td>
-                          <td style={{ width: 'auto', marginLeft: '15px' }}>{item[2]}</td>
-                        </MenuItem>
-                      </tr>
-                    );
-                  })}
+                <tbody>
+                  {neighbourRelCounts.length == 0 ? (
+                    <tr key={'ctxMenuItemTr1Default'}>
+                      <td style={{ paddingLeft: 15, minWidth: '250px' }}> No relationships...</td>
+                    </tr>
+                  ) : (
+                    <></>
+                  )}
+                  {neighbourRelCounts.length > 0 &&
+                    neighbourRelCounts.map((item, index) => {
+                      const dir = item[1] == 'any' ? undefined : item[1] == 'out';
+                      return (
+                        <tr key={`ctxMenuItemTr1-${index}`}>
+                          <MenuItem
+                            key={`ctxMenuItem1-${index}`}
+                            onClick={() => {
+                              props.interactivity.setContextMenuOpen(false);
+                              handleExpand(props.interactivity.selectedEntity.id, item[0], item[1], props);
+                              setDialogOpen(false);
+                              setCachedNeighbours(false);
+                            }}
+                          >
+                            <td style={{ minWidth: '250px', overflow: 'hidden' }}>
+                              {RenderNodeChip(props.interactivity.selectedEntity.labels, '#fff', '1px solid lightgrey')}
+                              &nbsp;
+                              {RenderRelationshipChip(item[0], dir, '#dedede')}
+                              &nbsp;
+                              {RenderNodeChip('...', '#fff', '1px solid lightgrey')}
+                            </td>
+                            <td style={{ width: 'auto', marginLeft: '15px' }}>{item[2]}</td>
+                          </MenuItem>
+                        </tr>
+                      );
+                    })}
+                </tbody>
               </table>
             </div>
           </NestedMenuItem>
@@ -157,25 +153,28 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           <NestedMenuItem label='Create relationship...' nonce={undefined} parentMenuOpen={true}>
             <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}>
               <table>
-                {props.data &&
-                  props.data.nodes.map((node) => (
-                    <tr>
-                      <MenuItem
-                        onClick={() => {
-                          setEditableEntityType(EditType.Relationship);
-                          setAction(EditAction.Create);
-                          setEditableEntity(node);
-                          props.interactivity.setContextMenuOpen(false);
-                          setDialogOpen(true);
-                        }}
-                      >
-                        <td style={{ width: '150px', overflow: 'hidden' }}>{RenderNode(node, false)}</td>
-                        <td style={{ width: 'auto', marginLeft: '15px' }}>
-                          {props.engine.selection[node.mainLabel] ? getNodeLabel(props.engine.selection, node) : ''}
-                        </td>
-                      </MenuItem>
-                    </tr>
-                  ))}
+                <tbody>
+                  {props.data &&
+                    props.data.nodes.map((node, index) => (
+                      <tr key={`ctxMenuItemTr2-${index}`}>
+                        <MenuItem
+                          key={`ctxMenuItem2-${index}`}
+                          onClick={() => {
+                            setEditableEntityType(EditType.Relationship);
+                            setAction(EditAction.Create);
+                            setEditableEntity(node);
+                            props.interactivity.setContextMenuOpen(false);
+                            setDialogOpen(true);
+                          }}
+                        >
+                          <td style={{ width: '150px', overflow: 'hidden' }}>{RenderNode(node, false)}</td>
+                          <td style={{ width: 'auto', marginLeft: '15px' }}>
+                            {props.engine.selection[node.mainLabel] ? getNodeLabel(props.engine.selection, node) : ''}
+                          </td>
+                        </MenuItem>
+                      </tr>
+                    ))}
+                </tbody>
               </table>
             </div>
           </NestedMenuItem>

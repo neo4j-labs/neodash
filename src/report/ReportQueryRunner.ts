@@ -5,6 +5,7 @@ export enum QueryStatus {
   NO_QUERY, // No query specified
   NO_DATA, // No data was returned, therefore we can't draw it.
   NO_DRAWABLE_DATA, // There is data returned, but we can't draw it
+  WAITING, // The report is waiting for custom logic to be executed.
   RUNNING, // The report query is running.
   TIMED_OUT, // Query has reached the time limit.
   COMPLETE, // There is data returned, and we can visualize it all.
@@ -12,6 +13,7 @@ export enum QueryStatus {
   ERROR, // Something broke, likely the cypher query is invalid.
 }
 
+// TODO: create a readOnly version of this method or inject a property
 /**
  * Runs a Cypher query using the specified driver.
  * @param driver - an instance of a Neo4j driver.
@@ -25,7 +27,7 @@ export enum QueryStatus {
  * @param queryTimeLimit - maximum query time in seconds.
  * @returns
  */
-export function runCypherQuery(
+export async function runCypherQuery(
   driver,
   database = '',
   query = '',
@@ -70,7 +72,7 @@ export function runCypherQuery(
     }
   }
 
-  transaction
+  await transaction
     .run(query, parameters)
     .then((res) => {
       // @ts-ignore
@@ -102,8 +104,8 @@ export function runCypherQuery(
         transaction.commit();
         return;
       } else if (records.length > rowLimit) {
-        setRecords(records.slice(0, rowLimit));
         setStatus(QueryStatus.COMPLETE_TRUNCATED);
+        setRecords(records.slice(0, rowLimit));
         // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
         transaction.commit();
         return;

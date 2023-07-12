@@ -65,6 +65,7 @@ export const applicationGetSsoSettings = (state: any) => {
   return {
     ssoEnabled: state.application.ssoEnabled,
     ssoDiscoveryUrl: state.application.ssoDiscoveryUrl,
+    cachedSSODiscoveryUrl: state.application.cachedSSODiscoveryUrl,
   };
 };
 

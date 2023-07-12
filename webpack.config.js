@@ -1,4 +1,4 @@
-const path = require('path');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const webpack = require('webpack');
 
 const rules = [
@@ -6,11 +6,18 @@ const rules = [
     test: /\.(js|jsx|ts|tsx)$/,
     exclude: /(node_modules)/,
     loader: 'babel-loader',
-    options: { presets: ['@babel/env'] },
+    options: {
+      presets: ['@babel/env'],
+      //plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean),
+    },
   },
   {
     test: /\.css$/,
     use: ['style-loader', 'css-loader'],
+  },
+  {
+    test: /\.pcss$/,
+    use: ['style-loader', 'css-loader', 'postcss-loader'],
   },
   {
     test: /\.js$/,
@@ -29,7 +36,10 @@ const rules = [
 module.exports = (env) => {
   const production = env.production;
   return {
-    entry: './src/index.tsx',
+    experiments: {
+      topLevelAwait: true,
+    },
+    entry: ['./src/index.tsx'],
     mode: production ? 'production' : 'development',
     devtool: production ? undefined : 'source-map',
     module: {
@@ -59,6 +69,7 @@ module.exports = (env) => {
           new webpack.DefinePlugin({
             process: { env: {} },
           }),
+          new ReactRefreshWebpackPlugin(),
         ],
     ignoreWarnings: [/Failed to parse source map/],
   };
