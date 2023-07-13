@@ -114,22 +114,24 @@ export const NeoTableChart = (props: ChartProps) => {
   const actionableFields = actionsRules.map((r) => r.field);
 
   const columns = transposed
-    ? ['Field'].concat(records.map((r, j) => `Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`)).map((key, i) => {
-        const value = key;
-        return ApplyColumnType(
-          {
-            key: `col-key-${i}`,
-            field: generateSafeColumnKey(key),
-            headerName: generateSafeColumnKey(key),
-            headerClassName: 'table-small-header',
-            disableColumnSelector: true,
-            flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
-            disableClickEventBubbling: true,
-          },
-          value,
-          actionableFields.includes(key)
-        );
-      })
+    ? [records[0].keys[0]]
+        .concat(records.map((record) => (record._fields[0] ? record._fields[0].toString() : '')))
+        .map((key, i) => {
+          const value = key;
+          return ApplyColumnType(
+            {
+              key: `col-key-${i}`,
+              field: generateSafeColumnKey(key),
+              headerName: generateSafeColumnKey(key),
+              headerClassName: 'table-small-header',
+              disableColumnSelector: true,
+              flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+              disableClickEventBubbling: true,
+            },
+            value,
+            actionableFields.includes(key)
+          );
+        })
     : records[0].keys.map((key, i) => {
         const value = records[0].get(key);
         if (columnWidthsType == 'Relative (%)') {
@@ -166,15 +168,32 @@ export const NeoTableChart = (props: ChartProps) => {
     ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
   );
 
+  const getTransposedRows = (records) => {
+    // Skip first key
+    const rowKeys = [...records[0].keys];
+    rowKeys.shift();
+
+    // Add values in rows
+    const rowsWithValues = rowKeys.map((key, i) =>
+      Object.assign(
+        { id: i, Field: key },
+        ...records.map((record) => ({
+          [record._fields[0]]: RenderSubValue(record._fields[i + 1]),
+        }))
+      )
+    );
+
+    // Add field in rows
+    const rowsWithFieldAndValues = rowsWithValues.map((row, i) => ({
+      ...row,
+      [records[0].keys[0]]: rowKeys[i],
+    }));
+
+    return rowsWithFieldAndValues;
+  };
+
   const rows = transposed
-    ? records[0].keys.map((key, i) => {
-        return Object.assign(
-          { id: i, Field: key },
-          ...records.map((r, j) => ({
-            [`Value${j == 0 ? '' : ` ${(j + 1).toString()}`}`]: RenderSubValue(r._fields[i]),
-          }))
-        );
-      })
+    ? getTransposedRows(records)
     : records.map((record, rownumber) => {
         return Object.assign(
           { id: rownumber },
