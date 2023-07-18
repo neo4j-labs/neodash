@@ -30,7 +30,10 @@ const AttachmentChart = (props: ChartProps) => {
         <object
           style={{ width: '100%', border: 'none', marginBottom: '-5px', height: '100%', overflow: 'hidden' }}
           data={node.properties['endpoint']}
-        ></object>
+          type="application/pdf"
+        >
+            <p>Unable to display PDF file. <a href={node.properties['endpoint']}>Download</a> instead.</p>
+        </object>
       }
     </div>
   );
