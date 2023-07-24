@@ -69,13 +69,16 @@ export class AzureOpenAiClient extends ModelClient {
         throw new Error('no client defined');
       }
 
-      const response = await fetch(`${this.endpoint  }openai/deployments?api-version=2023-03-15-preview`, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Api-Key': this.apiKey,
-        },
-      });
+      const response = await fetch(
+        `${this.endpoint + (this.endpoint?.endsWith('/') ? '' : '/')}openai/deployments?api-version=2023-03-15-preview`,
+        {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Api-Key': this.apiKey,
+          },
+        }
+      );
       const req = await response.json();
       return req.data.map((x) => x.id).filter((x) => x.includes('gpt-'));
     } catch (e) {
