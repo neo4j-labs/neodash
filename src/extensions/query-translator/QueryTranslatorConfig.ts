@@ -63,15 +63,15 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
       clientName: 'AzureOpenAI',
       clientClass: AzureOpenAiClient,
       settings: {
-        apiKey: {
-          label: 'AzureOpenAI API Key /Subscription Key',
+        endpoint: {
+          label: 'AzureOpenAI EndPoint',
           type: SELECTION_TYPES.TEXT,
           default: '',
           hasAuthButton: false,
           authentication: true,
         },
-        endpoint: {
-          label: 'AzureOpenAI EndPoint',
+        apiKey: {
+          label: 'AzureOpenAI API Key / Subscription Key',
           type: SELECTION_TYPES.TEXT,
           default: '',
           hasAuthButton: true,
@@ -86,29 +86,6 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
         },
       },
     },
-    // vertexAi: {
-    //   clientName: "vertexAi",
-    //   clientClass: VertexAiClient,
-    //   settings: {
-    //     apiKey: {
-    //       label: 'Api Key to authenticate the client',
-    //       type: SELECTION_TYPES.TEXT,
-    //       default: '',
-    //     },
-    //     modelType: {
-    //       label: 'Select from the possible model types',
-    //       type: SELECTION_TYPES.LIST,
-    //       needsStateValues: true,
-    //       default: "Insert your Api Key first",
-    //     },
-    //     region: {
-    //       label: 'GCP Region',
-    //       type: SELECTION_TYPES.LIST,
-    //       needsStateValues: true,
-    //       default: [],
-    //     }
-    //   }
-    // },
   },
 };
 

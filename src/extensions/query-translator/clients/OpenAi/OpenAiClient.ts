@@ -83,6 +83,7 @@ export class OpenAiClient extends ModelClient {
       consoleLogAsync('Error while loading the model list: ', e);
       res = [];
     }
+    this.setListAvailableModels(res);
     return res;
   }
 
