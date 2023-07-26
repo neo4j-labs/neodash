@@ -114,24 +114,22 @@ export const NeoTableChart = (props: ChartProps) => {
   const actionableFields = actionsRules.map((r) => r.field);
 
   const columns = transposed
-    ? [records[0].keys[0]]
-        .concat(records.map((record) => (record._fields[0] ? record._fields[0].toString() : '')))
-        .map((key, i) => {
-          const uniqueKey = `${String(key)}_${i}`;
-          return ApplyColumnType(
-            {
-              key: `col-key-${i}`,
-              field: generateSafeColumnKey(uniqueKey),
-              headerName: generateSafeColumnKey(key),
-              headerClassName: 'table-small-header',
-              disableColumnSelector: true,
-              flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
-              disableClickEventBubbling: true,
-            },
-            key,
-            actionableFields.includes(key)
-          );
-        })
+    ? [records[0].keys[0]].concat(records.map((record) => record._fields[0]?.toString() || '')).map((key, i) => {
+        const uniqueKey = `${String(key)}_${i}`;
+        return ApplyColumnType(
+          {
+            key: `col-key-${i}`,
+            field: generateSafeColumnKey(uniqueKey),
+            headerName: generateSafeColumnKey(key),
+            headerClassName: 'table-small-header',
+            disableColumnSelector: true,
+            flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
+            disableClickEventBubbling: true,
+          },
+          key,
+          actionableFields.includes(key)
+        );
+      })
     : records[0].keys.map((key, i) => {
         const value = records[0].get(key);
         if (columnWidthsType == 'Relative (%)') {
