@@ -282,7 +282,7 @@ export const NeoCustomReportActionsModal = ({
                           <span className='n-font-bold'>ON</span>
                         </td>
                         <td width='30%'>
-                          <div style={{ border: '2px dashed grey' }} className='n-px-1 n-py-1'>
+                          <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
                               className='n-align-middle n-w-2/5 n-pr-1'
@@ -332,7 +332,7 @@ export const NeoCustomReportActionsModal = ({
                           <span style={{ fontWeight: 'bold', color: 'black' }}>SET</span>
                         </td>
                         <td width='45%'>
-                          <div style={{ border: '2px dashed grey' }} className='n-px-1 n-py-1'>
+                          <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
                               className='n-align-middle n-w-1/4'
@@ -357,7 +357,7 @@ export const NeoCustomReportActionsModal = ({
                           <span style={{ fontWeight: 'bold', color: 'black' }}>TO</span>
                         </td>
                         <td width='20%'>
-                          <div style={{ border: '2px dashed grey' }} className='n-px-1 n-py-1'>
+                          <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Autocomplete
                               disableClearable={true}
                               id='autocomplete-label-type'
@@ -380,7 +380,7 @@ export const NeoCustomReportActionsModal = ({
                           </div>
                         </td>
 
-                        <td style={{ width: '2.5%' }} className='n-pl-1'>
+                        <td width='2.5%'>
                           <IconButton
                             aria-label='remove rule'
                             size='medium'
@@ -392,15 +392,14 @@ export const NeoCustomReportActionsModal = ({
                             <XMarkIconOutline />
                           </IconButton>
                         </td>
-                        <hr />
                       </tr>
                     </>
                   );
                 })}
 
                 <tr>
-                  <td colSpan={5}>
-                    <div style={{ textAlign: 'center', marginBottom: '5px' }}>
+                  <td colSpan={7}>
+                    <div className='n-text-center n-mt-1'>
                       <IconButton
                         aria-label='add'
                         size='medium'
@@ -417,7 +416,8 @@ export const NeoCustomReportActionsModal = ({
                 </tr>
               </table>
             </div>
-
+          </Dialog.Content>
+          <Dialog.Actions>
             <Button
               onClick={() => {
                 handleClose();
@@ -428,7 +428,7 @@ export const NeoCustomReportActionsModal = ({
               Save
               <SparklesIconOutline className='btn-icon-lg-r' />
             </Button>
-          </Dialog.Content>
+          </Dialog.Actions>
         </Dialog>
       ) : (
         <></>
