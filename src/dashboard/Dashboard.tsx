@@ -41,25 +41,35 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
         connection={connection}
         onConnectionUpdate={onConnectionUpdate}
       />
-      <NeoDrawer open={drawerOpen} handleDrawerClose={handleDrawerClose}></NeoDrawer>
-      <NeoDashboardHeader
-        open={drawerOpen}
-        connection={connection}
-        onDownloadImage={onDownloadDashboardAsImage}
-        handleDrawerOpen={handleDrawerOpen}
-      ></NeoDashboardHeader>
-      <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: '#fafafa' }}>
-        <Container maxWidth='xl' style={{ marginTop: '62px' }}>
-          {applicationSettings.standalonePassword ? (
-            <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
-              Warning: NeoDash is running with a plaintext password in config.json.
-            </div>
-          ) : (
-            <></>
-          )}
-          <NeoPage></NeoPage>
-        </Container>
-      </main>
+      {/* Navigation Bar */}
+      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-light-neutral-bg-weak n-border-b n-border-light-neutral-border-weak'>
+        <NeoDashboardHeader
+          open={drawerOpen}
+          connection={connection}
+          onDownloadImage={onDownloadDashboardAsImage}
+          handleDrawerOpen={handleDrawerOpen}
+        ></NeoDashboardHeader>
+      </div>
+      {/* Main Page */}
+      <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
+        {/* Sidebar */}
+        <NeoDrawer open={drawerOpen} handleDrawerClose={handleDrawerClose}></NeoDrawer>
+
+        {/* Main Content */}
+        <main className='n-flex-1 n-relative n-z-0 n-overflow-y-auto n-scroll-smooth n-w-full'>
+          <div className='n-absolute n-inset-0'>
+            {/* The main content of the page */}
+            {applicationSettings.standalonePassword ? (
+              <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
+                Warning: NeoDash is running with a plaintext password in config.json.
+              </div>
+            ) : (
+              <></>
+            )}
+            <NeoPage></NeoPage>
+          </div>
+        </main>
+      </div>
     </Neo4jProvider>
   );
   return content;

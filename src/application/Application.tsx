@@ -109,9 +109,11 @@ const Application = ({
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
     <ThemeProvider theme={lightTheme}>
-      <div ref={ref} className='n-flex'>
-        {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
-        <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
+      <div
+        ref={ref}
+        className='n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden n-bg-light-neutral-bg-default'
+      >
+        {connected ? <></> : <NeoDashboardPlaceholder></NeoDashboardPlaceholder>}
         {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
         {/* TODO - move all models into a pop-ups (or modals) component. */}
         <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />

@@ -7,7 +7,7 @@ import {
   DASHBOARD_HEADER_COLOR,
 } from '../../config/ApplicationConfig';
 
-export const NeoDashboardPlaceholder = ({ connected }) => {
+export const NeoDashboardPlaceholder = () => {
   const defaultToolbarContent = (
     <InputBase
       id='center-aligned'
@@ -52,7 +52,7 @@ export const NeoDashboardPlaceholder = ({ connected }) => {
         </Toolbar>
       </AppBar>
       <div className='n-absolute n-w-full n-h-full'>
-        {!connected ? <LoadingSpinner size='large' className='centered' /> : <></>}
+        <LoadingSpinner size='large' className='centered' />
       </div>
     </div>
   );
