@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
