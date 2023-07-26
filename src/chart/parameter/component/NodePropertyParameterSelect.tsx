@@ -50,7 +50,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         props.setParameterDisplayValue(undefined);
         return;
       }
-      if (newDisplay == null) {
+      if (newDisplay.length == 0) {
         setInputValue([]);
         props.setParameterValue(defaultValue);
         props.setParameterDisplayValue(defaultValue);
@@ -74,7 +74,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     let newValue;
     // Multiple and new entry
     if (isMulti && inputValue.length < newDisplay.length) {
-      newValue = [...props.parameterValue];
+      newValue = Array.isArray(props.parameterValue) ? [...props.parameterValue] : [props.parameterValue];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
 
       let val = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]._fields[
