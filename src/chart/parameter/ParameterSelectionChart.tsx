@@ -100,7 +100,6 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
         settings={props.settings}
         allParameters={allParameters}
         compatibilityMode={compatibilityMode}
-        multiSelector={multiSelector}
       />
     );
   } else if (type == 'Custom Query') {

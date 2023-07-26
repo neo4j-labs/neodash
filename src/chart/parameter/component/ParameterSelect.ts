@@ -49,5 +49,5 @@ export interface ParameterSelectProps {
   /**
    * Add the possibility for multiple selections
    */
-  multiSelector: boolean;
+  multiSelector?: boolean;
 }
