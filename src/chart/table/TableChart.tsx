@@ -117,18 +117,18 @@ export const NeoTableChart = (props: ChartProps) => {
     ? [records[0].keys[0]]
         .concat(records.map((record) => (record._fields[0] ? record._fields[0].toString() : '')))
         .map((key, i) => {
-          const value = key;
+          const uniqueKey = `${String(key)}_${i}`;
           return ApplyColumnType(
             {
               key: `col-key-${i}`,
-              field: generateSafeColumnKey(key),
+              field: generateSafeColumnKey(uniqueKey),
               headerName: generateSafeColumnKey(key),
               headerClassName: 'table-small-header',
               disableColumnSelector: true,
               flex: columnWidths && i < columnWidths.length ? columnWidths[i] : 1,
               disableClickEventBubbling: true,
             },
-            value,
+            key,
             actionableFields.includes(key)
           );
         })
@@ -177,8 +177,8 @@ export const NeoTableChart = (props: ChartProps) => {
     const rowsWithValues = rowKeys.map((key, i) =>
       Object.assign(
         { id: i, Field: key },
-        ...records.map((record) => ({
-          [record._fields[0]]: RenderSubValue(record._fields[i + 1]),
+        ...records.map((record, j) => ({
+          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1]),
         }))
       )
     );
@@ -186,7 +186,7 @@ export const NeoTableChart = (props: ChartProps) => {
     // Add field in rows
     const rowsWithFieldAndValues = rowsWithValues.map((row, i) => ({
       ...row,
-      [records[0].keys[0]]: rowKeys[i],
+      [`${records[0].keys[0]}_${0}`]: rowKeys[i],
     }));
 
     return rowsWithFieldAndValues;
