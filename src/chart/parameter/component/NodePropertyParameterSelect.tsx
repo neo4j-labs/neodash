@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
+import { RenderSubValue } from '../../../report/ReportRecordProcessing';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
@@ -129,6 +130,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
           variant='outlined'
         />
       )}
+      getOptionLabel={(option) => RenderSubValue(option)}
     />
   );
 };
