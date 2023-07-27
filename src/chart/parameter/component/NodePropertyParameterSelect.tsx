@@ -53,8 +53,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       }
       if (newDisplay.length == 0) {
         setInputValue([]);
-        props.setParameterValue(defaultValue);
-        props.setParameterDisplayValue(defaultValue);
+        props.setParameterValue([]);
+        props.setParameterDisplayValue([]);
         return;
       }
     } else {
