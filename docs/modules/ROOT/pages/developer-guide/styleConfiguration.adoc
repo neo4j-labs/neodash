@@ -14,7 +14,6 @@ An example configuration for NeoDash
 ....
 {
   "DASHBOARD_HEADER_BRAND_LOGO": "logo_lightsand.png",
-  "APPLY_CUSTOM_BRAND_LOGO": true,
   "DASHBOARD_HEADER_COLOR" : "#F3F3F0",
   "DASHBOARD_HEADER_BUTTON_COLOR" : "#009999",
   "DASHBOARD_HEADER_TITLE_COLOR" : "#00C1B6",
@@ -31,9 +30,7 @@ An example configuration for NeoDash
 [width="100%",cols="19%,17%,26%,38%",options="header",]
 |===
 |Name |Type |Default Value |Description
-|APPLY_CUSTOM_BRAND_LOGO |boolean |false |If enabled, a custom logo will be used on the header based on the DASHBOARD_HEADER_BRAND_LOGO variable.
-
-|DASHBOARD_HEADER_BRAND_LOGO |string |undefined |If APPLY_CUSTOM_BRAND_LOGO is true, this variable defines the name of the logo file located on the public folder of the Neodash deployment.
+|DASHBOARD_HEADER_BRAND_LOGO |string |undefined |This variable defines the name of the logo file located on the public folder of the Neodash deployment, if you want your own logo instead of the Neo4j one.
 
 |DASHBOARD_HEADER_COLOR |string |#0B297D |Determines the color of the header.
 

@@ -1,11 +1,7 @@
 import { AppBar, Toolbar, InputBase } from '@mui/material';
 import React from 'react';
 import { LoadingSpinner } from '@neo4j-ndl/react';
-import {
-  APPLY_CUSTOM_BRAND_LOGO,
-  DASHBOARD_HEADER_BRAND_LOGO,
-  DASHBOARD_HEADER_COLOR,
-} from '../../config/ApplicationConfig';
+import { DASHBOARD_HEADER_BRAND_LOGO, DASHBOARD_HEADER_COLOR } from '../../config/ApplicationConfig';
 
 export const NeoDashboardPlaceholder = () => {
   const defaultToolbarContent = (
@@ -35,7 +31,7 @@ export const NeoDashboardPlaceholder = () => {
         }}
       >
         <Toolbar className='n-z-20 n-pr-6' style={{ background: DASHBOARD_HEADER_COLOR, color: 'white !important' }}>
-          {APPLY_CUSTOM_BRAND_LOGO ? brandedToolbarContent : defaultToolbarContent}
+          {/* {APPLY_CUSTOM_BRAND_LOGO ? brandedToolbarContent : defaultToolbarContent} */}
         </Toolbar>
         <Toolbar
           className='n-z-10 n-px-0 n-bg-danger-10'

@@ -1,6 +1,4 @@
-// import { AppBar } from '@mui/material';
-// import React, { useCallback, useEffect } from 'react';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 // import { setDashboardTitle, addPage, removePage } from '../DashboardActions';
 import { setDashboardTitle } from '../DashboardActions';
@@ -14,22 +12,24 @@ import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSe
 // import NeoDashboardHeaderPageList from './DashboardHeaderPageList';
 // import { NeoDashboardHeaderTitleBar } from './DashboardHeaderTitleBar';
 import { NeoDashboardHeaderLogo } from './DashboardHeaderLogo';
+import { NeoLogoutButton } from './DashboardHeaderLogoutButton';
+import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownloadImageButton';
 
 const drawerWidth = 240;
 
 export const NeoDashboardHeader = ({
   // open,
-  // standalone,
+  standalone,
   dashboardTitle,
   // handleDrawerOpen,
   // setDashboardTitle,
   // editable,
   connection,
-  // settings,
-  // onConnectionModalOpen,
-  // onDownloadImage,
+  settings,
+  onConnectionModalOpen,
+  onDownloadImage,
 }) => {
-  // const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
+  const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
 
   useEffect(() => {
@@ -47,36 +47,15 @@ export const NeoDashboardHeader = ({
           <nav className='n-items-center n-justify-center n-flex n-flex-1 n-w-full'>
             {`${connection.protocol}://${connection.url}:${connection.port}`}
           </nav>
-          <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>John Cena</div>
-          {/* <div className="hidden sm:flex items-center justify-end md:flex-1 lg:w-0 gap-6">
-            <FeedbackButton />
-            <div className="flex flex-row gap-x-2">
-              <HelpButton />
-              <GlobalSettingsButton />
-              <LogoutButton />
+          <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>
+            <div className='n-flex n-flex-row n-gap-x-2'>
+              {downloadImageEnabled && <NeoDashboardHeaderDownloadImageButton onDownloadImage={onDownloadImage} />}
+              <NeoLogoutButton standalone={standalone} onConnectionModalOpen={onConnectionModalOpen} />
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>
-    // <AppBar
-    //   position='absolute'
-    //   className='n-z-20'
-    //   style={
-    //     open
-    //       ? {
-    //           boxShadow: 'none',
-    //           marginLeft: drawerWidth,
-    //           width: `calc(100% - ${drawerWidth}px)`,
-    //           transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-    //         }
-    //       : {
-    //           boxShadow: 'none',
-    //           width: `calc(100%)`,
-    //           transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-    //         }
-    //   }
-    // >
     //   <NeoDashboardHeaderTitleBar
     //     downloadImageEnabled={downloadImageEnabled}
     //     onDownloadImage={onDownloadImage}
