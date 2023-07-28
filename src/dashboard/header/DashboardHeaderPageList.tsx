@@ -50,9 +50,11 @@ export const NeoDashboardHeaderPageList = ({
 
   const handleMenuEditClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
     event.stopPropagation();
+    console.log(i);
   };
   const handleMenuDeleteClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
     event.stopPropagation();
+    console.log(i);
   };
 
   /**
@@ -95,7 +97,10 @@ export const NeoDashboardHeaderPageList = ({
                   'open-menu': menuOpen,
                 })}
                 style={{ height: '1.1rem' }}
-                onClick={(e) => setAnchorEl(e.currentTarget)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAnchorEl(e.currentTarget);
+                }}
                 size='small'
                 clean
               >
