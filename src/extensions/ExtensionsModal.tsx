@@ -6,7 +6,7 @@ import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
 import { setExtensionReducerEnabled } from './state/ExtensionActions';
-import { Dialog, Label, SideNavigationItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
+import { Dialog, Label, MenuItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
 import { Section, SectionContent } from '../modal/ModalUtils';
 
@@ -15,7 +15,6 @@ const NeoExtensionsModal = ({
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
   setExtensionReducerEnabled,
-  navItemClass,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -29,15 +28,12 @@ const NeoExtensionsModal = ({
 
   return (
     <div>
-      <Tooltip title='Extensions' aria-label='extensions' disableInteractive>
-        <SideNavigationItem
-          id='extensions-sidebar-button'
-          onClick={handleClickOpen}
-          icon={<PuzzlePieceIconSolid className={navItemClass} />}
-        >
-          Extensions
-        </SideNavigationItem>
-      </Tooltip>
+      <MenuItem
+        title='Extensions'
+        id='extensions-sidebar-button'
+        onClick={handleClickOpen}
+        icon={<PuzzlePieceIconSolid />}
+      />
 
       {open ? (
         <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>

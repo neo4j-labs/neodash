@@ -1,8 +1,5 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
-import NeoSaveModal from '../../modal/SaveModal';
-import NeoLoadModal from '../../modal/LoadModal';
-import NeoShareModal from '../../modal/ShareModal';
 import { NeoReportExamplesModal } from '../../modal/ReportExamplesModal';
 import {
   applicationGetConnection,
@@ -11,10 +8,7 @@ import {
 } from '../../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../application/ApplicationActions';
-import NeoSettingsModal from '../../settings/SettingsModal';
-import { getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
-import { updateDashboardSetting } from '../../settings/SettingsActions';
-import NeoExtensionsModal from '../../extensions/ExtensionsModal';
+import { getDashboardExtensions } from '../DashboardSelectors';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import NodeSidebarDrawer from '../../extensions/sidebar/SidebarDrawer';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
@@ -32,15 +26,7 @@ function renderExtensionDrawers(database) {
 }
 
 // The sidebar that appears on the left side of the dashboard.
-export const NeoDrawer = ({
-  hidden,
-  connection,
-  dashboardSettings,
-  extensions,
-  updateDashboardSetting,
-  onAboutModalOpen,
-  resetApplication,
-}) => {
+export const NeoDrawer = ({ hidden, connection, extensions, onAboutModalOpen, resetApplication }) => {
   const navItemClass = 'n-w-full n-h-full';
 
   /**
@@ -81,17 +67,7 @@ export const NeoDrawer = ({
             </SideNavigationItem>
           </Tooltip>
           <SideNavigationGroupHeader>Manage</SideNavigationGroupHeader>
-          <NeoSettingsModal
-            dashboardSettings={dashboardSettings}
-            updateDashboardSetting={updateDashboardSetting}
-            navItemClass={navItemClass}
-            extensions={extensions}
-          ></NeoSettingsModal>
 
-          <NeoSaveModal navItemClass={navItemClass}></NeoSaveModal>
-          <NeoLoadModal navItemClass={navItemClass}></NeoLoadModal>
-          <NeoShareModal navItemClass={navItemClass}></NeoShareModal>
-          <NeoExtensionsModal navItemClass={navItemClass}></NeoExtensionsModal>
           {renderDrawerExtensionsButtons()}
           <SideNavigationGroupHeader>Learn</SideNavigationGroupHeader>
           <NeoReportExamplesModal
@@ -132,7 +108,6 @@ export const NeoDrawer = ({
 };
 
 const mapStateToProps = (state) => ({
-  dashboardSettings: getDashboardSettings(state),
   hidden: applicationIsStandalone(state),
   extensions: getDashboardExtensions(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
@@ -141,9 +116,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   onAboutModalOpen: () => dispatch(setAboutModalOpen(true)),
-  updateDashboardSetting: (setting, value) => {
-    dispatch(updateDashboardSetting(setting, value));
-  },
   resetApplication: () => {
     dispatch(setWelcomeScreenOpen(true));
     dispatch(setConnected(false));

@@ -7,14 +7,13 @@ import { valueIsArray, valueIsObject } from '../chart/ChartUtils';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { loadDatabaseListFromNeo4jThunk, saveDashboardToNeo4jThunk } from '../dashboard/DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { SideNavigationItem } from '@neo4j-ndl/react';
 import {
   CloudArrowDownIconOutline,
   DatabaseAddCircleIcon,
   DocumentArrowDownIconOutline,
   BackspaceIconOutline,
 } from '@neo4j-ndl/react/icons';
-import { Button, Checkbox, Dialog, Dropdown } from '@neo4j-ndl/react';
+import { Button, Checkbox, Dialog, Dropdown, MenuItem } from '@neo4j-ndl/react';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -49,13 +48,7 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
   return value;
 };
 
-export const NeoSaveModal = ({
-  dashboard,
-  connection,
-  saveDashboardToNeo4j,
-  loadDatabaseListFromNeo4j,
-  navItemClass,
-}) => {
+export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
@@ -98,11 +91,7 @@ export const NeoSaveModal = ({
 
   return (
     <div>
-      <Tooltip title='Save' aria-label='save' disableInteractive>
-        <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowDownIconOutline className={navItemClass} />}>
-          Save
-        </SideNavigationItem>
-      </Tooltip>
+      <MenuItem title='Save' onClick={handleClickOpen} icon={<CloudArrowDownIconOutline />} />
 
       <Dialog size='large' open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>

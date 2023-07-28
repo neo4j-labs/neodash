@@ -8,7 +8,7 @@ import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { SELECTION_TYPES } from '../config/CardConfig';
-import { SideNavigationItem, Button, Dialog, Dropdown, TextLink } from '@neo4j-ndl/react';
+import { MenuItem, Button, Dialog, Dropdown, TextLink } from '@neo4j-ndl/react';
 import {
   ShareIconOutline,
   PlayIconSolid,
@@ -20,7 +20,7 @@ const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
 const styles = {};
 
-export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j, navItemClass }) => {
+export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j }) => {
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
   const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
   const [loadFromFileModalOpen, setLoadFromFileModalOpen] = React.useState(false);
@@ -87,11 +87,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
 
   return (
     <div>
-      <Tooltip title='Share' aria-label='share' disableInteractive>
-        <SideNavigationItem onClick={handleClickOpen} icon={<ShareIconOutline className={navItemClass} />}>
-          Share
-        </SideNavigationItem>
-      </Tooltip>
+      <MenuItem title='Share' onClick={handleClickOpen} icon={<ShareIconOutline />} />
 
       <Dialog
         key={1}
