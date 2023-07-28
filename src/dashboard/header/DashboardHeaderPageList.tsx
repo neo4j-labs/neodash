@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getPages } from '../DashboardSelectors';
 import debounce from 'lodash/debounce';
+import classname from 'classnames';
 import { setPageTitle } from '../../page/PageActions';
 import { addPageThunk, movePageThunk, removePageThunk } from '../DashboardThunks';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
@@ -47,28 +48,12 @@ export const NeoDashboardHeaderPageList = ({
 
   const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
-    event.stopPropagation();
-    const clickedElement = event.currentTarget as HTMLElement;
-    clickedElement.classList.add('open-menu');
-
-    setAnchorEl(clickedElement);
-  };
   const handleMenuEditClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
     event.stopPropagation();
-    console.log(i);
   };
   const handleMenuDeleteClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
     event.stopPropagation();
-    console.log(i);
   };
-  const handleMenuClose = () => {
-    anchorEl.classList.remove('open-menu');
-
-    setAnchorEl(null);
-  };
-  const menuOpen = Boolean(anchorEl);
 
   /**
    * Recompute the layout of the page buttons.This is called whenever the pages get reorganized.
@@ -97,32 +82,39 @@ export const NeoDashboardHeaderPageList = ({
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
-        {pages.map((page, i) => (
-          <Tab tabId={i} key={i}>
-            {page.title}
-            <IconButton
-              aria-label='Page actions'
-              className='n-relative n-top-1 visible-on-tab-hover'
-              style={{ height: '1.1rem' }}
-              onClick={handleMenuClick}
-              size='small'
-              clean
-            >
-              <EllipsisHorizontalIconOutline />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose}>
-              <MenuItems>
-                <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e, i)} />
-                <MenuItem
-                  className='n-text-palette-danger-text'
-                  icon={<TrashIconOutline />}
-                  title='Delete'
-                  onClick={(e) => handleMenuDeleteClick(e, i)}
-                />
-              </MenuItems>
-            </Menu>
-          </Tab>
-        ))}
+        {pages.map((page, i) => {
+          const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+          const menuOpen = Boolean(anchorEl);
+
+          return (
+            <Tab tabId={i} key={i}>
+              {page.title}
+              <IconButton
+                aria-label='Page actions'
+                className={classname('n-relative n-top-1 visible-on-tab-hover', {
+                  'open-menu': menuOpen,
+                })}
+                style={{ height: '1.1rem' }}
+                onClick={(e) => setAnchorEl(e.currentTarget)}
+                size='small'
+                clean
+              >
+                <EllipsisHorizontalIconOutline />
+              </IconButton>
+              <Menu anchorEl={anchorEl} open={menuOpen} onClose={() => setAnchorEl(null)}>
+                <MenuItems>
+                  <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e, i)} />
+                  <MenuItem
+                    className='n-text-palette-danger-text'
+                    icon={<TrashIconOutline />}
+                    title='Delete'
+                    onClick={(e) => handleMenuDeleteClick(e, i)}
+                  />
+                </MenuItems>
+              </Menu>
+            </Tab>
+          );
+        })}
       </Tabs>
       {editable && !isDragging ? lastElement : <></>}
     </div>
