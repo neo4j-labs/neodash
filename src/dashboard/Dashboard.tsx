@@ -3,7 +3,7 @@ import NeoPage from '../page/Page';
 import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
 import NeoDashboardTitle from './header/DashboardTitle';
-import { NeoDashboardHeaderPageList } from './header/DashboardHeaderPageList';
+import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
 import { createDriver, Neo4jProvider } from 'use-neo4j';
 import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';

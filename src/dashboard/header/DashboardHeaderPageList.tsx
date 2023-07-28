@@ -14,7 +14,7 @@ import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSe
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../../config/ApplicationConfig';
-import { Tabs, Tab, TabPanel, Menu, MenuItems, MenuItem, IconButton } from '@neo4j-ndl/react';
+import { Tabs, Tab, Menu, MenuItems, MenuItem, IconButton } from '@neo4j-ndl/react';
 import {
   EllipsisHorizontalIconOutline,
   PencilIconOutline,
@@ -34,7 +34,7 @@ export const NeoDashboardHeaderPageList = ({
   addPage,
   // movePage,
   // removePage,
-  // selectPage,
+  selectPage,
   // setPageTitle,
 }) => {
   const [layout, setLayout] = React.useState([]);
@@ -43,16 +43,25 @@ export const NeoDashboardHeaderPageList = ({
   const [lastElement, setLastElement] = React.useState(<></>);
 
   // We debounce several state changes to improve user experience.
-  // const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
+  const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
 
-  // const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
+  const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const handleMenuClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+    event.stopPropagation();
     const clickedElement = event.currentTarget as HTMLElement;
     clickedElement.classList.add('open-menu');
 
     setAnchorEl(clickedElement);
+  };
+  const handleMenuEditClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
+    event.stopPropagation();
+    console.log(i);
+  };
+  const handleMenuDeleteClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
+    event.stopPropagation();
+    console.log(i);
   };
   const handleMenuClose = () => {
     anchorEl.classList.remove('open-menu');
@@ -87,12 +96,12 @@ export const NeoDashboardHeaderPageList = ({
 
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
-      <Tabs fill='underline' onChange={function Xa() {}} value={pagenumber}>
+      <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
         {pages.map((page, i) => (
-          <Tab tabId={i}>
+          <Tab tabId={i} key={i}>
             {page.title}
             <IconButton
-              id='tab-0-menu'
+              aria-label='Page actions'
               className='n-relative n-top-1 visible-on-tab-hover'
               style={{ height: '1.1rem' }}
               onClick={handleMenuClick}
@@ -103,12 +112,12 @@ export const NeoDashboardHeaderPageList = ({
             </IconButton>
             <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose}>
               <MenuItems>
-                <MenuItem icon={<PencilIconOutline />} onClick={function Xa() {}} title='Edit name' />
+                <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e, i)} />
                 <MenuItem
                   className='n-text-palette-danger-text'
                   icon={<TrashIconOutline />}
-                  onClick={function Xa() {}}
                   title='Delete'
+                  onClick={(e) => handleMenuDeleteClick(e, i)}
                 />
               </MenuItems>
             </Menu>
