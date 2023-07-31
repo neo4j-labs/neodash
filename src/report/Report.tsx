@@ -37,7 +37,7 @@ export const NeoReport = ({
   setFields = (f) => {
     fields = f;
   }, // The callback to update the set of query fields after query execution.
-  setAllFields,
+  setSchema,
   setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
   getGlobalParameter = (_: string) => {
     return '';
@@ -122,7 +122,7 @@ export const NeoReport = ({
           HARD_ROW_LIMITING,
           queryTimeLimit,
           (fields) => {
-            setAllFields(id, fields);
+            setSchema(id, fields);
           }
         );
       } else {
@@ -141,7 +141,7 @@ export const NeoReport = ({
           HARD_ROW_LIMITING,
           queryTimeLimit,
           (fields) => {
-            setAllFields(id, fields);
+            setSchema(id, fields);
           }
         );
       }
@@ -216,7 +216,7 @@ export const NeoReport = ({
         HARD_ROW_LIMITING,
         queryTimeLimit,
         (fields) => {
-          setAllFields(id, fields);
+          setSchema(id, fields);
         }
       );
     },
@@ -341,7 +341,7 @@ const mapDispatchToProps = (dispatch) => ({
   getCustomDispatcher: () => {
     return dispatch;
   },
-  setAllFields: (id: any, fields: any) => {
+  setSchema: (id: any, fields: any) => {
     dispatch(updateFieldsThunk(id, fields, true));
   },
 });

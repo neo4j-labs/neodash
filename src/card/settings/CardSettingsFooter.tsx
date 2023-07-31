@@ -19,7 +19,7 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 const NeoCardSettingsFooter = ({
   type,
   fields,
-  fieldsAll,
+  schema,
   reportSettings,
   reportSettingsOpen,
   extensions,
@@ -125,7 +125,7 @@ const NeoCardSettingsFooter = ({
           settingValue={reportSettings[settingToCustomize]}
           type={type}
           fields={fields}
-          fieldsAll={fieldsAll}
+          schema={schema}
           customReportStyleModalOpen={customReportStyleModalOpen}
           setCustomReportStyleModalOpen={setCustomReportStyleModalOpen}
           onReportSettingUpdate={onReportSettingUpdate}

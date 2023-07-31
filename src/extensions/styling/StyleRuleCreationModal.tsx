@@ -129,7 +129,7 @@ export const NeoCustomReportStyleModal = ({
   settingValue,
   type,
   fields,
-  fieldsAll,
+  schema,
   setCustomReportStyleModalOpen,
   onReportSettingUpdate,
 }) => {
@@ -163,20 +163,20 @@ export const NeoCustomReportStyleModal = ({
    * This will be dynamic based on the type of report we are customizing.
    */
   const createFieldVariableSuggestions = () => {
-    if (!fieldsAll) {
+    if (!schema) {
       return [];
     }
     if (type == 'graph' || type == 'map') {
-      return fieldsAll
+      return schema
         .map((node, index) => {
           if (!Array.isArray(node)) {
             return undefined;
           }
-          return fieldsAll[index].map((property, propertyIndex) => {
+          return schema[index].map((property, propertyIndex) => {
             if (propertyIndex == 0) {
               return undefined;
             }
-            return `${fieldsAll[index][0]}.${property}`;
+            return `${schema[index][0]}.${property}`;
           });
         })
         .flat()

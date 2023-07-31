@@ -50,9 +50,9 @@ export const updateFields = (pagenumber: number, id: number, fields: any) => ({
   payload: { pagenumber, id, fields },
 });
 
-export const UPDATE_FIELDS_ALL = 'PAGE/CARD/UPDATE_FIELDS_ALL';
-export const updateFieldsAll = (pagenumber: number, id: number, fields: any) => ({
-  type: UPDATE_FIELDS_ALL,
+export const UPDATE_SCHEMA = 'PAGE/CARD/UPDATE_SCHEMA';
+export const updateSchema = (pagenumber: number, id: number, fields: any) => ({
+  type: UPDATE_SCHEMA,
   payload: { pagenumber, id, fields },
 });
 

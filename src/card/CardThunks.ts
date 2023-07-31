@@ -10,7 +10,7 @@ import {
   clearSelection,
   updateAllSelections,
   updateReportDatabase,
-  updateFieldsAll,
+  updateSchema,
 } from './CardActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getReportTypes } from '../extensions/ExtensionUtils';
@@ -68,7 +68,7 @@ export const updateReportTypeThunk = (id, type) => (dispatch: any, getState: any
 
     dispatch(updateReportType(pagenumber, id, type));
     dispatch(updateFields(pagenumber, id, []));
-    dispatch(updateFieldsAll(pagenumber, id, []));
+    dispatch(updateSchema(pagenumber, id, []));
     dispatch(clearSelection(pagenumber, id));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update report type', e));
@@ -76,7 +76,7 @@ export const updateReportTypeThunk = (id, type) => (dispatch: any, getState: any
 };
 
 export const updateFieldsThunk =
-  (id, fields, allFields = false) =>
+  (id, fields, schema = false) =>
   (dispatch: any, getState: any) => {
     try {
       const state = getState();
@@ -87,7 +87,7 @@ export const updateFieldsThunk =
       if (!oldReport) {
         return;
       }
-      const oldFields = allFields ? oldReport.fieldsAll : oldReport.fields;
+      const oldFields = schema ? oldReport.schema : oldReport.fields;
       const reportType = oldReport.type;
       const oldSelection = oldReport.selection;
       const reportTypes = getReportTypes(extensions);
@@ -128,8 +128,8 @@ export const updateFieldsThunk =
         });
         // Set the new set of fields for the report so that we may select them.
 
-        if (allFields) {
-          dispatch(updateFieldsAll(pagenumber, id, fields));
+        if (schema) {
+          dispatch(updateSchema(pagenumber, id, fields));
         } else {
           dispatch(updateFields(pagenumber, id, fields));
         }
