@@ -56,20 +56,6 @@ export const NeoDashboardHeader = ({
         </div>
       </div>
     </div>
-    //   <NeoDashboardHeaderTitleBar
-    //     downloadImageEnabled={downloadImageEnabled}
-    //     onDownloadImage={onDownloadImage}
-    //     dashboardTitle={dashboardTitle}
-    //     setDashboardTitle={setDashboardTitle}
-    //     editable={editable}
-    //     standalone={standalone}
-    //     open={open}
-    //     onConnectionModalOpen={onConnectionModalOpen}
-    //     handleDrawerOpen={handleDrawerOpen}
-    //     connection={connection}
-    //   ></NeoDashboardHeaderTitleBar>
-    //   <NeoDashboardHeaderPageList open={open}></NeoDashboardHeaderPageList>
-    // </AppBar>
   );
   return content;
 };
