@@ -36,7 +36,7 @@ export const modelClientInitializationThunk =
     if (modelProvider && settings) {
       // Getting the correct ModelClient object
       let tmpClient = getModelClientObject(modelProvider, settings);
-      console.log(tmpClient);
+
       // Try authentication
       let isAuthenticated = await tmpClient.authenticate(setIsAuthenticated);
 

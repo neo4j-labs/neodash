@@ -64,14 +64,14 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
       clientClass: AzureOpenAiClient,
       settings: {
         endpoint: {
-          label: 'AzureOpenAI EndPoint',
+          label: 'Azure OpenAI EndPoint',
           type: SELECTION_TYPES.TEXT,
           default: '',
           hasAuthButton: false,
           authentication: true,
         },
         apiKey: {
-          label: 'AzureOpenAI API Key / Subscription Key',
+          label: 'Subscription Key',
           type: SELECTION_TYPES.TEXT,
           default: '',
           hasAuthButton: true,
