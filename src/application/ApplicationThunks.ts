@@ -221,13 +221,12 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         const database = connection.split('@')[1].split(':')[0];
         const url = connection.split('@')[1].split(':')[1];
         const port = connection.split('@')[1].split(':')[2];
-
         if (url == password) {
           // Special case where a connect link is generated without a password.
           // Here, the format is parsed incorrectly and we open the connection window instead.
 
           dispatch(resetShareDetails());
-          dispatch(setConnectionProperties('neo4j', url, '7687', database, username.split('@')[0], ''));
+          dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
           dispatch(setWelcomeScreenOpen(false));
           dispatch(setConnectionModalOpen(true));
           // window.history.pushState({}, document.title, "/");
