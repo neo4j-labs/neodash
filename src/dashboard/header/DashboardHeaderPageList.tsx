@@ -44,7 +44,7 @@ export const NeoDashboardHeaderPageList = ({
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
         {pages.map((page, i) => (
-          <DashboardHeaderPageTitle title={page.title} tabIndex={i} key={i} />
+          <DashboardHeaderPageTitle title={page.title} tabIndex={i} key={i} disabled={!editable} />
         ))}
       </Tabs>
       {editable && !isDragging ? pageAddButton : <></>}
