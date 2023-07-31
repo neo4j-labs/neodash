@@ -34,6 +34,7 @@
   "keywords": [],
   "author": "Neo4j Labs",
   "dependencies": {
+    "@azure/openai": "^1.0.0-beta.2",
     "@codemirror/lang-markdown": "^6.1.1",
     "@codemirror/language-data": "^6.3.1",
     "@mui/icons-material": "^5.11.16",
