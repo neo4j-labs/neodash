@@ -29,7 +29,7 @@ const NeoExtensionsModal = ({
   return (
     <div>
       <MenuItem
-        title='Extensions'
+        title='Manage extensions'
         id='extensions-sidebar-button'
         onClick={handleClickOpen}
         icon={<PuzzlePieceIconSolid />}
