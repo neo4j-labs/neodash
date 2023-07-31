@@ -1,8 +1,5 @@
-import { ChatMessage, AzureKeyCredential, OpenAIClient } from '@azure/openai';
+import { AzureKeyCredential, OpenAIClient } from '@azure/openai';
 
-import { ChatCompletionRequestMessageRoleEnum } from 'openai';
-import { reportTypesToDesc, reportExampleQueries } from '../const';
-import { Status } from '../../component/ClientSettings';
 import { OpenAiClient } from '../OpenAi/OpenAiClient';
 
 const consoleLogAsync = async (message: string, other?: any) => {
@@ -64,7 +61,7 @@ export class AzureOpenAiClient extends OpenAiClient {
       completion = await this.modelClient.getChatCompletions(this.modelType, history);
     }
     // If the status is correct
-    if (completion && completion.choices && completion.choices[0].message) {
+    if (completion?.choices?.[0]?.message || false) {
       let { message } = completion.choices[0];
       return message;
     }
