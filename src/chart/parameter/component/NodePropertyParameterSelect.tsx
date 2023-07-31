@@ -42,36 +42,38 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
 
-  const propagateSelection = (event, newDisplay) => {
-    const isMulti = Array.isArray(newDisplay);
+  const handleCrossClick = (isMulti, value) => {
     if (isMulti) {
-      if (newDisplay.length == 0 && clearParameterOnFieldClear) {
+      if (value.length == 0 && clearParameterOnFieldClear) {
         setInputValue([]);
         props.setParameterValue(undefined);
         props.setParameterDisplayValue(undefined);
         return;
       }
-      if (newDisplay.length == 0) {
+      if (value.length == 0) {
         setInputValue([]);
         props.setParameterValue([]);
         props.setParameterDisplayValue([]);
-        return;
+        
       }
     } else {
-      if (newDisplay && clearParameterOnFieldClear) {
+      if (value && clearParameterOnFieldClear) {
         setInputValue(null);
         props.setParameterValue(undefined);
         props.setParameterDisplayValue(undefined);
         return;
       }
-      if (newDisplay == null) {
+      if (value == null) {
         setInputValue(null);
         props.setParameterValue(defaultValue);
         props.setParameterDisplayValue(defaultValue);
-        return;
+        
       }
     }
-
+  };
+  const propagateSelection = (event, newDisplay) => {
+    const isMulti = Array.isArray(newDisplay);
+    handleCrossClick(isMulti, newDisplay);
     let newValue;
     // Multiple and new entry
     if (isMulti && inputValue.length < newDisplay.length) {
@@ -97,10 +99,6 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
-
-    /* if (newDisplayValue && newDisplayValue.low) {
-      newDisplayValue = newDisplayValue.low;
-    }*/
 
     props.setParameterValue(newValue);
     props.setParameterDisplayValue(newDisplay);
