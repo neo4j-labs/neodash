@@ -1,5 +1,5 @@
 import React from 'react';
-import GaugeChart from 'react-gauge-chart';
+import GaugeComponent from 'react-gauge-component';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { createUUID } from '../../../../dashboard/DashboardThunks';
@@ -21,11 +21,6 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
   const arcsLength = settings.arcsLength ? settings.arcsLength : '0.15, 0.55, 0.3';
-  const arcPadding = settings.arcPadding ? settings.arcPadding : 0.02;
-  const colors = settings.colors ? settings.colors : '#5BE12C, #F5CD19, #EA4228';
-  const textColor = settings.textColor ? settings.textColor : 'black';
-  const animDelay = settings.animDelay ? settings.animDelay : 0;
-  const animateDuration = settings.animateDuration ? settings.animateDuration : 2000;
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 24;
   const marginTop = settings.marginTop ? settings.marginTop : 40;
@@ -41,6 +36,7 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   const chartId = createUUID();
   let score = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
+  let scale = 100
 
   if (isNaN(score)) {
     return <NoDrawableDataErrorMessage />;
@@ -49,29 +45,68 @@ const NeoGaugeChart = (props: ChartProps) => {
     score = score.low;
   }
   if (score >= 0) {
-    score /= 100;
+    score /= 1;
   } // supporting older versions of Neo4j which don't support round to 2 decimal points
+  if (score > 100) {
+    scale = score;
+  } else if (score <= 100) {
+    scale = 100
+  }
 
-  return (
-    <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
-      {typeof score == 'number' ? (
-        <GaugeChart
-          id={chartId}
-          nrOfLevels={nrOfLevels}
-          percent={score}
-          arcsLength={arcsLengthN}
-          arcPadding={arcPadding}
-          colors={colors.split(', ')}
-          textColor={textColor}
-          style={{ marginTop: marginTop, marginRight: marginRight, marginBottom: marginBottom, marginLeft: marginLeft }}
-          animDelay={animDelay}
-          animateDuration={animateDuration}
-        />
-      ) : (
-        <></>
-      )}
-    </div>
-  );
-};
-
+// Add this part to use the new "GaugeComponent"
+return (
+  <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
+    {typeof score == 'number' ? (
+      <GaugeComponent
+        id={chartId}
+        type="grafana"
+        value={score}
+        minValue={0}
+        maxValue={scale}
+        arc={{
+          cornerRadius: 7,
+          padding: 0.05,
+          width: 0.25,
+        }}
+        pointer={{
+          type: "needle",
+          color: "#464A4F",
+          baseColor: "#464A4F",
+          length: 0.70,
+          animate: true,
+          elastic: false,
+          animationDuration: 3000,
+          animationDelay: 100,
+          width: 20,
+        }}
+        labels={{
+          valueLabel: {
+            matchColorWithArc: true,
+            maxDecimalDigits: 2,
+          },
+          markLabel: {
+            type: "outer",
+            marks: [
+              { value: 0 },
+              { value: scale/4 },
+              { value: scale/2 },
+              { value: scale*3/4 },
+              { value: scale },
+            ],
+            valueConfig: {
+              maxDecimalDigits: 2,
+            },
+            markerConfig: {
+              char: '_',
+            },
+          },
+        }}
+        style={{ marginTop: marginTop, marginRight: marginRight, marginBottom: marginBottom, marginLeft: marginLeft }}
+      />
+    ) : (
+      <></>
+    )}
+  </div>
+);
+    };
 export default NeoGaugeChart;
