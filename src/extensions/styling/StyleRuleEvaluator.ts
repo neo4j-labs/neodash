@@ -1,6 +1,4 @@
 import { makeStyles } from '@mui/styles';
-import { extensionEnabled } from '../ExtensionUtils';
-import React, { useEffect, useState } from 'react';
 
 /**
  * Evaluates the specified rule set on a row returned by the Neo4j driver.
@@ -91,7 +89,6 @@ export const evaluateRulesOnNode = (node, customization, defaultValue, rules) =>
   return evaluateRules(node, customization, defaultValue, rules, true);
 };
 
-// TODO: Refactor to reduce duplication.
 export const evaluateRulesOnLink = (link, customization, defaultValue, rules) => {
   return evaluateRules(link, customization, defaultValue, rules, false);
 };

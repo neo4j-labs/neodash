@@ -170,9 +170,7 @@ export function buildGraphVisualizationObjectFromRecords(
 
       // Assign color from json based on style rule evaluation if specified
       let evaluatedColor = evaluateRulesOnLink(link, 'relationship color', defaultColor, styleRules);
-      if (evaluatedColor !== defaultColor) {
-        link.color = evaluatedColor ? evaluatedColor : defaultColor;
-      }
+      link.color = evaluatedColor;
       const mirroredNodePair = links[`${link.target},${link.source}`];
       return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);
     });
