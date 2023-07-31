@@ -214,7 +214,7 @@ function RenderArray(value) {
 }
 
 function RenderString(value) {
-  const str = value ? value.toString() : '';
+  const str = value?.toString() || '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
       <TextLink externalLink target='_blank' href={str}>
@@ -328,6 +328,10 @@ export const rendererForType: any = {
     renderValue: (c) => RenderString(c.value),
   },
   undefined: {
+    type: 'string',
+    renderValue: (c) => RenderString(c.value),
+  },
+  boolean: {
     type: 'string',
     renderValue: (c) => RenderString(c.value),
   },
