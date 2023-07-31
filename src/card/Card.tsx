@@ -175,6 +175,7 @@ const NeoCard = ({
             height={report.height}
             heightPx={height}
             fields={report.fields}
+            fieldsAll={report.fieldsAll}
             type={report.type}
             expanded={expanded}
             extensions={extensions}

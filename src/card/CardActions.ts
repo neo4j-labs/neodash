@@ -50,6 +50,12 @@ export const updateFields = (pagenumber: number, id: number, fields: any) => ({
   payload: { pagenumber, id, fields },
 });
 
+export const UPDATE_FIELDS_ALL = 'PAGE/CARD/UPDATE_FIELDS_ALL';
+export const updateFieldsAll = (pagenumber: number, id: number, fields: any) => ({
+  type: UPDATE_FIELDS_ALL,
+  payload: { pagenumber, id, fields },
+});
+
 export const UPDATE_SELECTION = 'PAGE/CARD/UPDATE_SELECTION';
 export const updateSelection = (pagenumber: number, id: number, selectable: any, field: any) => ({
   type: UPDATE_SELECTION,

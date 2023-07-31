@@ -53,6 +53,11 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
       value: 'node label color',
       label: 'Node Label Color',
     },
+    {
+      value: 'relationship color',
+      label: 'Relationship Color',
+      on: 'relationship',
+    },
   ],
   map: [
     {
@@ -124,6 +129,7 @@ export const NeoCustomReportStyleModal = ({
   settingValue,
   type,
   fields,
+  fieldsAll,
   setCustomReportStyleModalOpen,
   onReportSettingUpdate,
 }) => {
@@ -157,20 +163,20 @@ export const NeoCustomReportStyleModal = ({
    * This will be dynamic based on the type of report we are customizing.
    */
   const createFieldVariableSuggestions = () => {
-    if (!fields) {
+    if (!fieldsAll) {
       return [];
     }
     if (type == 'graph' || type == 'map') {
-      return fields
+      return fieldsAll
         .map((node, index) => {
           if (!Array.isArray(node)) {
             return undefined;
           }
-          return fields[index].map((property, propertyIndex) => {
+          return fieldsAll[index].map((property, propertyIndex) => {
             if (propertyIndex == 0) {
               return undefined;
             }
-            return `${fields[index][0]}.${property}`;
+            return `${fieldsAll[index][0]}.${property}`;
           });
         })
         .flat()

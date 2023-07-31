@@ -88,17 +88,28 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
  * @returns a user-defined value if a rule is met, or the default value if none are.
  */
 export const evaluateRulesOnNode = (node, customization, defaultValue, rules) => {
-  if (!node || !customization || !rules) {
+  return evaluateRules(node, customization, defaultValue, rules, true);
+};
+
+// TODO: Refactor to reduce duplication.
+export const evaluateRulesOnLink = (link, customization, defaultValue, rules) => {
+  return evaluateRules(link, customization, defaultValue, rules, false);
+};
+
+export const evaluateRules = (entity, customization, defaultValue, rules, isNode) => {
+  if (!entity || !customization || !rules) {
     return defaultValue;
   }
+
   for (const [index, rule] of rules.entries()) {
     // Only look at rules relevant to the target customization.
     if (rule.customization == customization) {
       // if the row contains the specified field...
-      const label = rule.field.split('.')[0];
+      const type = rule.field.split('.')[0];
       const property = rule.field.split('.')[1];
-      if (node.labels.includes(label)) {
-        const realValue = node.properties[property] ? node.properties[property] : '';
+
+      if ((isNode && entity.labels.includes(type)) || (!isNode && entity.type == type)) {
+        const realValue = entity?.properties?.[property] || '';
         const ruleValue = rule.value;
         if (evaluateCondition(realValue, rule.condition, ruleValue)) {
           return rule.customizationValue;
@@ -107,34 +118,6 @@ export const evaluateRulesOnNode = (node, customization, defaultValue, rules) =>
     }
   }
   return defaultValue;
-};
-
-// TODO: Refactor to reduce duplication.
-export const evaluateRulesOnLink = (link, customization, defaultValue, rules) => {
-  let str = '';
-
-  if (!link || !customization || !rules) {
-    return defaultValue;
-  }
-
-  for (const [index, rule] of rules.entries()) {
-    // Only look at rules relevant to the target customization.
-    if (rule.customization == customization && link.type == rule.field.split('.')[0]) {
-      // eslint-disable is needed for the warning that variable declared outside loop is modified inside it.
-      // We don't have a issue here as its synchronous code and not asynchrnous for this to be an issue.s
-      // eslint-disable-next-line no-loop-func
-      Object.keys(link.properties).forEach((property) => {
-        if (property === rule.field.split('.')[1]) {
-          const ruleValue = rule.value;
-          const realValue = link.properties[property];
-          if (evaluateCondition(realValue, rule.condition, ruleValue)) {
-            str = rule.customizationValue;
-          }
-        }
-      });
-    }
-  }
-  return str !== '' ? str : defaultValue;
 };
 
 /**

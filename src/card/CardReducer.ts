@@ -5,6 +5,7 @@ import {
   UPDATE_ALL_SELECTIONS,
   UPDATE_CYPHER_PARAMETERS,
   UPDATE_FIELDS,
+  UPDATE_FIELDS_ALL,
   UPDATE_REPORT_QUERY,
   UPDATE_REPORT_SETTING,
   UPDATE_REPORT_SIZE,
@@ -70,6 +71,11 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
     case UPDATE_FIELDS: {
       const { fields } = payload;
       state = update(state, { fields: fields });
+      return state;
+    }
+    case UPDATE_FIELDS_ALL: {
+      const { fields } = payload;
+      state = update(state, { fieldsAll: fields });
       return state;
     }
     case UPDATE_REPORT_TYPE: {
