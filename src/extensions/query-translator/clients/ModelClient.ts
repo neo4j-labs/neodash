@@ -21,10 +21,13 @@ export abstract class ModelClient {
 
   driver: any;
 
+  endpoint: string | undefined;
+
   constructor(settings) {
     this.apiKey = settings.apiKey;
     this.modelType = settings.modelType;
     this.listAvailableModels = [];
+    this.endpoint = settings.endpoint;
     this.setModelClient();
   }
 
