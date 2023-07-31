@@ -42,7 +42,7 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex }) => {
       </IconButton>
       <Menu anchorEl={anchorEl} open={menuOpen} onClose={() => setAnchorEl(null)}>
         <MenuItems>
-          <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e, tabIndex)} />
+          <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e)} />
           <MenuItem
             className='n-text-palette-danger-text'
             icon={<TrashIconOutline />}
