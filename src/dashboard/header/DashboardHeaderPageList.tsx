@@ -25,9 +25,7 @@ export const NeoDashboardHeaderPageList = ({
   pagenumber,
   addPage,
   // movePage,
-  // removePage,
   selectPage,
-  // setPageTitle,
 }) => {
   const [layout, setLayout] = React.useState([]);
   const [isDragging, setIsDragging] = React.useState(false);

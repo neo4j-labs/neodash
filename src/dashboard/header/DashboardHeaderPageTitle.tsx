@@ -1,14 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { connect } from 'react-redux';
-import classname from 'classnames';
+import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import { setPageTitle } from '../../page/PageActions';
 import { removePageThunk } from '../DashboardThunks';
 import { Tab, Menu, MenuItems, MenuItem, IconButton } from '@neo4j-ndl/react';
 import { EllipsisHorizontalIconOutline, PencilIconOutline, TrashIconOutline } from '@neo4j-ndl/react/icons';
-import { removePage } from '../DashboardActions';
 
-export const DashboardHeaderPageTitle = ({ title, tabIndex }) => {
+export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageTitle }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const menuOpen = Boolean(anchorEl);
 
@@ -27,7 +26,7 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex }) => {
       {title}
       <IconButton
         aria-label='Page actions'
-        className={classname('n-relative n-top-1 visible-on-tab-hover', {
+        className={classnames('n-relative n-top-1 visible-on-tab-hover', {
           'open-menu': menuOpen,
         })}
         style={{ height: '1.1rem' }}
@@ -66,4 +65,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapDispatchToProps)(DashboardHeaderPageTitle);
+export default connect(null, mapDispatchToProps)(DashboardHeaderPageTitle);
