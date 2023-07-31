@@ -26,6 +26,8 @@ export const removePageThunk = (number) => (dispatch: any, getState: any) => {
     }
     if (number >= numberOfPages - 1) {
       dispatch(updateDashboardSetting('pagenumber', Math.max(0, numberOfPages - 2)));
+    } else {
+      dispatch(updateDashboardSetting('pagenumber', getState().dashboard.settings.pagenumber - 1));
     }
     dispatch(removePage(number));
   } catch (e) {
