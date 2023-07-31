@@ -11,7 +11,7 @@ To enable Natural Language Queries in NeoDash, follow these configuration steps:
 1. Open NeoDash and navigate to the "Extensions" section in the left sidebar.
 2. Locate the "Natural Language Queries" extension and click on it to activate it.
 3. Once activated, a new button will appear in the sidebar(see image below). Click on the button to open the configuration window.
-4. In the configuration window, you will be prompted to provide the necessary information to connect to the Language Model (LLM). Enter the model provider, API key, and select the desired model to use.
+4. In the configuration window, you will be prompted to provide the necessary information to connect to the Language Model (LLM). Enter the model provider, API key, deployment url if needed by the model provider, and select the desired model to use.
 5. After providing the required information, click on the "Start Querying" button to finalize the configuration.
 
 image::extensionbutton.png[Extension Button enables Natural Language Queries button in the sidebar]
