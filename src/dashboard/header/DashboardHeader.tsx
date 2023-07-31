@@ -1,16 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
-// import { setDashboardTitle, addPage, removePage } from '../DashboardActions';
 import { setDashboardTitle } from '../DashboardActions';
 import { getDashboardSettings, getDashboardTitle, getPages } from '../DashboardSelectors';
-// import debounce from 'lodash/debounce';
-// import { setPageTitle } from '../../page/PageActions';
-// import { addPageThunk, removePageThunk } from '../DashboardThunks';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
-// import NeoDashboardHeaderPageList from './DashboardHeaderPageList';
-// import { NeoDashboardHeaderTitleBar } from './DashboardHeaderTitleBar';
 import { NeoDashboardHeaderLogo } from './DashboardHeaderLogo';
 import { NeoLogoutButton } from './DashboardHeaderLogoutButton';
 import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownloadImageButton';
@@ -18,12 +12,8 @@ import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownload
 const drawerWidth = 240;
 
 export const NeoDashboardHeader = ({
-  // open,
   standalone,
   dashboardTitle,
-  // handleDrawerOpen,
-  // setDashboardTitle,
-  // editable,
   connection,
   settings,
   onConnectionModalOpen,

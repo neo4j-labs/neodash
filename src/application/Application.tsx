@@ -113,8 +113,11 @@ const Application = ({
         ref={ref}
         className='n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden n-bg-light-neutral-bg-default'
       >
-        {connected ? <></> : <NeoDashboardPlaceholder></NeoDashboardPlaceholder>}
-        {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
+        {connected ? (
+          <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard>
+        ) : (
+          <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
+        )}
         {/* TODO - move all models into a pop-ups (or modals) component. */}
         <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
         <NeoConnectionModal
