@@ -28,35 +28,39 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
     <>
       <Tab tabId={tabIndex} key={tabIndex}>
         {title}
-        <IconButton
-          aria-label='Page actions'
-          className={classnames('n-relative n-top-1 visible-on-tab-hover', {
-            'open-menu': menuOpen,
-          })}
-          style={{ height: '1.1rem' }}
-          onClick={(e) => {
-            e.stopPropagation();
-            setAnchorEl(e.currentTarget);
-          }}
-          size='small'
-          clean
-        >
-          <EllipsisHorizontalIconOutline />
-        </IconButton>
-        <Menu anchorEl={anchorEl} open={menuOpen} onClose={() => setAnchorEl(null)}>
-          <MenuItems>
-            <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e)} />
-            <MenuItem
-              className='n-text-palette-danger-text'
-              icon={<TrashIconOutline />}
-              title='Delete'
+        {!disabled && (
+          <>
+            <IconButton
+              aria-label='Page actions'
+              className={classnames('n-relative n-top-1 visible-on-tab-hover', {
+                'open-menu': menuOpen,
+              })}
+              style={{ height: '1.1rem' }}
               onClick={(e) => {
                 e.stopPropagation();
-                !disabled && setDeleteModalOpen(true);
+                setAnchorEl(e.currentTarget);
               }}
-            />
-          </MenuItems>
-        </Menu>
+              size='small'
+              clean
+            >
+              <EllipsisHorizontalIconOutline />
+            </IconButton>
+            <Menu anchorEl={anchorEl} open={menuOpen} onClose={() => setAnchorEl(null)}>
+              <MenuItems>
+                <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e)} />
+                <MenuItem
+                  className='n-text-palette-danger-text'
+                  icon={<TrashIconOutline />}
+                  title='Delete'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    !disabled && setDeleteModalOpen(true);
+                  }}
+                />
+              </MenuItems>
+            </Menu>
+          </>
+        )}
       </Tab>
       <NeoDeletePageModal
         modalOpen={deleteModalOpen}

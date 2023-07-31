@@ -25,10 +25,10 @@ export const NeoDashboardTitle = ({
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const handleActionsClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleActionsClose = () => {
+  const handleSettingsMenuClose = () => {
     setAnchorEl(null);
   };
   const menuOpen = Boolean(anchorEl);
@@ -61,7 +61,7 @@ export const NeoDashboardTitle = ({
       {/* TODO : Replace with editable field if dashboard is editable */}
       <Typography variant='h3'>{dashboardTitle}</Typography>
       <div className='flex flex-row flex-wrap items-center gap-2'>
-        <IconButton aria-label='Dashboard actions' onClick={handleActionsClick}>
+        <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
           <EllipsisHorizontalIconOutline />
         </IconButton>
         <Menu
@@ -75,7 +75,7 @@ export const NeoDashboardTitle = ({
           }}
           anchorEl={anchorEl}
           open={menuOpen}
-          onClose={handleActionsClose}
+          onClose={handleSettingsMenuClose}
           size='large'
         >
           <MenuItems>
