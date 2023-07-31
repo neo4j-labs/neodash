@@ -1,27 +1,18 @@
-import { Toolbar } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
-import NeoPageButton from './DashboardHeaderPageButton';
-import NeoPageAddButton from './DashboardHeaderPageAddButton';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getPages } from '../DashboardSelectors';
 import debounce from 'lodash/debounce';
-import classname from 'classnames';
-import { setPageTitle } from '../../page/PageActions';
-import { addPageThunk, movePageThunk, removePageThunk } from '../DashboardThunks';
+import { addPageThunk, movePageThunk } from '../DashboardThunks';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
 import { setPageNumberThunk } from '../../settings/SettingsThunks';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../../config/ApplicationConfig';
-import { Tabs, Tab, Menu, MenuItems, MenuItem, IconButton } from '@neo4j-ndl/react';
-import {
-  EllipsisHorizontalIconOutline,
-  PencilIconOutline,
-  PlusIconOutline,
-  TrashIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { Tabs, IconButton } from '@neo4j-ndl/react';
+import { PlusIconOutline } from '@neo4j-ndl/react/icons';
+import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
 const ReactGridLayout = WidthProvider(RGL);
 
 /**
@@ -41,87 +32,24 @@ export const NeoDashboardHeaderPageList = ({
   const [layout, setLayout] = React.useState([]);
   const [isDragging, setIsDragging] = React.useState(false);
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
-  const [lastElement, setLastElement] = React.useState(<></>);
 
   // We debounce several state changes to improve user experience.
   const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
 
-  const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
-
-  const handleMenuEditClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
-    event.stopPropagation();
-    console.log(i);
-  };
-  const handleMenuDeleteClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, i) => {
-    event.stopPropagation();
-    console.log(i);
-  };
-
-  /**
-   * Recompute the layout of the page buttons.This is called whenever the pages get reorganized.
-   */
-  function recomputeLayout() {
-    const timestamp = Date.now();
-    // @ts-ignore
-    // setLayout([
-    //   ...pages.map((page, index) => {
-    //     return { x: index, y: 0, i: `${index}`, w: Math.min(2.0, 11.3 / pages.length), h: 1 };
-    //   }),
-    //   { x: pages.length, y: 0, i: `${timestamp}`, minW: 0.1, w: 0.1, h: 1, isDraggable: false },
-    // ]);
-
-    setLastElement(
-      <IconButton className='n-relative -n-top-1' size='large' onClick={addPage} clean>
-        <PlusIconOutline />
-      </IconButton>
-    );
-  }
-
-  useEffect(() => {
-    recomputeLayout();
-  }, [pages]);
+  const pageAddButton = (
+    <IconButton className='n-relative -n-top-1' size='large' onClick={addPage} clean>
+      <PlusIconOutline />
+    </IconButton>
+  );
 
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
-        {pages.map((page, i) => {
-          const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-          const menuOpen = Boolean(anchorEl);
-
-          return (
-            <Tab tabId={i} key={i}>
-              {page.title}
-              <IconButton
-                aria-label='Page actions'
-                className={classname('n-relative n-top-1 visible-on-tab-hover', {
-                  'open-menu': menuOpen,
-                })}
-                style={{ height: '1.1rem' }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setAnchorEl(e.currentTarget);
-                }}
-                size='small'
-                clean
-              >
-                <EllipsisHorizontalIconOutline />
-              </IconButton>
-              <Menu anchorEl={anchorEl} open={menuOpen} onClose={() => setAnchorEl(null)}>
-                <MenuItems>
-                  <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e, i)} />
-                  <MenuItem
-                    className='n-text-palette-danger-text'
-                    icon={<TrashIconOutline />}
-                    title='Delete'
-                    onClick={(e) => handleMenuDeleteClick(e, i)}
-                  />
-                </MenuItems>
-              </Menu>
-            </Tab>
-          );
-        })}
+        {pages.map((page, i) => (
+          <DashboardHeaderPageTitle title={page.title} tabIndex={i} key={i} />
+        ))}
       </Tabs>
-      {editable && !isDragging ? lastElement : <></>}
+      {editable && !isDragging ? pageAddButton : <></>}
     </div>
 
     //   <ReactGridLayout
@@ -211,14 +139,8 @@ const mapDispatchToProps = (dispatch) => ({
   selectPage: (number: any) => {
     dispatch(setPageNumberThunk(number));
   },
-  setPageTitle: (number: any, title: any) => {
-    dispatch(setPageTitle(number, title));
-  },
   addPage: () => {
     dispatch(addPageThunk());
-  },
-  removePage: (index: any) => {
-    dispatch(removePageThunk(index));
   },
   movePage: (oldIndex: number, newIndex: number) => {
     dispatch(movePageThunk(oldIndex, newIndex));

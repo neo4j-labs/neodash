@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
+import { applicationGetConnection } from '../../application/ApplicationSelectors';
 import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
@@ -11,6 +12,7 @@ import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../../modal/ShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
+import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
@@ -19,6 +21,7 @@ export const NeoDashboardTitle = ({
   dashboardSettings,
   extensions,
   updateDashboardSetting,
+  connection,
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -29,6 +32,23 @@ export const NeoDashboardTitle = ({
     setAnchorEl(null);
   };
   const menuOpen = Boolean(anchorEl);
+
+  /**
+   * Function to render dynamically the buttons in the drawer related to all the extension that
+   * are enabled and present a button (EX: node-sidebar)
+   * @returns JSX element containing all the buttons related to their enabled extensions
+   */
+  function renderDrawerExtensionsButtons() {
+    const res = (
+      <>
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
+          const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
+          return Component ? <Component database={connection.database} /> : <></>;
+        })}
+      </>
+    );
+    return res;
+  }
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -56,6 +76,7 @@ export const NeoDashboardTitle = ({
           anchorEl={anchorEl}
           open={menuOpen}
           onClose={handleActionsClose}
+          size='large'
         >
           <MenuItems>
             <NeoSettingsModal
@@ -67,6 +88,7 @@ export const NeoDashboardTitle = ({
             <NeoLoadModal />
             <NeoShareModal />
             <NeoExtensionsModal />
+            {renderDrawerExtensionsButtons()}
           </MenuItems>
         </Menu>
       </div>
@@ -79,6 +101,7 @@ const mapStateToProps = (state) => ({
   editable: getDashboardIsEditable(state),
   dashboardSettings: getDashboardSettings(state),
   extensions: getDashboardExtensions(state),
+  connection: applicationGetConnection(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

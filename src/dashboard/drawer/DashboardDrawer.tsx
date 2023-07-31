@@ -11,7 +11,6 @@ import { setAboutModalOpen, setConnected, setWelcomeScreenOpen } from '../../app
 import { getDashboardExtensions } from '../DashboardSelectors';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import NodeSidebarDrawer from '../../extensions/sidebar/SidebarDrawer';
-import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 import { SideNavigation, SideNavigationList, SideNavigationItem, SideNavigationGroupHeader } from '@neo4j-ndl/react';
 import { BookOpenIconOutline, InformationCircleIconOutline, HomeIconOutline } from '@neo4j-ndl/react/icons';
 
@@ -28,23 +27,6 @@ function renderExtensionDrawers(database) {
 // The sidebar that appears on the left side of the dashboard.
 export const NeoDrawer = ({ hidden, connection, extensions, onAboutModalOpen, resetApplication }) => {
   const navItemClass = 'n-w-full n-h-full';
-
-  /**
-   * Function to render dynamically the buttons in the drawer related to all the extension that
-   * are enabled and present a button (EX: node-sidebar)
-   * @returns JSX element containing all the buttons related to their enabled extensions
-   */
-  function renderDrawerExtensionsButtons() {
-    const res = (
-      <>
-        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
-          const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return Component ? <Component database={connection.database} navItemClass={navItemClass} /> : <></>;
-        })}
-      </>
-    );
-    return res;
-  }
   const [expanded, setOnExpanded] = React.useState(false);
 
   // Override to hide the drawer when the application is in standalone mode.
@@ -66,9 +48,7 @@ export const NeoDrawer = ({ hidden, connection, extensions, onAboutModalOpen, re
               Menu
             </SideNavigationItem>
           </Tooltip>
-          <SideNavigationGroupHeader>Manage</SideNavigationGroupHeader>
 
-          {renderDrawerExtensionsButtons()}
           <SideNavigationGroupHeader>Learn</SideNavigationGroupHeader>
           <NeoReportExamplesModal
             extensions={extensions}
