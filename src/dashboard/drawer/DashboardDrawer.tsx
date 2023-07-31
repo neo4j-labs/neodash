@@ -51,9 +51,13 @@ export const NeoDrawer = ({
   function renderDrawerExtensionsButtons() {
     const res = (
       <>
-        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name, idx) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return Component ? <Component database={connection.database} navItemClass={navItemClass} /> : <></>;
+          return Component ? (
+            <Component key={`ext-${  idx}`} database={connection.database} navItemClass={navItemClass} />
+          ) : (
+            <></>
+          );
         })}
       </>
     );
