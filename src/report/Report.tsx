@@ -121,8 +121,8 @@ export const NeoReport = ({
           useReturnValuesAsFields,
           HARD_ROW_LIMITING,
           queryTimeLimit,
-          (fields) => {
-            setSchema(id, fields);
+          (schema) => {
+            setSchema(id, schema);
           }
         );
       } else {
@@ -140,8 +140,8 @@ export const NeoReport = ({
           useReturnValuesAsFields,
           HARD_ROW_LIMITING,
           queryTimeLimit,
-          (fields) => {
-            setSchema(id, fields);
+          (schema) => {
+            setSchema(id, schema);
           }
         );
       }
@@ -215,8 +215,8 @@ export const NeoReport = ({
         false,
         HARD_ROW_LIMITING,
         queryTimeLimit,
-        (fields) => {
-          setSchema(id, fields);
+        (schema) => {
+          setSchema(id, schema);
         }
       );
     },
@@ -341,8 +341,8 @@ const mapDispatchToProps = (dispatch) => ({
   getCustomDispatcher: () => {
     return dispatch;
   },
-  setSchema: (id: any, fields: any) => {
-    dispatch(updateFieldsThunk(id, fields, true));
+  setSchema: (id: any, schema: any) => {
+    dispatch(updateFieldsThunk(id, schema, true));
   },
 });
 
