@@ -1,8 +1,8 @@
 ## NeoDash 2.3.1
-What's new in NeoDash 2.3.1? A few bug fixes, improvement of natural language queries with support of Azure Open AI V1 and parameters, Graph Vizualization relationship styling and more below!
+What's new in NeoDash 2.3.1? A few bug fixes, improvement of natural language queries with support of Azure Open AI and parameters, Graph Vizualization relationship styling and more below!
 
 - Natural language queries
-  - **Support of Azure Open AI V1** ([@BennuFire](https://github.com/bennufire), [#515](https://github.com/neo4j-labs/neodash/pull/515))
+  - **Support of Azure Open AI** ([@BennuFire](https://github.com/bennufire), [#515](https://github.com/neo4j-labs/neodash/pull/515))
   - Support parameters on natural language queries ([@BennuFire](https://github.com/bennufire), [#514](https://github.com/neo4j-labs/neodash/pull/514))
 
 - Graph Visualization
