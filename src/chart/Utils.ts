@@ -111,3 +111,8 @@ export const rgbaToHex = (color: string): string => {
   }
   return color;
 };
+
+export enum EntityType {
+  Node,
+  Relationship,
+}

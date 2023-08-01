@@ -30,6 +30,24 @@ export function extractNodePropertiesFromRecords(records: any) {
 }
 
 /**
+ * Collects all node labels and node properties in a set of Neo4j records.
+ * @param records : a list of Neo4j records.
+ * @returns a list of lists, where each inner list is [NodeLabel] + [prop1, prop2, prop3]...
+ */
+export function extractNodeAndRelPropertiesFromRecords(records: any) {
+  const fieldsDict = {};
+  records.forEach((record) => {
+    record._fields.forEach((field) => {
+      saveNodeAndRelPropertiesToDictionary(field, fieldsDict);
+    });
+  });
+  const fields = Object.keys(fieldsDict).map((label) => {
+    return [label].concat(Object.values(fieldsDict[label]));
+  });
+  return fields.length > 0 ? fields : [];
+}
+
+/**
  * Merges an existing set of fields (node labels and their properties) with a new one.
  * This is used when we explore the graph and want to update the report footer.
  * @param oldFields a list of string[].
@@ -71,6 +89,32 @@ export function saveNodePropertiesToDictionary(field, fieldsDict) {
     field.segments.forEach((segment) => {
       saveNodePropertiesToDictionary(segment.start, fieldsDict);
       saveNodePropertiesToDictionary(segment.end, fieldsDict);
+    });
+  }
+}
+
+export function saveNodeAndRelPropertiesToDictionary(field, fieldsDict) {
+  // TODO - instead of doing this discovery ad-hoc, we could also use CALL db.schema.nodeTypeProperties().
+  if (field == undefined) {
+    return;
+  }
+  if (valueIsArray(field)) {
+    field.forEach((v) => saveNodeAndRelPropertiesToDictionary(v, fieldsDict));
+  } else if (valueIsNode(field)) {
+    field.labels.forEach((l) => {
+      fieldsDict[l] = fieldsDict[l]
+        ? [...new Set(fieldsDict[l].concat(Object.keys(field.properties)))]
+        : Object.keys(field.properties);
+    });
+  } else if (valueIsRelationship(field)) {
+    let l = field.type;
+    fieldsDict[l] = fieldsDict[l]
+      ? [...new Set(fieldsDict[l].concat(Object.keys(field.properties)))]
+      : Object.keys(field.properties);
+  } else if (valueIsPath(field)) {
+    field.segments.forEach((segment) => {
+      saveNodeAndRelPropertiesToDictionary(segment.start, fieldsDict);
+      saveNodeAndRelPropertiesToDictionary(segment.end, fieldsDict);
     });
   }
 }

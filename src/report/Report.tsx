@@ -19,6 +19,7 @@ import { EXTENSIONS } from '../extensions/ExtensionConfig';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSelectors';
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
+import { updateFieldsThunk } from '../card/CardThunks';
 
 const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -36,6 +37,7 @@ export const NeoReport = ({
   setFields = (f) => {
     fields = f;
   }, // The callback to update the set of query fields after query execution.
+  setSchema,
   setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
   getGlobalParameter = (_: string) => {
     return '';
@@ -118,7 +120,10 @@ export const NeoReport = ({
           useNodePropsAsFields,
           useReturnValuesAsFields,
           HARD_ROW_LIMITING,
-          queryTimeLimit
+          queryTimeLimit,
+          (schema) => {
+            setSchema(id, schema);
+          }
         );
       } else {
         runCypherQuery(
@@ -134,7 +139,10 @@ export const NeoReport = ({
           useNodePropsAsFields,
           useReturnValuesAsFields,
           HARD_ROW_LIMITING,
-          queryTimeLimit
+          queryTimeLimit,
+          (schema) => {
+            setSchema(id, schema);
+          }
         );
       }
     };
@@ -206,7 +214,10 @@ export const NeoReport = ({
         false,
         false,
         HARD_ROW_LIMITING,
-        queryTimeLimit
+        queryTimeLimit,
+        (schema) => {
+          setSchema(id, schema);
+        }
       );
     },
     [database]
@@ -329,6 +340,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   getCustomDispatcher: () => {
     return dispatch;
+  },
+  setSchema: (id: any, schema: any) => {
+    dispatch(updateFieldsThunk(id, schema, true));
   },
 });
 
