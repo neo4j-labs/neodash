@@ -19,13 +19,10 @@ const NeoGaugeChart = (props: ChartProps) => {
    * This visualization was extracted from https://github.com/Martin36/react-gauge-chart.
    */
 
+  //const for 
   const maxValue = settings.maxValue ? settings.maxValue : 100;
   const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
-  const arcsLength = settings.arcsLength ? settings.arcsLength : '0.15, 0.55, 0.3';
-  const marginRight = settings.marginRight ? settings.marginRight : 24;
-  const marginLeft = settings.marginLeft ? settings.marginLeft : 24;
-  const marginTop = settings.marginTop ? settings.marginTop : 40;
-  const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
+  const arcsLength = settings.arcsLength ? settings.arcsLength : '1/3, 1/3, 1/3';
 
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
 
@@ -59,10 +56,11 @@ return (
           cornerRadius: 7,
           padding: 0.05,
           width: 0.25,
+          nbSubArcs: nrOfLevels,
         }}
         pointer={{
           type: "needle",
-          color: "#464A4F",
+          color: "#345243",
           baseColor: "#464A4F",
           length: 0.70,
           animate: true,
@@ -97,7 +95,6 @@ return (
             },
           },
         }}
-        style={{ marginTop: marginTop, marginRight: marginRight, marginBottom: marginBottom, marginLeft: marginLeft }}
       />
     ) : (
       <></>
