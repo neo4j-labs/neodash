@@ -33,6 +33,11 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.COLOR,
         default: '#fafafa',
       },
+      maxValue: {
+        label: 'Maximum value of scale',
+        type: SELECTION_TYPES.NUMBER,
+        default: 100,
+      },
       nrOfLevels: {
         label: 'Number of levels',
         type: SELECTION_TYPES.NUMBER,
@@ -68,22 +73,22 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 2000,
       },
-      marginLeft: {
+      marginLeftInPercent: {
         label: 'Margin Left (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 24,
       },
-      marginRight: {
+      marginRightInPercent: {
         label: 'Margin Right (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 24,
       },
-      marginTop: {
+      marginTopInPercent: {
         label: 'Margin Top (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 40,
       },
-      marginBottom: {
+      marginBottomInPercent: {
         label: 'Margin Bottom (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 40,

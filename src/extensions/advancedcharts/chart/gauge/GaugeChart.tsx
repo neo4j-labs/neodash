@@ -19,6 +19,7 @@ const NeoGaugeChart = (props: ChartProps) => {
    * This visualization was extracted from https://github.com/Martin36/react-gauge-chart.
    */
 
+  const maxValue = settings.maxValue ? settings.maxValue : 100;
   const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
   const arcsLength = settings.arcsLength ? settings.arcsLength : '0.15, 0.55, 0.3';
   const marginRight = settings.marginRight ? settings.marginRight : 24;
@@ -36,21 +37,12 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   const chartId = createUUID();
   let score = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
-  let scale = 100
 
   if (isNaN(score)) {
     return <NoDrawableDataErrorMessage />;
   }
   if (score.low != undefined) {
     score = score.low;
-  }
-  if (score >= 0) {
-    score /= 1;
-  } // supporting older versions of Neo4j which don't support round to 2 decimal points
-  if (score > 100) {
-    scale = score;
-  } else if (score <= 100) {
-    scale = 100
   }
 
 // Add this part to use the new "GaugeComponent"
@@ -62,7 +54,7 @@ return (
         type="grafana"
         value={score}
         minValue={0}
-        maxValue={scale}
+        maxValue={maxValue}
         arc={{
           cornerRadius: 7,
           padding: 0.05,
@@ -88,10 +80,14 @@ return (
             type: "outer",
             marks: [
               { value: 0 },
-              { value: scale/4 },
-              { value: scale/2 },
-              { value: scale*3/4 },
-              { value: scale },
+              { value: maxValue
+          /4 },
+              { value: maxValue
+          /2 },
+              { value: maxValue
+          *3/4 },
+              { value: maxValue
+         },
             ],
             valueConfig: {
               maxDecimalDigits: 2,
