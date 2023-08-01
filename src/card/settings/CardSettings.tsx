@@ -19,6 +19,7 @@ const NeoCardSettings = ({
   reportSettings,
   reportSettingsOpen,
   fields,
+  schema,
   heightPx,
   extensions, // A set of enabled extensions.
   onQueryUpdate,
@@ -78,6 +79,7 @@ const NeoCardSettings = ({
     <NeoCardSettingsFooter
       type={type}
       fields={fields}
+      schema={schema}
       extensions={extensions}
       reportSettings={reportSettings}
       reportSettingsOpen={reportSettingsOpen}

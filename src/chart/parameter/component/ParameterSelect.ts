@@ -46,4 +46,8 @@ export interface ParameterSelectProps {
    * Create the parameter selector in compatibility mode for NeoDash 2.2.1 or earlier.
    */
   compatibilityMode: boolean;
+  /**
+   * Add the possibility for multiple selections
+   */
+  multiSelector?: boolean;
 }

@@ -4,6 +4,7 @@ import { OpenAiClient } from './clients/OpenAi/OpenAiClient';
 
 // TODO: implement VertexAiClient
 import { VertexAiClient } from './clients/VertexAiClient';
+import { AzureOpenAiClient } from './clients/AzureOpenAi/AzureOpenAiClient';
 
 interface ClientSettingEntry {
   label: string;
@@ -58,29 +59,33 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
         },
       },
     },
-    // vertexAi: {
-    //   clientName: "vertexAi",
-    //   clientClass: VertexAiClient,
-    //   settings: {
-    //     apiKey: {
-    //       label: 'Api Key to authenticate the client',
-    //       type: SELECTION_TYPES.TEXT,
-    //       default: '',
-    //     },
-    //     modelType: {
-    //       label: 'Select from the possible model types',
-    //       type: SELECTION_TYPES.LIST,
-    //       needsStateValues: true,
-    //       default: "Insert your Api Key first",
-    //     },
-    //     region: {
-    //       label: 'GCP Region',
-    //       type: SELECTION_TYPES.LIST,
-    //       needsStateValues: true,
-    //       default: [],
-    //     }
-    //   }
-    // },
+    AzureOpenAI: {
+      clientName: 'AzureOpenAI',
+      clientClass: AzureOpenAiClient,
+      settings: {
+        endpoint: {
+          label: 'Azure OpenAI EndPoint',
+          type: SELECTION_TYPES.TEXT,
+          default: '',
+          hasAuthButton: false,
+          authentication: true,
+        },
+        apiKey: {
+          label: 'Subscription Key',
+          type: SELECTION_TYPES.TEXT,
+          default: '',
+          hasAuthButton: true,
+          authentication: true,
+        },
+        modelType: {
+          label: 'Model',
+          type: SELECTION_TYPES.LIST,
+          methodFromClient: 'getListModels',
+          default: '',
+          authentication: false,
+        },
+      },
+    },
   },
 };
 
