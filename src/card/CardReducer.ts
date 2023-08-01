@@ -74,8 +74,8 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
       return state;
     }
     case UPDATE_SCHEMA: {
-      const { fields } = payload;
-      state = update(state, { schema: fields });
+      const { schema } = payload;
+      state = update(state, { schema: schema });
       return state;
     }
     case UPDATE_REPORT_TYPE: {
