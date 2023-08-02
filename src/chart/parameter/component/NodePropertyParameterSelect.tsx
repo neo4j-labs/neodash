@@ -3,6 +3,7 @@ import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
 import { RenderSubValue } from '../../../report/ReportRecordProcessing';
+import { SelectionConfirmationButton } from './SelectionConfirmationButton';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
@@ -20,13 +21,16 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     }
     return multi ? [] : value;
   };
-  const { multiSelector } = props;
+  const { multiSelector, setManual } = props;
   const allParameters = props.allParameters ? props.allParameters : {};
   const [extraRecords, setExtraRecords] = React.useState([]);
   const [inputDisplayText, setInputDisplayText] = React.useState(
     props.parameterDisplayValue && multiSelector ? '' : props.parameterDisplayValue
   );
   const [inputValue, setInputValue] = React.useState(getInitialValue(props.parameterDisplayValue, multiSelector));
+
+  const [paramValueTemp, setParamValueTemp] = React.useState(null);
+  const [paramValueDisplayTemp, setParamValueDisplayTemp] = React.useState(null);
 
   const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
@@ -42,38 +46,51 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
 
+  const manualHandleParameters = () => {
+    handleParameters(paramValueTemp, paramValueDisplayTemp, false);
+  };
+  const handleParameters = (value, displayValue, manual = false) => {
+    setParamValueTemp(value);
+    setParamValueDisplayTemp(displayValue);
+
+    if (manual) {
+      return;
+    }
+
+    props.setParameterValue(value);
+    props.setParameterDisplayValue(displayValue);
+  };
   const handleCrossClick = (isMulti, value) => {
     if (isMulti) {
       if (value.length == 0 && clearParameterOnFieldClear) {
         setInputValue([]);
-        props.setParameterValue(undefined);
-        props.setParameterDisplayValue(undefined);
-        return;
+        handleParameters(undefined, undefined, setManual);
+        return true;
       }
       if (value.length == 0) {
         setInputValue([]);
-        props.setParameterValue([]);
-        props.setParameterDisplayValue([]);
-        
+        handleParameters([], [], setManual);
+        return true;
       }
     } else {
       if (value && clearParameterOnFieldClear) {
         setInputValue(null);
-        props.setParameterValue(undefined);
-        props.setParameterDisplayValue(undefined);
-        return;
+        handleParameters(undefined, undefined, setManual);
+        return true;
       }
       if (value == null) {
         setInputValue(null);
-        props.setParameterValue(defaultValue);
-        props.setParameterDisplayValue(defaultValue);
-        
+        handleParameters(defaultValue, defaultValue, setManual);
+        return true;
       }
+      return false;
     }
   };
   const propagateSelection = (event, newDisplay) => {
     const isMulti = Array.isArray(newDisplay);
-    handleCrossClick(isMulti, newDisplay);
+    if (handleCrossClick(isMulti, newDisplay)) {
+      return;
+    }
     let newValue;
     // Multiple and new entry
     if (isMulti && inputValue.length < newDisplay.length) {
@@ -86,9 +103,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
       newValue.push(val?.low ?? val);
     } else if (!isMulti) {
-      newValue = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplay)[0]._fields[
-        realValueRowIndex
-      ];
+      newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
+        ._fields[realValueRowIndex];
 
       newValue = newValue?.low || newValue;
     } else {
@@ -100,36 +116,42 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
 
-    props.setParameterValue(newValue);
-    props.setParameterDisplayValue(newDisplay);
+    handleParameters(newValue, newDisplay, setManual);
   };
   return (
-    <Autocomplete
-      id='autocomplete'
-      multiple={multiSelector}
-      options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
-      style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
-      inputValue={inputDisplayText}
-      onInputChange={(event, value) => {
-        setInputDisplayText(value);
-        debouncedQueryCallback(props.query, { input: `${value}`, ...allParameters }, setExtraRecords);
-      }}
-      isOptionEqualToValue={(option, value) => {
-        return (option && option.toString()) === (value && value.toString());
-      }}
-      value={inputValue}
-      onChange={propagateSelection}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          InputLabelProps={{ shrink: true }}
-          placeholder='Start typing...'
-          label={helperText ? helperText : `${label} ${propertyType}`}
-          variant='outlined'
-        />
+    <div>
+      <Autocomplete
+        id='autocomplete'
+        multiple={multiSelector}
+        options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
+        inputValue={inputDisplayText || ''}
+        onInputChange={(event, value) => {
+          setInputDisplayText(value);
+          debouncedQueryCallback(props.query, { input: `${value}`, ...allParameters }, setExtraRecords);
+        }}
+        isOptionEqualToValue={(option, value) => {
+          return (option && option.toString()) === (value && value.toString());
+        }}
+        value={inputValue}
+        onChange={propagateSelection}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            InputLabelProps={{ shrink: true }}
+            placeholder='Start typing...'
+            label={helperText ? helperText : `${label} ${propertyType}`}
+            variant='outlined'
+          />
+        )}
+        getOptionLabel={(option) => RenderSubValue(option)}
+      />
+      {setManual ? (
+        <SelectionConfirmationButton onClick={() => manualHandleParameters()} key={`selectionConfirmation`} />
+      ) : (
+        <></>
       )}
-      getOptionLabel={(option) => RenderSubValue(option)}
-    />
+    </div>
   );
 };
 

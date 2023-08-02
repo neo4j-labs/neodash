@@ -1296,6 +1296,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      setManual: {
+        label: 'Manual Set',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       overridePropertyDisplayName: {
         label: 'Property Display Name Override',
         type: SELECTION_TYPES.LIST,
