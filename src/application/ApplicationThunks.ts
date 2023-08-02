@@ -474,6 +474,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               credentials.password
             )
           );
+          dispatch(setConnected(true));
         }
 
         if (standalone) {
