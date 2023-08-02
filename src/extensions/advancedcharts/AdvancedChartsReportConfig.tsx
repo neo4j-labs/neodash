@@ -73,26 +73,6 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 2000,
       },
-      marginLeftInPercent: {
-        label: 'Margin Left (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginRightInPercent: {
-        label: 'Margin Right (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginTopInPercent: {
-        label: 'Margin Top (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 40,
-      },
-      marginBottomInPercent: {
-        label: 'Margin Bottom (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 40,
-      },
       refreshButtonEnabled: {
         label: 'Refreshable',
         type: SELECTION_TYPES.LIST,

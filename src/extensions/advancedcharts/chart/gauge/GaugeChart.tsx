@@ -48,7 +48,7 @@ return (
     {typeof score == 'number' ? (
       <GaugeComponent
         id={chartId}
-        type="grafana"
+        type="semicircle"
         value={score}
         minValue={0}
         maxValue={maxValue}
@@ -59,16 +59,22 @@ return (
           nbSubArcs: nrOfLevels,
         }}
         pointer={{
-          type: "needle",
-          color: "#345243",
-          baseColor: "#464A4F",
-          length: 0.70,
-          animate: true,
-          elastic: false,
-          animationDuration: 3000,
-          animationDelay: 100,
-          width: 20,
+          color: '#345243',
+          length: 0.80,
+          width: 15,
+          // elastic: true,
         }}
+        // pointer={{
+        //   type: "needle",
+        //   color: "#345243",
+        //   baseColor: "#345243",
+        //   length: 0.70,
+        //   animate: true,
+        //   elastic: false,
+        //   animationDuration: 3000,
+        //   animationDelay: 100,
+        //   width: 20,
+        // }}
         labels={{
           valueLabel: {
             matchColorWithArc: true,
