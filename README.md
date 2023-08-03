@@ -1,10 +1,12 @@
-#MADT4BC: Multi-Aspect Digital Twin for Business Continuity
+# MADT4BC: Multi-Aspect Digital Twin for Business Continuity
 
 ## Installation
+
 node version v20.2.0
 yarn version 1.22.19
 
 ## Preparation
+
 Launch databases in docker:
 ```bash 
 docker compose up
@@ -16,15 +18,23 @@ user name: neo4j, password: sindit-neo4j
 If the database is empty, copy the content in samples/sample-data.cypher and past it into the query box, then execute the query.
 
 ## Install dependencies
-``` yarn install ```
+
+```
+yarn install
+```
 
 ## Start up
-```yarn run dev```
+
+```
+yarn run dev
+```
+
 Open the dashboard in browser: http://localhost:3000, choose "Existing Dashboard". In the opened dialog, choose neo4j database from localhost, 7687 (should be the default one). Same user name and password as above.
 
 # Original README from NeoDash
 
 ## NeoDash - Neo4j Dashboard Builder
+
 NeoDash is an open source tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
 
 ![screenshot](public/screenshot.png)
@@ -32,6 +42,7 @@ NeoDash is an open source tool for visualizing your Neo4j data. It lets you grou
 Neodash supports presenting your data as tables, graphs, bar charts, line charts, maps and more. It contains a Cypher editor to directly write the Cypher queries that populate the reports. You can save dashboards to your database, and share them with others.
 
 ## Try NeoDash
+
 You can run NeoDash in one of three ways:
 
 1. You can install NeoDash into Neo4j Desktop from the [graph app gallery](https://install.graphapp.io). NeoDash will automatically connect to your active database.
@@ -107,7 +118,7 @@ If you have any questions about NeoDash, please reach out to the maintainers:
 > NeoDash is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. If you have a need for a commercial agreement around training, custom extensions or other services, please contact the [Neo4j Professional Services](https://neo4j.com/professional-services/) team.
 
 
-#DYNABIC pending features
+# DYNABIC pending features
 
 
 1. Attachment chart
@@ -115,3 +126,12 @@ If you have any questions about NeoDash, please reach out to the maintainers:
 2. Datasource chart
 2.1 MQTT support
 2.2 Time series data
+
+
+
+Run MQTT-Kafka bridge:
+
+```
+yarn run mqtt-kafka-bridge
+```
+
