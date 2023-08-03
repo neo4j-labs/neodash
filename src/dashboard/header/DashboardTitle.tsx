@@ -17,7 +17,7 @@ import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 export const NeoDashboardTitle = ({
   dashboardTitle,
   //   setDashboardTitle,
-  // editable,
+  editable,
   dashboardSettings,
   extensions,
   updateDashboardSetting,
@@ -60,38 +60,40 @@ export const NeoDashboardTitle = ({
     <div className='n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'>
       {/* TODO : Replace with editable field if dashboard is editable */}
       <Typography variant='h3'>{dashboardTitle}</Typography>
-      <div className='flex flex-row flex-wrap items-center gap-2'>
-        <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
-          <EllipsisHorizontalIconOutline />
-        </IconButton>
-        <Menu
-          anchorOrigin={{
-            horizontal: 'right',
-            vertical: 'bottom',
-          }}
-          transformOrigin={{
-            horizontal: 'right',
-            vertical: 'top',
-          }}
-          anchorEl={anchorEl}
-          open={menuOpen}
-          onClose={handleSettingsMenuClose}
-          size='large'
-        >
-          <MenuItems>
-            <NeoSettingsModal
-              dashboardSettings={dashboardSettings}
-              updateDashboardSetting={updateDashboardSetting}
-              extensions={extensions}
-            ></NeoSettingsModal>
-            <NeoSaveModal />
-            <NeoLoadModal />
-            <NeoShareModal />
-            <NeoExtensionsModal />
-            {renderDrawerExtensionsButtons()}
-          </MenuItems>
-        </Menu>
-      </div>
+      {editable && (
+        <div className='flex flex-row flex-wrap items-center gap-2'>
+          <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
+            <EllipsisHorizontalIconOutline />
+          </IconButton>
+          <Menu
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            transformOrigin={{
+              horizontal: 'right',
+              vertical: 'top',
+            }}
+            anchorEl={anchorEl}
+            open={menuOpen}
+            onClose={handleSettingsMenuClose}
+            size='large'
+          >
+            <MenuItems>
+              <NeoSettingsModal
+                dashboardSettings={dashboardSettings}
+                updateDashboardSetting={updateDashboardSetting}
+                extensions={extensions}
+              ></NeoSettingsModal>
+              <NeoSaveModal />
+              <NeoLoadModal />
+              <NeoShareModal />
+              <NeoExtensionsModal />
+              {renderDrawerExtensionsButtons()}
+            </MenuItems>
+          </Menu>
+        </div>
+      )}
     </div>
   );
 };

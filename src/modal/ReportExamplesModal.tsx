@@ -1,13 +1,11 @@
 import React from 'react';
-import { Tooltip } from '@mui/material';
 import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
-import { SideNavigationItem } from '@neo4j-ndl/react';
+import { Dialog, MenuItem } from '@neo4j-ndl/react';
 import { ChartBarIconSolid } from '@neo4j-ndl/react/icons';
-import { Dialog, Typography } from '@neo4j-ndl/react';
 import { Section, SectionTitle, SectionContent } from '../modal/ModalUtils';
 
-export const NeoReportExamplesModal = ({ database, examples, extensions, navItemClass }) => {
+export const NeoReportExamplesModal = ({ database, examples, extensions }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -20,11 +18,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions, navItem
 
   return (
     <div>
-      <Tooltip title='Examples' aria-label='examples' disableInteractive>
-        <SideNavigationItem onClick={handleClickOpen} icon={<ChartBarIconSolid className={navItemClass} />}>
-          Examples
-        </SideNavigationItem>
-      </Tooltip>
+      <MenuItem title='Examples' onClick={handleClickOpen} icon={<ChartBarIconSolid />} />
 
       {open ? (
         <Dialog open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title' className='dialog-xl'>

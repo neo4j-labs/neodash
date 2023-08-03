@@ -83,6 +83,7 @@ const Application = ({
   resetDashboard,
   onAboutModalOpen,
   onAboutModalClose,
+  resetApplication,
   getDebugState,
   onReportHelpModalClose,
   welcomeScreenOpen,
@@ -114,7 +115,11 @@ const Application = ({
         className='n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden n-bg-light-neutral-bg-default'
       >
         {connected ? (
-          <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard>
+          <Dashboard
+            onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}
+            onAboutModalOpen={onAboutModalOpen}
+            resetApplication={resetApplication}
+          ></Dashboard>
         ) : (
           <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
         )}
@@ -217,6 +222,10 @@ const mapDispatchToProps = (dispatch) => ({
   onAboutModalOpen: (_) => dispatch(setAboutModalOpen(true)),
   setWelcomeScreenOpen: (open) => dispatch(setWelcomeScreenOpen(open)),
   onAboutModalClose: (_) => dispatch(setAboutModalOpen(false)),
+  resetApplication: () => {
+    dispatch(setWelcomeScreenOpen(true));
+    dispatch(setConnected(false));
+  },
 });
 
 Application.displayName = 'Application';
