@@ -13,7 +13,7 @@ import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../
 import { Tabs, IconButton } from '@neo4j-ndl/react';
 import { PlusIconOutline } from '@neo4j-ndl/react/icons';
 import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -52,10 +52,17 @@ export const NeoDashboardHeaderPageList = ({
     }
   }
 
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10, // Enable sort function when dragging 10px   💡 here!!!
+    },
+  });
+  const sensors = useSensors(mouseSensor);
+
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
-        <DndContext onDragEnd={handleDragEnd}>
+        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
           <SortableContext items={pages} strategy={horizontalListSortingStrategy}>
             {pages.map((page, i) => (
               <DashboardHeaderPageTitle title={page.title} tabIndex={i} key={i} disabled={!editable} />
