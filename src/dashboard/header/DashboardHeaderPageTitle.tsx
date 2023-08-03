@@ -34,7 +34,7 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
   const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
 
   const content = (
-    <div ref={setNodeRef} style={style} id={`tab_${tabIndex}`} {...attributes} {...listeners}>
+    <div className='n-inline-flex' ref={setNodeRef} style={style} id={`tab_${tabIndex}`} {...attributes} {...listeners}>
       <Tab tabId={tabIndex} key={tabIndex}>
         {title}
         {!disabled && (
