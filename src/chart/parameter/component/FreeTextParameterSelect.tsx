@@ -2,8 +2,10 @@ import { debounce, CircularProgress } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
 import { ParameterSelectProps } from './ParameterSelect';
 import NeoField from '../../../component/field/Field';
+import { SelectionConfirmationButton } from './SelectionConfirmationButton';
 
 const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
+  const { setManual } = props;
   const setParameterTimeout =
     props.settings && props.settings.setParameterTimeout ? props.settings.setParameterTimeout : 1000;
   const defaultValue =
@@ -17,11 +19,31 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
   const [running, setRunning] = React.useState(false);
+  const [paramValueTemp, setParamValueTemp] = React.useState(null);
+
   const setParameterValue = (value) => {
     setRunning(false);
     props.setParameterValue(value);
   };
   const debouncedSetParameterValue = useCallback(debounce(setParameterValue, setParameterTimeout), []);
+
+  const manualHandleParameters = () => {
+    handleParameters(paramValueTemp, false);
+  };
+
+  const handleParameters = (value, manual = false) => {
+    setParamValueTemp(value);
+
+    if (manual) {
+      return;
+    }
+
+    if (value == null && clearParameterOnFieldClear) {
+      debouncedSetParameterValue(defaultValue);
+    } else {
+      debouncedSetParameterValue(value);
+    }
+  };
 
   // If the user hasn't typed, and the parameter value mismatches the input value --> it was changed externally --> refresh the input value.
   if (running == false && inputText !== props.parameterValue) {
@@ -42,13 +64,14 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
           setRunning(true);
           setInputText(newValue);
 
-          if (newValue == null && clearParameterOnFieldClear) {
-            debouncedSetParameterValue(defaultValue);
-          } else {
-            debouncedSetParameterValue(newValue);
-          }
+          handleParameters(newValue, setManual);
         }}
       />
+      {setManual ? (
+        <SelectionConfirmationButton onClick={() => manualHandleParameters()} key={`selectionConfirmation`} />
+      ) : (
+        <></>
+      )}
       {running ? <CircularProgress size={26} style={{ marginTop: '20px', marginLeft: '5px' }} /> : <></>}
     </div>
   );
