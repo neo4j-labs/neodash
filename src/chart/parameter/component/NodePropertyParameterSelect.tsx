@@ -29,8 +29,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   );
   const [inputValue, setInputValue] = React.useState(getInitialValue(props.parameterDisplayValue, multiSelector));
 
-  const [paramValueTemp, setParamValueTemp] = React.useState(null);
-  const [paramValueDisplayTemp, setParamValueDisplayTemp] = React.useState(null);
+  const [paramValueTemp, setParamValueTemp] = React.useState(props.parameterValue);
+  const [paramValueDisplayTemp, setParamValueDisplayTemp] = React.useState(props.parameterDisplayValue);
 
   const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
@@ -92,9 +92,11 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       return;
     }
     let newValue;
+    let valReference = setManual ? paramValueTemp : props.parameterValue;
+    let valDisplayReference = setManual ? paramValueDisplayTemp : props.parameterDisplayValue;
     // Multiple and new entry
     if (isMulti && inputValue.length < newDisplay.length) {
-      newValue = Array.isArray(props.parameterValue) ? [...props.parameterValue] : [props.parameterValue];
+      newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
 
       let val = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]._fields[
@@ -108,9 +110,9 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
       newValue = RenderSubValue(newValue);
     } else {
-      let ele = props.parameterDisplayValue.filter((x) => !newDisplay.includes(x))[0];
-      newValue = [...props.parameterValue];
-      newValue.splice(props.parameterDisplayValue.indexOf(ele), 1);
+      let ele = valDisplayReference.filter((x) => !newDisplay.includes(x))[0];
+      newValue = [...valReference];
+      newValue.splice(valDisplayReference.indexOf(ele), 1);
     }
 
     setInputDisplayText(isMulti ? '' : newDisplay);
