@@ -8,14 +8,11 @@ import { setConnectionModalOpen } from '../../application/ApplicationActions';
 import { setPageNumberThunk } from '../../settings/SettingsThunks';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
-import RGL, { WidthProvider } from 'react-grid-layout';
-import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../../config/ApplicationConfig';
 import { Tabs, IconButton } from '@neo4j-ndl/react';
 import { PlusIconOutline } from '@neo4j-ndl/react/icons';
 import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
 import { DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-const ReactGridLayout = WidthProvider(RGL);
 
 /**
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.
@@ -29,12 +26,10 @@ export const NeoDashboardHeaderPageList = ({
   movePage,
   selectPage,
 }) => {
-  const [layout, setLayout] = React.useState([]);
-  const [isDragging, setIsDragging] = React.useState(false);
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
 
   // We debounce several state changes to improve user experience.
-  // const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
+  const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
 
   const pageAddButton = (
     <IconButton className='n-relative -n-top-1' size='large' onClick={addPage} clean>
@@ -50,6 +45,8 @@ export const NeoDashboardHeaderPageList = ({
       const newIndex = parseInt(over.id.split('_')[1]);
       movePage(oldIndex, newIndex);
     }
+
+    debouncedSetCanSwitchPages(true);
   }
 
   const mouseSensor = useSensor(MouseSensor, {
@@ -70,7 +67,7 @@ export const NeoDashboardHeaderPageList = ({
           </SortableContext>
         </DndContext>
       </Tabs>
-      {editable && !isDragging ? pageAddButton : <></>}
+      {editable && pageAddButton}
     </div>
   );
   return content;
