@@ -34,7 +34,7 @@ export const NeoDashboardHeaderPageList = ({
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
 
   // We debounce several state changes to improve user experience.
-  const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
+  // const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
 
   const pageAddButton = (
     <IconButton className='n-relative -n-top-1' size='large' onClick={addPage} clean>
@@ -54,7 +54,7 @@ export const NeoDashboardHeaderPageList = ({
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
-      distance: 10, // Enable sort function when dragging 10px   💡 here!!!
+      distance: 5, // Enable sort function when dragging 10px
     },
   });
   const sensors = useSensors(mouseSensor);
@@ -72,76 +72,6 @@ export const NeoDashboardHeaderPageList = ({
       </Tabs>
       {editable && !isDragging ? pageAddButton : <></>}
     </div>
-
-    //   <ReactGridLayout
-    //     className='layout -n-z-50'
-    //     layout={layout}
-    //     isResizable={false}
-    //     isDraggable={editable}
-    //     onDrag={() => {
-    //       if (!isDragging) {
-    //         setCanSwitchPages(false);
-    //         setIsDragging(true);
-    //       }
-    //     }}
-    //     onDragStop={(newLayout, oldPosition, newPosition) => {
-    //       // Calculate the old and new index of the page that was just dropped.
-    //       const newXPositions = newLayout.map((page) => page.x);
-    //       const oldIndex = oldPosition.i;
-    //       const newIndex = Math.min(
-    //         newXPositions.length - 2,
-    //         newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
-    //       );
-    //       if (oldIndex !== newIndex) {
-    //         movePage(oldIndex, newIndex);
-    //         recomputeLayout();
-    //       }
-    //       setIsDragging(false);
-    //       debouncedSetCanSwitchPages(true);
-    //     }}
-    //     style={{
-    //       width: '100%',
-    //       height: '47px',
-    //       overflowY: 'hidden',
-    //       overflowX: 'hidden',
-    //       background: DASHBOARD_PAGE_LIST_COLOR,
-    //       padding: 0,
-    //       margin: 0,
-    //       boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 15%)',
-    //     }}
-    //     margin={[0, 0]}
-    //     maxRows={1}
-    //     rowHeight={47}
-    //     isBounded={true}
-    //     compactType={'horizontal'}
-    //   >
-    //     {pages.map((page, i) => (
-    //       <div
-    //         key={i}
-    //         style={{
-    //           background: DASHBOARD_PAGE_LIST_COLOR,
-    //           backgroundColor: pagenumber == i ? DASHBOARD_PAGE_LIST_ACTIVE_COLOR : 'inherit',
-    //           display: 'inline-block',
-    //           height: '100%',
-    //           padding: 0,
-    //           margin: 0,
-    //           borderRight: '1px solid #ddd',
-    //           borderLeft: '1px solid #ddd',
-    //         }}
-    //       >
-    //         <NeoPageButton
-    //           title={page.title}
-    //           selected={pagenumber == i}
-    //           disabled={!editable}
-    //           onSelect={() => (canSwitchPages ? selectPage(i) : null)}
-    //           onRemove={() => removePage(i)}
-    //           onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)}
-    //         />
-    //       </div>
-    //     ))}
-    //     {editable && !isDragging ? lastElement : <></>}
-    //   </ReactGridLayout>
-    // </Toolbar>
   );
   return content;
 };
