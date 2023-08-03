@@ -101,12 +101,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         realValueRowIndex
       ];
 
-      newValue.push(val?.low ?? val);
+      newValue.push(RenderSubValue(val));
     } else if (!isMulti) {
       newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
         ._fields[realValueRowIndex];
 
-      newValue = newValue?.low || newValue;
+      newValue = RenderSubValue(newValue);
     } else {
       let ele = props.parameterDisplayValue.filter((x) => !newDisplay.includes(x))[0];
       newValue = [...props.parameterValue];
