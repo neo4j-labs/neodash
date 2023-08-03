@@ -7,6 +7,8 @@ import { removePageThunk } from '../DashboardThunks';
 import { Tab, Menu, MenuItems, MenuItem, IconButton } from '@neo4j-ndl/react';
 import { EllipsisHorizontalIconOutline, PencilIconOutline, TrashIconOutline } from '@neo4j-ndl/react/icons';
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageTitle, disabled = false }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -22,10 +24,17 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
     setDeleteModalOpen(false);
   };
 
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: `tab_${tabIndex}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
 
   const content = (
-    <>
+    <div ref={setNodeRef} style={style} id={`tab_${tabIndex}`} {...attributes} {...listeners}>
       <Tab tabId={tabIndex} key={tabIndex}>
         {title}
         {!disabled && (
@@ -67,7 +76,7 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
         onRemove={() => removePage(tabIndex)}
         handleClose={handleDeleteModalClose}
       />
-    </>
+    </div>
   );
 
   return content;

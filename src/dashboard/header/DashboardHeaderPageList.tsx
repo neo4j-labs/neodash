@@ -13,6 +13,8 @@ import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../
 import { Tabs, IconButton } from '@neo4j-ndl/react';
 import { PlusIconOutline } from '@neo4j-ndl/react/icons';
 import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
+import { DndContext } from '@dnd-kit/core';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 const ReactGridLayout = WidthProvider(RGL);
 
 /**
@@ -24,7 +26,7 @@ export const NeoDashboardHeaderPageList = ({
   pages,
   pagenumber,
   addPage,
-  // movePage,
+  movePage,
   selectPage,
 }) => {
   const [layout, setLayout] = React.useState([]);
@@ -40,12 +42,26 @@ export const NeoDashboardHeaderPageList = ({
     </IconButton>
   );
 
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = parseInt(active.id.split('_')[1]);
+      const newIndex = parseInt(over.id.split('_')[1]);
+      movePage(oldIndex, newIndex);
+    }
+  }
+
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
-        {pages.map((page, i) => (
-          <DashboardHeaderPageTitle title={page.title} tabIndex={i} key={i} disabled={!editable} />
-        ))}
+        <DndContext onDragEnd={handleDragEnd}>
+          <SortableContext items={pages} strategy={horizontalListSortingStrategy}>
+            {pages.map((page, i) => (
+              <DashboardHeaderPageTitle title={page.title} tabIndex={i} key={i} disabled={!editable} />
+            ))}
+          </SortableContext>
+        </DndContext>
       </Tabs>
       {editable && !isDragging ? pageAddButton : <></>}
     </div>
