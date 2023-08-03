@@ -45,10 +45,12 @@ export const addPageThunk = () => (dispatch: any, getState: any) => {
   }
 };
 
-export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: any) => {
+export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: any, getState: any) => {
   try {
+    if (getState().dashboard.settings.pagenumber == oldIndex) {
+      dispatch(updateDashboardSetting('pagenumber', newIndex));
+    }
     dispatch(movePage(oldIndex, newIndex));
-    dispatch(updateDashboardSetting('pagenumber', newIndex));
   } catch (e) {
     dispatch(createNotificationThunk('Unable to move page', e));
   }
