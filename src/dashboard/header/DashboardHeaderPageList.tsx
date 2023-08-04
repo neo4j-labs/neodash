@@ -40,6 +40,9 @@ export const NeoDashboardHeaderPageList = ({
   function handleDragEnd(event) {
     const { active, over } = event;
 
+    if (!over || !editable) {
+      return;
+    }
     if (active.id !== over.id) {
       const oldIndex = parseInt(active.id.split('_')[1]);
       const newIndex = parseInt(over.id.split('_')[1]);
