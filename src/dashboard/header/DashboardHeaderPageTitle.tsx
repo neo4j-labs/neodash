@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
@@ -9,14 +9,20 @@ import { EllipsisHorizontalIconOutline, PencilIconOutline, TrashIconOutline } fr
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { InputBase, TextField } from '@mui/material';
 
-export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageTitle, disabled = false }) => {
+export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, setPageTitle, disabled = false }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const menuOpen = Boolean(anchorEl);
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+  const [editing, setEditing] = React.useState(false);
 
   const handleMenuEditClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
-    event.stopPropagation();
+    event.preventDefault();
+    if (editing) {
+      debouncedSetPageTitle(key, titleText);
+    }
+    setEditing(!editing);
   };
 
   const handleDeleteModalClose = () => {
@@ -33,10 +39,45 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
 
   const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
 
+  const [titleText, setTitleText] = React.useState(title);
+  useEffect(() => {
+    // Reset text to the dashboard state when the page gets reorganized.
+    if (titleText !== title) {
+      setTitleText(title);
+    }
+  }, [title]);
+
   const content = (
     <div className='n-inline-flex' ref={setNodeRef} style={style} id={`tab_${tabIndex}`} {...attributes} {...listeners}>
       <Tab tabId={tabIndex} key={tabIndex}>
-        {title}
+        {!editing ? (
+          title
+        ) : (
+          <InputBase
+            value={titleText}
+            onChange={(event) => {
+              if (disabled) {
+                return;
+              }
+              setTitleText(event.target.value);
+            }}
+            onFocus={(e) => {
+              if (disabled) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }}
+            inputProps={{ style: { textTransform: 'none', cursor: 'pointer', fontWeight: 'normal' } }}
+            style={{
+              height: '36px',
+              width: '100%',
+              paddingLeft: '10px',
+              textAlign: 'center',
+              textTransform: 'uppercase',
+            }}
+            placeholder='Page name...'
+          />
+        )}
         {!disabled && (
           <>
             <IconButton
@@ -56,7 +97,14 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
             </IconButton>
             <Menu anchorEl={anchorEl} open={menuOpen} onClose={() => setAnchorEl(null)}>
               <MenuItems>
-                <MenuItem icon={<PencilIconOutline />} title='Edit name' onClick={(e) => handleMenuEditClick(e)} />
+                <MenuItem
+                  icon={<PencilIconOutline />}
+                  title={editing ? 'Stop Editing' : 'Edit name'}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMenuEditClick(e);
+                  }}
+                />
                 <MenuItem
                   className='n-text-palette-danger-text'
                   icon={<TrashIconOutline />}
