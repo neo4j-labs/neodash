@@ -66,13 +66,9 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
                 e.stopPropagation();
               }
             }}
-            inputProps={{ style: { textTransform: 'none', cursor: 'pointer', fontWeight: 'normal' } }}
             style={{
-              height: '36px',
               width: '100%',
-              paddingLeft: '10px',
               textAlign: 'center',
-              textTransform: 'uppercase',
             }}
             placeholder='Page name...'
           />
