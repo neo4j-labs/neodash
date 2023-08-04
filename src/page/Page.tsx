@@ -144,7 +144,7 @@ export const NeoPage = ({
   useEffect(() => {
     setAnimated(false);
     recomputeLayout();
-  }, [reports, dashboardSettings.resizing]);
+  }, [reports, dashboardSettings.resizing, pagenumber]);
 
   const content = (
     <div className='n-pt-3'>

@@ -19,17 +19,17 @@ export function createUUID() {
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
     const numberOfPages = getState().dashboard.pages.length;
-
+    const pageIndex = getState().dashboard.settings.pagenumber;
     if (numberOfPages == 1) {
       dispatch(createNotificationThunk('Cannot remove page', "You can't remove the only page of a dashboard."));
       return;
     }
-    if (number >= numberOfPages - 1) {
-      dispatch(updateDashboardSetting('pagenumber', Math.max(0, numberOfPages - 2)));
-    } else {
-      dispatch(updateDashboardSetting('pagenumber', getState().dashboard.settings.pagenumber - 1));
-    }
+
     dispatch(removePage(number));
+
+    if (number <= pageIndex) {
+      dispatch(updateDashboardSetting('pagenumber', Math.max(pageIndex - 1)));
+    }
   } catch (e) {
     dispatch(createNotificationThunk('Unable to remove page', e));
   }
@@ -47,10 +47,15 @@ export const addPageThunk = () => (dispatch: any, getState: any) => {
 
 export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: any, getState: any) => {
   try {
-    if (getState().dashboard.settings.pagenumber == oldIndex) {
-      dispatch(updateDashboardSetting('pagenumber', newIndex));
-    }
     dispatch(movePage(oldIndex, newIndex));
+    const pageIndex = getState().dashboard.settings.pagenumber;
+    if (pageIndex == oldIndex) {
+      dispatch(updateDashboardSetting('pagenumber', newIndex));
+    } else if (oldIndex > pageIndex && pageIndex >= newIndex) {
+      dispatch(updateDashboardSetting('pagenumber', pageIndex + 1));
+    } else if (oldIndex < pageIndex && pageIndex <= newIndex) {
+      dispatch(updateDashboardSetting('pagenumber', pageIndex - 1));
+    }
   } catch (e) {
     dispatch(createNotificationThunk('Unable to move page', e));
   }
