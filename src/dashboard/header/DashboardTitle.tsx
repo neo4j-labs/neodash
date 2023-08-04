@@ -38,12 +38,12 @@ export const NeoDashboardTitle = ({
    * are enabled and present a button (EX: node-sidebar)
    * @returns JSX element containing all the buttons related to their enabled extensions
    */
-  function renderDrawerExtensionsButtons() {
+  function renderExtensionsButtons() {
     const res = (
       <>
-        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name, idx) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return Component ? <Component database={connection.database} /> : <></>;
+          return Component ? <Component key={`ext-${idx}`} database={connection.database} /> : <></>;
         })}
       </>
     );
@@ -89,7 +89,7 @@ export const NeoDashboardTitle = ({
               <NeoLoadModal />
               <NeoShareModal />
               <NeoExtensionsModal />
-              {renderDrawerExtensionsButtons()}
+              {renderExtensionsButtons()}
             </MenuItems>
           </Menu>
         </div>

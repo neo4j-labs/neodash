@@ -1,4 +1,4 @@
-import { extractNodePropertiesFromRecords } from './ReportRecordProcessing';
+import { extractNodePropertiesFromRecords, extractNodeAndRelPropertiesFromRecords } from './ReportRecordProcessing';
 import isEqual from 'lodash.isequal';
 
 export enum QueryStatus {
@@ -49,7 +49,11 @@ export async function runCypherQuery(
   useNodePropsAsFields = false,
   useReturnValuesAsFields = false,
   useHardRowLimit = false,
-  queryTimeLimit = 20
+  queryTimeLimit = 20,
+  setSchema = (schema) => {
+    // eslint-disable-next-line no-console
+    console.log(`Query runner attempted to set schema: ${JSON.stringify(schema)}`);
+  }
 ) {
   // If no query specified, we don't do anything.
   if (query.trim() == '') {
@@ -97,6 +101,8 @@ export async function runCypherQuery(
         const nodePropsAsFields = extractNodePropertiesFromRecords(records);
         setFields(nodePropsAsFields);
       }
+
+      setSchema(extractNodeAndRelPropertiesFromRecords(records));
 
       if (records == null) {
         setStatus(QueryStatus.NO_DRAWABLE_DATA);

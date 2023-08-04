@@ -4,7 +4,7 @@ import { BookOpenIconOutline, BeakerIconOutline } from '@neo4j-ndl/react/icons';
 import { Section, SectionTitle, SectionContent } from './ModalUtils';
 
 export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
-  const version = '2.3.0';
+  const version = '2.3.1';
 
   const downloadDebugFile = () => {
     const element = document.createElement('a');

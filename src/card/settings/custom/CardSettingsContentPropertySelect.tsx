@@ -237,7 +237,7 @@ const NeoCardSettingsContentPropertySelect = ({
           value={settings.entityType ? settings.entityType : ''}
           defaultValue={''}
           placeholder={'Enter a parameter name here...'}
-          style={{ width: 335, marginLeft: '5px', marginTop: '13px' }}
+          style={{}}
           onChange={(value) => {
             setLabelInputText(value);
             handleNodeLabelSelectionUpdate(value);
@@ -253,14 +253,13 @@ const NeoCardSettingsContentPropertySelect = ({
               value={settings?.entityType || ''}
               defaultValue={''}
               placeholder={'Enter a parameter name here...'}
-              style={{ width: 350, marginLeft: '5px', marginTop: '0px' }}
+              style={{}}
               onChange={(value) => {
                 setLabelInputText(value);
                 handleNodeLabelSelectionUpdate(value);
                 handleFreeTextNameSelectionUpdate(value);
               }}
             />
-            <br />
             <br />
             <div style={{ display: labelInputText ? 'inherit' : 'none' }}>
               <NeoCodeEditorComponent
@@ -301,7 +300,7 @@ const NeoCardSettingsContentPropertySelect = ({
                 : labelRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
             }
             getOptionLabel={(option) => option || ''}
-            style={{ width: 350, marginLeft: '5px', marginTop: '13px' }}
+            style={{ marginTop: '13px' }}
             inputValue={labelInputText}
             onInputChange={(event, value) => {
               setLabelInputText(value);
@@ -344,7 +343,7 @@ const NeoCardSettingsContentPropertySelect = ({
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
                 getOptionLabel={(option) => (option ? option : '')}
-                style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '13px' }}
+                style={{ display: 'inline-block', width: '65%', marginTop: '13px', marginRight: '5%' }}
                 inputValue={propertyInputText}
                 onInputChange={(event, value) => {
                   setPropertyInputText(value);
@@ -374,13 +373,14 @@ const NeoCardSettingsContentPropertySelect = ({
               {overridePropertyDisplayName ? (
                 <Autocomplete
                   id='autocomplete-property-display'
+                  size={'small'}
                   options={
                     manualPropertyNameSpecification
                       ? [settings.propertyTypeDisplay || settings.propertyType]
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
                   getOptionLabel={(option) => (option ? option : '')}
-                  style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '13px' }}
+                  style={{ display: 'inline-block', width: '65%', marginTop: '13px', marginRight: '5%' }}
                   inputValue={propertyInputDisplayText}
                   onInputChange={(event, value) => {
                     setPropertyInputDisplayText(value);
@@ -408,14 +408,14 @@ const NeoCardSettingsContentPropertySelect = ({
               ) : (
                 <></>
               )}
-              <NeoField
+              <TextField
                 placeholder='number'
                 label='Number (optional)'
                 disabled={!settings.propertyType}
                 value={settings.id}
-                style={{ width: '170px', marginTop: '13px', marginLeft: '5px' }}
-                onChange={(value) => {
-                  handleIdSelectionUpdate(value);
+                style={{ width: '30%', display: 'inline-block', marginTop: '13px' }}
+                onChange={(e) => {
+                  handleIdSelectionUpdate(e.target.value);
                 }}
                 size={'small'}
               />
