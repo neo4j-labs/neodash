@@ -4,12 +4,11 @@ import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import { setPageTitle } from '../../page/PageActions';
 import { removePageThunk } from '../DashboardThunks';
-import { Tab, Menu, MenuItems, MenuItem, IconButton } from '@neo4j-ndl/react';
+import { Tab, Menu, MenuItems, MenuItem, IconButton, TextInput } from '@neo4j-ndl/react';
 import { EllipsisHorizontalIconOutline, PencilIconOutline, TrashIconOutline } from '@neo4j-ndl/react/icons';
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { InputBase, TextField } from '@mui/material';
 
 export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, setPageTitle, disabled = false }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -53,7 +52,7 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
         {!editing ? (
           title
         ) : (
-          <InputBase
+          <TextInput
             value={titleText}
             onChange={(event) => {
               if (disabled) {
