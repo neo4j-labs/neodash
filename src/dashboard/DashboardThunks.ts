@@ -47,8 +47,13 @@ export const addPageThunk = () => (dispatch: any, getState: any) => {
 
 export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: any, getState: any) => {
   try {
-    if (getState().dashboard.settings.pagenumber == oldIndex) {
+    let pageIndex = getState().dashboard.settings.pagenumber;
+    if (pageIndex == oldIndex) {
       dispatch(updateDashboardSetting('pagenumber', newIndex));
+    } else if (oldIndex > pageIndex && pageIndex >= newIndex) {
+      dispatch(updateDashboardSetting('pagenumber', pageIndex + 1));
+    } else if (oldIndex < pageIndex && pageIndex <= newIndex) {
+      dispatch(updateDashboardSetting('pagenumber', pageIndex - 1));
     }
     dispatch(movePage(oldIndex, newIndex));
   } catch (e) {
