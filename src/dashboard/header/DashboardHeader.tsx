@@ -54,13 +54,12 @@ export const NeoDashboardHeader = ({
           </nav>
           <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>
             <div className='n-flex n-flex-row n-gap-x-2'>
-              <div className='n-p-1 ndl-icon-btn'>
+              <div className='ndl-icon-btn logo-btn n-p-1 ndl-large ndl-clean'>
                 <DarkModeSwitch
                   style={{}}
                   checked={isDarkMode}
                   onChange={toggleDarkMode}
                   size={24}
-                  sunColor={'#0000ff'}
                   moonColor={'#ff0000'}
                 />
               </div>
