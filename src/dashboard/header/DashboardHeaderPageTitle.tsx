@@ -64,18 +64,14 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
           title
         ) : (
           <TextInput
+            data-no-dnd='true'
+            autoFocus={true}
             value={titleText}
             onChange={(event) => {
               if (disabled) {
                 return;
               }
               setTitleText(event.target.value);
-            }}
-            onFocus={(e) => {
-              if (disabled) {
-                e.preventDefault();
-                e.stopPropagation();
-              }
             }}
             style={{
               textAlign: 'center',

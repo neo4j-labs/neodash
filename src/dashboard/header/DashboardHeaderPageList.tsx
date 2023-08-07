@@ -11,9 +11,10 @@ import { applicationIsStandalone } from '../../application/ApplicationSelectors'
 import { Tabs, IconButton } from '@neo4j-ndl/react';
 import { PlusIconOutline } from '@neo4j-ndl/react/icons';
 import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
-import { DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { mutateName, processHierarchyFromRecords } from '../../chart/ChartUtils';
+import { MouseSensor } from '../../utils/accessibility';
 
 /**
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.
