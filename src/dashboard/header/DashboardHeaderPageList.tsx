@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getPages } from '../DashboardSelectors';
@@ -13,6 +13,7 @@ import { PlusIconOutline } from '@neo4j-ndl/react/icons';
 import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
 import { DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { mutateName, processHierarchyFromRecords } from '../../chart/ChartUtils';
 
 /**
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.

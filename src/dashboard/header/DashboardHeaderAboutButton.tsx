@@ -13,6 +13,7 @@ import StyleConfig from '../../config/StyleConfig';
 import { getDashboardExtensions } from '../DashboardSelectors';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import { NeoReportExamplesModal } from '../../modal/ReportExamplesModal';
+import { enterHandler, openTab } from '../../utils/accessibility';
 
 await StyleConfig.getInstance();
 
@@ -25,6 +26,11 @@ export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen }) => 
     setAnchorEl(null);
   };
   const menuOpen = Boolean(anchorEl);
+
+  const menuAboutHandler = (e) => {
+    onAboutModalOpen(e);
+    handleHelpMenuClose();
+  };
 
   return (
     <>
@@ -61,19 +67,17 @@ export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen }) => 
             database={connection.database}
           ></NeoReportExamplesModal>
           <MenuItem
-            title={
-              <a
-                className='n-flex n-flex-row n-gap-token-4'
-                target='_blank'
-                rel='noreferrer'
-                href='https://neo4j.com/labs/neodash/2.3/user-guide/'
-              >
-                <BookOpenIconOutline className='n-w-4 n-h-4 n-text-light-neutral-text-weak n-inline-block' />
-                Documentation
-              </a>
-            }
+            onKeyDown={(e) => enterHandler(e, () => openTab('https://neo4j.com/labs/neodash/2.3/user-guide/'))}
+            onClick={() => openTab('https://neo4j.com/labs/neodash/2.3/user-guide/')}
+            title={'Documentation'}
+            icon={<BookOpenIconOutline />}
           />
-          <MenuItem title={'About'} onClick={onAboutModalOpen} icon={<InformationCircleIconOutline />} />
+          <MenuItem
+            title={'About'}
+            onClick={menuAboutHandler}
+            onKeyDown={(e) => enterHandler(e, menuAboutHandler)}
+            icon={<InformationCircleIconOutline />}
+          />
         </MenuItems>
       </Menu>
     </>

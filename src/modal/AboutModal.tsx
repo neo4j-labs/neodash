@@ -18,8 +18,8 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
   };
 
   return (
-    <div>
-      <Dialog onClose={handleClose} open={open == true} aria-labelledby='form-dialog-title' size='large'>
+    <>
+      <Dialog onClose={handleClose} open={open} aria-labelledby='form-dialog-title' size='large'>
         <Dialog.Header>About NeoDash</Dialog.Header>
         <Dialog.Content>
           <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
@@ -116,7 +116,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
           </div>
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 

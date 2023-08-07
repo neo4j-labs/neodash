@@ -6,7 +6,7 @@ import { setConnectionModalOpen } from '../../application/ApplicationActions';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { NeoDashboardHeaderLogo } from './DashboardHeaderLogo';
-import { NeoAboutButton } from './DashboardHeaderAboutButton';
+import NeoAboutButton from './DashboardHeaderAboutButton';
 import { NeoLogoutButton } from './DashboardHeaderLogoutButton';
 import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownloadImageButton';
 
