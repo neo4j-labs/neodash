@@ -22,6 +22,7 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
       debouncedSetPageTitle(key, titleText);
     }
     setEditing(!editing);
+    setAnchorEl(null);
   };
 
   const handleDeleteModalClose = () => {
@@ -29,7 +30,17 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
     setDeleteModalOpen(false);
   };
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: `tab_${tabIndex}` });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging, isSorting } = useSortable({
+    id: `tab_${tabIndex}`,
+  });
+
+  useEffect(() => {
+    // Reset text to the dashboard state when the page gets reorganized.
+    if ((isDragging || isSorting) && editing) {
+      setEditing(false);
+    }
+    setAnchorEl(null);
+  }, [isDragging, isSorting]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -67,8 +78,8 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
               }
             }}
             style={{
-              width: '100%',
               textAlign: 'center',
+              height: '1.9rem',
             }}
             placeholder='Page name...'
           />
@@ -97,7 +108,7 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
                   title={editing ? 'Stop Editing' : 'Edit name'}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleMenuEditClick(e);
+                    !disabled && handleMenuEditClick(e);
                   }}
                 />
                 <MenuItem
