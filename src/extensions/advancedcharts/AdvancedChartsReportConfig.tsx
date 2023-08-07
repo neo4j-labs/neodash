@@ -33,6 +33,12 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.COLOR,
         default: '#fafafa',
       },
+      flipColorArray: {
+        label: 'Color Range',
+        type: SELECTION_TYPES.LIST,
+        values: ['Green - Red', 'Red - Green'],
+        default: 'Green - Red'
+      },
       maxValue: {
         label: 'Maximum value of scale',
         type: SELECTION_TYPES.NUMBER,

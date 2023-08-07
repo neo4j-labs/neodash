@@ -4,9 +4,7 @@ import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { createUUID } from '../../../../dashboard/DashboardThunks';
 
-/**
- * Based on https://github.com/dekelpaz PR https://github.com/neo4j-labs/neodash/pull/191
- */
+
 const NeoGaugeChart = (props: ChartProps) => {
   const { records } = props;
   const { selection } = props;
@@ -15,14 +13,11 @@ const NeoGaugeChart = (props: ChartProps) => {
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
-  /**
-   * This visualization was extracted from https://github.com/Martin36/react-gauge-chart.
-   */
 
-  //const for 
   const maxValue = settings.maxValue ? settings.maxValue : 100;
   const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
   const arcsLength = settings.arcsLength ? settings.arcsLength : '1/3, 1/3, 1/3';
+  const flipColorArray = settings.flipColorArray ? settings.flipColorArray : 'Green - Red';
 
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
 
@@ -33,6 +28,7 @@ const NeoGaugeChart = (props: ChartProps) => {
   arcsLengthN = arcsLengthN.map((e) => e / sumArcs);
 
   const chartId = createUUID();
+
   let score = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
 
   if (isNaN(score)) {
@@ -42,7 +38,8 @@ const NeoGaugeChart = (props: ChartProps) => {
     score = score.low;
   }
 
-// Add this part to use the new "GaugeComponent"
+  const colorArray = flipColorArray === 'Red - Green' ? ['#EA4228', '#5BE12C'] : ['#5BE12C', '#EA4228'];
+
 return (
   <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
     {typeof score == 'number' ? (
@@ -57,24 +54,13 @@ return (
           padding: 0.05,
           width: 0.25,
           nbSubArcs: nrOfLevels,
+          colorArray: colorArray
         }}
         pointer={{
           color: '#345243',
           length: 0.80,
-          width: 15,
-          // elastic: true,
+          width: 15
         }}
-        // pointer={{
-        //   type: "needle",
-        //   color: "#345243",
-        //   baseColor: "#345243",
-        //   length: 0.70,
-        //   animate: true,
-        //   elastic: false,
-        //   animationDuration: 3000,
-        //   animationDelay: 100,
-        //   width: 20,
-        // }}
         labels={{
           valueLabel: {
             matchColorWithArc: true,

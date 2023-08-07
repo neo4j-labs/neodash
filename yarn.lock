@@ -11678,10 +11678,10 @@ react-gauge-chart@^0.4.1:
   dependencies:
     d3 "^7.6.1"
 
-react-gauge-component@^1.1.11:
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/react-gauge-component/-/react-gauge-component-1.1.11.tgz#627a48495eb080ec5e53051053e0f27da5d76c18"
-  integrity sha512-vKYsR0yEFM4ZRVOUr05KZ+hspWcjyvTjy4v6Nb+ZFTDFalqwkEQEZSpZyLbTDAHYoiHxWvHWmG7e8wkrjbVPxw==
+react-gauge-component@^1.1.12:
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/react-gauge-component/-/react-gauge-component-1.1.12.tgz#52afa2923d65526cb6d8bf39e817fedda2b0670a"
+  integrity sha512-bsM8d7Z9I1VeO2eqoju3DVODtDuHgK2IrAeBoT2khJp4NHsvUblSD3BKvKVN52GOi6kv9pFkgTGpwbM8c/391A==
   dependencies:
     "@types/d3" "^7.4.0"
     d3 "^7.6.1"
