@@ -42,7 +42,7 @@ const NeoExtensionsModal = ({
             Extensions
           </Dialog.Header>
           <Dialog.Content>
-            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
+            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-neutral-border-strong'>
               <Section>
                 <SectionContent>
                   <TextLink

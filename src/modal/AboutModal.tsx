@@ -22,7 +22,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
       <Dialog onClose={handleClose} open={open} aria-labelledby='form-dialog-title' size='large'>
         <Dialog.Header>About NeoDash</Dialog.Header>
         <Dialog.Content>
-          <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
+          <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-neutral-border-strong'>
             <Section>
               <SectionContent>
                 NeoDash is a dashboard builder for the Neo4j graph database. With NeoDash, all you need to do is write
