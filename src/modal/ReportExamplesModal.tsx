@@ -32,7 +32,7 @@ export const NeoReportExamplesModal = ({ database, examples, extensions }) => {
           Report Examples
         </Dialog.Header>
         <Dialog.Content>
-          <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
+          <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-neutral-border-strong'>
             {examples.map((example, index) => {
               return (
                 <Section key={`example-${index}`}>

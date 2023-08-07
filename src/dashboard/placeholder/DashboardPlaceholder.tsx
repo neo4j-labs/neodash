@@ -6,8 +6,8 @@ import { NeoDashboardHeaderLogo } from '../header/DashboardHeaderLogo';
 export const NeoDashboardPlaceholder = () => {
   return (
     <>
-      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-light-neutral-bg-weak n-border-b n-border-light-neutral-border-weak'>
-        <div className='n-relative n-bg-light-neutral-bg-weak n-w-full'>
+      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b n-border-neutral-border-weak'>
+        <div className='n-relative n-bg-neutral-bg-weak n-w-full'>
           <div className='n-min-w-full'>
             <div className='n-flex n-justify-between n-h-16 n-items-center n-py-6 md:n-justify-start md:n-space-x-10 n-mx-4'>
               <NeoDashboardHeaderLogo />

@@ -14,7 +14,7 @@ import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
 import { DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { mutateName, processHierarchyFromRecords } from '../../chart/ChartUtils';
-import { MouseSensor } from '../../utils/accessibility';
+import { KeyboardSensor, MouseSensor } from '../../utils/accessibility';
 
 /**
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.
@@ -59,7 +59,16 @@ export const NeoDashboardHeaderPageList = ({
       distance: 5, // Enable sort function when dragging 10px
     },
   });
-  const sensors = useSensors(mouseSensor);
+
+  const keySensor = useSensor(KeyboardSensor, {
+    keyboardCodes: {
+      start: ['Space'],
+      cancel: ['Escape'],
+      end: ['Space'],
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, keySensor);
 
   const content = (
     <div className='n-flex n-flex-row n-w-full'>

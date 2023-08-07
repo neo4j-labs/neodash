@@ -152,11 +152,11 @@ export const NeoWelcomeScreenModal = ({
             padding: '3rem',
           }}
         >
-          <div className='n-text-light-neutral-text-weakest'>
+          <div className='n-text-neutral-text-weakest'>
             NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated solution?{' '}
             <TextLink
               href='https://neo4j.com/professional-services/'
-              className='n-text-light-neutral-text-inverse'
+              className='n-text-neutral-text-inverse'
               externalLink
             >
               Get in touch

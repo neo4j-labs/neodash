@@ -44,7 +44,7 @@ const Dashboard = ({
         onConnectionUpdate={onConnectionUpdate}
       />
       {/* Navigation Bar */}
-      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-light-neutral-bg-weak n-border-b n-border-light-neutral-border-weak'>
+      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b n-border-neutral-border-weak'>
         <NeoDashboardHeader
           connection={connection}
           onDownloadImage={onDownloadDashboardAsImage}
