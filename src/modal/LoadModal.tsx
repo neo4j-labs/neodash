@@ -1,6 +1,5 @@
 import React, { useContext, useRef } from 'react';
 import { TextareaAutosize, Tooltip } from '@mui/material';
-import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import {
   loadDashboardFromNeo4jByUUIDThunk,
@@ -22,8 +21,6 @@ import {
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
  */
-
-const styles = {};
 
 export const NeoLoadModal = ({
   loadDashboard,
@@ -99,7 +96,7 @@ export const NeoLoadModal = ({
   ];
 
   return (
-    <div>
+    <>
       <MenuItem title='Load' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
 
       <Dialog size='large' open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
@@ -209,7 +206,7 @@ export const NeoLoadModal = ({
           ></Dropdown>
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 
@@ -224,4 +221,4 @@ const mapDispatchToProps = (dispatch) => ({
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadModal));
+export default connect(mapStateToProps, mapDispatchToProps)(NeoLoadModal);

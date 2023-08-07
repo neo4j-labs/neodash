@@ -27,7 +27,7 @@ const NeoExtensionsModal = ({
   };
 
   return (
-    <div>
+    <>
       <MenuItem
         title='Manage extensions'
         id='extensions-sidebar-button'
@@ -139,7 +139,7 @@ const NeoExtensionsModal = ({
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 };
 

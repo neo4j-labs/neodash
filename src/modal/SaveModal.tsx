@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react';
 import { FormControl, TextareaAutosize, Tooltip } from '@mui/material';
-import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { getDashboardJson } from './ModalSelectors';
 import { valueIsArray, valueIsObject } from '../chart/ChartUtils';
@@ -14,13 +13,6 @@ import {
   BackspaceIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { Button, Checkbox, Dialog, Dropdown, MenuItem } from '@neo4j-ndl/react';
-
-/**
- * A modal to save a dashboard as a JSON text string.
- * The button to open the modal is intended to use in a drawer at the side of the page.
- */
-
-const styles = {};
 
 /**
  * Removes the specified set of keys from the nested dictionary.
@@ -47,6 +39,11 @@ const filterNestedDict = (value: any, removedKeys: any[]) => {
   }
   return value;
 };
+
+/**
+ * A modal to save a dashboard as a JSON text string.
+ * The button to open the modal is intended to use in a drawer at the side of the page.
+ */
 
 export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, loadDatabaseListFromNeo4j }) => {
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
@@ -90,7 +87,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
   };
 
   return (
-    <div>
+    <>
       <MenuItem title='Save' onClick={handleClickOpen} icon={<CloudArrowDownIconOutline />} />
 
       <Dialog size='large' open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
@@ -211,7 +208,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
           </Button>
         </Dialog.Actions>
       </Dialog>
-    </div>
+    </>
   );
 };
 
@@ -227,4 +224,4 @@ const mapDispatchToProps = (dispatch) => ({
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoSaveModal));
+export default connect(mapStateToProps, mapDispatchToProps)(NeoSaveModal);

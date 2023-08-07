@@ -41,7 +41,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
   );
 
   return (
-    <div>
+    <>
       <MenuItem onClick={handleClickOpen} icon={<Cog6ToothIconOutline />} title='Dashboard settings' />
 
       <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
@@ -57,7 +57,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
           <br />
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 

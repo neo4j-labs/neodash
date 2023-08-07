@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 
-import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import NeoWorkflowEditorModal from './WorkflowEditorModal';
 import { PlayArrow, Stop } from '@mui/icons-material';

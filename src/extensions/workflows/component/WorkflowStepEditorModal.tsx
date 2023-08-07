@@ -4,9 +4,7 @@ import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponen
 import { Badge, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material';
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import SaveIcon from '@mui/icons-material/Save';
-import { withStyles } from '@mui/styles';
 
-const styles = {};
 export const NeoWorkflowStepEditorModal = ({ index, stepName, query, open, setOpen, updateStep }) => {
   const [name, setName] = React.useState(stepName);
   const [queryText, setQueryText] = React.useState(query);
@@ -92,4 +90,4 @@ export const NeoWorkflowStepEditorModal = ({ index, stepName, query, open, setOp
 };
 const mapStateToProps = () => ({});
 const mapDispatchToProps = () => ({});
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowStepEditorModal));
+export default connect(mapStateToProps, mapDispatchToProps)(NeoWorkflowStepEditorModal);

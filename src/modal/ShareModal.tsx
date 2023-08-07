@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { Tooltip } from '@mui/material';
-import { withStyles } from '@mui/styles';
+
 import { connect } from 'react-redux';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
@@ -18,7 +17,6 @@ import {
 
 const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
-const styles = {};
 
 export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j }) => {
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
@@ -86,7 +84,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
   ];
 
   return (
-    <div>
+    <>
       <MenuItem title='Share' onClick={handleClickOpen} icon={<ShareIconOutline />} />
 
       <Dialog
@@ -340,7 +338,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
           </div>
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 
@@ -354,4 +352,4 @@ const mapDispatchToProps = (dispatch) => ({
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoShareModal));
+export default connect(mapStateToProps, mapDispatchToProps)(NeoShareModal);
