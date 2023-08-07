@@ -139,6 +139,7 @@ const Application = ({
         onConnectionModalClose={onConnectionModalClose}
       ></NeoConnectionModal>
       <NeoWelcomeScreenModal
+        themeMode={themeMode}
         welcomeScreenOpen={welcomeScreenOpen}
         setWelcomeScreenOpen={setWelcomeScreenOpen}
         hasCachedDashboard={hasCachedDashboard}

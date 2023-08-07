@@ -66,6 +66,7 @@ export const NeoDashboardTitle = ({
             <EllipsisHorizontalIconOutline />
           </IconButton>
           <Menu
+            className=''
             anchorOrigin={{
               horizontal: 'right',
               vertical: 'bottom',

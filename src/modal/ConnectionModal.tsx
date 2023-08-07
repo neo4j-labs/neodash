@@ -43,7 +43,7 @@ export default function NeoConnectionModal({
   const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl;
 
   return (
-    <div>
+    <>
       <Dialog
         size='small'
         open={open == true}
@@ -241,6 +241,6 @@ export default function NeoConnectionModal({
           )}
         </Dialog.Actions>
       </Dialog>
-    </div>
+    </>
   );
 }
