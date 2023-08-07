@@ -72,14 +72,13 @@ export const NeoDashboardHeaderPageList = ({
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
-        {/* TODO - : Disable DnD if !editable */}
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
           <SortableContext items={pages} strategy={horizontalListSortingStrategy}>
             {pages.map((page, i) => (
               <DashboardHeaderPageTitle
                 title={page.title}
                 tabIndex={i}
-                key={`DashboardHeaderPageTitle_${  i}`}
+                key={`DashboardHeaderPageTitle_${i}`}
                 disabled={!editable}
               />
             ))}
