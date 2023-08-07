@@ -4,9 +4,15 @@ import { Dialog, TextLink } from '@neo4j-ndl/react';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export const NeoReportHelpModal = ({ open, handleClose }) => {
+export const NeoReportHelpModal = ({ open, handleClose, themeMode }) => {
   return (
-    <Dialog size='large' open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+    <Dialog
+      size='large'
+      open={open == true}
+      onClose={handleClose}
+      aria-labelledby='form-dialog-title'
+      className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}
+    >
       <Dialog.Header id='form-dialog-title'>About Reports</Dialog.Header>
       <Dialog.Content>
         {' '}

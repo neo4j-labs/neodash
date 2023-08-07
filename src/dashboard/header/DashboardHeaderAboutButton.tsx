@@ -10,14 +10,14 @@ import { Tooltip } from '@mui/material';
 
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
 import StyleConfig from '../../config/StyleConfig';
-import { getDashboardExtensions } from '../DashboardSelectors';
+import { getDashboardExtensions, getDashboardTheme } from '../DashboardSelectors';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import { NeoReportExamplesModal } from '../../modal/ReportExamplesModal';
 import { enterHandler, openTab } from '../../utils/accessibility';
 
 await StyleConfig.getInstance();
 
-export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen }) => {
+export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen, themeMode }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleHelpMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -47,6 +47,7 @@ export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen }) => 
         </IconButton>
       </Tooltip>
       <Menu
+        className={`ndl-theme-${themeMode} `}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
@@ -86,6 +87,7 @@ export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen }) => 
 
 const mapStateToProps = (state) => ({
   extensions: getDashboardExtensions(state),
+  themeMode: getDashboardTheme(state),
 });
 
 export default connect(mapStateToProps, null)(NeoAboutButton);

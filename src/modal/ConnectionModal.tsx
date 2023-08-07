@@ -16,6 +16,7 @@ export default function NeoConnectionModal({
   setConnectionProperties,
   onConnectionModalClose,
   onSSOAttempt,
+  themeMode,
 }) {
   const protocols = ['neo4j', 'neo4j+s', 'neo4j+ssc', 'bolt', 'bolt+s', 'bolt+ssc'];
   const [ssoVisible, setSsoVisible] = React.useState(ssoSettings.ssoEnabled);
@@ -51,6 +52,7 @@ export default function NeoConnectionModal({
           dismissable ? onConnectionModalClose() : null;
         }}
         aria-labelledby='form-dialog-title'
+        className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}
         disableCloseButton
       >
         <Dialog.Header id='form-dialog-title'>{standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}</Dialog.Header>

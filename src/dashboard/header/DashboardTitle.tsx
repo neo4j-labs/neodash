@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { applicationGetConnection } from '../../application/ApplicationSelectors';
-import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
+import {
+  getDashboardTitle,
+  getDashboardExtensions,
+  getDashboardSettings,
+  getDashboardTheme,
+} from '../DashboardSelectors';
 import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems } from '@neo4j-ndl/react';
@@ -22,6 +27,7 @@ export const NeoDashboardTitle = ({
   extensions,
   updateDashboardSetting,
   connection,
+  themeMode,
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -66,7 +72,7 @@ export const NeoDashboardTitle = ({
             <EllipsisHorizontalIconOutline />
           </IconButton>
           <Menu
-            className=''
+            className={`ndl-theme-${themeMode} `}
             anchorOrigin={{
               horizontal: 'right',
               vertical: 'bottom',
@@ -105,6 +111,7 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   extensions: getDashboardExtensions(state),
   connection: applicationGetConnection(state),
+  themeMode: getDashboardTheme(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

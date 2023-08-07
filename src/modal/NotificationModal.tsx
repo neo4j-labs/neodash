@@ -23,6 +23,7 @@ export const NeoNotificationModal = ({
   openConnectionModalOnClose,
   setConnectionModalOpen,
   onNotificationClose,
+  themeMode,
 }) => {
   return (
     <div>
@@ -39,6 +40,7 @@ export const NeoNotificationModal = ({
         }}
         aria-labelledby='form-dialog-title'
         disableCloseButton={!dismissable}
+        className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}
       >
         <Dialog.Header id='form-dialog-title'>{title}</Dialog.Header>
 

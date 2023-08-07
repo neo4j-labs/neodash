@@ -125,7 +125,12 @@ const Application = ({
         <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
       )}
       {/* TODO - move all models into a pop-ups (or modals) component. */}
-      <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
+      <NeoAboutModal
+        open={aboutModalOpen}
+        handleClose={onAboutModalClose}
+        getDebugState={getDebugState}
+        themeMode={themeMode}
+      />
       <NeoConnectionModal
         open={connectionModalOpen}
         dismissable={connected}
@@ -137,6 +142,7 @@ const Application = ({
         onSSOAttempt={onSSOAttempt}
         setConnectionProperties={setConnectionDetails}
         onConnectionModalClose={onConnectionModalClose}
+        themeMode={themeMode}
       ></NeoConnectionModal>
       <NeoWelcomeScreenModal
         themeMode={themeMode}
@@ -154,14 +160,16 @@ const Application = ({
         text={oldDashboard}
         loadDashboard={loadDashboard}
         clearOldDashboard={clearOldDashboard}
+        themeMode={themeMode}
       />
       <NeoLoadSharedDashboardModal
         shareDetails={shareDetails}
         onResetShareDetails={onResetShareDetails}
         onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
+        themeMode={themeMode}
       />
-      <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
-      <NeoNotificationModal></NeoNotificationModal>
+      <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} themeMode={themeMode} />
+      <NeoNotificationModal themeMode={themeMode}></NeoNotificationModal>
     </div>
   );
 };
