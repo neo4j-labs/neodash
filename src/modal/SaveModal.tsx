@@ -90,7 +90,7 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
     <>
       <MenuItem title='Save' onClick={handleClickOpen} icon={<CloudArrowDownIconOutline />} />
 
-      <Dialog size='large' open={saveModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      <Dialog size='large' open={saveModalOpen} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
           <CloudArrowDownIconOutline className='icon-base icon-inline text-r' aria-label={'save cloud'} />
           Save Dashboard

@@ -13,7 +13,6 @@ import { PlusIconOutline } from '@neo4j-ndl/react/icons';
 import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
 import { DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-import { mutateName, processHierarchyFromRecords } from '../../chart/ChartUtils';
 import { KeyboardSensor, MouseSensor } from '../../utils/accessibility';
 
 /**
@@ -73,11 +72,16 @@ export const NeoDashboardHeaderPageList = ({
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
-        {/* TODO : Disable DnD if !editable */}
+        {/* TODO - : Disable DnD if !editable */}
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
           <SortableContext items={pages} strategy={horizontalListSortingStrategy}>
             {pages.map((page, i) => (
-              <DashboardHeaderPageTitle title={page.title} tabIndex={i} key={i} disabled={!editable} />
+              <DashboardHeaderPageTitle
+                title={page.title}
+                tabIndex={i}
+                key={`DashboardHeaderPageTitle_${  i}`}
+                disabled={!editable}
+              />
             ))}
           </SortableContext>
         </DndContext>

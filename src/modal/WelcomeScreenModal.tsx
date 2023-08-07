@@ -40,7 +40,7 @@ export const NeoWelcomeScreenModal = ({
     <div>
       <Dialog
         size='small'
-        open={welcomeScreenOpen == true}
+        open={welcomeScreenOpen}
         aria-labelledby='form-dialog-title'
         disableCloseButton
         className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}

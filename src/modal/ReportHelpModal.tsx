@@ -8,7 +8,7 @@ export const NeoReportHelpModal = ({ open, handleClose, themeMode }) => {
   return (
     <Dialog
       size='large'
-      open={open == true}
+      open={open}
       onClose={handleClose}
       aria-labelledby='form-dialog-title'
       className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}

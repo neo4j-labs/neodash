@@ -8,7 +8,7 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
     <div>
       <Dialog
         size='large'
-        open={open == true}
+        open={open}
         aria-labelledby='form-dialog-title'
         className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}
       >

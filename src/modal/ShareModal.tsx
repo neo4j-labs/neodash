@@ -87,13 +87,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
     <>
       <MenuItem title='Share' onClick={handleClickOpen} icon={<ShareIconOutline />} />
 
-      <Dialog
-        key={1}
-        size='large'
-        open={shareModalOpen == true}
-        onClose={handleClose}
-        aria-labelledby='form-dialog-title'
-      >
+      <Dialog key={1} size='large' open={shareModalOpen} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
           <ShareIconOutline className='icon-base icon-inline text-r' />
           Share Dashboard

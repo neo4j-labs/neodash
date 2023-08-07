@@ -29,7 +29,7 @@ export const NeoNotificationModal = ({
     <div>
       <Dialog
         size='large'
-        open={open == true}
+        open={open}
         onClose={() => {
           if (dismissable) {
             onNotificationClose();
