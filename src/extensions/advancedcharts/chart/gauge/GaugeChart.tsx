@@ -4,7 +4,6 @@ import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { createUUID } from '../../../../dashboard/DashboardThunks';
 
-
 const NeoGaugeChart = (props: ChartProps) => {
   const { records } = props;
   const { selection } = props;
@@ -33,65 +32,60 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   if (isNaN(score)) {
     return <NoDrawableDataErrorMessage />;
-  }
-  if (score.low != undefined) {
-    score = score.low;
-  }
+  } 
+    score = score.toNumber();
+  
 
   const colorArray = flipColorArray === 'Red - Green' ? ['#EA4228', '#5BE12C'] : ['#5BE12C', '#EA4228'];
 
-return (
-  <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
-    {typeof score == 'number' ? (
-      <GaugeComponent
-        id={chartId}
-        type="semicircle"
-        value={score}
-        minValue={0}
-        maxValue={maxValue}
-        arc={{
-          cornerRadius: 7,
-          padding: 0.05,
-          width: 0.25,
-          nbSubArcs: nrOfLevels,
-          colorArray: colorArray
-        }}
-        pointer={{
-          color: '#345243',
-          length: 0.80,
-          width: 15
-        }}
-        labels={{
-          valueLabel: {
-            matchColorWithArc: true,
-            maxDecimalDigits: 2,
-          },
-          markLabel: {
-            type: "outer",
-            marks: [
-              { value: 0 },
-              { value: maxValue
-          /4 },
-              { value: maxValue
-          /2 },
-              { value: maxValue
-          *3/4 },
-              { value: maxValue
-         },
-            ],
-            valueConfig: {
+  return (
+    <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
+      {typeof score == 'number' ? (
+        <GaugeComponent
+          id={chartId}
+          type='semicircle'
+          value={score}
+          minValue={0}
+          maxValue={maxValue}
+          arc={{
+            cornerRadius: 7,
+            padding: 0.05,
+            width: 0.25,
+            nbSubArcs: nrOfLevels,
+            colorArray: colorArray,
+          }}
+          pointer={{
+            color: '#345243',
+            length: 0.8,
+            width: 15,
+          }}
+          labels={{
+            valueLabel: {
+              matchColorWithArc: true,
               maxDecimalDigits: 2,
             },
-            markerConfig: {
-              char: '_',
+            markLabel: {
+              type: 'outer',
+              marks: [
+                { value: 0 },
+                { value: maxValue / 4 },
+                { value: maxValue / 2 },
+                { value: (maxValue * 3) / 4 },
+                { value: maxValue },
+              ],
+              valueConfig: {
+                maxDecimalDigits: 2,
+              },
+              markerConfig: {
+                char: '_',
+              },
             },
-          },
-        }}
-      />
-    ) : (
-      <></>
-    )}
-  </div>
-);
-    };
+          }}
+        />
+      ) : (
+        <></>
+      )}
+    </div>
+  );
+};
 export default NeoGaugeChart;
