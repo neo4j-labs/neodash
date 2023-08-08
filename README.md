@@ -50,7 +50,7 @@ To manually run linting of all your .ts and .tsx files, run:
 yarn run lint
 ```
 
-To manually run linting of all your .ts and .tsx staged files,  run:
+To manually run linting of all your .ts and .tsx staged files, run:
 ```
 yarn run lint-staged
 ```
