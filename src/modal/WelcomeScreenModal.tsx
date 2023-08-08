@@ -20,7 +20,6 @@ export const NeoWelcomeScreenModal = ({
   resetDashboard,
   onConnectionModalOpen,
   onAboutModalOpen,
-  themeMode,
 }) => {
   const [promptOpen, setPromptOpen] = React.useState(false);
   const handleOpen = () => {
@@ -38,13 +37,7 @@ export const NeoWelcomeScreenModal = ({
 
   return (
     <div>
-      <Dialog
-        size='small'
-        open={welcomeScreenOpen}
-        aria-labelledby='form-dialog-title'
-        disableCloseButton
-        className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}
-      >
+      <Dialog size='small' open={welcomeScreenOpen} aria-labelledby='form-dialog-title' disableCloseButton>
         <Dialog.Header id='form-dialog-title'>
           NeoDash - Neo4j Dashboard Builder
           <BoltIconSolid className='icon-base' color='gold' style={{ float: 'right' }} />

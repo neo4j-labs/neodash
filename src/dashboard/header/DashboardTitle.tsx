@@ -27,7 +27,6 @@ export const NeoDashboardTitle = ({
   extensions,
   updateDashboardSetting,
   connection,
-  themeMode,
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -72,7 +71,6 @@ export const NeoDashboardTitle = ({
             <EllipsisHorizontalIconOutline />
           </IconButton>
           <Menu
-            className={`ndl-theme-${themeMode} `}
             anchorOrigin={{
               horizontal: 'right',
               vertical: 'bottom',
@@ -90,7 +88,6 @@ export const NeoDashboardTitle = ({
               <NeoSettingsModal
                 dashboardSettings={dashboardSettings}
                 updateDashboardSetting={updateDashboardSetting}
-                extensions={extensions}
               ></NeoSettingsModal>
               <NeoSaveModal />
               <NeoLoadModal />
@@ -111,7 +108,6 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   extensions: getDashboardExtensions(state),
   connection: applicationGetConnection(state),
-  themeMode: getDashboardTheme(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

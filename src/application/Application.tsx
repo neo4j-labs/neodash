@@ -47,8 +47,6 @@ import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
 import NeoReportHelpModal from '../modal/ReportHelpModal';
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
-import { ThemeProvider } from '@mui/material/styles';
-import lightTheme from '../component/theme/Themes';
 import { resetSessionStorage } from '../sessionStorage/SessionStorageActions';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
 
@@ -109,11 +107,19 @@ const Application = ({
 
   const ref = React.useRef();
 
+  useEffect(() => {
+    if (themeMode === 'dark') {
+      document.body.classList.add('ndl-theme-dark');
+    } else {
+      document.body.classList.remove('ndl-theme-dark');
+    }
+  }, [themeMode]);
+
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
     <div
       ref={ref}
-      className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
+      className={`n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
     >
       {connected ? (
         <Dashboard
@@ -125,12 +131,7 @@ const Application = ({
         <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
       )}
       {/* TODO - move all models into a pop-ups (or modals) component. */}
-      <NeoAboutModal
-        open={aboutModalOpen}
-        handleClose={onAboutModalClose}
-        getDebugState={getDebugState}
-        themeMode={themeMode}
-      />
+      <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
       <NeoConnectionModal
         open={connectionModalOpen}
         dismissable={connected}
@@ -142,10 +143,8 @@ const Application = ({
         onSSOAttempt={onSSOAttempt}
         setConnectionProperties={setConnectionDetails}
         onConnectionModalClose={onConnectionModalClose}
-        themeMode={themeMode}
       ></NeoConnectionModal>
       <NeoWelcomeScreenModal
-        themeMode={themeMode}
         welcomeScreenOpen={welcomeScreenOpen}
         setWelcomeScreenOpen={setWelcomeScreenOpen}
         hasCachedDashboard={hasCachedDashboard}
@@ -160,16 +159,14 @@ const Application = ({
         text={oldDashboard}
         loadDashboard={loadDashboard}
         clearOldDashboard={clearOldDashboard}
-        themeMode={themeMode}
       />
       <NeoLoadSharedDashboardModal
         shareDetails={shareDetails}
         onResetShareDetails={onResetShareDetails}
         onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
-        themeMode={themeMode}
       />
-      <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} themeMode={themeMode} />
-      <NeoNotificationModal themeMode={themeMode}></NeoNotificationModal>
+      <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
+      <NeoNotificationModal></NeoNotificationModal>
     </div>
   );
 };

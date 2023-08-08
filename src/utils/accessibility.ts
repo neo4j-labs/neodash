@@ -28,7 +28,7 @@ function shouldHandleEvent(element: HTMLElement | null) {
   let cur = element;
 
   while (cur) {
-    if (cur?.dataset?.noDnd || false) {
+    if (cur?.dataset?.noDnd) {
       return false;
     }
     cur = cur.parentElement;

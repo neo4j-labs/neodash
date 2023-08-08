@@ -17,7 +17,7 @@ import { enterHandler, openTab } from '../../utils/accessibility';
 
 await StyleConfig.getInstance();
 
-export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen, themeMode }) => {
+export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleHelpMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -47,7 +47,6 @@ export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen, theme
         </IconButton>
       </Tooltip>
       <Menu
-        className={`ndl-theme-${themeMode} `}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
@@ -87,7 +86,6 @@ export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen, theme
 
 const mapStateToProps = (state) => ({
   extensions: getDashboardExtensions(state),
-  themeMode: getDashboardTheme(state),
 });
 
 export default connect(mapStateToProps, null)(NeoAboutButton);

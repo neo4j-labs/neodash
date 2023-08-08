@@ -8,12 +8,7 @@ import { PlayIconSolid, AdjustmentsVerticalIconOutline, BackspaceIconOutline } f
  * The button to open the modal is intended to use in a drawer at the side of the page.
  */
 
-export const NeoLoadSharedDashboardModal = ({
-  shareDetails,
-  onResetShareDetails,
-  onConfirmLoadSharedDashboard,
-  themeMode,
-}) => {
+export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails, onConfirmLoadSharedDashboard }) => {
   const handleClose = () => {
     onResetShareDetails();
   };
@@ -24,7 +19,6 @@ export const NeoLoadSharedDashboardModal = ({
         size='large'
         open={shareDetails !== undefined && shareDetails.skipConfirmation === false}
         aria-labelledby='form-dialog-title'
-        className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}
       >
         <Dialog.Header id='form-dialog-title'>
           <AdjustmentsVerticalIconOutline

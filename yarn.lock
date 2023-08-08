@@ -2774,30 +2774,27 @@
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/codemirror" "1.0.2"
 
-"@neo4j-ndl/base@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-1.7.0.tgz#03b098b06d43efd0debc75a731f34d64683786f4"
-  integrity sha512-CfAEGeEBpvOGIOXgu7OZaHUofP0Wq4DnnJ7k6z4PgZj9cbSm2AS7PGKyE+fzGzCOqknjL5thYdGnHrVmm5gXlQ==
-
-"@neo4j-ndl/base@^1.7.0":
+"@neo4j-ndl/base@1.10.1", "@neo4j-ndl/base@^1.10.1":
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-1.10.1.tgz#18b3b35b9a52d0f5f0ee978c435bc96717ff16a9"
   integrity sha512-ytz82vN1qMDCZButP4Wm0bLTStz6BWXWWRXMY0iP2Wfw/OAcI3WF2fBVL902FtzCBq0MR/GHHwjgMVpy9g7XeA==
 
-"@neo4j-ndl/react@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@neo4j-ndl/react/-/react-1.7.0.tgz#f21d0436f36b3e8ff75dbc03d8215a102b15e997"
-  integrity sha512-eQK81HPtU6JOpcTP2OnTY9EmjQK1yvnV/0xmYqAygb1dGFQ5CfSx7l0dx462tsnM0kFPBlG9c4qs5KppEAjhzQ==
+"@neo4j-ndl/react@1.10.2":
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/@neo4j-ndl/react/-/react-1.10.2.tgz#aaf61a06f3c63212f275b2a67ecf588a03287c84"
+  integrity sha512-t4OPV+qA5EqO4qb3FQBfdNnEZAhIO4CiW1qKN4cPeOvXCAyquPBkSM2+8l/rI1+Ra8o4r5FJ1LKln1BhLQPHPw==
   dependencies:
     "@floating-ui/react" "^0.24.2"
     "@heroicons/react" "2.0.13"
     "@neo4j-cypher/react-codemirror" "^1.0.1"
-    "@neo4j-ndl/base" "^1.7.0"
-    "@tanstack/react-table" "^8.5.22"
+    "@neo4j-ndl/base" "^1.10.1"
+    "@tanstack/react-table" "^8.9.3"
     classnames "^2.3.1"
+    date-fns "^2.30.0"
     detect-browser "^5.3.0"
     re-resizable "^6.9.9"
     react-aria "^3.25.0"
+    react-datepicker "^4.14.1"
     react-dropzone "^14.0.0"
     react-focus-lock "^2.9.4"
     react-select "5.7.0"
@@ -3135,6 +3132,11 @@
   version "2.11.7"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.7.tgz#ccab5c8f7dc557a52ca3288c10075c9ccd37fff7"
   integrity sha512-Cr4OjIkipTtcXKjAsm8agyleBuDHvxzeBoa1v543lbv1YaIwQjESsVcmjiWiPEbC1FIeHOG/Op9kdCmAmiS3Kw==
+
+"@popperjs/core@^2.11.8":
+  version "2.11.8"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
+  integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
 "@react-aria/breadcrumbs@^3.5.2":
   version "3.5.2"
@@ -4406,7 +4408,7 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@tanstack/react-table@^8.5.22":
+"@tanstack/react-table@^8.9.3":
   version "8.9.3"
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.9.3.tgz#03a52e9e15f65c82a8c697a445c42bfca0c5cfc4"
   integrity sha512-Ng9rdm3JPoSCi6cVZvANsYnF+UoGVRxflMb270tVj0+LjeT/ZtZ9ckxF6oLPLcKesza6VKBqtdF9mQ+vaz24Aw==
@@ -5918,7 +5920,7 @@ ci-info@^3.2.0, ci-info@^3.5.0:
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-3.8.0.tgz#81408265a5380c929f0bc665d62256628ce9ef91"
   integrity sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==
 
-classnames@^2.3.1:
+classnames@^2.2.6, classnames@^2.3.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
   integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
@@ -6803,6 +6805,13 @@ dashdash@^1.12.0:
   integrity sha512-jRFi8UDGo6j+odZiEpjazZaWqEal3w/basFjQHQEwVtZJGDpxbH1MeYluwCS8Xq5wmLJooDlMgvVarmWfGM44g==
   dependencies:
     assert-plus "^1.0.0"
+
+date-fns@^2.30.0:
+  version "2.30.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
+  integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
 
 dayjs@1.11.8:
   version "1.11.8"
@@ -11540,6 +11549,18 @@ react-cool-dimensions@^2.0.7:
   resolved "https://registry.yarnpkg.com/react-cool-dimensions/-/react-cool-dimensions-2.0.7.tgz#2fe6657608f034cd7c89f149ed14e79cf1cb2d50"
   integrity sha512-z1VwkAAJ5d8QybDRuYIXTE41RxGr5GYsv1bQhbOBE8cMfoZQZpcF0odL64vdgrQVzat2jayedj1GoYi80FWcbA==
 
+react-datepicker@^4.14.1:
+  version "4.16.0"
+  resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-4.16.0.tgz#b9dd389bb5611a1acc514bba1dd944be21dd877f"
+  integrity sha512-hNQ0PAg/LQoVbDUO/RWAdm/RYmPhN3cz7LuQ3hqbs24OSp69QCiKOJRrQ4jk1gv1jNR5oYu8SjjgfDh8q6Q1yw==
+  dependencies:
+    "@popperjs/core" "^2.11.8"
+    classnames "^2.2.6"
+    date-fns "^2.30.0"
+    prop-types "^15.7.2"
+    react-onclickoutside "^6.12.2"
+    react-popper "^2.3.0"
+
 react-dom@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
@@ -11565,6 +11586,11 @@ react-dropzone@^14.0.0:
     attr-accept "^2.2.2"
     file-selector "^0.6.0"
     prop-types "^15.8.1"
+
+react-fast-compare@^3.0.1:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
+  integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
 
 react-focus-lock@^2.9.4:
   version "2.9.4"
@@ -11681,6 +11707,19 @@ react-markdown@^8.0.0:
     unified "^10.0.0"
     unist-util-visit "^4.0.0"
     vfile "^5.0.0"
+
+react-onclickoutside@^6.12.2:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.13.0.tgz#e165ea4e5157f3da94f4376a3ab3e22a565f4ffc"
+  integrity sha512-ty8So6tcUpIb+ZE+1HAhbLROvAIJYyJe/1vRrrcmW+jLsaM+/powDRqxzo6hSh9CuRZGSL1Q8mvcF5WRD93a0A==
+
+react-popper@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-2.3.0.tgz#17891c620e1320dce318bad9fede46a5f71c70ba"
+  integrity sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==
+  dependencies:
+    react-fast-compare "^3.0.1"
+    warning "^4.0.2"
 
 react-redux@^7.2.6:
   version "7.2.9"
@@ -13425,6 +13464,13 @@ w3c-keyname@^2.2.4:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/w3c-keyname/-/w3c-keyname-2.2.6.tgz#8412046116bc16c5d73d4e612053ea10a189c85f"
   integrity sha512-f+fciywl1SJEniZHD6H+kUO8gOnwIr7f4ijKA6+ZvJFjeGi1r4PDLl53Ayud9O/rk64RqgoQine0feoeOU0kXg==
+
+warning@^4.0.2:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
+  integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
+  dependencies:
+    loose-envify "^1.0.0"
 
 watchpack@^2.4.0:
   version "2.4.0"

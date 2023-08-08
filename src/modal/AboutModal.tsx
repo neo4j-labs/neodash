@@ -3,7 +3,7 @@ import { Button, Dialog, TextLink } from '@neo4j-ndl/react';
 import { BookOpenIconOutline, BeakerIconOutline } from '@neo4j-ndl/react/icons';
 import { Section, SectionTitle, SectionContent } from './ModalUtils';
 
-export const NeoAboutModal = ({ open, handleClose, getDebugState, themeMode }) => {
+export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
   const version = '2.3.1';
 
   const downloadDebugFile = () => {
@@ -19,13 +19,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState, themeMode }) =
 
   return (
     <>
-      <Dialog
-        onClose={handleClose}
-        open={open}
-        aria-labelledby='form-dialog-title'
-        size='large'
-        className={`ndl-theme-${themeMode} n-bg-palette-neutral-bg-default`}
-      >
+      <Dialog onClose={handleClose} open={open} aria-labelledby='form-dialog-title' size='large'>
         <Dialog.Header>About NeoDash</Dialog.Header>
         <Dialog.Content>
           <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-neutral-border-strong'>
