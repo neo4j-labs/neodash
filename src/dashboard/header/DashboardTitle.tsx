@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { applicationGetConnection } from '../../application/ApplicationSelectors';
@@ -11,7 +12,12 @@ import {
 import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
-import { EllipsisHorizontalIconOutline, QuestionMarkCircleIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  CheckBadgeIconOutline,
+  EllipsisHorizontalIconOutline,
+  PencilSquareIconOutline,
+  QuestionMarkCircleIconOutline,
+} from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
 import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
@@ -20,10 +26,11 @@ import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
 import { Tooltip } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
-  //   setDashboardTitle,
+  setDashboardTitle,
   editable,
   dashboardSettings,
   extensions,
@@ -33,6 +40,7 @@ export const NeoDashboardTitle = ({
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [editing, setEditing] = React.useState(false);
+  const debouncedDashboardTitleUpdate = useCallback(debounce(setDashboardTitle, 250), []);
 
   const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -69,30 +77,49 @@ export const NeoDashboardTitle = ({
     <div className='n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'>
       {/* TODO : Replace with editable field if dashboard is editable */}
       {editing ? (
-        <TextInput
-          autoFocus={true}
-          value={dashboardTitle}
-          style={{
-            textAlign: 'center',
-            height: '1.9rem',
-          }}
-          placeholder='Dashboard name...'
-        />
+        <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
+          <TextInput
+            autoFocus={true}
+            value={dashboardTitleText}
+            style={{
+              textAlign: 'center',
+              height: '1.9rem',
+            }}
+            placeholder='Dashboard name...'
+            onChange={(event) => {
+              if (editable) {
+                setDashboardTitleText(event.target.value);
+                debouncedDashboardTitleUpdate(event.target.value);
+              }
+            }}
+          />
+          <Tooltip title={'Stop Editing'} disableInteractive>
+            <IconButton
+              className='logo-btn n-p-1'
+              aria-label={'stop-editing'}
+              size='large'
+              onClick={() => setEditing(false)}
+              clean
+            >
+              <CheckBadgeIconOutline className='header-icon' type='outline' />
+            </IconButton>
+          </Tooltip>
+        </div>
       ) : (
-        <>
+        <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <Typography variant='h3'>{dashboardTitle}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
             <IconButton
               className='logo-btn n-p-1'
-              aria-label={'help'}
+              aria-label={'edit'}
               size='large'
               onClick={() => setEditing(true)}
               clean
             >
-              <QuestionMarkCircleIconOutline className='header-icon' type='outline' />
+              <PencilSquareIconOutline className='header-icon' type='outline' />
             </IconButton>
           </Tooltip>
-        </>
+        </div>
       )}
       {editable && (
         <div className='flex flex-row flex-wrap items-center gap-2'>
