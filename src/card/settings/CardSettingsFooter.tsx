@@ -151,7 +151,6 @@ const NeoCardSettingsFooter = ({
       <table
         style={{
           borderTop: '1px dashed lightgrey',
-          background: reportSettingsOpen ? '#f6f6f6' : 'inherit',
           width: '100%',
         }}
       >
