@@ -12,7 +12,6 @@ import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
-import { tokens } from '@neo4j-ndl/base';
 import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 

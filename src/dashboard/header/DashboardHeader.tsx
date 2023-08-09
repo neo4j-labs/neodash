@@ -61,7 +61,7 @@ export const NeoDashboardHeader = ({
                   checked={isDarkMode}
                   onChange={toggleDarkMode}
                   size={24}
-                  sunColor={DASHBOARD_HEADER_BUTTON_COLOR ? DASHBOARD_HEADER_BUTTON_COLOR : '#000000'}
+                  sunColor={DASHBOARD_HEADER_BUTTON_COLOR || '#000000'}
                   moonColor={'#ff0000'}
                 />
               </div>
