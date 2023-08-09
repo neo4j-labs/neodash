@@ -23,6 +23,7 @@ jobs:
           sleep 30s
           chmod +x apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
           apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
+      - run: yarn global add turbo
       - run: yarn install
       - name: Eslint check
         run: turbo run lint

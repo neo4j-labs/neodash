@@ -23,6 +23,7 @@ jobs:
           sleep 30s
           chmod +x apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
           apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
+      - run: yarn global add turbo
       - run: yarn install
       - name: Eslint check
         run: turbo run lint
@@ -112,6 +113,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: yarn global add turbo
       - run: yarn install
       - run: turbo run build --filter gallery
       - name: Set AWS credentials
@@ -143,6 +145,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: yarn global add turbo
       - run: yarn install
       - run: PRODUCTION=true && turbo run build --filter neodash-editor
       - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > apps/neodash-editor/dist/index.html
