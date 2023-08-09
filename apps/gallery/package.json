@@ -15,6 +15,7 @@
   "scripts": {
     "start": "yarn webpack-dev-server --mode development",
     "build": "yarn webpack --mode production"
+
   },
   "browserslist": {
     "production": [

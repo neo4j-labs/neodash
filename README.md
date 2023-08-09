@@ -30,9 +30,13 @@ To install dependencies:
 yarn install
 ```
 
-To run the application in development mode:
+To run the entire application(all workspaces) in development mode:
 ```
 turbo run start
+```
+To run only the editor for example, you can do that by running:
+```
+turbo start --filter neodash-editor
 ```
 
 To build the app for deployment:

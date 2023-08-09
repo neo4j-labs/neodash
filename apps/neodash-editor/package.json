@@ -24,7 +24,6 @@
     "start": "yarn webpack-dev-server --mode development",
     "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
     "build": "yarn webpack --mode production --env production && cp -r public/* dist/",
-    "build-minimal": "yarn webpack --mode production --env production && cp -r public/* dist/",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
@@ -135,6 +134,7 @@
     "typescript": "^4.8.4",
     "webpack": "^5.77.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.3"
+    "webpack-dev-server": "^4.7.3",
+    "@cypress/code-coverage": "^3.10.8"
   }
 }

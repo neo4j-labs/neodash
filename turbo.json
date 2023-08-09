@@ -4,8 +4,11 @@
     "build": {
       "outputs": [".next/**"]
     },
-    "install": {},
     "lint": {},
-    "start": {}
+    "lint-staged": {},
+    "start": {},
+    "test": {},
+    "format": {},
+    "test-headless": {}
   }
 }
