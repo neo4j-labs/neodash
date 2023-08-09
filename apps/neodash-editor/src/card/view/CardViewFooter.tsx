@@ -109,12 +109,12 @@ const NeoCardViewFooter = ({
                   type='select'
                   selectProps={{
                     onChange: (newValue) =>
-                      newValue && selectableFields[selectable].multiple
+                      (newValue && selectableFields[selectable].multiple
                         ? onSelectionUpdate(
                             selectable,
                             newValue.map((v) => v.value)
                           )
-                        : onSelectionUpdate(selectable, newValue.value),
+                        : onSelectionUpdate(selectable, newValue.value)),
                     options: fieldsToRender.map((option) => ({ label: option, value: option })),
                     value: selectableFields[selectable].multiple
                       ? selection[selectable].map((sel) => ({ label: sel, value: sel }))
