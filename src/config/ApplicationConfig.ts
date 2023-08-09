@@ -17,11 +17,9 @@ export const DASHBOARD_HEADER_BUTTON_COLOR = styleConfig?.style?.DASHBOARD_HEADE
 
 export const DASHBOARD_HEADER_TITLE_COLOR = styleConfig?.style?.DASHBOARD_HEADER_TITLE_COLOR || '#FFFFFF'; // '#FFFFFF'
 
-export const DASHBOARD_PAGE_LIST_COLOR = styleConfig?.style?.DASHBOARD_PAGE_LIST_COLOR || '#f0f0f0'; // '#f0f0f0'
-
-export const DASHBOARD_PAGE_LIST_ACTIVE_COLOR = styleConfig?.style?.DASHBOARD_PAGE_LIST_ACTIVE_COLOR || '#ffffff'; // '#FFFFFF'
-
 export const DASHBOARD_HEADER_BRAND_LOGO =
   styleConfig?.style?.DASHBOARD_HEADER_BRAND_LOGO || 'neo4j-icon-color-full.png';
+
+export const IS_CUSTOM_LOGO = Boolean(styleConfig?.style?.DASHBOARD_HEADER_BRAND_LOGO);
 
 export const CUSTOM_CONNECTION_FOOTER_TEXT = ''; // ''

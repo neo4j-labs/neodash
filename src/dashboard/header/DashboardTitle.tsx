@@ -3,30 +3,19 @@ import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { applicationGetConnection } from '../../application/ApplicationSelectors';
-import {
-  getDashboardTitle,
-  getDashboardExtensions,
-  getDashboardSettings,
-  getDashboardTheme,
-} from '../DashboardSelectors';
+import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
-import {
-  CheckBadgeIconOutline,
-  EllipsisHorizontalIconOutline,
-  PencilSquareIconOutline,
-  QuestionMarkCircleIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
 import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../../modal/ShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
-import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
+
 import { Tooltip } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
