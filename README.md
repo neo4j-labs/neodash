@@ -55,6 +55,16 @@ To manually run linting of all your .ts and .tsx staged files, run:
 turbo run lint-staged
 ```
 
+To test the application with a Cypress UI, run:
+```
+turbo run test
+```
+
+To test the application with just the command line, run:
+```
+turbo run test-headless
+```
+
 See the [Developer Guide](https://neo4j.com/labs/neodash/2.3/developer-guide/) for more on installing, building, and running the application.
 
 ### Pre-Commit Hook
