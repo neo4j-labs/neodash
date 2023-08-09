@@ -15,6 +15,7 @@ const NeoExtensionsModal = ({
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
   setExtensionReducerEnabled,
+  closeMenu,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -24,6 +25,7 @@ const NeoExtensionsModal = ({
 
   const handleClose = () => {
     setOpen(false);
+    closeMenu();
   };
 
   return (

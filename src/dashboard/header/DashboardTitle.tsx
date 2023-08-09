@@ -137,7 +137,7 @@ export const NeoDashboardTitle = ({
               <NeoSaveModal />
               <NeoLoadModal />
               <NeoShareModal />
-              <NeoExtensionsModal />
+              <NeoExtensionsModal closeMenu={handleSettingsMenuClose} />
               {renderExtensionsButtons()}
             </MenuItems>
           </Menu>
