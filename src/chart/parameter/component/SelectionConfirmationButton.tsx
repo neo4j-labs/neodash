@@ -1,14 +1,27 @@
 import React from 'react';
-import { Fab } from '@mui/material';
-import RefreshIcon from '@mui/icons-material/Refresh';
-
+import { Tooltip } from '@mui/material';
+import { CheckBadgeIconOutline } from '@neo4j-ndl/react/icons';
+import { IconButton } from '@neo4j-ndl/react';
 /**
  * Returns a button to delete a property entry from the table inside the GraphChartEditModal.
  */
 export const SelectionConfirmationButton = ({ onClick, key }) => {
   return (
+    <Tooltip title={'Confirm'} disableInteractive key={key}>
+      <IconButton
+        key={`btn${  key}`}
+        className='logo-btn n-p-1'
+        aria-label={'btb-confirmation'}
+        size='large'
+        onClick={onClick}
+        clean
+      >
+        <CheckBadgeIconOutline className='header-icon' type='outline' />
+      </IconButton>
+    </Tooltip>
+    /*
     <Fab
-      key={key}
+
       size='small'
       aria-label='remove'
       style={{
@@ -22,7 +35,6 @@ export const SelectionConfirmationButton = ({ onClick, key }) => {
       }}
       onClick={onClick}
     >
-      <RefreshIcon key={`icon${key}`} />
-    </Fab>
+      */
   );
 };

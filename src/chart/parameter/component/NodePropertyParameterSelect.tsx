@@ -121,12 +121,17 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     handleParameters(newValue, newDisplay, setManual);
   };
   return (
-    <div>
+    <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
-        style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
+        style={{
+          maxWidth: 'calc(100% - 30px)',
+          minWidth: `calc(100% - ${setManual ? '70' : '30'}px)`,
+          marginLeft: '15px',
+          marginTop: '5px',
+        }}
         inputValue={inputDisplayText || ''}
         onInputChange={(event, value) => {
           setInputDisplayText(value);
