@@ -9,10 +9,10 @@ WORKDIR /usr/local/src/neodash
 #RUN git clone https://github.com/neo4j-labs/neodash.git /usr/local/src/neodash
 
 # Copy sources and install/build
-COPY ./package.json /usr/local/src/neodash/package.json
+COPY apps/neodash-editor/package.json /usr/local/src/neodash/package.json
 
 RUN yarn install
-COPY ./ /usr/local/src/neodash
+COPY apps/neodash-editor /usr/local/src/neodash
 RUN yarn run build-minimal
 
 # production stage
@@ -22,9 +22,9 @@ RUN apk upgrade
 ENV NGINX_PORT=5005
 
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
-COPY ./conf/default.conf.template /etc/nginx/templates/
-COPY ./scripts/config-entrypoint.sh /docker-entrypoint.d/config-entrypoint.sh
-COPY ./scripts/message-entrypoint.sh /docker-entrypoint.d/message-entrypoint.sh
+COPY apps/neodash-editor/docker-files/default.conf.template /etc/nginx/templates/
+COPY apps/neodash-editor/docker-files/config-entrypoint.sh /docker-entrypoint.d/config-entrypoint.sh
+COPY apps/neodash-editor/docker-files/message-entrypoint.sh /docker-entrypoint.d/message-entrypoint.sh
 
 RUN chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \

@@ -25,12 +25,12 @@ jobs:
           ./scripts/docker-neo4j-initializer/start-movies-db.sh
       - run: yarn install
       - name: Eslint check
-        run: yarn run lint
+        run: turbo run lint
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          build: yarn run build
-          start: yarn run dev
+          build: turbo run build --filter neodash-editor
+          start: turbo run start --filter neodash-editor
           wait-on: 'http://localhost:3000'
           browser: chrome
       - name: Upload coverage reports to Codecov
