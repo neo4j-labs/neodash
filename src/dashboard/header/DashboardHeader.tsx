@@ -11,6 +11,7 @@ import { NeoLogoutButton } from './DashboardHeaderLogoutButton';
 import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownloadImageButton';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
+import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
 
 export const NeoDashboardHeader = ({
   standalone,
@@ -60,6 +61,7 @@ export const NeoDashboardHeader = ({
                   checked={isDarkMode}
                   onChange={toggleDarkMode}
                   size={24}
+                  sunColor={DASHBOARD_HEADER_BUTTON_COLOR ? DASHBOARD_HEADER_BUTTON_COLOR : '#000000'}
                   moonColor={'#ff0000'}
                 />
               </div>
