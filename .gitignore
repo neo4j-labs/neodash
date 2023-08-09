@@ -17,8 +17,8 @@ target
 cypress/videos
 
 # production
-/build
-/dist
+**/build
+**/dist
 
 # misc
 .DS_Store
@@ -33,8 +33,13 @@ yarn-error.log*
 *.tgz
 
 # package directories
-node_modules
+**/node_modules
 jspm_packages
 
 # Serverless directories
 .serverless
+
+# Turbo
++ .turbo
+*/.turbo
+**/.turbo
