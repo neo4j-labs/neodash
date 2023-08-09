@@ -3,8 +3,6 @@
 import React, { useContext } from 'react';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 
-const DEFAULT_QUERY = 'return true';
-
 const NeoFormCardSettings = ({
   query,
   //   type,
@@ -12,7 +10,7 @@ const NeoFormCardSettings = ({
   //   settings,
   //   extensions,
   //   onReportSettingUpdate,
-  onQueryUpdate,
+  //   onQueryUpdate,
 }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   if (!driver) {
@@ -21,11 +19,7 @@ const NeoFormCardSettings = ({
     );
   }
 
-  if (query !== DEFAULT_QUERY) {
-    onQueryUpdate(DEFAULT_QUERY);
-  }
-
-  return <div>Form Settings</div>;
+  return <div>Form Settings {query} </div>;
 };
 
 export default NeoFormCardSettings;
