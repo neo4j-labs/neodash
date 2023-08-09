@@ -27,7 +27,7 @@ This project uses `turbo` to install, run, build prettify and apply linting to t
 
 To install dependencies:
 ```
-turbo install
+yarn install
 ```
 
 To run the application in development mode:
