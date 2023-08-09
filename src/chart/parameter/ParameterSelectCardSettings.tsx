@@ -1,16 +1,16 @@
 // TODO: this file (in a way) belongs to chart/parameter/ParameterSelectionChart. It would make sense to move it there
 
 import React, { useCallback, useContext, useEffect } from 'react';
-import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
-import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
+import { RUN_QUERY_DELAY_MS } from '../../config/ReportConfig';
+import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { Autocomplete, debounce, TextField } from '@mui/material';
-import NeoField from '../../../component/field/Field';
-import { getReportTypes } from '../../../extensions/ExtensionUtils';
+import NeoField from '../../component/field/Field';
+import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
-import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
+import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 
-const NeoCardSettingsContentPropertySelect = ({
+const ParameterSelectCardSettings = ({
   query,
   type,
   database,
@@ -436,4 +436,4 @@ const NeoCardSettingsContentPropertySelect = ({
   );
 };
 
-export default NeoCardSettingsContentPropertySelect;
+export default ParameterSelectCardSettings;

@@ -19,6 +19,7 @@ export const getReportTypes = (extensions) => {
   if (extensions && extensions.forms && extensions.forms.active) {
     charts = { ...charts, ...FORMS };
   }
+  console.log(charts);
   return charts;
 };
 
