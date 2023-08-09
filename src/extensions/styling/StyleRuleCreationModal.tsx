@@ -163,7 +163,7 @@ export const NeoCustomReportStyleModal = ({
    * This will be dynamic based on the type of report we are customizing.
    */
   const createFieldVariableSuggestions = () => {
-    if (!schema) {
+    if (!schema && !fields) {
       return [];
     }
     if (type == 'graph' || type == 'map') {
