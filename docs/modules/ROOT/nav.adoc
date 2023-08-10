@@ -38,6 +38,7 @@
 ** xref:developer-guide/standalone-mode.adoc[Standalone Mode]
 ** xref:developer-guide/component-overview.adoc[Component Overview]
 ** xref:developer-guide/design.adoc[Design]
+** xref:developer-guide/style-configuration.adoc[Style Configuration]
 ** xref:developer-guide/adding-visualizations.adoc[Adding Visualizations]
 ** xref:developer-guide/state-management.adoc[State Management]
 ** xref:developer-guide/session-storage.adoc[Session Storage]
