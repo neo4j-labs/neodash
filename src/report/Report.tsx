@@ -72,8 +72,6 @@ export const NeoReport = ({
   const setSchema = (id, schema) => {
     if (type === 'graph' || type === 'map') {
       setSchemaDispatch(id, schema);
-    } else {
-      console.log('Not a valid report type for Schema');
     }
   };
   const populateReport = (debounced = true) => {
