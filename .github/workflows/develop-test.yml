@@ -30,6 +30,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
+          config-file: apps/neodash-editor/cypress-config.ts
           build: turbo run build --filter neodash-editor
           start: turbo run start --filter neodash-editor
           wait-on: 'http://localhost:3000'
