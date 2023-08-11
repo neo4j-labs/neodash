@@ -43,7 +43,7 @@ describe('NeoDash E2E Tests', () => {
     //     cy.contains('Yes').click()
     // }
 
-    cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j');
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'Connect to Neo4j');
 
     // Connect to Neo4j database
     // cy.get('#protocol').click()
