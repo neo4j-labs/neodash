@@ -127,8 +127,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         multiple={multiSelector}
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
-          maxWidth: 'calc(100% - 30px)',
-          minWidth: `calc(100% - ${manualParameterSave ? '80' : '30'}px)`,
+          maxWidth: 'calc(100% - 40px)',
+          minWidth: `calc(100% - ${manualParameterSave ? '60' : '30'}px)`,
           marginLeft: '15px',
           marginTop: '5px',
         }}

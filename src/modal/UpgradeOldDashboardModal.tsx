@@ -6,7 +6,7 @@ import { TrashIconOutline, PlayIconSolid } from '@neo4j-ndl/react/icons';
 export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loadDashboard }) => {
   return (
     <div>
-      <Dialog size='large' open={open == true} aria-labelledby='form-dialog-title'>
+      <Dialog size='large' open={open} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>Old Dashboard Found</Dialog.Header>
         <Dialog.Content>
           We've found a dashboard built with an old version of NeoDash. Would you like to attempt an upgrade, or start

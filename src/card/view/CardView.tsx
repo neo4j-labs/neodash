@@ -12,7 +12,6 @@ import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
-
 import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 
@@ -224,7 +223,7 @@ const NeoCardView = ({
 
   return (
     <div
-      className={`card-view ${expanded ? 'expanded' : ''}`}
+      className={`card-view n-bg-palette-neutral-bg-strong ${expanded ? 'expanded' : ''}`}
       style={settings && settings.backgroundColor ? { backgroundColor: settings.backgroundColor } : {}}
     >
       {reportHeader}
