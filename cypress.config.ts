@@ -11,6 +11,10 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config);
     },
+    retries: {
+      runMode: 2,
+      openMode: 0,
+    },
   },
   env: {
     codeCoverage: {
