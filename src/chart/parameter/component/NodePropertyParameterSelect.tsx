@@ -128,7 +128,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
           maxWidth: 'calc(100% - 30px)',
-          minWidth: `calc(100% - ${manualParameterSave ? '70' : '30'}px)`,
+          minWidth: `calc(100% - ${manualParameterSave ? '80' : '30'}px)`,
           marginLeft: '15px',
           marginTop: '5px',
         }}
