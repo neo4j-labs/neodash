@@ -2,8 +2,8 @@
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
-  projectId: 'a8nh14',
-  video: false,
+  // projectId: 'a8nh14',
+  // video: false,
   e2e: {
     // experimentalMemoryManagement: true,
     numTestsKeptInMemory: 1,
