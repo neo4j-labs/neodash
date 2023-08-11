@@ -37,7 +37,7 @@ export const NeoReport = ({
   setFields = (f) => {
     fields = f;
   }, // The callback to update the set of query fields after query execution.
-  setSchema,
+  setSchemaDispatch,
   setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
   getGlobalParameter = (_: string) => {
     return '';
@@ -69,6 +69,11 @@ export const NeoReport = ({
 
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
+  const setSchema = (id, schema) => {
+    if (type === 'graph' || type === 'map') {
+      setSchemaDispatch(id, schema);
+    }
+  };
   const populateReport = (debounced = true) => {
     // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
     const reportTypes = getReportTypes(extensions);
@@ -341,7 +346,7 @@ const mapDispatchToProps = (dispatch) => ({
   getCustomDispatcher: () => {
     return dispatch;
   },
-  setSchema: (id: any, schema: any) => {
+  setSchemaDispatch: (id: any, schema: any) => {
     dispatch(updateFieldsThunk(id, schema, true));
   },
 });
