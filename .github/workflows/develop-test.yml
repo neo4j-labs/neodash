@@ -27,16 +27,11 @@ jobs:
       - name: Eslint check
         run: yarn run lint
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v4
         with:
           build: yarn run build
           start: yarn run dev
           wait-on: 'http://localhost:3000'
           browser: chrome
-          record : true
-        env:
-          CYPRESS_RECORD_KEY: 4737836d-3dd9-4903-bcf6-24c5e4d81c6c
-          CYPRESS_PROJECT_ID: a8nh14
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
