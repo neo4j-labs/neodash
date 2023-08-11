@@ -35,6 +35,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
     setParamValueLocal(value);
 
     if (manual) {
+      // setRunning(false);
       return;
     }
 
@@ -60,10 +61,10 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
         variant='outlined'
         placeholder={'Enter text here...'}
         style={{
-          marginBottom: '10px',
+          marginBottom: '20px',
           marginRight: '10px',
           marginLeft: '15px',
-          minWidth: `calc(100% - ${manualParameterSave ? '70' : '30'}px)`,
+          minWidth: `calc(100% - ${manualParameterSave ? '80' : '30'}px)`,
           maxWidth: 'calc(100% - 30px)',
         }}
         onChange={(newValue) => {
