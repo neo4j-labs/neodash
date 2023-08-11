@@ -5,7 +5,7 @@ import NeoField from '../../../component/field/Field';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
 
 const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
-  const { setManual } = props;
+  const { manualParameterSave } = props;
   const setParameterTimeout =
     props.settings && props.settings.setParameterTimeout ? props.settings.setParameterTimeout : 1000;
   const defaultValue =
@@ -51,7 +51,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
   }
 
   return (
-    <div style={{ width: '100%', marginTop: '5px' }}>
+    <div className={'n-flex n-flex-row n-flex-wrap n-items-center'} style={{ width: '100%', marginTop: '5px' }}>
       <NeoField
         key={'freetext'}
         label={helperText ? helperText : `${label} ${property}`}
@@ -59,15 +59,21 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
         value={inputText}
         variant='outlined'
         placeholder={'Enter text here...'}
-        style={{ marginBottom: '10px', marginRight: '10px', marginLeft: '15px', width: 'calc(100% - 80px)' }}
+        style={{
+          marginBottom: '10px',
+          marginRight: '10px',
+          marginLeft: '15px',
+          minWidth: `calc(100% - ${manualParameterSave ? '70' : '30'}px)`,
+          maxWidth: 'calc(100% - 30px)',
+        }}
         onChange={(newValue) => {
           setRunning(true);
           setInputText(newValue);
 
-          handleParameters(newValue, setManual);
+          handleParameters(newValue, manualParameterSave);
         }}
       />
-      {setManual ? (
+      {manualParameterSave ? (
         <SelectionConfirmationButton onClick={() => manualHandleParameters()} key={`selectionConfirmation`} />
       ) : (
         <></>

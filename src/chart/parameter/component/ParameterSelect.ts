@@ -53,5 +53,5 @@ export interface ParameterSelectProps {
   /**
    * Add the possibility for manual selection confirmation
    */
-  setManual?: boolean;
+  manualParameterSave?: boolean;
 }

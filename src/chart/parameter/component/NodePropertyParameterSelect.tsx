@@ -21,7 +21,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     }
     return multi ? [] : value;
   };
-  const { multiSelector, setManual } = props;
+  const { multiSelector, manualParameterSave } = props;
   const allParameters = props.allParameters ? props.allParameters : {};
   const [extraRecords, setExtraRecords] = React.useState([]);
   const [inputDisplayText, setInputDisplayText] = React.useState(
@@ -64,23 +64,23 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     if (isMulti) {
       if (value.length == 0 && clearParameterOnFieldClear) {
         setInputValue([]);
-        handleParameters(undefined, undefined, setManual);
+        handleParameters(undefined, undefined, manualParameterSave);
         return true;
       }
       if (value.length == 0) {
         setInputValue([]);
-        handleParameters([], [], setManual);
+        handleParameters([], [], manualParameterSave);
         return true;
       }
     } else {
       if (value && clearParameterOnFieldClear) {
         setInputValue(null);
-        handleParameters(undefined, undefined, setManual);
+        handleParameters(undefined, undefined, manualParameterSave);
         return true;
       }
       if (value == null) {
         setInputValue(null);
-        handleParameters(defaultValue, defaultValue, setManual);
+        handleParameters(defaultValue, defaultValue, manualParameterSave);
         return true;
       }
       return false;
@@ -92,8 +92,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       return;
     }
     let newValue;
-    let valReference = setManual ? paramValueTemp : props.parameterValue;
-    let valDisplayReference = setManual ? paramValueDisplayTemp : props.parameterDisplayValue;
+    let valReference = manualParameterSave ? paramValueTemp : props.parameterValue;
+    let valDisplayReference = manualParameterSave ? paramValueDisplayTemp : props.parameterDisplayValue;
     // Multiple and new entry
     if (isMulti && inputValue.length < newDisplay.length) {
       newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
@@ -118,7 +118,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
 
-    handleParameters(newValue, newDisplay, setManual);
+    handleParameters(newValue, newDisplay, manualParameterSave);
   };
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
@@ -128,7 +128,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
           maxWidth: 'calc(100% - 30px)',
-          minWidth: `calc(100% - ${setManual ? '70' : '30'}px)`,
+          minWidth: `calc(100% - ${manualParameterSave ? '70' : '30'}px)`,
           marginLeft: '15px',
           marginTop: '5px',
         }}
@@ -153,7 +153,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         )}
         getOptionLabel={(option) => RenderSubValue(option)}
       />
-      {setManual ? (
+      {manualParameterSave ? (
         <SelectionConfirmationButton onClick={() => manualHandleParameters()} key={`selectionConfirmation`} />
       ) : (
         <></>
