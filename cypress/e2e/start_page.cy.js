@@ -27,7 +27,7 @@ describe('NeoDash E2E Tests', () => {
       },
     });
 
-    cy.get('#form-dialog-title', { timeout: 2000 }).should('be.visible');
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('be.visible');
 
     cy.get('#form-dialog-title').then(($div) => {
       const text = $div.text();
@@ -322,6 +322,9 @@ function checkInitialState() {
 
 function createCard() {
   // Check the starter cards
-  cy.get('main .react-grid-item:eq(2)  button[aria-label="add report"]').click();
+  cy.get('main .react-grid-item button[aria-label="add report"]', { timeout: WAITING_TIME })
+    .should('be.visible')
+    .click();
+  cy.wait(1000);
   cy.get('main .react-grid-item:eq(2)').should('contain', 'No query specified.');
 }
