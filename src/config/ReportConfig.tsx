@@ -1297,7 +1297,7 @@ export const REPORT_TYPES = {
         default: false,
       },
       setManual: {
-        label: 'Manual Set',
+        label: 'Manual Parameter Save',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
