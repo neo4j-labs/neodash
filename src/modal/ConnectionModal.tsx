@@ -140,7 +140,6 @@ export default function NeoConnectionModal({
             <TextInput
               id='dbusername'
               value={username}
-              disabled={standalone}
               onChange={(e) => setUsername(e.target.value)}
               label='Username'
               placeholder='neo4j'
@@ -158,7 +157,6 @@ export default function NeoConnectionModal({
               <TextInput
                 id='dbpassword'
                 value={password}
-                disabled={standalone}
                 onChange={(e) => setPassword(e.target.value)}
                 label='Password'
                 placeholder='neo4j'

@@ -28,7 +28,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const setParameterDisplayValue = (value) => setGlobalParameter(parameterDisplayName, value);
   const allParameters = props.parameters;
   const multiSelector = props?.settings?.multiSelector;
-
+  const manualParameterSave = props?.settings?.manualParameterSave;
   // in NeoDash 2.2.1 or earlier, there was no means to have a different display value in the selector. This condition handles that.
   const compatibilityMode = !query?.toLowerCase().includes('as display') || false;
 
@@ -50,6 +50,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
         settings={props.settings}
         allParameters={allParameters}
         compatibilityMode={compatibilityMode}
+        manualParameterSave={manualParameterSave}
       />
     );
   } else if (type == 'Node Property') {
@@ -67,6 +68,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
         allParameters={allParameters}
         compatibilityMode={compatibilityMode}
         multiSelector={multiSelector}
+        manualParameterSave={manualParameterSave}
       />
     );
   } else if (type == 'Relationship Property') {
@@ -84,6 +86,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
         allParameters={allParameters}
         compatibilityMode={compatibilityMode}
         multiSelector={multiSelector}
+        manualParameterSave={manualParameterSave}
       />
     );
   } else if (type == 'Date Picker') {
@@ -100,6 +103,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
         settings={props.settings}
         allParameters={allParameters}
         compatibilityMode={compatibilityMode}
+        manualParameterSave={manualParameterSave}
       />
     );
   } else if (type == 'Custom Query') {
@@ -117,6 +121,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
         allParameters={allParameters}
         compatibilityMode={compatibilityMode}
         multiSelector={multiSelector}
+        manualParameterSave={manualParameterSave}
       />
     );
   }

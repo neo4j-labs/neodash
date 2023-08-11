@@ -254,7 +254,14 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callba
               'A dashboard with the provided name could not be found.'
             )
           );
+          return;
         }
+
+        if (records[0].error) {
+          dispatch(createNotificationThunk('Unable to load dashboard.', records[0].error));
+          return;
+        }
+
         callback(records[0]._fields[0]);
       }
     );
