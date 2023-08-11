@@ -29,8 +29,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   );
   const [inputValue, setInputValue] = React.useState(getInitialValue(props.parameterDisplayValue, multiSelector));
 
-  const [paramValueTemp, setParamValueTemp] = React.useState(props.parameterValue);
-  const [paramValueDisplayTemp, setParamValueDisplayTemp] = React.useState(props.parameterDisplayValue);
+  const [paramValueLocal, setParamValueLocal] = React.useState(props.parameterValue);
+  const [paramValueDisplayLocal, setParamValueDisplayLocal] = React.useState(props.parameterDisplayValue);
 
   const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
@@ -46,12 +46,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
 
-  const manualHandleParameters = () => {
-    handleParameters(paramValueTemp, paramValueDisplayTemp, false);
+  const manualHandleParametersUpdate = () => {
+    handleParametersUpdate(paramValueLocal, paramValueDisplayLocal, false);
   };
-  const handleParameters = (value, displayValue, manual = false) => {
-    setParamValueTemp(value);
-    setParamValueDisplayTemp(displayValue);
+  const handleParametersUpdate = (value, displayValue, manual = false) => {
+    setParamValueLocal(value);
+    setParamValueDisplayLocal(displayValue);
 
     if (manual) {
       return;
@@ -64,23 +64,23 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     if (isMulti) {
       if (value.length == 0 && clearParameterOnFieldClear) {
         setInputValue([]);
-        handleParameters(undefined, undefined, manualParameterSave);
+        handleParametersUpdate(undefined, undefined, manualParameterSave);
         return true;
       }
       if (value.length == 0) {
         setInputValue([]);
-        handleParameters([], [], manualParameterSave);
+        handleParametersUpdate([], [], manualParameterSave);
         return true;
       }
     } else {
       if (value && clearParameterOnFieldClear) {
         setInputValue(null);
-        handleParameters(undefined, undefined, manualParameterSave);
+        handleParametersUpdate(undefined, undefined, manualParameterSave);
         return true;
       }
       if (value == null) {
         setInputValue(null);
-        handleParameters(defaultValue, defaultValue, manualParameterSave);
+        handleParametersUpdate(defaultValue, defaultValue, manualParameterSave);
         return true;
       }
       return false;
@@ -92,8 +92,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       return;
     }
     let newValue;
-    let valReference = manualParameterSave ? paramValueTemp : props.parameterValue;
-    let valDisplayReference = manualParameterSave ? paramValueDisplayTemp : props.parameterDisplayValue;
+    let valReference = manualParameterSave ? paramValueLocal : props.parameterValue;
+    let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
     if (isMulti && inputValue.length < newDisplay.length) {
       newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
@@ -118,7 +118,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
 
-    handleParameters(newValue, newDisplay, manualParameterSave);
+    handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
@@ -154,7 +154,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         getOptionLabel={(option) => RenderSubValue(option)}
       />
       {manualParameterSave ? (
-        <SelectionConfirmationButton onClick={() => manualHandleParameters()} key={`selectionConfirmation`} />
+        <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} key={`selectionConfirmation`} />
       ) : (
         <></>
       )}

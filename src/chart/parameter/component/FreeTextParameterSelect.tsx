@@ -19,7 +19,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
   const [running, setRunning] = React.useState(false);
-  const [paramValueTemp, setParamValueTemp] = React.useState(null);
+  const [paramValueLocal, setParamValueLocal] = React.useState(null);
 
   const setParameterValue = (value) => {
     setRunning(false);
@@ -27,12 +27,12 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
   };
   const debouncedSetParameterValue = useCallback(debounce(setParameterValue, setParameterTimeout), []);
 
-  const manualHandleParameters = () => {
-    handleParameters(paramValueTemp, false);
+  const manualHandleParametersUpdate = () => {
+    handleParametersUpdate(paramValueLocal, false);
   };
 
-  const handleParameters = (value, manual = false) => {
-    setParamValueTemp(value);
+  const handleParametersUpdate = (value, manual = false) => {
+    setParamValueLocal(value);
 
     if (manual) {
       return;
@@ -70,11 +70,11 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
           setRunning(true);
           setInputText(newValue);
 
-          handleParameters(newValue, manualParameterSave);
+          handleParametersUpdate(newValue, manualParameterSave);
         }}
       />
       {manualParameterSave ? (
-        <SelectionConfirmationButton onClick={() => manualHandleParameters()} key={`selectionConfirmation`} />
+        <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} key={`selectionConfirmation`} />
       ) : (
         <></>
       )}

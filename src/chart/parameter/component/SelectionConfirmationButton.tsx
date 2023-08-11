@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
-import { CheckBadgeIconOutline } from '@neo4j-ndl/react/icons';
+import { PlayIconOutline } from '@neo4j-ndl/react/icons';
 import { IconButton } from '@neo4j-ndl/react';
 /**
  * Returns a button to confirm a selection entry from the parameter selector.
@@ -16,7 +16,7 @@ export const SelectionConfirmationButton = ({ onClick, key }) => {
         onClick={onClick}
         clean
       >
-        <CheckBadgeIconOutline className='header-icon' type='outline' />
+        <PlayIconOutline className='header-icon' type='outline' />
       </IconButton>
     </Tooltip>
   );
