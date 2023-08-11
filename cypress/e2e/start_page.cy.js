@@ -27,7 +27,7 @@ describe('NeoDash E2E Tests', () => {
       },
     });
 
-    cy.get('#form-dialog-title', { timeout: 20000 }).should('be.visible');
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'NeoDash - Neo4j Dashboard Builder').click();
 
     cy.get('#form-dialog-title').then(($div) => {
       const text = $div.text();
