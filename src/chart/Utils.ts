@@ -1,5 +1,5 @@
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
-
+import { tokens } from '@neo4j-ndl/base';
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;
@@ -116,3 +116,10 @@ export enum EntityType {
   Node,
   Relationship,
 }
+
+export const themeNivo = {
+  text: { fill: 'inherit' },
+  axis: {
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+  },
+};

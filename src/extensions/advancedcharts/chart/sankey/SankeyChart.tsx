@@ -7,6 +7,7 @@ import { evaluateRulesOnDict, evaluateRulesOnNode, useStyleRules } from '../../.
 import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
 import { isCyclic } from '../../Utils';
 import { extensionEnabled } from '../../../ExtensionUtils';
+import { themeNivo } from '../../../../chart/Utils';
 
 const UNWEIGHTED_SANKEY_PROPERTY = 'SANKEY_UNWEIGHTED';
 
@@ -190,6 +191,7 @@ const NeoSankeyChart = (props: ChartProps) => {
 
   return (
     <ResponsiveSankey
+      theme={themeNivo}
       data={data}
       margin={{
         top: marginTop,
