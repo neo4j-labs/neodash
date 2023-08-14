@@ -7,7 +7,8 @@ What's new in NeoDash 2.3.2? A few bug fixes, performance improvements and more 
 - Parameter Selector Chart
   - New advanced setting 'Manual Parameter Save' allowing  dashboard parameters propagation on demand (instead of automatically on change) ([@BennuFire](https://github.com/bennufire), [#545](https://github.com/neo4j-labs/neodash/pull/545))
   - Fix delete button leading to inconsistent values on click. ([@BennuFire](https://github.com/bennufire), [#545](https://github.com/neo4j-labs/neodash/pull/545))
-
+  
+  - Fix search on numbers not being triggered. ([@BennuFire](https://github.com/bennufire), [#545](https://github.com/neo4j-labs/neodash/pull/545))
 
 - Others
   - Fix performance degradation on schema calculation ([@BennuFire](https://github.com/bennufire), [#555](https://github.com/neo4j-labs/neodash/pull/555))
