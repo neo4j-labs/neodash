@@ -21,7 +21,6 @@ const Dashboard = ({
   onAboutModalOpen,
   resetApplication,
 }) => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [driver, setDriver] = React.useState(undefined);
 
   // If no driver is yet instantiated, create a new one.

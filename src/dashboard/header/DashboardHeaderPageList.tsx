@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getPages } from '../DashboardSelectors';
