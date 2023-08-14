@@ -4,6 +4,11 @@ import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { createUUID } from '../../../../dashboard/DashboardThunks';
 
+interface SubArc {
+  limit: number;
+  color: string;
+  // Other subArc properties...
+}
 
 const NeoGaugeChart = (props: ChartProps) => {
   const { records } = props;
@@ -16,24 +21,15 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   const maxValue = settings.maxValue ? settings.maxValue : 100;
   const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
-  const arcsLength = settings.arcsLength ? settings.arcsLength : '0.15, 0.55, 0.3';
+  const arcsLength = settings.arcsLength ? settings.arcsLength : '1, 2, 1';
   const flipColorArray = settings.flipColorArray ? settings.flipColorArray : 'Green - Red';
-  console.log('arcsLength is '+arcsLength);
 
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
-console.log('arcsLengthN 1: '+arcsLengthN)
-  if (arcsLengthN.filter((e) => isNaN(e)).length > 0 || arcsLengthN.length != nrOfLevels) {
-    arcsLengthN = Array(nrOfLevels).fill(1);
-  }
   const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-  // arcsLengthN = arcsLengthN.map((e) => e / sumArcs);
-  console.log('arcsLengthN 1: '+arcsLengthN)
   arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * 100 }));
   for (let i = 1; i < arcsLengthN.length; i++) {
     arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
   }
-  const formattedArcsLength = arcsLengthN.map(obj => `{limit: ${obj.limit}}`).join(', ');
-  console.log(formattedArcsLength);
 
   const chartId = createUUID();
 
@@ -48,59 +44,64 @@ console.log('arcsLengthN 1: '+arcsLengthN)
 
   const colorArray = flipColorArray === 'Red - Green' ? ['#EA4228', '#5BE12C'] : ['#5BE12C', '#EA4228'];
 
-return (
-  <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
-    {typeof score == 'number' ? (
-      <GaugeComponent
-        id={chartId}
-        type="semicircle"
-        value={score}
-        minValue={0}
-        maxValue={maxValue}
-        arc={{
-          cornerRadius: 7,
-          padding: 0.05,
-          width: 0.25,
-          // nbSubArcs: nrOfLevels,
-          colorArray: colorArray,
-          subArcs: formattedArcsLength
-        }}
-        pointer={{
-          color: '#345243',
-          length: 0.80,
-          width: 15
-        }}
-        labels={{
-          valueLabel: {
-            matchColorWithArc: true,
-            maxDecimalDigits: 2,
-          },
-          markLabel: {
-            type: "outer",
-            marks: [
-              { value: 0 },
-              { value: maxValue
-          /4 },
-              { value: maxValue
-          /2 },
-              { value: maxValue
-          *3/4 },
-              { value: maxValue
-         },
-            ],
-            valueConfig: {
+  // Dynamically generate subArcs based on arcsLengthN
+  const subArcs: SubArc[] = arcsLengthN.map((arc, index) => ({
+    limit: arc.limit,
+    color: colorArray[index % colorArray.length], // Rotate colors based on index
+    // Other subArc properties...
+  }));
+
+  return (
+    <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
+      {typeof score == 'number' ? (
+        <GaugeComponent
+          id={chartId}
+          type="semicircle"
+          value={score}
+          minValue={0}
+          maxValue={maxValue}
+          arc={{
+            cornerRadius: 7,
+            padding: 0.05,
+            width: 0.25,
+            // nbSubArcs: nrOfLevels,
+            colorArray: colorArray,
+            subArcs: subArcs,
+          }}
+          pointer={{
+            color: '#345243',
+            length: 0.80,
+            width: 15
+          }}
+          labels={{
+            valueLabel: {
+              matchColorWithArc: true,
               maxDecimalDigits: 2,
             },
-            markerConfig: {
-              char: '_',
+            markLabel: {
+              type: 'outer',
+              marks: [
+                { value: 0 },
+                { value: maxValue / 4 },
+                { value: maxValue / 2 },
+                { value: (maxValue * 3) / 4 },
+                { value: maxValue },
+              ],
+              valueConfig: {
+                maxDecimalDigits: 2,
+              },
+              markerConfig: {
+                char: '_',
+              },
             },
-          },
-        }}
-      />
-    ) : (
-      <></>
-    )}
-  </div>
-);
-    };
+          }}
+        />
+      ) : (
+        <></>
+      )}
+    </div>
+  );
+};
+
 export default NeoGaugeChart;
+
