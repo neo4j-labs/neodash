@@ -121,7 +121,7 @@ const NeoCard = ({
   const component = (
     <div
       ref={observe}
-      className='bg-light-neutral-bg-weak overflow-hidden n-shadow-l4 border-2 border-light-neutral-border-strong min-w-max rounded-lg px-4 py-5 sm:p-6 n-h-full'
+      className='n-bg-neutral-bg-weak overflow-hidden n-shadow-l4 border-2 border-neutral-border-strong min-w-max rounded-lg px-4 py-5 sm:p-6 n-h-full'
     >
       {/* The front of the card, referred to as the 'view' */}
       <Collapse disablestrictmodecompat='true' in={!settingsOpen} timeout={collapseTimeout} className='n-h-full'>

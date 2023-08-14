@@ -55,6 +55,10 @@ global parameter completely when the field is cleared. This may break
 some visualizations. If disabled, sets the parameter value to “” (empty
 string) when the input field is cleared.
 
+|Multiple Selection |on/off |off |If enabled, allows user to select multiple choices. Parameter will be then an array of selections.
+
+|Manual Parameter Save |on/off |off |If enabled, adds a confirmation button in order to propagate the selection into the dashboard parameter.
+
 |Enable Manual Label/Property Name Specification |on/off |off |If
 enabled, does not enforce you to select a node label/property using an
 auto-complete field, instead, you can enter any value. This is useful

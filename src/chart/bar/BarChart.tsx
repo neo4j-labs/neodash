@@ -6,6 +6,7 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
+import { themeNivo } from '../Utils';
 
 /**
  * Embeds a BarReport (from Nivo) into NeoDash.
@@ -210,6 +211,7 @@ const NeoBarChart = (props: ChartProps) => {
   const BarChartComponent = data.length > 30 ? ResponsiveBarCanvas : ResponsiveBar;
   const chart = (
     <BarChartComponent
+      theme={themeNivo}
       data={data}
       key={`${selection.index}___${selection.value}`}
       layout={layout}

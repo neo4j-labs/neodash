@@ -8,7 +8,6 @@ import {
   PlusIconOutline,
   PlayIconSolid,
 } from '@neo4j-ndl/react/icons';
-import { withStyles } from '@mui/styles';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = [
@@ -163,7 +162,7 @@ export const NeoCustomReportStyleModal = ({
    * This will be dynamic based on the type of report we are customizing.
    */
   const createFieldVariableSuggestions = () => {
-    if (!schema) {
+    if (!schema && !fields) {
       return [];
     }
     if (type == 'graph' || type == 'map') {
@@ -395,4 +394,4 @@ export const NeoCustomReportStyleModal = ({
   );
 };
 
-export default withStyles({})(NeoCustomReportStyleModal);
+export default NeoCustomReportStyleModal;

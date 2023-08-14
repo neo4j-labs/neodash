@@ -1,6 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { TextareaAutosize, Tooltip } from '@mui/material';
-import { withStyles } from '@mui/styles';
+import { TextareaAutosize } from '@mui/material';
 import { connect } from 'react-redux';
 import {
   loadDashboardFromNeo4jByUUIDThunk,
@@ -10,7 +9,7 @@ import {
 } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { SideNavigationItem, Button, Dialog, Dropdown } from '@neo4j-ndl/react';
+import { MenuItem, Button, Dialog, Dropdown } from '@neo4j-ndl/react';
 import {
   CloudArrowUpIconOutline,
   PlayIconSolid,
@@ -23,14 +22,11 @@ import {
  * The button to open the modal is intended to use in a drawer at the side of the page.
  */
 
-const styles = {};
-
 export const NeoLoadModal = ({
   loadDashboard,
   loadDatabaseListFromNeo4j,
   loadDashboardFromNeo4j,
   loadDashboardListFromNeo4j,
-  navItemClass,
 }) => {
   const [loadModalOpen, setLoadModalOpen] = React.useState(false);
   const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
@@ -100,12 +96,8 @@ export const NeoLoadModal = ({
   ];
 
   return (
-    <div>
-      <Tooltip title='Load' aria-label='load' disableInteractive>
-        <SideNavigationItem onClick={handleClickOpen} icon={<CloudArrowUpIconOutline className={navItemClass} />}>
-          Load
-        </SideNavigationItem>
-      </Tooltip>
+    <>
+      <MenuItem title='Load' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
 
       <Dialog size='large' open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
@@ -214,7 +206,7 @@ export const NeoLoadModal = ({
           ></Dropdown>
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 
@@ -229,4 +221,4 @@ const mapDispatchToProps = (dispatch) => ({
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadModal));
+export default connect(mapStateToProps, mapDispatchToProps)(NeoLoadModal);

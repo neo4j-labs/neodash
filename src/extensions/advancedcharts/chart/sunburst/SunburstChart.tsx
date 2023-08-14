@@ -11,6 +11,7 @@ import { Tooltip } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
+import { themeNivo } from '../../../../chart/Utils';
 /**
  * Embeds a SunburstChart (from Charts) into NeoDash.
  */
@@ -92,6 +93,7 @@ const NeoSunburstChart = (props: ChartProps) => {
         )}
         <ResponsiveSunburst
           {...commonProperties}
+          theme={themeNivo}
           id='name'
           value='loc'
           data={data}

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Badge, CardHeader, Dialog, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { Close } from '@mui/icons-material';
+import { Close, ThirteenMp } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import { replaceDashboardParameters } from '../../chart/ChartUtils';
@@ -17,6 +17,7 @@ import {
   CameraIconSolid,
   InformationCircleIconOutline,
 } from '@neo4j-ndl/react/icons';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const NeoCardViewHeader = ({
   title,
@@ -61,8 +62,20 @@ const NeoCardViewHeader = ({
     }
   }, [title]);
 
+  const theme = createTheme({
+    typography: {
+      fontFamily: "'Nunito Sans', sans-serif !important",
+      allVariants: { color: 'rgb(var(--palette-neutral-text-weak))' },
+    },
+    palette: {
+      text: {
+        primary: 'rgb(var(--palette-neutral-text-weaker))',
+      },
+    },
+  });
+
   const cardTitle = (
-    <>
+    <ThemeProvider theme={theme}>
       <table style={{ width: '100%' }}>
         <tbody>
           <tr>
@@ -103,7 +116,7 @@ const NeoCardViewHeader = ({
           </tr>
         </tbody>
       </table>
-    </>
+    </ThemeProvider>
   );
 
   const descriptionEnabled = description && description.length > 0;

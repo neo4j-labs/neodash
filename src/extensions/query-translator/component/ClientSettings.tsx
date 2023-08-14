@@ -153,7 +153,7 @@ export const ClientSettings = ({
         .map((setting) => {
           let disabled = checkIfDisabled(setting);
           return (
-            <ListItem key={`list-${  setting}`} style={{ padding: 0 }}>
+            <ListItem key={`list-${setting}`} style={{ padding: 0 }}>
               <NeoSetting
                 key={setting}
                 style={{ marginLeft: 0, marginRight: 0 }}

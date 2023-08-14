@@ -11,7 +11,7 @@ const NeoColorPicker = ({ value, onChange, defaultValue, label, style }) => {
               key={label}
               defaultValue={defaultValue}
               value={value}
-              onChange={(e) => onChange(e.css.backgroundColor)}
+              onChange={(e) => onChange(e?.css?.backgroundColor ?? null)}
             />
           </div>
           <div className='ndl-form-item-wrapper'>

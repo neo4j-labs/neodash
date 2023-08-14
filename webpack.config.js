@@ -1,4 +1,5 @@
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const rules = [
   {
     test: /\.(js|jsx|ts|tsx)$/,
@@ -51,7 +52,15 @@ module.exports = (env) => {
       port: 3000,
       hot: true,
     },
-    plugins: production ? [] : [new ReactRefreshWebpackPlugin()],
+    plugins: production
+      ? [
+          sentryWebpackPlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: 'neo4j-inc',
+            project: 'neodash',
+          }),
+        ]
+      : [new ReactRefreshWebpackPlugin()],
     ignoreWarnings: [/Failed to parse source map/],
   };
 };
