@@ -1,5 +1,5 @@
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
-import { tokens } from '@neo4j-ndl/base';
+
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;
@@ -118,6 +118,7 @@ export enum EntityType {
 }
 
 export const themeNivo = {
+  textColor: 'rgb(var(--palette-neutral-text-weak))',
   text: { fill: 'rgb(var(--palette-neutral-text-weak))' },
   axis: {
     ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
@@ -127,5 +128,15 @@ export const themeNivo = {
     text: { fill: 'rgb(var(--palette-neutral-text-weak))' },
     title: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
     ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+    hidden: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+  },
+  markers: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  labels: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  annotations: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
   },
 };

@@ -115,7 +115,6 @@ const NeoRadarChart = (props: ChartProps) => {
                 translateY: -40,
                 itemWidth: 100,
                 itemHeight: 14,
-                itemTextColor: '#999',
                 symbolSize: 14,
                 symbolShape: 'circle',
                 effects: [

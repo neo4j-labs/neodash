@@ -253,7 +253,7 @@ export const NeoReport = ({
     }
     return (
       <div
-        className={'n-text-palette-primary-bg-strong'}
+        className={'n-text-palette-neutral-text-default'}
         style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}
       >
         <ChartType
