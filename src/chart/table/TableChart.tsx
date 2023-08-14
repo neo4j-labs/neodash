@@ -33,6 +33,7 @@ const HIDDEN_COLUMN_PREFIX = '__';
 const theme = createTheme({
   typography: {
     fontFamily: "'Nunito Sans', sans-serif !important",
+    allVariants: { color: 'rgb(var(--palette-neutral-text-default))' },
   },
 });
 const fallbackRenderer = (value) => {

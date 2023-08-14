@@ -35,7 +35,6 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
     setParamValueLocal(value);
 
     if (manual) {
-      // setRunning(false);
       return;
     }
 

@@ -6,6 +6,7 @@ import Refresh from '@mui/icons-material/Refresh';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { mutateName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
+import { themeNivo } from '../../../../chart/Utils';
 
 /**
  * Embeds a CirclePackaging (from Charts) into NeoDash.
@@ -94,6 +95,7 @@ const NeoCirclePackingChart = (props: ChartProps) => {
         )}
         <ResponsiveCirclePacking
           {...commonProperties}
+          theme={themeNivo}
           id='name'
           value='loc'
           data={data}
