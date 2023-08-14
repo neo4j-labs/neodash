@@ -33,24 +33,18 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.COLOR,
         default: '#fafafa',
       },
-      flipColorArray: {
-        label: 'Color Range',
-        type: SELECTION_TYPES.LIST,
-        values: ['Green - Red', 'Red - Green'],
-        default: 'Green - Red'
-      },
       maxValue: {
         label: 'Maximum value of scale',
         type: SELECTION_TYPES.NUMBER,
         default: 100,
       },
       nrOfLevels: {
-        label: 'Number of levels',
+        label: 'Number of levels (priority)',
         type: SELECTION_TYPES.NUMBER,
         default: 3,
       },
       arcsLength: {
-        label: 'Comma-separated length of each arc',
+        label: 'Comma-separated length of each arc (Number must match nrOfLevels)',
         type: SELECTION_TYPES.TEXT,
         default: '0.15, 0.55, 0.3',
       },
@@ -60,7 +54,7 @@ export const ADVANCED_REPORT_TYPES = {
         default: '0.02',
       },
       colors: {
-        label: 'Comma-separated arc colors',
+        label: 'Comma-separated arc colors (Number must match nrOfLevels)',
         type: SELECTION_TYPES.TEXT,
         default: '#5BE12C, #F5CD19, #EA4228',
       },

@@ -22,7 +22,7 @@ const NeoGaugeChart = (props: ChartProps) => {
   const maxValue = settings.maxValue ? settings.maxValue : 100;
   const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
   const arcsLength = settings.arcsLength ? settings.arcsLength : '1, 2, 1';
-  const flipColorArray = settings.flipColorArray ? settings.flipColorArray : 'Green - Red';
+  const colorArrayString = settings.colors ? settings.colors : '#EA4228, #5BE12C'; 
 
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
   const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
@@ -42,13 +42,16 @@ const NeoGaugeChart = (props: ChartProps) => {
     score = score.low;
   }
 
-  const colorArray = flipColorArray === 'Red - Green' ? ['#EA4228', '#5BE12C'] : ['#5BE12C', '#EA4228'];
+  const colorArray = colorArrayString.split(',').map((color) => color.trim());
+
+  if (colorArray.length !== arcsLengthN.length) {
+    colorArray.splice(1, colorArray.length - 2); // Keep only the first and last colors
+  }
 
   // Dynamically generate subArcs based on arcsLengthN
   const subArcs: SubArc[] = arcsLengthN.map((arc, index) => ({
     limit: arc.limit,
-    color: colorArray[index % colorArray.length], // Rotate colors based on index
-    // Other subArc properties...
+    color: colorArray[index % colorArray.length],
   }));
 
   return (
@@ -64,7 +67,7 @@ const NeoGaugeChart = (props: ChartProps) => {
             cornerRadius: 7,
             padding: 0.05,
             width: 0.25,
-            // nbSubArcs: nrOfLevels,
+            nbSubArcs: nrOfLevels,
             colorArray: colorArray,
             subArcs: subArcs,
           }}
@@ -104,4 +107,3 @@ const NeoGaugeChart = (props: ChartProps) => {
 };
 
 export default NeoGaugeChart;
-
