@@ -166,7 +166,6 @@ const NeoPieChart = (props: ChartProps) => {
                 itemsSpacing: 0,
                 itemWidth: 100,
                 itemHeight: 18,
-                itemTextColor: '#999',
                 itemDirection: 'left-to-right',
                 itemOpacity: 1,
                 symbolSize: 18,

@@ -118,8 +118,14 @@ export enum EntityType {
 }
 
 export const themeNivo = {
-  text: { fill: 'inherit' },
+  text: { fill: 'rgb(var(--palette-neutral-text-weak))' },
   axis: {
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+    legend: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+  },
+  legends: {
+    text: { fill: 'rgb(var(--palette-neutral-text-weak))' },
+    title: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
     ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
   },
 };
