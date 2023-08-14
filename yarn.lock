@@ -11671,13 +11671,6 @@ react-force-graph-2d@^1.23.8:
     prop-types "^15.8"
     react-kapsule "^2.2"
 
-react-gauge-chart@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/react-gauge-chart/-/react-gauge-chart-0.4.1.tgz#e5554b9133c871965858078c144b857514e6b139"
-  integrity sha512-xc1pQ6tF3shRpjyzIGA5EeQcRNfjy5og6Ory5fUe9cWChw8ZadaONMnUIpGHdfUefF+Ffzh6HAZuOX5+AMzOzw==
-  dependencies:
-    d3 "^7.6.1"
-
 react-gauge-component@^1.1.12:
   version "1.1.12"
   resolved "https://registry.yarnpkg.com/react-gauge-component/-/react-gauge-component-1.1.12.tgz#52afa2923d65526cb6d8bf39e817fedda2b0670a"

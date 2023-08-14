@@ -16,16 +16,24 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   const maxValue = settings.maxValue ? settings.maxValue : 100;
   const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
-  const arcsLength = settings.arcsLength ? settings.arcsLength : '1/3, 1/3, 1/3';
+  const arcsLength = settings.arcsLength ? settings.arcsLength : '0.15, 0.55, 0.3';
   const flipColorArray = settings.flipColorArray ? settings.flipColorArray : 'Green - Red';
+  console.log('arcsLength is '+arcsLength);
 
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
-
+console.log('arcsLengthN 1: '+arcsLengthN)
   if (arcsLengthN.filter((e) => isNaN(e)).length > 0 || arcsLengthN.length != nrOfLevels) {
     arcsLengthN = Array(nrOfLevels).fill(1);
   }
   const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-  arcsLengthN = arcsLengthN.map((e) => e / sumArcs);
+  // arcsLengthN = arcsLengthN.map((e) => e / sumArcs);
+  console.log('arcsLengthN 1: '+arcsLengthN)
+  arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * 100 }));
+  for (let i = 1; i < arcsLengthN.length; i++) {
+    arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
+  }
+  const formattedArcsLength = arcsLengthN.map(obj => `{limit: ${obj.limit}}`).join(', ');
+  console.log(formattedArcsLength);
 
   const chartId = createUUID();
 
@@ -53,8 +61,9 @@ return (
           cornerRadius: 7,
           padding: 0.05,
           width: 0.25,
-          nbSubArcs: nrOfLevels,
-          colorArray: colorArray
+          // nbSubArcs: nrOfLevels,
+          colorArray: colorArray,
+          subArcs: formattedArcsLength
         }}
         pointer={{
           color: '#345243',
