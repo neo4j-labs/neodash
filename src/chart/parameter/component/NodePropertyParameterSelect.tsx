@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
+import { RenderSubValue } from '../../../report/ReportRecordProcessing';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
@@ -11,10 +12,22 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       ? props.settings.defaultValue
       : '';
 
+  const getInitialValue = (value, multi) => {
+    if (value && Array.isArray(value)) {
+      return multi ? value : null;
+    } else if (value) {
+      return multi ? [value] : value;
+    }
+    return multi ? [] : value;
+  };
+  const { multiSelector } = props;
   const allParameters = props.allParameters ? props.allParameters : {};
   const [extraRecords, setExtraRecords] = React.useState([]);
-  // const [inputText, setInputText] = React.useState(props.parameterValue);
-  const [inputDisplayText, setInputDisplayText] = React.useState(props.parameterDisplayValue);
+  const [inputDisplayText, setInputDisplayText] = React.useState(
+    props.parameterDisplayValue && multiSelector ? '' : props.parameterDisplayValue
+  );
+  const [inputValue, setInputValue] = React.useState(getInitialValue(props.parameterDisplayValue, multiSelector));
+
   const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
   const propertyType = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
@@ -29,50 +42,83 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
 
+  const handleCrossClick = (isMulti, value) => {
+    if (isMulti) {
+      if (value.length == 0 && clearParameterOnFieldClear) {
+        setInputValue([]);
+        props.setParameterValue(undefined);
+        props.setParameterDisplayValue(undefined);
+        return;
+      }
+      if (value.length == 0) {
+        setInputValue([]);
+        props.setParameterValue([]);
+        props.setParameterDisplayValue([]);
+        
+      }
+    } else {
+      if (value && clearParameterOnFieldClear) {
+        setInputValue(null);
+        props.setParameterValue(undefined);
+        props.setParameterDisplayValue(undefined);
+        return;
+      }
+      if (value == null) {
+        setInputValue(null);
+        props.setParameterValue(defaultValue);
+        props.setParameterDisplayValue(defaultValue);
+        
+      }
+    }
+  };
+  const propagateSelection = (event, newDisplay) => {
+    const isMulti = Array.isArray(newDisplay);
+    handleCrossClick(isMulti, newDisplay);
+    let newValue;
+    // Multiple and new entry
+    if (isMulti && inputValue.length < newDisplay.length) {
+      newValue = Array.isArray(props.parameterValue) ? [...props.parameterValue] : [props.parameterValue];
+      const newDisplayValue = [...newDisplay].slice(-1)[0];
+
+      let val = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]._fields[
+        realValueRowIndex
+      ];
+
+      newValue.push(val?.low ?? val);
+    } else if (!isMulti) {
+      newValue = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplay)[0]._fields[
+        realValueRowIndex
+      ];
+
+      newValue = newValue?.low || newValue;
+    } else {
+      let ele = props.parameterDisplayValue.filter((x) => !newDisplay.includes(x))[0];
+      newValue = [...props.parameterValue];
+      newValue.splice(props.parameterDisplayValue.indexOf(ele), 1);
+    }
+
+    setInputDisplayText(isMulti ? '' : newDisplay);
+    setInputValue(newDisplay);
+
+    props.setParameterValue(newValue);
+    props.setParameterDisplayValue(newDisplay);
+  };
   return (
     <Autocomplete
       id='autocomplete'
-      options={extraRecords
-        .map((r) =>
-          (r._fields && r._fields[displayValueRowIndex] !== null ? r._fields[displayValueRowIndex] : '(no data)')
-        )
-        .sort()}
-      getOptionLabel={(option) => (option ? option.toString() : '')}
-      style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '6.5px' }}
-      inputValue={inputDisplayText !== null ? `${inputDisplayText}` : ''}
+      multiple={multiSelector}
+      options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+      style={{ maxWidth: 'calc(100% - 30px)', marginLeft: '15px', marginTop: '5px' }}
+      inputValue={inputDisplayText}
       onInputChange={(event, value) => {
-        setInputDisplayText(value !== null ? `${value}` : '');
+        setInputDisplayText(value);
         debouncedQueryCallback(props.query, { input: `${value}`, ...allParameters }, setExtraRecords);
       }}
       isOptionEqualToValue={(option, value) => {
         return (option && option.toString()) === (value && value.toString());
       }}
-      value={props.parameterDisplayValue !== null ? `${props.parameterDisplayValue}` : ''}
-      onChange={(event, newDisplayValue) => {
-        if (newDisplayValue == null && clearParameterOnFieldClear) {
-          props.setParameterValue(undefined);
-          props.setParameterDisplayValue(undefined);
-          return;
-        }
-        if (newDisplayValue == null) {
-          props.setParameterValue(defaultValue);
-          props.setParameterDisplayValue(defaultValue);
-          return;
-        }
-
-        let newValue = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]
-          ._fields[realValueRowIndex];
-        setInputDisplayText(newDisplayValue);
-        if (newValue && newValue.low) {
-          newValue = newValue.low;
-        }
-        if (newDisplayValue && newDisplayValue.low) {
-          newDisplayValue = newDisplayValue.low;
-        }
-
-        props.setParameterValue(newValue);
-        props.setParameterDisplayValue(newDisplayValue);
-      }}
+      value={inputValue}
+      onChange={propagateSelection}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -82,6 +128,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
           variant='outlined'
         />
       )}
+      getOptionLabel={(option) => RenderSubValue(option)}
     />
   );
 };
