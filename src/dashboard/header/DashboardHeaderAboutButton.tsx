@@ -17,7 +17,7 @@ import { enterHandler, openTab } from '../../utils/accessibility';
 
 await StyleConfig.getInstance();
 
-export const NeoAboutButton = ({ connection, extensions, onAboutModalOpen }) => {
+export const NeoAboutButton = ({ connection, onAboutModalOpen, extensions }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleHelpMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

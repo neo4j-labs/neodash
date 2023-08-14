@@ -12,6 +12,7 @@ import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownload
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
+import { Tooltip } from '@mui/material';
 
 export const NeoDashboardHeader = ({
   standalone,
@@ -55,8 +56,9 @@ export const NeoDashboardHeader = ({
           </nav>
           <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>
             <div className='n-flex n-flex-row n-gap-x-2'>
-              <div className='ndl-icon-btn logo-btn n-p-1 ndl-large ndl-clean'>
+              <Tooltip title={'Change Theme'} disableInteractive>
                 <DarkModeSwitch
+                  className={'ndl-icon-btn n-p-2 ndl-large ndl-clean'}
                   style={{}}
                   checked={isDarkMode}
                   onChange={toggleDarkMode}
@@ -64,7 +66,7 @@ export const NeoDashboardHeader = ({
                   sunColor={DASHBOARD_HEADER_BUTTON_COLOR || '#000000'}
                   moonColor={'#ff0000'}
                 />
-              </div>
+              </Tooltip>
               {downloadImageEnabled && <NeoDashboardHeaderDownloadImageButton onDownloadImage={onDownloadImage} />}
               <NeoAboutButton connection={connection} onAboutModalOpen={onAboutModalOpen} />
               <NeoLogoutButton standalone={standalone} onConnectionModalOpen={onConnectionModalOpen} />

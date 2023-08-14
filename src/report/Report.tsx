@@ -252,7 +252,10 @@ export const NeoReport = ({
       return <div>Loading...</div>;
     }
     return (
-      <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
+      <div
+        className={'n-text-palette-primary-bg-strong'}
+        style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}
+      >
         <ChartType
           setPageNumber={setPageNumber}
           records={records}
