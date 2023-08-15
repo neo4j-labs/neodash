@@ -7,6 +7,7 @@ import { createUUID } from '../../../../dashboard/DashboardThunks';
 interface SubArc {
   limit: number;
   color: string;
+  // Other subArc properties...
 }
 
 const NeoGaugeChart = (props: ChartProps) => {
@@ -19,27 +20,15 @@ const NeoGaugeChart = (props: ChartProps) => {
   }
 
   const maxValue = settings.maxValue ? settings.maxValue : 100;
-  const nbOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
+  const nrOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
   const arcsLength = settings.arcsLength ? settings.arcsLength : '1, 2, 1';
-  const colorArrayString = settings.colorArray ? settings.colorArray : '#EA4228, #5BE12C';
+  const colorArrayString = settings.colorArray ? settings.colorArray : '#EA4228, #5BE12C'; // Example default color array
 
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
-
-  if (arcsLengthN.length === nbOfLevels) {
-    const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-    arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * 100 }));
-    for (let i = 1; i < arcsLengthN.length; i++) {
-      arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
-    }
-  }
-  
-
-  // Ensure that the length of arcsLengthN matches nbOfLevels
-  while (arcsLengthN.length < nbOfLevels) {
-    arcsLengthN.push(1); // All arcs have equal length
-  }
-  while (arcsLengthN.length > nbOfLevels) {
-    arcsLengthN.pop(); // Remove excess arcs
+  const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+  arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * 100 }));
+  for (let i = 1; i < arcsLengthN.length; i++) {
+    arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
   }
 
   const chartId = createUUID();
@@ -49,18 +38,21 @@ const NeoGaugeChart = (props: ChartProps) => {
   if (isNaN(score)) {
     return <NoDrawableDataErrorMessage />;
   }
-  score = score.toNumber();
+  if (score.low != undefined) {
+    score = score.low;
+  }
 
   const colorArray = colorArrayString.split(',').map((color) => color.trim());
 
   if (colorArray.length !== arcsLengthN.length) {
-    colorArray.splice(1, colorArray.length - 2);
+    colorArray.splice(1, colorArray.length - 2); // Keep only the first and last colors
   }
-  console.log(colorArray);
 
+  // Dynamically generate subArcs based on arcsLengthN
   const subArcs: SubArc[] = arcsLengthN.map((arc, index) => ({
     limit: arc.limit,
-    color: colorArray[index % colorArray.length],
+    color: colorArray[index % colorArray.length], // Rotate colors based on index
+    // Other subArc properties...
   }));
 
   return (
@@ -76,6 +68,7 @@ const NeoGaugeChart = (props: ChartProps) => {
             cornerRadius: 7,
             padding: 0.05,
             width: 0.25,
+            // nbSubArcs: nrOfLevels,
             colorArray: colorArray,
             subArcs: subArcs,
           }}
@@ -115,4 +108,3 @@ const NeoGaugeChart = (props: ChartProps) => {
 };
 
 export default NeoGaugeChart;
-
