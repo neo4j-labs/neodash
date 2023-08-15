@@ -4,12 +4,15 @@ import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { createUUID } from '../../../../dashboard/DashboardThunks';
 
+<<<<<<< HEAD
 interface SubArc {
   limit: number;
   color: string;
   // Other subArc properties...
 }
 
+=======
+>>>>>>> 4f8d19594640bc16f690925c865831d6b4dda088
 const NeoGaugeChart = (props: ChartProps) => {
   const { records } = props;
   const { selection } = props;
@@ -37,13 +40,13 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   if (isNaN(score)) {
     return <NoDrawableDataErrorMessage />;
-  }
-  if (score.low != undefined) {
-    score = score.low;
-  }
+  } 
+    score = score.toNumber();
+  
 
   const colorArray = colorArrayString.split(',').map((color) => color.trim());
 
+<<<<<<< HEAD
   if (colorArray.length !== arcsLengthN.length) {
     colorArray.splice(1, colorArray.length - 2); // Keep only the first and last colors
   }
@@ -54,12 +57,18 @@ const NeoGaugeChart = (props: ChartProps) => {
     color: colorArray[index % colorArray.length],
   }));
 
+=======
+>>>>>>> 4f8d19594640bc16f690925c865831d6b4dda088
   return (
     <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
       {typeof score == 'number' ? (
         <GaugeComponent
           id={chartId}
+<<<<<<< HEAD
           type="semicircle"
+=======
+          type='semicircle'
+>>>>>>> 4f8d19594640bc16f690925c865831d6b4dda088
           value={score}
           minValue={0}
           maxValue={maxValue}
@@ -69,12 +78,20 @@ const NeoGaugeChart = (props: ChartProps) => {
             width: 0.25,
             nbSubArcs: nrOfLevels,
             colorArray: colorArray,
+<<<<<<< HEAD
             subArcs: subArcs,
           }}
           pointer={{
             color: '#345243',
             length: 0.80,
             width: 15
+=======
+          }}
+          pointer={{
+            color: '#345243',
+            length: 0.8,
+            width: 15,
+>>>>>>> 4f8d19594640bc16f690925c865831d6b4dda088
           }}
           labels={{
             valueLabel: {
@@ -105,5 +122,9 @@ const NeoGaugeChart = (props: ChartProps) => {
     </div>
   );
 };
+<<<<<<< HEAD
 
 export default NeoGaugeChart;
+=======
+export default NeoGaugeChart;
+>>>>>>> 4f8d19594640bc16f690925c865831d6b4dda088
