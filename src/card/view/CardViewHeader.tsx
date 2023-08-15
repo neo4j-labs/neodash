@@ -69,7 +69,7 @@ const NeoCardViewHeader = ({
     },
     palette: {
       text: {
-        primary: 'rgb(var(--palette-neutral-text-weaker))',
+        primary: 'rgb(var(--palette-neutral-text))',
       },
     },
   });
@@ -97,7 +97,7 @@ const NeoCardViewHeader = ({
                 onBlur={() => {
                   setEditing(false);
                 }}
-                className={'no-underline large'}
+                className={'n-text-palette-neutral-text-default no-underline large'}
                 label=''
                 disabled={!editable}
                 placeholder='Report name...'
