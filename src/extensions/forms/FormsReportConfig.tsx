@@ -1,7 +1,7 @@
 import React from 'react';
 import { SELECTION_TYPES } from '../../config/CardConfig';
 import NeoForm from './chart/NeoForm';
-import NeoFormCardSettings from './chart/NeoFormCardSettings';
+import NeoFormCardSettings from './settings/NeoFormCardSettings';
 
 export const FORMS = {
   forms: {
