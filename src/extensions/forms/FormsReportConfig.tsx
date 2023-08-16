@@ -19,7 +19,12 @@ export const FORMS = {
       runButtonText: {
         label: 'Form Button Text',
         type: SELECTION_TYPES.TEXT,
-        default: 'Send',
+        default: 'Submit',
+      },
+      confirmationMessage: {
+        label: 'Confirmation Message',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Form submitted.',
       },
       description: {
         label: 'Report Description',

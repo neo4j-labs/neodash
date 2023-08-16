@@ -21,7 +21,7 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 
-const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
+export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
 export const NeoReport = ({
   pagenumber = '', // page number that the report is on.
@@ -60,7 +60,7 @@ export const NeoReport = ({
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-  const [loadingIcon, setLoadingIcon] = React.useState(DEFAULT_LOADING_ICON);
+  const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
@@ -110,7 +110,7 @@ export const NeoReport = ({
 
     // Logic to run a query
     const executeQuery = (newQuery) => {
-      setLoadingIcon(DEFAULT_LOADING_ICON);
+      setLoadingIcon(REPORT_LOADING_ICON);
       if (debounced) {
         debouncedRunCypherQuery(
           driver,
@@ -265,6 +265,7 @@ export const NeoReport = ({
           fullscreen={expanded}
           dimensions={dimensions}
           parameters={parameters}
+          query={query}
           queryCallback={queryCallback}
           createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
