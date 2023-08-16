@@ -39,27 +39,27 @@ export const ADVANCED_REPORT_TYPES = {
         default: 100,
       },
       nrOfLevels: {
-        label: 'Number of levels (priority)',
+        label: 'Number of levels',
         type: SELECTION_TYPES.NUMBER,
         default: 3,
       },
       arcsLength: {
-        label: 'Comma-separated length of each arc (Number must match nrOfLevels)',
+        label: 'Comma-separated length of each arc (Number must match Number of levels)',
         type: SELECTION_TYPES.TEXT,
-        default: '0.15, 0.55, 0.3',
+        default: '1,1,1',
       },
       arcPadding: {
         label: 'Arc padding',
         type: SELECTION_TYPES.TEXT,
         default: '0.02',
       },
-      colors: {
-        label: 'Comma-separated arc colors (Number must match nrOfLevels)',
+      colorArray: {
+        label: 'Comma-separated arc colors (Number must match Number of levels)',
         type: SELECTION_TYPES.TEXT,
         default: '#5BE12C, #F5CD19, #EA4228',
       },
       textColor: {
-        label: 'Color of the text',
+        label: 'Color of the gauge markers',
         type: SELECTION_TYPES.TEXT,
         default: 'black',
       },

@@ -19,11 +19,13 @@ const NeoGaugeChart = (props: ChartProps) => {
   }
 
   const maxValue = settings.maxValue ? settings.maxValue : 100;
-  const nbOfLevels = settings.nrOfLevels ? settings.nrOfLevels : 3;
-  const arcsLength = settings.arcsLength ? settings.arcsLength : '1, 2, 1';
-  const colorArrayString = settings.colorArray ? settings.colorArray : '#EA4228, #5BE12C';
-
+  const arcsLength = settings.arcsLength ? settings.arcsLength : '1, 1, 1';
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
+  const arcPadding = settings.arcPadding ? settings.arcPadding : 0.02
+  const nbOfLevels = settings.nrOfLevels ? settings.nrOfLevels : (arcsLength ? arcsLengthN.length : 3);
+  const colorArrayString = settings.colorArray ? settings.colorArray : '#EA4228, #5BE12C';
+  const textColor = settings.textColor ? settings.textColor : 'black'
+
 
   if (arcsLengthN.length === nbOfLevels) {
     const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
@@ -32,14 +34,11 @@ const NeoGaugeChart = (props: ChartProps) => {
       arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
     }
   }
-  
-
-  // Ensure that the length of arcsLengthN matches nbOfLevels
   while (arcsLengthN.length < nbOfLevels) {
-    arcsLengthN.push(1); // All arcs have equal length
+    arcsLengthN.push(1);
   }
   while (arcsLengthN.length > nbOfLevels) {
-    arcsLengthN.pop(); // Remove excess arcs
+    arcsLengthN.pop();
   }
 
   const chartId = createUUID();
@@ -56,7 +55,6 @@ const NeoGaugeChart = (props: ChartProps) => {
   if (colorArray.length !== arcsLengthN.length) {
     colorArray.splice(1, colorArray.length - 2);
   }
-  console.log(colorArray);
 
   const subArcs: SubArc[] = arcsLengthN.map((arc, index) => ({
     limit: arc.limit,
@@ -73,8 +71,8 @@ const NeoGaugeChart = (props: ChartProps) => {
           minValue={0}
           maxValue={maxValue}
           arc={{
+            padding: arcPadding,
             cornerRadius: 7,
-            padding: 0.05,
             width: 0.25,
             colorArray: colorArray,
             subArcs: subArcs,
@@ -88,9 +86,10 @@ const NeoGaugeChart = (props: ChartProps) => {
             valueLabel: {
               matchColorWithArc: true,
               maxDecimalDigits: 2,
+              style: {textShadow: "none"},
             },
             markLabel: {
-              type: 'outer',
+              type: 'inner',
               marks: [
                 { value: 0 },
                 { value: maxValue / 4 },
@@ -100,9 +99,11 @@ const NeoGaugeChart = (props: ChartProps) => {
               ],
               valueConfig: {
                 maxDecimalDigits: 2,
+                style: {fill: textColor, textShadow: "none"},
               },
               markerConfig: {
                 char: '_',
+                style: {textShadow: "none"},
               },
             },
           }}
