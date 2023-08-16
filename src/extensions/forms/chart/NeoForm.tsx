@@ -27,7 +27,7 @@ const NeoForm = (props: ChartProps) => {
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
 
-  // The user is still entering the form's fields...
+  // The user is entering the form's fields
   if (status == FormStatus.DATA_ENTRY) {
     return (
       <div style={{ margin: '10px' }}>
@@ -81,7 +81,7 @@ const NeoForm = (props: ChartProps) => {
     </div>
   );
 
-  // The user has succesfully completed the form.
+  // The user has succesfully completed the form
   if (status == FormStatus.SUBMITTED) {
     return (
       <div className='content-center' style={{ margin: '10px' }}>
@@ -91,7 +91,7 @@ const NeoForm = (props: ChartProps) => {
     );
   }
 
-  // The user has succesfully completed the form.
+  // The form query has failed, display the error
   if (status == FormStatus.ERROR) {
     return (
       <div>
