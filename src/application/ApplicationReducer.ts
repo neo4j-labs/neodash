@@ -81,6 +81,9 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
     }
     case SET_ABOUT_MODAL_OPEN: {
       const { open } = payload;
+      if (!open) {
+        console.log('');
+      }
       state = update(state, { aboutModalOpen: open });
       return state;
     }

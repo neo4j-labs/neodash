@@ -43,7 +43,7 @@ export const FIRST_PAGE_INITIAL_STATE = {
 };
 
 export const PAGE_INITIAL_STATE = {
-  title: '',
+  title: 'New page',
   reports: [],
 };
 

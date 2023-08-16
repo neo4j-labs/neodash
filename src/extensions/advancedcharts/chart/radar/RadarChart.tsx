@@ -4,6 +4,7 @@ import { ResponsiveRadar } from '@nivo/radar';
 import { evaluateRulesOnDict, useStyleRules } from '../../../styling/StyleRuleEvaluator';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { extensionEnabled } from '../../../ExtensionUtils';
+import { themeNivo } from '../../../../chart/Utils';
 
 /**
  * Embeds a RadarChart (from Charts) into NeoDash.
@@ -80,6 +81,7 @@ const NeoRadarChart = (props: ChartProps) => {
   }
   return (
     <ResponsiveRadar
+      theme={themeNivo}
       data={data}
       isInteractive={interactive}
       animate={animate}
@@ -113,7 +115,6 @@ const NeoRadarChart = (props: ChartProps) => {
                 translateY: -40,
                 itemWidth: 100,
                 itemHeight: 14,
-                itemTextColor: '#999',
                 symbolSize: 14,
                 symbolShape: 'circle',
                 effects: [

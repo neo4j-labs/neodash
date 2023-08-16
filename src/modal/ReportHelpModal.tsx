@@ -6,7 +6,7 @@ import { Dialog, TextLink } from '@neo4j-ndl/react';
  */
 export const NeoReportHelpModal = ({ open, handleClose }) => {
   return (
-    <Dialog size='large' open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
+    <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
       <Dialog.Header id='form-dialog-title'>About Reports</Dialog.Header>
       <Dialog.Content>
         {' '}

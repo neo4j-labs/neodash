@@ -16,7 +16,7 @@ interface Extension {
   link: string;
   reducerPrefix?: string;
   reducerObject?: any;
-  drawerButton?: JSX.Element;
+  settingsMenuButton?: JSX.Element;
   cardSettingsComponent?: JSX.Element;
   settingsModal?: JSX.Element;
   prepopulateReportFunction?: any; // function
@@ -63,7 +63,7 @@ export const EXTENSIONS: Record<string, Extension> = {
   //   enabled: true,
   //   reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
   //   reducerObject: sidebarReducer,
-  //   drawerButton: SidebarDrawerButton,
+  //   settingsMenuButton: SidebarDrawerButton,
   //   description:
   //     'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
   //   link: 'https://neo4j.com/professional-services/',
@@ -76,7 +76,7 @@ export const EXTENSIONS: Record<string, Extension> = {
   //   enabled: false,
   //   reducerPrefix: WORKFLOWS_ACTION_PREFIX,
   //   reducerObject: workflowReducer,
-  //   drawerButton: NeoWorkflowDrawerButton,
+  //   settingsMenuButton: NeoWorkflowDrawerButton,
   //   description:
   //     'An extension to create, manage, and run workflows consisting of Cypher queries. Workflows can be used to run ETL flows, complex query chains, or run graph data science workloads.',
   //   link: 'https://neo4j.com/professional-services/',
@@ -92,7 +92,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     cardSettingsComponent: NeoOverrideCardQueryEditor,
     prepopulateReportFunction: translateQuery,
     customLoadingIcon: GPT_LOADING_ICON,
-    drawerButton: QueryTranslatorButton,
+    settingsMenuButton: QueryTranslatorButton,
     description:
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
     link: 'https://neo4j.com/professional-services/',
@@ -136,8 +136,8 @@ function getExtensionDrawerButtons() {
   let buttons = {};
   Object.values(EXTENSIONS).forEach((extension) => {
     try {
-      if (extension.drawerButton) {
-        buttons[extension.name] = extension.drawerButton;
+      if (extension.settingsMenuButton) {
+        buttons[extension.name] = extension.settingsMenuButton;
       }
     } catch (e) {
       console.log(`Something wrong happened while loading the drawer extension : ${e}`);

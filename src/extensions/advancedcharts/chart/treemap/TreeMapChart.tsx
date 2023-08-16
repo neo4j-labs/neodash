@@ -6,6 +6,7 @@ import { Tooltip } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
+import { themeNivo } from '../../../../chart/Utils';
 
 /**
  * Embeds a TreeMap (from Charts) into NeoDash.
@@ -94,6 +95,7 @@ const NeoTreeMapChart = (props: ChartProps) => {
         )}
         <ResponsiveTreeMap
           {...commonProperties}
+          theme={themeNivo}
           identity='name'
           value='loc'
           data={data}

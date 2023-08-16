@@ -6,6 +6,7 @@ import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/Sty
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import { themeNivo } from '../Utils';
 
 /**
  * Embeds a PieChart (from Nivo) into NeoDash.
@@ -132,6 +133,7 @@ const NeoPieChart = (props: ChartProps) => {
 
   return (
     <ResponsivePie
+      theme={themeNivo}
       data={data}
       sortByValue={sortByValue}
       enableArcLabels={enableArcLabels}
@@ -164,7 +166,6 @@ const NeoPieChart = (props: ChartProps) => {
                 itemsSpacing: 0,
                 itemWidth: 100,
                 itemHeight: 18,
-                itemTextColor: '#999',
                 itemDirection: 'left-to-right',
                 itemOpacity: 1,
                 symbolSize: 18,

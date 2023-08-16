@@ -39,12 +39,12 @@ const NeoCodeEditorComponent = ({
         onChange(val);
       }
     },
-    className: 'ReactCodeMirror', // only used by integration tests
   };
 
+  // className 'ReactCodeMirror', only used by integration tests
   return (
     <div style={style}>
-      <CypherEditor className='ndl-cypher-editor' {...editorProps} />
+      <CypherEditor className='ndl-cypher-editor ReactCodeMirror' {...editorProps} />
     </div>
   );
 };
