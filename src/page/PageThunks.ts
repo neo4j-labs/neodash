@@ -1,7 +1,7 @@
 import { createNotification } from '../application/ApplicationActions';
 import { CARD_INITIAL_STATE } from '../card/CardReducer';
 import { createReport, removeReport, updateAllCardPositionsInPage } from './PageActions';
-import { createUUID } from '../dashboard/DashboardThunks';
+import { createUUID } from '../utils/uuid';
 
 export const createNotificationThunk = (title: any, message: any) => (dispatch: any) => {
   dispatch(createNotification(title, message));

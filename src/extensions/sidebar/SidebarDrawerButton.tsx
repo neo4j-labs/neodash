@@ -1,4 +1,3 @@
-import ReportIcon from '@mui/icons-material/Report';
 import React from 'react';
 import { connect } from 'react-redux';
 import { setExtensionSidebarOpen } from './state/SidebarActions';
