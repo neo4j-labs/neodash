@@ -6,19 +6,10 @@ import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { Autocomplete, debounce, TextField } from '@mui/material';
 import NeoField from '../../../component/field/Field';
-import { getReportTypes } from '../../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 
-const NeoCardSettingsContentPropertySelect = ({
-  query,
-  type,
-  database,
-  settings,
-  extensions,
-  onReportSettingUpdate,
-  onQueryUpdate,
-}) => {
+const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   if (!driver) {
     throw new Error(
@@ -199,7 +190,8 @@ const NeoCardSettingsContentPropertySelect = ({
   // TODO: since this component is only rendered for parameter select, this is technically not needed
   const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query', 'Date Picker'];
   const selectedType = settings.type ? settings.type : 'Node Property';
-  const reportTypes = getReportTypes(extensions);
+  const helperText = settings && settings.helperText ? settings.helperText : '';
+  const inputMode = settings && settings.inputMode ? settings.inputMode : 'cypher';
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
 
@@ -213,7 +205,7 @@ const NeoCardSettingsContentPropertySelect = ({
   return (
     <div>
       <p style={{ color: 'grey', fontSize: 12, paddingLeft: '5px', border: '1px solid lightgrey', marginTop: '0px' }}>
-        {reportTypes[type].helperText}
+        {helperText}
       </p>
       <Dropdown
         id='type'
@@ -265,7 +257,7 @@ const NeoCardSettingsContentPropertySelect = ({
               <NeoCodeEditorComponent
                 value={queryText}
                 editable={true}
-                language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
+                language={inputMode}
                 onChange={(value) => {
                   debouncedQueryUpdate(value);
                   setQueryText(value);
