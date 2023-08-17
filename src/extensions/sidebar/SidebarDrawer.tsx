@@ -140,9 +140,9 @@ export const NodeSidebarDrawer = ({
         <NoDrawableDataErrorMessage />
       ) : (
         <List style={{ overflowY: 'scroll', position: 'absolute', top: '40px' }}>
-          {parsedRecords.map((entity) => {
+          {parsedRecords.map((entity, k) => {
             return (
-              <ListItem>
+              <ListItem key={`item${  k}`}>
                 <SidebarNodeCard entity={entity} extensionSettings={extensionSettings}></SidebarNodeCard>
               </ListItem>
             );

@@ -5,6 +5,13 @@ import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCar
 import { translateQuery } from './query-translator/util/Util';
 import { GPT_LOADING_ICON } from './query-translator/component/LoadingIcon';
 
+import { NODE_SIDEBAR_ACTION_PREFIX } from './sidebar/state/SidebarActions';
+import { sidebarReducer } from './sidebar/state/SidebarReducer';
+import React from 'react';
+
+const SidebarDrawerButton = React.lazy(() => import('./sidebar/SidebarDrawerButton'));
+// const sidebarReducer = React.lazy(() => import('./sidebar/SidebarDrawerButton'));
+
 // TODO: continue documenting interface
 interface Extension {
   name: string;
@@ -55,19 +62,19 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked.',
     link: 'https://neo4j.com/professional-services/',
   },
-  // 'node-sidebar': {
-  //   name: 'node-sidebar',
-  //   label: 'Node Sidebar',
-  //   author: 'Neo4j Professional Services',
-  //   image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-  //   enabled: true,
-  //   reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
-  //   reducerObject: sidebarReducer,
-  //   settingsMenuButton: SidebarDrawerButton,
-  //   description:
-  //     'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
-  //   link: 'https://neo4j.com/professional-services/',
-  // },
+  'node-sidebar': {
+    name: 'node-sidebar',
+    label: 'Node Sidebar',
+    author: 'Neo4j Professional Services',
+    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
+    enabled: true,
+    reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
+    reducerObject: sidebarReducer,
+    settingsMenuButton: SidebarDrawerButton,
+    description:
+      'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
+    link: 'https://neo4j.com/professional-services/',
+  },
   // workflows: {
   //   name: 'workflows',
   //   label: 'Cypher Workflows',

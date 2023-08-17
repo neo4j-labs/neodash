@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
 import { getSidebarDatabase, getSidebarQuery } from '../state/SidebarSelectors';
@@ -10,6 +10,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { getExtensionSettings } from '../../state/ExtensionSelectors';
 import {
   Badge,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -19,6 +20,7 @@ import {
   MenuItem,
   Switch,
 } from '@mui/material';
+import { Dropdown } from '@neo4j-ndl/react';
 
 /**
  * TODO: lets also generalize this as a 'pop-uppable report'.
@@ -38,6 +40,8 @@ const SidebarSettingsModal = ({
 }) => {
   const [queryText, setQueryText] = React.useState(query);
   const [databaseText, setDatabaseText] = React.useState(database);
+  const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
+
   const [isAdvancedSettingsOpen, setIsAdvancedSettingsOpen] = React.useState(false);
   const [settingsToSave, setSettingsToSave] = React.useState(extensionSettings);
 
@@ -69,7 +73,7 @@ const SidebarSettingsModal = ({
 
   // On startup, if no specific database was defined, default to 'neo4j'.
   useEffect(() => {
-    if (databaseText === '') {
+    if (databaseText === '' || database == undefined) {
       let firstDb = applicationDatabase ? applicationDatabase : 'neo4j';
       setDatabaseText(firstDb);
     }
@@ -81,28 +85,40 @@ const SidebarSettingsModal = ({
         <Dialog maxWidth={'md'} scroll={'paper'} open={settingsOpen} aria-labelledby='form-dialog-title'>
           <DialogTitle id='form-dialog-title'>
             Node Sidebar Settings
-            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
+            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }} aria-label={'closeM'}>
               <Badge overlap='rectangular' badgeContent={''}>
                 <SaveIcon id={'extensions-modal-close-button'} />
               </Badge>
             </IconButton>
           </DialogTitle>
           <DialogContent>
-            <NeoField
-              select
-              placeholder='neo4j'
+            <Dropdown
+              id='databaseSelector'
               label='Database'
-              value={databaseText}
-              style={{ width: '47%', maxWidth: '200px' }}
-              choices={databaseList.map((database) => (
-                <MenuItem key={database} value={database}>
-                  {database}
-                </MenuItem>
-              ))}
-              onChange={(value) => {
-                setDatabaseText(value);
+              placeholder='neo4j...'
+              type='select'
+              selectProps={{
+                onChange: (newValue) => {
+                  newValue && setDatabaseText(newValue.value);
+                  newValue && debouncedDatabaseUpdate(newValue.value);
+                },
+                options: databaseList.map((database) => ({
+                  label: database,
+                  value: database,
+                })),
+                value: { label: databaseText, value: databaseText },
+                menuPortalTarget: document.querySelector('body'),
+              }}
+              fluid
+              style={{
+                marginLeft: '0px',
+                marginRight: '10px',
+                width: '47%',
+                maxWidth: '200px',
+                display: 'inline-block',
               }}
             />
+
             <></>
             <br />
             <br />

@@ -57,16 +57,19 @@ export const NeoDashboardHeader = ({
           <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>
             <div className='n-flex n-flex-row n-gap-x-2'>
               <Tooltip title={'Change Theme'} disableInteractive>
-                <DarkModeSwitch
-                  className={'ndl-icon-btn n-p-2 ndl-large ndl-clean'}
-                  style={{}}
-                  checked={isDarkMode}
-                  onChange={toggleDarkMode}
-                  size={24}
-                  sunColor={DASHBOARD_HEADER_BUTTON_COLOR || '#000000'}
-                  moonColor={'#ff0000'}
-                />
+                <div>
+                  <DarkModeSwitch
+                    className={'ndl-icon-btn n-p-2 ndl-large ndl-clean'}
+                    style={{}}
+                    checked={isDarkMode}
+                    onChange={toggleDarkMode}
+                    size={24}
+                    sunColor={DASHBOARD_HEADER_BUTTON_COLOR || '#000000'}
+                    moonColor={'#ff0000'}
+                  />
+                </div>
               </Tooltip>
+
               {downloadImageEnabled && <NeoDashboardHeaderDownloadImageButton onDownloadImage={onDownloadImage} />}
               <NeoAboutButton connection={connection} onAboutModalOpen={onAboutModalOpen} />
               <NeoLogoutButton standalone={standalone} onConnectionModalOpen={onConnectionModalOpen} />

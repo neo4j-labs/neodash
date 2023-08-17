@@ -1,6 +1,4 @@
 import React, { useCallback } from 'react';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import SidebarSettingsModal from './settings/SidebarSettingsModal';
 import { getSidebarGlobalParameters, getSidebarTitle } from './state/SidebarSelectors';
 import { setExtensionTitle } from './state/SidebarActions';
 import { connect } from 'react-redux';
@@ -9,13 +7,14 @@ import ClearAllIcon from '@mui/icons-material/ClearAll';
 import { getExtensionSettings } from '../state/ExtensionSelectors';
 import { updateGlobalParameterThunk } from '../../settings/SettingsThunks';
 import { IconButton, TextField, Tooltip, debounce } from '@mui/material';
+import { TextInput, Typography } from '@neo4j-ndl/react';
+import { CheckBadgeIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * The editable header of the drawer, including the title and settings button.
  * TODO - rename to 'Node Sidebar Header' to match new extension name.
  */
 export const SidebarDrawerHeader = ({
-  databaseList,
   title,
   extensionSettings,
   sidebarGlobalParameters,
@@ -27,6 +26,7 @@ export const SidebarDrawerHeader = ({
   const [headerTitle, setHeaderTitle] = React.useState(title);
   const refreshable = extensionSettings.refreshButtonEnabled ? extensionSettings.refreshButtonEnabled : false;
   const debouncedTitleUpdate = useCallback(debounce(onTitleUpdate, 250), []);
+  const [editing, setEditing] = React.useState(false);
 
   function clearNodeSidebarParameters() {
     sidebarGlobalParameters.forEach((key) => onGlobalParameterUpdate(key, undefined));
@@ -48,46 +48,44 @@ export const SidebarDrawerHeader = ({
   );
 
   return (
-    <table style={{ width: '100%' }}>
-      <tbody>
-        <tr>
-          <td>
-            <TextField
-              id='standard-outlined'
-              label=''
-              style={{ marginLeft: '14px', marginTop: '8px' }}
-              placeholder='Sidebar Name...'
-              className={'no-underline large'}
-              maxRows={4}
-              value={headerTitle}
-              onChange={(event) => {
-                setHeaderTitle(event.target.value);
-                debouncedTitleUpdate(event.target.value);
-              }}
-            />
-          </td>
-          <td>{refreshable ? refreshButton : <></>}</td>
-          <td>{extensionSettings.resetParametersEnabled ? clearParametersButton : <></>}</td>
-          <td>
-            <Tooltip title='Settings' aria-label='settings' disableInteractive>
-              <IconButton
-                aria-label='settings'
-                onClick={() => {
-                  setSettingsOpen(true);
-                }}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            </Tooltip>
-            <SidebarSettingsModal
-              databaseList={databaseList}
-              settingsOpen={settingsOpen}
-              setSettingsOpen={setSettingsOpen}
-            ></SidebarSettingsModal>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div>
+      {editing ? (
+        <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
+          <TextInput
+            autoFocus={true}
+            value={headerTitle}
+            style={{
+              textAlign: 'center',
+              height: '1.9rem',
+            }}
+            placeholder='Dashboard name...'
+            onChange={(event) => {
+              setHeaderTitle(event.target.value);
+              debouncedTitleUpdate(event.target.value);
+            }}
+          />
+          <Tooltip title={'Stop Editing'} disableInteractive>
+            <IconButton
+              className='logo-btn n-p-1'
+              aria-label={'stop-editing'}
+              size='large'
+              onClick={() => setEditing(false)}
+            >
+              <CheckBadgeIconOutline className='header-icon' type='outline' />
+            </IconButton>
+          </Tooltip>
+        </div>
+      ) : (
+        <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
+          <Typography variant='h3'>{headerTitle}</Typography>
+          <Tooltip title={'Edit'} disableInteractive>
+            <IconButton className='logo-btn n-p-1' aria-label={'edit'} size='large' onClick={() => setEditing(true)}>
+              <PencilSquareIconOutline className='header-icon' type='outline' />
+            </IconButton>
+          </Tooltip>
+        </div>
+      )}
+    </div>
   );
 };
 

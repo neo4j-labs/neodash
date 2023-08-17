@@ -3,23 +3,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { setExtensionSidebarOpen } from './state/SidebarActions';
 import { getSidebarOpened } from './state/SidebarSelectors';
-import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { MenuItem } from '@neo4j-ndl/react';
+import { ExternalLinkIcon } from '@neo4j-ndl/react/icons';
 
 // TODO - rename to 'Node Sidebar Extension button' to reflect better the functionality.
-const NeoNodeSidebarButton = ({ navItemClass, isOpen, setNodeSidebarOpened }) => {
+const NeoNodeSidebarButton = ({ isOpen, setNodeSidebarOpened }) => {
   const handleClick = () => {
     setNodeSidebarOpened(!isOpen);
   };
 
   return (
-    <div>
-      <ListItem button onClick={handleClick} id='sidebar-button'>
-        <ListItemIcon>
-          <ReportIcon className={navItemClass} />
-        </ListItemIcon>
-        <ListItemText primary='Alerts' />
-      </ListItem>
-    </div>
+    <MenuItem
+      title='Alerts'
+      onClick={() => handleClick()}
+      icon={
+        <>
+          <ExternalLinkIcon />
+        </>
+      }
+    />
   );
 };
 
