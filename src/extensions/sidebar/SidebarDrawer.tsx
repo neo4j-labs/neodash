@@ -10,7 +10,8 @@ import { loadDatabaseListFromNeo4jThunk } from '../../dashboard/DashboardThunks'
 import { checkIfAllRecordsAreNodes, parseNodeRecordsToDictionaries } from '../../chart/graph/util/RecordUtils';
 import { getExtensionSettings } from '../state/ExtensionSelectors';
 import { getDashboardExtensions } from '../../dashboard/DashboardSelectors';
-import { Drawer, List, ListItem } from '@mui/material';
+import { List, ListItem } from '@mui/material';
+import { Drawer } from '@neo4j-ndl/react';
 
 // The sidebar that appears on the left side of the dashboard.
 export const NodeSidebarDrawer = ({
@@ -21,7 +22,7 @@ export const NodeSidebarDrawer = ({
   isOpen,
   loadDatabaseListFromNeo4j,
 }) => {
-  const open = extensions['node-sidebar'] && isOpen ? isOpen : false;
+  const [open, setOpen] = useState(extensions['node-sidebar'] && isOpen ? isOpen : false);
   const [records, setRecords] = useState([]);
   // List of records parsed from the result
   const [parsedRecords, setParsedRecords] = useState([]);
@@ -43,6 +44,10 @@ export const NodeSidebarDrawer = ({
       setMaxRecords(newMaxRecords);
     }
   }, [extensionSettings]);
+
+  useEffect(() => {
+    setOpen(extensions['node-sidebar'] ? isOpen : false);
+  }, [isOpen, extensions['node-sidebar']]);
 
   // On first initialization, load a database list from neo4j to use in the component.
   useEffect(() => {
@@ -119,37 +124,37 @@ export const NodeSidebarDrawer = ({
     return <NeoCodeViewerComponent value={message} />;
   }
   const drawer = (
-    <Drawer
-      variant='persistent'
-      open={open}
-      anchor='left'
+    <div
       style={{
         position: 'relative',
-        overflowX: 'hidden',
-        width: open ? '240px' : '0px',
-        transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-        boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
         marginTop: '113px',
       }}
+      className={'n-z-10'}
     >
-      <SidebarDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></SidebarDrawerHeader>
-      {/* TODO: define generic body here (for now list of clickable cards) */}
-      {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
-        getDrawerErrorMessage(status, records)
-      ) : hasInvalidQuery ? (
-        <NoDrawableDataErrorMessage />
-      ) : (
-        <List style={{ overflowY: 'scroll', position: 'absolute', top: '40px' }}>
-          {parsedRecords.map((entity) => {
-            return (
-              <ListItem key={`item${entity.id}`}>
-                <SidebarNodeCard entity={entity} extensionSettings={extensionSettings}></SidebarNodeCard>
-              </ListItem>
-            );
-          })}
-        </List>
-      )}
-    </Drawer>
+      <Drawer closeable position='left' type='overlay' expanded={open} onExpandedChange={(e) => setOpen(e)}>
+        <Drawer.Header>
+          <SidebarDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></SidebarDrawerHeader>
+        </Drawer.Header>
+        <Drawer.Body>
+          {/* TODO: define generic body here (for now list of clickable cards) */}
+          {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
+            getDrawerErrorMessage(status, records)
+          ) : hasInvalidQuery ? (
+            <NoDrawableDataErrorMessage />
+          ) : (
+            <List style={{ overflowY: 'scroll', position: 'absolute', top: '40px' }}>
+              {parsedRecords.map((entity) => {
+                return (
+                  <ListItem key={`item${entity.id}`}>
+                    <SidebarNodeCard entity={entity} extensionSettings={extensionSettings}></SidebarNodeCard>
+                  </ListItem>
+                );
+              })}
+            </List>
+          )}
+        </Drawer.Body>
+      </Drawer>
+    </div>
   );
 
   return drawer;

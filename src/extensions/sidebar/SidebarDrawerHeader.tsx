@@ -9,12 +9,15 @@ import { updateGlobalParameterThunk } from '../../settings/SettingsThunks';
 import { IconButton, TextField, Tooltip, debounce } from '@mui/material';
 import { TextInput, Typography } from '@neo4j-ndl/react';
 import { CheckBadgeIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
+import SidebarSettingsModal from './settings/SidebarSettingsModal';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 /**
  * The editable header of the drawer, including the title and settings button.
  * TODO - rename to 'Node Sidebar Header' to match new extension name.
  */
 export const SidebarDrawerHeader = ({
+  databaseList,
   title,
   extensionSettings,
   sidebarGlobalParameters,
@@ -85,6 +88,24 @@ export const SidebarDrawerHeader = ({
           </Tooltip>
         </div>
       )}
+      {refreshable ? refreshButton : <></>}
+      {extensionSettings.resetParametersEnabled ? clearParametersButton : <></>}
+
+      <Tooltip title='Settings' aria-label='settings' disableInteractive>
+        <IconButton
+          aria-label='settings'
+          onClick={() => {
+            setSettingsOpen(true);
+          }}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </Tooltip>
+      <SidebarSettingsModal
+        databaseList={databaseList}
+        settingsOpen={settingsOpen}
+        setSettingsOpen={setSettingsOpen}
+      ></SidebarSettingsModal>
     </div>
   );
 };
