@@ -136,22 +136,24 @@ export const NodeSidebarDrawer = ({
           <SidebarDrawerHeader databaseList={databaseList} onManualRefreshDrawer={runCypher}></SidebarDrawerHeader>
         </Drawer.Header>
         <Drawer.Body>
-          {/* TODO: define generic body here (for now list of clickable cards) */}
-          {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
-            getDrawerErrorMessage(status, records)
-          ) : hasInvalidQuery ? (
-            <NoDrawableDataErrorMessage />
-          ) : (
-            <List style={{ overflowY: 'scroll', position: 'absolute', top: '40px' }}>
-              {parsedRecords.map((entity) => {
-                return (
-                  <ListItem key={`item${entity.id}`}>
-                    <SidebarNodeCard entity={entity} extensionSettings={extensionSettings}></SidebarNodeCard>
-                  </ListItem>
-                );
-              })}
-            </List>
-          )}
+          <React.Fragment key='.0'>
+            {/* TODO: define generic body here (for now list of clickable cards) */}
+            {[QueryStatus.NO_DATA, QueryStatus.ERROR, QueryStatus.NO_QUERY].includes(status) ? (
+              getDrawerErrorMessage(status, records)
+            ) : hasInvalidQuery ? (
+              <NoDrawableDataErrorMessage />
+            ) : (
+              <List>
+                {parsedRecords.map((entity) => {
+                  return (
+                    <ListItem key={`item${entity.id}`}>
+                      <SidebarNodeCard entity={entity} extensionSettings={extensionSettings}></SidebarNodeCard>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            )}
+          </React.Fragment>
         </Drawer.Body>
       </Drawer>
     </div>

@@ -6,8 +6,8 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import { getExtensionSettings } from '../state/ExtensionSelectors';
 import { updateGlobalParameterThunk } from '../../settings/SettingsThunks';
-import { IconButton, TextField, Tooltip, debounce } from '@mui/material';
-import { TextInput, Typography } from '@neo4j-ndl/react';
+import { Tooltip, debounce } from '@mui/material';
+import { IconButton, TextInput, Typography } from '@neo4j-ndl/react';
 import { CheckBadgeIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import SidebarSettingsModal from './settings/SidebarSettingsModal';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -51,7 +51,7 @@ export const SidebarDrawerHeader = ({
   );
 
   return (
-    <div>
+    <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
       {editing ? (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <TextInput
@@ -73,6 +73,7 @@ export const SidebarDrawerHeader = ({
               aria-label={'stop-editing'}
               size='large'
               onClick={() => setEditing(false)}
+              clean
             >
               <CheckBadgeIconOutline className='header-icon' type='outline' />
             </IconButton>
@@ -82,7 +83,13 @@ export const SidebarDrawerHeader = ({
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <Typography variant='h3'>{headerTitle}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
-            <IconButton className='logo-btn n-p-1' aria-label={'edit'} size='large' onClick={() => setEditing(true)}>
+            <IconButton
+              className='logo-btn n-p-1'
+              aria-label={'edit'}
+              size='large'
+              onClick={() => setEditing(true)}
+              clean
+            >
               <PencilSquareIconOutline className='header-icon' type='outline' />
             </IconButton>
           </Tooltip>
@@ -93,10 +100,12 @@ export const SidebarDrawerHeader = ({
 
       <Tooltip title='Settings' aria-label='settings' disableInteractive>
         <IconButton
+          className='logo-btn n-p-1'
           aria-label='settings'
           onClick={() => {
             setSettingsOpen(true);
           }}
+          clean
         >
           <MoreVertIcon />
         </IconButton>
