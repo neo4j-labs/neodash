@@ -39,6 +39,4 @@ const mapStateToProps = (state) => ({
   active: getModelProvider(state),
 });
 
-const mapDispatchToProps = (_dispatch) => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(QueryTranslatorButton);
+export default connect(mapStateToProps, null)(QueryTranslatorButton);

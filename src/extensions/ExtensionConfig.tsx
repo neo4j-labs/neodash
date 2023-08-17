@@ -1,6 +1,5 @@
 import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
-import QueryTranslatorButton from './query-translator/component/QueryTranslator';
 import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
 import { translateQuery } from './query-translator/util/Util';
 import { GPT_LOADING_ICON } from './query-translator/component/LoadingIcon';
@@ -10,6 +9,8 @@ import { sidebarReducer } from './sidebar/state/SidebarReducer';
 import React from 'react';
 
 const SidebarDrawerButton = React.lazy(() => import('./sidebar/SidebarDrawerButton'));
+const QueryTranslatorButton = React.lazy(() => import('./query-translator/component/QueryTranslator'));
+
 // const sidebarReducer = React.lazy(() => import('./sidebar/SidebarDrawerButton'));
 
 // TODO: continue documenting interface

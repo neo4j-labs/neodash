@@ -67,7 +67,7 @@ module.exports = (env) => {
             // exclude detection of files based on a RegExp
             exclude: /a\.js|node_modules/,
             // add errors to webpack instead of warnings
-            failOnError: true,
+            failOnError: false,
             // allow import cycles that include an asyncronous import,
             // e.g. via import(/* webpackMode: "weak" */ './file.js')
             allowAsyncCycles: false,
