@@ -5,8 +5,8 @@ import LocationOn from '@mui/icons-material/LocationOn';
 import 'leaflet/dist/leaflet.css';
 import { Popup, Tooltip } from 'react-leaflet';
 import { Button, Typography } from '@neo4j-ndl/react';
-import { extensionEnabled } from '../../../extensions/ExtensionUtils';
 import { getRule } from '../../../extensions/advancedcharts/Utils';
+import { extensionEnabled } from '../../../utils/ReportUtils';
 
 export function createMarkers(data, props) {
   const clusterMarkers =

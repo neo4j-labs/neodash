@@ -5,8 +5,8 @@ import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { themeNivo } from '../Utils';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 /**
  * Embeds a PieChart (from Nivo) into NeoDash.

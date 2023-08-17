@@ -11,7 +11,6 @@ import { downloadCSV } from '../ChartUtils';
 import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
 
 import { Close } from '@mui/icons-material';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 
 import {
   getRule,
@@ -24,6 +23,7 @@ import { IconButton } from '@neo4j-ndl/react';
 import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;

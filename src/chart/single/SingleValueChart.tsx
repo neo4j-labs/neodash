@@ -2,8 +2,8 @@ import React from 'react';
 import { ChartProps } from '../Chart';
 import { renderValueByType } from '../../report/ReportRecordProcessing';
 import { evaluateRulesOnNeo4jRecord } from '../../extensions/styling/StyleRuleEvaluator';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import YAML from 'yaml';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 /**
  * Renders Neo4j records as their JSON representation.
