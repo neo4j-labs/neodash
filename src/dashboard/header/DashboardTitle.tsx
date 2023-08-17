@@ -47,11 +47,11 @@ export const NeoDashboardTitle = ({
   function renderExtensionsButtons() {
     const res = (
       <>
-        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name, idx) => {
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
           return (
-            <Suspense fallback='' key={`extS-${idx}`}>
-              {Component ? <Component key={`ext-${idx}`} database={connection.database} /> : <></>}
+            <Suspense fallback='' key={`extS-${name}`}>
+              {Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>}
             </Suspense>
           );
         })}

@@ -10,7 +10,7 @@ import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, setPageTitle, disabled = false }) => {
+export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageTitle, disabled = false }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const menuOpen = Boolean(anchorEl);
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
@@ -19,7 +19,7 @@ export const DashboardHeaderPageTitle = ({ key, title, tabIndex, removePage, set
   const handleMenuEditClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
     event.preventDefault();
     if (editing) {
-      debouncedSetPageTitle(key, titleText);
+      debouncedSetPageTitle(tabIndex, titleText);
     }
     setEditing(!editing);
     setAnchorEl(null);
