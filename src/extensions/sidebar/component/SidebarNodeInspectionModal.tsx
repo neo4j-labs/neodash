@@ -64,7 +64,7 @@ const SidebarNodeInspectionModal = ({
         >
           <DialogTitle id='form-dialog-title'>
             {entity.labels.join(', ')}
-            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }}>
+            <IconButton onClick={handleClose} style={{ padding: '3px', float: 'right' }} aria-label={'Close'}>
               <Badge overlap='rectangular' badgeContent={''}>
                 <CloseIcon id={'extensions-modal-close-button'} />
               </Badge>
