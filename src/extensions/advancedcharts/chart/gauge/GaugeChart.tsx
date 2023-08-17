@@ -3,10 +3,15 @@ import GaugeComponent from 'react-gauge-component';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { createUUID } from '../../../../dashboard/DashboardThunks';
+import { Settings } from '@mui/icons-material';
 
 interface SubArc {
   limit: number;
   color: string;
+}
+
+interface nrMarkers {
+  value: number;
 }
 
 const NeoGaugeChart = (props: ChartProps) => {
@@ -18,18 +23,62 @@ const NeoGaugeChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
 
-  const maxValue = settings.maxValue ? settings.maxValue : 100;
+  let maxValue = settings.maxValue ? settings.maxValue : 100;
   const arcsLength = settings.arcsLength ? settings.arcsLength : '1, 1, 1';
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
-  const arcPadding = settings.arcPadding ? settings.arcPadding : 0.02
+  const arcPadding = settings.arcPadding ? settings.arcPadding : 0.02;
   const nbOfLevels = settings.nrOfLevels ? settings.nrOfLevels : (arcsLength ? arcsLengthN.length : 3);
   const colorArrayString = settings.colorArray ? settings.colorArray : '#EA4228, #5BE12C';
-  const textColor = settings.textColor ? settings.textColor : 'black'
+  const textColor = settings.textColor ? settings.textColor : '#000000';
+  const valueLabelColor = settings.valueLabelColor ? settings.valueLabelColor : 'arc color';
+  const arrowColor = settings.pointerColor ? settings.pointerColor : '#000000';
+  let matchColorWithArc = false;
+  const markerPosition = settings.markerPosition ? settings.markerPosition : "outer";
+  const graphStyle = settings.graphStyle ? settings.graphStyle : 'grafana';
+  const nrMarkers = settings.numberOfMarkers ? settings.numberOfMarkers : 5;
+  const marginSides = settings.marginSides || settings.marginSides === 0 ? settings.marginSides: 30;
+  const pointerType = settings.pointerType ? settings.pointerType : 'needle';
+  const animationDuration = settings.animateDuration ? settings.animateDuration : 2000;
+  const animationDelay = settings.animDelay ? settings.animDelay : 0;
 
+
+  function colorTranslater(colorName): any {
+    switch(colorName) {
+      case 'arc color':
+        return null;
+      case 'black':
+        return '#000000';
+      case 'dark grey':
+        return '#242424';
+      case 'grey':
+        return '#9c9c9c';
+        default:
+          null;
+    }
+  }
+
+  const chartId = createUUID();
+
+  let score = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
+
+  if (isNaN(score)) {
+    return <NoDrawableDataErrorMessage />;
+  }
+  score = score.toNumber();
+  
+  if (score>maxValue) {
+    maxValue = score;
+  }
+
+  const colorArray = colorArrayString.split(',').map((color) => color.trim());
+
+  if (colorArray.length !== arcsLengthN.length) {
+    colorArray.splice(1, colorArray.length - 2);
+  }
 
   if (arcsLengthN.length === nbOfLevels) {
     const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-    arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * 100 }));
+    arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * maxValue }));
     for (let i = 1; i < arcsLengthN.length; i++) {
       arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
     }
@@ -41,35 +90,35 @@ const NeoGaugeChart = (props: ChartProps) => {
     arcsLengthN.pop();
   }
 
-  const chartId = createUUID();
-
-  let score = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
-
-  if (isNaN(score)) {
-    return <NoDrawableDataErrorMessage />;
-  }
-  score = score.toNumber();
-
-  const colorArray = colorArrayString.split(',').map((color) => color.trim());
-
-  if (colorArray.length !== arcsLengthN.length) {
-    colorArray.splice(1, colorArray.length - 2);
-  }
-
   const subArcs: SubArc[] = arcsLengthN.map((arc, index) => ({
     limit: arc.limit,
     color: colorArray[index % colorArray.length],
   }));
+
+  const markers: nrMarkers[] = [];
+  const step = maxValue / (nrMarkers - 1);
+
+  for (let i = 0; i < nrMarkers; i++) {
+    markers.push({ value: step * i });
+  }
+
+  if (colorTranslater(valueLabelColor) === null) {
+    matchColorWithArc = true;
+  } else {
+    matchColorWithArc = false;
+  }
+  let adjustedMarginSides = (marginSides/100 * 0.49)-0.14;
 
   return (
     <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
       {typeof score == 'number' ? (
         <GaugeComponent
           id={chartId}
-          type="semicircle"
+          type={graphStyle}
           value={score}
           minValue={0}
           maxValue={maxValue}
+          marginInPercent={{ top: 0.12, bottom: 0, left: adjustedMarginSides, right: adjustedMarginSides }}
           arc={{
             padding: arcPadding,
             cornerRadius: 7,
@@ -78,25 +127,22 @@ const NeoGaugeChart = (props: ChartProps) => {
             subArcs: subArcs,
           }}
           pointer={{
-            color: '#345243',
+            animationDuration: animationDuration,
+            animationDelay: animationDelay,
+            color: arrowColor,
             length: 0.80,
-            width: 15
+            width: 15,
+            type: pointerType,
           }}
           labels={{
             valueLabel: {
-              matchColorWithArc: true,
+              matchColorWithArc: matchColorWithArc,
               maxDecimalDigits: 2,
-              style: {textShadow: "none"},
+              style: {textShadow: "none", fill: colorTranslater(valueLabelColor)},
             },
             markLabel: {
-              type: 'inner',
-              marks: [
-                { value: 0 },
-                { value: maxValue / 4 },
-                { value: maxValue / 2 },
-                { value: (maxValue * 3) / 4 },
-                { value: maxValue },
-              ],
+              type: markerPosition,
+              marks: markers,
               valueConfig: {
                 maxDecimalDigits: 2,
                 style: {fill: textColor, textShadow: "none"},
