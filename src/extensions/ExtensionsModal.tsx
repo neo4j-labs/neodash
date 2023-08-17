@@ -6,7 +6,7 @@ import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
 import { setExtensionReducerEnabled } from './state/ExtensionActions';
-import { Dialog, Label, MenuItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
+import { Dialog, Label, MenuItem, TextLink, Typography, Checkbox, IconButton } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
 import { Section, SectionContent } from '../modal/ModalUtils';
 
@@ -30,12 +30,9 @@ const NeoExtensionsModal = ({
 
   return (
     <>
-      <MenuItem
-        title='Manage extensions'
-        id='extensions-sidebar-button'
-        onClick={handleClickOpen}
-        icon={<PuzzlePieceIconSolid />}
-      />
+      <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
+        <PuzzlePieceIconSolid />
+      </IconButton>
 
       {open ? (
         <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>

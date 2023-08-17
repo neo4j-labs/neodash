@@ -204,7 +204,7 @@ export const NeoCustomReportActionsModal = ({
     if (customization == 'set variable') {
       return (
         <>
-          <div style={{ marginLeft: 15, display: 'inline' }}>
+          <div style={{ marginLeft: 10, display: 'inline' }}>
             <span
               style={{
                 height: '2.25rem',
@@ -213,7 +213,7 @@ export const NeoCustomReportActionsModal = ({
                 fontSize: 'var(--font-size-body-medium)',
                 fontWeight: '700',
                 letterSpacing: '0.016rem',
-                lineHeight: '36px',
+                lineHeight: '37px',
               }}
             >
               $neodash_
@@ -222,7 +222,7 @@ export const NeoCustomReportActionsModal = ({
           <TextInput
             className='n-inline-block n-align-middle n-w-1/2 font-bold'
             fluid
-            style={{ minWidth: 150, fontWeight: 700 }}
+            style={{ minWidth: 100, fontWeight: 700 }}
             placeholder=''
             value={rule.customizationValue}
             onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
