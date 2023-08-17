@@ -3,7 +3,6 @@ import GaugeComponent from 'react-gauge-component';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { createUUID } from '../../../../dashboard/DashboardThunks';
-import { Settings } from '@mui/icons-material';
 
 interface SubArc {
   limit: number;
@@ -24,6 +23,7 @@ const NeoGaugeChart = (props: ChartProps) => {
   }
 
   let maxValue = settings.maxValue ? settings.maxValue : 100;
+  let minValue = settings.minValue ? settings.minValue : 0;
   const arcsLength = settings.arcsLength ? settings.arcsLength : '1, 1, 1';
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
   const arcPadding = settings.arcPadding ? settings.arcPadding : 0.02;
@@ -69,6 +69,9 @@ const NeoGaugeChart = (props: ChartProps) => {
   if (score>maxValue) {
     maxValue = score;
   }
+  if (score<minValue) {
+    minValue = score;
+  }
 
   const colorArray = colorArrayString.split(',').map((color) => color.trim());
 
@@ -79,9 +82,9 @@ const NeoGaugeChart = (props: ChartProps) => {
   if (arcsLengthN.length === nbOfLevels) {
     const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
     arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * maxValue }));
-    for (let i = 1; i < arcsLengthN.length; i++) {
-      arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
-    }
+  }
+  for (let i = 1; i < arcsLengthN.length; i++) {
+    arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
   }
   while (arcsLengthN.length < nbOfLevels) {
     arcsLengthN.push(1);
@@ -116,7 +119,7 @@ const NeoGaugeChart = (props: ChartProps) => {
           id={chartId}
           type={graphStyle}
           value={score}
-          minValue={0}
+          minValue={minValue}
           maxValue={maxValue}
           marginInPercent={{ top: 0.12, bottom: 0, left: adjustedMarginSides, right: adjustedMarginSides }}
           arc={{

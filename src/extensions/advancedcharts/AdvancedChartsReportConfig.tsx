@@ -111,6 +111,11 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 100,
       },
+      minValue: {
+        label: 'Minimum value of scale',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
       nrOfLevels: {
         label: 'Number of levels',
         type: SELECTION_TYPES.NUMBER,
