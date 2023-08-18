@@ -13,6 +13,7 @@ import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { themeNivo } from '../../../../chart/Utils';
 import { IconButton } from '@neo4j-ndl/react';
+import RefreshButton from '../../component/RefreshButton';
 /**
  * Embeds a SunburstChart (from Charts) into NeoDash.
  */
@@ -69,25 +70,12 @@ const NeoSunburstChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title='Reset' aria-label='reset' disableInteractive>
-            <IconButton
-              onClick={() => {
-                setData(commonProperties.data);
-                setRefreshable(false);
-              }}
-              className='n-z-10'
-              style={{
-                opacity: 0.6,
-                bottom: 12,
-                right: 12,
-                position: 'absolute',
-                borderRadius: '12px',
-              }}
-              size={'small'}
-            >
-              <ArrowPathIconOutline />
-            </IconButton>
-          </Tooltip>
+          <RefreshButton
+            onClick={() => {
+              setData(commonProperties.data);
+              setRefreshable(false);
+            }}
+          ></RefreshButton>
         ) : (
           <div></div>
         )}

@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import { useState } from 'react';
-import { Tooltip } from '@mui/material';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { mutateName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
 import { themeNivo } from '../../../../chart/Utils';
-import { IconButton } from '@neo4j-ndl/react';
-import { ArrowPathIconOutline } from '@neo4j-ndl/react/icons';
+import RefreshButton from '../../component/RefreshButton';
 
 /**
  * Embeds a CirclePackaging (from Charts) into NeoDash.
@@ -71,25 +69,12 @@ const NeoCirclePackingChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title='Reset' aria-label='reset' disableInteractive>
-            <IconButton
-              onClick={() => {
-                setData(commonProperties.data);
-                setRefreshable(false);
-              }}
-              className='n-z-10'
-              style={{
-                opacity: 0.6,
-                bottom: 12,
-                right: 12,
-                position: 'absolute',
-                borderRadius: '12px',
-              }}
-              size={'small'}
-            >
-              <ArrowPathIconOutline />
-            </IconButton>
-          </Tooltip>
+          <RefreshButton
+            onClick={() => {
+              setData(commonProperties.data);
+              setRefreshable(false);
+            }}
+          ></RefreshButton>
         ) : (
           <div></div>
         )}
