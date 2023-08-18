@@ -18,6 +18,8 @@ import {
 } from '../util/EditUtils';
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
+import { XMarkIconOutline, PlusIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
+
 export enum EditType {
   Node,
   Relationship,

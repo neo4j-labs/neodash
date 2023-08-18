@@ -5,14 +5,13 @@ import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../config/ReportConfig';
-import { MoreVert } from '@mui/icons-material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
 import { LoadingSpinner } from '@neo4j-ndl/react';
-import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
+import { EllipsisVerticalIconOutline, ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 import { EXTENSIONS } from '../extensions/ExtensionConfig';
@@ -237,8 +236,13 @@ export const NeoReport = ({
     return (
       <div className={'n-text-palette-neutral-text-default'} style={{ padding: 15 }}>
         No query specified. <br /> Use the &nbsp;
-        <Chip style={{ backgroundColor: '#dddddd' }} size='small' icon={<MoreVert />} label='Report Settings' /> button
-        to get started.
+        <Chip
+          style={{ backgroundColor: '#dddddd' }}
+          size='small'
+          icon={<EllipsisVerticalIconOutline className='btn-icon-base-r' />}
+          label='Report Settings'
+        />{' '}
+        button to get started.
       </div>
     );
   } else if (status == QueryStatus.RUNNING) {

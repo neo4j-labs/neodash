@@ -1,14 +1,5 @@
 import React, { useEffect } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
-import StarsIcon from '@mui/icons-material/Stars';
-import {
-  AdjustmentsHorizontalIconOutline,
-  XMarkIconOutline,
-  PlusIconOutline,
-  PlayIconSolid,
-  SparklesIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { XMarkIconOutline, PlusIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
 import { Autocomplete, TextField } from '@mui/material';
