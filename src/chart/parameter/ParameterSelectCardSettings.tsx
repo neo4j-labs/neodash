@@ -30,7 +30,7 @@ const ParameterSelectCardSettings = ({
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
-  const { manualPropertyNameSpecification } = settings;
+  const {manualPropertyNameSpecification} = settings;
   const [labelInputText, setLabelInputText] = React.useState(settings.entityType);
   const [labelRecords, setLabelRecords] = React.useState([]);
   const [propertyInputText, setPropertyInputText] = React.useState(settings.propertyType);
