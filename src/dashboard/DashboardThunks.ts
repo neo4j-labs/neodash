@@ -4,6 +4,7 @@ import { addPage, movePage, removePage, resetDashboardState, setDashboard } from
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
+import { createUUID } from '../utils/uuid';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
