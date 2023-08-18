@@ -1,17 +1,11 @@
+import React from 'react';
 import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
 import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
 import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
 import { translateQuery } from './query-translator/util/Util';
 import { GPT_LOADING_ICON } from './query-translator/component/LoadingIcon';
 
-import { NODE_SIDEBAR_ACTION_PREFIX } from './sidebar/state/SidebarActions';
-import { sidebarReducer } from './sidebar/state/SidebarReducer';
-import React from 'react';
-
-const SidebarDrawerButton = React.lazy(() => import('./sidebar/SidebarDrawerButton'));
 const QueryTranslatorButton = React.lazy(() => import('./query-translator/component/QueryTranslator'));
-
-// const sidebarReducer = React.lazy(() => import('./sidebar/SidebarDrawerButton'));
 
 // TODO: continue documenting interface
 interface Extension {
@@ -63,32 +57,6 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked.',
     link: 'https://neo4j.com/professional-services/',
   },
-  'node-sidebar': {
-    name: 'node-sidebar',
-    label: 'Node Sidebar',
-    author: 'Neo4j Professional Services',
-    image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-    enabled: true,
-    reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
-    reducerObject: sidebarReducer,
-    settingsMenuButton: SidebarDrawerButton,
-    description:
-      'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
-    link: 'https://neo4j.com/professional-services/',
-  },
-  // workflows: {
-  //   name: 'workflows',
-  //   label: 'Cypher Workflows',
-  //   author: 'Neo4j Professional Services',
-  //   image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-  //   enabled: false,
-  //   reducerPrefix: WORKFLOWS_ACTION_PREFIX,
-  //   reducerObject: workflowReducer,
-  //   settingsMenuButton: NeoWorkflowDrawerButton,
-  //   description:
-  //     'An extension to create, manage, and run workflows consisting of Cypher queries. Workflows can be used to run ETL flows, complex query chains, or run graph data science workloads.',
-  //   link: 'https://neo4j.com/professional-services/',
-  // },
   'query-translator': {
     name: 'query-translator',
     label: 'Natural Language Queries',

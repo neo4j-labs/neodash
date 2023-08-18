@@ -1,6 +1,5 @@
 import React from 'react';
 import NeoPage from '../page/Page';
-import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
 import NeoDashboardTitle from './header/DashboardTitle';
 import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
@@ -53,9 +52,6 @@ const Dashboard = ({
       </div>
       {/* Main Page */}
       <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
-        {/* Sidebar */}
-        <NeoDrawer />
-
         {/* Main Content */}
         <main className='n-flex-1 n-relative n-z-0 n-overflow-y-auto n-scroll-smooth n-w-full'>
           <div className='n-absolute n-inset-0 page-spacing'>
