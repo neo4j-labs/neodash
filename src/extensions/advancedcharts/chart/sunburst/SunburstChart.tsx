@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  mutateName as mutateHierarchyNameIntoDisplayName,
-  processHierarchyFromRecords,
-  findObject,
-  flatten,
-  mutateName,
-} from '../../../../chart/ChartUtils';
+import { processHierarchyFromRecords, findObject, flatten, mutateName } from '../../../../chart/ChartUtils';
 import { ResponsiveSunburst } from '@nivo/sunburst';
-import { Tooltip } from '@mui/material';
-import { ArrowPathIconOutline } from '@neo4j-ndl/react/icons';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { themeNivo } from '../../../../chart/Utils';
-import { IconButton } from '@neo4j-ndl/react';
 import RefreshButton from '../../component/RefreshButton';
 /**
  * Embeds a SunburstChart (from Charts) into NeoDash.
