@@ -8,7 +8,6 @@ import {
   PlusIconOutline,
   PlayIconSolid,
 } from '@neo4j-ndl/react/icons';
-import { withStyles } from '@mui/styles';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = [
@@ -163,7 +162,7 @@ export const NeoCustomReportStyleModal = ({
    * This will be dynamic based on the type of report we are customizing.
    */
   const createFieldVariableSuggestions = () => {
-    if (!schema) {
+    if (!schema && !fields) {
       return [];
     }
     if (type == 'graph' || type == 'map') {
@@ -247,6 +246,7 @@ export const NeoCustomReportStyleModal = ({
                                 className='n-align-middle n-inline-block n-w-5/12 n-pr-1'
                                 disableClearable={true}
                                 id={`autocomplete-label-type${index}`}
+                                size='small'
                                 noOptionsText='*Specify an exact field name'
                                 options={createFieldVariableSuggestions().filter((e) =>
                                   e.toLowerCase().includes(rule.field.toLowerCase())
@@ -268,7 +268,6 @@ export const NeoCustomReportStyleModal = ({
                                     InputLabelProps={{ shrink: true }}
                                     style={{ padding: '6px 0 7px' }}
                                     size={'small'}
-                                    variant={'standard'}
                                   />
                                 )}
                               />
@@ -303,8 +302,8 @@ export const NeoCustomReportStyleModal = ({
                             <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                               <Dropdown
                                 type='select'
-                                className='n-align-middle n-w-4/12 n-pr-1'
-                                style={{ minWidth: 125, display: 'inline-block' }}
+                                className='n-align-middle n-w-5/12 n-pr-1'
+                                style={{ minWidth: 100, display: 'inline-block' }}
                                 selectProps={{
                                   onChange: (newValue) => updateRuleField(index, 'customization', newValue.value),
                                   options: RULE_BASED_REPORT_CUSTOMIZATIONS[type].map((option) => ({
@@ -319,8 +318,8 @@ export const NeoCustomReportStyleModal = ({
                                 fluid
                               />
                               <TextInput
-                                className='n-align-middle n-inline-block n-w-2/12 n-pr-1'
-                                style={{ minWidth: 50 }}
+                                className='n-align-middle n-inline-block n-w-1/12 n-pr-1'
+                                style={{ minWidth: 30 }}
                                 disabled={true}
                                 value={'='}
                                 fluid
@@ -395,4 +394,4 @@ export const NeoCustomReportStyleModal = ({
   );
 };
 
-export default withStyles({})(NeoCustomReportStyleModal);
+export default NeoCustomReportStyleModal;

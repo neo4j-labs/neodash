@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { Tooltip } from '@mui/material';
-import { withStyles } from '@mui/styles';
+
 import { connect } from 'react-redux';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
@@ -8,7 +7,7 @@ import NeoSetting from '../component/field/Setting';
 import { loadDashboardListFromNeo4jThunk, loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { SELECTION_TYPES } from '../config/CardConfig';
-import { SideNavigationItem, Button, Dialog, Dropdown, TextLink } from '@neo4j-ndl/react';
+import { MenuItem, Button, Dialog, Dropdown, TextLink } from '@neo4j-ndl/react';
 import {
   ShareIconOutline,
   PlayIconSolid,
@@ -18,9 +17,8 @@ import {
 
 const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
-const styles = {};
 
-export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j, navItemClass }) => {
+export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadDatabaseListFromNeo4j }) => {
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
   const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
   const [loadFromFileModalOpen, setLoadFromFileModalOpen] = React.useState(false);
@@ -86,20 +84,10 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
   ];
 
   return (
-    <div>
-      <Tooltip title='Share' aria-label='share' disableInteractive>
-        <SideNavigationItem onClick={handleClickOpen} icon={<ShareIconOutline className={navItemClass} />}>
-          Share
-        </SideNavigationItem>
-      </Tooltip>
+    <>
+      <MenuItem title='Share' onClick={handleClickOpen} icon={<ShareIconOutline />} />
 
-      <Dialog
-        key={1}
-        size='large'
-        open={shareModalOpen == true}
-        onClose={handleClose}
-        aria-labelledby='form-dialog-title'
-      >
+      <Dialog key={1} size='large' open={shareModalOpen} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
           <ShareIconOutline className='icon-base icon-inline text-r' />
           Share Dashboard
@@ -344,7 +332,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
           </div>
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 
@@ -358,4 +346,4 @@ const mapDispatchToProps = (dispatch) => ({
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoShareModal));
+export default connect(mapStateToProps, mapDispatchToProps)(NeoShareModal);

@@ -116,3 +116,27 @@ export enum EntityType {
   Node,
   Relationship,
 }
+
+export const themeNivo = {
+  textColor: 'rgb(var(--palette-neutral-text-weak))',
+  text: { fill: 'rgb(var(--palette-neutral-text-weak))' },
+  axis: {
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+    legend: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+  },
+  legends: {
+    text: { fill: 'rgb(var(--palette-neutral-text-weak))' },
+    title: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+    hidden: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+  },
+  markers: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  labels: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  annotations: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+};

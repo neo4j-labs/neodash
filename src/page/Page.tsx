@@ -144,10 +144,10 @@ export const NeoPage = ({
   useEffect(() => {
     setAnimated(false);
     recomputeLayout();
-  }, [reports, dashboardSettings.resizing]);
+  }, [reports, dashboardSettings.resizing, pagenumber]);
 
   const content = (
-    <div style={{ paddingTop: '52px' }}>
+    <div className='n-pt-3'>
       <ResponsiveGridLayout
         draggableHandle='.drag-handle'
         layouts={layouts}

@@ -1,33 +1,39 @@
-import { AppBar } from '@mui/material';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { setDashboardTitle, addPage, removePage } from '../DashboardActions';
-import { getDashboardSettings, getDashboardTitle, getPages } from '../DashboardSelectors';
-import debounce from 'lodash/debounce';
-import { setPageTitle } from '../../page/PageActions';
-import { addPageThunk, removePageThunk } from '../DashboardThunks';
+import { setDashboardTitle } from '../DashboardActions';
+import { getDashboardSettings, getDashboardTheme, getDashboardTitle, getPages } from '../DashboardSelectors';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
-import NeoDashboardHeaderPageList from './DashboardHeaderPageList';
-import { NeoDashboardHeaderTitleBar } from './DashboardHeaderTitleBar';
-
-const drawerWidth = 240;
+import { NeoDashboardHeaderLogo } from './DashboardHeaderLogo';
+import NeoAboutButton from './DashboardHeaderAboutButton';
+import { NeoLogoutButton } from './DashboardHeaderLogoutButton';
+import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownloadImageButton';
+import { updateDashboardSetting } from '../../settings/SettingsActions';
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
+import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
+import { Tooltip } from '@mui/material';
 
 export const NeoDashboardHeader = ({
-  open,
   standalone,
   dashboardTitle,
-  handleDrawerOpen,
-  setDashboardTitle,
-  editable,
   connection,
   settings,
   onConnectionModalOpen,
   onDownloadImage,
+  onAboutModalOpen,
+  resetApplication,
+  themeMode,
+  setTheme,
 }) => {
   const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
+
+  const [isDarkMode, setDarkMode] = React.useState(themeMode !== 'light');
+
+  const toggleDarkMode = (checked: boolean) => {
+    setDarkMode(checked);
+  };
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -36,39 +42,39 @@ export const NeoDashboardHeader = ({
     }
   }, [dashboardTitle]);
 
+  useEffect(() => {
+    setTheme(isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
   const content = (
-    <AppBar
-      position='absolute'
-      className='n-z-20'
-      style={
-        open
-          ? {
-              boxShadow: 'none',
-              marginLeft: drawerWidth,
-              width: `calc(100% - ${drawerWidth}px)`,
-              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-            }
-          : {
-              boxShadow: 'none',
-              width: `calc(100%)`,
-              transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-            }
-      }
-    >
-      <NeoDashboardHeaderTitleBar
-        downloadImageEnabled={downloadImageEnabled}
-        onDownloadImage={onDownloadImage}
-        dashboardTitle={dashboardTitle}
-        setDashboardTitle={setDashboardTitle}
-        editable={editable}
-        standalone={standalone}
-        open={open}
-        onConnectionModalOpen={onConnectionModalOpen}
-        handleDrawerOpen={handleDrawerOpen}
-        connection={connection}
-      ></NeoDashboardHeaderTitleBar>
-      <NeoDashboardHeaderPageList open={open}></NeoDashboardHeaderPageList>
-    </AppBar>
+    <div className='n-relative n-bg-neutral-bg-weak n-w-full'>
+      <div className='n-min-w-full'>
+        <div className='n-flex n-justify-between n-h-16 n-items-center n-py-6 md:n-justify-start md:n-space-x-10 n-mx-4'>
+          <NeoDashboardHeaderLogo resetApplication={resetApplication} />
+          <nav className='n-items-center n-justify-center n-flex n-flex-1 n-w-full n-font-semibold'>
+            {`${connection.protocol}://${connection.url}:${connection.port}`}
+          </nav>
+          <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>
+            <div className='n-flex n-flex-row n-gap-x-2'>
+              <Tooltip title={'Change Theme'} disableInteractive>
+                <DarkModeSwitch
+                  className={'ndl-icon-btn n-p-2 ndl-large ndl-clean'}
+                  style={{}}
+                  checked={isDarkMode}
+                  onChange={toggleDarkMode}
+                  size={24}
+                  sunColor={DASHBOARD_HEADER_BUTTON_COLOR || '#000000'}
+                  moonColor={'#ff0000'}
+                />
+              </Tooltip>
+              {downloadImageEnabled && <NeoDashboardHeaderDownloadImageButton onDownloadImage={onDownloadImage} />}
+              <NeoAboutButton connection={connection} onAboutModalOpen={onAboutModalOpen} />
+              <NeoLogoutButton standalone={standalone} onConnectionModalOpen={onConnectionModalOpen} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
   return content;
 };
@@ -80,11 +86,16 @@ const mapStateToProps = (state) => ({
   settings: getDashboardSettings(state),
   editable: getDashboardIsEditable(state),
   pagenumber: getPageNumber(state),
+  themeMode: getDashboardTheme(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setDashboardTitle: (title: any) => {
     dispatch(setDashboardTitle(title));
+  },
+
+  setTheme: (theme: string) => {
+    dispatch(updateDashboardSetting('theme', theme));
   },
 
   onConnectionModalOpen: () => {

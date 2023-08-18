@@ -5,6 +5,25 @@
 /* Create CSS class based components */
 /* https://tailwindcss.com/docs/reusing-styles#extracting-classes-with-apply */
 @layer components {
+  /* Page structure */
+  .page-spacing {
+    @apply n-p-2 sm:n-p-3 md:n-p-4;
+  }
+
+  .page-spacing-overflow {
+    @apply n-pb-2 sm:n-pb-3 md:n-pb-4;
+  }
+
+  /* Tabs */
+  .visible-on-tab-hover {
+    display: none;
+  }
+
+  .ndl-tab:hover .visible-on-tab-hover,
+  .ndl-tab .visible-on-tab-hover.open-menu {
+    display: inline-flex;
+  }
+
   /* Override Mui default z-index */
   .MuiAppBar-root.n-z-20 {
     z-index: 20 !important;

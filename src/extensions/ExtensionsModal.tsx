@@ -6,7 +6,7 @@ import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
 import { setExtensionReducerEnabled } from './state/ExtensionActions';
-import { Dialog, Label, SideNavigationItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
+import { Dialog, Label, MenuItem, TextLink, Typography, Checkbox, IconButton } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
 import { Section, SectionContent } from '../modal/ModalUtils';
 
@@ -15,7 +15,7 @@ const NeoExtensionsModal = ({
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
   setExtensionReducerEnabled,
-  navItemClass,
+  closeMenu,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -25,19 +25,14 @@ const NeoExtensionsModal = ({
 
   const handleClose = () => {
     setOpen(false);
+    closeMenu();
   };
 
   return (
-    <div>
-      <Tooltip title='Extensions' aria-label='extensions' disableInteractive>
-        <SideNavigationItem
-          id='extensions-sidebar-button'
-          onClick={handleClickOpen}
-          icon={<PuzzlePieceIconSolid className={navItemClass} />}
-        >
-          Extensions
-        </SideNavigationItem>
-      </Tooltip>
+    <>
+      <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
+        <PuzzlePieceIconSolid />
+      </IconButton>
 
       {open ? (
         <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
@@ -46,7 +41,7 @@ const NeoExtensionsModal = ({
             Extensions
           </Dialog.Header>
           <Dialog.Content>
-            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
+            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-neutral-border-strong'>
               <Section>
                 <SectionContent>
                   <TextLink
@@ -143,7 +138,7 @@ const NeoExtensionsModal = ({
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 };
 
