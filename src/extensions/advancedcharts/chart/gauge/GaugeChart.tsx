@@ -81,11 +81,22 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   if (arcsLengthN.length === nbOfLevels) {
     const sumArcs = arcsLengthN.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-    arcsLengthN = arcsLengthN.map((value) => ({ limit: (value / sumArcs) * maxValue }));
+    arcsLengthN = arcsLengthN.map((value) => ({ limit: ((value / sumArcs) * (maxValue - minValue)+minValue) }));
+    for (let i = 1; i < arcsLengthN.length; i++) {
+      arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
+    }
   }
-  for (let i = 1; i < arcsLengthN.length; i++) {
-    arcsLengthN[i].limit += arcsLengthN[i - 1].limit;
+
+  if (arcsLengthN.length !== nbOfLevels) {
+    const totalRange = maxValue - minValue;
+    const subArcRange = totalRange / nbOfLevels;
+  
+    arcsLengthN = Array.from({ length: nbOfLevels }, (_, index) => ({
+      limit: minValue + subArcRange * (index + 1),
+    }));
   }
+  
+  
   while (arcsLengthN.length < nbOfLevels) {
     arcsLengthN.push(1);
   }
