@@ -10,8 +10,6 @@ import { Tooltip, Snackbar } from '@mui/material';
 import { downloadCSV } from '../ChartUtils';
 import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
 
-import { Close } from '@mui/icons-material';
-
 import {
   getRule,
   executeActionRule,
@@ -20,7 +18,7 @@ import {
 } from '../../extensions/advancedcharts/Utils';
 
 import { IconButton } from '@neo4j-ndl/react';
-import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
+import { CloudArrowDownIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
@@ -221,8 +219,14 @@ export const NeoTableChart = (props: ChartProps) => {
           message='Value copied to clipboard.'
           action={
             <React.Fragment>
-              <IconButton size='small' aria-label='close' color='inherit' onClick={() => setNotificationOpen(false)}>
-                <Close fontSize='small' />
+              <IconButton
+                size='small'
+                aria-label='close'
+                color='inherit'
+                onClick={() => setNotificationOpen(false)}
+                clean
+              >
+                <XMarkIconOutline />
               </IconButton>
             </React.Fragment>
           }

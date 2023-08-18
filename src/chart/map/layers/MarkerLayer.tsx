@@ -1,7 +1,7 @@
 import React from 'react';
 import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import LocationOn from '@mui/icons-material/LocationOn';
+import { MapPinIconSolid } from '@neo4j-ndl/react/icons';
 import 'leaflet/dist/leaflet.css';
 import { Popup, Tooltip } from 'react-leaflet';
 import { Button, Typography } from '@neo4j-ndl/react';
@@ -26,7 +26,7 @@ export function createMarkers(data, props) {
   // Render a node label tooltip
   switch (defaultNodeSize) {
     case 'large':
-      markerMarginTop = '-5px';
+      markerMarginTop = '-20px';
       break;
     case 'medium':
       markerMarginTop = '3px';
@@ -128,7 +128,7 @@ export function createMarkers(data, props) {
         key={i}
         icon={
           <div style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop }}>
-            <LocationOn fontSize={node.size}></LocationOn>
+            <MapPinIconSolid fontSize={node.size} />
           </div>
         }
       >

@@ -3,13 +3,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { Card, CardHeader } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
-import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { MagnifyingGlassCircleIconOutline, PencilIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import { NestedMenuItem, IconMenuItem } from 'mui-nested-menu';
-import SearchIcon from '@mui/icons-material/Search';
 import { RenderNode, RenderNodeChip, RenderRelationshipChip } from '../../../report/ReportRecordProcessing';
 import { getNodeLabel } from '../util/NodeUtils';
 import { EditAction, EditType, GraphChartEditModal } from './GraphChartEditModal';
-import EditIcon from '@mui/icons-material/Edit';
 import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
@@ -63,7 +61,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
           }
         />
         <IconMenuItem
-          rightIcon={<SearchIcon />}
+          rightIcon={<MagnifyingGlassCircleIconOutline className='btn-icon-base-r' />}
           label='Inspect'
           onClick={() => {
             props.interactivity.setContextMenuOpen(false);
@@ -72,7 +70,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
         ></IconMenuItem>
         {props.interactivity.enableEditing ? (
           <IconMenuItem
-            rightIcon={<EditIcon />}
+            rightIcon={<PencilIconOutline className='btn-icon-base-r' />}
             label='Edit'
             onClick={() => {
               setEditableEntityType(expandable ? EditType.Node : EditType.Relationship);
