@@ -235,9 +235,9 @@ export const NeoReport = ({
     return <div></div>;
   } else if (status == QueryStatus.NO_QUERY) {
     return (
-      <div style={{ padding: 15 }}>
-        No query specified. <br /> Use the
-        <Chip style={{ backgroundColor: '#efefef' }} size='small' icon={<MoreVert />} label='Report Settings' /> button
+      <div className={'n-text-palette-neutral-text-default'} style={{ padding: 15 }}>
+        No query specified. <br /> Use the &nbsp;
+        <Chip style={{ backgroundColor: '#dddddd' }} size='small' icon={<MoreVert />} label='Report Settings' /> button
         to get started.
       </div>
     );
