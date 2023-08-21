@@ -139,4 +139,10 @@ export const themeNivo = {
   annotations: {
     text: { fill: 'rgb(var(--palette-neutral-text-default))' },
   },
+  tooltip: {
+    container: {
+      fill: 'rgb(var(--palette-neutral-text-default))',
+      background: 'rgb(var(--palette-neutral-bg-strong))',
+    },
+  },
 };
