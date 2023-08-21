@@ -32,7 +32,7 @@ const Dashboard = ({
       connection.port,
       connection.username,
       connection.password,
-      { userAgent: `neodash_v${  version}` }
+      { userAgent: `neodash/v${version}` }
     );
     setDriver(newDriver);
   }

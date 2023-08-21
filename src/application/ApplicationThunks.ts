@@ -58,7 +58,7 @@ import { version } from '../modal/AboutModal';
 export const createConnectionThunk =
   (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
-      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash_v${  version}` });
+      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
