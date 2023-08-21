@@ -190,8 +190,8 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
   // TODO: since this component is only rendered for parameter select, this is technically not needed
   const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query', 'Date Picker'];
   const selectedType = settings.type ? settings.type : 'Node Property';
-  const helperText = settings && settings.helperText ? settings.helperText : '';
-  const inputMode = settings && settings.inputMode ? settings.inputMode : 'cypher';
+  const helperText = settings?.helperText || '';
+  const inputMode = settings?.inputMode || 'cypher';
   const overridePropertyDisplayName =
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
 

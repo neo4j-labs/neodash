@@ -7,10 +7,7 @@ import NeoCodeEditorComponent, {
 } from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
-import {
-  EXTENSIONS_CARD_SETTINGS_COMPONENT,
-  getExtensionCardSettingsComponents,
-} from '../../extensions/ExtensionConfig';
+import { EXTENSIONS_CARD_SETTINGS_COMPONENT } from '../../extensions/ExtensionConfig';
 import { update } from '../../utils/ObjectManipulation';
 
 const NeoCardSettingsContent = ({
@@ -44,7 +41,7 @@ const NeoCardSettingsContent = ({
 
   const reportTypes = getReportTypes(extensions);
   const report = reportTypes[type];
-  const SettingsComponent = report && report.settingsComponent;
+  const SettingsComponent = report?.settingsComponent || {};
 
   function hasExtensionComponents() {
     return (
@@ -111,8 +108,8 @@ const NeoCardSettingsContent = ({
             value: report && reportTypes[option].label,
           })),
           value: {
-            label: report && report.label,
-            value: report && report.label,
+            label: report?.label || '',
+            value: report?.label || '',
           },
           menuPortalTarget: document.querySelector('body'),
         }}
