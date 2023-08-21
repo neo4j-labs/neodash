@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ColorPicker } from 'mui-color';
 
 const NeoColorPicker = ({ value, onChange, defaultValue, label, style }) => {
@@ -11,7 +11,14 @@ const NeoColorPicker = ({ value, onChange, defaultValue, label, style }) => {
               key={label}
               defaultValue={defaultValue}
               value={value}
-              onChange={(e) => onChange(e?.css?.backgroundColor ?? null)}
+              onChange={(e) => {
+                if (e?.css?.backgroundColor) {
+                  onChange(e?.css?.backgroundColor);
+                }
+                if (typeof e === 'string' || e instanceof String) {
+                  onChange(e);
+                }
+              }}
             />
           </div>
           <div className='ndl-form-item-wrapper'>
