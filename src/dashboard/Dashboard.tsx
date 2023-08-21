@@ -11,6 +11,7 @@ import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
+import NeoDashboardSidebar from './sidebar/DashboardSidebar';
 
 const Dashboard = ({
   pagenumber,
@@ -53,10 +54,12 @@ const Dashboard = ({
         ></NeoDashboardHeader>
       </div>
       {/* Main Page */}
+
       <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
         {/* Main Content */}
         <main className='n-flex-1 n-relative n-z-0 n-overflow-y-auto n-scroll-smooth n-w-full'>
           <div className='n-absolute n-inset-0 page-spacing'>
+            <NeoDashboardSidebar />
             <div className='page-spacing-overflow'>
               {/* The main content of the page */}
               {applicationSettings.standalonePassword ? (
