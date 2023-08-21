@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    runs-on: neodash-runners
     strategy:
       matrix:
         node-version: [18.x]
@@ -35,7 +35,7 @@ jobs:
           browser: chrome
   build-s3:
     needs: build-test
-    runs-on: ubuntu-latest
+    runs-on: neodash-runners
     strategy:
       matrix:
         node-version: [18.x]

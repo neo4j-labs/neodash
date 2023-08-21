@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
-import { applicationGetConnection } from '../../application/ApplicationSelectors';
+import { applicationGetConnection, applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
@@ -21,6 +21,7 @@ export const NeoDashboardTitle = ({
   dashboardTitle,
   setDashboardTitle,
   editable,
+  isStandalone,
   dashboardSettings,
   extensions,
   updateDashboardSetting,
@@ -47,9 +48,13 @@ export const NeoDashboardTitle = ({
   function renderExtensionsButtons() {
     const res = (
       <>
-        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name, idx) => {
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return Component ? <Component key={`ext-${idx}`} database={connection.database} /> : <></>;
+          return (
+            <Suspense fallback='' key={`extS-${name}`}>
+              {Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>}
+            </Suspense>
+          );
         })}
       </>
     );
@@ -98,20 +103,26 @@ export const NeoDashboardTitle = ({
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <Typography variant='h3'>{dashboardTitle}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
-            <IconButton
-              className='logo-btn n-p-1'
-              aria-label={'edit'}
-              size='large'
-              onClick={() => setEditing(true)}
-              clean
-            >
-              <PencilSquareIconOutline className='header-icon' type='outline' />
-            </IconButton>
+            {editable ? (
+              <IconButton
+                className='logo-btn n-p-1'
+                aria-label={'edit'}
+                size='large'
+                onClick={() => setEditing(true)}
+                clean
+              >
+                <PencilSquareIconOutline className='header-icon' type='outline' />
+              </IconButton>
+            ) : (
+              <></>
+            )}
           </Tooltip>
         </div>
       )}
-      {editable && (
+      {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
+      {!isStandalone ? (
         <div className='flex flex-row flex-wrap items-center gap-2'>
+          {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
           <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
             <EllipsisHorizontalIconOutline />
           </IconButton>
@@ -134,14 +145,22 @@ export const NeoDashboardTitle = ({
                 dashboardSettings={dashboardSettings}
                 updateDashboardSetting={updateDashboardSetting}
               ></NeoSettingsModal>
-              <NeoSaveModal />
-              <NeoLoadModal />
-              <NeoShareModal />
-              <NeoExtensionsModal closeMenu={handleSettingsMenuClose} />
-              {renderExtensionsButtons()}
+              {/* Saving, loading, extensions, sharing is only enabled when the dashboard is editable. */}
+              {editable ? (
+                <>
+                  <NeoSaveModal />
+                  <NeoLoadModal />
+                  <NeoShareModal />
+                  {renderExtensionsButtons()}
+                </>
+              ) : (
+                <></>
+              )}
             </MenuItems>
           </Menu>
         </div>
+      ) : (
+        <></>
       )}
     </div>
   );
@@ -150,6 +169,7 @@ export const NeoDashboardTitle = ({
 const mapStateToProps = (state) => ({
   dashboardTitle: getDashboardTitle(state),
   editable: getDashboardIsEditable(state),
+  isStandalone: applicationIsStandalone(state),
   dashboardSettings: getDashboardSettings(state),
   extensions: getDashboardExtensions(state),
   connection: applicationGetConnection(state),

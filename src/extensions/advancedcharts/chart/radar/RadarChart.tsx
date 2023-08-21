@@ -3,8 +3,8 @@ import { ChartProps } from '../../../../chart/Chart';
 import { ResponsiveRadar } from '@nivo/radar';
 import { evaluateRulesOnDict, useStyleRules } from '../../../styling/StyleRuleEvaluator';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
-import { extensionEnabled } from '../../../ExtensionUtils';
 import { themeNivo } from '../../../../chart/Utils';
+import { extensionEnabled } from '../../../../utils/ReportUtils';
 
 /**
  * Embeds a RadarChart (from Charts) into NeoDash.

@@ -7,10 +7,8 @@ import NeoCodeEditorComponent, {
 } from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
-import {
-  EXTENSIONS_CARD_SETTINGS_COMPONENT,
-  getExtensionCardSettingsComponents,
-} from '../../extensions/ExtensionConfig';
+import { EXTENSIONS_CARD_SETTINGS_COMPONENT } from '../../extensions/ExtensionConfig';
+import { update } from '../../utils/ObjectManipulation';
 
 const NeoCardSettingsContent = ({
   pagenumber,
@@ -42,7 +40,8 @@ const NeoCardSettingsContent = ({
   }, [query]);
 
   const reportTypes = getReportTypes(extensions);
-  const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
+  const report = reportTypes[type];
+  const SettingsComponent = report?.settingsComponent || {};
 
   function hasExtensionComponents() {
     return (
@@ -85,13 +84,13 @@ const NeoCardSettingsContent = ({
       <NeoCodeEditorComponent
         value={queryText}
         editable={true}
-        language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
+        language={report?.inputMode || 'cypher'}
         onChange={(value) => {
           updateCypherQuery(value);
         }}
         placeholder={`Enter Cypher here...`}
       />
-      <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>{reportTypes[type] && reportTypes[type].helperText}</div>
+      <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>{report?.helperText || ''}</div>
     </>
   );
 
@@ -105,17 +104,20 @@ const NeoCardSettingsContent = ({
           onChange: (newValue) =>
             newValue && onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value)),
           options: Object.keys(reportTypes).map((option) => ({
-            label: reportTypes[option].label,
-            value: reportTypes[option].label,
+            label: report && reportTypes[option].label,
+            value: report && reportTypes[option].label,
           })),
-          value: { label: reportTypes[type].label, value: reportTypes[type].label },
+          value: {
+            label: report?.label || '',
+            value: report?.label || '',
+          },
           menuPortalTarget: document.querySelector('body'),
         }}
         fluid
         style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
       />
 
-      {reportTypes[type] && reportTypes[type].disableDatabaseSelector == undefined ? (
+      {report?.disableDatabaseSelector == undefined ? (
         <Dropdown
           id='databaseSelector'
           label='Database'
@@ -143,11 +145,10 @@ const NeoCardSettingsContent = ({
       <br />
       <br />
       {/* Allow for overriding the code box with a custom component */}
-      {reportTypes[type] && reportTypes[type].settingsComponent ? (
+      {report && report.settingsComponent ? (
         <SettingsComponent
-          type={type}
           onReportSettingUpdate={onReportSettingUpdate}
-          settings={reportSettings}
+          settings={update({ helperText: report.helperText, inputMode: report.inputMode }, reportSettings)}
           database={database}
           query={query}
           onQueryUpdate={onQueryUpdate}

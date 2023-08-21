@@ -10,8 +10,8 @@ import {
   recordToNative,
   toNumber,
 } from '../ChartUtils';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { themeNivo } from '../Utils';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 interface LineChartData {
   id: string;

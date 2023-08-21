@@ -5,10 +5,10 @@ import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObj
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { createHeatmap } from './layers/HeatmapLayer';
 import { createMarkers } from './layers/MarkerLayer';
 import { createLines } from './layers/LineLayer';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
