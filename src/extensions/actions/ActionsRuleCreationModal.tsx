@@ -204,17 +204,25 @@ export const NeoCustomReportActionsModal = ({
     if (customization == 'set variable') {
       return (
         <>
+          <div style={{ marginLeft: 10, display: 'inline' }}>
+            <span
+              style={{
+                height: '2.25rem',
+                paddingTop: '0.5rem',
+                paddingBottom: '0.5rem',
+                fontSize: 'var(--font-size-body-medium)',
+                fontWeight: '700',
+                letterSpacing: '0.016rem',
+                lineHeight: '37px',
+              }}
+            >
+              $neodash_
+            </span>
+          </div>
           <TextInput
-            className='n-inline-block n-align-middle n-w-1/4 n-pr-1'
+            className='n-inline-block n-align-middle n-w-1/2 font-bold'
             fluid
-            style={{ minWidth: 80, color: 'black' }}
-            disabled={true}
-            value='$neodash_'
-          ></TextInput>
-          <TextInput
-            className='n-inline-block n-align-middle n-w-1/2'
-            fluid
-            style={{ minWidth: 150 }}
+            style={{ minWidth: 100, fontWeight: 700 }}
             placeholder=''
             value={rule.customizationValue}
             onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
@@ -224,20 +232,21 @@ export const NeoCustomReportActionsModal = ({
     } else if (customization == 'set page') {
       return (
         <>
-          <td
-            style={{
-              paddingLeft: '5px',
-              paddingRight: '0px',
-              paddingTop: '5px',
-              paddingBottom: '5px',
-            }}
-          >
-            <TextInput
-              style={{ width: '100%', color: 'black', marginRight: '-5px' }}
-              disabled={true}
-              value='name/index'
-            ></TextInput>
-          </td>
+          <div style={{ marginLeft: 15, display: 'inline-block' }}>
+            <span
+              style={{
+                height: '2.25rem',
+                paddingTop: '0.5rem',
+                paddingBottom: '0.5rem',
+                fontSize: 'var(--font-size-body-medium)',
+                fontWeight: '700',
+                letterSpacing: '0.016rem',
+                lineHeight: '36px',
+              }}
+            >
+              index/name
+            </span>
+          </div>
         </>
       );
     }
@@ -268,7 +277,7 @@ export const NeoCustomReportActionsModal = ({
             <div>
               <hr></hr>
 
-              <table>
+              <table style={{ width: '100%' }}>
                 {rules.map((rule, index) => {
                   const ruleType = RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS[type].find(
                     (el) => el.value === rule.customization
@@ -277,9 +286,9 @@ export const NeoCustomReportActionsModal = ({
                   return (
                     <>
                       <tr>
-                        <td width='2.5%' className='n-pr-1'>
+                        <td width='5%' className='n-pr-1'>
                           <span className='n-pr-1'>{index + 1}.</span>
-                          <span className='n-font-bold'>ON</span>
+                          <span className='n-font-bold'>&nbsp;ON</span>
                         </td>
                         <td width='30%'>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
@@ -328,15 +337,15 @@ export const NeoCustomReportActionsModal = ({
                             />
                           </div>
                         </td>
-                        <td width='2.5%' className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black' }}>SET</span>
+                        <td width='5%' className='n-text-center'>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>SET</span>
                         </td>
-                        <td width='45%'>
+                        <td width='40%'>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
                               className='n-align-middle n-w-1/4'
-                              style={{ minWidth: 80, display: 'inline-block' }}
+                              style={{ minWidth: 140, display: 'inline-block' }}
                               fluid
                               selectProps={{
                                 onChange: (newValue) => updateRuleField(index, 'customization', newValue.value),
@@ -353,20 +362,22 @@ export const NeoCustomReportActionsModal = ({
                           </div>
                         </td>
 
-                        <td width='2.5%' className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black' }}>TO</span>
+                        <td width='5%' className='n-text-center'>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>TO</span>
                         </td>
                         <td width='20%'>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Autocomplete
                               disableClearable={true}
+                              size='small'
+                              className='n-align-middle n-inline-block n-w-3/5'
                               id='autocomplete-label-type'
                               noOptionsText='*Specify an exact field name'
                               options={createFieldVariableSuggestionsFromRule(rule, false)}
                               value={rule.value || ''}
                               inputValue={rule.value || ''}
                               popupIcon={<></>}
-                              style={{ minWidth: 125 }}
+                              style={{ minWidth: 250 }}
                               onInputChange={(event, value) => {
                                 updateRuleField(index, 'value', value);
                               }}
@@ -380,10 +391,11 @@ export const NeoCustomReportActionsModal = ({
                           </div>
                         </td>
 
-                        <td width='2.5%'>
+                        <td width='5%'>
                           <IconButton
                             aria-label='remove rule'
                             size='medium'
+                            style={{ marginLeft: 10 }}
                             floating
                             onClick={() => {
                               setRules([...rules.slice(0, index), ...rules.slice(index + 1)]);

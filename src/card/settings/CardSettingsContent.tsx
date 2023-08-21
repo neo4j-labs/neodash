@@ -105,10 +105,13 @@ const NeoCardSettingsContent = ({
           onChange: (newValue) =>
             newValue && onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value)),
           options: Object.keys(reportTypes).map((option) => ({
-            label: reportTypes[option].label,
-            value: reportTypes[option].label,
+            label: reportTypes[type] && reportTypes[option].label,
+            value: reportTypes[type] && reportTypes[option].label,
           })),
-          value: { label: reportTypes[type].label, value: reportTypes[type].label },
+          value: {
+            label: reportTypes[type] && reportTypes[type].label,
+            value: reportTypes[type] && reportTypes[type].label,
+          },
           menuPortalTarget: document.querySelector('body'),
         }}
         fluid
