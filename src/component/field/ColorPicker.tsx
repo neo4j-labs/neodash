@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ColorPicker } from 'mui-color';
 
 const NeoColorPicker = ({ value, onChange, defaultValue, label, style }) => {
