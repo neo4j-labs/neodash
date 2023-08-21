@@ -44,8 +44,12 @@ const Dashboard = ({
         connection={connection}
         onConnectionUpdate={onConnectionUpdate}
       />
+
       {/* Navigation Bar */}
-      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b n-border-neutral-border-weak'>
+      <div
+        className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b'
+        style={{ borderColor: 'lightgrey' }}
+      >
         <NeoDashboardHeader
           connection={connection}
           onDownloadImage={onDownloadDashboardAsImage}
@@ -55,26 +59,39 @@ const Dashboard = ({
       </div>
       {/* Main Page */}
 
-      <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
-        {/* Main Content */}
-        <main className='n-flex-1 n-relative n-z-0 n-overflow-y-auto n-scroll-smooth n-w-full'>
-          <div className='n-absolute n-inset-0 page-spacing'>
-            <NeoDashboardSidebar />
-            <div className='page-spacing-overflow'>
-              {/* The main content of the page */}
-              {applicationSettings.standalonePassword ? (
-                <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
-                  Warning: NeoDash is running with a plaintext password in config.json.
+      <div
+        style={{
+          display: 'flex',
+          height: 'calc(40vh - 32px)',
+          minHeight: window.innerHeight - 62,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+      >
+        <NeoDashboardSidebar />
+        <div className='n-w-full n-h-full n-flex n-flex-col n-items-center n-justify-center n-rounded-md n-p-4'>
+          <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
+            {/* Main Content */}
+            <main className='n-flex-1 n-relative n-z-0 n-scroll-smooth n-w-full'>
+              <div className='n-absolute n-inset-0 page-spacing'>
+                {/* The main content of the page */}
+
+                <div>
+                  {applicationSettings.standalonePassword ? (
+                    <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
+                      Warning: NeoDash is running with a plaintext password in config.json.
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                  <NeoDashboardTitle />
+                  <NeoDashboardHeaderPageList />
+                  <NeoPage></NeoPage>
                 </div>
-              ) : (
-                <></>
-              )}
-              <NeoDashboardTitle />
-              <NeoDashboardHeaderPageList />
-              <NeoPage></NeoPage>
-            </div>
+              </div>
+            </main>
           </div>
-        </main>
+        </div>
       </div>
     </Neo4jProvider>
   );
