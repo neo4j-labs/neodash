@@ -123,7 +123,7 @@ export function saveNodeAndRelPropertiesToDictionary(field, fieldsDict) {
 const HtmlTooltip = withStyles((theme) => ({
   tooltip: {
     color: 'white',
-    fontSize: theme.typography.pxToRem(12),
+    fontSize: theme?.typography?.pxToRem(12) || 12,
     border: '1px solid #fcfffa',
   },
 }))(Tooltip);

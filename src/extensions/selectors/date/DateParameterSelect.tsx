@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { ParameterSelectProps } from './ParameterSelect';
 import NeoDatePicker from '../../../component/field/DateField';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
-import { isCastableToNeo4jDate, isEmptyObject } from '../../ChartUtils';
+
+import { DatePickerProps } from './DatePickerProps';
+import { isCastableToNeo4jDate, isEmptyObject } from '../Utils';
 
 function castPropsToBoltDate(dict) {
   if (isEmptyObject(dict)) {
@@ -18,7 +19,7 @@ function castPropsToJsDate(dict) {
   return new Date(dict.year, dict.month - 1, dict.day);
 }
 
-const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
+const DatePickerParameterSelectComponent = (props: DatePickerProps) => {
   const defaultValue =
     props.settings && props.settings.defaultValue && props.settings.defaultValue.length > 0
       ? props.settings.defaultValue

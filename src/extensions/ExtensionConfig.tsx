@@ -55,6 +55,16 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked.',
     link: 'https://neo4j.com/professional-services/',
   },
+  selectors: {
+    name: 'selectors',
+    label: 'Advanced Selectors',
+    author: 'Neo4j Labs',
+    image: 'advanced-visualizations.png',
+    enabled: true,
+    description:
+      'Advanced selectors let you take your dashboard to the next level. This extension adds a date picker selector.',
+    link: 'https://neo4j.com/labs/neodash/2.3/user-guide',
+  },
   // 'node-sidebar': {
   //   name: 'node-sidebar',
   //   label: 'Node Sidebar',
