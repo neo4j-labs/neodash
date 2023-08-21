@@ -10,6 +10,7 @@ import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConn
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
+import { version } from '../modal/AboutModal';
 
 const Dashboard = ({
   pagenumber,
@@ -29,7 +30,8 @@ const Dashboard = ({
       connection.url,
       connection.port,
       connection.username,
-      connection.password
+      connection.password,
+      { userAgent: `neodash/v${version}` }
     );
     setDriver(newDriver);
   }
