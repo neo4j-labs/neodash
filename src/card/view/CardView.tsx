@@ -6,7 +6,7 @@ import { CardContent } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
+import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
@@ -14,6 +14,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
 import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 const NeoCardView = ({
   id,

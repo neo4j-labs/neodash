@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { ResponsiveTreeMap } from '@nivo/treemap';
 import { mutateName, processHierarchyFromRecords, findObject, flatten } from '../../../../chart/ChartUtils';
 import { useState } from 'react';
-import { Tooltip } from '@mui/material';
-import { Refresh } from '@mui/icons-material';
+
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { themeNivo } from '../../../../chart/Utils';
+import RefreshButton from '../../component/RefreshButton';
 
 /**
  * Embeds a TreeMap (from Charts) into NeoDash.
@@ -70,26 +70,12 @@ const NeoTreeMapChart = (props: ChartProps) => {
     <>
       <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
         {refreshable ? (
-          <Tooltip title='Reset' aria-label='reset' disableInteractive>
-            <Refresh
-              onClick={() => {
-                setData(commonProperties.data);
-                setRefreshable(false);
-              }}
-              className='n-z-10'
-              style={{
-                fontSize: '1.3rem',
-                opacity: 0.6,
-                bottom: 12,
-                right: 12,
-                position: 'absolute',
-                borderRadius: '12px',
-                background: '#eee',
-              }}
-              color='disabled'
-              fontSize='small'
-            ></Refresh>
-          </Tooltip>
+          <RefreshButton
+            onClick={() => {
+              setData(commonProperties.data);
+              setRefreshable(false);
+            }}
+          ></RefreshButton>
         ) : (
           <div></div>
         )}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
@@ -48,9 +48,13 @@ export const NeoDashboardTitle = ({
   function renderExtensionsButtons() {
     const res = (
       <>
-        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name, idx) => {
+        {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return Component ? <Component key={`ext-${idx}`} database={connection.database} /> : <></>;
+          return (
+            <Suspense fallback='' key={`extS-${name}`}>
+              {Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>}
+            </Suspense>
+          );
         })}
       </>
     );

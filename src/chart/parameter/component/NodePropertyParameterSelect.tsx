@@ -153,11 +153,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         )}
         getOptionLabel={(option) => RenderSubValue(option)}
       />
-      {manualParameterSave ? (
-        <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} key={`selectionConfirmation`} />
-      ) : (
-        <></>
-      )}
+      {manualParameterSave ? <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} /> : <></>}
     </div>
   );
 };

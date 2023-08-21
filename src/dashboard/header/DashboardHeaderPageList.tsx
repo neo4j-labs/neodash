@@ -33,7 +33,7 @@ export const NeoDashboardHeaderPageList = ({
   const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
 
   const pageAddButton = (
-    <IconButton className='n-relative -n-top-1' size='large' onClick={addPage} clean>
+    <IconButton aria-label={'add page'} className='n-relative -n-top-1' size='large' onClick={addPage} clean>
       <PlusIconOutline />
     </IconButton>
   );
