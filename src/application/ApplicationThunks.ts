@@ -38,6 +38,7 @@ import {
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
 } from './ApplicationActions';
+import { version } from '../modal/AboutModal';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -56,7 +57,7 @@ import {
 export const createConnectionThunk =
   (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
     try {
-      const driver = createDriver(protocol, url, port, username, password);
+      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
