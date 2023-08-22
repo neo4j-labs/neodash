@@ -121,7 +121,7 @@ export const themeNivo = {
   textColor: 'rgb(var(--palette-neutral-text-default))',
   text: { fill: 'rgb(var(--palette-neutral-text-default))' },
   axis: {
-    ticks: { text: { fill: 'rgb(var(--palette-light-neutral-text-default))' } },
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
     legend: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
   },
   legends: {
