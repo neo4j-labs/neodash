@@ -46,6 +46,9 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
       text: {
         primary: 'rgb(var(--palette-neutral-text))',
       },
+      background: {
+        paper: 'rgb(var(--palette-neutral-bg-weak))',
+      },
     },
   });
 

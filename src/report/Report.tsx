@@ -19,6 +19,7 @@ import { getPageNumber } from '../settings/SettingsSelectors';
 import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSelectors';
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
+import { getDashboardTheme } from '../dashboard/DashboardSelectors';
 
 const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -54,6 +55,7 @@ export const NeoReport = ({
   ChartType = NeoTableChart, // The report component to render with the query results.
   prepopulateExtensionName,
   deletePrepopulationReportFunction,
+  theme,
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -276,6 +278,7 @@ export const NeoReport = ({
           updateReportSetting={updateReportSetting}
           fields={fields}
           setFields={setFields}
+          theme={theme}
         />
       </div>
     );
@@ -341,6 +344,7 @@ export const NeoReport = ({
 const mapStateToProps = (state, ownProps) => ({
   pagenumber: getPageNumber(state),
   prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
+  theme: getDashboardTheme(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
