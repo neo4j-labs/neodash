@@ -125,10 +125,10 @@ export const themeNivo = {
     legend: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
   },
   legends: {
-    text: { fill: 'rgb(var(--palette-neutral-text-weak))' },
-    title: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
-    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
-    hidden: { text: { fill: 'rgb(var(--palette-neutral-text-weak))' } },
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+    title: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    hidden: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
   },
   markers: {
     text: { fill: 'rgb(var(--palette-neutral-text-default))' },
