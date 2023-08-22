@@ -1246,6 +1246,13 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@babel/runtime@^7.22.6":
+  version "7.22.10"
+  resolved "https://pkgs.dev.azure.com/daimler-mic/_packaging/mercedes-developer-experience/npm/registry/@babel/runtime/-/runtime-7.22.10.tgz#ae3e9631fd947cb7e3610d3e9d8fef5f76696682"
+  integrity sha1-rj6WMf2UfLfjYQ0+nY/vX3ZpZoI=
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/template@^7.18.10", "@babel/template@^7.20.7":
   version "7.20.7"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.20.7.tgz#a15090c2839a83b02aa996c0b4994005841fd5a8"
@@ -2316,6 +2323,13 @@
   version "5.12.3"
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.12.3.tgz#3dffe62dccc065ddd7338e97d7be4b917004287e"
   integrity sha512-yiJZ+knaknPHuRKhRk4L6XiwppwkAahVal3LuYpvBH7GkA2g+D9WLEXOEnNYtVFUggyKf6fWGLGnx0iqzkU5YA==
+
+"@mui/icons-material@^5.14.3":
+  version "5.14.3"
+  resolved "https://pkgs.dev.azure.com/daimler-mic/_packaging/mercedes-developer-experience/npm/registry/@mui/icons-material/-/icons-material-5.14.3.tgz#26a84d52ab2fceea2856adf7a139527b3a51ae90"
+  integrity sha1-JqhNUqsvzuooVq33oTlSezpRrpA=
+  dependencies:
+    "@babel/runtime" "^7.22.6"
 
 "@mui/material@^5.12.3":
   version "5.12.3"
@@ -11861,6 +11875,11 @@ regenerator-runtime@^0.13.11, regenerator-runtime@^0.13.4:
   version "0.13.11"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
   integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
+
+regenerator-runtime@^0.14.0:
+  version "0.14.0"
+  resolved "https://pkgs.dev.azure.com/daimler-mic/_packaging/mercedes-developer-experience/npm/registry/regenerator-runtime/-/regenerator-runtime-0.14.0.tgz#5e19d68eb12d486f797e15a3c6a918f7cec5eb45"
+  integrity sha1-XhnWjrEtSG95fhWjxqkY987F60U=
 
 regenerator-transform@^0.15.1:
   version "0.15.1"
