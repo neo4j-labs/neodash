@@ -56,7 +56,7 @@ export const DashboardSidebarListItem = ({ title, selected, saved, onSelect, onS
           ) : (
             <Tooltip title='Save' aria-label='save' disableInteractive>
               <CloudArrowUpIconOutline
-                color='#966c2e'
+                color='rgb(var(--palette-warning-text))'
                 style={{ float: 'right', marginRight: '-6px' }}
                 className='btn-icon-base-r'
               />
