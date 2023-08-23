@@ -18,8 +18,8 @@ RUN yarn run build-minimal
 # production stage
 FROM nginx:alpine AS neodash
 RUN apk upgrade
-
-ENV NGINX_PORT=5005
+ARG PORT=5005
+ENV NGINX_PORT=$PORT
 
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
 COPY ./conf/default.conf.template /etc/nginx/templates/
