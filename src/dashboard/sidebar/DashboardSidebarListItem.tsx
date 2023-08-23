@@ -7,7 +7,7 @@ import {
 } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip';
 
-export const DashboardSidebarListItem = ({ title, selected, saved, onSelect, onSave }) => {
+export const DashboardSidebarListItem = ({ title, selected, saved, onSelect, onSave, onSettingsOpen }) => {
   return (
     <SideNavigationGroupHeader>
       <div style={{ display: 'contents', width: '100%' }}>
@@ -42,8 +42,8 @@ export const DashboardSidebarListItem = ({ title, selected, saved, onSelect, onS
             paddingLeft: '0px',
             marginRight: '10px',
           }}
-          onClick={() => {
-            saved == false ? onSave() : onSave();
+          onClick={(event) => {
+            saved == false ? onSave() : onSettingsOpen(event);
           }}
         >
           {saved == true ? (

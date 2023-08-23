@@ -1,63 +1,58 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { connect } from 'react-redux';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { getDashboardSettings, getDashboardTitle } from '../DashboardSelectors';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import {
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  MenuItems,
-  SideNavigation,
-  SideNavigationGroupHeader,
-  SideNavigationItem,
-  SideNavigationList,
-  TextInput,
-} from '@neo4j-ndl/react';
+import { Button, SideNavigation, SideNavigationGroupHeader, SideNavigationList, TextInput } from '@neo4j-ndl/react';
 import { removeReportThunk } from '../../page/PageThunks';
-import {
-  PlusIconOutline,
-  MagnifyingGlassIconOutline,
-  DocumentChartBarIconOutline,
-  InformationCircleIconOutline,
-  EllipsisVerticalIconOutline,
-  Cog6ToothIconOutline,
-  CircleStackIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { PlusIconOutline, MagnifyingGlassIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip';
 import { DashboardSidebarListItem } from './DashboardSidebarListItem';
-import { dashboardIsDraft } from '../../application/ApplicationSelectors';
+import { applicationGetConnectionDatabase, dashboardIsDraft } from '../../application/ApplicationSelectors';
 import { setDraft } from '../../application/ApplicationActions';
 import NeoDashboardSidebarLoadModal from './DashboardSidebarLoadModal';
 import { resetDashboardState } from '../DashboardActions';
 import NeoDashboardSidebarCreateModal from './DashboardSidebarCreateModal';
+import NeoDashboardSidebarDatabaseMenu from './DashboardSidebarDatabaseMenu';
+import NeoDashboardSidebarDashboardMenu from './DashboardSidebarDashboardMenu';
+import { loadDatabaseListFromNeo4jThunk } from '../DashboardThunks';
+import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+
+enum Menu {
+  DASHBOARD,
+  DATABASE,
+  NONE,
+}
 
 /**
  * A component responsible for rendering the sidebar on the left of the screen.
  */
-export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboard }) => {
+export const NeoDashboardSidebar = ({
+  database,
+  title,
+  draft,
+  setDraft,
+  resetLocalDashboard,
+  loadDatabaseListFromNeo4j,
+}) => {
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
   const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(-1);
+  const [dashboardDatabase, setDashboardDatabase] = React.useState(database);
+  const [databases, setDatabases] = useState([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [loadModelOpen, setLoadModalOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleSettingsMenuClose = () => {
-    setAnchorEl(null);
-  };
-  const menuOpen = Boolean(anchorEl);
+  const [searchText, setSearchText] = useState('');
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const [menuOpen, setMenuOpen] = useState(Menu.NONE);
 
   const [dashboards, setDashboards] = React.useState([
     {
       uuid: '123',
-      title: 'asdfasjiod aosifmklasl kfdmklsa  dmlkals',
+      title: 'Revenue streams 2024',
     },
     {
       uuid: '456',
-      title: 'sdflk asldakmsd axassv',
+      title: 'Human resources dashboard',
     },
   ]);
 
@@ -117,35 +112,26 @@ export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboar
         }}
       >
         <SideNavigationList>
-          <Menu
-            anchorOrigin={{
-              horizontal: 'left',
-              vertical: 'bottom',
+          <NeoDashboardSidebarDatabaseMenu
+            databases={databases}
+            selected={dashboardDatabase}
+            setSelected={setDashboardDatabase}
+            open={menuOpen == Menu.DATABASE}
+            anchorEl={menuAnchor}
+            handleClose={() => {
+              setMenuOpen(Menu.NONE);
+              setMenuAnchor(null);
             }}
-            transformOrigin={{
-              horizontal: 'left',
-              vertical: 'top',
+          />
+          <NeoDashboardSidebarDashboardMenu
+            open={menuOpen == Menu.DASHBOARD}
+            anchorEl={menuAnchor}
+            handleClose={() => {
+              setMenuOpen(Menu.NONE);
+              setMenuAnchor(null);
             }}
-            anchorEl={anchorEl}
-            open={menuOpen}
-            onClose={handleSettingsMenuClose}
-            size='large'
-          >
-            <MenuItems>
-              <MenuItem
-                onClick={() => {}}
-                title='neo4j'
-                style={{
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  color: 'rgb(var(--palette-primary-bg-strong))',
-                  borderColor: 'rgb(var(--palette-primary-bg-strong))',
-                  borderRadius: '8px',
-                }}
-              />
-              <MenuItem onClick={() => {}} title='system' />
-            </MenuItems>
-          </Menu>
+          />
+
           <SideNavigationGroupHeader>
             <div style={{ display: 'inline-block', width: '100%' }}>
               <span className='n-text-palette-neutral-text-weak' style={{ lineHeight: '28px' }}>
@@ -165,7 +151,16 @@ export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboar
                     paddingLeft: 0,
                     paddingRight: '3px',
                   }}
-                  onClick={handleSettingsMenuOpen}
+                  onClick={(event) => {
+                    setMenuOpen(Menu.DATABASE);
+                    // Only when not yet retrieved, and needed, get the list of databases from Neo4j.
+                    if (databases.length == 0) {
+                      loadDatabaseListFromNeo4j(driver, (result) => {
+                        setDatabases(result);
+                      });
+                    }
+                    setMenuAnchor(event.currentTarget);
+                  }}
                 >
                   <CircleStackIconOutline className='btn-icon-base-r' />
                 </Button>
@@ -193,17 +188,17 @@ export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboar
           </SideNavigationGroupHeader>
         </SideNavigationList>
         <SideNavigationList>
-          <SideNavigationGroupHeader>
+          <SideNavigationGroupHeader style={{ marginBottom: '10px' }}>
             <TextInput
               fluid
-              // label="Dashboards"
               size='small'
               leftIcon={<MagnifyingGlassIconOutline style={{ height: 16, marginTop: '2px' }} />}
               className='n-w-full n-mr-2'
               placeholder='Search...'
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
             />
           </SideNavigationGroupHeader>
-
           {draft ? (
             <DashboardSidebarListItem
               selected={draft}
@@ -215,24 +210,30 @@ export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboar
           ) : (
             <></>
           )}
-          {dashboards.map((d, index) => {
-            return (
-              <DashboardSidebarListItem
-                selected={!draft && selectedDashboardIndex == index}
-                title={d.title}
-                saved={true}
-                onSelect={() => {
-                  setSelectedDashboardIndex(index);
-                  if (draft) {
-                    setLoadModalOpen(true);
-                  } else {
-                    // TODO - trigger load
-                  }
-                }}
-                onSave={() => {}}
-              />
-            );
-          })}
+          {dashboards
+            .filter((d) => d.title.toLowerCase().includes(searchText.toLowerCase()))
+            .map((d, index) => {
+              return (
+                <DashboardSidebarListItem
+                  selected={!draft && selectedDashboardIndex == index}
+                  title={d.title}
+                  saved={true}
+                  onSelect={() => {
+                    setSelectedDashboardIndex(index);
+                    if (draft) {
+                      setLoadModalOpen(true);
+                    } else {
+                      // TODO - trigger load
+                    }
+                  }}
+                  onSave={() => {}}
+                  onSettingsOpen={(event) => {
+                    setMenuOpen(Menu.DASHBOARD);
+                    setMenuAnchor(event.currentTarget);
+                  }}
+                />
+              );
+            })}
         </SideNavigationList>
       </SideNavigation>
     </div>
@@ -246,12 +247,14 @@ const mapStateToProps = (state) => ({
   editable: getDashboardIsEditable(state),
   draft: dashboardIsDraft(state),
   dashboardSettings: getDashboardSettings(state),
+  database: applicationGetConnectionDatabase(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onRemovePressed: (id) => dispatch(removeReportThunk(id)),
   resetLocalDashboard: () => dispatch(resetDashboardState()),
   setDraft: (draft) => dispatch(setDraft(draft)),
+  loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoDashboardSidebar);

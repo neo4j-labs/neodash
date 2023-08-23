@@ -1,6 +1,12 @@
 import React from 'react';
 import { Button, Dialog } from '@neo4j-ndl/react';
-import { BackspaceIconOutline, ExclamationTriangleIconSolid, TrashIconSolid } from '@neo4j-ndl/react/icons';
+import {
+  BackspaceIconOutline,
+  ExclamationTriangleIconOutline,
+  ExclamationTriangleIconSolid,
+  PaperAirplaneIconOutline,
+  TrashIconSolid,
+} from '@neo4j-ndl/react/icons';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -34,7 +40,7 @@ export const NeoDashboardSidebarLoadModal = ({ open, onConfirm, handleClose }) =
           style={{ float: 'right', marginRight: '5px' }}
         >
           Continue
-          <ExclamationTriangleIconSolid className='btn-icon-base-r' />
+          <ExclamationTriangleIconOutline className='btn-icon-base-r' />
         </Button>
       </Dialog.Actions>
     </Dialog>
