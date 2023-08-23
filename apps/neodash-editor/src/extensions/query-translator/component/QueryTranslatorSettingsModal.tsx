@@ -9,7 +9,7 @@ import ClientSettings from './ClientSettings';
 import { Dialog } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 
-export const QueryTranslatorSettingsModal = ({
+const QueryTranslatorSettingsModal = ({
   open,
   setOpen,
   modelProvider,

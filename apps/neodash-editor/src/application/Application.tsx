@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import NeoNotificationModal from '../modal/NotificationModal';
+import React, { Suspense, useEffect } from 'react';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { connect } from 'react-redux';
 import {
@@ -39,16 +38,19 @@ import {
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
-import Dashboard from '../dashboard/Dashboard';
-import NeoAboutModal from '../modal/AboutModal';
-import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
+
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
-import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
-import NeoReportHelpModal from '../modal/ReportHelpModal';
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
 import { resetSessionStorage } from '../sessionStorage/SessionStorageActions';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+
+const NeoUpgradeOldDashboardModal = React.lazy(() => import('../modal/UpgradeOldDashboardModal'));
+const NeoLoadSharedDashboardModal = React.lazy(() => import('../modal/LoadSharedDashboardModal'));
+const NeoReportHelpModal = React.lazy(() => import('../modal/ReportHelpModal'));
+const NeoNotificationModal = React.lazy(() => import('../modal/NotificationModal'));
+const NeoAboutModal = React.lazy(() => import('../modal/AboutModal'));
+const Dashboard = React.lazy(() => import('../dashboard/Dashboard'));
 
 /**
  * This is the main application component for NeoDash.
@@ -122,16 +124,20 @@ const Application = ({
       className={`n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
     >
       {connected ? (
-        <Dashboard
-          onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}
-          onAboutModalOpen={onAboutModalOpen}
-          resetApplication={resetApplication}
-        ></Dashboard>
+        <Suspense fallback=''>
+          <Dashboard
+            onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}
+            onAboutModalOpen={onAboutModalOpen}
+            resetApplication={resetApplication}
+          ></Dashboard>
+        </Suspense>
       ) : (
         <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
       )}
       {/* TODO - move all models into a pop-ups (or modals) component. */}
-      <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
+      <Suspense fallback=''>
+        <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
+      </Suspense>
       <NeoConnectionModal
         open={connectionModalOpen}
         dismissable={connected}
@@ -154,19 +160,27 @@ const Application = ({
         onAboutModalOpen={onAboutModalOpen}
         resetDashboard={resetDashboard}
       ></NeoWelcomeScreenModal>
-      <NeoUpgradeOldDashboardModal
-        open={oldDashboard}
-        text={oldDashboard}
-        loadDashboard={loadDashboard}
-        clearOldDashboard={clearOldDashboard}
-      />
-      <NeoLoadSharedDashboardModal
-        shareDetails={shareDetails}
-        onResetShareDetails={onResetShareDetails}
-        onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
-      />
-      <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
-      <NeoNotificationModal></NeoNotificationModal>
+      <Suspense fallback=''>
+        <NeoUpgradeOldDashboardModal
+          open={oldDashboard}
+          text={oldDashboard}
+          loadDashboard={loadDashboard}
+          clearOldDashboard={clearOldDashboard}
+        />
+      </Suspense>
+      <Suspense fallback=''>
+        <NeoLoadSharedDashboardModal
+          shareDetails={shareDetails}
+          onResetShareDetails={onResetShareDetails}
+          onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
+        />
+      </Suspense>
+      <Suspense fallback=''>
+        <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
+      </Suspense>
+      <Suspense fallback=''>
+        <NeoNotificationModal></NeoNotificationModal>
+      </Suspense>
     </div>
   );
 };

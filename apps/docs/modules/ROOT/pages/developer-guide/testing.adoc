@@ -8,19 +8,19 @@ instructions].
 After cypress is installed, you can use:
 
 ....
-yarn run test
+yarn test:editor
 ....
 
 To open the Cypress GUN. Alternatively, use:
 
 ....
-yarn run test-headless
+yarn test-headless:editor
 ....
 
 To run Cypress from the UI.
 
 Before starting the tests, make sure you have a local instance of
-NeoDash running at `http://localhost:3000` using `yarn run dev`.
+NeoDash running at `http://localhost:3000` using `yarn start:editor`.
 
 image:cypress.png[Cypress] Above: a screenshot of the Cypress GUI.
 

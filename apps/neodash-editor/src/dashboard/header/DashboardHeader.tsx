@@ -11,6 +11,8 @@ import { NeoLogoutButton } from './DashboardHeaderLogoutButton';
 import { NeoDashboardHeaderDownloadImageButton } from './DashboardHeaderDownloadImageButton';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
+import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
+import { Tooltip } from '@mui/material';
 
 export const NeoDashboardHeader = ({
   standalone,
@@ -49,20 +51,25 @@ export const NeoDashboardHeader = ({
       <div className='n-min-w-full'>
         <div className='n-flex n-justify-between n-h-16 n-items-center n-py-6 md:n-justify-start md:n-space-x-10 n-mx-4'>
           <NeoDashboardHeaderLogo resetApplication={resetApplication} />
-          <nav className='n-items-center n-justify-center n-flex n-flex-1 n-w-full'>
+          <nav className='n-items-center n-justify-center n-flex n-flex-1 n-w-full n-font-semibold'>
             {`${connection.protocol}://${connection.url}:${connection.port}`}
           </nav>
           <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>
             <div className='n-flex n-flex-row n-gap-x-2'>
-              <div className='ndl-icon-btn logo-btn n-p-1 ndl-large ndl-clean'>
-                <DarkModeSwitch
-                  style={{}}
-                  checked={isDarkMode}
-                  onChange={toggleDarkMode}
-                  size={24}
-                  moonColor={'#ff0000'}
-                />
-              </div>
+              <Tooltip title={'Change Theme'} disableInteractive>
+                <div>
+                  <DarkModeSwitch
+                    className={'ndl-icon-btn n-p-2 ndl-large ndl-clean'}
+                    style={{}}
+                    checked={isDarkMode}
+                    onChange={toggleDarkMode}
+                    size={24}
+                    sunColor={DASHBOARD_HEADER_BUTTON_COLOR || '#000000'}
+                    moonColor={'#ff0000'}
+                  />
+                </div>
+              </Tooltip>
+
               {downloadImageEnabled && <NeoDashboardHeaderDownloadImageButton onDownloadImage={onDownloadImage} />}
               <NeoAboutButton connection={connection} onAboutModalOpen={onAboutModalOpen} />
               <NeoLogoutButton standalone={standalone} onConnectionModalOpen={onConnectionModalOpen} />

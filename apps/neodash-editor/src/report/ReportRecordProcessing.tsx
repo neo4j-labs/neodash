@@ -248,7 +248,7 @@ function RenderPath(value) {
 function RenderArray(value) {
   const mapped = value.map((v, i) => {
     return (
-      <div>
+      <div key={String(`k${i}`) + v}>
         {RenderSubValue(v)}
         {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
       </div>
@@ -261,7 +261,7 @@ function RenderString(value) {
   const str = value?.toString() || '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
-      <TextLink externalLink target='_blank' href={str}>
+      <TextLink key={value} externalLink target='_blank' href={str}>
         {str}
       </TextLink>
     );

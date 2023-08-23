@@ -5,8 +5,7 @@ development environment.
 
 == Run & Build using yarn
 
-NeoDash is built with React. You will need `yarn` installed to run the web
-app.
+NeoDash is built with React. You will need `yarn` installed to run the web app.
 
 ____
 Use a recent version of `yarn` and `node` to build NeoDash. The
@@ -18,13 +17,13 @@ To run the application in development mode:
 - https://github.com/neo4j-labs/neodash[clone this repository.]
 - open a terminal and navigate to the directory you just cloned. 
 - run `yarn install` to install the necessary dependencies. 
-- run `yarn run dev` to run the app in development mode. 
+- run `yarn run start:editor` to run the app in development mode. 
 - the application should be available at http://localhost:3000.
 
 To build the app for production: 
 
 - follow the steps above to clone the repository and install dependencies. 
-- execute `yarn run build`. This will create a `build` folder in your project directory. 
+- execute `yarn run build:editor`. This will create a `build` folder in your `neodash-editor` directory. 
 - deploy the contents of the build folder to a web server. You should then be able to run the web app.
 
 == Run locally with Docker

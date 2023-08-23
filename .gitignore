@@ -43,3 +43,6 @@ jspm_packages
 + .turbo
 */.turbo
 **/.turbo
+# Sentry Auth Token
+.env.sentry-build-plugin
+**/.nyc_output

@@ -1,7 +1,7 @@
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai';
 import { reportTypesToDesc, reportExampleQueries } from '../const';
 import { ModelClient } from '../ModelClient';
-import { Status } from '../../component/ClientSettings';
+import { Status } from '../../util/Status';
 
 const consoleLogAsync = async (message: string, other?: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));

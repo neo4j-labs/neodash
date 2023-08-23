@@ -10,7 +10,8 @@ import {
   recordToNative,
   toNumber,
 } from '../ChartUtils';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
+import { themeNivo } from '../Utils';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 interface LineChartData {
   id: string;
@@ -193,6 +194,7 @@ const NeoLineChart = (props: ChartProps) => {
   const lineViz = (
     <div className='n-h-full n-w-full overflow-hidden'>
       <ResponsiveLine
+        theme={themeNivo}
         data={data}
         xScale={
           isTimeChart

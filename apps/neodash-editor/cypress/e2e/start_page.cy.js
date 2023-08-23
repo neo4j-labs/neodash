@@ -27,7 +27,7 @@ describe('NeoDash E2E Tests', () => {
       },
     });
 
-    cy.get('#form-dialog-title', { timeout: 2000 }).should('be.visible');
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'NeoDash - Neo4j Dashboard Builder').click();
 
     cy.get('#form-dialog-title').then(($div) => {
       const text = $div.text();
@@ -43,7 +43,7 @@ describe('NeoDash E2E Tests', () => {
     //     cy.contains('Yes').click()
     // }
 
-    cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j');
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'Connect to Neo4j');
 
     // Connect to Neo4j database
     // cy.get('#protocol').click()
@@ -279,7 +279,7 @@ describe('NeoDash E2E Tests', () => {
 });
 
 function enableAdvancedVisualizations() {
-  cy.get('#extensions-sidebar-button').should('be.visible').click();
+  cy.get('main button[aria-label="Extensions').should('be.visible').click();
   cy.get('#checkbox-advanced-charts').should('be.visible').click();
   cy.get('.ndl-dialog-close').scrollIntoView().should('be.visible').click();
   cy.wait(200);
@@ -321,6 +321,9 @@ function checkInitialState() {
 
 function createCard() {
   // Check the starter cards
-  cy.get('main .react-grid-item:eq(2)  button[aria-label="add report"]').click();
+  cy.get('main .react-grid-item button[aria-label="add report"]', { timeout: WAITING_TIME })
+    .should('be.visible')
+    .click();
+  cy.wait(1000);
   cy.get('main .react-grid-item:eq(2)').should('contain', 'No query specified.');
 }

@@ -10,6 +10,18 @@
   },
   "scripts": {
     "clean:packages": "yarn global add del-cli && del-cli node_modules && del-cli **/*/node_modules",
-    "start:demos": "turbo run start"
+    "format:all": "turbo run format",
+    "lint:all": "turbo run lint",
+    "lint-staged:all": "turbo run lint-staged",
+    "start:all": "turbo run start",
+    "start:editor": "turbo run start --scope neodash-editor",
+    "start:docs": "turbo run start --scope docs",
+    "start:gallery": "turbo run start --scope neodash-gallery",
+    "build:editor": "turbo run build --scope neodash-editor",
+    "build:docs": "turbo run build --scope docs",
+    "build:gallery": "turbo run build --scope neodash-gallery",
+    "build-minimal:editor": "turbo run build --scope neodash-editor",
+    "test:editor": "turbo run test --scope neodash-editor",
+    "test-headless:editor": "turbo run test-headless --scope neodash-editor"
   }
 }

@@ -5,8 +5,8 @@ This is the source code for the NeoDash dashboard gallery located at [https://ne
 This app is built with React, Tailwind and the Neo4j Design Language.
 
 - `yarn install` installs the dependencies.
-- `yarn start` runs the app in development mode.
-- `yarn build` builds the app for production.
+- `yarn start:gallery` runs the app in development mode.
+- `yarn build:gallery` builds the app for production.
 
 ## Contribute to the Gallery
 Want to add a dashboard to the gallery?

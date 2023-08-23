@@ -6,7 +6,8 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    runs-on: neodash-runners
     strategy:
       matrix:
         node-version: [18.x]
@@ -26,14 +27,16 @@ jobs:
       - run: yarn global add turbo
       - run: yarn install
       - name: Eslint check
-        run: turbo run lint
+        run: yarn lint:all
+      - name: Copy cypress config to root folder for execution
+        run: cp -r apps/neodash-editor/cypress .
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
           config-file: apps/neodash-editor/cypress-config.ts
-          build: turbo run build --filter neodash-editor
-          start: turbo run start --filter neodash-editor
-          wait-on: 'http://localhost:3000'
+          build: yarn build:editor
+          start: yarn start:editor
+          wait-on: "http://localhost:3000"
           browser: chrome
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

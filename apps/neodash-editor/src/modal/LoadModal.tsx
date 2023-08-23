@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { TextareaAutosize, Tooltip } from '@mui/material';
+import { TextareaAutosize } from '@mui/material';
 import { connect } from 'react-redux';
 import {
   loadDashboardFromNeo4jByUUIDThunk,
