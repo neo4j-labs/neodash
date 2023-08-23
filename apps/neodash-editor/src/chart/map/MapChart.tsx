@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ChartProps } from '../Chart';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../../chart/ChartUtils';
+import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../ChartUtils';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';

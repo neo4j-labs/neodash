@@ -3,7 +3,7 @@ import NeoCodeEditorComponent from '../component/editor/CodeEditorComponent';
 import NeoReport from '../report/Report';
 import { Dialog, MenuItem } from '@neo4j-ndl/react';
 import { ChartBarIconSolid } from '@neo4j-ndl/react/icons';
-import { Section, SectionTitle, SectionContent } from '../modal/ModalUtils';
+import { Section, SectionTitle, SectionContent } from './ModalUtils';
 import { enterHandler } from '../utils/accessibility';
 
 export const NeoReportExamplesModal = ({ database, examples, extensions }) => {

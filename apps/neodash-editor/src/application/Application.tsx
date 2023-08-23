@@ -15,13 +15,13 @@ import {
   applicationGetStandaloneSettings,
   applicationGetSsoSettings,
   applicationHasReportHelpModalOpen,
-} from '../application/ApplicationSelectors';
+} from './ApplicationSelectors';
 import {
   createConnectionThunk,
   createConnectionFromDesktopIntegrationThunk,
   onConfirmLoadSharedDashboardThunk,
   loadApplicationConfigThunk,
-} from '../application/ApplicationThunks';
+} from './ApplicationThunks';
 import {
   clearNotification,
   resetShareDetails,
@@ -34,7 +34,7 @@ import {
   setReportHelpModalOpen,
   setWaitForSSO,
   setWelcomeScreenOpen,
-} from '../application/ApplicationActions';
+} from './ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
