@@ -28,6 +28,7 @@ jobs:
       - run: yarn install
       - name: Eslint check
         run: yarn lint:all
+      - run: mv apps/neodash-editor/cypress . 
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
