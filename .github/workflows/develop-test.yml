@@ -29,7 +29,7 @@ jobs:
       - name: Eslint check
         run: yarn lint:all
       - name: Copy cypress config to root folder for execution
-        run: cp apps/neodash-editor/cypress .
+        run: cp -r apps/neodash-editor/cypress .
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
