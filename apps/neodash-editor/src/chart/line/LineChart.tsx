@@ -23,20 +23,20 @@ interface LineChartData {
 const NeoLineChart = (props: ChartProps) => {
   const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
 
-  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <>No data, re-run the report.</>;
-  }
   const { records, selection } = props;
-
-  if (!selection || !selection.value || selection.value.length == 0) {
-    return <div style={{ margin: '15px' }}>No y-axis selected. To view the report, select a value below. </div>;
-  }
 
   const [isTimeChart, setIsTimeChart] = React.useState(false);
   const [validSelection, setValidSelection] = React.useState(true);
 
   const [parseFormat, setParseFormat] = React.useState('%Y-%m-%dT%H:%M:%SZ');
   const [data, setData] = React.useState([]);
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
+  if (!selection || !selection.value || selection.value.length == 0) {
+    return <div style={{ margin: '15px' }}>No y-axis selected. To view the report, select a value below. </div>;
+  }
 
   const settings = props.settings ? props.settings : {};
 
@@ -66,6 +66,7 @@ const NeoLineChart = (props: ChartProps) => {
 
   const xTickRotationAngle = settings.xTickRotationAngle != undefined ? settings.xTickRotationAngle : 0;
   const yTickRotationAngle = settings.yTickRotationAngle != undefined ? settings.yTickRotationAngle : 0;
+
   const styleRules = useStyleRules(
     extensionEnabled(props.extensions, 'styling'),
     props.settings.styleRules,

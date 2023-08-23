@@ -11,14 +11,15 @@ import { mutateName, processHierarchyFromRecords, findObject, flatten } from '..
  * Embeds a CirclePackaging (from Charts) into NeoDash.
  */
 const NeoCirclePackingChart = (props: ChartProps) => {
-  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <>No data, re-run the report.</>;
-  }
   const { records } = props;
   const { selection } = props;
   const [data, setData] = useState(undefined);
   const [commonProperties, setCommonProperties] = useState({ data: { name: 'Total', children: [] } });
   const [refreshable, setRefreshable] = useState(false);
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;

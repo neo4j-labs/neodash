@@ -12,19 +12,7 @@ import chroma from 'chroma-js';
 const NeoScatterPlot = (props: ChartProps) => {
   const POSSIBLE_TIME_FORMATS = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
 
-  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <>No data, re-run the report.</>;
-  }
-
   const { records, selection } = props;
-
-  if (!selection || !selection.value || selection.value.length == 0) {
-    return <div style={{ margin: '15px' }}>No y-axis selected. To view the report, select a value below. </div>;
-  }
-
-  if (!selection.value.length) {
-    return <p></p>;
-  }
 
   const [keepLegend, setKeepLegend] = React.useState(false);
   const [isTimeChart, setIsTimeChart] = React.useState(false);
@@ -37,6 +25,18 @@ const NeoScatterPlot = (props: ChartProps) => {
 
   const [intensities, setIntensities] = React.useState<number[]>([]);
   const [legendRange, setLegendRange] = React.useState({ min: 1, max: 2 });
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
+
+  if (!selection || !selection.value || selection.value.length == 0) {
+    return <div style={{ margin: '15px' }}>No y-axis selected. To view the report, select a value below. </div>;
+  }
+
+  if (!selection.value.length) {
+    return <p></p>;
+  }
 
   const settings = props.settings ? props.settings : {};
 
