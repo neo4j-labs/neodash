@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
 import { Button, Dialog, Switch, TextInput, Dropdown, TextLink } from '@neo4j-ndl/react';
 import { PlayIconOutline } from '@neo4j-ndl/react/icons';
@@ -140,7 +140,6 @@ export default function NeoConnectionModal({
             <TextInput
               id='dbusername'
               value={username}
-              disabled={standalone}
               onChange={(e) => setUsername(e.target.value)}
               label='Username'
               placeholder='neo4j'
@@ -158,7 +157,6 @@ export default function NeoConnectionModal({
               <TextInput
                 id='dbpassword'
                 value={password}
-                disabled={standalone}
                 onChange={(e) => setPassword(e.target.value)}
                 label='Password'
                 placeholder='neo4j'

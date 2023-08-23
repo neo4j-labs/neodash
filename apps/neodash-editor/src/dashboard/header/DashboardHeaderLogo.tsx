@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { DASHBOARD_HEADER_BRAND_LOGO } from '../../config/ApplicationConfig';
+import { DASHBOARD_HEADER_BRAND_LOGO, IS_CUSTOM_LOGO } from '../../config/ApplicationConfig';
 import StyleConfig from '../../config/StyleConfig';
 import { Typography } from '@neo4j-ndl/react';
 
@@ -12,7 +12,7 @@ export const NeoDashboardHeaderLogo = ({ resetApplication }) => {
       <a className='n-cursor-pointer'>
         <img onClick={resetApplication} className='n-h-6 n-w-auto n-m-2' src={DASHBOARD_HEADER_BRAND_LOGO} alt='Logo' />
       </a>
-      <Typography variant='h6'>Labs</Typography>
+      {IS_CUSTOM_LOGO ? <></> : <Typography variant='h6'>Labs</Typography>}
     </div>
   );
 

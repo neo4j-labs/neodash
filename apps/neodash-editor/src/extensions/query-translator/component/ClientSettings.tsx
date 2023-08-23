@@ -11,21 +11,16 @@ import {
   setModelProvider,
 } from '../state/QueryTranslatorActions';
 import {
-  PlayCircleIconSolid,
   CheckCircleIconSolid,
-  PlayIconSolid,
   ExclamationTriangleIconSolid,
+  PlayCircleIconSolid,
+  PlayIconSolid,
 } from '@neo4j-ndl/react/icons';
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
+import { Status } from '../util/Status';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
-
-export enum Status {
-  NOT_AUTHENTICATED,
-  AUTHENTICATED,
-  ERROR,
-}
 
 // TODO: the following
 // 1. the settings modal should save only when all the required fields are defined and we can correctly authenticate

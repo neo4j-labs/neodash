@@ -4,17 +4,14 @@ import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import { CardContent } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
+import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
-import { ThemeProvider } from '@mui/material/styles';
-import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
-import { tokens } from '@neo4j-ndl/base';
 import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 const NeoCardView = ({
   id,
@@ -79,30 +76,22 @@ const NeoCardView = ({
 
   // @ts-ignore
   const reportHeader = (
-    <ThemeProvider
-      theme={
-        settings.backgroundColor && luma(settings.backgroundColor) < (dashboardSettings.darkLuma || 40)
-          ? darkHeaderTheme
-          : lightTheme
-      }
-    >
-      <NeoCardViewHeader
-        title={title}
-        editable={editable}
-        description={settings.description}
-        fullscreenEnabled={settings.fullscreenEnabled}
-        downloadImageEnabled={settings.downloadImageEnabled}
-        refreshButtonEnabled={settings.refreshButtonEnabled}
-        onTitleUpdate={onTitleUpdate}
-        onToggleCardSettings={onToggleCardSettings}
-        onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
-        settings={settings}
-        onDownloadImage={onDownloadImage}
-        onToggleCardExpand={onToggleCardExpand}
-        expanded={expanded}
-        parameters={getLocalParameters(title)}
-      ></NeoCardViewHeader>
-    </ThemeProvider>
+    <NeoCardViewHeader
+      title={title}
+      editable={editable}
+      description={settings.description}
+      fullscreenEnabled={settings.fullscreenEnabled}
+      downloadImageEnabled={settings.downloadImageEnabled}
+      refreshButtonEnabled={settings.refreshButtonEnabled}
+      onTitleUpdate={onTitleUpdate}
+      onToggleCardSettings={onToggleCardSettings}
+      onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
+      settings={settings}
+      onDownloadImage={onDownloadImage}
+      onToggleCardExpand={onToggleCardExpand}
+      expanded={expanded}
+      parameters={getLocalParameters(title)}
+    ></NeoCardViewHeader>
   );
 
   // @ts-ignore
@@ -224,7 +213,7 @@ const NeoCardView = ({
 
   return (
     <div
-      className={`card-view n-bg-palette-neutral-bg-strong ${expanded ? 'expanded' : ''}`}
+      className={`card-view n-bg-palette-neutral-bg-weak ${expanded ? 'expanded' : ''}`}
       style={settings && settings.backgroundColor ? { backgroundColor: settings.backgroundColor } : {}}
     >
       {reportHeader}

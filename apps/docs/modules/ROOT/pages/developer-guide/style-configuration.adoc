@@ -1,0 +1,48 @@
+= Style Configuration
+
+When using a custom NeoDash deployment, there are several theme variables that
+can be configured. These mostly relate to css tokens for
+link:https://cdn.jsdelivr.net/npm/@neo4j-ndl/base@1.4.0/lib/tokens/css/tokens.css[Needle] and some other brand specific options.
+
+For a simple (non-Dockerized) deployment, these configuration parameters
+can be changed by modifying `dist/style.config.json` after you have built the
+application. When Docker image, these can not be passed as environment
+variables.
+
+An example configuration for NeoDash
+
+....
+{
+  "DASHBOARD_HEADER_BRAND_LOGO": "logo_lightsand.png",
+  "DASHBOARD_HEADER_COLOR" : "#F3F3F0",
+  "DASHBOARD_HEADER_BUTTON_COLOR" : "#009999",
+  "DASHBOARD_HEADER_TITLE_COLOR" : "#00C1B6",
+  "DASHBOARD_PAGE_LIST_COLOR" : "#F3F3F0",
+  "DASHBOARD_PAGE_LIST_ACTIVE_COLOR": "#009999",
+  "style": {
+    "--palette-light-neutral-bg-weak" : "243, 243, 240"
+  }
+}
+....
+
+== Configuration Options
+
+[width="100%",cols="19%,17%,26%,38%",options="header",]
+|===
+|Name |Type |Default Value |Description
+|DASHBOARD_HEADER_BRAND_LOGO |string |undefined |This variable defines the name of the logo file located on the public folder of the Neodash deployment, if you want your own logo instead of the Neo4j one.
+
+|DASHBOARD_HEADER_COLOR |string |#0B297D |Determines the color of the header.
+
+|DASHBOARD_HEADER_BUTTON_COLOR |string |#FFFFFF22 |Determines the color of the header buttons.
+
+|DASHBOARD_HEADER_TITLE_COLOR |string |#FFFFFF |Determines the color of the header title.
+
+|DASHBOARD_PAGE_LIST_COLOR |string |#F0F0F0 |Determines the color of the page selector tabs.
+
+|DASHBOARD_PAGE_LIST_ACTIVE_COLOR |string |#FFFFFF |Determines the color of the page selector active tabs.
+
+|style |object |{} | Determines css needle tokens that should be overridden at the root level. Colors should be defined with an rgb comma separated string (e.g "243, 243, 240")
+
+
+|===

@@ -5,14 +5,13 @@ import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../config/ReportConfig';
-import { MoreVert } from '@mui/icons-material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
 import { LoadingSpinner } from '@neo4j-ndl/react';
-import { ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
+import { EllipsisVerticalIconOutline, ExclamationTriangleIconSolid } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
 import { setPageNumberThunk } from '../settings/SettingsThunks';
 import { EXTENSIONS } from '../extensions/ExtensionConfig';
@@ -20,6 +19,7 @@ import { getPageNumber } from '../settings/SettingsSelectors';
 import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSelectors';
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
+import { getDashboardTheme } from '../dashboard/DashboardSelectors';
 
 const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -37,7 +37,7 @@ export const NeoReport = ({
   setFields = (f) => {
     fields = f;
   }, // The callback to update the set of query fields after query execution.
-  setSchema,
+  setSchemaDispatch,
   setGlobalParameter = () => {}, // callback to update global (dashboard) parameters.
   getGlobalParameter = (_: string) => {
     return '';
@@ -55,6 +55,7 @@ export const NeoReport = ({
   ChartType = NeoTableChart, // The report component to render with the query results.
   prepopulateExtensionName,
   deletePrepopulationReportFunction,
+  theme,
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -69,6 +70,11 @@ export const NeoReport = ({
 
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
+  const setSchema = (id, schema) => {
+    if (type === 'graph' || type === 'map') {
+      setSchemaDispatch(id, schema);
+    }
+  };
   const populateReport = (debounced = true) => {
     // If this is a 'text-only' report, no queries are ran, instead we pass the input directly to the report.
     const reportTypes = getReportTypes(extensions);
@@ -230,10 +236,15 @@ export const NeoReport = ({
     return <div></div>;
   } else if (status == QueryStatus.NO_QUERY) {
     return (
-      <div style={{ padding: 15 }}>
-        No query specified. <br /> Use the
-        <Chip style={{ backgroundColor: '#efefef' }} size='small' icon={<MoreVert />} label='Report Settings' /> button
-        to get started.
+      <div className={'n-text-palette-neutral-text-default'} style={{ padding: 15 }}>
+        No query specified. <br /> Use the &nbsp;
+        <Chip
+          style={{ backgroundColor: '#dddddd' }}
+          size='small'
+          icon={<EllipsisVerticalIconOutline className='btn-icon-base-r' />}
+          label='Report Settings'
+        />{' '}
+        button to get started.
       </div>
     );
   } else if (status == QueryStatus.RUNNING) {
@@ -247,7 +258,10 @@ export const NeoReport = ({
       return <div>Loading...</div>;
     }
     return (
-      <div style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}>
+      <div
+        className={'n-text-palette-neutral-text-default'}
+        style={{ height: '100%', marginTop: '0px', overflow: reportTypes[type].allowScrolling ? 'auto' : 'hidden' }}
+      >
         <ChartType
           setPageNumber={setPageNumber}
           records={records}
@@ -264,6 +278,7 @@ export const NeoReport = ({
           updateReportSetting={updateReportSetting}
           fields={fields}
           setFields={setFields}
+          theme={theme}
         />
       </div>
     );
@@ -329,6 +344,7 @@ export const NeoReport = ({
 const mapStateToProps = (state, ownProps) => ({
   pagenumber: getPageNumber(state),
   prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
+  theme: getDashboardTheme(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -341,7 +357,7 @@ const mapDispatchToProps = (dispatch) => ({
   getCustomDispatcher: () => {
     return dispatch;
   },
-  setSchema: (id: any, schema: any) => {
+  setSchemaDispatch: (id: any, schema: any) => {
     dispatch(updateFieldsThunk(id, schema, true));
   },
 });
