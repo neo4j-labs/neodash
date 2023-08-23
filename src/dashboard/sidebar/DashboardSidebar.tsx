@@ -6,6 +6,9 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import {
   Button,
   IconButton,
+  Menu,
+  MenuItem,
+  MenuItems,
   SideNavigation,
   SideNavigationGroupHeader,
   SideNavigationItem,
@@ -20,6 +23,7 @@ import {
   InformationCircleIconOutline,
   EllipsisVerticalIconOutline,
   Cog6ToothIconOutline,
+  CircleStackIconOutline,
 } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip';
 import { DashboardSidebarListItem } from './DashboardSidebarListItem';
@@ -37,6 +41,15 @@ export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboar
   const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(-1);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [loadModelOpen, setLoadModalOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleSettingsMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const menuOpen = Boolean(anchorEl);
+
   const [dashboards, setDashboards] = React.useState([
     {
       uuid: '123',
@@ -104,12 +117,44 @@ export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboar
         }}
       >
         <SideNavigationList>
+          <Menu
+            anchorOrigin={{
+              horizontal: 'left',
+              vertical: 'bottom',
+            }}
+            transformOrigin={{
+              horizontal: 'left',
+              vertical: 'top',
+            }}
+            anchorEl={anchorEl}
+            open={menuOpen}
+            onClose={handleSettingsMenuClose}
+            size='large'
+          >
+            <MenuItems>
+              <MenuItem
+                onClick={() => {}}
+                title='neo4j'
+                style={{
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  color: 'rgb(var(--palette-primary-bg-strong))',
+                  borderColor: 'rgb(var(--palette-primary-bg-strong))',
+                  borderRadius: '8px',
+                }}
+              />
+              <MenuItem onClick={() => {}} title='system' />
+            </MenuItems>
+          </Menu>
           <SideNavigationGroupHeader>
             <div style={{ display: 'inline-block', width: '100%' }}>
-              <span style={{ lineHeight: '28px' }}>Dashboards</span>
-              <Tooltip title='Settings' aria-label='settings' disableInteractive>
+              <span className='n-text-palette-neutral-text-weak' style={{ lineHeight: '28px' }}>
+                Dashboards
+              </span>
+
+              <Tooltip title='Database' aria-label='database' disableInteractive>
                 <Button
-                  aria-label={'new dashboard'}
+                  aria-label={'settings'}
                   fill='text'
                   size='small'
                   color='neutral'
@@ -120,11 +165,12 @@ export const NeoDashboardSidebar = ({ title, draft, setDraft, resetLocalDashboar
                     paddingLeft: 0,
                     paddingRight: '3px',
                   }}
-                  onClick={() => {}}
+                  onClick={handleSettingsMenuOpen}
                 >
-                  <Cog6ToothIconOutline className='btn-icon-base-r' />
+                  <CircleStackIconOutline className='btn-icon-base-r' />
                 </Button>
               </Tooltip>
+
               <Tooltip title='Create' aria-label='create' disableInteractive>
                 <Button
                   aria-label={'new dashboard'}
