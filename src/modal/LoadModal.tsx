@@ -15,6 +15,7 @@ import {
   PlayIconSolid,
   DatabaseAddCircleIcon,
   DocumentPlusIconOutline,
+  CloudArrowDownIconOutline,
 } from '@neo4j-ndl/react/icons';
 
 /**
@@ -97,11 +98,11 @@ export const NeoLoadModal = ({
 
   return (
     <>
-      <MenuItem title='Load' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
+      <MenuItem title='Load' onClick={handleClickOpen} icon={<CloudArrowDownIconOutline />} />
 
       <Dialog size='large' open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          <CloudArrowUpIconOutline className='icon-base icon-inline text-r' />
+          <CloudArrowDownIconOutline className='icon-base icon-inline text-r' />
           Load Dashboard
         </Dialog.Header>
         <Dialog.Content>

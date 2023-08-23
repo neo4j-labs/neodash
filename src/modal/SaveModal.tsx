@@ -11,6 +11,7 @@ import {
   DatabaseAddCircleIcon,
   DocumentArrowDownIconOutline,
   BackspaceIconOutline,
+  CloudArrowUpIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { Button, Checkbox, Dialog, Dropdown, MenuItem } from '@neo4j-ndl/react';
 
@@ -88,11 +89,11 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
 
   return (
     <>
-      <MenuItem title='Save' onClick={handleClickOpen} icon={<CloudArrowDownIconOutline />} />
+      <MenuItem title='Save' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
 
       <Dialog size='large' open={saveModalOpen} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          <CloudArrowDownIconOutline className='icon-base icon-inline text-r' aria-label={'save cloud'} />
+          <CloudArrowUpIconOutline className='icon-base icon-inline text-r' aria-label={'save cloud'} />
           Save Dashboard
         </Dialog.Header>
         <Dialog.Content>

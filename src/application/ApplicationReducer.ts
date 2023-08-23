@@ -2,7 +2,9 @@
  * Reducers define changes to the application state when a given action is taken.
  */
 
+import { HARD_RESET_CARD_SETTINGS } from '../card/CardActions';
 import { DEFAULT_NEO4J_URL } from '../config/ApplicationConfig';
+import { UPDATE_DASHBOARD_SETTING } from '../settings/SettingsActions';
 import {
   CLEAR_DESKTOP_CONNECTION_PROPERTIES,
   CLEAR_NOTIFICATION,
@@ -15,6 +17,7 @@ import {
   SET_CONNECTION_PROPERTIES,
   SET_DASHBOARD_TO_LOAD_AFTER_CONNECTING,
   SET_DESKTOP_CONNECTION_PROPERTIES,
+  SET_DRAFT,
   SET_OLD_DASHBOARD,
   SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING,
   SET_REPORT_HELP_MODAL_OPEN,
@@ -35,6 +38,7 @@ const initialState = {
   notificationMessage: null,
   connectionModalOpen: false,
   welcomeScreenOpen: true,
+  draft: false,
   aboutModalOpen: false,
   connection: {
     protocol: 'neo4j',
@@ -54,6 +58,16 @@ const initialState = {
 export const applicationReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
 
+  // if anything changes EXCEPT for the selected page, we flag that we are drafting a dashboard.
+  // This is a special application-level flag used to determine whether the dashboard needs to be saved to the database.
+  if (action.type.startsWith('DASHBOARD/') || action.type.startsWith('PAGE/') || action.type.startsWith('CARD/')) {
+    if (!state.draft && ![UPDATE_DASHBOARD_SETTING, HARD_RESET_CARD_SETTINGS].includes(type)) {
+      console.log(action.type);
+      state = update(state, { draft: true });
+      return state;
+    }
+  }
+
   if (!action.type.startsWith('APPLICATION/')) {
     return state;
   }
@@ -72,6 +86,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
     case SET_CONNECTED: {
       const { connected } = payload;
       state = update(state, { connected: connected });
+      return state;
+    }
+    case SET_DRAFT: {
+      const { draft } = payload;
+      state = update(state, { draft: draft });
       return state;
     }
     case SET_CONNECTION_MODAL_OPEN: {

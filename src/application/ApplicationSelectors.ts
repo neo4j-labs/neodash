@@ -21,6 +21,10 @@ export const getNotificationTitle = (state: any) => {
   return state.application.notificationTitle;
 };
 
+export const dashboardIsDraft = (state: any) => {
+  return state.application.draft;
+};
+
 export const applicationIsConnected = (state: any) => {
   return state.application.connected;
 };

@@ -58,7 +58,6 @@ const Dashboard = ({
         ></NeoDashboardHeader>
       </div>
       {/* Main Page */}
-
       <div
         style={{
           display: 'flex',
@@ -69,24 +68,26 @@ const Dashboard = ({
         }}
       >
         <NeoDashboardSidebar />
-        <div className='n-w-full n-h-full n-flex n-flex-col n-items-center n-justify-center n-rounded-md n-p-4'>
+        <div className='n-w-full n-h-full n-flex n-flex-col n-items-center n-justify-center n-rounded-md'>
           <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
             {/* Main Content */}
             <main className='n-flex-1 n-relative n-z-0 n-scroll-smooth n-w-full'>
               <div className='n-absolute n-inset-0 page-spacing'>
-                {/* The main content of the page */}
+                <div className='page-spacing-overflow'>
+                  {/* The main content of the page */}
 
-                <div>
-                  {applicationSettings.standalonePassword ? (
-                    <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
-                      Warning: NeoDash is running with a plaintext password in config.json.
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                  <NeoDashboardTitle />
-                  <NeoDashboardHeaderPageList />
-                  <NeoPage></NeoPage>
+                  <div>
+                    {applicationSettings.standalonePassword ? (
+                      <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
+                        Warning: NeoDash is running with a plaintext password in config.json.
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    <NeoDashboardTitle />
+                    <NeoDashboardHeaderPageList />
+                    <NeoPage></NeoPage>
+                  </div>
                 </div>
               </div>
             </main>

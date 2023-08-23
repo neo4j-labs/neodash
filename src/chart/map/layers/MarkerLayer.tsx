@@ -23,16 +23,24 @@ export function createMarkers(data, props) {
       : [];
 
   let markerMarginTop;
+  let markerIconClass;
+  let markerMarginLeft;
   // Render a node label tooltip
   switch (defaultNodeSize) {
     case 'large':
       markerMarginTop = '-20px';
+      markerMarginLeft = '0px';
+      markerIconClass = '';
       break;
     case 'medium':
-      markerMarginTop = '3px';
+      markerMarginTop = '-5px';
+      markerMarginLeft = '2px';
+      markerIconClass = 'btn-icon-lg-r';
       break;
     default:
       markerMarginTop = '6px';
+      markerMarginLeft = '10px';
+      markerIconClass = 'btn-icon-base-r';
       break;
   }
 
@@ -127,8 +135,10 @@ export function createMarkers(data, props) {
         position={node.pos}
         key={i}
         icon={
-          <div style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop }}>
-            <MapPinIconSolid fontSize={node.size} />
+          <div
+            style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop, marginLeft: markerMarginLeft }}
+          >
+            <MapPinIconSolid className={markerIconClass} />
           </div>
         }
       >
