@@ -9,10 +9,10 @@ https://neo4j.com/labs/neodash/{version}
 For example: https://neo4j.com/labs/neodash/2.3
 
 ## Local Build
-To compile and view the documentation locally, navigate to this (`./docs`) folder and run:
+To compile and view the documentation locally, run:
 ```
 yarn install
-yarn start
+yarn start:docs
 ```
 
 Then, open your browser and navigate to http://localhost:8000/.

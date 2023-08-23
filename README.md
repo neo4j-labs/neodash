@@ -23,50 +23,52 @@ docker run -it --rm -p 5005:5005 neo4jlabs/neodash
 
 
 ## Build and Run
-This project uses `turbo` to install, run, build prettify and apply linting to the code.
+This project uses `yarn` to install, run, build prettify and apply linting to the code.
+`turborepo` is used by yarn to manage the monorepo with different applications.
 
 To install dependencies:
 ```
 yarn install
 ```
 
-To run the entire application(all workspaces) in development mode:
+To run the entire application (all workspaces) in development mode:
 ```
-turbo run start
-```
-To run only the editor for example, you can do that by running:
-```
-turbo start --filter neodash-editor
+yarn start:all
 ```
 
-To build the app for deployment:
+To run only the main application (neodash editor):
 ```
-turbo run build
+yarn start:editor
 ```
 
 To manually prettify all the project `.ts` and `.tsx` files, run:
 ```
-turbo run format
+yarn format:all
+```
+
+To build the main application for deployment:
+```
+yarn build:editor
 ```
 
 To manually run linting of all your .ts and .tsx files, run:
 ```
-turbo run lint
+yarn lint:all
 ```
 
 To manually run linting of all your .ts and .tsx staged files, run:
 ```
-turbo run lint-staged
+yarn lint-staged:all
 ```
 
-To test the application with a Cypress UI, run:
+To test the main application with a Cypress UI, run:
 ```
-turbo run test
+yarn test:editor
 ```
 
 To test the application with just the command line, run:
 ```
-turbo run test-headless
+yarn test-headless:editor
 ```
 
 See the [Developer Guide](https://neo4j.com/labs/neodash/2.3/developer-guide/) for more on installing, building, and running the application.

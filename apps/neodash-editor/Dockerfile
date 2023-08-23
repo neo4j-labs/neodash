@@ -13,7 +13,7 @@ COPY apps/neodash-editor/package.json /usr/local/src/neodash/package.json
 
 RUN yarn install
 COPY apps/neodash-editor /usr/local/src/neodash
-RUN yarn run build-minimal
+RUN yarn run build-minimal:editor
 
 # production stage
 FROM nginx:alpine AS neodash
