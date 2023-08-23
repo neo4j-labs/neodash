@@ -27,6 +27,8 @@ jobs:
       - run: yarn install
       - name: Eslint check
         run: turbo run lint
+      - name: Copy cypress config to root folder for execution
+        run: cp -r apps/neodash-editor/cypress .
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
