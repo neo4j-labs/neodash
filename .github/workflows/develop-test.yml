@@ -34,8 +34,8 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           config-file: apps/neodash-editor/cypress-config.ts
-          build: yarn build:editor
-          start: yarn start:editor
+          build: yarn run build:editor
+          start: yarn run start:editor
           wait-on: "http://localhost:3000"
           browser: chrome
       - name: Upload coverage reports to Codecov
