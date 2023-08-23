@@ -27,13 +27,13 @@ jobs:
       - run: yarn global add turbo
       - run: yarn install
       - name: Eslint check
-        run: turbo run lint
+        run: yarn lint:all
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
           config-file: apps/neodash-editor/cypress-config.ts
-          build: turbo run build --filter neodash-editor
-          start: turbo run start --filter neodash-editor
+          build: yarn build:editor
+          start: yarn start:editor
           wait-on: 'http://localhost:3000'
           browser: chrome
       - name: Upload coverage reports to Codecov
