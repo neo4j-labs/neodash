@@ -28,7 +28,7 @@ This is an optional step if you want to configure optional settings for your Neo
 2. Edit this file to modify your link:../configuration[Configuration] settings.
 3. Save the file.
 4. Inside the folder you just unzipped, open up `style.config.json`.
-5. Edit this file to modify your link:../styleConfiguration[Style Configuration] settings.
+5. Edit this file to modify your link:../style-configuration[Style Configuration] settings.
 6. Save the file
 
 == 3. Move the tarball/zip to your webserver
