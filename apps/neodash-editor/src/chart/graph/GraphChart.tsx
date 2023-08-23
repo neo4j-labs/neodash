@@ -27,6 +27,18 @@ import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
  * See https://github.com/vasturiano/react-force-graph for examples on customization.
  */
 const NeoGraphChart = (props: ChartProps) => {
+  const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
+  const [inspectModalOpen, setInspectModalOpen] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState(undefined);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const [recenterAfterEngineStop, setRecenterAfterEngineStop] = useState(true);
+  const [cooldownTicks, setCooldownTicks] = useState(100);
+
+  let [nodeLabels, setNodeLabels] = useState({});
+  let [linkTypes, setLinkTypes] = useState({});
+  const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
+
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
@@ -56,17 +68,6 @@ const NeoGraphChart = (props: ChartProps) => {
       y: event.clientY,
     });
   };
-  const frozen: boolean = props.settings && props.settings.frozen !== undefined ? props.settings.frozen : false;
-  const [inspectModalOpen, setInspectModalOpen] = useState(false);
-  const [selectedEntity, setSelectedEntity] = useState(undefined);
-  const [contextMenuOpen, setContextMenuOpen] = useState(false);
-  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
-  const [recenterAfterEngineStop, setRecenterAfterEngineStop] = useState(true);
-  const [cooldownTicks, setCooldownTicks] = useState(100);
-
-  let [nodeLabels, setNodeLabels] = useState({});
-  let [linkTypes, setLinkTypes] = useState({});
-  const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
 
   const setLayoutFrozen = (value) => {
     if (value == false) {

@@ -144,7 +144,6 @@
   scrollbar-width: none;
   resize: none;
   background: url(linenumbers.png);
-  background-size: 20;
   background-attachment: local;
   background-repeat: no-repeat;
   font-family: monospace;

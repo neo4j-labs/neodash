@@ -36,7 +36,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
     updateReportQuery(
       settings.entityType,
       settings.propertyType,
-      settings.propertyTypeDisplay || settings.propertyTypeDisplay
+      settings.propertyTypeDisplay || settings.propertyType
     );
   }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
