@@ -60,7 +60,7 @@ function getDrillDown(geoJson, features, key, keepConflict = false) {
 
   // Creating a dictionary that is just a filtered version of  features
   let res = {};
-  polygonsToKeep.map((id) => {
+  polygonsToKeep.forEach((id) => {
     res[id] = features[id];
   });
   return res;
@@ -265,7 +265,7 @@ export const MapBoundary = ({ dimensions, data, props, featureLevel0, featureLev
   }
 
   // Create a legend only if the values are ready
-  const legend = !(isNaN(rangeValues.min) && isNaN(rangeValues.min)) ? (
+  const legend = !(isNaN(rangeValues.min) && isNaN(rangeValues.max)) ? (
     Legend(listColors, legendRange, dimensions)
   ) : (
     <></>

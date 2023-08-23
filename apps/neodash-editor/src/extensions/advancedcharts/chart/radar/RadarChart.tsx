@@ -10,15 +10,6 @@ import { extensionEnabled } from '../../../../utils/ReportUtils';
  * Embeds a RadarChart (from Charts) into NeoDash.
  */
 const NeoRadarChart = (props: ChartProps) => {
-  if (
-    !props.selection ||
-    props.selection.values == undefined ||
-    props.records == null ||
-    props.records.length == 0 ||
-    props.records[0].keys == null
-  ) {
-    return <NoDrawableDataErrorMessage />;
-  }
   const { records } = props;
   const selection = props.selection ? props.selection : {};
   const settings = props.settings ? props.settings : {};
@@ -74,6 +65,16 @@ const NeoRadarChart = (props: ChartProps) => {
     });
     return entry;
   });
+
+  if (
+    !props.selection ||
+    props.selection.values == undefined ||
+    props.records == null ||
+    props.records.length == 0 ||
+    props.records[0].keys == null
+  ) {
+    return <NoDrawableDataErrorMessage />;
+  }
 
   // If we find inconsitent data, return an error/
   if (!valid) {
