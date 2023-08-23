@@ -27,7 +27,7 @@
     "build-minimal": "yarn webpack --mode production --env production && cp -r public/* dist/",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "eslint --ext .ts --ext .tsx .",
-    "lint-staged": "lint-staged --config .lintstagedrc.json",
+    "lint-staged": "lint-staged --config ../../.lintstagedrc.json",
     "old-prepare": "husky install",
     "test": "yarn cypress open",
     "test-headless": "yarn cypress run"
