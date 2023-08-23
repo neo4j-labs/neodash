@@ -18,13 +18,6 @@ const NeoTreeMapChart = (props: ChartProps) => {
   const [commonProperties, setCommonProperties] = useState({ data: { name: 'Total', children: [] } });
   const [refreshable, setRefreshable] = useState(false);
 
-  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <>No data, re-run the report.</>;
-  }
-  if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <NoDrawableDataErrorMessage />;
-  }
-
   useEffect(() => {
     let dataPre = processHierarchyFromRecords(records, selection);
     dataPre.forEach((currentNode) => mutateName(currentNode));
@@ -34,6 +27,13 @@ const NeoTreeMapChart = (props: ChartProps) => {
   useEffect(() => {
     setData(commonProperties.data);
   }, [props.selection, commonProperties]);
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
+  if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <NoDrawableDataErrorMessage />;
+  }
 
   // Where a user give us the hierarchy with a common root, in that case we can push the entire tree.
   // Where a user give us just the tree starting one hop away from the root.
