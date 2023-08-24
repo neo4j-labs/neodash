@@ -72,11 +72,7 @@ export const NeoPage = ({
     return ['se'];
   };
 
-  // const groupedReports = reports
-  //   .filter((report: any) => Boolean(report.groupId))
-  //   .sort((a: any, b: any) => a.groupOrder - b.groupOrder); // Sorting to achieve vertical compaction
-
-  const handleButtonClick = () => {
+  const toggleToolBox = () => {
     setListOpen(!isListOpen);
   };
 
@@ -147,7 +143,6 @@ export const NeoPage = ({
       // @ts-ignore
       lg: [
         ...reports.map((report) => {
-          // TODO: Revist here
           return {
             x: report.x || 0,
             y: report.y || 0,
@@ -221,7 +216,7 @@ export const NeoPage = ({
         <PageToolBox
           items={toolbox || []}
           onTakeItem={onTakeItem}
-          handleButtonClick={handleButtonClick}
+          toggleToolBox={toggleToolBox}
           isListOpen={isListOpen}
         />
       )}

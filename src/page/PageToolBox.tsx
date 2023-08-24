@@ -17,13 +17,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@neo4j-ndl/react';
 import { ExpandIcon } from '@neo4j-ndl/react/icons';
 
-export default function PageToolBox({ items, onTakeItem, isListOpen, handleButtonClick }) {
+export default function PageToolBox({ items, onTakeItem, isListOpen, toggleToolBox }) {
   return (
     <Box position='fixed' bottom={16} right={30} zIndex={1}>
       {!isListOpen && (
         <Tooltip title='Minimized reports will appear here' placement='left' arrow>
           <Badge badgeContent={items.length} color='success' max={999}>
-            <Fab color='primary' aria-label='up' onClick={handleButtonClick}>
+            <Fab color='primary' aria-label='up' onClick={toggleToolBox}>
               <KeyboardArrowUpIcon />
             </Fab>
           </Badge>
@@ -52,7 +52,7 @@ export default function PageToolBox({ items, onTakeItem, isListOpen, handleButto
             <MIconButton
               aria-label='close'
               color='primary'
-              onClick={handleButtonClick}
+              onClick={toggleToolBox}
               style={{
                 position: 'absolute',
                 top: '-7px',

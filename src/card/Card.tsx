@@ -54,7 +54,7 @@ const NeoCard = ({
   onDatabaseChanged, // action to take when the user changes the database related to the card
   loadDatabaseListFromNeo4j, // Thunk to get the list of databases
   createNotification, // Thunk to create a global notification pop-up.
-  onPutItem, // Method to remove report from ui to toolbox
+  onPutItem, // Method to remove report from ui and move it to toolbox
 }) => {
   // Will be used to fetch the list of current databases
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
