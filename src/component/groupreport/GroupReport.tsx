@@ -2,7 +2,7 @@ import { Box, Grid } from '@mui/material';
 import React from 'react';
 import NeoCard from '../../card/Card';
 
-export default function Subreport({
+export default function GroupReport({
   groupedReports,
   groupId,
   getBorderSpecsForGroupId,

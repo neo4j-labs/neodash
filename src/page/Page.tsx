@@ -17,7 +17,7 @@ import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { GRID_COMPACTION_TYPE } from '../config/PageConfig';
 import PageToolBox from './PageToolBox';
-import Subreport from '../component/subreport/Subreport';
+import GroupReport from '../component/groupreport/GroupReport';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -227,7 +227,7 @@ export const NeoPage = ({
       )}
       {groupedReports &&
         Object.keys(groupedReports).map((groupId) => (
-          <Subreport
+          <GroupReport
             groupedReports={groupedReports}
             groupId={groupId}
             getBorderSpecsForGroupId={getBorderSpecsForGroupId}
