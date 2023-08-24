@@ -121,7 +121,6 @@ const NeoCardViewFooter = ({
                       : { label: selection[selectable], value: selection[selectable] },
                     isMulti: selectableFields[selectable].multiple,
                     isClearable: false,
-                    menuPortalTarget: document.querySelector('body'),
                   }}
                   fluid
                   style={{
