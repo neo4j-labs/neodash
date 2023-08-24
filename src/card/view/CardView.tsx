@@ -41,6 +41,7 @@ const NeoCardView = ({
   onFieldsUpdate,
   expanded,
   onToggleCardExpand,
+  onHandleMinimize,
 }) => {
   const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 22;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
@@ -85,6 +86,7 @@ const NeoCardView = ({
       refreshButtonEnabled={settings.refreshButtonEnabled}
       onTitleUpdate={onTitleUpdate}
       onToggleCardSettings={onToggleCardSettings}
+      onHandleMinimize={onHandleMinimize}
       onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
       settings={settings}
       onDownloadImage={onDownloadImage}
