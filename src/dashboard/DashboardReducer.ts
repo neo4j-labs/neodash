@@ -15,6 +15,7 @@ import {
   SET_DASHBOARD,
   MOVE_PAGE,
   SET_EXTENSION_ENABLED,
+  SET_DASHBOARD_UUID,
 } from './DashboardActions';
 
 export const NEODASH_VERSION = '2.3';
@@ -73,6 +74,10 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     case SET_DASHBOARD: {
       const { dashboard } = payload;
       return { ...dashboard };
+    }
+    case SET_DASHBOARD_UUID: {
+      const { uuid } = payload;
+      return { uuid: uuid, ...state };
     }
     case SET_DASHBOARD_TITLE: {
       const { title } = payload;

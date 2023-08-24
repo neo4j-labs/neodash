@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react';
 import { TextareaAutosize } from '@mui/material';
 import { connect } from 'react-redux';
 import {
-  loadDashboardFromNeo4jByUUIDThunk,
+  loadDashboardFromNeo4jThunk,
   loadDashboardListFromNeo4jThunk,
   loadDashboardThunk,
   loadDatabaseListFromNeo4jThunk,
@@ -68,7 +68,7 @@ export const NeoLoadModal = ({
   };
 
   const columns = [
-    { field: 'id', hide: true, headerName: 'ID', width: 150 },
+    { field: 'uuid', hide: true, headerName: 'ID', width: 150 },
     { field: 'date', headerName: 'Date', width: 200 },
     { field: 'title', headerName: 'Title', width: 300 },
     { field: 'author', headerName: 'Author', width: 160 },
@@ -80,7 +80,7 @@ export const NeoLoadModal = ({
         return (
           <Button
             onClick={() => {
-              loadDashboardFromNeo4j(driver, dashboardDatabase, c.id, handleDashboardLoadedFromNeo4j);
+              loadDashboardFromNeo4j(driver, dashboardDatabase, c.uuid, handleDashboardLoadedFromNeo4j);
             }}
             style={{ float: 'right' }}
             fill='outlined'
@@ -216,7 +216,7 @@ const mapStateToProps = () => ({});
 const mapDispatchToProps = (dispatch) => ({
   loadDashboard: (text) => dispatch(loadDashboardThunk(text)),
   loadDashboardFromNeo4j: (driver, database, uuid, callback) =>
-    dispatch(loadDashboardFromNeo4jByUUIDThunk(driver, database, uuid, callback)),
+    dispatch(loadDashboardFromNeo4jThunk(driver, database, uuid, callback)),
   loadDashboardListFromNeo4j: (driver, database, callback) =>
     dispatch(loadDashboardListFromNeo4jThunk(driver, database, callback)),
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),

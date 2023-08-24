@@ -101,7 +101,7 @@ export const NeoDashboardTitle = ({
         </div>
       ) : (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
-          <Typography variant='h3'>{dashboardTitle}</Typography>
+          <Typography variant='h3'>{dashboardTitle ? dashboardTitle : '(no title)'}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
             {editable ? (
               <IconButton

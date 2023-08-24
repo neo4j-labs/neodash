@@ -2,6 +2,7 @@ import React from 'react';
 import { Menu, MenuItem, MenuItems } from '@neo4j-ndl/react';
 import {
   CloudArrowUpIconOutline,
+  DocumentDuplicateIconOutline,
   InformationCircleIconOutline,
   ShareIconOutline,
   TrashIconOutline,
@@ -29,6 +30,7 @@ export const NeoDashboardSidebarDashboardMenu = ({ anchorEl, open, handleClose }
       <MenuItems>
         <MenuItem onClick={() => {}} icon={<InformationCircleIconOutline />} title='Info' />
         <MenuItem onClick={() => {}} icon={<CloudArrowUpIconOutline />} title='Load' />
+        <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' />
         <MenuItem onClick={() => {}} icon={<ShareIconOutline />} title='Share' />
         <MenuItem onClick={() => {}} icon={<TrashIconOutline />} title='Delete' />
       </MenuItems>

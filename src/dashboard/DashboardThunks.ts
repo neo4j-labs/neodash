@@ -1,8 +1,8 @@
 import { createNotificationThunk } from '../page/PageThunks';
 import { updateDashboardSetting } from '../settings/SettingsActions';
-import { addPage, movePage, removePage, resetDashboardState, setDashboard } from './DashboardActions';
+import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDashboardUuid } from './DashboardActions';
 import { runCypherQuery } from '../report/ReportQueryRunner';
-import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
+import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
 
@@ -52,6 +52,7 @@ export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: 
 };
 
 export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
+  console.log('ues');
   try {
     if (text.length == 0) {
       throw 'No dashboard file specified. Did you select a file?';
@@ -80,6 +81,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
       const upgradedDashboard = upgradeDashboardVersion(dashboard, '1.1', '2.0');
       dispatch(setDashboard(upgradedDashboard));
       dispatch(setWelcomeScreenOpen(false));
+      dispatch(setDraft(true));
       dispatch(
         createNotificationThunk(
           'Successfully upgraded dashboard',
@@ -92,6 +94,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
       const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.0', '2.1');
       dispatch(setDashboard(upgradedDashboard));
       dispatch(setWelcomeScreenOpen(false));
+      dispatch(setDraft(true));
       dispatch(
         createNotificationThunk(
           'Successfully upgraded dashboard',
@@ -104,6 +107,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
       const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.1', '2.2');
       dispatch(setDashboard(upgradedDashboard));
       dispatch(setWelcomeScreenOpen(false));
+      dispatch(setDraft(true));
       dispatch(
         createNotificationThunk(
           'Successfully upgraded dashboard',
@@ -117,6 +121,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
       const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.2', '2.3');
       dispatch(setDashboard(upgradedDashboard));
       dispatch(setWelcomeScreenOpen(false));
+      dispatch(setDraft(true));
       dispatch(
         createNotificationThunk(
           'Successfully upgraded dashboard',
@@ -198,7 +203,7 @@ export const saveDashboardToNeo4jThunk =
     }
   };
 
-export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any) => {
+export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) => (dispatch: any) => {
   try {
     const query = 'MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard';
     runCypherQuery(
@@ -217,6 +222,7 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
             )
           );
         }
+        console.log(records);
         callback(records[0]._fields[0]);
       }
     );
@@ -265,7 +271,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
     runCypherQuery(
       driver,
       database,
-      'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as id, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC',
+      'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC',
       {},
       1000,
       () => {},
@@ -276,7 +282,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
         }
         const result = records.map((r) => {
           return {
-            id: r._fields[0],
+            uuid: r._fields[0],
             title: r._fields[1],
             date: r._fields[2],
             author: r._fields[3],
@@ -309,6 +315,14 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     );
   } catch (e) {
     dispatch(createNotificationThunk('Unable to list databases from Neo4j', e));
+  }
+};
+
+export const assignDashboardUuidIfNotPresentThunk = () => (dispatch: any, getState: any) => {
+  console.log(getState().dashboard);
+  const {uuid} = getState().dashboard;
+  if (!uuid) {
+    dispatch(setDashboardUuid(createUUID()));
   }
 };
 

@@ -2,8 +2,9 @@
  * Reducers define changes to the application state when a given action is taken.
  */
 
-import { HARD_RESET_CARD_SETTINGS } from '../card/CardActions';
+import { HARD_RESET_CARD_SETTINGS, UPDATE_ALL_SELECTIONS, UPDATE_FIELDS, UPDATE_SCHEMA } from '../card/CardActions';
 import { DEFAULT_NEO4J_URL } from '../config/ApplicationConfig';
+import { SET_DASHBOARD } from '../dashboard/DashboardActions';
 import { UPDATE_DASHBOARD_SETTING } from '../settings/SettingsActions';
 import {
   CLEAR_DESKTOP_CONNECTION_PROPERTIES,
@@ -58,11 +59,20 @@ const initialState = {
 export const applicationReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
 
+  // LOGIC TO DETERMINE WHETHER WE ARE DRAFTING...
+
   // if anything changes EXCEPT for the selected page, we flag that we are drafting a dashboard.
+  const NON_TRANSFORMATIVE_ACTIONS = [
+    UPDATE_DASHBOARD_SETTING,
+    UPDATE_SCHEMA,
+    HARD_RESET_CARD_SETTINGS,
+    SET_DASHBOARD,
+    UPDATE_ALL_SELECTIONS,
+    UPDATE_FIELDS,
+  ];
   // This is a special application-level flag used to determine whether the dashboard needs to be saved to the database.
   if (action.type.startsWith('DASHBOARD/') || action.type.startsWith('PAGE/') || action.type.startsWith('CARD/')) {
-    if (!state.draft && ![UPDATE_DASHBOARD_SETTING, HARD_RESET_CARD_SETTINGS].includes(type)) {
-      console.log(action.type);
+    if (!state.draft && !NON_TRANSFORMATIVE_ACTIONS.includes(type)) {
       state = update(state, { draft: true });
       return state;
     }

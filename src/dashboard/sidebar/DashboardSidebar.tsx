@@ -14,7 +14,12 @@ import { resetDashboardState } from '../DashboardActions';
 import NeoDashboardSidebarCreateModal from './DashboardSidebarCreateModal';
 import NeoDashboardSidebarDatabaseMenu from './DashboardSidebarDatabaseMenu';
 import NeoDashboardSidebarDashboardMenu from './DashboardSidebarDashboardMenu';
-import { loadDatabaseListFromNeo4jThunk } from '../DashboardThunks';
+import {
+  loadDashboardFromNeo4jThunk,
+  loadDashboardListFromNeo4jThunk,
+  loadDashboardThunk,
+  loadDatabaseListFromNeo4jThunk,
+} from '../DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 
 enum Menu {
@@ -32,7 +37,10 @@ export const NeoDashboardSidebar = ({
   draft,
   setDraft,
   resetLocalDashboard,
+  loadDashboard,
   loadDatabaseListFromNeo4j,
+  loadDashboardListFromNeo4j,
+  loadDashboardFromNeo4j,
 }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
@@ -45,32 +53,15 @@ export const NeoDashboardSidebar = ({
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
 
-  const [dashboards, setDashboards] = React.useState([
-    {
-      uuid: '123',
-      title: 'Revenue streams 2024',
-    },
-    {
-      uuid: '456',
-      title: 'Human resources dashboard',
-    },
-  ]);
+  const [dashboards, setDashboards] = React.useState([]);
 
-  const getDashboardListFromNeo4j = (database: string) => {
+  const getDashboardListFromNeo4j = () => {
     // Retrieves list of all dashboards stored in a given database.
-    return [{ uuid: database }];
+    console.log('getting');
+    loadDashboardListFromNeo4j(driver, dashboardDatabase, (list) => {
+      setDashboards(list);
+    });
   };
-
-  function loadDashboard(uuid) {
-    // Trigger dashboard load.
-    // TODO - call Neo4j to get the dashboard.
-
-    // Re-retrieve list of dashboards.
-    const loadedDashboards: object[] = getDashboardListFromNeo4j('neo4j');
-    // Set `selectedDashboardIndex` to the one that was just created.
-    const selectedDashboardIndex = loadedDashboards.find((o) => o.uuid === uuid);
-    setDashboards(loadedDashboards);
-  }
 
   function createDashboard() {
     // Creates new dashboard in draft state (not yet saved to Neo4j)
@@ -84,7 +75,9 @@ export const NeoDashboardSidebar = ({
         open={loadModelOpen}
         onConfirm={() => {
           setLoadModalOpen(true);
-          // TODO - load
+          loadDashboardFromNeo4j(driver, dashboardDatabase, dashboards[selectedDashboardIndex].uuid, (file) => {
+            loadDashboard(file);
+          });
           setDraft(false);
         }}
         handleClose={() => setLoadModalOpen(false)}
@@ -105,6 +98,9 @@ export const NeoDashboardSidebar = ({
         expanded={expanded}
         onExpandedChange={(open) => {
           setOnExpanded(open);
+          if (open) {
+            getDashboardListFromNeo4j();
+          }
           // Wait until the sidebar has fully opened. Then trigger a resize event to align the grid layout.
           const timeout = setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
@@ -115,7 +111,14 @@ export const NeoDashboardSidebar = ({
           <NeoDashboardSidebarDatabaseMenu
             databases={databases}
             selected={dashboardDatabase}
-            setSelected={setDashboardDatabase}
+            setSelected={(newDatabase) => {
+              setDashboardDatabase(newDatabase);
+              // We changed the active dashboard database, reload the list in the sidebar.
+              loadDashboardListFromNeo4j(driver, newDatabase, (list) => {
+                setDashboards(list);
+                setDraft(true);
+              });
+            }}
             open={menuOpen == Menu.DATABASE}
             anchorEl={menuAnchor}
             handleClose={() => {
@@ -195,6 +198,7 @@ export const NeoDashboardSidebar = ({
               leftIcon={<MagnifyingGlassIconOutline style={{ height: 16, marginTop: '2px' }} />}
               className='n-w-full n-mr-2'
               placeholder='Search...'
+              aria-label='Search'
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
@@ -223,7 +227,9 @@ export const NeoDashboardSidebar = ({
                     if (draft) {
                       setLoadModalOpen(true);
                     } else {
-                      // TODO - trigger load
+                      loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
+                        loadDashboard(file);
+                      });
                     }
                   }}
                   onSave={() => {}}
@@ -254,7 +260,12 @@ const mapDispatchToProps = (dispatch) => ({
   onRemovePressed: (id) => dispatch(removeReportThunk(id)),
   resetLocalDashboard: () => dispatch(resetDashboardState()),
   setDraft: (draft) => dispatch(setDraft(draft)),
+  loadDashboard: (text) => dispatch(loadDashboardThunk(text)),
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
+  loadDashboardFromNeo4j: (driver, database, uuid, callback) =>
+    dispatch(loadDashboardFromNeo4jThunk(driver, database, uuid, callback)),
+  loadDashboardListFromNeo4j: (driver, database, callback) =>
+    dispatch(loadDashboardListFromNeo4jThunk(driver, database, callback)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoDashboardSidebar);

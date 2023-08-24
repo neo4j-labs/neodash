@@ -53,7 +53,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
   };
 
   const columns = [
-    { field: 'id', hide: true, headerName: 'ID', width: 150 },
+    { field: 'uuid', hide: true, headerName: 'ID', width: 150 },
     { field: 'date', headerName: 'Date', width: 200 },
     { field: 'title', headerName: 'Title', width: 370 },
     { field: 'author', headerName: 'Author', width: 160 },
@@ -64,7 +64,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
         return (
           <Button
             onClick={() => {
-              setShareID(c.id);
+              setShareID(c.uuid);
               setShareName(c.row.title);
               setShareType('database');
               setLoadFromNeo4jModalOpen(false);

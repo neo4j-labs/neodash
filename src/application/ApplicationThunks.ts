@@ -4,8 +4,9 @@ import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
 import { NEODASH_VERSION } from '../dashboard/DashboardReducer';
 import {
+  assignDashboardUuidIfNotPresentThunk,
   loadDashboardFromNeo4jByNameThunk,
-  loadDashboardFromNeo4jByUUIDThunk,
+  loadDashboardFromNeo4jThunk,
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
@@ -66,9 +67,12 @@ export const createConnectionThunk =
         if (records && records[0] && records[0].error) {
           dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
         } else if (records && records[0] && records[0].keys[0] == 'connected') {
+          // Connected to Neo4j. Set state accordingly.
           dispatch(setConnectionProperties(protocol, url, port, database, username, password));
           dispatch(setConnectionModalOpen(false));
           dispatch(setConnected(true));
+          // An old dashboard (pre-2.3.5) may not always have a UUID. We catch this case here.
+          dispatch(assignDashboardUuidIfNotPresentThunk());
           dispatch(updateSessionParameterThunk('session_uri', `${protocol}://${url}:${port}`));
           dispatch(updateSessionParameterThunk('session_database', database));
           dispatch(updateSessionParameterThunk('session_username', username));
@@ -102,7 +106,7 @@ export const createConnectionThunk =
               );
             } else {
               dispatch(
-                loadDashboardFromNeo4jByUUIDThunk(
+                loadDashboardFromNeo4jThunk(
                   driver,
                   application.standaloneDashboardDatabase,
                   application.dashboardToLoadAfterConnecting,
