@@ -16,75 +16,10 @@ import { getDashboardIsEditable, getPageNumber } from '../settings/SettingsSelec
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { GRID_COMPACTION_TYPE } from '../config/PageConfig';
-import {
-  Badge,
-  Box,
-  Card,
-  CardContent,
-  Fab,
-  List,
-  ListItem,
-  ListItemText,
-  Tooltip,
-  IconButton as MIconButton,
-} from '@mui/material';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@neo4j-ndl/react';
-import { ExpandIcon } from '@neo4j-ndl/react/icons';
+import PageToolBox from './PageToolBox';
+import Subreport from '../component/subreport/Subreport';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
-
-const truncateString = (str) => (str.length > 25 ? str.slice(0, 25) + '...' : str);
-
-const ToolBox = ({ items, onTakeItem, isListOpen, handleButtonClick }) => (
-  <Box position='fixed' bottom={16} right={30} zIndex={1}>
-    {!isListOpen && (
-      <Tooltip title='Minimized reports will appear here' placement='left' arrow>
-        <Badge badgeContent={items.length} color='success' max={999}>
-          <Fab color='primary' aria-label='up' onClick={handleButtonClick}>
-            <KeyboardArrowUpIcon />
-          </Fab>
-        </Badge>
-      </Tooltip>
-    )}
-    {isListOpen && (
-      <Card variant='outlined' sx={{ minWidth: 275 }}>
-        <CardContent>
-          <List sx={{ width: '100%', maxWidth: 500, bgcolor: 'background.paper' }}>
-            {items.map((item: { i: React.Key | null | undefined; title: any }, index: number) => (
-              <ListItem
-                key={item.i}
-                disableGutters={false}
-                secondaryAction={
-                  <IconButton aria-label='maximize' onClick={() => onTakeItem(item)} clean size='medium'>
-                    <ExpandIcon />
-                  </IconButton>
-                }
-              >
-                <Tooltip title={item.title} placement='left' arrow>
-                  <ListItemText primary={`${index + 1}. ${truncateString(item.title)}`} />
-                </Tooltip>
-              </ListItem>
-            ))}
-          </List>
-          <MIconButton
-            aria-label='close'
-            color='primary'
-            onClick={handleButtonClick}
-            style={{
-              position: 'absolute',
-              top: '-7px',
-              right: '-5px',
-            }}
-          >
-            <CloseIcon />
-          </MIconButton>
-        </CardContent>
-      </Card>
-    )}
-  </Box>
-);
 
 /**
  * A component responsible for rendering the **current** page, a collection of reports.
@@ -250,10 +185,12 @@ export const NeoPage = ({
     );
   };
 
+  // Remove element/report from toolbox and set it in report
   const onTakeItem = (item: { id: any }) => {
     onMaximizeClick(item.id);
   };
 
+  // Move element/report to toolbox
   const onPutItem = (item: { id: any }) => {
     onMinimizeClick(item.id);
   };
@@ -281,7 +218,7 @@ export const NeoPage = ({
   const content = (
     <div className='n-pt-3'>
       {toolbox && toolbox.length > 0 && (
-        <ToolBox
+        <PageToolBox
           items={toolbox || []}
           onTakeItem={onTakeItem}
           handleButtonClick={handleButtonClick}
@@ -290,45 +227,18 @@ export const NeoPage = ({
       )}
       {groupedReports &&
         Object.keys(groupedReports).map((groupId) => (
-          <>
-            {groupedReports[groupId].length > 0 ? (
-              <Box key={groupId} sx={getBorderSpecsForGroupId(groupId)}>
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 2, sm: 8, md: 12, lg: 12 }}>
-                  {groupedReports[groupId]
-                    .sort((a: any, b: any) => a.groupOrder - b.groupOrder)
-                    .map((report: { id: any; width: any; height: any }) => {
-                      const { id, width: w, height: h } = report;
-                      return (
-                        <Grid
-                          item
-                          key={id}
-                          xs={Math.min(w * 4, 12)}
-                          sm={Math.min(w * 2, 12)}
-                          md={Math.min(w * 2, 12)}
-                          lg={Math.min(w, 12)}
-                          xl={Math.min(w, 12)}
-                          height={h * 210}
-                        >
-                          <NeoCard
-                            id={id}
-                            key={getReportKey(pagenumber, id)}
-                            dashboardSettings={dashboardSettings}
-                            onRemovePressed={onRemovePressed}
-                            onPutItem={onPutItem}
-                            onClonePressed={(id) => {
-                              const { x, y } = getAddCardButtonPosition();
-                              onClonePressed(id, x, y);
-                            }}
-                          />
-                        </Grid>
-                      );
-                    })}
-                </Grid>
-              </Box>
-            ) : (
-              <></>
-            )}
-          </>
+          <Subreport
+            groupedReports={groupedReports}
+            groupId={groupId}
+            getBorderSpecsForGroupId={getBorderSpecsForGroupId}
+            getReportKey={getReportKey}
+            pagenumber={pagenumber}
+            dashboardSettings={dashboardSettings}
+            onRemovePressed={onRemovePressed}
+            onPutItem={onPutItem}
+            getAddCardButtonPosition={getAddCardButtonPosition}
+            onClonePressed={onClonePressed}
+          />
         ))}
       <ResponsiveGridLayout
         draggableHandle='.drag-handle'
