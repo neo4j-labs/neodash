@@ -70,7 +70,8 @@ export const NeoDashboardTitle = ({
   return (
     <div className='n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'>
       {/* TODO : Replace with editable field if dashboard is editable */}
-      {editing ? (
+      {/* only allow edit title if dashboard is not standalone - here we are in Title edit mode*/}
+      {editing && !isStandalone ? (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <TextInput
             autoFocus={true}
@@ -99,7 +100,7 @@ export const NeoDashboardTitle = ({
             </IconButton>
           </Tooltip>
         </div>
-      ) : (
+      ) : !isStandalone? ( /* out of edit mode - if Not Standalone we display the edit button */
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <Typography variant='h3'>{dashboardTitle}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
@@ -117,6 +118,10 @@ export const NeoDashboardTitle = ({
               <></>
             )}
           </Tooltip>
+        </div>
+      ):( /* if we are in Standalone just title is displayed with no edit button */
+        <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
+        <Typography variant='h3'>{dashboardTitle}</Typography>
         </div>
       )}
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
