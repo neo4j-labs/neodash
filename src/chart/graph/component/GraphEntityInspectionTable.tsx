@@ -11,7 +11,7 @@ export const formatProperty = (property) => {
       </TextLink>
     );
   }
-  return property.split(',').join(', ');
+  return property.replace(/,(?=[^\s])/g, ", ");
 };
 
 /**
