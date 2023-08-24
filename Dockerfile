@@ -19,9 +19,7 @@ RUN yarn run build-minimal
 FROM nginx:alpine AS neodash
 RUN apk upgrade
 
-## Argument to change exposed port
-ARG NGINX_PORT=5005
-ENV PORT=$NGINX_PORT
+ENV NGINX_PORT=5005
 
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
 COPY ./conf/default.conf.template /etc/nginx/templates/
@@ -42,7 +40,7 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 ## Launch webserver as non-root user.
 USER nginx
 
-EXPOSE $PORT
+EXPOSE $NGINX_PORT
 
-HEALTHCHECK cmd curl --fail "http://localhost:$PORT" || exit 1
-LABEL version="2.3.2"
+HEALTHCHECK cmd curl --fail "http://localhost:$NGINX_PORT" || exit 1
+LABEL version="2.3.1"
