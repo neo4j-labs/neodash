@@ -4,4 +4,4 @@ export const extensionEnabled = (extensions, name) => {
 };
 
 
-export const dottedTruncateString = (str) => (str.length > 25 ? `${str.slice(0, 25)}...` : str);
+export const dottedTruncateString = (str: string, len: number) => (str.length > len ? `${str.slice(0, len)}...` : str);

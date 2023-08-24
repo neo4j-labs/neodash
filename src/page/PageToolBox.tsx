@@ -44,7 +44,7 @@ export default function PageToolBox({ items, onTakeItem, isListOpen, handleButto
                   }
                 >
                   <Tooltip title={item.title} placement='left' arrow>
-                    <ListItemText primary={`${index + 1}. ${dottedTruncateString(item.title)}`} />
+                    <ListItemText primary={`${index + 1}. ${dottedTruncateString(item.title, 25)}`} />
                   </Tooltip>
                 </ListItem>
               ))}
