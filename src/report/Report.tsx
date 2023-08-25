@@ -1,12 +1,10 @@
 import { Chip, Tooltip } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { QueryStatus, runCypherQuery } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
-import { useCallback } from 'react';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
 import { DEFAULT_ROW_LIMIT, HARD_ROW_LIMITING, RUN_QUERY_DELAY_MS } from '../config/ReportConfig';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { useContext } from 'react';
 import NeoTableChart from '../chart/table/TableChart';
 import { getReportTypes } from '../extensions/ExtensionUtils';
 import { SELECTION_TYPES } from '../config/CardConfig';
@@ -51,6 +49,7 @@ export const NeoReport = ({
   type = 'table', // The type of report as a string.
   expanded = false, // whether the report is visualized in a fullscreen view.
   extensions = {}, // A set of enabled extensions.
+  legendDefinition = {},
   getCustomDispatcher = () => {},
   ChartType = NeoTableChart, // The report component to render with the query results.
   prepopulateExtensionName,
@@ -279,6 +278,7 @@ export const NeoReport = ({
           fields={fields}
           setFields={setFields}
           theme={theme}
+          legendDefinition={legendDefinition}
         />
       </div>
     );
@@ -320,6 +320,7 @@ export const NeoReport = ({
           updateReportSetting={updateReportSetting}
           fields={fields}
           setFields={setFields}
+          legendDefinition={legendDefinition}
         />
       </div>
     );

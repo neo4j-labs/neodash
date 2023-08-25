@@ -23,6 +23,7 @@ const NeoCardView = ({
   heightPx,
   fields,
   extensions,
+  legendDefinition,
   active,
   setActive,
   onDownloadImage,
@@ -173,6 +174,7 @@ const NeoCardView = ({
           expanded={expanded}
           rowLimit={dashboardSettings.disableRowLimiting ? 1000000 : reportTypes[type] && reportTypes[type].maxRecords}
           dimensions={{ width: widthPx, height: heightPx }}
+          legendDefinition={legendDefinition}
           type={type}
           ChartType={reportTypes[type] && reportTypes[type].component}
           setGlobalParameter={onGlobalParameterUpdate}

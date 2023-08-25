@@ -58,6 +58,7 @@ export interface GraphChartVisualizationProps {
     setLinks: (links) => void;
     setNodeLabels: (labels) => void;
     setLinkTypes: (types) => void;
+    legendDefinition: object;
   };
   /**
    * The properties relevant for styling the graph.

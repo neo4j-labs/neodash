@@ -107,7 +107,7 @@ const NeoCard = ({
   const onHandleMinimize = () => {
     onPutItem(report);
   };
-
+    
   useEffect(() => {
     if (!report.settingsOpen) {
       setActive(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
@@ -121,6 +121,15 @@ const NeoCard = ({
   useEffect(() => {
     setCollapseTimeout(report.collapseTimeout);
   }, [report.collapseTimeout]);
+
+  const [legendDefinition, setLegendDefinition] = React.useState(report.settings?.legendDefinition);
+
+  useEffect(() => {
+    if (!report.settings.legendDefinition) {
+      return;
+    }
+    setLegendDefinition(report.settings?.legendDefinition);
+  }, [report.settings.legendDefinition]);
 
   // TODO - get rid of some of the props-drilling here...
   const component = (
@@ -164,6 +173,7 @@ const NeoCard = ({
               setCollapseTimeout('auto');
               debouncedOnToggleCardSettings(id, true);
             }}
+            legendDefinition={legendDefinition}
           />
         </Card>
       </Collapse>
