@@ -39,6 +39,7 @@ const theme = createTheme({
 const expandedCellRenderer = (value, lineBreaksAfterListEntry) => {
   return renderCellExpand(value, lineBreaksAfterListEntry);
 };
+
 const fallbackRenderer = (value) => {
   return JSON.stringify(value);
 };

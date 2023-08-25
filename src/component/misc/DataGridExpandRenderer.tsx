@@ -105,12 +105,7 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
 });
 
 export function renderCellExpand(params: GridRenderCellParams<any, string>, lineBreakAfterListEntry: boolean) {
-  let [value, setValue] = React.useState(params.value);
-  useEffect(() => {
-    if (value?.low) {
-      setValue(value.low);
-    }
-  }, [params]);
+  let value = params.value?.low ? params.value.low : params.value;
 
   const stringifiedObj = value
     ? JSON.stringify(value)
