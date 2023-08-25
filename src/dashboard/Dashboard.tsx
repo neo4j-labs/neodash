@@ -59,7 +59,7 @@ const Dashboard = ({
           <div className='n-absolute n-inset-0 page-spacing'>
             <div className='page-spacing-overflow'>
               {/* The main content of the page */}
-              {applicationSettings.standalonePassword ? (
+              {applicationSettings.standalonePassword && applicationSettings.skipConfirmation !== true ? (
                 <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
                   Warning: NeoDash is running with a plaintext password in config.json.
                 </div>

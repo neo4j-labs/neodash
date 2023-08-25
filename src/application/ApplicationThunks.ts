@@ -349,6 +349,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDashboardName: 'My Dashboard',
     standaloneDashboardDatabase: 'dashboards',
     standaloneDashboardURL: '',
+    standaloneUsername: '',
+    standalonePassword: '',
+    skipConfirmation: false,
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -390,7 +393,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standaloneDashboardDatabase,
         config.standaloneDashboardURL,
         config.standaloneUsername,
-        config.standalonePassword
+        config.standalonePassword,
+        config.skipConfirmation
       )
     );
     dispatch(setConnectionModalOpen(false));
