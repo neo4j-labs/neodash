@@ -81,6 +81,7 @@ export const applicationGetStandaloneSettings = (state: any) => {
     standaloneDashboardURL: state.application.standaloneDashboardURL,
     standaloneUsername: state.application.standaloneUsername,
     standalonePassword: state.application.standalonePassword,
+    standaloneAllowLoad: state.application.standaloneAllowLoad,
   };
 };
 

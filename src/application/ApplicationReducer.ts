@@ -134,6 +134,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standaloneDashboardURL,
         standaloneUsername,
         standalonePassword,
+        standaloneAllowLoad
       } = payload;
       state = update(state, {
         standalone: standalone,
@@ -146,6 +147,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standaloneDashboardURL: standaloneDashboardURL,
         standaloneUsername: standaloneUsername,
         standalonePassword: standalonePassword,
+        standaloneAllowLoad: standaloneAllowLoad,
       });
       return state;
     }

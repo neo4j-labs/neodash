@@ -9,17 +9,20 @@ import {
 } from '../dashboard/DashboardThunks';
 import { DataGrid } from '@mui/x-data-grid';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { MenuItem, Button, Dialog, Dropdown } from '@neo4j-ndl/react';
+import { MenuItem, Button, Dialog, Dropdown, IconButton } from '@neo4j-ndl/react';
 import {
   CloudArrowUpIconOutline,
   PlayIconSolid,
   DatabaseAddCircleIcon,
   DocumentPlusIconOutline,
 } from '@neo4j-ndl/react/icons';
+import { applicationIsStandalone } from '../application/ApplicationSelectors';
 
 /**
  * A modal to save a dashboard as a JSON text string.
- * The button to open the modal is intended to use in a drawer at the side of the page.
+ * The button to open the modal is renderedd as:
+ * - a ListItem to use in a drawer at the side of the page if the app is in Editor Mode.
+ * - a Button to be diplayed by itself if the app is in Standalone Mode.
  */
 
 export const NeoLoadModal = ({
@@ -27,6 +30,7 @@ export const NeoLoadModal = ({
   loadDatabaseListFromNeo4j,
   loadDashboardFromNeo4j,
   loadDashboardListFromNeo4j,
+  isStandalone
 }) => {
   const [loadModalOpen, setLoadModalOpen] = React.useState(false);
   const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
@@ -97,7 +101,15 @@ export const NeoLoadModal = ({
 
   return (
     <>
-      <MenuItem title='Load' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
+      {!isStandalone?
+        (
+          <MenuItem title='Load' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
+        ):(
+          <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
+            <CloudArrowUpIconOutline />
+          </IconButton>
+        )
+      }
 
       <Dialog size='large' open={loadModalOpen == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
@@ -123,6 +135,7 @@ export const NeoLoadModal = ({
               Select from Neo4j
               <DatabaseAddCircleIcon className='btn-icon-base-r' />
             </Button>
+            {!isStandalone ? 
             <Button
               onClick={() => {
                 loadFromFile.current.click();
@@ -135,8 +148,8 @@ export const NeoLoadModal = ({
               <input type='file' ref={loadFromFile} onChange={(e) => uploadDashboard(e)} hidden />
               Select From File
               <DocumentPlusIconOutline className='btn-icon-base-r' />
-            </Button>
-
+            </Button> : <></>
+            }
             <Button
               onClick={text.length > 0 ? handleCloseAndLoad : null}
               style={{
@@ -210,7 +223,9 @@ export const NeoLoadModal = ({
   );
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  isStandalone: applicationIsStandalone(state),
+});
 
 const mapDispatchToProps = (dispatch) => ({
   loadDashboard: (text) => dispatch(loadDashboardThunk(text)),
