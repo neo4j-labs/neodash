@@ -25,6 +25,7 @@ export default function NeoConnectionModal({
   const [username, setUsername] = React.useState(connection.username);
   const [password, setPassword] = React.useState(connection.password);
   const [database, setDatabase] = React.useState(connection.database);
+  const [skipConfirmation, setSkipConfirmation] = React.useState(standaloneSettings.skipConfirmation);
 
   // Make sure local vars are updated on external connection updates.
   useEffect(() => {
@@ -39,6 +40,17 @@ export default function NeoConnectionModal({
   useEffect(() => {
     setSsoVisible(ssoSettings.ssoEnabled);
   }, [JSON.stringify(ssoSettings)]);
+
+  useEffect(() => {
+    if (standaloneSettings.skipConfirmation) {
+      setSkipConfirmation(standaloneSettings.skipConfirmation);
+    }
+
+    if (skipConfirmation && protocol && url && port && database && username && password) {
+      onConnectionModalClose();
+      createConnection(protocol, url, port, database, username, password);
+    }
+  }, [standaloneSettings.skipConfirmation, protocol, url, port, database, username, password]);
 
   const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl;
 
