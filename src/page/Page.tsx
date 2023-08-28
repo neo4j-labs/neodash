@@ -50,7 +50,8 @@ export const NeoPage = ({
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
   const enableExecuteButtonForIds = reports.filter(
-    (report: any) => report.settings?.hideQueryEditorInAutoRunOnMode === 'on'
+    (report: any) =>
+      report.settings?.hideQueryEditorInAutoRunOnMode || report.settings?.hideQueryEditorInAutoRunOnMode === 'on'
   );
 
   const availableHandles = () => {
