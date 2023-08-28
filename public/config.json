@@ -5,10 +5,10 @@
   "standaloneProtocol": "neo4j",
   "standaloneHost": "localhost",
   "standalonePort": "7687",
-  "standaloneDatabase": "movies",
+  "standaloneDatabase": "neo4j",
   "standaloneDashboardName": "My Dashboard",
   "standaloneDashboardDatabase": "dashboards",
   "standaloneDashboardURL": "",
-  "standaloneAllowLoad": true,
-  "standaloneLoadFromOtherDatabases": true
+  "standaloneAllowLoad": false,
+  "standaloneLoadFromOtherDatabases": false
 }
