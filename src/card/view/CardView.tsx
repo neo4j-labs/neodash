@@ -135,7 +135,7 @@ const NeoCardView = ({
 
   useEffect(() => {
     setSelectorChange(true);
-  }, [query, type]);
+  }, [query, type, database]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
