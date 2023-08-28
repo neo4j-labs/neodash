@@ -46,9 +46,9 @@ export const FIRST_PAGE_INITIAL_STATE = {
 
 export const PAGE_INITIAL_STATE = {
   title: 'New page',
-  groups: [],
+  groups: [], // Holds reports border info and group info
   reports: [],
-  toolbox: []
+  toolbox: [] // Holds minimized reports
 };
 
 /**
@@ -133,7 +133,7 @@ export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; pay
       let cards = state.reports.filter((o) => o.id !== id);
       let item = state.reports.filter((o) => o.id === id);
       let temp = [...item]
-      if (state.toolbox) {
+      if (state.toolbox && state.toolbox.length > 0) {
         temp = [...temp, ...state.toolbox]
       }
       return {
