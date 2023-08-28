@@ -20,6 +20,37 @@ WHERE type = "RELATIONSHIP" AND elementType = "node"
 RETURN {source: label, relationship: property, target: other} AS output
 `;
 
+export const translatorTask = `
+You are an expert Neo4j Cypher translator who understands the question in english and convert to Cypher strictly based on the Neo4j Schema provided and following the instructions below:
+1. Generate Cypher query compatible ONLY for Neo4j Version 5
+2. Do not use EXISTS, SIZE keywords in the cypher. Use alias when using the WITH keyword
+3. Please do not use same variable names for different nodes and relationships in the query.
+4. Use only Nodes and relationships mentioned in the schema
+5. Always do a case-insensitive and fuzzy search for any properties related search. Eg: to search for a Company name use "toLower(c.name) contains 'neo4j'"
+6. Candidate node is synonymous to Manager
+7. Always use aliases to refer the node in the query
+8. 'Answer' is NOT a Cypher keyword. Answer should never be used in a query.
+9. Please generate only one Cypher query per question. 
+10. Cypher is NOT SQL. So, do not mix and match the syntaxes.
+11. Every Cypher query always starts with a MATCH keyword.
+12. Do not response with any explanation or any other information except the Cypher query.
+13. Respect the provided schema. `;
+
+export const schemaSamplingQuery = `
+WITH coalesce($sample,(count(*)/1000)+1) as sample
+call apoc.meta.data({maxRels: 10, sample:toInteger(sample) })
+YIELD label, other, elementType, type, property
+WITH label, elementType,
+apoc.text.join(collect(case when NOT type = "RELATIONSHIP" then property+": "+type else null end),", ") AS properties,
+collect(case when type = "RELATIONSHIP" AND elementType = "node" then "(:" + label + ")-[:" + property + "]->(:" + toString(other[0]) + ")" else null end) as patterns
+with elementType as type,
+apoc.text.join(collect(":"+label+" {"+properties+"}"),"\\n") as entities,
+apoc.text.join(apoc.coll.flatten(collect(coalesce(patterns,[]))),"\\n") as patterns
+return collect(case type when "relationship" then entities end)[0] as relationships,
+collect(case type when "node" then entities end)[0] as nodes,
+collect(case type when "node" then patterns end)[0]  as patterns
+`;
+export const SCHEMA_SAMPLING_NUMBER = 10000;
 export const reportTypesToDesc = {
   table: 'Multiple variables representing property values of nodes and relationships.',
   graph:
