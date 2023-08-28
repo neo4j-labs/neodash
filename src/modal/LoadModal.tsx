@@ -16,7 +16,7 @@ import {
   DatabaseAddCircleIcon,
   DocumentPlusIconOutline,
 } from '@neo4j-ndl/react/icons';
-import { applicationIsStandalone } from '../application/ApplicationSelectors';
+import { applicationGetStandaloneSettings, applicationIsStandalone } from '../application/ApplicationSelectors';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -30,15 +30,17 @@ export const NeoLoadModal = ({
   loadDatabaseListFromNeo4j,
   loadDashboardFromNeo4j,
   loadDashboardListFromNeo4j,
-  isStandalone
+  isStandalone,
+  standaloneSettings
 }) => {
   const [loadModalOpen, setLoadModalOpen] = React.useState(false);
   const [loadFromNeo4jModalOpen, setLoadFromNeo4jModalOpen] = React.useState(false);
   const [text, setText] = React.useState('');
   const [rows, setRows] = React.useState([]);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-  const [dashboardDatabase, setDashboardDatabase] = React.useState('neo4j');
-  const [databases, setDatabases] = React.useState(['neo4j']);
+  //database values are initialized using standalone settings if the app is running in standalone mode
+  const [dashboardDatabase, setDashboardDatabase] = React.useState(standaloneSettings.standalone ? standaloneSettings.standaloneDashboardDatabase : 'neo4j');
+  const [databases, setDatabases] = React.useState([standaloneSettings.standalone? standaloneSettings.standaloneDatabase : 'neo4j']);
   const loadFromFile = useRef(null);
 
   const handleClickOpen = () => {
@@ -211,6 +213,8 @@ export const NeoLoadModal = ({
                   setRows(result);
                 });
               },
+              //if application is running standalone and standaloneLoadFromOtherDatabases is not enabled, we do not allow changing database
+              isDisabled: standaloneSettings.standalone&&!standaloneSettings.standaloneLoadFromOtherDatabases?true:false, 
               options: databases.map((database) => ({ label: database, value: database })),
               value: { label: dashboardDatabase, value: dashboardDatabase },
               menuPlacement: 'auto',
@@ -225,6 +229,7 @@ export const NeoLoadModal = ({
 
 const mapStateToProps = (state) => ({
   isStandalone: applicationIsStandalone(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,7 +1,7 @@
 {
   "ssoEnabled": false,
   "ssoDiscoveryUrl": "https://example.com",
-  "standalone": true,
+  "standalone": false,
   "standaloneProtocol": "neo4j",
   "standaloneHost": "localhost",
   "standalonePort": "7687",
@@ -9,5 +9,6 @@
   "standaloneDashboardName": "My Dashboard",
   "standaloneDashboardDatabase": "dashboards",
   "standaloneDashboardURL": "",
-  "standaloneAllowLoad": true
+  "standaloneAllowLoad": true,
+  "standaloneLoadFromOtherDatabases": true
 }

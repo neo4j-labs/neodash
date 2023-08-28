@@ -25,7 +25,8 @@ will look like this:
     "standaloneDashboardName": "My Dashboard",
     "standaloneDashboardDatabase": "dashboards",
     "standaloneDashboardURL": "",
-    "standaloneAllowLoad": true
+    "standaloneAllowLoad": true,
+    "standaloneLoadFromOtherDatabases": false
 }
 ....
 
@@ -86,11 +87,16 @@ inside Neo4j and would like to run a standalone mode deployment with a
 dashboard from a URL, set this parameter to the complete URL pointing to
 the dashboard JSON.
 
-|standaloneAllowLoad |boolean |true |If set t yes the "Load Dashboard"
+|standaloneAllowLoad |boolean |false |If set t yes the "Load Dashboard"
 button will be enabled in standalone mode, allowing users to load 
 additional dashboards from Neo4J. 
 *NOTE*: when Load is enabled in standalone mode, only Database is available
 as a source, not file.
+
+|standaloneLoadFromOtherDatabases|boolean |false |If standaloneAllowLoad is 
+set to true, this parmeter enables or not users to load dashboards from 
+other databases than the one deifned in standaloneDashboardDatabase. If 
+standaloneAllowLoad is set to false this parameters has no effect. 
 |===
 
 == Configuring SSO
