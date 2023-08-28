@@ -39,6 +39,7 @@ const NeoCard = ({
   extensions, // A set of enabled extensions.
   globalParameters, // Query parameters that are globally set for the entire dashboard.
   dashboardSettings, // Dictionary of settings for the entire dashboard.
+  enableExecuteButtonForIds, // Reports will have save buttons to execute cypher queries
   onRemovePressed, // action to take when the card is removed. (passed from parent)
   onClonePressed, // action to take when user presses the clone button
   onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
@@ -139,6 +140,7 @@ const NeoCard = ({
             settingsOpen={settingsOpen}
             editable={editable}
             dashboardSettings={dashboardSettings}
+            enableExecuteButtonForIds={enableExecuteButtonForIds}
             extensions={extensions}
             settings={report.settings ? report.settings : {}}
             updateReportSetting={(name, value) => onReportSettingUpdate(id, name, value)}
