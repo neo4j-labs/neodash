@@ -83,3 +83,13 @@ export const getApiKey = (state: any) => {
   let settings = getQueryTranslatorSettings(state);
   return settings.apiKey != undefined && settings.apiKey ? settings.apiKey : '';
 };
+
+/**
+ * Method to retrieve the examples provided by the user in the shape {question, answer}
+ * @param state State of the application
+ * @returns List of examples provided by the user
+ */
+export const getModelExamples = (state: any) => {
+  let examples = checkExtensionConfig(state) && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME].examples;
+  return examples != undefined && examples ? examples : [];
+};

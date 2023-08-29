@@ -5,7 +5,7 @@ import {
   relQuery,
   schemaSamplingQuery,
   SCHEMA_SAMPLING_NUMBER,
-  translatorTask,
+  QUERY_TRANSLATOR_TASK,
 } from './const';
 
 const notImplementedError = (functionName) => {
@@ -73,11 +73,16 @@ export abstract class ModelClient {
     throw new Error('Driver not present');
   }
 
+  /**
+   * Function used to create a schema representation to send to the model
+   * @param nodeProps Labels and properties of the nodes in the database
+   * @param relProps Properties of the relationships in the database
+   * @param rels Patterns existing in the database
+   * @returns Message representing the schema
+   */
   createSchemaText(nodeProps, relProps, rels) {
     if (nodeProps.length == 0 && relProps.length == 0 && rels.length == 0) {
-      throw Error(
-        `Couldn't generate schema due to: There is no schema to use for the model, please persist some data in the database first.`
-      );
+      throw Error(`Looks like there is no schema to fetch, are you sure this database is not empty?`);
     }
     let nodes = JSON.stringify(nodeProps);
     let relationshipsProps = JSON.stringify(relProps);
@@ -94,18 +99,14 @@ export abstract class ModelClient {
     `;
   }
 
+  /**
+   * Creates the schema message for the model in sampling mode (faster but less accurate)
+   * @param database Name of the database which will provide the schema
+   * @returns Message representing the schema
+   */
   async generateSchemaSample(database) {
     let sample = await this.queryDatabase(schemaSamplingQuery, database, false, { sample: SCHEMA_SAMPLING_NUMBER });
     let { relationships, nodes, patterns } = sample[0];
-    console.log(relationships);
-    console.log(nodes);
-    console.log(patterns);
-
-    if ((relationships == null && patterns == undefined) || nodes == undefined) {
-      throw Error(
-        `Couldn't generate schema due to: There is no schema to use for the model, please persist some data in the database first.`
-      );
-    }
 
     let nodesText = nodes ? nodes.split('\n').join(',') : '';
     let relText = relationships ? relationships.split('\n').join(',') : '';
@@ -115,6 +116,11 @@ export abstract class ModelClient {
     return res;
   }
 
+  /**
+   * Creates the schema message for the model in full reading mode (slower but 100% accurate)
+   * @param database Name of the database which will provide the schema
+   * @returns Message representing the schema
+   */
   async generateSchema(database) {
     try {
       let nodeProps = await this.queryDatabase(nodePropsQuery, database);
@@ -129,7 +135,7 @@ export abstract class ModelClient {
   }
 
   getSystemMessage(schemaText) {
-    return `${translatorTask}
+    return `${QUERY_TRANSLATOR_TASK}
       Schema:
       ${schemaText}
     `;
@@ -166,6 +172,7 @@ export abstract class ModelClient {
   ) {
     // Creating a copy of the history
     let newHistory = [...history];
+
     // Creating a tmp history to prevent updating the history with erroneous messages
     let tmpHistory = [...newHistory];
     let schema = '';
@@ -174,8 +181,8 @@ export abstract class ModelClient {
     try {
       // If empty, the first message will be the task definition
       if (tmpHistory.length == 0) {
+        // The schema can be fetched in full or in sample mode (the second one is faster but less accurate)
         schema = schemaSampling ? await this.generateSchemaSample(database) : await this.generateSchema(database);
-        console.log(schema);
         tmpHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
       }
       tmpHistory.push(this.addUserMessage(inputMessage, reportType));
@@ -189,7 +196,7 @@ export abstract class ModelClient {
         retries += 1;
         onRetry(retries);
 
-        // Get the answer to the question
+        // Get the answer to the question from the model
         modelAnswer = await this.chatCompletion(tmpHistory);
         tmpHistory.push(modelAnswer);
         console.log(tmpHistory);
