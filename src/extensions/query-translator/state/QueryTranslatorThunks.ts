@@ -8,6 +8,7 @@ import {
   getHistoryPerCard,
   getModelClient,
   getModelProvider,
+  getModelExamples,
 } from './QueryTranslatorSelector';
 import { Status } from '../util/Status';
 
@@ -102,7 +103,11 @@ export const queryTranslationThunk =
     try {
       const state = getState();
       const database = getDatabase(state, pagenumber, cardId);
+      const examples = getModelExamples(state);
+
+      // Storing the message that will be sent to the model
       dispatch(updateLastMessage(message, pagenumber, cardId));
+
       // Retrieving the model client from the state
       let client: ModelClient = await dispatch(getModelClientThunk());
       if (client) {
