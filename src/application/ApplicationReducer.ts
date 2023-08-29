@@ -4,7 +4,7 @@
 
 import { HARD_RESET_CARD_SETTINGS, UPDATE_ALL_SELECTIONS, UPDATE_FIELDS, UPDATE_SCHEMA } from '../card/CardActions';
 import { DEFAULT_NEO4J_URL } from '../config/ApplicationConfig';
-import { SET_DASHBOARD } from '../dashboard/DashboardActions';
+import { SET_DASHBOARD, SET_DASHBOARD_UUID } from '../dashboard/DashboardActions';
 import { UPDATE_DASHBOARD_SETTING } from '../settings/SettingsActions';
 import {
   CLEAR_DESKTOP_CONNECTION_PROPERTIES,
@@ -59,25 +59,25 @@ const initialState = {
 export const applicationReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
 
-  // LOGIC TO DETERMINE WHETHER WE ARE DRAFTING...
-
-  // if anything changes EXCEPT for the selected page, we flag that we are drafting a dashboard.
-  const NON_TRANSFORMATIVE_ACTIONS = [
-    UPDATE_DASHBOARD_SETTING,
-    UPDATE_SCHEMA,
-    HARD_RESET_CARD_SETTINGS,
-    SET_DASHBOARD,
-    UPDATE_ALL_SELECTIONS,
-    UPDATE_FIELDS,
-  ];
   // This is a special application-level flag used to determine whether the dashboard needs to be saved to the database.
   if (action.type.startsWith('DASHBOARD/') || action.type.startsWith('PAGE/') || action.type.startsWith('CARD/')) {
+    // if anything changes EXCEPT for the selected page, we flag that we are drafting a dashboard.
+    const NON_TRANSFORMATIVE_ACTIONS = [
+      UPDATE_DASHBOARD_SETTING,
+      UPDATE_SCHEMA,
+      HARD_RESET_CARD_SETTINGS,
+      SET_DASHBOARD,
+      UPDATE_ALL_SELECTIONS,
+      UPDATE_FIELDS,
+      SET_DASHBOARD_UUID,
+    ];
     if (!state.draft && !NON_TRANSFORMATIVE_ACTIONS.includes(type)) {
       state = update(state, { draft: true });
       return state;
     }
   }
 
+  // Ignore any non-application actions.
   if (!action.type.startsWith('APPLICATION/')) {
     return state;
   }
@@ -110,9 +110,6 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
     }
     case SET_ABOUT_MODAL_OPEN: {
       const { open } = payload;
-      if (!open) {
-        console.log('');
-      }
       state = update(state, { aboutModalOpen: open });
       return state;
     }

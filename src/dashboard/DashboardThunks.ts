@@ -51,8 +51,7 @@ export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: 
   }
 };
 
-export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
-  console.log('ues');
+export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any) => {
   try {
     if (text.length == 0) {
       throw 'No dashboard file specified. Did you select a file?';
@@ -88,7 +87,6 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
           'Your old dashboard was migrated to version 2.0. You might need to refresh this page.'
         )
       );
-      return;
     }
     if (dashboard.version == '2.0') {
       const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.0', '2.1');
@@ -101,7 +99,6 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
           'Your old dashboard was migrated to version 2.1. You might need to refresh this page.'
         )
       );
-      return;
     }
     if (dashboard.version == '2.1') {
       const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.1', '2.2');
@@ -114,7 +111,6 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
           'Your old dashboard was migrated to version 2.2. You might need to refresh this page.'
         )
       );
-      return;
     }
 
     if (dashboard.version == '2.2') {
@@ -128,7 +124,6 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
           'Your old dashboard was migrated to version 2.3. You might need to refresh this page and reactivate extensions.'
         )
       );
-      return;
     }
 
     if (dashboard.version != '2.3') {
@@ -153,55 +148,70 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
     dispatch(setParametersToLoadAfterConnecting(null));
     dispatch(updateParametersToNeo4jTypeThunk());
+
+    // Pre-2.3.4 dashboards might now always have a UUID. Set it if not present.
+    if (!dashboard.uuid) {
+      dispatch(setDashboardUuid(uuid));
+    }
   } catch (e) {
+    console.log(e);
     dispatch(createNotificationThunk('Unable to load dashboard', e));
   }
 };
 
-export const saveDashboardToNeo4jThunk =
-  (driver, database, dashboard, date, user, overwrite = false) =>
-  (dispatch: any) => {
-    try {
-      const uuid = createUUID();
-      const { title, version } = dashboard;
+export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, user, onSuccess) => (dispatch: any) => {
+  try {
+    let {uuid} = dashboard;
 
-      // Generate a cypher query to save the dashboard.
-      const query = overwrite
-        ? 'OPTIONAL MATCH (n:_Neodash_Dashboard{title:$title}) DELETE n WITH 1 as X LIMIT 1 CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid'
-        : 'CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid';
-
-      const parameters = {
-        uuid: uuid,
-        title: title,
-        version: version,
-        user: user,
-        content: JSON.stringify(dashboard, null, 2),
-        date: date,
-      };
-      runCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        1,
-        () => {},
-        (records) => {
-          if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
-            dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Neo4j.'));
-          } else {
-            dispatch(
-              createNotificationThunk(
-                'Unable to save dashboard',
-                `Do you have write access to the '${database}' database?`
-              )
-            );
-          }
-        }
-      );
-    } catch (e) {
-      dispatch(createNotificationThunk('Unable to save dashboard to Neo4j', e));
+    // Dashboards pre-2.3.4 may not always have a UUID. If this is the case, generate one just before we save.
+    if (!dashboard.uuid) {
+      uuid = createUUID();
+      dashboard.uuid = uuid;
+      dispatch(setDashboardUuid(uuid));
+      createUUID();
     }
-  };
+
+    const { title, version } = dashboard;
+
+    // Generate a cypher query to save the dashboard.
+    const query =
+      'MERGE (n:_Neodash_Dashboard {uuid: $uuid }) SET n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid';
+
+    const parameters = {
+      uuid: uuid,
+      title: title,
+      version: version,
+      user: user,
+      content: JSON.stringify(dashboard, null, 2),
+      date: date,
+    };
+    runCypherQuery(
+      driver,
+      database,
+      query,
+      parameters,
+      1,
+      () => {},
+      (records) => {
+        if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
+          dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Neo4j.'));
+
+          onSuccess(uuid);
+        } else {
+          console.log(records);
+          dispatch(
+            createNotificationThunk(
+              'Unable to save dashboard',
+              `Do you have write access to the '${database}' database?`
+            )
+          );
+        }
+      }
+    );
+  } catch (e) {
+    dispatch(createNotificationThunk('Unable to save dashboard to Neo4j', e));
+  }
+};
 
 export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) => (dispatch: any) => {
   try {
@@ -218,12 +228,12 @@ export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) =>
           dispatch(
             createNotificationThunk(
               `Unable to load dashboard from database '${database}'.`,
-              `A dashboard with UUID '${uuid}' could not be found.`
+              `A dashboard with UUID '${uuid}' could not be loaded.`
             )
           );
+        } else {
+          callback(records[0]._fields[0]);
         }
-        console.log(records);
-        callback(records[0]._fields[0]);
       }
     );
   } catch (e) {
@@ -319,8 +329,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
 };
 
 export const assignDashboardUuidIfNotPresentThunk = () => (dispatch: any, getState: any) => {
-  console.log(getState().dashboard);
-  const {uuid} = getState().dashboard;
+  const { uuid } = getState().dashboard;
   if (!uuid) {
     dispatch(setDashboardUuid(createUUID()));
   }

@@ -7,7 +7,11 @@ import { removeReportThunk } from '../../page/PageThunks';
 import { PlusIconOutline, MagnifyingGlassIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip';
 import { DashboardSidebarListItem } from './DashboardSidebarListItem';
-import { applicationGetConnectionDatabase, dashboardIsDraft } from '../../application/ApplicationSelectors';
+import {
+  applicationGetConnection,
+  applicationGetConnectionDatabase,
+  dashboardIsDraft,
+} from '../../application/ApplicationSelectors';
 import { setDraft } from '../../application/ApplicationActions';
 import NeoDashboardSidebarLoadModal from './DashboardSidebarLoadModal';
 import { resetDashboardState } from '../DashboardActions';
@@ -19,12 +23,17 @@ import {
   loadDashboardListFromNeo4jThunk,
   loadDashboardThunk,
   loadDatabaseListFromNeo4jThunk,
+  saveDashboardToNeo4jThunk,
 } from '../DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import NeoDashboardSidebarSaveModal from './DashboardSidebarSaveModal';
+import { getDashboardJson } from '../../modal/ModalSelectors';
+import NeoDashboardSidebarCreateMenu from './DashboardSidebarCreateMenu';
 
 enum Menu {
   DASHBOARD,
   DATABASE,
+  CREATE,
   NONE,
 }
 
@@ -33,14 +42,17 @@ enum Menu {
  */
 export const NeoDashboardSidebar = ({
   database,
+  connection,
   title,
   draft,
   setDraft,
+  dashboard,
   resetLocalDashboard,
   loadDashboard,
   loadDatabaseListFromNeo4j,
   loadDashboardListFromNeo4j,
   loadDashboardFromNeo4j,
+  saveDashboardToNeo4j,
 }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
@@ -48,7 +60,9 @@ export const NeoDashboardSidebar = ({
   const [dashboardDatabase, setDashboardDatabase] = React.useState(database);
   const [databases, setDatabases] = useState([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [loadModelOpen, setLoadModalOpen] = useState(false);
+  const [loadModalOpen, setLoadModalOpen] = useState(false);
+  const [loadModalIndex, setLoadModalIndex] = useState(-1);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
@@ -57,8 +71,8 @@ export const NeoDashboardSidebar = ({
 
   const getDashboardListFromNeo4j = () => {
     // Retrieves list of all dashboards stored in a given database.
-    console.log('getting');
     loadDashboardListFromNeo4j(driver, dashboardDatabase, (list) => {
+      console.log(list);
       setDashboards(list);
     });
   };
@@ -71,14 +85,40 @@ export const NeoDashboardSidebar = ({
 
   return (
     <div>
+      <NeoDashboardSidebarSaveModal
+        open={saveModalOpen}
+        onConfirm={() => {
+          saveDashboardToNeo4j(
+            driver,
+            dashboardDatabase,
+            dashboard,
+            new Date().toISOString(),
+            connection.username,
+            () => {
+              // After saving successfully, refresh the list after a small delay.
+              // The new dashboard will always be on top (the latest), so we select index 0.
+              setDashboards([]);
+              setTimeout(() => {
+                getDashboardListFromNeo4j();
+                setSelectedDashboardIndex(0);
+                setDraft(false);
+              }, 100);
+            }
+          );
+        }}
+        handleClose={() => setSaveModalOpen(false)}
+      />
+
       <NeoDashboardSidebarLoadModal
-        open={loadModelOpen}
+        open={loadModalOpen}
         onConfirm={() => {
           setLoadModalOpen(true);
-          loadDashboardFromNeo4j(driver, dashboardDatabase, dashboards[selectedDashboardIndex].uuid, (file) => {
-            loadDashboard(file);
+          const {uuid} = dashboards[loadModalIndex];
+          loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
+            loadDashboard(uuid, file);
+            setSelectedDashboardIndex(loadModalIndex);
+            setDraft(false);
           });
-          setDraft(false);
         }}
         handleClose={() => setLoadModalOpen(false)}
       />
@@ -135,6 +175,15 @@ export const NeoDashboardSidebar = ({
             }}
           />
 
+          <NeoDashboardSidebarCreateMenu
+            open={menuOpen == Menu.CREATE}
+            anchorEl={menuAnchor}
+            handleClose={() => {
+              setMenuOpen(Menu.NONE);
+              setMenuAnchor(null);
+            }}
+          />
+
           <SideNavigationGroupHeader>
             <div style={{ display: 'inline-block', width: '100%' }}>
               <span className='n-text-palette-neutral-text-weak' style={{ lineHeight: '28px' }}>
@@ -176,12 +225,14 @@ export const NeoDashboardSidebar = ({
                   size='small'
                   color='neutral'
                   style={{ float: 'right', marginLeft: '0px', marginRight: '5px', paddingLeft: 0, paddingRight: '3px' }}
-                  onClick={() => {
-                    if (draft) {
-                      setCreateModalOpen(true);
-                    } else {
-                      createDashboard();
-                    }
+                  onClick={(event) => {
+                    setMenuAnchor(event.currentTarget);
+                    setMenuOpen(Menu.CREATE);
+                    // if (draft) {
+                    //   setCreateModalOpen(true);
+                    // } else {
+                    //   createDashboard();
+                    // }
                   }}
                 >
                   <PlusIconOutline className='btn-icon-base-r' />
@@ -209,7 +260,8 @@ export const NeoDashboardSidebar = ({
               title={title}
               saved={false}
               onSelect={() => {}}
-              onSave={() => setDraft(false)}
+              onSave={() => setSaveModalOpen(true)}
+              onSettingsOpen={() => {}}
             />
           ) : (
             <></>
@@ -223,12 +275,14 @@ export const NeoDashboardSidebar = ({
                   title={d.title}
                   saved={true}
                   onSelect={() => {
-                    setSelectedDashboardIndex(index);
                     if (draft) {
+                      setLoadModalIndex(index);
                       setLoadModalOpen(true);
                     } else {
                       loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
-                        loadDashboard(file);
+                        loadDashboard(d.uuid, file);
+                        console.log(index);
+                        setSelectedDashboardIndex(index);
                       });
                     }
                   }}
@@ -248,10 +302,12 @@ export const NeoDashboardSidebar = ({
 
 const mapStateToProps = (state) => ({
   isLoaded: true,
+  connection: applicationGetConnection(state),
   pagenumber: getPageNumber(state),
   title: getDashboardTitle(state),
   editable: getDashboardIsEditable(state),
   draft: dashboardIsDraft(state),
+  dashboard: getDashboardJson(state),
   dashboardSettings: getDashboardSettings(state),
   database: applicationGetConnectionDatabase(state),
 });
@@ -260,12 +316,15 @@ const mapDispatchToProps = (dispatch) => ({
   onRemovePressed: (id) => dispatch(removeReportThunk(id)),
   resetLocalDashboard: () => dispatch(resetDashboardState()),
   setDraft: (draft) => dispatch(setDraft(draft)),
-  loadDashboard: (text) => dispatch(loadDashboardThunk(text)),
+  loadDashboard: (uuid, text) => dispatch(loadDashboardThunk(uuid, text)),
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
   loadDashboardFromNeo4j: (driver, database, uuid, callback) =>
     dispatch(loadDashboardFromNeo4jThunk(driver, database, uuid, callback)),
   loadDashboardListFromNeo4j: (driver, database, callback) =>
     dispatch(loadDashboardListFromNeo4jThunk(driver, database, callback)),
+  saveDashboardToNeo4j: (driver: any, database: string, dashboard: any, date: any, user: any, onSuccess) => {
+    dispatch(saveDashboardToNeo4jThunk(driver, database, dashboard, date, user, onSuccess));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoDashboardSidebar);

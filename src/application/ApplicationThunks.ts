@@ -40,6 +40,7 @@ import {
   setReportHelpModalOpen,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
+import { createUUID } from '../utils/uuid';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -86,11 +87,11 @@ export const createConnectionThunk =
           ) {
             fetch(application.dashboardToLoadAfterConnecting)
               .then((response) => response.text())
-              .then((data) => dispatch(loadDashboardThunk(data)));
+              .then((data) => dispatch(loadDashboardThunk(createUUID(), data)));
             dispatch(setDashboardToLoadAfterConnecting(null));
           } else if (application.dashboardToLoadAfterConnecting) {
             const setDashboardAfterLoadingFromDatabase = (value) => {
-              dispatch(loadDashboardThunk(value));
+              dispatch(loadDashboardThunk(createUUID(), value));
             };
 
             // If we specify a dashboard by name, load the latest version of it.

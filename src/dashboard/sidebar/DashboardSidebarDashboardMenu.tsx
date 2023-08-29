@@ -3,6 +3,7 @@ import { Menu, MenuItem, MenuItems } from '@neo4j-ndl/react';
 import {
   CloudArrowUpIconOutline,
   DocumentDuplicateIconOutline,
+  DocumentTextIconOutline,
   InformationCircleIconOutline,
   ShareIconOutline,
   TrashIconOutline,
@@ -11,7 +12,16 @@ import {
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export const NeoDashboardSidebarDashboardMenu = ({ anchorEl, open, handleClose }) => {
+export const NeoDashboardSidebarDashboardMenu = ({
+  anchorEl,
+  open,
+  handleInfoClicked,
+  handleLoadClicked,
+  handleExportClicked,
+  handleShareClicked,
+  handleDeleteClicked,
+  handleClose,
+}) => {
   return (
     <Menu
       anchorOrigin={{
@@ -28,11 +38,12 @@ export const NeoDashboardSidebarDashboardMenu = ({ anchorEl, open, handleClose }
       size='small'
     >
       <MenuItems>
-        <MenuItem onClick={() => {}} icon={<InformationCircleIconOutline />} title='Info' />
-        <MenuItem onClick={() => {}} icon={<CloudArrowUpIconOutline />} title='Load' />
-        <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' />
-        <MenuItem onClick={() => {}} icon={<ShareIconOutline />} title='Share' />
-        <MenuItem onClick={() => {}} icon={<TrashIconOutline />} title='Delete' />
+        <MenuItem onClick={handleInfoClicked} icon={<InformationCircleIconOutline />} title='Info' />
+        <MenuItem onClick={handleLoadClicked} icon={<CloudArrowUpIconOutline />} title='Load' />
+        {/* <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' /> */}
+        <MenuItem onClick={handleExportClicked} icon={<DocumentTextIconOutline />} title='Export' />
+        <MenuItem onClick={handleShareClicked} icon={<ShareIconOutline />} title='Share' />
+        <MenuItem onClick={handleDeleteClicked} icon={<TrashIconOutline />} title='Delete' />
       </MenuItems>
     </Menu>
   );

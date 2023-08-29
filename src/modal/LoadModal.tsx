@@ -214,7 +214,7 @@ export const NeoLoadModal = ({
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = (dispatch) => ({
-  loadDashboard: (text) => dispatch(loadDashboardThunk(text)),
+  loadDashboard: (uuid, text) => dispatch(loadDashboardThunk(uuid, text)),
   loadDashboardFromNeo4j: (driver, database, uuid, callback) =>
     dispatch(loadDashboardFromNeo4jThunk(driver, database, uuid, callback)),
   loadDashboardListFromNeo4j: (driver, database, callback) =>
