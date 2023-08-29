@@ -23,5 +23,10 @@
     "build-minimal:editor": "turbo run build --scope neodash",
     "test:editor": "turbo run test --scope neodash",
     "test-headless:editor": "turbo run test-headless --scope neodash"
+  },
+  "preconstruct": {
+    "packages": [
+      "packages/*"
+    ]
   }
 }
