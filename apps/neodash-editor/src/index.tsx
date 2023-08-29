@@ -4,13 +4,11 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { configureStore } from './store';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-// import Application from '@neodash/engine/application/Application';
-import { printStuff } from '@neodash/engine/src/';
-
+import Application from '@neodash/engine';
+import StyleConfig from '@neodash/engine/style';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
 import './index.pcss';
-// import StyleConfig from '@neodash/engine/config/StyleConfig';
 import * as Sentry from '@sentry/react';
 
 Sentry.init({
@@ -34,18 +32,18 @@ Sentry.init({
  */
 const store = configureStore();
 
-const a = printStuff();
-alert(a);
+// const a = printStuff();
+// alert(a);
 // @ts-ignore - persist state in browser cache.
 const persister = persistStore(store);
 
-// await StyleConfig.getInstance();
+await StyleConfig.getInstance();
 
 /** Wrap the application in a redux provider / browser cache persistance gate **/
 const provider = (
   <ReduxProvider store={store}>
     <PersistGate persistor={persister} loading={<div>Loading NeoDash...</div>}>
-      {/* <Application /> */}
+      <Application />
     </PersistGate>
   </ReduxProvider>
 );

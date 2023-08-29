@@ -1,3 +1,4 @@
-export function printStuff(override?: string) {
-  return override || 'test';
-}
+import Application from "./application/Application";
+
+export default Application;
+

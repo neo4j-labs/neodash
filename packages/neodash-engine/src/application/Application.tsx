@@ -61,7 +61,7 @@ const Dashboard = React.lazy(() => import('../dashboard/Dashboard'));
  * Parts of the application state are retrieved here and passed to the relevant compoenents.
  * State-changing actions are also dispatched from here. See `ApplicationThunks.tsx`, `ApplicationActions.tsx` and `ApplicationSelectors.tsx` for more info.
  */
-const Application = ({
+export const Application = ({
   connection,
   connected,
   hasCachedDashboard,
