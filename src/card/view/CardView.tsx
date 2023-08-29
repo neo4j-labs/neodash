@@ -211,7 +211,7 @@ const NeoCardView = ({
 
   const reportContent = (
     <CardContent ref={ref} style={cardContentStyle}>
-      {active === true || active === 'on' ? (
+      {active ? (
         <NeoReportWrapper
           id={id}
           query={query}
@@ -236,7 +236,7 @@ const NeoCardView = ({
           queryTimeLimit={dashboardSettings.queryTimeLimit ? dashboardSettings.queryTimeLimit : 20}
           setFields={onFieldsUpdate}
         />
-      ) : settings.hideQueryEditorInAutoRunOnMode || settings.hideQueryEditorInAutoRunOnMode === 'on' ? (
+      ) : settings.hideQueryEditorInAutoRunOnMode ? (
         executeButton
       ) : (
         queryEditor

@@ -49,10 +49,7 @@ export const NeoPage = ({
   const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
-  const enableExecuteButtonForIds = reports.filter(
-    (report: any) =>
-      report.settings?.hideQueryEditorInAutoRunOnMode || report.settings?.hideQueryEditorInAutoRunOnMode === 'on'
-  );
+  const enableExecuteButtonForIds = reports.filter((report: any) => report.settings?.hideQueryEditorInAutoRunOnMode);
 
   const availableHandles = () => {
     if (dashboardSettings.resizing && dashboardSettings.resizing == 'all') {
