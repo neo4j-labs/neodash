@@ -179,7 +179,7 @@ const NeoCardView = ({
     </div>
   );
 
-  const queryEditor = (
+  const cypherQueryEditor = (
     <>
       <IconButton
         style={{ float: 'right', marginRight: '9px' }}
@@ -239,7 +239,7 @@ const NeoCardView = ({
       ) : settings.hideQueryEditorInAutoRunOnMode ? (
         executeButton
       ) : (
-        queryEditor
+        cypherQueryEditor
       )}
     </CardContent>
   );
