@@ -44,36 +44,6 @@ export abstract class ModelClient {
   }
 
   /**
-   * Function to query the db directly from the client
-   * @param query Query to run
-   * @param database Selected database
-   * @returns The records results if the query runs correctly, otherwise the function will throw an error
-   */
-  async queryDatabase(query, database, getFirstColumnOnly = true, parameters = {}) {
-    if (this.driver) {
-      const session = this.driver.session({ database: database });
-      const transaction = session.beginTransaction({ timeout: 20 * 1000, connectionTimeout: 2000 });
-
-      let res = await transaction
-        .run(query, parameters)
-        .then((res) => {
-          const { records } = res;
-          let elems = records.map((elem) => {
-            return getFirstColumnOnly ? elem.toObject()[elem.keys[0]] : elem.toObject();
-          });
-          records.length > 0 ?? elems.unshift(records[0].keys);
-          transaction.commit();
-          return elems;
-        })
-        .catch(async (e) => {
-          throw e;
-        });
-      return res;
-    }
-    throw new Error('Driver not present');
-  }
-
-  /**
    * Function used to create a schema representation to send to the model
    * @param nodeProps Labels and properties of the nodes in the database
    * @param relProps Properties of the relationships in the database
@@ -134,7 +104,7 @@ export abstract class ModelClient {
     }
   }
 
-  getSystemMessage(schemaText) {
+  getTaskDefinition(schemaText) {
     return `${QUERY_TRANSLATOR_TASK}
       Schema:
       ${schemaText}
@@ -148,6 +118,25 @@ export abstract class ModelClient {
   getMessageContent(_message: any) {
     notImplementedError('getMessageContent');
     return '';
+  }
+
+  getExamplePrompt(examples) {
+    let res = `Here some samples of questions and their answers: \n`;
+    let tmp = examples.map((ex) => `Question: ${ex.question} \nAnswer: ${ex.answer} \n`);
+    return res + tmp.join('');
+  }
+
+  async manageMessageHistory(database, schema, schemaSampling, inputMessage, tmpHistory, reportType, examples) {
+    // If empty, the first message will be the task definition
+    if (tmpHistory.length == 0) {
+      // The schema can be fetched in full or in sample mode (the second one is faster but less accurate)
+      schema = schemaSampling ? await this.generateSchemaSample(database) : await this.generateSchema(database);
+      tmpHistory.push(this.addSystemMessage(this.getTaskDefinition(schema)));
+    }
+    // The Examples are always refreshed and always in second position
+    tmpHistory[1] = this.addSystemMessage(this.getExamplePrompt(examples));
+    tmpHistory.push(this.addUserMessage(inputMessage, reportType));
+    return tmpHistory;
   }
 
   /**
@@ -165,10 +154,11 @@ export abstract class ModelClient {
     history,
     database,
     reportType,
-    schemaSampling = true, // By default we create the schema message using apoc.meta.data in sampling mode
+    examples,
     onRetry = (value) => {
       let x = value;
-    }
+    },
+    schemaSampling = true // By default we create the schema message using apoc.meta.data in sampling mode
   ) {
     // Creating a copy of the history
     let newHistory = [...history];
@@ -179,13 +169,15 @@ export abstract class ModelClient {
     let query = '';
     let modelAnswer = { role: '', content: '' };
     try {
-      // If empty, the first message will be the task definition
-      if (tmpHistory.length == 0) {
-        // The schema can be fetched in full or in sample mode (the second one is faster but less accurate)
-        schema = schemaSampling ? await this.generateSchemaSample(database) : await this.generateSchema(database);
-        tmpHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
-      }
-      tmpHistory.push(this.addUserMessage(inputMessage, reportType));
+      tmpHistory = await this.manageMessageHistory(
+        database,
+        schema,
+        schemaSampling,
+        inputMessage,
+        tmpHistory,
+        reportType,
+        examples
+      );
 
       let retries = 0;
       let isValidated = false;
@@ -210,7 +202,7 @@ export abstract class ModelClient {
           tmpHistory.push(this.addErrorMessage(errorMessage));
         } else {
           if (newHistory.length == 0 && schema) {
-            newHistory.push(this.addSystemMessage(this.getSystemMessage(schema)));
+            newHistory.push(this.addSystemMessage(this.getTaskDefinition(schema)));
           }
           newHistory.push(this.addUserMessage(inputMessage, reportType, true));
           newHistory.push(modelAnswer);
@@ -229,6 +221,36 @@ export abstract class ModelClient {
       throw error;
     }
     return [query, newHistory];
+  }
+
+  /**
+   * Function to query the db directly from the client
+   * @param query Query to run
+   * @param database Selected database
+   * @returns The records results if the query runs correctly, otherwise the function will throw an error
+   */
+  async queryDatabase(query, database, getFirstColumnOnly = true, parameters = {}) {
+    if (this.driver) {
+      const session = this.driver.session({ database: database });
+      const transaction = session.beginTransaction({ timeout: 20 * 1000, connectionTimeout: 2000 });
+
+      let res = await transaction
+        .run(query, parameters)
+        .then((res) => {
+          const { records } = res;
+          let elems = records.map((elem) => {
+            return getFirstColumnOnly ? elem.toObject()[elem.keys[0]] : elem.toObject();
+          });
+          records.length > 0 ?? elems.unshift(records[0].keys);
+          transaction.commit();
+          return elems;
+        })
+        .catch(async (e) => {
+          throw e;
+        });
+      return res;
+    }
+    throw new Error('Driver not present');
   }
 
   async validateQuery(_message, _database) {

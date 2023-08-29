@@ -50,7 +50,8 @@ export const queryTranslatorReducer = (state = INITIAL_EXTENSION_STATE, action: 
     }
     case ADD_EXAMPLE: {
       const { question, answer } = payload;
-      let newExamples: object[] = [...state.examples];
+      let currentExamples = state.examples ? state.examples : [];
+      let newExamples: object[] = [...currentExamples];
       newExamples.push({ question: question, answer: answer });
       state = update(state, { examples: newExamples });
       return state;
