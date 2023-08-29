@@ -34,11 +34,15 @@ import {
   setAboutModalOpen,
   setStandaloneMode,
   setStandaloneDashboardDatabase,
+  setLoggingMode,
+  setLoggingDatabase,
   setWaitForSSO,
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
+import { applicationGetLoggingSettings, applicationIsStandalone } from './ApplicationSelectors';
+import { createUUID } from '../utils/uuid';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -56,6 +60,9 @@ import { version } from '../modal/AboutModal';
  */
 export const createConnectionThunk =
   (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
+    const loggingState = getState();
+    const loggingSettings = applicationGetLoggingSettings(loggingState)
+    const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor'
     try {
       const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
       // eslint-disable-next-line no-console
@@ -65,13 +72,41 @@ export const createConnectionThunk =
         console.log('Confirming connection was established...');
         if (records && records[0] && records[0].error) {
           dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
-        } else if (records && records[0] && records[0].keys[0] == 'connected') {
+          if (loggingSettings.loggingMode>'0'){
+            dispatch(
+              createLogThunk(
+                  driver, 
+                  loggingSettings.loggingDatabase,
+                  neodashMode,
+                  username,
+                  'ERR - connect to DB', 
+                  database, 
+                  '',
+                  'Error while trying to establish connection to Neo4j DB in ' +neodashMode+' mode at '+Date.now()  
+                )
+            );  
+          }              
+      } else if (records && records[0] && records[0].keys[0] == 'connected') {
           dispatch(setConnectionProperties(protocol, url, port, database, username, password));
           dispatch(setConnectionModalOpen(false));
           dispatch(setConnected(true));
           dispatch(updateSessionParameterThunk('session_uri', `${protocol}://${url}:${port}`));
           dispatch(updateSessionParameterThunk('session_database', database));
           dispatch(updateSessionParameterThunk('session_username', username));
+          if (loggingSettings.loggingMode>'0'){
+            dispatch(
+              createLogThunk(
+                  driver, 
+                  loggingSettings.loggingDatabase,
+                  neodashMode,
+                  username,
+                  'INF - connect to DB', 
+                  database, 
+                  '',
+                  username +'established connection to Neo4j DB in ' +neodashMode+' mode at '+Date.now()  
+                )
+            );                
+        }
           // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
           const { application } = getState();
           if (
@@ -349,6 +384,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDashboardName: 'My Dashboard',
     standaloneDashboardDatabase: 'dashboards',
     standaloneDashboardURL: '',
+    loggingMode: '0',
+    loggingDatabase: 'logs',
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -393,6 +430,10 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standalonePassword
       )
     );
+
+    dispatch(setLoggingMode(config.loggingMode));
+    dispatch(setLoggingDatabase(config.loggingDatabase));
+
     dispatch(setConnectionModalOpen(false));
 
     // Auto-upgrade the dashboard version if an old version is cached.
@@ -595,3 +636,48 @@ export const initializeApplicationAsStandaloneThunk =
       dispatch(setConnectionModalOpen(true));
     }
   };
+
+    // Thunk to handle log events.
+export const createLogThunk =
+(loggingDriver, loggingDatabase, neodashMode, logUser, logAction, logDatabase, logDashboard = '', logMessage) =>
+(dispatch: any) => {
+  try {
+    alert('entered log ceation with following parameters:\n'+loggingDriver+'\n'+neodashMode+'\n'+logUser+'\n'+logAction+'\n'+logDatabase+'\n'+logDashboard+'\n'+logMessage)
+    const uuid = createUUID();
+
+    // Generate a cypher query to save the log.
+    const query = 'CREATE (n:_Neodash_Log) SET n.uuid = $uuid, n.user = $user, n.date = datetime(), n.neodash_mode = $neodashMode, n.action = $logAction, n.database = $logDatabase, n.dashboard = $logDashboard, n.message = $logMessage RETURN $uuid as uuid'
+      
+    const parameters = {
+      uuid: uuid,
+      user: logUser,
+      logAction: logAction,
+      logDatabase: logDatabase,
+      neodashMode: neodashMode,
+      logDashboard: logDashboard,
+      logMessage: logMessage
+    };
+    runCypherQuery(
+      loggingDriver,
+      loggingDatabase,
+      query,
+      parameters,
+      1,
+      () => {},
+      (records) => {
+        if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
+          dispatch(createNotificationThunk('🎉 Success!', 'log created: '+uuid));
+        } else {
+          dispatch(
+            createNotificationThunk(
+              'Error creating log',
+              `Please check logging configuration with your Neodash administrator`
+            )
+          );
+        }
+      }
+    );
+  } catch (e) {
+    dispatch(createNotificationThunk('Error creating log', e));
+  }
+};

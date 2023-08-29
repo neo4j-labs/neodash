@@ -24,7 +24,10 @@ will look like this:
     "standaloneDatabase": "neo4j",
     "standaloneDashboardName": "My Dashboard",
     "standaloneDashboardDatabase": "dashboards",
-    "standaloneDashboardURL": ""
+    "standaloneDashboardURL": "",
+    "loggingMode": "0",
+    "loggingDatabase": "logging"   
+
 }
 ....
 
@@ -84,6 +87,18 @@ use multiple databases.
 inside Neo4j and would like to run a standalone mode deployment with a
 dashboard from a URL, set this parameter to the complete URL pointing to
 the dashboard JSON.
+
+|loggingMode |string |none |Determines whether neodash should create any
+user activity logs. possible values include: `0` (no log is created), 
+`1` (user login are tracked), `2` (tracks when a specific dashboard is 
+accessed/opened or saved by a user). 
+⚠️ Logs are created in Neo4J DB using the current user credentials 
+(or standaloneUsername if configured); write access to the log database 
+must be granted to enble any user to create logs.
+
+|loggingDatabase |string |neo4j |When loggingMode is set to anything 
+else than '0', the database to use for logging. Log records (nodes)
+will be created in this database.
 |===
 
 == Configuring SSO
@@ -134,3 +149,20 @@ The `standaloneDashboardName` and `standaloneDashboardDatabase` config
 parameters are used to define these.
 ** A standalone deployment that *reads the fixed dashboard from a URL*.
 The `standaloneDashboardURL` config parameter is used to define this.
+
+== Configuring Logging
+
+NeoDash treats log records with an approach similar to dashboards metadata: 
+saving them in a Neo4J database as distinct nodes. Each node has a label 
+"_Neodash_Log" and a standard set of properties such as DateTime (date), 
+UserID (user), Databadse Name (dashboard) Dashboard Name or UUID (dashboard), 
+NeoDash mode (neodash_mmode), Action (action) and a short message (message).
+
+⚠️ Logs are created using the credentials of the current user (either from 
+logon or, if configured, from standaloneUsername), therefore, for it to work,
+administrator must ensure that every neodash user has write access to the 
+__Neodash_Log_ label in the database confugred in the loggingDatabase prameter (which must also be available on the same Neo4J instance where dashboards and data are stored).
+This can be achieved by creating a standard NeoDashUser role in Neo4j with 
+such permissions and assigning this role to every neoDash user. For more 
+details on Neo4J granular access control please refer to the link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/access-control/[product documentation]
+

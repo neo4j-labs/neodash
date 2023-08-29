@@ -5,6 +5,8 @@ import { runCypherQuery } from '../report/ReportQueryRunner';
 import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
+import { createLogThunk } from '../application/ApplicationThunks';
+import { applicationGetLoggingSettings, applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -198,8 +200,13 @@ export const saveDashboardToNeo4jThunk =
     }
   };
 
-export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any) => {
-  try {
+export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {
+const loggingState = getState();
+const loggingSettings = applicationGetLoggingSettings(loggingState)
+const loguser = applicationGetConnectionUser(loggingState)
+const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor'
+alert('loggingsettings: '+loggingSettings.loggingMode+'\n'+loggingSettings.loggingDatabase+'\n'+loguser+'\n'+neodashMode)
+try {
     const query = 'MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard';
     runCypherQuery(
       driver,
@@ -216,17 +223,64 @@ export const loadDashboardFromNeo4jByUUIDThunk = (driver, database, uuid, callba
               `A dashboard with UUID '${uuid}' could not be found.`
             )
           );
+          if (loggingSettings.loggingMode > '1'){
+            dispatch(
+                createLogThunk(
+                    driver, 
+                    loggingSettings.loggingDatabase,
+                    neodashMode,
+                    loguser,
+                    'ERR - load dashboard', 
+                    database, 
+                    'UUID:'+uuid,
+                    'Error while trying to load dashboard by UUID in '+neodashMode+' mode at '+Date.now()  
+                )
+            );
+          }
         }
-        callback(records[0]._fields[0]);
+        if (loggingSettings.loggingMode > '1'){
+          dispatch(
+              createLogThunk(
+                  driver, 
+                  loggingSettings.loggingDatabase,
+                  neodashMode,
+                  loguser,
+                  'INF - load dashboard', 
+                  database, 
+                  'UUID:'+uuid,
+                  'User '+loguser+' Loaded dashboard by UUID in '+neodashMode+' mode at '+Date.now() 
+              )
+          );
+        }
+      callback(records[0]._fields[0]);
       }
     );
   } catch (e) {
     dispatch(createNotificationThunk('Unable to load dashboard to Neo4j', e));
+    if (loggingSettings.loggingMode > '1'){
+      dispatch(
+          createLogThunk(
+              driver, 
+              loggingSettings.loggingDatabase,
+              neodashMode,
+              loguser,
+              'ERR - load dashboard', 
+              database, 
+              'UUID:'+uuid,
+              'Error while trying to load dashboard by UUID in '+neodashMode+' mode at '+Date.now()  
+          )
+      );
+    }
   }
 };
 
-export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callback) => (dispatch: any) => {
-  try {
+export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callback) => (dispatch: any, getState: any) => {
+  const loggingState = getState();
+  const loggingSettings = applicationGetLoggingSettings(loggingState)
+  const loguser = applicationGetConnectionUser(loggingState)
+  const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor'
+  alert('loggingsettings: '+loggingSettings.loggingMode+'\n'+loggingSettings.loggingDatabase+'\n'+loguser+'\n'+neodashMode)
+    try {
     const query =
       'MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1';
     runCypherQuery(
@@ -244,14 +298,56 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callba
               'A dashboard with the provided name could not be found.'
             )
           );
+          if (loggingSettings.loggingMode > '1'){
+            dispatch(
+                createLogThunk(
+                    driver, 
+                    loggingSettings.loggingDatabase,
+                    neodashMode,
+                    loguser,
+                    'ERR - load dashboard', 
+                    database, 
+                    'Name:'+name,
+                    'Error while trying to load dashboard by Name in '+neodashMode+' mode at '+Date.now()  
+                )
+            );
+          }
           return;
         }
 
         if (records[0].error) {
           dispatch(createNotificationThunk('Unable to load dashboard.', records[0].error));
+          if (loggingSettings.loggingMode > '1'){
+            dispatch(
+                createLogThunk(
+                    driver, 
+                    loggingSettings.loggingDatabase,
+                    neodashMode,
+                    loguser,
+                    'ERR - load dashboard', 
+                    database, 
+                    'Name:'+name,
+                    'Error while trying to load dashboard by Name in '+neodashMode+' mode at '+Date.now()  
+                )
+            );
+          }
           return;
         }
 
+        if (loggingSettings.loggingMode > '1'){
+          dispatch(
+              createLogThunk(
+                  driver, 
+                  loggingSettings.loggingDatabase,
+                  neodashMode,
+                  loguser,
+                  'INF - load dashboard', 
+                  database, 
+                  'Name:'+name,
+                  'User '+loguser+' Loaded dashboard by UUID in '+neodashMode+' mode at '+Date.now() 
+              )
+          );
+        }
         callback(records[0]._fields[0]);
       }
     );
