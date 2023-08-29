@@ -13,11 +13,11 @@ import {
   dashboardIsDraft,
 } from '../../application/ApplicationSelectors';
 import { setDraft } from '../../application/ApplicationActions';
-import NeoDashboardSidebarLoadModal from './DashboardSidebarLoadModal';
+import NeoDashboardSidebarLoadModal from './modal/DashboardSidebarLoadModal';
 import { resetDashboardState } from '../DashboardActions';
-import NeoDashboardSidebarCreateModal from './DashboardSidebarCreateModal';
-import NeoDashboardSidebarDatabaseMenu from './DashboardSidebarDatabaseMenu';
-import NeoDashboardSidebarDashboardMenu from './DashboardSidebarDashboardMenu';
+import NeoDashboardSidebarCreateModal from './modal/DashboardSidebarCreateModal';
+import NeoDashboardSidebarDatabaseMenu from './menu/DashboardSidebarDatabaseMenu';
+import NeoDashboardSidebarDashboardMenu from './menu/DashboardSidebarDashboardMenu';
 import {
   loadDashboardFromNeo4jThunk,
   loadDashboardListFromNeo4jThunk,
@@ -26,9 +26,9 @@ import {
   saveDashboardToNeo4jThunk,
 } from '../DashboardThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import NeoDashboardSidebarSaveModal from './DashboardSidebarSaveModal';
+import NeoDashboardSidebarSaveModal from './modal/DashboardSidebarSaveModal';
 import { getDashboardJson } from '../../modal/ModalSelectors';
-import NeoDashboardSidebarCreateMenu from './DashboardSidebarCreateMenu';
+import NeoDashboardSidebarCreateMenu from './menu/DashboardSidebarCreateMenu';
 
 enum Menu {
   DASHBOARD,
@@ -113,7 +113,7 @@ export const NeoDashboardSidebar = ({
         open={loadModalOpen}
         onConfirm={() => {
           setLoadModalOpen(true);
-          const {uuid} = dashboards[loadModalIndex];
+          const { uuid } = dashboards[loadModalIndex];
           loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
             loadDashboard(uuid, file);
             setSelectedDashboardIndex(loadModalIndex);
