@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useMap, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '@mui/material';
-// TODO NIELS import '/styles/PolygonStyle.css';
 import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { abbreviateNumber } from '../../../../chart/map/MapUtils';
 

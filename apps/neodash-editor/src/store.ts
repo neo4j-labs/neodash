@@ -17,7 +17,6 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2,
 };
 
-console.log(applicationReducer);
 
 const reducers = {
   dashboard: dashboardReducer,
