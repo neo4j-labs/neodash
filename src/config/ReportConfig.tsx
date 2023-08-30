@@ -339,6 +339,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
       },
+      customTablePropertiesOfModal: {
+        label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
+        type: SELECTION_TYPES.LIST,
+        values: ['node', 'edge'],
+        default: 'node',
       minimizable: {
         label: 'Minimize Button',
         type: SELECTION_TYPES.LIST,
