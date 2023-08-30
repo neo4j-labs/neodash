@@ -23,6 +23,19 @@ export const parseNodeIconConfig = (iconStyle) => {
     console.log(error);
   }
 };
+const getSelectedNodeProperty = (entity: any, sourceOrTarget: string, propertySelections: any) => {
+  const sourceOrTargetLabel = propertySelections[entity[sourceOrTarget]?.labels[0]];
+  return entity[sourceOrTarget]?.properties[sourceOrTargetLabel];
+};
+
+export const getEntityHeaderForEdge = (entity: any, propertySelections: any) => {
+  const sourceTitle = getSelectedNodeProperty(entity, 'source', propertySelections);
+  const targetTitle = getSelectedNodeProperty(entity, 'target', propertySelections);
+  return (
+    (entity?.labels && `${sourceTitle} >> ${entity.labels.join(', ')} >> ${targetTitle}`) ||
+    `${entity.type} (${sourceTitle} --> ${targetTitle})`
+  );
+};
 
 const getSelectedNodeProperty = (entity: any, sourceOrTarget: string, propertySelections: any) => {
   const sourceOrTargetLabel = propertySelections[entity[sourceOrTarget]?.labels[0]];
