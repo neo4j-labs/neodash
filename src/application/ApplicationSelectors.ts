@@ -99,6 +99,12 @@ export const applicationGetLoggingSettings = (state: any) => {
   };
 };
 
+export const applicationGetLogErrorNotification = (state: any) => {
+  return {
+    logErrorNotification: state.application.logErrorNotification,
+  };
+};
+
 export const applicationHasWelcomeScreenOpen = (state: any) => {
   return state.application.welcomeScreenOpen;
 };

@@ -7,6 +7,8 @@ import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '.
 import { createUUID } from '../utils/uuid';
 import { createLogThunk } from '../application/ApplicationThunks';
 import { applicationGetLoggingSettings, applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
+// import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+// import { useContext } from 'react';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -54,6 +56,11 @@ export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: 
 };
 
 export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
+  const loggingState = getState();
+  const loggingSettings = applicationGetLoggingSettings(loggingState)
+  const loguser = applicationGetConnectionUser(loggingState)
+  const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor'
+
   try {
     if (text.length == 0) {
       throw 'No dashboard file specified. Did you select a file?';
@@ -68,6 +75,7 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
     if (dashboard._persist && dashboard.application && dashboard.dashboard) {
       dispatch(
         createNotificationThunk('Loaded a Debug Report', "Recovery-mode active. All report types were set to 'table'.")
+
       );
       dashboard.dashboard.pages.map((p) => {
         p.reports.map((r) => {
@@ -134,9 +142,9 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
 
     // Reverse engineer the minimal set of fields from the selection loaded.
     dashboard.pages.forEach((p) => {
+      r.fields = [];
       p.reports.forEach((r) => {
         if (r.selection) {
-          r.fields = [];
           Object.keys(r.selection).forEach((f) => {
             r.fields.push([f, r.selection[f]]);
           });
@@ -145,19 +153,55 @@ export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {
     });
 
     dispatch(setDashboard(dashboard));
+    // if(loggingSettings.loggingMode > '1') {
+    //   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+    //   dispatch(
+    //     createLogThunk(
+    //       driver, 
+    //       loggingSettings.loggingDatabase,
+    //       neodashMode,
+    //       loguser,
+    //       'INF - load dashboard from file', 
+    //       loggingSettings.loggingDatabase, 
+    //       'Name:'+dashboard.title,
+    //       'User '+loguser+' Loaded dashboard from file in '+neodashMode+' mode at '+Date.now()  
+    //     )
+    //   )
+    // }
+
     const { application } = getState();
 
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
     dispatch(setParametersToLoadAfterConnecting(null));
     dispatch(updateParametersToNeo4jTypeThunk());
   } catch (e) {
+    // if(loggingSettings.loggingMode > '1') {
+    //   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+    //   dispatch(
+    //     createLogThunk(
+    //       driver, 
+    //       loggingSettings.loggingDatabase,
+    //       neodashMode,
+    //       loguser,
+    //       'ERR - load dashboard from file', 
+    //       loggingSettings.loggingDatabase, 
+    //       'Name:Not Parsed',
+    //       'Error while trying to load dashboard from file in '+neodashMode+' mode at '+Date.now()  
+    //     )
+    //   )
+    // }
     dispatch(createNotificationThunk('Unable to load dashboard', e));
   }
 };
 
 export const saveDashboardToNeo4jThunk =
   (driver, database, dashboard, date, user, overwrite = false) =>
-  (dispatch: any) => {
+  (dispatch: any, getState: any) => {
+    const loggingState = getState();
+    const loggingSettings = applicationGetLoggingSettings(loggingState)
+    const loguser = applicationGetConnectionUser(loggingState)
+    const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor'
+
     try {
       const uuid = createUUID();
       const { title, version } = dashboard;
@@ -205,7 +249,6 @@ const loggingState = getState();
 const loggingSettings = applicationGetLoggingSettings(loggingState)
 const loguser = applicationGetConnectionUser(loggingState)
 const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor'
-alert('loggingsettings: '+loggingSettings.loggingMode+'\n'+loggingSettings.loggingDatabase+'\n'+loguser+'\n'+neodashMode)
 try {
     const query = 'MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard';
     runCypherQuery(

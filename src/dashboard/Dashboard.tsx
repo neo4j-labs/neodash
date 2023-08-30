@@ -75,6 +75,7 @@ const Dashboard = ({
       </div>
     </Neo4jProvider>
   );
+  alert ('I am here and I am a dashboard')
   return content;
 };
 

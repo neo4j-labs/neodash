@@ -36,12 +36,13 @@ import {
   setStandaloneDashboardDatabase,
   setLoggingMode,
   setLoggingDatabase,
+  setLogErrorNotification,
   setWaitForSSO,
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
-import { applicationGetLoggingSettings, applicationIsStandalone } from './ApplicationSelectors';
+import { applicationGetLoggingSettings, applicationIsStandalone, applicationGetLogErrorNotification } from './ApplicationSelectors';
 import { createUUID } from '../utils/uuid';
 
 /**
@@ -637,12 +638,11 @@ export const initializeApplicationAsStandaloneThunk =
     }
   };
 
-    // Thunk to handle log events.
+// Thunk to handle log events.
 export const createLogThunk =
 (loggingDriver, loggingDatabase, neodashMode, logUser, logAction, logDatabase, logDashboard = '', logMessage) =>
-(dispatch: any) => {
+(dispatch: any, getState: any) => {
   try {
-    alert('entered log ceation with following parameters:\n'+loggingDriver+'\n'+neodashMode+'\n'+logUser+'\n'+logAction+'\n'+logDatabase+'\n'+logDashboard+'\n'+logMessage)
     const uuid = createUUID();
 
     // Generate a cypher query to save the log.
@@ -666,18 +666,30 @@ export const createLogThunk =
       () => {},
       (records) => {
         if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
-          dispatch(createNotificationThunk('🎉 Success!', 'log created: '+uuid));
+          console.log('log created: '+uuid);
         } else {
+          //we only show error notification one time
+          const state = getState()
+          const LogErrorNotification : number = Number(applicationGetLogErrorNotification(state))
+          if (LogErrorNotification > 0 ) {
           dispatch(
-            createNotificationThunk(
-              'Error creating log',
-              `Please check logging configuration with your Neodash administrator`
-            )
-          );
+              createNotificationThunk(
+                'Error creating log',
+                `Please check logging configuration with your Neodash administrator`
+              )
+            );
+            dispatch(setLogErrorNotification (LogErrorNotification - 1));
+          }
         }
       }
     );
   } catch (e) {
-    dispatch(createNotificationThunk('Error creating log', e));
+            //we only show error notification 3 times
+            const state = getState()
+            const LogErrorNotification : number = Number(applicationGetLogErrorNotification(state))
+            if (LogErrorNotification > 0 ) {
+              dispatch(createNotificationThunk('Error creating log', e));
+              dispatch(setLogErrorNotification (LogErrorNotification - 1));
+            }
   }
 };

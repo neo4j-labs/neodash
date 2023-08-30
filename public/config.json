@@ -3,12 +3,12 @@
   "ssoDiscoveryUrl": "https://example.com",
   "standalone": false,
   "standaloneProtocol": "neo4j",
-  "standaloneHost": "localhost",
+  "standaloneHost": "192.168.0.100",
   "standalonePort": "7687",
-  "standaloneDatabase": "neo4j",
+  "standaloneDatabase": "movies",
   "standaloneDashboardName": "My Dashboard",
   "standaloneDashboardDatabase": "dashboards",
   "standaloneDashboardURL": "",
-  "loggingMode": "2",
+  "loggingMode": "0",
   "loggingDatabase": "logs"
 }
