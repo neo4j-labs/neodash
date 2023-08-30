@@ -4,7 +4,7 @@
 
 import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
 import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/state/ExtensionReducer';
-import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
+import { PAGE_EXAMPLE_STATE, pageReducer, PAGE_EMPTY_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
 
 import {
@@ -23,9 +23,17 @@ export const NEODASH_VERSION = '2.3';
 export const initialState = {
   title: DEFAULT_DASHBOARD_TITLE,
   version: NEODASH_VERSION,
-
   settings: SETTINGS_INITIAL_STATE,
-  pages: [FIRST_PAGE_INITIAL_STATE],
+  pages: [PAGE_EXAMPLE_STATE],
+  parameters: {},
+  extensions: INITIAL_EXTENSIONS_STATE,
+};
+
+export const emptyDashboardState = {
+  title: DEFAULT_DASHBOARD_TITLE,
+  version: NEODASH_VERSION,
+  settings: SETTINGS_INITIAL_STATE,
+  pages: [PAGE_EMPTY_STATE],
   parameters: {},
   extensions: INITIAL_EXTENSIONS_STATE,
 };
@@ -69,7 +77,7 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
   // Global dashboard updates are handled here.
   switch (type) {
     case RESET_DASHBOARD_STATE: {
-      return { ...initialState };
+      return { ...emptyDashboardState };
     }
     case SET_DASHBOARD: {
       const { dashboard } = payload;
@@ -91,7 +99,7 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
       return { ...state, extensions: extensions };
     }
     case CREATE_PAGE: {
-      return { ...state, pages: [...state.pages, PAGE_INITIAL_STATE] };
+      return { ...state, pages: [...state.pages, PAGE_EMPTY_STATE] };
     }
     case REMOVE_PAGE: {
       // Removes the card at a given index on a selected page number.

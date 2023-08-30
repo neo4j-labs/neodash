@@ -5,7 +5,13 @@ import { DocumentTextIconOutline, PlusCircleIconOutline } from '@neo4j-ndl/react
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export const NeoDashboardSidebarCreateMenu = ({ anchorEl, open, handleClose }) => {
+export const NeoDashboardSidebarCreateMenu = ({
+  anchorEl,
+  open,
+  handleNewClicked,
+  handleImportClicked,
+  handleClose,
+}) => {
   return (
     <Menu
       anchorOrigin={{
@@ -22,8 +28,8 @@ export const NeoDashboardSidebarCreateMenu = ({ anchorEl, open, handleClose }) =
       size='small'
     >
       <MenuItems>
-        <MenuItem onClick={() => {}} title='New' />
-        <MenuItem onClick={() => {}} title='Import' />
+        <MenuItem onClick={handleNewClicked} title='New' />
+        <MenuItem onClick={handleImportClicked} title='Import' />
       </MenuItems>
     </Menu>
   );

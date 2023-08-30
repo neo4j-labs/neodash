@@ -29,11 +29,21 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import NeoDashboardSidebarSaveModal from './modal/DashboardSidebarSaveModal';
 import { getDashboardJson } from '../../modal/ModalSelectors';
 import NeoDashboardSidebarCreateMenu from './menu/DashboardSidebarCreateMenu';
+import NeoDashboardSidebarImportModal from './modal/DashboardSidebarImportModal';
 
 enum Menu {
   DASHBOARD,
   DATABASE,
   CREATE,
+  NONE,
+}
+
+enum Modal {
+  CREATE,
+  IMPORT,
+  EXPORT,
+  LOAD,
+  SAVE,
   NONE,
 }
 
@@ -57,22 +67,19 @@ export const NeoDashboardSidebar = ({
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
   const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(-1);
-  const [dashboardDatabase, setDashboardDatabase] = React.useState(database);
+  const [dashboardDatabase, setDashboardDatabase] = React.useState(database ? database : 'neo4j');
   const [databases, setDatabases] = useState([]);
-  const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [loadModalOpen, setLoadModalOpen] = useState(false);
   const [loadModalIndex, setLoadModalIndex] = useState(-1);
-  const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
+  const [modalOpen, setModalOpen] = useState(Modal.NONE);
 
   const [dashboards, setDashboards] = React.useState([]);
 
   const getDashboardListFromNeo4j = () => {
     // Retrieves list of all dashboards stored in a given database.
     loadDashboardListFromNeo4j(driver, dashboardDatabase, (list) => {
-      console.log(list);
       setDashboards(list);
     });
   };
@@ -86,7 +93,7 @@ export const NeoDashboardSidebar = ({
   return (
     <div>
       <NeoDashboardSidebarSaveModal
-        open={saveModalOpen}
+        open={modalOpen == Modal.SAVE}
         onConfirm={() => {
           saveDashboardToNeo4j(
             driver,
@@ -106,13 +113,13 @@ export const NeoDashboardSidebar = ({
             }
           );
         }}
-        handleClose={() => setSaveModalOpen(false)}
+        handleClose={() => setModalOpen(Modal.NONE)}
       />
 
       <NeoDashboardSidebarLoadModal
-        open={loadModalOpen}
+        open={modalOpen == Modal.LOAD}
         onConfirm={() => {
-          setLoadModalOpen(true);
+          setModalOpen(Modal.LOAD);
           const { uuid } = dashboards[loadModalIndex];
           loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
             loadDashboard(uuid, file);
@@ -120,16 +127,25 @@ export const NeoDashboardSidebar = ({
             setDraft(false);
           });
         }}
-        handleClose={() => setLoadModalOpen(false)}
+        handleClose={() => setModalOpen(Modal.NONE)}
       />
 
       <NeoDashboardSidebarCreateModal
-        open={createModalOpen}
+        open={modalOpen == Modal.CREATE}
         onConfirm={() => {
-          setCreateModalOpen(false);
+          setModalOpen(Modal.NONE);
           createDashboard();
         }}
-        handleClose={() => setCreateModalOpen(false)}
+        handleClose={() => setModalOpen(Modal.NONE)}
+      />
+
+      <NeoDashboardSidebarImportModal
+        open={modalOpen == Modal.IMPORT}
+        onConfirm={() => {
+          setModalOpen(Modal.NONE);
+          alert('oh');
+        }}
+        handleClose={() => setModalOpen(Modal.NONE)}
       />
 
       <SideNavigation
@@ -169,6 +185,21 @@ export const NeoDashboardSidebar = ({
           <NeoDashboardSidebarDashboardMenu
             open={menuOpen == Menu.DASHBOARD}
             anchorEl={menuAnchor}
+            handleInfoClicked={() => {
+              alert('todo');
+            }}
+            handleLoadClicked={() => {
+              alert('todo');
+            }}
+            handleExportClicked={() => {
+              alert('todo');
+            }}
+            handleShareClicked={() => {
+              alert('todo');
+            }}
+            handleDeleteClicked={() => {
+              alert('todo');
+            }}
             handleClose={() => {
               setMenuOpen(Menu.NONE);
               setMenuAnchor(null);
@@ -178,6 +209,18 @@ export const NeoDashboardSidebar = ({
           <NeoDashboardSidebarCreateMenu
             open={menuOpen == Menu.CREATE}
             anchorEl={menuAnchor}
+            handleNewClicked={() => {
+              setMenuOpen(Menu.NONE);
+              if (draft) {
+                setModalOpen(Modal.CREATE);
+              } else {
+                createDashboard();
+              }
+            }}
+            handleImportClicked={() => {
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.IMPORT);
+            }}
             handleClose={() => {
               setMenuOpen(Menu.NONE);
               setMenuAnchor(null);
@@ -228,11 +271,6 @@ export const NeoDashboardSidebar = ({
                   onClick={(event) => {
                     setMenuAnchor(event.currentTarget);
                     setMenuOpen(Menu.CREATE);
-                    // if (draft) {
-                    //   setCreateModalOpen(true);
-                    // } else {
-                    //   createDashboard();
-                    // }
                   }}
                 >
                   <PlusIconOutline className='btn-icon-base-r' />
@@ -260,7 +298,7 @@ export const NeoDashboardSidebar = ({
               title={title}
               saved={false}
               onSelect={() => {}}
-              onSave={() => setSaveModalOpen(true)}
+              onSave={() => setModalOpen(Modal.SAVE)}
               onSettingsOpen={() => {}}
             />
           ) : (
@@ -277,11 +315,10 @@ export const NeoDashboardSidebar = ({
                   onSelect={() => {
                     if (draft) {
                       setLoadModalIndex(index);
-                      setLoadModalOpen(true);
+                      setModalOpen(Modal.LOAD);
                     } else {
                       loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
                         loadDashboard(d.uuid, file);
-                        console.log(index);
                         setSelectedDashboardIndex(index);
                       });
                     }
