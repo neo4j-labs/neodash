@@ -127,14 +127,22 @@ export abstract class ModelClient {
   }
 
   async manageMessageHistory(database, schema, schemaSampling, inputMessage, tmpHistory, reportType, examples) {
+    let res = [...tmpHistory];
     // If empty, the first message will be the task definition
     if (tmpHistory.length == 0) {
       // The schema can be fetched in full or in sample mode (the second one is faster but less accurate)
       schema = schemaSampling ? await this.generateSchemaSample(database) : await this.generateSchema(database);
       tmpHistory.push(this.addSystemMessage(this.getTaskDefinition(schema)));
     }
+    console.log(examples);
     // The Examples are always refreshed and always in second position
-    tmpHistory[1] = this.addSystemMessage(this.getExamplePrompt(examples));
+    if (examples.length > 0) {
+      // If a message is already there, we need to shift the whole array
+      if (tmpHistory[1]) {
+        tmpHistory = [tmpHistory[0], undefined, ...tmpHistory.slice(1)];
+      }
+      tmpHistory[1] = this.addSystemMessage(this.getExamplePrompt(examples));
+    }
     tmpHistory.push(this.addUserMessage(inputMessage, reportType));
     return tmpHistory;
   }
