@@ -91,6 +91,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -305,6 +311,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
@@ -495,6 +507,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -664,6 +682,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
+      },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       refreshRate: {
         label: 'Refresh rate (seconds)',
@@ -858,6 +882,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -1044,6 +1074,12 @@ export const REPORT_TYPES = {
   //       values: [true, false],
   //       default: true,
   //     },
+  //     hideQueryEditorInAutoRunOnMode: {
+  //        label: 'Hide query editor on auto run on mode',
+  //        type: SELECTION_TYPES.LIST,
+  //        values: [true, false],
+  //        default: false,
+  //      },
   //     refreshRate: {
   //       label: 'Refresh rate (seconds)',
   //       type: SELECTION_TYPES.NUMBER,
@@ -1163,6 +1199,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
@@ -1245,6 +1287,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -1304,6 +1352,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
+      },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       refreshRate: {
         label: 'Refresh rate (seconds)',

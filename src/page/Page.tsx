@@ -65,6 +65,8 @@ export const NeoPage = ({
   const notGroupReports = reports.filter((report: any) => !report.groupId);
   const filteredReports = reports.filter((report: any) => report.groupId); // Filter only reports with groupId
 
+  const enableExecuteButtonForIds = reports.filter((report: any) => report.settings?.hideQueryEditorInAutoRunOnMode);
+
   const availableHandles = () => {
     if (dashboardSettings.resizing && dashboardSettings.resizing == 'all') {
       return ['s', 'w', 'e', 'sw', 'se'];
@@ -285,6 +287,7 @@ export const NeoPage = ({
               <NeoCard
                 id={id}
                 key={getReportKey(pagenumber, id)}
+                enableExecuteButtonForIds={enableExecuteButtonForIds}
                 dashboardSettings={dashboardSettings}
                 onRemovePressed={onRemovePressed}
                 onPutItem={onPutItem}
