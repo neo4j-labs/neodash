@@ -107,6 +107,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
       },
+      expandedCellRenderer: {
+        label: 'Use expanded cell renderer',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       minimizable: {
         label: 'Minimize Button',
         type: SELECTION_TYPES.LIST,
