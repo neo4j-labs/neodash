@@ -58,6 +58,7 @@ export interface GraphChartVisualizationProps {
     setLinks: (links) => void;
     setNodeLabels: (labels) => void;
     setLinkTypes: (types) => void;
+    legendDefinition: object;
   };
   /**
    * The properties relevant for styling the graph.
@@ -134,6 +135,7 @@ export interface GraphChartVisualizationProps {
     setClickPosition: (pos) => void;
     setPageNumber: any;
     pageNames: [];
+    customTablePropertiesOfModal: any[]
   };
   /**
    * entries in 'extensions' let users plug in extra functionality into the visualization based on enabled plugins.

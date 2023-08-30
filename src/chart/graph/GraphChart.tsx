@@ -13,13 +13,14 @@ import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { IconButtonArray, IconButton } from '@neo4j-ndl/react';
-import { Tooltip } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 import { downloadCSV } from '../ChartUtils';
 import { generateSafeColumnKey } from '../table/TableChart';
 import { GraphChartContextMenu } from './component/GraphChartContextMenu';
 import { getSettings } from '../SettingsUtils';
 import { getPageNumbersAndNamesList } from '../../extensions/advancedcharts/Utils';
 import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
+import { NeoGraphChartLegendButton } from './component/button/GraphChartLegendButton';
 
 /**
  * Draws graph data using a force-directed-graph visualization.
@@ -137,6 +138,7 @@ const NeoGraphChart = (props: ChartProps) => {
       setLinks: setLinks,
       setNodeLabels: setNodeLabels,
       setLinkTypes: setLinkTypes,
+      legendDefinition: props.legendDefinition ? props.legendDefinition : {},
     },
     style: {
       width: width,
@@ -202,6 +204,7 @@ const NeoGraphChart = (props: ChartProps) => {
       clickPosition: clickPosition,
       setClickPosition: setClickPosition,
       createNotification: props.createNotification,
+      customTablePropertiesOfModal: settings.customTablePropertiesOfModal,
     },
     extensions: {
       styleRules: settings.styleRules,
@@ -217,17 +220,20 @@ const NeoGraphChart = (props: ChartProps) => {
   return (
     <div ref={observe} style={{ width: '100%', height: '95%' }}>
       <NeoGraphChartCanvas>
-        <IconButtonArray
-          aria-label={'graph icon'}
-          floating
-          orientation='horizontal'
-          className='n-z-10 n-absolute n-bottom-2 n-right-4'
-        >
-          <GraphChartContextMenu {...chartProps} />
-          <NeoGraphChartFitViewButton {...chartProps} />
-          {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
-          {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
-        </IconButtonArray>
+        <Stack direction={'row'}>
+          <NeoGraphChartLegendButton {...chartProps}></NeoGraphChartLegendButton>
+          <IconButtonArray
+            aria-label={'graph icon'}
+            floating
+            orientation='horizontal'
+            className='n-z-10 n-absolute n-bottom-2 n-right-4'
+          >
+            <GraphChartContextMenu {...chartProps} />
+            <NeoGraphChartFitViewButton {...chartProps} />
+            {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+            {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
+          </IconButtonArray>
+        </Stack>
         <NeoGraphChartVisualization2D {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
         {settings.allowDownload && props.records && props.records.length > 0 ? (

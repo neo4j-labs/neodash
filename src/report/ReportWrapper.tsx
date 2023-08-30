@@ -46,6 +46,7 @@ export const NeoReportWrapper = ({
   type,
   expanded,
   extensions,
+  legendDefinition,
   ChartType,
 }) => {
   return (
@@ -71,6 +72,7 @@ export const NeoReportWrapper = ({
         type={type}
         expanded={expanded}
         extensions={extensions}
+        legendDefinition={legendDefinition}
         ChartType={ChartType}
       />
     </ErrorBoundary>
