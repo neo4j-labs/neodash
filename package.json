@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -108,8 +108,8 @@
     "@babel/preset-typescript": "^7.16.7",
     "@babel/register": "^7.16.9",
     "@cypress/code-coverage": "^3.10.8",
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@redux-devtools/extension": "^3.2.3",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
