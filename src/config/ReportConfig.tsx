@@ -91,6 +91,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -103,6 +109,12 @@ export const REPORT_TYPES = {
       },
       expandedCellRenderer: {
         label: 'Use expanded cell renderer',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      minimizable: {
+        label: 'Minimize Button',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -305,6 +317,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
@@ -326,6 +344,17 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      customTablePropertiesOfModal: {
+        label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
+        type: SELECTION_TYPES.LIST,
+        values: ['node', 'edge'],
+        default: 'node',
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -489,6 +518,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -498,6 +533,12 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -653,6 +694,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -662,6 +709,12 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -840,6 +893,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -849,6 +908,12 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1020,6 +1085,12 @@ export const REPORT_TYPES = {
   //       values: [true, false],
   //       default: true,
   //     },
+  //     hideQueryEditorInAutoRunOnMode: {
+  //        label: 'Hide query editor on auto run on mode',
+  //        type: SELECTION_TYPES.LIST,
+  //        values: [true, false],
+  //        default: false,
+  //      },
   //     refreshRate: {
   //       label: 'Refresh rate (seconds)',
   //       type: SELECTION_TYPES.NUMBER,
@@ -1139,10 +1210,22 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1215,6 +1298,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -1224,6 +1313,12 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1269,6 +1364,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -1278,6 +1379,12 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1380,6 +1487,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   iframe: {
@@ -1421,6 +1534,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   text: {
@@ -1460,6 +1579,12 @@ export const REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },

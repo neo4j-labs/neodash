@@ -9,38 +9,30 @@ WORKDIR /usr/local/src/neodash
 #RUN git clone https://github.com/neo4j-labs/neodash.git /usr/local/src/neodash
 
 # Copy sources and install/build
-COPY ./package.json /usr/local/src/neodash/package.json
+COPY ./package.json ./yarn.lock /usr/local/src/neodash/
 
 RUN yarn install
-COPY ./ /usr/local/src/neodash
+COPY --chown=101:101 ./ /usr/local/src/neodash
+
 RUN yarn run build-minimal
 
 # production stage
-FROM nginx:alpine AS neodash
-RUN apk upgrade
+FROM nginxinc/nginx-unprivileged:latest AS neodash
 
-ENV NGINX_PORT=5005
+COPY --chown=101:101 --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
 
-COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
-COPY ./conf/default.conf.template /etc/nginx/templates/
-COPY ./scripts/config-entrypoint.sh /docker-entrypoint.d/config-entrypoint.sh
-COPY ./scripts/message-entrypoint.sh /docker-entrypoint.d/message-entrypoint.sh
+USER root
+RUN chown -R 101:101 /usr/share/nginx/html
+COPY --chown=101:101 ./conf/default.conf /etc/nginx/conf.d/
+COPY --chown=101:101 ./scripts/config-entrypoint.sh /docker-entrypoint.d/config-entrypoint.sh
+COPY --chown=101:101 ./scripts/message-entrypoint.sh /docker-entrypoint.d/message-entrypoint.sh
+RUN chmod +x /docker-entrypoint.d/config-entrypoint.sh
+RUN chmod +x /docker-entrypoint.d/message-entrypoint.sh
 
-RUN chown -R nginx:nginx /var/cache/nginx && \
-    chown -R nginx:nginx /var/log/nginx && \
-    chown -R nginx:nginx /etc/nginx/conf.d && \
-    chown -R nginx:nginx /etc/nginx/templates && \
-    chown -R nginx:nginx /docker-entrypoint.d/config-entrypoint.sh && \
-    chmod +x /docker-entrypoint.d/config-entrypoint.sh  && \
-    chmod +x /docker-entrypoint.d/message-entrypoint.sh
-RUN touch /var/run/nginx.pid && \
-    chown -R nginx:nginx /var/run/nginx.pid
-RUN chown -R nginx:nginx /usr/share/nginx/html/
+USER 101
+EXPOSE 5005
 
 ## Launch webserver as non-root user.
-USER nginx
-
-EXPOSE $NGINX_PORT
-
-HEALTHCHECK cmd curl --fail "http://localhost:$NGINX_PORT" || exit 1
-LABEL version="2.3.4"
+CMD ["nginx", "-g", "daemon off;"]
+HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
+LABEL version="2.3.0"

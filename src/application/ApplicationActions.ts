@@ -143,7 +143,8 @@ export const setStandaloneEnabled = (
   standaloneDashboardDatabase: string,
   standaloneDashboardURL: string,
   standaloneUsername: string,
-  standalonePassword: string
+  standalonePassword: string,
+  skipConfirmation: boolean
 ) => ({
   type: SET_STANDALONE_ENABLED,
   payload: {
@@ -157,6 +158,7 @@ export const setStandaloneEnabled = (
     standaloneDashboardURL,
     standaloneUsername,
     standalonePassword,
+    skipConfirmation,
   },
 });
 

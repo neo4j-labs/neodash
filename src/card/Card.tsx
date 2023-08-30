@@ -39,6 +39,7 @@ const NeoCard = ({
   extensions, // A set of enabled extensions.
   globalParameters, // Query parameters that are globally set for the entire dashboard.
   dashboardSettings, // Dictionary of settings for the entire dashboard.
+  enableExecuteButtonForIds, // Reports will have save buttons to execute cypher queries
   onRemovePressed, // action to take when the card is removed. (passed from parent)
   onClonePressed, // action to take when user presses the clone button
   onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
@@ -54,6 +55,7 @@ const NeoCard = ({
   onDatabaseChanged, // action to take when the user changes the database related to the card
   loadDatabaseListFromNeo4j, // Thunk to get the list of databases
   createNotification, // Thunk to create a global notification pop-up.
+  onPutItem, // Method to remove report from ui and move it to toolbox
 }) => {
   // Will be used to fetch the list of current databases
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -102,6 +104,11 @@ const NeoCard = ({
   const [active, setActive] = React.useState(
     report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true
   );
+
+  const onHandleMinimize = () => {
+    onPutItem(report);
+  };
+    
   useEffect(() => {
     if (!report.settingsOpen) {
       setActive(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
@@ -139,6 +146,7 @@ const NeoCard = ({
             settingsOpen={settingsOpen}
             editable={editable}
             dashboardSettings={dashboardSettings}
+            enableExecuteButtonForIds={enableExecuteButtonForIds}
             extensions={extensions}
             settings={report.settings ? report.settings : {}}
             updateReportSetting={(name, value) => onReportSettingUpdate(id, name, value)}
@@ -149,6 +157,7 @@ const NeoCard = ({
             setActive={setActive}
             onDownloadImage={() => downloadComponentAsImage(ref)}
             query={report.query}
+            onHandleMinimize={onHandleMinimize}
             globalParameters={globalParameters}
             fields={report.fields ? report.fields : []}
             selection={report.selection}
