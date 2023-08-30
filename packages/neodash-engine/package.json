@@ -18,9 +18,7 @@
     ".": "./dist/index.js",
     "./application": "./dist/application/Application.js",
     "./style": "./dist/config/StyleConfig.js",
-    "./reducers/application": "./dist/application/ApplicationReducer.js",
-    "./reducers/dashboard": "./dist/dashboard/DashboardReducer.js",
-    "./reducers/session": "./dist/sessionStorage/SessionStorageReducer.js"
+    "./store": "./dist/store.js"
   },
   "types": "dist/index.d.ts",
   "scripts": {
