@@ -91,10 +91,13 @@ the dashboard JSON.
 |loggingMode |string |none |Determines whether neodash should create any
 user activity logs. possible values include: `0` (no log is created), 
 `1` (user login are tracked), `2` (tracks when a specific dashboard is 
-accessed/opened or saved by a user). 
+accessed/loaded or saved by a user*). 
+
 ⚠️ Logs are created in Neo4J DB using the current user credentials 
 (or standaloneUsername if configured); write access to the log database 
 must be granted to enble any user to create logs.
+
+⚠️ * Load/Save from/to file are not logged (only from/to Database)   
 
 |loggingDatabase |string |neo4j |When loggingMode is set to anything 
 else than '0', the database to use for logging. Log records (nodes)
@@ -165,4 +168,3 @@ __Neodash_Log_ label in the database confugred in the loggingDatabase prameter (
 This can be achieved by creating a standard NeoDashUser role in Neo4j with 
 such permissions and assigning this role to every neoDash user. For more 
 details on Neo4J granular access control please refer to the link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/access-control/[product documentation]
-

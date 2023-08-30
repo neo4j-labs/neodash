@@ -217,8 +217,8 @@ export default function NeoConnectionModal({
             <div style={{ color: 'lightgrey' }}>
               {standaloneSettings.standaloneDashboardURL === '' ? (
                 <>
-                  Sign in to continue. You will be connected to Neo4j, and load a dashboard called
-                  <b>{standaloneSettings.standaloneDashboardName}</b>.
+                  Sign in to continue. You will be connected to Neo4j, and load a dashboard called 
+                  <b> {standaloneSettings.standaloneDashboardName}</b>.
                 </>
               ) : (
                 <> Sign in to continue. You will be connected to Neo4j, and load a dashboard.</>
