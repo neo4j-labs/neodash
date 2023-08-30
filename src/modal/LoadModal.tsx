@@ -17,6 +17,7 @@ import {
   DocumentPlusIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { applicationGetStandaloneSettings, applicationIsStandalone } from '../application/ApplicationSelectors';
+import { Tooltip } from '@mui/material';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -107,9 +108,11 @@ export const NeoLoadModal = ({
         (
           <MenuItem title='Load' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
         ):(
-          <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
-            <CloudArrowUpIconOutline />
-          </IconButton>
+          <Tooltip title={'Load Dashboard'}>
+            <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
+              <CloudArrowUpIconOutline />
+            </IconButton>
+          </Tooltip>
         )
       }
 
