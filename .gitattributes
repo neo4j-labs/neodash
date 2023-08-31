@@ -1,0 +1,3 @@
+develop-test.yml merge=leaveAsItIs
+develop-deployment.yml merge=leaveAsItIs
+Dockerfile merge=leaveAsItIs
