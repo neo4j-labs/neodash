@@ -344,1241 +344,1242 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['node', 'edge'],
         default: 'node',
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
     },
-  },
-  bar: {
-    label: 'Bar Chart',
-    component: NeoBarChart,
-    useReturnValuesAsFields: true,
-    helperText: (
-      <div>
-        A bar chart expects two fields: a <code>category</code> and a <code>value</code>.
-      </div>
-    ),
-    selection: {
-      index: {
-        label: 'Category',
-        type: SELECTION_TYPES.TEXT,
+    bar: {
+      label: 'Bar Chart',
+      component: NeoBarChart,
+      useReturnValuesAsFields: true,
+      helperText: (
+        <div>
+          A bar chart expects two fields: a <code>category</code> and a <code>value</code>.
+        </div>
+      ),
+      selection: {
+        index: {
+          label: 'Category',
+          type: SELECTION_TYPES.TEXT,
+        },
+        value: {
+          label: 'Value',
+          type: SELECTION_TYPES.NUMBER,
+          key: true,
+        },
+        key: {
+          label: 'Group',
+          type: SELECTION_TYPES.TEXT,
+          optional: true,
+        },
       },
-      value: {
-        label: 'Value',
-        type: SELECTION_TYPES.NUMBER,
-        key: true,
-      },
-      key: {
-        label: 'Group',
-        type: SELECTION_TYPES.TEXT,
-        optional: true,
-      },
-    },
-    maxRecords: 250,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      legend: {
-        label: 'Show Legend',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      showOptionalSelections: {
-        label: 'Grouping',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      valueScale: {
-        label: 'Value Scale',
-        type: SELECTION_TYPES.LIST,
-        values: ['linear', 'symlog'],
-        default: 'linear',
-      },
-      minValue: {
-        label: 'Min Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      maxValue: {
-        label: 'Max Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      groupMode: {
-        label: 'Group Mode',
-        type: SELECTION_TYPES.LIST,
-        values: ['grouped', 'stacked'],
-        default: 'stacked',
-      },
-      layout: {
-        label: 'Layout',
-        type: SELECTION_TYPES.LIST,
-        values: ['horizontal', 'vertical'],
-        default: 'vertical',
-      },
-      colors: {
-        label: 'Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
-        default: 'set2',
-      },
-      barValues: {
-        label: 'Show Value on Bars',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      labelSkipWidth: {
-        label: 'Skip label on width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      labelSkipHeight: {
-        label: 'Skip label on height (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      positionLabel: {
-        label: 'Custom label position',
-        type: SELECTION_TYPES.LIST,
-        values: ['off', 'top', 'bottom'],
-        default: 'off',
-      },
-      labelRotation: {
-        label: 'Label Rotation (degrees)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 45,
-      },
-      marginLeft: {
-        label: 'Margin Left (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 50,
-      },
-      marginRight: {
-        label: 'Margin Right (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginTop: {
-        label: 'Margin Top (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginBottom: {
-        label: 'Margin Bottom (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 45,
-      },
-      legendWidth: {
-        label: 'Legend Width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 128,
-      },
-      hideSelections: {
-        label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-    },
-  },
-  pie: {
-    label: 'Pie Chart',
-    component: NeoPieChart,
-    useReturnValuesAsFields: true,
-    helperText: (
-      <div>
-        A pie chart expects two fields: a <code>category</code> and a <code>value</code>.
-      </div>
-    ),
-    selection: {
-      index: {
-        label: 'Category',
-        type: SELECTION_TYPES.TEXT,
-      },
-      value: {
-        label: 'Value',
-        type: SELECTION_TYPES.NUMBER,
-        key: true,
-      },
-      key: {
-        label: 'Group',
-        type: SELECTION_TYPES.TEXT,
-        optional: true,
+      maxRecords: 250,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        legend: {
+          label: 'Show Legend',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        showOptionalSelections: {
+          label: 'Grouping',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        valueScale: {
+          label: 'Value Scale',
+          type: SELECTION_TYPES.LIST,
+          values: ['linear', 'symlog'],
+          default: 'linear',
+        },
+        minValue: {
+          label: 'Min Value',
+          type: SELECTION_TYPES.NUMBER,
+          default: 'auto',
+        },
+        maxValue: {
+          label: 'Max Value',
+          type: SELECTION_TYPES.NUMBER,
+          default: 'auto',
+        },
+        groupMode: {
+          label: 'Group Mode',
+          type: SELECTION_TYPES.LIST,
+          values: ['grouped', 'stacked'],
+          default: 'stacked',
+        },
+        layout: {
+          label: 'Layout',
+          type: SELECTION_TYPES.LIST,
+          values: ['horizontal', 'vertical'],
+          default: 'vertical',
+        },
+        colors: {
+          label: 'Color Scheme',
+          type: SELECTION_TYPES.LIST,
+          values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
+          default: 'set2',
+        },
+        barValues: {
+          label: 'Show Value on Bars',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        labelSkipWidth: {
+          label: 'Skip label on width (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 0,
+        },
+        labelSkipHeight: {
+          label: 'Skip label on height (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 0,
+        },
+        positionLabel: {
+          label: 'Custom label position',
+          type: SELECTION_TYPES.LIST,
+          values: ['off', 'top', 'bottom'],
+          default: 'off',
+        },
+        labelRotation: {
+          label: 'Label Rotation (degrees)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 45,
+        },
+        marginLeft: {
+          label: 'Margin Left (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 50,
+        },
+        marginRight: {
+          label: 'Margin Right (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 24,
+        },
+        marginTop: {
+          label: 'Margin Top (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 24,
+        },
+        marginBottom: {
+          label: 'Margin Bottom (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 45,
+        },
+        legendWidth: {
+          label: 'Legend Width (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 128,
+        },
+        hideSelections: {
+          label: 'Hide Property Selection',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        refreshButtonEnabled: {
+          label: 'Refreshable',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        downloadImageEnabled: {
+          label: 'Download Image enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        autorun: {
+          label: 'Auto-run query',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        hideQueryEditorInAutoRunOnMode: {
+          label: 'Hide query editor on auto run on mode',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        refreshRate: {
+          label: 'Refresh rate (seconds)',
+          type: SELECTION_TYPES.NUMBER,
+          default: '0 (No refresh)',
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
     },
-    maxRecords: 250,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
+    pie: {
+      label: 'Pie Chart',
+      component: NeoPieChart,
+      useReturnValuesAsFields: true,
+      helperText: (
+        <div>
+          A pie chart expects two fields: a <code>category</code> and a <code>value</code>.
+        </div>
+      ),
+      selection: {
+        index: {
+          label: 'Category',
+          type: SELECTION_TYPES.TEXT,
+        },
+        value: {
+          label: 'Value',
+          type: SELECTION_TYPES.NUMBER,
+          key: true,
+        },
+        key: {
+          label: 'Group',
+          type: SELECTION_TYPES.TEXT,
+          optional: true,
+        },
       },
-      legend: {
-        label: 'Show Legend',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      sortByValue: {
-        label: 'Auto-sort slices by value',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      enableArcLabels: {
-        label: 'Show Values in slices',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      arcLabelsSkipAngle: {
-        label: "Skip label if corresponding arc's angle is lower than provided value",
-        type: SELECTION_TYPES.NUMBER,
-        default: 10,
-      },
-      enableArcLinkLabels: {
-        label: 'Show categories next to slices',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      interactive: {
-        label: 'Enable interactivity',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      colors: {
-        label: 'Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
-        default: 'set2',
-      },
-      innerRadius: {
-        label: 'Pie Inner Radius (between 0 and 1)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      padAngle: {
-        label: 'Slice padding angle (degrees)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      borderWidth: {
-        label: 'Slice border width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      activeOuterRadiusOffset: {
-        label: 'Extends active slice outer radius',
-        type: SELECTION_TYPES.NUMBER,
-        default: 8,
-      },
-      arcLinkLabelsOffset: {
-        label: 'Link offset from pie outer radius, useful to have links overlapping pie slices',
-        type: SELECTION_TYPES.NUMBER,
-        default: 15,
-      },
-      arcLinkLabelsSkipAngle: {
-        label: "Skip label if corresponding slice's angle is lower than provided value",
-        type: SELECTION_TYPES.NUMBER,
-        default: 1,
-      },
-      cornerRadius: {
-        label: 'Slice Corner Radius',
-        type: SELECTION_TYPES.NUMBER,
-        default: 1,
-      },
-      marginLeft: {
-        label: 'Margin Left (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginRight: {
-        label: 'Margin Right (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginTop: {
-        label: 'Margin Top (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginBottom: {
-        label: 'Margin Bottom (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 40,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-    },
-  },
-  line: {
-    label: 'Line Chart',
-    component: NeoLineChart,
-    useReturnValuesAsFields: true,
-    helperText: (
-      <div>
-        A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value
-        can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
-      </div>
-    ),
-    selection: {
-      x: {
-        label: 'X-value',
-        type: SELECTION_TYPES.NUMBER_OR_DATETIME,
-      },
-      value: {
-        label: 'Y-value',
-        type: SELECTION_TYPES.NUMBER,
-        key: true,
-        multiple: true,
-      },
-    },
-    maxRecords: 250,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      legend: {
-        label: 'Show Legend',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      colors: {
-        label: 'Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
-        default: 'set2',
-      },
-      xScale: {
-        label: 'X Scale',
-        type: SELECTION_TYPES.LIST,
-        values: ['linear', 'log', 'point'],
-        default: 'linear',
-      },
-      yScale: {
-        label: 'Y Scale',
-        type: SELECTION_TYPES.LIST,
-        values: ['linear', 'log'],
-        default: 'linear',
-      },
-      minXValue: {
-        label: 'Min X Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      maxXValue: {
-        label: 'Max X Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      minYValue: {
-        label: 'Min Y Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      maxYValue: {
-        label: 'Max Y Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      xTickValues: {
-        label: 'X-axis Tick Count (Approximate)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      xAxisTimeFormat: {
-        label: 'X-axis Format (Time chart)',
-        type: SELECTION_TYPES.TEXT,
-        default: '%Y-%m-%dT%H:%M:%SZ',
-      },
-      xTickTimeValues: {
-        label: 'X-axis Tick Size (Time chart)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'every 1 year',
-      },
-      xTickRotationAngle: {
-        label: 'X-axis Tick Rotation (Degrees)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      yTickRotationAngle: {
-        label: 'Y-axis Tick Rotation (Degrees)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      curve: {
-        label: 'Line Smoothing',
-        type: SELECTION_TYPES.LIST,
-        values: ['linear', 'basis', 'cardinal', 'step'],
-        default: 'linear',
-      },
-      showGrid: {
-        label: 'Show Grid',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      pointSize: {
-        label: 'Point Radius (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 10,
-      },
-      lineWidth: {
-        label: 'Line Width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 2,
-      },
-      marginLeft: {
-        label: 'Margin Left (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 50,
-      },
-      marginRight: {
-        label: 'Margin Right (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginTop: {
-        label: 'Margin Top (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginBottom: {
-        label: 'Margin Bottom (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 40,
-      },
-      legendWidth: {
-        label: 'Legend Label Width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 100,
-      },
-      hideSelections: {
-        label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+      maxRecords: 250,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        legend: {
+          label: 'Show Legend',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        sortByValue: {
+          label: 'Auto-sort slices by value',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        enableArcLabels: {
+          label: 'Show Values in slices',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        arcLabelsSkipAngle: {
+          label: "Skip label if corresponding arc's angle is lower than provided value",
+          type: SELECTION_TYPES.NUMBER,
+          default: 10,
+        },
+        enableArcLinkLabels: {
+          label: 'Show categories next to slices',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        interactive: {
+          label: 'Enable interactivity',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        colors: {
+          label: 'Color Scheme',
+          type: SELECTION_TYPES.LIST,
+          values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
+          default: 'set2',
+        },
+        innerRadius: {
+          label: 'Pie Inner Radius (between 0 and 1)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 0,
+        },
+        padAngle: {
+          label: 'Slice padding angle (degrees)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 0,
+        },
+        borderWidth: {
+          label: 'Slice border width (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 0,
+        },
+        activeOuterRadiusOffset: {
+          label: 'Extends active slice outer radius',
+          type: SELECTION_TYPES.NUMBER,
+          default: 8,
+        },
+        arcLinkLabelsOffset: {
+          label: 'Link offset from pie outer radius, useful to have links overlapping pie slices',
+          type: SELECTION_TYPES.NUMBER,
+          default: 15,
+        },
+        arcLinkLabelsSkipAngle: {
+          label: "Skip label if corresponding slice's angle is lower than provided value",
+          type: SELECTION_TYPES.NUMBER,
+          default: 1,
+        },
+        cornerRadius: {
+          label: 'Slice Corner Radius',
+          type: SELECTION_TYPES.NUMBER,
+          default: 1,
+        },
+        marginLeft: {
+          label: 'Margin Left (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 24,
+        },
+        marginRight: {
+          label: 'Margin Right (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 24,
+        },
+        marginTop: {
+          label: 'Margin Top (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 24,
+        },
+        marginBottom: {
+          label: 'Margin Bottom (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 40,
+        },
+        refreshButtonEnabled: {
+          label: 'Refreshable',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        downloadImageEnabled: {
+          label: 'Download Image enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        autorun: {
+          label: 'Auto-run query',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        hideQueryEditorInAutoRunOnMode: {
+          label: 'Hide query editor on auto run on mode',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        refreshRate: {
+          label: 'Refresh rate (seconds)',
+          type: SELECTION_TYPES.NUMBER,
+          default: '0 (No refresh)',
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
     },
-  },
-  // TODO - move to advanced visualization.
-  // scatterPlot: {
-  //   label: 'Scatter Plot',
-  //   component: NeoScatterPlot,
-  //   useReturnValuesAsFields: true,
-  //   helperText: (
-  //     <div>
-  //       A Scatter plot chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code>
-  //       value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
-  //     </div>
-  //   ),
-  //   selection: {
-  //     x: {
-  //       label: 'X-value',
-  //       type: SELECTION_TYPES.NUMBER_OR_DATETIME,
-  //     },
-  //     value: {
-  //       label: 'Y-value',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       key: true,
-  //     },
-  //   },
-  //   maxRecords: 2000,
-  //   settings: {
-  //     backgroundColor: {
-  //       label: 'Background Color',
-  //       type: SELECTION_TYPES.COLOR,
-  //       default: '#fafafa',
-  //     },
-  //     colorIntensityProp: {
-  //       label: 'Intensity value field',
-  //       type: SELECTION_TYPES.TEXT,
-  //       default: 'intensity',
-  //     },
-  //     labelProp: {
-  //       label: 'Point label field',
-  //       type: SELECTION_TYPES.TEXT,
-  //       default: 'label',
-  //     },
-  //     legend: {
-  //       label: 'Show Legend',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     legendWidth: {
-  //       label: 'Legend Width (px)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 20,
-  //     },
-  //     xScale: {
-  //       label: 'X Scale',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: ['linear', 'log'],
-  //       default: 'linear',
-  //     },
-  //     yScale: {
-  //       label: 'Y Scale',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: ['linear', 'log'],
-  //       default: 'linear',
-  //     },
-  //     minXValue: {
-  //       label: 'Min X Value',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 'auto',
-  //     },
-  //     maxXValue: {
-  //       label: 'Max X Value',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 'auto',
-  //     },
-  //     minYValue: {
-  //       label: 'Min Y Value',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 'auto',
-  //     },
-  //     maxYValue: {
-  //       label: 'Max Y Value',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 'auto',
-  //     },
-  //     xTickValues: {
-  //       label: 'X-axis Tick Count (Approximate)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 'auto',
-  //     },
-  //     xAxisTimeFormat: {
-  //       label: 'X-axis Format (Time chart)',
-  //       type: SELECTION_TYPES.TEXT,
-  //       default: '%Y-%m-%dT%H:%M:%SZ',
-  //     },
-  //     xTickTimeValues: {
-  //       label: 'X-axis Tick Size (Time chart)',
-  //       type: SELECTION_TYPES.TEXT,
-  //       default: 'every 1 year',
-  //     },
-  //     xTickRotationAngle: {
-  //       label: 'X-axis Tick Rotation (Degrees)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 0,
-  //     },
-  //     yTickRotationAngle: {
-  //       label: 'Y-axis Tick Rotation (Degrees)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 0,
-  //     },
-  //     showGrid: {
-  //       label: 'Show Grid',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: true,
-  //     },
-  //     pointSize: {
-  //       label: 'Point Radius (px)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 9,
-  //     },
-  //     marginLeft: {
-  //       label: 'Margin Left (px)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 50,
-  //     },
-  //     marginRight: {
-  //       label: 'Margin Right (px)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 24,
-  //     },
-  //     marginTop: {
-  //       label: 'Margin Top (px)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 24,
-  //     },
-  //     marginBottom: {
-  //       label: 'Margin Bottom (px)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: 40,
-  //     },
-  //     hideSelections: {
-  //       label: 'Hide Property Selection',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     refreshButtonEnabled: {
-  //       label: 'Refreshable',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     fullscreenEnabled: {
-  //       label: 'Fullscreen enabled',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     downloadImageEnabled: {
-  //       label: 'Download Image enabled',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     autorun: {
-  //       label: 'Auto-run query',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: true,
-  //     },
-  //     hideQueryEditorInAutoRunOnMode: {
-  //        label: 'Hide query editor on auto run on mode',
-  //        type: SELECTION_TYPES.LIST,
-  //        values: [true, false],
-  //        default: false,
-  //      },
-  //     refreshRate: {
-  //       label: 'Refresh rate (seconds)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: '0 (No refresh)',
-  //     },
-  //     description: {
-  //       label: 'Report Description',
-  //       type: SELECTION_TYPES.MULTILINE_TEXT,
-  //       default: 'Enter markdown here...',
-  //     },
-  //   },
-  // },
-  map: {
-    label: 'Map',
-    helperText: 'A map will draw all nodes and relationships with spatial properties.',
-    selection: {
-      properties: {
-        label: 'Node Properties',
-        type: SELECTION_TYPES.NODE_PROPERTIES,
+    line: {
+      label: 'Line Chart',
+      component: NeoLineChart,
+      useReturnValuesAsFields: true,
+      helperText: (
+        <div>
+          A line chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code> value
+          can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
+        </div>
+      ),
+      selection: {
+        x: {
+          label: 'X-value',
+          type: SELECTION_TYPES.NUMBER_OR_DATETIME,
+        },
+        value: {
+          label: 'Y-value',
+          type: SELECTION_TYPES.NUMBER,
+          key: true,
+          multiple: true,
+        },
+      },
+      maxRecords: 250,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        legend: {
+          label: 'Show Legend',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        colors: {
+          label: 'Color Scheme',
+          type: SELECTION_TYPES.LIST,
+          values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
+          default: 'set2',
+        },
+        xScale: {
+          label: 'X Scale',
+          type: SELECTION_TYPES.LIST,
+          values: ['linear', 'log', 'point'],
+          default: 'linear',
+        },
+        yScale: {
+          label: 'Y Scale',
+          type: SELECTION_TYPES.LIST,
+          values: ['linear', 'log'],
+          default: 'linear',
+        },
+        minXValue: {
+          label: 'Min X Value',
+          type: SELECTION_TYPES.NUMBER,
+          default: 'auto',
+        },
+        maxXValue: {
+          label: 'Max X Value',
+          type: SELECTION_TYPES.NUMBER,
+          default: 'auto',
+        },
+        minYValue: {
+          label: 'Min Y Value',
+          type: SELECTION_TYPES.NUMBER,
+          default: 'auto',
+        },
+        maxYValue: {
+          label: 'Max Y Value',
+          type: SELECTION_TYPES.NUMBER,
+          default: 'auto',
+        },
+        xTickValues: {
+          label: 'X-axis Tick Count (Approximate)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 'auto',
+        },
+        xAxisTimeFormat: {
+          label: 'X-axis Format (Time chart)',
+          type: SELECTION_TYPES.TEXT,
+          default: '%Y-%m-%dT%H:%M:%SZ',
+        },
+        xTickTimeValues: {
+          label: 'X-axis Tick Size (Time chart)',
+          type: SELECTION_TYPES.TEXT,
+          default: 'every 1 year',
+        },
+        xTickRotationAngle: {
+          label: 'X-axis Tick Rotation (Degrees)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 0,
+        },
+        yTickRotationAngle: {
+          label: 'Y-axis Tick Rotation (Degrees)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 0,
+        },
+        curve: {
+          label: 'Line Smoothing',
+          type: SELECTION_TYPES.LIST,
+          values: ['linear', 'basis', 'cardinal', 'step'],
+          default: 'linear',
+        },
+        showGrid: {
+          label: 'Show Grid',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        pointSize: {
+          label: 'Point Radius (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 10,
+        },
+        lineWidth: {
+          label: 'Line Width (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 2,
+        },
+        marginLeft: {
+          label: 'Margin Left (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 50,
+        },
+        marginRight: {
+          label: 'Margin Right (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 24,
+        },
+        marginTop: {
+          label: 'Margin Top (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 24,
+        },
+        marginBottom: {
+          label: 'Margin Bottom (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 40,
+        },
+        legendWidth: {
+          label: 'Legend Label Width (px)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 100,
+        },
+        hideSelections: {
+          label: 'Hide Property Selection',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        refreshButtonEnabled: {
+          label: 'Refreshable',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        downloadImageEnabled: {
+          label: 'Download Image enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        autorun: {
+          label: 'Auto-run query',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        hideQueryEditorInAutoRunOnMode: {
+          label: 'Hide query editor on auto run on mode',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        refreshRate: {
+          label: 'Refresh rate (seconds)',
+          type: SELECTION_TYPES.NUMBER,
+          default: '0 (No refresh)',
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
     },
-    useNodePropsAsFields: true,
-    component: NeoMapChart,
-    maxRecords: 1000,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
+    // TODO - move to advanced visualization.
+    // scatterPlot: {
+    //   label: 'Scatter Plot',
+    //   component: NeoScatterPlot,
+    //   useReturnValuesAsFields: true,
+    //   helperText: (
+    //     <div>
+    //       A Scatter plot chart expects two fields: an <code>x</code> value and a <code>y</code> value. The <code>x</code>
+    //       value can be a number or a Neo4j datetime object. Values are automatically selected from your query results.
+    //     </div>
+    //   ),
+    //   selection: {
+    //     x: {
+    //       label: 'X-value',
+    //       type: SELECTION_TYPES.NUMBER_OR_DATETIME,
+    //     },
+    //     value: {
+    //       label: 'Y-value',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       key: true,
+    //     },
+    //   },
+    //   maxRecords: 2000,
+    //   settings: {
+    //     backgroundColor: {
+    //       label: 'Background Color',
+    //       type: SELECTION_TYPES.COLOR,
+    //       default: '#fafafa',
+    //     },
+    //     colorIntensityProp: {
+    //       label: 'Intensity value field',
+    //       type: SELECTION_TYPES.TEXT,
+    //       default: 'intensity',
+    //     },
+    //     labelProp: {
+    //       label: 'Point label field',
+    //       type: SELECTION_TYPES.TEXT,
+    //       default: 'label',
+    //     },
+    //     legend: {
+    //       label: 'Show Legend',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: [true, false],
+    //       default: false,
+    //     },
+    //     legendWidth: {
+    //       label: 'Legend Width (px)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 20,
+    //     },
+    //     xScale: {
+    //       label: 'X Scale',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: ['linear', 'log'],
+    //       default: 'linear',
+    //     },
+    //     yScale: {
+    //       label: 'Y Scale',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: ['linear', 'log'],
+    //       default: 'linear',
+    //     },
+    //     minXValue: {
+    //       label: 'Min X Value',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 'auto',
+    //     },
+    //     maxXValue: {
+    //       label: 'Max X Value',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 'auto',
+    //     },
+    //     minYValue: {
+    //       label: 'Min Y Value',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 'auto',
+    //     },
+    //     maxYValue: {
+    //       label: 'Max Y Value',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 'auto',
+    //     },
+    //     xTickValues: {
+    //       label: 'X-axis Tick Count (Approximate)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 'auto',
+    //     },
+    //     xAxisTimeFormat: {
+    //       label: 'X-axis Format (Time chart)',
+    //       type: SELECTION_TYPES.TEXT,
+    //       default: '%Y-%m-%dT%H:%M:%SZ',
+    //     },
+    //     xTickTimeValues: {
+    //       label: 'X-axis Tick Size (Time chart)',
+    //       type: SELECTION_TYPES.TEXT,
+    //       default: 'every 1 year',
+    //     },
+    //     xTickRotationAngle: {
+    //       label: 'X-axis Tick Rotation (Degrees)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 0,
+    //     },
+    //     yTickRotationAngle: {
+    //       label: 'Y-axis Tick Rotation (Degrees)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 0,
+    //     },
+    //     showGrid: {
+    //       label: 'Show Grid',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: [true, false],
+    //       default: true,
+    //     },
+    //     pointSize: {
+    //       label: 'Point Radius (px)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 9,
+    //     },
+    //     marginLeft: {
+    //       label: 'Margin Left (px)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 50,
+    //     },
+    //     marginRight: {
+    //       label: 'Margin Right (px)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 24,
+    //     },
+    //     marginTop: {
+    //       label: 'Margin Top (px)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 24,
+    //     },
+    //     marginBottom: {
+    //       label: 'Margin Bottom (px)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: 40,
+    //     },
+    //     hideSelections: {
+    //       label: 'Hide Property Selection',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: [true, false],
+    //       default: false,
+    //     },
+    //     refreshButtonEnabled: {
+    //       label: 'Refreshable',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: [true, false],
+    //       default: false,
+    //     },
+    //     fullscreenEnabled: {
+    //       label: 'Fullscreen enabled',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: [true, false],
+    //       default: false,
+    //     },
+    //     downloadImageEnabled: {
+    //       label: 'Download Image enabled',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: [true, false],
+    //       default: false,
+    //     },
+    //     autorun: {
+    //       label: 'Auto-run query',
+    //       type: SELECTION_TYPES.LIST,
+    //       values: [true, false],
+    //       default: true,
+    //     },
+    //     hideQueryEditorInAutoRunOnMode: {
+    //        label: 'Hide query editor on auto run on mode',
+    //        type: SELECTION_TYPES.LIST,
+    //        values: [true, false],
+    //        default: false,
+    //      },
+    //     refreshRate: {
+    //       label: 'Refresh rate (seconds)',
+    //       type: SELECTION_TYPES.NUMBER,
+    //       default: '0 (No refresh)',
+    //     },
+    //     description: {
+    //       label: 'Report Description',
+    //       type: SELECTION_TYPES.MULTILINE_TEXT,
+    //       default: 'Enter markdown here...',
+    //     },
+    //   },
+    // },
+    map: {
+      label: 'Map',
+      helperText: 'A map will draw all nodes and relationships with spatial properties.',
+      selection: {
+        properties: {
+          label: 'Node Properties',
+          type: SELECTION_TYPES.NODE_PROPERTIES,
+        },
       },
-      layerType: {
-        label: 'Layer Type',
-        type: SELECTION_TYPES.LIST,
-        values: ['markers', 'heatmap'],
-        default: 'markers',
-      },
-      clusterMarkers: {
-        label: 'Cluster Markers',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      separateOverlappingMarkers: {
-        label: 'Seperate Overlapping Markers',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      nodeColorScheme: {
-        label: 'Node Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: [
-          'neodash',
-          'nivo',
-          'category10',
-          'accent',
-          'dark2',
-          'paired',
-          'pastel1',
-          'pastel2',
-          'set1',
-          'set2',
-          'set3',
-        ],
-        default: 'neodash',
-      },
-      defaultNodeSize: {
-        label: 'Node Marker Size',
-        type: SELECTION_TYPES.LIST,
-        values: ['small', 'medium', 'large'],
-        default: 'large',
-      },
-      nodeColorProp: {
-        label: 'Node Color Property',
-        type: SELECTION_TYPES.TEXT,
-        default: 'color',
-      },
-      defaultRelColor: {
-        label: 'Relationship Color',
-        type: SELECTION_TYPES.TEXT,
-        default: '#a0a0a0',
-      },
-      defaultRelWidth: {
-        label: 'Relationship Width',
-        type: SELECTION_TYPES.NUMBER,
-        default: 1,
-      },
-      relColorProp: {
-        label: 'Relationship Color Property',
-        type: SELECTION_TYPES.TEXT,
-        default: 'color',
-      },
-      relWidthProp: {
-        label: 'Relationship Width Property',
-        type: SELECTION_TYPES.TEXT,
-        default: 'width',
-      },
-      providerUrl: {
-        label: 'Map Provider URL',
-        type: SELECTION_TYPES.TEXT,
-        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      },
-      intensityProp: {
-        label: 'Intensity Property (for heatmap)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'intensity',
-      },
-      hideSelections: {
-        label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-    },
-  },
-  value: {
-    label: 'Single Value',
-    helperText: 'This report will show only the first value of the first row returned.',
-    component: NeoSingleValueChart,
-    maxRecords: 1,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      fontSize: {
-        label: 'Font Size',
-        type: SELECTION_TYPES.NUMBER,
-        default: 64,
-      },
-      color: {
-        label: 'Color',
-        type: SELECTION_TYPES.TEXT,
-        default: 'rgba(0, 0, 0, 0.87)',
-      },
-      format: {
-        label: 'Display format',
-        type: SELECTION_TYPES.LIST,
-        values: ['auto', 'json', 'yml'],
-        default: 'auto',
-      },
-      monospace: {
-        label: 'Use monospace font',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      textAlign: {
-        label: 'Horizontal Align',
-        type: SELECTION_TYPES.LIST,
-        values: ['left', 'center', 'right'],
-        default: 'left',
-      },
-      verticalAlign: {
-        label: 'Vertical Align',
-        type: SELECTION_TYPES.LIST,
-        values: ['bottom', 'middle', 'top'],
-        default: 'top',
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-    },
-  },
-  json: {
-    label: 'Raw JSON',
-    helperText: 'This report will render the raw data returned by Neo4j.',
-    component: NeoJSONChart,
-    allowScrolling: true,
-    maxRecords: 500,
-    settings: {
-      format: {
-        label: 'Format',
-        type: SELECTION_TYPES.LIST,
-        values: ['json', 'yml'],
-        default: 'json',
-      },
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-    },
-  },
-  select: {
-    label: 'Parameter Select',
-    helperText:
-      'This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.',
-    component: NeoParameterSelectionChart,
-    settingsComponent: NeoCardSettingsContentPropertySelect,
-    disableCypherParameters: true,
-    textOnly: true,
-    maxRecords: 100,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      multiSelector: {
-        label: 'Multiple Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      manualParameterSave: {
-        label: 'Manual Parameter Save',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      overridePropertyDisplayName: {
-        label: 'Property Display Name Override',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      suggestionLimit: {
-        label: 'Value Suggestion Limit',
-        type: SELECTION_TYPES.NUMBER,
-        default: 5,
-      },
-      searchType: {
-        label: 'Search Type',
-        type: SELECTION_TYPES.LIST,
-        values: ['CONTAINS', 'STARTS WITH', 'ENDS WITH'],
-        default: 'CONTAINS',
-      },
-      caseSensitive: {
-        label: 'Case Sensitive Search',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      deduplicateSuggestions: {
-        label: 'Deduplicate Suggestion Values',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      defaultValue: {
-        label: 'Default Value (Override)',
-        type: SELECTION_TYPES.TEXT,
-        default: '',
-      },
-      clearParameterOnFieldClear: {
-        label: 'Clear Parameter on Field Reset',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      manualPropertyNameSpecification: {
-        label: 'Manual Label/Property Name Specification',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      helperText: {
-        label: 'Helper Text (Override)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Enter a custom helper text here...',
-      },
-      suggestionsUpdateTimeout: {
-        label: 'Timeout for value suggestions (ms)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 250,
-      },
-      setParameterTimeout: {
-        label: 'Timeout for value updates (ms)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 1000,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+      useNodePropsAsFields: true,
+      component: NeoMapChart,
+      maxRecords: 1000,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        layerType: {
+          label: 'Layer Type',
+          type: SELECTION_TYPES.LIST,
+          values: ['markers', 'heatmap'],
+          default: 'markers',
+        },
+        clusterMarkers: {
+          label: 'Cluster Markers',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        separateOverlappingMarkers: {
+          label: 'Seperate Overlapping Markers',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        nodeColorScheme: {
+          label: 'Node Color Scheme',
+          type: SELECTION_TYPES.LIST,
+          values: [
+            'neodash',
+            'nivo',
+            'category10',
+            'accent',
+            'dark2',
+            'paired',
+            'pastel1',
+            'pastel2',
+            'set1',
+            'set2',
+            'set3',
+          ],
+          default: 'neodash',
+        },
+        defaultNodeSize: {
+          label: 'Node Marker Size',
+          type: SELECTION_TYPES.LIST,
+          values: ['small', 'medium', 'large'],
+          default: 'large',
+        },
+        nodeColorProp: {
+          label: 'Node Color Property',
+          type: SELECTION_TYPES.TEXT,
+          default: 'color',
+        },
+        defaultRelColor: {
+          label: 'Relationship Color',
+          type: SELECTION_TYPES.TEXT,
+          default: '#a0a0a0',
+        },
+        defaultRelWidth: {
+          label: 'Relationship Width',
+          type: SELECTION_TYPES.NUMBER,
+          default: 1,
+        },
+        relColorProp: {
+          label: 'Relationship Color Property',
+          type: SELECTION_TYPES.TEXT,
+          default: 'color',
+        },
+        relWidthProp: {
+          label: 'Relationship Width Property',
+          type: SELECTION_TYPES.TEXT,
+          default: 'width',
+        },
+        providerUrl: {
+          label: 'Map Provider URL',
+          type: SELECTION_TYPES.TEXT,
+          default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        },
+        intensityProp: {
+          label: 'Intensity Property (for heatmap)',
+          type: SELECTION_TYPES.TEXT,
+          default: 'intensity',
+        },
+        hideSelections: {
+          label: 'Hide Property Selection',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        autorun: {
+          label: 'Auto-run query',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        hideQueryEditorInAutoRunOnMode: {
+          label: 'Hide query editor on auto run on mode',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
     },
-  },
-  iframe: {
-    label: 'iFrame',
-    helperText:
-      'iFrame reports let you embed external webpages into your dashboard. Enter an URL in the query box above to embed it as an iFrame.',
-    textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
-    disableDatabaseSelector: true,
-    component: NeoIFrameChart,
-    inputMode: 'url',
-    maxRecords: 1,
-    allowScrolling: true,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      replaceGlobalParameters: {
-        label: 'Replace global parameters in URL',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      passGlobalParameters: {
-        label: 'Append global parameters to iFrame URL',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+    value: {
+      label: 'Single Value',
+      helperText: 'This report will show only the first value of the first row returned.',
+      component: NeoSingleValueChart,
+      maxRecords: 1,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        fontSize: {
+          label: 'Font Size',
+          type: SELECTION_TYPES.NUMBER,
+          default: 64,
+        },
+        color: {
+          label: 'Color',
+          type: SELECTION_TYPES.TEXT,
+          default: 'rgba(0, 0, 0, 0.87)',
+        },
+        format: {
+          label: 'Display format',
+          type: SELECTION_TYPES.LIST,
+          values: ['auto', 'json', 'yml'],
+          default: 'auto',
+        },
+        monospace: {
+          label: 'Use monospace font',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        textAlign: {
+          label: 'Horizontal Align',
+          type: SELECTION_TYPES.LIST,
+          values: ['left', 'center', 'right'],
+          default: 'left',
+        },
+        verticalAlign: {
+          label: 'Vertical Align',
+          type: SELECTION_TYPES.LIST,
+          values: ['bottom', 'middle', 'top'],
+          default: 'top',
+        },
+        refreshButtonEnabled: {
+          label: 'Refreshable',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        downloadImageEnabled: {
+          label: 'Download Image enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        autorun: {
+          label: 'Auto-run query',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        hideQueryEditorInAutoRunOnMode: {
+          label: 'Hide query editor on auto run on mode',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        refreshRate: {
+          label: 'Refresh rate (seconds)',
+          type: SELECTION_TYPES.NUMBER,
+          default: '0 (No refresh)',
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
     },
-  },
-  text: {
-    label: 'Markdown',
-    helperText: 'Markdown text specified above will be rendered in the report.',
-    component: NeoMarkdownChart,
-    inputMode: 'markdown',
-    textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
-    disableDatabaseSelector: true,
-    maxRecords: 1,
-    allowScrolling: true,
-    settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
+    json: {
+      label: 'Raw JSON',
+      helperText: 'This report will render the raw data returned by Neo4j.',
+      component: NeoJSONChart,
+      allowScrolling: true,
+      maxRecords: 500,
+      settings: {
+        format: {
+          label: 'Format',
+          type: SELECTION_TYPES.LIST,
+          values: ['json', 'yml'],
+          default: 'json',
+        },
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        refreshButtonEnabled: {
+          label: 'Refreshable',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        downloadImageEnabled: {
+          label: 'Download Image enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        autorun: {
+          label: 'Auto-run query',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        hideQueryEditorInAutoRunOnMode: {
+          label: 'Hide query editor on auto run on mode',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        refreshRate: {
+          label: 'Refresh rate (seconds)',
+          type: SELECTION_TYPES.NUMBER,
+          default: '0 (No refresh)',
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
-      replaceGlobalParameters: {
-        label: 'Replace global parameters in Markdown',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
+    },
+    select: {
+      label: 'Parameter Select',
+      helperText:
+        'This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.',
+      component: NeoParameterSelectionChart,
+      settingsComponent: NeoCardSettingsContentPropertySelect,
+      disableCypherParameters: true,
+      textOnly: true,
+      maxRecords: 100,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        multiSelector: {
+          label: 'Multiple Selection',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        manualParameterSave: {
+          label: 'Manual Parameter Save',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        overridePropertyDisplayName: {
+          label: 'Property Display Name Override',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        suggestionLimit: {
+          label: 'Value Suggestion Limit',
+          type: SELECTION_TYPES.NUMBER,
+          default: 5,
+        },
+        searchType: {
+          label: 'Search Type',
+          type: SELECTION_TYPES.LIST,
+          values: ['CONTAINS', 'STARTS WITH', 'ENDS WITH'],
+          default: 'CONTAINS',
+        },
+        caseSensitive: {
+          label: 'Case Sensitive Search',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        deduplicateSuggestions: {
+          label: 'Deduplicate Suggestion Values',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        defaultValue: {
+          label: 'Default Value (Override)',
+          type: SELECTION_TYPES.TEXT,
+          default: '',
+        },
+        clearParameterOnFieldClear: {
+          label: 'Clear Parameter on Field Reset',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        manualPropertyNameSpecification: {
+          label: 'Manual Label/Property Name Specification',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        helperText: {
+          label: 'Helper Text (Override)',
+          type: SELECTION_TYPES.TEXT,
+          default: 'Enter a custom helper text here...',
+        },
+        suggestionsUpdateTimeout: {
+          label: 'Timeout for value suggestions (ms)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 250,
+        },
+        setParameterTimeout: {
+          label: 'Timeout for value updates (ms)',
+          type: SELECTION_TYPES.NUMBER,
+          default: 1000,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+    },
+    iframe: {
+      label: 'iFrame',
+      helperText:
+        'iFrame reports let you embed external webpages into your dashboard. Enter an URL in the query box above to embed it as an iFrame.',
+      textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
+      disableDatabaseSelector: true,
+      component: NeoIFrameChart,
+      inputMode: 'url',
+      maxRecords: 1,
+      allowScrolling: true,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        replaceGlobalParameters: {
+          label: 'Replace global parameters in URL',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        passGlobalParameters: {
+          label: 'Append global parameters to iFrame URL',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+    },
+    text: {
+      label: 'Markdown',
+      helperText: 'Markdown text specified above will be rendered in the report.',
+      component: NeoMarkdownChart,
+      inputMode: 'markdown',
+      textOnly: true, // this makes sure that no query is executed, input of the report gets passed directly to the renderer.
+      disableDatabaseSelector: true,
+      maxRecords: 1,
+      allowScrolling: true,
+      settings: {
+        backgroundColor: {
+          label: 'Background Color',
+          type: SELECTION_TYPES.COLOR,
+          default: '#fafafa',
+        },
+        replaceGlobalParameters: {
+          label: 'Replace global parameters in Markdown',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: true,
+        },
+        fullscreenEnabled: {
+          label: 'Fullscreen enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        downloadImageEnabled: {
+          label: 'Download Image enabled',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
+        description: {
+          label: 'Report Description',
+          type: SELECTION_TYPES.MULTILINE_TEXT,
+          default: 'Enter markdown here...',
+        },
+        minimizable: {
+          label: 'Minimize Button',
+          type: SELECTION_TYPES.LIST,
+          values: [true, false],
+          default: false,
+        },
       },
     },
   },
