@@ -389,6 +389,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     loggingMode: '0',
     loggingDatabase: 'logs',
     logErrorNotification: '3',
+    standaloneAllowLoad: false,
+    standaloneLoadFromOtherDatabases: false,
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -430,7 +432,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standaloneDashboardDatabase,
         config.standaloneDashboardURL,
         config.standaloneUsername,
-        config.standalonePassword
+        config.standalonePassword,
+        config.standaloneAllowLoad,
+        config.standaloneLoadFromOtherDatabases,
       )
     );
 

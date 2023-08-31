@@ -10,5 +10,7 @@
   "standaloneDashboardDatabase": "dashboards",
   "standaloneDashboardURL": "",
   "loggingMode": "0",
-  "loggingDatabase": "logs"
+  "loggingDatabase": "logs",
+  "standaloneAllowLoad": false,
+  "standaloneLoadFromOtherDatabases": false
 }

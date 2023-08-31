@@ -26,8 +26,9 @@ will look like this:
     "standaloneDashboardDatabase": "dashboards",
     "standaloneDashboardURL": "",
     "loggingMode": "0",
-    "loggingDatabase": "logging"   
-
+    "loggingDatabase": "logs",
+    "standaloneAllowLoad": false,
+    "standaloneLoadFromOtherDatabases": false
 }
 ....
 
@@ -102,6 +103,17 @@ must be granted to enble any user to create logs.
 |loggingDatabase |string |neo4j |When loggingMode is set to anything 
 else than '0', the database to use for logging. Log records (nodes)
 will be created in this database.
+
+|standaloneAllowLoad |boolean |false |If set t yes the "Load Dashboard"
+button will be enabled in standalone mode, allowing users to load 
+additional dashboards from Neo4J. 
+*NOTE*: when Load is enabled in standalone mode, only Database is available
+as a source, not file.
+
+|standaloneLoadFromOtherDatabases|boolean |false |If standaloneAllowLoad is 
+set to true, this parmeter enables or not users to load dashboards from 
+other databases than the one deifned in standaloneDashboardDatabase. If 
+standaloneAllowLoad is set to false this parameters has no effect. 
 |===
 
 == Configuring SSO

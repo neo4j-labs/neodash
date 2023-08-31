@@ -136,6 +136,8 @@ standalone mode.
     "standaloneDashboardDatabase": "dashboards",
     "loggingMode": "0",
     "loggingDatabase": "logging",
+    "standaloneAllowLoad": false,
+    "standaloneLoadFromOtherDatabases ": false,
     "notificationIsDismissable": null
 }
 ....
