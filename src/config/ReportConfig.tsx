@@ -350,6 +350,7 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['node', 'edge'],
         default: 'node',
+      },
       minimizable: {
         label: 'Minimize Button',
         type: SELECTION_TYPES.LIST,
