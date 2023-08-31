@@ -16,6 +16,8 @@ echo " \
     \"standaloneDashboardName\": \"${standaloneDashboardName:='My Dashboard'}\", \
     \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase:='neo4j'}\",  \
     \"standaloneDashboardURL\": \"${standaloneDashboardURL:=}\",  \
+    \"loggingMode\": \"${loggingMode:='0'}\",  \
+    \"loggingMode\": \"${loggingDatabase:='logs'}\",  \
     \"standaloneAllowLoad\": \"${standaloneAllowLoad:=false}\",  \
     \"standaloneLoadFromOtherDatabases\": \"${standaloneLoadFromOtherDatabases:=false}\"  \
     }" > /usr/share/nginx/html/config.json

@@ -176,6 +176,24 @@ export const setStandaloneDashboardDatabase = (dashboardDatabase: string) => ({
   payload: { dashboardDatabase },
 });
 
+export const SET_LOGGING_MODE = 'APPLICATION/SET_LOGGING_MODE';
+export const setLoggingMode = (loggingMode: string) => ({
+  type: SET_LOGGING_MODE,
+  payload: { loggingMode },
+});
+
+export const SET_LOGGING_DATABASE = 'APPLICATION/SET_LOGGING_DATABASE';
+export const setLoggingDatabase = (loggingDatabase: string) => ({
+  type: SET_LOGGING_DATABASE,
+  payload: { loggingDatabase },
+});
+
+export const SET_LOG_ERROR_NOTIFICATION = 'APPLICATION/SET_LOG_ERROR_NOTIFICATION';
+export const setLogErrorNotification = (logErrorNotification: any) => ({
+  type: SET_LOG_ERROR_NOTIFICATION,
+  payload: { logErrorNotification },
+});
+
 export const SET_SSO_ENABLED = 'APPLICATION/SET_SSO_ENABLED';
 export const setSSOEnabled = (enabled: boolean, discoveryUrl: string) => ({
   type: SET_SSO_ENABLED,

@@ -9,6 +9,8 @@
   "standaloneDashboardName": "My Dashboard",
   "standaloneDashboardDatabase": "dashboards",
   "standaloneDashboardURL": "",
+  "loggingMode": "0",
+  "loggingDatabase": "logs",
   "standaloneAllowLoad": false,
   "standaloneLoadFromOtherDatabases": false
 }

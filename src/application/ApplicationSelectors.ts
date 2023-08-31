@@ -33,12 +33,20 @@ export const applicationGetConnectionDatabase = (state: any) => {
   return state.application.connection.database;
 };
 
+export const applicationGetConnectionUser = (state: any) => {
+  return state.application.connection.username;
+}
+
 export const applicationGetShareDetails = (state: any) => {
   return state.application.shareDetails;
 };
 
 export const applicationIsStandalone = (state: any) => {
   return state.application.standalone;
+};
+
+export const applicationGetLoggingMode = (state: any) => {
+  return state.application.loggingMode;
 };
 
 export const applicationHasNeo4jDesktopConnection = (state: any) => {
@@ -83,6 +91,14 @@ export const applicationGetStandaloneSettings = (state: any) => {
     standalonePassword: state.application.standalonePassword,
     standaloneAllowLoad: state.application.standaloneAllowLoad,
     standaloneLoadFromOtherDatabases: state.application.standaloneLoadFromOtherDatabases,
+  };
+};
+
+export const applicationGetLoggingSettings = (state: any) => {
+  return {
+    loggingMode: state.application.loggingMode,
+    loggingDatabase: state.application.loggingDatabase,
+    logErrorNotification: state.application.logErrorNotification,
   };
 };
 
