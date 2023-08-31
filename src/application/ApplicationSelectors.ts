@@ -96,11 +96,6 @@ export const applicationGetLoggingSettings = (state: any) => {
   return {
     loggingMode: state.application.loggingMode,
     loggingDatabase: state.application.loggingDatabase,
-  };
-};
-
-export const applicationGetLogErrorNotification = (state: any) => {
-  return {
     logErrorNotification: state.application.logErrorNotification,
   };
 };

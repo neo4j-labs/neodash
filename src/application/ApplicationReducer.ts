@@ -54,7 +54,7 @@ const initialState = {
   waitForSSO: false,
   standalone: false,
   loggingMode: '0',
-  logErrorNotification: 3,
+  logErrorNotification: '3',
 };
 export const applicationReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;

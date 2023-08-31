@@ -42,8 +42,9 @@ import {
   setReportHelpModalOpen,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
-import { applicationGetLoggingSettings, applicationIsStandalone, applicationGetLogErrorNotification } from './ApplicationSelectors';
+import { applicationGetLoggingSettings, applicationIsStandalone } from './ApplicationSelectors';
 import { createUUID } from '../utils/uuid';
+import { valueIsRelationship } from '../chart/ChartUtils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -83,7 +84,7 @@ export const createConnectionThunk =
                   'ERR - connect to DB', 
                   database, 
                   '',
-                  'Error while trying to establish connection to Neo4j DB in ' +neodashMode+' mode at '+Date.now()  
+                  'Error while trying to establish connection to Neo4j DB in ' +neodashMode+' mode at '+Date(Date.now()).substring(0,33)
                 )
             );  
           }              
@@ -104,7 +105,7 @@ export const createConnectionThunk =
                   'INF - connect to DB', 
                   database, 
                   '',
-                  username +'established connection to Neo4j DB in ' +neodashMode+' mode at '+Date.now()  
+                  username +'established connection to Neo4j DB in ' +neodashMode+' mode at '+Date(Date.now()).substring(0,33)
                 )
             );                
         }
@@ -387,6 +388,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDashboardURL: '',
     loggingMode: '0',
     loggingDatabase: 'logs',
+    logErrorNotification: '3',
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -434,6 +436,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
     dispatch(setLoggingMode(config.loggingMode));
     dispatch(setLoggingDatabase(config.loggingDatabase));
+    dispatch(setLogErrorNotification('3'));
 
     dispatch(setConnectionModalOpen(false));
 
@@ -644,7 +647,6 @@ export const createLogThunk =
 (dispatch: any, getState: any) => {
   try {
     const uuid = createUUID();
-
     // Generate a cypher query to save the log.
     const query = 'CREATE (n:_Neodash_Log) SET n.uuid = $uuid, n.user = $user, n.date = datetime(), n.neodash_mode = $neodashMode, n.action = $logAction, n.database = $logDatabase, n.dashboard = $logDashboard, n.message = $logMessage RETURN $uuid as uuid'
       
@@ -670,26 +672,37 @@ export const createLogThunk =
         } else {
           //we only show error notification one time
           const state = getState()
-          const LogErrorNotification : number = Number(applicationGetLogErrorNotification(state))
-          if (LogErrorNotification > 0 ) {
-          dispatch(
+          const loggingSettings = applicationGetLoggingSettings (state);
+          var LogErrorNotificationNum = Number(loggingSettings.logErrorNotification)
+          console.log('Error creating log for '+((LogErrorNotificationNum-4)*(-1))+' times')
+          if (LogErrorNotificationNum > 0 ) {
+            dispatch(
               createNotificationThunk(
                 'Error creating log',
-                `Please check logging configuration with your Neodash administrator`
-              )
+                LogErrorNotificationNum>1 ? `Please check logging configuration with your Neodash administrator`:`Please check logging configuration with your Neodash administrator - This message will not be displayed anymore in the current session`
+                )
             );
-            dispatch(setLogErrorNotification (LogErrorNotification - 1));
           }
-        }
+          LogErrorNotificationNum = LogErrorNotificationNum-1
+          dispatch(setLogErrorNotification (LogErrorNotificationNum.toString()));
+      }
       }
     );
   } catch (e) {
             //we only show error notification 3 times
             const state = getState()
-            const LogErrorNotification : number = Number(applicationGetLogErrorNotification(state))
-            if (LogErrorNotification > 0 ) {
-              dispatch(createNotificationThunk('Error creating log', e));
-              dispatch(setLogErrorNotification (LogErrorNotification - 1));
+            const loggingSettings = applicationGetLoggingSettings (state);
+            var LogErrorNotificationNum = Number(loggingSettings.logErrorNotification)
+            console.log('Error creating log for '+((LogErrorNotificationNum-4)*(-1))+' times')
+            if (LogErrorNotificationNum > 0 ) {
+              dispatch(
+                createNotificationThunk(
+                  'Error creating log',
+                  LogErrorNotificationNum>1 ? `Please check logging configuration with your Neodash administrator`:`Please check logging configuration with your Neodash administrator - This message will not be displayed anymore in the current session`
+                )
+              );
             }
-  }
+            LogErrorNotificationNum = LogErrorNotificationNum-1
+            dispatch(setLogErrorNotification (LogErrorNotificationNum.toString()));
+    }
 };

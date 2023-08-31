@@ -185,9 +185,9 @@ export const setLoggingDatabase = (loggingDatabase: string) => ({
 });
 
 export const SET_LOG_ERROR_NOTIFICATION = 'APPLICATION/SET_LOG_ERROR_NOTIFICATION';
-export const setLogErrorNotification = (parameters: any) => ({
+export const setLogErrorNotification = (logErrorNotification: any) => ({
   type: SET_LOG_ERROR_NOTIFICATION,
-  payload: { parameters },
+  payload: { logErrorNotification },
 });
 
 export const SET_SSO_ENABLED = 'APPLICATION/SET_SSO_ENABLED';
