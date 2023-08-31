@@ -11,7 +11,6 @@ import {
   DatabaseAddCircleIcon,
   DocumentArrowDownIconOutline,
   BackspaceIconOutline,
-  CloudArrowUpIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { Button, Checkbox, Dialog, Dropdown, MenuItem } from '@neo4j-ndl/react';
 
@@ -89,23 +88,38 @@ export const NeoSaveModal = ({ dashboard, connection, saveDashboardToNeo4j, load
 
   return (
     <>
-      <MenuItem title='Save' onClick={handleClickOpen} icon={<CloudArrowUpIconOutline />} />
+      <MenuItem title='Save' onClick={handleClickOpen} icon={<CloudArrowDownIconOutline />} />
 
-      <Dialog size='small' open={saveModalOpen} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      <Dialog size='large' open={saveModalOpen} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>
-          <CloudArrowUpIconOutline className='icon-base icon-inline text-r' aria-label={'save cloud'} />
+          <CloudArrowDownIconOutline className='icon-base icon-inline text-r' aria-label={'save cloud'} />
           Save Dashboard
         </Dialog.Header>
         <Dialog.Content>
-          Saving dashboards has moved. Open the sidebar on the left of the screen to save, load, import and export
-          dashboards.
-          {/* <TextareaAutosize
+          <div style={{ marginBottom: '10px' }}>
+            <Button
+              onClick={() => {
+                setSaveToNeo4jModalOpen(true);
+              }}
+              fill='outlined'
+              color='neutral'
+              floating
+            >
+              Save to Neo4j
+              <DatabaseAddCircleIcon className='btn-icon-base-r' />
+            </Button>
+            <Button onClick={downloadDashboard} fill='outlined' color='neutral' style={{ marginLeft: '10px' }} floating>
+              Save to file
+              <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
+            </Button>
+          </div>
+          <TextareaAutosize
             style={{ minHeight: '500px', width: '100%', border: '1px solid lightgray' }}
             className={'textinput-linenumbers'}
             value={dashboardString}
             aria-label=''
             placeholder='Your dashboard JSON should show here'
-          /> */}
+          />
         </Dialog.Content>
       </Dialog>
 

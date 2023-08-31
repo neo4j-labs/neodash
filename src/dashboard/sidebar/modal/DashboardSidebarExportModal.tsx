@@ -1,32 +1,80 @@
 import React from 'react';
-import { FormControl, TextareaAutosize, Tooltip } from '@mui/material';
-import { DatabaseAddCircleIcon, BackspaceIconOutline } from '@neo4j-ndl/react/icons';
-import { Button, Checkbox, Dialog, Dropdown } from '@neo4j-ndl/react';
+import { DocumentArrowDownIconOutline } from '@neo4j-ndl/react/icons';
+import { Button, Dialog } from '@neo4j-ndl/react';
+import { valueIsArray, valueIsObject } from '../../../chart/ChartUtils';
+import { TextareaAutosize } from '@mui/material';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export const NeoDashboardSidebarExportModal = ({ open, onConfirm, handleClose }) => {
+export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose }) => {
+  /**
+   * Removes the specified set of keys from the nested dictionary.
+   */
+  const filterNestedDict = (value: any, removedKeys: any[]) => {
+    if (value == undefined) {
+      return value;
+    }
+
+    if (valueIsArray(value)) {
+      return value.map((v) => filterNestedDict(v, removedKeys));
+    }
+
+    if (valueIsObject(value)) {
+      const newValue = {};
+      Object.keys(value).forEach((k) => {
+        if (removedKeys.indexOf(k) != -1) {
+          newValue[k] = undefined;
+        } else {
+          newValue[k] = filterNestedDict(value[k], removedKeys);
+        }
+      });
+      return newValue;
+    }
+    return value;
+  };
+
+  const filteredDashboard = filterNestedDict(dashboard, [
+    'fields',
+    'settingsOpen',
+    'advancedSettingsOpen',
+    'collapseTimeout',
+    'apiKey', // Added for query-translator extension
+  ]);
+
+  const dashboardString = JSON.stringify(filteredDashboard, null, 2);
+  const downloadDashboard = () => {
+    const element = document.createElement('a');
+    const file = new Blob([dashboardString], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = 'dashboard.json';
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  };
+
   return (
-    <Dialog size='small' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+    <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
       <Dialog.Header id='form-dialog-title'>Export Dashboard</Dialog.Header>
-      <Dialog.Content>Export your dashboard as a JSON file, or copy-paste the save file here.</Dialog.Content>
+      <Dialog.Content>
+        Export your dashboard as a JSON file, or copy-paste the file from here.
+        <TextareaAutosize
+          style={{ width: '100%', border: '1px solid lightgray' }}
+          className={'textinput-linenumbers'}
+          value={
+            `{\n    title: '${dashboard.title}',\n` +
+            `    date: '${new Date().toISOString()}',\n` +
+            `    content: ` +
+            `{...}` +
+            `\n}`
+          }
+          aria-label=''
+          placeholder=''
+        />
+      </Dialog.Content>
       <Dialog.Actions>
-        <Button onClick={handleClose} style={{ float: 'right' }} fill='outlined' floating>
-          <BackspaceIconOutline className='btn-icon-base-l' aria-label={'save back'} />
-          Cancel
-        </Button>
-        <Button
-          onClick={() => {
-            onConfirm();
-            handleClose();
-          }}
-          color='success'
-          style={{ float: 'right', marginRight: '10px' }}
-          floating
-        >
-          Save
-          <DatabaseAddCircleIcon className='btn-icon-base-r' />
+        <Button onClick={downloadDashboard} fill='outlined' color='neutral' style={{ marginLeft: '10px' }} floating>
+          Save to file
+          <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
         </Button>
       </Dialog.Actions>
     </Dialog>

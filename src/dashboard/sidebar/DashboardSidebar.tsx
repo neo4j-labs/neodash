@@ -30,6 +30,8 @@ import NeoDashboardSidebarSaveModal from './modal/DashboardSidebarSaveModal';
 import { getDashboardJson } from '../../modal/ModalSelectors';
 import NeoDashboardSidebarCreateMenu from './menu/DashboardSidebarCreateMenu';
 import NeoDashboardSidebarImportModal from './modal/DashboardSidebarImportModal';
+import { createUUID } from '../../utils/uuid';
+import NeoDashboardSidebarExportModal from './modal/DashboardSidebarExportModal';
 
 enum Menu {
   DASHBOARD,
@@ -69,7 +71,7 @@ export const NeoDashboardSidebar = ({
   const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(-1);
   const [dashboardDatabase, setDashboardDatabase] = React.useState(database ? database : 'neo4j');
   const [databases, setDatabases] = useState([]);
-  const [loadModalIndex, setLoadModalIndex] = useState(-1);
+  const [inspectedIndex, setInspectedIndex] = useState(-1);
   const [searchText, setSearchText] = useState('');
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
@@ -120,10 +122,10 @@ export const NeoDashboardSidebar = ({
         open={modalOpen == Modal.LOAD}
         onConfirm={() => {
           setModalOpen(Modal.LOAD);
-          const { uuid } = dashboards[loadModalIndex];
+          const { uuid } = dashboards[inspectedIndex];
           loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
             loadDashboard(uuid, file);
-            setSelectedDashboardIndex(loadModalIndex);
+            setSelectedDashboardIndex(inspectedIndex);
             setDraft(false);
           });
         }}
@@ -141,10 +143,17 @@ export const NeoDashboardSidebar = ({
 
       <NeoDashboardSidebarImportModal
         open={modalOpen == Modal.IMPORT}
-        onConfirm={() => {
+        onImport={(text) => {
           setModalOpen(Modal.NONE);
-          alert('oh');
+          setDraft(true);
+          loadDashboard(createUUID(), text);
         }}
+        handleClose={() => setModalOpen(Modal.NONE)}
+      />
+
+      <NeoDashboardSidebarExportModal
+        open={modalOpen == Modal.EXPORT}
+        dashboard={dashboard}
         handleClose={() => setModalOpen(Modal.NONE)}
       />
 
@@ -189,10 +198,20 @@ export const NeoDashboardSidebar = ({
               alert('todo');
             }}
             handleLoadClicked={() => {
-              alert('todo');
+              setMenuOpen(Menu.NONE);
+              if (draft) {
+                setModalOpen(Modal.LOAD);
+              } else {
+                const d = dashboards[inspectedIndex];
+                loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
+                  loadDashboard(d.uuid, file);
+                  setSelectedDashboardIndex(inspectedIndex);
+                });
+              }
             }}
             handleExportClicked={() => {
-              alert('todo');
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.EXPORT);
             }}
             handleShareClicked={() => {
               alert('todo');
@@ -219,7 +238,11 @@ export const NeoDashboardSidebar = ({
             }}
             handleImportClicked={() => {
               setMenuOpen(Menu.NONE);
-              setModalOpen(Modal.IMPORT);
+              if (draft) {
+                setModalOpen(Modal.IMPORT);
+              } else {
+                setModalOpen(Modal.IMPORT);
+              }
             }}
             handleClose={() => {
               setMenuOpen(Menu.NONE);
@@ -314,7 +337,7 @@ export const NeoDashboardSidebar = ({
                   saved={true}
                   onSelect={() => {
                     if (draft) {
-                      setLoadModalIndex(index);
+                      setInspectedIndex(index);
                       setModalOpen(Modal.LOAD);
                     } else {
                       loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
@@ -325,6 +348,7 @@ export const NeoDashboardSidebar = ({
                   }}
                   onSave={() => {}}
                   onSettingsOpen={(event) => {
+                    setInspectedIndex(index);
                     setMenuOpen(Menu.DASHBOARD);
                     setMenuAnchor(event.currentTarget);
                   }}
