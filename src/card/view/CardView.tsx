@@ -31,7 +31,7 @@ const NeoCardView = ({
   type,
   selection,
   dashboardSettings,
-  enableExecuteButtonForIds = [],
+  enableExecuteButtonForIds = [], // We can enable execute button to mutiple reports
   settings,
   updateReportSetting,
   createNotification,
