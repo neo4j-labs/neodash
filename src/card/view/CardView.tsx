@@ -31,7 +31,7 @@ const NeoCardView = ({
   type,
   selection,
   dashboardSettings,
-  enableExecuteButtonForIds,
+  enableExecuteButtonForIds = [],
   settings,
   updateReportSetting,
   createNotification,
