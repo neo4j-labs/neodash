@@ -677,7 +677,7 @@ export const createLogThunk =
           //we only show error notification one time
           const state = getState()
           const loggingSettings = applicationGetLoggingSettings (state);
-          var LogErrorNotificationNum = Number(loggingSettings.logErrorNotification)
+          let LogErrorNotificationNum = Number(loggingSettings.logErrorNotification)
           console.log('Error creating log for '+((LogErrorNotificationNum-4)*(-1))+' times')
           if (LogErrorNotificationNum > 0 ) {
             dispatch(
@@ -687,7 +687,7 @@ export const createLogThunk =
                 )
             );
           }
-          LogErrorNotificationNum = LogErrorNotificationNum-1
+          LogErrorNotificationNum -= 1
           dispatch(setLogErrorNotification (LogErrorNotificationNum.toString()));
       }
       }
@@ -696,7 +696,7 @@ export const createLogThunk =
             //we only show error notification 3 times
             const state = getState()
             const loggingSettings = applicationGetLoggingSettings (state);
-            var LogErrorNotificationNum = Number(loggingSettings.logErrorNotification)
+            let LogErrorNotificationNum = Number(loggingSettings.logErrorNotification)
             console.log('Error creating log for '+((LogErrorNotificationNum-4)*(-1))+' times')
             if (LogErrorNotificationNum > 0 ) {
               dispatch(
@@ -706,7 +706,7 @@ export const createLogThunk =
                 )
               );
             }
-            LogErrorNotificationNum = LogErrorNotificationNum-1
+            LogErrorNotificationNum -= 1
             dispatch(setLogErrorNotification (LogErrorNotificationNum.toString()));
     }
 };
