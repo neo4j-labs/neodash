@@ -164,7 +164,19 @@ NeoDash mode (neodash_mmode), Action (action) and a short message (message).
 ⚠️ Logs are created using the credentials of the current user (either from 
 logon or, if configured, from standaloneUsername), therefore, for it to work,
 administrator must ensure that every neodash user has write access to the 
-__Neodash_Log_ label in the database confugred in the loggingDatabase prameter (which must also be available on the same Neo4J instance where dashboards and data are stored).
+__Neodash_Log_ label in the database confugred in the loggingDatabase prameter 
+(which must also be available on the same Neo4J instance where dashboards and 
+data are stored).
 This can be achieved by creating a standard NeoDashUser role in Neo4j with 
 such permissions and assigning this role to every neoDash user. For more 
-details on Neo4J granular access control please refer to the link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/access-control/[product documentation]
+details on Neo4J granular access control please refer to the link:
+https://neo4j.com/docs/operations-manual/current/authentication-authorization/access-control/[product documentation]
+In case of any misconfiguration (e.g. user not having grants to write in the 
+loggingDatabase), the application will show an error notification every time
+a log creation fails (e.g. for a loggingMode set to '2', at user connection
+attempt and any subsequent attempt to load or save a dashboard); the error will
+not block the application flow (users will still be able to connect, load and
+save dashboards normally); additionally, to limit user discomfort in such
+scenario, the notification is shown for 3 times only in a single user session.
+After 3rd time, a line will still be logged in the javascript console of user
+browser but interactive notifictions will be suppressed.
