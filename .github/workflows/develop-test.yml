@@ -6,8 +6,7 @@ on:
 
 jobs:
   build-test:
-    if: github.event.pull_request.draft == false
-    runs-on: neodash-runners
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x]
@@ -34,5 +33,3 @@ jobs:
           start: yarn run dev
           wait-on: 'http://localhost:3000'
           browser: chrome
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
