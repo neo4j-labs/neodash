@@ -38,9 +38,9 @@ import {
   setReportHelpModalOpen,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
-import neo4j, { AuthTokenManager, authTokenManagers } from 'neo4j-driver';
+import neo4j, { AuthTokenManager, auth, authTokenManagers } from 'neo4j-driver';
 import type { Neo4jScheme } from 'use-neo4j/dist/neo4j-config.interface';
-import { handleRefreshingToken } from 'neo4j-client-sso';
+import { SSOProviderOriginal, handleRefreshingToken } from 'neo4j-client-sso';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -54,11 +54,33 @@ export const createDriver = (
   username?: string,
   password?: string,
   config?: { userAgent?: string },
-  authTokenMgr?: AuthTokenManager
+  ssoProviders: SSOProviderOriginal[] = []
 ) => {
-  if (authTokenMgr) {
+  if (ssoProviders.length > 0) {
+    const authTokenMgr = authTokenManagers.bearer({
+      tokenProvider: async () => {
+        const credentials = await handleRefreshingToken(ssoProviders);
+        const token = auth.bearer(credentials.password);
+        // Get the expiration from the JWT's payload, which is a JSON string encoded
+        // using base64. You could also use a JWT parsing lib
+        const [, payloadBase64] = credentials.password.split('.');
+        const payload: unknown = JSON.parse(window.atob(payloadBase64 ?? ''));
+        let expiration: Date;
+        if (typeof payload === 'object' && payload !== null && 'exp' in payload) {
+          expiration = new Date(Number(payload.exp) * 1000);
+        } else {
+          expiration = new Date();
+        }
+
+        return {
+          expiration,
+          token,
+        };
+      },
+    });
     return neo4j.driver(`${scheme}://${host}:${port}`, authTokenMgr, config);
   }
+
   if (!username || !password) {
     return neo4j.driver(`${scheme}://${host}:${port}`);
   }
@@ -80,28 +102,6 @@ export const createConnectionThunk =
   (protocol, url, port, database, username, password, SSOProviders = []) =>
   (dispatch: any, getState: any) => {
     try {
-      const authTokenMgr = authTokenManagers.bearer({
-        tokenProvider: async () => {
-          const credentials = await handleRefreshingToken(SSOProviders);
-          const token = neo4j.auth.bearer(credentials.password);
-          // Get the expiration from the JWT's payload, which is a JSON string encoded
-          // using base64. You could also use a JWT parsing lib
-          const [, payloadBase64] = credentials.password.split('.');
-          const payload: unknown = JSON.parse(window.atob(payloadBase64 ?? ''));
-          let expiration: Date;
-          if (typeof payload === 'object' && payload !== null && 'exp' in payload) {
-            expiration = new Date(Number(payload.exp) * 1000);
-          } else {
-            expiration = new Date();
-          }
-
-          return {
-            expiration,
-            token,
-          };
-        },
-      });
-
       const driver = createDriver(
         protocol,
         url,
@@ -109,7 +109,7 @@ export const createConnectionThunk =
         username,
         password,
         { userAgent: `neodash/v${version}` },
-        authTokenMgr
+        SSOProviders
       );
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');

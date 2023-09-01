@@ -11,8 +11,6 @@ import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
-import { auth, authTokenManagers } from 'neo4j-driver';
-import { handleRefreshingToken } from 'neo4j-client-sso';
 import { createDriver } from '../application/ApplicationThunks';
 
 const Dashboard = ({
@@ -28,27 +26,6 @@ const Dashboard = ({
 
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
-    const authTokenMgr = authTokenManagers.bearer({
-      tokenProvider: async () => {
-        const credentials = await handleRefreshingToken(connection.ssoProviders ?? []);
-        const token = auth.bearer(credentials.password);
-        // Get the expiration from the JWT's payload, which is a JSON string encoded
-        // using base64. You could also use a JWT parsing lib
-        const [, payloadBase64] = credentials.password.split('.');
-        const payload: unknown = JSON.parse(window.atob(payloadBase64 ?? ''));
-        let expiration: Date;
-        if (typeof payload === 'object' && payload !== null && 'exp' in payload) {
-          expiration = new Date(Number(payload.exp) * 1000);
-        } else {
-          expiration = new Date();
-        }
-
-        return {
-          expiration,
-          token,
-        };
-      },
-    });
     const newDriver = createDriver(
       connection.protocol,
       connection.url,
@@ -56,7 +33,7 @@ const Dashboard = ({
       connection.username,
       connection.password,
       { userAgent: `neodash/v${version}` },
-      authTokenMgr
+      connection.ssoProviders
     );
     // @ts-ignore wrong driver version
     setDriver(newDriver);
