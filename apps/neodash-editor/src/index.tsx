@@ -4,9 +4,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { configureStore } from '@neodash/engine/store';
-import Application from '@neodash/engine';
-import StyleConfig from '@neodash/engine/style';
+import {Application, configureStore, StyleConfig} from '@neodash/engine';
 
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';

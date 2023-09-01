@@ -13,18 +13,11 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "main": "dist/index.js",
-  "exports": {
-    ".": "./dist/index.js",
-    "./application": "./dist/application/Application.js",
-    "./style": "./dist/config/StyleConfig.js",
-    "./store": "./dist/store.js"
-  },
-  "types": "dist/index.d.ts",
+  "entry": "./src/index.tsx",
+  "main": "./src/index.tsx",
   "scripts": {
-    "build": "tsc --outDir dist",
-    "clean:build": "rimraf ./dist",
-    "dev": "nodemon"
+    "build": "webpack",
+    "clean:build": "rimraf ./dist"
   },
   "keywords": [],
   "author": "Neo4j Labs",

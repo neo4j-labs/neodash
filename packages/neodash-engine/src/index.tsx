@@ -1,4 +1,6 @@
 import Application from "./application/Application";
+import StyleConfig from "./config/StyleConfig";
+import { configureStore } from "./store";
 
-export default Application;
 
+export { Application, configureStore, StyleConfig };
