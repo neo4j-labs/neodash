@@ -56,9 +56,7 @@ export const createDriver = (
   config?: { userAgent?: string },
   authTokenMgr?: AuthTokenManager
 ) => {
-  console.log('creating driver');
   if (authTokenMgr) {
-    console.log('creating fancy auth mgr');
     return neo4j.driver(`${scheme}://${host}:${port}`, authTokenMgr, config);
   }
   if (!username || !password) {
@@ -84,7 +82,6 @@ export const createConnectionThunk =
     try {
       const authTokenMgr = authTokenManagers.bearer({
         tokenProvider: async () => {
-          console.log('refreshing token');
           const credentials = await handleRefreshingToken(SSOProviders);
           const token = neo4j.auth.bearer(credentials.password);
           // Get the expiration from the JWT's payload, which is a JSON string encoded
@@ -97,7 +94,6 @@ export const createConnectionThunk =
           } else {
             expiration = new Date();
           }
-          console.log('new token', expiration, token);
 
           return {
             expiration,

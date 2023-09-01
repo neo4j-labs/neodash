@@ -28,10 +28,8 @@ const Dashboard = ({
 
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
-    console.log('this driver');
     const authTokenMgr = authTokenManagers.bearer({
       tokenProvider: async () => {
-        console.log('refreshing token', connection.ssoProviders);
         const credentials = await handleRefreshingToken(connection.ssoProviders ?? []);
         const token = auth.bearer(credentials.password);
         // Get the expiration from the JWT's payload, which is a JSON string encoded
@@ -44,7 +42,6 @@ const Dashboard = ({
         } else {
           expiration = new Date();
         }
-        console.log('new token', expiration, token);
 
         return {
           expiration,

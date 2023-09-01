@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { authRequestForSSO } from 'neo4j-client-sso';
+import { SSOProviderOriginal, authRequestForSSO } from 'neo4j-client-sso';
 import { getDiscoveryDataInfo } from './SSOUtils';
 import { ShieldCheckIconOutline } from '@neo4j-ndl/react/icons';
-import { Button } from '@neo4j-ndl/react';
+import { Button, IconButton } from '@neo4j-ndl/react';
 
 export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, onClick }) => {
   const [savedSSOProviders, setSSOProviders] = useState([]);
   const [discoveryUrlValidated, setDiscoveryUrlValidated] = useState(undefined);
   const attemptManualSSOProviderRetrieval = () => {
     // Do an extra check to see if the hostname provides some SSO provider configuration.
-    getDiscoveryDataInfo(`http://${hostname}:${port}`)
+    getDiscoveryDataInfo(`https://${hostname}:${port}`)
       .then((mergedSSOProviders) => {
         setSSOProviders(mergedSSOProviders);
         if (mergedSSOProviders.length == 0) {
           setDiscoveryUrlValidated(undefined);
         } else {
-          setDiscoveryUrlValidated(`http://${hostname}:${port}`);
+          setDiscoveryUrlValidated(`https://${hostname}:${port}`);
         }
       })
       // eslint-disable-next-line no-console
