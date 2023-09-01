@@ -352,6 +352,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneUsername: '',
     standalonePassword: '',
     skipConfirmation: false,
+    skipAddDashErrorPopup: false
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -394,7 +395,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standaloneDashboardURL,
         config.standaloneUsername,
         config.standalonePassword,
-        config.skipConfirmation
+        config.skipConfirmation,
+        config.skipAddDashErrorPopup
       )
     );
     dispatch(setConnectionModalOpen(false));

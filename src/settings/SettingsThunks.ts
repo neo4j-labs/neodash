@@ -1,4 +1,5 @@
 import { setSessionParameters } from '../application/ApplicationActions';
+import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { hardResetCardSettings } from '../card/CardActions';
 import { castToNeo4jDate, isCastableToNeo4jDate, valueIsNode } from '../chart/ChartUtils';
 import { createNotificationThunk } from '../page/PageThunks';
@@ -83,8 +84,10 @@ export const updateGlobalParametersThunk = (newParameters) => (dispatch: any, ge
  * Casting complex params to Neo4j type (right now just dates)
  */
 export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: any) => {
+  const { skipAddDashErrorPopup } = getState().application;
   try {
     const { settings } = getState().dashboard;
+
     const parameters = settings.parameters ? settings.parameters : {};
 
     // if new parameters are set...
@@ -98,6 +101,8 @@ export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: 
     });
     dispatch(updateDashboardSetting('parameters', { ...parameters }));
   } catch (e) {
-    dispatch(createNotificationThunk('Unable to update cached parameters to Neo4j types', e));
+    if(!skipAddDashErrorPopup) {
+      dispatch(createNotificationThunk('Unable to update cached parameters to Neo4j types', e));
+    }
   }
 };

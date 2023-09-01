@@ -135,6 +135,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standaloneUsername,
         standalonePassword,
         skipConfirmation,
+        skipAddDashErrorPopup
       } = payload;
       state = update(state, {
         standalone: standalone,
@@ -148,6 +149,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standaloneUsername: standaloneUsername,
         standalonePassword: standalonePassword,
         skipConfirmation: skipConfirmation,
+        skipAddDashErrorPopup: skipAddDashErrorPopup
       });
       return state;
     }
