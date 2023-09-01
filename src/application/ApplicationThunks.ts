@@ -38,7 +38,7 @@ import {
   setReportHelpModalOpen,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
-import neo4j, { AuthTokenManager, auth, authTokenManagers } from 'neo4j-driver';
+import neo4j, { auth, authTokenManagers } from 'neo4j-driver';
 import type { Neo4jScheme } from 'use-neo4j/dist/neo4j-config.interface';
 import { SSOProviderOriginal, handleRefreshingToken } from 'neo4j-client-sso';
 
