@@ -288,6 +288,7 @@ try {
           }
         }
         if (loggingSettings.loggingMode > '1'){
+          const dashboard = JSON.parse(records[0]._fields[0])
           dispatch(
               createLogThunk(
                   driver, 
@@ -296,7 +297,7 @@ try {
                   loguser,
                   'INF - load dashboard', 
                   database, 
-                  'UUID:'+uuid,
+                  'Name:'+dashboard.title,
                   'User '+loguser+' Loaded dashboard by UUID in '+neodashMode+' mode at '+Date(Date.now()).substring(0,33) 
               )
           );
