@@ -2,6 +2,8 @@
  * This file contains all state-changing actions relevant for the main application.
  */
 
+import { SSOProviderOriginal } from 'neo4j-client-sso';
+
 export const CLEAR_NOTIFICATION = 'APPLICATION/CLEAR_NOTIFICATION';
 export const clearNotification = () => ({
   type: CLEAR_NOTIFICATION,
@@ -50,10 +52,11 @@ export const setConnectionProperties = (
   port: string,
   database: string,
   username: string,
-  password: string
+  password: string,
+  ssoProviders?: SSOProviderOriginal[]
 ) => ({
   type: SET_CONNECTION_PROPERTIES,
-  payload: { protocol, url, port, database, username, password },
+  payload: { protocol, url, port, database, username, password, ssoProviders },
 });
 
 export const SET_BASIC_CONNECTION_PROPERTIES = 'APPLICATION/SET_BASIC_CONNECTION_PROPERTIES';

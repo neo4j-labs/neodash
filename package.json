@@ -70,6 +70,7 @@
     "mui-color": "^2.0.0-beta.2",
     "mui-nested-menu": "^3.2.1",
     "neo4j-client-sso": "^1.2.2",
+    "neo4j-driver": "^5.12.0",
     "openai": "^3.3.0",
     "postcss": "^8.4.21",
     "postcss-loader": "^7.2.4",
@@ -115,6 +116,7 @@
     "@typescript-eslint/parser": "^5.42.0",
     "babel-loader": "^8.2.3",
     "babel-plugin-istanbul": "^6.1.1",
+    "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^3.6.0",
     "cypress": "^10.11.0",
     "eslint": "^8.26.0",
@@ -134,7 +136,6 @@
     "typescript": "^4.8.4",
     "webpack": "^5.77.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.3",
-    "circular-dependency-plugin": "^5.2.2"
+    "webpack-dev-server": "^4.7.3"
   }
 }

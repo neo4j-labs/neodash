@@ -3,7 +3,7 @@ import NeoPage from '../page/Page';
 import NeoDashboardHeader from './header/DashboardHeader';
 import NeoDashboardTitle from './header/DashboardTitle';
 import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
-import { createDriver, Neo4jProvider } from 'use-neo4j';
+import { Neo4jProvider } from 'use-neo4j';
 import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
@@ -11,6 +11,9 @@ import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
+import { auth, authTokenManagers } from 'neo4j-driver';
+import { handleRefreshingToken } from 'neo4j-client-sso';
+import { createDriver } from '../application/ApplicationThunks';
 
 const Dashboard = ({
   pagenumber,
@@ -25,14 +28,40 @@ const Dashboard = ({
 
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
+    console.log('this driver');
+    const authTokenMgr = authTokenManagers.bearer({
+      tokenProvider: async () => {
+        console.log('refreshing token', connection.ssoProviders);
+        const credentials = await handleRefreshingToken(connection.ssoProviders ?? []);
+        const token = auth.bearer(credentials.password);
+        // Get the expiration from the JWT's payload, which is a JSON string encoded
+        // using base64. You could also use a JWT parsing lib
+        const [, payloadBase64] = credentials.password.split('.');
+        const payload: unknown = JSON.parse(window.atob(payloadBase64 ?? ''));
+        let expiration: Date;
+        if (typeof payload === 'object' && payload !== null && 'exp' in payload) {
+          expiration = new Date(Number(payload.exp) * 1000);
+        } else {
+          expiration = new Date();
+        }
+        console.log('new token', expiration, token);
+
+        return {
+          expiration,
+          token,
+        };
+      },
+    });
     const newDriver = createDriver(
       connection.protocol,
       connection.url,
       connection.port,
       connection.username,
       connection.password,
-      { userAgent: `neodash/v${version}` }
+      { userAgent: `neodash/v${version}` },
+      authTokenMgr
     );
+    // @ts-ignore wrong driver version
     setDriver(newDriver);
   }
 
