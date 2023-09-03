@@ -27,78 +27,45 @@ export const ADVANCED_REPORT_TYPES = {
       },
     },
     withoutFooter: true,
+
+
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
-      nrOfLevels: {
-        label: 'Number of levels',
-        type: SELECTION_TYPES.NUMBER,
-        default: 3,
-      },
       arcsLength: {
-        label: 'Comma-separated length of each arc',
+        label: 'Comma-separated length of each arc (number must match number of levels)',
         type: SELECTION_TYPES.TEXT,
-        default: '0.15, 0.55, 0.3',
+        default: '1,1,1',
       },
       arcPadding: {
         label: 'Arc padding',
         type: SELECTION_TYPES.TEXT,
         default: '0.02',
       },
-      colors: {
-        label: 'Comma-separated arc colors',
-        type: SELECTION_TYPES.TEXT,
-        default: '#5BE12C, #F5CD19, #EA4228',
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      backgroundColor: {
+        label: 'Background color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#fafafa',
       },
       textColor: {
-        label: 'Color of the text',
-        type: SELECTION_TYPES.TEXT,
+        label: 'Color of the gauge markers',
+        type: SELECTION_TYPES.COLOR,
         default: 'black',
       },
-      animDelay: {
-        label: 'Delay in ms before needle animation',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      animateDuration: {
-        label: 'Duration in ms for needle animation',
-        type: SELECTION_TYPES.NUMBER,
-        default: 2000,
-      },
-      marginLeft: {
-        label: 'Margin Left (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginRight: {
-        label: 'Margin Right (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginTop: {
-        label: 'Margin Top (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 40,
-      },
-      marginBottom: {
-        label: 'Margin Bottom (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 40,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
+      valueLabelColor: {
+        label: 'Color of the value label',
         type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+        values: ['arc color', 'black', 'dark grey','grey'],
+        default: 'arc color',
       },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+      colorArray: {
+        label: 'Comma-separated arc colors (number must match number of levels)',
+        type: SELECTION_TYPES.TEXT,
+        default: '#5BE12C, #F5CD19, #EA4228',
       },
       downloadImageEnabled: {
         label: 'Download Image enabled',
@@ -106,11 +73,75 @@ export const ADVANCED_REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      autorun: {
-        label: 'Auto-run query',
+      animateDuration: {
+        label: 'Duration in ms for needle animation',
+        type: SELECTION_TYPES.NUMBER,
+        default: 2000,
+      },
+      animDelay: {
+        label: 'Delay in ms before needle animation',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
+      },
+      graphStyle: {
+        label: 'Graph style',
+        type: SELECTION_TYPES.LIST,
+        values: ['grafana', 'semicircle', 'radial'],
+        default: 'semicircle',
+      },
+      marginSides: {
+        label: 'Margins - sides(%)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 30
+      },
+      markerPosition: {
+        label: 'Marker position',
+        type: SELECTION_TYPES.LIST,
+        values: ['inner', 'outer'],
+        default: 'outer'
+      },
+      maxValue: {
+        label: 'Maximum value of scale',
+        type: SELECTION_TYPES.NUMBER,
+        default: 100,
+      },
+      minValue: {
+        label: 'Minimum value of scale',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      nrOfLevels: {
+        label: 'Number of levels',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
+      },
+      numberOfMarkers: {
+        label: 'Number of markers',
+        type: SELECTION_TYPES.NUMBER,
+        default: 5
+      },
+      pointerColor: {
+        label: 'Pointer color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#000000',
+      },
+      pointerType: {
+        label: 'Pointer type',
+        type: SELECTION_TYPES.LIST,
+        values: ['arrow', 'blob', 'needle'],
+        default: 'needle',
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       refreshRate: {
         label: 'Refresh rate (seconds)',
