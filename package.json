@@ -9,7 +9,7 @@
     "turbo": "^1.7.4"
   },
   "scripts": {
-    "clean:packages": "yarn global add del-cli && del-cli node_modules && del-cli **/*/node_modules",
+    "clean:packages": "yarn global add del-cli && del-cli node_modules && del-cli **/*/node_modules && del-cli **/*/es && del-cli **/*/lib",
     "format:all": "turbo run format",
     "lint:all": "turbo run lint",
     "lint-staged:all": "turbo run lint-staged",

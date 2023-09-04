@@ -20,6 +20,5 @@
     "useDefineForClassFields": false,
     "noFallthroughCasesInSwitch": true,
     "outDir": "test"
-  
   }
 }

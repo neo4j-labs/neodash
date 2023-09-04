@@ -17,5 +17,8 @@
     "noImplicitAny": false,
     "useDefineForClassFields": false,
     "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@root/*": ["./packages/*/src"]
+    }
   },
 }

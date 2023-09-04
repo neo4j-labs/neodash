@@ -33,9 +33,9 @@
   "keywords": [],
   "author": "Neo4j Labs",
   "dependencies": {
-    "@neodash/engine": "^2.3.4",
     "@neo4j-ndl/base": "1.10.1",
     "@neo4j-ndl/react": "1.10.2",
+    "@neodash/engine": "^2.3.4",
     "@sentry/react": "^7.57.0",
     "@sentry/webpack-plugin": "^2.5.0",
     "babel-runtime": "^6.26.0",
@@ -93,6 +93,7 @@
     "@typescript-eslint/parser": "^5.42.0",
     "babel-loader": "^8.2.3",
     "babel-plugin-istanbul": "^6.1.1",
+    "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^3.6.0",
     "cypress": "^10.11.0",
     "eslint": "^8.26.0",
@@ -112,7 +113,6 @@
     "typescript": "^4.8.4",
     "webpack": "^5.77.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.3",
-    "circular-dependency-plugin": "^5.2.2"
+    "webpack-dev-server": "^4.7.3"
   }
 }
