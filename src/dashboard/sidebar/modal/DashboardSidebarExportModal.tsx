@@ -57,26 +57,21 @@ export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose })
       <Dialog.Header id='form-dialog-title'>Export Dashboard</Dialog.Header>
       <Dialog.Content>
         Export your dashboard as a JSON file, or copy-paste the file from here.
-        <TextareaAutosize
-          style={{ width: '100%', border: '1px solid lightgray' }}
-          className={'textinput-linenumbers'}
-          value={
-            `{\n    title: '${dashboard.title}',\n` +
-            `    date: '${new Date().toISOString()}',\n` +
-            `    content: ` +
-            `{...}` +
-            `\n}`
-          }
-          aria-label=''
-          placeholder=''
-        />
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onClick={downloadDashboard} fill='outlined' color='neutral' style={{ marginLeft: '10px' }} floating>
+        <br />
+        <Button onClick={downloadDashboard} fill='outlined' color='neutral' floating>
           Save to file
           <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
         </Button>
-      </Dialog.Actions>
+        <br />
+        <br />
+        <TextareaAutosize
+          style={{ minHeight: '500px', width: '100%', border: '1px solid lightgray' }}
+          className={'textinput-linenumbers'}
+          value={dashboardString}
+          aria-label=''
+          placeholder='Your dashboard JSON should be displayed here.'
+        />
+      </Dialog.Content>
     </Dialog>
   );
 };

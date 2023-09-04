@@ -1,7 +1,7 @@
 import { createNotificationThunk } from '../page/PageThunks';
 import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDashboardUuid } from './DashboardActions';
-import { runCypherQuery } from '../report/ReportQueryRunner';
+import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
@@ -161,7 +161,7 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
 
 export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, user, onSuccess) => (dispatch: any) => {
   try {
-    let {uuid} = dashboard;
+    let { uuid } = dashboard;
 
     // Dashboards pre-2.3.4 may not always have a UUID. If this is the case, generate one just before we save.
     if (!dashboard.uuid) {
@@ -213,6 +213,40 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
   }
 };
 
+export const deleteDashboardFromNeo4jThunk = (driver, database, uuid, onSuccess) => (dispatch: any) => {
+  try {
+    // Generate a cypher query to save the dashboard.
+    const query = 'MATCH (n:_Neodash_Dashboard {uuid: $uuid }) DETACH DELETE n RETURN $uuid as uuid';
+
+    const parameters = {
+      uuid: uuid,
+    };
+    runCypherQuery(
+      driver,
+      database,
+      query,
+      parameters,
+      1,
+      () => {},
+      (records) => {
+        if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
+          onSuccess(uuid);
+        } else {
+          console.log(records);
+          dispatch(
+            createNotificationThunk(
+              'Unable to delete dashboard',
+              `Do you have write access to the '${database}' database?`
+            )
+          );
+        }
+      }
+    );
+  } catch (e) {
+    dispatch(createNotificationThunk('Unable to delete dashboard from Neo4j', e));
+  }
+};
+
 export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) => (dispatch: any) => {
   try {
     const query = 'MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard';
@@ -222,7 +256,16 @@ export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) =>
       query,
       { uuid: uuid },
       1,
-      () => {},
+      (status) => {
+        if (status == QueryStatus.NO_DATA) {
+          dispatch(
+            createNotificationThunk(
+              `Unable to load dashboard from database '${database}'.`,
+              `A dashboard with UUID '${uuid}' does not exist.`
+            )
+          );
+        }
+      },
       (records) => {
         if (!records[0]._fields) {
           dispatch(

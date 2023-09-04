@@ -11,7 +11,7 @@ import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconO
 import NeoSettingsModal from '../../settings/SettingsModal';
 import NeoSaveModal from '../../modal/SaveModal';
 import NeoLoadModal from '../../modal/LoadModal';
-import NeoShareModal from '../../modal/ShareModal';
+import NeoShareModal from '../sidebar/modal/legacy/LegacyShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
