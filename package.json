@@ -9,7 +9,7 @@
     "turbo": "^1.7.4"
   },
   "scripts": {
-    "clean:packages": "yarn global add del-cli && del-cli node_modules && del-cli **/*/node_modules && del-cli **/*/es && del-cli **/*/lib",
+    "clean:packages": "yarn dlx del-cli node_modules && yarn dlx del-cli **/*/node_modules && yarn dlx del-cli **/*/es && yarn dlx del-cli **/*/lib",
     "format:all": "turbo run format",
     "lint:all": "turbo run lint",
     "lint-staged:all": "turbo run lint-staged",
@@ -17,7 +17,7 @@
     "start:editor": "turbo run start --scope neodash",
     "start:docs": "turbo run start --scope docs",
     "start:gallery": "turbo run start --scope neodash-gallery",
-    "build:engine": "turbo run build --scope engine",
+    "build:engine": "turbo run build --scope @neodash/engine",
     "build:editor": "turbo run build --scope neodash",
     "build:docs": "turbo run build --scope docs",
     "build:gallery": "turbo run build --scope neodash-gallery",
@@ -29,5 +29,6 @@
     "packages": [
       "packages/*"
     ]
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }
