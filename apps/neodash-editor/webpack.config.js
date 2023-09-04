@@ -64,9 +64,6 @@ module.exports = (env) => {
     output: {
       filename: 'bundle.js',
     },
-    watchOptions: {
-      followSymlinks: true,
-    },  
     devServer: {
       port: 3000,
       hot: true,

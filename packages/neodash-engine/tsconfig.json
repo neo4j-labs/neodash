@@ -19,6 +19,6 @@
     "noImplicitAny": false,
     "useDefineForClassFields": false,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "test"
+    "outDir": "dist",
   }
 }

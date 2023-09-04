@@ -17,6 +17,7 @@
     "start:editor": "turbo run start --scope neodash",
     "start:docs": "turbo run start --scope docs",
     "start:gallery": "turbo run start --scope neodash-gallery",
+    "build:engine": "turbo run build --scope engine",
     "build:editor": "turbo run build --scope neodash",
     "build:docs": "turbo run build --scope docs",
     "build:gallery": "turbo run build --scope neodash-gallery",
