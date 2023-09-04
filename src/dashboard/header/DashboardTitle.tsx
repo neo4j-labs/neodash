@@ -9,8 +9,6 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
 import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import NeoSaveModal from '../../modal/SaveModal';
-import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../sidebar/modal/legacy/LegacyShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
@@ -146,16 +144,7 @@ export const NeoDashboardTitle = ({
                 updateDashboardSetting={updateDashboardSetting}
               ></NeoSettingsModal>
               {/* Saving, loading, extensions, sharing is only enabled when the dashboard is editable. */}
-              {editable ? (
-                <>
-                  <NeoSaveModal />
-                  <NeoLoadModal />
-                  <NeoShareModal />
-                  {renderExtensionsButtons()}
-                </>
-              ) : (
-                <></>
-              )}
+              {editable ? <>{renderExtensionsButtons()}</> : <></>}
             </MenuItems>
           </Menu>
         </div>
