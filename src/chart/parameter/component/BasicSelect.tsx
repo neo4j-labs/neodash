@@ -7,7 +7,7 @@ import Select from '@mui/material/Select';
 import { CircularProgress, debounce } from '@mui/material';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
 
-const PredefinedOptionsSelect = (props: ParameterSelectProps) => {
+const BasicSelect = (props: ParameterSelectProps) => {
   const { manualParameterSave, predefinedOptions } = props;
   const setParameterTimeout =
     props.settings && props.settings.setParameterTimeout ? props.settings.setParameterTimeout : 1000;
@@ -91,4 +91,4 @@ const PredefinedOptionsSelect = (props: ParameterSelectProps) => {
   );
 };
 
-export default PredefinedOptionsSelect;
+export default BasicSelect;

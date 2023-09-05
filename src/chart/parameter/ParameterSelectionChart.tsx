@@ -5,7 +5,7 @@ import NodePropertyParameterSelectComponent from './component/NodePropertyParame
 import RelationshipPropertyParameterSelectComponent from './component/RelationshipPropertyParameterSelect';
 import FreeTextParameterSelectComponent from './component/FreeTextParameterSelect';
 import QueryParameterSelectComponent from './component/QueryParameterSelect';
-import PredefinedOptionsSelect from './component/PredefinedOptionsSelect';
+import BasicSelectComponent from './component/BasicSelect';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 /**
@@ -145,7 +145,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
       );
     } else if (type === 'Basic Select') {
       return (
-        <PredefinedOptionsSelect
+        <BasicSelectComponent
           parameterName={parameterName}
           parameterDisplayName={parameterName}
           parameterValue={parameterValue}
