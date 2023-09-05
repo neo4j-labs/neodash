@@ -188,7 +188,14 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
   }
 
   // TODO: since this component is only rendered for parameter select, this is technically not needed
-  const parameterSelectTypes = ['Node Property', 'Relationship Property', 'Free Text', 'Custom Query', 'Date Picker'];
+  const parameterSelectTypes = [
+    'Node Property',
+    'Relationship Property',
+    'Free Text',
+    'Custom Query',
+    'Date Picker',
+    'Basic Select',
+  ];
   const selectedType = settings.type ? settings.type : 'Node Property';
   const helperText = settings?.helperText || '';
   const inputMode = settings?.inputMode || 'cypher';
