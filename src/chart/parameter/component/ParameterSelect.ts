@@ -54,4 +54,8 @@ export interface ParameterSelectProps {
    * Add the possibility for manual selection confirmation
    */
   manualParameterSave?: boolean;
+  /**
+   * Predefined options
+   */
+  predefinedOptions?: string | undefined
 }
