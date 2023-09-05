@@ -5,6 +5,7 @@ import NodePropertyParameterSelectComponent from './component/NodePropertyParame
 import RelationshipPropertyParameterSelectComponent from './component/RelationshipPropertyParameterSelect';
 import FreeTextParameterSelectComponent from './component/FreeTextParameterSelect';
 import QueryParameterSelectComponent from './component/QueryParameterSelect';
+import BasicSelectComponent from './component/BasicSelect';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 /**
@@ -13,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 export const NeoParameterSelectionChart = (props: ChartProps) => {
   const query = props.records[0].input ? props.records[0].input : undefined;
   const parameterName = props.settings && props.settings.parameterName ? props.settings.parameterName : undefined;
+  const predefinedOptions = (props.settings && props.settings.predefinedOptions) || 'No Data';
   const parameterDisplayName = `${parameterName}_display`;
   const type = props.settings && props.settings.type ? props.settings.type : undefined;
   const queryCallback = props.queryCallback ? props.queryCallback : () => {};
@@ -135,6 +137,25 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           query={query}
           queryCallback={queryCallback}
           settings={props.settings}
+          allParameters={allParameters}
+          compatibilityMode={compatibilityMode}
+          multiSelector={multiSelector}
+          manualParameterSave={manualParameterSave}
+        />
+      );
+    } else if (type === 'Basic Select') {
+      return (
+        <BasicSelectComponent
+          parameterName={parameterName}
+          parameterDisplayName={parameterName}
+          parameterValue={parameterValue}
+          parameterDisplayValue={parameterDisplayValue}
+          setParameterValue={setParameterValue}
+          setParameterDisplayValue={setParameterDisplayValue}
+          query={query}
+          queryCallback={queryCallback}
+          settings={props.settings}
+          predefinedOptions={predefinedOptions}
           allParameters={allParameters}
           compatibilityMode={compatibilityMode}
           multiSelector={multiSelector}
