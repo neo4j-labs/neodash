@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Button, Switch } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent, {
@@ -8,7 +8,7 @@ import { getReportTypes } from '../../ExtensionUtils';
 import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import debounce from 'lodash/debounce';
-import { updateLastMessage } from '../state/QueryTranslatorActions';
+import { updateLastMessage, addModelExample } from '../state/QueryTranslatorActions';
 import { createNotification } from '../../../application/ApplicationActions';
 import { getLastMessage, QUERY_TRANSLATOR_EXTENSION_NAME } from '../state/QueryTranslatorSelector';
 import { GPT_LOADING_ICON } from './LoadingIcon';
@@ -17,6 +17,7 @@ import {
   setSessionStoragePrepopulationReportFunction,
 } from '../../state/ExtensionActions';
 import { getPrepopulateReportExtension } from '../../state/ExtensionSelectors';
+import QuestionAnswerForm from './QuestionAnswerForm';
 
 // TODO: right now if we change the database in the cardSelector, it should forgot the card history
 export const NeoOverrideCardQueryEditor = ({
@@ -33,6 +34,7 @@ export const NeoOverrideCardQueryEditor = ({
   displayError,
   setPrepopulationReportFunction,
   deletePrepopulationReportFunction,
+  addModelExample,
 }) => {
   enum Language {
     ENGLISH,
@@ -43,6 +45,7 @@ export const NeoOverrideCardQueryEditor = ({
   const [runningTranslation, setRunningTranslation] = React.useState(false);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -108,6 +111,20 @@ export const NeoOverrideCardQueryEditor = ({
     );
   }
 
+  // Function to handle form submission
+  const handleFormSubmit = (question, answer) => {
+    // Dispatch the addModelExample action with the question and answer
+    addModelExample(question, answer);
+
+    // Reset the form and hide it
+    setShowForm(false);
+  };
+
+  const handleFormClose = () => {
+    // Reset the form and hide it
+    setShowForm(false);
+  };
+
   return (
     <div>
       {runningTranslation ? (
@@ -115,9 +132,20 @@ export const NeoOverrideCardQueryEditor = ({
       ) : (
         <>
           <table style={{ marginBottom: 5, width: '100%' }}>
-            <tr>
-              <td style={{ width: 50 }}>Cypher</td>
-              <td style={{ width: 50 }}>
+            <tr style={{ display: 'block', marginBottom: 20, width: '100%' }}>
+              <td style={{ marginBottom: 5, width: '100%' }}>
+                <div style={{ float: 'left', display: 'flex', justifyContent: 'flex-end' }}>
+                  {showForm ? (
+                    <QuestionAnswerForm onSubmit={handleFormSubmit} onClose={handleFormClose} />
+                  ) : (
+                    <Button onClick={() => setShowForm(true)}>Add Q&As</Button>
+                  )}
+                </div>
+              </td>
+            </tr>
+            <tr style={{ display: 'inline', width: '100%' }}>
+              <td style={{ width: 50, textAlign: 'right' }}>Cypher</td>
+              <td style={{ width: 50, textAlign: 'left' }}>
                 <Switch
                   style={{ backgroundColor: 'grey' }}
                   checked={language == Language.ENGLISH}
@@ -132,24 +160,26 @@ export const NeoOverrideCardQueryEditor = ({
                   className='n-ml-2'
                 />
               </td>
-              <td style={{ width: 70 }}>&nbsp; English</td>
-              <td style={{ width: '100px', float: 'right' }}>
+              <td style={{ width: 50, textAlign: 'left' }}>&nbsp;English&nbsp;</td>
+              <td style={{ float: 'right' }}>
                 {/* Only show translation button if there's something new to translate */}
                 {language == Language.ENGLISH ? (
-                  <Button
-                    fill='outlined'
-                    disabled={prepopulateExtensionName == undefined}
-                    style={{ float: 'right' }}
-                    onClick={() => {
-                      if (prepopulateExtensionName !== undefined) {
-                        triggerTranslation();
-                        setLanguage(Language.CYPHER);
-                        deletePrepopulationReportFunction(reportId);
-                      }
-                    }}
-                  >
-                    Translate
-                  </Button>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      fill='outlined'
+                      disabled={prepopulateExtensionName == undefined}
+                      style={{ marginLeft: '8px' }} // Add margin between the buttons
+                      onClick={() => {
+                        if (prepopulateExtensionName !== undefined) {
+                          triggerTranslation();
+                          setLanguage(Language.CYPHER);
+                          deletePrepopulationReportFunction(reportId);
+                        }
+                      }}
+                    >
+                      Translate
+                    </Button>
+                  </div>
                 ) : (
                   <></>
                 )}
@@ -212,6 +242,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   deletePrepopulationReportFunction: (reportId) => {
     dispatch(deleteSessionStoragePrepopulationReportFunction(reportId));
+  },
+  addModelExample: (question, answer) => {
+    dispatch(addModelExample(question, answer));
   },
 });
 
