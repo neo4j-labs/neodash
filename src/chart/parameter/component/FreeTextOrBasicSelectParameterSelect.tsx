@@ -1,17 +1,18 @@
-import { debounce, CircularProgress } from '@mui/material';
+import { debounce, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import React, { useCallback, useEffect } from 'react';
 import { ParameterSelectProps } from './ParameterSelect';
 import NeoField from '../../../component/field/Field';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
 
-const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
-  const { manualParameterSave } = props;
+const FreeTextOrBasicSelectParameterSelectComponent = (props: ParameterSelectProps) => {
+  const { manualParameterSave, type, predefinedOptions } = props;
   const setParameterTimeout =
     props.settings && props.settings.setParameterTimeout ? props.settings.setParameterTimeout : 1000;
   const defaultValue =
     props.settings && props.settings.defaultValue && props.settings.defaultValue.length > 0
       ? props.settings.defaultValue
       : '';
+  const defaultOptions = (predefinedOptions && predefinedOptions.split(',')) || [];
   const [inputText, setInputText] = React.useState(props.parameterValue);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
   const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
@@ -52,31 +53,66 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
 
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'} style={{ width: '100%', marginTop: '5px' }}>
-      <NeoField
-        key={'freetext'}
-        label={helperText ? helperText : `${label} ${property}`}
-        defaultValue={defaultValue}
-        value={inputText}
-        variant='outlined'
-        placeholder={'Enter text here...'}
-        style={{
-          marginBottom: '20px',
-          marginRight: '10px',
-          marginLeft: '15px',
-          minWidth: `calc(100% - ${manualParameterSave ? '80' : '30'}px)`,
-          maxWidth: 'calc(100% - 30px)',
-        }}
-        onChange={(newValue) => {
-          setRunning(true);
-          setInputText(newValue);
+      {type == 'Free Text' && (
+        <NeoField
+          key={'freetext'}
+          label={helperText ? helperText : `${label} ${property}`}
+          defaultValue={defaultValue}
+          value={inputText}
+          variant='outlined'
+          placeholder={'Enter text here...'}
+          style={{
+            marginBottom: '20px',
+            marginRight: '10px',
+            marginLeft: '15px',
+            minWidth: `calc(100% - ${manualParameterSave ? '80' : '30'}px)`,
+            maxWidth: 'calc(100% - 30px)',
+          }}
+          onChange={(newValue) => {
+            setRunning(true);
+            setInputText(newValue);
 
-          handleParametersUpdate(newValue, manualParameterSave);
-        }}
-      />
+            handleParametersUpdate(newValue, manualParameterSave);
+          }}
+        />
+      )}
+
+      {type == 'Basic Select' && (
+        <FormControl
+          fullWidth
+          style={{
+            maxWidth: 'calc(100% - 40px)',
+            minWidth: `calc(100% - ${manualParameterSave ? '60' : '30'}px)`,
+            marginLeft: '15px',
+            marginTop: '5px',
+          }}
+        >
+          <InputLabel shrink id='dropdown'>
+            {helperText ? helperText : `${label} ${property}`}
+          </InputLabel>
+          <Select
+            labelId={'dropdown'}
+            id='dropdown-id'
+            label={helperText ? helperText : `${label} ${property}`}
+            value={inputText}
+            onChange={(event) => {
+              setRunning(true);
+              setInputText(event.target.value);
+
+              handleParametersUpdate(event.target.value, manualParameterSave);
+            }}
+          >
+            {defaultOptions.map((option) => (
+              <MenuItem value={option}>{option}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+
       {manualParameterSave ? <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} /> : <></>}
       {running ? <CircularProgress size={26} style={{ marginTop: '20px', marginLeft: '5px' }} /> : <></>}
     </div>
   );
 };
 
-export default FreeTextParameterSelectComponent;
+export default FreeTextOrBasicSelectParameterSelectComponent;

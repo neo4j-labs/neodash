@@ -57,5 +57,9 @@ export interface ParameterSelectProps {
   /**
    * Predefined options
    */
-  predefinedOptions?: string | undefined
+  predefinedOptions?: string | undefined;
+  /**
+   * Parameter type
+   */
+  type?: string | undefined
 }
