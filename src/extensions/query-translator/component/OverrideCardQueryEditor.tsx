@@ -34,7 +34,6 @@ export const NeoOverrideCardQueryEditor = ({
   displayError,
   setPrepopulationReportFunction,
   deletePrepopulationReportFunction,
-  addModelExample,
 }) => {
   enum Language {
     ENGLISH,
@@ -45,7 +44,11 @@ export const NeoOverrideCardQueryEditor = ({
   const [runningTranslation, setRunningTranslation] = React.useState(false);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);
-  const [showForm, setShowForm] = useState(false);
+
+  // State value to manage the opening of the Q&A form
+  const [showQAForm, setShowQAForm] = useState(false);
+
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -90,8 +93,6 @@ export const NeoOverrideCardQueryEditor = ({
     </div>
   );
 
-  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-
   function triggerTranslation() {
     setRunningTranslation(true);
     translateQuery(
@@ -111,20 +112,6 @@ export const NeoOverrideCardQueryEditor = ({
     );
   }
 
-  // Function to handle form submission
-  const handleFormSubmit = (question, answer) => {
-    // Dispatch the addModelExample action with the question and answer
-    addModelExample(question, answer);
-
-    // Reset the form and hide it
-    setShowForm(false);
-  };
-
-  const handleFormClose = () => {
-    // Reset the form and hide it
-    setShowForm(false);
-  };
-
   return (
     <div>
       {runningTranslation ? (
@@ -135,10 +122,10 @@ export const NeoOverrideCardQueryEditor = ({
             <tr style={{ display: 'block', marginBottom: 20, width: '100%' }}>
               <td style={{ marginBottom: 5, width: '100%' }}>
                 <div style={{ float: 'left', display: 'flex', justifyContent: 'flex-end' }}>
-                  {showForm ? (
-                    <QuestionAnswerForm onSubmit={handleFormSubmit} onClose={handleFormClose} />
+                  {showQAForm ? (
+                    <QuestionAnswerForm pagenumber={pagenumber} reportId={reportId} setShowForm={setShowQAForm} />
                   ) : (
-                    <Button onClick={() => setShowForm(true)}>Add Q&As</Button>
+                    <Button onClick={() => setShowQAForm(true)}>Add Q&As</Button>
                   )}
                 </div>
               </td>
@@ -242,9 +229,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   deletePrepopulationReportFunction: (reportId) => {
     dispatch(deleteSessionStoragePrepopulationReportFunction(reportId));
-  },
-  addModelExample: (question, answer) => {
-    dispatch(addModelExample(question, answer));
   },
 });
 
