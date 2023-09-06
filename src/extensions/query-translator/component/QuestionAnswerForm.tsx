@@ -4,9 +4,21 @@ import './QuestionAnswerForm.css'; // Import your CSS file for custom styling
 const QuestionAnswerForm = ({ onSubmit, onClose }) => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Check if either question or answer is empty
+    if (!question || !answer) {
+      setErrorMessage('Both fields must be filled');
+      return; // Don't proceed with submission
+    }
+
+    // If both fields are filled, reset the error message
+    setErrorMessage('');
+
+    // Proceed with submission
     onSubmit(question, answer);
     setQuestion('');
     setAnswer('');
@@ -21,8 +33,7 @@ const QuestionAnswerForm = ({ onSubmit, onClose }) => {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="question">Question:</label>
-          <input
-            type="text"
+          <textarea
             id="question"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
@@ -31,13 +42,15 @@ const QuestionAnswerForm = ({ onSubmit, onClose }) => {
         </div>
         <div className="form-group">
           <label htmlFor="answer">Answer:</label>
-          <input
-            type="text"
+          <textarea
             id="answer"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
             className="input-field"
           />
+        </div>
+        <div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
         <div className="button-group">
           <button type="submit" className="submit-button">Save</button>

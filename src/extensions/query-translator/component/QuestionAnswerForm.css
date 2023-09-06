@@ -3,8 +3,7 @@
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    width: 100%;
     margin: 0 auto;
   }
   
@@ -33,7 +32,13 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     outline: none;
+    height: 47px;
+    min-height: 47px;
+    max-height: 120px;
+    resize: vertical;
+    overflow-y: auto;
   }
+  
   
   .button-group {
     text-align: right;
@@ -52,5 +57,10 @@
   .submit-button:hover,
   .close-button:hover {
     background-color: #e0e0e0;
+  }
+
+  .error-message {
+    color: red;
+    text-decoration: underline;
   }
   
