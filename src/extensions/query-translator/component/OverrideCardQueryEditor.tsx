@@ -8,7 +8,7 @@ import { getReportTypes } from '../../ExtensionUtils';
 import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import debounce from 'lodash/debounce';
-import { updateLastMessage, addModelExample } from '../state/QueryTranslatorActions';
+import { updateLastMessage } from '../state/QueryTranslatorActions';
 import { createNotification } from '../../../application/ApplicationActions';
 import { getLastMessage, QUERY_TRANSLATOR_EXTENSION_NAME } from '../state/QueryTranslatorSelector';
 import { GPT_LOADING_ICON } from './LoadingIcon';

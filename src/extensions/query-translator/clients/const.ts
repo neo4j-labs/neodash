@@ -111,17 +111,3 @@ export const reportExampleQueries = {
 };
 
 export const MAX_NUM_VALIDATION = 1;
-
-// used for testing to remove
-export const MODEL_EXAMPLES_TEST = [
-  {
-    question: 'Which fund manager owns most shares? What is the total portfolio value?',
-    answer:
-      'MATCH (m:Manager) -[o:OWNS]-> (c:Company) RETURN m.managerName as manager, sum(distinct o.shares) as ownedShares, sum(o.value) as portfolioValue ORDER BY ownedShares DESC LIMIT 10',
-  },
-  {
-    question: 'Which fund manager owns most companies? How many shares?',
-    answer:
-      'MATCH (m:Manager) -[o:OWNS]-> (c:Company) RETURN m.managerName as manager, count(distinct c) as ownedCompanies, sum(distinct o.shares) as ownedShares ORDER BY ownedCompanies DESC LIMIT 10',
-  },
-];

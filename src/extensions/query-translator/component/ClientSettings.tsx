@@ -5,7 +5,6 @@ import { getModelClientObject, getQueryTranslatorDefaultConfig } from '../QueryT
 import { getQueryTranslatorSettings } from '../state/QueryTranslatorSelector';
 import NeoSetting from '../../../component/field/Setting';
 import {
-  addModelExample,
   deleteAllMessageHistory,
   setClientSettings,
   setGlobalModelClient,
@@ -20,7 +19,6 @@ import {
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 import { Status } from '../util/Status';
-import { MODEL_EXAMPLES_TEST } from '../clients/const';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -34,7 +32,6 @@ export const ClientSettings = ({
   updateModelProvider,
   updateClientSettings,
   deleteAllMessageHistory,
-  addModelExample,
   handleClose,
 }) => {
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
@@ -55,10 +52,6 @@ export const ClientSettings = ({
     const entry = {};
     entry[field] = value;
     setFunction(update(stateObj, entry));
-  };
-  // TODO: REMOVE THIS JUST FOR TESTING
-  const testFunction = () => {
-    MODEL_EXAMPLES_TEST.forEach((ex) => addModelExample(ex.question, ex.answer));
   };
 
   const debouncedUpdateSpecificFieldInStateObject = useCallback(debounce(updateSpecificFieldInStateObject, 500), []);
@@ -225,9 +218,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   deleteAllMessageHistory: () => {
     dispatch(deleteAllMessageHistory());
-  },
-  addModelExample: (question, answer) => {
-    dispatch(addModelExample(question, answer));
   },
 });
 
