@@ -10,16 +10,9 @@ import { Banner, Dialog, IconButton } from '@neo4j-ndl/react';
 import { PencilIconOutline, PlusIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import ParameterSelectCardSettings from '../../../chart/parameter/ParameterSelectCardSettings';
 import NeoCardSettingsFooter from '../../../card/settings/CardSettingsFooter';
+import NeoFormCardSettingsModal from './NeoFormCardSettingsModal';
 
-const NeoFormCardSettings = ({
-  query,
-  //   type,
-  database,
-  //   settings,
-  extensions,
-  //   onReportSettingUpdate,
-  onQueryUpdate,
-}) => {
+const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSettingUpdate, onQueryUpdate }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   if (!driver) {
     throw new Error(
@@ -29,13 +22,17 @@ const NeoFormCardSettings = ({
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const [queryText, setQueryText] = React.useState(query);
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-  const [formFields, setFormFields] = React.useState([]);
+  const formFields = settings.formFields ? settings.formFields : [];
   const [selectedFieldIndex, setSelectedFieldIndex] = React.useState(-1);
   const [fieldModalOpen, setFieldModalOpen] = React.useState(false);
-  const [fieldModalAdvancedSettingsOpen, setFieldModalAdvancedSettingsOpen] = React.useState(false);
+
   function updateCypherQuery(value) {
     debouncedQueryUpdate(value);
     setQueryText(value);
+  }
+
+  function updateFormFields(newFormFields) {
+    onReportSettingUpdate('formFields', newFormFields);
   }
 
   const formFieldComponents = formFields.map((field, index) => {
@@ -44,14 +41,17 @@ const NeoFormCardSettings = ({
         description={
           <div>
             <span style={{ lineHeight: '32px' }}>
-              {index + 1}. {'(Undefined)'}
+              {index + 1}.{' '}
+              {formFields[index].settings.parameterName
+                ? `$${  formFields[index].settings.parameterName}`
+                : '(undefined)'}
             </span>
             <IconButton
               className='n-float-right'
               aria-label='remove field'
               size='small'
               onClick={() => {
-                setFormFields([...formFields.slice(0, index), ...formFields.slice(index + 1)]);
+                updateFormFields([...formFields.slice(0, index), ...formFields.slice(index + 1)]);
               }}
             >
               <XMarkIconOutline />
@@ -84,7 +84,7 @@ const NeoFormCardSettings = ({
         onClick={() => {
           const newField = { type: 'Node Property', settings: {}, query: '' };
           const newIndex = formFields.length;
-          setFormFields(formFields.concat(newField));
+          updateFormFields(formFields.concat(newField));
           setSelectedFieldIndex(newIndex);
           setFieldModalOpen(true);
         }}
@@ -96,49 +96,16 @@ const NeoFormCardSettings = ({
 
   return (
     <div>
-      <Dialog
-        className='dialog-l'
+      <NeoFormCardSettingsModal
         open={fieldModalOpen}
-        onClose={() => setFieldModalOpen(false)}
-        style={{ overflow: 'inherit', overflowY: 'inherit' }}
-        aria-labelledby='form-dialog-title'
-      >
-        <Dialog.Header id='form-dialog-title'>Editing Form Field #{selectedFieldIndex + 1}</Dialog.Header>
-        <Dialog.Content style={{ overflow: 'inherit' }}>
-          {formFields[selectedFieldIndex] ? (
-            <>
-              <ParameterSelectCardSettings
-                query={formFields[selectedFieldIndex].query}
-                type={'select'}
-                database={database}
-                settings={formFields[selectedFieldIndex].settings}
-                extensions={extensions}
-                onReportSettingUpdate={(key, value) => {
-                  const newFormFields = [...formFields];
-                  newFormFields[selectedFieldIndex].settings[key] = value;
-                  setFormFields(newFormFields);
-                }}
-                onQueryUpdate={(query) => {
-                  const newFormFields = [...formFields];
-                  newFormFields[selectedFieldIndex].query = query;
-                  setFormFields(newFormFields);
-                }}
-              />
-              <NeoCardSettingsFooter
-                type={'select'}
-                reportSettings={formFields[selectedFieldIndex].settings}
-                reportSettingsOpen={fieldModalAdvancedSettingsOpen}
-                onToggleReportSettings={() => setFieldModalAdvancedSettingsOpen(!fieldModalAdvancedSettingsOpen)}
-                onReportSettingUpdate={() => {
-                  alert('error');
-                }}
-              />
-            </>
-          ) : (
-            <></>
-          )}
-        </Dialog.Content>
-      </Dialog>
+        setOpen={setFieldModalOpen}
+        index={selectedFieldIndex}
+        formFields={formFields}
+        setFormFields={updateFormFields}
+        database={database}
+        extensions={extensions}
+      />
+
       <div style={{ borderTop: '1px dashed lightgrey', width: '100%' }}>
         <span>Fields:</span>
         {formFieldComponents}

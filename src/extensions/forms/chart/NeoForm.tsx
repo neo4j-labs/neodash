@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { ChartProps } from '../../../chart/Chart';
 import { Button, TextInput, Tag } from '@neo4j-ndl/react';
 import { PlayIconSolid } from '@neo4j-ndl/react/icons';
@@ -6,6 +6,7 @@ import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponen
 import { REPORT_LOADING_ICON } from '../../../report/Report';
 import debounce from 'lodash/debounce';
 import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
+import NeoParameterSelectionChart from '../../../chart/parameter/ParameterSelectionChart';
 
 enum FormStatus {
   DATA_ENTRY, // The user is filling in the form.
@@ -21,33 +22,51 @@ const NeoForm = (props: ChartProps) => {
   const { settings } = props;
   const buttonText = settings?.runButtonText ? settings.runButtonText : 'Submit';
   const confirmationMessage = settings?.confirmationMessage ? settings.confirmationMessage : 'Form Submitted.';
-  const resetMessage = settings?.resetMessage ? settings.resetMessage : 'Reset Form';
-  const hasResetButton = settings?.hasResetButton ? settings.hasResetButton : true;
+  const resetButtonText = settings?.resetButtonText ? settings.resetButtonText : 'Reset Form';
+  const hasResetButton = settings?.hasResetButton !== undefined ? settings.hasResetButton : true;
+  const hasSubmitButton = settings?.hasSubmitButton !== undefined ? settings.hasSubmitButton : true;
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
+  const formFields = settings?.formFields ? settings.formFields : [];
 
-  // The user is entering the form's fields
+  useEffect(() => {
+    // If the parameters change after the form is completed, reset it, as there might be another submission.
+    if (status == FormStatus.SUBMITTED) {
+      setStatus(FormStatus.DATA_ENTRY);
+    }
+  }, [JSON.stringify(props)]);
+
   if (status == FormStatus.DATA_ENTRY) {
     return (
-      <div style={{ margin: '10px' }}>
-        {props.query}
-        <Button
-          onClick={() => {
-            setStatus(FormStatus.RUNNING);
-            debouncedRunCypherQuery(props.query, props.parameters, (records) => {
-              setFormResults(records);
-              if (records && records[0] && records[0].error) {
-                setStatus(FormStatus.ERROR);
-              } else {
-                setStatus(FormStatus.SUBMITTED);
-              }
-            });
-          }}
-        >
-          {buttonText}
-          <PlayIconSolid className='btn-icon-base-r' />
-        </Button>
+      <div>
+        {settings?.formFields?.map((field) => (
+          <NeoParameterSelectionChart
+            records={[{ input: field.query }]}
+            settings={field.settings}
+            parameters={props.parameters}
+          />
+        ))}
+        {hasSubmitButton ? (
+          <Button
+            onClick={() => {
+              setStatus(FormStatus.RUNNING);
+              debouncedRunCypherQuery(props.query, props.parameters, (records) => {
+                setFormResults(records);
+                if (records && records[0] && records[0].error) {
+                  setStatus(FormStatus.ERROR);
+                } else {
+                  setStatus(FormStatus.SUBMITTED);
+                }
+              });
+            }}
+          >
+            {buttonText}
+            <PlayIconSolid className='btn-icon-base-r' />
+          </Button>
+        ) : (
+          <></>
+        )}
       </div>
     );
   }
@@ -76,7 +95,7 @@ const NeoForm = (props: ChartProps) => {
           setStatus(FormStatus.DATA_ENTRY);
         }}
       >
-        {resetMessage}
+        {resetButtonText}
       </Button>
     </div>
   );

@@ -26,6 +26,23 @@ export const FORMS = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Form submitted.',
       },
+      resetButtonText: {
+        label: 'Reset Button Text',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Submit',
+      },
+      hasSubmitButton: {
+        label: 'Has Submit Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      hasResetButton: {
+        label: 'Has Reset Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
