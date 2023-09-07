@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ChartProps } from '../Chart';
 import DatePickerParameterSelectComponent from './component/DateParameterSelect';
 import NodePropertyParameterSelectComponent from './component/NodePropertyParameterSelect';
@@ -14,6 +14,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const query = props.records[0].input ? props.records[0].input : undefined;
   const parameterName = props.settings && props.settings.parameterName ? props.settings.parameterName : undefined;
   const parameterDisplayName = `${parameterName}_display`;
+  const clearParameterValueOnTabChange = props.settings && props.settings.clearParameterValueOnTabChange;
   const type = props.settings && props.settings.type ? props.settings.type : undefined;
   const queryCallback = props.queryCallback ? props.queryCallback : () => {};
   const setGlobalParameter = props.setGlobalParameter ? props.setGlobalParameter : () => {};
@@ -36,6 +37,16 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   if (!query || query.trim().length == 0) {
     return <p style={{ margin: '15px' }}>No selection specified.</p>;
   }
+
+  // When Component unmounts based on clearParameterValueOnTabChange parameter value is set to empty.
+  // clearParameterValueOnTabChange can be configured in settings
+  useEffect(() => {
+    return () => {
+      if (clearParameterValueOnTabChange) {
+        setGlobalParameter(parameterName, '');
+      }
+    };
+  }, []);
 
   const theme = createTheme({
     typography: {
