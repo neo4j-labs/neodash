@@ -15,7 +15,7 @@ export default function GroupReport({
   onClonePressed,
 }) {
   return groupedReports[groupId].length > 0 ? (
-    <Box sx={getBorderSpecsForGroupId(groupId)}>
+    <Box key={groupId} sx={getBorderSpecsForGroupId(groupId)}>
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 2, sm: 8, md: 12, lg: 12 }}>
         {groupedReports[groupId]
           .sort((a: any, b: any) => a.groupOrder - b.groupOrder)
