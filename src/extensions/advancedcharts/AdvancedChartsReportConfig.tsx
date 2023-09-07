@@ -30,8 +30,13 @@ export const ADVANCED_REPORT_TYPES = {
 
 
     settings: {
+      nrOfLevels: {
+        label: 'Number of arcs',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
+      },
       arcsLength: {
-        label: 'Comma-separated length of each arc (number must match number of levels)',
+        label: 'Comma-separated length of each arc (number must match number of arcs)',
         type: SELECTION_TYPES.TEXT,
         default: '1,1,1',
       },
@@ -63,7 +68,7 @@ export const ADVANCED_REPORT_TYPES = {
         default: 'arc color',
       },
       colorArray: {
-        label: 'Comma-separated arc colors (number must match number of levels)',
+        label: 'Comma-separated arc colors (number must match number of arcs)',
         type: SELECTION_TYPES.TEXT,
         default: '#5BE12C, #F5CD19, #EA4228',
       },
@@ -115,11 +120,6 @@ export const ADVANCED_REPORT_TYPES = {
         label: 'Minimum value of scale',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
-      },
-      nrOfLevels: {
-        label: 'Number of levels',
-        type: SELECTION_TYPES.NUMBER,
-        default: 3,
       },
       numberOfMarkers: {
         label: 'Number of markers',

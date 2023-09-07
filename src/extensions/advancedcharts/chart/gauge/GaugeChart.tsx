@@ -28,7 +28,7 @@ const NeoGaugeChart = (props: ChartProps) => {
   let arcsLengthN = arcsLength.split(',').map((e) => parseFloat(e.trim()));
   const arcPadding = settings.arcPadding ? settings.arcPadding : 0.02;
   const nbOfLevels = settings.nrOfLevels ? settings.nrOfLevels : (arcsLength ? arcsLengthN.length : 3);
-  const colorArrayString = settings.colorArray ? settings.colorArray : '#EA4228, #5BE12C';
+  const colorArrayString = settings.colorArray ? settings.colorArray : '#5BE12C, #EA4228';
   const textColor = settings.textColor ? settings.textColor : '#000000';
   const valueLabelColor = settings.valueLabelColor ? settings.valueLabelColor : 'arc color';
   const arrowColor = settings.pointerColor ? settings.pointerColor : '#000000';
@@ -64,7 +64,6 @@ const NeoGaugeChart = (props: ChartProps) => {
   if (isNaN(score)) {
     return <NoDrawableDataErrorMessage />;
   }
-  score = score.toNumber();
   
   if (score>maxValue) {
     maxValue = score;
@@ -125,14 +124,13 @@ const NeoGaugeChart = (props: ChartProps) => {
 
   return (
     <div style={{ position: 'relative', top: '40%', transform: 'translateY(-50%)' }}>
-      {typeof score == 'number' ? (
         <GaugeComponent
           id={chartId}
           type={graphStyle}
           value={score}
           minValue={minValue}
           maxValue={maxValue}
-          marginInPercent={{ top: 0.12, bottom: 0, left: adjustedMarginSides, right: adjustedMarginSides }}
+          marginInPercent={{ top: 0.12, bottom: 0.01, left: adjustedMarginSides, right: adjustedMarginSides }}
           arc={{
             padding: arcPadding,
             cornerRadius: 7,
@@ -168,9 +166,6 @@ const NeoGaugeChart = (props: ChartProps) => {
             },
           }}
         />
-      ) : (
-        <></>
-      )}
     </div>
   );
 };

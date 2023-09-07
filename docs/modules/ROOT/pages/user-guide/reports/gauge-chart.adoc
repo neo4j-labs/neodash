@@ -4,8 +4,10 @@ link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[
 
 A gauge chart takes a single numeric value, and plots it on an animated gauge:
 
-- The value returned should be in the range of 0 to 100.
-- The gauge chart can be customized with different colors and levels (arc segments).
+- The value returned will automatically be in the range of 0 to 100 if the returned value is within that range.
+- The upper and lower limits of the range will change to accomodate a returned value outside of the set range.
+- The range limits can be manually set in the advanced settings.
+- The gauge chart can be customized in a number of ways as shown in <<advanced-settings-anchor, Advanced Settings>>.
 
 == Examples
 
@@ -20,23 +22,42 @@ RETURN c.load_percentage * 100
 
 image::gauge.png[Gauge Chart]
 
+[[advanced-settings-anchor]]
 == Advanced Settings
 
               
 [width="100%",cols="15%,2%,6%,77%",options="header",]
 |===
 |Name |Type |Default Value |Description
-|Number of levels | number | 3 | The number of distinct colored levels in the gauge.
 
-| Comma-separated length of each arc | List |  "0.15, 0.55, 0.3" | A comma-separated list of length for each of the colored arc segments on the gauge.
+|Number of arcs | number | 3 | The number of distinct colored levels in the gauge.
 
-| Comma-separated arc colors | List | "#5BE12C, #F5CD19, #EA4228" | The HEX color values to assign to each arc.
+| Comma-separated length of each arc | list |  "1, 1, 1" | A comma-separated list of length for each of the colored arc segments on the gauge.
 
-| Color of the text | string | black | The color of the number on the gauge.
+| Arc padding | number | 0.02 | The padding around each individual arc
+
+| Colour of the value label | list | "arc color" | Dicates the colour of the value indicator in the center of the gauge chart. When 'arc color' is selected, the color of the value label will be the same as the color of the arc in which the value falls on the scale. The other color options are static and will not change according to the value returned from the query.
+
+| Comma-separated arc colors | list | "#5BE12C, #F5CD19, #EA4228" | The HEX color values to assign to each arc.
+
 
 | Delay in ms before needle animation | number | 0 | Delay in milliseconds before starting the animation.
 
 | Duration in ms for needle animation | number | 2000 | The duration of the moving needle animation when the chart renders.
+
+| Graph style | list | "grafana" | Choose between three different grpah styles: grafana, radial and semicircle. The chosen grpah style may override 'pointer type'.
+
+| Margins - sides(%) | number | 30 | Margins dictate how large the graph will be on a given dashboard card. If card size is changed, margins may need to be altered and the query may need to be re-run for the margins to re-adjust.
+
+| Marker position | list | "outer" | Marker position dicates whether the marker values will be show on the inside of the outside of the arcs.
+
+| Maximum value of scale | number | 100 | The maximum value of the scale can be set. This will adjust automatically if returned query value is larger than set upper range.
+
+| Minimum value of scale | number | 0 | The minimum value of the scale can be set. This will adjust automatically if returned query value is smaller than set lower range.
+
+| Number of markers | number | 5 | The number of markers on the scale.
+
+| Pointer Type | list | "needle" | The style of the pointer used for a graph. Does not work on "grafana" style gauge charts.
 
 |===
 
