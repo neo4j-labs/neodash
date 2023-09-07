@@ -30,6 +30,16 @@ const NeoForm = (props: ChartProps) => {
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
   const formFields = settings?.formFields ? settings.formFields : [];
 
+  // Helper function to force a refresh on all reports that depend on the form.
+  // All reports that use one or more parameters used in the form will be refreshed.
+  function forceRefreshDependentReports() {
+    const paramCache = { ...props.parameters };
+    Object.keys(paramCache).forEach((key) => {
+      props.setGlobalParameter && props.setGlobalParameter(key, undefined);
+      props.setGlobalParameter && props.setGlobalParameter(key, paramCache[key]);
+    });
+  }
+
   useEffect(() => {
     // If the parameters change after the form is completed, reset it, as there might be another submission.
     if (status == FormStatus.SUBMITTED) {
@@ -41,14 +51,20 @@ const NeoForm = (props: ChartProps) => {
     return (
       <div>
         {settings?.formFields?.map((field) => (
-          <NeoParameterSelectionChart
-            records={[{ input: field.query }]}
-            settings={field.settings}
-            parameters={props.parameters}
-          />
+          <div style={{ marginBottom: 10 }}>
+            <NeoParameterSelectionChart
+              records={[{ input: field.query }]}
+              settings={field.settings}
+              parameters={props.parameters}
+              queryCallback={props.queryCallback}
+              setGlobalParameter={props.setGlobalParameter}
+              getGlobalParameter={props.getGlobalParameter}
+            />
+          </div>
         ))}
         {hasSubmitButton ? (
           <Button
+            style={{ marginLeft: 15 }}
             onClick={() => {
               setStatus(FormStatus.RUNNING);
               debouncedRunCypherQuery(props.query, props.parameters, (records) => {
@@ -56,6 +72,7 @@ const NeoForm = (props: ChartProps) => {
                 if (records && records[0] && records[0].error) {
                   setStatus(FormStatus.ERROR);
                 } else {
+                  forceRefreshDependentReports();
                   setStatus(FormStatus.SUBMITTED);
                 }
               });

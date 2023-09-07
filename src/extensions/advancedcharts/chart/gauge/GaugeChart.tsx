@@ -2,7 +2,7 @@ import React from 'react';
 import GaugeChart from 'react-gauge-chart';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
-import { createUUID } from '../../../../dashboard/DashboardThunks';
+import { createUUID } from '../../../../utils/uuid';
 
 /**
  * Based on https://github.com/dekelpaz PR https://github.com/neo4j-labs/neodash/pull/191

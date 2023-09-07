@@ -50,9 +50,9 @@ export async function runCypherQuery(
   useReturnValuesAsFields = false,
   useHardRowLimit = false,
   queryTimeLimit = 20,
-  setSchema = (schema) => {
+  setSchema = () => {
     // eslint-disable-next-line no-console
-    console.log(`Query runner attempted to set schema: ${JSON.stringify(schema)}`);
+    // console.log(`Query runner attempted to set schema: ${JSON.stringify(schema)}`);
   }
 ) {
   // If no query specified, we don't do anything.

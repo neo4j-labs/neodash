@@ -1,7 +1,6 @@
 import { updateReportQueryThunk } from '../../../card/CardThunks';
 import { getDatabase } from '../../../settings/SettingsSelectors';
 import { ModelClient } from '../clients/ModelClient';
-import { Status } from '../component/ClientSettings';
 import { getModelClientObject } from '../QueryTranslatorConfig';
 import { setGlobalModelClient, updateLastMessage, updateMessageHistory } from './QueryTranslatorActions';
 import {
@@ -10,6 +9,7 @@ import {
   getModelClient,
   getModelProvider,
 } from './QueryTranslatorSelector';
+import { Status } from '../util/Status';
 
 const consoleLogAsync = async (message: string, other?: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0)).then(() => console.info(message, other));

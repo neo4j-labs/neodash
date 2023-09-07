@@ -6,10 +6,8 @@ import NeoCodeEditorComponent, {
   DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
 } from '../../../component/editor/CodeEditorComponent';
 import debounce from 'lodash/debounce';
-import { Banner, Dialog, IconButton } from '@neo4j-ndl/react';
+import { Banner, IconButton } from '@neo4j-ndl/react';
 import { PencilIconOutline, PlusIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
-import ParameterSelectCardSettings from '../../../chart/parameter/ParameterSelectCardSettings';
-import NeoCardSettingsFooter from '../../../card/settings/CardSettingsFooter';
 import NeoFormCardSettingsModal from './NeoFormCardSettingsModal';
 
 const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSettingUpdate, onQueryUpdate }) => {
@@ -43,7 +41,7 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
             <span style={{ lineHeight: '32px' }}>
               {index + 1}.{' '}
               {formFields[index].settings.parameterName
-                ? `$${  formFields[index].settings.parameterName}`
+                ? `$${formFields[index].settings.parameterName}`
                 : '(undefined)'}
             </span>
             <IconButton

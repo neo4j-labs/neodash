@@ -10,7 +10,6 @@ import {
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS } from '../../extensions/actions/ActionsRuleCreationModal';
 import NeoCustomReportActionsModal from '../../extensions/actions/ActionsRuleCreationModal';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { AdjustmentsHorizontalIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
 import { IconButton, Switch } from '@neo4j-ndl/react';
 

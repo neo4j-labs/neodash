@@ -2,11 +2,11 @@ import { ResponsiveBar, ResponsiveBarCanvas } from '@nivo/bar';
 import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
-import { themeNivo } from '../Utils';
+import { themeNivo, themeNivoCanvas } from '../Utils';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 /**
  * Embeds a BarReport (from Nivo) into NeoDash.
@@ -208,10 +208,11 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
-  const BarChartComponent = data.length > 30 ? ResponsiveBarCanvas : ResponsiveBar;
+  const canvas = data.length > 30;
+  const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
   const chart = (
     <BarChartComponent
-      theme={themeNivo}
+      theme={canvas ? themeNivoCanvas(props.theme) : themeNivo}
       data={data}
       key={`${selection.index}___${selection.value}`}
       layout={layout}

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Badge, CardHeader, Dialog, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import { Close, ThirteenMp } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import { replaceDashboardParameters } from '../../chart/ChartUtils';
@@ -16,6 +15,7 @@ import {
   ShrinkIcon,
   CameraIconSolid,
   InformationCircleIconOutline,
+  XMarkIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -69,7 +69,7 @@ const NeoCardViewHeader = ({
     },
     palette: {
       text: {
-        primary: 'rgb(var(--palette-neutral-text-weaker))',
+        primary: 'rgb(var(--palette-neutral-text))',
       },
     },
   });
@@ -81,7 +81,13 @@ const NeoCardViewHeader = ({
           <tr>
             {editable ? (
               <td>
-                <IconButton className='n-mb-3 n-relative -n-left-3 drag-handle' clean size='medium' aria-label={'drag'}>
+                <IconButton
+                  className='n-mb-3 n-relative -n-left-3 drag-handle'
+                  clean
+                  size='medium'
+                  aria-label={'drag'}
+                  onClick={() => {}}
+                >
                   <DragIcon />
                 </IconButton>
               </td>
@@ -97,7 +103,7 @@ const NeoCardViewHeader = ({
                 onBlur={() => {
                   setEditing(false);
                 }}
-                className={'no-underline large'}
+                className={'n-text-palette-neutral-text-default no-underline large'}
                 label=''
                 disabled={!editable}
                 placeholder='Report name...'
@@ -172,7 +178,7 @@ const NeoCardViewHeader = ({
     <>
       <Dialog
         maxWidth={'lg'}
-        open={descriptionModalOpen == true}
+        open={descriptionModalOpen}
         onClose={() => setDescriptionModalOpen(false)}
         aria-labelledby='form-dialog-title'
       >
@@ -182,10 +188,9 @@ const NeoCardViewHeader = ({
             onClick={() => setDescriptionModalOpen(false)}
             style={{ padding: '3px', float: 'right' }}
             aria-label={'rect badge'}
+            clean
           >
-            <Badge overlap='rectangular' badgeContent={''}>
-              <Close />
-            </Badge>
+            <XMarkIconOutline />
           </IconButton>
         </DialogTitle>
         <DialogContent style={{ minWidth: '400px' }}>

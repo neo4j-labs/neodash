@@ -40,11 +40,14 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const theme = createTheme({
     typography: {
       fontFamily: "'Nunito Sans', sans-serif !important",
-      allVariants: { color: 'rgb(var(--palette-neutral-text-weak))' },
+      allVariants: { color: 'rgb(var(--palette-neutral-text))' },
     },
     palette: {
       text: {
-        primary: 'rgb(var(--palette-neutral-text-weaker))',
+        primary: 'rgb(var(--palette-neutral-text))',
+      },
+      background: {
+        paper: 'rgb(var(--palette-neutral-bg-weak))',
       },
     },
   });
