@@ -36,6 +36,7 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
   const formFieldComponents = formFields.map((field, index) => {
     return (
       <Banner
+        key={index}
         description={
           <div>
             <span style={{ lineHeight: '32px' }}>
