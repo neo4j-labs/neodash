@@ -4,11 +4,13 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDatabase } from '../../../settings/SettingsSelectors';
 import { validateQuery } from '../../../utils/ReportUtils';
 import { addModelExample } from '../state/QueryTranslatorActions';
-import './QuestionAnswerForm.css'; // Import your CSS file for custom styling
+import { Button, Textarea, Typography } from '@neo4j-ndl/react';
 
 const QuestionAnswerForm = ({ setShowForm, database, addModelExample }) => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [questionErrorMessage, setQuestionErrorMessage] = useState('');
+  const [answerErrorMessage, setAnswerErrorMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -16,14 +18,26 @@ const QuestionAnswerForm = ({ setShowForm, database, addModelExample }) => {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    // If both fields are filled, reset the error message
+    setQuestionErrorMessage('');
+    setAnswerErrorMessage('');
+    setErrorMessage('');
+
     // Check if either question or answer is empty
-    if (!question || !answer) {
+    if (!question && !answer) {
       setErrorMessage('Both fields must be filled');
+      return;
+    }
+
+    if (!question) {
+      setQuestionErrorMessage('Field must be filled');
       return; // Don't proceed with submission
     }
 
-    // If both fields are filled, reset the error message
-    setErrorMessage('');
+    if (!answer) {
+      setAnswerErrorMessage('Field must be filled');
+      return; // Don't proceed with submission
+    }
 
     // Proceed with submission
     let isValid = await validateQuery(answer, driver, database);
@@ -53,34 +67,53 @@ const QuestionAnswerForm = ({ setShowForm, database, addModelExample }) => {
   };
 
   return (
-    <div className='question-answer-form'>
-      <h2 className='form-title'>Add Q&As</h2>
-      <p className='form-description'>
+    <div
+      style={{
+        backgroundColor: '#fff',
+        padding: '20px',
+        border: '1px solid #ccc',
+        borderRadius: '5px',
+        width: '100%',
+        margin: '10px auto'
+      }}
+    >
+      <Typography variant='h4' className='n-mb-4'>Add Q&As</Typography>
+      <p className='n-mb-4'>
         Add questions and answers to aid in the training of the AI models. This will increase AI accuracy and
         performance.
       </p>
       <form onSubmit={handleSubmit}>
-        <div className='form-group'>
-          <label htmlFor='question'>Question:</label>
-          <textarea
-            id='question'
+        <div className='n-mb-6'>
+          <Textarea
+            errorText={questionErrorMessage}
+            fluid
+            helpText=''
+            label='Question'
+            size='small'
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            className='input-field'
           />
         </div>
-        <div className='form-group'>
-          <label htmlFor='answer'>Answer:</label>
-          <textarea id='answer' value={answer} onChange={(e) => setAnswer(e.target.value)} className='input-field' />
+        <div className='n-mb-4'>
+          <Textarea
+            errorText={answerErrorMessage}
+            fluid
+            helpText=''
+            label='Answer (Query equivalent)'
+            size='small'
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+          />
+          {/* <textarea id='answer' value={answer} onChange={(e) => setAnswer(e.target.value)} className='input-field' /> */}
         </div>
-        <div>{errorMessage && <p className='error-message'>{errorMessage}</p>}</div>
-        <div className='button-group'>
-          <button type='submit' className='submit-button'>
+        <p className='n-text-palette-danger-text'> {errorMessage}</p>
+        <div className='n-text-right'>
+          <Button type='submit' className='n-m-1'>
             Save
-          </button>
-          <button type='button' onClick={handleFormClose} className='close-button'>
+          </Button>
+          <Button fill='outlined' type='button' onClick={handleFormClose} className='n-m-1'>
             Close
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -119,20 +119,14 @@ export const NeoOverrideCardQueryEditor = ({
       ) : (
         <>
           <table style={{ marginBottom: 5, width: '100%' }}>
-            <tr style={{ display: 'block', marginBottom: 20, width: '100%' }}>
+            <tr style={{ display: 'block', width: '100%' }}>
               <td style={{ marginBottom: 5, width: '100%' }}>
-                <div style={{ float: 'left', display: 'flex', justifyContent: 'flex-end' }}>
-                  {showQAForm ? (
-                    <QuestionAnswerForm pagenumber={pagenumber} reportId={reportId} setShowForm={setShowQAForm} />
-                  ) : (
-                    <Button onClick={() => setShowQAForm(true)}>Add Q&As</Button>
-                  )}
-                </div>
+                <div style={{ float: 'left', display: 'flex', justifyContent: 'flex-end' }}></div>
               </td>
             </tr>
             <tr style={{ display: 'inline', width: '100%' }}>
-              <td style={{ width: 50, textAlign: 'right' }}>Cypher</td>
-              <td style={{ width: 50, textAlign: 'left' }}>
+              <td style={{ width: 50, textAlign: 'right', paddingTop: '6px' }}>Cypher</td>
+              <td style={{ width: 50, textAlign: 'left', paddingTop: '8px' }}>
                 <Switch
                   style={{ backgroundColor: 'grey' }}
                   checked={language == Language.ENGLISH}
@@ -147,25 +141,32 @@ export const NeoOverrideCardQueryEditor = ({
                   className='n-ml-2'
                 />
               </td>
-              <td style={{ width: 50, textAlign: 'left' }}>&nbsp;English&nbsp;</td>
+              <td style={{ width: 50, textAlign: 'left', paddingTop: '6px' }}>&nbsp;English&nbsp;</td>
               <td style={{ float: 'right' }}>
                 {/* Only show translation button if there's something new to translate */}
                 {language == Language.ENGLISH ? (
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button
-                      fill='outlined'
-                      disabled={prepopulateExtensionName == undefined}
-                      style={{ marginLeft: '8px' }} // Add margin between the buttons
-                      onClick={() => {
-                        if (prepopulateExtensionName !== undefined) {
-                          triggerTranslation();
-                          setLanguage(Language.CYPHER);
-                          deletePrepopulationReportFunction(reportId);
-                        }
-                      }}
-                    >
-                      Translate
-                    </Button>
+                    {showQAForm ? (
+                      <QuestionAnswerForm pagenumber={pagenumber} reportId={reportId} setShowForm={setShowQAForm} />
+                    ) : (
+                      <div>
+                        <Button onClick={() => setShowQAForm(true)}>Add Q&As</Button>
+                        <Button
+                          fill='outlined'
+                          disabled={prepopulateExtensionName == undefined}
+                          style={{ marginLeft: '8px' }}
+                          onClick={() => {
+                            if (prepopulateExtensionName !== undefined) {
+                              triggerTranslation();
+                              setLanguage(Language.CYPHER);
+                              deletePrepopulationReportFunction(reportId);
+                            }
+                          }}
+                        >
+                          Translate
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <></>
