@@ -65,6 +65,7 @@ const NeoForm = (props: ChartProps) => {
         {hasSubmitButton ? (
           <Button
             style={{ marginLeft: 15 }}
+            id='form-submit'
             onClick={() => {
               if (!props.query || !props.query.trim()) {
                 props.createNotification(
@@ -131,7 +132,7 @@ const NeoForm = (props: ChartProps) => {
   // The user has succesfully completed the form
   if (status == FormStatus.SUBMITTED) {
     return (
-      <div className='content-center' style={{ margin: '10px' }}>
+      <div className='content-center form-submitted-message' style={{ margin: '10px' }}>
         {confirmationMessage}
         {hasResetButton ? resetButton : <></>}
       </div>

@@ -76,6 +76,7 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
   const addFieldButton = (
     <div style={{ width: '100%', display: 'flex' }}>
       <IconButton
+        className='form-add-parameter'
         style={{ marginLeft: 'auto', marginRight: 'auto', marginTop: 5, marginBottom: 5 }}
         aria-label='add'
         size='medium'
