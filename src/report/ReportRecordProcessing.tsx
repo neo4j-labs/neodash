@@ -120,10 +120,10 @@ export function saveNodeAndRelPropertiesToDictionary(field, fieldsDict) {
 }
 
 /* HELPER FUNCTIONS FOR RENDERING A FIELD BASED ON TYPE */
-const HtmlTooltip = withStyles((theme) => ({
+const HtmlTooltip = withStyles(() => ({
   tooltip: {
     color: 'white',
-    fontSize: theme.typography.pxToRem(12),
+    fontSize: 12,
     border: '1px solid #fcfffa',
   },
 }))(Tooltip);

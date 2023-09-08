@@ -25,10 +25,10 @@ const NeoForm = (props: ChartProps) => {
   const resetButtonText = settings?.resetButtonText ? settings.resetButtonText : 'Reset Form';
   const hasResetButton = settings?.hasResetButton !== undefined ? settings.hasResetButton : true;
   const hasSubmitButton = settings?.hasSubmitButton !== undefined ? settings.hasSubmitButton : true;
+  const hasSubmitMessage = settings?.hasSubmitMessage !== undefined ? settings.hasSubmitMessage : true;
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
-  const formFields = settings?.formFields ? settings.formFields : [];
 
   // Helper function to force a refresh on all reports that depend on the form.
   // All reports that use one or more parameters used in the form will be refreshed.
@@ -66,6 +66,13 @@ const NeoForm = (props: ChartProps) => {
           <Button
             style={{ marginLeft: 15 }}
             onClick={() => {
+              if (!props.query || !props.query.trim()) {
+                props.createNotification(
+                  'No query specified',
+                  'There is no query defined to run on submission. Specify one in the report settings.'
+                );
+                return;
+              }
               setStatus(FormStatus.RUNNING);
               debouncedRunCypherQuery(props.query, props.parameters, (records) => {
                 setFormResults(records);
@@ -73,7 +80,11 @@ const NeoForm = (props: ChartProps) => {
                   setStatus(FormStatus.ERROR);
                 } else {
                   forceRefreshDependentReports();
-                  setStatus(FormStatus.SUBMITTED);
+                  if (hasSubmitMessage) {
+                    setStatus(FormStatus.SUBMITTED);
+                  } else {
+                    setStatus(FormStatus.DATA_ENTRY);
+                  }
                 }
               });
             }}

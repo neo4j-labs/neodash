@@ -29,7 +29,7 @@ export const FORMS = {
       resetButtonText: {
         label: 'Reset Button Text',
         type: SELECTION_TYPES.TEXT,
-        default: 'Submit',
+        default: 'Reset Form',
       },
       hasSubmitButton: {
         label: 'Has Submit Button',
@@ -39,6 +39,12 @@ export const FORMS = {
       },
       hasResetButton: {
         label: 'Has Reset Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      hasSubmitMessage: {
+        label: 'Has Submit Message',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
