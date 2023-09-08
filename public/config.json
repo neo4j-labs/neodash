@@ -10,5 +10,8 @@
   "standaloneDashboardDatabase": "dashboards",
   "standaloneDashboardURL": "",
   "standaloneAllowLoad": false,
-  "standaloneLoadFromOtherDatabases": false
+  "standaloneLoadFromOtherDatabases": false,
+  "standaloneMultiDatabase": false,
+  "standaloneDatabaseList": "neo4j"
+
 }

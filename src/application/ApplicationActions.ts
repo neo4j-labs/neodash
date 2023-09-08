@@ -145,7 +145,9 @@ export const setStandaloneEnabled = (
   standaloneUsername: string,
   standalonePassword: string,
   standaloneAllowLoad: boolean,
-  standaloneLoadFromOtherDatabases: boolean
+  standaloneLoadFromOtherDatabases: boolean,
+  standaloneMultiDatabase: boolean,
+  standaloneDatabaseList: string
 ) => ({
   type: SET_STANDALONE_ENABLED,
   payload: {
@@ -161,6 +163,8 @@ export const setStandaloneEnabled = (
     standalonePassword,
     standaloneAllowLoad,
     standaloneLoadFromOtherDatabases,
+    standaloneMultiDatabase,
+    standaloneDatabaseList,
   },
 });
 

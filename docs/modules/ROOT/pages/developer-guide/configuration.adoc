@@ -25,8 +25,10 @@ will look like this:
     "standaloneDashboardName": "My Dashboard",
     "standaloneDashboardDatabase": "dashboards",
     "standaloneDashboardURL": "",
-    "standaloneAllowLoad": true,
-    "standaloneLoadFromOtherDatabases": false
+    "standaloneAllowLoad": false,
+    "standaloneLoadFromOtherDatabases": false,
+    "standaloneMultiDatabase": false,
+    "standaloneDatabaseList": "neo4j"    
 }
 ....
 
@@ -87,16 +89,32 @@ inside Neo4j and would like to run a standalone mode deployment with a
 dashboard from a URL, set this parameter to the complete URL pointing to
 the dashboard JSON.
 
-|standaloneAllowLoad |boolean |false |If set t yes the "Load Dashboard"
-button will be enabled in standalone mode, allowing users to load 
-additional dashboards from Neo4J. 
+|standaloneAllowLoad |boolean |false |If set to yes the "Load Dashboard"
+button will be enabled in standalone mode, allowing users to load
+additional dashboards from Neo4J. This parameter is false by default 
+_unless you are using Neo4j Enterprise Edition_, which lets you use multiple 
+databases.
 *NOTE*: when Load is enabled in standalone mode, only Database is available
 as a source, not file.
 
-|standaloneLoadFromOtherDatabases|boolean |false |If standaloneAllowLoad is 
-set to true, this parmeter enables or not users to load dashboards from 
-other databases than the one deifned in standaloneDashboardDatabase. If 
-standaloneAllowLoad is set to false this parameters has no effect. 
+|standaloneLoadFromOtherDatabases |boolean |false |If _standaloneAllowLoad_ is
+set to true, this parmeter enables or not users to load dashboards from
+other databases than the one deifned in _standaloneDashboardDatabase_. If
+_standaloneAllowLoad_ is set to false this parameters has no effect.
+
+|standaloneMultiDatabase |boolean |false |If this parameter set to true, the
+standalone configuration will ignore the _standaloneDatabase_ parameter and
+allow users to choose which database to connect to in the login screen, among
+the ones provided in _standaloneDatabaseList_, with a dropdown list. This
+parameter is false by default _unless you are using Neo4j Enterprise Edition_,
+which lets you use multiple databases.
+
+|standaloneDatabaseList |string |neo4j |If _standaloneMultiDatabase_ is
+set to true, this parmeter must contain a comma separated list of database
+names that will be displayed as options in the Database dropdown at user
+login (e.g. 'neo4j,database1,database2' will populate the database dropdown
+with the values 'neo4j','database1' and 'database2' in the connection screen).
+If _standaloneMultiDatabase_ is set to false this parameters has no effect. 
 |===
 
 == Configuring SSO
@@ -139,7 +157,7 @@ be enabled by changing the `standalone` config parameter:
 * If standalone mode is `false`, all other configuration parameters are
 ignored. NeoDash will run in Editor mode, and require a manual sign-in.
 * If standalone mode is `true`, NeoDash will read all configuration
-parameters. A *fixed dashboard* will be auto-loaded, and no changes to
+parameters. A *predefined dashboard* will be auto-loaded, and no changes to
 the dashboard can be made. There are two types of valid standalone
 deployments:
 ** A standalone deployment that *reads the fixed dashboard from Neo4j*.
@@ -147,3 +165,15 @@ The `standaloneDashboardName` and `standaloneDashboardDatabase` config
 parameters are used to define these.
 ** A standalone deployment that *reads the fixed dashboard from a URL*.
 The `standaloneDashboardURL` config parameter is used to define this.
+
+* Standalone mode can also be configured to allow users load a different
+dashboard after the predefined one is loaded (a `Load Dashboard` button
+will be displayed on the right side of dashboard title). 
+The `standaloneAllowLoad` and `standaloneLoadFromOtherDatabases` are used
+to define this.
+* When allowing users to load dashboards dyamically in standalone mode,
+they may also need to connect to different databases, depending on the
+specific dashboard bing loaded. this can be enabled setting 
+`standaloneMultiDatabase` to true and providing a comma separated list
+of the allowed database names in the`standaloneDatabaseList` parameter.
+

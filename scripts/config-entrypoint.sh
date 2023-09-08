@@ -17,5 +17,7 @@ echo " \
     \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase:='neo4j'}\",  \
     \"standaloneDashboardURL\": \"${standaloneDashboardURL:=}\",  \
     \"standaloneAllowLoad\": \"${standaloneAllowLoad:=false}\",  \
-    \"standaloneLoadFromOtherDatabases\": \"${standaloneLoadFromOtherDatabases:=false}\"  \
+    \"standaloneLoadFromOtherDatabases\": \"${standaloneLoadFromOtherDatabases:=false}\",  \
+    \"standaloneMultiDatabase\": ${standaloneMultiDatabase:=false}\", \
+    \"standaloneDatabaseList\": ${standaloneDatabaseList:='neo4j'}\" \
     }" > /usr/share/nginx/html/config.json

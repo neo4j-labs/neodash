@@ -83,6 +83,8 @@ export const applicationGetStandaloneSettings = (state: any) => {
     standalonePassword: state.application.standalonePassword,
     standaloneAllowLoad: state.application.standaloneAllowLoad,
     standaloneLoadFromOtherDatabases: state.application.standaloneLoadFromOtherDatabases,
+    standaloneMultiDatabase: state.application.standaloneMultiDatabase,
+    standaloneDatabaseList: state.application.standaloneDatabaseList,
   };
 };
 

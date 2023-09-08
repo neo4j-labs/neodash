@@ -25,7 +25,7 @@ export default function NeoConnectionModal({
   const [username, setUsername] = React.useState(connection.username);
   const [password, setPassword] = React.useState(connection.password);
   const [database, setDatabase] = React.useState(connection.database);
-
+  
   // Make sure local vars are updated on external connection updates.
   useEffect(() => {
     setProtocol(connection.protocol);
@@ -41,6 +41,14 @@ export default function NeoConnectionModal({
   }, [JSON.stringify(ssoSettings)]);
 
   const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl;
+  
+  //sice config is loaded asynchronously, value may not be yet defined when this runs for first time
+  let databaseList = ['neo4j']
+  try{
+    databaseList = standaloneSettings.standaloneDatabaseList.split(',')
+  }
+  catch(e){
+  }
 
   return (
     <>
@@ -126,15 +134,36 @@ export default function NeoConnectionModal({
               Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
             </div>
           ) : null}
-          <TextInput
-            id='database'
-            value={database}
-            disabled={standalone}
-            onChange={(e) => setDatabase(e.target.value)}
-            label='Database (optional)'
-            placeholder='neo4j'
-            fluid
-          />
+          {
+            !standalone ? (
+              <TextInput
+                id='database'
+                value={database}
+                disabled={standalone}
+                onChange={(e) => setDatabase(e.target.value)}
+                label='Database (optional)'
+                placeholder='neo4j'
+                fluid
+              />
+            ) : (
+              <Dropdown
+                id='database'
+                label='Database'
+                type='select'
+                selectProps={{
+                  onChange: (newValue) => {setDatabase(newValue.value);},
+                  //if application is running standalone and standaloneLoadFromOtherDatabases is not enabled, we do not allow changing database
+                  options: databaseList.map((option) => ({
+                    label: option,
+                    value: option,
+                  })),
+                  value: { label: database, value: database },
+                  menuPlacement: 'auto',
+                }}
+                fluid
+              ></Dropdown>
+            )
+          }
 
           {!ssoVisible ? (
             <TextInput

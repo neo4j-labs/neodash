@@ -135,7 +135,9 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standaloneUsername,
         standalonePassword,
         standaloneAllowLoad,
-        standaloneLoadFromOtherDatabases
+        standaloneLoadFromOtherDatabases,
+        standaloneMultiDatabase,
+        standaloneDatabaseList,
       } = payload;
       state = update(state, {
         standalone: standalone,
@@ -150,6 +152,8 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standalonePassword: standalonePassword,
         standaloneAllowLoad: standaloneAllowLoad,
         standaloneLoadFromOtherDatabases: standaloneLoadFromOtherDatabases,
+        standaloneMultiDatabase: standaloneMultiDatabase,
+        standaloneDatabaseList: standaloneDatabaseList,
       });
       return state;
     }

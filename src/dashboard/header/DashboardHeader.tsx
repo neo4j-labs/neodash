@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getDashboardSettings, getDashboardTheme, getDashboardTitle, getPages } from '../DashboardSelectors';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
-import { applicationIsStandalone } from '../../application/ApplicationSelectors';
+import { applicationGetStandaloneSettings } from '../../application/ApplicationSelectors';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { NeoDashboardHeaderLogo } from './DashboardHeaderLogo';
 import NeoAboutButton from './DashboardHeaderAboutButton';
@@ -15,7 +15,7 @@ import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
 import { Tooltip } from '@mui/material';
 
 export const NeoDashboardHeader = ({
-  standalone,
+  standaloneSettings,
   dashboardTitle,
   connection,
   settings,
@@ -45,7 +45,6 @@ export const NeoDashboardHeader = ({
   useEffect(() => {
     setTheme(isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
-
   const content = (
     <div className='n-relative n-bg-neutral-bg-weak n-w-full'>
       <div className='n-min-w-full'>
@@ -72,7 +71,7 @@ export const NeoDashboardHeader = ({
 
               {downloadImageEnabled && <NeoDashboardHeaderDownloadImageButton onDownloadImage={onDownloadImage} />}
               <NeoAboutButton connection={connection} onAboutModalOpen={onAboutModalOpen} />
-              <NeoLogoutButton standalone={standalone} onConnectionModalOpen={onConnectionModalOpen} />
+              <NeoLogoutButton standaloneSettings={standaloneSettings} onConnectionModalOpen={onConnectionModalOpen} />
             </div>
           </div>
         </div>
@@ -84,7 +83,7 @@ export const NeoDashboardHeader = ({
 
 const mapStateToProps = (state) => ({
   dashboardTitle: getDashboardTitle(state),
-  standalone: applicationIsStandalone(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
   pages: getPages(state),
   settings: getDashboardSettings(state),
   editable: getDashboardIsEditable(state),
