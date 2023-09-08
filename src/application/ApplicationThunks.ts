@@ -391,6 +391,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     logErrorNotification: '3',
     standaloneAllowLoad: false,
     standaloneLoadFromOtherDatabases: false,
+    standaloneMultiDatabase: false,
+    standaloneDatabaseList: 'neo4j',
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -435,6 +437,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standalonePassword,
         config.standaloneAllowLoad,
         config.standaloneLoadFromOtherDatabases,
+        config.standaloneMultiDatabase,
+        config.standaloneDatabaseList,
       )
     );
 

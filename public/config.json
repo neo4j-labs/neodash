@@ -12,5 +12,8 @@
   "loggingMode": "0",
   "loggingDatabase": "logs",
   "standaloneAllowLoad": false,
-  "standaloneLoadFromOtherDatabases": false
+  "standaloneLoadFromOtherDatabases": false,
+  "standaloneMultiDatabase": false,
+  "standaloneDatabaseList": "neo4j"
+
 }
