@@ -18,14 +18,13 @@ module.exports = {
         // "targets": "last 2 versions, > 5%"
       }
     ],
-    "@babel/preset-typescript"
+    "@babel/preset-typescript",
+    "@babel/preset-react"
   ],
   plugins: [
     
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-object-rest-spread",
-    "@babel/plugin-transform-react-display-name",
-    ["@babel/plugin-transform-react-jsx", { runtime: "automatic" }],
     "@babel/plugin-transform-runtime",
     "istanbul"
   ]

@@ -13,6 +13,7 @@ const localPackages = {
 }
 
 const basePath = process.cwd()
+const babelConfigPath = path.join(__dirname, "../../babel.config.js");
 
 // Because we're using a monorepo, node modules are at the root
 const modulePackages = [path.join(basePath, "../../node_modules")];
@@ -75,15 +76,15 @@ module.exports = (env) => {
   for (let packageName of Object.keys(packageToSrcPathMap)) {
     let packageSrcPath = packageToSrcPathMap[packageName]
 
-    let query = {
-      babelrcRoots: packageSrcPath,
-      cacheDirectory: babelCacheDirectory
+    let options = {
+      cacheDirectory: babelCacheDirectory,
+      configFile: babelConfigPath
     }
     let include = packageSrcPath
 
     const localPackage = localPackages[packageName]
     if (localPackage && localPackage.entry && !localPackage.entry.srcPath) {
-      query = {
+      options = {
         babelrc: false,
         cacheDirectory: babelCacheDirectory
       }
@@ -93,7 +94,7 @@ module.exports = (env) => {
       {
         test: tsRegexp,
         loader: 'babel-loader',
-        options: query,
+        options: options,
         include: include
       }
     )
