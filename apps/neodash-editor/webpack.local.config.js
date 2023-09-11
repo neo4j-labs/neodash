@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const webpackConfig = require('./webpack.config')
+const webpackConfigFunc = require('./webpack.config')
 
 const localPackages = {
   '@neodash/engine': {
@@ -60,43 +60,47 @@ if (!allFound) {
   process.exit(1)
 }
 
-let resolve = webpackConfig.resolve
-resolve = {
-  ...resolve,
-  modules: [...resolve.modules, ...modulePackages],
-  alias: { ...resolve.alias, ...packageToEntryFileMap }
-}
+module.exports = (env) => {
+  const webpackConfig = webpackConfigFunc(env);
 
-let rules = (webpackConfig.module.rules ? webpackConfig.module.rules : []).slice()
-
-for (let packageName of Object.keys(packageToSrcPathMap)) {
-  let packageSrcPath = packageToSrcPathMap[packageName]
-
-  let query = {
-    babelrcRoots: packageSrcPath,
-    cacheDirectory: babelCacheDirectory
+  let resolve = webpackConfig.resolve
+  resolve = {
+    ...resolve,
+    modules: [...resolve.modules, ...modulePackages],
+    alias: { ...resolve.alias, ...packageToEntryFileMap }
   }
-  let include = packageSrcPath
 
-  const localPackage = localPackages[packageName]
-  if (localPackage && localPackage.entry && !localPackage.entry.srcPath) {
-    query = {
-      babelrc: false,
+  let rules = (webpackConfig.module.rules ? webpackConfig.module.rules : []).slice()
+
+  for (let packageName of Object.keys(packageToSrcPathMap)) {
+    let packageSrcPath = packageToSrcPathMap[packageName]
+
+    let query = {
+      babelrcRoots: packageSrcPath,
       cacheDirectory: babelCacheDirectory
     }
-    include = path.join(basePath, packageSrcPath)
-  }
-  rules.push(
-    {
-      test: tsRegexp,
-      loader: 'babel-loader',
-      query: query,
-      include: include
+    let include = packageSrcPath
+
+    const localPackage = localPackages[packageName]
+    if (localPackage && localPackage.entry && !localPackage.entry.srcPath) {
+      query = {
+        babelrc: false,
+        cacheDirectory: babelCacheDirectory
+      }
+      include = path.join(basePath, packageSrcPath)
     }
-  )
+    rules.push(
+      {
+        test: tsRegexp,
+        loader: 'babel-loader',
+        options: query,
+        include: include
+      }
+    )
+  }
+
+  webpackConfig.resolve = resolve
+  webpackConfig.module.rules = rules
+
+  return webpackConfig;
 }
-
-webpackConfig.resolve = resolve
-webpackConfig.module.rules = rules
-
-module.exports = webpackConfig

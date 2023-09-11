@@ -1,6 +1,9 @@
+const path = require('path');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+
+const basePath = process.cwd();
 
 const circularPlugin = new CircularDependencyPlugin({
   // exclude detection of files based on a RegExp
