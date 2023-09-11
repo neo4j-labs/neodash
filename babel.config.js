@@ -1,5 +1,4 @@
 const es = !!process.env.ES;
-const path = require("path");
 
 module.exports = {
   presets: [

@@ -1,10 +1,9 @@
 const path = require('path')
 const fs = require('fs')
-
-const webpackConfig = require('./webpack.config.js')
+const webpackConfig = require('./webpack.config')
 
 const localPackages = {
-  'neo4j-engine': {
+  '@neodash/engine': {
     rootPath: '../../packages/neodash-engine',
     entry: {
       srcPath: 'src',
@@ -12,13 +11,15 @@ const localPackages = {
     }
   }
 }
+
 const basePath = process.cwd()
 
-const modulePackages = [path.join(basePath, 'node_modules'), 'node_modules']
+// Because we're using a monorepo, node modules are at the root
+const modulePackages = [path.join(basePath, "../../node_modules")];
 
 const description = 'Local Packages Map'
 const babelCacheDirectory = true
-const jsRegexp = /\.jsx?$/
+const tsRegexp = /\.tsx?$/
 
 const packageToEntryFileMap = {}
 const packageToSrcPathMap = {}
@@ -60,7 +61,6 @@ if (!allFound) {
 }
 
 let resolve = webpackConfig.resolve
-
 resolve = {
   ...resolve,
   modules: [...resolve.modules, ...modulePackages],
@@ -88,7 +88,7 @@ for (let packageName of Object.keys(packageToSrcPathMap)) {
   }
   rules.push(
     {
-      test: jsRegexp,
+      test: tsRegexp,
       loader: 'babel-loader',
       query: query,
       include: include

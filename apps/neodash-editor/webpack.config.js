@@ -60,7 +60,15 @@ module.exports = (env) => {
     module: {
       rules: rules,
     },
-    resolve: { extensions: ['*', '.js', '.jsx', '.ts', '.tsx'] },
+    resolve: {
+      alias: {},
+      modules: [
+        path.resolve(basePath, "node_modules"),
+        path.resolve(basePath, "../../node_modules")
+      ],
+      extensions: [".js", ".jsx", ".ts", ".tsx", "*"],
+      mainFields: ["browser", "module", "main"]
+    },
     output: {
       filename: 'bundle.js',
     },
