@@ -8,6 +8,8 @@ import { QUERY_TRANSLATOR_CONFIG } from '../QueryTranslatorConfig';
 import ClientSettings from './ClientSettings';
 import { Dialog } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
+import { Button } from '@neo4j-ndl/react';
+import { useState } from 'react';
 
 const QueryTranslatorSettingsModal = ({
   open,
@@ -20,6 +22,7 @@ const QueryTranslatorSettingsModal = ({
 }) => {
   const [modelProviderState, setModelProviderState] = React.useState(modelProvider);
   const [settingsState, setSettingsState] = React.useState(clientSettings);
+  const [editDialogIsOpen, setEditDialogIsOpen] = React.useState(false);
 
   // TODO: a user shouldn't be able to save a configuration if it's not correct and it didn't fill all the requirements
   // DONE: by moving the storing logic only inside the start querying button
@@ -34,44 +37,82 @@ const QueryTranslatorSettingsModal = ({
     setOpen(false);
   };
 
-  return (
-    <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
-      <Dialog.Header id='form-dialog-title'>LLM-Powered Natural Language Queries</Dialog.Header>
-      <Dialog.Content>
-        This extensions lets you create reports with natural language. Your queries (in English) are translated to
-        Cypher by a LLM provider of your choice.
-        <br />
-        <br />
-        Keep in mind that the following data will be sent to a external API:
-        <ul>
-          <li>- Your database schema, including label names, relationship types, and property keys.</li>
-          <li>- Any natural language question that a user writes.</li>
-        </ul>
-        <br />
-        <br />
-        <NeoSetting
-          style={{ marginLeft: 0, marginRight: 0 }}
-          key={'Model Provider'}
-          name={'Model Provider'}
-          label={'Model Provider'}
-          value={modelProviderState}
-          type={SELECTION_TYPES.LIST}
-          choices={Object.keys(QUERY_TRANSLATOR_CONFIG.availableClients)}
-          onChange={(e) => setModelProviderState(e)}
-        />
-        {modelProviderState ? (
-          <ClientSettings
-            handleClose={handleCloseWithSave}
-            modelProvider={modelProviderState}
-            settingState={settingsState}
-            setSettingsState={setSettingsState}
+  const handleOpenEditSolutions = () => {
+    setEditDialogIsOpen(true);
+  };
+
+  const handleCloseEditSolutions = () => {
+    setEditDialogIsOpen(false);
+  };
+
+  if (editDialogIsOpen === false) {
+    return (
+      <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
+        <Dialog.Header id='form-dialog-title'>LLM-Powered Natural Language Queries</Dialog.Header>
+        <Dialog.Content>
+          This extensions lets you create reports with natural language. Your queries (in English) are translated to
+          Cypher by a LLM provider of your choice.
+          <br />
+          <br />
+          Keep in mind that the following data will be sent to a external API:
+          <ul>
+            <li>- Your database schema, including label names, relationship types, and property keys.</li>
+            <li>- Any natural language question that a user writes.</li>
+          </ul>
+          <br />
+          <br />
+          <div className='n-text-right n-pr-7' onClick={handleOpenEditSolutions}>
+            <Button>View/Edit Saved Q&As</Button>
+          </div>
+          <NeoSetting
+            style={{ marginLeft: '0', marginRight: '0' }}
+            key={'Model Provider'}
+            name={'Model Provider'}
+            label={'Model Provider'}
+            value={modelProviderState}
+            type={SELECTION_TYPES.LIST}
+            choices={Object.keys(QUERY_TRANSLATOR_CONFIG.availableClients)}
+            onChange={(e) => setModelProviderState(e)}
           />
-        ) : (
-          <>Select one of the available clients.</>
-        )}
-      </Dialog.Content>
-    </Dialog>
-  );
+          {modelProviderState ? (
+            <ClientSettings
+              handleClose={handleCloseWithSave}
+              modelProvider={modelProviderState}
+              settingState={settingsState}
+              setSettingsState={setSettingsState}
+            />
+          ) : (
+            <>Select one of the available clients.</>
+          )}
+        </Dialog.Content>
+      </Dialog>
+    );
+  } else if (editDialogIsOpen === true) {
+    return (
+      <Dialog size='large' open={open} aria-labelledby='form-dialog-title'>
+        <Dialog.Header id='form-dialog-title'>View/Edit Questions & Answers</Dialog.Header>
+        <Dialog.Content>
+          <div>
+            <table style={{ marginBottom: 5, width: '100%' }}>
+              <thead>
+                <th>Question</th>
+                <th>Answer</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Row 1</td>
+                  <td>Row 2</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className='n-text-right'>
+            <Button onClick={handleCloseEditSolutions}>Back</Button>
+          </div>
+        </Dialog.Content>
+      </Dialog>
+    );
+  }
 };
 const mapStateToProps = (state) => ({
   clientSettings: getQueryTranslatorSettings(state),
