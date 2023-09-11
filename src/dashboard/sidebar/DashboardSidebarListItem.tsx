@@ -32,7 +32,7 @@ export const DashboardSidebarListItem = ({ title, selected, readonly, saved, onS
           {saved == false ? <b>(Draft)</b> : <></>}
           {title ? title : '(no title)'}
         </Button>
-        {readonly == false ? (
+        {readonly !== true ? (
           <IconButton
             aria-label={'new dashboard'}
             clean

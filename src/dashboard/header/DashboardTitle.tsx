@@ -14,6 +14,8 @@ import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 import { Tooltip } from '@mui/material';
+import NeoDashboardSidebarExportModal from '../sidebar/modal/DashboardSidebarExportModal';
+import NeoExportModal from '../../modal/ExportModal';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
@@ -143,6 +145,8 @@ export const NeoDashboardTitle = ({
                 dashboardSettings={dashboardSettings}
                 updateDashboardSetting={updateDashboardSetting}
               ></NeoSettingsModal>
+
+              <NeoExportModal />
               {/* Saving, loading, extensions, sharing is only enabled when the dashboard is editable. */}
               {editable ? <>{renderExtensionsButtons()}</> : <></>}
             </MenuItems>

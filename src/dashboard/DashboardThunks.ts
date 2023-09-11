@@ -333,13 +333,14 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
           callback([]);
           return;
         }
-        const result = records.map((r) => {
+        const result = records.map((r, index) => {
           return {
             uuid: r._fields[0],
             title: r._fields[1],
             date: r._fields[2],
             author: r._fields[3],
             version: r._fields[4],
+            index: index,
           };
         });
         callback(result);

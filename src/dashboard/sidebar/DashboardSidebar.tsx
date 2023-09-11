@@ -35,6 +35,7 @@ import NeoDashboardSidebarImportModal from './modal/DashboardSidebarImportModal'
 import { createUUID } from '../../utils/uuid';
 import NeoDashboardSidebarExportModal from './modal/DashboardSidebarExportModal';
 import NeoDashboardSidebarDeleteModal from './modal/DashboardSidebarDeleteModal';
+import NeoDashboardSidebarInfoModal from './modal/DashboardSidebarInfoModal';
 import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
 
@@ -94,6 +95,16 @@ export const NeoDashboardSidebar = ({
     // Retrieves list of all dashboards stored in a given database.
     loadDashboardListFromNeo4j(driver, dashboardDatabase, (list) => {
       setDashboards(list);
+
+      // Update the UI to reflect the currently selected dashboard.
+      if (dashboard && dashboard.uuid) {
+        const index = list.findIndex((element) => element.uuid == dashboard.uuid);
+        setSelectedDashboardIndex(index);
+        if (index == -1) {
+          // If we can't find the currently dashboard in the database, we are drafting a new one.
+          setDraft(true);
+        }
+      }
     });
   };
 
@@ -202,6 +213,15 @@ export const NeoDashboardSidebar = ({
         handleClose={() => setModalOpen(Modal.NONE)}
       />
 
+      <NeoDashboardSidebarInfoModal
+        open={modalOpen == Modal.INFO}
+        dashboard={dashboards[inspectedIndex]}
+        handleClose={() => {
+          setModalOpen(Modal.NONE);
+          setCachedDashboard('');
+        }}
+      />
+
       <NeoDashboardSidebarExportModal
         open={modalOpen == Modal.EXPORT}
         dashboard={cachedDashboard}
@@ -249,7 +269,12 @@ export const NeoDashboardSidebar = ({
             open={menuOpen == Menu.DASHBOARD}
             anchorEl={menuAnchor}
             handleInfoClicked={() => {
-              alert('todo');
+              setMenuOpen(Menu.NONE);
+              const d = dashboards[inspectedIndex];
+              loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (text) => {
+                setCachedDashboard(JSON.parse(text));
+              });
+              setModalOpen(Modal.INFO);
             }}
             handleLoadClicked={() => {
               setMenuOpen(Menu.NONE);
@@ -269,7 +294,6 @@ export const NeoDashboardSidebar = ({
               loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (text) => {
                 setCachedDashboard(JSON.parse(text));
               });
-
               setModalOpen(Modal.EXPORT);
             }}
             handleShareClicked={() => {
@@ -402,27 +426,28 @@ export const NeoDashboardSidebar = ({
           )}
           {dashboards
             .filter((d) => d.title.toLowerCase().includes(searchText.toLowerCase()))
-            .map((d, index) => {
+            .map((d) => {
+              // index stored in list
               return (
                 <DashboardSidebarListItem
-                  selected={!draft && selectedDashboardIndex == index}
+                  selected={!draft && selectedDashboardIndex == d.index}
                   title={d.title}
                   saved={true}
                   readonly={readonly}
                   onSelect={() => {
                     if (draft) {
-                      setInspectedIndex(index);
+                      setInspectedIndex(d.index);
                       setModalOpen(Modal.LOAD);
                     } else {
                       loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
                         loadDashboard(d.uuid, file);
-                        setSelectedDashboardIndex(index);
+                        setSelectedDashboardIndex(d.index);
                       });
                     }
                   }}
                   onSave={() => {}}
                   onSettingsOpen={(event) => {
-                    setInspectedIndex(index);
+                    setInspectedIndex(d.index);
                     setMenuOpen(Menu.DASHBOARD);
                     setMenuAnchor(event.currentTarget);
                   }}
