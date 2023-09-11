@@ -16,6 +16,7 @@ import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 import { Tooltip } from '@mui/material';
+import PageHeader from '../../component/page/PageHeader';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
@@ -101,6 +102,7 @@ export const NeoDashboardTitle = ({
         </div>
       ) : (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
+          <PageHeader title={dashboardTitle || 'NeoDash - Neo4j Dashboard Builder'} />
           <Typography variant='h3'>{dashboardTitle}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
             {editable ? (
