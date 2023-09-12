@@ -9,7 +9,7 @@ import ClientSettings from './ClientSettings';
 import { Dialog } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 import { Button } from '@neo4j-ndl/react';
-import { useState } from 'react';
+import QueryTranslatorSettingsModelExamples from './QueryTranslatorSettingsModelExamples';
 
 const QueryTranslatorSettingsModal = ({
   open,
@@ -45,7 +45,7 @@ const QueryTranslatorSettingsModal = ({
     setEditDialogIsOpen(false);
   };
 
-  if (editDialogIsOpen === false) {
+  if (!editDialogIsOpen) {
     return (
       <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>LLM-Powered Natural Language Queries</Dialog.Header>
@@ -87,32 +87,13 @@ const QueryTranslatorSettingsModal = ({
         </Dialog.Content>
       </Dialog>
     );
-  } else if (editDialogIsOpen === true) {
+  } 
     return (
-      <Dialog size='large' open={open} aria-labelledby='form-dialog-title'>
-        <Dialog.Header id='form-dialog-title'>View/Edit Questions & Answers</Dialog.Header>
-        <Dialog.Content>
-          <div>
-            <table style={{ marginBottom: 5, width: '100%' }}>
-              <thead>
-                <th>Question</th>
-                <th>Answer</th>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Row 1</td>
-                  <td>Row 2</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className='n-text-right'>
-            <Button onClick={handleCloseEditSolutions}>Back</Button>
-          </div>
-        </Dialog.Content>
-      </Dialog>
+      <QueryTranslatorSettingsModelExamples
+        handleCloseEditSolutions={handleCloseEditSolutions}
+      ></QueryTranslatorSettingsModelExamples>
     );
-  }
+  
 };
 const mapStateToProps = (state) => ({
   clientSettings: getQueryTranslatorSettings(state),
