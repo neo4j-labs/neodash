@@ -8,6 +8,10 @@
     "del-cli": "^5.0.0",
     "turbo": "^1.7.4"
   },
+  "resolutions": {
+    "hastscript": "7.2.0",
+    "property-information": "6.3.0"
+  },
   "scripts": {
     "clean:packages": "yarn dlx del-cli node_modules && yarn dlx del-cli **/*/node_modules && yarn dlx del-cli **/*/es && yarn dlx del-cli **/*/lib",
     "format:all": "turbo run format",

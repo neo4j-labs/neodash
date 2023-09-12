@@ -21,7 +21,7 @@
     }
   ],
   "scripts": {
-    "start": "yarn webpack-dev-server --colors --progress --no-info --mode development",
+    "start": "yarn webpack-dev-server --progress --mode development",
     "start:local": "yarn webpack-dev-server --config ./webpack.local.config.js --progress --mode development",
     "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
     "build": "yarn webpack --mode production --env production && cp -r public/* dist/",
@@ -34,8 +34,8 @@
   "keywords": [],
   "author": "Neo4j Labs",
   "dependencies": {
-    "@neo4j-ndl/base": "1.10.1",
-    "@neo4j-ndl/react": "1.10.2",
+    "@neo4j-ndl/base": "1.10.3",
+    "@neo4j-ndl/react": "1.10.7",
     "@neodash/engine": "^2.3.4",
     "@sentry/react": "^7.57.0",
     "@sentry/webpack-plugin": "^2.5.0",
@@ -80,6 +80,8 @@
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.12",
+    "@babel/plugin-proposal-class-properties": "^7.16.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.16.10",
     "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
