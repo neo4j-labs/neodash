@@ -1319,6 +1319,12 @@ export const REPORT_TYPES = {
         values: ['CONTAINS', 'STARTS WITH', 'ENDS WITH'],
         default: 'CONTAINS',
       },
+      disabled: {
+        label: 'Disable the field',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       caseSensitive: {
         label: 'Case Sensitive Search',
         type: SELECTION_TYPES.LIST,

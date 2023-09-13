@@ -13,6 +13,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       ? props.settings.defaultValue
       : '';
 
+  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
   const getInitialValue = (value, multi) => {
     if (value && Array.isArray(value)) {
       return multi ? value : null;
@@ -125,6 +126,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
+        disabled={disabled}
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
           maxWidth: 'calc(100% - 40px)',
