@@ -65,7 +65,7 @@ const QueryTranslatorSettingsModal = ({
             <Button>View/Edit Saved Q&As</Button>
           </div>
           <NeoSetting
-            style={{ marginLeft: '0', marginRight: '0' }}
+            style= {{ marginLeft: '0', marginRight: '0' }}
             key={'Model Provider'}
             name={'Model Provider'}
             label={'Model Provider'}
@@ -87,14 +87,17 @@ const QueryTranslatorSettingsModal = ({
         </Dialog.Content>
       </Dialog>
     );
-  } 
-    return (
-      <QueryTranslatorSettingsModelExamples
-        handleCloseEditSolutions={handleCloseEditSolutions}
-      ></QueryTranslatorSettingsModelExamples>
-    );
-  
+  }
+  return (
+    <QueryTranslatorSettingsModelExamples
+      handleCloseEditSolutions={handleCloseEditSolutions}
+      open = {open}
+      handleCloseWithoutSave={handleCloseWithoutSave}
+    ></QueryTranslatorSettingsModelExamples>
+  );
 };
+
+
 const mapStateToProps = (state) => ({
   clientSettings: getQueryTranslatorSettings(state),
   modelProvider: getModelProvider(state),
