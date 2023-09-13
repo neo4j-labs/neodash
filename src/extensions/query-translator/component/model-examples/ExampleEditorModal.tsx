@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
 import { getModelExamples } from '../../state/QueryTranslatorSelector';
 import { Dialog, Button, Textarea, Typography } from '@neo4j-ndl/react';
-import { updateModelExample } from '../../state/QueryTranslatorActions';
+import { addModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDatabase } from '../../../../settings/SettingsSelectors';
 import { checkModelExampleAndSubmit } from './utils';
@@ -15,8 +15,8 @@ const ExampleEditorModal = ({
   exampleEditorIsOpen,
   setExampleEditorIsOpen,
 }) => {
-  const [question, setQuestion] = useState(examples[index].question);
-  const [answer, setAnswer] = useState(examples[index].answer);
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
   const [questionErrorMessage, setQuestionErrorMessage] = useState('');
   const [answerErrorMessage, setAnswerErrorMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -24,6 +24,19 @@ const ExampleEditorModal = ({
   const handleCloseEditor = () => {
     setExampleEditorIsOpen(false);
   };
+
+  useEffect(()=> {
+    console.log(index);
+    if (index !== null && examples && examples[index]) {
+      setQuestion(examples[index].question);
+      setAnswer(examples[index].answer);
+    }
+    if (index === null) {
+      setQuestion('');
+      setAnswer('');
+    }
+  }, [index, examples]);
+
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
@@ -47,7 +60,15 @@ const ExampleEditorModal = ({
   // Function to handle form submission
   const handleFormSubmit = (question, answer) => {
     console.log('Form submitted');
+    /* If the current index state has a value, use it 
+    to update the Q&A, otherwise, create a new one*/
+    if (index !== null && examples && examples[index]) {
     updateModelExample(index, question, answer);
+    } else {
+      /*Checking to see if parameters are thruthy*/
+      console.log('Question: '+ question+', Answer: ' + answer)
+      addModelExample(question, answer);
+    }
     // Reset the form and hide it
     setExampleEditorIsOpen(false);
   };
@@ -63,10 +84,7 @@ const ExampleEditorModal = ({
       <Dialog.Content>
         <div
           style={{
-            backgroundColor: '#fff' /*
-            padding: '20px',
-            border: '1px solid #ccc',
-            borderRadius: '5px',</Dialog.Content>*/,
+            backgroundColor: '#fff',
             width: '100%',
             margin: '10px auto',
           }}
@@ -93,7 +111,6 @@ const ExampleEditorModal = ({
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
               />
-              {/* <textarea id='answer' value={answer} onChange={(e) => setAnswer(e.target.value)} className='input-field' /> */}
             </div>
             <p className='n-text-palette-danger-text'> {errorMessage}</p>
             <div className='n-text-right n-pt-2'>
@@ -120,6 +137,10 @@ const mapStateToProps = (state, ownProps) => ({
 // Function to launch an action to modify the state
 const mapDispatchToProps = (dispatch) => ({
   updateModelExample: (index, question, answer) => dispatch(updateModelExample(index, question, answer)),
+  addModelExample: (question, answer) => {
+    dispatch(addModelExample(question, answer));
+    console.log('(line 142, editor)Model being dispatched. Question is: ' + question +', answer is: ' + answer);
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExampleEditorModal);

@@ -19,12 +19,18 @@ const QueryTranslatorSettingsModelExamples = ({
   // updateModelExample,
 }) => {
   const [exampleEditorIsOpen, setExampleEditorIsOpen] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState<number | null>(0);
 
-  const handleOpenEditorModal = (index: number) => {
+  const handleEdit = (index: number) => {
     setIndex(index);
     setExampleEditorIsOpen(true);
   };
+
+  //New function which passes no index value. This tells the form to create new example instead of editing
+  const handleAdd = () => {
+    setIndex(null);
+    setExampleEditorIsOpen(true);
+  }
 
   if (!exampleEditorIsOpen) {
     return (
@@ -59,7 +65,7 @@ const QueryTranslatorSettingsModelExamples = ({
                     <td className='n-w-min n-float-right n-text-right'>
                       <IconButton
                         className='n-float-right n-text-right'
-                        onClick={() => handleOpenEditorModal(index)}
+                        onClick={() => handleEdit(index)}
                         aria-label={'edit'}
                         size='large'
                         clean
@@ -73,6 +79,8 @@ const QueryTranslatorSettingsModelExamples = ({
             </table>
           </div>
           <div className='n-text-right'>
+            {/* Add Q*A button added with similar function to handleEdit */}
+            <Button onClick={handleAdd}>Add Q&A</Button>
             <Button onClick={handleCloseEditSolutions}>Back</Button>
           </div>
         </Dialog.Content>
