@@ -9,7 +9,7 @@ import ClientSettings from './ClientSettings';
 import { Dialog } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 import { Button } from '@neo4j-ndl/react';
-import QueryTranslatorSettingsModelExamples from './QueryTranslatorSettingsModelExamples';
+import QueryTranslatorSettingsModelExamples from './model-examples/QueryTranslatorSettingsModelExamples';
 
 const QueryTranslatorSettingsModal = ({
   open,
@@ -65,7 +65,7 @@ const QueryTranslatorSettingsModal = ({
             <Button>View/Edit Saved Q&As</Button>
           </div>
           <NeoSetting
-            style= {{ marginLeft: '0', marginRight: '0' }}
+            style={{ marginLeft: '0', marginRight: '0' }}
             key={'Model Provider'}
             name={'Model Provider'}
             label={'Model Provider'}
@@ -91,12 +91,11 @@ const QueryTranslatorSettingsModal = ({
   return (
     <QueryTranslatorSettingsModelExamples
       handleCloseEditSolutions={handleCloseEditSolutions}
-      open = {open}
+      open={open}
       handleCloseWithoutSave={handleCloseWithoutSave}
     ></QueryTranslatorSettingsModelExamples>
   );
 };
-
 
 const mapStateToProps = (state) => ({
   clientSettings: getQueryTranslatorSettings(state),

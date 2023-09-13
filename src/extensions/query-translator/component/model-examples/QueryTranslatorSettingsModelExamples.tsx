@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { getModelExamples } from '../state/QueryTranslatorSelector';
+import { getModelExamples } from '../../state/QueryTranslatorSelector';
 
 import { Dialog } from '@neo4j-ndl/react';
 import { Button, IconButton } from '@neo4j-ndl/react';
-import { deleteModelExample, updateModelExample } from '../state/QueryTranslatorActions';
+import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
 import { TrashIconOutline } from '@neo4j-ndl/react/icons';
 import { PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import ExampleEditorModal from './ExampleEditorModal';
@@ -48,7 +48,7 @@ const QueryTranslatorSettingsModelExamples = ({
                         className='n-float-right n-text-right'
                         style={{ color: 'red' }}
                         aria-label='remove'
-                        onClick={() => deleteModelExample(example.index)}
+                        onClick={() => deleteModelExample(index)}
                         size='large'
                         clean
                       >
@@ -59,7 +59,7 @@ const QueryTranslatorSettingsModelExamples = ({
                     <td className='n-w-min n-float-right n-text-right'>
                       <IconButton
                         className='n-float-right n-text-right'
-                        onClick={() => handleOpenEditorModal(example.index)}
+                        onClick={() => handleOpenEditorModal(index)}
                         aria-label={'edit'}
                         size='large'
                         clean
@@ -78,7 +78,7 @@ const QueryTranslatorSettingsModelExamples = ({
         </Dialog.Content>
       </Dialog>
     );
-  } else
+  } 
     return (
       <ExampleEditorModal
         index={index}
@@ -86,6 +86,7 @@ const QueryTranslatorSettingsModelExamples = ({
         setExampleEditorIsOpen={setExampleEditorIsOpen}
       ></ExampleEditorModal>
     );
+  
 };
 
 // Function to access the state and pass to the component some parameters

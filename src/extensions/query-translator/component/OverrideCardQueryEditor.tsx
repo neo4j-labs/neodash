@@ -17,7 +17,7 @@ import {
   setSessionStoragePrepopulationReportFunction,
 } from '../../state/ExtensionActions';
 import { getPrepopulateReportExtension } from '../../state/ExtensionSelectors';
-import QuestionAnswerForm from './QuestionAnswerForm';
+import QuestionAnswerForm from './model-examples/QuestionAnswerForm';
 
 // TODO: right now if we change the database in the cardSelector, it should forgot the card history
 export const NeoOverrideCardQueryEditor = ({

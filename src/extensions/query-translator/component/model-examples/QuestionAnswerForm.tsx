@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { getDatabase } from '../../../settings/SettingsSelectors';
-import { validateQuery } from '../../../utils/ReportUtils';
-import { addModelExample } from '../state/QueryTranslatorActions';
+import { getDatabase } from '../../../../settings/SettingsSelectors';
+import { addModelExample } from '../../state/QueryTranslatorActions';
 import { Button, Textarea, Typography } from '@neo4j-ndl/react';
+import { checkModelExampleAndSubmit } from './utils';
 
 const QuestionAnswerForm = ({ setShowForm, database, addModelExample }) => {
   const [question, setQuestion] = useState('');
@@ -15,43 +15,6 @@ const QuestionAnswerForm = ({ setShowForm, database, addModelExample }) => {
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-
-    // If both fields are filled, reset the error message
-    setQuestionErrorMessage('');
-    setAnswerErrorMessage('');
-    setErrorMessage('');
-
-    // Check if either question or answer is empty
-    if (!question && !answer) {
-      setErrorMessage('Both fields must be filled');
-      return;
-    }
-
-    if (!question) {
-      setQuestionErrorMessage('Field must be filled');
-      return; // Don't proceed with submission
-    }
-
-    if (!answer) {
-      setAnswerErrorMessage('Field must be filled');
-      return; // Don't proceed with submission
-    }
-
-    // Proceed with submission
-    let isValid = await validateQuery(answer, driver, database);
-
-    if (!isValid) {
-      setErrorMessage('The answer is not a valid Cypher query.');
-      return; // Don't proceed with submission
-    }
-
-    handleFormSubmit(question, answer);
-    setQuestion('');
-    setAnswer('');
-  }
-
   // Function to handle form submission
   const handleFormSubmit = (question, answer) => {
     // Dispatch the addModelExample action with the question and answer
@@ -60,6 +23,23 @@ const QuestionAnswerForm = ({ setShowForm, database, addModelExample }) => {
     // Reset the form and hide it
     setShowForm(false);
   };
+
+  async function handleAsyncSubmit(e) {
+    e.preventDefault();
+
+    await checkModelExampleAndSubmit(
+      question,
+      setQuestion,
+      answer,
+      setAnswer,
+      driver,
+      database,
+      handleFormSubmit,
+      setQuestionErrorMessage,
+      setAnswerErrorMessage,
+      setErrorMessage
+    );
+  }
 
   const handleFormClose = () => {
     // Reset the form and hide it
@@ -74,15 +54,17 @@ const QuestionAnswerForm = ({ setShowForm, database, addModelExample }) => {
         border: '1px solid #ccc',
         borderRadius: '5px',
         width: '100%',
-        margin: '10px auto'
+        margin: '10px auto',
       }}
     >
-      <Typography variant='h4' className='n-mb-4'>Add Q&As</Typography>
+      <Typography variant='h4' className='n-mb-4'>
+        Add Q&As
+      </Typography>
       <p className='n-mb-4'>
         Add questions and answers to aid in the training of the AI models. This will increase AI accuracy and
         performance.
       </p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleAsyncSubmit}>
         <div className='n-mb-6'>
           <Textarea
             errorText={questionErrorMessage}

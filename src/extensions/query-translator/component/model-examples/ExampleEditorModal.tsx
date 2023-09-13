@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
-import { getModelExamples } from '../state/QueryTranslatorSelector';
+import { getModelExamples } from '../../state/QueryTranslatorSelector';
 import { Dialog, Button, Textarea, Typography } from '@neo4j-ndl/react';
-import { updateModelExample } from '../state/QueryTranslatorActions';
+import { updateModelExample } from '../../state/QueryTranslatorActions';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { validateQuery } from '../../../utils/ReportUtils';
-import { getDatabase } from '../../../settings/SettingsSelectors';
+import { getDatabase } from '../../../../settings/SettingsSelectors';
+import { checkModelExampleAndSubmit } from './utils';
 
 const ExampleEditorModal = ({
   examples,
@@ -15,8 +15,8 @@ const ExampleEditorModal = ({
   exampleEditorIsOpen,
   setExampleEditorIsOpen,
 }) => {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [question, setQuestion] = useState(examples[index].question);
+  const [answer, setAnswer] = useState(examples[index].answer);
   const [questionErrorMessage, setQuestionErrorMessage] = useState('');
   const [answerErrorMessage, setAnswerErrorMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -25,63 +25,29 @@ const ExampleEditorModal = ({
     setExampleEditorIsOpen(false);
   };
 
-  useEffect(() => {
-    console.log('Index: ' + index);
-    // if (index !== null && examples && examples[index]) {
-    //   setQuestion(examples[index].question);
-    //   setAnswer(examples[index].answer);
-    // }
-    setQuestion(examples[0].question);
-    setAnswer(examples[0].answer);
-    // setQuestion('Question');
-    // setAnswer('Answer');
-  }, [index, examples]);
-
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    console.log('Index: ' + index + ', question: ' + question + ', answer is: ' + answer);
-
-    // If both fields are filled, reset the error message
-    setQuestionErrorMessage('');
-    setAnswerErrorMessage('');
-    setErrorMessage('');
-
-    // Check if either question or answer is empty
-    if (!question && !answer) {
-      setErrorMessage('Both fields must be filled');
-      return;
-    }
-
-    if (!question) {
-      setQuestionErrorMessage('Field must be filled');
-      return; // Don't proceed with submission
-    }
-
-    if (!answer) {
-      setAnswerErrorMessage('Field must be filled');
-      return; // Don't proceed with submission
-    }
-
-    // Proceed with submission
-    let isValid = await validateQuery(answer, driver, database);
-
-    if (!isValid) {
-      setErrorMessage('The answer is not a valid Cypher query.');
-      return; // Don't proceed with submission
-    }
-
-    handleFormSubmit(question, answer);
-    setQuestion('');
-    setAnswer('');
+    await checkModelExampleAndSubmit(
+      question,
+      setQuestion,
+      answer,
+      setAnswer,
+      driver,
+      database,
+      handleFormSubmit,
+      setQuestionErrorMessage,
+      setAnswerErrorMessage,
+      setErrorMessage
+    );
   }
 
   // Function to handle form submission
   const handleFormSubmit = (question, answer) => {
     console.log('Form submitted');
-
+    updateModelExample(index, question, answer);
     // Reset the form and hide it
     setExampleEditorIsOpen(false);
   };

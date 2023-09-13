@@ -180,7 +180,6 @@ export const ClientSettings = ({
             style={{ float: 'right', marginRight: '30px' }}
             onClick={() => {
               handleClose();
-              testFunction();
             }}
             floating
           >
