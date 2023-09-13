@@ -43,7 +43,6 @@ const QueryTranslatorSettingsModelExamples = ({
                     <td className='n-w-1/2'>{example.question}</td>
                     <td className='n-w-auto'>{example.answer}</td>
 
-                    //Delete button
                     <td className='n-w-min n-float-right n-text-right'>
                       <IconButton
                         className='n-float-right n-text-right'
@@ -57,7 +56,6 @@ const QueryTranslatorSettingsModelExamples = ({
                       </IconButton>
                     </td>
 
-                    //Edit button
                     <td className='n-w-min n-float-right n-text-right'>
                       <IconButton
                         className='n-float-right n-text-right'
