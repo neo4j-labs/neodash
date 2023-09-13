@@ -126,23 +126,21 @@ export abstract class ModelClient {
     return res + tmp.join('');
   }
 
-  async manageMessageHistory(database, schema, schemaSampling, inputMessage, tmpHistory, reportType, examples) {
+  async manageMessageHistory(database, schema, schemaSampling, inputMessage, history, reportType, examples) {
     // If empty, the first message will be the task definition
-    if (tmpHistory.length == 0) {
+    if (history.length == 0) {
       // The schema can be fetched in full or in sample mode (the second one is faster but less accurate)
       schema = schemaSampling ? await this.generateSchemaSample(database) : await this.generateSchema(database);
-      tmpHistory.push(this.addSystemMessage(this.getTaskDefinition(schema)));
+      history.push(this.addSystemMessage(this.getTaskDefinition(schema)));
     }
     // The Examples are always refreshed and always in second position
     if (examples.length > 0) {
-      // If a message is already there, we need to shift the whole array
-      if (tmpHistory[1]) {
-        tmpHistory = [tmpHistory[0], undefined, ...tmpHistory.slice(1)];
-      }
-      tmpHistory[1] = this.addSystemMessage(this.getExamplePrompt(examples));
+      history[1] = this.addSystemMessage(this.getExamplePrompt(examples));
+    } else {
+      history[1] = this.addSystemMessage('There are no examples provided.');
     }
-    tmpHistory.push(this.addUserMessage(inputMessage, reportType));
-    return tmpHistory;
+    history.push(this.addUserMessage(inputMessage, reportType, true));
+    return history;
   }
 
   /**
@@ -198,6 +196,7 @@ export abstract class ModelClient {
         modelAnswer = await this.chatCompletion(tmpHistory);
         tmpHistory.push(modelAnswer);
         console.log(tmpHistory);
+
         // and try to validate it
         let validationResult = await this.validateQuery(modelAnswer, database);
         isValidated = validationResult[0];
@@ -207,10 +206,15 @@ export abstract class ModelClient {
         if (!isValidated) {
           tmpHistory.push(this.addErrorMessage(errorMessage));
         } else {
-          if (newHistory.length == 0 && schema) {
-            newHistory.push(this.addSystemMessage(this.getTaskDefinition(schema)));
-          }
-          newHistory.push(this.addUserMessage(inputMessage, reportType, true));
+          newHistory = await this.manageMessageHistory(
+            database,
+            schema,
+            schemaSampling,
+            inputMessage,
+            newHistory,
+            reportType,
+            examples
+          );
           newHistory.push(modelAnswer);
           query = this.getMessageContent(modelAnswer);
         }

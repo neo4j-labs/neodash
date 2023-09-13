@@ -26,11 +26,11 @@ const QueryTranslatorSettingsModelExamples = ({
     setExampleEditorIsOpen(true);
   };
 
-  //New function which passes no index value. This tells the form to create new example instead of editing
+  // New function which passes no index value. This tells the form to create new example instead of editing
   const handleAdd = () => {
     setIndex(null);
     setExampleEditorIsOpen(true);
-  }
+  };
 
   if (!exampleEditorIsOpen) {
     return (
@@ -86,15 +86,16 @@ const QueryTranslatorSettingsModelExamples = ({
         </Dialog.Content>
       </Dialog>
     );
-  } 
-    return (
-      <ExampleEditorModal
-        index={index}
-        exampleEditorIsOpen={exampleEditorIsOpen}
-        setExampleEditorIsOpen={setExampleEditorIsOpen}
-      ></ExampleEditorModal>
-    );
-  
+  }
+  return (
+    <ExampleEditorModal
+      index={index}
+      question={index && examples[index].question ? examples[index].question : ''}
+      answer={index && examples[index].answer ? examples[index].answer : ''}
+      exampleEditorIsOpen={exampleEditorIsOpen}
+      setExampleEditorIsOpen={setExampleEditorIsOpen}
+    ></ExampleEditorModal>
+  );
 };
 
 // Function to access the state and pass to the component some parameters
