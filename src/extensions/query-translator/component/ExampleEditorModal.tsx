@@ -24,7 +24,6 @@ const ExampleEditorModal = ({
   const handleCloseEditor = () => {
     setExampleEditorIsOpen(false);
   };
-  console.log('i: ' + index);
 
   useEffect(() => {
     console.log('Index: ' + index);

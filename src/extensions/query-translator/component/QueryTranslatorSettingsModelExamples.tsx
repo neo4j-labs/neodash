@@ -26,10 +26,6 @@ const QueryTranslatorSettingsModelExamples = ({
     setExampleEditorIsOpen(true);
   };
 
-  useEffect(() => {
-    console.log('Index: ' + index)
-  }, [index]);
-
   if (!exampleEditorIsOpen) {
     return (
       <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
