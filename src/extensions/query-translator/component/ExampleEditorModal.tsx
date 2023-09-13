@@ -7,7 +7,14 @@ import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { validateQuery } from '../../../utils/ReportUtils';
 import { getDatabase } from '../../../settings/SettingsSelectors';
 
-const ExampleEditorModal = ({ examples, database, updateModelExample, index, exampleEditorIsOpen, setExampleEditorIsOpen }) => {
+const ExampleEditorModal = ({
+  examples,
+  database,
+  updateModelExample,
+  index,
+  exampleEditorIsOpen,
+  setExampleEditorIsOpen,
+}) => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [questionErrorMessage, setQuestionErrorMessage] = useState('');
@@ -17,12 +24,18 @@ const ExampleEditorModal = ({ examples, database, updateModelExample, index, exa
   const handleCloseEditor = () => {
     setExampleEditorIsOpen(false);
   };
+  console.log('i: ' + index);
 
   useEffect(() => {
-    if (index !== null && examples && examples[index]) {
-      setQuestion(examples[index].question);
-      setAnswer(examples[index].answer);
-    }
+    console.log('Index: ' + index);
+    // if (index !== null && examples && examples[index]) {
+    //   setQuestion(examples[index].question);
+    //   setAnswer(examples[index].answer);
+    // }
+    setQuestion(examples[0].question);
+    setAnswer(examples[0].answer);
+    // setQuestion('Question');
+    // setAnswer('Answer');
   }, [index, examples]);
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -30,7 +43,7 @@ const ExampleEditorModal = ({ examples, database, updateModelExample, index, exa
   async function handleSubmit(e) {
     e.preventDefault();
 
-    console.log('Index: ' + index + ', question: ' + question + ', answer is: ' + answer)
+    console.log('Index: ' + index + ', question: ' + question + ', answer is: ' + answer);
 
     // If both fields are filled, reset the error message
     setQuestionErrorMessage('');
@@ -68,7 +81,7 @@ const ExampleEditorModal = ({ examples, database, updateModelExample, index, exa
 
   // Function to handle form submission
   const handleFormSubmit = (question, answer) => {
-    console.log('Form submitted')
+    console.log('Form submitted');
 
     // Reset the form and hide it
     setExampleEditorIsOpen(false);
@@ -85,10 +98,10 @@ const ExampleEditorModal = ({ examples, database, updateModelExample, index, exa
       <Dialog.Content>
         <div
           style={{
-            backgroundColor: '#fff',/*
+            backgroundColor: '#fff' /*
             padding: '20px',
             border: '1px solid #ccc',
-            borderRadius: '5px',</Dialog.Content>*/
+            borderRadius: '5px',</Dialog.Content>*/,
             width: '100%',
             margin: '10px auto',
           }}

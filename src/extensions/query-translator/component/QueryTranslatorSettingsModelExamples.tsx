@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getModelExamples } from '../state/QueryTranslatorSelector';
 
@@ -19,12 +19,16 @@ const QueryTranslatorSettingsModelExamples = ({
   // updateModelExample,
 }) => {
   const [exampleEditorIsOpen, setExampleEditorIsOpen] = useState(false);
-  const [index, setIndex] = useState(null);
+  const [index, setIndex] = useState(0);
 
-  const handleOpenEditorModal = (index) => {
+  const handleOpenEditorModal = (index: number) => {
     setIndex(index);
     setExampleEditorIsOpen(true);
   };
+
+  useEffect(() => {
+    console.log('Index: ' + index)
+  }, [index]);
 
   if (!exampleEditorIsOpen) {
     return (
