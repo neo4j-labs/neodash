@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { getModelExamples } from '../../state/QueryTranslatorSelector';
-
-import { Dialog } from '@neo4j-ndl/react';
-import { Button, IconButton } from '@neo4j-ndl/react';
+import { useTable, usePagination } from 'react-table';
+import { Dialog, IconButton } from '@neo4j-ndl/react';
+import { Button } from '@neo4j-ndl/react';
 import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
-import { TrashIconOutline } from '@neo4j-ndl/react/icons';
-import { PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import ExampleEditorModal from './ExampleEditorModal';
+import { PencilSquareIconOutline, TrashIconOutline } from '@neo4j-ndl/react/icons';
+import ExampleDisplayTable from './ExampleDisplayTable';
 
 const QueryTranslatorSettingsModelExamples = ({
   handleCloseEditSolutions,
@@ -37,49 +37,8 @@ const QueryTranslatorSettingsModelExamples = ({
       <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>View/Edit Questions & Answers</Dialog.Header>
         <Dialog.Content>
-          <div>
-            <table style={{ marginBottom: 5, width: '100%' }}>
-              <thead>
-                <th>Question</th>
-                <th>Answer</th>
-              </thead>
-              <tbody>
-                {examples.map((example, index) => (
-                  <tr key={index}>
-                    <td className='n-w-1/2'>{example.question}</td>
-                    <td className='n-w-auto'>{example.answer}</td>
-
-                    <td className='n-w-min n-float-right n-text-right'>
-                      <IconButton
-                        className='n-float-right n-text-right'
-                        style={{ color: 'red' }}
-                        aria-label='remove'
-                        onClick={() => deleteModelExample(index)}
-                        size='large'
-                        clean
-                      >
-                        <TrashIconOutline aria-label={'remove'} />
-                      </IconButton>
-                    </td>
-
-                    <td className='n-w-min n-float-right n-text-right'>
-                      <IconButton
-                        className='n-float-right n-text-right'
-                        onClick={() => handleEdit(index)}
-                        aria-label={'edit'}
-                        size='large'
-                        clean
-                      >
-                        <PencilSquareIconOutline aria-label={'edit'} />
-                      </IconButton>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
           <div className='n-text-right'>
-            {/* Add Q*A button added with similar function to handleEdit */}
             <Button onClick={handleAdd}>Add Q&A</Button>
             <Button onClick={handleCloseEditSolutions}>Back</Button>
           </div>
