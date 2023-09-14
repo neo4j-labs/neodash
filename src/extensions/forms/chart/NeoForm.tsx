@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { ChartProps } from '../../../chart/Chart';
-import { Button, TextInput, Tag } from '@neo4j-ndl/react';
+import { Button } from '@neo4j-ndl/react';
 import { PlayIconSolid } from '@neo4j-ndl/react/icons';
 import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponent';
 import { REPORT_LOADING_ICON } from '../../../report/Report';
