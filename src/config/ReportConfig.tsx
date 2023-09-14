@@ -357,6 +357,17 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      nodeRedirectionEnabled: {
+        label: 'Node Redirection Enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      pageIdAndParameterName: {
+        label: '<PageId>:<ParameterName>',
+        type: SELECTION_TYPES.TEXT,
+        default: '0:neodash_ntg6_hu_sw_title_100', // For our use neodash_ntg6_hu_sw_title_100 is set as default and page number is 0
+      },
     },
   },
   bar: {

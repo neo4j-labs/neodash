@@ -12,6 +12,7 @@ import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
 import { createPortal } from 'react-dom';
+import LaunchIcon from '@mui/icons-material/Launch';
 
 /**
  * Renders the context menu that is present when a user right clicks on a node or relationship in the graph.
@@ -60,6 +61,24 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               : ''
           }
         />
+        {/* Redirects to the page and sets the global parameter */}
+        {props.interactivity.nodeRedirectionEnabled && (
+          <IconMenuItem
+            rightIcon={<LaunchIcon className='btn-icon-base-r' />}
+            label='Redirect'
+            onClick={() => {
+              const { interactivity } = props;
+              const { pageIdAndParameterName, selectedEntity } = interactivity;
+              const title = selectedEntity?.properties?.title || '';
+              const [pageId, paramaterName] = pageIdAndParameterName.split(':');
+              interactivity.setContextMenuOpen(false);
+              if (title) {
+                interactivity?.setPageNumber(pageId);
+                interactivity?.setGlobalParameter(paramaterName, selectedEntity?.properties.title);
+              }
+            }}
+          ></IconMenuItem>
+        )}
         <IconMenuItem
           rightIcon={<MagnifyingGlassCircleIconOutline className='btn-icon-base-r' />}
           label='Inspect'
