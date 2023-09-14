@@ -1,10 +1,15 @@
 // TODO: this file (in a way) belongs to chart/parameter/ParameterSelectionChart. It would make sense to move it there
 
 import React from 'react';
-import { Dialog } from '@neo4j-ndl/react';
+import { Button, Dialog } from '@neo4j-ndl/react';
 import ParameterSelectCardSettings from '../../../chart/parameter/ParameterSelectCardSettings';
 import NeoCardSettingsFooter from '../../../card/settings/CardSettingsFooter';
-
+import {
+  AdjustmentsHorizontalIconOutline,
+  PencilIconOutline,
+  PlusIconOutline,
+  XMarkIconOutline,
+} from '@neo4j-ndl/react/icons';
 const NeoFormCardSettingsModal = ({ open, setOpen, index, formFields, setFormFields, database, extensions }) => {
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = React.useState(false);
 
@@ -37,6 +42,18 @@ const NeoFormCardSettingsModal = ({ open, setOpen, index, formFields, setFormFie
                 setFormFields(newFormFields);
               }}
             />
+
+            <Button
+              onClick={() => {
+                setOpen(false);
+              }}
+              size='medium'
+              floating
+              style={{ float: 'right' }}
+            >
+              Save
+            </Button>
+            <br />
             <br />
             <NeoCardSettingsFooter
               type={'select'}
