@@ -1,4 +1,5 @@
 import { makeStyles } from '@mui/styles';
+import { number } from 'prop-types';
 import { EntityType } from '../../chart/Utils';
 
 /**
@@ -128,12 +129,14 @@ export const evaluateRules = (entity, customization, defaultValue, rules, entity
  * @return whether the condition is met.
  */
 const evaluateCondition = (realValue, condition, ruleValue) => {
+  console.log(ruleValue);
+  console.log(realValue);
   if (!ruleValue || !condition || !realValue) {
     // If something is null, rules are never met.
     return false;
   }
-  if (!isNaN(parseFloat(ruleValue))) {
-    ruleValue = parseFloat(ruleValue);
+  if (!isNaN(Number(ruleValue))) {
+    ruleValue = Number(ruleValue);
   }
   if (condition == '=') {
     return realValue == ruleValue;
