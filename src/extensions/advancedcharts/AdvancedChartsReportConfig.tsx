@@ -8,6 +8,7 @@ import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
 import NeoAreaMapChart from './chart/areamap/AreaMapChart';
+import NeoGanttChart from './chart/gantt/GanttChart';
 
 export const ADVANCED_REPORT_TYPES = {
   gauge: {
@@ -998,6 +999,32 @@ export const ADVANCED_REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+    },
+  },
+  gantt: {
+    label: 'Gantt Chart',
+    helperText: <div>A gantt chart requires nodes (events) and relationships (dependencies).</div>,
+    maxRecords: 300,
+    component: NeoGanttChart,
+    useNodePropsAsFields: true,
+    autoAssignSelectedProperties: true,
+    selection: {
+      index: {
+        label: 'Code',
+        type: SELECTION_TYPES.TEXT,
+      },
+      value: {
+        label: 'Value',
+        type: SELECTION_TYPES.NUMBER,
+        key: true,
+      },
+    },
+    settings: {
+      placeholder: {
+        label: 'Placeholder',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Default',
       },
     },
   },
