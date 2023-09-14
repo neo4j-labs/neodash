@@ -4,14 +4,23 @@ import { getDiscoveryDataInfo } from './SSOUtils';
 import { ShieldCheckIconOutline } from '@neo4j-ndl/react/icons';
 import { Button, IconButton } from '@neo4j-ndl/react';
 
-export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, onClick }) => {
+export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, onClick, providers }) => {
   const [savedSSOProviders, setSSOProviders] = useState([]);
   const [discoveryUrlValidated, setDiscoveryUrlValidated] = useState(undefined);
+
+  const filterByProvidersList = (discoveredProviders, validProviders) => {
+    if (validProviders.length == 0) {
+      return discoveredProviders;
+    }
+    return validProviders.length == 0
+      ? discoveredProviders
+      : discoveredProviders.filter((p) => validProviders.includes(p.id));
+  };
   const attemptManualSSOProviderRetrieval = () => {
     // Do an extra check to see if the hostname provides some SSO provider configuration.
     getDiscoveryDataInfo(`https://${hostname}:${port}`)
       .then((mergedSSOProviders) => {
-        setSSOProviders(mergedSSOProviders);
+        setSSOProviders(filterByProvidersList(mergedSSOProviders, providers));
         if (mergedSSOProviders.length == 0) {
           setDiscoveryUrlValidated(undefined);
         } else {
@@ -26,7 +35,7 @@ export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, 
     // First, try to get the SSO discovery URL from the config.json configuration file and see if it contains anything.
     getDiscoveryDataInfo(discoveryAPIUrl)
       .then((mergedSSOProviders) => {
-        setSSOProviders(mergedSSOProviders);
+        setSSOProviders(filterByProvidersList(mergedSSOProviders, providers));
         if (mergedSSOProviders.length == 0) {
           attemptManualSSOProviderRetrieval();
         } else {

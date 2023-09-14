@@ -30,6 +30,7 @@ import {
   clearDesktopConnectionProperties,
   clearNotification,
   setSSOEnabled,
+  setSSOProviders,
   setStandaloneEnabled,
   setAboutModalOpen,
   setStandaloneMode,
@@ -340,6 +341,7 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
   let config = {
     ssoEnabled: false,
+    ssoProviders: [],
     ssoDiscoveryUrl: 'http://example.com',
     standalone: false,
     standaloneProtocol: 'neo4j',
@@ -377,6 +379,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     }
     const state = getState();
     dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
+    dispatch(setSSOProviders(config.ssoProviders));
 
     const { standalone } = config;
     dispatch(
