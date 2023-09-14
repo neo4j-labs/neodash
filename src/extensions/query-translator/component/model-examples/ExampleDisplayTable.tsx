@@ -1,8 +1,15 @@
 // ExampleDisplayTable.js
 import React from 'react';
 import { useTable, usePagination } from 'react-table';
-import { IconButton } from '@neo4j-ndl/react';
-import { TrashIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
+import { IconButton, TextInput } from '@neo4j-ndl/react';
+import {
+  TrashIconOutline,
+  PencilSquareIconOutline,
+  ChevronDoubleLeftIconOutline,
+  ChevronLeftIconOutline,
+  ChevronRightIconOutline,
+  ChevronDoubleRightIconOutline,
+} from '@neo4j-ndl/react/icons';
 
 const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
   const data = React.useMemo(() => examples, [examples]);
@@ -18,10 +25,10 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
         accessor: 'answer',
       },
       {
-        Header: 'Actions',
+        Header: '',
         accessor: 'actions',
         Cell: ({ row }) => (
-          <div className='n-w-min n-float-right n-text-right'>
+          <div className='n-float-right n-text-right n-w-[100px]'>
             <IconButton
               className='n-float-right n-text-right'
               style={{ color: 'red' }}
@@ -97,28 +104,44 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
           })}
         </tbody>
       </table>
-      <div className='pagination'>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
-        <span>
-          Page{' '}
+      <div className='pagination n-flex n-place-content-center n-my-[20px]'>
+        <IconButton
+          className='n-place-content-center'
+          onClick={() => gotoPage(0)}
+          aria-label={'edit'}
+          size='medium'
+          clean
+        >
+          <ChevronDoubleLeftIconOutline className='n-py-0' aria-label={'firstPage'} />
+        </IconButton>
+        <IconButton
+          className='n-place-content-center'
+          onClick={() => previousPage()}
+          aria-label={'previousPage'}
+          size='medium'
+          clean
+        >
+          <ChevronLeftIconOutline className='n-py-0' aria-label={'firstPage'} />
+        </IconButton>
+        <span className='n-mt-[6px]'>
+          &nbsp;Page&nbsp;
           <strong>
             {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          </strong>
+          &nbsp;
         </span>
-        <span>
-          | Go to page:{' '}
+        <span className='n-mt-[5px]'>&nbsp; | &nbsp;</span>
+        <span className='n-mt-1.5'>
+          Go to page:{' '}
           <input
+            style={{
+              width: '80px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              margin: '0px 3px',
+              padding: '0px 1px',
+            }}
+            className='n-w-[50px]'
             type='number'
             defaultValue={pageIndex + 1}
             onChange={(e) => {
@@ -126,19 +149,59 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
               gotoPage(page);
             }}
           />
-        </span>{' '}
+        </span>
+        <span className='n-mt-[5px]'>&nbsp; | &nbsp;</span>
         <select
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
           }}
+          className='n-float-right'
+          style={{
+            marginTop: '6px',
+            marginLeft: '3px',
+            marginRight: '3px',
+            height: '26px',
+            padding: '1px 5px',
+            fontSize: '16px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: 'white',
+            cursor: 'pointer',
+          }}
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
+          {[5, 10, 20, 30, 40].map((pageSize) => (
+            <option
+              key={pageSize}
+              value={pageSize}
+              style={{
+                padding: '5px',
+                fontSize: '14px',
+                backgroundColor: 'white',
+              }}
+            >
               Show {pageSize}
             </option>
           ))}
         </select>
+        <IconButton
+          className='n-place-content-center'
+          onClick={() => nextPage()}
+          aria-label={'nextPage'}
+          size='medium'
+          clean
+        >
+          <ChevronRightIconOutline className='n-py-0' aria-label={'firstPage'} />
+        </IconButton>
+        <IconButton
+          className='n-place-content-center n-mr-[3px]'
+          onClick={() => gotoPage(pageCount - 1)}
+          aria-label={'lastPage'}
+          size='medium'
+          clean
+        >
+          <ChevronDoubleRightIconOutline className='n-py-0' aria-label={'firstPage'} />
+        </IconButton>
       </div>
     </div>
   );

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { getModelExamples } from '../../state/QueryTranslatorSelector';
-import { useTable, usePagination } from 'react-table';
-import { Dialog, IconButton } from '@neo4j-ndl/react';
+import { Dialog } from '@neo4j-ndl/react';
 import { Button } from '@neo4j-ndl/react';
 import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
 import ExampleEditorModal from './ExampleEditorModal';
-import { PencilSquareIconOutline, TrashIconOutline } from '@neo4j-ndl/react/icons';
 import ExampleDisplayTable from './ExampleDisplayTable';
 
 const QueryTranslatorSettingsModelExamples = ({
@@ -14,9 +12,7 @@ const QueryTranslatorSettingsModelExamples = ({
   examples,
   open,
   handleCloseWithoutSave,
-  // To be used later
   deleteModelExample,
-  // updateModelExample,
 }) => {
   const [exampleEditorIsOpen, setExampleEditorIsOpen] = useState(false);
   const [index, setIndex] = useState<number | null>(0);
@@ -38,9 +34,9 @@ const QueryTranslatorSettingsModelExamples = ({
         <Dialog.Header id='form-dialog-title'>View/Edit Questions & Answers</Dialog.Header>
         <Dialog.Content>
           <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
-          <div className='n-text-right'>
-            <Button onClick={handleAdd}>Add Q&A</Button>
-            <Button onClick={handleCloseEditSolutions}>Back</Button>
+          <div>
+            <Button className='n-float-left' onClick={handleAdd}>Add Q&A</Button>
+            <Button className='n-float-right' onClick={handleCloseEditSolutions}>Back</Button>
           </div>
         </Dialog.Content>
       </Dialog>
