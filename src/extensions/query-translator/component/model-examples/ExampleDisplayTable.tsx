@@ -74,7 +74,7 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 10 }, // Set initial page index and page size
+      initialState: { pageIndex: 0, pageSize: 5 }, // Set initial page index and page size
     },
     usePagination // Enable pagination
   );
