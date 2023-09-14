@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
@@ -120,12 +120,18 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
+
+  useEffect(() => {
+    setInputValue(getInitialValue(props.parameterDisplayValue, multiSelector));
+    handleParametersUpdate(props.parameterValue, props.parameterDisplayValue, true);
+  }, [props.parameterValue]);
+
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
-        options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        options={extraRecords && extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
           maxWidth: 'calc(100% - 40px)',
           minWidth: `calc(100% - ${manualParameterSave ? '60' : '30'}px)`,
