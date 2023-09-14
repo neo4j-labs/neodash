@@ -34,6 +34,7 @@ const NeoField = ({
             value != null ? { label: valueLabel, value: value } : { label: defaultValueLabel, value: defaultValue },
           menuPlacement: 'auto',
           isDisabled: disabled,
+          menuPortalTarget: document.querySelector('body'),
         }}
         helpText={helperText}
         placeholder={placeholder}
