@@ -9,10 +9,7 @@ export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, 
   const [discoveryUrlValidated, setDiscoveryUrlValidated] = useState(undefined);
 
   const filterByProvidersList = (discoveredProviders, validProviders) => {
-    if (validProviders.length == 0) {
-      return discoveredProviders;
-    }
-    return validProviders.length == 0
+    return validProviders == null || validProviders.length == 0
       ? discoveredProviders
       : discoveredProviders.filter((p) => validProviders.includes(p.id));
   };
