@@ -9,6 +9,23 @@ import debounce from 'lodash/debounce';
 import { Banner, IconButton } from '@neo4j-ndl/react';
 import { PencilIconOutline, PlusIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import NeoFormCardSettingsModal from './NeoFormCardSettingsModal';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  MouseSensor,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  horizontalListSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { SortableList } from './list/NeoFormSortableList';
 
 const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSettingUpdate, onQueryUpdate }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -33,14 +50,31 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
     onReportSettingUpdate('formFields', newFormFields);
   }
 
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 5, // Enable sort function when dragging 10px
+    },
+  });
+
+  const keySensor = useSensor(KeyboardSensor, {
+    keyboardCodes: {
+      start: ['Space'],
+      cancel: ['Escape'],
+      end: ['Space'],
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, keySensor);
+
   const formFieldComponents = formFields.map((field, index) => {
     return (
       <Banner
         key={index}
+        id={index}
         description={
           <div>
             <span style={{ lineHeight: '32px' }}>
-              {index + 1}.{' '}
+              <SortableList.DragHandle />{' '}
               {formFields[index].settings.parameterName
                 ? `$${formFields[index].settings.parameterName}`
                 : '(undefined)'}
@@ -108,23 +142,26 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
 
       <div style={{ borderTop: '1px dashed lightgrey', width: '100%' }}>
         <span>Fields:</span>
-        {formFieldComponents}
-        {addFieldButton}
-      </div>
-
-      <div style={{ borderTop: '1px dashed lightgrey', width: '100%' }}>
-        <span>Form Submission Query:</span>
-        <NeoCodeEditorComponent
-          value={queryText}
-          editable={true}
-          language={'cypher'}
-          onChange={(value) => {
-            updateCypherQuery(value);
-          }}
-          placeholder={`Enter Cypher here...`}
+        <SortableList
+          items={formFieldComponents}
+          onChange={(e) => console.log(e)}
+          renderItem={(item, index) => <SortableList.Item id={index}>{item}</SortableList.Item>}
         />
-        <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>
-          This query is executed when the user submits the form.
+
+        <div style={{ borderTop: '1px dashed lightgrey', width: '100%' }}>
+          <span>Form Submission Query:</span>
+          <NeoCodeEditorComponent
+            value={queryText}
+            editable={true}
+            language={'cypher'}
+            onChange={(value) => {
+              updateCypherQuery(value);
+            }}
+            placeholder={`Enter Cypher here...`}
+          />
+          <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>
+            This query is executed when the user submits the form.
+          </div>
         </div>
       </div>
     </div>
