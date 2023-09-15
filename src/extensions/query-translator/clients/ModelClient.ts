@@ -121,7 +121,7 @@ export abstract class ModelClient {
   }
 
   getExamplePrompt(examples) {
-    let res = `Here some samples of questions and their answers: \n`;
+    let res = `Here are some samples of questions and their answers: \n`;
     let tmp = examples.map((ex) => `Question: ${ex.question} \nAnswer: ${ex.answer} \n`);
     return res + tmp.join('');
   }
