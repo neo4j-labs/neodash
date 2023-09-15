@@ -17,11 +17,11 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Question',
+        Header: 'Prompt',
         accessor: 'question',
       },
       {
-        Header: 'Answer',
+        Header: 'Cypher Query',
         accessor: 'answer',
       },
       {

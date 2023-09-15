@@ -61,9 +61,6 @@ const QueryTranslatorSettingsModal = ({
           </ul>
           <br />
           <br />
-          <div className='n-text-right n-pr-7' onClick={handleOpenEditSolutions}>
-            <Button>View/Edit Saved Q&As</Button>
-          </div>
           <NeoSetting
             style={{ marginLeft: '0', marginRight: '0' }}
             key={'Model Provider'}
@@ -84,6 +81,9 @@ const QueryTranslatorSettingsModal = ({
           ) : (
             <>Select one of the available clients.</>
           )}
+          <div className='n-text-right n-pr-7' onClick={handleOpenEditSolutions}>
+            <Button>Edit Model Examples</Button>
+          </div>
         </Dialog.Content>
       </Dialog>
     );

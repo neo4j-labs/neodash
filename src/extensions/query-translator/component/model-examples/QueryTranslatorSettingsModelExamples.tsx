@@ -35,7 +35,7 @@ const QueryTranslatorSettingsModelExamples = ({
   if (!exampleEditorIsOpen) {
     return (
       <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
-        <Dialog.Header id='form-dialog-title'>Questions & Answers</Dialog.Header>
+        <Dialog.Header id='form-dialog-title'>LLM Model Examples</Dialog.Header>
         <Dialog.Content>
           <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
           <div>

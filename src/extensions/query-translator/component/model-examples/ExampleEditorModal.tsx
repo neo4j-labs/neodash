@@ -81,11 +81,11 @@ const ExampleEditorModal = ({
         >
           <form onSubmit={handleSubmit}>
             <div className='n-mb-6'>
+              <label>Prompt</label>
               <Textarea
+                className='n-mt-1'
                 errorText={questionErrorMessage}
                 fluid
-                helpText=''
-                label='Question'
                 size='small'
                 value={questionState}
                 onChange={(e) => setQuestionState(e.target.value)}
@@ -94,21 +94,25 @@ const ExampleEditorModal = ({
 
             {/* Cypher editor */}
             <div className='n-mb-4'>
+              <label>Cypher Query</label>
               <CypherEditor
-                className='n-border-solid n-border-2 n-border-neutral-50'
-                cypherLanguage
+                className='n-mt-1 n-border-solid n-border-2 n-border-neutral-50'
+                lineWrapping={true}
+                lineNumbers={true}
+                cypherLanguage={true}
                 value={answerState}
                 onValueChanged={(e) => setAnswerState(e)}
               />
             </div>
             <p className='n-text-palette-danger-text'> {errorMessage}</p>
-            
+
             {/* Save and close buttons  */}
             <div className='n-text-right n-pt-2'>
-
               {/* Changes button to loading button is isSaving state=true */}
               {isSaving ? (
-                <Button className='n-m-1' loading>Saving</Button>
+                <Button className='n-m-1' loading>
+                  Saving
+                </Button>
               ) : (
                 <Button type='submit' className='n-m-1' disabled={isSaving}>
                   {' '}
