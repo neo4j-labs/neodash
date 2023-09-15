@@ -82,7 +82,7 @@ const QueryTranslatorSettingsModal = ({
             <>Select one of the available clients.</>
           )}
           <div className='n-text-right n-pr-7' onClick={handleOpenEditSolutions}>
-            <Button>Edit Model Examples</Button>
+            <Button>Tweak Model</Button>
           </div>
         </Dialog.Content>
       </Dialog>

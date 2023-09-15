@@ -1,4 +1,3 @@
-// ExampleDisplayTable.js
 import React from 'react';
 import { useTable, usePagination } from 'react-table';
 import { IconButton } from '@neo4j-ndl/react';
@@ -65,8 +64,6 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
     gotoPage,
     nextPage,
     previousPage,
-    canNextPage,
-    canPreviousPage,
     pageCount,
     pageOptions,
     setPageSize,
@@ -76,7 +73,7 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
       data,
       initialState: { pageIndex: 0, pageSize: 5 }, // Set initial page index and page size
     },
-    usePagination // Enable pagination
+    usePagination
   );
 
   return (
@@ -97,7 +94,7 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                  return <td className='n-px-[5px]' {...cell.getCellProps()}>{cell.render('Cell')}</td>;
                 })}
               </tr>
             );
@@ -150,7 +147,7 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
             cursor: 'pointer',
           }}
         >
-          {[5, 10, 20, 30, 40].map((pageSize) => (
+          {[5, 10, 20].map((pageSize) => (
             <option
               key={pageSize}
               value={pageSize}

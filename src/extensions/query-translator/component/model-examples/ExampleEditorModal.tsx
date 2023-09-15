@@ -5,7 +5,7 @@ import { addModelExample, updateModelExample } from '../../state/QueryTranslator
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDatabase } from '../../../../settings/SettingsSelectors';
 import { checkModelExampleAndSubmit } from './utils';
-import { CypherEditor } from '@neo4j-cypher/react-codemirror';
+import NeoCodeEditorComponent from '../../../../component/editor/CodeEditorComponent';
 
 const ExampleEditorModal = ({
   index,
@@ -68,9 +68,18 @@ const ExampleEditorModal = ({
     setExampleEditorIsOpen(false);
   };
 
+  const cypherEditor = (
+    <NeoCodeEditorComponent
+      value={answerState}
+      editable={true}
+      onChange={(e) => setAnswerState(e)}
+      placeholder={`Enter Cypher here...`}
+    />
+  );
+
   return (
     <Dialog size='large' aria-labelledby='form-dialog-title' open={exampleEditorIsOpen} onClose={handleCloseEditor}>
-      <Dialog.Header> {index && index >= 0 ? 'Edit' : 'Add'} Questions & Answers </Dialog.Header>
+      <Dialog.Header> {index && index >= 0 ? 'Edit' : 'Create New'} Example </Dialog.Header>
       <Dialog.Content>
         <div
           style={{
@@ -95,14 +104,7 @@ const ExampleEditorModal = ({
             {/* Cypher editor */}
             <div className='n-mb-4'>
               <label>Cypher Query</label>
-              <CypherEditor
-                className='n-mt-1 n-border-solid n-border-2 n-border-neutral-50'
-                lineWrapping={true}
-                lineNumbers={true}
-                cypherLanguage={true}
-                value={answerState}
-                onValueChanged={(e) => setAnswerState(e)}
-              />
+              {cypherEditor}
             </div>
             <p className='n-text-palette-danger-text'> {errorMessage}</p>
 

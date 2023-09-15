@@ -35,11 +35,11 @@ const QueryTranslatorSettingsModelExamples = ({
   if (!exampleEditorIsOpen) {
     return (
       <Dialog size='large' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
-        <Dialog.Header id='form-dialog-title'>LLM Model Examples</Dialog.Header>
+        <Dialog.Header id='form-dialog-title'>LLM Examples</Dialog.Header>
         <Dialog.Content>
           <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
           <div>
-            <Button className='n-float-left' onClick={handleAdd}>Add Q&A</Button>
+            <Button className='n-float-left' onClick={handleAdd}>Create New</Button>
             <Button className='n-float-right' onClick={handleCloseEditSolutions}>Back</Button>
           </div>
         </Dialog.Content>
