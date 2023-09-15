@@ -17,6 +17,7 @@ const ExampleEditorModal = ({
   updateModelExample,
   addModelExample,
 }) => {
+  
   // States
   const [questionState, setQuestionState] = useState(question);
   const [answerState, setAnswerState] = useState(answer);
@@ -56,9 +57,10 @@ const ExampleEditorModal = ({
   // Function to handle form submission
   const handleFormSubmit = (question, answer) => {
     console.log('Form submitted');
+    console
     /* If the current index state has a value, use it 
     to update the Q&A, otherwise, create a new one*/
-    index && index >= 0 ? updateModelExample(index, question, answer) : addModelExample(question, answer);
+    index != null && index >= 0 ? updateModelExample(index, question, answer) : addModelExample(question, answer);
     // Reset the form and hide it
     setExampleEditorIsOpen(false);
   };
@@ -79,7 +81,7 @@ const ExampleEditorModal = ({
 
   return (
     <Dialog size='large' aria-labelledby='form-dialog-title' open={exampleEditorIsOpen} onClose={handleCloseEditor}>
-      <Dialog.Header> {index && index >= 0 ? 'Edit' : 'Create New'} Example </Dialog.Header>
+      <Dialog.Header> {index != null && index >= 0 ? 'Edit' : 'Create New'} Example </Dialog.Header>
       <Dialog.Content>
         <div
           style={{
