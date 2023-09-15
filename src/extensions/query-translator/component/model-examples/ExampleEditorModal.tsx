@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
-import { Dialog, Button, Textarea, Typography } from '@neo4j-ndl/react';
+import { Dialog, Button, Textarea } from '@neo4j-ndl/react';
 import { addModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { getDatabase } from '../../../../settings/SettingsSelectors';
@@ -17,11 +17,13 @@ const ExampleEditorModal = ({
   updateModelExample,
   addModelExample,
 }) => {
+  // States
   const [questionState, setQuestionState] = useState(question);
   const [answerState, setAnswerState] = useState(answer);
   const [questionErrorMessage, setQuestionErrorMessage] = useState('');
-  const [answerErrorMessage, setAnswerErrorMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false); // Add isSaving state
+
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   const handleCloseEditor = () => {
@@ -31,6 +33,10 @@ const ExampleEditorModal = ({
   async function handleSubmit(e) {
     e.preventDefault();
 
+    // Disable the "Save" button and show "Saving..." message while saving
+    setIsSaving(true);
+
+    // Passing on props to utils.ts
     await checkModelExampleAndSubmit(
       questionState,
       setQuestionState,
@@ -40,9 +46,11 @@ const ExampleEditorModal = ({
       database,
       handleFormSubmit,
       setQuestionErrorMessage,
-      setAnswerErrorMessage,
       setErrorMessage
     );
+
+    // Re-enable the "Save" button after saving is complete
+    setIsSaving(false);
   }
 
   // Function to handle form submission
@@ -58,10 +66,6 @@ const ExampleEditorModal = ({
   const handleFormClose = () => {
     // Reset the form and hide it
     setExampleEditorIsOpen(false);
-  };
-
-  const cypherCodeditorComponent = () => {
-    const cypherEditorProps = {};
   };
 
   return (
@@ -87,25 +91,31 @@ const ExampleEditorModal = ({
                 onChange={(e) => setQuestionState(e.target.value)}
               />
             </div>
-            {/* <div className='n-mb-4'>
-              <Textarea
-                errorText={answerErrorMessage}
-                fluid
-                helpText=''
-                label='Answer (Query equivalent)'
-                size='small'
-                value={answerState}
-                onChange={(e) => setAnswerState(e.target.value)}
-              />
-            </div> */}
+
+            {/* Cypher editor */}
             <div className='n-mb-4'>
-              <CypherEditor className='n-border-solid n-border-2 n-border-neutral-50' value={answerState} onValueChanged={(e) => setAnswerState(e)} />
+              <CypherEditor
+                className='n-border-solid n-border-2 n-border-neutral-50'
+                cypherLanguage
+                value={answerState}
+                onValueChanged={(e) => setAnswerState(e)}
+              />
             </div>
             <p className='n-text-palette-danger-text'> {errorMessage}</p>
+            
+            {/* Save and close buttons  */}
             <div className='n-text-right n-pt-2'>
-              <Button type='submit' className='n-m-1'>
-                Save
-              </Button>
+
+              {/* Changes button to loading button is isSaving state=true */}
+              {isSaving ? (
+                <Button className='n-m-1' loading>Saving</Button>
+              ) : (
+                <Button type='submit' className='n-m-1' disabled={isSaving}>
+                  {' '}
+                  {/* Disable the button while saving */}
+                  Save
+                </Button>
+              )}
               <Button fill='outlined' type='button' onClick={handleFormClose} className='n-m-1'>
                 Close
               </Button>

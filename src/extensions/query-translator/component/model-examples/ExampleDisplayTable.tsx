@@ -1,7 +1,7 @@
 // ExampleDisplayTable.js
 import React from 'react';
 import { useTable, usePagination } from 'react-table';
-import { IconButton, TextInput } from '@neo4j-ndl/react';
+import { IconButton } from '@neo4j-ndl/react';
 import {
   TrashIconOutline,
   PencilSquareIconOutline,
@@ -131,26 +131,6 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
           &nbsp;
         </span>
         <span className='n-mt-[5px]'>&nbsp; | &nbsp;</span>
-        <span className='n-mt-1.5'>
-          Go to page:{' '}
-          <input
-            style={{
-              width: '80px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              margin: '0px 3px',
-              padding: '0px 1px',
-            }}
-            className='n-w-[50px]'
-            type='number'
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-          />
-        </span>
-        <span className='n-mt-[5px]'>&nbsp; | &nbsp;</span>
         <select
           value={pageSize}
           onChange={(e) => {
@@ -194,11 +174,12 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
           <ChevronRightIconOutline className='n-py-0' aria-label={'firstPage'} />
         </IconButton>
         <IconButton
-          className='n-place-content-center n-mr-[3px]'
+          className='n- n-place-content-center n-mr-[3px]'
           onClick={() => gotoPage(pageCount - 1)}
           aria-label={'lastPage'}
           size='medium'
           clean
+          
         >
           <ChevronDoubleRightIconOutline className='n-py-0' aria-label={'firstPage'} />
         </IconButton>

@@ -9,12 +9,10 @@ export async function checkModelExampleAndSubmit(
   database,
   handleFormSubmit,
   setQuestionErrorMessage,
-  setAnswerErrorMessage,
   setErrorMessage
 ) {
   // If both fields are filled, reset the error message
   setQuestionErrorMessage('');
-  setAnswerErrorMessage('');
   setErrorMessage('');
 
   // Check if either question or answer is empty
@@ -22,14 +20,12 @@ export async function checkModelExampleAndSubmit(
     setErrorMessage('Both fields must be filled');
     return;
   }
-
   if (!question) {
     setQuestionErrorMessage('Field must be filled');
     return; // Don't proceed with submission
   }
-
   if (!answer) {
-    setAnswerErrorMessage('Field must be filled');
+    setErrorMessage('Answer field must be filled');
     return; // Don't proceed with submission
   }
 
@@ -41,6 +37,7 @@ export async function checkModelExampleAndSubmit(
     return; // Don't proceed with submission
   }
 
+  // Submit question and answer and then reset question and answer states
   handleFormSubmit(question, answer);
   setQuestion('');
   setAnswer('');

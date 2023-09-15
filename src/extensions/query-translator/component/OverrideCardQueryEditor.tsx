@@ -17,7 +17,6 @@ import {
   setSessionStoragePrepopulationReportFunction,
 } from '../../state/ExtensionActions';
 import { getPrepopulateReportExtension } from '../../state/ExtensionSelectors';
-import QuestionAnswerForm from './model-examples/QuestionAnswerForm';
 
 // TODO: right now if we change the database in the cardSelector, it should forgot the card history
 export const NeoOverrideCardQueryEditor = ({
@@ -40,14 +39,12 @@ export const NeoOverrideCardQueryEditor = ({
     CYPHER,
   }
 
+  // States
   const [language, setLanguage] = React.useState(Language.CYPHER);
   const [runningTranslation, setRunningTranslation] = React.useState(false);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
+
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);
-
-  // State value to manage the opening of the Q&A form
-  const [showQAForm, setShowQAForm] = useState(false);
-
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   useEffect(() => {
@@ -146,11 +143,7 @@ export const NeoOverrideCardQueryEditor = ({
                 {/* Only show translation button if there's something new to translate */}
                 {language == Language.ENGLISH ? (
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    {showQAForm ? (
-                      <QuestionAnswerForm pagenumber={pagenumber} reportId={reportId} setShowForm={setShowQAForm} />
-                    ) : (
-                      <div>
-                        <Button onClick={() => setShowQAForm(true)}>Add Q&As</Button>
+                    <div>
                         <Button
                           fill='outlined'
                           disabled={prepopulateExtensionName == undefined}
@@ -166,7 +159,6 @@ export const NeoOverrideCardQueryEditor = ({
                           Translate
                         </Button>
                       </div>
-                    )}
                   </div>
                 ) : (
                   <></>
