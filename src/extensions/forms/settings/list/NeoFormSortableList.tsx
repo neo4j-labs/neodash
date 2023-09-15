@@ -52,7 +52,7 @@ export function SortableList<T extends BaseItem>({ items, onChange, renderItem }
           ))}
         </div>
       </SortableContext>
-      <SortableOverlay>{activeItem ? renderItem(activeItem, -1) : null}</SortableOverlay>
+      <SortableOverlay>{activeItem ? renderItem(activeItem, items.indexOf(activeItem)) : null}</SortableOverlay>
     </DndContext>
   );
 }

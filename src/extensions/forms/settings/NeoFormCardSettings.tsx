@@ -9,22 +9,6 @@ import debounce from 'lodash/debounce';
 import { Banner, IconButton } from '@neo4j-ndl/react';
 import { PencilIconOutline, PlusIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import NeoFormCardSettingsModal from './NeoFormCardSettingsModal';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  MouseSensor,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
 import { SortableList } from './list/NeoFormSortableList';
 
 const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSettingUpdate, onQueryUpdate }) => {
@@ -50,63 +34,6 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
     onReportSettingUpdate('formFields', newFormFields);
   }
 
-  const mouseSensor = useSensor(MouseSensor, {
-    activationConstraint: {
-      distance: 5, // Enable sort function when dragging 10px
-    },
-  });
-
-  const keySensor = useSensor(KeyboardSensor, {
-    keyboardCodes: {
-      start: ['Space'],
-      cancel: ['Escape'],
-      end: ['Space'],
-    },
-  });
-
-  const sensors = useSensors(mouseSensor, keySensor);
-
-  const formFieldComponents = formFields.map((field, index) => {
-    return (
-      <Banner
-        key={index}
-        id={index}
-        description={
-          <div>
-            <span style={{ lineHeight: '32px' }}>
-              <SortableList.DragHandle />{' '}
-              {formFields[index].settings.parameterName
-                ? `$${formFields[index].settings.parameterName}`
-                : '(undefined)'}
-            </span>
-            <IconButton
-              className='n-float-right'
-              aria-label='remove field'
-              size='small'
-              onClick={() => {
-                updateFormFields([...formFields.slice(0, index), ...formFields.slice(index + 1)]);
-              }}
-            >
-              <XMarkIconOutline />
-            </IconButton>
-            <IconButton
-              className='n-float-right'
-              aria-label='edit field'
-              size='small'
-              onClick={() => {
-                setSelectedFieldIndex(index);
-                setFieldModalOpen(true);
-              }}
-            >
-              <PencilIconOutline />
-            </IconButton>
-          </div>
-        }
-        style={{ width: '100%' }}
-      ></Banner>
-    );
-  });
-
   const addFieldButton = (
     <div style={{ width: '100%', display: 'flex' }}>
       <IconButton
@@ -128,6 +55,10 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
     </div>
   );
 
+  const indexedFormFields = formFields.map((f, index) => {
+    return { ...f, id: index };
+  });
+
   return (
     <div>
       <NeoFormCardSettingsModal
@@ -142,12 +73,52 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
 
       <div style={{ borderTop: '1px dashed lightgrey', width: '100%' }}>
         <span>Fields:</span>
-        <SortableList
-          items={formFieldComponents}
-          onChange={(e) => console.log(e)}
-          renderItem={(item, index) => <SortableList.Item id={index}>{item}</SortableList.Item>}
-        />
-
+        <div style={{ position: 'relative' }}>
+          <SortableList
+            items={indexedFormFields}
+            onChange={(e) => console.log(e)}
+            renderItem={(item, index) => (
+              <SortableList.Item id={index}>
+                <Banner
+                  key={index}
+                  id={index}
+                  description={
+                    <div>
+                      <span style={{ lineHeight: '32px' }}>
+                        <SortableList.DragHandle />{' '}
+                        {formFields[index].settings.parameterName
+                          ? `$${formFields[index].settings.parameterName}`
+                          : '(undefined)'}
+                      </span>
+                      <IconButton
+                        className='n-float-right'
+                        aria-label='remove field'
+                        size='small'
+                        onClick={() => {
+                          updateFormFields([...formFields.slice(0, index), ...formFields.slice(index + 1)]);
+                        }}
+                      >
+                        <XMarkIconOutline />
+                      </IconButton>
+                      <IconButton
+                        className='n-float-right'
+                        aria-label='edit field'
+                        size='small'
+                        onClick={() => {
+                          setSelectedFieldIndex(index);
+                          setFieldModalOpen(true);
+                        }}
+                      >
+                        <PencilIconOutline />
+                      </IconButton>
+                    </div>
+                  }
+                  style={{ width: '100%' }}
+                ></Banner>
+              </SortableList.Item>
+            )}
+          />
+        </div>
         <div style={{ borderTop: '1px dashed lightgrey', width: '100%' }}>
           <span>Form Submission Query:</span>
           <NeoCodeEditorComponent
