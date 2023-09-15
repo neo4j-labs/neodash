@@ -1,10 +1,7 @@
 import React from 'react';
 
 import { DASHBOARD_HEADER_BRAND_LOGO, IS_CUSTOM_LOGO } from '../../config/ApplicationConfig';
-import StyleConfig from '../../config/StyleConfig';
 import { Typography } from '@neo4j-ndl/react';
-
-await StyleConfig.getInstance();
 
 export const NeoDashboardHeaderLogo = ({ resetApplication }) => {
   const content = (

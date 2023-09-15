@@ -4,9 +4,6 @@ import { Tooltip } from '@mui/material';
 import { CameraIconSolid } from '@neo4j-ndl/react/icons';
 
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
-import StyleConfig from '../../config/StyleConfig';
-
-await StyleConfig.getInstance();
 
 export const NeoDashboardHeaderDownloadImageButton = (onDownloadImage) => {
   const content = (

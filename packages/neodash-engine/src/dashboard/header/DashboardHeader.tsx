@@ -13,6 +13,9 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
 import { Tooltip } from '@mui/material';
+import StyleConfig from '../../config/StyleConfig';
+
+await StyleConfig.getInstance();
 
 export const NeoDashboardHeader = ({
   standalone,

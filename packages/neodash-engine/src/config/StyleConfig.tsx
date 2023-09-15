@@ -14,6 +14,10 @@ export default class StyleConfig {
     return this.instance;
   }
 
+  public static getInstanceNoWait(): StyleConfig {
+    return this.instance;
+  }
+
   async initialize() {
     try {
       await (await fetch('style.config.json')).json().then((json) => {

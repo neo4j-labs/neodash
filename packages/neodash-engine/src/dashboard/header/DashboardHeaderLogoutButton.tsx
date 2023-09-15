@@ -4,10 +4,7 @@ import { IconButton } from '@neo4j-ndl/react';
 import { Tooltip } from '@mui/material';
 
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
-import StyleConfig from '../../config/StyleConfig';
 import { ArrowRightOnRectangleIconOutline } from '@neo4j-ndl/react/icons';
-
-await StyleConfig.getInstance();
 
 export const NeoLogoutButton = ({ standalone, onConnectionModalOpen }) => {
   return (

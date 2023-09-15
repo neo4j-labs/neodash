@@ -5,7 +5,7 @@ export const enum Screens {
   CONNECTION_MODAL,
 }
 
-const styleConfig = await StyleConfig.getInstance();
+const styleConfig = StyleConfig.getInstanceNoWait();
 
 export const DEFAULT_SCREEN = Screens.WELCOME_SCREEN; // WELCOME_SCREEN
 export const DEFAULT_NEO4J_URL = 'localhost'; // localhost
