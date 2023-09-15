@@ -232,7 +232,8 @@
 
 
 /* Workaround for Needle not handling menu placement of dropdowns on modals */
-.css-1vh66o6-MenuPortal {
+#overlay {
   z-index: 99 !important;
+  position: absolute;
 }
 /* End workaround */

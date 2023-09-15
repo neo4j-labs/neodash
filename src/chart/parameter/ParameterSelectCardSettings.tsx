@@ -214,7 +214,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
           options: parameterSelectTypes.map((option) => ({ label: option, value: option })),
           value: { label: selectedType, value: selectedType },
           menuPlacement: 'auto',
-          menuPortalTarget: document.querySelector('body'),
+          menuPortalTarget: document.querySelector('#overlay'),
         }}
         label='Selection Type'
         type='select'
