@@ -24,8 +24,26 @@ export const parseNodeIconConfig = (iconStyle) => {
   }
 };
 
-export const getEntityHeader = (entity) => {
-  return (entity.labels && entity.labels.join(', ')) || entity.type;
+const getSelectedNodeProperty = (entity: any, sourceOrTarget: string, propertySelections: any) => {
+  const selection = propertySelections[entity[sourceOrTarget]?.mainLabel];
+  switch (selection) {
+    case '(label)':
+      return entity[sourceOrTarget]?.mainLabel;
+    case '(id)':
+      return entity[sourceOrTarget]?.id;
+    default:
+      return entity[sourceOrTarget]?.properties[selection];
+  }
+};
+
+const getEdgeHelper = (entity: any, selection: any) => {
+  const sourceTitle = getSelectedNodeProperty(entity, 'source', selection);
+  const targetTitle = getSelectedNodeProperty(entity, 'target', selection);
+  return `(${sourceTitle} --> ${targetTitle})`;
+};
+
+export const getEntityHeader = (entity: any, selection: any) => {
+  return entity.labels?.join(', ') || `${entity.type} ${getEdgeHelper(entity, selection)}`;
 };
 
 export const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
