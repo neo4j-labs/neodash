@@ -18,19 +18,23 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Creating Neo4j Container
         run: |
-          chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
-          ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          chmod +x apps/neodash-editor/docker-files/docker-neo4j-initializer/docker-neo4j.sh
+          apps/neodash-editor/docker-files/docker-neo4j-initializer/docker-neo4j.sh
           sleep 30s
-          chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
-          ./scripts/docker-neo4j-initializer/start-movies-db.sh
+          chmod +x apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
+          apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
+      - run: yarn global add turbo
       - run: yarn install
       - name: Eslint check
-        run: yarn run lint
+        run: turbo run lint
+      - name: Copy cypress config to root folder for execution
+        run: cp -r apps/neodash-editor/cypress .
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          build: yarn run build
-          start: yarn run dev
+          config-file: apps/neodash-editor/cypress-config.ts
+          build: turbo run build --filter neodash-editor
+          start: turbo run start --filter neodash-editor
           wait-on: "http://localhost:3000"
           browser: chrome
   build-s3:
@@ -45,17 +49,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: rm -rf docs
       - run: yarn install
-      - run: yarn run build-minimal
+      - run: turbo run build --filter neodash-editor
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
-      - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
-      - run: aws s3 rm s3://neodash.graphapp.io/ --recursive && aws s3 sync dist s3://neodash.graphapp.io/ --acl public-read
+      - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > apps/neodash-editor/dist/index.html
+      - run: aws s3 rm s3://neodash.graphapp.io/ --recursive && aws s3 sync apps/neodash-editor/dist s3://neodash.graphapp.io/ --acl public-read
   build-docker:
     needs: build-test
     runs-on: neodash-runners
@@ -65,7 +68,6 @@ jobs:
     steps:
       - name: run Docker
         uses: actions/checkout@v2
-      - run: rm -rf docs
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -77,7 +79,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile
+          file: apps/neodash-editor/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:2.3.4
   build-docker-legacy:
@@ -89,7 +91,6 @@ jobs:
     steps:
       - name: run Docker
         uses: actions/checkout@v2
-      - run: rm -rf docs
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -101,7 +102,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile
+          file: apps/neodash-editor/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.3.4
   deploy-gallery:
@@ -115,15 +116,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: cd gallery && yarn install
-      - run: cd gallery && yarn run build
+      - run: yarn global add turbo
+      - run: yarn install
+      - run: turbo run build --filter gallery
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
-      - run: aws s3 rm s3://neodash-gallery.graphapp.io/ --recursive && aws s3 sync gallery/build s3://neodash-gallery.graphapp.io/ --acl public-read
+      - run: aws s3 rm s3://neodash-gallery.graphapp.io/ --recursive && aws s3 sync apps/gallery/build s3://neodash-gallery.graphapp.io/ --acl public-read
   deploy-docs:
     needs: build-test
     runs-on: neodash-runners
@@ -146,10 +148,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: rm -rf docs
+      - run: yarn global add turbo
       - run: yarn install
-      - run: PRODUCTION=true && yarn run build-minimal
-      - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
+      - run: PRODUCTION=true && turbo run build --filter neodash-editor
+      - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > apps/neodash-editor/dist/index.html
+      - run: cd apps/neodash-editor/
       - run: npm pack
       - run: rm -rf target
       - run: mkdir target

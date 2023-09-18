@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "outputs": [".next/**"]
+    },
+    "lint": {},
+    "lint-staged": {},
+    "start": {},
+    "test": {},
+    "format": {},
+    "test-headless": {}
+  }
+}

@@ -10,6 +10,9 @@ target
 /.pnp
 .pnp.js
 .vscode
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
 
 # testing
 /coverage
@@ -17,8 +20,11 @@ target
 cypress/videos
 
 # production
-/build
-/dist
+**/build
+**/dist
+**/es
+**/lib
+
 
 # misc
 .DS_Store
@@ -33,10 +39,17 @@ yarn-error.log*
 *.tgz
 
 # package directories
-node_modules
+**/node_modules
 jspm_packages
 
 # Serverless directories
 .serverless
+
+# Turbo
++ .turbo
+*/.turbo
+**/.turbo
 # Sentry Auth Token
 .env.sentry-build-plugin
+**/.nyc_output
+**/screenshots

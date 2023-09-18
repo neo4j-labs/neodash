@@ -1,0 +1,109 @@
+= Build & Run
+
+To start developing the application, you will need to set up the
+development environment.
+
+== Run & Build using yarn
+
+NeoDash is built with React. You will need `yarn` installed to run the web app.
+
+____
+Use a recent version of `yarn` and `node` to build NeoDash. The
+application has been tested with yarn 1.22.17 & node v18.8.0.
+____
+
+To run the application in development mode: 
+
+- https://github.com/neo4j-labs/neodash[clone this repository.]
+- open a terminal and navigate to the directory you just cloned. 
+- run `yarn install` to install the necessary dependencies. 
+- run `yarn run start:editor` to run the app in development mode. 
+- the application should be available at http://localhost:3000.
+
+To build the app for production: 
+
+- follow the steps above to clone the repository and install dependencies. 
+- execute `yarn run build:editor`. This will create a `build` folder in your `neodash-editor` directory. 
+- deploy the contents of the build folder to a web server. You should then be able to run the web app.
+
+== Run locally with Docker
+
+Pull the latest image from Docker Hub to run the application locally:
+
+....
+# Run the application on http://localhost:5005
+docker pull neo4jlabs/neodash:latest
+docker run -it --rm -p 5005:5005 neo4jlabs/neodash
+
+# If you want to run on a custom port, set an environment variable
+export NGINX_PORT=5008
+docker run -it --rm -e NGINX_PORT=5008 -p 5008:5008 neo4jlabs/neodash
+....
+
+____
+Windows users may need to prefix the `docker run` command with `winpty`.
+____
+
+== Build Docker image
+
+A pre-built Docker image is available
+https://hub.docker.com/r/neo4jlabs/neodash[on DockerHub]. This image
+is built using the default configuration (running in editor mode,
+without SSO).
+
+=== To build the image yourself:
+
+Make sure you have a recent version of `docker` installed to build the
+multi-stage NeoDash image and run it.
+
+On Unix (Mac/Linux) systems:
+
+....
+docker build . -t neodash
+....
+
+If you use Windows, you might need to prefix the command with `winpty`:
+
+....
+winpty docker build . -t neodash
+....
+
+After building, you can run the image with:
+....
+docker run -it –rm -p 5005:5005 neodash
+.... 
+
+== Run on Kubernetes
+
+An example of a pod definition YAML file to create a NeoDash pod in a cluster:
+
+....
+apiVersion: v1
+kind: Pod
+metadata:
+  name: neodash
+  labels:
+    project: neodash
+spec:
+  containers:
+    - name: neodash
+      image: neo4jlabs/neodash:latest
+      ports:
+        - containerPort: 5005
+....
+
+
+Creating a Kubernetes service to expose the application:
+....
+apiVersion: v1
+kind: Service
+metadata:
+    name: neodash-svc
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 5005
+      targetPort: 5005
+    selector:
+      project: neodash
+....

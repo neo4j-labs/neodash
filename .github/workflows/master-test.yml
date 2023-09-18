@@ -18,18 +18,22 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Creating Neo4j Container
         run: |
-          chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
-          ./scripts/docker-neo4j-initializer/docker-neo4j.sh
+          chmod +x apps/neodash-editor/docker-files/docker-neo4j-initializer/docker-neo4j.sh
+          apps/neodash-editor/docker-files/docker-neo4j-initializer/docker-neo4j.sh
           sleep 30s
-          chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
-          ./scripts/docker-neo4j-initializer/start-movies-db.sh
+          chmod +x apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
+          apps/neodash-editor/docker-files/docker-neo4j-initializer/start-movies-db.sh
+      - run: yarn global add turbo
       - run: yarn install
       - name: Eslint check
-        run: yarn run lint
+        run: turbo run lint
+      - name: Copy cypress config to root folder for execution
+        run: cp -r apps/neodash-editor/cypress .
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          build: yarn run build
-          start: yarn run dev
+          config-file: apps/neodash-editor/cypress-config.ts
+          build: turbo run build --filter neodash-editor
+          start: turbo run start --filter neodash-editor
           wait-on: "http://localhost:3000"
           browser: chrome
