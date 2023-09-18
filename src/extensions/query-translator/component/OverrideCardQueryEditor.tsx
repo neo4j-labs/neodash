@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect} from 'react';
 import { connect } from 'react-redux';
 import { Button, Switch } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent, {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { Dialog, Button, Textarea } from '@neo4j-ndl/react';
 import { addModelExample, updateModelExample } from '../../state/QueryTranslatorActions';

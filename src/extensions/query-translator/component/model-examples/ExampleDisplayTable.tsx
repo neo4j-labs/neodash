@@ -10,6 +10,25 @@ import {
   ChevronDoubleRightIconOutline,
 } from '@neo4j-ndl/react/icons';
 
+const RemoveButton = ({ onClick }) => (
+  <IconButton
+    className='n-float-right n-text-right'
+    style={{ color: 'red' }}
+    aria-label='remove'
+    onClick={onClick}
+    size='medium'
+    clean
+  >
+    <TrashIconOutline aria-label={'remove'} />
+  </IconButton>
+);
+
+const EditButton = ({ onClick }) => (
+  <IconButton className='n-float-right n-text-right' onClick={onClick} aria-label={'edit'} size='medium' clean>
+    <PencilSquareIconOutline aria-label={'edit'} />
+  </IconButton>
+);
+
 const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
   const data = React.useMemo(() => examples, [examples]);
 
@@ -28,25 +47,8 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
         accessor: 'actions',
         Cell: ({ row }) => (
           <div className='n-float-right n-text-right n-w-[100px]'>
-            <IconButton
-              className='n-float-right n-text-right'
-              style={{ color: 'red' }}
-              aria-label='remove'
-              onClick={() => deleteModelExample(row.index)}
-              size='large'
-              clean
-            >
-              <TrashIconOutline aria-label={'remove'} />
-            </IconButton>
-            <IconButton
-              className='n-float-right n-text-right'
-              onClick={() => handleEdit(row.index)}
-              aria-label={'edit'}
-              size='large'
-              clean
-            >
-              <PencilSquareIconOutline aria-label={'edit'} />
-            </IconButton>
+            <RemoveButton onClick={() => deleteModelExample(row.index)} />
+            <EditButton onClick={() => handleEdit(row.index)} />
           </div>
         ),
       },
@@ -94,7 +96,11 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
-                  return <td className='n-px-[5px]' {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                  return (
+                    <td className='n-px-[5px]' {...cell.getCellProps()}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
                 })}
               </tr>
             );
@@ -176,7 +182,6 @@ const ExampleDisplayTable = ({ examples, deleteModelExample, handleEdit }) => {
           aria-label={'lastPage'}
           size='medium'
           clean
-          
         >
           <ChevronDoubleRightIconOutline className='n-py-0' aria-label={'firstPage'} />
         </IconButton>

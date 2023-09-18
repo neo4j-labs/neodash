@@ -6,9 +6,8 @@ import { SELECTION_TYPES } from '../../../config/CardConfig';
 import NeoSetting from '../../../component/field/Setting';
 import { QUERY_TRANSLATOR_CONFIG } from '../QueryTranslatorConfig';
 import ClientSettings from './ClientSettings';
-import { Dialog } from '@neo4j-ndl/react';
+import { Dialog, Button } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
-import { Button } from '@neo4j-ndl/react';
 import QueryTranslatorSettingsModelExamples from './model-examples/QueryTranslatorSettingsModelExamples';
 
 const QueryTranslatorSettingsModal = ({
