@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [],
   presets: [require('@neo4j-ndl/base/lib/optimised.config')],
   prefix: '',
   corePlugins: {

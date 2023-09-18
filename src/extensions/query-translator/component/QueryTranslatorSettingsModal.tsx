@@ -72,17 +72,20 @@ const QueryTranslatorSettingsModal = ({
           />
           {modelProviderState ? (
             <ClientSettings
+              handleOpenEditSolutions={handleOpenEditSolutions}
               handleClose={handleCloseWithSave}
               modelProvider={modelProviderState}
               settingState={settingsState}
               setSettingsState={setSettingsState}
             />
           ) : (
-            <>Select one of the available clients.</>
+            <>
+              Select one of the available clients.
+              <div className='n-text-right n-pr-7' onClick={handleOpenEditSolutions}>
+                <Button>Tweak Prompts</Button>
+              </div>
+            </>
           )}
-          <div className='n-text-right n-pr-7' onClick={handleOpenEditSolutions}>
-            <Button>Tweak Model</Button>
-          </div>
         </Dialog.Content>
       </Dialog>
     );

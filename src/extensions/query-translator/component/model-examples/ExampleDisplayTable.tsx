@@ -10,6 +10,7 @@ import {
   ChevronDoubleRightIconOutline,
 } from '@neo4j-ndl/react/icons';
 
+
 const RemoveButton = ({ onClick }) => (
   <IconButton
     className='n-float-right n-text-right'

@@ -15,6 +15,7 @@ import {
   ExclamationTriangleIconSolid,
   PlayCircleIconSolid,
   PlayIconSolid,
+  PencilSquareIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
@@ -33,6 +34,7 @@ export const ClientSettings = ({
   updateClientSettings,
   deleteAllMessageHistory,
   handleClose,
+  handleOpenEditSolutions,
 }) => {
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
@@ -175,9 +177,16 @@ export const ClientSettings = ({
         })}
       <br />
       {status == Status.AUTHENTICATED && Object.keys(defaultSettings).every((n) => localSettings[n] !== undefined) ? (
-        <>
+        <div className='n-flex n-justify-between'>
+          <Button floating onClick={handleOpenEditSolutions}>
+            Tweak Prompts
+            <PencilSquareIconOutline className='btn-icon-base-r' />
+          </Button>
+          <Button fill='outlined' onClick={() => deleteAllMessageHistory()}>
+            Delete Model History
+          </Button>
           <Button
-            style={{ float: 'right', marginRight: '30px' }}
+            style={{ marginRight: '30px' }}
             onClick={() => {
               handleClose();
             }}
@@ -186,12 +195,14 @@ export const ClientSettings = ({
             Start Querying
             <PlayIconSolid className='btn-icon-base-r' />
           </Button>
-          <Button fill='outlined' onClick={() => deleteAllMessageHistory()}>
-            Delete Model History
+        </div>
+      ) : (
+        <>
+          <Button floating onClick={handleOpenEditSolutions}>
+            Tweak Prompts
+            <PencilSquareIconOutline className='btn-icon-base-r' />
           </Button>
         </>
-      ) : (
-        <></>
       )}
     </List>
   );
