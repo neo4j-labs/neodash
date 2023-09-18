@@ -1,11 +1,11 @@
-import StyleConfig from './StyleConfig';
+import { styleConfiguration } from './StyleConfig';
 
 export const enum Screens {
   WELCOME_SCREEN,
   CONNECTION_MODAL,
 }
 
-const styleConfig = StyleConfig.getInstanceNoWait();
+const styleConfig = styleConfiguration;
 
 export const DEFAULT_SCREEN = Screens.WELCOME_SCREEN; // WELCOME_SCREEN
 export const DEFAULT_NEO4J_URL = 'localhost'; // localhost

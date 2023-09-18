@@ -1,6 +1,6 @@
 import { rgbaToHex } from '../chart/Utils';
 
-export default class StyleConfig {
+export class StyleConfig {
   private static instance: StyleConfig;
 
   protected style: any;
@@ -48,3 +48,5 @@ export default class StyleConfig {
     return `#${complementColor}`;
   }
 }
+
+export const styleConfiguration = await StyleConfig.getInstance();

@@ -9,13 +9,10 @@ import {
 import { Tooltip } from '@mui/material';
 
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
-import StyleConfig from '../../config/StyleConfig';
 import { getDashboardExtensions } from '../DashboardSelectors';
 import { getExampleReports } from '../../extensions/ExtensionUtils';
 import { NeoReportExamplesModal } from '../../modal/ReportExamplesModal';
 import { enterHandler, openTab } from '../../utils/accessibility';
-
-await StyleConfig.getInstance();
 
 export const NeoAboutButton = ({ connection, onAboutModalOpen, extensions }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
