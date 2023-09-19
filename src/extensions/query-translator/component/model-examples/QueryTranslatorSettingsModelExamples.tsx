@@ -4,7 +4,7 @@ import { getModelExamples } from '../../state/QueryTranslatorSelector';
 import { Dialog, Button } from '@neo4j-ndl/react';
 import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
 import ExampleEditorModal from './ExampleEditorModal';
-import ExampleDisplayTable from './ExampleDisplayTable';
+import ExampleDisplayTable2 from './ExampleDisplayTable2';
 
 const QueryTranslatorSettingsModelExamples = ({
   handleCloseEditSolutions,
@@ -36,7 +36,7 @@ const QueryTranslatorSettingsModelExamples = ({
       <Dialog className='dialog-xl' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
         <Dialog.Header id='form-dialog-title'>LLM Examples</Dialog.Header>
         <Dialog.Content>
-          <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
+          <ExampleDisplayTable2 examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
           <div>
             <Button className='n-float-left' onClick={handleAdd}>Create New</Button>
             <Button className='n-float-right' onClick={handleCloseEditSolutions}>Back</Button>
