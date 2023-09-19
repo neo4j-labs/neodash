@@ -56,7 +56,7 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
   );
 
   const indexedFormFields = formFields.map((f, index) => {
-    return { ...f, id: index };
+    return { ...f, id: index + 1 };
   });
 
   return (
@@ -78,10 +78,10 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
             items={indexedFormFields}
             onChange={(e) => console.log(e)}
             renderItem={(item, index) => (
-              <SortableList.Item id={index}>
+              <SortableList.Item id={index + 1}>
                 <Banner
-                  key={index}
-                  id={index}
+                  key={index + 1}
+                  id={`list${  index}`}
                   description={
                     <div>
                       <span style={{ lineHeight: '32px' }}>
@@ -118,6 +118,7 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
               </SortableList.Item>
             )}
           />
+          {addFieldButton}
         </div>
         <div style={{ borderTop: '1px dashed lightgrey', width: '100%' }}>
           <span>Form Submission Query:</span>

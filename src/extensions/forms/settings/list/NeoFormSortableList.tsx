@@ -5,6 +5,7 @@ import type { Active, UniqueIdentifier } from '@dnd-kit/core';
 import { SortableContext, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { DragHandle, SortableItem } from './NeoFormSortableItem';
 import { SortableOverlay } from './NeoFormSortableOverlay';
+import { createPortal } from 'react-dom';
 
 interface BaseItem {
   id: UniqueIdentifier;
@@ -30,6 +31,7 @@ export function SortableList<T extends BaseItem>({ items, onChange, renderItem }
     <DndContext
       sensors={sensors}
       onDragStart={({ active }) => {
+        console.log(active);
         setActive(active);
       }}
       onDragEnd={({ active, over }) => {
@@ -52,7 +54,12 @@ export function SortableList<T extends BaseItem>({ items, onChange, renderItem }
           ))}
         </div>
       </SortableContext>
-      <SortableOverlay>{activeItem ? renderItem(activeItem, items.indexOf(activeItem)) : null}</SortableOverlay>
+      {createPortal(
+        <SortableOverlay>
+          {activeItem !== undefined ? renderItem(activeItem, items.indexOf(activeItem)) : null}
+        </SortableOverlay>,
+        document.body
+      )}
     </DndContext>
   );
 }
