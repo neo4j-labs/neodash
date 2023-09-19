@@ -1,6 +1,6 @@
 // TODO: this file (in a way) belongs to chart/parameter/ParameterSelectionChart. It would make sense to move it there
 
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import NeoCodeEditorComponent, {
   DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
@@ -24,6 +24,7 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
   const formFields = settings.formFields ? settings.formFields : [];
   const [selectedFieldIndex, setSelectedFieldIndex] = React.useState(-1);
   const [fieldModalOpen, setFieldModalOpen] = React.useState(false);
+  const [indexedFormFields, setIndexedFormFields] = React.useState([]);
 
   function updateCypherQuery(value) {
     debouncedQueryUpdate(value);
@@ -55,9 +56,13 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
     </div>
   );
 
-  const indexedFormFields = formFields.map((f, index) => {
-    return { ...f, id: index + 1 };
-  });
+  useEffect(() => {
+    setIndexedFormFields(
+      formFields.map((f, index) => {
+        return { ...f, id: index + 1 };
+      })
+    );
+  }, [formFields]);
 
   return (
     <div>
@@ -76,12 +81,15 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
         <div style={{ position: 'relative' }}>
           <SortableList
             items={indexedFormFields}
-            onChange={(e) => console.log(e)}
+            onChange={(e) => {
+              setIndexedFormFields([]);
+              updateFormFields(e);
+            }}
             renderItem={(item, index) => (
               <SortableList.Item id={index + 1}>
                 <Banner
                   key={index + 1}
-                  id={`list${  index}`}
+                  id={`list${index}`}
                   description={
                     <div>
                       <span style={{ lineHeight: '32px' }}>

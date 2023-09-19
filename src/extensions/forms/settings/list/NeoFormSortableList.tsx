@@ -31,7 +31,6 @@ export function SortableList<T extends BaseItem>({ items, onChange, renderItem }
     <DndContext
       sensors={sensors}
       onDragStart={({ active }) => {
-        console.log(active);
         setActive(active);
       }}
       onDragEnd={({ active, over }) => {
