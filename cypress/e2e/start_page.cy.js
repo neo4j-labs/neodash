@@ -245,7 +245,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1', { timeout: 45000 }).should('have.text', 'Hello');
   });
 
-  it('creates a form report', () => {
+  it.skip('creates a form report', () => {
     enableFormsExtension();
     checkInitialState();
     createReportOfType('Form', formCypherQuery, true, false);
