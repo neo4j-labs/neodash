@@ -21,5 +21,5 @@ echo " \
     \"standaloneMultiDatabase\": ${standaloneMultiDatabase:=false}, \
     \"standaloneDatabaseList\": \"${standaloneDatabaseList:='neo4j'}\", \
     \"loggingMode\": \"${loggingMode:='0'}\",  \
-    \"loggingMode\": \"${loggingDatabase:='logs'}\"  \
+    \"loggingDatabase\": \"${loggingDatabase:='logs'}\"  \
    }" > /usr/share/nginx/html/config.json
