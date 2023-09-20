@@ -33,8 +33,8 @@ const QueryTranslatorSettingsModelExamples = ({
   // Returns viewer or editor depending on exampleEditorIsOpen state
   if (!exampleEditorIsOpen) {
     return (
-      <Dialog className='dialog-xl' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
-        <Dialog.Header id='form-dialog-title'>LLM Examples</Dialog.Header>
+      <Dialog className='dialog-xl n-bg-palette-neutral-bg-default ndl-theme-light' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
+        <Dialog.Header className='n-ml-2' id='form-dialog-title'>LLM Examples</Dialog.Header>
         <Dialog.Content>
           <ExampleDisplayTable2 examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
           <div>

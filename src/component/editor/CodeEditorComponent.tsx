@@ -1,7 +1,6 @@
 import React from 'react';
 import { CypherEditor, CypherEditorProps } from '@neo4j-cypher/react-codemirror';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
-// import { languages } from '@codemirror/language-data';
 
 export const DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE = {
   color: 'grey',
