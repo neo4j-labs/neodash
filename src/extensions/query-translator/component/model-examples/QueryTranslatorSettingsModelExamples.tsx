@@ -36,7 +36,7 @@ const QueryTranslatorSettingsModelExamples = ({
       <Dialog className='dialog-xl n-bg-palette-neutral-bg-default ndl-theme-light' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
         <Dialog.Header className='n-ml-2' id='form-dialog-title'>LLM Examples</Dialog.Header>
         <Dialog.Content>
-          <ExampleDisplayTable2 examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
+          <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
           <div>
             <Button className='n-float-left' onClick={handleAdd}>Create New</Button>
             <Button className='n-float-right' onClick={handleCloseEditSolutions}>Back</Button>
