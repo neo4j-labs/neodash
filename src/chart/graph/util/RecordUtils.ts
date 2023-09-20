@@ -145,8 +145,8 @@ export function buildGraphVisualizationObjectFromRecords(
   relColorProperty: any,
   defaultRelColor: any,
   styleRules: any,
-  nodePositions: any,
-  frozen: any
+  nodePositions: any = {},
+  frozen: any = false
 ) {
   // Extract graph objects from result set.
   records.forEach((record) => {

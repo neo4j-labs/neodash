@@ -229,3 +229,12 @@
 		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 	}
 }
+
+/* Workaround for cleaning the Gantt chart UI */
+.gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div> div:not(:first-child) {
+  display: none;
+}
+.gantt-wrapper > div > div > div > div> div>  div> div:not(:first-child)  {
+  display: none;
+}
+/* End Gantt chart workaround */

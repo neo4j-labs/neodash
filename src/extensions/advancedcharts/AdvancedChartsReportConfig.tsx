@@ -1007,6 +1007,7 @@ export const ADVANCED_REPORT_TYPES = {
     helperText: <div>A gantt chart requires nodes (events) and relationships (dependencies).</div>,
     maxRecords: 300,
     component: NeoGanttChart,
+    withoutFooter: true,
     useNodePropsAsFields: true,
     autoAssignSelectedProperties: true,
     selection: {
