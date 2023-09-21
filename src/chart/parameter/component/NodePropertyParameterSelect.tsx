@@ -63,12 +63,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   };
   const handleCrossClick = (isMulti, value) => {
     if (isMulti) {
-      if (value.length == 0 && clearParameterOnFieldClear) {
+      if (value !== null && value.length == 0 && clearParameterOnFieldClear) {
         setInputValue([]);
         handleParametersUpdate(undefined, undefined, manualParameterSave);
         return true;
       }
-      if (value.length == 0) {
+      if (value !== null && value.length == 0) {
         setInputValue([]);
         handleParametersUpdate([], [], manualParameterSave);
         return true;
@@ -96,7 +96,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     let valReference = manualParameterSave ? paramValueLocal : props.parameterValue;
     let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
-    if (isMulti && inputValue.length < newDisplay.length) {
+    if (isMulti && inputValue !== null && newDisplay !== null && inputValue.length < newDisplay.length) {
       newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
 

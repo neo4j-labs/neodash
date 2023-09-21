@@ -94,7 +94,7 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
                     <div>
                       <span style={{ lineHeight: '32px' }}>
                         <SortableList.DragHandle />{' '}
-                        {formFields[index].settings.parameterName
+                        {formFields[index] && formFields[index].settings.parameterName
                           ? `$${formFields[index].settings.parameterName}`
                           : '(undefined)'}
                       </span>
