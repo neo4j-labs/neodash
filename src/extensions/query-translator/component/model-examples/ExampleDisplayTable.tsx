@@ -65,7 +65,6 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
         header: 'Answer',
       }),
       {
-        // Is there a way to define these components not during the render?
         header: '',
         id: 'actions',
         cell: ({ row }) => RowButtons(row.index),
@@ -81,6 +80,11 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: { 
+      pagination: {
+        pageSize: 5, 
+      },
+    },
   });
 
   return (
