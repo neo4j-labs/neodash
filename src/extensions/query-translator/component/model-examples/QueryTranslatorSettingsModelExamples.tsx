@@ -4,7 +4,7 @@ import { getModelExamples } from '../../state/QueryTranslatorSelector';
 import { Dialog, Button } from '@neo4j-ndl/react';
 import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
 import ExampleEditorModal from './ExampleEditorModal';
-import ExampleDisplayTable2 from './ExampleDisplayTable2';
+import ExampleDisplayTable from './ExampleDisplayTable';
 
 const QueryTranslatorSettingsModelExamples = ({
   handleCloseEditSolutions,
@@ -13,7 +13,6 @@ const QueryTranslatorSettingsModelExamples = ({
   handleCloseWithoutSave,
   deleteModelExample,
 }) => {
-
   // States
   const [exampleEditorIsOpen, setExampleEditorIsOpen] = useState(false);
   const [index, setIndex] = useState<number | null>(0);
@@ -33,13 +32,27 @@ const QueryTranslatorSettingsModelExamples = ({
   // Returns viewer or editor depending on exampleEditorIsOpen state
   if (!exampleEditorIsOpen) {
     return (
-      <Dialog className='dialog-xl n-bg-palette-neutral-bg-default ndl-theme-light' open={open} onClose={handleCloseWithoutSave} aria-labelledby='form-dialog-title'>
-        <Dialog.Header className='n-ml-2' id='form-dialog-title'>LLM Examples</Dialog.Header>
-        <Dialog.Content>
+      <Dialog
+        className='dialog-xl n-bg-palette-neutral-bg-default ndl-theme-light'
+        open={open}
+        onClose={handleCloseWithoutSave}
+        aria-labelledby='form-dialog-title'
+      >
+        <Dialog.Header className='n-ml-2' id='form-dialog-title'>
+          LLM Examples
+        </Dialog.Header>
+        <Dialog.Content className='n-ml-2'>
+          View your local library of saved LLM examples. <br /> These will improve the performance of LLM English to Cypher predictioins on your dashboard.
+          <br />
+          <br />
           <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
           <div>
-            <Button className='n-float-left' onClick={handleAdd}>Create New</Button>
-            <Button className='n-float-right' onClick={handleCloseEditSolutions}>Back</Button>
+            <Button className='n-float-left' onClick={handleAdd}>
+              Create New
+            </Button>
+            <Button className='n-float-right' onClick={handleCloseEditSolutions}>
+              Back
+            </Button>
           </div>
         </Dialog.Content>
       </Dialog>

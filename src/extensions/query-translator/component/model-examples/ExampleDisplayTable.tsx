@@ -19,7 +19,6 @@ import { IconButton } from '@neo4j-ndl/react';
 type Example = {
   question: string;
   answer: string;
-  index: number;
 };
 
 const RemoveButton = ({ onClick }) => (
@@ -41,6 +40,15 @@ const EditButton = ({ onClick }) => (
   </IconButton>
 );
 
+const Buttons = ({EditButton, RemoveButton, row, deleteModelExample, handleEdit}) => {
+  return (
+    <div className='n-float-right n-text-right n-w-[100px]'>
+    <RemoveButton onClick={() => deleteModelExample(row.index)} />
+    <EditButton onClick={() => handleEdit(row.index)} />
+  </div>
+  );
+};
+
 function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
   const columnHelper = createColumnHelper<Example>();
 
@@ -58,10 +66,13 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
         header: '',
         id: 'actions',
         cell: ({ row }) => (
-          <div className='n-float-right n-text-right n-w-[100px]'>
-            <RemoveButton onClick={() => deleteModelExample(row.index)} />
-            <EditButton onClick={() => handleEdit(row.index)} />
-          </div>
+          <Buttons 
+          deleteModelExample={deleteModelExample} 
+          handleEdit={handleEdit} 
+          row={row} 
+          EditButton={EditButton} 
+          RemoveButton={RemoveButton}
+          />
         ),
       },
     ],
@@ -69,7 +80,6 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
   );
 
   const data = React.useMemo(() => examples, [examples]);
-  const rerender = React.useReducer(() => ({}), {})[1];
 
   const table = useReactTable({
     data,

@@ -17,7 +17,6 @@ const ExampleEditorModal = ({
   updateModelExample,
   addModelExample,
 }) => {
-  
   // States
   const [questionState, setQuestionState] = useState(question);
   const [answerState, setAnswerState] = useState(answer);
@@ -56,8 +55,6 @@ const ExampleEditorModal = ({
 
   // Function to handle form submission
   const handleFormSubmit = (question, answer) => {
-    console.log('Form submitted');
-    console
     /* If the current index state has a value, use it 
     to update the Q&A, otherwise, create a new one*/
     index != null && index >= 0 ? updateModelExample(index, question, answer) : addModelExample(question, answer);
@@ -83,6 +80,9 @@ const ExampleEditorModal = ({
     <Dialog size='large' aria-labelledby='form-dialog-title' open={exampleEditorIsOpen} onClose={handleCloseEditor}>
       <Dialog.Header> {index != null && index >= 0 ? 'Edit' : 'Create New'} Example </Dialog.Header>
       <Dialog.Content>
+        {index != null && index >= 0 ? 'Edit' : 'Create new'} prompt and cypher query examples for the purposes of training LLM prediction performance.
+        <br />
+        <br />
         <div
           style={{
             backgroundColor: '#fff',
@@ -102,16 +102,15 @@ const ExampleEditorModal = ({
                 onChange={(e) => setQuestionState(e.target.value)}
               />
             </div>
-
+            <div className=' n-mb-1 '>Cypher Query</div>
             {/* Cypher editor */}
-            <div className='n-mb-4'>
-              <label>Cypher Query</label>
+            <div className='n-mb-6'>
               {cypherEditor}
             </div>
             <p className='n-text-palette-danger-text'> {errorMessage}</p>
 
             {/* Save and close buttons  */}
-            <div className='n-text-right n-pt-2'>
+            <div className='n-text-right n-t-2'>
               {/* Changes button to loading button is isSaving state=true */}
               {isSaving ? (
                 <Button className='n-m-1' loading>
