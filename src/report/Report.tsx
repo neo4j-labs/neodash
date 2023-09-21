@@ -232,7 +232,7 @@ export const NeoReport = ({
   const reportTypes = getReportTypes(extensions);
 
   /**
-   * This component renders string response from the cypher query. This feature is only applicable for graph reports.
+   * This component renders string response from the cypher query. This feature is only applicable for graph report.
    * https://mercedes-benz.atlassian.net/browse/VULCAN-235
    */
   if (records !== null && records.length === 1) {
