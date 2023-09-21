@@ -40,11 +40,11 @@ const EditButton = ({ onClick }) => (
   </IconButton>
 );
 
-const Buttons = ({EditButton, RemoveButton, row, deleteModelExample, handleEdit}) => {
+const Buttons = ({EditButton, RemoveButton, index, deleteModelExample, handleEdit}) => {
   return (
     <div className='n-float-right n-text-right n-w-[100px]'>
-    <RemoveButton onClick={() => deleteModelExample(row.index)} />
-    <EditButton onClick={() => handleEdit(row.index)} />
+    <RemoveButton onClick={() => deleteModelExample(index)} />
+    <EditButton onClick={() => handleEdit(index)} />
   </div>
   );
 };
@@ -56,11 +56,11 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
     () => [
       columnHelper.accessor('question', {
         cell: (info) => info.getValue(),
-        header: () => <span>Question</span>,
+        header: 'Question',
       }),
       columnHelper.accessor('answer', {
         cell: (info) => info.getValue(),
-        header: () => <span>Answer</span>,
+        header: 'Answer',
       }),
       {
         header: '',
@@ -69,7 +69,7 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
           <Buttons 
           deleteModelExample={deleteModelExample} 
           handleEdit={handleEdit} 
-          row={row} 
+          index={row.index} 
           EditButton={EditButton} 
           RemoveButton={RemoveButton}
           />
