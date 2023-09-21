@@ -43,6 +43,14 @@ const EditButton = ({ onClick }) => (
 function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
   const columnHelper = createColumnHelper<Example>();
 
+  // Buttons that will be used inside the table
+  const RowButtons = (index) => (
+    <div className='n-float-right n-text-right n-w-[100px]'>
+      <RemoveButton onClick={() => deleteModelExample(index)} />
+      <EditButton onClick={() => handleEdit(index)} />
+    </div>
+  );
+
   const columns = React.useMemo(
     () => [
       columnHelper.accessor('question', {
@@ -54,15 +62,10 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
         header: 'Answer',
       }),
       {
-        //Is there a way to define these components not during the render?
+        // Is there a way to define these components not during the render?
         header: '',
         id: 'actions',
-        cell: ({ row }) => (
-          <div className='n-float-right n-text-right n-w-[100px]'>
-            <RemoveButton onClick={() => deleteModelExample(row.index)} />
-            <EditButton onClick={() => handleEdit(row.index)} />
-          </div>
-        ),
+        cell: ({ row }) => RowButtons(row.index),
       },
     ],
     []
@@ -83,7 +86,11 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
         <table className='ndl-div-table'>
           <thead className='ndl-table-thead'>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr className='ndl-table-tr' style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px' }} key={headerGroup.id}>
+              <tr
+                className='ndl-table-tr'
+                style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px' }}
+                key={headerGroup.id}
+              >
                 {headerGroup.headers.map((header) => (
                   <th className='ndl-table-th ndl-focusable-cell ndl-header-group ndl-header-cell' key={header.id}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -94,7 +101,11 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
           </thead>
           <tbody className='ndl-table-tbody'>
             {table.getRowModel().rows.map((row) => (
-              <tr className='ndl-table-tr' style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px' }} key={row.id}>
+              <tr
+                className='ndl-table-tr'
+                style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px' }}
+                key={row.id}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td className='ndl-table-td ndl-focusable-cell' key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
