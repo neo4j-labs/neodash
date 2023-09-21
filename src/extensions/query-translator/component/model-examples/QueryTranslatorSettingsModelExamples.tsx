@@ -36,7 +36,7 @@ const QueryTranslatorSettingsModelExamples = ({ handleCloseEditSolutions, exampl
         </Dialog.Header>
         <Dialog.Content className='n-ml-2'>
           You can define custom English to Cypher translation examples here. <br /> Adding your own examples will
-          improve the performance of LLM English to Cypher predictioins on your dashboard.
+          improve the accuracy of translating English to Cypher in your dashboard.
           <br />
           <br />
           <ExampleDisplayTable handleEdit={handleEdit} />
