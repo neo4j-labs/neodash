@@ -231,6 +231,24 @@ export const NeoReport = ({
 
   const reportTypes = getReportTypes(extensions);
 
+  /**
+   * This component renders string response from the cypher query. This feature is only applicable for graph report.
+   */
+  if (records !== null && records.length === 1) {
+    if (type === 'graph' && typeof records[0]?._fields[0] === 'string') {
+      return (
+        <CustomSingleValueComponent
+          value={records[0]._fields[0]}
+          sx={{
+            fontSize: settings?.fontSize,
+            color: settings?.color,
+            textAlign: settings?.textAlign,
+          }}
+        />
+      );
+    }
+  }
+
   // Draw the report based on the query status.
   if (disabled) {
     return <div></div>;
