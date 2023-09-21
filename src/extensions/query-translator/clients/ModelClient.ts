@@ -195,7 +195,6 @@ export abstract class ModelClient {
         // Get the answer to the question from the model
         modelAnswer = await this.chatCompletion(tmpHistory);
         tmpHistory.push(modelAnswer);
-        console.log(tmpHistory);
 
         // and try to validate it
         let validationResult = await this.validateQuery(modelAnswer, database);
@@ -222,7 +221,7 @@ export abstract class ModelClient {
       if (!isValidated) {
         throw Error(
           `The model could not translate your question to valid Cypher: '${inputMessage}'. \n
-           The result from the model was: '${modelAnswer && modelAnswer.content ? modelAnswer.content : ''}'. \n
+           The result from the model was: '${modelAnswer?.content ? modelAnswer.content : ''}'. \n
            Try writing a more descriptive question, explicitly calling out the node labels, relationship types, and property names. `
         );
       }

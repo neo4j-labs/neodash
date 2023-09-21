@@ -16,7 +16,7 @@ import {
 } from '@tanstack/react-table';
 import { IconButton } from '@neo4j-ndl/react';
 import { getModelExamples } from '../../state/QueryTranslatorSelector';
-import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
+import { deleteModelExample } from '../../state/QueryTranslatorActions';
 import { connect } from 'react-redux';
 
 type Example = {
@@ -80,9 +80,9 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    initialState: { 
+    initialState: {
       pagination: {
-        pageSize: 5, 
+        pageSize: 5,
       },
     },
   });

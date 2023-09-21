@@ -6,7 +6,7 @@ import { SELECTION_TYPES } from '../../../config/CardConfig';
 import NeoSetting from '../../../component/field/Setting';
 import { QUERY_TRANSLATOR_CONFIG } from '../QueryTranslatorConfig';
 import ClientSettings from './ClientSettings';
-import { Dialog, Button } from '@neo4j-ndl/react';
+import { Dialog } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 import QueryTranslatorSettingsModelExamples from './model-examples/QueryTranslatorSettingsModelExamples';
 
@@ -79,9 +79,7 @@ const QueryTranslatorSettingsModal = ({
               setSettingsState={setSettingsState}
             />
           ) : (
-            <>
-              Select one of the available clients.
-            </>
+            <>Select one of the available clients.</>
           )}
         </Dialog.Content>
       </Dialog>
