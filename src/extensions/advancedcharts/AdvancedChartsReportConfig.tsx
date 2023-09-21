@@ -1011,21 +1011,26 @@ export const ADVANCED_REPORT_TYPES = {
     useNodePropsAsFields: true,
     autoAssignSelectedProperties: true,
     selection: {
-      index: {
-        label: 'Code',
-        type: SELECTION_TYPES.TEXT,
-      },
-      value: {
-        label: 'Value',
-        type: SELECTION_TYPES.NUMBER,
-        key: true,
+      properties: {
+        label: 'Node Properties',
+        type: SELECTION_TYPES.NODE_PROPERTIES,
       },
     },
     settings: {
-      placeholder: {
-        label: 'Placeholder',
+      nameProperty: {
+        label: 'Task Label Property',
         type: SELECTION_TYPES.TEXT,
-        default: 'Default',
+        default: 'activityName',
+      },
+      startDateProperty: {
+        label: 'Task Start Date Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'startDate',
+      },
+      endDateProperty: {
+        label: 'Task End Date Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'endDate',
       },
     },
   },
