@@ -120,6 +120,9 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
+  console.log(extraRecords);
+  console.log(displayValueRowIndex);
+  console.log(inputDisplayText);
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
@@ -151,7 +154,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
             variant='outlined'
           />
         )}
-        getOptionLabel={(option) => RenderSubValue(option)}
+        getOptionLabel={(option) => option?.toString() || ''}
       />
       {manualParameterSave ? <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} /> : <></>}
     </div>
