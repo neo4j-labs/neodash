@@ -100,6 +100,8 @@ const ExampleEditorModal = ({
                 size='small'
                 value={questionState}
                 onChange={(e) => setQuestionState(e.target.value)}
+                label=''
+                placeholder='Enter prompt here ...'
               />
             </div>
             <div className=' n-mb-1 '>Cypher Query</div>

@@ -15,6 +15,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { IconButton } from '@neo4j-ndl/react';
+import { getModelExamples } from '../../state/QueryTranslatorSelector';
+import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
+import { connect } from 'react-redux';
 
 type Example = {
   question: string;
@@ -207,4 +210,13 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
   );
 }
 
-export default ExampleDisplayTable;
+const mapStateToProps = (state) => ({
+  examples: getModelExamples(state),
+});
+
+// Function to launch an action to modify the state
+const mapDispatchToProps = (dispatch) => ({
+  deleteModelExample: (index) => dispatch(deleteModelExample(index)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExampleDisplayTable);

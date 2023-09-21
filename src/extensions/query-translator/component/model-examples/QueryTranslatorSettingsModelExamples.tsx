@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { getModelExamples } from '../../state/QueryTranslatorSelector';
 import { Dialog, Button } from '@neo4j-ndl/react';
-import { deleteModelExample, updateModelExample } from '../../state/QueryTranslatorActions';
 import ExampleEditorModal from './ExampleEditorModal';
 import ExampleDisplayTable from './ExampleDisplayTable';
 
@@ -11,7 +10,6 @@ const QueryTranslatorSettingsModelExamples = ({
   examples,
   open,
   handleCloseWithoutSave,
-  deleteModelExample,
 }) => {
   // States
   const [exampleEditorIsOpen, setExampleEditorIsOpen] = useState(false);
@@ -45,7 +43,7 @@ const QueryTranslatorSettingsModelExamples = ({
           View your local library of saved LLM examples. <br /> These will improve the performance of LLM English to Cypher predictioins on your dashboard.
           <br />
           <br />
-          <ExampleDisplayTable examples={examples} deleteModelExample={deleteModelExample} handleEdit={handleEdit} />
+          <ExampleDisplayTable handleEdit={handleEdit} />
           <div>
             <Button className='n-float-left' onClick={handleAdd}>
               Create New
@@ -75,10 +73,4 @@ const mapStateToProps = (state) => ({
   examples: getModelExamples(state),
 });
 
-// Function to launch an action to modify the state
-const mapDispatchToProps = (dispatch) => ({
-  deleteModelExample: (index) => dispatch(deleteModelExample(index)),
-  updateModelExample: (index, question, answer) => dispatch(updateModelExample(index, question, answer)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(QueryTranslatorSettingsModelExamples);
+export default connect(mapStateToProps)(QueryTranslatorSettingsModelExamples);
