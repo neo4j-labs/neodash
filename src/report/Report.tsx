@@ -18,6 +18,7 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import CustomSingleValueComponent from '../component/custom/CustomSingleValueComponent';
 
 const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -229,6 +230,25 @@ export const NeoReport = ({
   );
 
   const reportTypes = getReportTypes(extensions);
+
+  /**
+   * This component renders string response from the cypher query. This feature is only applicable for graph reports.
+   * https://mercedes-benz.atlassian.net/browse/VULCAN-235
+   */
+  if (records !== null && records.length === 1) {
+    if (type === 'graph' && typeof records[0]?._fields[0] === 'string') {
+      return (
+        <CustomSingleValueComponent
+          value={records[0]._fields[0]}
+          sx={{
+            fontSize: settings?.fontSize,
+            color: settings?.color,
+            textAlign: settings?.textAlign,
+          }}
+        />
+      );
+    }
+  }
 
   // Draw the report based on the query status.
   if (disabled) {
