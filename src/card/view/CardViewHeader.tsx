@@ -71,6 +71,9 @@ const NeoCardViewHeader = ({
       text: {
         primary: 'rgb(var(--palette-neutral-text))',
       },
+      action: {
+        disabled: 'rgb(var(--palette-neutral-text-weak))',
+      },
     },
   });
 
@@ -117,6 +120,11 @@ const NeoCardViewHeader = ({
                 size={'small'}
                 style={{ paddingTop: '0px important!' }}
                 variant={'standard'}
+                sx={{
+                  '& .MuiInputBase-input.Mui-disabled': {
+                    WebkitTextFillColor: 'inherit',
+                  },
+                }}
               />
             </td>
           </tr>
