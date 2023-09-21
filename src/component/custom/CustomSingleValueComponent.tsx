@@ -6,7 +6,7 @@ import React from 'react';
  */
 export default function CustomSingleValueComponent({ value = '', sx = {} }) {
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', marginRight: '15px', marginLeft: '15px' }}>
       <Typography style={{ ...sx }}>{value}</Typography>
     </Box>
   );
