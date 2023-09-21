@@ -152,40 +152,6 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
             </strong>
             &nbsp;
           </span>
-          <span className='n-mt-[5px]'>&nbsp; | &nbsp;</span>
-          <select
-            value={table.getState().pagination.pageSize}
-            onChange={(e) => {
-              table.setPageSize(Number(e.target.value));
-            }}
-            className='n-float-right'
-            style={{
-              marginTop: '6px',
-              marginLeft: '3px',
-              marginRight: '3px',
-              height: '26px',
-              padding: '1px 5px',
-              fontSize: '16px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              backgroundColor: 'white',
-              cursor: 'pointer',
-            }}
-          >
-            {[5, 10, 20].map((pageSize) => (
-              <option
-                key={pageSize}
-                value={pageSize}
-                style={{
-                  padding: '5px',
-                  fontSize: '14px',
-                  backgroundColor: 'white',
-                }}
-              >
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
 
           <IconButton
             className='n-place-content-center'

@@ -198,10 +198,6 @@ export const ClientSettings = ({
         </div>
       ) : (
         <>
-          <Button floating onClick={handleOpenEditSolutions}>
-            Tweak Prompts
-            <PencilSquareIconOutline className='btn-icon-base-r' />
-          </Button>
         </>
       )}
     </List>
