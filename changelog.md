@@ -1,3 +1,200 @@
+## NeoDash 2.3.3 & 2.3.4
+This is a bugfix / stability release directly following 2.3.2.
+
+Improvements:
+- Cleaned up dependencies, add lazy loading and code splitting in the bundle file for faster loading times. ([@BennuFire](https://github.com/BennuFire), [#545](https://github.com/neo4j-labs/neodash/pull/571))
+- Migrated all icons from Material UI to Needle icons. ([@BennuFire](https://github.com/BennuFire), [#545](https://github.com/neo4j-labs/neodash/pull/571))
+- Improved contrast for light and dark theme. ([@nielsdejong](https://github.com/nielsdejong), [#545](https://github.com/neo4j-labs/neodash/pull/566))
+- Fixed issue where dashboards were locked in read-only mode, after toggling in the dashboard settings. ([@nielsdejong](https://github.com/nielsdejong), [#545](https://github.com/neo4j-labs/neodash/pull/566))
+- Fixed issue where editing the name of a non-selected page changed the wrong page data. ([@BennuFire](https://github.com/BennuFire), [#545](https://github.com/neo4j-labs/neodash/pull/571))
+- Fixed issue where color picker was only working on popup selections. ([@BennuFire](https://github.com/BennuFire), [#579](https://github.com/neo4j-labs/neodash/pull/579))
+- Add user agent to driver session for better logging of NeoDash queries. ([@nielsdejong](https://github.com/nielsdejong), [#545](https://github.com/neo4j-labs/neodash/pull/574))
+
+
+## NeoDash 2.3.2
+What's new in NeoDash 2.3.2? A few bug fixes, performance improvements and more important, it ships phase 2 of our migration to [Needle](https://neo4j.com/developer-blog/needle-neo4j-design-system/)  !
+
+- Key Features:
+  - UI updated to use the **[Neo4j Design Language](https://www.neo4j.design/)** phase 2, giving NeoDash a similar look-and-feel to other Neo4j tools. This includes the removal of the sidebar and a complete refactor on the header component. ([@mariusconjeaud](https://github.com/mariusconjeaud),[@konsalex](https://github.com/konsalex),[@BennuFire](https://github.com/bennufire), [#552](https://github.com/neo4j-labs/neodash/pull/552))
+  - *Experimental* Support for **Dark Mode**.
+- Parameter Selector Chart
+  - New advanced setting 'Manual Parameter Save' allowing  dashboard parameters propagation on demand (instead of automatically on change) ([@BennuFire](https://github.com/bennufire), [#545](https://github.com/neo4j-labs/neodash/pull/545))
+  - Fix delete button leading to inconsistent values on click. ([@BennuFire](https://github.com/bennufire), [#545](https://github.com/neo4j-labs/neodash/pull/545))
+  
+  - Fix search on numbers not being triggered. ([@BennuFire](https://github.com/bennufire), [#545](https://github.com/neo4j-labs/neodash/pull/545))
+
+- Others
+  - Fix performance degradation on schema calculation ([@BennuFire](https://github.com/bennufire), [#555](https://github.com/neo4j-labs/neodash/pull/555))
+  - Fix standalone bug that prevent user from using username and password fields([@BennuFire](https://github.com/bennufire), [#551](https://github.com/neo4j-labs/neodash/pull/551))
+  - Added Sentry Support on https://neodash.graphapp.io ([@mariusconjeaud](https://github.com/mariusconjeaud), [#546](https://github.com/neo4j-labs/neodash/pull/546))
+  - Fix SSO redirection on editor mode ([@BennuFire](https://github.com/bennufire), [#543](https://github.com/neo4j-labs/neodash/pull/543))
+
+## NeoDash 2.3.1
+What's new in NeoDash 2.3.1? A few bug fixes, improvement of natural language queries with support of Azure Open AI and parameters, Graph Vizualization relationship styling and more below!
+
+- Natural language queries
+  - **Support of Azure Open AI** ([@BennuFire](https://github.com/bennufire), [#515](https://github.com/neo4j-labs/neodash/pull/515))
+  - Support parameters on natural language queries ([@BennuFire](https://github.com/bennufire), [#514](https://github.com/neo4j-labs/neodash/pull/514))
+
+- Graph Visualization
+  - Added styling rules for relationship color ([@brahmprakashMishra](https://github.com/brahmprakashMishra) [@BennuFire](https://github.com/bennufire), [#537](https://github.com/neo4j-labs/neodash/pull/537))
+
+- Table Chart
+  - Update TableChart to use first returned row values as titles when transposed ([@bastienhubert](https://github.com/bastienhubert), [#513](https://github.com/neo4j-labs/neodash/pull/513))
+  - Fix falsy boolean display on table ([@bastienhubert](https://github.com/bastienhubert), [#536](https://github.com/neo4j-labs/neodash/pull/536))
+
+- Report Actions
+  - Fix on Style and Action modal that was preventing from setting params on low resolutions ([@mariusconjeaud](https://github.com/mariusconjeaud), [#533](https://github.com/neo4j-labs/neodash/pull/533))
+
+- Others
+  - New setting for parameters selector to allow selection of multiple values instead of one + Fix multi selector on dates ([@BennuFire](https://github.com/bennufire), [#535](https://github.com/neo4j-labs/neodash/pull/535))
+  - Fix bug where protocol was not set properly on share links ([@nielsdejong](https://github.com/nielsdejong), [#521](https://github.com/neo4j-labs/neodash/pull/521))
+  - Update word-wrap from 1.2.3 to 1.2.4 ([@BennuFire](https://github.com/bennufire), [#526](https://github.com/neo4j-labs/neodash/pull/526) [#527](https://github.com/neo4j-labs/neodash/pull/527))
+
+## NeoDash 2.3.0
+NeoDash 2.3 is out! This release brings a brand new look-and-feel, improved speed for large dashboards, and a new extension for querying Neo4j with natural language (using LLMs).
+
+Key features:
+- Write **[Natural Language Queries](https://neo4j.com/labs/neodash/2.3/user-guide/extensions/natural-language-queries/)** and use OpenAI to generate Cypher queries for your visualizations.
+- UI updated to use the **[Neo4j Design Language](https://www.neo4j.design/)**, giving NeoDash a similar look-and-feel to other Neo4j tools.
+- Customize branding, colors dynamically with a new [Style Configuration File](https://neo4j.com/labs/neodash/2.3/developer-guide/style-configuration).
+  
+Other changes:
+- Fixed issues with date picker / free-text parameter sometimes not initializing.
+- Improved documentation by fixing broken links, and adding more details around complex concepts. 
+- **Pro Extensions have evolved to open Expert Extensions.**
+- Fixed issue where deep-linked parameters were not set from the URL.
+- Added option to specify absolute width for table columns (in pixels or as percentages).
+- Fixed map charts to auto-cluster markers when they collide, or are too close together.
+- ... and dozens of other improvements!
+
+
+
+Contributors to this release:
+- [Alfredo Rubin](https://github.com/alfredorubin96)
+- [Harold Agudelo](https://github.com/BennuFire)
+- [Aleksandar Simeunovic](https://github.com/AleSim94)
+- [Marius Conjeaud](https://github.com/mariusconjeaud)
+- [Brahm Prakash Mishra](https://github.com/brahmprakashMishra)
+- [Pierre Martignon](https://github.com/pierremartignon)
+- [Kim Zachariassen](https://github.com/KiZach)
+- [Paolo Baldini](https://github.com/8Rav3n)
+- [Niels de Jong](https://github.com/nielsdejong/)
+
+
+## NeoDash 2.2.5
+This is a minor release with some small bug fixes, directly following the 2.2.4 release.
+- Fixed replacement rules for parameters in iFrames/Markdown reports. [#417](https://github.com/neo4j-labs/neodash/pull/417)
+- Added automatic header text color switch for reports with a dark background [#420](https://github.com/neo4j-labs/neodash/pull/420)
+- Fixed handling right click events (for graph exploration) in Neo4j Desktop [#415](https://github.com/neo4j-labs/neodash/pull/415).
+- Added support for unweighted Sankey charts [#419](https://github.com/neo4j-labs/neodash/pull/419)
+
+
+## NeoDash 2.2.4
+This release is a feature-rich package with a variety of new features and bug fixes. NeoDash 2.2.4 features new visualizations, as well as new features in existing visualization components. 
+
+
+- Area Map - **New!** 
+  - Added a new advanced chart interactive area map visualization for rendering geo json polygons. ([@alfredorubin96](https://github.com/alfredorubin96), [#401](https://github.com/neo4j-labs/neodash/pull/401))
+  - Assign color scale automatically based on numeric values.
+  - Assign colors to countries based on Alpha-2 and Alpha-3 codes, and area codes by ISO 3166 code.
+  - Interactive drilldown by clicking on regions in a country.
+
+- Graph Visualization
+  - Added **lightweight, ad-hoc graph exploration** by relationship type and direction. ([@nielsdejong](https://github.com/nielsdejong), [#401](https://github.com/neo4j-labs/neodash/pull/401))
+  - Added experimental graph editing: nodes and relationships, plus creating relationships between existing nodes. ([@nielsdejong](https://github.com/nielsdejong), [#401](https://github.com/neo4j-labs/neodash/pull/401))
+  - Fixed incorrect assignment of chip colors in graph visualization footer. ([@BennuFire](https://github.com/bennufire), [#296](https://github.com/neo4j-labs/neodash/issues/296))
+  - Added experimental CSV download button to graph visualizations. ([@JonanOribe](https://github.com/JonanOribe), [#288](https://github.com/neo4j-labs/neodash/issues/288), [#363](https://github.com/neo4j-labs/neodash/issues/363))
+  - Fixed a bug where dashboard parameters were not dynamically injected into drilldown links. ([@nielsdejong](https://github.com/nielsdejong), [#397](https://github.com/neo4j-labs/neodash/pull/397))
+  - Added setting to customize the size of the arrow head on an edge. Set to zero to disable directional rendering. ([@BennuFire](https://github.com/bennufire), [#410](https://github.com/neo4j-labs/neodash/pull/410))
+ 
+- Single Value Chart
+  - Added support for outputting dictionaries in YML format, and rendering new lines. ([@nielsdejong](https://github.com/nielsdejong), [#315](https://github.com/neo4j-labs/neodash/issues/315))
+
+- Choropleth Map
+  - Added polygon information for missing countries: France, Kosovo, and others. ([@BennuFire](https://github.com/bennufire), [#357](https://github.com/neo4j-labs/neodash/issues/357))
+
+- Parameter Selector
+  - Fixed bug where the parameter selector was not using the selected database to populate results. ([@BennuFire](https://github.com/bennufire), [#366](https://github.com/neo4j-labs/neodash/issues/366))
+  - Added a date picker parameter selector type for natively specifying dates. ([@alfredorubin96](https://github.com/alfredorubin96), [#401](https://github.com/neo4j-labs/neodash/pull/401))
+  - Added support for injecting custom queries as a populator for parameter selector suggestions. ([@BennuFire](https://github.com/bennufire), [#236](https://github.com/neo4j-labs/neodash/issues/236), [#369](https://github.com/neo4j-labs/neodash/issues/369))
+
+- Table Chart
+  - Added support for customizing the seperator in csv exports. ([@nielsdejong](https://github.com/nielsdejong), [#337](https://github.com/neo4j-labs/neodash/issues/337))
+- Others
+  - Added support for easily configurable branding/color schemes of the editor. ([@nielsdejong](https://github.com/nielsdejong), [#401](https://github.com/neo4j-labs/neodash/pull/401))
+  - Added a new report action to switch pages based on a user interaction. ([@BennuFire](https://github.com/BennuFire), [#324](https://github.com/neo4j-labs/neodash/issues/324))
+  - Added handler for mulitple report actions to be executed on the same event. ([@BennuFire](https://github.com/BennuFire), [#324](https://github.com/neo4j-labs/neodash/issues/324))
+  - Integrated the official released version of the Neo4j Cypher editor component. ([@jharris4](https://github.com/jharris4), [#365](https://github.com/neo4j-labs/neodash/pull/365))
+  - Fixed hot-module replacement inside webpack configuration.  ([@konsalex](https://github.com/konsalex), [#396](https://github.com/neo4j-labs/neodash/pull/396))
+  - Fixed husky pre-commit hook not triggering correctly on Windows environments. ([@bastienhubert](https://github.com/bastienhubert), [#342](https://github.com/neo4j-labs/neodash/issues/342))
+  - Add support for using complex objects in markdown, iframes and report titles. ([@BennuFire](https://github.com/bennufire), [#413](https://github.com/neo4j-labs/neodash/pull/413))
+
+
+## NeoDash 2.2.3
+This releases fixes a small set of bugs that slipped through the 2.2.3 release, and adds some minor features:
+- Added support for scatter plots by overriding a parameter in the line chart.
+- Added the ability to use dashboard parameter as filters in custom parameter selector queries.
+- Fixed breaking bug in parameter selector settings causing a white-screen error.
+- Fixed auto-coloring of bar charts (resolved back to logic of 2.2.1 and earlier).
+- Added a quick fix for automatically resetting the parameter display value when the property display override is toggled.
+- Upversioned outdated dashboards and in the NeoDash Gallery.
+
+  
+## NeoDash 2.2.2
+The NeoDash 2.2.2 release is packed with a bunch of new usability features:
+- Changed the built-in Cypher editor to a brand-new [CodeMirror Editor](https://github.com/neo4j-contrib/cypher-editor).
+- Rebuilt the **Parameter Select** component from scratch for improved stability, performance and extendability:
+  - Added an optional setting to the parameter selector to display a different property from the one that is set by the selector.
+  - Use this to - for example - let users choose a name and set an ID for use by other reports.
+  - Fields no longer reset randomly when parameters are changed.
+  - Freetext fields are no longer slow - perform as fast as the other selectors.
+- Add the option to use rule-based styling based on dashboard parameters.
+- Changed rule-based styling on bar and pie charts to override color scheme instead of clear the scheme.
+- Extended the [Example Gallery](https://neodash-gallery.graphapp.io/) with several new demos.
+- Adding intermediate report error boundaries for improved app stability. 
+- Changed docker image name to `neo4jlabs/neodash`.
+- Improved documementation for developers.
+- Fixed inconsistent styling between different pop-up screens, and fixed report title placeholders.
+
+## NeoDash 2.2.1
+This update provides a number of usability improves over the 2.2.0 release.
+In addition, it entails various improvements to the codebase, including security patches on the dependencies.
+
+Table:
+- Column names prefixed with `__` are now hidden in the table view.
+  
+Map:
+- Added documentation for adding a custom map provider.
+
+Parameter selector:
+- Added support for boolean parameters.
+
+Editor:
+- Parameters are now automatically replaced **inside report titles**.
+- Image downloads now include the report title alongside the visualization.
+
+Others:
+- Applied security patches for dependencies.
+- Set test container for release pipeline to fixed version of Neo4j.
+- Aligned code style / linting with Neo4j product standards.
+- Updated Docker setup to inject `standaloneDashboardURL` into the application config.
+
+## NeoDash 2.2.0
+This release marks the official arrival of **[Extensions](https://neo4j.com/labs/neodash/2.2/user-guide/extensions/)**, which provide a simple way of extending NeoDash with additional features. Adding your own features to NeoDash just became a lot easier!
+
+NeoDash 2.2 comes with three in-built extensions.
+- **Rule-Based Styling**
+- **Advanced Visualizations**: These provide a means to enable complex visualizations in a dashboard. These were previously available as Radar charts, Treemaps, Circle Packing reports, Sankey charts, Choropleth and a Gauge Chart).
+- **Report Actions**: Which let you create interactivity in dashboards, using the output of one report as input for another visualization. (Expert Extension)
+
+You can enable extensions by clicking the 🧩 icon on the left sidebar of the screen.
+
+Other changes include:
+- New example dashboards available in the [Dashboard Gallery](https://neodash-gallery.graphapp.io).
+- Customizable background colors for all report types.
+- Fixing a bug where the Choropleth map chart was unable to parse country-codes.
+
 ## NeoDash 2.1.10
 This is a minor update which adds some operational/styling improvements, and a bug fix for line charts.
 

@@ -91,6 +91,9 @@ directly maps to the width value.
 relationships with animated particles on them, moving in the direction
 of the relationship.
 
+|Arrow head size |Number |3 |Use this to set the length of the arrow head, size is adjusted automatically.
+If 0, no arrow will be drawn.
+
 |Background Color |Text |#fafafa |The background color of the
 visualization.
 
@@ -98,6 +101,10 @@ visualization.
 the main (force-directed) layout to one of the two experimental layouts
 (tree/radial). For the experimental layouts, make sure your graph is a
 DAG (directed acyclic graph).
+
+|Enable graph exploration |on/off |on |Enables basic exploration functionality for the graph. Exploration can be done by right clicking on a node, and choosing 'Expand' to choose a type to traverse. Data is retrieved real-time and not cached in the visualization.
+
+|Enable graph editing |on/off |off |Enables editing of nodes and relationships in the graph from the right-click context menu. In addition, lets users create new relationships with existing types/property keys as present in the database.
 
 |Show pop-up on Hover |on/off |on |if enabled, shows a pop-up when a
 user hovers over one of the nodes/relationships in the visualization.

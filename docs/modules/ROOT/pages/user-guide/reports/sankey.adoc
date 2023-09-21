@@ -1,5 +1,7 @@
 = Sankey Chart
 
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
+
 A Sankey visualization will generate a flow diagram from nodes and links.
 Beware that cyclic dependencies are not supported.
 
@@ -29,7 +31,8 @@ the visualization.
 user hovers over a node or link.
 
 |Relationship Property |text | value | Name of the property with an integer value that is going
-to be used to determine thickness of links.
+to be used to determine thickness of links. Using 'SANKEY_UNWEIGHTED', this sankey will assume
+every relationship with a weight of 1.
 
 |Color Scheme |List | |The color scheme to use for the slices. Colors
 are assigned automatically (consecutively) to the different categories

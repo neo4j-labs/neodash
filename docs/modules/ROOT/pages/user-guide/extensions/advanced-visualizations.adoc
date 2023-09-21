@@ -1,0 +1,16 @@
+= Advanced Visualizations
+
+Advanced visualizations let you extend your dashboard with complex, powerful visualizations beyond the standard visualizations.
+For specific use-cases, these visualizations may convey information that a simple visualization cannot.
+To use advanced visualizations, enable them in the **Extensions Window**. This makes them selectable inside reports, as well as add examples to the Example window.
+
+The following visualizations are part of this extension:
+
+- A link:../../reports/sankey[Sankey Chart] to visualize flows.
+- Three charts to plot hierarchical data (link:../../reports/sunburst[Sunburst], link:../../reports/circle-packing[Circle Packing], link:../../reports/treemap[Treemap])
+- A link:../../reports/gauge-chart[Gauge Chart] to show percentages 
+- An link:../../reports/choropleth[Choropleth] to visualize numeric, country-data.
+- An link:../../reports/areamap[Area Map] to show an interactive world map, annotated with numeric country / region values.
+- A link:../../reports/radar[Radar Chart] to create a radial view of multiple categoric values.
+
+image::advanced-visualizations.png[Advanced Visualizations]

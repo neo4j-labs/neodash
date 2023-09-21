@@ -1,9 +1,11 @@
-## NeoDash 2.1.10
-This is a minor update which adds some operational/styling improvements, and a bug fix for line charts.
+## NeoDash 2.3.3 & 2.3.4
+This is a bugfix / stability release directly following 2.3.2.
 
-Changes:
-- Added customizable label positions for bar charts.
-- Fixed bug where datetimes were not handled correctly by line charts. (https://github.com/neo4j-labs/neodash/issues/243)
-- Added **session parameters**, set automatically and available to Cypher queries ([Documentation](https://neo4j.com/labs/neodash/2.1/user-guide/reports/)).
-- Added option to restore debug reports in recovery mode.
-- Added option to share dashboards from self-hosted deployments.
+Improvements:
+- Cleaned up dependencies, add lazy loading and code splitting in the bundle file for faster loading times. ([@BennuFire](https://github.com/BennuFire), [#545](https://github.com/neo4j-labs/neodash/pull/571))
+- Migrated all icons from Material UI to Needle icons. ([@BennuFire](https://github.com/BennuFire), [#545](https://github.com/neo4j-labs/neodash/pull/571))
+- Improved contrast for light and dark theme. ([@nielsdejong](https://github.com/nielsdejong), [#545](https://github.com/neo4j-labs/neodash/pull/566))
+- Fixed issue where dashboards were locked in read-only mode, after toggling in the dashboard settings. ([@nielsdejong](https://github.com/nielsdejong), [#545](https://github.com/neo4j-labs/neodash/pull/566))
+- Fixed issue where editing the name of a non-selected page changed the wrong page data. ([@BennuFire](https://github.com/BennuFire), [#545](https://github.com/neo4j-labs/neodash/pull/571))
+- Fixed issue where color picker was only working on popup selections. ([@BennuFire](https://github.com/BennuFire), [#579](https://github.com/neo4j-labs/neodash/pull/579))
+- Add user agent to driver session for better logging of NeoDash queries. ([@nielsdejong](https://github.com/nielsdejong), [#545](https://github.com/neo4j-labs/neodash/pull/574))

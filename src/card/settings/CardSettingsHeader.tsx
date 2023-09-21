@@ -1,60 +1,83 @@
 import React from 'react';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import SaveIcon from '@material-ui/icons/Save';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import { FullscreenExit } from '@material-ui/icons';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, CardHeader } from '@mui/material';
+import { IconButton } from '@neo4j-ndl/react';
+import {
+  ExpandIcon,
+  ShrinkIcon,
+  DragIcon,
+  QuestionMarkCircleIconOutline,
+  TrashIconOutline,
+  DocumentDuplicateIconOutline,
+  PlayCircleIconSolid,
+} from '@neo4j-ndl/react/icons';
 
-const NeoCardSettingsHeader = ({ onRemovePressed, onToggleCardSettings, onToggleCardExpand, 
-    expanded, fullscreenEnabled, onReportHelpButtonPressed, onClonePressed }) => {
-    const maximizeButton = <IconButton aria-label="maximize"
-        onClick={onToggleCardExpand}>
-        <FullscreenIcon />
+const NeoCardSettingsHeader = ({
+  onRemovePressed,
+  onToggleCardSettings,
+  onToggleCardExpand,
+  expanded,
+  fullscreenEnabled,
+  onReportHelpButtonPressed,
+  onClonePressed,
+}) => {
+  const maximizeButton = (
+    <IconButton aria-label='maximize' onClick={onToggleCardExpand}>
+      <ExpandIcon />
     </IconButton>
+  );
 
-    const unMaximizeButton = <IconButton aria-label="un-maximize"
-        onClick={onToggleCardExpand}>
-        <FullscreenExit />
+  const unMaximizeButton = (
+    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand}>
+      <ShrinkIcon />
     </IconButton>
+  );
 
-    return (
-        <CardHeader
-            avatar={<div style={{ marginTop: "-8px" }}>
-
-                <DragIndicatorIcon className="drag-handle" style={{ color: "grey", cursor: "pointer", marginTop: "8px", marginLeft: "-7px", marginRight: "10px" }}></DragIndicatorIcon>
-                <Tooltip title="Help" aria-label="help">
-                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px" }} aria-label="help"
-                        onClick={onReportHelpButtonPressed}>
-                        <HelpOutlineIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete" aria-label="delete">
-                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "red" }} aria-label="remove"
-                        onClick={onRemovePressed} >
-                        <DeleteOutlineIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Clone" aria-label="clone">
-                    <IconButton size="medium" style={{ marginTop: "-16px", padding: "8px", color: "green" }} aria-label="clone"
-                                onClick={onClonePressed} >
-                        <FileCopyOutlinedIcon />
-                    </IconButton>
-                </Tooltip>
-            </div>}
-            action={<>
-                {fullscreenEnabled ? (expanded ? unMaximizeButton : maximizeButton) : <></>}
-                <Tooltip title="Save" aria-label="save">
-                    <IconButton aria-label="save" onClick={(e) => { e.preventDefault(); onToggleCardSettings() }}><SaveIcon /></IconButton>
-                </Tooltip >
-            </>}
-            title=""
-            subheader="" />
-    );
+  return (
+    <CardHeader
+      avatar={
+        <div style={{ marginTop: '-8px', paddingBottom: '1px' }}>
+          <IconButton clean size='medium' aria-label={'Move Report'} className='n-relative -n-left-3 drag-handle'>
+            <DragIcon aria-label={'Move Report'} />
+          </IconButton>
+          <Tooltip title='Help' aria-label='Help' disableInteractive>
+            <IconButton aria-label='Help' onClick={onReportHelpButtonPressed} clean size='medium'>
+              <QuestionMarkCircleIconOutline aria-label={'Help'} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Delete' aria-label='Delete' disableInteractive>
+            <IconButton style={{ color: 'red' }} aria-label='remove' onClick={onRemovePressed} clean size='medium'>
+              <TrashIconOutline aria-label={'Delete'} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Clone' aria-label='Clone' disableInteractive>
+            <IconButton style={{ color: 'green' }} aria-label='Clone' onClick={onClonePressed} clean size='medium'>
+              <DocumentDuplicateIconOutline aria-label={'Clone'} />
+            </IconButton>
+          </Tooltip>
+        </div>
+      }
+      action={
+        <>
+          {fullscreenEnabled ? expanded ? unMaximizeButton : maximizeButton : <></>}
+          <Tooltip title='Run' aria-label='run' disableInteractive>
+            <IconButton
+              aria-label='run'
+              onClick={(e) => {
+                e.preventDefault();
+                onToggleCardSettings();
+              }}
+              clean
+              size='medium'
+            >
+              <PlayCircleIconSolid />
+            </IconButton>
+          </Tooltip>
+        </>
+      }
+      title=''
+      subheader=''
+    />
+  );
 };
 
 export default NeoCardSettingsHeader;

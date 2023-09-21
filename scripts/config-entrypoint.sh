@@ -14,5 +14,6 @@ echo " \
     \"standaloneUsername\": \"${standaloneUsername:=}\", \
     \"standalonePassword\": \"${standalonePassword:=}\", \
     \"standaloneDashboardName\": \"${standaloneDashboardName:='My Dashboard'}\", \
-    \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase:='neo4j'}\"  \
+    \"standaloneDashboardDatabase\": \"${standaloneDashboardDatabase:='neo4j'}\",  \
+    \"standaloneDashboardURL\": \"${standaloneDashboardURL:=}\"  \
     }" > /usr/share/nginx/html/config.json

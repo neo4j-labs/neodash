@@ -13,20 +13,23 @@ COPY ./package.json /usr/local/src/neodash/package.json
 
 RUN yarn install
 COPY ./ /usr/local/src/neodash
-RUN yarn run build
+RUN yarn run build-minimal
 
 # production stage
 FROM nginx:alpine AS neodash
 RUN apk upgrade
-COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
 
-COPY ./conf/default.conf /etc/nginx/conf.d/
+ENV NGINX_PORT=5005
+
+COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
+COPY ./conf/default.conf.template /etc/nginx/templates/
 COPY ./scripts/config-entrypoint.sh /docker-entrypoint.d/config-entrypoint.sh
 COPY ./scripts/message-entrypoint.sh /docker-entrypoint.d/message-entrypoint.sh
 
 RUN chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
     chown -R nginx:nginx /etc/nginx/conf.d && \
+    chown -R nginx:nginx /etc/nginx/templates && \
     chown -R nginx:nginx /docker-entrypoint.d/config-entrypoint.sh && \
     chmod +x /docker-entrypoint.d/config-entrypoint.sh  && \
     chmod +x /docker-entrypoint.d/message-entrypoint.sh
@@ -36,6 +39,8 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 
 ## Launch webserver as non-root user.
 USER nginx
-EXPOSE 5005
-HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
-LABEL version="2.1.10"
+
+EXPOSE $NGINX_PORT
+
+HEALTHCHECK cmd curl --fail "http://localhost:$NGINX_PORT" || exit 1
+LABEL version="2.3.4"

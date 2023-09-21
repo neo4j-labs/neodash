@@ -13,8 +13,7 @@ target
 
 # testing
 /coverage
-cypress/plugins
-cypress/support
+/.nyc_output
 cypress/videos
 
 # production
@@ -39,3 +38,5 @@ jspm_packages
 
 # Serverless directories
 .serverless
+# Sentry Auth Token
+.env.sentry-build-plugin

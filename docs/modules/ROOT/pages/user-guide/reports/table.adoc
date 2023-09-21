@@ -9,6 +9,7 @@ The table report supports the following additional features:
 
 - automatic pagination of results. 
 - Sorting/filtering by clicking on the table headers. 
+- Prefixing a column header with __ (double underscore) will make the column hidden
 - Downloading your data as a CSV file.
 
 Double-clicking on a table cell will copy that cell's value to the user's clipboard.
@@ -19,7 +20,7 @@ Double-clicking on a table cell will copy that cell's value to the user's clipbo
 
 ....
 MATCH (n:Movie)<-[:ACTED_IN]-(p:Person)
-RETURN n.title, n.released, count(p) as actors
+RETURN n.title AS Title, n.released AS Released, count(p) as Actors
 ....
 
 image::table1.png[Basic Table]
@@ -41,6 +42,8 @@ image::table2.png[Table with nodes / collections]
 |Transpose Rows & Columns |on/off |off |when activated, transposes the
 rows and columns of the table. This means that each of the returned rows
 from Neo4j will be shown as a column instead of a row.
+
+|Compact Table |on/off |off |When activated, makes the rows half height and increase the number of rows per page accordingly.
 
 |Relative Column Sizes |List of numbers |[1, 1, 1, …] |The relative
 width between each of the columns in the table. For example, if the
@@ -66,3 +69,5 @@ following style rules can be applied to the table:
 - The text color of an entire row in a table. 
 - The background color of a single cell in the table. 
 - The text color of a single cell in the table.
+
+If a column is hidden (header prefixed with __ double underscore), it can still be used as an entry point for a styling rule.

@@ -70,37 +70,7 @@ Note that even though the row limiter is enabled by default, rows are
 only limited after the query is executed. For this reason, it is
 recommended to use the `LIMIT` clause in your query at all times.
 
-== Rule-Based Styling
-
-On several report types, rule-based styling can be applied to the
-visualization. To do this, open up the report settings, Then, click the
-*Rule-Based Styling* button on the bottom right (marked with the red
-circle):
-
-image::rulebasedstylingbutton.png[Report]
-
-This will open up the rule definition window. Inside this screen, a list
-of rules can be defined. Each rule will have the following structure:
-
-`IF [CONDITION] THEN [STYLE]`
-
-image::rulebasedstyling.png[Report]
-
-Conditions are always based on one of the return fields of the query.
-This can be a simple field (text, number) or a node property. Style
-rules are (as of NeoDash 2.1) always color-based.
-
-For example, the following rule will set the color of all `Warning`
-nodes to red:
-
-`IF Warning.level = "critical" THEN 'Node Color' = "red"`
-
-Ultimately, it is important to understand that the order of the rules is
-important. If a node matches multiple rules, the first rule that matches
-will be used. If no rules are matched, the default style will be used.
-
 == Parameters
-...
 
 Parameters can be set in a dashboard by using a link:parameter-select[Parameter Select] report. Set parameters are then available in any Cypher query across the dashboard.
 
@@ -129,6 +99,7 @@ pages:
 - link:radar[Radar Chart] 
 - link:map[Map]
 - link:choropleth[Choropleth Chart] 
+- link:areamap[Area Map] 
 - link:single-value[Single Value] 
 - link:sankey[Sankey Chart] 
 - link:gauge[Gauge Chart]
