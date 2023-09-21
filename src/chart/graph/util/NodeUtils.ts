@@ -36,14 +36,14 @@ const getSelectedNodeProperty = (entity: any, sourceOrTarget: string, propertySe
   }
 };
 
-const getEdgeHelper = (entity: any, selection: any) => {
+const getRelPatternString = (entity: any, selection: any) => {
   const sourceTitle = getSelectedNodeProperty(entity, 'source', selection);
   const targetTitle = getSelectedNodeProperty(entity, 'target', selection);
-  return `(${sourceTitle} --> ${targetTitle})`;
+  return `(${sourceTitle ? sourceTitle : '[no value]'} --> ${targetTitle ? targetTitle : '[no value]'})`;
 };
 
 export const getEntityHeader = (entity: any, selection: any) => {
-  return entity.labels?.join(', ') || `${entity.type} ${getEdgeHelper(entity, selection)}`;
+  return entity.labels?.join(', ') || `${entity.type} ${getRelPatternString(entity, selection)}`;
 };
 
 export const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
