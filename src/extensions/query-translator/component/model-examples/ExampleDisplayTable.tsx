@@ -40,15 +40,6 @@ const EditButton = ({ onClick }) => (
   </IconButton>
 );
 
-const Buttons = ({EditButton, RemoveButton, index, deleteModelExample, handleEdit}) => {
-  return (
-    <div className='n-float-right n-text-right n-w-[100px]'>
-    <RemoveButton onClick={() => deleteModelExample(index)} />
-    <EditButton onClick={() => handleEdit(index)} />
-  </div>
-  );
-};
-
 function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
   const columnHelper = createColumnHelper<Example>();
 
@@ -56,23 +47,21 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
     () => [
       columnHelper.accessor('question', {
         cell: (info) => info.getValue(),
-        header: 'Question',
+        header: () => 'Question',
       }),
       columnHelper.accessor('answer', {
         cell: (info) => info.getValue(),
         header: 'Answer',
       }),
       {
+        //Is there a way to define these components not during the render?
         header: '',
         id: 'actions',
         cell: ({ row }) => (
-          <Buttons 
-          deleteModelExample={deleteModelExample} 
-          handleEdit={handleEdit} 
-          index={row.index} 
-          EditButton={EditButton} 
-          RemoveButton={RemoveButton}
-          />
+          <div className='n-float-right n-text-right n-w-[100px]'>
+            <RemoveButton onClick={() => deleteModelExample(row.index)} />
+            <EditButton onClick={() => handleEdit(row.index)} />
+          </div>
         ),
       },
     ],
