@@ -5,12 +5,7 @@ import { Dialog, Button } from '@neo4j-ndl/react';
 import ExampleEditorModal from './ExampleEditorModal';
 import ExampleDisplayTable from './ExampleDisplayTable';
 
-const QueryTranslatorSettingsModelExamples = ({
-  handleCloseEditSolutions,
-  examples,
-  open,
-  handleCloseWithoutSave,
-}) => {
+const QueryTranslatorSettingsModelExamples = ({ handleCloseEditSolutions, examples, open, handleCloseWithoutSave }) => {
   // States
   const [exampleEditorIsOpen, setExampleEditorIsOpen] = useState(false);
   const [index, setIndex] = useState<number | null>(0);
@@ -40,7 +35,8 @@ const QueryTranslatorSettingsModelExamples = ({
           LLM Examples
         </Dialog.Header>
         <Dialog.Content className='n-ml-2'>
-          View your local library of saved LLM examples. <br /> These will improve the performance of LLM English to Cypher predictioins on your dashboard.
+          You can define custom English to Cypher translation examples here. <br /> Adding your own examples will
+          improve the performance of LLM English to Cypher predictioins on your dashboard.
           <br />
           <br />
           <ExampleDisplayTable handleEdit={handleEdit} />
@@ -59,7 +55,7 @@ const QueryTranslatorSettingsModelExamples = ({
   return (
     <ExampleEditorModal
       index={index}
-      //checks if index exists, and if it does, it passes the question and answer props over to the component, otherwise is empty
+      // checks if index exists, and if it does, it passes the question and answer props over to the component, otherwise is empty
       question={index !== null && examples[index].question ? examples[index].question : ''}
       answer={index !== null && examples[index].answer ? examples[index].answer : ''}
       exampleEditorIsOpen={exampleEditorIsOpen}
