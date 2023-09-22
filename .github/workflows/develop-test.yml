@@ -33,6 +33,6 @@ jobs:
           build: yarn run build
           start: yarn run dev
           wait-on: 'http://localhost:3000'
-          browser: chrome
+          browser: firefox
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

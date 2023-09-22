@@ -33,7 +33,7 @@ jobs:
           build: yarn run build
           start: yarn run dev
           wait-on: "http://localhost:3000"
-          browser: chrome
+          browser: firefox
   build-s3:
     needs: build-test
     runs-on: neodash-runners

@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "dev": "yarn webpack-dev-server --mode development",
+    "prod": "yarn webpack-dev-server --mode production",
     "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
     "build": "yarn webpack --mode production --env production && cp -r public/* dist/",
     "build-minimal": "yarn webpack --mode production --env production && cp -r public/* dist/",
