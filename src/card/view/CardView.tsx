@@ -213,7 +213,9 @@ const NeoCardView = ({
 
   return (
     <div
-      className={`card-view n-bg-palette-neutral-bg-weak ${expanded ? 'expanded' : ''}`}
+      className={`card-view n-bg-palette-neutral-bg-weak n-text-palette-neutral-text-default ${
+        expanded ? 'expanded' : ''
+      }`}
       style={settings && settings.backgroundColor ? { backgroundColor: settings.backgroundColor } : {}}
     >
       {reportHeader}
