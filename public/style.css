@@ -229,3 +229,10 @@
 		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 	}
 }
+
+/* Workaround for Needle not handling menu placement of dropdowns on modals */
+#overlay {
+  z-index: 99 !important;
+  position: absolute;
+}
+/* End workaround */
