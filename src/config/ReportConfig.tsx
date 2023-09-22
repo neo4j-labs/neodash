@@ -572,22 +572,22 @@ const _REPORT_TYPES = {
       marginLeft: {
         label: 'Margin Left (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 24,
+        default: 50,
       },
       marginRight: {
         label: 'Margin Right (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 24,
+        default: 50,
       },
       marginTop: {
         label: 'Margin Top (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 24,
+        default: 50,
       },
       marginBottom: {
         label: 'Margin Bottom (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 40,
+        default: 50,
       },
       refreshButtonEnabled: {
         label: 'Refreshable',

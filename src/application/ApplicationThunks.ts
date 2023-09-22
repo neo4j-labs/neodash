@@ -124,7 +124,7 @@ export const createConnectionThunk =
         query,
         parameters,
         1,
-        () => {},
+        () => { },
         (records) => validateConnection(records)
       );
     } catch (e) {
@@ -254,7 +254,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           dispatch(onConfirmLoadSharedDashboardThunk());
         }
 
-        window.history.pushState({}, document.title, '/');
+        window.history.pushState({}, document.title, window.location.pathname);
       } else {
         dispatch(setConnectionModalOpen(false));
         // dispatch(setWelcomeScreenOpen(false));
@@ -273,7 +273,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             false
           )
         );
-        window.history.pushState({}, document.title, '/');
+        window.history.pushState({}, document.title, window.location.pathname);
       }
     } else {
       // dispatch(resetShareDetails());
