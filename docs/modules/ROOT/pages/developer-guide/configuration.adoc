@@ -16,6 +16,7 @@ will look like this:
 ....
 {
     "ssoEnabled": false,
+    "ssoProviders": [],
     "ssoDiscoveryUrl": "https://example.com",
     "standalone": false,
     "standaloneProtocol": "neo4j",
@@ -36,6 +37,8 @@ will look like this:
 |ssoEnabled |boolean |false |If enabled, lets users connect to Neo4j
 using SSO. This requires the app to be running in standalone mode, and a
 valid ssoDiscoveryUrl to be set.
+
+|ssoProviders |List |[] |When using multiple SSO providers on the database, you can configure the list of providers (by id) to be used on Neodash. If empty, all providers will be displayed.
 
 |ssoDiscoveryUrl |string |https://example.com |If ssoEnabled is true &
 standalone mode is enabled, the URL to retrieve SSO auth config from.
