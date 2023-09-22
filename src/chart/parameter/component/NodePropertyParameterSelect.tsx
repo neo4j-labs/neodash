@@ -120,9 +120,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
-  console.log(extraRecords);
-  console.log(displayValueRowIndex);
-  console.log(inputDisplayText);
+
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
