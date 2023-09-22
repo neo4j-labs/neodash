@@ -12,6 +12,8 @@ import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleE
 import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import { objMerge } from '../../utils/ObjectManipulation';
+import { REPORT_TYPES } from '../../config/ReportConfig';
 
 const NeoCardView = ({
   id,
@@ -46,6 +48,14 @@ const NeoCardView = ({
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
   const ref = React.useRef();
 
+  const settingsSelector = Object.keys(
+    Object.fromEntries(Object.entries(REPORT_TYPES[type].settings).filter(([_, value]) => value.refresh))
+  ).reduce((obj, key) => {
+    return Object.assign(obj, {
+      [key]: settings[key],
+    });
+  }, {});
+
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   // TODO : selectorChange should handle every case where query execution needs to be re-executed
@@ -69,9 +79,13 @@ const NeoCardView = ({
       localQueryVariables.push(match[1]);
     }
 
-    return Object.fromEntries(
+    let params = Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
+
+    return settings.ignoreNonDefinedParams
+      ? objMerge(Object.fromEntries(localQueryVariables.map((name) => [name, null])), params)
+      : params;
   };
 
   // @ts-ignore
@@ -135,7 +149,7 @@ const NeoCardView = ({
 
   useEffect(() => {
     setSelectorChange(true);
-  }, [query, type]);
+  }, [query, type, JSON.stringify(settingsSelector)]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {

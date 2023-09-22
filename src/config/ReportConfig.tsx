@@ -13,6 +13,7 @@ import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
 import NeoLineChart from '../chart/line/LineChart';
 import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
+import { objMerge, objectMap } from '../utils/ObjectManipulation';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -25,7 +26,7 @@ export const RUN_QUERY_DELAY_MS = 300;
 export const DEFAULT_ROW_LIMIT = 100;
 
 // A dictionary of available reports (visualizations).
-export const REPORT_TYPES = {
+const _REPORT_TYPES = {
   table: {
     label: 'Table',
     helperText: 'A table will contain all returned data.',
@@ -33,11 +34,6 @@ export const REPORT_TYPES = {
     useReturnValuesAsFields: true,
     maxRecords: 1000,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       transposed: {
         label: 'Transpose Rows & Columns',
         type: SELECTION_TYPES.LIST,
@@ -96,11 +92,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   graph: {
@@ -120,11 +111,6 @@ export const REPORT_TYPES = {
     // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
     disabledDependency: { relationshipParticleSpeed: { dependsOn: 'relationshipParticles', operator: false } },
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       nodeColorScheme: {
         label: 'Node Color Scheme',
         type: SELECTION_TYPES.LIST,
@@ -316,11 +302,6 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   bar: {
@@ -350,11 +331,6 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -488,11 +464,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   pie: {
@@ -522,11 +493,6 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -652,11 +618,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   line: {
@@ -683,11 +644,6 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -838,11 +794,6 @@ export const REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
       },
     },
   },
@@ -1039,11 +990,6 @@ export const REPORT_TYPES = {
     component: NeoMapChart,
     maxRecords: 1000,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       layerType: {
         label: 'Layer Type',
         type: SELECTION_TYPES.LIST,
@@ -1133,11 +1079,6 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   value: {
@@ -1146,11 +1087,6 @@ export const REPORT_TYPES = {
     component: NeoSingleValueChart,
     maxRecords: 1,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       fontSize: {
         label: 'Font Size',
         type: SELECTION_TYPES.NUMBER,
@@ -1214,11 +1150,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   json: {
@@ -1233,11 +1164,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['json', 'yml'],
         default: 'json',
-      },
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
       },
       refreshButtonEnabled: {
         label: 'Refreshable',
@@ -1268,11 +1194,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   select: {
@@ -1285,11 +1206,6 @@ export const REPORT_TYPES = {
     textOnly: true,
     maxRecords: 100,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       multiSelector: {
         label: 'Multiple Selection',
         type: SELECTION_TYPES.LIST,
@@ -1369,11 +1285,6 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   iframe: {
@@ -1387,11 +1298,6 @@ export const REPORT_TYPES = {
     maxRecords: 1,
     allowScrolling: true,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       replaceGlobalParameters: {
         label: 'Replace global parameters in URL',
         type: SELECTION_TYPES.LIST,
@@ -1410,11 +1316,6 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   text: {
@@ -1427,11 +1328,6 @@ export const REPORT_TYPES = {
     maxRecords: 1,
     allowScrolling: true,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       replaceGlobalParameters: {
         label: 'Replace global parameters in Markdown',
         type: SELECTION_TYPES.LIST,
@@ -1450,11 +1346,30 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
 };
+
+export const COMMON_REPORT_SETTINGS = {
+  backgroundColor: {
+    label: 'Background Color',
+    type: SELECTION_TYPES.COLOR,
+    default: '#fafafa',
+  },
+  description: {
+    label: 'Selector Description',
+    type: SELECTION_TYPES.MULTILINE_TEXT,
+    default: 'Enter markdown here...',
+  },
+  ignoreNonDefinedParams: {
+    label: 'Ignore undefined parameters',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+    refresh: true,
+  },
+};
+
+export const REPORT_TYPES = objectMap(_REPORT_TYPES, (value: any) => {
+  return objMerge({ settings: COMMON_REPORT_SETTINGS }, value);
+});
