@@ -73,13 +73,13 @@ slice.
 |Margin Left (px) |number |50 |The margin in pixels on the left side of
 the visualization.
 
-|Margin Right (px) |number |24 |The margin in pixels on the right side
+|Margin Right (px) |number |50 |The margin in pixels on the right side
 of the visualization.
 
-|Margin Top (px) |number |24 |The margin in pixels on the top side of
+|Margin Top (px) |number |50 |The margin in pixels on the top side of
 the visualization.
 
-|Margin Bottom (px) |number |40 |The margin in pixels on the bottom side
+|Margin Bottom (px) |number |50 |The margin in pixels on the bottom side
 of the visualization.
 
 |Hide Selections |on/off |off |If enabled, hides the property selector
