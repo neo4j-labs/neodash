@@ -39,6 +39,7 @@ variables to Docker:
 ....
 docker run  -it --rm -p 5005:5005 \
     -e ssoEnabled=false \
+    -e ssoProviders=[] \
     -e ssoDiscoveryUrl="https://example.com" \
     -e standalone=true \
     -e standaloneProtocol="neo4j" \
