@@ -12,6 +12,7 @@ import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
 import { createPortal } from 'react-dom';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 /**
  * Renders the context menu that is present when a user right clicks on a node or relationship in the graph.
@@ -29,6 +30,8 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const dialogProps = { ...props, selectedNode: editableEntity, dialogOpen: dialogOpen, setDialogOpen: setDialogOpen };
   const expandable = props.interactivity.selectedEntity && props.interactivity.selectedEntity.labels !== undefined;
   const [cachedNeighbours, setCachedNeighbours] = React.useState(false);
+  const isShowDetailsValid = expandable && Boolean(props.interactivity.pageIdAndParameterName);
+
   // Clear neighbour cache when selection changes.
   useEffect(() => {
     setCachedNeighbours(false);
@@ -60,6 +63,29 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               : ''
           }
         />
+
+        {/* Clicking on this redirects to the pageId and sets the global parameter */}
+        {isShowDetailsValid && (
+          <IconMenuItem
+            rightIcon={<InfoOutlinedIcon className='btn-icon-base-r' />}
+            label='Show details'
+            onClick={() => {
+              const { interactivity } = props;
+              const { pageIdAndParameterName, selectedEntity = {} } = interactivity;
+              const title = selectedEntity?.properties?.title || '';
+              // Get pageId, parameterName and nodeType from settings
+              const [pageId, parameterName, nodeType] = pageIdAndParameterName.split(':');
+              interactivity.setContextMenuOpen(false);
+
+              // Only set if the nodeType is valid
+              if (title && selectedEntity?.labels.join(', ') === nodeType) {
+                interactivity?.setPageNumber(pageId);
+                interactivity?.setGlobalParameter(parameterName, selectedEntity?.properties.title);
+              }
+            }}
+          ></IconMenuItem>
+        )}
+
         <IconMenuItem
           rightIcon={<MagnifyingGlassCircleIconOutline className='btn-icon-base-r' />}
           label='Inspect'

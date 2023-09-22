@@ -302,6 +302,21 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      pageIdAndParameterName: {
+        label: '<PageId>:<ParameterName>:<NodeType>',
+        type: SELECTION_TYPES.TEXT,
+      },
     },
   },
   bar: {
