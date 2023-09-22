@@ -276,13 +276,18 @@ export const NeoTableChart = (props: ChartProps) => {
             ColumnSortedAscendingIcon: () => <></>,
           }}
           getRowClassName={(params) => {
-            return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+            return ['row color', 'row text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
+              })
+              .join(' ');
           }}
           getCellClassName={(params) => {
-            return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
-              'cell color',
-              'cell text color',
-            ])}`;
+            return ['cell color', 'cell text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
+              })
+              .join(' ');
           }}
         />
       </div>
