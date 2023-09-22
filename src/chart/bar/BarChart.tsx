@@ -28,7 +28,7 @@ const NeoBarChart = (props: ChartProps) => {
 
   const { records, selection } = props;
 
-  const [keys, setKeys] = React.useState({});
+  const [keys, setKeys] = React.useState<string[]>([]);
   const [data, setData] = React.useState<Record<string, any>[]>([]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const NeoBarChart = (props: ChartProps) => {
         return row;
       });
 
-    setKeys(newKeys);
+    setKeys(Object.keys(newKeys));
     setData(newData);
   }, [selection]);
 
@@ -114,8 +114,8 @@ const NeoBarChart = (props: ChartProps) => {
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
-    let { data, id } = bar;
-    let colorIndex = Object.keys(data).indexOf(id);
+    let { id } = bar;
+    let colorIndex = keys.indexOf(id);
     if (colorIndex >= chartColorsByScheme.length) {
       colorIndex %= chartColorsByScheme.length;
     }
@@ -218,7 +218,7 @@ const NeoBarChart = (props: ChartProps) => {
       layout={layout}
       groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
       enableLabel={enableLabel}
-      keys={Object.keys(keys)}
+      keys={keys}
       indexBy='index'
       margin={{
         top: marginTop,
