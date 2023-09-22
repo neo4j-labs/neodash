@@ -49,7 +49,7 @@ const NeoCardView = ({
   const ref = React.useRef();
 
   const settingsSelector = Object.keys(
-    Object.fromEntries(Object.entries(REPORT_TYPES[type].settings).filter(([_, value]) => value.refresh))
+    Object.fromEntries(Object.entries(REPORT_TYPES[type]?.settings || {}).filter(([_, value]) => value.refresh))
   ).reduce((obj, key) => {
     return Object.assign(obj, {
       [key]: settings[key],
