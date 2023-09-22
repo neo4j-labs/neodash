@@ -56,7 +56,7 @@ module.exports = (env) => {
     },
     entry: ['./src/index.tsx'],
     mode: production ? 'production' : 'development',
-    devtool: production ? undefined : 'source-map',
+    devtool: production ? undefined : 'eval-cheap-module-source-map',
     module: {
       rules: rules,
     },
@@ -67,6 +67,12 @@ module.exports = (env) => {
     devServer: {
       port: 3000,
       hot: true,
+      compress: true,
+      client: {
+        overlay: {
+          warnings: false,
+        },
+      },
     },
     plugins: production
       ? [
