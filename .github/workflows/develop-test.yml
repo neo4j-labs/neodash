@@ -31,8 +31,8 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           build: yarn run build
-          start: yarn run dev
+          start: yarn run prod
           wait-on: 'http://localhost:3000'
-          browser: firefox
+          browser: chrome
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

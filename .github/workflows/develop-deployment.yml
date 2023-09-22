@@ -31,9 +31,9 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           build: yarn run build
-          start: yarn run dev
+          start: yarn run prod
           wait-on: "http://localhost:3000"
-          browser: firefox
+          browser: chrome
   build-s3:
     needs: build-test
     runs-on: neodash-runners
