@@ -347,9 +347,7 @@ export const REPORT_TYPES = {
       },
       customTablePropertiesOfModal: {
         label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
-        type: SELECTION_TYPES.LIST,
-        values: ['node', 'edge'],
-        default: 'node',
+        type: SELECTION_TYPES.DICTIONARY,
       },
       minimizable: {
         label: 'Minimize Button',
@@ -357,16 +355,9 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      nodeRedirectionEnabled: {
-        label: 'Node Redirection Enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       pageIdAndParameterName: {
-        label: '<PageId>:<ParameterName>',
+        label: '<PageId>:<ParameterName>:<NodeType>',
         type: SELECTION_TYPES.TEXT,
-        default: '0:neodash_ntg6_hu_sw_title_100', // For our use neodash_ntg6_hu_sw_title_100 is set as default and page number is 0
       },
     },
   },

@@ -12,7 +12,7 @@ import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
 import { createPortal } from 'react-dom';
-import LaunchIcon from '@mui/icons-material/Launch';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 /**
  * Renders the context menu that is present when a user right clicks on a node or relationship in the graph.
@@ -30,6 +30,8 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const dialogProps = { ...props, selectedNode: editableEntity, dialogOpen: dialogOpen, setDialogOpen: setDialogOpen };
   const expandable = props.interactivity.selectedEntity && props.interactivity.selectedEntity.labels !== undefined;
   const [cachedNeighbours, setCachedNeighbours] = React.useState(false);
+  const isShowDetailsValid = expandable && Boolean(props.interactivity.pageIdAndParameterName);
+
   // Clear neighbour cache when selection changes.
   useEffect(() => {
     setCachedNeighbours(false);
@@ -61,24 +63,30 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               : ''
           }
         />
-        {/* Redirects to the page and sets the global parameter */}
-        {props.interactivity.nodeRedirectionEnabled && (
+
+        {/* Start of Show details: clicking on this redirects to the pageId and sets the global parameter */}
+        {isShowDetailsValid && (
           <IconMenuItem
-            rightIcon={<LaunchIcon className='btn-icon-base-r' />}
-            label='Redirect'
+            rightIcon={<InfoOutlinedIcon className='btn-icon-base-r' />}
+            label='Show details'
             onClick={() => {
               const { interactivity } = props;
-              const { pageIdAndParameterName, selectedEntity } = interactivity;
+              const { pageIdAndParameterName, selectedEntity = {} } = interactivity;
               const title = selectedEntity?.properties?.title || '';
-              const [pageId, paramaterName] = pageIdAndParameterName.split(':');
+              // Get pageId, parameterName and nodeType from settings
+              const [pageId, parameterName, nodeType] = pageIdAndParameterName.split(':');
               interactivity.setContextMenuOpen(false);
-              if (title) {
+
+              // Only set if the nodeType is valid
+              if (title && selectedEntity?.labels.join(', ') === nodeType) {
                 interactivity?.setPageNumber(pageId);
-                interactivity?.setGlobalParameter(paramaterName, selectedEntity?.properties.title);
+                interactivity?.setGlobalParameter(parameterName, selectedEntity?.properties.title);
               }
             }}
           ></IconMenuItem>
         )}
+        {/* End of Show details: clicking on this redirects to the pageId and sets the global parameter */}
+
         <IconMenuItem
           rightIcon={<MagnifyingGlassCircleIconOutline className='btn-icon-base-r' />}
           label='Inspect'

@@ -136,7 +136,6 @@ export interface GraphChartVisualizationProps {
     setPageNumber: any;
     pageNames: [];
     customTablePropertiesOfModal: any[],
-    nodeRedirectionEnabled: boolean,
     pageIdAndParameterName: string
   };
   /**
