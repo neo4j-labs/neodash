@@ -11,7 +11,7 @@ import './index.pcss';
 import StyleConfig from './config/StyleConfig';
 import * as Sentry from '@sentry/react';
 
-if (window.location.href == 'https://neodash.graphapp.io' || window.location.href == 'http://neodash.graphapp.io') {
+if (window.location.href == 'https://neodash.graphapp.io/' || window.location.href == 'http://neodash.graphapp.io/') {
   Sentry.init({
     dsn: 'https://25edb17cc4c14c8cb726e7ac1ff74e3b@o110884.ingest.sentry.io/4505397810167808',
     allowUrls: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
