@@ -123,7 +123,7 @@ export interface GraphChartVisualizationProps {
     onNodeRightClick: (node, event) => void;
     onRelationshipClick: (rel) => void;
     onRelationshipRightClick: (rel, event) => void;
-    setGlobalParameter?: (name: string, value: string) => void;
+    setGlobalParameter?: ((name: string, value: string) => void) | undefined;
     handleExpand: (id, type, dir, properties) => void;
     zoomToFit: () => void;
     drilldownLink: string;
@@ -135,7 +135,8 @@ export interface GraphChartVisualizationProps {
     setClickPosition: (pos) => void;
     setPageNumber: any;
     pageNames: [];
-    customTablePropertiesOfModal: any[]
+    customTablePropertiesOfModal: any[],
+    pageIdAndParameterName: string
   };
   /**
    * entries in 'extensions' let users plug in extra functionality into the visualization based on enabled plugins.

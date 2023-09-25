@@ -355,6 +355,10 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      pageIdAndParameterName: {
+        label: '<PageId>:<ParameterName>:<NodeType>',
+        type: SELECTION_TYPES.TEXT,
+      },
     },
   },
   bar: {

@@ -205,6 +205,7 @@ const NeoGraphChart = (props: ChartProps) => {
       setClickPosition: setClickPosition,
       createNotification: props.createNotification,
       customTablePropertiesOfModal: settings.customTablePropertiesOfModal,
+      pageIdAndParameterName: settings.pageIdAndParameterName,
     },
     extensions: {
       styleRules: settings.styleRules,
