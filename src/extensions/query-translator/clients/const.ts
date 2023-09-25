@@ -74,7 +74,7 @@ export const reportExampleQueries = {
   'Single Value': 'MATCH (n) RETURN COUNT(n)',
   'Gauge Chart': 'MATCH (c:CPU) WHERE c.id = 1 RETURN c.load_percentage * 100',
   'Raw JSON': 'MATCH (n) RETURN COUNT(n)',
-  'Pie Chart': 'Match (n:Person)-[e]->(m:Movie) RETURN m.title as Title, COUNT(p) as People LIMIT 10',
+  'Pie Chart': 'Match (p:Person)-[e]->(m:Movie) RETURN m.title as Title, COUNT(p) as People LIMIT 10',
 };
 
 export const TASK_DEFINITION = `Task: Generate Cypher queries to query a Neo4j graph database based on the provided schema definition. These queries will be used inside NeoDash reports.
