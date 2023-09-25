@@ -11,22 +11,26 @@ import './index.pcss';
 import StyleConfig from './config/StyleConfig';
 import * as Sentry from '@sentry/react';
 
-Sentry.init({
-  dsn: 'https://25edb17cc4c14c8cb726e7ac1ff74e3b@o110884.ingest.sentry.io/4505397810167808',
-  integrations: [
-    new Sentry.BrowserTracing({
-      // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-      tracePropagationTargets: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
-    }),
-    new Sentry.Replay(),
-  ],
-  // Performance Monitoring
-  tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
-  // Session Replay
-  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-});
-
+if (window.location.href == 'https://neodash.graphapp.io/' || window.location.href == 'http://neodash.graphapp.io/') {
+  Sentry.init({
+    dsn: 'https://25edb17cc4c14c8cb726e7ac1ff74e3b@o110884.ingest.sentry.io/4505397810167808',
+    allowUrls: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
+    integrations: [
+      new Sentry.BrowserTracing({
+        // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+        tracePropagationTargets: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
+      }),
+      new Sentry.Replay({
+        networkDetailAllowUrls: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
+      }),
+    ],
+    // Performance Monitoring
+    tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  });
+}
 /**
  * Set up the NeoDash application and wrap it in the needed providers.
  */
