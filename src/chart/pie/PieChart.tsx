@@ -7,6 +7,7 @@ import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 import { themeNivo } from '../Utils';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import { objMerge } from '../../utils/ObjectManipulation';
 
 /**
  * Embeds a PieChart (from Nivo) into NeoDash.
@@ -90,6 +91,8 @@ const NeoPieChart = (props: ChartProps) => {
   const cornerRadius = settings.cornerRadius ? settings.cornerRadius : 1;
   const arcLabelsSkipAngle = settings.arcLabelsSkipAngle ? settings.arcLabelsSkipAngle : 10;
 
+  const arcLabelsFontSize = settings.arcLabelsFontSize ? settings.arcLabelsFontSize : 13;
+
   const legend = settings.legend ? settings.legend : false;
   const colorScheme = settings.colors ? settings.colors : 'set2';
   const styleRules = useStyleRules(
@@ -131,9 +134,14 @@ const NeoPieChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
 
+  const theme = objMerge(themeNivo, {
+    labels: {
+      text: { fontSize: arcLabelsFontSize },
+    },
+  });
   return (
     <ResponsivePie
-      theme={themeNivo}
+      theme={theme}
       data={data}
       sortByValue={sortByValue}
       enableArcLabels={enableArcLabels}

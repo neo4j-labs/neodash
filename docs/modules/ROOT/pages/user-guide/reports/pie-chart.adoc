@@ -49,6 +49,8 @@ the pie slices in order of size.
 |Show Values in Slices |on/off |off |If enabled, show the category
 values inside the pie slices.
 
+|Labels font Size |Number |13 |Define the size of the font for internal and external labels on the pie.
+
 |Show categories next to Slices |on/off |off |If enabled, show the
 category values next to the pie slices.
 
