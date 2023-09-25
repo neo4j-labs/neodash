@@ -31,7 +31,7 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
     properties.find((setting) => setting.entityType === entityName);
 
   /**
-   * check if customTablePropertiesOfModal is an array orelse return empty object.
+   * check if customTablePropertiesOfModal is an array or else return empty object.
    */
   const customTableDataSettingsForEntityType = Array.isArray(customTablePropertiesOfModal)
     ? getSettingsByEntityType(customTablePropertiesOfModal)

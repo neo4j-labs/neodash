@@ -88,7 +88,7 @@ export const GraphEntityInspectionTable = ({
   );
 
   const filterCustomDataSettingsForEntityTypeHide = (attr: string) =>
-    !(customTableDataSettingsForEntityType.hide || []).includes(attr);
+    !(customTableDataSettingsForEntityType?.hide || []).includes(attr);
 
   return (
     <TableContainer>

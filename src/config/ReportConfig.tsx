@@ -347,9 +347,7 @@ export const REPORT_TYPES = {
       },
       customTablePropertiesOfModal: {
         label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
-        type: SELECTION_TYPES.LIST,
-        values: ['node', 'edge'],
-        default: 'node',
+        type: SELECTION_TYPES.DICTIONARY,
       },
       minimizable: {
         label: 'Minimize Button',
