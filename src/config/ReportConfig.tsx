@@ -516,6 +516,11 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 10,
       },
+      arcLabelsFontSize: {
+        label: 'Labels font Size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 13,
+      },
       enableArcLinkLabels: {
         label: 'Show categories next to slices',
         type: SELECTION_TYPES.LIST,
