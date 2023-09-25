@@ -90,9 +90,9 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
         onClick={handleClick}
         style={{
           display: !legendEnabled ? 'none' : '',
-          position: 'absolute',
-          background: 'white',
-          bottom: '15px',
+          bottom: '0px',
+          margin: '0px',
+          padding: '0px',
           left: '0px',
           zIndex: '50',
         }}
@@ -100,12 +100,9 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
         <Tooltip title='Show legend' aria-label={'show Legend'}>
           <Box
             sx={{
-              paddingRight: '2pt',
-              paddingLeft: '2pt',
-              borderColor: '#EAECEE',
-              borderWidth: '1pt',
               typography: 'subtitle2',
               textTransform: 'capitalize',
+              color: '#535a65',
             }}
           >
             Legend
@@ -134,6 +131,7 @@ export const NeoGraphChartLegendButton = (props: GraphChartVisualizationProps) =
             padding: 0,
             marginTop: '0.2rem',
             fontWeight: 'bold',
+            color: '#535a65',
           }}
         >
           LEGEND

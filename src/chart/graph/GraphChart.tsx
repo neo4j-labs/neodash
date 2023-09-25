@@ -222,7 +222,14 @@ const NeoGraphChart = (props: ChartProps) => {
     <div ref={observe} style={{ width: '100%', height: '95%' }}>
       <NeoGraphChartCanvas>
         <Stack direction={'row'}>
-          <NeoGraphChartLegendButton {...chartProps}></NeoGraphChartLegendButton>
+          <IconButtonArray
+            aria-label={'graph icon'}
+            floating
+            orientation='horizontal'
+            className='n-z-10 n-absolute n-bottom-2 n-left-4'
+          >
+            <NeoGraphChartLegendButton {...chartProps}></NeoGraphChartLegendButton>
+          </IconButtonArray>
           <IconButtonArray
             aria-label={'graph icon'}
             floating
