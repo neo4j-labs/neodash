@@ -3,7 +3,12 @@ import MenuItem from '@mui/material/MenuItem';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { Card, CardHeader } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
-import { MagnifyingGlassCircleIconOutline, PencilIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  MagnifyingGlassCircleIconOutline,
+  PencilIconOutline,
+  XMarkIconOutline,
+  InformationCircleIconOutline,
+} from '@neo4j-ndl/react/icons';
 import { NestedMenuItem, IconMenuItem } from 'mui-nested-menu';
 import { RenderNode, RenderNodeChip, RenderRelationshipChip } from '../../../report/ReportRecordProcessing';
 import { getNodeLabel } from '../util/NodeUtils';
@@ -12,7 +17,6 @@ import { handleExpand, handleGetNodeRelTypes } from '../util/ExplorationUtils';
 import { useEffect } from 'react';
 import { mergeDatabaseStatCountsWithCountsInView } from '../util/ExplorationUtils';
 import { createPortal } from 'react-dom';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 /**
  * Renders the context menu that is present when a user right clicks on a node or relationship in the graph.
@@ -67,7 +71,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
         {/* Clicking on this redirects to the pageId and sets the global parameter */}
         {isShowDetailsValid && (
           <IconMenuItem
-            rightIcon={<InfoOutlinedIcon className='btn-icon-base-r' />}
+            rightIcon={<InformationCircleIconOutline className='btn-icon-base-r' />}
             label='Show details'
             onClick={() => {
               const { interactivity } = props;
