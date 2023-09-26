@@ -1,0 +1,178 @@
+{
+  "title": "DYNABIC - MADT - FERRO",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_annotation_endpoint": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg/1920px-Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg",
+      "neodash_annotation_endpoint_display": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg/1920px-Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg",
+      "neodash_asset_layer": "Physical",
+      "neodash_asset_layer_display": "Physical",
+      "main_selected_node": 15
+    }
+  },
+  "pages": [
+    {
+      "title": "Main - All assets",
+      "reports": [
+        {
+          "title": "Hi there 👋",
+          "query": "match (a: ASSET)<--(b: ATTACHMENT)\nreturn count(a) as assets, count(b) as attachments",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "",
+          "query": "MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n",
+          "width": 4,
+          "height": 3,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "ATTACHMENT": "name",
+            "ASSET": "name",
+            "DATASOURCE": "name",
+            "STATICDATA": "name"
+          },
+          "settings": {
+            "enableEditing": true
+          }
+        },
+        {
+          "title": "",
+          "query": "match(n:ANNOTATION) return n.endpoint\n\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 7,
+          "y": 10,
+          "type": "image",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Attachment",
+          "query": "match(n:ATTACHMENT) \nwhere id(n) = $main_selected_node \nreturn n\n\n\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 7,
+          "y": 0,
+          "type": "attachment",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "",
+          "query": "MATCH (n:`ASSET`) \nWHERE toLower(toString(n.`layer`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`layer` as value,  n.`layer` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 7,
+          "y": 8,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "ASSET",
+            "propertyType": "layer",
+            "propertyTypeDisplay": "layer",
+            "parameterName": "neodash_asset_layer"
+          }
+        },
+        {
+          "title": "",
+          "query": "match(n:ATTACHMENT) \nwhere id(n) = $main_selected_node \nreturn n\n",
+          "width": 3,
+          "height": 2,
+          "x": 7,
+          "y": 6,
+          "type": "json",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Asset location",
+          "query": "MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 1,
+          "type": "map",
+          "selection": {
+            "ATTACHMENT": "name",
+            "ASSET": "name",
+            "DATASOURCE": "name",
+            "STATICDATA": "name"
+          },
+          "settings": {}
+        },
+        {
+          "title": "Data Source",
+          "query": "match(n:DATASOURCE) \nwhere id(n) = $main_selected_node \nreturn n\n\n\n",
+          "width": 3,
+          "height": 1,
+          "x": 7,
+          "y": 3,
+          "type": "datasource",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "",
+          "query": "\n\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 4,
+          "type": "attachment",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Asset in layers",
+      "reports": [
+        {
+          "title": "",
+          "query": "MATCH (n:`ASSET`) \nWHERE toLower(toString(n.`layer`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`layer` as value,  n.`layer` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "ASSET",
+            "propertyType": "layer",
+            "propertyTypeDisplay": "layer",
+            "parameterName": "neodash_asset_layer"
+          }
+        },
+        {
+          "title": "",
+          "query": "match (a: ASSET {layer:$neodash_asset_layer})\noptional match (t:ATTACHMENT)-[c1]-(a)\noptional match (b: ASSET {layer:$neodash_asset_layer})-[c2]-(a)\nreturn a, b, t, c1, c2\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "ASSET": "name",
+            "ATTACHMENT": "name"
+          },
+          "settings": {}
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {}
+}

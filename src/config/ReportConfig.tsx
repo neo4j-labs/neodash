@@ -14,6 +14,7 @@ import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
 import AttachmentChart from '../chart/attachment/AttachmentChart';
 import DataSourceChart from '../chart/datasource/DataSource';
+import StaticDataChart from '../chart/staticdata/StaticDataChart';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -1271,6 +1272,13 @@ export const REPORT_TYPES = {
     label: "DataSource",
     helperText: "I show the content following the endpoint of a data source",
     component: DataSourceChart,
+    maxRecords: 1,
+    settings: {}
+  },
+  staticdata: {
+    label: "StaticData",
+    helperText: "I show the content following the endpoint of a static data file",
+    component: StaticDataChart,
     maxRecords: 1,
     settings: {}
   }
