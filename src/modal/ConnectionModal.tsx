@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
 import { Button, Dialog, Switch, TextInput, Dropdown, TextLink } from '@neo4j-ndl/react';
 import { PlayIconOutline } from '@neo4j-ndl/react/icons';
+
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
@@ -25,6 +26,7 @@ export default function NeoConnectionModal({
   const [username, setUsername] = React.useState(connection.username);
   const [password, setPassword] = React.useState(connection.password);
   const [database, setDatabase] = React.useState(connection.database);
+  const [standaloneDatabase, setStandaloneDatabases] = React.useState([standaloneSettings.standalone? standaloneSettings.standaloneDatabase : 'neo4j']);
   
   // Make sure local vars are updated on external connection updates.
   useEffect(() => {
@@ -151,8 +153,10 @@ export default function NeoConnectionModal({
                 label='Database'
                 type='select'
                 selectProps={{
-                  onChange: (newValue) => {setDatabase(newValue.value);},
-                  //if application is running standalone and standaloneLoadFromOtherDatabases is not enabled, we do not allow changing database
+                  onChange: (newValue) => {
+                    setDatabase(newValue.value);
+                    setStandaloneDatabases(newValue.value);
+                  },
                   options: databaseList.map((option) => ({
                     label: option,
                     value: option,
