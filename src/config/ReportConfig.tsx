@@ -122,7 +122,7 @@ export const REPORT_TYPES = {
       executeButtonName: {
         label: 'Execute Button Name',
         type: SELECTION_TYPES.TEXT,
-        default: 'Test',
+        default: 'Execute',
       },
     },
   },
