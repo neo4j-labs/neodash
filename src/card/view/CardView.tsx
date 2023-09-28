@@ -12,6 +12,8 @@ import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleE
 import { IconButton, Typography } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid, PlayIconOutline } from '@neo4j-ndl/react/icons';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import { PlayArrowOutlined } from '@mui/icons-material';
+import { checkParametersNameInGlobalParameter, extractAllParameterNames } from '../../utils/parameterUtils';
 import { objMerge } from '../../utils/ObjectManipulation';
 import { REPORT_TYPES } from '../../config/ReportConfig';
 
@@ -174,10 +176,20 @@ const NeoCardView = ({
       : `${reportHeight}px`,
     overflow: 'auto',
   };
+
+  const isParametersDefined = (cypherQuery: string) => {
+    const parameterNames = extractAllParameterNames(cypherQuery);
+    if (globalParameters) {
+      return checkParametersNameInGlobalParameter(parameterNames, globalParameters);
+    }
+    return false;
+  };
+
   const executeButton = (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       <Stack direction='column' justifyContent='center' alignItems='center' spacing={2}>
         <IconButton
+          disabled={isParametersDefined(query)}
           onClick={() => {
             setActive(true);
           }}
