@@ -119,6 +119,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Test',
+      },
     },
   },
   graph: {
