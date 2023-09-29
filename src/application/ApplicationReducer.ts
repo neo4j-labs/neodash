@@ -21,6 +21,7 @@ import {
   SET_SESSION_PARAMETERS,
   SET_SHARE_DETAILS_FROM_URL,
   SET_SSO_ENABLED,
+  SET_SSO_PROVIDERS,
   SET_STANDALONE_DASHBOARD_DATEBASE,
   SET_STANDALONE_ENABLED,
   SET_STANDALONE_MODE,
@@ -110,6 +111,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
     case SET_SSO_ENABLED: {
       const { enabled, discoveryUrl } = payload;
       state = update(state, { ssoEnabled: enabled, ssoDiscoveryUrl: discoveryUrl });
+      return state;
+    }
+    case SET_SSO_PROVIDERS: {
+      const { providers } = payload;
+      state = update(state, { ssoProviders: providers });
       return state;
     }
     case SET_WAIT_FOR_SSO: {

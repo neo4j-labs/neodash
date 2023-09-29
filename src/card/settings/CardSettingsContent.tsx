@@ -111,7 +111,7 @@ const NeoCardSettingsContent = ({
             label: report?.label || '',
             value: report?.label || '',
           },
-          menuPortalTarget: document.querySelector('body'),
+          menuPortalTarget: document.querySelector('#overlay'),
         }}
         fluid
         style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
@@ -133,7 +133,7 @@ const NeoCardSettingsContent = ({
               value: database,
             })),
             value: { label: databaseText, value: databaseText },
-            menuPortalTarget: document.querySelector('body'),
+            menuPortalTarget: document.querySelector('#overlay'),
           }}
           fluid
           style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
