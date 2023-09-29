@@ -34,6 +34,14 @@ const hideQueryEditorInAutoRunOnMode = {
   },
 };
 
+const executeButtonName = {
+  executeButtonName: {
+    label: 'Execute Button Name',
+    type: SELECTION_TYPES.TEXT,
+    default: 'Execute',
+  },
+};
+
 // A dictionary of available reports (visualizations).
 const _REPORT_TYPES = {
   table: {
@@ -332,11 +340,7 @@ const _REPORT_TYPES = {
         label: '<PageId>:<ParameterName>:<NodeType>',
         type: SELECTION_TYPES.TEXT,
       },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
+      ...executeButtonName,
     },
   },
   bar: {
@@ -511,11 +515,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
+      ...executeButtonName,
     },
   },
   pie: {
@@ -687,11 +687,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
+      ...executeButtonName,
     },
   },
   line: {
@@ -881,11 +877,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
+      ...executeButtonName,
     },
   },
   // TODO - move to advanced visualization.
@@ -1193,11 +1185,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
+      ...executeButtonName,
     },
   },
   value: {
@@ -1281,11 +1269,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
+      ...executeButtonName,
     },
   },
   json: {
@@ -1342,11 +1326,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
+      ...executeButtonName,
     },
   },
   select: {
