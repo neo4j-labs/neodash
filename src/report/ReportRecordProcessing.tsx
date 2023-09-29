@@ -248,7 +248,7 @@ function RenderPath(value) {
 function RenderArray(value) {
   const mapped = value.map((v, i) => {
     return (
-      <div key={String(`k${  i}`) + v}>
+      <div key={String(`k${i}`) + v}>
         {RenderSubValue(v)}
         {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
       </div>
@@ -267,6 +267,14 @@ function RenderString(value) {
     );
   }
   return str;
+}
+
+function RenderLink(value) {
+  return (
+    <TextLink key={value} externalLink target='_blank' href={value}>
+      {value}
+    </TextLink>
+  );
 }
 
 function RenderPoint(value) {
@@ -378,6 +386,10 @@ export const rendererForType: any = {
   boolean: {
     type: 'string',
     renderValue: (c) => RenderString(c.value),
+  },
+  link: {
+    type: 'link',
+    renderValue: (c) => RenderLink(c.value),
   },
 };
 

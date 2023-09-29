@@ -5,6 +5,7 @@ set -e
 echo " \
     { \
     \"ssoEnabled\": ${ssoEnabled:=false}, \
+    \"ssoProviders\": ${ssoProviders:=[]}, \
     \"ssoDiscoveryUrl\": \"${ssoDiscoveryUrl:='https://example.com'}\",  \
     \"standalone\": "${standalone:=false}", \
     \"standaloneProtocol\": \"${standaloneProtocol:='neo4j+s'}\", \
