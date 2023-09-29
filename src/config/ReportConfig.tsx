@@ -313,6 +313,30 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      customTablePropertiesOfModal: {
+        label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
+        type: SELECTION_TYPES.DICTIONARY,
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      pageIdAndParameterName: {
+        label: '<PageId>:<ParameterName>:<NodeType>',
+        type: SELECTION_TYPES.TEXT,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   bar: {
@@ -476,6 +500,22 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   pie: {
@@ -635,6 +675,22 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
       },
     },
   },
@@ -813,6 +869,22 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
       },
     },
   },
@@ -995,6 +1067,11 @@ const _REPORT_TYPES = {
   //       type: SELECTION_TYPES.MULTILINE_TEXT,
   //       default: 'Enter markdown here...',
   //     },
+  // executeButtonName: {
+  //   label: 'Execute Button Name',
+  //   type: SELECTION_TYPES.TEXT,
+  //   default: 'Execute',
+  // },
   //   },
   // },
   map: {
@@ -1099,7 +1176,28 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      ...hideQueryEditorInAutoRunOnMode,
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   value: {
@@ -1172,6 +1270,22 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   json: {
@@ -1216,6 +1330,22 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
       },
     },
   },
