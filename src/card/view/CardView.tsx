@@ -2,19 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
-import { CardContent, Fab } from '@mui/material';
+import { CardContent, Fab, Stack } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
-import { IconButton } from '@neo4j-ndl/react';
-import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
+import { IconButton, Typography } from '@neo4j-ndl/react';
+import { PlayCircleIconSolid, PlayIconOutline } from '@neo4j-ndl/react/icons';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { objMerge } from '../../utils/ObjectManipulation';
 import { REPORT_TYPES } from '../../config/ReportConfig';
-import { PlayArrowOutlined } from '@mui/icons-material';
 
 const NeoCardView = ({
   id,
@@ -177,17 +176,23 @@ const NeoCardView = ({
   };
   const executeButton = (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Fab
-        variant='extended'
-        onClick={() => {
-          setActive(true);
-        }}
-        color='success'
-        size='small'
-      >
-        <PlayArrowOutlined aria-label={'play'} />
-        Execute
-      </Fab>
+      <Stack direction='column' justifyContent='center' alignItems='center' spacing={2}>
+        <IconButton
+          onClick={() => {
+            setActive(true);
+          }}
+          size='large'
+          style={{
+            color: '#ffffff',
+            backgroundColor: 'green',
+          }}
+        >
+          <PlayIconOutline aria-label={'play'} />
+        </IconButton>
+        <Typography variant='body-medium' component='div'>
+          {settings.executeButtonName ?? 'Execute'}
+        </Typography>
+      </Stack>
     </div>
   );
 
