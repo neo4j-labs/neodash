@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
-import { CardContent } from '@mui/material';
+import { CardContent, Fab } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
@@ -14,6 +14,7 @@ import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { objMerge } from '../../utils/ObjectManipulation';
 import { REPORT_TYPES } from '../../config/ReportConfig';
+import { PlayArrowOutlined } from '@mui/icons-material';
 
 const NeoCardView = ({
   id,
@@ -31,6 +32,7 @@ const NeoCardView = ({
   type,
   selection,
   dashboardSettings,
+  enableExecuteButtonForIds,
   settings,
   updateReportSetting,
   createNotification,
@@ -138,6 +140,11 @@ const NeoCardView = ({
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
     }
+
+    // Resets the report with save button
+    if (enableExecuteButtonForIds.map((report) => report.id).includes(id)) {
+      setActive(false);
+    }
   }, [JSON.stringify(localParameters)]);
 
   useEffect(() => {
@@ -168,6 +175,52 @@ const NeoCardView = ({
       : `${reportHeight}px`,
     overflow: 'auto',
   };
+  const executeButton = (
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <Fab
+        variant='extended'
+        onClick={() => {
+          setActive(true);
+        }}
+        color='success'
+        size='small'
+      >
+        <PlayArrowOutlined aria-label={'play'} />
+        Execute
+      </Fab>
+    </div>
+  );
+
+  const cypherQueryEditor = (
+    <>
+      <IconButton
+        style={{ float: 'right', marginRight: '9px' }}
+        aria-label='run'
+        onClick={() => {
+          setActive(true);
+        }}
+        clean
+        size='small'
+      >
+        <PlayCircleIconSolid className='n-w-5 n-h-5' aria-label={'play'} />
+      </IconButton>
+      <NeoCodeEditorComponent
+        value={query}
+        language={'cypher'}
+        editable={false}
+        style={{
+          border: '1px solid lightgray',
+          borderRight: '35px solid #eee',
+          marginTop: '0px',
+          marginLeft: '10px',
+          marginRight: '10px',
+        }}
+        onChange={() => {}}
+        placeholder={'No query specified...'}
+      />
+    </>
+  );
+
   const reportContent = (
     <CardContent ref={ref} style={cardContentStyle}>
       {active ? (
@@ -194,33 +247,10 @@ const NeoCardView = ({
           queryTimeLimit={dashboardSettings.queryTimeLimit ? dashboardSettings.queryTimeLimit : 20}
           setFields={onFieldsUpdate}
         />
+      ) : settings.hideQueryEditorInAutoRunOnMode ? (
+        executeButton
       ) : (
-        <>
-          <IconButton
-            style={{ float: 'right', marginRight: '9px' }}
-            aria-label='run'
-            onClick={() => {
-              setActive(true);
-            }}
-            clean
-          >
-            <PlayCircleIconSolid className='n-w-5 n-h-5' aria-label={'play'} />
-          </IconButton>
-          <NeoCodeEditorComponent
-            value={query}
-            language={'cypher'}
-            editable={false}
-            style={{
-              border: '1px solid lightgray',
-              borderRight: '35px solid #eee',
-              marginTop: '0px',
-              marginLeft: '10px',
-              marginRight: '10px',
-            }}
-            onChange={() => {}}
-            placeholder={'No query specified...'}
-          />
-        </>
+        cypherQueryEditor
       )}
     </CardContent>
   );

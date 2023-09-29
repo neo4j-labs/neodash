@@ -25,6 +25,15 @@ export const RUN_QUERY_DELAY_MS = 300;
 // The default number of rows to process in a visualization.
 export const DEFAULT_ROW_LIMIT = 100;
 
+const hideQueryEditorInAutoRunOnMode = {
+  hideQueryEditorInAutoRunOnMode: {
+    label: 'Hide query editor on auto run on mode',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+};
+
 // A dictionary of available reports (visualizations).
 const _REPORT_TYPES = {
   table: {
@@ -87,6 +96,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -285,6 +295,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
@@ -459,6 +470,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -618,6 +630,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -795,6 +808,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -970,6 +984,7 @@ const _REPORT_TYPES = {
   //       values: [true, false],
   //       default: true,
   //     },
+  // ...hideQueryEditorInAutoRunOnMode,
   //     refreshRate: {
   //       label: 'Refresh rate (seconds)',
   //       type: SELECTION_TYPES.NUMBER,
@@ -1084,6 +1099,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
     },
   },
   value: {
@@ -1150,6 +1166,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -1194,6 +1211,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      ...hideQueryEditorInAutoRunOnMode,
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
