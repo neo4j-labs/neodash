@@ -364,6 +364,11 @@ export const REPORT_TYPES = {
         label: '<PageId>:<ParameterName>:<NodeType>',
         type: SELECTION_TYPES.TEXT,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   bar: {
@@ -548,6 +553,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   pie: {
@@ -723,6 +733,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
       },
     },
   },
@@ -923,6 +938,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   // TODO - move to advanced visualization.
@@ -1109,6 +1129,11 @@ export const REPORT_TYPES = {
   //       type: SELECTION_TYPES.MULTILINE_TEXT,
   //       default: 'Enter markdown here...',
   //     },
+  // executeButtonName: {
+  //   label: 'Execute Button Name',
+  //   type: SELECTION_TYPES.TEXT,
+  //   default: 'Execute',
+  // },
   //   },
   // },
   map: {
@@ -1235,6 +1260,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   value: {
@@ -1328,6 +1358,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   json: {
@@ -1393,6 +1428,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
       },
     },
   },
