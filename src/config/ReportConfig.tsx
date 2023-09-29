@@ -25,6 +25,15 @@ export const RUN_QUERY_DELAY_MS = 300;
 // The default number of rows to process in a visualization.
 export const DEFAULT_ROW_LIMIT = 100;
 
+const minimizable = {
+  minimizable: {
+    label: 'Minimize Button',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+};
+
 // A dictionary of available reports (visualizations).
 const _REPORT_TYPES = {
   table: {
@@ -92,12 +101,7 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   graph: {
@@ -307,12 +311,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   bar: {
@@ -475,12 +474,7 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   pie: {
@@ -640,12 +634,7 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   line: {
@@ -823,12 +812,7 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   // TODO - move to advanced visualization.
@@ -1113,12 +1097,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   value: {
@@ -1190,12 +1169,7 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   json: {
@@ -1240,12 +1214,7 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   select: {
@@ -1337,12 +1306,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   iframe: {
@@ -1374,12 +1338,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
   text: {
@@ -1410,12 +1369,7 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
+      ...minimizable,
     },
   },
 };
