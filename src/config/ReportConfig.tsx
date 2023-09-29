@@ -92,6 +92,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   graph: {
@@ -184,7 +190,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
-
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -298,6 +303,12 @@ const _REPORT_TYPES = {
       },
       rightClickToExpandNodes: {
         label: 'Right Click to Expand Nodes',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      minimizable: {
+        label: 'Minimize Button',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -464,6 +475,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   pie: {
@@ -622,6 +639,12 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -799,6 +822,12 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1084,6 +1113,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   value: {
@@ -1155,6 +1190,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   json: {
@@ -1198,6 +1239,12 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1290,6 +1337,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   iframe: {
@@ -1321,6 +1374,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   text: {
@@ -1347,6 +1406,12 @@ const _REPORT_TYPES = {
       },
       downloadImageEnabled: {
         label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      minimizable: {
+        label: 'Minimize Button',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
