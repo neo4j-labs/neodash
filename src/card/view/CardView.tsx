@@ -186,7 +186,7 @@ const NeoCardView = ({
         size='small'
       >
         <PlayArrowOutlined aria-label={'play'} />
-        Execute
+        {settings.executeButtonName ?? 'Execute'}
       </Fab>
     </div>
   );
