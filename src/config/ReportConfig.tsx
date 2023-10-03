@@ -1466,8 +1466,7 @@ export const REPORT_TYPES = {
       },
       predefinedOptions: {
         label: 'Predefined Options, If type is Basic Select',
-        type: SELECTION_TYPES.TEXT,
-        default: '',
+        type: SELECTION_TYPES.DICTIONARY,
       },
       manualPropertyNameSpecification: {
         label: 'Manual Label/Property Name Specification',
