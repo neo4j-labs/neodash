@@ -30,6 +30,7 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const dialogProps = { ...props, selectedNode: editableEntity, dialogOpen: dialogOpen, setDialogOpen: setDialogOpen };
   const expandable = props.interactivity.selectedEntity && props.interactivity.selectedEntity.labels !== undefined;
   const [cachedNeighbours, setCachedNeighbours] = React.useState(false);
+  // Check for nodeType given in the settings. Which will be always in 2 index.
   const isNodeTypeEqualToSelectedNode =
     props.interactivity.pageIdAndParameterName &&
     props.interactivity.pageIdAndParameterName.split(':')[2] === props.interactivity.selectedEntity?.labels?.join(', ');
