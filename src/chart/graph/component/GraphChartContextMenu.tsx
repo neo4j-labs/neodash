@@ -30,7 +30,11 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const dialogProps = { ...props, selectedNode: editableEntity, dialogOpen: dialogOpen, setDialogOpen: setDialogOpen };
   const expandable = props.interactivity.selectedEntity && props.interactivity.selectedEntity.labels !== undefined;
   const [cachedNeighbours, setCachedNeighbours] = React.useState(false);
-  const isShowDetailsValid = expandable && Boolean(props.interactivity.pageIdAndParameterName);
+  const isNodeTypeEqualToSelectedNode =
+    props.interactivity.pageIdAndParameterName &&
+    props.interactivity.pageIdAndParameterName.split(':')[2] === props.interactivity.selectedEntity?.labels?.join(', ');
+  const isShowDetailsValid =
+    expandable && Boolean(props.interactivity.pageIdAndParameterName) && Boolean(isNodeTypeEqualToSelectedNode);
 
   // Clear neighbour cache when selection changes.
   useEffect(() => {
@@ -73,12 +77,12 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               const { interactivity } = props;
               const { pageIdAndParameterName, selectedEntity = {} } = interactivity;
               const title = selectedEntity?.properties?.title || '';
-              // Get pageId, parameterName and nodeType from settings
-              const [pageId, parameterName, nodeType] = pageIdAndParameterName.split(':');
+              // Get pageId, parameterName from settings
+              const [pageId, parameterName] = pageIdAndParameterName.split(':');
               interactivity.setContextMenuOpen(false);
 
-              // Only set if the nodeType is valid
-              if (title && selectedEntity?.labels.join(', ') === nodeType) {
+              // Only sets if the title is valid
+              if (title) {
                 interactivity?.setPageNumber(pageId);
                 interactivity?.setGlobalParameter(parameterName, selectedEntity?.properties.title);
               }
