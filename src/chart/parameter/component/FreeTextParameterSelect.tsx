@@ -71,7 +71,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
         onChange={(newValue) => {
           setRunning(true);
           setInputText(newValue);
-
+          props.onInputChange && props.onInputChange(newValue);
           handleParametersUpdate(newValue, manualParameterSave);
         }}
       />

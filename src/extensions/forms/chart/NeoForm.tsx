@@ -20,6 +20,7 @@ enum FormStatus {
  */
 const NeoForm = (props: ChartProps) => {
   const { settings } = props;
+  const [submitButtonActive, setSubmitButtonActive] = React.useState(true);
   const buttonText = settings?.runButtonText ? settings.runButtonText : 'Submit';
   const confirmationMessage = settings?.confirmationMessage ? settings.confirmationMessage : 'Form Submitted.';
   const resetButtonText = settings?.resetButtonText ? settings.resetButtonText : 'Reset Form';
@@ -57,6 +58,15 @@ const NeoForm = (props: ChartProps) => {
               settings={field.settings}
               parameters={props.parameters}
               queryCallback={props.queryCallback}
+              updateReportSetting={(key, value) => {
+                // If anyone of the fields is in a loading state (debounce / waiting for input) we disable submission temporarily.
+                if (key == 'typing' && value == true) {
+                  setSubmitButtonActive(false);
+                }
+                if (key == 'typing' && value == undefined) {
+                  setSubmitButtonActive(true);
+                }
+              }}
               setGlobalParameter={props.setGlobalParameter}
               getGlobalParameter={props.getGlobalParameter}
             />
@@ -66,6 +76,7 @@ const NeoForm = (props: ChartProps) => {
           <Button
             style={{ marginLeft: 15 }}
             id='form-submit'
+            disabled={!submitButtonActive}
             onClick={() => {
               if (!props.query || !props.query.trim()) {
                 props.createNotification(

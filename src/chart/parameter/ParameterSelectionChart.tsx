@@ -60,10 +60,16 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           parameterDisplayName={parameterName}
           parameterValue={parameterValue}
           parameterDisplayValue={parameterDisplayValue}
-          setParameterValue={setParameterValue}
+          setParameterValue={(value) => {
+            setParameterValue(value);
+            props.updateReportSetting && props.updateReportSetting('typing', undefined);
+          }}
           setParameterDisplayValue={setParameterDisplayValue}
           query={query}
           queryCallback={queryCallback}
+          onInputChange={() => {
+            props.updateReportSetting && props.updateReportSetting('typing', true);
+          }}
           settings={props.settings}
           allParameters={allParameters}
           compatibilityMode={compatibilityMode}
