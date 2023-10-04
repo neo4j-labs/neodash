@@ -3,7 +3,10 @@
  */
 export const layouts = {
   'force-directed': undefined,
-  tree: 'td',
+  'tree-top-down': 'td',
+  'tree-bottom-up': 'bu',
+  'tree-left-right': 'lr',
+  'tree-right-left': 'rl',
   radial: 'radialout',
 };
 
@@ -90,6 +93,7 @@ export interface GraphChartVisualizationProps {
    */
   engine: {
     layout: Layout;
+    graphDepthSep: number;
     queryCallback: (query: string, parameters: Record<string, any>, setRecords: any) => void;
     cooldownTicks: number;
     setCooldownTicks: (ticks: number) => void;
@@ -134,6 +138,8 @@ export interface GraphChartVisualizationProps {
     setClickPosition: (pos) => void;
     setPageNumber: any;
     pageNames: [];
+    customTablePropertiesOfModal: any[];
+    pageIdAndParameterName: string;
   };
   /**
    * entries in 'extensions' let users plug in extra functionality into the visualization based on enabled plugins.
