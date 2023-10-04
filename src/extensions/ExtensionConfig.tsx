@@ -73,6 +73,16 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
     link: 'https://neo4j.com/professional-services/',
   },
+  forms: {
+    name: 'forms',
+    label: 'Forms',
+    author: 'Neo4j Professional Services',
+    image: 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg',
+    enabled: true,
+    description:
+      'Forms let you craft Cypher queries with multiple inputs, that are fired on demand. Using parameters from the dashboard, or form specific input, you will be able to trigger custom logic with forms.',
+    link: 'https://neo4j.com/professional-services/',
+  },
 };
 
 /**

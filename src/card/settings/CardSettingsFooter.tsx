@@ -17,11 +17,11 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 
 const NeoCardSettingsFooter = ({
   type,
-  fields,
-  schema,
+  fields = [],
+  schema = [],
   reportSettings,
   reportSettingsOpen,
-  extensions,
+  extensions = {},
   onToggleReportSettings,
   onReportSettingUpdate,
 }) => {

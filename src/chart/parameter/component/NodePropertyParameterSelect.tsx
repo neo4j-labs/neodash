@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
@@ -13,6 +13,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       ? props.settings.defaultValue
       : '';
 
+  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
   const getInitialValue = (value, multi) => {
     if (value && Array.isArray(value)) {
       return multi ? value : null;
@@ -62,12 +63,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   };
   const handleCrossClick = (isMulti, value) => {
     if (isMulti) {
-      if (value.length == 0 && clearParameterOnFieldClear) {
+      if (value !== null && value.length == 0 && clearParameterOnFieldClear) {
         setInputValue([]);
         handleParametersUpdate(undefined, undefined, manualParameterSave);
         return true;
       }
-      if (value.length == 0) {
+      if (value !== null && value.length == 0) {
         setInputValue([]);
         handleParametersUpdate([], [], manualParameterSave);
         return true;
@@ -95,7 +96,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     let valReference = manualParameterSave ? paramValueLocal : props.parameterValue;
     let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
-    if (isMulti && inputValue.length < newDisplay.length) {
+    if (isMulti && inputValue !== null && newDisplay !== null && inputValue.length < newDisplay.length) {
       newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
 
@@ -120,12 +121,19 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
+
+  useEffect(() => {
+    setInputValue(getInitialValue(props.parameterDisplayValue, multiSelector));
+    handleParametersUpdate(props.parameterValue, props.parameterDisplayValue, true);
+  }, [props.parameterValue]);
+
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
-        options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        options={extraRecords && extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        disabled={disabled}
         style={{
           maxWidth: 'calc(100% - 40px)',
           minWidth: `calc(100% - ${manualParameterSave ? '60' : '30'}px)`,

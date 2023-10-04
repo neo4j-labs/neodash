@@ -1,5 +1,5 @@
 import React from 'react';
-import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
+import ParameterSelectCardSettings from '../chart/parameter/ParameterSelectCardSettings';
 import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
@@ -1280,7 +1280,7 @@ export const REPORT_TYPES = {
     helperText:
       'This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.',
     component: NeoParameterSelectionChart,
-    settingsComponent: NeoCardSettingsContentPropertySelect,
+    settingsComponent: ParameterSelectCardSettings,
     disableCypherParameters: true,
     textOnly: true,
     maxRecords: 100,
@@ -1318,6 +1318,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['CONTAINS', 'STARTS WITH', 'ENDS WITH'],
         default: 'CONTAINS',
+      },
+      disabled: {
+        label: 'Disable the field',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       caseSensitive: {
         label: 'Case Sensitive Search',

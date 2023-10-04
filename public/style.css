@@ -230,6 +230,14 @@
 	}
 }
 
+
+/* Workaround for Needle not handling menu placement of dropdowns on modals */
+#overlay {
+  z-index: 99 !important;
+  position: absolute;
+}
+/* End workaround */
+
 /* Workaround for cleaning the Gantt chart UI */
 .gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div> div:not(:first-child) {
   display: none;

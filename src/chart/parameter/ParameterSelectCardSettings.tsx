@@ -1,15 +1,15 @@
 // TODO: this file (in a way) belongs to chart/parameter/ParameterSelectionChart. It would make sense to move it there
 
 import React, { useCallback, useContext, useEffect } from 'react';
-import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
-import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
+import { RUN_QUERY_DELAY_MS } from '../../config/ReportConfig';
+import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { Autocomplete, debounce, TextField } from '@mui/material';
-import NeoField from '../../../component/field/Field';
+import NeoField from '../../component/field/Field';
 import { Dropdown } from '@neo4j-ndl/react';
-import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
+import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 
-const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
+const ParameterSelectCardSettings = ({ query, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   if (!driver) {
     throw new Error(
@@ -214,6 +214,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
           options: parameterSelectTypes.map((option) => ({ label: option, value: option })),
           value: { label: selectedType, value: selectedType },
           menuPlacement: 'auto',
+          menuPortalTarget: document.querySelector('#overlay'),
         }}
         label='Selection Type'
         type='select'
@@ -428,4 +429,4 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
   );
 };
 
-export default NeoCardSettingsContentPropertySelect;
+export default ParameterSelectCardSettings;

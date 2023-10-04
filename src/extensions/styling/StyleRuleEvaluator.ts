@@ -132,8 +132,8 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
     // If something is null, rules are never met.
     return false;
   }
-  if (!isNaN(parseFloat(ruleValue))) {
-    ruleValue = parseFloat(ruleValue);
+  if (!isNaN(Number(ruleValue))) {
+    ruleValue = Number(ruleValue);
   }
   if (condition == '=') {
     return realValue == ruleValue;

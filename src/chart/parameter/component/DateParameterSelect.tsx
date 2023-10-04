@@ -4,6 +4,7 @@ import NeoDatePicker from '../../../component/field/DateField';
 import dayjs, { Dayjs } from 'dayjs';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
 import { isCastableToNeo4jDate, isEmptyObject } from '../../ChartUtils';
+import { debounce } from '@mui/material';
 
 function castPropsToBoltDate(dict) {
   if (isEmptyObject(dict)) {
@@ -30,6 +31,8 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
+  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
+
   const setParameterValue = (value) => {
     props.setParameterValue(castPropsToBoltDate(value));
   };
@@ -48,6 +51,7 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
       <NeoDatePicker
         label={helperText ? helperText : label}
         value={inputDate}
+        disabled={disabled}
         onChange={(newValue) => {
           setInputDate(newValue);
 

@@ -105,5 +105,6 @@ pages:
 - link:gauge[Gauge Chart]
 - link:raw-json[Raw JSON] 
 - link:parameter-select[Parameter Select] 
+- link:form[Form] 
 - link:iframe[iFrame]
 - link:markdown[Markdown]
