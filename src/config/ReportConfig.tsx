@@ -241,8 +241,13 @@ export const REPORT_TYPES = {
       layout: {
         label: 'Graph Layout (experimental)',
         type: SELECTION_TYPES.LIST,
-        values: ['force-directed', 'tree', 'radial'],
+        values: ['force-directed', 'tree-top-down', 'tree-bottom-up', 'tree-left-right', 'tree-right-left', 'radial'],
         default: 'force-directed',
+      },
+      graphDepthSep: {
+        label: 'Graph Depth Separation (experimental)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '30',
       },
       enableExploration: {
         label: 'Enable graph exploration',
