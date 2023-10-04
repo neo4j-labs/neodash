@@ -91,6 +91,7 @@ const NeoCardView = ({
   // @ts-ignore
   const reportHeader = (
     <NeoCardViewHeader
+      id={id}
       title={title}
       editable={editable}
       description={settings.description}

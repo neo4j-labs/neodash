@@ -1,4 +1,4 @@
-import { createNotificationThunk } from '../page/PageThunks';
+import { addReportOnPageThunk, addReportThunk, createNotificationThunk } from '../page/PageThunks';
 import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard } from './DashboardActions';
 import { runCypherQuery } from '../report/ReportQueryRunner';
@@ -49,6 +49,17 @@ export const movePageThunk = (oldIndex: number, newIndex: number) => (dispatch: 
   } catch (e) {
     dispatch(createNotificationThunk('Unable to move page', e));
   }
+};
+
+export const moveCardThunk = (cardId: string, newPageNumber: number) => (dispatch: any, getState: any) => {
+  const state = getState();
+  const { pagenumber } = state.dashboard.settings;
+  if (pagenumber === newPageNumber) {
+    return;
+  }
+  const data = { ...state.dashboard.pages[pagenumber].reports.find((o) => o.id === cardId) };
+  data.settingsOpen = false;
+  dispatch(addReportOnPageThunk(newPageNumber, 0, 0, data.width, data.height, data));
 };
 
 export const loadDashboardThunk = (text) => (dispatch: any, getState: any) => {

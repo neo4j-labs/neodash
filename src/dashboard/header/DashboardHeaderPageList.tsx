@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getPages } from '../DashboardSelectors';
@@ -10,10 +10,12 @@ import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSe
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
 import { Tabs, IconButton } from '@neo4j-ndl/react';
 import { PlusIconOutline } from '@neo4j-ndl/react/icons';
-import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
-import { DndContext, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import DashboardHeaderPageTitle from './DashboardHeaderPageTitleNew';
+import { useSensor, useSensors } from '@dnd-kit/core';
+import { horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { KeyboardSensor, MouseSensor } from '../../utils/accessibility';
+import Droppable from '../../component/misc/NeoDroppableZone';
+import { SortableListNoContext } from '../../component/misc/NeoSortableListNoContext';
 
 /**
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.
@@ -27,7 +29,14 @@ export const NeoDashboardHeaderPageList = ({
   movePage,
   selectPage,
 }) => {
+  const addIndex = (e: any[]) => {
+    return e.map((e, i) => {
+      return { ...e, id: `DashboardHeaderPageTitle_${i}`, editing: false };
+    });
+  };
+
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
+  const [pagesIndexed, setPagesIndexed] = React.useState(addIndex(pages));
 
   // We debounce several state changes to improve user experience.
   const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
@@ -38,19 +47,17 @@ export const NeoDashboardHeaderPageList = ({
     </IconButton>
   );
 
-  function handleDragEnd(event) {
-    const { active, over } = event;
-
-    if (!over || !editable) {
-      return;
+  function handleTabsChange(items: any[], activeIndex: number, overIndex: number) {
+    console.log('handleTabsChange');
+    console.log(items);
+    console.log(activeIndex);
+    console.log(overIndex);
+    if (activeIndex !== overIndex && overIndex !== -1) {
+      // old - new
+      movePage(activeIndex, overIndex);
+      setPagesIndexed(addIndex(items));
+      debouncedSetCanSwitchPages(true);
     }
-    if (active.id !== over.id) {
-      const oldIndex = parseInt(active.id.split('_')[1]);
-      const newIndex = parseInt(over.id.split('_')[1]);
-      movePage(oldIndex, newIndex);
-    }
-
-    debouncedSetCanSwitchPages(true);
   }
 
   const mouseSensor = useSensor(MouseSensor, {
@@ -69,21 +76,41 @@ export const NeoDashboardHeaderPageList = ({
 
   const sensors = useSensors(mouseSensor, keySensor);
 
+  useEffect(() => {
+    setPagesIndexed(addIndex(pages));
+  }, [JSON.stringify(pages)]);
+
+  const setEditing = (id, value) => {
+    let copy = [...pagesIndexed];
+    copy[id].editing = value;
+    setPagesIndexed(copy);
+  };
   const content = (
     <div className='n-flex n-flex-row n-w-full'>
       <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
-        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-          <SortableContext items={pages} strategy={horizontalListSortingStrategy}>
-            {pages.map((page, i) => (
-              <DashboardHeaderPageTitle
-                title={page.title}
-                tabIndex={i}
-                key={`DashboardHeaderPageTitle_${i}`}
-                disabled={!editable}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
+        <SortableListNoContext
+          items={pagesIndexed}
+          onChange={handleTabsChange}
+          renderItem={(item, index) => (
+            <Droppable id={`DashboardHeaderPageTitleDroppable_${index}`}>
+              <SortableListNoContext.Item
+                id={`DashboardHeaderPageTitle_${index}`}
+                render={<div>item.title</div>}
+                onDraggingOrSorting={() => setEditing(index, false)}
+              >
+                <DashboardHeaderPageTitle
+                  title={item.title}
+                  tabIndex={index}
+                  key={`DashboardHeaderPageTitle_${index}`}
+                  disabled={!editable}
+                  editing={item.editing}
+                  setEditing={setEditing}
+                />
+              </SortableListNoContext.Item>
+            </Droppable>
+          )}
+          strategy={horizontalListSortingStrategy}
+        />
       </Tabs>
       {editable && pageAddButton}
     </div>
