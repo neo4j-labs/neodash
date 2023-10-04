@@ -55,9 +55,9 @@ export interface ParameterSelectProps {
    */
   multiSelector?: boolean;
   /**
-   * Add the possibility for multiple lines (freetext only)
+   * Add the possibility for users to insert multiple lines (freetext only)
    */
-  multiLine?: boolean;
+  multiline?: boolean;
   /**
    * Add the possibility for manual selection confirmation
    */

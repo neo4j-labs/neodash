@@ -1296,6 +1296,12 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      multiline: {
+        label: 'Multiline',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       manualParameterSave: {
         label: 'Manual Parameter Save',
         type: SELECTION_TYPES.LIST,
