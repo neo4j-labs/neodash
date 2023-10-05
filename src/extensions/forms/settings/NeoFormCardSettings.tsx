@@ -57,11 +57,13 @@ const NeoFormCardSettings = ({ query, database, settings, extensions, onReportSe
   );
 
   useEffect(() => {
-    setIndexedFormFields(
-      formFields.map((f, index) => {
-        return { ...f, id: index + 1 };
-      })
-    );
+    if (formFields && formFields.length > 0) {
+      setIndexedFormFields(
+        formFields.map((f, index) => {
+          return { ...f, id: index + 1 };
+        })
+      );
+    }
   }, [formFields]);
 
   return (

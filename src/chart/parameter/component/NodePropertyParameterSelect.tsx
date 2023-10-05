@@ -4,6 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
 import { RenderSubValue } from '../../../report/ReportRecordProcessing';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
+import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponent';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
@@ -127,6 +128,21 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     handleParametersUpdate(props.parameterValue, props.parameterDisplayValue, true);
   }, [props.parameterValue]);
 
+  // The query used to populate the selector is invalid.
+  if (extraRecords && extraRecords[0] && extraRecords[0].error) {
+    return (
+      <NeoCodeViewerComponent
+        value={
+          `The parameter value retrieval query is invalid: \n${ 
+          props.query 
+          }\n\nError message:\n${ 
+          extraRecords[0].error}`
+        }
+      />
+    );
+  }
+
+  // If we don't have an error message, render the selector:
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
@@ -147,6 +163,11 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         }}
         isOptionEqualToValue={(option, value) => {
           return (option && option.toString()) === (value && value.toString());
+        }}
+        onOpen={() => {
+          if (extraRecords && extraRecords.length == 0) {
+            debouncedQueryCallback(props.query, { input: `${inputDisplayText}`, ...allParameters }, setExtraRecords);
+          }
         }}
         value={inputValue}
         onChange={propagateSelection}
