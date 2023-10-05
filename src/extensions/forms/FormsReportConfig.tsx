@@ -16,6 +16,11 @@ export const FORMS = {
     ),
     maxRecords: 1,
     settings: {
+      backgroundColor: {
+        label: 'Background Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#fafafa',
+      },
       runButtonText: {
         label: 'Form Button Text',
         type: SELECTION_TYPES.TEXT,
@@ -48,6 +53,24 @@ export const FORMS = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       description: {
         label: 'Report Description',
