@@ -44,14 +44,15 @@ const Dashboard = ({
         onConnectionUpdate={onConnectionUpdate}
       />
       {/* Navigation Bar */}
-      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b n-border-neutral-border-weak'>
+      {/* <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b n-border-neutral-border-weak'>
         <NeoDashboardHeader
           connection={connection}
           onDownloadImage={onDownloadDashboardAsImage}
           onAboutModalOpen={onAboutModalOpen}
           resetApplication={resetApplication}
         ></NeoDashboardHeader>
-      </div>
+      </div> */}
+
       {/* Main Page */}
       <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
         {/* Main Content */}
