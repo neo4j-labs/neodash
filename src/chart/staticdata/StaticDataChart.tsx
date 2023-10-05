@@ -15,7 +15,7 @@ const StaticDataChart = (props: ChartProps) => {
   return (
     <div style={{ marginTop: '0px', height: '100%' }}>
       <p>Name: {node.properties['name']}</p>
-      <p>Link: <a href={node.properties['endpoint']}>{node.properties['endpoint']}</a></p>
+      <p>Link: <a href={node.properties['endpoint']}>download here</a></p>
     </div>
   );
 };
