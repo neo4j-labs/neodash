@@ -46,6 +46,13 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
 
+  React.useEffect(() => {
+    setInputDisplayText(props.parameterDisplayValue && multiSelector ? '' : props.parameterDisplayValue);
+    setInputValue(getInitialValue(props.parameterDisplayValue, multiSelector));
+    setParamValueLocal(props.parameterValue);
+    setParamValueDisplayLocal(props.parameterDisplayValue);
+  }, [props.parameterValue, props.parameterDisplayValue]);
+
   const manualHandleParametersUpdate = () => {
     handleParametersUpdate(paramValueLocal, paramValueDisplayLocal, false);
   };
