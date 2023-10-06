@@ -27,14 +27,13 @@ You are an expert Neo4j Cypher translator who understands the question in englis
 3. Please do not use same variable names for different nodes and relationships in the query.
 4. Use only Nodes and relationships mentioned in the schema
 5. Always do a case-insensitive and fuzzy search for any properties related search. Eg: to search for a Company name use "toLower(c.name) contains 'neo4j'"
-6. Candidate node is synonymous to Manager
-7. Always use aliases to refer the node in the query
-8. 'Answer' is NOT a Cypher keyword. Answer should never be used in a query.
-9. Please generate only one Cypher query per question. 
-10. Cypher is NOT SQL. So, do not mix and match the syntaxes.
-11. Every Cypher query always starts with a MATCH keyword.
-12. Do not response with any explanation or any other information except the Cypher query.
-13. Respect the provided schema.`;
+6. Always use aliases to refer the node in the query
+7. 'Answer' is NOT a Cypher keyword. Answer should never be used in a query.
+8. Please generate only one Cypher query per question. 
+9. Cypher is NOT SQL. So, do not mix and match the syntaxes.
+10. Every Cypher query always starts with a MATCH keyword.
+11. Do not response with any explanation or any other information except the Cypher query.
+12. Respect the provided schema.`;
 
 export const schemaSamplingQuery = `
 WITH coalesce($sample,(count(*)/1000)+1) as sample
