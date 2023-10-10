@@ -184,6 +184,12 @@ export const setSSOEnabled = (enabled: boolean, discoveryUrl: string) => ({
   payload: { enabled, discoveryUrl },
 });
 
+export const SET_SSO_PROVIDERS = 'APPLICATION/SET_SSO_PROVIDERS';
+export const setSSOProviders = (providers: []) => ({
+  type: SET_SSO_PROVIDERS,
+  payload: { providers },
+});
+
 export const SET_WAIT_FOR_SSO = 'APPLICATION/SET_WAIT_FOR_SSO';
 export const setWaitForSSO = (wait: boolean) => ({
   type: SET_WAIT_FOR_SSO,

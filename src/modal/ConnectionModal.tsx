@@ -186,6 +186,7 @@ export default function NeoConnectionModal({
                   // Remember credentials on click
                   setConnectionProperties(protocol, url, port, database, '', '');
                 }}
+                providers={ssoSettings.ssoProviders}
               />
             ) : (
               <Button
