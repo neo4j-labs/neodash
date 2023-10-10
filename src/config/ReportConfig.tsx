@@ -92,6 +92,33 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      expandedCellRenderer: {
+        label: 'Use expanded cell renderer',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
+      overrideDefaultMessage: {
+        label: 'Override default message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
+      },
     },
   },
   graph: {
@@ -184,7 +211,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
-
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -301,6 +327,35 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      customTablePropertiesOfModal: {
+        label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
+        type: SELECTION_TYPES.DICTIONARY,
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      pageIdAndParameterName: {
+        label: '<PageId>:<ParameterName>:<NodeType>',
+        type: SELECTION_TYPES.TEXT,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
+      overrideDefaultMessage: {
+        label: 'Override default message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
       },
     },
   },
