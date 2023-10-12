@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
@@ -24,6 +24,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const { multiSelector, manualParameterSave } = props;
   const allParameters = props.allParameters ? props.allParameters : {};
   const [extraRecords, setExtraRecords] = React.useState([]);
+
   const [inputDisplayText, setInputDisplayText] = React.useState(
     props.parameterDisplayValue && multiSelector ? '' : props.parameterDisplayValue
   );
@@ -120,6 +121,27 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
+
+  useEffect(() => {
+    // Handle external updates of parameter values, with varying value types and parameter selector types.
+    const isArray = Array.isArray(props.parameterDisplayValue);
+    console.log(props.parameterDisplayValue);
+    if (multiSelector) {
+      if (isArray) {
+        setInputDisplayText(props.parameterDisplayValue);
+        setInputValue(props.parameterDisplayValue);
+      } else if (props.parameterDisplayValue !== '') {
+          setInputDisplayText([props.parameterDisplayValue]);
+          setInputValue([props.parameterDisplayValue]);
+        } else {
+          setInputDisplayText([]);
+          setInputValue([]);
+        }
+    } else {
+      setInputDisplayText(props.parameterDisplayValue);
+      setInputValue(props.parameterDisplayValue);
+    }
+  }, [props.parameterDisplayValue]);
 
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
