@@ -280,8 +280,6 @@ export const NeoCustomReportActionsModal = ({
                     (el) => el.value === rule.customization
                   );
                   const ruleTrigger = RULE_CONDITIONS[type].find((el) => el.value === rule.condition);
-                  const {condition} = rule;
-                  console.log(RULE_CONDITIONS[type], ruleTrigger, condition);
 
                   return (
                     <>
