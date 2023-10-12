@@ -124,6 +124,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'Execute',
       },
+      overrideDefaultMessage: {
+        label: 'Override default message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
+      },
     },
   },
   graph: {
@@ -221,7 +226,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
-
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -373,6 +377,11 @@ export const REPORT_TYPES = {
         label: 'Execute Button Name',
         type: SELECTION_TYPES.TEXT,
         default: 'Execute',
+      },
+      overrideDefaultMessage: {
+        label: 'Override default message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
       },
     },
   },
