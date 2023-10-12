@@ -124,19 +124,19 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   useEffect(() => {
     // Handle external updates of parameter values, with varying value types and parameter selector types.
+    // Handles multiple scenarios if an external parameter changes type from value to lists.
     const isArray = Array.isArray(props.parameterDisplayValue);
-    console.log(props.parameterDisplayValue);
     if (multiSelector) {
       if (isArray) {
         setInputDisplayText(props.parameterDisplayValue);
         setInputValue(props.parameterDisplayValue);
       } else if (props.parameterDisplayValue !== '') {
-          setInputDisplayText([props.parameterDisplayValue]);
-          setInputValue([props.parameterDisplayValue]);
-        } else {
-          setInputDisplayText([]);
-          setInputValue([]);
-        }
+        setInputDisplayText([props.parameterDisplayValue]);
+        setInputValue([props.parameterDisplayValue]);
+      } else {
+        setInputDisplayText('');
+        setInputValue([]);
+      }
     } else {
       setInputDisplayText(props.parameterDisplayValue);
       setInputValue(props.parameterDisplayValue);
