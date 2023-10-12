@@ -82,6 +82,7 @@ export const NeoTableChart = (props: ChartProps) => {
   );
 
   const [notificationOpen, setNotificationOpen] = React.useState(false);
+  const [columnVisibilityModel, setColumnVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
@@ -199,9 +200,6 @@ export const NeoTableChart = (props: ChartProps) => {
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
   const pageNames = getPageNumbersAndNamesList();
-
-  const [columnVisibilityModel, setColumnVisibilityModel] =
-  React.useState<GridColumnVisibilityModel>({});
 
   return (
     <ThemeProvider theme={theme}>
