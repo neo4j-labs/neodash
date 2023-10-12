@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
@@ -26,6 +26,7 @@ import { extensionEnabled } from '../../utils/ReportUtils';
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
+const HIDDEN_COLUMN_PREFIX = '__';
 
 const theme = createTheme({
   typography: {
@@ -159,6 +160,10 @@ export const NeoTableChart = (props: ChartProps) => {
           actionableFields.includes(key)
         );
       });
+  const hiddenColumns = Object.assign(
+    {},
+    ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
+  );
 
   const getTransposedRows = (records) => {
     // Skip first key
@@ -199,9 +204,6 @@ export const NeoTableChart = (props: ChartProps) => {
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
   const pageNames = getPageNumbersAndNamesList();
-
-  const [columnVisibilityModel, setColumnVisibilityModel] =
-  React.useState<GridColumnVisibilityModel>({});
 
   return (
     <ThemeProvider theme={theme}>
@@ -253,10 +255,7 @@ export const NeoTableChart = (props: ChartProps) => {
           rowHeight={tableRowHeight}
           rows={rows}
           columns={columns}
-          columnVisibilityModel={columnVisibilityModel}
-          onColumnVisibilityModelChange={(newModel) =>
-            setColumnVisibilityModel(newModel)
-          }
+          columnVisibilityModel={hiddenColumns}
           onCellClick={(e) =>
             performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
           }
