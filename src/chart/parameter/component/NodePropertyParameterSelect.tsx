@@ -35,6 +35,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
+  const multiSelectLimit = props.settings && props.settings.multiSelectLimit ? props.settings.multiSelectLimit : 5;
   const propertyType = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
@@ -148,6 +149,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
+        limitTags={multiSelectLimit}
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
           maxWidth: 'calc(100% - 40px)',
