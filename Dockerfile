@@ -11,9 +11,11 @@ WORKDIR /usr/local/src/neodash
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
 
-RUN yarn install
+# RUN yarn install
+RUN npm install --legacy-peer-deps
 COPY ./ /usr/local/src/neodash
-RUN yarn run build-minimal
+# RUN yarn run build-minimal
+RUN npm run build
 
 # production stage
 FROM nginx:alpine AS neodash
