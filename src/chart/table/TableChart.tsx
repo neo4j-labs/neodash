@@ -165,6 +165,47 @@ export const NeoTableChart = (props: ChartProps) => {
     ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
   );
 
+  // Helper functions for checkbox selection with report actions.
+  const hasCheckboxes = () => {
+    let rules = actionsRules.filter((rule) => rule.condition && rule.condition == 'rowCheck');
+    return rules.length > 0;
+  };
+
+  const getCheckboxes = () => {
+    let rules = actionsRules.filter((rule) => rule.condition && rule.condition == 'rowCheck');
+    const params = rules.map((rule) => `neodash_${rule.customizationValue}`);
+
+    // See if any of the rows should be checked. This is the case when a parameter is already in the list of checked values.
+    let selection = [];
+    params.forEach((parameter, index) => {
+      const fieldName = rules[index].value;
+      const values = props.getGlobalParameter && props.getGlobalParameter(parameter);
+      if (Array.isArray(values)) {
+        values.forEach((value) => {
+          rows.forEach((row, index) => {
+            if (row[fieldName] == value) {
+              selection.push(index);
+            }
+          });
+        });
+      }
+    });
+    return [...new Set(selection)];
+  };
+
+  const updateCheckBoxes = (selection) => {
+    if (hasCheckboxes()) {
+      const selectedRows = rows.filter((_, i) => selection.includes(i));
+      let rules = actionsRules.filter((rule) => rule.condition && rule.condition == 'rowCheck');
+      rules.forEach((rule) => {
+        const parameterValues = selectedRows.map((row) => row[rule.value]).filter((v) => v !== undefined);
+        props.setGlobalParameter && props.setGlobalParameter(`neodash_${rule.customizationValue}`, parameterValues);
+        props.setGlobalParameter &&
+          props.setGlobalParameter(`neodash_${rule.customizationValue}_display`, parameterValues);
+      });
+    }
+  };
+
   const getTransposedRows = (records) => {
     // Skip first key
     const rowKeys = [...records[0].keys];
@@ -267,6 +308,11 @@ export const NeoTableChart = (props: ChartProps) => {
               setNotificationOpen(true);
               navigator.clipboard.writeText(e.value);
             }
+          }}
+          checkboxSelection={hasCheckboxes()}
+          selectionModel={getCheckboxes()}
+          onSelectionModelChange={(selection) => {
+            updateCheckBoxes(selection);
           }}
           pageSize={tablePageSize > 0 ? tablePageSize : 5}
           rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}

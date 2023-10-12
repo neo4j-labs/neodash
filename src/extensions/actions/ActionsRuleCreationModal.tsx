@@ -16,6 +16,12 @@ const RULE_CONDITIONS = {
       value: 'doubleClick',
       label: 'Cell Double Click',
     },
+    {
+      value: 'rowCheck',
+      label: 'Row Checked',
+      disableFieldSelection: true,
+      multiple: true,
+    },
   ],
   map: [
     {
@@ -274,6 +280,9 @@ export const NeoCustomReportActionsModal = ({
                     (el) => el.value === rule.customization
                   );
                   const ruleTrigger = RULE_CONDITIONS[type].find((el) => el.value === rule.condition);
+                  const {condition} = rule;
+                  console.log(RULE_CONDITIONS[type], ruleTrigger, condition);
+
                   return (
                     <>
                       <tr>
@@ -286,7 +295,11 @@ export const NeoCustomReportActionsModal = ({
                             <Dropdown
                               type='select'
                               className='n-align-middle n-w-2/5 n-pr-1'
-                              style={{ minWidth: 80, display: 'inline-block' }}
+                              style={{
+                                minWidth: '140px',
+                                width: ruleTrigger.disableFieldSelection === true ? '100%' : '140px',
+                                display: 'inline-block',
+                              }}
                               selectProps={{
                                 onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
                                 options:
@@ -298,40 +311,46 @@ export const NeoCustomReportActionsModal = ({
                                 value: { label: ruleTrigger ? ruleTrigger.label : '', value: rule.condition },
                               }}
                             ></Dropdown>
-                            <Autocomplete
-                              className='n-align-middle n-inline-block n-w-3/5'
-                              disableClearable={true}
-                              id='autocomplete-label-type'
-                              size='small'
-                              noOptionsText='*Specify an exact field name'
-                              options={createFieldVariableSuggestionsFromRule(rule, true)}
-                              value={rule.field ? rule.field : ''}
-                              inputValue={rule.field ? rule.field : ''}
-                              popupIcon={<></>}
-                              style={{
-                                minWidth: 125,
-                              }}
-                              onInputChange={(event, value) => {
-                                updateRuleField(index, 'field', value);
-                              }}
-                              onChange={(event, newValue) => {
-                                updateRuleField(index, 'field', newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  placeholder='Field name...'
-                                  style={{ padding: 0 }}
-                                  InputLabelProps={{ shrink: true }}
-                                />
-                              )}
-                            />
+                            {!ruleTrigger.disableFieldSelection ? (
+                              <Autocomplete
+                                className='n-align-middle n-inline-block n-w-3/5'
+                                disableClearable={true}
+                                id='autocomplete-label-type'
+                                size='small'
+                                noOptionsText='*Specify an exact field name'
+                                options={createFieldVariableSuggestionsFromRule(rule, true)}
+                                value={rule.field ? rule.field : ''}
+                                inputValue={rule.field ? rule.field : ''}
+                                popupIcon={<></>}
+                                style={{
+                                  minWidth: 125,
+                                }}
+                                onInputChange={(event, value) => {
+                                  updateRuleField(index, 'field', value);
+                                }}
+                                onChange={(event, newValue) => {
+                                  updateRuleField(index, 'field', newValue);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    placeholder='Field name...'
+                                    style={{ padding: 0 }}
+                                    InputLabelProps={{ shrink: true }}
+                                  />
+                                )}
+                              />
+                            ) : (
+                              <></>
+                            )}
                           </div>
                         </td>
-                        <td width='5%' className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>SET</span>
+                        <td width='6%' className='n-text-center'>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
+                            {!ruleTrigger.multiple ? 'SET' : 'APPEND'}
+                          </span>
                         </td>
-                        <td width='40%'>
+                        <td width='39%'>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
@@ -354,7 +373,9 @@ export const NeoCustomReportActionsModal = ({
                         </td>
 
                         <td width='5%' className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>TO</span>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
+                            {!ruleTrigger.multiple ? 'TO' : 'WITH'}
+                          </span>
                         </td>
                         <td width='20%'>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
