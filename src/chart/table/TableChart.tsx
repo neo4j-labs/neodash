@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
@@ -17,7 +17,6 @@ import { extensionEnabled } from '../../extensions/ExtensionUtils';
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 52;
 const TABLE_ROW_HEIGHT = 52;
-const HIDDEN_COLUMN_PREFIX = '__';
 
 function ApplyColumnType(column, value) {
   const renderer = getRendererForValue(value);
@@ -97,10 +96,6 @@ const NeoTableChart = (props: ChartProps) => {
           value
         );
       });
-  const hiddenColumns = Object.assign(
-    {},
-    ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
-  );
 
   const rows = transposed
     ? records[0].keys.map((key, i) => {
@@ -122,6 +117,9 @@ const NeoTableChart = (props: ChartProps) => {
   const tablePageSize = compact
     ? Math.round(availableRowHeight) - pageSizeReducer
     : Math.floor(availableRowHeight) - pageSizeReducer;
+
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+    React.useState<GridColumnVisibilityModel>({});
 
   return (
     <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
@@ -158,12 +156,16 @@ const NeoTableChart = (props: ChartProps) => {
       ) : (
         <></>
       )}
+      
       <DataGrid
         headerHeight={32}
         rowHeight={tableRowHeight}
         rows={rows}
         columns={columns}
-        columnVisibilityModel={hiddenColumns}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={(newModel) =>
+          setColumnVisibilityModel(newModel)
+        }
         onCellDoubleClick={(e) => {
           setNotificationOpen(true);
           navigator.clipboard.writeText(e.value);
