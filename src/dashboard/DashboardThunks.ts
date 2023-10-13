@@ -170,7 +170,12 @@ export const saveDashboardToNeo4jThunk =
 
       // Generate a cypher query to save the dashboard.
       const query = overwrite
-        ? 'OPTIONAL MATCH (n:_Neodash_Dashboard{title:$title}) DELETE n WITH 1 as X LIMIT 1 CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid'
+        ? 'MATCH (n:_Neodash_Dashboard{title:$title}) WITH n ORDER BY n.date DESC LIMIT 1 '+
+          ' FOREACH (ignoreMe IN CASE WHEN n IS NOT NULL THEN [1] ELSE [] END |'+
+          '  SET n.uuid = $uuid, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date))'+
+          ' FOREACH (ignoreMe IN CASE WHEN n IS NULL THEN [1] ELSE [] END |'+
+          '  CREATE (m:_Neodash_Dashboard {uuid: $uuid, title: $title, version: $version, user: $user, content: $content, date: datetime($date)}))'+
+          'RETURN COALESCE(n.uuid, $uuid) as uuid'
         : 'CREATE (n:_Neodash_Dashboard) SET n.uuid = $uuid, n.title = $title, n.version = $version, n.user = $user, n.content = $content, n.date = datetime($date) RETURN $uuid as uuid';
 
       const parameters = {
