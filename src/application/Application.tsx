@@ -34,6 +34,7 @@ import {
   setReportHelpModalOpen,
   setWaitForSSO,
   setWelcomeScreenOpen,
+  setCustomHeader,
 } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
@@ -93,6 +94,7 @@ const Application = ({
   onConnectionModalClose,
   onSSOAttempt,
   themeMode,
+  customHeader,
 }) => {
   const [initialized, setInitialized] = React.useState(false);
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getDashboardSettings, getDashboardTheme, getDashboardTitle, getPages } from '../DashboardSelectors';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
-import { applicationGetStandaloneSettings } from '../../application/ApplicationSelectors';
+import { applicationGetStandaloneSettings, applicationGetCustomHeader } from '../../application/ApplicationSelectors';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { NeoDashboardHeaderLogo } from './DashboardHeaderLogo';
 import NeoAboutButton from './DashboardHeaderAboutButton';
@@ -17,6 +17,7 @@ import { Tooltip } from '@mui/material';
 export const NeoDashboardHeader = ({
   standaloneSettings,
   dashboardTitle,
+  customHeader,
   connection,
   settings,
   onConnectionModalOpen,
@@ -28,6 +29,8 @@ export const NeoDashboardHeader = ({
 }) => {
   const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
+
+  const [customHeaderText, setCustomHeader] = React.useState(customHeader);
 
   const [isDarkMode, setDarkMode] = React.useState(themeMode !== 'light');
 
@@ -51,7 +54,7 @@ export const NeoDashboardHeader = ({
         <div className='n-flex n-justify-between n-h-16 n-items-center n-py-6 md:n-justify-start md:n-space-x-10 n-mx-4'>
           <NeoDashboardHeaderLogo resetApplication={resetApplication} />
           <nav className='n-items-center n-justify-center n-flex n-flex-1 n-w-full n-font-semibold'>
-            {`${connection.protocol}://${connection.url}:${connection.port}/${connection.database}`}
+            {customHeaderText.length>0? `${customHeaderText}` : `${connection.protocol}://${connection.url}:${connection.port}`}
           </nav>
           <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'>
             <div className='n-flex n-flex-row n-gap-x-2'>
@@ -84,6 +87,7 @@ export const NeoDashboardHeader = ({
 const mapStateToProps = (state) => ({
   dashboardTitle: getDashboardTitle(state),
   standaloneSettings: applicationGetStandaloneSettings(state),
+  customHeader: applicationGetCustomHeader(state),
   pages: getPages(state),
   settings: getDashboardSettings(state),
   editable: getDashboardIsEditable(state),

@@ -14,5 +14,6 @@
   "standaloneMultiDatabase": false,
   "standaloneDatabaseList": "neo4j",
   "loggingMode": "0",
-  "loggingDatabase": "logs"
+  "loggingDatabase": "logs",
+  "customHeader": ""
 }

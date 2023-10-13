@@ -127,3 +127,7 @@ export const applicationGetDebugState = (state: any) => {
   }
   return copy;
 };
+
+export const applicationGetCustomHeader = (state: any) => {
+  return state.application.customHeader;
+};

@@ -29,6 +29,7 @@ import {
   SET_LOG_ERROR_NOTIFICATION,
   SET_WAIT_FOR_SSO,
   SET_WELCOME_SCREEN_OPEN,
+  SET_CUSTOM_HEADER,
 } from './ApplicationActions';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -265,6 +266,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       return state;
     }
     default: {
+      return state;
+    }
+    case SET_CUSTOM_HEADER: {
+      const { customHeader } = payload;
+      state = update(state, { customHeader: customHeader });
       return state;
     }
   }
