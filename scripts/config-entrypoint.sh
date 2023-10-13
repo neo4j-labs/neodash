@@ -24,3 +24,5 @@ echo " \
     \"loggingDatabase\": \"${loggingDatabase:='logs'}\",  \
     \"customHeader\": \"${customHeader:=}\"  \
    }" > /usr/share/nginx/html/config.json
+
+echo "${styleConfigJson:={\}}" > /usr/share/nginx/html/style.config.json
