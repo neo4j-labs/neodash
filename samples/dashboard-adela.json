@@ -1,0 +1,170 @@
+{
+  "title": "DYNABIC - MADT - FERRO",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_annotation_endpoint": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg/1920px-Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg",
+      "neodash_annotation_endpoint_display": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg/1920px-Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg",
+      "neodash_asset_layer": "Physical",
+      "neodash_asset_layer_display": "Physical",
+      "main_selected_node": 15
+    }
+  },
+  "pages": [
+    {
+      "title": "Digital Twin",
+      "reports": [
+        {
+          "title": "Asset Number",
+          "query": "MATCH (n:ASSET) RETURN count(n)",
+          "width": 1,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Attachment Number",
+          "query": "MATCH (n:ATTACHMENT) RETURN count(n)",
+          "width": 1,
+          "height": 1,
+          "x": 2,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+
+        {
+          "title": "Asset Overview",
+          "query": "MATCH (n:ASSET) RETURN n as Node, n.name as Name, n.layer as Layer LIMIT 10",
+          "width": 4,
+          "height": 3,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Attachment Overview",
+          "query": "MATCH (n:ASSET)<-[:AttachTo]-(a:ATTACHMENT) RETURN a.name as Attachment, n.name as Attached_to, a.type as Type LIMIT 5",
+          "width": 4,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Graph Representation",
+          "query": "MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 50",
+          "width": 4,
+          "height": 3,
+          "x": 4,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "ATTACHMENT": "(label)",
+            "ASSET": "name",
+            "DATASOURCE": "(label)",
+            "STATICDATA": "name"
+          },
+          "settings": {
+            "enableEditing": true
+          }
+        },
+        {
+          "title": "Asset location",
+          "query": "MATCH (n:ASSET) RETURN n LIMIT 20",
+          "width": 4,
+          "height": 2,
+          "x": 4,
+          "y": 0,
+          "type": "map",
+          "selection": {
+            "ASSET": "name"
+          },
+          "settings": {}
+        },
+        {
+          "title": "Card: Attachment",
+          "query": "MATCH (n:ATTACHMENT) WHERE id(n) = $main_selected_node RETURN n",
+          "width": 3,
+          "height": 2,
+          "x": 8,
+          "y": 0,
+          "type": "attachment",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Card: Data Source",
+          "query": "MATCH (n:DATASOURCE) WHERE id(n) = $main_selected_node RETURN n",
+          "width": 3,
+          "height": 2,
+          "x": 8,
+          "y": 0,
+          "type": "datasource",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Card: Static Data",
+          "query": "MATCH (n:STATICDATA) WHERE id(n) = $main_selected_node RETURN n",
+          "width": 3,
+          "height": 2,
+          "x": 8,
+          "y": 0,
+          "type": "staticdata",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Layers",
+      "reports": [
+        {
+          "title": "",
+          "query": "MATCH (n:`ASSET`) WHERE toLower(toString(n.`layer`)) CONTAINS toLower($input) RETURN DISTINCT n.`layer` as Value,  n.`layer` as Display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "ASSET",
+            "propertyType": "layer",
+            "propertyTypeDisplay": "layer",
+            "parameterName": "neodash_asset_layer"
+          }
+        },
+        {
+          "title": "",
+          "query": "match (a: ASSET {layer:$neodash_asset_layer})\noptional match (t:ATTACHMENT)-[c1]-(a)\noptional match (b: ASSET {layer:$neodash_asset_layer})-[c2]-(a)\nreturn a, b, t, c1, c2\n\n",
+          "width": 3,
+          "height": 2,
+          "x": 3,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "ASSET": "name",
+            "ATTACHMENT": "name"
+          },
+          "settings": {}
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {}
+}

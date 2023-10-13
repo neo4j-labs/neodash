@@ -37,7 +37,13 @@ module.exports = (env) => {
     },
     resolve: { 
       extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
-      fallback: {"fs": false}
+      fallback: {"fs": false,
+                "https": require.resolve("https-browserify"),
+                "crypto": require.resolve("crypto-browserify"),
+                "path": require.resolve("path-browserify"),
+                "timers": require.resolve("timers-browserify"),
+                "http": require.resolve("stream-http")
+              }
     },
     output: {
       filename: 'bundle.js',
