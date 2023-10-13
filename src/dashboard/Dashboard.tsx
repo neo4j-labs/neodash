@@ -51,7 +51,7 @@ const Dashboard = ({
           onAboutModalOpen={onAboutModalOpen}
           resetApplication={resetApplication}
         ></NeoDashboardHeader> */}
-        <div className='n-w-full n-mx-8'>
+        <div className='n-w-full n-mx-8 n-my-6'>
           <NeoDashboardTitle />
           <NeoDashboardHeaderPageList />
         </div>
