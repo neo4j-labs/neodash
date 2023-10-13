@@ -31,6 +31,7 @@ will look like this:
     "standaloneDatabaseList": "neo4j"    
     "loggingMode": "0",
     "loggingDatabase": "logs",
+    "customHeader": "",
 }
 ....
 
@@ -132,6 +133,10 @@ must be granted to enble any user to create logs.
 |loggingDatabase |string |neo4j |When loggingMode is set to anything 
 else than '0', the database to use for logging. Log records (nodes)
 will be created in this database.
+
+|customHeader |string |none |When set the dashboard header will display
+the prameter value as a fixed string, otherwise it will display the host 
+and port of current connection.
 |===
 
 == Configuring SSO
