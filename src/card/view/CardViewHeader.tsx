@@ -18,8 +18,10 @@ import {
   XMarkIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { DragButton } from '../../component/misc/NeoDragButton';
 
 const NeoCardViewHeader = ({
+  id,
   title,
   description,
   editable,
@@ -84,15 +86,14 @@ const NeoCardViewHeader = ({
           <tr>
             {editable ? (
               <td>
-                <IconButton
+                <DragButton
+                  id={`Card_${id}`}
                   className='n-mb-3 n-relative -n-left-3 drag-handle'
                   clean
                   size='medium'
                   aria-label={'drag'}
                   onClick={() => {}}
-                >
-                  <DragIcon />
-                </IconButton>
+                />
               </td>
             ) : (
               <></>

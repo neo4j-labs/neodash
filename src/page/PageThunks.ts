@@ -20,6 +20,17 @@ export const addReportThunk =
     }
   };
 
+export const addReportOnPageThunk =
+  (pagenumber: number, x: number, y: number, width: number, height: number, data: any) => (dispatch: any) => {
+    try {
+      const initialState = data !== undefined ? data : CARD_INITIAL_STATE;
+      const report = { ...initialState, x: x, y: y, width: width, height: height, id: createUUID() };
+      dispatch(createReport(pagenumber, report));
+    } catch (e) {
+      dispatch(createNotificationThunk('Cannot create report', e));
+    }
+  };
+
 export const removeReportThunk = (id: string) => (dispatch: any, getState: any) => {
   try {
     const state = getState();
