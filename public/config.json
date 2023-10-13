@@ -15,5 +15,5 @@
   "standaloneDatabaseList": "neo4j",
   "loggingMode": "0",
   "loggingDatabase": "logs",
-  "customHeader": "B-Raven.com"
+  "customHeader": ""
 }
