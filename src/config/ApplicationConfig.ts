@@ -18,7 +18,7 @@ export const DASHBOARD_HEADER_BUTTON_COLOR = styleConfig?.style?.DASHBOARD_HEADE
 export const DASHBOARD_HEADER_TITLE_COLOR = styleConfig?.style?.DASHBOARD_HEADER_TITLE_COLOR || '#FFFFFF'; // '#FFFFFF'
 
 export const DASHBOARD_HEADER_BRAND_LOGO =
-  styleConfig?.style?.https://www.novartis.com/themes/custom/nvs_arctic/logo.svg || 'neo4j-icon-color-full.png';
+  styleConfig?.style?.DASHBOARD_HEADER_BRAND_LOGO || 'neo4j-icon-color-full.png';
 
 export const IS_CUSTOM_LOGO = Boolean(styleConfig?.style?.DASHBOARD_HEADER_BRAND_LOGO);
 
