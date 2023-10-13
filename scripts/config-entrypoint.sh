@@ -23,3 +23,5 @@ echo " \
     \"loggingMode\": \"${loggingMode:='0'}\",  \
     \"loggingDatabase\": \"${loggingDatabase:='logs'}\"  \
    }" > /usr/share/nginx/html/config.json
+
+echo "${styleConfigJson:={\}}" > /usr/share/nginx/html/style.config.json
