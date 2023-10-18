@@ -14,7 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 export const NeoParameterSelectionChart = (props: ChartProps) => {
   const query = props.records[0].input ? props.records[0].input : undefined;
   const parameterName = props.settings && props.settings.parameterName ? props.settings.parameterName : undefined;
-  const predefinedOptions = (props.settings && props.settings.predefinedOptions) || 'No Data';
+  const predefinedOptions = props.settings && props.settings.predefinedOptions;
   const parameterDisplayName = `${parameterName}_display`;
   const clearParameterValueOnTabChange = props.settings && props.settings.clearParameterValueOnTabChange;
   const type = props.settings && props.settings.type ? props.settings.type : undefined;
