@@ -32,7 +32,6 @@ const NeoCardView = ({
   type,
   selection,
   dashboardSettings,
-  enableExecuteButtonForIds = [],
   settings,
   updateReportSetting,
   createNotification,
@@ -78,6 +77,13 @@ const NeoCardView = ({
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
   };
+
+  // Reset the report if hideQueryEditorInAutoRunOnMode is enabled
+  useEffect(() => {
+    if (!settings?.autorun && settings?.hideQueryEditorInAutoRunOnMode) {
+      setActive(false);
+    }
+  }, [JSON.stringify(globalParameters)]);
 
   // @ts-ignore
   const reportHeader = (
@@ -129,11 +135,6 @@ const NeoCardView = ({
   useEffect(() => {
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
-    }
-
-    // Resets the report with save button
-    if (enableExecuteButtonForIds.map((report) => report.id).includes(id)) {
-      setActive(false);
     }
   }, [JSON.stringify(localParameters)]);
 
