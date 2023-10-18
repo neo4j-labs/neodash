@@ -19,7 +19,7 @@ import { ExpandIcon } from '@neo4j-ndl/react/icons';
 
 export default function PageToolBox({ items, onTakeItem, isListOpen, toggleToolBox }) {
   return (
-    <Box position='fixed' bottom={16} right={30} zIndex={1}>
+    <Box position='fixed' bottom={16} right={30} zIndex={11}>
       {isListOpen ? (
         <Card variant='outlined' sx={{ minWidth: 275 }}>
           <CardContent>
