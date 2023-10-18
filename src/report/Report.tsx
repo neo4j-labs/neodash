@@ -244,7 +244,7 @@ export const NeoReport = ({
    * This rendering in implemented as a part of https://mercedes-benz.atlassian.net/browse/VULCAN-126.
    * isQueryParametersDefined is checked if the inputs required for the graph or table chart is given. if not "Waiting for input." is returned.
    */
-  if ((type === 'graph' || type === 'table') && isQueryParametersDefined(query)) {
+  if (['graph', 'table'].includes(type) && isQueryParametersDefined(query)) {
     return <NeoCodeViewerComponent value={'Waiting for input.'} />;
   }
 
