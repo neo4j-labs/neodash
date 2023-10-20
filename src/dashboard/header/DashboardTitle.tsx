@@ -17,6 +17,7 @@ import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 import { Tooltip } from '@mui/material';
 import PageHeader from '../../component/page/PageHeader';
+import NeoDashboardHeaderLogo from './DashboardHeaderLogo';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
@@ -27,6 +28,7 @@ export const NeoDashboardTitle = ({
   extensions,
   updateDashboardSetting,
   connection,
+  resetApplication,
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -102,23 +104,26 @@ export const NeoDashboardTitle = ({
         </div>
       ) : (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
-          <PageHeader title={dashboardTitle || 'NeoDash - Neo4j Dashboard Builder'} />
-          <Typography variant='h3'>{dashboardTitle}</Typography>
-          <Tooltip title={'Edit'} disableInteractive>
-            {editable ? (
-              <IconButton
-                className='logo-btn n-p-1'
-                aria-label={'edit'}
-                size='large'
-                onClick={() => setEditing(true)}
-                clean
-              >
-                <PencilSquareIconOutline className='header-icon' type='outline' />
-              </IconButton>
-            ) : (
-              <></>
-            )}
-          </Tooltip>
+          {isStandalone && <NeoDashboardHeaderLogo resetApplication={resetApplication} />}
+          <div className='n-flex n-flex-row n-mx-8'>
+            <PageHeader title={dashboardTitle || 'NeoDash - Neo4j Dashboard Builder'} />
+            <Typography variant='h3'>{dashboardTitle}</Typography>
+            <Tooltip title={'Edit'} disableInteractive>
+              {editable ? (
+                <IconButton
+                  className='logo-btn n-p-1'
+                  aria-label={'edit'}
+                  size='large'
+                  onClick={() => setEditing(true)}
+                  clean
+                >
+                  <PencilSquareIconOutline className='header-icon' type='outline' />
+                </IconButton>
+              ) : (
+                <></>
+              )}
+            </Tooltip>
+          </div>
         </div>
       )}
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}

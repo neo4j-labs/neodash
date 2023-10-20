@@ -52,7 +52,7 @@ const Dashboard = ({
           resetApplication={resetApplication}
         ></NeoDashboardHeader> */}
         <div className='n-w-full n-mx-8 n-my-6'>
-          <NeoDashboardTitle />
+          <NeoDashboardTitle resetApplication={resetApplication} />
           <NeoDashboardHeaderPageList />
         </div>
       </div>
