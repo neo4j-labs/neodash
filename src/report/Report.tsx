@@ -19,6 +19,7 @@ import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/s
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
 import CustomSingleValueComponent from '../component/custom/CustomSingleValueComponent';
+import { checkParametersNameInGlobalParameter, extractAllParameterNames } from '../utils/parameterUtils';
 
 const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -69,6 +70,14 @@ export const NeoReport = ({
   }
 
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
+
+  const isQueryParametersDefined = (cypherQuery: string) => {
+    const parameterNames = extractAllParameterNames(cypherQuery);
+    if (parameters) {
+      return checkParametersNameInGlobalParameter(parameterNames, parameters);
+    }
+    return false;
+  };
 
   const setSchema = (id, schema) => {
     if (type === 'graph' || type === 'map') {
@@ -230,6 +239,14 @@ export const NeoReport = ({
   );
 
   const reportTypes = getReportTypes(extensions);
+
+  /**
+   * This rendering in implemented as a part of https://mercedes-benz.atlassian.net/browse/VULCAN-126.
+   * isQueryParametersDefined is checked if the inputs required for the graph or table chart is given. if not "Waiting for input." is returned.
+   */
+  if (['graph', 'table'].includes(type) && isQueryParametersDefined(query)) {
+    return <NeoCodeViewerComponent value={'Waiting for input.'} />;
+  }
 
   /**
    * This component renders string response from the cypher query. This feature is only applicable for graph report.
