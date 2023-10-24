@@ -210,7 +210,24 @@ const NeoBarChart = (props: ChartProps) => {
   const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
+
+  // For adaptable item length in the legend
+  const maxKeyLength = Math.max(...keys.map(key => key.length));
+  const baseItemWidth = 40; // Some base width for color box and padding
+  const charWidthEstimate = 5; // An estimate of how wide each character is, you might need to adjust this based on font size and type
+  const itemWidthConst = baseItemWidth + (maxKeyLength * charWidthEstimate);
+
+  // Scrollable Wrapper
+  
+  const scrollableWrapperStyle: React.CSSProperties = {
+    width: '100%',
+    overflowX: 'auto',
+    height: '500px',
+    whiteSpace: 'nowrap',
+  };
+
   const chart = (
+    <div style={scrollableWrapperStyle}>
     <BarChartComponent
       theme={canvas ? themeNivoCanvas(props.theme) : themeNivo}
       data={data}
@@ -223,7 +240,7 @@ const NeoBarChart = (props: ChartProps) => {
       margin={{
         top: marginTop,
         right: legend ? legendWidth + marginRight : marginRight,
-        bottom: marginBottom,
+        bottom: legend? marginBottom + 50 : marginBottom,
         left: marginLeft,
       }}
       valueScale={{ type: valueScale }}
@@ -252,15 +269,15 @@ const NeoBarChart = (props: ChartProps) => {
           ? [
               {
                 dataFrom: 'keys',
-                anchor: 'bottom-right',
-                direction: 'column',
-                justify: true,
-                translateX: 120,
-                translateY: 0,
+                anchor: 'bottom-left',
+                direction: 'row',
+                justify: false,
+                translateX: 40,
+                translateY: 80,
                 itemsSpacing: 2,
-                itemWidth: legendWidth - 28,
+                itemWidth: itemWidthConst,
                 itemHeight: 20,
-                itemDirection: 'right-to-left',
+                itemDirection: 'left-to-right',
                 itemOpacity: 0.85,
                 symbolSize: 20,
                 effects: [
@@ -277,6 +294,7 @@ const NeoBarChart = (props: ChartProps) => {
       }
       animate={false}
     />
+    </div>
   );
 
   return chart;
