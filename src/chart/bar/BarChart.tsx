@@ -220,7 +220,7 @@ const NeoBarChart = (props: ChartProps) => {
   // Scrollable Wrapper
 
   const scrollableWrapperStyle: React.CSSProperties = {
-    width: '2000px',
+    width: (itemWidthConst*data.length)+200,
     overflowX: 'auto',
     height: '100%',
     whiteSpace: 'nowrap',
