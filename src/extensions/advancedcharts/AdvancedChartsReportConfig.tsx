@@ -1032,6 +1032,29 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'endDate',
       },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
     },
   },
 };

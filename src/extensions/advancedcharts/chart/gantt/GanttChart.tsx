@@ -115,12 +115,23 @@ const NeoGanttChart = (props: ChartProps) => {
       return a < b ? a : b;
     });
 
+  // Find the latest task in the view.
+  let maxDate = tasks
+    .map((t) => t.end)
+    .reduce((a, b) => {
+      return a > b ? a : b;
+    });
+
+  let dateDiff = (maxDate - minDate) / (1000 * 60 * 60 * 24);
+
+  const viewMode = dateDiff > 100 ? ViewMode.Month : ViewMode.Week;
+
   return (
     <div className='gantt-wrapper' style={{ width: '100%', height: '100%' }}>
       <Gantt
         tasks={tasks}
         ganttHeight={chartHeight - GANTT_HEADER_HEIGHT - CARD_HEADER_HEIGHT}
-        viewMode={ViewMode.Month}
+        viewMode={viewMode}
         viewDate={minDate}
         onClick={(item) => {
           let rules = getRuleWithFieldPropertyName(item, actionsRules, 'onActivityClick', 'labels');
