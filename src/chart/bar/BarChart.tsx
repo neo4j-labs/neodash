@@ -107,7 +107,7 @@ const NeoBarChart = (props: ChartProps) => {
   const maxValue = settings.maxValue ? settings.maxValue : 'auto';
   const styleRules = useStyleRules(
     extensionEnabled(props.extensions, 'styling'),
-    props.settings.styleRules,
+    settings.styleRules,
     props.getGlobalParameter
   );
 
@@ -212,88 +212,96 @@ const NeoBarChart = (props: ChartProps) => {
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 
   // For adaptable item length in the legend
-  const maxKeyLength = Math.max(...keys.map(key => key.length));
+  const maxKeyLength = Math.max(...keys.map((key) => key.length));
   const baseItemWidth = 40; // Some base width for color box and padding
   const charWidthEstimate = 5; // An estimate of how wide each character is, you might need to adjust this based on font size and type
-  const itemWidthConst = baseItemWidth + (maxKeyLength * charWidthEstimate);
+  const itemWidthConst = baseItemWidth + maxKeyLength * charWidthEstimate;
 
   // Scrollable Wrapper
-  
+
   const scrollableWrapperStyle: React.CSSProperties = {
-    width: '100%',
+    width: '2000px',
     overflowX: 'auto',
-    height: '500px',
+    height: '100%',
     whiteSpace: 'nowrap',
   };
 
+  const barChartStyle: React.CSSProperties = {
+    width: '100%',
+    overflowX: 'auto',
+    height: '100%'
+  }
+
   const chart = (
-    <div style={scrollableWrapperStyle}>
-    <BarChartComponent
-      theme={canvas ? themeNivoCanvas(props.theme) : themeNivo}
-      data={data}
-      key={`${selection.index}___${selection.value}`}
-      layout={layout}
-      groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
-      enableLabel={enableLabel}
-      keys={keys}
-      indexBy='index'
-      margin={{
-        top: marginTop,
-        right: legend ? legendWidth + marginRight : marginRight,
-        bottom: legend? marginBottom + 50 : marginBottom,
-        left: marginLeft,
-      }}
-      valueScale={{ type: valueScale }}
-      padding={0.3}
-      minValue={minValue}
-      maxValue={maxValue}
-      colors={getBarColor}
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: labelRotation,
-      }}
-      axisLeft={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-      }}
-      labelSkipWidth={labelSkipWidth}
-      labelSkipHeight={labelSkipHeight}
-      labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-      {...extraProperties}
-      legends={
-        legend
-          ? [
-              {
-                dataFrom: 'keys',
-                anchor: 'bottom-left',
-                direction: 'row',
-                justify: false,
-                translateX: 40,
-                translateY: 80,
-                itemsSpacing: 2,
-                itemWidth: itemWidthConst,
-                itemHeight: 20,
-                itemDirection: 'left-to-right',
-                itemOpacity: 0.85,
-                symbolSize: 20,
-                effects: [
+    <div style={barChartStyle}>
+      <div style={scrollableWrapperStyle}>
+        <BarChartComponent
+          theme={canvas ? themeNivoCanvas(props.theme) : themeNivo}
+          data={data}
+          key={`${selection.index}___${selection.value}`}
+          layout={layout}
+          groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
+          enableLabel={enableLabel}
+          keys={keys}
+          indexBy='index'
+          margin={{
+            top: marginTop,
+            right: legend ? legendWidth + marginRight : marginRight,
+            bottom: legend ? marginBottom + 50 : marginBottom,
+            left: marginLeft,
+          }}
+          valueScale={{ type: valueScale }}
+          padding={0.3}
+          minValue={minValue}
+          maxValue={maxValue}
+          colors={getBarColor}
+          axisTop={null}
+          axisRight={null}
+          axisBottom={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: labelRotation,
+          }}
+          axisLeft={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+          }}
+          labelSkipWidth={labelSkipWidth}
+          labelSkipHeight={labelSkipHeight}
+          labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+          {...extraProperties}
+          legends={
+            legend
+              ? [
                   {
-                    on: 'hover',
-                    style: {
-                      itemOpacity: 1,
-                    },
+                    dataFrom: 'keys',
+                    anchor: 'bottom-left',
+                    direction: 'row',
+                    justify: false,
+                    translateX: 0,
+                    translateY: 80,
+                    itemsSpacing: 2,
+                    itemWidth: itemWidthConst,
+                    itemHeight: 20,
+                    itemDirection: 'left-to-right',
+                    itemOpacity: 0.85,
+                    symbolSize: 20,
+                    effects: [
+                      {
+                        on: 'hover',
+                        style: {
+                          itemOpacity: 1,
+                        },
+                      },
+                    ],
                   },
-                ],
-              },
-            ]
-          : []
-      }
-      animate={false}
-    />
+                ]
+              : []
+          }
+          animate={false}
+        />
+      </div>
     </div>
   );
 
