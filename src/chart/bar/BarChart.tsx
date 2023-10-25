@@ -85,13 +85,14 @@ const NeoBarChart = (props: ChartProps) => {
   }
 
   const settings = props.settings ? props.settings : {};
-  const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 50;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
   const legend = settings.legend ? settings.legend : false;
   const labelRotation = settings.labelRotation != undefined ? settings.labelRotation : 45;
+  const barWidth = settings.barWidth? settings.barWidth : 50;
+  const padding = settings.padding ? settings.padding : 0.3;
 
   const labelSkipWidth = settings.labelSkipWidth ? settings.labelSkipWidth : 0;
   const labelSkipHeight = settings.labelSkipHeight ? settings.labelSkipHeight : 0;
@@ -220,15 +221,15 @@ const NeoBarChart = (props: ChartProps) => {
   // Scrollable Wrapper
 
   const scrollableWrapperStyle: React.CSSProperties = {
-    width: (itemWidthConst*data.length)+200,
-    overflowX: 'auto',
-    height: '100%',
+    width: (barWidth*data.length)+itemWidthConst,
+    height: (18*data.length)+(itemWidthConst*1.2)+marginBottom,
     whiteSpace: 'nowrap',
   };
 
   const barChartStyle: React.CSSProperties = {
     width: '100%',
     overflowX: 'auto',
+    overflowY: 'auto',
     height: '100%'
   }
 
@@ -241,17 +242,17 @@ const NeoBarChart = (props: ChartProps) => {
           key={`${selection.index}___${selection.value}`}
           layout={layout}
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
-          enableLabel={enableLabel}
+          // enableLabel={enableLabel}
           keys={keys}
           indexBy='index'
           margin={{
             top: marginTop,
-            right: legend ? legendWidth + marginRight : marginRight,
-            bottom: legend ? marginBottom + 50 : marginBottom,
+            right: legend ? itemWidthConst + marginRight : marginRight,
+            bottom: (itemWidthConst*0.3) +marginBottom,
             left: marginLeft,
           }}
           valueScale={{ type: valueScale }}
-          padding={0.3}
+          padding={padding}
           minValue={minValue}
           maxValue={maxValue}
           colors={getBarColor}
@@ -276,17 +277,17 @@ const NeoBarChart = (props: ChartProps) => {
               ? [
                   {
                     dataFrom: 'keys',
-                    anchor: 'bottom-left',
-                    direction: 'row',
+                    anchor: 'bottom-right',
+                    direction: 'column',
                     justify: false,
-                    translateX: 0,
-                    translateY: 80,
-                    itemsSpacing: 2,
+                    translateX: itemWidthConst+10,
+                    translateY: 0,
+                    itemsSpacing: 1,
                     itemWidth: itemWidthConst,
                     itemHeight: 20,
                     itemDirection: 'left-to-right',
                     itemOpacity: 0.85,
-                    symbolSize: 20,
+                    symbolSize: 15,
                     effects: [
                       {
                         on: 'hover',

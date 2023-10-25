@@ -337,6 +337,16 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      barWidth: {
+        label: 'Bar Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 50,
+      },
+      padding: {
+        label: 'Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.3,
+      },
       showOptionalSelections: {
         label: 'Grouping',
         type: SELECTION_TYPES.LIST,
