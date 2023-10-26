@@ -68,6 +68,7 @@ export const applicationHasReportHelpModalOpen = (state: any) => {
 export const applicationGetSsoSettings = (state: any) => {
   return {
     ssoEnabled: state.application.ssoEnabled,
+    ssoProviders: state.application.ssoProviders,
     ssoDiscoveryUrl: state.application.ssoDiscoveryUrl,
     cachedSSODiscoveryUrl: state.application.cachedSSODiscoveryUrl,
   };

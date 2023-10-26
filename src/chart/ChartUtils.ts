@@ -140,6 +140,11 @@ export function getRecordType(value) {
       return 'objectNumber';
     }
     return 'object';
+  } else if (typeof value === 'string' || value instanceof String) {
+    if (value.startsWith('http') || value.startsWith('https')) {
+      return 'link';
+    }
+    return 'string';
   }
 
   // Use string as default type
