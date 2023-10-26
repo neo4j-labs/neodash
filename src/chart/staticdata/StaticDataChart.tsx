@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChartProps } from '../Chart';
 import { generateCypher } from '../../openai/TextToCypher';
-
+import axios from 'axios'; // HTTP client
 
 /**
  * Renders Neo4j records as their JSON representation.
@@ -11,32 +11,33 @@ const StaticDataChart = (props: ChartProps) => {
   //const { generated, setGenerated } = useState(0);
 
   const { records, settings, getGlobalParameter } = props;
-  const type = settings && settings.format ? settings.format : 'json';
   const node = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : {};
+  const [url, setUrl] = useState('');
+  const name = node.properties['name']
+  const type = node.properties['type']
+  const nodename = name + '.' + type; // Add extension to name
 
-  //const minioEndpoint = 'http://localhost';
-  //const accessKey = 'pcap-user';
-  //const secretKey = 'pcap-user-pass';
-  //const bucketName = 'pcap-test';
-  //const port = 9000;
-  //const expiryInSeconds = 60 * 60; // 1 hour
+  const fetchUrl = () => {
+    // Make an HTTP request to the Flask API
+    const httpString = 'http://127.0.0.1:5000/get_minio_url?node_name=' + nodename;
+    axios.get(httpString)
+      .then((response) => {
+        const apiUrl = response.data.url;
+        setUrl(apiUrl);
+      })
+      .catch((error) => {
+        console.error('Error fetching URL:', error);
+      });
+  };
 
-  //const Minio = require('minio');
-  //const minioClient = new Minio.Client({
-  //  endPoint: minioEndpoint,
-  //  accessKey: accessKey,
-  //  secretKey: secretKey,
-  //  useSSL: false,
-  //  port:port,
-  //  });
-  
-  //const objectName = node.properties['name'];
-  //const minioUrl = minioClient.presignedGetObject(bucketName, objectName, expiryInSeconds);
- 
-  return (
-  // {minioUrl && <p>Endpoint: {minioUrl}</p>} // Add this below Name 
+  useEffect(() => {
+    // Fetch the URL when the component mounts
+    fetchUrl();
+  }, [nodename]);
+
+  return ( 
     <div style={{ marginTop: '0px', height: '100%' }}>
-        <p>Name: {node.properties['name']}</p>
+      {url && <a href={url} target="_blank" rel="noopener noreferrer"><button style={{ fontSize: '16px', padding: '10px 20px' }}>Download PCAP</button></a>}
     </div>
   );
 };

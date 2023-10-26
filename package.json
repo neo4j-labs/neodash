@@ -55,6 +55,7 @@
     "@nivo/sankey": "^0.80.0",
     "@nivo/sunburst": "^0.80.0",
     "@nivo/treemap": "^0.80.0",
+    "axios": "^1.5.1",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.3.1",
     "crypto-browserify": "^3.12.0",
