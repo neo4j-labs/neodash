@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
-import { Gantt, Task, ViewMode } from 'gantt-task-react';
-import 'gantt-task-react/dist/index.css';
+// import { Gantt, Task, ViewMode } from 'gantt-task-react';
+// import 'gantt-task-react/dist/index.css';
 import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { CARD_HEADER_HEIGHT } from '../../../../config/CardConfig';
 import { extractNodePropertiesFromRecords } from '../../../../report/ReportRecordProcessing';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../Utils';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
 import { generateVisualizationDataGraph } from './Utils';
+import ReactGantt from './frappe/Gantt';
 
 const GANTT_HEADER_HEIGHT = 60;
 
@@ -104,44 +105,106 @@ const NeoGanttChart = (props: ChartProps) => {
   const chartHeight = props.dimensions ? props.dimensions.height : 500;
 
   // If no tasks can be parsed, also return an error message.
-  if (!tasks || tasks.length == 0) {
-    return <NoDrawableDataErrorMessage />;
-  }
+  // if (!tasks || tasks.length == 0) {
+  // return <NoDrawableDataErrorMessage />;
+  // }
 
-  // Find the earliest task in the view.
-  let minDate = tasks
-    .map((t) => t.end)
-    .reduce((a, b) => {
-      return a < b ? a : b;
-    });
+  // // Find the earliest task in the view.
+  // let minDate = tasks
+  //   .map((t) => t.end)
+  //   .reduce((a, b) => {
+  //     return a < b ? a : b;
+  //   });
 
-  // Find the latest task in the view.
-  let maxDate = tasks
-    .map((t) => t.end)
-    .reduce((a, b) => {
-      return a > b ? a : b;
-    });
+  // // Find the latest task in the view.
+  // let maxDate = tasks
+  //   .map((t) => t.end)
+  //   .reduce((a, b) => {
+  //     return a > b ? a : b;
+  //   });
 
-  let dateDiff = (maxDate - minDate) / (1000 * 60 * 60 * 24);
+  // let dateDiff = (maxDate - minDate) / (1000 * 60 * 60 * 24);
 
-  const viewMode = dateDiff > 100 ? ViewMode.Month : ViewMode.Week;
+  // const viewMode = dateDiff > 100 ? ViewMode.Month : ViewMode.Week;
+
+  var tasksa = [
+    {
+      start: '2018-10-01',
+      end: '2018-10-08',
+      name: 'Redesign website',
+      id: "Task 0",
+      progress: 20
+    },
+    {
+      start: '2018-10-03',
+      end: '2018-10-06',
+      name: 'Write new content',
+      id: "Task 1",
+      progress: 5,
+      dependencies: 'Task 0'
+    },
+    {
+      start: '2018-10-04',
+      end: '2018-10-08',
+      name: 'Apply new styles',
+      id: "Task 2",
+      progress: 10,
+      dependencies: 'Task 1'
+    },
+    {
+      start: '2018-10-08',
+      end: '2018-10-09',
+      name: 'Review',
+      id: "Task 3",
+      progress: 5,
+      dependencies: 'Task 2'
+    },
+    {
+      start: '2018-10-08',
+      end: '2018-10-10',
+      name: 'Deploy',
+      id: "Task 4",
+      progress: 0,
+      dependencies: 'Task 2'
+    },
+    {
+      start: '2018-10-11',
+      end: '2018-10-11',
+      name: 'Go Live!',
+      id: "Task 5",
+      progress: 0,
+      dependencies: 'Task 4',
+      custom_class: 'bar-milestone'
+    }
+  ]
+  // var gantt_chart = new Gantt("#gantt-target", tasksa, {
+  //   on_click: task => {
+  //     console.log(task);
+  //   },
+  //   on_date_change: (task, start, end) => {
+  //     console.log(task, start, end);
+  //   },
+  //   on_progress_change: (task, progress) => {
+  //     console.log(task, progress);
+  //   },
+  //   on_view_change: (mode) => {
+  //     console.log(mode);
+  //   },
+  //   view_mode: 'Month',
+  //   language: 'en'
+  // });
+  // console.log(gantt_chart);
 
   return (
     <div className='gantt-wrapper' style={{ width: '100%', height: '100%' }}>
-      <Gantt
-        tasks={tasks}
-        ganttHeight={chartHeight - GANTT_HEADER_HEIGHT - CARD_HEADER_HEIGHT}
-        viewMode={viewMode}
-        viewDate={minDate}
-        onClick={(item) => {
-          let rules = getRuleWithFieldPropertyName(item, actionsRules, 'onActivityClick', 'labels');
-          console.log(rules);
-          if (rules !== null) {
-            rules.forEach((rule) => executeActionRule(rule, item, { ...props }));
-          }
-        }}
-        listCellWidth={300}
-        columnWidth={100}
+      <ReactGantt
+        tasks={tasksa}
+        viewMode={'Day'}
+        // onClick={this._func}
+        // onDateChange={this._func}
+        // onProgressChange={this._func}
+        // onViewChange={this._func}
+        // customPopupHtml={this._html_func}
       />
     </div>
   );
