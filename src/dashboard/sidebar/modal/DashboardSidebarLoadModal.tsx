@@ -1,12 +1,6 @@
 import React from 'react';
 import { Button, Dialog } from '@neo4j-ndl/react';
-import {
-  BackspaceIconOutline,
-  ExclamationTriangleIconOutline,
-  ExclamationTriangleIconSolid,
-  PaperAirplaneIconOutline,
-  TrashIconSolid,
-} from '@neo4j-ndl/react/icons';
+import { BackspaceIconOutline, ExclamationTriangleIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.

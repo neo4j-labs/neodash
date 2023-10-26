@@ -1,13 +1,5 @@
 import React from 'react';
-import { Button, Checkbox, Dialog, TextLink } from '@neo4j-ndl/react';
-import {
-  BackspaceIconOutline,
-  ExclamationTriangleIconOutline,
-  ExclamationTriangleIconSolid,
-  PaperAirplaneIconOutline,
-  TrashIconSolid,
-} from '@neo4j-ndl/react/icons';
-import { Tooltip } from '@mui/material';
+import { Checkbox, Dialog, TextLink } from '@neo4j-ndl/react';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.

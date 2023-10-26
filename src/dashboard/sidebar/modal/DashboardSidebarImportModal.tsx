@@ -1,10 +1,5 @@
 import React, { useRef } from 'react';
-import {
-  DatabaseAddCircleIcon,
-  BackspaceIconOutline,
-  PlayIconSolid,
-  DocumentPlusIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { PlayIconSolid, DocumentPlusIconOutline } from '@neo4j-ndl/react/icons';
 import { Button, Checkbox, Dialog, Dropdown } from '@neo4j-ndl/react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 

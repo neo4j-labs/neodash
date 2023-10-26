@@ -1,7 +1,6 @@
 import React from 'react';
-import { FormControl, TextareaAutosize, Tooltip } from '@mui/material';
 import { DatabaseAddCircleIcon, BackspaceIconOutline } from '@neo4j-ndl/react/icons';
-import { Button, Checkbox, Dialog, Dropdown } from '@neo4j-ndl/react';
+import { Button, Dialog } from '@neo4j-ndl/react';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
