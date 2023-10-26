@@ -9,7 +9,7 @@ import { extractNodePropertiesFromRecords } from '../../../../report/ReportRecor
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../Utils';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
 import { generateVisualizationDataGraph } from './Utils';
-import ReactGantt from './frappe/Gantt';
+import ReactGantt from './frappe/GanttVisualization';
 
 const GANTT_HEADER_HEIGHT = 60;
 
@@ -127,56 +127,56 @@ const NeoGanttChart = (props: ChartProps) => {
 
   // const viewMode = dateDiff > 100 ? ViewMode.Month : ViewMode.Week;
 
-  var tasksa = [
+  let tasksa = [
     {
       start: '2018-10-01',
       end: '2018-10-08',
       name: 'Redesign website',
-      id: "Task 0",
-      progress: 20
+      id: 'Task 0',
+      progress: 20,
     },
     {
       start: '2018-10-03',
       end: '2018-10-06',
       name: 'Write new content',
-      id: "Task 1",
+      id: 'Task 1',
       progress: 5,
-      dependencies: 'Task 0'
+      dependencies: 'Task 0',
     },
     {
       start: '2018-10-04',
       end: '2018-10-08',
       name: 'Apply new styles',
-      id: "Task 2",
+      id: 'Task 2',
       progress: 10,
-      dependencies: 'Task 1'
+      dependencies: 'Task 1',
     },
     {
       start: '2018-10-08',
       end: '2018-10-09',
       name: 'Review',
-      id: "Task 3",
+      id: 'Task 3',
       progress: 5,
-      dependencies: 'Task 2'
+      dependencies: 'Task 2',
     },
     {
       start: '2018-10-08',
       end: '2018-10-10',
       name: 'Deploy',
-      id: "Task 4",
+      id: 'Task 4',
       progress: 0,
-      dependencies: 'Task 2'
+      dependencies: 'Task 2',
     },
     {
       start: '2018-10-11',
       end: '2018-10-11',
       name: 'Go Live!',
-      id: "Task 5",
+      id: 'Task 5',
       progress: 0,
       dependencies: 'Task 4',
-      custom_class: 'bar-milestone'
-    }
-  ]
+      custom_class: 'bar-milestone',
+    },
+  ];
   // var gantt_chart = new Gantt("#gantt-target", tasksa, {
   //   on_click: task => {
   //     console.log(task);
@@ -196,9 +196,13 @@ const NeoGanttChart = (props: ChartProps) => {
   // console.log(gantt_chart);
 
   return (
-    <div className='gantt-wrapper' style={{ width: '100%', height: '100%' }}>
+    <div
+      className='gantt-wrapper'
+      style={{ height: props.dimensions.height - CARD_HEADER_HEIGHT + 7, overflowY: 'hidden' }}
+    >
       <ReactGantt
         tasks={tasksa}
+        height={props.dimensions.height}
         viewMode={'Day'}
         // onClick={this._func}
         // onDateChange={this._func}
