@@ -2,6 +2,7 @@ import React from 'react';
 import { TextareaAutosize } from '@mui/material';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { TrashIconOutline, PlayIconSolid } from '@neo4j-ndl/react/icons';
+import { createUUID } from '../utils/uuid';
 
 export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loadDashboard }) => {
   return (
@@ -29,7 +30,7 @@ export const NeoUpgradeOldDashboardModal = ({ open, text, clearOldDashboard, loa
             <Button
               onClick={() => {
                 localStorage.removeItem('neodash-dashboard');
-                loadDashboard(text);
+                loadDashboard(createUUID(), text);
                 clearOldDashboard();
               }}
               style={{ marginRight: '6px' }}

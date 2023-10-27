@@ -109,19 +109,19 @@ const NeoCardViewFooter = ({
                   type='select'
                   selectProps={{
                     onChange: (newValue) =>
-                      (newValue && selectableFields[selectable].multiple
+                      newValue && selectableFields[selectable].multiple
                         ? onSelectionUpdate(
                             selectable,
                             newValue.map((v) => v.value)
                           )
-                        : onSelectionUpdate(selectable, newValue.value)),
+                        : onSelectionUpdate(selectable, newValue.value),
                     options: fieldsToRender.map((option) => ({ label: option, value: option })),
                     value: selectableFields[selectable].multiple
                       ? selection[selectable].map((sel) => ({ label: sel, value: sel }))
                       : { label: selection[selectable], value: selection[selectable] },
                     isMulti: selectableFields[selectable].multiple,
                     isClearable: false,
-                    menuPortalTarget: document.querySelector('body'),
+                    menuPortalTarget: document.querySelector('#overlay'),
                   }}
                   fluid
                   style={{

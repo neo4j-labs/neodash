@@ -269,6 +269,14 @@ function RenderString(value) {
   return str;
 }
 
+function RenderLink(value) {
+  return (
+    <TextLink key={value} externalLink target='_blank' href={value}>
+      {value}
+    </TextLink>
+  );
+}
+
 function RenderPoint(value) {
   return (
     <HtmlTooltip
@@ -378,6 +386,10 @@ export const rendererForType: any = {
   boolean: {
     type: 'string',
     renderValue: (c) => RenderString(c.value),
+  },
+  link: {
+    type: 'link',
+    renderValue: (c) => RenderLink(c.value),
   },
 };
 
