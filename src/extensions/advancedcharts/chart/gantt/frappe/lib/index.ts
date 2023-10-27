@@ -285,12 +285,12 @@ export default class Gantt {
       if (!cur_date) {
         cur_date = date_utils.clone(this.gantt_start);
       } else if (this.view_is(VIEW_MODE.YEAR)) {
-          cur_date = date_utils.add(cur_date, 1, 'year');
-        } else if (this.view_is(VIEW_MODE.MONTH)) {
-          cur_date = date_utils.add(cur_date, 1, 'month');
-        } else {
-          cur_date = date_utils.add(cur_date, this.options.step, 'hour');
-        }
+        cur_date = date_utils.add(cur_date, 1, 'year');
+      } else if (this.view_is(VIEW_MODE.MONTH)) {
+        cur_date = date_utils.add(cur_date, 1, 'month');
+      } else {
+        cur_date = date_utils.add(cur_date, this.options.step, 'hour');
+      }
       this.dates.push(cur_date);
     }
   }
@@ -661,11 +661,13 @@ export default class Gantt {
       this.bar_being_dragged = parent_bar_id;
 
       bars.forEach((bar) => {
-        const {$bar} = bar;
-        $bar.ox = $bar.getX();
-        $bar.oy = $bar.getY();
-        $bar.owidth = $bar.getWidth();
-        $bar.finaldx = 0;
+        if (bar) {
+          const { $bar } = bar;
+          $bar.ox = $bar.getX();
+          $bar.oy = $bar.getY();
+          $bar.owidth = $bar.getWidth();
+          $bar.finaldx = 0;
+        }
       });
     });
 
@@ -677,35 +679,37 @@ export default class Gantt {
       const dy = e.offsetY - y_on_start;
 
       bars.forEach((bar) => {
-        const {$bar} = bar;
-        $bar.finaldx = this.get_snap_position(dx);
-        this.hide_popup();
-        if (is_resizing_left) {
-          if (parent_bar_id === bar.task.id) {
-            bar.update_bar_position({
-              x: $bar.ox + $bar.finaldx,
-              width: $bar.owidth - $bar.finaldx,
-            });
-          } else {
-            bar.update_bar_position({
-              x: $bar.ox + $bar.finaldx,
-            });
+        if (bar) {
+          const { $bar } = bar;
+          $bar.finaldx = this.get_snap_position(dx);
+          this.hide_popup();
+          if (is_resizing_left) {
+            if (parent_bar_id === bar.task.id) {
+              bar.update_bar_position({
+                x: $bar.ox + $bar.finaldx,
+                width: $bar.owidth - $bar.finaldx,
+              });
+            } else {
+              bar.update_bar_position({
+                x: $bar.ox + $bar.finaldx,
+              });
+            }
+          } else if (is_resizing_right) {
+            if (parent_bar_id === bar.task.id) {
+              bar.update_bar_position({
+                width: $bar.owidth + $bar.finaldx,
+              });
+            }
+          } else if (is_dragging) {
+            bar.update_bar_position({ x: $bar.ox + $bar.finaldx });
           }
-        } else if (is_resizing_right) {
-          if (parent_bar_id === bar.task.id) {
-            bar.update_bar_position({
-              width: $bar.owidth + $bar.finaldx,
-            });
-          }
-        } else if (is_dragging) {
-          bar.update_bar_position({ x: $bar.ox + $bar.finaldx });
         }
       });
     });
 
     document.addEventListener('mouseup', (_) => {
       if (is_dragging || is_resizing_left || is_resizing_right) {
-        bars.forEach((bar) => bar.group.classList.remove('active'));
+        bars.forEach((bar) => bar && bar.group.classList.remove('active'));
       }
 
       is_dragging = false;
@@ -716,12 +720,14 @@ export default class Gantt {
     $.on(this.$svg, 'mouseup', (_) => {
       this.bar_being_dragged = null;
       bars.forEach((bar) => {
-        const {$bar} = bar;
-        if (!$bar.finaldx) {
-          return;
+        if (bar) {
+          const { $bar } = bar;
+          if (!$bar.finaldx) {
+            return;
+          }
+          bar.date_changed();
+          bar.set_action_completed();
         }
-        bar.date_changed();
-        bar.set_action_completed();
       });
     });
 
@@ -803,8 +809,8 @@ export default class Gantt {
 
   get_snap_position(dx) {
     let odx = dx;
-      let rem;
-      let position;
+    let rem;
+    let position;
 
     if (this.view_is(VIEW_MODE.WEEK)) {
       rem = dx % (this.options.column_width / 7);
@@ -861,8 +867,8 @@ export default class Gantt {
   }
 
   trigger_event(event, args) {
-    if (this.options[`on_${  event}`]) {
-      this.options[`on_${  event}`].apply(null, args);
+    if (this.options[`on_${event}`]) {
+      this.options[`on_${event}`].apply(null, args);
     }
   }
 
@@ -891,5 +897,5 @@ export default class Gantt {
 Gantt.VIEW_MODE = VIEW_MODE;
 
 function generate_id(task) {
-  return `${task.name  }_${  Math.random().toString(36).slice(2, 12)}`;
+  return `${task.name}_${Math.random().toString(36).slice(2, 12)}`;
 }

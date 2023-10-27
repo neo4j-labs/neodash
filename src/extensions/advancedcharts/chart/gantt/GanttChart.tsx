@@ -6,12 +6,9 @@ import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeVie
 import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { CARD_HEADER_HEIGHT } from '../../../../config/CardConfig';
 import { extractNodePropertiesFromRecords } from '../../../../report/ReportRecordProcessing';
-import { executeActionRule, getRuleWithFieldPropertyName } from '../../Utils';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
 import { generateVisualizationDataGraph } from './Utils';
 import ReactGantt from './frappe/GanttVisualization';
-
-const GANTT_HEADER_HEIGHT = 60;
 
 /**
  * A Gantt Chart plots activities (nodes) with dependencies (relationships) on a timeline.
@@ -87,11 +84,12 @@ const NeoGanttChart = (props: ChartProps) => {
           end: new Date(neoEndDate.year, neoEndDate.month, neoEndDate.day),
           name: name ? name : '(undefined)',
           dependencies: dependencies[n.id],
-          id: n.id,
+          id: `${  n.id}`,
           properties: n.properties,
           labels: n.labels,
           type: 'task',
-          progress: 0,
+          progress: 100,
+          // custom_class: 'bar-milestone',
           isDisabled: true,
           styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
         };
@@ -102,30 +100,29 @@ const NeoGanttChart = (props: ChartProps) => {
   // Build visualization-specific objects.
   const dependencies = createDependenciesMap(data.links);
   const tasks: Task[] = createTasksList(data.nodes, dependencies);
-  const chartHeight = props.dimensions ? props.dimensions.height : 500;
 
   // If no tasks can be parsed, also return an error message.
-  // if (!tasks || tasks.length == 0) {
-  // return <NoDrawableDataErrorMessage />;
-  // }
+  if (!tasks || tasks.length == 0) {
+    return <NoDrawableDataErrorMessage />;
+  }
 
-  // // Find the earliest task in the view.
-  // let minDate = tasks
-  //   .map((t) => t.end)
-  //   .reduce((a, b) => {
-  //     return a < b ? a : b;
-  //   });
+  // Find the earliest task in the view.
+  let minDate = tasks
+    .map((t) => t.end)
+    .reduce((a, b) => {
+      return a < b ? a : b;
+    });
 
-  // // Find the latest task in the view.
-  // let maxDate = tasks
-  //   .map((t) => t.end)
-  //   .reduce((a, b) => {
-  //     return a > b ? a : b;
-  //   });
+  // Find the latest task in the view.
+  let maxDate = tasks
+    .map((t) => t.end)
+    .reduce((a, b) => {
+      return a > b ? a : b;
+    });
 
-  // let dateDiff = (maxDate - minDate) / (1000 * 60 * 60 * 24);
+  let dateDiff = (maxDate - minDate) / (1000 * 60 * 60 * 24);
 
-  // const viewMode = dateDiff > 100 ? ViewMode.Month : ViewMode.Week;
+  const viewMode = dateDiff > 40 ? 'Month' : 'Day';
 
   let tasksa = [
     {
@@ -177,33 +174,16 @@ const NeoGanttChart = (props: ChartProps) => {
       custom_class: 'bar-milestone',
     },
   ];
-  // var gantt_chart = new Gantt("#gantt-target", tasksa, {
-  //   on_click: task => {
-  //     console.log(task);
-  //   },
-  //   on_date_change: (task, start, end) => {
-  //     console.log(task, start, end);
-  //   },
-  //   on_progress_change: (task, progress) => {
-  //     console.log(task, progress);
-  //   },
-  //   on_view_change: (mode) => {
-  //     console.log(mode);
-  //   },
-  //   view_mode: 'Month',
-  //   language: 'en'
-  // });
-  // console.log(gantt_chart);
 
   return (
     <div
       className='gantt-wrapper'
-      style={{ height: props.dimensions.height - CARD_HEADER_HEIGHT + 7, overflowY: 'hidden' }}
+      style={{ height: props.dimensions?.height - CARD_HEADER_HEIGHT + 7, overflowY: 'hidden' }}
     >
       <ReactGantt
-        tasks={tasksa}
-        height={props.dimensions.height}
-        viewMode={'Day'}
+        tasks={tasks}
+        height={props.dimensions?.height}
+        viewMode={viewMode}
         // onClick={this._func}
         // onDateChange={this._func}
         // onProgressChange={this._func}

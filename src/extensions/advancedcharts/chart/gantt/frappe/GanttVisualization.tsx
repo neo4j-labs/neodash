@@ -12,13 +12,17 @@ export abstract class ReactGanttProps extends Component {
 
 const TASK_PADDING = 18;
 const HEADER_HEIGHT = 50;
-
+const COLUMN_WIDTH = 30;
+const STEP_SIZE = 24;
+const VIEW_MODE = 'Day';
 export default class ReactGantt extends ReactGanttProps {
   ganttRef: SVGSVGElement | undefined = undefined;
 
-  ganttInst: any;
+  ganttInstance: any;
 
   getOptions() {
+    const barHeight =
+      (this.props.height - HEADER_HEIGHT - TASK_PADDING * 2 * this.props.tasks.length) / this.props.tasks.length;
     return {
       on_click: this.props.onClick,
       on_date_change: this.props.onDateChange,
@@ -29,10 +33,7 @@ export default class ReactGantt extends ReactGanttProps {
       // column_width: 30,
       // step: 24,
       // view_modes: [...Object.values(VIEW_MODE)],
-      bar_height: Math.max(
-        5,
-        (this.props.height - HEADER_HEIGHT - TASK_PADDING * 2 * this.props.tasks.length) / this.props.tasks.length
-      ),
+      bar_height: Math.max(5, barHeight),
       // bar_corner_radius: 3,
       // arrow_curve: 5,
       padding: TASK_PADDING,
@@ -45,32 +46,31 @@ export default class ReactGantt extends ReactGanttProps {
   }
 
   componentDidMount() {
-    // init the Gantt chart. if it already exists, return
-    if (this.ganttInst) {
-      return this.ganttInst;
+    if (this.ganttInstance) {
+      return this.ganttInstance;
     }
-    // Else, create a new instance.
-    this.ganttInst = new Gantt(this.ganttRef, this.props.tasks, this.getOptions());
-    // change view mode
-    this.ganttInst.change_view_mode(this.props.viewMode);
-    return this.ganttInst;
+    this.ganttInstance = new Gantt(this.ganttRef, this.props.tasks, this.getOptions());
+    this.ganttInstance.change_view_mode(this.props.viewMode);
+    return this.ganttInstance;
   }
 
   // redraw the gantt when update. now change the viewMode
   componentDidUpdate(prevProps, _) {
-    if (this.ganttInst) {
-      this.ganttInst.refresh(this.props.tasks);
-      this.ganttInst.setup_options(this.getOptions());
+    if (this.ganttInstance) {
+      this.ganttInstance.refresh(this.props.tasks);
+      this.ganttInstance.setup_options(this.getOptions());
       if (this.props.viewMode !== prevProps.viewMode) {
-        this.ganttInst.change_view_mode(this.props.viewMode);
+        this.ganttInstance.change_view_mode(this.props.viewMode);
       }
     }
   }
 
+  // Clear reference when the component unmounts.
   componentWillUnmount() {
     this.ganttRef = undefined;
   }
 
+  // Render the component as an SVG.
   render() {
     return (
       <svg
