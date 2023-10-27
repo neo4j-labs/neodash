@@ -79,7 +79,7 @@ export const NeoDashboardHeader = ({
       </div>
     </div>
   );
-  return content;
+  return <></> || content;
 };
 
 const mapStateToProps = (state) => ({
