@@ -461,7 +461,6 @@ export const NeoDashboardSidebar = ({
 };
 
 const mapStateToProps = (state) => ({
-  isLoaded: true,
   readonly: applicationIsStandalone(state),
   connection: applicationGetConnection(state),
   pagenumber: getPageNumber(state),

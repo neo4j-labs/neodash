@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog } from '@neo4j-ndl/react';
-import { BackspaceIconOutline, ExclamationTriangleIconOutline } from '@neo4j-ndl/react/icons';
+import { BackspaceIconOutline, ExclamationTriangleIconOutline, TrashIconOutline } from '@neo4j-ndl/react/icons';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -19,10 +19,11 @@ export const NeoDashboardSidebarLoadModal = ({ open, onConfirm, handleClose }) =
           onClick={() => {
             handleClose();
           }}
+          fill='outlined'
           style={{ float: 'right' }}
         >
           <BackspaceIconOutline className='btn-icon-base-l' />
-          Cancel
+          Keep
         </Button>
         <Button
           onClick={() => {
@@ -30,11 +31,10 @@ export const NeoDashboardSidebarLoadModal = ({ open, onConfirm, handleClose }) =
             handleClose();
           }}
           color='danger'
-          fill='outlined'
           style={{ float: 'right', marginRight: '5px' }}
         >
-          Continue
-          <ExclamationTriangleIconOutline className='btn-icon-base-r' />
+          Discard
+          <TrashIconOutline className='btn-icon-base-r' />
         </Button>
       </Dialog.Actions>
     </Dialog>
