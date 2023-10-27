@@ -45,12 +45,12 @@ const Dashboard = ({
       />
       {/* Navigation Bar */}
       <div className='n-w-screen n-flex n-flex-row n-bg-neutral-bg-weak n-border-b n-border-neutral-border-weak'>
-        {/* <NeoDashboardHeader
+        <NeoDashboardHeader
           connection={connection}
           onDownloadImage={onDownloadDashboardAsImage}
           onAboutModalOpen={onAboutModalOpen}
           resetApplication={resetApplication}
-        ></NeoDashboardHeader> */}
+        ></NeoDashboardHeader>
         <div className='n-w-full n-mx-8 n-my-6'>
           <NeoDashboardTitle resetApplication={resetApplication} />
           <NeoDashboardHeaderPageList />
