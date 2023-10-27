@@ -13,6 +13,7 @@ import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { PlayArrowOutlined } from '@mui/icons-material';
+import { checkParametersNameInGlobalParameter, extractAllParameterNames } from '../../utils/parameterUtils';
 
 const NeoCardView = ({
   id,
@@ -31,7 +32,6 @@ const NeoCardView = ({
   type,
   selection,
   dashboardSettings,
-  enableExecuteButtonForIds = [],
   settings,
   updateReportSetting,
   createNotification,
@@ -77,6 +77,13 @@ const NeoCardView = ({
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
   };
+
+  // Reset the report if hideQueryEditorInAutoRunOnMode is enabled
+  useEffect(() => {
+    if (!settings?.autorun && settings?.hideQueryEditorInAutoRunOnMode) {
+      setActive(false);
+    }
+  }, [JSON.stringify(globalParameters)]);
 
   // @ts-ignore
   const reportHeader = (
@@ -129,11 +136,6 @@ const NeoCardView = ({
     if (!settingsOpen) {
       setLastRunTimestamp(Date.now());
     }
-
-    // Resets the report with save button
-    if (enableExecuteButtonForIds.map((report) => report.id).includes(id)) {
-      setActive(false);
-    }
   }, [JSON.stringify(localParameters)]);
 
   useEffect(() => {
@@ -165,10 +167,19 @@ const NeoCardView = ({
     overflow: 'auto',
   };
 
+  const isParametersDefined = (cypherQuery: string) => {
+    const parameterNames = extractAllParameterNames(cypherQuery);
+    if (globalParameters) {
+      return checkParametersNameInGlobalParameter(parameterNames, globalParameters);
+    }
+    return false;
+  };
+
   const executeButton = (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       <Fab
         variant='extended'
+        disabled={isParametersDefined(query)}
         onClick={() => {
           setActive(true);
         }}
@@ -176,7 +187,7 @@ const NeoCardView = ({
         size='small'
       >
         <PlayArrowOutlined aria-label={'play'} />
-        Execute
+        {settings.executeButtonName ?? 'Execute'}
       </Fab>
     </div>
   );

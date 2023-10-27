@@ -119,6 +119,16 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
+      overrideDefaultMessage: {
+        label: 'Override default message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
+      },
     },
   },
   graph: {
@@ -216,7 +226,6 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
-
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -236,8 +245,13 @@ export const REPORT_TYPES = {
       layout: {
         label: 'Graph Layout (experimental)',
         type: SELECTION_TYPES.LIST,
-        values: ['force-directed', 'tree', 'radial'],
+        values: ['force-directed', 'tree-top-down', 'tree-bottom-up', 'tree-left-right', 'tree-right-left', 'radial'],
         default: 'force-directed',
+      },
+      graphDepthSep: {
+        label: 'Graph Depth Separation (experimental)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '30',
       },
       enableExploration: {
         label: 'Enable graph exploration',
@@ -358,6 +372,16 @@ export const REPORT_TYPES = {
       pageIdAndParameterName: {
         label: '<PageId>:<ParameterName>:<NodeType>',
         type: SELECTION_TYPES.TEXT,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
+      overrideDefaultMessage: {
+        label: 'Override default message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
       },
     },
   },
@@ -543,6 +567,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   pie: {
@@ -718,6 +747,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
       },
     },
   },
@@ -918,6 +952,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   // TODO - move to advanced visualization.
@@ -1104,6 +1143,11 @@ export const REPORT_TYPES = {
   //       type: SELECTION_TYPES.MULTILINE_TEXT,
   //       default: 'Enter markdown here...',
   //     },
+  // executeButtonName: {
+  //   label: 'Execute Button Name',
+  //   type: SELECTION_TYPES.TEXT,
+  //   default: 'Execute',
+  // },
   //   },
   // },
   map: {
@@ -1230,6 +1274,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   value: {
@@ -1323,6 +1372,11 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
+      },
     },
   },
   json: {
@@ -1388,6 +1442,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      executeButtonName: {
+        label: 'Execute Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Execute',
       },
     },
   },
@@ -1467,7 +1526,7 @@ export const REPORT_TYPES = {
       predefinedOptions: {
         label: 'Predefined Options, If type is Basic Select',
         type: SELECTION_TYPES.TEXT,
-        default: '',
+        default: null,
       },
       manualPropertyNameSpecification: {
         label: 'Manual Label/Property Name Specification',

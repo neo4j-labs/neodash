@@ -164,6 +164,7 @@ const NeoGraphChart = (props: ChartProps) => {
     },
     engine: {
       layout: layouts[settings.layout],
+      graphDepthSep: settings.graphDepthSep,
       queryCallback: props.queryCallback,
       cooldownTicks: cooldownTicks,
       setCooldownTicks: setCooldownTicks,

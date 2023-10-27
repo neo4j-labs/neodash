@@ -15,7 +15,8 @@ const BasicSelect = (props: ParameterSelectProps) => {
     props.settings && props.settings.defaultValue && props.settings.defaultValue.length > 0
       ? props.settings.defaultValue
       : '';
-  const defaultOptions = (predefinedOptions && predefinedOptions.split(',')) || [];
+  const defaultOptions = (predefinedOptions && JSON.parse(predefinedOptions)) || [];
+
   const [inputText, setInputText] = React.useState(props.parameterValue);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
   const property = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
@@ -65,21 +66,19 @@ const BasicSelect = (props: ParameterSelectProps) => {
           marginTop: '5px',
         }}
       >
-        <InputLabel shrink id='dropdown'>
-          {helperText ? helperText : `${label} ${property}`}
-        </InputLabel>
+        <InputLabel id='basic-select-label'>{helperText ? helperText : `${label} ${property}`}</InputLabel>
         <Select
-          labelId={'dropdown'}
-          id='dropdown-id'
+          labelId='basic-select-label'
+          id='basic-select'
           label={helperText ? helperText : `${label} ${property}`}
           value={inputText}
           onChange={(event) => {
             setRunning(true);
             setInputText(event.target.value);
-
             handleParametersUpdate(event.target.value, manualParameterSave);
           }}
         >
+          <MenuItem value='' style={{ height: 40 }}></MenuItem>
           {defaultOptions.map((option) => (
             <MenuItem value={option}>{option}</MenuItem>
           ))}
