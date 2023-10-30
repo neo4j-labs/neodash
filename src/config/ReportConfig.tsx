@@ -340,7 +340,7 @@ const _REPORT_TYPES = {
       barWidth: {
         label: 'Bar Width',
         type: SELECTION_TYPES.NUMBER,
-        default: 50,
+        default: 10,
       },
       padding: {
         label: 'Padding',

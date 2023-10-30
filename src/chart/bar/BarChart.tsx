@@ -39,8 +39,8 @@ const NeoBarChart = (props: ChartProps) => {
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
   const legend = settings.legend ? settings.legend : false;
   const labelRotation = settings.labelRotation != undefined ? settings.labelRotation : 45;
-  const barWidth = settings.barWidth ? settings.barWidth : 50;
-  const padding = settings.padding ? settings.padding : 0.3;
+  const barWidth = settings.barWidth ? settings.barWidth : 10;
+  const padding = settings.padding ? settings.padding : 0.1;
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
   const minBarHeight = settings.minBarHeight ? settings.minBarHeight : 0;
 
@@ -95,15 +95,16 @@ const NeoBarChart = (props: ChartProps) => {
         return [];
       }
     }, [])
-    .map((row) => {
-      Object.keys(newKeys).forEach((key) => {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!row.hasOwnProperty(key)) {
-          row[key] = 0;
-        }
-      });
-      return row;
-    });
+    // .map((row) => {
+    //   Object.keys(newKeys).forEach((key) => {
+    //     // eslint-disable-next-line no-prototype-builtins
+    //     if (!row.hasOwnProperty(key)) {
+    //       row[key] = 0;
+    //     }
+    //   });
+    //   return row;
+    // })
+    ;
 
     setKeys(Object.keys(newKeys));
     setData(newData);
@@ -237,14 +238,14 @@ const NeoBarChart = (props: ChartProps) => {
   const baseItemWidth = 40; // Some base width for color box and padding
   const charWidthEstimate = 5; // An estimate of how wide each character is, you might need to adjust this based on font size and type
   const itemWidthConst = baseItemWidth + maxKeyLength * charWidthEstimate;
+  const adaptableWidth = marginLeft + marginRight + (data.length * barWidth*4) + ((data.length-1)*4) + ((data.length-1)*innerPadding*4);
 
   // Scrollable Wrapper
 
   const scrollableWrapperStyle: React.CSSProperties = {
-    width: legendPosition === 'Horizontal' ? (itemWidthConst*data.length)+200 : barWidth * data.length + itemWidthConst,
+    width: legendPosition === 'Horizontal' ? (adaptableWidth > (itemWidthConst*data.length)+200 ? adaptableWidth : (itemWidthConst*data.length)+200): (adaptableWidth > adaptableWidth ? adaptableWidth : barWidth * 5 * data.length + itemWidthConst),
     height: legendPosition === 'Horizontal' ? '100%' : 18 * data.length + itemWidthConst * 1.2 + marginBottom,
     whiteSpace: 'nowrap',
-    overflowX: 'auto',
   };
 
   const barChartStyle: React.CSSProperties = {
@@ -268,8 +269,8 @@ const NeoBarChart = (props: ChartProps) => {
           indexBy='index'
           margin={{
             top: marginTop,
-            right: legendPosition === 'Horizontal' ? legend ? legendWidth + marginRight : marginRight : legend ? itemWidthConst + marginRight : marginRight,
-            bottom: legendPosition === 'Horizontal' ? legend ? marginBottom + 50 : marginBottom : itemWidthConst * 0.3 + marginBottom,
+            right: legendPosition === 'Horizontal' ? marginRight : legend ? itemWidthConst + marginRight : marginRight,
+            bottom: legendPosition === 'Horizontal' ? legend ? itemWidthConst * 0.3 + marginBottom + 50 : itemWidthConst * 0.3 + marginBottom : itemWidthConst * 0.3 + marginBottom,
             left: marginLeft,
           }}
           valueScale={{ type: valueScale }}
@@ -303,7 +304,7 @@ const NeoBarChart = (props: ChartProps) => {
                   direction: 'row',
                   justify: false,
                   translateX: 0,
-                  translateY: 80,
+                  translateY: itemWidthConst,
                   itemsSpacing: 2,
                   itemWidth: itemWidthConst,
                   itemHeight: 20,
