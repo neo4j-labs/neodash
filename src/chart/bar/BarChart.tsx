@@ -30,69 +30,19 @@ const NeoBarChart = (props: ChartProps) => {
 
   const [keys, setKeys] = React.useState<string[]>([]);
   const [data, setData] = React.useState<Record<string, any>[]>([]);
-
-  useEffect(() => {
-    let newKeys = {};
-    let newData: Record<string, any>[] = records
-      .reduce((data: Record<string, any>[], row: Record<string, any>) => {
-        try {
-          if (!selection || !selection.index || !selection.value) {
-            return data;
-          }
-          const index = convertRecordObjectToString(row.get(selection.index));
-          const idx = data.findIndex((item) => item.index === index);
-
-          const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
-          const rawValue = recordToNative(row.get(selection.value));
-          const value = rawValue !== null ? rawValue : 0.0000001;
-          if (isNaN(value)) {
-            return data;
-          }
-          newKeys[key] = true;
-
-          if (idx > -1) {
-            data[idx][key] = value;
-          } else {
-            data.push({ index, [key]: value });
-          }
-          return data;
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          return [];
-        }
-      }, [])
-      .map((row) => {
-        Object.keys(newKeys).forEach((key) => {
-          // eslint-disable-next-line no-prototype-builtins
-          if (!row.hasOwnProperty(key)) {
-            row[key] = 0;
-          }
-        });
-        return row;
-      });
-
-    setKeys(Object.keys(newKeys));
-    setData(newData);
-  }, [selection]);
-
-  if (loading) {
-    return <></>;
-  }
-
-  if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <NoDrawableDataErrorMessage />;
-  }
-
+  const [adjustedData, setAdjustedData] = React.useState<Record<string, any>[]>([]);
   const settings = props.settings ? props.settings : {};
+  const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 50;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
   const legend = settings.legend ? settings.legend : false;
   const labelRotation = settings.labelRotation != undefined ? settings.labelRotation : 45;
-  const barWidth = settings.barWidth? settings.barWidth : 50;
+  const barWidth = settings.barWidth ? settings.barWidth : 50;
   const padding = settings.padding ? settings.padding : 0.3;
+  const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
+  const minBarHeight = settings.minBarHeight ? settings.minBarHeight : 0;
 
   const labelSkipWidth = settings.labelSkipWidth ? settings.labelSkipWidth : 0;
   const labelSkipHeight = settings.labelSkipHeight ? settings.labelSkipHeight : 0;
@@ -111,6 +61,73 @@ const NeoBarChart = (props: ChartProps) => {
     settings.styleRules,
     props.getGlobalParameter
   );
+
+  useEffect(() => {
+    let newKeys = {};
+    let newData: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
+      try {
+        if (!selection || !selection.index || !selection.value) {
+          return data;
+        }
+        const index = convertRecordObjectToString(row.get(selection.index));
+        const idx = data.findIndex((item) => item.index === index);
+
+        const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
+        const rawValue = recordToNative(row.get(selection.value));
+        const value = rawValue !== null ? rawValue : 0.0000001;
+        if (isNaN(value)) {
+          return data;
+        }
+        newKeys[key] = true;
+
+        if (idx > -1) {
+          data[idx][key] = value;
+        } else {
+          data.push({ index, [key]: value });
+        }
+
+        return data;
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        return [];
+      }
+    }, []);
+    // .map((row) => {
+    //   Object.keys(newKeys).forEach((key) => {
+    //     // eslint-disable-next-line no-prototype-builtins
+    //     if (!row.hasOwnProperty(key)) {
+    //       row[key] = 0;
+    //     }
+    //   });
+    //   return row;
+    // });
+
+    setKeys(Object.keys(newKeys));
+    setData(newData);
+
+    if (minBarHeight > 0) {
+      let modifiedData = JSON.parse(JSON.stringify(newData)); // deep copy the data
+      for (let row of modifiedData) {
+        for (let key of Object.keys(newKeys)) {
+          if (!row[key] || row[key] < minBarHeight) {
+            row[key] = minBarHeight;
+          }
+        }
+      }
+      setAdjustedData(modifiedData);
+    } else {
+      setAdjustedData(newData); // Use original data if minBarHeight is 0
+    }
+  }, [selection, minBarHeight]);
+
+  if (loading) {
+    return <></>;
+  }
+
+  if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <NoDrawableDataErrorMessage />;
+  }
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
   // Compute bar color based on rules - overrides default color scheme completely.
@@ -204,6 +221,7 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   // Fixing canvas bug, from https://github.com/plouc/nivo/issues/2162
+  // SVGGraphicsElement.getBBox
   HTMLCanvasElement.prototype.getBBox = function tooltipMapper() {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
@@ -221,8 +239,8 @@ const NeoBarChart = (props: ChartProps) => {
   // Scrollable Wrapper
 
   const scrollableWrapperStyle: React.CSSProperties = {
-    width: (barWidth*data.length)+itemWidthConst,
-    height: (18*data.length)+(itemWidthConst*1.2)+marginBottom,
+    width: barWidth * data.length + itemWidthConst,
+    height: 18 * data.length + itemWidthConst * 1.2 + marginBottom,
     whiteSpace: 'nowrap',
   };
 
@@ -230,29 +248,30 @@ const NeoBarChart = (props: ChartProps) => {
     width: '100%',
     overflowX: 'auto',
     overflowY: 'auto',
-    height: '100%'
-  }
+    height: '100%',
+  };
 
   const chart = (
     <div style={barChartStyle}>
       <div style={scrollableWrapperStyle}>
         <BarChartComponent
           theme={canvas ? themeNivoCanvas(props.theme) : themeNivo}
-          data={data}
+          data={minBarHeight > 0 ? adjustedData : data}
           key={`${selection.index}___${selection.value}`}
           layout={layout}
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
-          // enableLabel={enableLabel}
+          enableLabel={enableLabel}
           keys={keys}
           indexBy='index'
           margin={{
             top: marginTop,
             right: legend ? itemWidthConst + marginRight : marginRight,
-            bottom: (itemWidthConst*0.3) +marginBottom,
+            bottom: itemWidthConst * 0.3 + marginBottom,
             left: marginLeft,
           }}
           valueScale={{ type: valueScale }}
           padding={padding}
+          innerPadding={innerPadding}
           minValue={minValue}
           maxValue={maxValue}
           colors={getBarColor}
@@ -280,7 +299,7 @@ const NeoBarChart = (props: ChartProps) => {
                     anchor: 'bottom-right',
                     direction: 'column',
                     justify: false,
-                    translateX: itemWidthConst+10,
+                    translateX: itemWidthConst + 10,
                     translateY: 0,
                     itemsSpacing: 1,
                     itemWidth: itemWidthConst,

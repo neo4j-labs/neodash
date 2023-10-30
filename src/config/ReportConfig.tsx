@@ -347,6 +347,16 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 0.3,
       },
+      innerPadding: {
+        label: 'Padding Between Grouped Elements',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      minBarHeight: {
+        label: 'Minimum Bar Height',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
       showOptionalSelections: {
         label: 'Grouping',
         type: SELECTION_TYPES.LIST,
