@@ -19,6 +19,7 @@ export interface ChartProps {
   updateReportSetting?: (name, value) => void; // Callback to update a setting for this report.
   fields: (fields) => string[]; // List of fields (return values) available for the report.
   setFields?: (fields) => void; // Update the list of fields for this report.
+  legendDefinition?: object;
   theme?: string; // Dashboard theme value.
 }
 
