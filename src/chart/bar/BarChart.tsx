@@ -44,6 +44,8 @@ const NeoBarChart = (props: ChartProps) => {
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
   const minBarHeight = settings.minBarHeight ? settings.minBarHeight : 0;
 
+  const legendPosition = settings.legendPosition ? settings.legendPosition : 'Vertical';
+
   const labelSkipWidth = settings.labelSkipWidth ? settings.labelSkipWidth : 0;
   const labelSkipHeight = settings.labelSkipHeight ? settings.labelSkipHeight : 0;
   const enableLabel = settings.barValues ? settings.barValues : false;
@@ -92,16 +94,16 @@ const NeoBarChart = (props: ChartProps) => {
         console.error(e);
         return [];
       }
-    }, []);
-    // .map((row) => {
-    //   Object.keys(newKeys).forEach((key) => {
-    //     // eslint-disable-next-line no-prototype-builtins
-    //     if (!row.hasOwnProperty(key)) {
-    //       row[key] = 0;
-    //     }
-    //   });
-    //   return row;
-    // });
+    }, [])
+    .map((row) => {
+      Object.keys(newKeys).forEach((key) => {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!row.hasOwnProperty(key)) {
+          row[key] = 0;
+        }
+      });
+      return row;
+    });
 
     setKeys(Object.keys(newKeys));
     setData(newData);
@@ -239,9 +241,10 @@ const NeoBarChart = (props: ChartProps) => {
   // Scrollable Wrapper
 
   const scrollableWrapperStyle: React.CSSProperties = {
-    width: barWidth * data.length + itemWidthConst,
-    height: 18 * data.length + itemWidthConst * 1.2 + marginBottom,
+    width: legendPosition === 'Horizontal' ? (itemWidthConst*data.length)+200 : barWidth * data.length + itemWidthConst,
+    height: legendPosition === 'Horizontal' ? '100%' : 18 * data.length + itemWidthConst * 1.2 + marginBottom,
     whiteSpace: 'nowrap',
+    overflowX: 'auto',
   };
 
   const barChartStyle: React.CSSProperties = {
@@ -265,8 +268,8 @@ const NeoBarChart = (props: ChartProps) => {
           indexBy='index'
           margin={{
             top: marginTop,
-            right: legend ? itemWidthConst + marginRight : marginRight,
-            bottom: itemWidthConst * 0.3 + marginBottom,
+            right: legendPosition === 'Horizontal' ? legend ? legendWidth + marginRight : marginRight : legend ? itemWidthConst + marginRight : marginRight,
+            bottom: legendPosition === 'Horizontal' ? legend ? marginBottom + 50 : marginBottom : itemWidthConst * 0.3 + marginBottom,
             left: marginLeft,
           }}
           valueScale={{ type: valueScale }}
@@ -293,7 +296,31 @@ const NeoBarChart = (props: ChartProps) => {
           {...extraProperties}
           legends={
             legend
-              ? [
+              ? legendPosition === 'Horizontal' ? [
+                {
+                  dataFrom: 'keys',
+                  anchor: 'bottom-left',
+                  direction: 'row',
+                  justify: false,
+                  translateX: 0,
+                  translateY: 80,
+                  itemsSpacing: 2,
+                  itemWidth: itemWidthConst,
+                  itemHeight: 20,
+                  itemDirection: 'left-to-right',
+                  itemOpacity: 0.85,
+                  symbolSize: 20,
+                  effects: [
+                    {
+                      on: 'hover',
+                      style: {
+                        itemOpacity: 1,
+                      },
+                    },
+                  ],
+                },
+              ] : 
+                [
                   {
                     dataFrom: 'keys',
                     anchor: 'bottom-right',

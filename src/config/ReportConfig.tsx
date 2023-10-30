@@ -357,6 +357,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
+      legendPosition: {
+        label: 'Legend Position',
+        type: SELECTION_TYPES.LIST,
+        values: ['Horizontal', 'Vertical'],
+        default: 'Vertical'
+      },
       showOptionalSelections: {
         label: 'Grouping',
         type: SELECTION_TYPES.LIST,
