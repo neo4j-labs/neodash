@@ -7,6 +7,10 @@ import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 import { themeNivo, themeNivoCanvas } from '../Utils';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import {
+  getPageNumbersAndNamesList,
+  performActionOnElement,
+} from '../../extensions/advancedcharts/Utils';
 
 /**
  * Embeds a BarReport (from Nivo) into NeoDash.
@@ -40,9 +44,15 @@ const NeoBarChart = (props: ChartProps) => {
   const legend = settings.legend ? settings.legend : false;
   const labelRotation = settings.labelRotation != undefined ? settings.labelRotation : 45;
   const barWidth = settings.barWidth ? settings.barWidth : 10;
-  const padding = settings.padding ? settings.padding : 0.1;
+  const padding = settings.padding ? settings.padding : 0.25;
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
   const minBarHeight = settings.minBarHeight ? settings.minBarHeight : 0;
+
+  const actionsRules =
+  extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+    ? props.settings.actionsRules
+    : [];
+  const pageNames = getPageNumbersAndNamesList();
 
   const legendPosition = settings.legendPosition ? settings.legendPosition : 'Vertical';
 
@@ -233,6 +243,8 @@ const NeoBarChart = (props: ChartProps) => {
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 
+
+
   // For adaptable item length in the legend
   const maxKeyLength = Math.max(...keys.map((key) => key.length));
   const baseItemWidth = 40; // Some base width for color box and padding
@@ -265,6 +277,9 @@ const NeoBarChart = (props: ChartProps) => {
           layout={layout}
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
           enableLabel={enableLabel}
+          onClick={({value}) =>
+          performActionOnElement(value, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'bar')
+          }
           keys={keys}
           indexBy='index'
           margin={{

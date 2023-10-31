@@ -338,17 +338,17 @@ const _REPORT_TYPES = {
         default: false,
       },
       barWidth: {
-        label: 'Bar Width',
+        label: 'Bar Width (Use to size graph width)',
         type: SELECTION_TYPES.NUMBER,
         default: 10,
       },
       padding: {
-        label: 'Padding',
+        label: 'Padding (Proportional)',
         type: SELECTION_TYPES.NUMBER,
-        default: 0.3,
+        default: 0.25,
       },
       innerPadding: {
-        label: 'Padding Between Grouped Elements',
+        label: 'Padding Between Grouped Bars',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },

@@ -17,6 +17,13 @@ const RULE_CONDITIONS = {
       label: 'Cell Double Click',
     },
   ],
+  bar: [
+    {
+      value: 'Click',
+      label: 'Click',
+      default: true,
+    }
+  ],
   map: [
     {
       value: 'Click',
@@ -40,6 +47,16 @@ const RULE_CONDITIONS = {
 // For each report type, the customizations that can be specified using rules.
 export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
   table: [
+    {
+      value: 'set variable',
+      label: 'Parameter',
+    },
+    {
+      value: 'set page',
+      label: 'Page',
+    },
+  ],
+  bar: [
     {
       value: 'set variable',
       label: 'Parameter',
