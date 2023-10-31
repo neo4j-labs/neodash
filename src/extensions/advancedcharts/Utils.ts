@@ -79,13 +79,13 @@ export const executeActionRule = (rule, e, props, _type = 'default') => {
 
 /**
  * Evaluates and runs actions based on an element based on the rule set defined in the settings.
- * @param e - the element.
+ * @param e - the element --> should be a dictionary with two entries {field, value}, the category and the attached value.
  * @param actionsRules - the list of rules.
  * @param props - ChartProps object with callbacks to execute rule.
  * @param action - the type of action to perform.
  * @param type - the rule type.
  */
-export const performActionOnElement = (e, actionsRules, props, action, type = 'default') => {
+export const performActionOnElement = (e: { field; value }, actionsRules, props, action, type = 'default') => {
   let rules = getRule(e, actionsRules, action);
   if (rules !== null) {
     rules.forEach((rule) => executeActionRule(rule, e, props, type));

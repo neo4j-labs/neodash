@@ -7,10 +7,7 @@ import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 import { themeNivo, themeNivoCanvas } from '../Utils';
 import { extensionEnabled } from '../../utils/ReportUtils';
-import {
-  getPageNumbersAndNamesList,
-  performActionOnElement,
-} from '../../extensions/advancedcharts/Utils';
+import { getPageNumbersAndNamesList, performActionOnElement } from '../../extensions/advancedcharts/Utils';
 
 /**
  * Embeds a BarReport (from Nivo) into NeoDash.
@@ -49,9 +46,9 @@ const NeoBarChart = (props: ChartProps) => {
   const minBarHeight = settings.minBarHeight ? settings.minBarHeight : 0;
 
   const actionsRules =
-  extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
-    ? props.settings.actionsRules
-    : [];
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
   const pageNames = getPageNumbersAndNamesList();
 
   const legendPosition = settings.legendPosition ? settings.legendPosition : 'Vertical';
@@ -104,7 +101,7 @@ const NeoBarChart = (props: ChartProps) => {
         console.error(e);
         return [];
       }
-    }, [])
+    }, []);
     // .map((row) => {
     //   Object.keys(newKeys).forEach((key) => {
     //     // eslint-disable-next-line no-prototype-builtins
@@ -114,8 +111,6 @@ const NeoBarChart = (props: ChartProps) => {
     //   });
     //   return row;
     // })
-    ;
-
     setKeys(Object.keys(newKeys));
     setData(newData);
 
@@ -243,19 +238,27 @@ const NeoBarChart = (props: ChartProps) => {
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 
-
-
   // For adaptable item length in the legend
   const maxKeyLength = Math.max(...keys.map((key) => key.length));
   const baseItemWidth = 40; // Some base width for color box and padding
   const charWidthEstimate = 5; // An estimate of how wide each character is, you might need to adjust this based on font size and type
   const itemWidthConst = baseItemWidth + maxKeyLength * charWidthEstimate;
-  const adaptableWidth = marginLeft + marginRight + (data.length * barWidth*4) + ((data.length-1)*4) + ((data.length-1)*innerPadding*4);
+  const adaptableWidth =
+    marginLeft +
+    marginRight +
+    data.length * barWidth * 4 +
+    (data.length - 1) * 4 +
+    (data.length - 1) * innerPadding * 4;
 
   // Scrollable Wrapper
 
   const scrollableWrapperStyle: React.CSSProperties = {
-    width: legendPosition === 'Horizontal' ? (adaptableWidth > (itemWidthConst*data.length)+200 ? adaptableWidth : (itemWidthConst*data.length)+200): (adaptableWidth > adaptableWidth ? adaptableWidth : barWidth * 5 * data.length + itemWidthConst),
+    width:
+      legendPosition === 'Horizontal'
+        ? adaptableWidth > itemWidthConst * data.length + 200
+          ? adaptableWidth
+          : itemWidthConst * data.length + 200
+        : barWidth * 5 * data.length + itemWidthConst,
     height: legendPosition === 'Horizontal' ? '100%' : 18 * data.length + itemWidthConst * 1.2 + marginBottom,
     whiteSpace: 'nowrap',
   };
@@ -277,15 +280,25 @@ const NeoBarChart = (props: ChartProps) => {
           layout={layout}
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
           enableLabel={enableLabel}
-          onClick={({value}) =>
-          performActionOnElement(value, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'bar')
-          }
+          onClick={(e) => {
+            /**
+             * We need to transform the bar chart event `e`, into the standardized event `e2` that the action handler expects.
+             * The standardized event is a dictionary with two keys, `field` and `value`.
+             */
+            const e2 = { field: e.id, value: e.value };
+            performActionOnElement(e2, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'bar');
+          }}
           keys={keys}
           indexBy='index'
           margin={{
             top: marginTop,
             right: legendPosition === 'Horizontal' ? marginRight : legend ? itemWidthConst + marginRight : marginRight,
-            bottom: legendPosition === 'Horizontal' ? legend ? itemWidthConst * 0.3 + marginBottom + 50 : itemWidthConst * 0.3 + marginBottom : itemWidthConst * 0.3 + marginBottom,
+            bottom:
+              legendPosition === 'Horizontal'
+                ? legend
+                  ? itemWidthConst * 0.3 + marginBottom + 50
+                  : itemWidthConst * 0.3 + marginBottom
+                : itemWidthConst * 0.3 + marginBottom,
             left: marginLeft,
           }}
           valueScale={{ type: valueScale }}
@@ -312,54 +325,55 @@ const NeoBarChart = (props: ChartProps) => {
           {...extraProperties}
           legends={
             legend
-              ? legendPosition === 'Horizontal' ? [
-                {
-                  dataFrom: 'keys',
-                  anchor: 'bottom-left',
-                  direction: 'row',
-                  justify: false,
-                  translateX: 0,
-                  translateY: itemWidthConst,
-                  itemsSpacing: 2,
-                  itemWidth: itemWidthConst,
-                  itemHeight: 20,
-                  itemDirection: 'left-to-right',
-                  itemOpacity: 0.85,
-                  symbolSize: 20,
-                  effects: [
+              ? legendPosition === 'Horizontal'
+                ? [
                     {
-                      on: 'hover',
-                      style: {
-                        itemOpacity: 1,
-                      },
-                    },
-                  ],
-                },
-              ] : 
-                [
-                  {
-                    dataFrom: 'keys',
-                    anchor: 'bottom-right',
-                    direction: 'column',
-                    justify: false,
-                    translateX: itemWidthConst + 10,
-                    translateY: 0,
-                    itemsSpacing: 1,
-                    itemWidth: itemWidthConst,
-                    itemHeight: 20,
-                    itemDirection: 'left-to-right',
-                    itemOpacity: 0.85,
-                    symbolSize: 15,
-                    effects: [
-                      {
-                        on: 'hover',
-                        style: {
-                          itemOpacity: 1,
+                      dataFrom: 'keys',
+                      anchor: 'bottom-left',
+                      direction: 'row',
+                      justify: false,
+                      translateX: 0,
+                      translateY: itemWidthConst,
+                      itemsSpacing: 2,
+                      itemWidth: itemWidthConst,
+                      itemHeight: 20,
+                      itemDirection: 'left-to-right',
+                      itemOpacity: 0.85,
+                      symbolSize: 20,
+                      effects: [
+                        {
+                          on: 'hover',
+                          style: {
+                            itemOpacity: 1,
+                          },
                         },
-                      },
-                    ],
-                  },
-                ]
+                      ],
+                    },
+                  ]
+                : [
+                    {
+                      dataFrom: 'keys',
+                      anchor: 'bottom-right',
+                      direction: 'column',
+                      justify: false,
+                      translateX: itemWidthConst + 10,
+                      translateY: 0,
+                      itemsSpacing: 1,
+                      itemWidth: itemWidthConst,
+                      itemHeight: 20,
+                      itemDirection: 'left-to-right',
+                      itemOpacity: 0.85,
+                      symbolSize: 15,
+                      effects: [
+                        {
+                          on: 'hover',
+                          style: {
+                            itemOpacity: 1,
+                          },
+                        },
+                      ],
+                    },
+                  ]
               : []
           }
           animate={false}
