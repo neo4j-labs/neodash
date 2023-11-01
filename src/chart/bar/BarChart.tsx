@@ -281,11 +281,12 @@ const NeoBarChart = (props: ChartProps) => {
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
           enableLabel={enableLabel}
           onClick={(e) => {
+            console.log(e)
             /**
              * We need to transform the bar chart event `e`, into the standardized event `e2` that the action handler expects.
              * The standardized event is a dictionary with two keys, `field` and `value`.
              */
-            const e2 = { field: e.id, value: e.value };
+            const e2 = { field: e.id, value: props.records[e.indexValue] };
             performActionOnElement(e2, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'bar');
           }}
           keys={keys}
