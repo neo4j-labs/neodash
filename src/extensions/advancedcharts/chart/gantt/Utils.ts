@@ -29,10 +29,10 @@ export const generateVisualizationDataGraph = (records, nodeLabels, linkTypes, c
 export function createDependenciesMap(links) {
   const dependencies = {};
   links.forEach((l) => {
-    if (!dependencies[l.target]) {
-      dependencies[l.target] = [];
+    if (!dependencies[`${  l.target}`]) {
+      dependencies[`${  l.target}`] = [];
     }
-    dependencies[l.target].push(l.source);
+    dependencies[`${  l.target}`].push(`${  l.source}`);
   });
   return dependencies;
 }

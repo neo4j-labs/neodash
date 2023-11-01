@@ -3,7 +3,6 @@
  * (MIT License)
  */
 import React, { Component } from 'react';
-// import { bind, clear } from 'size-sensor';
 import Gantt from './lib';
 
 export abstract class ReactGanttProps extends Component {
@@ -15,11 +14,19 @@ const HEADER_HEIGHT = 50;
 const COLUMN_WIDTH = 30;
 const STEP_SIZE = 24;
 const VIEW_MODE = 'Day';
+
+/**
+ * React wrapper for the modified Frappe Gannt library.
+ */
 export default class ReactGantt extends ReactGanttProps {
   ganttRef: SVGSVGElement | undefined = undefined;
 
   ganttInstance: any;
 
+  /**
+   * Maps the NeoDash configuration into the configuration dictionary expected by the Gantt chart library.
+   * @returns Frappe Gantt chart configuration dictionary.
+   */
   getOptions() {
     const barHeight =
       (this.props.height - HEADER_HEIGHT - TASK_PADDING * 2 * this.props.tasks.length) / this.props.tasks.length;
@@ -45,6 +52,9 @@ export default class ReactGantt extends ReactGanttProps {
     };
   }
 
+  /**
+   * Instantiate the Gantt chart when the React component mounts.
+   */
   componentDidMount() {
     if (this.ganttInstance) {
       return this.ganttInstance;
@@ -54,7 +64,9 @@ export default class ReactGantt extends ReactGanttProps {
     return this.ganttInstance;
   }
 
-  // redraw the gantt when update. now change the viewMode
+  /**
+   * Update instance variables when the properties of the React component change.
+   */
   componentDidUpdate(prevProps, _) {
     if (this.ganttInstance) {
       this.ganttInstance.refresh(this.props.tasks);
@@ -65,9 +77,12 @@ export default class ReactGantt extends ReactGanttProps {
     }
   }
 
-  // Clear reference when the component unmounts.
+  /**
+   * Clear reference when the component unmounts.
+   */
   componentWillUnmount() {
     this.ganttRef = undefined;
+    this.ganttInstance = undefined;
   }
 
   // Render the component as an SVG.

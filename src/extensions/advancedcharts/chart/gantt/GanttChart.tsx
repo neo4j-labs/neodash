@@ -57,8 +57,9 @@ const NeoGanttChart = (props: ChartProps) => {
 
   // Build visualization-specific objects.
   const dependencies = createDependenciesMap(data.links);
+  console.log(dependencies);
   const tasks = createTasksList(data.nodes, dependencies, startDateProperty, endDateProperty, nameProperty);
-
+  console.log(tasks);
   // If no tasks can be parsed, also return an error message.
   if (!tasks || tasks.length == 0) {
     return <NoDrawableDataErrorMessage />;
@@ -80,7 +81,7 @@ const NeoGanttChart = (props: ChartProps) => {
 
   let dateDiff = (maxDate - minDate) / (1000 * 60 * 60 * 24);
 
-  const viewMode = dateDiff > 40 ? 'Month' : 'Day';
+  const viewMode = dateDiff > 40 ? 'Month' : 'Month';
 
   return (
     <div

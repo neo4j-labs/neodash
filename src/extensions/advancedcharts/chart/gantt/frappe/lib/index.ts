@@ -17,6 +17,7 @@ const VIEW_MODE = {
   DAY: 'Day',
   WEEK: 'Week',
   MONTH: 'Month',
+  QUARTER: 'Quarter',
   YEAR: 'Year',
 };
 
@@ -41,16 +42,36 @@ export default class Gantt {
 
   layers: object;
 
-  arrows: never[];
+  /**
+   * List of arrows (dependencies between the tasks)
+   */
+  arrows: Arrow[] = [];
 
-  bars: any;
+  /**
+   * List of horizontal bars representing a task.
+   */
+  bars: Bar[] = [];
 
   bar_being_dragged: null;
 
   popup: Popup;
 
-  static VIEW_MODE: { QUARTER_DAY: string; HALF_DAY: string; DAY: string; WEEK: string; MONTH: string; YEAR: string };
+  static VIEW_MODE: {
+    QUARTER_DAY: string;
+    HALF_DAY: string;
+    DAY: string;
+    WEEK: string;
+    MONTH: string;
+    QUARTER: string;
+    YEAR: string;
+  };
 
+  /**
+   * Sets up the Gantt chart visualization
+   * @param wrapper
+   * @param tasks
+   * @param options configuration options for styling and handling events.
+   */
   constructor(wrapper, tasks, options) {
     this.setup_wrapper(wrapper);
     this.setup_options(options);
@@ -173,10 +194,7 @@ export default class Gantt {
       if (typeof task.dependencies === 'string' || !task.dependencies) {
         let deps = [];
         if (task.dependencies) {
-          deps = task.dependencies
-            .split(',')
-            .map((d) => d.trim())
-            .filter((d) => d);
+          deps = task.dependencies.map((d) => d.trim()).filter((d) => d);
         }
         task.dependencies = deps;
       }
@@ -233,6 +251,9 @@ export default class Gantt {
     } else if (view_mode === VIEW_MODE.MONTH) {
       this.options.step = 24 * 30;
       this.options.column_width = 120;
+    } else if (view_mode === VIEW_MODE.QUARTER) {
+      this.options.step = 24 * 90;
+      this.options.column_width = 120;
     } else if (view_mode === VIEW_MODE.YEAR) {
       this.options.step = 24 * 365;
       this.options.column_width = 120;
@@ -265,7 +286,7 @@ export default class Gantt {
     if (this.view_is([VIEW_MODE.QUARTER_DAY, VIEW_MODE.HALF_DAY])) {
       this.gantt_start = date_utils.add(this.gantt_start, -7, 'day');
       this.gantt_end = date_utils.add(this.gantt_end, 7, 'day');
-    } else if (this.view_is(VIEW_MODE.MONTH)) {
+    } else if (this.view_is(VIEW_MODE.MONTH, VIEW_MODE.QUARTER)) {
       this.gantt_start = date_utils.start_of(this.gantt_start, 'year');
       this.gantt_end = date_utils.add(this.gantt_end, 1, 'year');
     } else if (this.view_is(VIEW_MODE.YEAR)) {
