@@ -7,7 +7,8 @@ import { ChartProps } from '../Chart';
 import { convertRecordObjectToString, recordToNative } from '../ChartUtils';
 import { themeNivo, themeNivoCanvas } from '../Utils';
 import { extensionEnabled } from '../../utils/ReportUtils';
-import { getPageNumbersAndNamesList, performActionOnElement } from '../../extensions/advancedcharts/Utils';
+import { getPageNumbersAndNamesList, getRule, performActionOnElement } from '../../extensions/advancedcharts/Utils';
+import { getOriginalRecordForNivoClickEvent } from './util';
 
 /**
  * Embeds a BarReport (from Nivo) into NeoDash.
@@ -281,13 +282,25 @@ const NeoBarChart = (props: ChartProps) => {
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
           enableLabel={enableLabel}
           onClick={(e) => {
-            console.log(e)
-            /**
-             * We need to transform the bar chart event `e`, into the standardized event `e2` that the action handler expects.
-             * The standardized event is a dictionary with two keys, `field` and `value`.
-             */
-            const e2 = { field: e.id, value: props.records[e.indexValue] };
-            performActionOnElement(e2, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'bar');
+            // Get the original record that was used to draw this bar (or a group in a bar).
+            const record = getOriginalRecordForNivoClickEvent(e, records, selection);
+            // From that record, check if there are any rules assigned to each of the fields (columns).
+            Object.keys(record).forEach((key) => {
+              let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
+              // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
+              rules &&
+                rules.forEach((rule) => {
+                  const ruleField = rule.field;
+                  const ruleValue = record[rule.value];
+                  performActionOnElement(
+                    { field: ruleField, value: ruleValue },
+                    actionsRules,
+                    { ...props, pageNames: pageNames },
+                    'Click',
+                    'bar'
+                  );
+                });
+            });
           }}
           keys={keys}
           indexBy='index'
