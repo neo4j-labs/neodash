@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 // import { Gantt, Task, ViewMode } from 'gantt-task-react';
@@ -9,6 +9,9 @@ import { extractNodePropertiesFromRecords } from '../../../../report/ReportRecor
 import { extensionEnabled } from '../../../../utils/ReportUtils';
 import { createDependenciesMap, createTasksList, generateVisualizationDataGraph } from './Utils';
 import ReactGantt from './frappe/GanttVisualization';
+import { createUUID } from '../../../../utils/uuid';
+import debounce from 'lodash/debounce';
+import { REPORT_LOADING_ICON } from '../../../../report/Report';
 
 /**
  * A Gantt Chart plots activities (nodes) with dependencies (relationships) on a timeline.
@@ -24,6 +27,10 @@ const NeoGanttChart = (props: ChartProps) => {
    * We are essentially reconstructing the graph from the set of links, nodes, and paths returned in Cypher.
    */
   const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
+  const [tasks, setTasks] = useState([]);
+  const [key, setKey] = useState(createUUID());
+  const [isLoading, setIsLoading] = useState(false);
+  const debounceSetIsLoading = useCallback(debounce(setIsLoading, 1000), []);
 
   //
   const startDateProperty = settings.startDateProperty ? settings.startDateProperty : 'startDate';
@@ -41,13 +48,33 @@ const NeoGanttChart = (props: ChartProps) => {
       ? props.settings.actionsRules
       : [];
 
+  // When the user resizes, add an artificial wait to stop the visualization from rerendering too often.
+  useEffect(() => {
+    // We are resizing after there is already a rendered vis.
+    if (tasks.length > 0 && isLoading == false) {
+      setIsLoading(true);
+      debounceSetIsLoading(false);
+    }
+  }, [props.dimensions?.width, props.dimensions?.height]);
+
   // When data is refreshed, rebuild the data graph used for visualization.
   useEffect(() => {
-    setData(
-      generateVisualizationDataGraph(props.records, nodeLabels, linkTypes, colorScheme, props.fields, props.settings)
+    setIsLoading(false);
+    const newData = generateVisualizationDataGraph(
+      props.records,
+      nodeLabels,
+      linkTypes,
+      colorScheme,
+      props.fields,
+      props.settings
     );
+    setData(newData);
     const newFields = extractNodePropertiesFromRecords(records);
     props.setFields && props.setFields(newFields);
+
+    // Build visualization-specific objects.
+    const dependencies = createDependenciesMap(newData.links);
+    setTasks(createTasksList(newData.nodes, dependencies, startDateProperty, endDateProperty, nameProperty));
   }, [props.records]);
 
   // If no data is present, return an error message.
@@ -55,11 +82,6 @@ const NeoGanttChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
 
-  // Build visualization-specific objects.
-  const dependencies = createDependenciesMap(data.links);
-  console.log(dependencies);
-  const tasks = createTasksList(data.nodes, dependencies, startDateProperty, endDateProperty, nameProperty);
-  console.log(tasks);
   // If no tasks can be parsed, also return an error message.
   if (!tasks || tasks.length == 0) {
     return <NoDrawableDataErrorMessage />;
@@ -83,9 +105,14 @@ const NeoGanttChart = (props: ChartProps) => {
 
   const viewMode = dateDiff > 40 ? 'Month' : 'Month';
 
+  if (isLoading) {
+    return REPORT_LOADING_ICON;
+  }
   return (
     <div
       className='gantt-wrapper'
+      key={key}
+      id={key}
       style={{ height: props.dimensions?.height - CARD_HEADER_HEIGHT + 7, overflowY: 'hidden' }}
     >
       <ReactGantt

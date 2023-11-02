@@ -4,6 +4,7 @@
  */
 import React, { Component } from 'react';
 import Gantt from './lib';
+import { createUUID } from '../../../../../utils/uuid';
 
 export abstract class ReactGanttProps extends Component {
   props: any;
@@ -20,6 +21,8 @@ const VIEW_MODE = 'Day';
  */
 export default class ReactGantt extends ReactGanttProps {
   ganttRef: SVGSVGElement | undefined = undefined;
+
+  key: any;
 
   ganttInstance: any;
 
@@ -56,9 +59,12 @@ export default class ReactGantt extends ReactGanttProps {
    * Instantiate the Gantt chart when the React component mounts.
    */
   componentDidMount() {
+    console.log(this.ganttInstance);
     if (this.ganttInstance) {
+      this.key = createUUID();
       return this.ganttInstance;
     }
+    console.log('Recreating gantt...');
     this.ganttInstance = new Gantt(this.ganttRef, this.props.tasks, this.getOptions());
     this.ganttInstance.change_view_mode(this.props.viewMode);
     return this.ganttInstance;
@@ -81,14 +87,15 @@ export default class ReactGantt extends ReactGanttProps {
    * Clear reference when the component unmounts.
    */
   componentWillUnmount() {
-    this.ganttRef = undefined;
-    this.ganttInstance = undefined;
+    // this.ganttRef = undefined;
+    // this.ganttInstance = undefined;
   }
 
   // Render the component as an SVG.
   render() {
     return (
       <svg
+        key={this.key}
         style={{ height: '100%' }}
         ref={(node) => {
           this.ganttRef = node;

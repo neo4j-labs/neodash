@@ -4,12 +4,27 @@
  */
 
 import { createSVG } from './svg_utils';
-const DependencyDirections = {
-  StartToStart: 0,
-  StartToEnd: 1,
-  EndToStart: 2,
-  EndToEnd: 3,
+const DependencyDirection = {
+  SS: 0,
+  SE: 1,
+  ES: 2,
+  EE: 3,
 };
+
+const reverse_arrow_path = `
+h 5
+m 0 -5
+l -5 5
+l 5 5
+m -5 -5
+`;
+
+const arrow_path = `
+m -5 -5
+l 5 5
+l -5 5
+m 5 -5
+`;
 
 export default class Arrow {
   gantt: any;
@@ -22,38 +37,31 @@ export default class Arrow {
 
   element: any;
 
+  direction = DependencyDirection.SE;
+
   constructor(gantt, from_task, to_task) {
     this.gantt = gantt;
     this.from_task = from_task;
     this.to_task = to_task;
-    this.calculate_path();
+    this.calculate_path(this.direction);
     this.draw();
   }
 
-  calculate_path() {
+  calculate_path(direction) {
     // Start in the horizontal center of the 'from' bar...
-    let start_x = this.from_task.$bar.getX() + this.from_task.$bar.getWidth() / 2;
-
-    // We are shifting the start position left, if the X position of the 'to' bar is SMALLER than where we are (plus a small padding)...
-    // Until we reach the 'x' where the 'from' bar starts.
-    const condition = () =>
-      this.to_task.$bar.getX() < start_x + this.gantt.options.padding &&
-      start_x > this.from_task.$bar.getX() + this.gantt.options.padding;
-    while (condition()) {
-      start_x -= 10;
-    }
-
-    // Now get the Y position.
-    // This is equal to the header height, plus the bar height, plus the height of a bar multiplied by the index of the bar.
-    // This should end up exactly at the bottom of the 'from' bar.
+    // let start_x = this.from_task.$bar.getX() + this.from_task.$bar.getWidth() / 2;
+    const start_x = this.from_task.$bar.getX();
     const start_y =
       this.gantt.options.header_height +
-      this.gantt.options.bar_height +
+      this.gantt.options.bar_height / 2 +
       (this.gantt.options.padding + this.gantt.options.bar_height) * this.from_task.task._index +
       this.gantt.options.padding;
 
     // End X position is a small margin (padding) before the 'to' bar starts.
-    const end_x = this.to_task.$bar.getX() - this.gantt.options.padding / 2;
+    const end_x = this.to_task.$bar.getX();
+    // if (direction === DependencyDirection['EE'] || direction === DependencyDirection['SE']) {
+    //     end_x = end_x + this.to_task.$bar.getWidth();
+    // }
     // End Y position is exactly in the middle of the 'to' bar.
     const end_y =
       this.gantt.options.header_height +
@@ -62,37 +70,123 @@ export default class Arrow {
       this.gantt.options.padding;
 
     const from_is_below_to = this.from_task.task._index > this.to_task.task._index;
+    const from_end_is_before_to_start =
+      this.to_task.$bar.getX() >
+      this.from_task.$bar.getX() + this.from_task.$bar.getWidth() + this.gantt.options.padding;
+    const from_end_is_before_to_end =
+      this.to_task.$bar.getX() + this.to_task.$bar.getWidth() >
+      this.from_task.$bar.getX() + this.from_task.$bar.getWidth() + this.gantt.options.padding;
+    const from_start_is_before_to_start = this.to_task.$bar.getX() > this.from_task.$bar.getX();
+    const from_start_is_before_to_end =
+      this.to_task.$bar.getX() + this.to_task.$bar.getWidth() + this.gantt.options.padding > this.from_task.$bar.getX();
     const curve = this.gantt.options.arrow_curve;
     const clockwise = from_is_below_to ? 1 : 0;
+    const counter_clockwise = from_is_below_to ? 0 : 1;
+    const {padding} = this.gantt.options;
     const curve_y = from_is_below_to ? -curve : curve;
     const offset = from_is_below_to ? end_y + this.gantt.options.arrow_curve : end_y - this.gantt.options.arrow_curve;
+    const down_1 = (this.gantt.options.padding / 2 - curve) * (from_is_below_to ? 1 : -1);
+    const down_2 = this.to_task.$bar.getY() + this.to_task.$bar.getHeight() / 2 - curve_y;
+    const left = this.to_task.$bar.getX() - this.gantt.options.padding;
 
-    this.path = `
-            M ${start_x} ${start_y}
-            V ${offset}
-            a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
-            L ${end_x} ${end_y}
-            m -5 -5
-            l 5 5
-            l -5 5`;
-
-    if (this.to_task.$bar.getX() < this.from_task.$bar.getX() + this.gantt.options.padding) {
-      const down_1 = this.gantt.options.padding / 2 - curve;
-      const down_2 = this.to_task.$bar.getY() + this.to_task.$bar.getHeight() / 2 - curve_y;
-      const left = this.to_task.$bar.getX() - this.gantt.options.padding;
-
-      this.path = `
-                M ${start_x} ${start_y}
-                v ${down_1}
-                a ${curve} ${curve} 0 0 1 -${curve} ${curve}
-                H ${left}
-                a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
-                V ${down_2}
-                a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
-                L ${end_x} ${end_y}
-                m -5 -5
-                l 5 5
-                l -5 5`;
+    if (direction == DependencyDirection.ES) {
+      if (from_end_is_before_to_start) {
+        this.path = `
+                    M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
+                    h ${padding}
+                    a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
+                    V ${offset}
+                    a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
+                    L ${end_x} ${end_y}
+                    ${arrow_path}
+                `;
+      } else {
+        this.path = `
+                    M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
+                    h ${padding}
+                    a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
+                    v ${-down_1 * 5}
+                    a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
+                    H ${left}
+                    a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
+                    V ${down_2}
+                    a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
+                    L ${end_x} ${end_y}
+                    ${arrow_path}`;
+      }
+    }
+    if (direction == DependencyDirection.EE) {
+      if (from_end_is_before_to_end) {
+        this.path = `
+                        M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
+                        H ${end_x + this.to_task.$bar.getWidth() + padding}
+                        a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
+                        V ${offset}
+                        a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
+                        L ${end_x + this.to_task.$bar.getWidth()} ${end_y}
+                        ${reverse_arrow_path}
+                    `;
+      } else {
+        this.path = `
+                    M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
+                    h ${padding}
+                    a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
+                    V ${offset}
+                    a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
+                    L ${end_x + this.to_task.$bar.getWidth()} ${end_y}
+                    ${reverse_arrow_path}
+            `;
+      }
+    }
+    if (direction == DependencyDirection.SS) {
+      if (from_start_is_before_to_start) {
+        this.path = `
+                    M ${start_x} ${start_y}
+                    h ${-padding}
+                    a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
+                    V ${offset}
+                    a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
+                    L ${end_x} ${end_y}
+                    ${arrow_path}
+                `;
+      } else {
+        this.path = `
+                    M ${start_x} ${start_y}
+                    H ${end_x - padding}
+                    a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
+                    V ${offset}
+                    a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
+                    L ${end_x} ${end_y}
+                    ${arrow_path}
+                `;
+      }
+    }
+    if (direction == DependencyDirection.SE) {
+      if (from_start_is_before_to_end) {
+        this.path = `
+                        M ${start_x} ${start_y}
+                        h ${-padding}
+                        a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
+                        V ${offset + down_1 * 6}
+                        a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
+                        L ${end_x + this.to_task.$bar.getWidth() + padding} ${end_y + down_1 * 6}
+                        a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
+                        v ${-down_1 * 6}
+                        a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
+                        h ${-padding}
+                        ${reverse_arrow_path}
+                    `;
+      } else {
+        this.path = `
+                    M ${start_x} ${start_y}
+                    h ${-padding}
+                    a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
+                    V ${offset}
+                    a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
+                    L ${end_x + this.to_task.$bar.getWidth()} ${end_y}
+                    ${reverse_arrow_path}
+            `;
+      }
     }
   }
 
@@ -105,7 +199,7 @@ export default class Arrow {
   }
 
   update() {
-    this.calculate_path();
+    this.calculate_path(DependencyDirection.SE);
     this.element.setAttribute('d', this.path);
   }
 }
