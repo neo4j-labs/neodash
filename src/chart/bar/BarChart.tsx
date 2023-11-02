@@ -165,8 +165,10 @@ const NeoBarChart = (props: ChartProps) => {
     let shade = false;
     let darkTop = false;
     let includeIndex = false;
-    let x = bar.width / 2;
-    let y = bar.height / 2;
+    let x;
+    bar.width ? x = bar.width / 2 : x = 0;
+    let y
+    bar.height ? y = bar.height / 2 : y=0;
     let textAnchor = 'middle';
     if (positionLabel == 'top') {
       if (layout == 'vertical') {
@@ -285,7 +287,7 @@ const NeoBarChart = (props: ChartProps) => {
             // Get the original record that was used to draw this bar (or a group in a bar).
             const record = getOriginalRecordForNivoClickEvent(e, records, selection);
             // From that record, check if there are any rules assigned to each of the fields (columns).
-            Object.keys(record).forEach((key) => {
+            record ? Object.keys(record).forEach((key) => {
               let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
               // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
               rules &&
@@ -300,7 +302,7 @@ const NeoBarChart = (props: ChartProps) => {
                     'bar'
                   );
                 });
-            });
+            }): null;
           }}
           keys={keys}
           indexBy='index'

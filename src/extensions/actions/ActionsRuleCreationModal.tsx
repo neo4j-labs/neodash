@@ -22,7 +22,7 @@ const RULE_CONDITIONS = {
       value: 'Click',
       label: 'Click',
       default: true,
-    }
+    },
   ],
   map: [
     {
@@ -228,7 +228,10 @@ export const NeoCustomReportActionsModal = ({
             </span>
           </div>
           <TextInput
-            className='n-inline-block n-align-middle n-w-1/2 font-bold'
+            className={`n-mt-0.5 n-inline-block n-float-right font-bold ${
+              type === 'bar' ? 'n-w-7/12' : 'n-w-1/2'
+            }`}
+            aria-label='Choose variable'
             fluid
             style={{ minWidth: 100, fontWeight: 700 }}
             placeholder=''
@@ -298,11 +301,11 @@ export const NeoCustomReportActionsModal = ({
                           <span className='n-pr-1'>{index + 1}.</span>
                           <span className='n-font-bold'>&nbsp;ON</span>
                         </td>
-                        <td width='30%'>
+                        <td style={{ width: type === 'bar' ? '15%' : '30%' }}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
-                              className='n-align-middle n-w-2/5 n-pr-1'
+                              className={`n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`}
                               style={{ minWidth: 80, display: 'inline-block' }}
                               selectProps={{
                                 onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
@@ -315,44 +318,48 @@ export const NeoCustomReportActionsModal = ({
                                 value: { label: ruleTrigger ? ruleTrigger.label : '', value: rule.condition },
                               }}
                             ></Dropdown>
-                            <Autocomplete
-                              className='n-align-middle n-inline-block n-w-3/5'
-                              disableClearable={true}
-                              id='autocomplete-label-type'
-                              size='small'
-                              noOptionsText='*Specify an exact field name'
-                              options={createFieldVariableSuggestionsFromRule(rule, true)}
-                              value={rule.field ? rule.field : ''}
-                              inputValue={rule.field ? rule.field : ''}
-                              popupIcon={<></>}
-                              style={{
-                                minWidth: 125,
-                              }}
-                              onInputChange={(event, value) => {
-                                updateRuleField(index, 'field', value);
-                              }}
-                              onChange={(event, newValue) => {
-                                updateRuleField(index, 'field', newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  placeholder='Field name...'
-                                  style={{ padding: 0 }}
-                                  InputLabelProps={{ shrink: true }}
-                                />
-                              )}
-                            />
+                            {type !== 'bar' ? (
+                              <Autocomplete
+                                className='n-align-middle n-inline-block n-w-3/5'
+                                disableClearable={true}
+                                id='autocomplete-label-type'
+                                size='small'
+                                noOptionsText='*Specify an exact field name'
+                                options={createFieldVariableSuggestionsFromRule(rule, true)}
+                                value={rule.field ? rule.field : ''}
+                                inputValue={rule.field ? rule.field : ''}
+                                popupIcon={<></>}
+                                style={{
+                                  minWidth: 125,
+                                }}
+                                onInputChange={(event, value) => {
+                                  updateRuleField(index, 'field', value);
+                                }}
+                                onChange={(event, newValue) => {
+                                  updateRuleField(index, 'field', newValue);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    placeholder='Field name...'
+                                    style={{ padding: 0 }}
+                                    InputLabelProps={{ shrink: true }}
+                                  />
+                                )}
+                              />
+                            ) : (
+                              <></>
+                            )}
                           </div>
                         </td>
                         <td width='5%' className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>SET</span>
                         </td>
-                        <td width='40%'>
+                        <td style={{ width: type === 'bar' ? '45%' : '40%' }}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
-                              className='n-align-middle n-w-1/4'
+                              className={`n-align-middle ${type === 'bar' ? 'n-w-1/4' : 'n-w-1/5'}`}
                               style={{ minWidth: 140, display: 'inline-block' }}
                               fluid
                               selectProps={{
@@ -373,12 +380,12 @@ export const NeoCustomReportActionsModal = ({
                         <td width='5%' className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>TO</span>
                         </td>
-                        <td width='20%'>
+                        <td style={{ width: type === 'bar' ? '30%' : '20%' }}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Autocomplete
                               disableClearable={true}
                               size='small'
-                              className='n-align-middle n-inline-block n-w-3/5'
+                              className='n-align-middle n-inline-block n-w-full'
                               id='autocomplete-label-type'
                               noOptionsText='*Specify an exact field name'
                               options={createFieldVariableSuggestionsFromRule(rule, false)}
@@ -387,13 +394,23 @@ export const NeoCustomReportActionsModal = ({
                               popupIcon={<></>}
                               style={{ minWidth: 250 }}
                               onInputChange={(event, value) => {
-                                updateRuleField(index, 'value', value);
+                                if (type == 'bar') {
+                                  updateRuleField(index, 'value', value); // Also update rule.field here if needed
+                                  updateRuleField(index, 'field', value); // Duplicate the value to rule.field
+                                } else {
+                                  updateRuleField(index, 'value', value);
+                                }
                               }}
                               onChange={(event, newValue) => {
-                                updateRuleField(index, 'value', newValue);
+                                if (type == 'bar') {
+                                  updateRuleField(index, 'value', newValue); // Also update rule.field here if needed
+                                  updateRuleField(index, 'customization', newValue.value); // Duplicate the value to rule.field
+                                } else {
+                                  updateRuleField(index, 'value', newValue);
+                                }
                               }}
                               renderInput={(params) => (
-                                <TextField {...params} placeholder='Field name...' InputLabelProps={{ shrink: true }} />
+                                <TextField {...params} placeholder='Value name...' InputLabelProps={{ shrink: true }} />
                               )}
                             />
                           </div>
