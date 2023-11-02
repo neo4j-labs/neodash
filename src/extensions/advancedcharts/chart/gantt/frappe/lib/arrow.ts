@@ -90,6 +90,7 @@ export default class Arrow {
     const down_1 = (this.gantt.options.padding / 2 - curve) * (from_is_below_to ? 1 : -1);
     const down_2 = this.to_task.$bar.getY() + this.to_task.$bar.getHeight() / 2 - curve_y;
     const left = this.to_task.$bar.getX() - this.gantt.options.padding;
+    const bar_height = this.to_task.$bar.getHeight() * (from_is_below_to ? 1 : -1);
 
     if (direction == DependencyDirection.FS) {
       if (from_end_is_before_to_start) {
@@ -107,7 +108,7 @@ export default class Arrow {
                     M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
                     h ${padding}
                     a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
-                    v ${-down_1 * 5}
+                    v ${-bar_height / 2}
                     a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
                     H ${left}
                     a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
@@ -169,11 +170,11 @@ export default class Arrow {
                         M ${start_x} ${start_y}
                         h ${-padding}
                         a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
-                        V ${offset + down_1 * 6}
+                        V ${offset + bar_height / 2}
                         a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
-                        L ${end_x + this.to_task.$bar.getWidth() + padding} ${end_y + down_1 * 6}
+                        L ${end_x + this.to_task.$bar.getWidth() + padding} ${end_y + bar_height / 2}
                         a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
-                        v ${-down_1 * 6}
+                        v ${-bar_height / 2}
                         a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
                         h ${-padding}
                         ${reverse_arrow_path}

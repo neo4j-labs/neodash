@@ -128,7 +128,7 @@ const NeoGanttChart = (props: ChartProps) => {
       className='gantt-wrapper'
       key={key}
       id={key}
-      style={{ height: props.dimensions?.height - CARD_HEADER_HEIGHT + 7, overflowY: 'hidden' }}
+      style={{ height: props.dimensions?.height - CARD_HEADER_HEIGHT + 7, overflow: 'scroll' }}
     >
       <ReactGantt
         tasks={tasks}

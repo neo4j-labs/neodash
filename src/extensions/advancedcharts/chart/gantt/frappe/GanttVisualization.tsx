@@ -43,7 +43,7 @@ export default class ReactGantt extends ReactGanttProps {
       // column_width: 30,
       // step: 24,
       // view_modes: [...Object.values(VIEW_MODE)],
-      bar_height: Math.max(5, barHeight),
+      bar_height: Math.max(15, barHeight),
       // bar_corner_radius: 3,
       // arrow_curve: 5,
       padding: TASK_PADDING,
