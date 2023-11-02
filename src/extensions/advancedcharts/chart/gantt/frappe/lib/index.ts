@@ -6,7 +6,7 @@
 import date_utils from './date_utils';
 import { $, createSVG } from './svg_utils';
 import Bar from './bar';
-import Arrow from './arrow';
+import Arrow, { DependencyDirection } from './arrow';
 import Popup from './popup';
 
 import './gantt.css';
@@ -590,7 +590,7 @@ export default class Gantt {
     for (let task of this.tasks) {
       let arrows = [];
       arrows = task.dependencies
-        .map((task_id) => {
+        .map((task_id, index) => {
           const dependency = this.get_task(task_id);
           if (!dependency) {
             return;
@@ -598,7 +598,8 @@ export default class Gantt {
           const arrow = new Arrow(
             this,
             this.bars[dependency._index], // from_task
-            this.bars[task._index] // to_task
+            this.bars[task._index], // to_task
+            DependencyDirection[task.dependencyDirections[index]]
           );
           this.layers.arrow.appendChild(arrow.element);
           return arrow;

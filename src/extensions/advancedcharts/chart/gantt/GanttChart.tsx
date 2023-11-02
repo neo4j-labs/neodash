@@ -7,7 +7,12 @@ import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { CARD_HEADER_HEIGHT } from '../../../../config/CardConfig';
 import { extractNodePropertiesFromRecords } from '../../../../report/ReportRecordProcessing';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
-import { createDependenciesMap, createTasksList, generateVisualizationDataGraph } from './Utils';
+import {
+  createDependenciesDirectionsMap,
+  createDependenciesMap,
+  createTasksList,
+  generateVisualizationDataGraph,
+} from './Utils';
 import ReactGantt from './frappe/GanttVisualization';
 import { createUUID } from '../../../../utils/uuid';
 import debounce from 'lodash/debounce';
@@ -74,7 +79,17 @@ const NeoGanttChart = (props: ChartProps) => {
 
     // Build visualization-specific objects.
     const dependencies = createDependenciesMap(newData.links);
-    setTasks(createTasksList(newData.nodes, dependencies, startDateProperty, endDateProperty, nameProperty));
+    const dependencyDirections = createDependenciesDirectionsMap(newData.links, 'rel_type');
+    setTasks(
+      createTasksList(
+        newData.nodes,
+        dependencies,
+        dependencyDirections,
+        startDateProperty,
+        endDateProperty,
+        nameProperty
+      )
+    );
   }, [props.records]);
 
   // If no data is present, return an error message.

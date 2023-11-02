@@ -4,11 +4,12 @@
  */
 
 import { createSVG } from './svg_utils';
-const DependencyDirection = {
+
+export const DependencyDirection = {
   SS: 0,
-  SE: 1,
-  ES: 2,
-  EE: 3,
+  SF: 1,
+  FS: 2,
+  FF: 3,
 };
 
 const reverse_arrow_path = `
@@ -37,12 +38,13 @@ export default class Arrow {
 
   element: any;
 
-  direction = DependencyDirection.SE;
+  direction = DependencyDirection.SF;
 
-  constructor(gantt, from_task, to_task) {
+  constructor(gantt, from_task, to_task, direction) {
     this.gantt = gantt;
     this.from_task = from_task;
     this.to_task = to_task;
+    this.direction = direction ? direction : 'FS';
     this.calculate_path(this.direction);
     this.draw();
   }
@@ -82,14 +84,14 @@ export default class Arrow {
     const curve = this.gantt.options.arrow_curve;
     const clockwise = from_is_below_to ? 1 : 0;
     const counter_clockwise = from_is_below_to ? 0 : 1;
-    const {padding} = this.gantt.options;
+    const { padding } = this.gantt.options;
     const curve_y = from_is_below_to ? -curve : curve;
     const offset = from_is_below_to ? end_y + this.gantt.options.arrow_curve : end_y - this.gantt.options.arrow_curve;
     const down_1 = (this.gantt.options.padding / 2 - curve) * (from_is_below_to ? 1 : -1);
     const down_2 = this.to_task.$bar.getY() + this.to_task.$bar.getHeight() / 2 - curve_y;
     const left = this.to_task.$bar.getX() - this.gantt.options.padding;
 
-    if (direction == DependencyDirection.ES) {
+    if (direction == DependencyDirection.FS) {
       if (from_end_is_before_to_start) {
         this.path = `
                     M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
@@ -115,7 +117,7 @@ export default class Arrow {
                     ${arrow_path}`;
       }
     }
-    if (direction == DependencyDirection.EE) {
+    if (direction == DependencyDirection.FF) {
       if (from_end_is_before_to_end) {
         this.path = `
                         M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
@@ -161,7 +163,7 @@ export default class Arrow {
                 `;
       }
     }
-    if (direction == DependencyDirection.SE) {
+    if (direction == DependencyDirection.SF) {
       if (from_start_is_before_to_end) {
         this.path = `
                         M ${start_x} ${start_y}
@@ -199,7 +201,7 @@ export default class Arrow {
   }
 
   update() {
-    this.calculate_path(DependencyDirection.SE);
+    this.calculate_path(this.direction);
     this.element.setAttribute('d', this.path);
   }
 }

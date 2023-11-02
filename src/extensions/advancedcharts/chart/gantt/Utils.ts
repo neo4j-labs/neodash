@@ -29,16 +29,35 @@ export const generateVisualizationDataGraph = (records, nodeLabels, linkTypes, c
 export function createDependenciesMap(links) {
   const dependencies = {};
   links.forEach((l) => {
-    if (!dependencies[`${  l.target}`]) {
-      dependencies[`${  l.target}`] = [];
+    if (!dependencies[`${l.target}`]) {
+      dependencies[`${l.target}`] = [];
     }
-    dependencies[`${  l.target}`].push(`${  l.source}`);
+    dependencies[`${l.target}`].push(`${l.source}`);
   });
   return dependencies;
 }
 
+// Helper function to extract a dependency map from the parsed relationships.
+export function createDependenciesDirectionsMap(links, direction_property) {
+  const directions = {};
+  links.forEach((l) => {
+    if (!directions[`${l.target}`]) {
+      directions[`${l.target}`] = [];
+    }
+    directions[`${l.target}`].push(`${l.properties[direction_property]}`);
+  });
+  return directions;
+}
+
 // Helper function to extract a list of task objects from the parsed nodes.
-export function createTasksList(nodes, dependencies, startDateProperty, endDateProperty, nameProperty) {
+export function createTasksList(
+  nodes,
+  dependencies,
+  dependencyDirections,
+  startDateProperty,
+  endDateProperty,
+  nameProperty
+) {
   return nodes
     .map((n) => {
       const neoStartDate = n.properties[startDateProperty];
@@ -63,6 +82,7 @@ export function createTasksList(nodes, dependencies, startDateProperty, endDateP
         end: new Date(neoEndDate.year, neoEndDate.month, neoEndDate.day),
         name: name ? name : '(undefined)',
         dependencies: dependencies[n.id],
+        dependencyDirections: dependencyDirections[n.id],
         id: `${n.id}`,
         properties: n.properties,
         labels: n.labels,
