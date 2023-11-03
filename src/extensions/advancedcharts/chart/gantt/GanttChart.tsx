@@ -15,8 +15,8 @@ import {
 } from './Utils';
 import ReactGantt from './frappe/GanttVisualization';
 import { createUUID } from '../../../../utils/uuid';
-import debounce from 'lodash/debounce';
 import { REPORT_LOADING_ICON } from '../../../../report/Report';
+import NeoGraphChartInspectModal from '../../../../chart/graph/component/GraphChartInspectModal';
 
 /**
  * A Gantt Chart plots activities (nodes) with dependencies (relationships) on a timeline.
@@ -34,18 +34,17 @@ const NeoGanttChart = (props: ChartProps) => {
   const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
   const [tasks, setTasks] = useState([]);
   const [key, setKey] = useState(createUUID());
-  const [isLoading, setIsLoading] = useState(false);
-  const debounceSetIsLoading = useCallback(debounce(setIsLoading, 1000), []);
-
+  const [selectedTask, setSelectedTask] = useState(undefined);
   //
   const startDateProperty = settings.startDateProperty ? settings.startDateProperty : 'startDate';
   const endDateProperty = settings.endDateProperty ? settings.endDateProperty : 'endDate';
   const nameProperty = settings.nameProperty ? settings.nameProperty : 'name';
+  const orderProperty = settings.orderProperty ? settings.orderProperty : startDateProperty;
+  const viewModeSetting = settings.viewMode ? settings.viewMode : 'auto';
+  const dependencyTypeProperty = settings.dependencyTypeProperty ? settings.dependencyTypeProperty : 'rel_type';
 
   let nodeLabels = {};
   let linkTypes = {};
-
-  const colorScheme = categoricalColorSchemes[settings.nodeColorScheme];
 
   // Get the set of report actions defined for the report.
   const actionsRules =
@@ -53,23 +52,13 @@ const NeoGanttChart = (props: ChartProps) => {
       ? props.settings.actionsRules
       : [];
 
-  // When the user resizes, add an artificial wait to stop the visualization from rerendering too often.
-  useEffect(() => {
-    // We are resizing after there is already a rendered vis.
-    if (tasks.length > 0 && isLoading == false) {
-      setIsLoading(true);
-      debounceSetIsLoading(false);
-    }
-  }, [props.dimensions?.width, props.dimensions?.height]);
-
   // When data is refreshed, rebuild the data graph used for visualization.
   useEffect(() => {
-    setIsLoading(false);
     const newData = generateVisualizationDataGraph(
       props.records,
       nodeLabels,
       linkTypes,
-      colorScheme,
+      [],
       props.fields,
       props.settings
     );
@@ -79,17 +68,28 @@ const NeoGanttChart = (props: ChartProps) => {
 
     // Build visualization-specific objects.
     const dependencies = createDependenciesMap(newData.links);
-    const dependencyDirections = createDependenciesDirectionsMap(newData.links, 'rel_type');
-    setTasks(
-      createTasksList(
-        newData.nodes,
-        dependencies,
-        dependencyDirections,
-        startDateProperty,
-        endDateProperty,
-        nameProperty
-      )
+    const dependencyDirections = createDependenciesDirectionsMap(newData.links, dependencyTypeProperty);
+    let tasks = createTasksList(
+      newData.nodes,
+      dependencies,
+      dependencyDirections,
+      startDateProperty,
+      endDateProperty,
+      nameProperty
     );
+    // Sort tasks by the user's specified property.
+    tasks = tasks.sort((a, b) => {
+      console.log(orderProperty);
+      console.log('a', a.properties[orderProperty]);
+      if (a.properties[orderProperty] > b.properties[orderProperty]) {
+        return 1;
+      }
+      if (a.properties[orderProperty] < b.properties[orderProperty]) {
+        return -1;
+      }
+      return 0;
+    });
+    setTasks(tasks);
   }, [props.records]);
 
   // If no data is present, return an error message.
@@ -116,30 +116,52 @@ const NeoGanttChart = (props: ChartProps) => {
       return a > b ? a : b;
     });
 
+  // Determine view mode based on the range between the minimum and maximum dates.
   let dateDiff = (maxDate - minDate) / (1000 * 60 * 60 * 24);
+  let viewMode = viewModeSetting; // default
 
-  const viewMode = dateDiff > 40 ? 'Month' : 'Month';
-
-  if (isLoading) {
-    return REPORT_LOADING_ICON;
+  if (viewMode == 'auto') {
+    if (dateDiff < 7) {
+      viewMode = 'Quarter Day';
+    } else if (dateDiff < 14) {
+      viewMode = 'Half Day';
+    } else if (dateDiff < 30) {
+      viewMode = 'Day';
+    } else if (dateDiff < 120) {
+      viewMode = 'Week';
+    } else if (dateDiff < 3 * 365) {
+      viewMode = 'Month';
+    } else {
+      viewMode = 'Year';
+    }
   }
+
   return (
-    <div
-      className='gantt-wrapper'
-      key={key}
-      id={key}
-      style={{ height: props.dimensions?.height - CARD_HEADER_HEIGHT + 7, overflow: 'scroll' }}
-    >
-      <ReactGantt
-        tasks={tasks}
-        height={props.dimensions?.height}
-        viewMode={viewMode}
-        // onClick={this._func}
-        // onDateChange={this._func}
-        // onProgressChange={this._func}
-        // onViewChange={this._func}
-        // customPopupHtml={this._html_func}
+    <div>
+      <NeoGraphChartInspectModal
+        interactivity={{
+          selectedEntity: selectedTask,
+          showPropertyInspector: selectedTask !== undefined,
+          setPropertyInspectorOpen: function update(_) {
+            setSelectedTask(undefined);
+          },
+        }}
       />
+      <div
+        className='gantt-wrapper'
+        key={key}
+        id={key}
+        style={{ height: props.dimensions?.height - CARD_HEADER_HEIGHT + 7, overflow: 'scroll' }}
+      >
+        <ReactGantt
+          tasks={tasks}
+          height={props.dimensions?.height}
+          viewMode={viewMode}
+          onBarSelect={(e) => {
+            setSelectedTask(e);
+          }}
+        />
+      </div>
     </div>
   );
 };

@@ -223,6 +223,13 @@ export default class Gantt {
   refresh(tasks) {
     this.setup_tasks(tasks);
     this.change_view_mode();
+    // this.setup_dates();
+    // this.setup_date_values();
+
+    // this.render();
+
+    // fire viewmode_change event
+    // this.trigger_event('view_change', [this.options.view_mode]);
   }
 
   change_view_mode(mode = this.options.view_mode) {
@@ -279,19 +286,19 @@ export default class Gantt {
       }
     }
 
-    this.gantt_start = date_utils.start_of(this.gantt_start, 'day');
-    this.gantt_end = date_utils.start_of(this.gantt_end, 'day');
+    // this.gantt_start = date_utils.start_of(this.gantt_start, 'day');
+    // this.gantt_end = date_utils.start_of(this.gantt_end, 'day');
 
     // add date padding on both sides
-    if (this.view_is([VIEW_MODE.QUARTER_DAY, VIEW_MODE.HALF_DAY])) {
-      this.gantt_start = date_utils.add(this.gantt_start, -7, 'day');
-      this.gantt_end = date_utils.add(this.gantt_end, 7, 'day');
-    } else if (this.view_is(VIEW_MODE.MONTH, VIEW_MODE.QUARTER)) {
-      this.gantt_start = date_utils.start_of(this.gantt_start, 'year');
-      this.gantt_end = date_utils.add(this.gantt_end, 1, 'year');
+    if (this.view_is([VIEW_MODE.QUARTER_DAY, VIEW_MODE.HALF_DAY, VIEW_MODE.DAY])) {
+      this.gantt_start = date_utils.add(this.gantt_start, -2, 'day');
+      this.gantt_end = date_utils.add(this.gantt_end, 2, 'day');
+    } else if (this.view_is([VIEW_MODE.WEEK, VIEW_MODE.MONTH, VIEW_MODE.QUARTER])) {
+      this.gantt_start = date_utils.add(this.gantt_start, -14, 'day');
+      this.gantt_end = date_utils.add(this.gantt_end, 14, 'day');
     } else if (this.view_is(VIEW_MODE.YEAR)) {
-      this.gantt_start = date_utils.add(this.gantt_start, -2, 'year');
-      this.gantt_end = date_utils.add(this.gantt_end, 2, 'year');
+      this.gantt_start = date_utils.add(this.gantt_start, -90, 'day');
+      this.gantt_end = date_utils.add(this.gantt_end, 90, 'day');
     } else {
       this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
       this.gantt_end = date_utils.add(this.gantt_end, 1, 'month');
@@ -356,9 +363,8 @@ export default class Gantt {
   make_grid_background() {
     const grid_width = this.dates.length * this.options.column_width;
     const grid_height =
-      this.options.header_height +
-      this.options.padding +
-      (this.options.bar_height + this.options.padding) * this.tasks.length;
+      // this.options.header_height +
+      -this.options.padding + (this.options.bar_height + this.options.padding) * this.tasks.length;
 
     createSVG('rect', {
       x: 0,
@@ -661,6 +667,10 @@ export default class Gantt {
     }
 
     $.on(this.$svg, 'mousedown', '.bar-wrapper, .handle', (e, element) => {
+      if (!this.options.draggable) {
+        return;
+      }
+
       const bar_wrapper = $.closest('.bar-wrapper', element);
 
       if (element.classList.contains('left')) {
@@ -878,10 +888,12 @@ export default class Gantt {
   }
 
   show_popup(options) {
-    if (!this.popup) {
-      this.popup = new Popup(this.popup_wrapper, this.options.custom_popup_html);
+    if (options.popup_enabled) {
+      if (!this.popup) {
+        this.popup = new Popup(this.popup_wrapper, this.options.custom_popup_html);
+      }
+      this.popup.show(options);
     }
-    this.popup.show(options);
   }
 
   hide_popup() {

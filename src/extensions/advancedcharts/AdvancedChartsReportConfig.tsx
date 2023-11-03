@@ -1032,11 +1032,21 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'endDate',
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
+      orderProperty: {
+        label: 'Task Ordering Property',
+        type: SELECTION_TYPES.TEXT,
+        default: '(auto)',
+      },
+      dependencyTypeProperty: {
+        label: 'Dependency Type Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'rel_type',
+      },
+      viewMode: {
+        label: 'View mode',
         type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+        values: ['auto', 'Half Day', 'Day', 'Week', 'Month', 'Year'],
+        default: 'auto',
       },
       fullscreenEnabled: {
         label: 'Fullscreen enabled',

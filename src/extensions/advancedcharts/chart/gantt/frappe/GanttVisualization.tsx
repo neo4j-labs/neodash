@@ -13,7 +13,7 @@ export abstract class ReactGanttProps extends Component {
 const TASK_PADDING = 18;
 const HEADER_HEIGHT = 50;
 const COLUMN_WIDTH = 30;
-const STEP_SIZE = 24;
+const STEP_SIZE = 8;
 const VIEW_MODE = 'Day';
 
 /**
@@ -32,22 +32,24 @@ export default class ReactGantt extends ReactGanttProps {
    */
   getOptions() {
     const barHeight =
-      (this.props.height - HEADER_HEIGHT - TASK_PADDING * 2 * this.props.tasks.length) / this.props.tasks.length;
+      (this.props.height - 70 - HEADER_HEIGHT - 10 - TASK_PADDING * 2 * this.props.tasks.length) /
+      this.props.tasks.length;
     return {
-      on_click: this.props.onClick,
+      on_click: this.props.onBarSelect,
       on_date_change: this.props.onDateChange,
       on_progress_change: this.props.onProgressChange,
       on_view_change: this.props.onViewChange,
       custom_popup_html: this.props.customPopupHtml || null,
       header_height: HEADER_HEIGHT,
       // column_width: 30,
-      // step: 24,
+      step: STEP_SIZE,
+      draggable: false,
       // view_modes: [...Object.values(VIEW_MODE)],
       bar_height: Math.max(15, barHeight),
       // bar_corner_radius: 3,
       // arrow_curve: 5,
       padding: TASK_PADDING,
-      // view_mode: 'Day',
+      view_mode: this.props.viewMode,
       // date_format: 'YYYY-MM-DD',
       // popup_trigger: 'click',
       // custom_popup_html: null,
@@ -59,12 +61,11 @@ export default class ReactGantt extends ReactGanttProps {
    * Instantiate the Gantt chart when the React component mounts.
    */
   componentDidMount() {
-    console.log(this.ganttInstance);
     if (this.ganttInstance) {
       this.key = createUUID();
       return this.ganttInstance;
     }
-    console.log('Recreating gantt...');
+
     this.ganttInstance = new Gantt(this.ganttRef, this.props.tasks, this.getOptions());
     this.ganttInstance.change_view_mode(this.props.viewMode);
     return this.ganttInstance;
@@ -75,8 +76,10 @@ export default class ReactGantt extends ReactGanttProps {
    */
   componentDidUpdate(prevProps, _) {
     if (this.ganttInstance) {
-      this.ganttInstance.refresh(this.props.tasks);
-      this.ganttInstance.setup_options(this.getOptions());
+      if (this.props.tasks !== prevProps.tasks || this.props.height !== prevProps.height) {
+        this.ganttInstance.refresh(this.props.tasks);
+        this.ganttInstance.setup_options(this.getOptions());
+      }
       if (this.props.viewMode !== prevProps.viewMode) {
         this.ganttInstance.change_view_mode(this.props.viewMode);
       }
@@ -87,8 +90,8 @@ export default class ReactGantt extends ReactGanttProps {
    * Clear reference when the component unmounts.
    */
   componentWillUnmount() {
-    // this.ganttRef = undefined;
-    // this.ganttInstance = undefined;
+    this.ganttRef = undefined;
+    this.ganttInstance = undefined;
   }
 
   // Render the component as an SVG.
