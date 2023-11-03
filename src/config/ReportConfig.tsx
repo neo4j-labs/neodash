@@ -1269,6 +1269,11 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      multiSelectLimit: {
+        label: 'Multiselect Value Limit',
+        type: SELECTION_TYPES.NUMBER,
+        default: 5,
+      },
       helperText: {
         label: 'Helper Text (Override)',
         type: SELECTION_TYPES.TEXT,
