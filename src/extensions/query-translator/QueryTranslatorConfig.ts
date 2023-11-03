@@ -10,6 +10,7 @@ interface ClientSettingEntry {
   label: string;
   type: SELECTION_TYPES;
   default: any;
+  password?: boolean;
   authentication?: boolean; // Required for authentication, the user should insert all the required fields before trying to authenticate
   hasAuthButton?: boolean; // Append a button at the end of the selector to trigger an auth request.
   methodFromClient?: string; // String that contains the name of the client function to call to retrieve the data needed to fill the option
@@ -47,6 +48,7 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
           label: 'OpenAI API Key',
           type: SELECTION_TYPES.TEXT,
           default: '',
+          password: true,
           hasAuthButton: true,
           authentication: true,
         },
@@ -74,6 +76,7 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
           label: 'Subscription Key',
           type: SELECTION_TYPES.TEXT,
           default: '',
+          password: true,
           hasAuthButton: true,
           authentication: true,
         },
