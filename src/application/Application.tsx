@@ -214,9 +214,9 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setConnected(false));
     dispatch(createConnectionFromDesktopIntegrationThunk());
   },
-  loadDashboard: (text) => {
+  loadDashboard: (uuid, text) => {
     dispatch(clearNotification());
-    dispatch(loadDashboardThunk(text));
+    dispatch(loadDashboardThunk(uuid, text));
   },
   resetDashboard: () => dispatch(resetDashboardState()),
   clearOldDashboard: () => dispatch(setOldDashboard(null)),

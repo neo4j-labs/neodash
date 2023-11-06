@@ -20,6 +20,12 @@ export const setConnected = (connected: boolean) => ({
   payload: { connected },
 });
 
+export const SET_DRAFT = 'APPLICATION/SET_DRAFT';
+export const setDraft = (draft: boolean) => ({
+  type: SET_DRAFT,
+  payload: { draft },
+});
+
 export const SET_CONNECTION_MODAL_OPEN = 'APPLICATION/SET_CONNECTION_MODAL_OPEN';
 export const setConnectionModalOpen = (open: boolean) => ({
   type: SET_CONNECTION_MODAL_OPEN,
