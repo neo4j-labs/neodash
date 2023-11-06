@@ -163,8 +163,8 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   const BarComponent = ({ bar, borderColor }) => {
-    const dataItem = data.find(item => item.value = bar.data.value);
-    console.log(dataItem ? dataItem.value : null);
+        const dataItem = data.find(item => item.index === bar.data.index && item.id === bar.data.id);
+        console.log(dataItem ? dataItem.value: null);
     const value = dataItem ? dataItem[bar.id] : null;
     const indexValue = dataItem ? dataItem.index : null;
     let shade = false;
@@ -227,7 +227,7 @@ const NeoBarChart = (props: ChartProps) => {
               fontSize: 10,
             }}
           >
-            {dataItem? dataItem.value : ''}
+            {bar.data.value}
           </text>
         ) : (
           <></>
