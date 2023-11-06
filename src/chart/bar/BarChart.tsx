@@ -1,5 +1,5 @@
 import { ResponsiveBar, ResponsiveBarCanvas } from '@nivo/bar';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
@@ -45,6 +45,7 @@ const NeoBarChart = (props: ChartProps) => {
   const padding = settings.padding ? settings.padding : 0.25;
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
   const minBarHeight = settings.minBarHeight ? settings.minBarHeight : 0;
+  const expandForLegend = settings.expandForLegend ? settings.expandForLegend : false;
 
   const actionsRules =
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
@@ -102,16 +103,16 @@ const NeoBarChart = (props: ChartProps) => {
         console.error(e);
         return [];
       }
-    }, []);
-    // .map((row) => {
-    //   Object.keys(newKeys).forEach((key) => {
-    //     // eslint-disable-next-line no-prototype-builtins
-    //     if (!row.hasOwnProperty(key)) {
-    //       row[key] = 0;
-    //     }
-    //   });
-    //   return row;
-    // })
+    }, [])
+    .map((row) => {
+      Object.keys(newKeys).forEach((key) => {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!row.hasOwnProperty(key)) {
+          row[key] = 0;
+        }
+      });
+      return row;
+    });
     setKeys(Object.keys(newKeys));
     setData(newData);
 
@@ -162,6 +163,10 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   const BarComponent = ({ bar, borderColor }) => {
+    const dataItem = data.find(item => item.value = bar.data.value);
+    console.log(dataItem ? dataItem.value : null);
+    const value = dataItem ? dataItem[bar.id] : null;
+    const indexValue = dataItem ? dataItem.index : null;
     let shade = false;
     let darkTop = false;
     let includeIndex = false;
@@ -218,11 +223,11 @@ const NeoBarChart = (props: ChartProps) => {
             dominantBaseline='central'
             fill={borderColor}
             style={{
-              fontWeight: 400,
-              fontSize: 13,
+              fontWeight: 100,
+              fontSize: 10,
             }}
           >
-            {bar.data.value}
+            {dataItem? dataItem.value : ''}
           </text>
         ) : (
           <></>
@@ -237,7 +242,8 @@ const NeoBarChart = (props: ChartProps) => {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
 
-  const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
+  // positionLabel == 'off' ? {} :
+  const extraProperties = { barComponent: BarComponent };
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 
@@ -253,8 +259,6 @@ const NeoBarChart = (props: ChartProps) => {
     (data.length - 1) * 4 +
     (data.length - 1) * innerPadding * 4;
 
-  // Scrollable Wrapper
-
   const scrollableWrapperStyle: React.CSSProperties = {
     width:
       legendPosition === 'Horizontal'
@@ -262,7 +266,7 @@ const NeoBarChart = (props: ChartProps) => {
           ? adaptableWidth
           : itemWidthConst * data.length + 200
         : barWidth * 5 * data.length + itemWidthConst,
-    height: legendPosition === 'Horizontal' ? '100%' : 18 * data.length + itemWidthConst * 1.2 + marginBottom,
+    height: expandForLegend ? 18 * data.length + itemWidthConst * 1.2 + marginBottom : '100%',
     whiteSpace: 'nowrap',
   };
 

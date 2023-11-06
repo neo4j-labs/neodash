@@ -331,40 +331,161 @@ const _REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      legend: {
-        label: 'Show Legend',
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      barValues: {
+        label: 'Bar Values',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
       barWidth: {
-        label: 'Bar Width (Use to size graph width)',
+        label: 'Bar Width',
         type: SELECTION_TYPES.NUMBER,
         default: 10,
       },
-      padding: {
-        label: 'Padding (Proportional)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0.25,
+      colors: {
+        label: 'Colors',
+        type: SELECTION_TYPES.LIST,
+        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
+        default: 'set2',
+      },
+      downloadImageEnabled: {
+        label: 'Download Image',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      expandForLegend: {
+        label: 'Expand For Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      groupMode: {
+        label: 'Group Mode',
+        type: SELECTION_TYPES.LIST,
+        values: ['grouped', 'stacked'],
+        default: 'stacked',
+      },
+      hideSelections: {
+        label: 'Hide Selections',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       innerPadding: {
-        label: 'Padding Between Grouped Bars',
+        label: 'Inner Padding',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
-      minBarHeight: {
-        label: 'Minimum Bar Height',
+      labelRotation: {
+        label: 'Label Rotation',
+        type: SELECTION_TYPES.NUMBER,
+        default: 45,
+      },
+      labelSkipHeight: {
+        label: 'Label Skip Height',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
+      },
+      labelSkipWidth: {
+        label: 'Label Skip Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      layout: {
+        label: 'Layout',
+        type: SELECTION_TYPES.LIST,
+        values: ['horizontal', 'vertical'],
+        default: 'vertical',
+      },
+      legend: {
+        label: 'Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       legendPosition: {
         label: 'Legend Position',
         type: SELECTION_TYPES.LIST,
         values: ['Horizontal', 'Vertical'],
-        default: 'Vertical'
+        default: 'Vertical',
+      },
+      legendWidth: {
+        label: 'Legend Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 128,
+      },
+      marginBottom: {
+        label: 'Margin Bottom',
+        type: SELECTION_TYPES.NUMBER,
+        default: 45,
+      },
+      marginLeft: {
+        label: 'Margin Left',
+        type: SELECTION_TYPES.NUMBER,
+        default: 50,
+      },
+      marginRight: {
+        label: 'Margin Right',
+        type: SELECTION_TYPES.NUMBER,
+        default: 24,
+      },
+      marginTop: {
+        label: 'Margin Top',
+        type: SELECTION_TYPES.NUMBER,
+        default: 24,
+      },
+      maxValue: {
+        label: 'Max Value',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
+      },
+      minBarHeight: {
+        label: 'Min Bar Height',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      minValue: {
+        label: 'Min Value',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
+      },
+      padding: {
+        label: 'Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.25,
+      },
+      positionLabel: {
+        label: 'Position Label',
+        type: SELECTION_TYPES.LIST,
+        values: ['off', 'top', 'bottom'],
+        default: 'off',
+      },
+      refreshButtonEnabled: {
+        label: 'Refresh Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      refreshRate: {
+        label: 'Refresh Rate',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
       },
       showOptionalSelections: {
-        label: 'Grouping',
+        label: 'Show Optional Selections',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -375,122 +496,7 @@ const _REPORT_TYPES = {
         values: ['linear', 'symlog'],
         default: 'linear',
       },
-      minValue: {
-        label: 'Min Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      maxValue: {
-        label: 'Max Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      groupMode: {
-        label: 'Group Mode',
-        type: SELECTION_TYPES.LIST,
-        values: ['grouped', 'stacked'],
-        default: 'stacked',
-      },
-      layout: {
-        label: 'Layout',
-        type: SELECTION_TYPES.LIST,
-        values: ['horizontal', 'vertical'],
-        default: 'vertical',
-      },
-      colors: {
-        label: 'Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
-        default: 'set2',
-      },
-      barValues: {
-        label: 'Show Value on Bars',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      labelSkipWidth: {
-        label: 'Skip label on width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      labelSkipHeight: {
-        label: 'Skip label on height (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      positionLabel: {
-        label: 'Custom label position',
-        type: SELECTION_TYPES.LIST,
-        values: ['off', 'top', 'bottom'],
-        default: 'off',
-      },
-      labelRotation: {
-        label: 'Label Rotation (degrees)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 45,
-      },
-      marginLeft: {
-        label: 'Margin Left (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 50,
-      },
-      marginRight: {
-        label: 'Margin Right (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginTop: {
-        label: 'Margin Top (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 24,
-      },
-      marginBottom: {
-        label: 'Margin Bottom (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 45,
-      },
-      legendWidth: {
-        label: 'Legend Width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 128,
-      },
-      hideSelections: {
-        label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-    },
+    }
   },
   pie: {
     label: 'Pie Chart',
