@@ -147,6 +147,7 @@ const Application = ({
         ssoSettings={ssoSettings}
         standalone={standaloneSettings.standalone}
         standaloneSettings={standaloneSettings}
+        shareDetails={shareDetails}
         createConnection={createConnection}
         onSSOAttempt={onSSOAttempt}
         setConnectionProperties={setConnectionDetails}

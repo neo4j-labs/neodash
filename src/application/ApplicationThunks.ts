@@ -533,11 +533,33 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
 
         if (standalone) {
-          if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
-            dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
-          } else {
-            dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
-          }
+            if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+              dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
+            } else {
+              if(config.standaloneAllowLoad&&urlParams.get('share')!=null&&urlParams.get('id')?.length>0){
+                //TODO - evaluate future way to handle in-app dashboard linking (avoid reconnecting or use specific in-app component)
+                dispatch(setDashboardToLoadAfterConnecting(urlParams.get('id')));
+                dispatch(
+                  setShareDetailsFromUrl(
+                    urlParams.get('type'),
+                    urlParams.get('id'),
+                    true,
+                    config.standaloneProtocol,
+                    config.standaloneHost,
+                    config.standalonePort,
+                    config.standaloneDatabase,
+                    config.standaloneUsername,
+                    config.standalonePassword,
+                    config.standaloneDashboardDatabase,
+                    true
+                  )
+                );
+                window.history.pushState({}, document.title, "/");
+              } else { 
+                dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
+                dispatch(resetShareDetails())
+              }
+            }
           dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
         }
       });
@@ -608,6 +630,8 @@ export const initializeApplicationAsStandaloneThunk =
   (config, paramsToSetAfterConnecting) => (dispatch: any, getState: any) => {
     const clearNotificationAfterLoad = true;
     const state = getState();
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
 
     // If we are running in standalone mode, auto-set the connection details that are configured.
     dispatch(
@@ -627,7 +651,38 @@ export const initializeApplicationAsStandaloneThunk =
     if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
       dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
     } else {
-      dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
+      if(config.standaloneAllowLoad&&urlParams.get('share')!=null&&urlParams.get('id')?.length>0){
+        //TODO - evaluate future way to handle in-app dashboard linking (avoid reconnecting or use specific in-app component)
+        dispatch(setDashboardToLoadAfterConnecting(urlParams.get('id')));
+        window.history.pushState({}, document.title, "/");
+      }
+      else{ 
+        dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
+      }
+    }
+    //if standalone mode is allowed to load other dashboards we can try to process a share link. 
+    //it will fail if the user does not have access to the dashboard/underlying data.
+    if(config.standaloneAllowLoad&&urlParams.get('share')!=null&&urlParams.get('id')?.length>0){
+      //TODO - evaluate future way to handle in-app dashboard linking (avoid reconnecting or use specific in-app component)
+      dispatch(setDashboardToLoadAfterConnecting(urlParams.get('id')));
+      dispatch(
+        setShareDetailsFromUrl(
+          urlParams.get('type'),
+          urlParams.get('id'),
+          true,
+          config.standaloneProtocol,
+          config.standaloneHost,
+          config.standalonePort,
+          config.standaloneDatabase,
+          config.standaloneUsername,
+          config.standalonePassword,
+          config.standaloneDashboardDatabase,
+          true
+        )
+      );
+      window.history.pushState({}, document.title, "/");
+    } else {
+      dispatch(resetShareDetails())
     }
 
     dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));

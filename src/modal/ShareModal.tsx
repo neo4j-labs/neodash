@@ -32,6 +32,7 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
   const [shareFileURL, setShareFileURL] = React.useState('');
   const [shareConnectionDetails, setShareConnectionDetails] = React.useState('No');
   const [shareStandalone, setShareStandalone] = React.useState('No');
+  const [shareStandaloneURL, setShareStandaloneURL] = React.useState(shareLocalURL);
   const [selfHosted, setSelfHosted] = React.useState('No');
 
   const [shareLink, setShareLink] = React.useState(null);
@@ -198,11 +199,32 @@ export const NeoShareModal = ({ connection, loadDashboardListFromNeo4j, loadData
                   setSelfHosted(e);
                 }}
               />
+              {shareStandalone == 'Yes' && selfHosted == 'Yes' ? (
+                <NeoSetting
+                key={'standaloneURL'}
+                name={'standaloneURL'}
+                value={shareStandaloneURL}
+                style={{ marginLeft: '0px', width: '100%', marginBottom: '10px' }}
+                type={SELECTION_TYPES.TEXT}
+                helperText={'Share the dashboard on an existing Standalone instance. Note: dashboard database must match and load dashboard must be enabled on target instance'}
+                label={'Standalone Instance URL'}
+                defaultValue={shareLocalURL}
+                onChange={(e) => {
+                  setShareLink(null);
+                  setShareStandaloneURL(e);
+                  if (e == 'Yes') {
+                    setShareConnectionDetails('Yes');
+                  }
+                }}
+              />
+            ) : (
+                <></>
+              )}
               <Button
                 onClick={() => {
                   setShareLink(
                     `${
-                      selfHosted == 'Yes' ? shareLocalURL : shareBaseURL
+                      selfHosted == 'Yes' ? (shareStandalone == 'Yes' ? shareStandaloneURL : shareLocalURL) : shareBaseURL
                     }/?share&type=${shareType}&id=${encodeURIComponent(shareID)}&dashboardDatabase=${encodeURIComponent(
                       dashboardDatabase
                     )}${
