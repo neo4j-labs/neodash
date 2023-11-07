@@ -6,17 +6,18 @@ import { PlayIconOutline, ArrowLeftIconOutline } from '@neo4j-ndl/react/icons';
  * Configures setting the current Neo4j database connection for the dashboard.
  */
 export default function NeoConnectionModal({
+  connected,
   open,
   standalone,
   standaloneSettings,
   ssoSettings,
   connection,
-  dismissable = false,
+  dismissable = true,
   createConnection,
   setConnectionProperties,
   onConnectionModalClose,
   onSSOAttempt,
-  onWelcomeModalOpen,
+  setWelcomeScreenOpen,
 }) {
   const protocols = ['neo4j', 'neo4j+s', 'neo4j+ssc', 'bolt', 'bolt+s', 'bolt+ssc'];
   const [ssoVisible, setSsoVisible] = React.useState(ssoSettings.ssoEnabled);
@@ -49,23 +50,13 @@ export default function NeoConnectionModal({
         size='small'
         open={open}
         onClose={() => {
-          dismissable ? onConnectionModalClose() : null;
+          onConnectionModalClose();
+          dismissable && connected ? setWelcomeScreenOpen(true) : null;
         }}
         aria-labelledby='form-dialog-title'
-        disableCloseButton
+        disableCloseButton={!true}
       >
-        <Dialog.Header id='form-dialog-title'>
-          <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-            <IconButton
-              size='small'
-              aria-label='cancel connection'
-              onClick={onWelcomeModalOpen}
-            >
-              <ArrowLeftIconOutline />
-            </IconButton>
-            {standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}
-          </div>
-        </Dialog.Header>
+        <Dialog.Header id='form-dialog-title'>{standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}</Dialog.Header>
         <Dialog.Content className='n-flex n-flex-col n-gap-token-4'>
           <div className='n-flex n-flex-row n-flex-wrap'>
             <Dropdown

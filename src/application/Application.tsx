@@ -149,7 +149,7 @@ const Application = ({
         onSSOAttempt={onSSOAttempt}
         setConnectionProperties={setConnectionDetails}
         onConnectionModalClose={onConnectionModalClose}
-        onWelcomeModalOpen={setWelcomeScreenOpen}
+        setWelcomeScreenOpen={setWelcomeScreenOpen}
       ></NeoConnectionModal>
       <NeoWelcomeScreenModal
         welcomeScreenOpen={welcomeScreenOpen}
