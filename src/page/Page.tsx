@@ -23,7 +23,6 @@ export const NeoPage = ({
   onCreatePressed = () => {}, // callback for when the user wants to add a new report.
   onClonePressed = () => {}, // callback/action to take when a user wants to clone a report
   onRemovePressed = () => {}, // action to take when a report gets removed.
-  isLoaded = true, // Whether the page is loaded and the cards can be displayed.
   onPageLayoutUpdate = () => {}, // action to take when the page layout is updated.
 }) => {
   const getReportKey = (pagenumber: number, id: string) => {
@@ -43,7 +42,6 @@ export const NeoPage = ({
     ],
   };
 
-  const loadingMessage = <div>Loading card...</div>;
   const [isDragging, setIsDragging] = React.useState(false);
   const [layouts, setLayouts] = React.useState(defaultLayouts);
   const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
@@ -212,11 +210,10 @@ export const NeoPage = ({
       </ResponsiveGridLayout>
     </div>
   );
-  return !isLoaded ? loadingMessage : content;
+  return content;
 };
 
 const mapStateToProps = (state) => ({
-  isLoaded: true,
   pagenumber: getPageNumber(state),
   editable: getDashboardIsEditable(state),
   dashboardSettings: getDashboardSettings(state),

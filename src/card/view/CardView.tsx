@@ -118,6 +118,7 @@ const NeoCardView = ({
       type={type}
       onSelectionUpdate={onSelectionUpdate}
       showOptionalSelections={settings.showOptionalSelections}
+      dashboardSettings={dashboardSettings}
     ></NeoCardViewFooter>
   ) : (
     <></>
