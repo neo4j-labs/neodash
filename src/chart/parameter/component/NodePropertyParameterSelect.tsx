@@ -41,6 +41,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
 
+  const autoPopulate = props.settings && props.settings.autoPopulate ? props.settings.autoPopulate : true;
   // index of the display value in the resulting extra records retrieved by the component when the user types. equals '1' for NeoDash 2.2.2 and later.
   const displayValueRowIndex = props.compatibilityMode
     ? 0
@@ -143,6 +144,20 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       setInputValue(props.parameterDisplayValue);
     }
   }, [props.parameterDisplayValue]);
+
+  const autoPopulateCallback = (records) => {
+    const selection = records?.[0]?._fields?.[displayValueRowIndex] || null;
+    if (selection) {
+      propagateSelection(null, selection);
+    }
+    console.log('gotta love ma job');
+  };
+  useEffect(() => {
+    if (autoPopulate) {
+      debouncedQueryCallback(props.query, { input: ``, ...allParameters }, autoPopulateCallback);
+      console.log('Be careful');
+    }
+  }, [props.allParameters]);
 
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
