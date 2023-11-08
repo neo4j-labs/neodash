@@ -149,6 +149,9 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
             placeholder='Start typing...'
             label={helperText ? helperText : `${label} ${propertyType}`}
             variant='outlined'
+            onFocus={() => {
+              debouncedQueryCallback(props.query, { input: '', ...allParameters }, setExtraRecords);
+            }}
           />
         )}
         getOptionLabel={(option) => RenderSubValue(option)}
