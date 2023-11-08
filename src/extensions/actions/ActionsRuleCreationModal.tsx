@@ -43,7 +43,7 @@ const RULE_CONDITIONS = {
   ],
   gantt: [
     {
-      value: 'onActivityClick',
+      value: 'onTaskClick',
       label: 'Task Click',
       default: true,
     },

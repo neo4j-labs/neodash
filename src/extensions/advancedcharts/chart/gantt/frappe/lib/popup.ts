@@ -41,7 +41,7 @@ export default class Popup {
     if (!options.position) {
       options.position = 'left';
     }
-    const {target_element} = options;
+    const { target_element } = options;
 
     if (this.custom_html) {
       let html = this.custom_html(options.task);
@@ -52,7 +52,7 @@ export default class Popup {
       // set data
       this.title.innerHTML = options.title;
       this.subtitle.innerHTML = options.subtitle;
-      this.parent.style.width = `${300  }px`;
+      this.parent.style.width = `${300}px`;
       // this.parent.style.width = this.parent.clientWidth + 'px';
     }
 
@@ -65,13 +65,11 @@ export default class Popup {
     }
 
     if (options.position === 'left') {
-      this.parent.style.left = `${position_meta.x + (position_meta.width + 10)  }px`;
+      this.parent.style.left = `${position_meta.x + (position_meta.width + 10)}px`;
       const bar_height = 63;
       const popup_height = 79;
       const bar_index = options.task._index;
-
-      console.log(options);
-      this.parent.style.top = `${20 + (position_meta.height + 18) * bar_index - position_meta.height * 2  }px`;
+      this.parent.style.top = `${20 + (position_meta.height + 18) * bar_index - position_meta.height * 2}px`;
       this.pointer.style.transform = 'rotateZ(90deg)';
       this.pointer.style.left = '-7px';
       this.pointer.style.top = '2px';

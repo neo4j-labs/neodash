@@ -82,6 +82,12 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
       label: 'Slice Color',
     },
   ],
+  gantt: [
+    {
+      value: 'node color',
+      label: 'Task Color',
+    },
+  ],
   value: [
     {
       value: 'text color',

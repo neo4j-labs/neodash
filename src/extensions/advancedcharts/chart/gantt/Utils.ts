@@ -87,8 +87,8 @@ export function createTasksList(
         id: `${n.id}`,
         properties: n.properties,
         type: 'task',
+        color: n.color,
         progress: 100,
-        // custom_class: 'bar-milestone',
         isDisabled: true,
         styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
       };

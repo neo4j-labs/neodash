@@ -31,11 +31,10 @@ export default class ReactGantt extends ReactGanttProps {
    * @returns Frappe Gantt chart configuration dictionary.
    */
   getOptions() {
-    const barHeight =
-      (this.props.height - 70 - HEADER_HEIGHT - 10 - TASK_PADDING * 2 * this.props.tasks.length) /
-      this.props.tasks.length;
+    const barHeight = (this.props.height - 10 - TASK_PADDING * 2 * this.props.tasks.length) / this.props.tasks.length;
     return {
       on_click: this.props.onBarSelect,
+      on_right_click: this.props.onBarRightClick,
       on_date_change: this.props.onDateChange,
       on_progress_change: this.props.onProgressChange,
       on_view_change: this.props.onViewChange,

@@ -198,7 +198,7 @@ export function buildGraphVisualizationObjectFromRecords(
       ? node.properties[nodeColorProperty]
       : totalColors > 0
       ? colorScheme[nodeLabelsList.indexOf(node.mainLabel) % totalColors]
-      : 'grey';
+      : defaultNodeColor;
     // Next, evaluate the custom styling rules to see if there's a rule-based override
     assignedColor = evaluateRulesOnNode(node, 'node color', assignedColor, styleRules);
     return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });

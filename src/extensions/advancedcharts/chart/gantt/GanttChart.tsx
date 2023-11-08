@@ -17,6 +17,8 @@ import ReactGantt from './frappe/GanttVisualization';
 import { createUUID } from '../../../../utils/uuid';
 import { REPORT_LOADING_ICON } from '../../../../report/Report';
 import NeoGraphChartInspectModal from '../../../../chart/graph/component/GraphChartInspectModal';
+import { executeActionRule, getRuleWithFieldPropertyName } from '../../Utils';
+import { useStyleRules } from '../../../styling/StyleRuleEvaluator';
 
 /**
  * A Gantt Chart plots activities (nodes) with dependencies (relationships) on a timeline.
@@ -42,6 +44,7 @@ const NeoGanttChart = (props: ChartProps) => {
   const orderProperty = settings.orderProperty ? settings.orderProperty : startDateProperty;
   const viewModeSetting = settings.viewMode ? settings.viewMode : 'auto';
   const dependencyTypeProperty = settings.dependencyTypeProperty ? settings.dependencyTypeProperty : 'rel_type';
+  const barColor = settings.barColor ? settings.barColor : '#a3a3ff';
 
   let nodeLabels = {};
   let linkTypes = {};
@@ -52,16 +55,19 @@ const NeoGanttChart = (props: ChartProps) => {
       ? props.settings.actionsRules
       : [];
 
+  const styleRules = useStyleRules(
+    extensionEnabled(props.extensions, 'styling'),
+    props.settings.styleRules,
+    props.getGlobalParameter
+  );
+
   // When data is refreshed, rebuild the data graph used for visualization.
   useEffect(() => {
-    const newData = generateVisualizationDataGraph(
-      props.records,
-      nodeLabels,
-      linkTypes,
-      [],
-      props.fields,
-      props.settings
-    );
+    const settings = {
+      styleRules: styleRules,
+      defaultNodeColor: barColor,
+    };
+    const newData = generateVisualizationDataGraph(props.records, nodeLabels, linkTypes, [], props.fields, settings);
     setData(newData);
     const newFields = extractNodePropertiesFromRecords(records);
     props.setFields && props.setFields(newFields);
@@ -79,8 +85,6 @@ const NeoGanttChart = (props: ChartProps) => {
     );
     // Sort tasks by the user's specified property.
     tasks = tasks.sort((a, b) => {
-      console.log(orderProperty);
-      console.log('a', a.properties[orderProperty]);
       if (a.properties[orderProperty] > b.properties[orderProperty]) {
         return 1;
       }
@@ -157,8 +161,18 @@ const NeoGanttChart = (props: ChartProps) => {
           tasks={tasks}
           height={props.dimensions?.height}
           viewMode={viewMode}
-          onBarSelect={(e) => {
+          onBarRightClick={(e) => {
             setSelectedTask(e);
+          }}
+          onBarSelect={(e) => {
+            if (actionsRules) {
+              let rules = getRuleWithFieldPropertyName(e, actionsRules, 'onTaskClick', 'labels');
+              if (rules) {
+                rules.forEach((rule) => executeActionRule(rule, e, { ...props }));
+              }
+            } else {
+              setSelectedTask(e);
+            }
           }}
         />
       </div>

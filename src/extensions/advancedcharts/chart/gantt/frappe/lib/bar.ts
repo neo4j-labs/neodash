@@ -142,7 +142,8 @@ export default class Bar {
       height: this.height,
       rx: this.corner_radius,
       ry: this.corner_radius,
-      class: 'bar-progress',
+      // class: 'bar-progress',
+      fill: this.task.color,
       append_to: this.bar_group,
     });
 
@@ -229,6 +230,16 @@ export default class Bar {
       this.show_popup();
       this.gantt.unselect_all();
       this.group.classList.add('active');
+    });
+
+    $.on(this.group, 'auxclick', (e) => {
+      e.preventDefault();
+      this.gantt.trigger_event('right_click', [this.task]);
+    });
+
+    $.on(this.group, 'contextmenu', (e) => {
+      e.preventDefault();
+      this.gantt.trigger_event('right_click', [this.task]);
     });
 
     $.on(this.group, 'dblclick', (_) => {

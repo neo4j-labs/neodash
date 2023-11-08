@@ -1017,10 +1017,15 @@ export const ADVANCED_REPORT_TYPES = {
       },
     },
     settings: {
+      barColor: {
+        label: 'Bar Color',
+        type: SELECTION_TYPES.TEXT,
+        default: '#a3a3ff',
+      },
       nameProperty: {
         label: 'Task Label Property',
         type: SELECTION_TYPES.TEXT,
-        default: 'activityName',
+        default: 'name',
       },
       startDateProperty: {
         label: 'Task Start Date Property',
