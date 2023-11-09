@@ -83,6 +83,7 @@ const NeoGanttChart = (props: ChartProps) => {
       endDateProperty,
       nameProperty
     );
+
     // Sort tasks by the user's specified property.
     tasks = tasks.sort((a, b) => {
       if (a.properties[orderProperty] > b.properties[orderProperty]) {
@@ -169,6 +170,8 @@ const NeoGanttChart = (props: ChartProps) => {
               let rules = getRuleWithFieldPropertyName(e, actionsRules, 'onTaskClick', 'labels');
               if (rules) {
                 rules.forEach((rule) => executeActionRule(rule, e, { ...props }));
+              } else {
+                setSelectedTask(e);
               }
             } else {
               setSelectedTask(e);

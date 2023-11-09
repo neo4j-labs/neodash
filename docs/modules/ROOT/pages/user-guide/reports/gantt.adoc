@@ -39,6 +39,8 @@ image::gantt.png[Gantt Chart]
 |===
 |Name |Type |Default Value |Description
 
+| Bar Color  | string  | '#a3a3ff' | Default color for the task bars (with no style rules applied.)
+
 | Task Label Property  | string  | 'activityName' | Node property to display on the task bar.
 
 | Task Start Date Property  | string  | 'startDate' | Node property to use as a start date for the task.
@@ -71,4 +73,9 @@ and will need to be executed manually.
 |===
 
 
-      
+== Rule-Based Styling
+
+Using the link:../#_rule_based_styling[Rule-Based Styling] menu, the
+following style rules can be applied to the Gantt chart: 
+
+- The color of a task bar.

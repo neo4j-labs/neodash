@@ -1,4 +1,5 @@
 import { buildGraphVisualizationObjectFromRecords } from '../../../../chart/graph/util/RecordUtils';
+import date_utils from './frappe/lib/date_utils';
 
 // Helper function to extract Neo4j types (nodes and relationships) from a records object.
 export const generateVisualizationDataGraph = (records, nodeLabels, linkTypes, colorScheme, fields, settings) => {
@@ -60,11 +61,14 @@ export function createTasksList(
 ) {
   return nodes
     .map((n) => {
-      const neoStartDate = n.properties[startDateProperty];
-      const neoEndDate = n.properties[endDateProperty];
+      let neoStartDate = n.properties[startDateProperty];
+      let neoEndDate = n.properties[endDateProperty];
       const name = n.properties[nameProperty];
 
-      // If any of the dates cannot be parsed, we do not visualize this node.
+      // Two cases:
+      // 1. The date returned is a valid neo4j date object. We do nothing.
+      // 2. The date returned is not a valid Neo4j date but a string representing one. We try to parse it as one, and set the date accordingly.
+      // Fallback - we skip the current entry altogether.
       if (
         !neoStartDate ||
         !neoStartDate.year ||
@@ -75,7 +79,25 @@ export function createTasksList(
         !neoEndDate.month ||
         !neoEndDate.day
       ) {
-        return undefined;
+        // Not a valid Neo4j date, try to parse it as one...
+        const parsedStartDate = date_utils.parse(neoStartDate);
+        if (parsedStartDate) {
+          neoStartDate = {};
+          neoStartDate.year = parsedStartDate.getFullYear();
+          neoStartDate.month = parsedStartDate.getMonth();
+          neoStartDate.day = parsedStartDate.getDay();
+        }
+        const parsedEndDate = date_utils.parse(neoEndDate);
+        if (parsedEndDate) {
+          neoEndDate = {};
+          neoEndDate.year = parsedEndDate.getFullYear();
+          neoEndDate.month = parsedEndDate.getMonth();
+          neoEndDate.day = parsedEndDate.getDay();
+        }
+        if (!parsedEndDate || !parsedEndDate) {
+          // Fallback scenario, parsing has failed
+          return undefined;
+        }
       }
       return {
         start: new Date(neoStartDate.year, neoStartDate.month, neoStartDate.day),
