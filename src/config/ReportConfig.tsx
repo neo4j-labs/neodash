@@ -1011,7 +1011,7 @@ const _REPORT_TYPES = {
         label: 'Seperate Overlapping Markers',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       nodeColorScheme: {
         label: 'Node Color Scheme',

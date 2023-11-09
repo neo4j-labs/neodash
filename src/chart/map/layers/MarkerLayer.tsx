@@ -12,9 +12,9 @@ export function createMarkers(data, props) {
   const clusterMarkers =
     props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
   const separateOverlappingMarkers =
-    props.settings && typeof props.settings.separateOverlappingMarkers !== 'undefined'
+    props.settings && typeof props.settings.separateOverlappingMarkers !== undefined
       ? props.settings.separateOverlappingMarkers
-      : true;
+      : false;
 
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
   const actionsRules =

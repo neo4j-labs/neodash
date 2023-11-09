@@ -126,7 +126,20 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
       );
     }
 
-    if (dashboard.version != '2.3') {
+    if (dashboard.version == '2.3') {
+      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.3', '2.4');
+      dispatch(setDashboard(upgradedDashboard));
+      dispatch(setWelcomeScreenOpen(false));
+      dispatch(setDraft(true));
+      dispatch(
+        createNotificationThunk(
+          'Successfully upgraded dashboard',
+          'Your old dashboard was migrated to version 2.4. You might need to refresh this page and reactivate extensions.'
+        )
+      );
+    }
+
+    if (dashboard.version !== '2.4') {
       throw `Invalid dashboard version: ${dashboard.version}. Try restarting the application, or retrieve your cached dashboard using a debug report.`;
     }
 
@@ -380,6 +393,19 @@ export const assignDashboardUuidIfNotPresentThunk = () => (dispatch: any, getSta
 };
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
+  if (origin == '2.3' && target == '2.4') {
+    dashboard.pages.forEach((p) => {
+      p.reports.forEach((r) => {
+        r.x *= 2;
+        r.y *= 2;
+        r.width *= 2;
+        r.height *= 2;
+      });
+    });
+    dashboard.version = '2.4';
+    return dashboard;
+  }
+  // In 2.3 uuids were created, as well as a new format for specificing extensions.
   if (origin == '2.2' && target == '2.3') {
     dashboard.pages.forEach((p) => {
       p.reports.forEach((r) => {
@@ -398,7 +424,6 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
       activeReducers: [],
     };
     dashboard.version = '2.3';
-
     return dashboard;
   }
   if (origin == '2.1' && target == '2.2') {

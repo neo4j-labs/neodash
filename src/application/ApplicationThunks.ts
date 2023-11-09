@@ -39,6 +39,7 @@ import {
   setWaitForSSO,
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
+  setDraft,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
 import { createUUID } from '../utils/uuid';
@@ -130,7 +131,7 @@ export const createConnectionThunk =
         query,
         parameters,
         1,
-        () => { },
+        () => {},
         (records) => validateConnection(records)
       );
     } catch (e) {
@@ -432,6 +433,17 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
           createNotificationThunk(
             'Successfully upgraded dashboard',
             'Your old dashboard was migrated to version 2.3. You might need to refresh this page.'
+          )
+        );
+      }
+      if (state.dashboard.version == '2.3') {
+        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.3', '2.4');
+        dispatch(setDashboard(upgradedDashboard));
+        dispatch(setDraft(true));
+        dispatch(
+          createNotificationThunk(
+            'Successfully upgraded dashboard',
+            'Your old dashboard was migrated to version 2.4. You might need to refresh this page.'
           )
         );
       }

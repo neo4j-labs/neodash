@@ -4,34 +4,52 @@ import {
   CloudArrowDownIconOutline,
   CloudArrowUpIconOutline,
   EllipsisVerticalIconOutline,
+  ExclamationTriangleIconOutline,
+  InformationCircleIconOutline,
 } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip';
+import { NEODASH_VERSION } from '../DashboardReducer';
 
-export const DashboardSidebarListItem = ({ title, selected, readonly, saved, onSelect, onSave, onSettingsOpen }) => {
+export const DashboardSidebarListItem = ({
+  title,
+  selected,
+  readonly,
+  saved,
+  version,
+  onSelect,
+  onSave,
+  onSettingsOpen,
+}) => {
   return (
     <SideNavigationGroupHeader>
       <div style={{ display: 'contents', width: '100%' }}>
-        <Button
-          aria-label={'dashboard'}
-          fill={selected == true ? 'outlined' : 'text'}
-          size='medium'
-          color={selected == true ? (saved == true ? 'primary' : 'warning') : 'neutral'}
-          style={{
-            width: '300px',
-            whiteSpace: 'nowrap',
-            overflowX: 'clip',
-            justifyContent: 'left',
-            marginRight: '10px',
-            paddingLeft: '5px',
-            paddingRight: '5px',
-          }}
-          onClick={() => {
-            onSelect();
-          }}
+        <Tooltip
+          title={version !== NEODASH_VERSION ? `Old version: v${  version  }` : ''}
+          aria-label='old version'
+          disableInteractive
         >
-          {saved == false ? <b>(Draft)</b> : <></>}
-          {title ? title : '(no title)'}
-        </Button>
+          <Button
+            aria-label={'dashboard'}
+            fill={selected == true ? 'outlined' : 'text'}
+            size='medium'
+            color={selected == true ? (saved == true ? 'primary' : 'warning') : 'neutral'}
+            style={{
+              width: '300px',
+              whiteSpace: 'nowrap',
+              overflowX: 'clip',
+              justifyContent: 'left',
+              marginRight: '10px',
+              paddingLeft: '5px',
+              paddingRight: '5px',
+            }}
+            onClick={() => {
+              onSelect();
+            }}
+          >
+            {saved == false ? <b>(Draft)</b> : <></>}
+            {title ? title : '(no title)'}
+          </Button>
+        </Tooltip>
         {readonly !== true ? (
           <IconButton
             aria-label={'new dashboard'}

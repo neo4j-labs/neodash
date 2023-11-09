@@ -226,7 +226,7 @@ export default function NeoConnectionModal({
               )}
             </div>
           ) : (
-            <div style={{ color: 'lightgrey' }}>
+            <div style={{ color: 'white' }}>
               Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in&nbsp;
               <TextLink externalLink className='n-text-neutral-text-inverse' href='https://neo4j.com/download/'>
                 Neo4j Desktop
