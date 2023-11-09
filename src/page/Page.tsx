@@ -47,6 +47,9 @@ export const NeoPage = ({
   const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
+  // If hideQueryEditorInAutoRunOnMode is true and autorun option is false
+  const enableExecuteButtonForIds = reports.filter((report: any) => report.settings?.hideQueryEditorInAutoRunOnMode);
+
   const availableHandles = () => {
     if (dashboardSettings.resizing && dashboardSettings.resizing == 'all') {
       return ['s', 'w', 'e', 'sw', 'se'];
@@ -197,6 +200,7 @@ export const NeoPage = ({
                 id={id}
                 key={getReportKey(pagenumber, id)}
                 dashboardSettings={dashboardSettings}
+                enableExecuteButtonForIds={enableExecuteButtonForIds}
                 onRemovePressed={onRemovePressed}
                 onClonePressed={(id) => {
                   const { x, y } = getAddCardButtonPosition();
