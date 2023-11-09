@@ -86,6 +86,10 @@
   border: none !important;
 }
 
+.MuiDataGrid-footerContainer > div {
+  margin-top: -40px;
+}
+
 .MuiChip-root:before {
   border: none !important;
 }
@@ -229,7 +233,6 @@
 		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 	}
 }
-
 
 /* Workaround for Needle not handling menu placement of dropdowns on modals */
 #overlay {

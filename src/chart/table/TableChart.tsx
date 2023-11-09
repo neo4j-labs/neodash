@@ -22,6 +22,7 @@ import { CloudArrowDownIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/ic
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
@@ -268,6 +269,11 @@ export const NeoTableChart = (props: ChartProps) => {
               navigator.clipboard.writeText(e.value);
             }
           }}
+          checkboxSelection={hasCheckboxes(actionsRules)}
+          selectionModel={getCheckboxes(actionsRules, rows, props.getGlobalParameter)}
+          onSelectionModelChange={(selection) =>
+            updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter)
+          }
           pageSize={tablePageSize > 0 ? tablePageSize : 5}
           rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}
           disableSelectionOnClick
@@ -276,13 +282,18 @@ export const NeoTableChart = (props: ChartProps) => {
             ColumnSortedAscendingIcon: () => <></>,
           }}
           getRowClassName={(params) => {
-            return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+            return ['row color', 'row text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
+              })
+              .join(' ');
           }}
           getCellClassName={(params) => {
-            return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
-              'cell color',
-              'cell text color',
-            ])}`;
+            return ['cell color', 'cell text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
+              })
+              .join(' ');
           }}
         />
       </div>

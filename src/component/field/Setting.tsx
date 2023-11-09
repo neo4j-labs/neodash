@@ -72,6 +72,7 @@ const NeoSetting = ({
   defaultValue,
   disabled = undefined,
   helperText = undefined,
+  password = false,
   onChange,
   onClick = () => {},
   style = { width: '100%', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' },
@@ -104,6 +105,7 @@ const NeoSetting = ({
             disabled={disabled}
             helperText={helperText}
             value={value}
+            password={password}
             defaultValue={''}
             placeholder={`${defaultValue}`}
             style={style}

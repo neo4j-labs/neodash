@@ -21,6 +21,10 @@ export const getNotificationTitle = (state: any) => {
   return state.application.notificationTitle;
 };
 
+export const dashboardIsDraft = (state: any) => {
+  return state.application.draft;
+};
+
 export const applicationIsConnected = (state: any) => {
   return state.application.connected;
 };
@@ -64,6 +68,7 @@ export const applicationHasReportHelpModalOpen = (state: any) => {
 export const applicationGetSsoSettings = (state: any) => {
   return {
     ssoEnabled: state.application.ssoEnabled,
+    ssoProviders: state.application.ssoProviders,
     ssoDiscoveryUrl: state.application.ssoDiscoveryUrl,
     cachedSSODiscoveryUrl: state.application.cachedSSODiscoveryUrl,
   };

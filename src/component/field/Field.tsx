@@ -15,6 +15,7 @@ const NeoField = ({
   select = false,
   disabled = undefined,
   variant = undefined,
+  password = false,
   helperText = undefined,
   defaultValueLabel = undefined,
   defaultValue = undefined,
@@ -78,6 +79,7 @@ const NeoField = ({
         variant={variant}
         label={label}
         helpText={helperText}
+        type={password ? 'password' : 'text'}
         disabled={disabled}
         value={value != null ? value : defaultValue}
         fluid
