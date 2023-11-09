@@ -26,6 +26,8 @@ const NeoForm = (props: ChartProps) => {
   const hasResetButton = settings?.hasResetButton !== undefined ? settings.hasResetButton : true;
   const hasSubmitButton = settings?.hasSubmitButton !== undefined ? settings.hasSubmitButton : true;
   const hasSubmitMessage = settings?.hasSubmitMessage !== undefined ? settings.hasSubmitMessage : true;
+  const clearParametersAfterSubmit =
+    settings?.clearParametersAfterSubmit !== undefined ? settings.clearParametersAfterSubmit : false;
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
@@ -81,6 +83,12 @@ const NeoForm = (props: ChartProps) => {
                   setStatus(FormStatus.ERROR);
                 } else {
                   forceRefreshDependentReports();
+                  if (clearParametersAfterSubmit) {
+                    const paramCache = { ...props.parameters };
+                    Object.keys(paramCache).forEach((key) => {
+                      props.setGlobalParameter && props.setGlobalParameter(key, undefined);
+                    });
+                  }
                   if (hasSubmitMessage) {
                     setStatus(FormStatus.SUBMITTED);
                   } else {

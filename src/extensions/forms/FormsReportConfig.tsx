@@ -37,6 +37,12 @@ export const FORMS = {
         values: [true, false],
         default: true,
       },
+      clearParametersAfterSubmit: {
+        label: 'Clear parameters after submit',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       hasResetButton: {
         label: 'Has Reset Button',
         type: SELECTION_TYPES.LIST,
