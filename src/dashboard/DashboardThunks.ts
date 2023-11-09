@@ -307,7 +307,16 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callba
       query,
       { name: name },
       1,
-      () => {},
+      (status) => {
+        if (status == QueryStatus.NO_DATA) {
+          dispatch(
+            createNotificationThunk(
+              'Unable to load dashboard.',
+              'A dashboard with the provided name could not be found.'
+            )
+          );
+        }
+      },
       (records) => {
         if (records.length == 0) {
           dispatch(

@@ -60,8 +60,8 @@ export default function NeoConnectionModal({
               id='protocol'
               label='Protocol'
               type='select'
-              disabled={standalone}
               selectProps={{
+                isDisabled: standalone,
                 onChange: (newValue) => newValue && setProtocol(newValue.value),
                 options: protocols.map((option) => ({ label: option, value: option })),
                 value: { label: protocol, value: protocol },
@@ -218,7 +218,7 @@ export default function NeoConnectionModal({
             <div style={{ color: 'lightgrey' }}>
               {standaloneSettings.standaloneDashboardURL === '' ? (
                 <>
-                  Sign in to continue. You will be connected to Neo4j, and load a dashboard called
+                  Sign in to continue. You will be connected to Neo4j, and load a dashboard called&nbsp;
                   <b>{standaloneSettings.standaloneDashboardName}</b>.
                 </>
               ) : (
