@@ -14,7 +14,7 @@ const NeoMarkdownChart = (props: ChartProps) => {
   const replaceGlobalParameters =
     props.settings && props.settings.replaceGlobalParameters !== undefined
       ? props.settings.replaceGlobalParameters
-      : false;
+      : true;
   const markdown = records[0].input;
   const modifiedMarkdown = replaceGlobalParameters ? replaceDashboardParameters(markdown, parameters) : markdown;
   // TODO: we should check if the gfm plugin has an impact on the standard security provided by ReactMarkdown
