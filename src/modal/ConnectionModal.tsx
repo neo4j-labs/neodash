@@ -1,21 +1,23 @@
 import React, { useEffect } from 'react';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
-import { Button, Dialog, Switch, TextInput, Dropdown, TextLink } from '@neo4j-ndl/react';
-import { PlayIconOutline } from '@neo4j-ndl/react/icons';
+import { Button, Dialog, Switch, TextInput, Dropdown, TextLink, IconButton } from '@neo4j-ndl/react';
+import { PlayIconOutline, ArrowLeftIconOutline } from '@neo4j-ndl/react/icons';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
 export default function NeoConnectionModal({
+  connected,
   open,
   standalone,
   standaloneSettings,
   ssoSettings,
   connection,
-  dismissable = false,
+  dismissable,
   createConnection,
   setConnectionProperties,
   onConnectionModalClose,
   onSSOAttempt,
+  setWelcomeScreenOpen,
 }) {
   const protocols = ['neo4j', 'neo4j+s', 'neo4j+ssc', 'bolt', 'bolt+s', 'bolt+ssc'];
   const [ssoVisible, setSsoVisible] = React.useState(ssoSettings.ssoEnabled);
@@ -48,10 +50,13 @@ export default function NeoConnectionModal({
         size='small'
         open={open}
         onClose={() => {
-          dismissable ? onConnectionModalClose() : null;
+          onConnectionModalClose();
+          if (!connected) {
+            setWelcomeScreenOpen(true);
+          }
         }}
         aria-labelledby='form-dialog-title'
-        disableCloseButton
+        disableCloseButton={!dismissable}
       >
         <Dialog.Header id='form-dialog-title'>{standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}</Dialog.Header>
         <Dialog.Content className='n-flex n-flex-col n-gap-token-4'>
