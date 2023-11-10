@@ -51,8 +51,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('#url').clear().type('localhost');
     // cy.get('#database').type('neo4j')
     cy.get('#dbusername').clear().type('neo4j');
-    //cy.get('#dbpassword').type('test1234');
-    cy.get('#dbpassword').type('neo4j1337!');
+    cy.get('#dbpassword').type('test1234');
     cy.get('button').contains('Connect').click();
     cy.wait(100);
   });
