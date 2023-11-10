@@ -61,7 +61,11 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
     <div className='n-inline-flex' ref={setNodeRef} style={style} id={`tab_${tabIndex}`} {...attributes} {...listeners}>
       <Tab tabId={tabIndex} key={tabIndex}>
         {!editing ? (
-          title
+          title ? (
+            title
+          ) : (
+            '(no title)'
+          )
         ) : (
           <TextInput
             data-no-dnd='true'

@@ -11,7 +11,7 @@ import { createUUID } from '../utils/uuid';
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
 // TODO : Alfredo: this should source the card config defined inside the reducer and then define the first page initial state
-export const FIRST_PAGE_INITIAL_STATE = {
+export const PAGE_EXAMPLE_STATE = {
   title: 'Main Page',
   reports: [
     {
@@ -42,7 +42,7 @@ export const FIRST_PAGE_INITIAL_STATE = {
   ],
 };
 
-export const PAGE_INITIAL_STATE = {
+export const PAGE_EMPTY_STATE = {
   title: 'New page',
   reports: [],
 };
@@ -52,7 +52,7 @@ export const PAGE_INITIAL_STATE = {
  * This reducer handles updates to a single page of the dashboard.
  * TODO - pagenumbers can be cut from here with new reducer architecture.
  */
-export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; payload: any }) => {
+export const pageReducer = (state = PAGE_EMPTY_STATE, action: { type: any; payload: any }) => {
   const { type, payload } = action;
 
   if (!action.type.startsWith('PAGE/')) {

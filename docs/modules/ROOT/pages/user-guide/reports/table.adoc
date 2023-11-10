@@ -73,3 +73,22 @@ following style rules can be applied to the table:
 - The text color of a single cell in the table.
 
 If a column is hidden (header prefixed with __ double underscore), it can still be used as an entry point for a styling rule.
+
+== Report Actions
+
+With the link:../../extensions/report-actions[Report Actions] extension, tables can be turned into interactive components that set parameters.
+Two flavours of report actions for tables exist:
+
+=== 1. Select a value from a row
+Adding a **Cell Click** action to a table column, turns the values in that row into clickable buttons.
+When the user clicks on the button, a predefined parameter is set to one of the columns in that row.
+
+image::select-single-table.png[Select a value from a table to be used as a parameter]
+
+=== 2. Select multiple from a row
+Adding a **Row Clicked** action to a table prepends each row with a checkbox.
+The user can then check one or more boxes to update a dashboard parameter.
+
+> Keep in mind that regardless if one or more values are selected, the type of the dashboard parameter is a list of values. The queries using the parameter must ensure that the list type is handled correctly.
+
+image::select-multiple-table.png[Select multiple values to be used as a parameter]
