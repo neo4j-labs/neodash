@@ -94,7 +94,7 @@ export function createTasksList(
           neoEndDate.month = parsedEndDate.getMonth();
           neoEndDate.day = parsedEndDate.getDay();
         }
-        if (!parsedEndDate || !parsedEndDate) {
+        if (!parsedEndDate) {
           // Fallback scenario, parsing has failed
           return undefined;
         }

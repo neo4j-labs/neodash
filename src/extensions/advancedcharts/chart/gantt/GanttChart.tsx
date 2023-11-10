@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 // import { Gantt, Task, ViewMode } from 'gantt-task-react';
 // import 'gantt-task-react/dist/index.css';
-import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { CARD_HEADER_HEIGHT } from '../../../../config/CardConfig';
 import { extractNodePropertiesFromRecords } from '../../../../report/ReportRecordProcessing';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
@@ -15,7 +14,6 @@ import {
 } from './Utils';
 import ReactGantt from './frappe/GanttVisualization';
 import { createUUID } from '../../../../utils/uuid';
-import { REPORT_LOADING_ICON } from '../../../../report/Report';
 import NeoGraphChartInspectModal from '../../../../chart/graph/component/GraphChartInspectModal';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../Utils';
 import { useStyleRules } from '../../../styling/StyleRuleEvaluator';
