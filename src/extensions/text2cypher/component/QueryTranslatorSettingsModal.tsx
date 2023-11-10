@@ -23,8 +23,6 @@ const QueryTranslatorSettingsModal = ({
   const [settingsState, setSettingsState] = React.useState(clientSettings);
   const [editDialogIsOpen, setEditDialogIsOpen] = React.useState(false);
 
-  // TODO: a user shouldn't be able to save a configuration if it's not correct and it didn't fill all the requirements
-  // DONE: by moving the storing logic only inside the start querying button
   const handleCloseWithSave = () => {
     updateModelProvider(modelProviderState);
     updateClientSettings(settingsState);

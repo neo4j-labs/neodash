@@ -2,8 +2,6 @@ import { SELECTION_TYPES } from '../../config/CardConfig';
 import { ModelClient } from './clients/ModelClient';
 import { OpenAiClient } from './clients/OpenAi/OpenAiClient';
 
-// TODO: implement VertexAiClient
-import { VertexAiClient } from './clients/VertexAiClient';
 import { AzureOpenAiClient } from './clients/AzureOpenAi/AzureOpenAiClient';
 
 interface ClientSettingEntry {
