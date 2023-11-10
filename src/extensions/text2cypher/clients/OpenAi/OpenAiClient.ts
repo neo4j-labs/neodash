@@ -25,7 +25,7 @@ export class OpenAiClient extends ModelClient {
     let isValid = false;
     let errorMessage = '';
     try {
-      let res = await this.queryDatabase(`EXPLAIN ${query}`, database);
+      await this.queryDatabase(`EXPLAIN ${query}`, database);
       isValid = true;
     } catch (e) {
       isValid = false;
@@ -51,7 +51,7 @@ export class OpenAiClient extends ModelClient {
    */
   async authenticate(
     setIsAuthenticated = (boolean) => {
-      let x = boolean;
+      console.log(boolean);
     }
   ) {
     try {

@@ -160,7 +160,7 @@ export abstract class ModelClient {
     reportType,
     examples,
     onRetry = (value) => {
-      let x = value;
+      console.log(value);
     },
     schemaSampling = true // By default we create the schema message using apoc.meta.data in sampling mode
   ) {
