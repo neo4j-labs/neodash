@@ -92,8 +92,8 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      overrideDefaultMessage: {
-        label: 'Override default message',
+      noDataMessage: {
+        label: 'Override no data message',
         type: SELECTION_TYPES.TEXT,
         default: 'Query returned no data.',
       },
@@ -306,8 +306,8 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      overrideDefaultMessage: {
-        label: 'Override default message',
+      noDataMessage: {
+        label: 'Override no data message',
         type: SELECTION_TYPES.TEXT,
         default: 'Query returned no data.',
       },
