@@ -70,14 +70,12 @@ export function createTasksList(
       // 2. The date returned is not a valid Neo4j date but a string representing one. We try to parse it as one, and set the date accordingly.
       // Fallback - we skip the current entry altogether.
       if (
-        !neoStartDate ||
-        !neoStartDate.year ||
-        !neoStartDate.month ||
-        !neoStartDate.day ||
-        !neoEndDate ||
-        !neoEndDate.year ||
-        !neoEndDate.month ||
-        !neoEndDate.day
+        !neoStartDate?.year ||
+        !neoStartDate?.month ||
+        !neoStartDate?.day ||
+        !neoEndDate?.year ||
+        !neoEndDate?.month ||
+        !neoEndDate?.day
       ) {
         // Not a valid Neo4j date, try to parse it as one...
         const parsedStartDate = date_utils.parse(neoStartDate);
@@ -102,7 +100,7 @@ export function createTasksList(
       return {
         start: new Date(neoStartDate.year, neoStartDate.month, neoStartDate.day),
         end: new Date(neoEndDate.year, neoEndDate.month, neoEndDate.day),
-        name: name ? name : '(undefined)',
+        name: name || '(undefined)',
         labels: n.labels,
         dependencies: dependencies[n.id],
         dependencyDirections: dependencyDirections[n.id],

@@ -6,20 +6,18 @@ import React, { Component } from 'react';
 import Gantt from './lib';
 import { createUUID } from '../../../../../utils/uuid';
 
-export abstract class ReactGanttProps extends Component {
-  props: any;
-}
-
 const TASK_PADDING = 18;
 const HEADER_HEIGHT = 50;
-const COLUMN_WIDTH = 30;
 const STEP_SIZE = 8;
+const COLUMN_WIDTH = 30;
 const VIEW_MODE = 'Day';
 
 /**
  * React wrapper for the modified Frappe Gannt library.
  */
-export default class ReactGantt extends ReactGanttProps {
+export default class ReactGantt extends Component {
+  props: any;
+
   ganttRef: SVGSVGElement | undefined = undefined;
 
   key: any;

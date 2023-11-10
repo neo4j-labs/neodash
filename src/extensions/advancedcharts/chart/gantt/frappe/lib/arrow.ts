@@ -44,7 +44,7 @@ export default class Arrow {
     this.gantt = gantt;
     this.from_task = from_task;
     this.to_task = to_task;
-    this.direction = direction ? direction : DependencyDirection.FS;
+    this.direction = direction || DependencyDirection.FS;
     this.calculate_path(this.direction);
     this.draw();
   }
