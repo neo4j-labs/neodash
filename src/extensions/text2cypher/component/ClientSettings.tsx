@@ -79,9 +79,8 @@ export const ClientSettings = ({
     } else {
       setGlobalModelClient(undefined);
     }
-    let tmpSettingsChoices = {};
-    Object.keys(defaultSettings).map((setting) => {
-      tmpSettingsChoices[setting] = setChoices(setting, localClientTmp);
+    Object.keys(defaultSettings).forEach((setting) => {
+      setChoices(setting, localClientTmp);
     });
   }, [status]);
 
