@@ -12,7 +12,7 @@ export default function NeoConnectionModal({
   standaloneSettings,
   ssoSettings,
   connection,
-  dismissable = true,
+  dismissable,
   createConnection,
   setConnectionProperties,
   onConnectionModalClose,
@@ -51,10 +51,12 @@ export default function NeoConnectionModal({
         open={open}
         onClose={() => {
           onConnectionModalClose();
-          dismissable && connected ? setWelcomeScreenOpen(true) : null;
+          if (!connected) {
+            setWelcomeScreenOpen(true);
+          }
         }}
         aria-labelledby='form-dialog-title'
-        disableCloseButton={!true}
+        disableCloseButton={!dismissable}
       >
         <Dialog.Header id='form-dialog-title'>{standalone ? 'Connect to Dashboard' : 'Connect to Neo4j'}</Dialog.Header>
         <Dialog.Content className='n-flex n-flex-col n-gap-token-4'>
