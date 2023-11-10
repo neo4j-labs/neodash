@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChartProps } from '../../../../chart/Chart';
 import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
-// import { Gantt, Task, ViewMode } from 'gantt-task-react';
-// import 'gantt-task-react/dist/index.css';
 import { CARD_HEADER_HEIGHT } from '../../../../config/CardConfig';
 import { extractNodePropertiesFromRecords } from '../../../../report/ReportRecordProcessing';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
@@ -124,18 +122,28 @@ const NeoGanttChart = (props: ChartProps) => {
   let viewMode = viewModeSetting; // default
 
   if (viewMode == 'auto') {
-    if (dateDiff < 7) {
-      viewMode = 'Quarter Day';
-    } else if (dateDiff < 14) {
-      viewMode = 'Half Day';
-    } else if (dateDiff < 30) {
-      viewMode = 'Day';
-    } else if (dateDiff < 120) {
-      viewMode = 'Week';
-    } else if (dateDiff < 3 * 365) {
-      viewMode = 'Month';
-    } else {
-      viewMode = 'Year';
+    switch (true) {
+      case dateDiff < 7:
+        viewMode = 'Quarter Day';
+        break;
+      case dateDiff < 14:
+        viewMode = 'Half Day';
+        break;
+      case dateDiff < 30:
+        viewMode = 'Day';
+        break;
+      case dateDiff < 120:
+        viewMode = 'Week';
+        break;
+      case dateDiff < 1.8 * 365:
+        viewMode = 'Month';
+        break;
+      case dateDiff < 3 * 365:
+        viewMode = 'Quarter';
+        break;
+      default:
+        viewMode = 'Year';
+        break;
     }
   }
 

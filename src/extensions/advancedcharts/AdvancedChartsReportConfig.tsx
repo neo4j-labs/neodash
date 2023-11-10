@@ -1050,7 +1050,7 @@ export const ADVANCED_REPORT_TYPES = {
       viewMode: {
         label: 'View mode',
         type: SELECTION_TYPES.LIST,
-        values: ['auto', 'Half Day', 'Day', 'Week', 'Month', 'Year'],
+        values: ['auto', 'Half Day', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
         default: 'auto',
       },
       fullscreenEnabled: {
