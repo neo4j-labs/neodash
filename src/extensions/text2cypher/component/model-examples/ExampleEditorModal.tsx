@@ -80,7 +80,8 @@ const ExampleEditorModal = ({
     <Dialog size='large' aria-labelledby='form-dialog-title' open={exampleEditorIsOpen} onClose={handleCloseEditor}>
       <Dialog.Header> {index != null && index >= 0 ? 'Edit' : 'Create New'} Example </Dialog.Header>
       <Dialog.Content>
-        {index != null && index >= 0 ? 'Edit' : 'Create new'} prompt and cypher query examples for the purposes of training LLM prediction performance.
+        {index != null && index >= 0 ? 'Edit' : 'Create new'} prompt and cypher query examples for the purposes of
+        training LLM prediction performance.
         <br />
         <br />
         <div
@@ -106,9 +107,7 @@ const ExampleEditorModal = ({
             </div>
             <div className=' n-mb-1 '>Cypher Query</div>
             {/* Cypher editor */}
-            <div className='n-mb-6'>
-              {cypherEditor}
-            </div>
+            <div className='n-mb-6'>{cypherEditor}</div>
             <p className='n-text-palette-danger-text'> {errorMessage}</p>
 
             {/* Save and close buttons  */}

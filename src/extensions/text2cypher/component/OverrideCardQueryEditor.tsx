@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect} from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button, Switch } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent, {
@@ -144,21 +144,21 @@ export const NeoOverrideCardQueryEditor = ({
                 {language == Language.ENGLISH ? (
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <div>
-                        <Button
-                          fill='outlined'
-                          disabled={prepopulateExtensionName == undefined}
-                          style={{ marginLeft: '8px' }}
-                          onClick={() => {
-                            if (prepopulateExtensionName !== undefined) {
-                              triggerTranslation();
-                              setLanguage(Language.CYPHER);
-                              deletePrepopulationReportFunction(reportId);
-                            }
-                          }}
-                        >
-                          Translate
-                        </Button>
-                      </div>
+                      <Button
+                        fill='outlined'
+                        disabled={prepopulateExtensionName == undefined}
+                        style={{ marginLeft: '8px' }}
+                        onClick={() => {
+                          if (prepopulateExtensionName !== undefined) {
+                            triggerTranslation();
+                            setLanguage(Language.CYPHER);
+                            deletePrepopulationReportFunction(reportId);
+                          }
+                        }}
+                      >
+                        Translate
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <></>

@@ -197,8 +197,7 @@ export const ClientSettings = ({
           </Button>
         </div>
       ) : (
-        <>
-        </>
+        <></>
       )}
     </List>
   );

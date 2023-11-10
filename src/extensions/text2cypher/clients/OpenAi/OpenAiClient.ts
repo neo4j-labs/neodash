@@ -117,7 +117,7 @@ export class OpenAiClient extends ModelClient {
   addUserMessage(content, reportType, plain = false) {
     let queryExample = reportExampleQueries[reportType];
     let finalMessage = `${content}. Please respect the structure of the result based on this description: ${reportTypesToDesc[reportType]}.
-  Here an example of query: ${queryExample}.
+  Here an example of a query: ${queryExample}.
   Remember that every $ prefixed word is a parameter.`;
     return { role: ChatCompletionRequestMessageRoleEnum.User, content: plain ? content : finalMessage };
   }
