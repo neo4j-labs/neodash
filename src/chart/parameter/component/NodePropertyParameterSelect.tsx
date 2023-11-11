@@ -13,7 +13,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       ? props.settings.defaultValue
       : '';
 
-  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
+  const disabled = props?.settings?.disabled ? props.settings.disabled : false;
   const getInitialValue = (value, multi) => {
     if (value && Array.isArray(value)) {
       return multi ? value : null;
@@ -145,13 +145,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     }
   }, [props.parameterDisplayValue]);
 
-
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
-        options={extraRecords && extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        options={extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         disabled={disabled}
         limitTags={multiSelectLimit}
         style={{

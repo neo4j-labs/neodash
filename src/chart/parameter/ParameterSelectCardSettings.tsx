@@ -33,11 +33,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
 
   // When certain settings are updated, a re-generated search query is needed.
   useEffect(() => {
-    updateReportQuery(
-      settings.entityType,
-      settings.propertyType,
-      settings.propertyTypeDisplay || settings.propertyTypeDisplay
-    );
+    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyTypeDisplay);
   }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
   useEffect(() => {
@@ -132,7 +128,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
   }
 
   function handleIdSelectionUpdate(value) {
-    const newValue = value ? value : '';
+    const newValue = value || '';
     onReportSettingUpdate('id', `${newValue}`);
     if (settings.propertyType && settings.entityType) {
       const newParameterName = `neodash_${settings.entityType}_${settings.propertyType}`;
@@ -335,7 +331,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
                     ? [settings.propertyType]
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
-                getOptionLabel={(option) => (option ? option : '')}
+                getOptionLabel={(option) => option || ''}
                 style={{ display: 'inline-block', width: '65%', marginTop: '13px', marginRight: '5%' }}
                 inputValue={propertyInputText}
                 onInputChange={(event, value) => {
@@ -372,7 +368,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
                       ? [settings.propertyTypeDisplay || settings.propertyType]
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
-                  getOptionLabel={(option) => (option ? option : '')}
+                  getOptionLabel={(option) => option || ''}
                   style={{ display: 'inline-block', width: '65%', marginTop: '13px', marginRight: '5%' }}
                   inputValue={propertyInputDisplayText}
                   onInputChange={(event, value) => {
