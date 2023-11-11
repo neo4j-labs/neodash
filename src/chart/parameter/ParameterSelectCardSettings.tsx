@@ -47,7 +47,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
 
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
   const formatParameterId = (id: string | undefined | null) => {
-    const cleanedId = id || '';
+    const cleanedId = id ?? '';
     return cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
   };
 
@@ -196,7 +196,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
 
   // If the override is off, and the two values differ, set the display value to the original one again.
-  if (overridePropertyDisplayName == false && propertyInputText !== propertyInputDisplayText) {
+  if (!overridePropertyDisplayName && propertyInputText !== propertyInputDisplayText) {
     onReportSettingUpdate('propertyTypeDisplay', settings.propertyType);
     setPropertyInputDisplayText(propertyInputText);
     updateReportQuery(settings.entityType, settings.propertyType, settings.propertyType);

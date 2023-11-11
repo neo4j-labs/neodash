@@ -4,12 +4,7 @@ import React from 'react';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import ParameterSelectCardSettings from '../../../chart/parameter/ParameterSelectCardSettings';
 import NeoCardSettingsFooter from '../../../card/settings/CardSettingsFooter';
-import {
-  AdjustmentsHorizontalIconOutline,
-  PencilIconOutline,
-  PlusIconOutline,
-  XMarkIconOutline,
-} from '@neo4j-ndl/react/icons';
+
 const NeoFormCardSettingsModal = ({ open, setOpen, index, formFields, setFormFields, database, extensions }) => {
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = React.useState(false);
 
