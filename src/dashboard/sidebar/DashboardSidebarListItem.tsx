@@ -1,12 +1,6 @@
 import { Button, IconButton, SideNavigationGroupHeader } from '@neo4j-ndl/react';
 import React from 'react';
-import {
-  CloudArrowDownIconOutline,
-  CloudArrowUpIconOutline,
-  EllipsisVerticalIconOutline,
-  ExclamationTriangleIconOutline,
-  InformationCircleIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { CloudArrowUpIconOutline, EllipsisVerticalIconOutline } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
@@ -24,7 +18,7 @@ export const DashboardSidebarListItem = ({
     <SideNavigationGroupHeader>
       <div style={{ display: 'contents', width: '100%' }}>
         <Tooltip
-          title={version !== NEODASH_VERSION ? `Old version: v${  version  }` : ''}
+          title={version !== NEODASH_VERSION ? `Old version: v${version}` : ''}
           aria-label='old version'
           disableInteractive
         >
