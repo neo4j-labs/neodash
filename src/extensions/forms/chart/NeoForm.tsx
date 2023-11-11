@@ -23,11 +23,10 @@ const NeoForm = (props: ChartProps) => {
   const buttonText = settings?.runButtonText ? settings.runButtonText : 'Submit';
   const confirmationMessage = settings?.confirmationMessage ? settings.confirmationMessage : 'Form Submitted.';
   const resetButtonText = settings?.resetButtonText ? settings.resetButtonText : 'Reset Form';
-  const hasResetButton = settings?.hasResetButton !== undefined ? settings.hasResetButton : true;
-  const hasSubmitButton = settings?.hasSubmitButton !== undefined ? settings.hasSubmitButton : true;
-  const hasSubmitMessage = settings?.hasSubmitMessage !== undefined ? settings.hasSubmitMessage : true;
-  const clearParametersAfterSubmit =
-    settings?.clearParametersAfterSubmit !== undefined ? settings.clearParametersAfterSubmit : false;
+  const hasResetButton = settings?.hasResetButton ? settings.hasResetButton : true;
+  const hasSubmitButton = settings?.hasSubmitButton ? settings.hasSubmitButton : true;
+  const hasSubmitMessage = settings?.hasSubmitMessage ? settings.hasSubmitMessage : true;
+  const clearParametersAfterSubmit = settings?.clearParametersAfterSubmit ? settings.clearParametersAfterSubmit : false;
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);

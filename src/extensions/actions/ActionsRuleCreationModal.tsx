@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  AdjustmentsHorizontalIconOutline,
-  XMarkIconOutline,
-  PlusIconOutline,
-  PlayIconSolid,
-  SparklesIconOutline,
-} from '@neo4j-ndl/react/icons';
+import { XMarkIconOutline, PlusIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
 import { Autocomplete, TextField } from '@mui/material';
