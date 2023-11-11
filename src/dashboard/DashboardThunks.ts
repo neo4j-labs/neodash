@@ -5,6 +5,7 @@ import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
+import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -76,12 +77,11 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
     }
 
     // Attempt upgrade if dashboard version is outdated.
-    let versionToMigrate = { '1.1': '2.0', '2.0': '2.1', '2.1': '2.2', '2.2': '2.3', '2.3': '2.4' };
-    while (versionToMigrate[dashboard.version]) {
+    while (VERSION_TO_MIGRATE[dashboard.version]) {
       const upgradedDashboard = upgradeDashboardVersion(
         dashboard,
         dashboard.version,
-        versionToMigrate[dashboard.version]
+        VERSION_TO_MIGRATE[dashboard.version]
       );
       dispatch(setDashboard(upgradedDashboard));
       dispatch(setWelcomeScreenOpen(false));
@@ -93,8 +93,8 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
         )
       );
     }
-    let latestVersion = versionToMigrate[Object.keys(versionToMigrate).splice(-1)[0]];
-    if (dashboard.version !== latestVersion) {
+
+    if (dashboard.version !== NEODASH_VERSION) {
       throw `Invalid dashboard version: ${dashboard.version}. Try restarting the application, or retrieve your cached dashboard using a debug report.`;
     }
 

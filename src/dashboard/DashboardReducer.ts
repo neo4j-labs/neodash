@@ -19,6 +19,7 @@ import {
 } from './DashboardActions';
 
 export const NEODASH_VERSION = '2.4';
+export const VERSION_TO_MIGRATE = { '1.1': '2.0', '2.0': '2.1', '2.1': '2.2', '2.2': '2.3', '2.3': '2.4' };
 
 export const initialState = {
   title: DEFAULT_DASHBOARD_TITLE,
