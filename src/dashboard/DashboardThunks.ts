@@ -93,8 +93,8 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
         )
       );
     }
-
-    if (dashboard.version !== '2.4') {
+    let latestVersion = versionToMigrate[Object.keys(versionToMigrate).splice(-1)[0]];
+    if (dashboard.version !== latestVersion) {
       throw `Invalid dashboard version: ${dashboard.version}. Try restarting the application, or retrieve your cached dashboard using a debug report.`;
     }
 
