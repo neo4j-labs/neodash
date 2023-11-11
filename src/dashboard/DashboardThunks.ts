@@ -76,65 +76,20 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
     }
 
     // Attempt upgrade if dashboard version is outdated.
-    if (dashboard.version == '1.1') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '1.1', '2.0');
-      dispatch(setDashboard(upgradedDashboard));
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setDraft(true));
-      dispatch(
-        createNotificationThunk(
-          'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.0. You might need to refresh this page.'
-        )
+    let versionToMigrate = { '1.1': '2.0', '2.0': '2.1', '2.1': '2.2', '2.2': '2.3', '2.3': '2.4' };
+    while (versionToMigrate[dashboard.version]) {
+      const upgradedDashboard = upgradeDashboardVersion(
+        dashboard,
+        dashboard.version,
+        versionToMigrate[dashboard.version]
       );
-    }
-    if (dashboard.version == '2.0') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.0', '2.1');
       dispatch(setDashboard(upgradedDashboard));
       dispatch(setWelcomeScreenOpen(false));
       dispatch(setDraft(true));
       dispatch(
         createNotificationThunk(
           'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.1. You might need to refresh this page.'
-        )
-      );
-    }
-    if (dashboard.version == '2.1') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.1', '2.2');
-      dispatch(setDashboard(upgradedDashboard));
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setDraft(true));
-      dispatch(
-        createNotificationThunk(
-          'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.2. You might need to refresh this page.'
-        )
-      );
-    }
-
-    if (dashboard.version == '2.2') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.2', '2.3');
-      dispatch(setDashboard(upgradedDashboard));
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setDraft(true));
-      dispatch(
-        createNotificationThunk(
-          'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.3. You might need to refresh this page and reactivate extensions.'
-        )
-      );
-    }
-
-    if (dashboard.version == '2.3') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.3', '2.4');
-      dispatch(setDashboard(upgradedDashboard));
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setDraft(true));
-      dispatch(
-        createNotificationThunk(
-          'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.4. You might need to refresh this page and reactivate extensions.'
+          `Your old dashboard was migrated to version ${upgradedDashboard.version}. You might need to refresh this page and reactivate extensions.`
         )
       );
     }
