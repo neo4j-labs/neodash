@@ -4,6 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
 import { RenderSubValue } from '../../../report/ReportRecordProcessing';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
+import { getRecordType, toNumber } from '../../ChartUtils';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
@@ -105,17 +106,23 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         realValueRowIndex
       ];
 
-      newValue.push(RenderSubValue(val));
+      if (newValue.low) {
+        newValue.push(toNumber(val));
+      } else {
+        newValue.push(RenderSubValue(val));
+      }
     } else if (!isMulti) {
       newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
         ._fields[realValueRowIndex];
 
-      newValue = RenderSubValue(newValue);
+      newValue = newValue.low ? toNumber(newValue) : RenderSubValue(newValue);
     } else {
       let ele = valDisplayReference.filter((x) => !newDisplay.includes(x))[0];
       newValue = [...valReference];
       newValue.splice(valDisplayReference.indexOf(ele), 1);
     }
+
+    newDisplay = newDisplay.low ? toNumber(newDisplay) : RenderSubValue(newDisplay);
 
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
