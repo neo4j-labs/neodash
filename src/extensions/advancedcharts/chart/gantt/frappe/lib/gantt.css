@@ -73,9 +73,9 @@
 .gantt .bar-label {
     fill: #000;
     dominant-baseline: central;
-    text-anchor: middle;
+    text-anchor: start;
     font-size: 12px;
-    font-weight: lighter;
+    font-weight: normal;
 
 }
 
