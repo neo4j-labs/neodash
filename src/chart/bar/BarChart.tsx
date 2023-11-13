@@ -15,7 +15,6 @@ const NeoBarChart = (props: ChartProps) => {
 
   const [keys, setKeys] = React.useState<string[]>([]);
   const [data, setData] = React.useState<Record<string, any>[]>([]);
-  const [adjustedData, setAdjustedData] = React.useState<Record<string, any>[]>([]);
   const settings = props.settings ? props.settings : {};
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 50;
@@ -55,6 +54,7 @@ const NeoBarChart = (props: ChartProps) => {
     props.getGlobalParameter
   );
 
+  // Populates data with record information
   useEffect(() => {
     let newKeys = {};
     let newData: Record<string, any>[] = records
@@ -128,6 +128,7 @@ const NeoBarChart = (props: ChartProps) => {
     return chartColorsByScheme[colorIndex];
   };
 
+  // Function to call from BarComponent. Conducts necessary logic for Report Action.
   const handleBarClick = (bar, event) => {
     // Prevent any default action or bubbling if necessary to avoid interfering with other handlers
     event.preventDefault();
@@ -159,13 +160,14 @@ const NeoBarChart = (props: ChartProps) => {
     }
   };
 
+  // Used instead of BarChartComponent when Position Label !== 'off'
   const BarComponent = ({ bar, borderColor, onClick }) => {
     let shade = false;
     let darkTop = false;
     let includeIndex = false;
-    let x;
+    let x: number;
     bar.width ? (x = bar.width / 2) : (x = 0);
-    let y;
+    let y: number;
     bar.height ? (y = bar.height / 2) : (y = 0);
     let textAnchor = 'middle';
     if (positionLabel == 'top') {
@@ -184,6 +186,7 @@ const NeoBarChart = (props: ChartProps) => {
 
     return (
       <g transform={`translate(${bar.x},${bar.y})`} 
+      // onClick event to trigger event to pass value with report action
       onClick={(event) => onClick(bar.data, event)}
       style={{ cursor: 'pointer' }}
         >
@@ -255,6 +258,7 @@ const NeoBarChart = (props: ChartProps) => {
     (data.length - 1) * 4 +
     (data.length - 1) * innerPadding * 4;
 
+  // Container to make the chart scroll horizontally
   const scrollableWrapperStyle: React.CSSProperties = {
     width:
       legendPosition === 'Horizontal'
@@ -266,6 +270,7 @@ const NeoBarChart = (props: ChartProps) => {
     whiteSpace: 'nowrap',
   };
 
+  // Container for scrolling container to scroll in
   const barChartStyle: React.CSSProperties = {
     width: '100%',
     overflowX: 'auto',
@@ -369,6 +374,7 @@ const NeoBarChart = (props: ChartProps) => {
                     },
                   ]
                 : [
+                  // If legend is vertical
                     {
                       dataFrom: 'keys',
                       anchor: 'bottom-right',
