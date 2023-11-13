@@ -133,6 +133,7 @@ export default class Gantt {
     const default_options = {
       header_height: 50,
       column_width: 30,
+      min_bar_width: 10,
       step: 24,
       view_modes: [...Object.values(VIEW_MODE)],
       bar_height: 20,
@@ -260,7 +261,7 @@ export default class Gantt {
       this.options.column_width = 120;
     } else if (view_mode === VIEW_MODE.QUARTER) {
       this.options.step = 24 * 90;
-      this.options.column_width = 120;
+      this.options.column_width = 200;
     } else if (view_mode === VIEW_MODE.YEAR) {
       this.options.step = 24 * 365;
       this.options.column_width = 120;
@@ -316,6 +317,8 @@ export default class Gantt {
         cur_date = date_utils.add(cur_date, 1, 'year');
       } else if (this.view_is(VIEW_MODE.MONTH)) {
         cur_date = date_utils.add(cur_date, 1, 'month');
+      } else if (this.view_is(VIEW_MODE.QUARTER)) {
+        cur_date = date_utils.add(cur_date, 3, 'month');
       } else {
         cur_date = date_utils.add(cur_date, this.options.step, 'hour');
       }
@@ -445,6 +448,10 @@ export default class Gantt {
       if (this.view_is(VIEW_MODE.MONTH) && date.getMonth() % 3 === 0) {
         tick_class += ' thick';
       }
+      // thick ticks for half years
+      if (this.view_is(VIEW_MODE.QUARTER) && date.getMonth() % 6 === 0) {
+        tick_class += ' thick';
+      }
 
       createSVG('path', {
         d: `M ${tick_x} ${tick_y} v ${tick_height}`,
@@ -454,6 +461,8 @@ export default class Gantt {
 
       if (this.view_is(VIEW_MODE.MONTH)) {
         tick_x += (date_utils.get_days_in_month(date) * this.options.column_width) / 30;
+      } else if (this.view_is(VIEW_MODE.QUARTER)) {
+        tick_x += (date_utils.get_days_in_month(date) * this.options.column_width) / 90;
       } else {
         tick_x += this.options.column_width;
       }
@@ -534,6 +543,7 @@ export default class Gantt {
           ? date_utils.format(date, 'D MMM', this.options.language)
           : date_utils.format(date, 'D', this.options.language),
       Month_lower: date_utils.format(date, 'MMMM', this.options.language),
+      Quarter_lower: date_utils.format(date, 'MMMM', this.options.language),
       Year_lower: date_utils.format(date, 'YYYY', this.options.language),
       'Quarter Day_upper':
         date.getDate() !== last_date.getDate() ? date_utils.format(date, 'D MMM', this.options.language) : '',
@@ -547,6 +557,8 @@ export default class Gantt {
       Week_upper:
         date.getMonth() !== last_date.getMonth() ? date_utils.format(date, 'MMMM', this.options.language) : '',
       Month_upper:
+        date.getFullYear() !== last_date.getFullYear() ? date_utils.format(date, 'YYYY', this.options.language) : '',
+      Quarter_upper:
         date.getFullYear() !== last_date.getFullYear() ? date_utils.format(date, 'YYYY', this.options.language) : '',
       Year_upper:
         date.getFullYear() !== last_date.getFullYear() ? date_utils.format(date, 'YYYY', this.options.language) : '',
@@ -568,7 +580,9 @@ export default class Gantt {
       Week_lower: 0,
       Week_upper: (this.options.column_width * 4) / 2,
       Month_lower: this.options.column_width / 2,
+      Quarter_lower: this.options.column_width / 2 / 3,
       Month_upper: (this.options.column_width * 12) / 2,
+      Quarter_upper: this.options.column_width / 2 / 3,
       Year_lower: this.options.column_width / 2,
       Year_upper: (this.options.column_width * 30) / 2,
     };
@@ -848,6 +862,9 @@ export default class Gantt {
       rem = dx % (this.options.column_width / 7);
       position = odx - rem + (rem < this.options.column_width / 14 ? 0 : this.options.column_width / 7);
     } else if (this.view_is(VIEW_MODE.MONTH)) {
+      rem = dx % (this.options.column_width / 30);
+      position = odx - rem + (rem < this.options.column_width / 60 ? 0 : this.options.column_width / 30);
+    } else if (this.view_is(VIEW_MODE.QUARTER)) {
       rem = dx % (this.options.column_width / 30);
       position = odx - rem + (rem < this.options.column_width / 60 ? 0 : this.options.column_width / 30);
     } else {

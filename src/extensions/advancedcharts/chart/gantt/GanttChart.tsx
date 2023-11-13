@@ -168,6 +168,8 @@ const NeoGanttChart = (props: ChartProps) => {
           tasks={tasks}
           height={props.dimensions?.height}
           viewMode={viewMode}
+          minBarHeight={15}
+          maxBarHeight={100}
           onBarRightClick={(e) => {
             setSelectedTask(e);
           }}

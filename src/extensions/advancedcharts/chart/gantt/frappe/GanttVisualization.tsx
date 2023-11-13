@@ -42,7 +42,7 @@ export default class ReactGantt extends Component {
       step: STEP_SIZE,
       draggable: false,
       // view_modes: [...Object.values(VIEW_MODE)],
-      bar_height: Math.max(15, barHeight),
+      bar_height: Math.min(Math.max(this.props.minBarHeight, barHeight), this.props.maxBarHeight),
       // bar_corner_radius: 3,
       // arrow_curve: 5,
       padding: TASK_PADDING,

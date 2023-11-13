@@ -66,9 +66,9 @@ export default class Bar {
     this.y = this.compute_y();
     this.corner_radius = this.gantt.options.bar_corner_radius;
     this.duration = date_utils.diff(this.task._end, this.task._start, 'hour') / this.gantt.options.step;
-    this.width = Math.max(25, this.gantt.options.column_width * this.duration);
+    this.width = Math.max(this.gantt.options.min_bar_width, this.gantt.options.column_width * this.duration);
     this.progress_width = Math.max(
-      25,
+      this.gantt.options.min_bar_width,
       this.gantt.options.column_width * this.duration * (this.task.progress / 100) || 0
     );
     this.group = createSVG('g', {
