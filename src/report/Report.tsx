@@ -249,7 +249,7 @@ export const NeoReport = ({
   } else if (status == QueryStatus.RUNNING) {
     return loadingIcon;
   } else if (status == QueryStatus.NO_DATA) {
-    return <NeoCodeViewerComponent value={'Query returned no data.'} />;
+    return <NeoCodeViewerComponent value={settings?.noDataMessage || 'Query returned no data.'} />;
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
     return <NoDrawableDataErrorMessage />;
   } else if (status == QueryStatus.COMPLETE) {

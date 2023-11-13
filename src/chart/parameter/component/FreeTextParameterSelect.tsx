@@ -39,8 +39,12 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
       return;
     }
 
-    if (value == null && clearParameterOnFieldClear) {
-      debouncedSetParameterValue(defaultValue);
+    if (value == '') {
+      if (clearParameterOnFieldClear) {
+        debouncedSetParameterValue(undefined);
+      } else {
+        debouncedSetParameterValue(defaultValue);
+      }
     } else {
       debouncedSetParameterValue(value);
     }
