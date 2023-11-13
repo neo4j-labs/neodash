@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import Gantt from './lib';
 import { createUUID } from '../../../../../utils/uuid';
 
-const TASK_PADDING = 18;
+const TASK_PADDING = 9;
 const HEADER_HEIGHT = 50;
 const STEP_SIZE = 8;
 const COLUMN_WIDTH = 30;

@@ -108,7 +108,7 @@ export default class Arrow {
                     M ${start_x + this.from_task.$bar.getWidth()} ${start_y}
                     h ${padding}
                     a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
-                    v ${-bar_height / 2}
+                    v ${-bar_height / 2.5}
                     a ${curve} ${curve} 0 0 ${counter_clockwise} -${curve} ${curve_y}
                     H ${left}
                     a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
@@ -170,7 +170,7 @@ export default class Arrow {
                         M ${start_x} ${start_y}
                         h ${-padding}
                         a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
-                        V ${offset + bar_height / 2}
+                        V ${offset + bar_height / 2.5}
                         a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
                         L ${end_x + this.to_task.$bar.getWidth() + padding} ${end_y + bar_height / 2}
                         a ${curve} ${curve} 0 0 ${counter_clockwise} ${curve} ${curve_y}
