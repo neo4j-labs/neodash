@@ -10,31 +10,13 @@ import { extensionEnabled } from '../../utils/ReportUtils';
 import { getPageNumbersAndNamesList, getRule, performActionOnElement } from '../../extensions/advancedcharts/Utils';
 import { getOriginalRecordForNivoClickEvent } from './util';
 
-/**
- * Embeds a BarReport (from Nivo) into NeoDash.
- *  This visualization was extracted from https://github.com/neo4j-labs/charts.
- * TODO: There is a regression here with nivo > 0.73 causing the bar chart to have a very slow re-render.
- */
 const NeoBarChart = (props: ChartProps) => {
-  /**
-   * The code fragment below is a workaround for a bug in nivo > 0.73 causing bar charts to re-render very slowly.
-   */
-  const [loading, setLoading] = React.useState(false);
-  useEffect(() => {
-    setLoading(true);
-    const timeOutId = setTimeout(() => {
-      setLoading(false);
-    }, 1);
-    return () => clearTimeout(timeOutId);
-  }, [props.selection]);
-
   const { records, selection } = props;
 
   const [keys, setKeys] = React.useState<string[]>([]);
   const [data, setData] = React.useState<Record<string, any>[]>([]);
   const [adjustedData, setAdjustedData] = React.useState<Record<string, any>[]>([]);
   const settings = props.settings ? props.settings : {};
-  const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 50;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
@@ -117,24 +99,7 @@ const NeoBarChart = (props: ChartProps) => {
     setKeys(Object.keys(newKeys));
     setData(newData);
 
-    if (minBarHeight > 0) {
-      let modifiedData = JSON.parse(JSON.stringify(newData)); // deep copy the data
-      for (let row of modifiedData) {
-        for (let key of Object.keys(newKeys)) {
-          if (!row[key] || row[key] < minBarHeight) {
-            row[key] = minBarHeight;
-          }
-        }
-      }
-      setAdjustedData(modifiedData);
-    } else {
-      setAdjustedData(newData); // Use original data if minBarHeight is 0
-    }
   }, [selection, minBarHeight]);
-
-  if (loading) {
-    return <></>;
-  }
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
@@ -195,8 +160,6 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   const BarComponent = ({ bar, borderColor, onClick }) => {
-    const dataItem = data.find((item) => item.index === bar.data.index && item.id === bar.data.id);
-    console.log(dataItem ? dataItem.value : null);
     let shade = false;
     let darkTop = false;
     let includeIndex = false;
@@ -315,7 +278,7 @@ const NeoBarChart = (props: ChartProps) => {
       <div style={scrollableWrapperStyle}>
         <BarChartComponent
           theme={canvas ? themeNivoCanvas(props.theme) : themeNivo}
-          data={minBarHeight > 0 ? adjustedData : data}
+          data={data}
           key={`${selection.index}___${selection.value}`}
           layout={layout}
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
