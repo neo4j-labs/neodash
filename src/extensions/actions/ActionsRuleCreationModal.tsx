@@ -212,7 +212,7 @@ export const NeoCustomReportActionsModal = ({
     if (customization == 'set variable') {
       return (
         <>
-          <div style={{ marginLeft: 10, display: 'inline' }}>
+          <div style={{ marginLeft: 10, display: 'inline' }} className={`n-align-middle ${type === 'bar' ? 'n-w-3/4' : 'n-w-4/5'}`}>
             <span
               style={{
                 height: '2.25rem',
@@ -228,12 +228,11 @@ export const NeoCustomReportActionsModal = ({
             </span>
           </div>
           <TextInput
-            className={`n-mt-0.5 n-inline-block n-float-right font-bold ${
-              type === 'bar' ? 'n-w-7/12' : 'n-w-1/2'
-            }`}
+            className={`n-mt-0.5 n-inline-block font-bold n-ml-2`
+            }
             aria-label='Choose variable'
             fluid
-            style={{ minWidth: 100, fontWeight: 700 }}
+            style={{ minWidth: 100, fontWeight: 700, width: type === 'bar' ? '100%' : '50%' }}
             placeholder=''
             value={rule.customizationValue}
             onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}

@@ -452,6 +452,11 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 'auto',
       },
+      minBarHeight: {
+        label: 'Min Bar Height',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
       minValue: {
         label: 'Min Value',
         type: SELECTION_TYPES.NUMBER,

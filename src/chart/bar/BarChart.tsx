@@ -75,44 +75,45 @@ const NeoBarChart = (props: ChartProps) => {
 
   useEffect(() => {
     let newKeys = {};
-    let newData: Record<string, any>[] = records.reduce((data: Record<string, any>[], row: Record<string, any>) => {
-      try {
-        if (!selection || !selection.index || !selection.value) {
+    let newData: Record<string, any>[] = records
+      .reduce((data: Record<string, any>[], row: Record<string, any>) => {
+        try {
+          if (!selection || !selection.index || !selection.value) {
+            return data;
+          }
+          const index = convertRecordObjectToString(row.get(selection.index));
+          const idx = data.findIndex((item) => item.index === index);
+
+          const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
+          const rawValue = recordToNative(row.get(selection.value));
+          const value = rawValue !== null ? rawValue : 0.0000001;
+          if (isNaN(value)) {
+            return data;
+          }
+          newKeys[key] = true;
+
+          if (idx > -1) {
+            data[idx][key] = value;
+          } else {
+            data.push({ index, [key]: value });
+          }
+
           return data;
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          return [];
         }
-        const index = convertRecordObjectToString(row.get(selection.index));
-        const idx = data.findIndex((item) => item.index === index);
-
-        const key = selection.key !== '(none)' ? recordToNative(row.get(selection.key)) : selection.value;
-        const rawValue = recordToNative(row.get(selection.value));
-        const value = rawValue !== null ? rawValue : 0.0000001;
-        if (isNaN(value)) {
-          return data;
-        }
-        newKeys[key] = true;
-
-        if (idx > -1) {
-          data[idx][key] = value;
-        } else {
-          data.push({ index, [key]: value });
-        }
-
-        return data;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        return [];
-      }
-    }, [])
-    .map((row) => {
-      Object.keys(newKeys).forEach((key) => {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!row.hasOwnProperty(key)) {
-          row[key] = 0;
-        }
+      }, [])
+      .map((row) => {
+        Object.keys(newKeys).forEach((key) => {
+          // eslint-disable-next-line no-prototype-builtins
+          if (!row.hasOwnProperty(key)) {
+            row[key] = 0;
+          }
+        });
+        return row;
       });
-      return row;
-    });
     setKeys(Object.keys(newKeys));
     setData(newData);
 
@@ -162,18 +163,47 @@ const NeoBarChart = (props: ChartProps) => {
     return chartColorsByScheme[colorIndex];
   };
 
-  const BarComponent = ({ bar, borderColor }) => {
-        const dataItem = data.find(item => item.index === bar.data.index && item.id === bar.data.id);
-        console.log(dataItem ? dataItem.value: null);
-    const value = dataItem ? dataItem[bar.id] : null;
-    const indexValue = dataItem ? dataItem.index : null;
+  const handleBarClick = (bar, event) => {
+    // Prevent any default action or bubbling if necessary to avoid interfering with other handlers
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Get the original record that was used to draw this bar (or a group in a bar).
+    const record = getOriginalRecordForNivoClickEvent(bar.data, records, selection);
+
+    // From that record, check if there are any rules assigned to each of the fields (columns).
+    if (record) {
+      Object.keys(record).forEach((key) => {
+        const rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
+        // If there are rules assigned, run the rule with the specified field and value retrieved from the record.
+        if (rules) {
+          rules.forEach((rule) => {
+            const ruleField = rule.field; // The field the rule applies to
+            const ruleValue = record[ruleField]; // The value of that field in the record
+            // Perform the action defined by the rule with the value
+            performActionOnElement(
+              { field: ruleField, value: ruleValue },
+              actionsRules,
+              { ...props, pageNames: pageNames }, // The rest of the props needed for the action
+              'Click',
+              'bar'
+            );
+          });
+        }
+      });
+    }
+  };
+
+  const BarComponent = ({ bar, borderColor, onClick }) => {
+    const dataItem = data.find((item) => item.index === bar.data.index && item.id === bar.data.id);
+    console.log(dataItem ? dataItem.value : null);
     let shade = false;
     let darkTop = false;
     let includeIndex = false;
     let x;
-    bar.width ? x = bar.width / 2 : x = 0;
-    let y
-    bar.height ? y = bar.height / 2 : y=0;
+    bar.width ? (x = bar.width / 2) : (x = 0);
+    let y;
+    bar.height ? (y = bar.height / 2) : (y = 0);
     let textAnchor = 'middle';
     if (positionLabel == 'top') {
       if (layout == 'vertical') {
@@ -190,7 +220,10 @@ const NeoBarChart = (props: ChartProps) => {
     }
 
     return (
-      <g transform={`translate(${bar.x},${bar.y})`}>
+      <g transform={`translate(${bar.x},${bar.y})`} 
+      onClick={(event) => onClick(bar.data, event)}
+      style={{ cursor: 'pointer' }}
+        >
         {shade ? <rect x={-3} y={7} width={bar.width} height={bar.height} fill='rgba(0, 0, 0, .07)' /> : <></>}
         <rect width={bar.width} height={bar.height} fill={bar.color} />
         {darkTop ? (
@@ -243,7 +276,7 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   // positionLabel == 'off' ? {} :
-  const extraProperties = { barComponent: BarComponent };
+  const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 
@@ -291,22 +324,24 @@ const NeoBarChart = (props: ChartProps) => {
             // Get the original record that was used to draw this bar (or a group in a bar).
             const record = getOriginalRecordForNivoClickEvent(e, records, selection);
             // From that record, check if there are any rules assigned to each of the fields (columns).
-            record ? Object.keys(record).forEach((key) => {
-              let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
-              // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
-              rules &&
-                rules.forEach((rule) => {
-                  const ruleField = rule.field;
-                  const ruleValue = record[rule.value];
-                  performActionOnElement(
-                    { field: ruleField, value: ruleValue },
-                    actionsRules,
-                    { ...props, pageNames: pageNames },
-                    'Click',
-                    'bar'
-                  );
-                });
-            }): null;
+            record
+              ? Object.keys(record).forEach((key) => {
+                  let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
+                  // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
+                  rules &&
+                    rules.forEach((rule) => {
+                      const ruleField = rule.field;
+                      const ruleValue = record[rule.value];
+                      performActionOnElement(
+                        { field: ruleField, value: ruleValue },
+                        actionsRules,
+                        { ...props, pageNames: pageNames },
+                        'Click',
+                        'bar'
+                      );
+                    });
+                })
+              : null;
           }}
           keys={keys}
           indexBy='index'
