@@ -164,7 +164,7 @@ export const NeoCustomReportActionsModal = ({
             return undefined;
           }
           return fields[index].map((property, propertyIndex) => {
-            if (!['Click', 'onNodeClick', 'onActivityClick'].includes(c)) {
+            if (!['Click', 'onNodeClick', 'onTaskClick'].includes(c)) {
               return undefined;
             }
 
