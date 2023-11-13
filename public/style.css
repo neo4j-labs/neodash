@@ -86,6 +86,10 @@
   border: none !important;
 }
 
+.MuiDataGrid-footerContainer > div {
+  margin-top: -40px;
+}
+
 .MuiChip-root:before {
   border: none !important;
 }

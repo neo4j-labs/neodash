@@ -92,6 +92,11 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      noDataMessage: {
+        label: 'Override no data message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
+      },
     },
   },
   graph: {
@@ -184,7 +189,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
-
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -305,6 +309,11 @@ const _REPORT_TYPES = {
       customTablePropertiesOfModal: {
         label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
         type: SELECTION_TYPES.DICTIONARY,
+      },
+      noDataMessage: {
+        label: 'Override no data message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
       },
     },
   },
@@ -1272,6 +1281,11 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      multiSelectLimit: {
+        label: 'Multiselect Value Limit',
+        type: SELECTION_TYPES.NUMBER,
+        default: 5,
       },
       helperText: {
         label: 'Helper Text (Override)',
