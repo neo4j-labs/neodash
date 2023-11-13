@@ -3,8 +3,9 @@ import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
 import { NEODASH_VERSION } from '../dashboard/DashboardReducer';
 import {
+  assignDashboardUuidIfNotPresentThunk,
   loadDashboardFromNeo4jByNameThunk,
-  loadDashboardFromNeo4jByUUIDThunk,
+  loadDashboardFromNeo4jThunk,
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
@@ -29,6 +30,7 @@ import {
   clearDesktopConnectionProperties,
   clearNotification,
   setSSOEnabled,
+  setSSOProviders,
   setStandaloneEnabled,
   setAboutModalOpen,
   setStandaloneMode,
@@ -41,6 +43,7 @@ import { version } from '../modal/AboutModal';
 import neo4j, { auth, authTokenManagers } from 'neo4j-driver';
 import type { Neo4jScheme } from 'use-neo4j/dist/neo4j-config.interface';
 import { SSOProviderOriginal, handleRefreshingToken } from 'neo4j-client-sso';
+import { createUUID } from '../utils/uuid';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -119,9 +122,12 @@ export const createConnectionThunk =
         if (records && records[0] && records[0].error) {
           dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
         } else if (records && records[0] && records[0].keys[0] == 'connected') {
+          // Connected to Neo4j. Set state accordingly.
           dispatch(setConnectionProperties(protocol, url, port, database, username, password));
           dispatch(setConnectionModalOpen(false));
           dispatch(setConnected(true));
+          // An old dashboard (pre-2.3.5) may not always have a UUID. We catch this case here.
+          dispatch(assignDashboardUuidIfNotPresentThunk());
           dispatch(updateSessionParameterThunk('session_uri', `${protocol}://${url}:${port}`));
           dispatch(updateSessionParameterThunk('session_database', database));
           dispatch(updateSessionParameterThunk('session_username', username));
@@ -135,11 +141,11 @@ export const createConnectionThunk =
           ) {
             fetch(application.dashboardToLoadAfterConnecting)
               .then((response) => response.text())
-              .then((data) => dispatch(loadDashboardThunk(data)));
+              .then((data) => dispatch(loadDashboardThunk(createUUID(), data)));
             dispatch(setDashboardToLoadAfterConnecting(null));
           } else if (application.dashboardToLoadAfterConnecting) {
             const setDashboardAfterLoadingFromDatabase = (value) => {
-              dispatch(loadDashboardThunk(value));
+              dispatch(loadDashboardThunk(createUUID(), value));
             };
 
             // If we specify a dashboard by name, load the latest version of it.
@@ -155,7 +161,7 @@ export const createConnectionThunk =
               );
             } else {
               dispatch(
-                loadDashboardFromNeo4jByUUIDThunk(
+                loadDashboardFromNeo4jThunk(
                   driver,
                   application.standaloneDashboardDatabase,
                   application.dashboardToLoadAfterConnecting,
@@ -177,7 +183,7 @@ export const createConnectionThunk =
         query,
         parameters,
         1,
-        () => {},
+        () => { },
         (records) => validateConnection(records)
       );
     } catch (e) {
@@ -307,7 +313,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           dispatch(onConfirmLoadSharedDashboardThunk());
         }
 
-        window.history.pushState({}, document.title, '/');
+        window.history.pushState({}, document.title, window.location.pathname);
       } else {
         dispatch(setConnectionModalOpen(false));
         // dispatch(setWelcomeScreenOpen(false));
@@ -326,7 +332,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
             false
           )
         );
-        window.history.pushState({}, document.title, '/');
+        window.history.pushState({}, document.title, window.location.pathname);
       }
     } else {
       // dispatch(resetShareDetails());
@@ -393,6 +399,7 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
   let config = {
     ssoEnabled: false,
+    ssoProviders: [],
     ssoDiscoveryUrl: 'http://example.com',
     standalone: false,
     standaloneProtocol: 'neo4j',
@@ -430,6 +437,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     }
     const state = getState();
     dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
+    dispatch(setSSOProviders(config.ssoProviders));
 
     const { standalone } = config;
     dispatch(

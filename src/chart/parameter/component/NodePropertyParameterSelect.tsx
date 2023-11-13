@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { debounce, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
 import { RenderSubValue } from '../../../report/ReportRecordProcessing';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
+import { getRecordType, toNumber } from '../../ChartUtils';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
@@ -24,6 +25,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const { multiSelector, manualParameterSave } = props;
   const allParameters = props.allParameters ? props.allParameters : {};
   const [extraRecords, setExtraRecords] = React.useState([]);
+
   const [inputDisplayText, setInputDisplayText] = React.useState(
     props.parameterDisplayValue && multiSelector ? '' : props.parameterDisplayValue
   );
@@ -34,6 +36,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   const debouncedQueryCallback = useCallback(debounce(props.queryCallback, suggestionsUpdateTimeout), []);
   const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
+  const multiSelectLimit = props.settings && props.settings.multiSelectLimit ? props.settings.multiSelectLimit : 5;
   const propertyType = props.settings && props.settings.propertyType ? props.settings.propertyType : '';
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
@@ -103,28 +106,57 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         realValueRowIndex
       ];
 
-      newValue.push(RenderSubValue(val));
+      if (newValue.low) {
+        newValue.push(toNumber(val));
+      } else {
+        newValue.push(RenderSubValue(val));
+      }
     } else if (!isMulti) {
       newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
         ._fields[realValueRowIndex];
 
-      newValue = RenderSubValue(newValue);
+      newValue = newValue.low ? toNumber(newValue) : RenderSubValue(newValue);
     } else {
       let ele = valDisplayReference.filter((x) => !newDisplay.includes(x))[0];
       newValue = [...valReference];
       newValue.splice(valDisplayReference.indexOf(ele), 1);
     }
 
+    newDisplay = newDisplay.low ? toNumber(newDisplay) : RenderSubValue(newDisplay);
+
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
 
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
+
+  useEffect(() => {
+    // Handle external updates of parameter values, with varying value types and parameter selector types.
+    // Handles multiple scenarios if an external parameter changes type from value to lists.
+    const isArray = Array.isArray(props.parameterDisplayValue);
+    if (multiSelector) {
+      if (isArray) {
+        setInputDisplayText(props.parameterDisplayValue);
+        setInputValue(props.parameterDisplayValue);
+      } else if (props.parameterDisplayValue !== '') {
+        setInputDisplayText([props.parameterDisplayValue]);
+        setInputValue([props.parameterDisplayValue]);
+      } else {
+        setInputDisplayText('');
+        setInputValue([]);
+      }
+    } else {
+      setInputDisplayText(props.parameterDisplayValue);
+      setInputValue(props.parameterDisplayValue);
+    }
+  }, [props.parameterDisplayValue]);
+
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
+        limitTags={multiSelectLimit}
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
           maxWidth: 'calc(100% - 40px)',
@@ -151,7 +183,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
             variant='outlined'
           />
         )}
-        getOptionLabel={(option) => RenderSubValue(option)}
+        getOptionLabel={(option) => option?.toString() || ''}
       />
       {manualParameterSave ? <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} /> : <></>}
     </div>
