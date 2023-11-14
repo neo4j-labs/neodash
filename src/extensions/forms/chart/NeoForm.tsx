@@ -94,10 +94,17 @@ const NeoForm = (props: ChartProps) => {
                 } else {
                   forceRefreshDependentReports();
                   if (clearParametersAfterSubmit) {
-                    const paramCache = { ...props.parameters };
-                    Object.keys(paramCache).forEach((key) => {
-                      props.setGlobalParameter && props.setGlobalParameter(key, undefined);
-                    });
+                    const formFields = props?.settings?.formFields;
+                    if (formFields) {
+                      const entries = formFields.map((f) => f.settings);
+                      entries.forEach((entry) => {
+                        if (entry.multiSelector) {
+                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, []);
+                        } else {
+                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, '');
+                        }
+                      });
+                    }
                   }
                   if (hasSubmitMessage) {
                     setStatus(FormStatus.SUBMITTED);
