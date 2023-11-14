@@ -212,7 +212,7 @@ const _REPORT_TYPES = {
         default: 'force-directed',
       },
       graphDepthSep: {
-        label: 'Graph Depth Separation (experimental)',
+        label: 'Tree layout level distance',
         type: SELECTION_TYPES.NUMBER,
         default: '30',
       },
