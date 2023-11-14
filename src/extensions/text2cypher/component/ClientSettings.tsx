@@ -23,8 +23,6 @@ import { Status } from '../util/Status';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
-// TODO: the following
-// 1. the settings modal should save only when all the required fields are defined and we can correctly authenticate
 export const ClientSettings = ({
   modelProvider,
   settingState,
@@ -169,8 +167,7 @@ export const ClientSettings = ({
                   }
                 }}
               />
-              {/* TODO: Only show auth button if all required fields are filled in. */}
-              {defaultSettings[setting].hasAuthButton == true ? authButton : <></>}
+              {defaultSettings[setting]?.hasAuthButton ? authButton : <></>}
             </ListItem>
           );
         })}

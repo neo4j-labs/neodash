@@ -15,7 +15,7 @@ export const getSessionStorageHistoryKey = (pagenumber, cardId) => {
 export const getModelClientSessionStorageKey = () => 'query_translator_model_client_tmp';
 
 const checkExtensionConfig = (state: any) => {
-  return state.dashboard.extensions && state.dashboard.extensions[QUERY_TRANSLATOR_EXTENSION_NAME];
+  return state?.dashboard?.extensions[QUERY_TRANSLATOR_EXTENSION_NAME];
 };
 
 export const getHistory = (state: any) => {

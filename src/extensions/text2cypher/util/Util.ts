@@ -33,8 +33,6 @@ export function translateQuery(driver, dispatch, pagenumber, id, reportType, ext
           setResult(result);
         },
         (error) => {
-          // when on error - reopen the settings to avoid an infinitely looping loading screen
-          // TODO - still set the cypher query even though it fails
           dispatch(createNotification('Error when translating the natural language query', error));
           dispatch(toggleCardSettingsThunk(id, true));
         }

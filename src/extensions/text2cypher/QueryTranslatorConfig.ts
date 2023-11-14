@@ -93,11 +93,7 @@ export const QUERY_TRANSLATOR_CONFIG: QueryTranslatorConfig = {
  * @returns Predefined fields of configuration for an extension
  */
 export function getQueryTranslatorDefaultConfig(providerName) {
-  return QUERY_TRANSLATOR_CONFIG.availableClients &&
-    QUERY_TRANSLATOR_CONFIG.availableClients[providerName] &&
-    QUERY_TRANSLATOR_CONFIG.availableClients[providerName].settings
-    ? QUERY_TRANSLATOR_CONFIG.availableClients[providerName].settings
-    : {};
+  return QUERY_TRANSLATOR_CONFIG?.availableClients[providerName]?.settings || {};
 }
 
 /**

@@ -14,7 +14,6 @@ const QueryTranslatorButton = (active) => {
       icon={
         <>
           <LanguageIconSolid />
-          {/* TODO Use Needle Icon Badges when implemented. */}
           {active.active == '' || active.active == undefined ? (
             <ExclamationTriangleIconSolid color='red' className='-n-mt-1 n-ml-2 n-w-4/5'></ExclamationTriangleIconSolid>
           ) : (

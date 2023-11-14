@@ -131,7 +131,6 @@ export class OpenAiClient extends ModelClient {
   }
 
   addErrorMessage(error) {
-    // let finalMessage = `Please fix the query accordingly to this error: ${error}. Plain cypher code, no comments and no explanations and no unrequired symbols. Remember to respect the schema. Please remove any comment or explanation  from your result`;
     let finalMessage = `Error: ${error}. Please correct the query based on the provided error message. Ensure the query follows the expected format, adheres to the schema, and does not contain any comments, explanations, or unnecessary symbols. Please remove any comments or explanations from the query result.`;
     return { role: ChatCompletionRequestMessageRoleEnum.User, content: finalMessage };
   }

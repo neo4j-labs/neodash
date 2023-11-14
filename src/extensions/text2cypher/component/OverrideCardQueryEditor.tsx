@@ -43,7 +43,7 @@ export const NeoOverrideCardQueryEditor = ({
   const [language, setLanguage] = React.useState(Language.CYPHER);
   const [runningTranslation, setRunningTranslation] = React.useState(false);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
-
+  const [needsUpdate, setNeedsUpdate] = React.useState(true);
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
@@ -60,9 +60,7 @@ export const NeoOverrideCardQueryEditor = ({
     <NeoCodeEditorComponent
       value={cypherQuery}
       editable={true}
-      language={
-        reportTypes[reportType] && reportTypes[reportType].inputMode ? reportTypes[reportType].inputMode : 'cypher'
-      }
+      language={reportTypes[reportType]?.inputMode || 'cypher'}
       onChange={(value) => updateCypherQuery(value)}
       placeholder={`Enter Cypher here...`}
     />
@@ -71,6 +69,10 @@ export const NeoOverrideCardQueryEditor = ({
   function updateEnglishQuestion(value) {
     debouncedEnglishQuestionUpdate(pagenumber, reportId, value);
     setEnglishQuestion(value);
+    if (needsUpdate) {
+      updateCypherQuery(`${cypherQuery  } `);
+      setNeedsUpdate(false);
+    }
   }
 
   // To prevent a bug with the code editor component, we wrap it in an extra enclosing bracket.
@@ -193,7 +195,7 @@ export const NeoOverrideCardQueryEditor = ({
                 .
               </>
             ) : (
-              reportTypes[reportType] && reportTypes[reportType].helperText
+              reportTypes[reportType]?.helperText
             )}
           </div>
         </>
