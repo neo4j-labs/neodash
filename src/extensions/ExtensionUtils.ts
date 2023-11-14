@@ -7,7 +7,7 @@ import { FORMS } from './forms/FormsReportConfig';
 import { EXAMPLE_FORMS } from './forms/FormsExampleConfig';
 // Components can call this to check if any extension is enabled. For example, to decide whether to all rule-based styling.
 export const extensionEnabled = (extensions, name) => {
-  return extensions && extensions[name]?.active;
+  return extensions[name]?.active;
 };
 
 // Tell the application what charts are available, dynmically, based on the selected extensions.
