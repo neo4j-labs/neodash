@@ -77,7 +77,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     name: 'forms',
     label: 'Forms',
     author: 'Neo4j Professional Services',
-    image: 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg',
+    image: 'form.png',
     enabled: true,
     description:
       'Forms let you craft Cypher queries with multiple inputs, that are fired on demand. Using parameters from the dashboard, or form specific input, you will be able to trigger custom logic with forms.',

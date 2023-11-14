@@ -61,6 +61,8 @@ image::formselector.png[Parameter-only Form]
 
 |Confirmation Message | multiline text |Form submitted. |Text displayed to the user after the form is submitted successfully.
 
+|Clear parameters after submit |on/off |on | Clears all dashboard parameters in the form after submitting.
+
 |Has Submit Button |on/off |on | When enabled, lets the user submit the form with a button. Disabling turns the form into parameters-only mode.
 
 |Has Reset Button |on/off |on |When enabled, lets the user reset the form to enter more data. 

@@ -7,16 +7,16 @@ import { FORMS } from './forms/FormsReportConfig';
 import { EXAMPLE_FORMS } from './forms/FormsExampleConfig';
 // Components can call this to check if any extension is enabled. For example, to decide whether to all rule-based styling.
 export const extensionEnabled = (extensions, name) => {
-  return extensions && extensions[name] && extensions[name].active;
+  return extensions[name]?.active;
 };
 
 // Tell the application what charts are available, dynmically, based on the selected extensions.
 export const getReportTypes = (extensions) => {
   let charts = { ...REPORT_TYPES };
-  if (extensions && extensions['advanced-charts'] && extensions['advanced-charts'].active) {
+  if (extensions['advanced-charts']?.active) {
     charts = { ...charts, ...ADVANCED_REPORT_TYPES };
   }
-  if (extensions && extensions.forms && extensions.forms.active) {
+  if (extensions?.forms?.active) {
     charts = { ...charts, ...FORMS };
   }
   return charts;
@@ -25,10 +25,10 @@ export const getReportTypes = (extensions) => {
 // Tell the application what examples are available, dynmically, based on the selected extensions.
 export const getExampleReports = (extensions) => {
   let examples = [...EXAMPLE_REPORTS];
-  if (extensions && extensions['advanced-charts'] && extensions['advanced-charts'].active) {
+  if (extensions['advanced-charts']?.active) {
     examples = [...examples, ...EXAMPLE_ADVANCED_REPORTS];
   }
-  if (extensions && extensions.forms && extensions.forms.active) {
+  if (extensions?.forms?.active) {
     examples = [...examples, ...EXAMPLE_FORMS];
   }
   return examples;

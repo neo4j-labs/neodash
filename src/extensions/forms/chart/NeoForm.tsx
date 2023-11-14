@@ -20,13 +20,14 @@ enum FormStatus {
  */
 const NeoForm = (props: ChartProps) => {
   const { settings } = props;
-  const [submitButtonActive, setSubmitButtonActive] = React.useState(true);
   const buttonText = settings?.runButtonText ? settings.runButtonText : 'Submit';
   const confirmationMessage = settings?.confirmationMessage ? settings.confirmationMessage : 'Form Submitted.';
   const resetButtonText = settings?.resetButtonText ? settings.resetButtonText : 'Reset Form';
-  const hasResetButton = settings?.hasResetButton !== undefined ? settings.hasResetButton : true;
-  const hasSubmitButton = settings?.hasSubmitButton !== undefined ? settings.hasSubmitButton : true;
-  const hasSubmitMessage = settings?.hasSubmitMessage !== undefined ? settings.hasSubmitMessage : true;
+  const hasResetButton = settings?.hasResetButton ? settings.hasResetButton : true;
+  const hasSubmitButton = settings?.hasSubmitButton ? settings.hasSubmitButton : true;
+  const hasSubmitMessage = settings?.hasSubmitMessage ? settings.hasSubmitMessage : true;
+  const clearParametersAfterSubmit = settings?.clearParametersAfterSubmit ? settings.clearParametersAfterSubmit : false;
+  const [submitButtonActive, setSubmitButtonActive] = React.useState(true);
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
@@ -92,6 +93,19 @@ const NeoForm = (props: ChartProps) => {
                   setStatus(FormStatus.ERROR);
                 } else {
                   forceRefreshDependentReports();
+                  if (clearParametersAfterSubmit) {
+                    const formFields = props?.settings?.formFields;
+                    if (formFields) {
+                      const entries = formFields.map((f) => f.settings);
+                      entries.forEach((entry) => {
+                        if (entry.multiSelector) {
+                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, []);
+                        } else {
+                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, '');
+                        }
+                      });
+                    }
+                  }
                   if (hasSubmitMessage) {
                     setStatus(FormStatus.SUBMITTED);
                   } else {

@@ -7,7 +7,6 @@ import { SelectionConfirmationButton } from './SelectionConfirmationButton';
 import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponent';
 import { getRecordType, toNumber } from '../../ChartUtils';
 
-
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
     props.settings && props.settings.suggestionsUpdateTimeout ? props.settings.suggestionsUpdateTimeout : 250;
@@ -16,7 +15,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       ? props.settings.defaultValue
       : '';
 
-  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
+  const disabled = props?.settings?.disabled ? props.settings.disabled : false;
   const getInitialValue = (value, multi) => {
     if (value && Array.isArray(value)) {
       return multi ? value : null;
@@ -154,18 +153,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       setInputValue(props.parameterDisplayValue);
     }
   }, [props.parameterDisplayValue]);
-  
-  
+
   // The query used to populate the selector is invalid.
   if (extraRecords && extraRecords[0] && extraRecords[0].error) {
     return (
       <NeoCodeViewerComponent
-        value={
-          `The parameter value retrieval query is invalid: \n${ 
-          props.query 
-          }\n\nError message:\n${ 
-          extraRecords[0].error}`
-        }
+        value={`The parameter value retrieval query is invalid: \n${props.query}\n\nError message:\n${extraRecords[0].error}`}
       />
     );
   }
@@ -175,7 +168,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
-        options={extraRecords && extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        options={extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         disabled={disabled}
         limitTags={multiSelectLimit}
         style={{

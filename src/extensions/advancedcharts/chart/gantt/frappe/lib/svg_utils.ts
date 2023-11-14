@@ -43,7 +43,7 @@ function getAnimationElement(svgElement, attr, from, to, dur = '0.4s', begin = '
       from,
       to,
       dur,
-      begin: `click + ${  begin}`, // artificial click
+      begin: `click + ${begin}`, // artificial click
     });
     return svgElement;
   }
@@ -55,7 +55,7 @@ function getAnimationElement(svgElement, attr, from, to, dur = '0.4s', begin = '
     dur,
     begin,
     calcMode: 'spline',
-    values: `${from  };${  to}`,
+    values: `${from};${to}`,
     keyTimes: '0; 1',
     keySplines: cubic_bezier('ease-out'),
   });

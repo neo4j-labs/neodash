@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { ParameterSelectProps } from './ParameterSelect';
 import NeoDatePicker from '../../../component/field/DateField';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
 import { isCastableToNeo4jDate, isEmptyObject } from '../../ChartUtils';
 import { debounce } from '@mui/material';
@@ -27,11 +27,11 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
       : dayjs();
 
   const [inputDate, setInputDate] = React.useState(castPropsToJsDate(props.parameterValue));
-  const label = props.settings && props.settings.entityType ? props.settings.entityType : '';
-  const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
+  const label = props?.settings?.entityType ? props.settings.entityType : '';
+  const helperText = props?.settings?.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
-  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
+  const disabled = props?.settings?.disabled ? props.settings.disabled : false;
 
   const setParameterValue = (value) => {
     props.setParameterValue(castPropsToBoltDate(value));

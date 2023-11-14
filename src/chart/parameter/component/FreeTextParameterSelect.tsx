@@ -18,7 +18,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
-  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
+  const disabled = props?.settings?.disabled ? props.settings.disabled : false;
   const [running, setRunning] = React.useState(false);
   const [paramValueLocal, setParamValueLocal] = React.useState(null);
 
