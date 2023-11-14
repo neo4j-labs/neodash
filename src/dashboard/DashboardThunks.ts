@@ -5,6 +5,7 @@ import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
+import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -76,57 +77,24 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
     }
 
     // Attempt upgrade if dashboard version is outdated.
-    if (dashboard.version == '1.1') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '1.1', '2.0');
-      dispatch(setDashboard(upgradedDashboard));
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setDraft(true));
-      dispatch(
-        createNotificationThunk(
-          'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.0. You might need to refresh this page.'
-        )
+    while (VERSION_TO_MIGRATE[dashboard.version]) {
+      const upgradedDashboard = upgradeDashboardVersion(
+        dashboard,
+        dashboard.version,
+        VERSION_TO_MIGRATE[dashboard.version]
       );
-    }
-    if (dashboard.version == '2.0') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.0', '2.1');
       dispatch(setDashboard(upgradedDashboard));
       dispatch(setWelcomeScreenOpen(false));
       dispatch(setDraft(true));
       dispatch(
         createNotificationThunk(
           'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.1. You might need to refresh this page.'
-        )
-      );
-    }
-    if (dashboard.version == '2.1') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.1', '2.2');
-      dispatch(setDashboard(upgradedDashboard));
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setDraft(true));
-      dispatch(
-        createNotificationThunk(
-          'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.2. You might need to refresh this page.'
+          `Your old dashboard was migrated to version ${upgradedDashboard.version}. You might need to refresh this page and reactivate extensions.`
         )
       );
     }
 
-    if (dashboard.version == '2.2') {
-      const upgradedDashboard = upgradeDashboardVersion(dashboard, '2.2', '2.3');
-      dispatch(setDashboard(upgradedDashboard));
-      dispatch(setWelcomeScreenOpen(false));
-      dispatch(setDraft(true));
-      dispatch(
-        createNotificationThunk(
-          'Successfully upgraded dashboard',
-          'Your old dashboard was migrated to version 2.3. You might need to refresh this page and reactivate extensions.'
-        )
-      );
-    }
-
-    if (dashboard.version != '2.3') {
+    if (dashboard.version !== NEODASH_VERSION) {
       throw `Invalid dashboard version: ${dashboard.version}. Try restarting the application, or retrieve your cached dashboard using a debug report.`;
     }
 
@@ -294,7 +262,16 @@ export const loadDashboardFromNeo4jByNameThunk = (driver, database, name, callba
       query,
       { name: name },
       1,
-      () => {},
+      (status) => {
+        if (status == QueryStatus.NO_DATA) {
+          dispatch(
+            createNotificationThunk(
+              'Unable to load dashboard.',
+              'A dashboard with the provided name could not be found.'
+            )
+          );
+        }
+      },
       (records) => {
         if (records.length == 0) {
           dispatch(
@@ -380,6 +357,19 @@ export const assignDashboardUuidIfNotPresentThunk = () => (dispatch: any, getSta
 };
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
+  if (origin == '2.3' && target == '2.4') {
+    dashboard.pages.forEach((p) => {
+      p.reports.forEach((r) => {
+        r.x *= 2;
+        r.y *= 2;
+        r.width *= 2;
+        r.height *= 2;
+      });
+    });
+    dashboard.version = '2.4';
+    return dashboard;
+  }
+  // In 2.3 uuids were created, as well as a new format for specificing extensions.
   if (origin == '2.2' && target == '2.3') {
     dashboard.pages.forEach((p) => {
       p.reports.forEach((r) => {
@@ -398,7 +388,6 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
       activeReducers: [],
     };
     dashboard.version = '2.3';
-
     return dashboard;
   }
   if (origin == '2.1' && target == '2.2') {

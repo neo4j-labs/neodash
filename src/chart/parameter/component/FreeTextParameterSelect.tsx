@@ -63,6 +63,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
         defaultValue={defaultValue}
         value={inputText}
         variant='outlined'
+        multiline={props.multiline}
         placeholder={'Enter text here...'}
         style={{
           marginBottom: '20px',
@@ -75,7 +76,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
         onChange={(newValue) => {
           setRunning(true);
           setInputText(newValue);
-
+          props.onInputChange && props.onInputChange(newValue);
           handleParametersUpdate(newValue, manualParameterSave);
         }}
       />

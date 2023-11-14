@@ -92,6 +92,11 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      noDataMessage: {
+        label: 'Override no data message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
+      },
     },
   },
   graph: {
@@ -184,7 +189,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'width',
       },
-
       relationshipParticles: {
         label: 'Animated particles on Relationships',
         type: SELECTION_TYPES.LIST,
@@ -301,6 +305,11 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      noDataMessage: {
+        label: 'Override no data message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
       },
     },
   },
@@ -1011,7 +1020,7 @@ const _REPORT_TYPES = {
         label: 'Seperate Overlapping Markers',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       nodeColorScheme: {
         label: 'Node Color Scheme',
@@ -1213,6 +1222,12 @@ const _REPORT_TYPES = {
     settings: {
       multiSelector: {
         label: 'Multiple Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      multiline: {
+        label: 'Multiline',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,

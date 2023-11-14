@@ -102,6 +102,7 @@ pages:
 - link:areamap[Area Map] 
 - link:single-value[Single Value] 
 - link:sankey[Sankey Chart] 
+- link:gantt[Gantt Chart] 
 - link:gauge[Gauge Chart]
 - link:raw-json[Raw JSON] 
 - link:parameter-select[Parameter Select] 
