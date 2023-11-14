@@ -16,6 +16,7 @@ import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 import { Tooltip } from '@mui/material';
 import NeoDashboardSidebarExportModal from '../sidebar/modal/DashboardSidebarExportModal';
 import NeoExportModal from '../../modal/ExportModal';
+import { setDraft } from '../../application/ApplicationActions';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
@@ -173,6 +174,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setDashboardTitle(title));
   },
   updateDashboardSetting: (setting, value) => {
+    dispatch(setDraft(true));
     dispatch(updateDashboardSetting(setting, value));
   },
 });

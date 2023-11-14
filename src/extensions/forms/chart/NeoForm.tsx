@@ -27,6 +27,7 @@ const NeoForm = (props: ChartProps) => {
   const hasSubmitButton = settings?.hasSubmitButton ? settings.hasSubmitButton : true;
   const hasSubmitMessage = settings?.hasSubmitMessage ? settings.hasSubmitMessage : true;
   const clearParametersAfterSubmit = settings?.clearParametersAfterSubmit ? settings.clearParametersAfterSubmit : false;
+  const [submitButtonActive, setSubmitButtonActive] = React.useState(true);
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
@@ -58,6 +59,15 @@ const NeoForm = (props: ChartProps) => {
               settings={field.settings}
               parameters={props.parameters}
               queryCallback={props.queryCallback}
+              updateReportSetting={(key, value) => {
+                // If anyone of the fields is in a loading state (debounce / waiting for input) we disable submission temporarily.
+                if (key == 'typing' && value == true) {
+                  setSubmitButtonActive(false);
+                }
+                if (key == 'typing' && value == undefined) {
+                  setSubmitButtonActive(true);
+                }
+              }}
               setGlobalParameter={props.setGlobalParameter}
               getGlobalParameter={props.getGlobalParameter}
             />
@@ -67,6 +77,7 @@ const NeoForm = (props: ChartProps) => {
           <Button
             style={{ marginLeft: 15 }}
             id='form-submit'
+            disabled={!submitButtonActive}
             onClick={() => {
               if (!props.query || !props.query.trim()) {
                 props.createNotification(

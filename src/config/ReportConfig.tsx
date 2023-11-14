@@ -1020,7 +1020,7 @@ const _REPORT_TYPES = {
         label: 'Seperate Overlapping Markers',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       nodeColorScheme: {
         label: 'Node Color Scheme',
@@ -1222,6 +1222,12 @@ const _REPORT_TYPES = {
     settings: {
       multiSelector: {
         label: 'Multiple Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      multiline: {
+        label: 'Multiline',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,

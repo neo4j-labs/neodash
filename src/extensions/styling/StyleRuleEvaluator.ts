@@ -136,10 +136,13 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
     ruleValue = Number(ruleValue);
   }
   if (condition == '=') {
-    return realValue == ruleValue;
+    return realValue === ruleValue;
   }
   if (condition == '!=') {
     return realValue !== ruleValue;
+  }
+  if (!isNaN(Number(ruleValue))) {
+    ruleValue = Number(ruleValue);
   }
   if (condition == '<=') {
     return realValue <= ruleValue;

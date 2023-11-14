@@ -8,6 +8,7 @@ import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
 import NeoAreaMapChart from './chart/areamap/AreaMapChart';
+import NeoGanttChart from './chart/gantt/GanttChart';
 
 export const ADVANCED_REPORT_TYPES = {
   gauge: {
@@ -998,6 +999,76 @@ export const ADVANCED_REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
+      },
+    },
+  },
+  gantt: {
+    label: 'Gantt Chart',
+    helperText: <div>A gantt chart requires nodes (events) and relationships (dependencies).</div>,
+    maxRecords: 300,
+    component: NeoGanttChart,
+    withoutFooter: true,
+    useNodePropsAsFields: true,
+    autoAssignSelectedProperties: true,
+    selection: {
+      properties: {
+        label: 'Node Properties',
+        type: SELECTION_TYPES.NODE_PROPERTIES,
+      },
+    },
+    settings: {
+      barColor: {
+        label: 'Bar Color',
+        type: SELECTION_TYPES.TEXT,
+        default: '#a3a3ff',
+      },
+      nameProperty: {
+        label: 'Task Label Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'name',
+      },
+      startDateProperty: {
+        label: 'Task Start Date Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'startDate',
+      },
+      endDateProperty: {
+        label: 'Task End Date Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'endDate',
+      },
+      orderProperty: {
+        label: 'Task Ordering Property',
+        type: SELECTION_TYPES.TEXT,
+        default: '(auto)',
+      },
+      dependencyTypeProperty: {
+        label: 'Dependency Type Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'rel_type',
+      },
+      viewMode: {
+        label: 'View mode',
+        type: SELECTION_TYPES.LIST,
+        values: ['auto', 'Half Day', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
+        default: 'auto',
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
       },
     },
   },

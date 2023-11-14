@@ -13,7 +13,7 @@ const NeoFormCardSettingsModal = ({ open, setOpen, index, formFields, setFormFie
       className='dialog-l'
       open={open}
       onClose={() => setOpen(false)}
-      style={{ overflow: 'inherit', overflowY: 'scroll' }}
+      style={{ overflow: 'inherit', overflowY: 'auto' }}
       aria-labelledby='form-dialog-title'
     >
       <Dialog.Header id='form-dialog-title'>Editing Form Field #{index + 1}</Dialog.Header>

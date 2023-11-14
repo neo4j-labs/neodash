@@ -4,6 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
 import { RenderSubValue } from '../../../report/ReportRecordProcessing';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
+import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponent';
 import { getRecordType, toNumber } from '../../ChartUtils';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
@@ -131,6 +132,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
 
+  // If we don't have an error message, render the selector:
   useEffect(() => {
     // Handle external updates of parameter values, with varying value types and parameter selector types.
     // Handles multiple scenarios if an external parameter changes type from value to lists.
@@ -151,6 +153,15 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       setInputValue(props.parameterDisplayValue);
     }
   }, [props.parameterDisplayValue]);
+
+  // The query used to populate the selector is invalid.
+  if (extraRecords && extraRecords[0] && extraRecords[0].error) {
+    return (
+      <NeoCodeViewerComponent
+        value={`The parameter value retrieval query is invalid: \n${props.query}\n\nError message:\n${extraRecords[0].error}`}
+      />
+    );
+  }
 
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
@@ -173,6 +184,11 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         }}
         isOptionEqualToValue={(option, value) => {
           return (option && option.toString()) === (value && value.toString());
+        }}
+        onOpen={() => {
+          if (extraRecords && extraRecords.length == 0) {
+            debouncedQueryCallback(props.query, { input: `${inputDisplayText}`, ...allParameters }, setExtraRecords);
+          }
         }}
         value={inputValue}
         onChange={propagateSelection}

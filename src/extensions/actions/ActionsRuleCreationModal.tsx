@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { XMarkIconOutline, PlusIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  AdjustmentsHorizontalIconOutline,
+  XMarkIconOutline,
+  PlusIconOutline,
+  PlayIconSolid,
+  SparklesIconOutline,
+} from '@neo4j-ndl/react/icons';
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
 import { Autocomplete, TextField } from '@mui/material';
@@ -41,6 +47,13 @@ const RULE_CONDITIONS = {
       label: 'Link Click',
     },
   ],
+  gantt: [
+    {
+      value: 'onTaskClick',
+      label: 'Task Click',
+      default: true,
+    },
+  ],
 };
 
 // For each report type, the customizations that can be specified using rules.
@@ -66,6 +79,16 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
     },
   ],
   graph: [
+    {
+      value: 'set variable',
+      label: 'Parameter',
+    },
+    {
+      value: 'set page',
+      label: 'Page',
+    },
+  ],
+  gantt: [
     {
       value: 'set variable',
       label: 'Parameter',
@@ -140,14 +163,14 @@ export const NeoCustomReportActionsModal = ({
     if (!fields) {
       return [];
     }
-    if (type == 'graph' || type == 'map') {
+    if (type == 'graph' || type == 'map' || type == 'gantt') {
       return fields
         .map((node, index) => {
           if (!Array.isArray(node)) {
             return undefined;
           }
           return fields[index].map((property, propertyIndex) => {
-            if (!['Click', 'onNodeClick'].includes(c)) {
+            if (!['Click', 'onNodeClick', 'onTaskClick'].includes(c)) {
               return undefined;
             }
 
