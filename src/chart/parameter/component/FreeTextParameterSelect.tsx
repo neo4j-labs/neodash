@@ -18,6 +18,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
+  const disabled = props.settings && props.settings.disabled ? props.settings.disabled : false;
   const [running, setRunning] = React.useState(false);
   const [paramValueLocal, setParamValueLocal] = React.useState(null);
 
@@ -62,6 +63,7 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
         defaultValue={defaultValue}
         value={inputText}
         variant='outlined'
+        multiline={props.multiline}
         placeholder={'Enter text here...'}
         style={{
           marginBottom: '20px',
@@ -70,15 +72,16 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
           minWidth: `calc(100% - ${manualParameterSave ? '80' : '30'}px)`,
           maxWidth: 'calc(100% - 30px)',
         }}
+        disabled={disabled}
         onChange={(newValue) => {
           setRunning(true);
           setInputText(newValue);
-
+          props.onInputChange && props.onInputChange(newValue);
           handleParametersUpdate(newValue, manualParameterSave);
         }}
       />
       {manualParameterSave ? <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} /> : <></>}
-      {running ? <CircularProgress size={26} style={{ marginTop: '20px', marginLeft: '5px' }} /> : <></>}
+      {running ? <CircularProgress size={18} style={{ position: 'absolute', right: '20px' }} /> : <></>}
     </div>
   );
 };
