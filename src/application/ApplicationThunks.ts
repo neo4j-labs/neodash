@@ -2,7 +2,7 @@ import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
 import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
-import { NEODASH_VERSION } from '../dashboard/DashboardReducer';
+import { NEODASH_VERSION, VERSION_TO_MIGRATE } from '../dashboard/DashboardReducer';
 import {
   assignDashboardUuidIfNotPresentThunk,
   loadDashboardFromNeo4jByNameThunk,
@@ -39,6 +39,7 @@ import {
   setWaitForSSO,
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
+  setDraft,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
 import { createUUID } from '../utils/uuid';
@@ -130,7 +131,7 @@ export const createConnectionThunk =
         query,
         parameters,
         1,
-        () => { },
+        () => {},
         (records) => validateConnection(records)
       );
     } catch (e) {
@@ -405,33 +406,19 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
     // Auto-upgrade the dashboard version if an old version is cached.
     if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
-      if (state.dashboard.version == '2.0') {
-        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.0', '2.1');
-        dispatch(setDashboard(upgradedDashboard));
-        dispatch(
-          createNotificationThunk(
-            'Successfully upgraded dashboard',
-            'Your old dashboard was migrated to version 2.1. You might need to refresh this page.'
-          )
+      // Attempt upgrade if dashboard version is outdated.
+      while (VERSION_TO_MIGRATE[state.dashboard.version]) {
+        const upgradedDashboard = upgradeDashboardVersion(
+          state.dashboard,
+          state.dashboard.version,
+          VERSION_TO_MIGRATE[state.dashboard.version]
         );
-      }
-      if (state.dashboard.version == '2.1') {
-        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.1', '2.2');
         dispatch(setDashboard(upgradedDashboard));
+        dispatch(setDraft(true));
         dispatch(
           createNotificationThunk(
             'Successfully upgraded dashboard',
-            'Your old dashboard was migrated to version 2.2. You might need to refresh this page.'
-          )
-        );
-      }
-      if (state.dashboard.version == '2.2') {
-        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.2', '2.3');
-        dispatch(setDashboard(upgradedDashboard));
-        dispatch(
-          createNotificationThunk(
-            'Successfully upgraded dashboard',
-            'Your old dashboard was migrated to version 2.3. You might need to refresh this page.'
+            `Your old dashboard was migrated to version ${upgradedDashboard.version}. You might need to refresh this page and reactivate extensions.`
           )
         );
       }

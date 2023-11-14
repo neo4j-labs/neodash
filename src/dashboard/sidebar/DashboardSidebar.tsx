@@ -38,6 +38,7 @@ import NeoDashboardSidebarDeleteModal from './modal/DashboardSidebarDeleteModal'
 import NeoDashboardSidebarInfoModal from './modal/DashboardSidebarInfoModal';
 import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
+import { NEODASH_VERSION } from '../DashboardReducer';
 
 enum Menu {
   DASHBOARD,
@@ -160,9 +161,9 @@ export const NeoDashboardSidebar = ({
           setModalOpen(Modal.LOAD);
           const { uuid } = dashboards[inspectedIndex];
           loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
+            setDraft(false);
             loadDashboard(uuid, file);
             setSelectedDashboardIndex(inspectedIndex);
-            setDraft(false);
           });
         }}
         handleClose={() => setModalOpen(Modal.NONE)}
@@ -414,6 +415,7 @@ export const NeoDashboardSidebar = ({
           </SideNavigationGroupHeader>
           {draft && !readonly ? (
             <DashboardSidebarListItem
+              version={NEODASH_VERSION}
               selected={draft}
               title={title}
               saved={false}
@@ -432,6 +434,7 @@ export const NeoDashboardSidebar = ({
                 <DashboardSidebarListItem
                   selected={!draft && selectedDashboardIndex == d.index}
                   title={d.title}
+                  version={d.version}
                   saved={true}
                   readonly={readonly}
                   onSelect={() => {
