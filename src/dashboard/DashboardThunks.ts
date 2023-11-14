@@ -5,8 +5,9 @@ import { runCypherQuery } from '../report/ReportQueryRunner';
 import { setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
-import { createLogThunk } from '../application/ApplicationThunks';
-import { applicationGetLoggingSettings, applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
+import { createLogThunk } from "../application/logging/LoggingThunk";
+import { applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
+import { applicationGetLoggingSettings } from "../application/logging/LoggingSelectors";
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -231,7 +232,6 @@ export const saveDashboardToNeo4jThunk =
                   )
               );
             }
-  
           }
         }
       );
@@ -251,7 +251,6 @@ export const saveDashboardToNeo4jThunk =
             )
         );
       }
-
     }
   };
 

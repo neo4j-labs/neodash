@@ -24,13 +24,17 @@ import {
   SET_STANDALONE_DASHBOARD_DATEBASE,
   SET_STANDALONE_ENABLED,
   SET_STANDALONE_MODE,
-  SET_LOGGING_MODE,
-  SET_LOGGING_DATABASE,
-  SET_LOG_ERROR_NOTIFICATION,
   SET_WAIT_FOR_SSO,
   SET_WELCOME_SCREEN_OPEN,
   SET_CUSTOM_HEADER,
 } from './ApplicationActions';
+import {
+  SET_LOGGING_MODE,
+  SET_LOGGING_DATABASE,
+  SET_LOG_ERROR_NOTIFICATION,
+  LOGGING_PREFIX
+} from "./logging/LoggingActions";
+import { loggingReducer, LOGGING_INITIAL_STATE } from './logging/LoggingReducer';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -54,8 +58,7 @@ const initialState = {
   dashboardToLoadAfterConnecting: null,
   waitForSSO: false,
   standalone: false,
-  loggingMode: '0',
-  logErrorNotification: '3',
+  logging: LOGGING_INITIAL_STATE
 };
 export const applicationReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
@@ -63,7 +66,12 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
   if (!action.type.startsWith('APPLICATION/')) {
     return state;
   }
-
+  if (action.type.startsWith(LOGGING_PREFIX)){
+    const enrichedPayload = update(payload, { logging: state.logging });
+    const enrichedAction = { type, payload: enrichedPayload };
+    return {...state, logging: loggingReducer(state.logging, enrichedAction) }
+  }
+  
   // Application state updates are handled here.
   switch (type) {
     case CREATE_NOTIFICATION: {
@@ -265,12 +273,12 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       });
       return state;
     }
-    default: {
-      return state;
-    }
     case SET_CUSTOM_HEADER: {
       const { customHeader } = payload;
       state = update(state, { customHeader: customHeader });
+      return state;
+    }
+    default: {
       return state;
     }
   }

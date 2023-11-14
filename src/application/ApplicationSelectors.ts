@@ -96,14 +96,6 @@ export const applicationGetStandaloneSettings = (state: any) => {
   };
 };
 
-export const applicationGetLoggingSettings = (state: any) => {
-  return {
-    loggingMode: state.application.loggingMode,
-    loggingDatabase: state.application.loggingDatabase,
-    logErrorNotification: state.application.logErrorNotification,
-  };
-};
-
 export const applicationHasWelcomeScreenOpen = (state: any) => {
   return state.application.welcomeScreenOpen;
 };

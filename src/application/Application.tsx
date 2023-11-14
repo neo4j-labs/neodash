@@ -34,7 +34,6 @@ import {
   setReportHelpModalOpen,
   setWaitForSSO,
   setWelcomeScreenOpen,
-  setCustomHeader,
 } from '../application/ApplicationActions';
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
