@@ -127,6 +127,8 @@ that the graph can be explored further. Dynamic Dashboard Parameters
 |Hide Selections |on/off |off |If enabled, hides the property selector
 (footer of the visualization).
 
+|Override no data message |Text |Query returned no data. |Override the message displayed to the user when their query returns no data.
+
 |Auto-run query |on/off |on |when activated automatically runs the query
 when the report is displayed. When set to `off', the query is displayed
 and will need to be executed manually.
