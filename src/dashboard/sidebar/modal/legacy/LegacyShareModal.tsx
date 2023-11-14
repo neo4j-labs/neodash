@@ -74,7 +74,7 @@ export const NeoShareModal = ({ open, handleClose, connection }) => {
       <Dialog.Content>
         This window lets you create a temporary share link for your dashboard. Keep in mind that share links are not
         intended as a way to publish your dashboard for users, see the&nbsp;
-        <TextLink externalLink href='https://neo4j.com/labs/neodash/2.3/user-guide/publishing/'>
+        <TextLink externalLink href='https://neo4j.com/labs/neodash/2.4/user-guide/publishing/'>
           documentation
         </TextLink>{' '}
         for more on publishing.
