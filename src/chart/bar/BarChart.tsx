@@ -18,6 +18,7 @@ const NeoBarChart = (props: ChartProps) => {
   const settings = props.settings ? props.settings : {};
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 50;
+  const customDimensions = settings.customDimensions ? settings.customDimensions : false;
   const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
@@ -337,7 +338,7 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   // Container to make the chart scroll horizontally
-  const scrollableWrapperStyle: React.CSSProperties = {
+  const scrollableWrapperStyle: React.CSSProperties = customDimensions ? {
     width:
       legendPosition === 'Horizontal'
         ? adaptableWidth > itemWidthConst * data.length + 200
@@ -346,7 +347,7 @@ const NeoBarChart = (props: ChartProps) => {
         : barWidth * 5 * data.length + itemWidthConst,
     height: expandForLegend ? 18 * data.length + itemWidthConst * 1.2 + marginBottom : '100%',
     whiteSpace: 'nowrap',
-  };
+  } :  {};
 
   // Container for scrolling container to scroll in
   const barChartStyle: React.CSSProperties = {

@@ -349,6 +349,12 @@ const _REPORT_TYPES = {
         values: ['linear', 'symlog'],
         default: 'linear',
       },
+      customDimensions: {
+        label: 'Custom Dimensions',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       minValue: {
         label: 'Min Value',
         type: SELECTION_TYPES.NUMBER,
