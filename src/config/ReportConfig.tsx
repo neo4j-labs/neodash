@@ -331,46 +331,33 @@ const _REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      barValues: {
-        label: 'Bar Values',
+      legend: {
+        label: 'Legend',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
-      barWidth: {
-        label: 'Bar Width',
+      showOptionalSelections: {
+        label: 'Show Optional Selections',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      valueScale: {
+        label: 'Value Scale',
+        type: SELECTION_TYPES.LIST,
+        values: ['linear', 'symlog'],
+        default: 'linear',
+      },
+      minValue: {
+        label: 'Min Value',
         type: SELECTION_TYPES.NUMBER,
-        default: 10,
+        default: 'auto',
       },
-      colors: {
-        label: 'Colors',
-        type: SELECTION_TYPES.LIST,
-        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
-        default: 'set2',
-      },
-      downloadImageEnabled: {
-        label: 'Download Image',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      expandForLegend: {
-        label: 'Expand For Legend',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
+      maxValue: {
+        label: 'Max Value',
+        type: SELECTION_TYPES.NUMBER,
+        default: 'auto',
       },
       groupMode: {
         label: 'Group Mode',
@@ -378,57 +365,42 @@ const _REPORT_TYPES = {
         values: ['grouped', 'stacked'],
         default: 'stacked',
       },
-      hideSelections: {
-        label: 'Hide Selections',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      innerPadding: {
-        label: 'Inner Padding',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      labelRotation: {
-        label: 'Label Rotation',
-        type: SELECTION_TYPES.NUMBER,
-        default: 45,
-      },
-      labelSkipHeight: {
-        label: 'Label Skip Height',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      labelSkipWidth: {
-        label: 'Label Skip Width',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
       layout: {
         label: 'Layout',
         type: SELECTION_TYPES.LIST,
         values: ['horizontal', 'vertical'],
         default: 'vertical',
       },
-      legend: {
-        label: 'Legend',
+      colors: {
+        label: 'Colors',
+        type: SELECTION_TYPES.LIST,
+        values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
+        default: 'set2',
+      },
+      barValues: {
+        label: 'Bar Values',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
-      legendPosition: {
-        label: 'Legend Position',
-        type: SELECTION_TYPES.LIST,
-        values: ['Horizontal', 'Vertical'],
-        default: 'Vertical',
-      },
-      legendWidth: {
-        label: 'Legend Width',
+      labelSkipWidth: {
+        label: 'Label Skip Width',
         type: SELECTION_TYPES.NUMBER,
-        default: 128,
+        default: 0,
       },
-      marginBottom: {
-        label: 'Margin Bottom',
+      labelSkipHeight: {
+        label: 'Label Skip Height',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      positionLabel: {
+        label: 'Position Label',
+        type: SELECTION_TYPES.LIST,
+        values: ['off', 'top', 'bottom'],
+        default: 'off',
+      },
+      labelRotation: {
+        label: 'Label Rotation',
         type: SELECTION_TYPES.NUMBER,
         default: 45,
       },
@@ -447,31 +419,21 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 24,
       },
-      maxValue: {
-        label: 'Max Value',
+      marginBottom: {
+        label: 'Margin Bottom',
         type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
+        default: 45,
       },
-      minBarHeight: {
-        label: 'Min Bar Height',
+      legendWidth: {
+        label: 'Legend Width',
         type: SELECTION_TYPES.NUMBER,
-        default: 0,
+        default: 128,
       },
-      minValue: {
-        label: 'Min Value',
-        type: SELECTION_TYPES.NUMBER,
-        default: 'auto',
-      },
-      padding: {
-        label: 'Padding',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0.25,
-      },
-      positionLabel: {
-        label: 'Position Label',
+      hideSelections: {
+        label: 'Hide Selections',
         type: SELECTION_TYPES.LIST,
-        values: ['off', 'top', 'bottom'],
-        default: 'off',
+        values: [true, false],
+        default: false,
       },
       refreshButtonEnabled: {
         label: 'Refresh Button',
@@ -479,22 +441,61 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      fullscreenEnabled: {
+        label: 'Fullscreen',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       refreshRate: {
         label: 'Refresh Rate',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      showOptionalSelections: {
-        label: 'Show Optional Selections',
+      // New settings integrated as per their relevance
+      barWidth: {
+        label: 'Bar Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 10,
+      },
+      expandForLegend: {
+        label: 'Expand For Legend',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
-      valueScale: {
-        label: 'Value Scale',
+      innerPadding: {
+        label: 'Inner Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      legendPosition: {
+        label: 'Legend Position',
         type: SELECTION_TYPES.LIST,
-        values: ['linear', 'symlog'],
-        default: 'linear',
+        values: ['Horizontal', 'Vertical'],
+        default: 'Vertical',
+      },
+      minBarHeight: {
+        label: 'Min Bar Height',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      padding: {
+        label: 'Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.25,
       },
     }
   },
