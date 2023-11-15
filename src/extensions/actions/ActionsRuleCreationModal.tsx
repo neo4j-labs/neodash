@@ -208,6 +208,24 @@ export const NeoCustomReportActionsModal = ({
     return suggestions;
   };
 
+  const handleOnInputchange = (index, value) => {
+    if (type == 'bar') {
+      updateRuleField(index, 'value', value); // Also update rule.field here if needed
+      updateRuleField(index, 'field', value); // Duplicate the value to rule.field
+    } else {
+      updateRuleField(index, 'value', value);
+    }
+  }
+
+  const handleOnChange = (index, newValue) => {
+    if (type == 'bar') {
+      updateRuleField(index, 'value', newValue); // Also update rule.field here if needed
+      updateRuleField(index, 'customization', newValue.value); // Duplicate the value to rule.field
+    } else {
+      updateRuleField(index, 'value', newValue);
+    }
+  }
+
   const getActionHelper = (rule, index, customization) => {
     if (customization == 'set variable') {
       return (
@@ -392,22 +410,8 @@ export const NeoCustomReportActionsModal = ({
                               inputValue={rule.value || ''}
                               popupIcon={<></>}
                               style={{ minWidth: 250 }}
-                              onInputChange={(event, value) => {
-                                if (type == 'bar') {
-                                  updateRuleField(index, 'value', value); // Also update rule.field here if needed
-                                  updateRuleField(index, 'field', value); // Duplicate the value to rule.field
-                                } else {
-                                  updateRuleField(index, 'value', value);
-                                }
-                              }}
-                              onChange={(event, newValue) => {
-                                if (type == 'bar') {
-                                  updateRuleField(index, 'value', newValue); // Also update rule.field here if needed
-                                  updateRuleField(index, 'customization', newValue.value); // Duplicate the value to rule.field
-                                } else {
-                                  updateRuleField(index, 'value', newValue);
-                                }
-                              }}
+                              onInputChange={handleOnInputchange}
+                              onChange={handleOnChange}
                               renderInput={(params) => (
                                 <TextField {...params} placeholder='Value name...' InputLabelProps={{ shrink: true }} />
                               )}

@@ -273,18 +273,20 @@ const NeoBarChart = (props: ChartProps) => {
   const itemWidthConst = baseItemWidth + maxKeyLength * charWidthEstimate;
   const adaptableWidth = marginLeft + marginRight + data.length * barWidth * 4 + (data.length - 1) * 4 + (data.length - 1) * innerPadding * 4;
 
+
+  // Legend F
   const calculateLegendConfig = () => {
     if (!legend) {
-      return []; // No legend required
+      return ([]); // No legend required
     }
 
     const itemWidthConst = 40 + Math.max(...keys.map(key => key.length)) * 5;
 
     if (legendPosition === 'Horizontal') {
-      return [
+      return ([
         {
           dataFrom: 'keys',
-          anchor: 'bottom-left',
+          anchor: 'bottom',
           direction: 'row',
           justify: false,
           translateX: 0,
@@ -304,10 +306,10 @@ const NeoBarChart = (props: ChartProps) => {
             },
           ],
         },
-      ];
+      ]);
     } else {
       // Vertical legend
-      return [
+      return ([
         {
           dataFrom: 'keys',
           anchor: 'bottom-right',
@@ -330,7 +332,7 @@ const NeoBarChart = (props: ChartProps) => {
             },
           ],
         },
-      ];
+      ]);
     }
   };
 
