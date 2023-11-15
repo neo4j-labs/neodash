@@ -28,7 +28,6 @@ export const NeoOverrideCardQueryEditor = ({
   updateCypherQuery,
   lastMessage,
   prepopulateExtensionName,
-  onExecute,
   translateQuery,
   updateEnglishQuery,
   displayError,
@@ -40,10 +39,13 @@ export const NeoOverrideCardQueryEditor = ({
     CYPHER,
   }
 
+  // States
   const [language, setLanguage] = React.useState(Language.CYPHER);
   const [runningTranslation, setRunningTranslation] = React.useState(false);
   const [englishQuestion, setEnglishQuestion] = React.useState('');
+  const [needsUpdate, setNeedsUpdate] = React.useState(true);
   const debouncedEnglishQuestionUpdate = useCallback(debounce(updateEnglishQuery, 250), []);
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -58,10 +60,7 @@ export const NeoOverrideCardQueryEditor = ({
     <NeoCodeEditorComponent
       value={cypherQuery}
       editable={true}
-      onExecute={onExecute}
-      language={
-        reportTypes[reportType] && reportTypes[reportType].inputMode ? reportTypes[reportType].inputMode : 'cypher'
-      }
+      language={reportTypes[reportType]?.inputMode || 'cypher'}
       onChange={(value) => updateCypherQuery(value)}
       placeholder={`Enter Cypher here...`}
     />
@@ -70,6 +69,10 @@ export const NeoOverrideCardQueryEditor = ({
   function updateEnglishQuestion(value) {
     debouncedEnglishQuestionUpdate(pagenumber, reportId, value);
     setEnglishQuestion(value);
+    if (needsUpdate) {
+      updateCypherQuery(`${cypherQuery  } `);
+      setNeedsUpdate(false);
+    }
   }
 
   // To prevent a bug with the code editor component, we wrap it in an extra enclosing bracket.
@@ -89,8 +92,6 @@ export const NeoOverrideCardQueryEditor = ({
     </div>
   );
 
-  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-
   function triggerTranslation() {
     setRunningTranslation(true);
     translateQuery(
@@ -104,6 +105,7 @@ export const NeoOverrideCardQueryEditor = ({
       },
       (e) => {
         setRunningTranslation(false);
+        console.log(e);
         displayError(e);
       }
     );
@@ -116,9 +118,14 @@ export const NeoOverrideCardQueryEditor = ({
       ) : (
         <>
           <table style={{ marginBottom: 5, width: '100%' }}>
-            <tr>
-              <td style={{ width: 50 }}>Cypher</td>
-              <td style={{ width: 50 }}>
+            <tr style={{ display: 'block', width: '100%' }}>
+              <td style={{ marginBottom: 5, width: '100%' }}>
+                <div style={{ float: 'left', display: 'flex', justifyContent: 'flex-end' }}></div>
+              </td>
+            </tr>
+            <tr style={{ display: 'inline', width: '100%' }}>
+              <td style={{ width: 50, textAlign: 'right', paddingTop: '6px' }}>Cypher</td>
+              <td style={{ width: 50, textAlign: 'left', paddingTop: '8px' }}>
                 <Switch
                   style={{ backgroundColor: 'grey' }}
                   checked={language == Language.ENGLISH}
@@ -133,24 +140,28 @@ export const NeoOverrideCardQueryEditor = ({
                   className='n-ml-2'
                 />
               </td>
-              <td style={{ width: 70 }}>&nbsp; English</td>
-              <td style={{ width: '100px', float: 'right' }}>
+              <td style={{ width: 50, textAlign: 'left', paddingTop: '6px' }}>&nbsp;English&nbsp;</td>
+              <td style={{ float: 'right' }}>
                 {/* Only show translation button if there's something new to translate */}
                 {language == Language.ENGLISH ? (
-                  <Button
-                    fill='outlined'
-                    disabled={prepopulateExtensionName == undefined}
-                    style={{ float: 'right' }}
-                    onClick={() => {
-                      if (prepopulateExtensionName !== undefined) {
-                        triggerTranslation();
-                        setLanguage(Language.CYPHER);
-                        deletePrepopulationReportFunction(reportId);
-                      }
-                    }}
-                  >
-                    Translate
-                  </Button>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div>
+                      <Button
+                        fill='outlined'
+                        disabled={prepopulateExtensionName == undefined}
+                        style={{ marginLeft: '8px' }}
+                        onClick={() => {
+                          if (prepopulateExtensionName !== undefined) {
+                            triggerTranslation();
+                            setLanguage(Language.CYPHER);
+                            deletePrepopulationReportFunction(reportId);
+                          }
+                        }}
+                      >
+                        Translate
+                      </Button>
+                    </div>
+                  </div>
                 ) : (
                   <></>
                 )}
@@ -177,14 +188,14 @@ export const NeoOverrideCardQueryEditor = ({
                 <a
                   target='_blank'
                   style={{ textDecoration: 'underline' }}
-                  href='https://neo4j.com/labs/neodash/2.4/user-guide/extensions/natural-language-queries/'
+                  href='https://neo4j.com/labs/neodash/2.3/user-guide/extensions/natural-language-queries/'
                 >
                   documentation
                 </a>
                 .
               </>
             ) : (
-              reportTypes[reportType] && reportTypes[reportType].helperText
+              reportTypes[reportType]?.helperText
             )}
           </div>
         </>

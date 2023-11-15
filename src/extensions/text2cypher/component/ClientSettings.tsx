@@ -2,7 +2,12 @@ import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { debounce, List, ListItem } from '@mui/material';
 import { getModelClientObject, getQueryTranslatorDefaultConfig } from '../QueryTranslatorConfig';
-import { getQueryTranslatorSettings } from '../state/QueryTranslatorSelector';
+import {
+  QUERY_TRANSLATOR_HISTORY_PREFIX,
+  getHistory,
+  getModelClientSessionStorageKey,
+  getQueryTranslatorSettings,
+} from '../state/QueryTranslatorSelector';
 import NeoSetting from '../../../component/field/Setting';
 import {
   deleteAllMessageHistory,
@@ -15,15 +20,19 @@ import {
   ExclamationTriangleIconSolid,
   PlayCircleIconSolid,
   PlayIconSolid,
+  PencilSquareIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 import { Status } from '../util/Status';
+import {
+  getSessionStorage,
+  getSessionStorageValue,
+  getSessionStorageValuesWithPrefix,
+} from '../../../sessionStorage/SessionStorageSelectors';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
-// TODO: the following
-// 1. the settings modal should save only when all the required fields are defined and we can correctly authenticate
 export const ClientSettings = ({
   modelProvider,
   settingState,
@@ -31,16 +40,18 @@ export const ClientSettings = ({
   authenticate,
   updateModelProvider,
   updateClientSettings,
+  messageHistory,
   deleteAllMessageHistory,
   handleClose,
+  handleOpenEditSolutions,
 }) => {
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
   const [localSettings, setLocalSettings] = React.useState(settingState);
-
-  const [status, setStatus] = React.useState(Status.NOT_AUTHENTICATED);
+  const [status, setStatus] = React.useState(
+    settingState.modelType == undefined ? Status.NOT_AUTHENTICATED : Status.AUTHENTICATED
+  );
   const [settingChoices, setSettingChoices] = React.useState({});
-
   /**
    * Method used to update a certain field inside a state object.
    * @param field Name of the field to update
@@ -77,9 +88,8 @@ export const ClientSettings = ({
     } else {
       setGlobalModelClient(undefined);
     }
-    let tmpSettingsChoices = {};
-    Object.keys(defaultSettings).map((setting) => {
-      tmpSettingsChoices[setting] = setChoices(setting, localClientTmp);
+    Object.keys(defaultSettings).forEach((setting) => {
+      setChoices(setting, localClientTmp);
     });
   }, [status]);
 
@@ -169,16 +179,26 @@ export const ClientSettings = ({
                   }
                 }}
               />
-              {/* TODO: Only show auth button if all required fields are filled in. */}
-              {defaultSettings[setting].hasAuthButton == true ? authButton : <></>}
+              {defaultSettings[setting]?.hasAuthButton ? authButton : <></>}
             </ListItem>
           );
         })}
       <br />
       {status == Status.AUTHENTICATED && Object.keys(defaultSettings).every((n) => localSettings[n] !== undefined) ? (
-        <>
+        <div className='n-flex n-justify-between'>
+          <Button floating onClick={handleOpenEditSolutions}>
+            Tweak Prompts
+            <PencilSquareIconOutline className='btn-icon-base-r' />
+          </Button>
+          {Object.keys(messageHistory).length > 0 ? (
+            <Button fill='outlined' onClick={() => deleteAllMessageHistory()}>
+              Delete Model History
+            </Button>
+          ) : (
+            <></>
+          )}
           <Button
-            style={{ float: 'right', marginRight: '30px' }}
+            style={{ marginRight: '30px' }}
             onClick={() => {
               handleClose();
             }}
@@ -187,10 +207,7 @@ export const ClientSettings = ({
             Start Querying
             <PlayIconSolid className='btn-icon-base-r' />
           </Button>
-          <Button fill='outlined' onClick={() => deleteAllMessageHistory()}>
-            Delete Model History
-          </Button>
-        </>
+        </div>
       ) : (
         <></>
       )}
@@ -201,6 +218,7 @@ export const ClientSettings = ({
 
 const mapStateToProps = (state) => ({
   settings: getQueryTranslatorSettings(state),
+  messageHistory: getSessionStorageValuesWithPrefix(state, QUERY_TRANSLATOR_HISTORY_PREFIX),
 });
 
 const mapDispatchToProps = (dispatch) => ({
