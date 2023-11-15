@@ -25,7 +25,6 @@ const NeoBarChart = (props: ChartProps) => {
   const barWidth = settings.barWidth ? settings.barWidth : 10;
   const padding = settings.padding ? settings.padding : 0.25;
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
-  const minBarHeight = settings.minBarHeight ? settings.minBarHeight : 0;
   const expandForLegend = settings.expandForLegend ? settings.expandForLegend : false;
 
   const actionsRules =
@@ -99,7 +98,7 @@ const NeoBarChart = (props: ChartProps) => {
     setKeys(Object.keys(newKeys));
     setData(newData);
 
-  }, [selection, minBarHeight]);
+  }, [selection]);
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
@@ -126,38 +125,6 @@ const NeoBarChart = (props: ChartProps) => {
       return styleRules[validRuleIndex].customizationValue;
     }
     return chartColorsByScheme[colorIndex];
-  };
-
-  // Function to call from BarComponent. Conducts necessary logic for Report Action.
-  const handleBarClick = (bar, event) => {
-    // Prevent any default action or bubbling if necessary to avoid interfering with other handlers
-    event.preventDefault();
-    event.stopPropagation();
-
-    // Get the original record that was used to draw this bar (or a group in a bar).
-    const record = getOriginalRecordForNivoClickEvent(bar.data, records, selection);
-
-    // From that record, check if there are any rules assigned to each of the fields (columns).
-    if (record) {
-      Object.keys(record).forEach((key) => {
-        const rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
-        // If there are rules assigned, run the rule with the specified field and value retrieved from the record.
-        if (rules) {
-          rules.forEach((rule) => {
-            const ruleField = rule.field; // The field the rule applies to
-            const ruleValue = record[ruleField]; // The value of that field in the record
-            // Perform the action defined by the rule with the value
-            performActionOnElement(
-              { field: ruleField, value: ruleValue },
-              actionsRules,
-              { ...props, pageNames: pageNames }, // The rest of the props needed for the action
-              'Click',
-              'bar'
-            );
-          });
-        }
-      });
-    }
   };
 
   // Used instead of BarChartComponent when Position Label !== 'off'
@@ -241,8 +208,7 @@ const NeoBarChart = (props: ChartProps) => {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
 
-  // positionLabel == 'off' ? {} :
-  const extraProperties = positionLabel == 'off' ? {} : { barComponent: BarComponent };
+  const extraProperties = { barComponent: BarComponent };
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 
