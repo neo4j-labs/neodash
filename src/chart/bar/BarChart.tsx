@@ -97,13 +97,11 @@ const NeoBarChart = (props: ChartProps) => {
       });
     setKeys(Object.keys(newKeys));
     setData(newData);
-
   }, [selection]);
 
   if (!selection || props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <NoDrawableDataErrorMessage />;
   }
-
 
   // Function to call from BarComponent. Conducts necessary logic for Report Action.
   const handleBarClick = (e) => {
@@ -128,6 +126,31 @@ const NeoBarChart = (props: ChartProps) => {
             });
         })
       : null;
+  };
+
+  const margin = () => {
+    const itemWidthConst = 40 + Math.max(...keys.map((key) => key.length)) * 5; // Adjusted as per your existing logic
+
+    return {
+      top: settings.marginTop ? settings.marginTop : 24,
+      right:
+        legendPosition === 'Horizontal'
+          ? settings.marginRight
+            ? settings.marginRight
+            : 24
+          : settings.legend
+          ? itemWidthConst + (settings.marginRight ? settings.marginRight : 24)
+          : settings.marginRight
+          ? settings.marginRight
+          : 24,
+      bottom:
+        legendPosition === 'Horizontal'
+          ? settings.legend
+            ? itemWidthConst * 0.3 + (settings.marginBottom ? settings.marginBottom : 40) + 50
+            : itemWidthConst * 0.3 + (settings.marginBottom ? settings.marginBottom : 40)
+          : itemWidthConst * 0.3 + (settings.marginBottom ? settings.marginBottom : 40),
+      left: settings.marginLeft ? settings.marginLeft : 50,
+    };
   };
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
@@ -161,16 +184,16 @@ const NeoBarChart = (props: ChartProps) => {
     let x: number;
     // Places label in the centre of a bar with x and y
     if (bar.width) {
-      x = bar.width / 2
+      x = bar.width / 2;
     } else {
-      x = 0
-    };
+      x = 0;
+    }
     let y: number;
     if (bar.height) {
-      y = bar.height / 2
+      y = bar.height / 2;
     } else {
-      y = 0
-    };
+      y = 0;
+    }
     let textAnchor = 'middle';
     if (positionLabel == 'top') {
       if (layout == 'vertical') {
@@ -187,11 +210,12 @@ const NeoBarChart = (props: ChartProps) => {
     }
 
     return (
-      <g transform={`translate(${bar.x},${bar.y})`} 
-      // onClick event to trigger event to pass value with report action
-      onClick={(event) => onClick(bar.data, event)}
-      style={{ cursor: 'pointer' }}
-        >
+      <g
+        transform={`translate(${bar.x},${bar.y})`}
+        // onClick event to trigger event to pass value with report action
+        onClick={(event) => onClick(bar.data, event)}
+        style={{ cursor: 'pointer' }}
+      >
         {shade ? <rect x={-3} y={7} width={bar.width} height={bar.height} fill='rgba(0, 0, 0, .07)' /> : <></>}
         <rect width={bar.width} height={bar.height} fill={bar.color} />
         {darkTop ? (
@@ -252,12 +276,7 @@ const NeoBarChart = (props: ChartProps) => {
   const baseItemWidth = 40; // Some base width for color box and padding
   const charWidthEstimate = 5; // An estimate of how wide each character is, you might need to adjust this based on font size and type
   const itemWidthConst = baseItemWidth + maxKeyLength * charWidthEstimate;
-  const adaptableWidth =
-    marginLeft +
-    marginRight +
-    data.length * barWidth * 4 +
-    (data.length - 1) * 4 +
-    (data.length - 1) * innerPadding * 4;
+  const adaptableWidth = marginLeft + marginRight + data.length * barWidth * 4 + (data.length - 1) * 4 + (data.length - 1) * innerPadding * 4;
 
   // Container to make the chart scroll horizontally
   const scrollableWrapperStyle: React.CSSProperties = {
@@ -292,17 +311,7 @@ const NeoBarChart = (props: ChartProps) => {
           onClick={handleBarClick}
           keys={keys}
           indexBy='index'
-          margin={{
-            top: marginTop,
-            right: legendPosition === 'Horizontal' ? marginRight : legend ? itemWidthConst + marginRight : marginRight,
-            bottom:
-              legendPosition === 'Horizontal'
-                ? legend
-                  ? itemWidthConst * 0.3 + marginBottom + 50
-                  : itemWidthConst * 0.3 + marginBottom
-                : itemWidthConst * 0.3 + marginBottom,
-            left: marginLeft,
-          }}
+          margin={margin()}
           valueScale={{ type: valueScale }}
           padding={padding}
           innerPadding={innerPadding}
@@ -353,7 +362,7 @@ const NeoBarChart = (props: ChartProps) => {
                     },
                   ]
                 : [
-                  // If legend is vertical
+                    // If legend is vertical
                     {
                       dataFrom: 'keys',
                       anchor: 'bottom-right',
