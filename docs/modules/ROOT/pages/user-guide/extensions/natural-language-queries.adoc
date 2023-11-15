@@ -10,11 +10,9 @@ To enable Natural Language Queries in NeoDash, follow these configuration steps:
 
 1. Open NeoDash and navigate to the "Extensions" section in the left sidebar.
 2. Locate the "Text2Cypher" extension and click on it to activate it.
-3. Once activated, a new button will appear in the sidebar(see image below). Click on the button to open the configuration window.
+3. Once activated, a new button will appear on top of the screen, with a red exclamation mark (⚠️). Click this button.
 4. In the configuration window, you will be prompted to provide the necessary information to connect to the Language Model (LLM). Enter the model provider, API key, deployment url if needed by the model provider, and select the desired model to use.
 5. After providing the required information, click on the "Start Querying" button to finalize the configuration.
-
-image::extensionbutton.png[Extension Button enables Natural Language Queries button in the sidebar]
 
 image::llmconfiguration.png[Configuration settings for the Natural Language Queries extension]
 
@@ -33,7 +31,11 @@ This allows you to review and modify the generated Cypher query before execution
 
 image::englisheditor.png[Example of the English editor in NeoDash]
 
-=== Here is how it works behind the scenes:
+== Improving Accuracy with Custom Prompting
+
+
+
+== Underlying Functionality
 * Retrieve the Schema: The system prompts at the beginning of the interaction to retrieve the database schema. This ensures that the generated queries adhere to the provided schema and available relationship types and properties.
 
 * Prompting in English: Once the schema is retrieved, you can start prompting your queries in plain English. NeoDash, powered by the LLM, will interpret your English query and generate the corresponding Cypher query based on the provided schema.
