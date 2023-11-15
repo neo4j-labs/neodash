@@ -1,13 +1,32 @@
-## NeoDash 2.3.5
-This is a bugfix / stability release directly following 2.3.4.
+## NeoDash 2.4.0
+NeoDash 2.4 is out!
 
-Improvements:
-- Fixed issue where orphan relationships prevented graph charts from working ([@BennuFire](https://github.com/BennuFire), [#586](https://github.com/neo4j-labs/neodash/pull/586))
-- Fix issue where only one style rule was used a time on tables. ([@BennuFire](https://github.com/BennuFire), [#632](https://github.com/neo4j-labs/neodash/pull/632))
-- Added information about source and target on Graph Chart information modal . ([@BennuFire](https://github.com/BennuFire), [#627](https://github.com/neo4j-labs/neodash/pull/627)) Based on [@brahmprakashMishra](https://github.com/brahmprakashMishra) PR
-- Fixed issue where bar charts where displaying black bars instead of scheme colors. ([@BennuFire](https://github.com/BennuFire), [#626](https://github.com/neo4j-labs/neodash/pull/626))
-- Added right subpath replacement on shared links redirection while in self deployments. ([@m-o-n-i-s-h](https://github.com/m-o-n-i-s-h), [#618](https://github.com/neo4j-labs/neodash/pull/618))
-- Dark theme tweaks. ([@BennuFire](https://github.com/BennuFire), [#585](https://github.com/neo4j-labs/neodash/pull/585))
-- Fixed parameter selector search where numbers were not found and sporadically displayed with decimal points. ([@BennuFire](https://github.com/BennuFire), [#633](https://github.com/neo4j-labs/neodash/pull/633))
-- Added a configuration in order to list sso providers to be used whenever a database has more than one configured. ([@BennuFire](https://github.com/BennuFire), [#624](https://github.com/neo4j-labs/neodash/pull/624))
-- Added 'Ignore undefined parameters' advanced setting support for optional parameters on a query. Now queries will assume a null value instead of returning the error 'Parameter not defined'.  ([@BennuFire](https://github.com/BennuFire), [#625](https://github.com/neo4j-labs/neodash/pull/625))
+Key features:
+- A new sidebar with support for managing, save and load multiple dashboards directly from the UI. https://github.com/neo4j-labs/neodash/pull/657
+- Added **Forms** as a new extension. Forms let you combine multiple parameter selectors in one card and have users edit/submit data to Neo4j.  https://github.com/neo4j-labs/neodash/pull/568
+- Added a new advanced visualization type: Gantt chart https://github.com/neo4j-labs/neodash/pull/684
+- Doubled the grid resolution for dashboards, giving you more freedom to arrange visualizations [#682](https://github.com/neo4j-labs/neodash/pull/682)
+- Several improvements for the natural language queries extension - including customizable prompting, and faster schema retrieval  https://github.com/neo4j-labs/neodash/pull/600
+
+
+Other improvements:
+- Support for multiselect checkboxes as a report action for tables https://github.com/neo4j-labs/neodash/pull/688/commits
+- Added new experimental graph layouts (trees in various directions), with customizable level distance [#690]https://github.com/neo4j-labs/neodash/pull/690
+- Increased customizability for the Pie chart's styling.  https://github.com/neo4j-labs/neodash/pull/638/
+- Fixed issues with parameter selector: Better handling of integer / long parameters and processing external updates https://github.com/neo4j-labs/neodash/pull/641/
+- Improvements on text readability for the experimental dark mode https://github.com/neo4j-labs/neodash/pull/668/
+- UX improvements on database connection interface https://github.com/neo4j-labs/neodash/pull/675/
+- Added option to provide a custom message when no data is returned by a report https://github.com/neo4j-labs/neodash/pull/683/
+- Fixed issue where column names were not hidden correctly https://github.com/neo4j-labs/neodash/pull/685/commits
+- Added more styling options for the bar chart, including support for report actions  https://github.com/neo4j-labs/neodash/pull/689/
+
+Thanks to all the contributors for this release: 
+[alfredorubin96](https://github.com/alfredorubin96),
+[AleSim94](https://github.com/AleSim94),
+[BennuFire](https://github.com/BennuFire),
+[jacobbleakley-neo4j](https://github.com/jacobbleakley-neo4j),
+[hugorplobo](https://github.com/hugorplobo),
+[brahmprakashMishra](https://github.com/brahmprakashMishra),
+[m-o-n-i-s-h](https://github.com/m-o-n-i-s-h),
+[JonanOribe](https://github.com/JonanOribe),
+[nielsdejong](https://github.com/nielsdejong)
