@@ -49,7 +49,6 @@ const Dashboard = ({
           connection={connection}
           onDownloadImage={onDownloadDashboardAsImage}
           onAboutModalOpen={onAboutModalOpen}
-          resetApplication={resetApplication}
         ></NeoDashboardHeader>
         <div className='n-w-full n-mx-8 n-my-6'>
           <NeoDashboardTitle resetApplication={resetApplication} />
