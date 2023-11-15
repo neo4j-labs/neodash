@@ -104,6 +104,32 @@ const NeoBarChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
 
+
+  // Function to call from BarComponent. Conducts necessary logic for Report Action.
+  const handleBarClick = (e) => {
+    // Get the original record that was used to draw this bar (or a group in a bar).
+    const record = getOriginalRecordForNivoClickEvent(e, records, selection);
+    // From that record, check if there are any rules assigned to each of the fields (columns).
+    record
+      ? Object.keys(record).forEach((key) => {
+          let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
+          // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
+          rules &&
+            rules.forEach((rule) => {
+              const ruleField = rule.field;
+              const ruleValue = record[rule.value];
+              performActionOnElement(
+                { field: ruleField, value: ruleValue },
+                actionsRules,
+                { ...props, pageNames: pageNames },
+                'Click',
+                'bar'
+              );
+            });
+        })
+      : null;
+  };
+
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
@@ -133,9 +159,18 @@ const NeoBarChart = (props: ChartProps) => {
     let darkTop = false;
     let includeIndex = false;
     let x: number;
-    bar.width ? (x = bar.width / 2) : (x = 0);
+    // Places label in the centre of a bar with x and y
+    if (bar.width) {
+      x = bar.width / 2
+    } else {
+      x = 0
+    };
     let y: number;
-    bar.height ? (y = bar.height / 2) : (y = 0);
+    if (bar.height) {
+      y = bar.height / 2
+    } else {
+      y = 0
+    };
     let textAnchor = 'middle';
     if (positionLabel == 'top') {
       if (layout == 'vertical') {
@@ -254,29 +289,7 @@ const NeoBarChart = (props: ChartProps) => {
           layout={layout}
           groupMode={groupMode == 'stacked' ? 'stacked' : 'grouped'}
           enableLabel={enableLabel}
-          onClick={(e) => {
-            // Get the original record that was used to draw this bar (or a group in a bar).
-            const record = getOriginalRecordForNivoClickEvent(e, records, selection);
-            // From that record, check if there are any rules assigned to each of the fields (columns).
-            record
-              ? Object.keys(record).forEach((key) => {
-                  let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
-                  // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
-                  rules &&
-                    rules.forEach((rule) => {
-                      const ruleField = rule.field;
-                      const ruleValue = record[rule.value];
-                      performActionOnElement(
-                        { field: ruleField, value: ruleValue },
-                        actionsRules,
-                        { ...props, pageNames: pageNames },
-                        'Click',
-                        'bar'
-                      );
-                    });
-                })
-              : null;
-          }}
+          onClick={handleBarClick}
           keys={keys}
           indexBy='index'
           margin={{
