@@ -18,6 +18,7 @@ const NeoBarChart = (props: ChartProps) => {
   const settings = props.settings ? props.settings : {};
   const marginRight = settings.marginRight ? settings.marginRight : 24;
   const marginLeft = settings.marginLeft ? settings.marginLeft : 50;
+  const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
   const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
   const legend = settings.legend ? settings.legend : false;
@@ -132,26 +133,20 @@ const NeoBarChart = (props: ChartProps) => {
     const itemWidthConst = 40 + Math.max(...keys.map((key) => key.length)) * 5; // Adjusted as per your existing logic
 
     return {
-      top: settings.marginTop ? settings.marginTop : 24,
+      top: marginTop,
       right:
-        legendPosition === 'Horizontal'
-          ? settings.marginRight
-            ? settings.marginRight
-            : 24
-          : settings.legend
-          ? itemWidthConst + (settings.marginRight ? settings.marginRight : 24)
-          : settings.marginRight
-          ? settings.marginRight
-          : 24,
+        legendPosition === 'Horizontal' ? marginRight : legend ? itemWidthConst + (marginRight) : marginRight,
       bottom:
         legendPosition === 'Horizontal'
           ? settings.legend
-            ? itemWidthConst * 0.3 + (settings.marginBottom ? settings.marginBottom : 40) + 50
-            : itemWidthConst * 0.3 + (settings.marginBottom ? settings.marginBottom : 40)
-          : itemWidthConst * 0.3 + (settings.marginBottom ? settings.marginBottom : 40),
-      left: settings.marginLeft ? settings.marginLeft : 50,
+            ? itemWidthConst * 0.3 + (marginBottom ? marginBottom : 40) + 50
+            : itemWidthConst * 0.3 + (marginBottom ? marginBottom : 40)
+          : itemWidthConst * 0.3 + (marginBottom ? marginBottom : 40),
+      left: marginLeft,
     };
   };
+
+  
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
   // Compute bar color based on rules - overrides default color scheme completely.
@@ -278,6 +273,67 @@ const NeoBarChart = (props: ChartProps) => {
   const itemWidthConst = baseItemWidth + maxKeyLength * charWidthEstimate;
   const adaptableWidth = marginLeft + marginRight + data.length * barWidth * 4 + (data.length - 1) * 4 + (data.length - 1) * innerPadding * 4;
 
+  const calculateLegendConfig = () => {
+    if (!legend) {
+      return []; // No legend required
+    }
+
+    const itemWidthConst = 40 + Math.max(...keys.map(key => key.length)) * 5;
+
+    if (legendPosition === 'Horizontal') {
+      return [
+        {
+          dataFrom: 'keys',
+          anchor: 'bottom-left',
+          direction: 'row',
+          justify: false,
+          translateX: 0,
+          translateY: itemWidthConst,
+          itemsSpacing: 2,
+          itemWidth: itemWidthConst,
+          itemHeight: 20,
+          itemDirection: 'left-to-right',
+          itemOpacity: 0.85,
+          symbolSize: 20,
+          effects: [
+            {
+              on: 'hover',
+              style: {
+                itemOpacity: 1,
+              },
+            },
+          ],
+        },
+      ];
+    } else {
+      // Vertical legend
+      return [
+        {
+          dataFrom: 'keys',
+          anchor: 'bottom-right',
+          direction: 'column',
+          justify: false,
+          translateX: itemWidthConst + 10,
+          translateY: 0,
+          itemsSpacing: 1,
+          itemWidth: itemWidthConst,
+          itemHeight: 20,
+          itemDirection: 'left-to-right',
+          itemOpacity: 0.85,
+          symbolSize: 15,
+          effects: [
+            {
+              on: 'hover',
+              style: {
+                itemOpacity: 1,
+              },
+            },
+          ],
+        },
+      ];
+    }
+  };
+
   // Container to make the chart scroll horizontally
   const scrollableWrapperStyle: React.CSSProperties = {
     width:
@@ -334,60 +390,7 @@ const NeoBarChart = (props: ChartProps) => {
           labelSkipHeight={labelSkipHeight}
           labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
           {...extraProperties}
-          legends={
-            legend
-              ? legendPosition === 'Horizontal'
-                ? [
-                    {
-                      dataFrom: 'keys',
-                      anchor: 'bottom-left',
-                      direction: 'row',
-                      justify: false,
-                      translateX: 0,
-                      translateY: itemWidthConst,
-                      itemsSpacing: 2,
-                      itemWidth: itemWidthConst,
-                      itemHeight: 20,
-                      itemDirection: 'left-to-right',
-                      itemOpacity: 0.85,
-                      symbolSize: 20,
-                      effects: [
-                        {
-                          on: 'hover',
-                          style: {
-                            itemOpacity: 1,
-                          },
-                        },
-                      ],
-                    },
-                  ]
-                : [
-                    // If legend is vertical
-                    {
-                      dataFrom: 'keys',
-                      anchor: 'bottom-right',
-                      direction: 'column',
-                      justify: false,
-                      translateX: itemWidthConst + 10,
-                      translateY: 0,
-                      itemsSpacing: 1,
-                      itemWidth: itemWidthConst,
-                      itemHeight: 20,
-                      itemDirection: 'left-to-right',
-                      itemOpacity: 0.85,
-                      symbolSize: 15,
-                      effects: [
-                        {
-                          on: 'hover',
-                          style: {
-                            itemOpacity: 1,
-                          },
-                        },
-                      ],
-                    },
-                  ]
-              : []
-          }
+          legends={calculateLegendConfig()}
           animate={false}
         />
       </div>
