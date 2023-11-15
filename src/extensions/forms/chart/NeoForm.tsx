@@ -98,10 +98,12 @@ const NeoForm = (props: ChartProps) => {
                     if (formFields) {
                       const entries = formFields.map((f) => f.settings);
                       entries.forEach((entry) => {
-                        if (entry.multiSelector) {
-                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, []);
-                        } else {
-                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, '');
+                        if (entry.disabled !== true) {
+                          if (entry.multiSelector) {
+                            props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, []);
+                          } else {
+                            props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, '');
+                          }
                         }
                       });
                     }
