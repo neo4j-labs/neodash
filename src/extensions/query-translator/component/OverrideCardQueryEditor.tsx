@@ -28,6 +28,7 @@ export const NeoOverrideCardQueryEditor = ({
   updateCypherQuery,
   lastMessage,
   prepopulateExtensionName,
+  onExecute,
   translateQuery,
   updateEnglishQuery,
   displayError,
@@ -57,6 +58,7 @@ export const NeoOverrideCardQueryEditor = ({
     <NeoCodeEditorComponent
       value={cypherQuery}
       editable={true}
+      onExecute={onExecute}
       language={
         reportTypes[reportType] && reportTypes[reportType].inputMode ? reportTypes[reportType].inputMode : 'cypher'
       }
