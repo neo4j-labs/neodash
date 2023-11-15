@@ -18,6 +18,8 @@ import NeoDashboardSidebarExportModal from '../sidebar/modal/DashboardSidebarExp
 import NeoExportModal from '../../modal/ExportModal';
 import { setDraft } from '../../application/ApplicationActions';
 
+type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+
 export const NeoDashboardTitle = ({
   dashboardTitle,
   setDashboardTitle,
@@ -33,7 +35,7 @@ export const NeoDashboardTitle = ({
   const [editing, setEditing] = React.useState(false);
   const debouncedDashboardTitleUpdate = useCallback(debounce(setDashboardTitle, 250), []);
 
-  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleSettingsMenuOpen = (event: SettingsMenuOpenEvent) => {
     setAnchorEl(event.currentTarget);
   };
   const handleSettingsMenuClose = () => {
