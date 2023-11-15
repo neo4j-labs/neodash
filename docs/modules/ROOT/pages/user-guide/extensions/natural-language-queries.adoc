@@ -32,8 +32,18 @@ This allows you to review and modify the generated Cypher query before execution
 image::englisheditor.png[Example of the English editor in NeoDash]
 
 == Improving Accuracy with Custom Prompting
+To boost the accuracy of the language model, you can provide your own example queries to be fed into the prompt.
+Specifying queries specific to your data model & use-cases can significantly improve the quality of Text2Cypher translations.
 
+To access the model examples screen, open up the settings for the extensions.
+After specifying the provider and model, click the "Tweak Prompts" button on the bottom-left of the window.
+This leads you to the example interface:
 
+image::llm-examples.png[Custom Examples for your prompt]
+
+In this interface, you can specify one or more examples that are sent to the language model.
+An example consists of both a Cypher query, and a natural language equivalent of that query.
+You can create as many examples as you want, but keeping them close to your user queries will yield best results.
 
 == Underlying Functionality
 * Retrieve the Schema: The system prompts at the beginning of the interaction to retrieve the database schema. This ensures that the generated queries adhere to the provided schema and available relationship types and properties.
