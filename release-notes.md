@@ -1,7 +1,6 @@
 ## NeoDash 2.4.0
 NeoDash 2.4 is out! 🎂 This release packs a ton of new features, as well as improvements to the existing visualizations.
 
-
 Key new features:
 - A new sidebar with support for managing, save and load multiple dashboards directly from the UI.
    [#657](https://github.com/neo4j-labs/neodash/pull/657)
@@ -10,9 +9,9 @@ Key new features:
 - Doubled the grid resolution for dashboards, giving you more freedom to arrange visualizations. [#682](https://github.com/neo4j-labs/neodash/pull/682)
 - Several improvements for the natural language queries extension - including customizable prompting, and faster schema retrieval. [#600](https://github.com/neo4j-labs/neodash/pull/600)
 
-
 Other improvements:
 - Support for multiselect checkboxes as a report action for tables. [#688](https://github.com/neo4j-labs/neodash/pull/688/commits)
+- Added keyboard shortcuts (CMD/CTRL+Enter) for running Cypher queries from the editor. [#694](https://github.com/neo4j-labs/neodash/pull/694/)
 - Added new experimental graph layouts (trees in various directions), with customizable level distance. [#690](https://github.com/neo4j-labs/neodash/pull/690)
 - Increased customizability for the Pie chart's styling.  [#638](https://github.com/neo4j-labs/neodash/pull/638/)
 - Fixed issues with parameter selector: Better handling of integer / long parameters and processing external updates. [#641](https://github.com/neo4j-labs/neodash/pull/641/)
