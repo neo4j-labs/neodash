@@ -67,7 +67,7 @@ const NeoExtensionsModal = ({
                             <tr>
                               <td>
                                 <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
-                                  <Typography variant='h4'>{e.label}</Typography>
+                                  <Typography variant='h5'>{e.label}</Typography>
                                   {e.enabled && e.author == 'Neo4j Professional Services' && (
                                     <Label color='info' fill='outlined'>
                                       Expert

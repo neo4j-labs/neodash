@@ -9,7 +9,7 @@ const QueryTranslatorButton = (active) => {
   const [open, setOpen] = React.useState(false);
   const button = (
     <MenuItem
-      title='Natural Language Queries'
+      title='Text2Cypher'
       onClick={() => setOpen(true)}
       icon={
         <>
