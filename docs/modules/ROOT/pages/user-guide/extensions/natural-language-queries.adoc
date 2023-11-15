@@ -1,15 +1,15 @@
-= Natural Language Query Generation in NeoDash!
+= Text2Cypher - Natural Language Queries
 Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.
 
-== Natural Language Queries
-Natural Language Queries feature allows users to interact with NeoDash using natural language to generate Cypher queries for querying Neo4j graph databases. 
+== How it works
+This extension feature allows users to interact with NeoDash using natural language to generate Cypher queries for querying Neo4j graph databases. 
 This integration leverages Language Models (LLMs) to interpret user inputs and generate Cypher queries based on the provided schema definition.
 
 == Configuration
 To enable Natural Language Queries in NeoDash, follow these configuration steps:
 
 1. Open NeoDash and navigate to the "Extensions" section in the left sidebar.
-2. Locate the "Natural Language Queries" extension and click on it to activate it.
+2. Locate the "Text2Cypher" extension and click on it to activate it.
 3. Once activated, a new button will appear in the sidebar(see image below). Click on the button to open the configuration window.
 4. In the configuration window, you will be prompted to provide the necessary information to connect to the Language Model (LLM). Enter the model provider, API key, deployment url if needed by the model provider, and select the desired model to use.
 5. After providing the required information, click on the "Start Querying" button to finalize the configuration.
@@ -19,7 +19,7 @@ image::extensionbutton.png[Extension Button enables Natural Language Queries but
 image::llmconfiguration.png[Configuration settings for the Natural Language Queries extension]
 
 == Usage
-Once the Natural Language Queries extension is configured, you can start using it in your NeoDash reports. Here's how:
+Once the extension is configured, you can start using it in your NeoDash reports. Here's how:
 
 1. Open the Report settings for the desired report.
 2. In the report settings, you will find a toggle switch located above the editor. This switch allows you to toggle between Cypher and English languages.

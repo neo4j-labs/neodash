@@ -45,7 +45,7 @@ const QueryTranslatorSettingsModelExamples = ({ handleCloseEditSolutions, exampl
               Create New
             </Button>
             <Button className='n-float-right' onClick={handleCloseEditSolutions}>
-              Back
+              Save
             </Button>
           </div>
         </Dialog.Content>

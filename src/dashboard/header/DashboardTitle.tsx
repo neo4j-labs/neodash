@@ -50,11 +50,7 @@ export const NeoDashboardTitle = ({
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return (
-            <Suspense fallback='' key={`extS-${name}`}>
-              {Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>}
-            </Suspense>
-          );
+          return Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>;
         })}
       </>
     );
@@ -122,6 +118,7 @@ export const NeoDashboardTitle = ({
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
       {!isStandalone ? (
         <div className='flex flex-row flex-wrap items-center gap-2'>
+          {editable ? renderExtensionsButtons() : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
           <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
             <EllipsisHorizontalIconOutline />
@@ -151,7 +148,6 @@ export const NeoDashboardTitle = ({
                   <NeoSaveModal />
                   <NeoLoadModal />
                   <NeoShareModal />
-                  {renderExtensionsButtons()}
                 </>
               ) : (
                 <></>

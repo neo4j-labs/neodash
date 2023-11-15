@@ -2,7 +2,12 @@ import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { debounce, List, ListItem } from '@mui/material';
 import { getModelClientObject, getQueryTranslatorDefaultConfig } from '../QueryTranslatorConfig';
-import { getQueryTranslatorSettings } from '../state/QueryTranslatorSelector';
+import {
+  QUERY_TRANSLATOR_HISTORY_PREFIX,
+  getHistory,
+  getModelClientSessionStorageKey,
+  getQueryTranslatorSettings,
+} from '../state/QueryTranslatorSelector';
 import NeoSetting from '../../../component/field/Setting';
 import {
   deleteAllMessageHistory,
@@ -20,6 +25,11 @@ import {
 import { Button, IconButton } from '@neo4j-ndl/react';
 import { modelClientInitializationThunk } from '../state/QueryTranslatorThunks';
 import { Status } from '../util/Status';
+import {
+  getSessionStorage,
+  getSessionStorageValue,
+  getSessionStorageValuesWithPrefix,
+} from '../../../sessionStorage/SessionStorageSelectors';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -30,6 +40,7 @@ export const ClientSettings = ({
   authenticate,
   updateModelProvider,
   updateClientSettings,
+  messageHistory,
   deleteAllMessageHistory,
   handleClose,
   handleOpenEditSolutions,
@@ -37,10 +48,10 @@ export const ClientSettings = ({
   const defaultSettings = getQueryTranslatorDefaultConfig(modelProvider);
   const requiredSettings = Object.keys(defaultSettings).filter((setting) => defaultSettings[setting].required);
   const [localSettings, setLocalSettings] = React.useState(settingState);
-
-  const [status, setStatus] = React.useState(Status.NOT_AUTHENTICATED);
+  const [status, setStatus] = React.useState(
+    settingState.modelType == undefined ? Status.NOT_AUTHENTICATED : Status.AUTHENTICATED
+  );
   const [settingChoices, setSettingChoices] = React.useState({});
-
   /**
    * Method used to update a certain field inside a state object.
    * @param field Name of the field to update
@@ -178,9 +189,13 @@ export const ClientSettings = ({
             Tweak Prompts
             <PencilSquareIconOutline className='btn-icon-base-r' />
           </Button>
-          <Button fill='outlined' onClick={() => deleteAllMessageHistory()}>
-            Delete Model History
-          </Button>
+          {Object.keys(messageHistory).length > 0 ? (
+            <Button fill='outlined' onClick={() => deleteAllMessageHistory()}>
+              Delete Model History
+            </Button>
+          ) : (
+            <></>
+          )}
           <Button
             style={{ marginRight: '30px' }}
             onClick={() => {
@@ -202,6 +217,7 @@ export const ClientSettings = ({
 
 const mapStateToProps = (state) => ({
   settings: getQueryTranslatorSettings(state),
+  messageHistory: getSessionStorageValuesWithPrefix(state, QUERY_TRANSLATOR_HISTORY_PREFIX),
 });
 
 const mapDispatchToProps = (dispatch) => ({

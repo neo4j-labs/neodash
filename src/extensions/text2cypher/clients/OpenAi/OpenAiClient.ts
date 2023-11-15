@@ -50,8 +50,8 @@ export class OpenAiClient extends ModelClient {
    * @returns True if we client can authenticate, False otherwise
    */
   async authenticate(
-    setIsAuthenticated = (boolean) => {
-      console.log(boolean);
+    setIsAuthenticated = () => {
+      // console.log(boolean);
     }
   ) {
     try {
