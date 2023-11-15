@@ -9,13 +9,14 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
 import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import NeoSaveModal from '../../modal/SaveModal';
-import NeoLoadModal from '../../modal/LoadModal';
-import NeoShareModal from '../../modal/ShareModal';
+import NeoShareModal from '../sidebar/modal/legacy/LegacyShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 import { Tooltip } from '@mui/material';
+import NeoDashboardSidebarExportModal from '../sidebar/modal/DashboardSidebarExportModal';
+import NeoExportModal from '../../modal/ExportModal';
+import { setDraft } from '../../application/ApplicationActions';
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
@@ -97,7 +98,7 @@ export const NeoDashboardTitle = ({
         </div>
       ) : (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
-          <Typography variant='h3'>{dashboardTitle}</Typography>
+          <Typography variant='h3'>{dashboardTitle ? dashboardTitle : '(no title)'}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
             {editable ? (
               <IconButton
@@ -142,16 +143,8 @@ export const NeoDashboardTitle = ({
                 dashboardSettings={dashboardSettings}
                 updateDashboardSetting={updateDashboardSetting}
               ></NeoSettingsModal>
-              {/* Saving, loading, extensions, sharing is only enabled when the dashboard is editable. */}
-              {editable ? (
-                <>
-                  <NeoSaveModal />
-                  <NeoLoadModal />
-                  <NeoShareModal />
-                </>
-              ) : (
-                <></>
-              )}
+
+              <NeoExportModal />
             </MenuItems>
           </Menu>
         </div>
@@ -176,6 +169,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setDashboardTitle(title));
   },
   updateDashboardSetting: (setting, value) => {
+    dispatch(setDraft(true));
     dispatch(updateDashboardSetting(setting, value));
   },
 });

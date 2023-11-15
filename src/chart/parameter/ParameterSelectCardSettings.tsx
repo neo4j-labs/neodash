@@ -1,15 +1,15 @@
 // TODO: this file (in a way) belongs to chart/parameter/ParameterSelectionChart. It would make sense to move it there
 
 import React, { useCallback, useContext, useEffect } from 'react';
-import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
-import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
+import { RUN_QUERY_DELAY_MS } from '../../config/ReportConfig';
+import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { Autocomplete, debounce, TextField } from '@mui/material';
-import NeoField from '../../../component/field/Field';
+import NeoField from '../../component/field/Field';
 import { Dropdown } from '@neo4j-ndl/react';
-import NeoCodeEditorComponent from '../../../component/editor/CodeEditorComponent';
+import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 
-const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
+const ParameterSelectCardSettings = ({ query, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   if (!driver) {
     throw new Error(
@@ -33,11 +33,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
 
   // When certain settings are updated, a re-generated search query is needed.
   useEffect(() => {
-    updateReportQuery(
-      settings.entityType,
-      settings.propertyType,
-      settings.propertyTypeDisplay || settings.propertyTypeDisplay
-    );
+    updateReportQuery(settings.entityType, settings.propertyType, settings.propertyTypeDisplay);
   }, [settings.suggestionLimit, settings.deduplicateSuggestions, settings.searchType, settings.caseSensitive]);
 
   useEffect(() => {
@@ -47,7 +43,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
 
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
   const formatParameterId = (id: string | undefined | null) => {
-    const cleanedId = id || '';
+    const cleanedId = id ?? '';
     return cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
   };
 
@@ -132,7 +128,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
   }
 
   function handleIdSelectionUpdate(value) {
-    const newValue = value ? value : '';
+    const newValue = value || '';
     onReportSettingUpdate('id', `${newValue}`);
     if (settings.propertyType && settings.entityType) {
       const newParameterName = `neodash_${settings.entityType}_${settings.propertyType}`;
@@ -196,7 +192,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
     settings.overridePropertyDisplayName !== undefined ? settings.overridePropertyDisplayName : false;
 
   // If the override is off, and the two values differ, set the display value to the original one again.
-  if (overridePropertyDisplayName == false && propertyInputText !== propertyInputDisplayText) {
+  if (!overridePropertyDisplayName && propertyInputText !== propertyInputDisplayText) {
     onReportSettingUpdate('propertyTypeDisplay', settings.propertyType);
     setPropertyInputDisplayText(propertyInputText);
     updateReportQuery(settings.entityType, settings.propertyType, settings.propertyType);
@@ -214,6 +210,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
           options: parameterSelectTypes.map((option) => ({ label: option, value: option })),
           value: { label: selectedType, value: selectedType },
           menuPlacement: 'auto',
+          menuPortalTarget: document.querySelector('#overlay'),
         }}
         label='Selection Type'
         type='select'
@@ -334,7 +331,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
                     ? [settings.propertyType]
                     : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                 }
-                getOptionLabel={(option) => (option ? option : '')}
+                getOptionLabel={(option) => option || ''}
                 style={{ display: 'inline-block', width: '65%', marginTop: '13px', marginRight: '5%' }}
                 inputValue={propertyInputText}
                 onInputChange={(event, value) => {
@@ -371,7 +368,7 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
                       ? [settings.propertyTypeDisplay || settings.propertyType]
                       : propertyRecords.map((r) => (r._fields ? r._fields[0] : '(no data)'))
                   }
-                  getOptionLabel={(option) => (option ? option : '')}
+                  getOptionLabel={(option) => option || ''}
                   style={{ display: 'inline-block', width: '65%', marginTop: '13px', marginRight: '5%' }}
                   inputValue={propertyInputDisplayText}
                   onInputChange={(event, value) => {
@@ -428,4 +425,4 @@ const NeoCardSettingsContentPropertySelect = ({ query, database, settings, onRep
   );
 };
 
-export default NeoCardSettingsContentPropertySelect;
+export default ParameterSelectCardSettings;

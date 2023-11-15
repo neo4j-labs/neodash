@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "dev": "yarn webpack-dev-server --mode development",
+    "prod": "yarn webpack-dev-server --mode production",
     "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
     "build": "yarn webpack --mode production --env production && cp -r public/* dist/",
     "build-minimal": "yarn webpack --mode production --env production && cp -r public/* dist/",
@@ -43,8 +44,8 @@
     "@mui/x-data-grid": "5.17.26",
     "@mui/x-date-pickers": "^5.0.17",
     "@neo4j-cypher/react-codemirror": "^1.0.3",
-    "@neo4j-ndl/base": "1.10.1",
-    "@neo4j-ndl/react": "1.10.2",
+    "@neo4j-ndl/base": "1.10.3",
+    "@neo4j-ndl/react": "1.10.8",
     "@nivo/bar": "^0.83.0",
     "@nivo/circle-packing": "^0.83.0",
     "@nivo/core": "^0.83.0",
@@ -64,9 +65,11 @@
     "d3-scale-chromatic": "^3.0.0",
     "dayjs": "^1.11.7",
     "dom-to-image": "^2.6.0",
+    "gantt-task-react": "^0.3.9",
     "leaflet": "^1.7.1",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
+    "lodash.merge": "^4.6.2",
     "mui-color": "^2.0.0-beta.2",
     "mui-nested-menu": "^3.2.1",
     "neo4j-client-sso": "^1.2.2",
@@ -117,7 +120,7 @@
     "babel-plugin-istanbul": "^6.1.1",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^3.6.0",
-    "cypress": "^10.11.0",
+    "cypress": "^12.17.4",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",

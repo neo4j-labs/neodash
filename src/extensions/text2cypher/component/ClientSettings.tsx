@@ -165,6 +165,7 @@ export const ClientSettings = ({
                 name={setting}
                 value={localSettings[setting]}
                 disabled={disabled}
+                password={defaultSettings[setting].password}
                 type={defaultSettings[setting].type}
                 label={defaultSettings[setting].label}
                 defaultValue={defaultSettings[setting].default}

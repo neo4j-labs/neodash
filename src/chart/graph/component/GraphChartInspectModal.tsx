@@ -17,7 +17,9 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
         aria-labelledby='form-dialog-title'
       >
         <Dialog.Header id='form-dialog-title'>
-          {props.interactivity.selectedEntity ? getEntityHeader(props.interactivity.selectedEntity) : ''}
+          {props.interactivity.selectedEntity
+            ? getEntityHeader(props.interactivity.selectedEntity, props?.engine?.selection)
+            : ''}
         </Dialog.Header>
         <Dialog.Content>
           <GraphEntityInspectionTable entity={props.interactivity.selectedEntity}></GraphEntityInspectionTable>

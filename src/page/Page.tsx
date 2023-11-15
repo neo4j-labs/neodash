@@ -23,7 +23,6 @@ export const NeoPage = ({
   onCreatePressed = () => {}, // callback for when the user wants to add a new report.
   onClonePressed = () => {}, // callback/action to take when a user wants to clone a report
   onRemovePressed = () => {}, // action to take when a report gets removed.
-  isLoaded = true, // Whether the page is loaded and the cards can be displayed.
   onPageLayoutUpdate = () => {}, // action to take when the page layout is updated.
 }) => {
   const getReportKey = (pagenumber: number, id: string) => {
@@ -36,14 +35,13 @@ export const NeoPage = ({
         x: 0,
         y: 0,
         i: getReportKey(pagenumber, '999999'),
-        w: 3,
-        h: 2,
+        w: 6,
+        h: 3,
         isDraggable: false,
       },
     ],
   };
 
-  const loadingMessage = <div>Loading card...</div>;
   const [isDragging, setIsDragging] = React.useState(false);
   const [layouts, setLayouts] = React.useState(defaultLayouts);
   const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
@@ -89,7 +87,7 @@ export const NeoPage = ({
     }
 
     for (let level = 0; level < maxY; level++) {
-      if (maxXbyYLevel[level] <= 9 && (maxXbyYLevel[level + 1] === undefined || maxXbyYLevel[level + 1] <= 9)) {
+      if (maxXbyYLevel[level] <= 18 && (maxXbyYLevel[level + 1] === undefined || maxXbyYLevel[level + 1] <= 18)) {
         return { x: maxXbyYLevel[level] !== undefined ? maxXbyYLevel[level] : 0, y: level };
       }
     }
@@ -108,10 +106,10 @@ export const NeoPage = ({
             x: report.x || 0,
             y: report.y || 0,
             i: getReportKey(pagenumber, report.id),
-            w: Math.max(parseInt(report.width), 2) || 3,
-            h: Math.max(parseInt(report.height), 1) || 2,
-            minW: 2,
-            minH: 1,
+            w: Math.max(parseInt(report.width), 4) || 4,
+            h: Math.max(parseInt(report.height), 2) || 2,
+            minW: 4,
+            minH: 2,
             resizeHandles: availableHandles(),
             isDraggable: true,
           };
@@ -120,10 +118,10 @@ export const NeoPage = ({
           x: x,
           y: y,
           i: getReportKey(pagenumber, '999999'),
-          w: 3,
-          h: 2,
-          minW: 3,
-          minH: 2,
+          w: 6,
+          h: 4,
+          minW: 6,
+          minH: 4,
           isDraggable: false,
           isResizable: false,
         },
@@ -134,7 +132,7 @@ export const NeoPage = ({
         <NeoAddCard
           onCreatePressed={() => {
             const { x, y } = getAddCardButtonPosition();
-            onCreatePressed(x, y, 3, 2);
+            onCreatePressed(x, y, 6, 4);
           }}
         />
       </Grid>
@@ -153,8 +151,8 @@ export const NeoPage = ({
         layouts={layouts}
         className={`layout neodash-card-editable-${editable} ${animated ? 'animated' : 'not-animated'}`}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-        rowHeight={210}
+        cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+        rowHeight={100}
         compactType={GRID_COMPACTION_TYPE}
         onDrag={() => {
           if (!isDragging) {
@@ -181,7 +179,7 @@ export const NeoPage = ({
         }}
       >
         {reports.map((report) => {
-          const w = 12;
+          const w = 24;
           const { id } = report;
           // @ts-ignore
           return (
@@ -189,11 +187,11 @@ export const NeoPage = ({
               key={getReportKey(pagenumber, id)}
               style={{ paddingBottom: '6px' }}
               item
-              xs={Math.min(w * 4, 12)}
-              sm={Math.min(w * 2, 12)}
-              md={Math.min(w * 2, 12)}
-              lg={Math.min(w, 12)}
-              xl={Math.min(w, 12)}
+              xs={Math.min(w * 4, 24)}
+              sm={Math.min(w * 2, 24)}
+              md={Math.min(w * 2, 24)}
+              lg={Math.min(w, 24)}
+              xl={Math.min(w, 24)}
             >
               <NeoCard
                 id={id}
@@ -212,11 +210,10 @@ export const NeoPage = ({
       </ResponsiveGridLayout>
     </div>
   );
-  return !isLoaded ? loadingMessage : content;
+  return content;
 };
 
 const mapStateToProps = (state) => ({
-  isLoaded: true,
   pagenumber: getPageNumber(state),
   editable: getDashboardIsEditable(state),
   dashboardSettings: getDashboardSettings(state),

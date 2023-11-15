@@ -12,6 +12,8 @@ import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleE
 import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import { objMerge } from '../../utils/ObjectManipulation';
+import { REPORT_TYPES } from '../../config/ReportConfig';
 
 const NeoCardView = ({
   id,
@@ -46,13 +48,21 @@ const NeoCardView = ({
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
   const ref = React.useRef();
 
+  const settingsSelector = Object.keys(
+    Object.fromEntries(Object.entries(REPORT_TYPES[type]?.settings || {}).filter(([_, value]) => value.refresh))
+  ).reduce((obj, key) => {
+    return Object.assign(obj, {
+      [key]: settings[key],
+    });
+  }, {});
+
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
   // TODO : selectorChange should handle every case where query execution needs to be re-executed
   // e.g. Change of query, type, some advanced settings...
   const [selectorChange, setSelectorChange] = useState(false);
 
-  const getLocalParameters = (parse_string): any => {
+  const getLocalParameters = (parse_string, drilldown = true): any => {
     if (!parse_string || !globalParameters) {
       return {};
     }
@@ -64,14 +74,29 @@ const NeoCardView = ({
     const styleRules = settings.styleRules ? settings.styleRules : [];
     const styleParams = extensionEnabled(extensions, 'styling') ? identifyStyleRuleParameters(styleRules) : [];
 
-    let localQueryVariables: string[] = [...styleParams];
+    // Similarly, if the forms extension is enabled, extract nested parameters used by parameter selectors inside the form.
+    const formFields = settings.formFields ? settings.formFields : [];
+    const formsParams =
+      drilldown && extensionEnabled(extensions, 'forms')
+        ? formFields
+            .map((f) => {
+              return Object.keys(getLocalParameters(f.query, false));
+            })
+            .flat()
+        : [];
+
+    let localQueryVariables: string[] = [...styleParams, ...formsParams];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);
     }
 
-    return Object.fromEntries(
+    let params = Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
+
+    return settings.ignoreNonDefinedParams
+      ? objMerge(Object.fromEntries(localQueryVariables.map((name) => [name, null])), params)
+      : params;
   };
 
   // @ts-ignore
@@ -104,6 +129,7 @@ const NeoCardView = ({
       type={type}
       onSelectionUpdate={onSelectionUpdate}
       showOptionalSelections={settings.showOptionalSelections}
+      dashboardSettings={dashboardSettings}
     ></NeoCardViewFooter>
   ) : (
     <></>
@@ -135,7 +161,7 @@ const NeoCardView = ({
 
   useEffect(() => {
     setSelectorChange(true);
-  }, [query, type, database]);
+  }, [query, type, database, JSON.stringify(settingsSelector)]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
@@ -213,7 +239,9 @@ const NeoCardView = ({
 
   return (
     <div
-      className={`card-view n-bg-palette-neutral-bg-weak ${expanded ? 'expanded' : ''}`}
+      className={`card-view n-bg-palette-neutral-bg-weak n-text-palette-neutral-text-default ${
+        expanded ? 'expanded' : ''
+      }`}
       style={settings && settings.backgroundColor ? { backgroundColor: settings.backgroundColor } : {}}
     >
       {reportHeader}

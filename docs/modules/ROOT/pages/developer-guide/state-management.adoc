@@ -127,6 +127,7 @@ standalone mode.
     "standalone": false,
     "oldDashboard": null,
     "ssoEnabled": false,
+    "ssoProviders": [],
     "ssoDiscoveryUrl": "https://example.com",
     "standaloneProtocol": "neo4j",
     "standaloneHost": "localhost",

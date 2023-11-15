@@ -106,7 +106,7 @@ export const reportExampleQueries = {
   'Single Value': 'MATCH (n) RETURN COUNT(n)',
   'Gauge Chart': 'MATCH (c:CPU) WHERE c.id = 1 RETURN c.load_percentage * 100',
   'Raw JSON': 'MATCH (n) RETURN COUNT(n)',
-  'Pie Chart': 'Match (n:Person)-[e]->(m:Movie) RETURN m.title as Title, COUNT(p) as People LIMIT 10',
+  'Pie Chart': 'Match (p:Person)-[e]->(m:Movie) RETURN m.title as Title, COUNT(p) as People LIMIT 10',
 };
 
 export const MAX_NUM_VALIDATION = 1;
