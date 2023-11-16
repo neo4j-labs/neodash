@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
@@ -27,6 +27,7 @@ import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHe
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
+const HIDDEN_COLUMN_PREFIX = '__';
 
 const theme = createTheme({
   typography: {
@@ -161,6 +162,14 @@ export const NeoTableChart = (props: ChartProps) => {
           actionableFields.includes(key)
         );
       });
+
+  useEffect(() => {
+    const hiddenColumns = Object.assign(
+      {},
+      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
+    );
+    setColumnVisibilityModel(hiddenColumns);
+  }, [records]);
 
   const getTransposedRows = (records) => {
     // Skip first key
