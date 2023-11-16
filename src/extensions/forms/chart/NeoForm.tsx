@@ -31,8 +31,6 @@ const NeoForm = (props: ChartProps) => {
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
   const debouncedRunCypherQuery = useCallback(debounce(props.queryCallback, RUN_QUERY_DELAY_MS), []);
-  console.log(settings.hasSubmitButton);
-  console.log(hasSubmitButton);
 
   // Helper function to force a refresh on all reports that depend on the form.
   // All reports that use one or more parameters used in the form will be refreshed.
