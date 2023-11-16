@@ -163,14 +163,6 @@ export const NeoTableChart = (props: ChartProps) => {
         );
       });
 
-  useEffect(() => {
-    const hiddenColumns = Object.assign(
-      {},
-      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
-    );
-    setColumnVisibilityModel(hiddenColumns);
-  }, [records]);
-
   const getTransposedRows = (records) => {
     // Skip first key
     const rowKeys = [...records[0].keys];
@@ -210,6 +202,14 @@ export const NeoTableChart = (props: ChartProps) => {
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
   const pageNames = getPageNumbersAndNamesList();
+
+  useEffect(() => {
+    const hiddenColumns = Object.assign(
+      {},
+      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
+    );
+    setColumnVisibilityModel(hiddenColumns);
+  }, [records]);
 
   return (
     <ThemeProvider theme={theme}>
