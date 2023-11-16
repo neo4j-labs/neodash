@@ -19,7 +19,6 @@ Other improvements:
 - UX improvements on database connection interface. [#675](https://github.com/neo4j-labs/neodash/pull/675/)
 - Added option to provide a custom message when no data is returned by a report. [#683](https://github.com/neo4j-labs/neodash/pull/683/)
 - Fixed issue where column names were not hidden correctly. [#685](https://github.com/neo4j-labs/neodash/pull/685/commits)
-- Added more styling options for the bar chart, including support for report actions. [#689](https://github.com/neo4j-labs/neodash/pull/689/)
 
 Thanks to all the contributors for this release: 
 [alfredorubin96](https://github.com/alfredorubin96),
