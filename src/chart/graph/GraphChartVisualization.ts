@@ -8,6 +8,7 @@ export const layouts = {
   'tree-left-right': 'lr',
   'tree-right-left': 'rl',
   radial: 'radialout',
+  tree: 'td',
 };
 
 type Layout = 'td' | 'bu' | 'lr' | 'rl' | 'radialout' | 'radialin';
