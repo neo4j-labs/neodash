@@ -27,7 +27,7 @@ import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHe
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
-
+const HIDDEN_COLUMN_PREFIX = '__';
 const theme = createTheme({
   typography: {
     fontFamily: "'Nunito Sans', sans-serif !important",
