@@ -169,7 +169,6 @@
   overflow-x: scroll !important;
   overflow-y: scroll;
   min-height: 116px;
-  /*height: 200px !important;*/
 }
 
 .textinput-linenumbers::-webkit-scrollbar {

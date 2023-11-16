@@ -119,7 +119,7 @@ export const NeoDashboardSidebar = ({
     // Creates new dashboard in draft state (not yet saved to Neo4j)
     deleteDashboardFromNeo4j(driver, dashboardDatabase, uuid, () => {
       if (uuid == dashboard.uuid) {
-        setSelectedDashboardIndex[0];
+        setSelectedDashboardIndex(0);
         resetLocalDashboard();
         setDraft(true);
       }
@@ -324,11 +324,7 @@ export const NeoDashboardSidebar = ({
             }}
             handleImportClicked={() => {
               setMenuOpen(Menu.NONE);
-              if (draft) {
-                setModalOpen(Modal.IMPORT);
-              } else {
-                setModalOpen(Modal.IMPORT);
-              }
+              setModalOpen(Modal.IMPORT);
             }}
             handleClose={() => {
               setMenuOpen(Menu.NONE);

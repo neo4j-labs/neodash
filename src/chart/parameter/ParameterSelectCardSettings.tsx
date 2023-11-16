@@ -68,7 +68,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
         parameters,
         10,
         (status) => {
-          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+          status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
         (result) => setRecords(result),
         () => {}
