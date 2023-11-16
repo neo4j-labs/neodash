@@ -1,11 +1,10 @@
 import React from 'react';
-import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
-import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
-import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
-import { translateQuery } from './query-translator/util/Util';
-import { GPT_LOADING_ICON } from './query-translator/component/LoadingIcon';
-
-const QueryTranslatorButton = React.lazy(() => import('./query-translator/component/QueryTranslator'));
+import { QUERY_TRANSLATOR_ACTION_PREFIX } from './text2cypher/state/QueryTranslatorActions';
+import { queryTranslatorReducer } from './text2cypher/state/QueryTranslatorReducer';
+import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQueryEditor';
+import { translateQuery } from './text2cypher/util/Util';
+import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
+import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -59,7 +58,7 @@ export const EXTENSIONS: Record<string, Extension> = {
   },
   'query-translator': {
     name: 'query-translator',
-    label: 'Natural Language Queries',
+    label: 'Text2Cypher: Natural Language Queries',
     author: 'Neo4j Professional Services',
     image: 'translator.png',
     enabled: true,

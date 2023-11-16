@@ -61,7 +61,7 @@ export class AzureOpenAiClient extends OpenAiClient {
       completion = await this.modelClient.getChatCompletions(this.modelType, history);
     }
     // If the status is correct
-    if (completion?.choices?.[0]?.message || false) {
+    if (completion?.choices?.[0]?.message) {
       let { message } = completion.choices[0];
       return message;
     }

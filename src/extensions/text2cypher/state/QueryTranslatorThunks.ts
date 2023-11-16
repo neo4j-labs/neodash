@@ -8,6 +8,7 @@ import {
   getHistoryPerCard,
   getModelClient,
   getModelProvider,
+  getModelExamples,
 } from './QueryTranslatorSelector';
 import { Status } from '../util/Status';
 
@@ -102,7 +103,10 @@ export const queryTranslationThunk =
     try {
       const state = getState();
       const database = getDatabase(state, pagenumber, cardId);
+      const examples = getModelExamples(state);
+      // Storing the message that will be sent to the model
       dispatch(updateLastMessage(message, pagenumber, cardId));
+
       // Retrieving the model client from the state
       let client: ModelClient = await dispatch(getModelClientThunk());
       if (client) {
@@ -111,7 +115,14 @@ export const queryTranslationThunk =
           client.setDriver(driver);
         }
         const messageHistory = getHistoryPerCard(state, pagenumber, cardId);
-        let translationRes = await client.queryTranslation(message, messageHistory, database, reportType, onRetry);
+        let translationRes = await client.queryTranslation(
+          message,
+          messageHistory,
+          database,
+          reportType,
+          examples,
+          onRetry
+        );
         query = translationRes[0];
         let newHistory = translationRes[1];
         // The history will be updated only if the length is different (otherwise, it's the same history)

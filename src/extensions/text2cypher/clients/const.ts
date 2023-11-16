@@ -20,6 +20,38 @@ WHERE type = "RELATIONSHIP" AND elementType = "node"
 RETURN {source: label, relationship: property, target: other} AS output
 `;
 
+export const QUERY_TRANSLATOR_TASK = `
+You are an expert Neo4j Cypher translator who understands the question in english and convert to Cypher strictly based on the Neo4j Schema provided and following the instructions below:
+1. Generate Cypher query compatible ONLY for Neo4j Version 5
+2. Do not use EXISTS, SIZE keywords in the cypher. Use alias when using the WITH keyword
+3. Please do not use same variable names for different nodes and relationships in the query.
+4. Use only Nodes and relationships mentioned in the schema
+5. Always do a case-insensitive and fuzzy search for any properties related search. Eg: to search for a Company name use "toLower(c.name) contains 'neo4j'"
+6. Always use aliases to refer the node in the query
+7. 'Answer' is NOT a Cypher keyword. Answer should never be used in a query.
+8. Please generate only one Cypher query per question. 
+9. Cypher is NOT SQL. So, do not mix and match the syntaxes.
+10. Every Cypher query always starts with a MATCH keyword.
+11. Do not response with any explanation or any other information except the Cypher query.
+12. Respect the provided schema.`;
+
+export const schemaSamplingQuery = `
+WITH coalesce($sample,(count(*)/1000)+1) as sample
+call apoc.meta.data({maxRels: 10, sample:toInteger(sample) })
+YIELD label, other, elementType, type, property
+WITH label, elementType,
+apoc.text.join(collect(case when NOT type = "RELATIONSHIP" then property+": "+type else null end),", ") AS properties,
+collect(case when type = "RELATIONSHIP" AND elementType = "node" then "(:" + label + ")-[:" + property + "]->(:" + toString(other[0]) + ")" else null end) as patterns
+with elementType as type,
+apoc.text.join(collect(":"+label+" {"+properties+"}"),"\\n") as entities,
+apoc.text.join(apoc.coll.flatten(collect(coalesce(patterns,[]))),"\\n") as patterns
+return collect(case type when "relationship" then entities end)[0] as relationships,
+collect(case type when "node" then entities end)[0] as nodes,
+collect(case type when "node" then patterns end)[0]  as patterns
+`;
+
+export const SCHEMA_SAMPLING_NUMBER = 10000;
+
 export const reportTypesToDesc = {
   table: 'Multiple variables representing property values of nodes and relationships.',
   graph:
@@ -77,47 +109,4 @@ export const reportExampleQueries = {
   'Pie Chart': 'Match (p:Person)-[e]->(m:Movie) RETURN m.title as Title, COUNT(p) as People LIMIT 10',
 };
 
-export const TASK_DEFINITION = `Task: Generate Cypher queries to query a Neo4j graph database based on the provided schema definition. These queries will be used inside NeoDash reports.
-Documentation for NeoDash is here : https://neo4j.com/labs/neodash/2.2/
-Instructions:
-Use only the provided relationship types and properties.
-Do not use any other relationship types or properties that are not provided.
-The Cypher RETURN clause must contained certain variables, based on the report type asked for.
-Report types :
-Table - Multiple variables representing property values of nodes and relationships.
-Graph - Multiple variables representing nodes objects and relationships objects inside the graph.
-Bar Chart - Two variables named category(a String value) and value(numeric value).
-Line Chart - Two numeric variables named x and y.
-Sunburst - Two variables named Path(list of strings) and value(a numerical value).
-Circle Packing - Two variables named Path(a list of strings) and value(a numerical value).
-Choropleth - Two variables named code(a String value) and value(a numerical value).
-Area Map - Two variables named code(a String value) and value(a numerical value).
-Treemap - Two variables named Path(a list of strings) and value(a numerical value).
-Radar Chart - Multiple variables representing property values of nodes and relationships.
-Sankey Chart - Three variables, two being a node object (and not a property value) and one representing a relationship object (and not a property value).
-Map - multiple variables representing nodes objects(should contain spatial propeties) and relationship objects.
-Single Value - A single value of a single variable.
-Gauge Chart - A single value of a single variable.
-Raw JSON - The Cypher query must return a JSON object that will be displayed as raw JSON data.
-Pie Chart - Two variables named category and value.`;
-
 export const MAX_NUM_VALIDATION = 1;
-
-/**
- * Function to create, from the relQuery result, the patterns
- * @param rels Result got from relQuery query
- * @returns A string containing all the possible patterns
- */
-export function createRelPattern(rels) {
-  let res: string[] = [];
-  try {
-    // For each relationship
-    rels.forEach((rel) => {
-      // For each possible target
-      rel.target.forEach((trg) => res.push(`(:${rel.source})-[:${rel.relationship}]->(:${trg})`));
-    });
-    return res.join(',');
-  } catch (e) {
-    console.log(e);
-  }
-}
