@@ -87,7 +87,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-columnHeaders', { timeout: WAITING_TIME })
       .should('contain', 'title')
       .and('contain', 'released')
-      .and('contain', '__id');
+      .and('not.contain', '__id');
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-virtualScroller .MuiDataGrid-row').should('have.length', 5);
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-footerContainer').should('contain', '1–5 of 8');
     cy.get('main .react-grid-item:eq(2) .MuiDataGrid-footerContainer button[aria-label="Go to next page"]').click();
