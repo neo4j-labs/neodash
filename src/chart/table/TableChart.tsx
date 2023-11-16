@@ -88,10 +88,6 @@ export const NeoTableChart = (props: ChartProps) => {
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
-  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <>No data, re-run the report.</>;
-  }
-
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
   const pageSizeReducer = compact ? 3 : 1;
 
@@ -163,6 +159,17 @@ export const NeoTableChart = (props: ChartProps) => {
         );
       });
 
+  useEffect(() => {
+    const hiddenColumns = Object.assign(
+      {},
+      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
+    );
+    setColumnVisibilityModel(hiddenColumns);
+  }, [records]);
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
   const getTransposedRows = (records) => {
     // Skip first key
     const rowKeys = [...records[0].keys];
@@ -202,14 +209,6 @@ export const NeoTableChart = (props: ChartProps) => {
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
   const pageNames = getPageNumbersAndNamesList();
-
-  useEffect(() => {
-    const hiddenColumns = Object.assign(
-      {},
-      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
-    );
-    setColumnVisibilityModel(hiddenColumns);
-  }, [records]);
 
   return (
     <ThemeProvider theme={theme}>
