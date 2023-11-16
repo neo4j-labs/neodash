@@ -2,10 +2,11 @@ import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
 import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
-import { NEODASH_VERSION } from '../dashboard/DashboardReducer';
+import { NEODASH_VERSION, VERSION_TO_MIGRATE } from '../dashboard/DashboardReducer';
 import {
+  assignDashboardUuidIfNotPresentThunk,
   loadDashboardFromNeo4jByNameThunk,
-  loadDashboardFromNeo4jByUUIDThunk,
+  loadDashboardFromNeo4jThunk,
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
@@ -38,8 +39,10 @@ import {
   setWaitForSSO,
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
+  setDraft,
 } from './ApplicationActions';
 import { version } from '../modal/AboutModal';
+import { createUUID } from '../utils/uuid';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -67,9 +70,12 @@ export const createConnectionThunk =
         if (records && records[0] && records[0].error) {
           dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
         } else if (records && records[0] && records[0].keys[0] == 'connected') {
+          // Connected to Neo4j. Set state accordingly.
           dispatch(setConnectionProperties(protocol, url, port, database, username, password));
           dispatch(setConnectionModalOpen(false));
           dispatch(setConnected(true));
+          // An old dashboard (pre-2.3.5) may not always have a UUID. We catch this case here.
+          dispatch(assignDashboardUuidIfNotPresentThunk());
           dispatch(updateSessionParameterThunk('session_uri', `${protocol}://${url}:${port}`));
           dispatch(updateSessionParameterThunk('session_database', database));
           dispatch(updateSessionParameterThunk('session_username', username));
@@ -83,11 +89,11 @@ export const createConnectionThunk =
           ) {
             fetch(application.dashboardToLoadAfterConnecting)
               .then((response) => response.text())
-              .then((data) => dispatch(loadDashboardThunk(data)));
+              .then((data) => dispatch(loadDashboardThunk(createUUID(), data)));
             dispatch(setDashboardToLoadAfterConnecting(null));
           } else if (application.dashboardToLoadAfterConnecting) {
             const setDashboardAfterLoadingFromDatabase = (value) => {
-              dispatch(loadDashboardThunk(value));
+              dispatch(loadDashboardThunk(createUUID(), value));
             };
 
             // If we specify a dashboard by name, load the latest version of it.
@@ -103,7 +109,7 @@ export const createConnectionThunk =
               );
             } else {
               dispatch(
-                loadDashboardFromNeo4jByUUIDThunk(
+                loadDashboardFromNeo4jThunk(
                   driver,
                   application.standaloneDashboardDatabase,
                   application.dashboardToLoadAfterConnecting,
@@ -125,7 +131,7 @@ export const createConnectionThunk =
         query,
         parameters,
         1,
-        () => { },
+        () => {},
         (records) => validateConnection(records)
       );
     } catch (e) {
@@ -400,33 +406,19 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
     // Auto-upgrade the dashboard version if an old version is cached.
     if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
-      if (state.dashboard.version == '2.0') {
-        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.0', '2.1');
-        dispatch(setDashboard(upgradedDashboard));
-        dispatch(
-          createNotificationThunk(
-            'Successfully upgraded dashboard',
-            'Your old dashboard was migrated to version 2.1. You might need to refresh this page.'
-          )
+      // Attempt upgrade if dashboard version is outdated.
+      while (VERSION_TO_MIGRATE[state.dashboard.version]) {
+        const upgradedDashboard = upgradeDashboardVersion(
+          state.dashboard,
+          state.dashboard.version,
+          VERSION_TO_MIGRATE[state.dashboard.version]
         );
-      }
-      if (state.dashboard.version == '2.1') {
-        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.1', '2.2');
         dispatch(setDashboard(upgradedDashboard));
+        dispatch(setDraft(true));
         dispatch(
           createNotificationThunk(
             'Successfully upgraded dashboard',
-            'Your old dashboard was migrated to version 2.2. You might need to refresh this page.'
-          )
-        );
-      }
-      if (state.dashboard.version == '2.2') {
-        const upgradedDashboard = upgradeDashboardVersion(state.dashboard, '2.2', '2.3');
-        dispatch(setDashboard(upgradedDashboard));
-        dispatch(
-          createNotificationThunk(
-            'Successfully upgraded dashboard',
-            'Your old dashboard was migrated to version 2.3. You might need to refresh this page.'
+            `Your old dashboard was migrated to version ${upgradedDashboard.version}. You might need to refresh this page and reactivate extensions.`
           )
         );
       }

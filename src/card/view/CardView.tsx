@@ -62,7 +62,7 @@ const NeoCardView = ({
   // e.g. Change of query, type, some advanced settings...
   const [selectorChange, setSelectorChange] = useState(false);
 
-  const getLocalParameters = (parse_string): any => {
+  const getLocalParameters = (parse_string, drilldown = true): any => {
     if (!parse_string || !globalParameters) {
       return {};
     }
@@ -74,7 +74,18 @@ const NeoCardView = ({
     const styleRules = settings.styleRules ? settings.styleRules : [];
     const styleParams = extensionEnabled(extensions, 'styling') ? identifyStyleRuleParameters(styleRules) : [];
 
-    let localQueryVariables: string[] = [...styleParams];
+    // Similarly, if the forms extension is enabled, extract nested parameters used by parameter selectors inside the form.
+    const formFields = settings.formFields ? settings.formFields : [];
+    const formsParams =
+      drilldown && extensionEnabled(extensions, 'forms')
+        ? formFields
+            .map((f) => {
+              return Object.keys(getLocalParameters(f.query, false));
+            })
+            .flat()
+        : [];
+
+    let localQueryVariables: string[] = [...styleParams, ...formsParams];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);
     }
@@ -118,6 +129,7 @@ const NeoCardView = ({
       type={type}
       onSelectionUpdate={onSelectionUpdate}
       showOptionalSelections={settings.showOptionalSelections}
+      dashboardSettings={dashboardSettings}
     ></NeoCardViewFooter>
   ) : (
     <></>
@@ -149,7 +161,7 @@ const NeoCardView = ({
 
   useEffect(() => {
     setSelectorChange(true);
-  }, [query, type, JSON.stringify(settingsSelector)]);
+  }, [query, type, database, JSON.stringify(settingsSelector)]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {

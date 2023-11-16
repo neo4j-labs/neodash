@@ -18,7 +18,7 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
       >
         <Dialog.Header id='form-dialog-title'>
           {props.interactivity.selectedEntity
-            ? getEntityHeader(props.interactivity.selectedEntity, props.engine.selection)
+            ? getEntityHeader(props.interactivity.selectedEntity, props?.engine?.selection)
             : ''}
         </Dialog.Header>
         <Dialog.Content>
