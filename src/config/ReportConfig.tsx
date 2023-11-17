@@ -1393,9 +1393,15 @@ export const COMMON_REPORT_SETTINGS = {
     default: '#fafafa',
   },
   description: {
-    label: 'Selector Description',
+    label: 'Report Description',
     type: SELECTION_TYPES.MULTILINE_TEXT,
     default: 'Enter markdown here...',
+  },
+  setParameterToOutput: {
+    label: 'Set Parameter to Output',
+    type: SELECTION_TYPES.TEXT,
+    placeholder: '$neodash_query_output',
+    default: '',
   },
   ignoreNonDefinedParams: {
     label: 'Ignore undefined parameters',

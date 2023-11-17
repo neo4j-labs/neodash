@@ -119,7 +119,14 @@ export const NeoReport = ({
           parameters,
           rowLimit,
           setStatus,
-          setRecords,
+          (records) => {
+            if (settings.setParameterToOutput) {
+              if (records[0]._fields) {
+                setGlobalParameter(settings.setParameterToOutput.replace('$', ''), records[0]._fields[0].trim());
+              }
+            }
+            setRecords(records);
+          },
           setFields,
           fields,
           useNodePropsAsFields,
@@ -138,7 +145,14 @@ export const NeoReport = ({
           parameters,
           rowLimit,
           setStatus,
-          setRecords,
+          (records) => {
+            if (settings.setParameterToOutput) {
+              if (records[0]._fields) {
+                setGlobalParameter(settings.setParameterToOutput.replace('$', ''), records[0]._fields[0].trimg());
+              }
+            }
+            setRecords(records);
+          },
           setFields,
           fields,
           useNodePropsAsFields,
