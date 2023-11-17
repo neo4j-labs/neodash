@@ -148,7 +148,7 @@ export const NeoReport = ({
           (records) => {
             if (settings.setParameterToOutput) {
               if (records[0]._fields) {
-                setGlobalParameter(settings.setParameterToOutput.replace('$', ''), records[0]._fields[0].trimg());
+                setGlobalParameter(settings.setParameterToOutput.replace('$', ''), records[0]._fields[0].trim());
               }
             }
             setRecords(records);
