@@ -27,7 +27,6 @@ const NeoBarChart = (props: ChartProps) => {
   const barWidth = settings.barWidth ? settings.barWidth : 10;
   const padding = settings.padding ? settings.padding : 0.25;
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
-  const expandForLegend = settings.expandForLegend ? settings.expandForLegend : false;
 
   const actionsRules =
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
@@ -54,6 +53,7 @@ const NeoBarChart = (props: ChartProps) => {
     settings.styleRules,
     props.getGlobalParameter
   );
+  // For adaptable item length in the legend
 
   // Populates data with record information
   useEffect(() => {
@@ -131,23 +131,18 @@ const NeoBarChart = (props: ChartProps) => {
   };
 
   const margin = () => {
-    const itemWidthConst = 40 + Math.max(...keys.map((key) => key.length)) * 5; // Adjusted as per your existing logic
-
     return {
       top: marginTop,
-      right:
-        legendPosition === 'Horizontal' ? marginRight : legend ? itemWidthConst + (marginRight) : marginRight,
+      right: legendPosition === 'Horizontal' ? marginRight : legend ? legendWidth + marginRight : marginRight,
       bottom:
         legendPosition === 'Horizontal'
           ? settings.legend
-            ? itemWidthConst * 0.3 + (marginBottom ? marginBottom : 40) + 50
-            : itemWidthConst * 0.3 + (marginBottom ? marginBottom : 40)
-          : itemWidthConst * 0.3 + (marginBottom ? marginBottom : 40),
+            ? legendWidth * 0.3 + (marginBottom ? marginBottom : 40) + 50
+            : legendWidth * 0.3 + (marginBottom ? marginBottom : 40)
+          :legendWidth * 0.3 + (marginBottom ? marginBottom : 40),
       left: marginLeft,
     };
   };
-
-  
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
   // Compute bar color based on rules - overrides default color scheme completely.
@@ -228,7 +223,7 @@ const NeoBarChart = (props: ChartProps) => {
             fill='black'
             style={{
               fontWeight: 900,
-              fontSize: 15,
+              fontSize: 30,
             }}
           >
             {bar.data.indexValue}
@@ -263,37 +258,35 @@ const NeoBarChart = (props: ChartProps) => {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
 
-  const extraProperties = { barComponent: BarComponent };
+  const extraProperties = positionLabel ? { barComponent: BarComponent } : {};
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 
-  // For adaptable item length in the legend
-  const maxKeyLength = Math.max(...keys.map((key) => key.length));
-  const baseItemWidth = 40; // Some base width for color box and padding
-  const charWidthEstimate = 5; // An estimate of how wide each character is, you might need to adjust this based on font size and type
-  const itemWidthConst = baseItemWidth + maxKeyLength * charWidthEstimate;
-  const adaptableWidth = marginLeft + marginRight + data.length * barWidth * 4 + (data.length - 1) * 4 + (data.length - 1) * innerPadding * 4;
-
+  // Creates enough width to ensure chart doesn't get cut off
+  const adaptableWidth =
+    marginLeft +
+    marginRight +
+    data.length * barWidth * 4 +
+    (data.length - 1) * 4 +
+    (data.length - 1) * innerPadding * 4;
 
   // Legend F
   const calculateLegendConfig = () => {
     if (!legend) {
-      return ([]); // No legend required
+      return []; // No legend required
     }
 
-    const itemWidthConst = 40 + Math.max(...keys.map(key => key.length)) * 5;
-
     if (legendPosition === 'Horizontal') {
-      return ([
+      return [
         {
           dataFrom: 'keys',
           anchor: 'bottom',
           direction: 'row',
           justify: false,
           translateX: 0,
-          translateY: itemWidthConst,
+          translateY: legendWidth,
           itemsSpacing: 2,
-          itemWidth: itemWidthConst,
+          itemWidth: legendWidth,
           itemHeight: 20,
           itemDirection: 'left-to-right',
           itemOpacity: 0.85,
@@ -307,19 +300,19 @@ const NeoBarChart = (props: ChartProps) => {
             },
           ],
         },
-      ]);
+      ];
     } else {
       // Vertical legend
-      return ([
+      return [
         {
           dataFrom: 'keys',
           anchor: 'bottom-right',
           direction: 'column',
           justify: false,
-          translateX: itemWidthConst + 10,
+          translateX: legendWidth + 10,
           translateY: 0,
           itemsSpacing: 1,
-          itemWidth: itemWidthConst,
+          itemWidth: legendWidth,
           itemHeight: 20,
           itemDirection: 'left-to-right',
           itemOpacity: 0.85,
@@ -333,29 +326,39 @@ const NeoBarChart = (props: ChartProps) => {
             },
           ],
         },
-      ]);
+      ];
     }
   };
 
   // Container to make the chart scroll horizontally
-  const scrollableWrapperStyle: React.CSSProperties = customDimensions ? {
-    width:
-      legendPosition === 'Horizontal'
-        ? adaptableWidth > itemWidthConst * data.length + 200
-          ? adaptableWidth
-          : itemWidthConst * data.length + 200
-        : barWidth * 5 * data.length + itemWidthConst,
-    height: expandForLegend ? 18 * data.length + itemWidthConst * 1.2 + marginBottom : '100%',
-    whiteSpace: 'nowrap',
-  } :  {};
+  const scrollableWrapperStyle: React.CSSProperties = customDimensions
+    ? {
+        width:
+          legendPosition === 'Horizontal'
+          // Ensures that a horizontal legend doesn't get cut off
+            ? adaptableWidth > legendWidth * data.length + 200
+              ? adaptableWidth
+              : legendWidth * data.length + 200
+            : barWidth * 5 * data.length + legendWidth,
+        height: '100%',
+        whiteSpace: 'nowrap',
+      }
+    : {
+        width: '100%',
+        height: '100%',
+      };
 
   // Container for scrolling container to scroll in
-  const barChartStyle: React.CSSProperties = {
-    width: '100%',
-    overflowX: 'auto',
-    overflowY: 'auto',
-    height: '100%',
-  };
+  const barChartStyle: React.CSSProperties = customDimensions
+    ? {
+        width: '100%',
+        overflowX: 'auto',
+        height: '100%',
+      }
+    : {
+        width: '100%',
+        height: '100%',
+      };
 
   const chart = (
     <div style={barChartStyle}>

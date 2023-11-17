@@ -330,6 +330,7 @@ const _REPORT_TYPES = {
       },
     },
     maxRecords: 250,
+    disabledDependency: { barWidth: { dependsOn: 'customDimensions', operator: false } },
     settings: {
       legend: {
         label: 'Legend',
@@ -475,12 +476,6 @@ const _REPORT_TYPES = {
         label: 'Bar Width',
         type: SELECTION_TYPES.NUMBER,
         default: 10,
-      },
-      expandForLegend: {
-        label: 'Expand For Legend',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
       },
       innerPadding: {
         label: 'Inner Padding',
