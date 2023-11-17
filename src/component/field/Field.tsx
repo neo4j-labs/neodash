@@ -15,6 +15,7 @@ const NeoField = ({
   select = false,
   disabled = undefined,
   variant = undefined,
+  password = false,
   helperText = undefined,
   defaultValueLabel = undefined,
   defaultValue = undefined,
@@ -34,6 +35,7 @@ const NeoField = ({
             value != null ? { label: valueLabel, value: value } : { label: defaultValueLabel, value: defaultValue },
           menuPlacement: 'auto',
           isDisabled: disabled,
+          menuPortalTarget: document.querySelector('#overlay'),
         }}
         helpText={helperText}
         placeholder={placeholder}
@@ -77,6 +79,7 @@ const NeoField = ({
         variant={variant}
         label={label}
         helpText={helperText}
+        type={password ? 'password' : 'text'}
         disabled={disabled}
         value={value != null ? value : defaultValue}
         fluid

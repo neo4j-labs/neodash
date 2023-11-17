@@ -1,5 +1,5 @@
 import React from 'react';
-import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
+import ParameterSelectCardSettings from '../chart/parameter/ParameterSelectCardSettings';
 import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
@@ -13,6 +13,7 @@ import NeoMarkdownChart from '../chart/markdown/MarkdownChart';
 import { SELECTION_TYPES } from './CardConfig';
 import NeoLineChart from '../chart/line/LineChart';
 import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
+import { objMerge, objectMap } from '../utils/ObjectManipulation';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -25,7 +26,7 @@ export const RUN_QUERY_DELAY_MS = 300;
 export const DEFAULT_ROW_LIMIT = 100;
 
 // A dictionary of available reports (visualizations).
-export const REPORT_TYPES = {
+const _REPORT_TYPES = {
   table: {
     label: 'Table',
     helperText: 'A table will contain all returned data.',
@@ -33,11 +34,6 @@ export const REPORT_TYPES = {
     useReturnValuesAsFields: true,
     maxRecords: 1000,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       transposed: {
         label: 'Transpose Rows & Columns',
         type: SELECTION_TYPES.LIST,
@@ -102,10 +98,10 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
+      noDataMessage: {
+        label: 'Override no data message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
       },
       expandedCellRenderer: {
         label: 'Use expanded cell renderer',
@@ -148,11 +144,6 @@ export const REPORT_TYPES = {
     // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
     disabledDependency: { relationshipParticleSpeed: { dependsOn: 'relationshipParticles', operator: false } },
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       nodeColorScheme: {
         label: 'Node Color Scheme',
         type: SELECTION_TYPES.LIST,
@@ -249,7 +240,7 @@ export const REPORT_TYPES = {
         default: 'force-directed',
       },
       graphDepthSep: {
-        label: 'Graph Depth Separation (experimental)',
+        label: 'Tree layout level distance',
         type: SELECTION_TYPES.NUMBER,
         default: '30',
       },
@@ -354,10 +345,10 @@ export const REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
+      noDataMessage: {
+        label: 'Override no data message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
       },
       customTablePropertiesOfModal: {
         label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
@@ -412,11 +403,6 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -601,11 +587,6 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -628,6 +609,11 @@ export const REPORT_TYPES = {
         label: "Skip label if corresponding arc's angle is lower than provided value",
         type: SELECTION_TYPES.NUMBER,
         default: 10,
+      },
+      arcLabelsFontSize: {
+        label: 'Labels font Size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 13,
       },
       enableArcLinkLabels: {
         label: 'Show categories next to slices',
@@ -685,22 +671,22 @@ export const REPORT_TYPES = {
       marginLeft: {
         label: 'Margin Left (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 24,
+        default: 50,
       },
       marginRight: {
         label: 'Margin Right (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 24,
+        default: 50,
       },
       marginTop: {
         label: 'Margin Top (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 24,
+        default: 50,
       },
       marginBottom: {
         label: 'Margin Bottom (px)',
         type: SELECTION_TYPES.NUMBER,
-        default: 40,
+        default: 50,
       },
       refreshButtonEnabled: {
         label: 'Refreshable',
@@ -779,11 +765,6 @@ export const REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -1163,11 +1144,6 @@ export const REPORT_TYPES = {
     component: NeoMapChart,
     maxRecords: 1000,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       layerType: {
         label: 'Layer Type',
         type: SELECTION_TYPES.LIST,
@@ -1184,7 +1160,7 @@ export const REPORT_TYPES = {
         label: 'Seperate Overlapping Markers',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       nodeColorScheme: {
         label: 'Node Color Scheme',
@@ -1287,11 +1263,6 @@ export const REPORT_TYPES = {
     component: NeoSingleValueChart,
     maxRecords: 1,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       fontSize: {
         label: 'Font Size',
         type: SELECTION_TYPES.NUMBER,
@@ -1392,11 +1363,6 @@ export const REPORT_TYPES = {
         values: ['json', 'yml'],
         default: 'json',
       },
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       refreshButtonEnabled: {
         label: 'Refreshable',
         type: SELECTION_TYPES.LIST,
@@ -1455,7 +1421,7 @@ export const REPORT_TYPES = {
     helperText:
       'This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.',
     component: NeoParameterSelectionChart,
-    settingsComponent: NeoCardSettingsContentPropertySelect,
+    settingsComponent: ParameterSelectCardSettings,
     disableCypherParameters: true,
     textOnly: true,
     maxRecords: 100,
@@ -1473,6 +1439,12 @@ export const REPORT_TYPES = {
       },
       multiSelector: {
         label: 'Multiple Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      multiline: {
+        label: 'Multiline',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -1499,6 +1471,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['CONTAINS', 'STARTS WITH', 'ENDS WITH'],
         default: 'CONTAINS',
+      },
+      disabled: {
+        label: 'Disable the field',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       caseSensitive: {
         label: 'Case Sensitive Search',
@@ -1533,6 +1511,11 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      multiSelectLimit: {
+        label: 'Multiselect Value Limit',
+        type: SELECTION_TYPES.NUMBER,
+        default: 5,
       },
       helperText: {
         label: 'Helper Text (Override)',
@@ -1579,11 +1562,6 @@ export const REPORT_TYPES = {
     maxRecords: 1,
     allowScrolling: true,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       replaceGlobalParameters: {
         label: 'Replace global parameters in URL',
         type: SELECTION_TYPES.LIST,
@@ -1625,11 +1603,6 @@ export const REPORT_TYPES = {
     maxRecords: 1,
     allowScrolling: true,
     settings: {
-      backgroundColor: {
-        label: 'Background Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#fafafa',
-      },
       replaceGlobalParameters: {
         label: 'Replace global parameters in Markdown',
         type: SELECTION_TYPES.LIST,
@@ -1662,3 +1635,27 @@ export const REPORT_TYPES = {
     },
   },
 };
+
+export const COMMON_REPORT_SETTINGS = {
+  backgroundColor: {
+    label: 'Background Color',
+    type: SELECTION_TYPES.COLOR,
+    default: '#fafafa',
+  },
+  description: {
+    label: 'Selector Description',
+    type: SELECTION_TYPES.MULTILINE_TEXT,
+    default: 'Enter markdown here...',
+  },
+  ignoreNonDefinedParams: {
+    label: 'Ignore undefined parameters',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+    refresh: true,
+  },
+};
+
+export const REPORT_TYPES = objectMap(_REPORT_TYPES, (value: any) => {
+  return objMerge({ settings: COMMON_REPORT_SETTINGS }, value);
+});
