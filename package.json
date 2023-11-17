@@ -59,8 +59,6 @@
     "@nivo/treemap": "^0.83.0",
     "@sentry/react": "^7.57.0",
     "@sentry/webpack-plugin": "^2.5.0",
-    "babel-runtime": "^6.26.0",
-    "caniuse-lite": "^1.0.30001546",
     "chroma-js": "^2.4.2",
     "classnames": "^2.3.1",
     "d3-scale-chromatic": "^3.0.0",
