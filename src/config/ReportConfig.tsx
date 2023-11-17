@@ -477,6 +477,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 10,
       },
+      expandHeightForLegend: {
+        label: 'Expand Height For Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       innerPadding: {
         label: 'Inner Padding',
         type: SELECTION_TYPES.NUMBER,

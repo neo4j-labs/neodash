@@ -21,13 +21,13 @@ const NeoBarChart = (props: ChartProps) => {
   const customDimensions = settings.customDimensions ? settings.customDimensions : false;
   const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
-  const marginBottom = settings.marginBottom ? settings.marginBottom : 40;
+  const marginBottom = settings.marginBottom ? settings.marginBottom : 60;
   const legend = settings.legend ? settings.legend : false;
   const labelRotation = settings.labelRotation != undefined ? settings.labelRotation : 45;
   const barWidth = settings.barWidth ? settings.barWidth : 10;
   const padding = settings.padding ? settings.padding : 0.25;
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
-
+  const expandHeightForLegend = settings.expandHeightForLegend ? settings.expandHeightForLegend : false;
   const actionsRules =
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
       ? props.settings.actionsRules
@@ -105,6 +105,16 @@ const NeoBarChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
 
+  const conditionalMarginBottom =  
+  legendPosition === 'Horizontal' ? 
+  settings.legend ? 
+  // If legendPosition === 'Horizontal' and showLegend is true
+  legendWidth * 0.3 + (marginBottom) + 50 
+  // If legendPosition === 'Horizontal' and showLegend is false
+  : legendWidth * 0.3 + (marginBottom) 
+  // If legendPosition === 'Vertical'
+  : marginBottom
+
   // Function to call from BarComponent. Conducts necessary logic for Report Action.
   const handleBarClick = (e) => {
     // Get the original record that was used to draw this bar (or a group in a bar).
@@ -134,12 +144,7 @@ const NeoBarChart = (props: ChartProps) => {
     return {
       top: marginTop,
       right: legendPosition === 'Horizontal' ? marginRight : legend ? legendWidth + marginRight : marginRight,
-      bottom:
-        legendPosition === 'Horizontal'
-          ? settings.legend
-            ? legendWidth * 0.3 + (marginBottom ? marginBottom : 40) + 50
-            : legendWidth * 0.3 + (marginBottom ? marginBottom : 40)
-          :legendWidth * 0.3 + (marginBottom ? marginBottom : 40),
+      bottom: conditionalMarginBottom,
       left: marginLeft,
     };
   };
@@ -330,6 +335,8 @@ const NeoBarChart = (props: ChartProps) => {
     }
   };
 
+  // Height of each legend item
+  const itemHeight = 24.5;
   // Container to make the chart scroll horizontally
   const scrollableWrapperStyle: React.CSSProperties = customDimensions
     ? {
@@ -340,12 +347,12 @@ const NeoBarChart = (props: ChartProps) => {
               ? adaptableWidth
               : legendWidth * data.length + 200
             : barWidth * 5 * data.length + legendWidth,
-        height: '100%',
+        height: expandHeightForLegend ? itemHeight * data.length + conditionalMarginBottom + marginTop: '100%',
         whiteSpace: 'nowrap',
       }
     : {
         width: '100%',
-        height: '100%',
+        height: expandHeightForLegend ? itemHeight * data.length : '100%',
       };
 
   // Container for scrolling container to scroll in
@@ -353,11 +360,13 @@ const NeoBarChart = (props: ChartProps) => {
     ? {
         width: '100%',
         overflowX: 'auto',
+        overflowY: 'auto',
         height: '100%',
       }
     : {
         width: '100%',
         height: '100%',
+        overflowY: 'auto',
       };
 
   const chart = (

@@ -224,13 +224,17 @@ export const NeoCustomReportActionsModal = ({
     } else {
       updateRuleField(index, 'value', newValue);
     }
-  }
+  };
+
+  const getActionHelperClassname = "n-w-2/3 n-inline-flex";
+  const spanClass = "n-align-middle ";
+  const textInputClass = "font-bold n-ml-2 n-mt-[1px] n-float-right n-w-full";
 
   const getActionHelper = (rule, index, customization) => {
     if (customization == 'set variable') {
       return (
-        <>
-          <div style={{ marginLeft: 10, display: 'inline' }} className={`n-align-middle ${type === 'bar' ? 'n-w-3/4' : 'n-w-4/5'}`}>
+        <div className = {getActionHelperClassname}>
+          <div style={{ marginLeft: 10, display: 'inline' }} className={spanClass}>
             <span
               style={{
                 height: '2.25rem',
@@ -246,16 +250,15 @@ export const NeoCustomReportActionsModal = ({
             </span>
           </div>
           <TextInput
-            className={`n-mt-0.5 n-inline-block font-bold n-ml-2`
-            }
+            className={textInputClass}
             aria-label='Choose variable'
             fluid
-            style={{ minWidth: 100, fontWeight: 700, width: type === 'bar' ? '100%' : '50%' }}
+            style={{fontWeight: 700}}
             placeholder=''
             value={rule.customizationValue}
             onChange={(e) => updateRuleField(index, 'customizationValue', e.target.value)}
           ></TextInput>
-        </>
+        </div>
       );
     } else if (customization == 'set page') {
       return (
@@ -280,6 +283,44 @@ export const NeoCustomReportActionsModal = ({
     }
     return undefined;
   };
+
+  const td2Styling = (type) => ({ width: type === 'bar' ? '15%' : '30%' })
+  const td2DropdownClassname = (type) => `n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`
+  const td2Autocomplete = (type, rule, index) => type !== 'bar' ? (
+    <Autocomplete
+      className='n-align-middle n-inline-block n-w-/5'
+      disableClearable={true}
+      id='autocomplete-label-type'
+      size='small'
+      noOptionsText='*Specify an exact field name'
+      options={createFieldVariableSuggestionsFromRule(rule, true)}
+      value={rule.field ? rule.field : ''}
+      inputValue={rule.field ? rule.field : ''}
+      popupIcon={<></>}
+      style={{
+        minWidth: 125,
+      }}
+      onInputChange={(event, value) => {
+        updateRuleField(index, 'field', value);
+      }}
+      onChange={(event, newValue) => {
+        updateRuleField(index, 'field', newValue);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          placeholder='Field name...'
+          style={{ padding: 0 }}
+          InputLabelProps={{ shrink: true }}
+        />
+      )}
+    />
+  ) : (
+    <></>
+  );
+  const td4Styling = (type) => ({ width: type === 'bar' ? '45%' : '40%' });
+  const td4DropdownClassname = 'n-align-middle, n-w-1/3';
+  const td6Styling = (type) => ({ width: type === 'bar' ? '30%' : '20%' });
 
   return (
     <div>
@@ -318,11 +359,14 @@ export const NeoCustomReportActionsModal = ({
                           <span className='n-pr-1'>{index + 1}.</span>
                           <span className='n-font-bold'>&nbsp;ON</span>
                         </td>
-                        <td style={{ width: type === 'bar' ? '15%' : '30%' }}>
+
+                        {/*<--      td2       -->*/}
+
+                        <td style={td2Styling(type)}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
-                              className={`n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`}
+                              className={td2DropdownClassname(type)}
                               style={{ minWidth: 80, display: 'inline-block' }}
                               selectProps={{
                                 onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
@@ -335,49 +379,24 @@ export const NeoCustomReportActionsModal = ({
                                 value: { label: ruleTrigger ? ruleTrigger.label : '', value: rule.condition },
                               }}
                             ></Dropdown>
-                            {type !== 'bar' ? (
-                              <Autocomplete
-                                className='n-align-middle n-inline-block n-w-3/5'
-                                disableClearable={true}
-                                id='autocomplete-label-type'
-                                size='small'
-                                noOptionsText='*Specify an exact field name'
-                                options={createFieldVariableSuggestionsFromRule(rule, true)}
-                                value={rule.field ? rule.field : ''}
-                                inputValue={rule.field ? rule.field : ''}
-                                popupIcon={<></>}
-                                style={{
-                                  minWidth: 125,
-                                }}
-                                onInputChange={(event, value) => {
-                                  updateRuleField(index, 'field', value);
-                                }}
-                                onChange={(event, newValue) => {
-                                  updateRuleField(index, 'field', newValue);
-                                }}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    placeholder='Field name...'
-                                    style={{ padding: 0 }}
-                                    InputLabelProps={{ shrink: true }}
-                                  />
-                                )}
-                              />
-                            ) : (
-                              <></>
-                            )}
+                            {td2Autocomplete(type, index, rule)}
                           </div>
                         </td>
-                        <td width='5%' className='n-text-center'>
+
+                        {/*<--      td3       -->*/}
+
+                        <td style={{width: '5%'}} className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>SET</span>
                         </td>
-                        <td style={{ width: type === 'bar' ? '45%' : '40%' }}>
+
+                        {/*<--      td4       -->*/}
+
+                        <td style={td4Styling(type)}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
-                              className={`n-align-middle ${type === 'bar' ? 'n-w-1/4' : 'n-w-1/5'}`}
-                              style={{ minWidth: 140, display: 'inline-block' }}
+                              className={td4DropdownClassname}
+                              style={{ minWidth: 130, display: 'inline-block' }}
                               fluid
                               selectProps={{
                                 onChange: (newValue) => updateRuleField(index, 'customization', newValue.value),
@@ -394,10 +413,16 @@ export const NeoCustomReportActionsModal = ({
                           </div>
                         </td>
 
+                        {/*<--      td5       -->*/}
+
+
                         <td width='5%' className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>TO</span>
                         </td>
-                        <td style={{ width: type === 'bar' ? '30%' : '20%' }}>
+
+                        {/*<--      td6       -->*/}
+
+                        <td style={td6Styling(type)}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Autocomplete
                               disableClearable={true}
