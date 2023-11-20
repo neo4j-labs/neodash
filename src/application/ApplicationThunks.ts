@@ -47,7 +47,6 @@ import {
 import { version } from '../modal/AboutModal';
 import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from "./logging/LoggingSelectors";
-import { valueIsRelationship } from '../chart/ChartUtils';
 import { createLogThunk } from './logging/LoggingThunk';
 
 /**

@@ -14,7 +14,6 @@ import NeoLoadModal from '../../modal/LoadModal';
 import NeoShareModal from '../../modal/ShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
-
 import { Tooltip } from '@mui/material';
 
 export const NeoDashboardTitle = ({

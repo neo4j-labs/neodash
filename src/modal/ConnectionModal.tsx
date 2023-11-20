@@ -26,7 +26,6 @@ export default function NeoConnectionModal({
   const [username, setUsername] = React.useState(connection.username);
   const [password, setPassword] = React.useState(connection.password);
   const [database, setDatabase] = React.useState(connection.database);
-  const [standaloneDatabase, setStandaloneDatabases] = React.useState([standaloneSettings.standalone? standaloneSettings.standaloneDatabase : 'neo4j']);
   
   // Make sure local vars are updated on external connection updates.
   useEffect(() => {
@@ -44,7 +43,7 @@ export default function NeoConnectionModal({
 
   const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl;
   
-  //sice config is loaded asynchronously, value may not be yet defined when this runs for first time
+  //since config is loaded asynchronously, value may not be yet defined when this runs for first time
   let databaseList = ['neo4j']
   try{
     databaseList = standaloneSettings.standaloneDatabaseList.split(',')
@@ -155,7 +154,6 @@ export default function NeoConnectionModal({
                 selectProps={{
                   onChange: (newValue) => {
                     setDatabase(newValue.value);
-                    setStandaloneDatabases(newValue.value);
                   },
                   options: databaseList.map((option) => ({
                     label: option,

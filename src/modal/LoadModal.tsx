@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { TextareaAutosize } from '@mui/material';
+import { TextareaAutosize, Tooltip } from '@mui/material';
 import { connect } from 'react-redux';
 import {
   loadDashboardFromNeo4jByUUIDThunk,
@@ -17,7 +17,6 @@ import {
   DocumentPlusIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { applicationGetStandaloneSettings, applicationIsStandalone } from '../application/ApplicationSelectors';
-import { Tooltip } from '@mui/material';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -217,7 +216,7 @@ export const NeoLoadModal = ({
                 });
               },
               //if application is running standalone and standaloneLoadFromOtherDatabases is not enabled, we do not allow changing database
-              isDisabled: standaloneSettings.standalone&&!standaloneSettings.standaloneLoadFromOtherDatabases?true:false, 
+              isDisabled: standaloneSettings.standalone && !standaloneSettings.standaloneLoadFromOtherDatabases ? true : false, 
               options: databases.map((database) => ({ label: database, value: database })),
               value: { label: dashboardDatabase, value: dashboardDatabase },
               menuPlacement: 'auto',
