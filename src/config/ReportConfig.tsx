@@ -494,11 +494,6 @@ const _REPORT_TYPES = {
         values: ['Horizontal', 'Vertical'],
         default: 'Vertical',
       },
-      minBarHeight: {
-        label: 'Min Bar Height',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
       padding: {
         label: 'Padding',
         type: SELECTION_TYPES.NUMBER,
