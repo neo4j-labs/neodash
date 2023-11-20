@@ -333,7 +333,7 @@ const _REPORT_TYPES = {
     disabledDependency: { barWidth: { dependsOn: 'customDimensions', operator: false } },
     settings: {
       legend: {
-        label: 'Legend',
+        label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -379,35 +379,35 @@ const _REPORT_TYPES = {
         default: 'vertical',
       },
       colors: {
-        label: 'Colors',
+        label: 'Color Scheme',
         type: SELECTION_TYPES.LIST,
         values: ['nivo', 'category10', 'accent', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'],
         default: 'set2',
       },
       barValues: {
-        label: 'Bar Values',
+        label: 'Show Values On Bars',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
       labelSkipWidth: {
-        label: 'Label Skip Width',
+        label: 'Skip label if Bar Width < Xpx',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
       labelSkipHeight: {
-        label: 'Label Skip Height',
+        label: 'Skip label if Bar Height < Xpx',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
       positionLabel: {
-        label: 'Position Label',
+        label: 'Custom label position',
         type: SELECTION_TYPES.LIST,
         values: ['off', 'top', 'bottom'],
         default: 'off',
       },
       labelRotation: {
-        label: 'Label Rotation',
+        label: 'Label Rotation (degrees)',
         type: SELECTION_TYPES.NUMBER,
         default: 45,
       },

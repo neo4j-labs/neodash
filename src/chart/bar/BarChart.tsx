@@ -1,5 +1,5 @@
 import { ResponsiveBar, ResponsiveBarCanvas } from '@nivo/bar';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { getD3ColorsByScheme } from '../../config/ColorConfig';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
@@ -105,15 +105,20 @@ const NeoBarChart = (props: ChartProps) => {
     return <NoDrawableDataErrorMessage />;
   }
 
-  const conditionalMarginBottom =  
-  legendPosition === 'Horizontal' ? 
-  settings.legend ? 
-  // If legendPosition === 'Horizontal' and showLegend is true
-  legendWidth * 0.3 + (marginBottom) + 50 
-  // If legendPosition === 'Horizontal' and showLegend is false
-  : legendWidth * 0.3 + (marginBottom) 
-  // If legendPosition === 'Vertical'
-  : marginBottom
+  // Function to calculate the conditional margin bottom
+  function calculateMarginBottom(legendPosition, showLegend, legendWidth, marginBottom) {
+    // Check if legendPosition is 'Horizontal'
+    if (legendPosition === 'Horizontal') {
+      // Calculate margin based on whether the legend is shown
+      return showLegend ? legendWidth * 0.3 + marginBottom + 50 : legendWidth * 0.3 + marginBottom;
+    } else {
+      // Return the default marginBottom if legendPosition is not 'Horizontal'
+      return marginBottom;
+    }
+  }
+
+  // Using the function in your code
+  const conditionalMarginBottom = calculateMarginBottom(legendPosition, settings.legend, legendWidth, marginBottom);
 
   // Function to call from BarComponent. Conducts necessary logic for Report Action.
   const handleBarClick = (e) => {
@@ -124,26 +129,34 @@ const NeoBarChart = (props: ChartProps) => {
       ? Object.keys(record).forEach((key) => {
           let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
           // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
-          rules &&
-            rules.forEach((rule) => {
-              const ruleField = rule.field;
-              const ruleValue = record[rule.value];
-              performActionOnElement(
-                { field: ruleField, value: ruleValue },
-                actionsRules,
-                { ...props, pageNames: pageNames },
-                'Click',
-                'bar'
-              );
-            });
+          rules?.forEach((rule) => {
+            const ruleField = rule.field;
+            const ruleValue = record[rule.value];
+            performActionOnElement(
+              { field: ruleField, value: ruleValue },
+              actionsRules,
+              { ...props, pageNames: pageNames },
+              'Click',
+              'bar'
+            );
+          });
         })
       : null;
   };
 
+  // Function to calculate the right margin
+  function calculateRightMargin(legendPosition, legend, legendWidth, marginRight) {
+    if (legendPosition === 'Vertical') {
+      return legend ? legendWidth + marginRight : marginRight;
+    }
+    return marginRight;
+  }
+
+  // Original margin function, refactored
   const margin = () => {
     return {
       top: marginTop,
-      right: legendPosition === 'Horizontal' ? marginRight : legend ? legendWidth + marginRight : marginRight,
+      right: calculateRightMargin(legendPosition, legend, legendWidth, marginRight),
       bottom: conditionalMarginBottom,
       left: marginLeft,
     };
@@ -172,38 +185,34 @@ const NeoBarChart = (props: ChartProps) => {
     return chartColorsByScheme[colorIndex];
   };
 
-  // Used instead of BarChartComponent when Position Label !== 'off'
-  const BarComponent = ({ bar, borderColor, onClick }) => {
-    let shade = false;
-    let darkTop = false;
-    let includeIndex = false;
-    let x: number;
-    // Places label in the centre of a bar with x and y
-    if (bar.width) {
-      x = bar.width / 2;
-    } else {
-      x = 0;
-    }
-    let y: number;
-    if (bar.height) {
-      y = bar.height / 2;
-    } else {
-      y = 0;
-    }
-    let textAnchor = 'middle';
-    if (positionLabel == 'top') {
-      if (layout == 'vertical') {
+  function calculateLabelPosition(bar, positionLabel, layout) {
+    let x = bar.width ? bar.width / 2 : 0;
+    let y = bar.height ? bar.height / 2 : 0;
+
+    if (positionLabel === 'top') {
+      if (layout === 'vertical') {
         y = -10;
       } else {
         x = bar.width + 10;
       }
-    } else if (positionLabel == 'bottom') {
-      if (layout == 'vertical') {
+    } else if (positionLabel === 'bottom') {
+      if (layout === 'vertical') {
         y = bar.height + 10;
       } else {
         x = -10;
       }
     }
+
+    return { x, y };
+  }
+
+  // Used instead of BarChartComponent when Position Label !== 'off'
+  const BarComponent = ({ bar, borderColor, onClick }) => {
+    let shade = false;
+    let darkTop = false;
+    let includeIndex = false;
+    let textAnchor = 'middle';
+    const { x, y } = calculateLabelPosition(bar, positionLabel, layout);
 
     return (
       <g
@@ -337,23 +346,27 @@ const NeoBarChart = (props: ChartProps) => {
 
   // Height of each legend item
   const itemHeight = 24.5;
+
+  // Function to handle width logic, including scrollbar logic
+  function calculateWidth(customDimensions, legendPosition, adaptableWidth, legendWidth, data, barWidth) {
+    if (!customDimensions) {
+      return '100%';
+    }
+
+    if (legendPosition === 'Horizontal') {
+      const horizontalLegendWidth = legendWidth * data.length + 200;
+      return adaptableWidth > horizontalLegendWidth ? adaptableWidth : horizontalLegendWidth;
+    }
+
+    return barWidth * 5 * data.length + legendWidth;
+  }
+
   // Container to make the chart scroll horizontally
-  const scrollableWrapperStyle: React.CSSProperties = customDimensions
-    ? {
-        width:
-          legendPosition === 'Horizontal'
-          // Ensures that a horizontal legend doesn't get cut off
-            ? adaptableWidth > legendWidth * data.length + 200
-              ? adaptableWidth
-              : legendWidth * data.length + 200
-            : barWidth * 5 * data.length + legendWidth,
-        height: expandHeightForLegend ? itemHeight * data.length + conditionalMarginBottom + marginTop: '100%',
-        whiteSpace: 'nowrap',
-      }
-    : {
-        width: '100%',
-        height: expandHeightForLegend ? itemHeight * data.length : '100%',
-      };
+  const scrollableWrapperStyle: React.CSSProperties = {
+    width: calculateWidth(customDimensions, legendPosition, adaptableWidth, legendWidth, data, barWidth),
+    height: expandHeightForLegend ? itemHeight * data.length + conditionalMarginBottom : '100%',
+    whiteSpace: 'nowrap',
+  };
 
   // Container for scrolling container to scroll in
   const barChartStyle: React.CSSProperties = customDimensions

@@ -286,7 +286,7 @@ export const NeoCustomReportActionsModal = ({
 
   const td2Styling = (type) => ({ width: type === 'bar' ? '15%' : '30%' })
   const td2DropdownClassname = (type) => `n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`
-  const td2Autocomplete = (type, rule, index) => type !== 'bar' ? (
+  const td2Autocomplete = (type, index, rule) => type !== 'bar' ? (
     <Autocomplete
       className='n-align-middle n-inline-block n-w-/5'
       disableClearable={true}
