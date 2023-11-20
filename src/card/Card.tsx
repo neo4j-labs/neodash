@@ -265,7 +265,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleReportSettings(id));
   },
   onDatabaseChanged: (id: any, database: any) => {
-  dispatch(updateReportDatabaseThunk(id, database));
+    dispatch(updateReportDatabaseThunk(id, database));
   },
   createNotification: (title: any, message: any) => {
     dispatch(createNotificationThunk(title, message));

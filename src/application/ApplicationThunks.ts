@@ -109,7 +109,7 @@ export const createConnectionThunk =
                   'INF - connect to DB', 
                   database, 
                   '',
-                  username +'established connection to Neo4j DB in ' +neodashMode+' mode at '+Date(Date.now()).substring(0,33)
+                  username +' established connection to Neo4j DB in ' +neodashMode+' mode at '+Date(Date.now()).substring(0,33)
                 )
             );                
         }

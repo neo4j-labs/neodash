@@ -93,7 +93,6 @@ const Application = ({
   onConnectionModalClose,
   onSSOAttempt,
   themeMode,
-  customHeader,
 }) => {
   const [initialized, setInitialized] = React.useState(false);
 
