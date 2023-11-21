@@ -380,27 +380,31 @@ export const NeoDashboardSidebar = ({
                     </Button>
                   </Tooltip>
 
-                  <Tooltip title='Create' aria-label='create' disableInteractive>
-                    <Button
-                      aria-label={'new dashboard'}
-                      fill='text'
-                      size='small'
-                      color='neutral'
-                      style={{
-                        float: 'right',
-                        marginLeft: '0px',
-                        marginRight: '5px',
-                        paddingLeft: 0,
-                        paddingRight: '3px',
-                      }}
-                      onClick={(event) => {
-                        setMenuAnchor(event.currentTarget);
-                        setMenuOpen(Menu.CREATE);
-                      }}
-                    >
-                      <PlusIconOutline className='btn-icon-base-r' />
-                    </Button>
-                  </Tooltip>
+                  {!readonly ? (
+                    <Tooltip title='Create' aria-label='create' disableInteractive>
+                      <Button
+                        aria-label={'new dashboard'}
+                        fill='text'
+                        size='small'
+                        color='neutral'
+                        style={{
+                          float: 'right',
+                          marginLeft: '0px',
+                          marginRight: '5px',
+                          paddingLeft: 0,
+                          paddingRight: '3px',
+                        }}
+                        onClick={(event) => {
+                          setMenuAnchor(event.currentTarget);
+                          setMenuOpen(Menu.CREATE);
+                        }}
+                      >
+                        <PlusIconOutline className='btn-icon-base-r' />
+                      </Button>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )}
                 </>
               ) : (
                 <></>
