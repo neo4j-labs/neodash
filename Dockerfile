@@ -1,5 +1,5 @@
 # build stage
-FROM node:lts-alpine AS build-stage
+FROM node:lts-alpine3.18 AS build-stage
 
 RUN yarn global add typescript jest
 WORKDIR /usr/local/src/neodash
@@ -16,7 +16,7 @@ COPY ./ /usr/local/src/neodash
 RUN yarn run build-minimal
 
 # production stage
-FROM nginx:alpine AS neodash
+FROM nginx:alpine3.18 AS neodash
 RUN apk upgrade
 
 ENV NGINX_PORT=5005
