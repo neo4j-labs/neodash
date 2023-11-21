@@ -9,11 +9,9 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
 import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import NeoShareModal from '../sidebar/modal/legacy/LegacyShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 import { Tooltip } from '@mui/material';
-import NeoDashboardSidebarExportModal from '../sidebar/modal/DashboardSidebarExportModal';
 import NeoExportModal from '../../modal/ExportModal';
 import { setDraft } from '../../application/ApplicationActions';
 
