@@ -20,6 +20,7 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import { getReports } from '../page/PageSelectors';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -56,6 +57,7 @@ export const NeoReport = ({
   prepopulateExtensionName,
   deletePrepopulationReportFunction,
   theme,
+  reports = [],
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -273,10 +275,13 @@ export const NeoReport = ({
   } else if (status == QueryStatus.RUNNING) {
     return loadingIcon;
   } else if (status == QueryStatus.NO_DATA) {
-    return <NeoCodeViewerComponent value={settings?.noDataMessage || 'Query returned no data.'} />;
+    updateHeightOfTableReport(1);
+    return <NeoCodeViewerComponent value={settings?.overrideDefaultMessage || 'Query returned no data.'} />;
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
     return <NoDrawableDataErrorMessage />;
   } else if (status == QueryStatus.COMPLETE) {
+    updateHeightOfTableReport(getHeightOfTableReport());
+
     if (records == null || records.length == 0) {
       return <div>Loading...</div>;
     }
@@ -369,6 +374,7 @@ const mapStateToProps = (state, ownProps) => ({
   pagenumber: getPageNumber(state),
   prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
   theme: getDashboardTheme(state),
+  reports: getReports(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
