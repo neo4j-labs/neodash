@@ -44,11 +44,12 @@ export default function NeoConnectionModal({
   const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl;
   
   //since config is loaded asynchronously, value may not be yet defined when this runs for first time
-  let databaseList = ['neo4j']
+  let standaloneDatabaseList = [standaloneSettings.standaloneDatabase]
   try{
-    databaseList = standaloneSettings.standaloneDatabaseList.split(',')
+    standaloneDatabaseList = standaloneSettings.standaloneDatabaseList ? standaloneSettings.standaloneDatabaseList.split(',') : standaloneDatabaseList
   }
   catch(e){
+    console.log(e)
   }
 
   return (
@@ -155,7 +156,7 @@ export default function NeoConnectionModal({
                   onChange: (newValue) => {
                     setDatabase(newValue.value);
                   },
-                  options: databaseList.map((option) => ({
+                  options: standaloneDatabaseList.map((option) => ({
                     label: option,
                     value: option,
                   })),
