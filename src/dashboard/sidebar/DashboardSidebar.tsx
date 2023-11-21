@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { getDashboardSettings, getDashboardTitle } from '../DashboardSelectors';
@@ -10,6 +10,7 @@ import { DashboardSidebarListItem } from './DashboardSidebarListItem';
 import {
   applicationGetConnection,
   applicationGetConnectionDatabase,
+  applicationGetStandaloneSettings,
   applicationIsStandalone,
   dashboardIsDraft,
 } from '../../application/ApplicationSelectors';
@@ -78,6 +79,7 @@ export const NeoDashboardSidebar = ({
   loadDashboardFromNeo4j,
   saveDashboardToNeo4j,
   deleteDashboardFromNeo4j,
+  standaloneSettings,
 }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
@@ -256,7 +258,9 @@ export const NeoDashboardSidebar = ({
               // We changed the active dashboard database, reload the list in the sidebar.
               loadDashboardListFromNeo4j(driver, newDatabase, (list) => {
                 setDashboards(list);
-                setDraft(true);
+                if (!readonly) {
+                  setDraft(true);
+                }
               });
             }}
             open={menuOpen == Menu.DATABASE}
@@ -338,7 +342,7 @@ export const NeoDashboardSidebar = ({
                 Dashboards
               </span>
               {/* Only let users create dashboards and change database when running in editor mode. */}
-              {readonly == false ? (
+              {!readonly || (readonly && standaloneSettings.standaloneLoadFromOtherDatabases) ? (
                 <>
                   <Tooltip title='Database' aria-label='database' disableInteractive>
                     <Button
@@ -358,6 +362,14 @@ export const NeoDashboardSidebar = ({
                         // Only when not yet retrieved, and needed, get the list of databases from Neo4j.
                         if (databases.length == 0) {
                           loadDatabaseListFromNeo4j(driver, (result) => {
+                            if (
+                              readonly &&
+                              standaloneSettings.standaloneMultiDatabase &&
+                              standaloneSettings.standaloneDatabaseList
+                            ) {
+                              let tmp = standaloneSettings.standaloneDatabaseList.split(',').map((x) => x.trim());
+                              result = result.filter((value) => tmp.includes(value));
+                            }
                             setDatabases(result);
                           });
                         }
@@ -469,6 +481,7 @@ const mapStateToProps = (state) => ({
   dashboard: getDashboardJson(state),
   dashboardSettings: getDashboardSettings(state),
   database: applicationGetConnectionDatabase(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

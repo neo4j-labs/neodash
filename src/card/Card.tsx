@@ -54,7 +54,6 @@ const NeoCard = ({
   onDatabaseChanged, // action to take when the user changes the database related to the card
   loadDatabaseListFromNeo4j, // Thunk to get the list of databases
   createNotification, // Thunk to create a global notification pop-up.
-  saveDatabase, // added to ensure the database is always saved in the session as soon as the card is created (and added in the dahsboard JSON)
 }) => {
   // Will be used to fetch the list of current databases
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -117,10 +116,6 @@ const NeoCard = ({
   useEffect(() => {
     setCollapseTimeout(report.collapseTimeout);
   }, [report.collapseTimeout]);
-
-  useEffect(() => {
-    saveDatabase(id, database);
-  }, [database]);
 
   // TODO - get rid of some of the props-drilling here...
   const component = (
@@ -271,9 +266,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(createNotificationThunk(title, message));
   },
   loadDatabaseListFromNeo4j: (driver, callback) => dispatch(loadDatabaseListFromNeo4jThunk(driver, callback)),
-  saveDatabase: (id: any, database: any) => {
-    dispatch(updateReportDatabaseThunk(id, database));
-  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoCard);
