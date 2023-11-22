@@ -177,6 +177,30 @@ export const NeoReport = ({
     }
   };
 
+  // Gets the original report height.
+  const getHeightOfTableReport = () =>
+    reports.find((report) => report.id === id && report.type === 'table')?.height || 1;
+
+  // Updates the table report grid height.
+  const updateHeightOfTableReport = (height) => {
+    let el: any = document.getElementById(id);
+    // Checks if the element exists and compactCanvas is enabled.
+    // If the compactCanvas=true setting is enabled then the report height is set to 210
+    if (el && settings?.compactCanvas) {
+      if (type === 'table') {
+        el.style.height = `${height * 210}px`;
+      }
+    }
+  };
+
+  // Resets the height of the grid when page changes.
+  useEffect(() => {
+    let el: any = document.getElementById(id);
+    if (el) {
+      el.style.height = '';
+    }
+  }, [pagenumber]);
+
   // When report parameters are changed, re-run the report.
   useEffect(() => {
     if (timer) {
