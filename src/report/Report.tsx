@@ -196,7 +196,9 @@ export const NeoReport = ({
   // Updates the table report grid height.
   const updateHeightOfTableReport = (height) => {
     let el: any = document.getElementById(id);
-    if (el) {
+    // Checks if the element exists and compactCanvas is enabled.
+    // If the compactCanvas=true setting is enabled then the report height is set to 210
+    if (el && settings?.compactCanvas) {
       if (type === 'table') {
         el.style.height = `${height * 210}px`;
       }
