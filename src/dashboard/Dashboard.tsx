@@ -71,7 +71,9 @@ const Dashboard = ({
           position: 'relative',
         }}
       >
-        <NeoDashboardSidebar />
+        <div>
+          <NeoDashboardSidebar />
+        </div>
         <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
           {/* Main Content */}
           <main className='n-flex-1 n-relative n-z-0 n-scroll-smooth n-w-full'>
@@ -79,11 +81,11 @@ const Dashboard = ({
               <div className='page-spacing-overflow'>
                 {/* The main content of the page */}
                 {applicationSettings.standalonePassword && applicationSettings.skipConfirmation !== true ? (
-                    <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
-                      Warning: NeoDash is running with a plaintext password in config.json.
-                    </div>
+                  <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
+                    Warning: NeoDash is running with a plaintext password in config.json.
+                  </div>
                 ) : (
-                    <></>
+                  <></>
                 )}
                 <NeoPage></NeoPage>
               </div>
