@@ -103,9 +103,9 @@ and will need to be executed manually.
 
 |Expand Height For Legend |on/off |off |Useful for when the legend has many labels. When enabled the chart height will adjust to the number of rows returned by the query and therefore will prevent legend labels being cut off.
 
-|Inner Padding |number |0 |When specified, will implement padding between any grouped elements\
+|Inner Padding |number |0 |When specified, will add padding between any grouped elements.
 
-|Legend Position |Vertical/Horizontal |Vertical |Will dictate whether the lagend is displayed vertically on the right hand side of the chart or horizontally on the bottom of the chart
+|Legend Position |Vertical/Horizontal |Vertical |Will dictate whether the lagend is displayed vertically on the right hand side of the chart or horizontally on the bottom of the chart.
 |===
 
 == Rule-Based Styling

@@ -339,7 +339,7 @@ const _REPORT_TYPES = {
         default: false,
       },
       showOptionalSelections: {
-        label: 'Show Optional Selections',
+        label: 'Grouping',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -349,12 +349,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['linear', 'symlog'],
         default: 'linear',
-      },
-      customDimensions: {
-        label: 'Custom Dimensions',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
       },
       minValue: {
         label: 'Min Value',
@@ -389,6 +383,17 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      customDimensions: {
+        label: 'Custom Dimensions',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      barWidth: {
+        label: 'Bar Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 10,
       },
       labelSkipWidth: {
         label: 'Skip label if Bar Width < Xpx',
@@ -471,12 +476,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
-      // New settings integrated as per their relevance
-      barWidth: {
-        label: 'Bar Width',
-        type: SELECTION_TYPES.NUMBER,
-        default: 10,
-      },
       expandHeightForLegend: {
         label: 'Expand Height For Legend',
         type: SELECTION_TYPES.LIST,
@@ -499,7 +498,7 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 0.25,
       },
-    }
+    },
   },
   pie: {
     label: 'Pie Chart',
