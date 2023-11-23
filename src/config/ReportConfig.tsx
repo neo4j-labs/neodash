@@ -129,6 +129,12 @@ export const REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'Query returned no data.',
       },
+      compactCanvas: {
+        label: 'Compact canvas',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
     },
   },
   graph: {
