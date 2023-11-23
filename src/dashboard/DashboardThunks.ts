@@ -330,7 +330,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     runCypherQuery(
       driver,
       'system',
-      'SHOW DATABASES yield name RETURN DISTINCT name',
+      'SHOW DATABASES yield name, currentStatus WHERE currentStatus = "online" RETURN DISTINCT name',
       {},
       1000,
       () => {},
