@@ -1,6 +1,6 @@
 import { createNotification } from '../application/ApplicationActions';
 import { CARD_INITIAL_STATE } from '../card/CardReducer';
-import { createReport, removeReport, updateAllCardPositionsInPage } from './PageActions';
+import { createReport, removeReport, updateAllCardPositionsInPage, moveReportToToolbox, removeReportFromToolbox } from './PageActions';
 import { createUUID } from '../utils/uuid';
 
 export const createNotificationThunk = (title: any, message: any) => (dispatch: any) => {
@@ -51,3 +51,24 @@ export const updatePageLayoutThunk = (layout: any) => (dispatch: any, getState: 
     dispatch(createNotificationThunk('Cannot update page layout', e));
   }
 };
+
+
+export const moveReportToToolboxThunk = (id: string) => (dispatch: any, getState: any) => {
+  try {
+    const state = getState()
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(moveReportToToolbox(pagenumber, id));
+  } catch (error) {
+    dispatch(createNotificationThunk('Cannot move to toolbox report', error));
+  }
+}
+
+export const removeReportFromToolboxThunk = (id: string) => (dispatch: any, getState: any) => {
+  try {
+    const state = getState()
+    const { pagenumber } = state.dashboard.settings;
+    dispatch(removeReportFromToolbox(pagenumber, id));
+  } catch (error) {
+    dispatch(createNotificationThunk('Cannot revert back to report', error));
+  }
+}

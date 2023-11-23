@@ -92,6 +92,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       noDataMessage: {
         label: 'Override no data message',
         type: SELECTION_TYPES.TEXT,
@@ -311,6 +317,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       noDataMessage: {
         label: 'Override no data message',
         type: SELECTION_TYPES.TEXT,
@@ -478,6 +490,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   pie: {
@@ -636,6 +654,12 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -813,6 +837,12 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1098,6 +1128,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   value: {
@@ -1169,6 +1205,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   json: {
@@ -1212,6 +1254,12 @@ const _REPORT_TYPES = {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
@@ -1321,6 +1369,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   iframe: {
@@ -1352,6 +1406,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
     },
   },
   text: {
@@ -1378,6 +1438,12 @@ const _REPORT_TYPES = {
       },
       downloadImageEnabled: {
         label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      minimizable: {
+        label: 'Minimize Button',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,

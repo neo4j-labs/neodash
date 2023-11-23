@@ -2,13 +2,22 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import NeoAddCard from '../card/CardAddButton';
 import NeoCard from '../card/Card';
-import { getReports } from './PageSelectors';
-import { addReportThunk, removeReportThunk, updatePageLayoutThunk, cloneReportThunk } from './PageThunks';
+import { getPageDetails, getReports, getToolBox } from './PageSelectors';
+import {
+  addReportThunk,
+  removeReportThunk,
+  updatePageLayoutThunk,
+  cloneReportThunk,
+  moveReportToToolboxThunk,
+  removeReportFromToolboxThunk,
+} from './PageThunks';
 import Grid from '@mui/material/Grid';
 import { getDashboardIsEditable, getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { GRID_COMPACTION_TYPE } from '../config/PageConfig';
+import PageToolBox from './PageToolBox';
+import GroupReport from '../component/groupreport/GroupReport';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -24,6 +33,10 @@ export const NeoPage = ({
   onClonePressed = () => {}, // callback/action to take when a user wants to clone a report
   onRemovePressed = () => {}, // action to take when a report gets removed.
   onPageLayoutUpdate = () => {}, // action to take when the page layout is updated.
+  onMinimizeClick = () => {}, // moves report to toolbox.
+  onMaximizeClick = () => {}, // removes report from toolbox to reports.
+  pageDetails, // Page object of a tab.
+  toolbox, // reports list which are moved to toolbox.
 }) => {
   const getReportKey = (pagenumber: number, id: string) => {
     return `${pagenumber}:${id}`;
@@ -46,6 +59,9 @@ export const NeoPage = ({
   const [layouts, setLayouts] = React.useState(defaultLayouts);
   const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
+  const [isListOpen, setListOpen] = React.useState(true);
+  const notGroupReports = reports.filter((report: any) => !report.groupId);
+  const filteredReports = reports.filter((report: any) => report.groupId); // Filter only reports with groupId
 
   const availableHandles = () => {
     if (dashboardSettings.resizing && dashboardSettings.resizing == 'all') {
@@ -53,6 +69,29 @@ export const NeoPage = ({
     }
     return ['se'];
   };
+
+  const toggleToolBox = () => {
+    setListOpen(!isListOpen);
+  };
+
+  const groupReportsByGroupId = (reports: any[]) => {
+    const groupedReports = {
+      defaultGroup: [], // Group for reports without groupId
+    };
+
+    reports.forEach((report: { groupId: string }) => {
+      const groupId = report.groupId || 'defaultGroup';
+
+      if (!groupedReports[groupId]) {
+        groupedReports[groupId] = [];
+      }
+      groupedReports[groupId].push(report);
+    });
+
+    return groupedReports;
+  };
+
+  const groupedReports = groupReportsByGroupId(filteredReports);
 
   /**
    * Based on the current layout, determine where the 'add report' card should be placed.
@@ -139,6 +178,31 @@ export const NeoPage = ({
     );
   };
 
+  // Remove element/report from toolbox and set it in report
+  const onTakeItem = (item: { id: any }) => {
+    onMaximizeClick(item.id);
+  };
+
+  // Move element/report to toolbox
+  const onPutItem = (item: { id: any }) => {
+    onMinimizeClick(item.id);
+  };
+
+  const groupedReportContainerStyle = {
+    border: '1px solid #000',
+    padding: '10px',
+    margin: '10px',
+  };
+
+  const getBorderSpecsForGroupId = (groupId: any) => {
+    const borderStyles = pageDetails?.groups?.find((group: any) => group.groupId.toString() === groupId);
+
+    if (borderStyles) {
+      return { border: borderStyles.border, borderColor: borderStyles.borderColor, padding: '10px', margin: '10px' };
+    }
+    return groupedReportContainerStyle;
+  };
+
   useEffect(() => {
     setAnimated(false);
     recomputeLayout();
@@ -146,6 +210,29 @@ export const NeoPage = ({
 
   const content = (
     <div className='n-pt-3'>
+      {toolbox && toolbox.length > 0 && (
+        <PageToolBox
+          items={toolbox || []}
+          onTakeItem={onTakeItem}
+          toggleToolBox={toggleToolBox}
+          isListOpen={isListOpen}
+        />
+      )}
+      {groupedReports &&
+        Object.keys(groupedReports).map((groupId) => (
+          <GroupReport
+            groupedReports={groupedReports}
+            groupId={groupId}
+            getBorderSpecsForGroupId={getBorderSpecsForGroupId}
+            getReportKey={getReportKey}
+            pagenumber={pagenumber}
+            dashboardSettings={dashboardSettings}
+            onRemovePressed={onRemovePressed}
+            onPutItem={onPutItem}
+            getAddCardButtonPosition={getAddCardButtonPosition}
+            onClonePressed={onClonePressed}
+          />
+        ))}
       <ResponsiveGridLayout
         draggableHandle='.drag-handle'
         layouts={layouts}
@@ -178,7 +265,7 @@ export const NeoPage = ({
           onPageLayoutUpdate(newLayout);
         }}
       >
-        {reports.map((report) => {
+        {notGroupReports.map((report) => {
           const w = 24;
           const { id } = report;
           // @ts-ignore
@@ -198,6 +285,7 @@ export const NeoPage = ({
                 key={getReportKey(pagenumber, id)}
                 dashboardSettings={dashboardSettings}
                 onRemovePressed={onRemovePressed}
+                onPutItem={onPutItem}
                 onClonePressed={(id) => {
                   const { x, y } = getAddCardButtonPosition();
                   onClonePressed(id, x, y);
@@ -218,6 +306,8 @@ const mapStateToProps = (state) => ({
   editable: getDashboardIsEditable(state),
   dashboardSettings: getDashboardSettings(state),
   reports: getReports(state),
+  toolbox: getToolBox(state),
+  pageDetails: getPageDetails(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -225,6 +315,8 @@ const mapDispatchToProps = (dispatch) => ({
   onClonePressed: (id, x, y) => dispatch(cloneReportThunk(id, x, y)),
   onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height, undefined)),
   onPageLayoutUpdate: (layout) => dispatch(updatePageLayoutThunk(layout)),
+  onMinimizeClick: (reportId: string) => dispatch(moveReportToToolboxThunk(reportId)),
+  onMaximizeClick: (reportId: string) => dispatch(removeReportFromToolboxThunk(reportId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoPage);

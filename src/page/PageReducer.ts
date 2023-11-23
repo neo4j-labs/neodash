@@ -5,6 +5,8 @@ import {
   SET_PAGE_TITLE,
   FORCE_REFRESH_PAGE,
   UPDATE_ALL_CARD_POSITIONS_IN_PAGE,
+  MOVE_REPORT_TO_TOOLBOX,
+  REMOVE_REPORT_FROM_TOOLBOX,
 } from './PageActions';
 import { createUUID } from '../utils/uuid';
 
@@ -45,6 +47,8 @@ export const PAGE_EXAMPLE_STATE = {
 export const PAGE_EMPTY_STATE = {
   title: 'New page',
   reports: [],
+  groups: [], // Holds reports border info and group info
+  toolbox: [] // Holds minimized reports
 };
 
 /**
@@ -123,6 +127,30 @@ export const pageReducer = (state = PAGE_EMPTY_STATE, action: { type: any; paylo
         ...state,
         reports: state.reports.map((report) => update(report, { fields: report.fields.concat(['']) })),
       };
+    }
+    case MOVE_REPORT_TO_TOOLBOX: {
+      const { id } = payload;
+      let cards = state.reports.filter((o) => o.id !== id);
+      let item = state.reports.filter((o) => o.id === id);
+      let temp = [...item]
+      if (state.toolbox && state.toolbox.length > 0) {
+        temp = [...temp, ...state.toolbox]
+      }
+      return {
+        ...state,
+        reports: cards,
+        toolbox: temp
+      }
+    }
+    case REMOVE_REPORT_FROM_TOOLBOX: {
+      const { id } = payload;
+      const revertReport = state.toolbox.filter(item => item.id === id)
+
+      return {
+        ...state,
+        reports: [...state.reports, ...revertReport],
+        toolbox: state.toolbox.filter(item => item.id !== id)
+      }
     }
     default: {
       return state;
