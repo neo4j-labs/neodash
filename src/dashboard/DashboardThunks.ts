@@ -465,6 +465,11 @@ export const loadDashboardFromNeo4jByNameThunk =
   };
 
 export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (dispatch: any) => {
+  function setStatus(status) {
+    if (status == QueryStatus.NO_DATA) {
+      runCallback([]);
+    }
+  }
   function runCallback(records) {
     if (!records || !records[0] || !records[0]._fields) {
       callback([]);
@@ -489,9 +494,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
       'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC',
       {},
       1000,
-      (status) => {
-        status == QueryStatus.NO_DATA ? runCallback([]) : () => {};
-      },
+      (status) => setStatus(status),
       (records) => runCallback(records)
     );
   } catch (e) {
