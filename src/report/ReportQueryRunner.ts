@@ -84,7 +84,6 @@ export async function runCypherQuery(
       if (records.length == 0) {
         setStatus(QueryStatus.NO_DATA);
         // console.log("TODO remove this - QUERY RETURNED NO DATA!")
-        setRecords([]);
         transaction.commit();
         return;
       }

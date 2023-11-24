@@ -183,13 +183,11 @@ export const saveDashboardToNeo4jThunk =
                   loguser,
                   'INF - save dashboard',
                   database,
-                  `Name:${  title}`,
-                  `User ${ 
-                    loguser 
-                    } saved dashboard to Neo4J in ${ 
-                    neodashMode 
-                    } mode at ${ 
-                    Date(Date.now()).substring(0, 33)}`
+                  `Name:${title}`,
+                  `User ${loguser} saved dashboard to Neo4J in ${neodashMode} mode at ${Date(Date.now()).substring(
+                    0,
+                    33
+                  )}`
                 )
               );
             }
@@ -209,11 +207,11 @@ export const saveDashboardToNeo4jThunk =
                   loguser,
                   'ERR - save dashboard',
                   database,
-                  `Name:${  title}`,
-                  `Error while trying to save dashboard to Neo4J in ${ 
-                    neodashMode 
-                    } mode at ${ 
-                    Date(Date.now()).substring(0, 33)}`
+                  `Name:${title}`,
+                  `Error while trying to save dashboard to Neo4J in ${neodashMode} mode at ${Date(Date.now()).substring(
+                    0,
+                    33
+                  )}`
                 )
               );
             }
@@ -232,10 +230,10 @@ export const saveDashboardToNeo4jThunk =
             'ERR - save dashboard',
             database,
             'Name:Not fetched',
-            `Error while trying to save dashboard to Neo4J in ${ 
-              neodashMode 
-              } mode at ${ 
-              Date(Date.now()).substring(0, 33)}`
+            `Error while trying to save dashboard to Neo4J in ${neodashMode} mode at ${Date(Date.now()).substring(
+              0,
+              33
+            )}`
           )
         );
       }
@@ -316,11 +314,11 @@ export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) =>
                 loguser,
                 'ERR - load dashboard',
                 database,
-                `UUID:${  uuid}`,
-                `Error while trying to load dashboard by UUID in ${ 
-                  neodashMode 
-                  } mode at ${ 
-                  Date(Date.now()).substring(0, 33)}`
+                `UUID:${uuid}`,
+                `Error while trying to load dashboard by UUID in ${neodashMode} mode at ${Date(Date.now()).substring(
+                  0,
+                  33
+                )}`
               )
             );
           }
@@ -336,13 +334,11 @@ export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) =>
                 loguser,
                 'INF - load dashboard',
                 database,
-                `Name:${  dashboard.title}`,
-                `User ${ 
-                  loguser 
-                  } Loaded dashboard by UUID in ${ 
-                  neodashMode 
-                  } mode at ${ 
-                  Date(Date.now()).substring(0, 33)}`
+                `Name:${dashboard.title}`,
+                `User ${loguser} Loaded dashboard by UUID in ${neodashMode} mode at ${Date(Date.now()).substring(
+                  0,
+                  33
+                )}`
               )
             );
           }
@@ -360,11 +356,8 @@ export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) =>
           loguser,
           'ERR - load dashboard',
           database,
-          `UUID:${  uuid}`,
-          `Error while trying to load dashboard by UUID in ${ 
-            neodashMode 
-            } mode at ${ 
-            Date(Date.now()).substring(0, 33)}`
+          `UUID:${uuid}`,
+          `Error while trying to load dashboard by UUID in ${neodashMode} mode at ${Date(Date.now()).substring(0, 33)}`
         )
       );
     }
@@ -413,11 +406,11 @@ export const loadDashboardFromNeo4jByNameThunk =
                   loguser,
                   'ERR - load dashboard',
                   database,
-                  `Name:${  name}`,
-                  `Error while trying to load dashboard by Name in ${ 
-                    neodashMode 
-                    } mode at ${ 
-                    Date(Date.now()).substring(0, 33)}`
+                  `Name:${name}`,
+                  `Error while trying to load dashboard by Name in ${neodashMode} mode at ${Date(Date.now()).substring(
+                    0,
+                    33
+                  )}`
                 )
               );
             }
@@ -435,11 +428,11 @@ export const loadDashboardFromNeo4jByNameThunk =
                   loguser,
                   'ERR - load dashboard',
                   database,
-                  `Name:${  name}`,
-                  `Error while trying to load dashboard by Name in ${ 
-                    neodashMode 
-                    } mode at ${ 
-                    Date(Date.now()).substring(0, 33)}`
+                  `Name:${name}`,
+                  `Error while trying to load dashboard by Name in ${neodashMode} mode at ${Date(Date.now()).substring(
+                    0,
+                    33
+                  )}`
                 )
               );
             }
@@ -455,13 +448,11 @@ export const loadDashboardFromNeo4jByNameThunk =
                 loguser,
                 'INF - load dashboard',
                 database,
-                `Name:${  name}`,
-                `User ${ 
-                  loguser 
-                  } Loaded dashboard by UUID in ${ 
-                  neodashMode 
-                  } mode at ${ 
-                  Date(Date.now()).substring(0, 33)}`
+                `Name:${name}`,
+                `User ${loguser} Loaded dashboard by UUID in ${neodashMode} mode at ${Date(Date.now()).substring(
+                  0,
+                  33
+                )}`
               )
             );
           }
@@ -474,6 +465,23 @@ export const loadDashboardFromNeo4jByNameThunk =
   };
 
 export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (dispatch: any) => {
+  function runCallback(records) {
+    if (!records || !records[0] || !records[0]._fields) {
+      callback([]);
+      return;
+    }
+    const result = records.map((r, index) => {
+      return {
+        uuid: r._fields[0],
+        title: r._fields[1],
+        date: r._fields[2],
+        author: r._fields[3],
+        version: r._fields[4],
+        index: index,
+      };
+    });
+    callback(result);
+  }
   try {
     runCypherQuery(
       driver,
@@ -481,24 +489,10 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
       'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC',
       {},
       1000,
-      () => {},
-      (records) => {
-        if (!records || !records[0] || !records[0]._fields) {
-          callback([]);
-          return;
-        }
-        const result = records.map((r, index) => {
-          return {
-            uuid: r._fields[0],
-            title: r._fields[1],
-            date: r._fields[2],
-            author: r._fields[3],
-            version: r._fields[4],
-            index: index,
-          };
-        });
-        callback(result);
-      }
+      (status) => {
+        status == QueryStatus.NO_DATA ? runCallback([]) : () => {};
+      },
+      (records) => runCallback(records)
     );
   } catch (e) {
     dispatch(createNotificationThunk('Unable to load dashboard list from Neo4j', e));
