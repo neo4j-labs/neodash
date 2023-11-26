@@ -18,6 +18,10 @@ export const getRuleWithFieldPropertyName = (e, rules, type, fieldPropertyName) 
 };
 
 const ruleFieldCheck = (ruleValue, value) => {
+  // if the field is unspecified, always return true
+  if (ruleValue == '') {
+    return true;
+  }
   if (valueIsArray(value)) {
     return value.includes(ruleValue);
   }
