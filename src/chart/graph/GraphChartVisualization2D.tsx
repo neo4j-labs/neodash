@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
-import ForceGraph2D, { LinkObject } from 'react-force-graph-2d';
-import { actionRule } from '../../extensions/actions/ActionsRule';
+import ForceGraph2D from 'react-force-graph-2d';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
-import { GraphChartVisualizationProps, Link } from './GraphChartVisualization';
+import { GraphChartVisualizationProps } from './GraphChartVisualization';
 import { generateNodeCanvasObject } from './util/NodeUtils';
 import { generateRelCanvasObject } from './util/RelUtils';
 
