@@ -9,7 +9,7 @@ import { NeoGraphChartLockButton } from './component/button/GraphChartLockButton
 import { NeoGraphChartFitViewButton } from './component/button/GraphChartFitViewButton';
 import { buildGraphVisualizationObjectFromRecords } from './util/RecordUtils';
 import { parseNodeIconConfig } from './util/NodeUtils';
-import { GraphChartVisualizationProps, layouts } from './GraphChartVisualization';
+import { GraphChartVisualizationProps, Link, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { IconButtonArray, IconButton } from '@neo4j-ndl/react';
@@ -66,7 +66,7 @@ const NeoGraphChart = (props: ChartProps) => {
 
   let [nodeLabels, setNodeLabels] = useState({});
   let [linkTypes, setLinkTypes] = useState({});
-  const [data, setData] = useState({ nodes: [] as any[], links: [] as any[] });
+  const [data, setData] = useState({ nodes: [] as Node[], links: [] as Link[] });
 
   const setLayoutFrozen = (value) => {
     if (value == false) {
