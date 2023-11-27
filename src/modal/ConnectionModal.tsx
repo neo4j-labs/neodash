@@ -11,6 +11,7 @@ export default function NeoConnectionModal({
   standalone,
   standaloneSettings,
   ssoSettings,
+  shareDetails,
   connection,
   dismissable,
   createConnection,
@@ -251,7 +252,7 @@ export default function NeoConnectionModal({
         >
           {standalone ? (
             <div style={{ color: 'lightgrey' }}>
-              {standaloneSettings.standaloneDashboardURL === '' ? (
+              {standaloneSettings.standaloneDashboardURL === '' && shareDetails == undefined ? (
                 <>
                   Sign in to continue. You will be connected to Neo4j, and load a dashboard called&nbsp;
                   <b>{standaloneSettings.standaloneDashboardName}</b>.

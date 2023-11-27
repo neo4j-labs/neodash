@@ -172,6 +172,7 @@ export const NeoDashboardSidebar = ({
       />
 
       <NeoDashboardSidebarShareModal
+        readonly={readonly}
         connection={connection}
         uuid={dashboards[inspectedIndex] && dashboards[inspectedIndex].uuid}
         dashboardDatabase={dashboardDatabase}

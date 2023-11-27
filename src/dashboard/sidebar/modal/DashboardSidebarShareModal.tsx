@@ -5,6 +5,7 @@ import { Checkbox, Dialog, TextLink } from '@neo4j-ndl/react';
  * Configures setting the current Neo4j database connection for the dashboard.
  */
 export const NeoDashboardSidebarShareModal = ({
+  readonly,
   uuid,
   dashboardDatabase,
   connection,
@@ -15,8 +16,8 @@ export const NeoDashboardSidebarShareModal = ({
   const shareBaseURL = 'http://neodash.graphapp.io';
   const shareBaseURLAlternative = 'https://neodash.graphapp.io';
   const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;
-  const [selfHosted, setSelfHosted] = React.useState(false);
-  const [standalone, setStandalone] = React.useState(false);
+  const [selfHosted, setSelfHosted] = React.useState(false || readonly);
+  const [standalone, setStandalone] = React.useState(readonly);
   const [includeCredentials, setIncludeCredentials] = React.useState(false);
 
   function getShareURL() {
@@ -45,6 +46,7 @@ export const NeoDashboardSidebarShareModal = ({
             label='Self-hosted'
             style={{ fontSize: 'small' }}
             checked={selfHosted}
+            disabled={readonly}
             name='enable'
             onClick={() => {
               setSelfHosted(!selfHosted);
@@ -57,6 +59,7 @@ export const NeoDashboardSidebarShareModal = ({
           label='Hide Editor UI'
           style={{ fontSize: 'small' }}
           checked={standalone}
+          disabled={readonly}
           name='enable'
           onClick={() => {
             setStandalone(!standalone);
@@ -67,6 +70,7 @@ export const NeoDashboardSidebarShareModal = ({
           label={'Include credentials ⚠️'}
           style={{ fontSize: 'small' }}
           checked={includeCredentials}
+          disabled={readonly}
           name='enable'
           onClick={() => {
             setIncludeCredentials(!includeCredentials);

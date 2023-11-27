@@ -110,10 +110,12 @@ the credentials of the database that the dashboard is reporting on. *Be
 warned*, when using this feature, the share link will contain the
 database credentials, which can be a security risk. 
 - If the dashboard should be viewed in `editor mode', or `standalone mode'. The latter configures neodash to run in a stripped down UI without any of the editor features enabled.
+- If the dashboard should be displayed in a self-hosted instance of Neodash or on the graphapp.io neodash website
 
-When creating a NeoDash deployment on a production database, it is not
-recommended to use the `Share' feature. Rather, set up a dedicated
-standalone deployment of NeoDash. See Publishing for more infomation.
+If both `Standalone' and `Self Hosted' mode are selected, a standalone instance URL can also be specified. By default, this will be the same (Editor) URL where the link is being generated (the dashboard will be visualized in standalone mode when accessing using the share link), however it can be replaced with the URL where a standalone instance of Neodash is running; this allows t use share links as direct links to specific dashboards for end users in a production deployment. 
+
+It is not
+recommended to use the `Share' feature without replacing the standalone URL (i.e. without having  separate standalone instance to viualize the dashboards). See Publishing for more infomation on Standalone instances.
 
 == Dashboard Settings
 

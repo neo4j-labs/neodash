@@ -8,6 +8,8 @@ import {
   ShareIconOutline,
   TrashIconOutline,
 } from '@neo4j-ndl/react/icons';
+import { connect } from 'react-redux';
+import { applicationIsStandalone } from '../../../application/ApplicationSelectors';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -21,6 +23,7 @@ export const NeoDashboardSidebarDashboardMenu = ({
   handleShareClicked,
   handleDeleteClicked,
   handleClose,
+  readonly,
 }) => {
   return (
     <Menu
@@ -38,15 +41,29 @@ export const NeoDashboardSidebarDashboardMenu = ({
       size='small'
     >
       <MenuItems>
-        <MenuItem onClick={handleInfoClicked} icon={<InformationCircleIconOutline />} title='Info' />
-        <MenuItem onClick={handleLoadClicked} icon={<CloudArrowUpIconOutline />} title='Load' />
+        {!readonly ? (
+          <MenuItem onClick={handleInfoClicked} icon={<InformationCircleIconOutline />} title='Info' />
+        ) : (
+          <></>
+        )}
+        {!readonly ? <MenuItem onClick={handleLoadClicked} icon={<CloudArrowUpIconOutline />} title='Load' /> : <></>}
         {/* <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' /> */}
-        <MenuItem onClick={handleExportClicked} icon={<DocumentTextIconOutline />} title='Export' />
+        {!readonly ? (
+          <MenuItem onClick={handleExportClicked} icon={<DocumentTextIconOutline />} title='Export' />
+        ) : (
+          <></>
+        )}
         <MenuItem onClick={handleShareClicked} icon={<ShareIconOutline />} title='Share' />
-        <MenuItem onClick={handleDeleteClicked} icon={<TrashIconOutline />} title='Delete' />
+        {!readonly ? <MenuItem onClick={handleDeleteClicked} icon={<TrashIconOutline />} title='Delete' /> : <></>}
       </MenuItems>
     </Menu>
   );
 };
 
-export default NeoDashboardSidebarDashboardMenu;
+const mapStateToProps = (state) => ({
+  readonly: applicationIsStandalone(state),
+});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NeoDashboardSidebarDashboardMenu);

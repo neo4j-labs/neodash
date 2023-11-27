@@ -4,16 +4,7 @@ import { CloudArrowUpIconOutline, EllipsisVerticalIconOutline } from '@neo4j-ndl
 import Tooltip from '@mui/material/Tooltip';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
-export const DashboardSidebarListItem = ({
-  title,
-  selected,
-  readonly,
-  saved,
-  version,
-  onSelect,
-  onSave,
-  onSettingsOpen,
-}) => {
+export const DashboardSidebarListItem = ({ title, selected, saved, version, onSelect, onSave, onSettingsOpen }) => {
   return (
     <SideNavigationGroupHeader>
       <div style={{ display: 'contents', width: '100%' }}>
@@ -44,41 +35,37 @@ export const DashboardSidebarListItem = ({
             {title ? title : '(no title)'}
           </Button>
         </Tooltip>
-        {readonly !== true ? (
-          <IconButton
-            aria-label={'new dashboard'}
-            clean
-            size='small'
-            color={'neutral'}
-            style={{
-              justifyContent: 'left',
-              paddingLeft: '0px',
-              marginRight: '10px',
-            }}
-            onClick={(event) => {
-              saved == false ? onSave() : onSettingsOpen(event);
-            }}
-          >
-            {saved == true ? (
-              <Tooltip title='Settings' aria-label='settings' disableInteractive>
-                <EllipsisVerticalIconOutline
-                  style={{ float: 'right', marginRight: '-6px' }}
-                  className='btn-icon-base-r'
-                />
-              </Tooltip>
-            ) : (
-              <Tooltip title='Save' aria-label='save' disableInteractive>
-                <CloudArrowUpIconOutline
-                  color='rgb(var(--palette-warning-text))'
-                  style={{ float: 'right', marginRight: '-6px' }}
-                  className='btn-icon-base-r'
-                />
-              </Tooltip>
-            )}
-          </IconButton>
-        ) : (
-          <></>
-        )}
+        <IconButton
+          aria-label={'new dashboard'}
+          clean
+          size='small'
+          color={'neutral'}
+          style={{
+            justifyContent: 'left',
+            paddingLeft: '0px',
+            marginRight: '10px',
+          }}
+          onClick={(event) => {
+            saved == false ? onSave() : onSettingsOpen(event);
+          }}
+        >
+          {saved == true ? (
+            <Tooltip title='Settings' aria-label='settings' disableInteractive>
+              <EllipsisVerticalIconOutline
+                style={{ float: 'right', marginRight: '-6px' }}
+                className='btn-icon-base-r'
+              />
+            </Tooltip>
+          ) : (
+            <Tooltip title='Save' aria-label='save' disableInteractive>
+              <CloudArrowUpIconOutline
+                color='rgb(var(--palette-warning-text))'
+                style={{ float: 'right', marginRight: '-6px' }}
+                className='btn-icon-base-r'
+              />
+            </Tooltip>
+          )}
+        </IconButton>
       </div>
     </SideNavigationGroupHeader>
   );
