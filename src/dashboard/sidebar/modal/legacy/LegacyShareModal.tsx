@@ -114,7 +114,7 @@ export const NeoShareModal = ({ open, handleClose, connection }) => {
               defaultValue={'No'}
               choices={['Yes', 'No']}
               onChange={(e) => {
-                if ((e == 'No') & (shareStandalone == 'Yes')) {
+                if (e == 'No' && shareStandalone == 'Yes') {
                   return;
                 }
                 setShareLink(null);

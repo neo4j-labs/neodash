@@ -9,6 +9,8 @@ import NeoField from '../../component/field/Field';
 import { Dropdown } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 
+type ParameterId = string | undefined | null;
+
 const ParameterSelectCardSettings = ({ query, database, settings, onReportSettingUpdate, onQueryUpdate }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   if (!driver) {
@@ -42,7 +44,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
   }, [database]);
 
   const cleanParameter = (parameter: string) => parameter.replaceAll(' ', '_').replaceAll('-', '_').toLowerCase();
-  const formatParameterId = (id: string | undefined | null) => {
+  const formatParameterId = (id: ParameterId) => {
     const cleanedId = id ?? '';
     return cleanedId == '' || cleanedId.startsWith('_') ? cleanedId : `_${cleanedId}`;
   };
@@ -68,7 +70,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
         parameters,
         10,
         (status) => {
-          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+          status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
         (result) => setRecords(result),
         () => {}

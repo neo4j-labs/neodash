@@ -190,7 +190,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
             debouncedQueryCallback(props.query, { input: `${inputDisplayText}`, ...allParameters }, setExtraRecords);
           }
         }}
-        value={inputValue}
+        value={inputValue || ''}
         onChange={propagateSelection}
         renderInput={(params) => (
           <TextField

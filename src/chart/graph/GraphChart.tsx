@@ -89,6 +89,7 @@ const NeoGraphChart = (props: ChartProps) => {
 
   let icons = parseNodeIconConfig(settings.iconStyle);
   const colorScheme = categoricalColorSchemes[settings.nodeColorScheme];
+  const {theme} = props;
 
   const generateVisualizationDataGraph = (records, _) => {
     let nodes: Record<string, any>[] = [];
@@ -159,6 +160,7 @@ const NeoGraphChart = (props: ChartProps) => {
       defaultRelWidth: settings.defaultRelWidth,
       relColorProp: settings.relColorProp,
       defaultRelColor: settings.defaultRelColor,
+      theme: theme,
     },
     engine: {
       layout: layouts[settings.layout],

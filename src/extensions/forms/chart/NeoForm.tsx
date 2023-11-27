@@ -9,10 +9,10 @@ import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import NeoParameterSelectionChart from '../../../chart/parameter/ParameterSelectionChart';
 
 enum FormStatus {
-  DATA_ENTRY, // The user is filling in the form.
-  RUNNING, // The form is running.
-  SUBMITTED, // The form was successfully submitted.
-  ERROR, // Submitting the form has failed.
+  DATA_ENTRY = 0, // The user is filling in the form.
+  RUNNING = 1, // The form is running.
+  SUBMITTED = 2, // The form was successfully submitted.
+  ERROR = 3, // Submitting the form has failed.
 }
 
 /**
@@ -20,13 +20,13 @@ enum FormStatus {
  */
 const NeoForm = (props: ChartProps) => {
   const { settings } = props;
-  const buttonText = settings?.runButtonText ? settings.runButtonText : 'Submit';
-  const confirmationMessage = settings?.confirmationMessage ? settings.confirmationMessage : 'Form Submitted.';
-  const resetButtonText = settings?.resetButtonText ? settings.resetButtonText : 'Reset Form';
-  const hasResetButton = settings?.hasResetButton ? settings.hasResetButton : true;
-  const hasSubmitButton = settings?.hasSubmitButton ? settings.hasSubmitButton : true;
-  const hasSubmitMessage = settings?.hasSubmitMessage ? settings.hasSubmitMessage : true;
-  const clearParametersAfterSubmit = settings?.clearParametersAfterSubmit ? settings.clearParametersAfterSubmit : false;
+  const buttonText = settings?.runButtonText ?? 'Submit';
+  const confirmationMessage = settings?.confirmationMessage ?? 'Form Submitted.';
+  const resetButtonText = settings?.resetButtonText ?? 'Reset Form';
+  const hasResetButton = settings?.hasResetButton ?? true;
+  const hasSubmitButton = settings?.hasSubmitButton ?? true;
+  const hasSubmitMessage = settings?.hasSubmitMessage ?? true;
+  const clearParametersAfterSubmit = settings?.clearParametersAfterSubmit ?? false;
   const [submitButtonActive, setSubmitButtonActive] = React.useState(true);
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
@@ -98,10 +98,12 @@ const NeoForm = (props: ChartProps) => {
                     if (formFields) {
                       const entries = formFields.map((f) => f.settings);
                       entries.forEach((entry) => {
-                        if (entry.multiSelector) {
-                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, []);
-                        } else {
-                          props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, '');
+                        if (entry.disabled !== true) {
+                          if (entry.multiSelector) {
+                            props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, []);
+                          } else {
+                            props.setGlobalParameter && props.setGlobalParameter(entry.parameterName, '');
+                          }
                         }
                       });
                     }

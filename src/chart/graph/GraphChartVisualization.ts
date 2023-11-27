@@ -8,6 +8,7 @@ export const layouts = {
   'tree-left-right': 'lr',
   'tree-right-left': 'rl',
   radial: 'radialout',
+  tree: 'td',
 };
 
 type Layout = 'td' | 'bu' | 'lr' | 'rl' | 'radialout' | 'radialin';
@@ -87,6 +88,7 @@ export interface GraphChartVisualizationProps {
     defaultRelWidth: number;
     relColorProp: string;
     defaultRelColor: string;
+    theme?: string;
   };
   /**
    * The keys in 'engine' are related to the graph rendering engine (force-directed layout) or the NeoDash query engine.

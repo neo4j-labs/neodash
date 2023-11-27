@@ -163,10 +163,8 @@ export const saveDashboardToNeo4jThunk = (driver, database, dashboard, date, use
       (records) => {
         if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
           dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Neo4j.'));
-
           onSuccess(uuid);
         } else {
-          console.log(records);
           dispatch(
             createNotificationThunk(
               'Unable to save dashboard',
@@ -200,7 +198,6 @@ export const deleteDashboardFromNeo4jThunk = (driver, database, uuid, onSuccess)
         if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
           onSuccess(uuid);
         } else {
-          console.log(records);
           dispatch(
             createNotificationThunk(
               'Unable to delete dashboard',
@@ -333,7 +330,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
     runCypherQuery(
       driver,
       'system',
-      'SHOW DATABASES yield name RETURN DISTINCT name',
+      'SHOW DATABASES yield name, currentStatus WHERE currentStatus = "online" RETURN DISTINCT name',
       {},
       1000,
       () => {},

@@ -211,7 +211,7 @@ export const NeoReport = ({
         parameters,
         1000,
         (status) => {
-          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+          status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
         (result) => setRecords(result),
         () => {},
