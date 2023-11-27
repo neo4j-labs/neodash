@@ -88,6 +88,7 @@ export interface GraphChartVisualizationProps {
     defaultRelWidth: number;
     relColorProp: string;
     defaultRelColor: string;
+    theme?: string;
   };
   /**
    * The keys in 'engine' are related to the graph rendering engine (force-directed layout) or the NeoDash query engine.
