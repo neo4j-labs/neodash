@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
+import { actionRule } from '../../extensions/actions/ActionsRule';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';

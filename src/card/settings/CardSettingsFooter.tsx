@@ -37,7 +37,7 @@ const NeoCardSettingsFooter = ({
 
   const debouncedReportSettingUpdate = useCallback(debounce(onReportSettingUpdate, 250), []);
 
-  const updateSpecificReportSetting = (field: string, value: unknown) => {
+  const updateSpecificReportSetting = (field: string, value: any) => {
     const entry = {};
     entry[field] = value;
     setReportSettingsText(update(reportSettingsText, entry));
