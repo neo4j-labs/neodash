@@ -124,25 +124,27 @@ const NeoBarChart = (props: ChartProps) => {
   const handleBarClick = (e) => {
     // Get the original record that was used to draw this bar (or a group in a bar).
     const record = getOriginalRecordForNivoClickEvent(e, records, selection);
-    // From that record, check if there are any rules assigned to each of the fields (columns).
-    record
-      ? Object.keys(record).forEach((key) => {
-          let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
-          // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
-          rules?.forEach((rule) => {
-            const ruleField = rule.field;
-            const ruleValue = record[rule.value];
-            performActionOnElement(
-              { field: ruleField, value: ruleValue },
-              actionsRules,
-              { ...props, pageNames: pageNames },
-              'Click',
-              'bar'
-            );
-          });
-        })
-      : null;
-  };
+
+    // If there's a record, check if there are any rules assigned to each of the fields (columns).
+    if (record) {
+        Object.keys(record).forEach((key) => {
+            let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
+            // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
+            rules?.forEach((rule) => {
+                const ruleField = rule.field;
+                const ruleValue = record[rule.value];
+                performActionOnElement(
+                    { field: ruleField, value: ruleValue },
+                    actionsRules,
+                    { ...props, pageNames: pageNames },
+                    'Click',
+                    'bar'
+                );
+            });
+        });
+    }
+};
+
 
   // Function to calculate the right margin
   function calculateRightMargin(legendPosition, legend, legendWidth, marginRight) {
