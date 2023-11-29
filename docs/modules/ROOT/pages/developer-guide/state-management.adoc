@@ -11,7 +11,7 @@ structure:
 {
   "dashboard": {
     "title": "My Dashboard Name",
-    "version": "2.3",
+    "version": "2.4",
     "settings": {
       "pagenumber": 0,
       "editable": true,
@@ -56,7 +56,7 @@ dashboard. Take the following simple dashboard as an example.
 {
   "dashboard": {
     "title": "A Simple Dashboard",
-    "version": "2.3",
+    "version": "2.4",
     "settings": {
       "pagenumber": 0,
       "editable": true,
@@ -127,6 +127,7 @@ standalone mode.
     "standalone": false,
     "oldDashboard": null,
     "ssoEnabled": false,
+    "ssoProviders": [],
     "ssoDiscoveryUrl": "https://example.com",
     "standaloneProtocol": "neo4j",
     "standaloneHost": "localhost",

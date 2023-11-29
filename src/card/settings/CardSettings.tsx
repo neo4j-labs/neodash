@@ -70,6 +70,7 @@ const NeoCardSettings = ({
       onQueryUpdate={onQueryUpdate}
       onReportSettingUpdate={onReportSettingUpdate}
       onTypeUpdate={onTypeUpdate}
+      forceRunQuery={onToggleCardSettings}
     ></NeoCardSettingsContent>
   ) : (
     <CardContent className='n-py-2' />
@@ -91,7 +92,11 @@ const NeoCardSettings = ({
   );
 
   return (
-    <div className={`card-view n-bg-palette-neutral-bg-weak ${expanded ? 'expanded' : ''} n-overflow-y-auto n-h-full`}>
+    <div
+      className={`card-view n-bg-palette-neutral-bg-weak n-text-palette-neutral-text-default ${
+        expanded ? 'expanded' : ''
+      } n-overflow-y-auto n-h-full`}
+    >
       {cardSettingsHeader}
       <ReportItemContainer style={{ height: reportHeight }} className='-n-mt-2'>
         {cardSettingsContent}

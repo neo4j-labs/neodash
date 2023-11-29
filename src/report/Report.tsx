@@ -22,7 +22,7 @@ import CustomSingleValueComponent from '../component/custom/CustomSingleValueCom
 import { checkParametersNameInGlobalParameter, extractAllParameterNames } from '../utils/parameterUtils';
 import { getReports } from '../page/PageSelectors';
 
-const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
+export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
 export const NeoReport = ({
   pagenumber = '', // page number that the report is on.
@@ -64,13 +64,12 @@ export const NeoReport = ({
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-  const [loadingIcon, setLoadingIcon] = React.useState(DEFAULT_LOADING_ICON);
+  const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
-
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
   const isQueryParametersDefined = (cypherQuery: string) => {
@@ -82,7 +81,7 @@ export const NeoReport = ({
   };
 
   const setSchema = (id, schema) => {
-    if (type === 'graph' || type === 'map') {
+    if (type === 'graph' || type === 'map' || type === 'gantt') {
       setSchemaDispatch(id, schema);
     }
   };
@@ -122,7 +121,7 @@ export const NeoReport = ({
 
     // Logic to run a query
     const executeQuery = (newQuery) => {
-      setLoadingIcon(DEFAULT_LOADING_ICON);
+      setLoadingIcon(REPORT_LOADING_ICON);
       if (debounced) {
         debouncedRunCypherQuery(
           driver,
@@ -247,7 +246,7 @@ export const NeoReport = ({
         parameters,
         1000,
         (status) => {
-          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+          status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
         (result) => setRecords(result),
         () => {},
@@ -337,6 +336,7 @@ export const NeoReport = ({
           fullscreen={expanded}
           dimensions={dimensions}
           parameters={parameters}
+          query={query}
           queryCallback={queryCallback}
           createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}

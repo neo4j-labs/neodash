@@ -10,6 +10,12 @@ export const setDashboard = (dashboard: any) => ({
   payload: { dashboard },
 });
 
+export const SET_DASHBOARD_UUID = 'DASHBOARD/SET_DASHBOARD_UUID';
+export const setDashboardUuid = (uuid: any) => ({
+  type: SET_DASHBOARD_UUID,
+  payload: { uuid },
+});
+
 export const SET_DASHBOARD_TITLE = 'DASHBOARD/SET_DASHBOARD_TITLE';
 export const setDashboardTitle = (title: any) => ({
   type: SET_DASHBOARD_TITLE,

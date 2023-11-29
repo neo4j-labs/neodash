@@ -6,6 +6,7 @@ import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
 import NeoAreaMapChart from './chart/areamap/AreaMapChart';
+import NeoGanttChart from './chart/gantt/GanttChart';
 
 export const EXAMPLE_ADVANCED_REPORTS = [
   {
@@ -236,5 +237,37 @@ RETURN code,totalCount
     fields: [],
     type: 'gauge',
     chartType: NeoGaugeChart,
+  },
+  {
+    title: 'Gantt',
+    description:
+      'A Gantt chart models nodes as tasks, and relationships as dependencies between them. A relationship property can be used to display different dependency types.',
+    exampleQuery: 'MATCH (a:Activity)-[r:NEXT]->(a2:Activity)\nRETURN a, r, a2',
+    syntheticQuery: `
+        WITH [
+            {
+                path: {  start: {labels: ["Task"], identity: 1, properties: {name: "Task A", startDate: "2023-10-10",  endDate: "2023-10-11"}},  end:  {identity: 2},  length: 1, segments: [ { start: {labels: ["Task"], identity: 1, properties: {name: "Task A", startDate: "2023-10-10",  endDate: "2023-10-11"}}, relationship: {type: "NEXT", start: 1, end: 2, identity: 10001, properties: {rel_type: 'ES'}}, end: {labels: ["Task"], identity: 2,properties: {name: "Task B", startDate: "2023-10-11",  endDate: "2023-10-12"}} } ] }, person: "Jim", movie: "The Matrix", rating: 4.5
+            },
+            {
+                path: {  start: {labels: ["Task"], identity: 2, properties: {name: "Task B", startDate: "2023-10-11",  endDate: "2023-10-12"}},  end:  {identity: 3},  length: 1, segments: [ { start: {labels: ["Task"], identity: 2, properties: {name: "Task B", startDate: "2023-10-11",  endDate: "2023-10-12"}}, relationship: {type: "NEXT", start: 2, end: 3, identity: 10002, properties: {rel_type: 'EE'}}, end: {labels: ["Task"], identity: 3,properties: {name: "Task C", startDate: "2023-10-12",  endDate: "2023-10-13"}} } ] }, person: "Mike", movie: "The Matrix", rating: 3.8
+            },
+            {
+                path: {  start: {labels: ["Task"], identity: 3, properties: {name: "Task C", startDate: "2023-10-12",  endDate: "2023-10-13"}},  end:  {identity: 4},  length: 1, segments: [ { start: {labels: ["Task"], identity: 3, properties: {name: "Task C", startDate: "2023-10-12",  endDate: "2023-10-13"}}, relationship: {type: "NEXT", start: 3, end: 4, identity: 10003, properties: {rel_type: 'SE'}}, end: {labels: ["Task"], identity: 4,properties: {name: "Task D", startDate: "2023-10-13",  endDate: "2023-10-14"}} } ] }, person: "Sarah", movie: "The Matrix", rating: 5.0
+            },
+            {
+                path: {  start: {labels: ["Task"], identity: 4, properties: {name: "Task D", startDate: "2023-10-13",  endDate: "2023-10-14"}},  end:  {identity: 5},  length: 1, segments: [ { start: {labels: ["Task"], identity: 4, properties: {name: "Task D", startDate: "2023-10-13",  endDate: "2023-10-14"}}, relationship: {type: "NEXT", start: 4, end: 5, identity: 10004, properties: {rel_type: 'SS'}}, end: {labels: ["Task"], identity: 5, properties: {name: "Task E", startDate: "2023-10-14",  endDate: "2023-10-15"}} } ] }, person: "Jim", movie: "The Matrix - Reloaded", rating: 3.5
+            }
+          ] as data
+          UNWIND data as row
+          RETURN row.path as Path
+        `,
+    settings: {},
+    fields: [],
+    dimensions: {
+      height: 420,
+    },
+    selection: {},
+    type: 'gantt',
+    chartType: NeoGanttChart,
   },
 ];
