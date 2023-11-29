@@ -27,3 +27,15 @@ export const forceRefreshPage = (pagenumber: number) => ({
   type: FORCE_REFRESH_PAGE,
   payload: { pagenumber },
 });
+
+export const MOVE_REPORT_TO_TOOLBOX = 'PAGE/MOVE_REPORT_TO_TOOLBOX'
+export const moveReportToToolbox = (pagenumber: number, id: any) => ({
+  type: MOVE_REPORT_TO_TOOLBOX,
+  payload: { pagenumber, id },
+});
+
+export const REMOVE_REPORT_FROM_TOOLBOX = 'PAGE/REMOVE_REPORT_FROM_TOOLBOX'
+export const removeReportFromToolbox = (pagenumber: number, id: any) => ({
+  type: REMOVE_REPORT_FROM_TOOLBOX,
+  payload: { pagenumber, id },
+});

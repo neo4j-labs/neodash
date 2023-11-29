@@ -51,9 +51,10 @@ const NeoCard = ({
   onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
   onToggleCardSettings, // action to take when the card settings button is clicked.
   onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
-  onDatabaseChanged, // action to take when the user changes the database related to the card
+  onDatabaseChanged, // action to take when the user changes the database related to the card.
   loadDatabaseListFromNeo4j, // Thunk to get the list of databases
   createNotification, // Thunk to create a global notification pop-up.
+  onPutItem, // Method to remove report from ui and move it to toolbox.
 }) => {
   // Will be used to fetch the list of current databases
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -103,6 +104,10 @@ const NeoCard = ({
     report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true
   );
 
+  const onHandleMinimize = () => {
+    onPutItem(report);
+  };
+
   useEffect(() => {
     if (!report.settingsOpen) {
       setActive(report.settings && report.settings.autorun !== undefined ? report.settings.autorun : true);
@@ -141,6 +146,7 @@ const NeoCard = ({
             setActive={setActive}
             onDownloadImage={() => downloadComponentAsImage(ref)}
             query={report.query}
+            onHandleMinimize={onHandleMinimize}
             globalParameters={globalParameters}
             fields={report.fields ? report.fields : []}
             selection={report.selection}

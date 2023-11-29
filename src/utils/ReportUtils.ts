@@ -17,3 +17,5 @@ export async function validateQuery(query, driver, database) {
     return false;
   }
 }
+
+export const dottedTruncateString = (str: string, len: number) => (str.length > len ? `${str.slice(0, len)}...` : str);
