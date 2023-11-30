@@ -12,7 +12,9 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
   const selectedEntity = props.interactivity?.selectedEntity;
   const propertySelections = props?.engine.selection ? props.engine.selection : {};
   const customTablePropertiesOfModal = props.interactivity?.customTablePropertiesOfModal;
-  const entityName = selectedEntity ? getEntityHeader(props.interactivity?.selectedEntity) : '';
+  const entityName = selectedEntity
+    ? getEntityHeader(props.interactivity.selectedEntity, props?.engine?.selection)
+    : '';
 
   // Check if the user clicked relationship or edge
   const isRelationShipTypeExists = selectedEntity ? Object.getOwnPropertyNames(selectedEntity).includes('type') : false;
@@ -20,7 +22,7 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
     // Get header name of modal based on the node or edge clicked by user
     headerName = isRelationShipTypeExists
       ? getEntityHeaderForEdge(selectedEntity, propertySelections)
-      : getEntityHeader(selectedEntity);
+      : getEntityHeader(props.interactivity.selectedEntity, props?.engine?.selection);
   }
 
   /**

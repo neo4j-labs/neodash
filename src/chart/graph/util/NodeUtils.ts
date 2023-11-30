@@ -86,3 +86,12 @@ export const generateNodeCanvasObject = (
     }
   }
 };
+
+export const getEntityHeaderForEdge = (entity: any, propertySelections: any) => {
+  const sourceTitle = getSelectedNodeProperty(entity, 'source', propertySelections);
+  const targetTitle = getSelectedNodeProperty(entity, 'target', propertySelections);
+  return (
+    (entity?.labels && `${sourceTitle} >> ${entity.labels.join(', ')} >> ${targetTitle}`) ||
+    `${entity.type} (${sourceTitle} --> ${targetTitle})`
+  );
+};
