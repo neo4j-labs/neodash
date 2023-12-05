@@ -254,6 +254,7 @@ export const NeoCustomReportActionsModal = ({
   const spanClass = 'n-align-middle ';
   const textInputClass = 'font-bold n-ml-2 n-mt-[1px] n-float-right n-w-full';
 
+  // Sets parameter value
   const getActionHelper = (rule, index, customization) => {
     if (customization == 'set variable') {
       return (
@@ -308,6 +309,8 @@ export const NeoCustomReportActionsModal = ({
     return undefined;
   };
 
+  // Naming convention: td2 = table data 2. Conditional styling was implemented for each table data depending on whether the chart type == bar or not.
+  // Styling was then extracted into functions outside of the html components, hence the naming.
   const td2Styling = (type) => ({ width: type === 'bar' ? '15%' : '30%' });
   const td2DropdownClassname = (type) => `n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`;
   const td2Autocomplete = (type, index, rule) =>
@@ -386,7 +389,7 @@ export const NeoCustomReportActionsModal = ({
                           <span className='n-font-bold'>&nbsp;ON</span>
                         </td>
 
-                        {/* <--      td2       -->*/}
+                        {/* <--      td2 (table data 2)      -->*/}
 
                         <td style={td2Styling(type)}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
@@ -413,7 +416,7 @@ export const NeoCustomReportActionsModal = ({
                           </div>
                         </td>
 
-                        {/* <--      td3       -->*/}
+                        {/* <--      td3 (table data 3)      -->*/}
 
                         <td style={{ width: '6%' }} className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
@@ -421,7 +424,7 @@ export const NeoCustomReportActionsModal = ({
                           </span>
                         </td>
 
-                        {/* <--      td4       -->*/}
+                        {/* <--      td4 (table data 4)      -->*/}
 
                         <td style={td4Styling(type)}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
@@ -445,7 +448,7 @@ export const NeoCustomReportActionsModal = ({
                           </div>
                         </td>
 
-                        {/* <--      td5       -->*/}
+                        {/* <--      td5 (table data 5)       -->*/}
 
                         <td width='5%' className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
@@ -453,7 +456,7 @@ export const NeoCustomReportActionsModal = ({
                           </span>
                         </td>
 
-                        {/* <--      td6       -->*/}
+                        {/* <--      td6 (table data 6)       -->*/}
 
                         <td style={td6Styling(type)}>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
