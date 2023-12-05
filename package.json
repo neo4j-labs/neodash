@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.3.5",
+  "version": "2.4.0",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -59,7 +59,8 @@
     "@nivo/sunburst": "^0.83.0",
     "@nivo/treemap": "^0.83.0",
     "@sentry/react": "^7.57.0",
-    "@sentry/webpack-plugin": "^2.5.0",
+    "@sentry/webpack-plugin": "^2.7.1",
+    "babel-runtime": "^6.26.0",
     "chroma-js": "^2.4.2",
     "classnames": "^2.3.1",
     "d3-scale-chromatic": "^3.0.0",

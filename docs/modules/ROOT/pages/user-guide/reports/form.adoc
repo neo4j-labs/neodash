@@ -1,0 +1,75 @@
+= Form
+
+A form is a special type of report that lets users run predefined, parameterized queries.
+A single form can consist of:
+
+- Zero or more link:../parameter-select[parameter selectors].
+- A button that triggers submitting the form.
+
+When creating a form, you write the Cypher query that is called when the submit button is clicked.
+This query can then use the parameters specified as input. The image below provides an example of a form. On the left, the settings used to define the form, on the right, the final form as visible to the user.
+
+image::createform.png[Complex Form]
+
+
+== Examples
+
+=== Simple Button
+
+A form without parameters is a button that runs a specified query. 
+One or more buttons can be used to perform simple operations in the graph. 
+Below is an example of a simple button form. On submitting, the following query is executed:
+
+[source,cypher]
+----
+MERGE (c:Counter)
+SET c.count = c.count+1
+----
+
+image::formbutton.png[Button Form]
+
+=== A Parameter and a Button
+To create a form with dynamic input, use both a parameter and a button. 
+Below is an example of a form that deletes nodes from the graph. On submit, the following query is executed:
+
+[source,cypher]
+----
+MATCH (p:Person)
+WHERE p.name = $neodash_person_name
+DETACH DELETE p
+----
+
+image::formsimple.png[Simple Form]
+
+=== Parameters Only
+
+By hiding the submit button, a form can also be used as a space-efficient way to embed multiple parameter selectors.
+Disable `Has Submit Button` in the report's advanced settings, and add two or more parameter selectors to the form.
+
+image::formselector.png[Parameter-only Form]
+
+
+== Advanced Settings
+
+[width="100%",cols="19%,17%,26%,38%",options="header",]
+|===
+|Name |Type |Default Value |Description
+
+|Form Button Text |text |Submit |Text displayed on the button that submits the form.
+
+|Reset Button Text | text |Reset Form |Text displayed on the button that resets the form to data entry mode.
+
+|Confirmation Message | multiline text |Form submitted. |Text displayed to the user after the form is submitted successfully.
+
+|Clear parameters after submit |on/off |on | Clears all dashboard parameters in the form after submitting.
+
+|Has Submit Button |on/off |on | When enabled, lets the user submit the form with a button. Disabling turns the form into parameters-only mode.
+
+|Has Reset Button |on/off |on |When enabled, lets the user reset the form to enter more data. 
+
+|Has Submit Message |on/off |on |When enabled, the user to a seperate screen after submitting the form. Else, always stay in data-entry mode.
+
+|Report Description |markdown text | | When specified, adds another button the report header that opens a pop-up. This pop-up contains the rendered markdown from this setting. 
+
+
+|===

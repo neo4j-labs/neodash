@@ -58,8 +58,8 @@ const NeoBarChart = (props: ChartProps) => {
   // Populates data with record information
   useEffect(() => {
     let newKeys = {};
-    let newData: Record<string, any>[] = records
-      .reduce((data: Record<string, any>[], row: Record<string, any>) => {
+    let newData: Record<string, unknown>[] = records
+      .reduce((data: Record<string, unknown>[], row: Record<string, any>) => {
         try {
           if (!selection || !selection.index || !selection.value) {
             return data;
@@ -111,10 +111,10 @@ const NeoBarChart = (props: ChartProps) => {
     if (legendPosition === 'Horizontal') {
       // Calculate margin based on whether the legend is shown
       return showLegend ? legendWidth * 0.3 + marginBottom + 50 : legendWidth * 0.3 + marginBottom;
-    } else {
+    } 
       // Return the default marginBottom if legendPosition is not 'Horizontal'
       return marginBottom;
-    }
+    
   }
 
   // Using the function in your code
@@ -127,24 +127,23 @@ const NeoBarChart = (props: ChartProps) => {
 
     // If there's a record, check if there are any rules assigned to each of the fields (columns).
     if (record) {
-        Object.keys(record).forEach((key) => {
-            let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
-            // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
-            rules?.forEach((rule) => {
-                const ruleField = rule.field;
-                const ruleValue = record[rule.value];
-                performActionOnElement(
-                    { field: ruleField, value: ruleValue },
-                    actionsRules,
-                    { ...props, pageNames: pageNames },
-                    'Click',
-                    'bar'
-                );
-            });
+      Object.keys(record).forEach((key) => {
+        let rules = getRule({ field: key, value: record[key] }, actionsRules, 'Click');
+        // If there is a rule assigned, run the rule with the specified field and value retrieved from the record.
+        rules?.forEach((rule) => {
+          const ruleField = rule.field;
+          const ruleValue = record[rule.value];
+          performActionOnElement(
+            { field: ruleField, value: ruleValue },
+            actionsRules,
+            { ...props, pageNames: pageNames },
+            'Click',
+            'bar'
+          );
         });
+      });
     }
-};
-
+  };
 
   // Function to calculate the right margin
   function calculateRightMargin(legendPosition, legend, legendWidth, marginRight) {
@@ -317,7 +316,7 @@ const NeoBarChart = (props: ChartProps) => {
           ],
         },
       ];
-    } else {
+    } 
       // Vertical legend
       return [
         {
@@ -343,7 +342,7 @@ const NeoBarChart = (props: ChartProps) => {
           ],
         },
       ];
-    }
+    
   };
 
   // Height of each legend item

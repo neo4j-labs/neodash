@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { XMarkIconOutline, PlusIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  AdjustmentsHorizontalIconOutline,
+  XMarkIconOutline,
+  PlusIconOutline,
+  PlayIconSolid,
+  SparklesIconOutline,
+} from '@neo4j-ndl/react/icons';
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
 import { Autocomplete, TextField } from '@mui/material';
@@ -15,6 +21,12 @@ const RULE_CONDITIONS = {
     {
       value: 'doubleClick',
       label: 'Cell Double Click',
+    },
+    {
+      value: 'rowCheck',
+      label: 'Row Checked',
+      disableFieldSelection: true,
+      multiple: true,
     },
   ],
   bar: [
@@ -40,6 +52,13 @@ const RULE_CONDITIONS = {
     {
       value: 'onLinkClick',
       label: 'Link Click',
+    },
+  ],
+  gantt: [
+    {
+      value: 'onTaskClick',
+      label: 'Task Click',
+      default: true,
     },
   ],
 };
@@ -77,6 +96,16 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
     },
   ],
   graph: [
+    {
+      value: 'set variable',
+      label: 'Parameter',
+    },
+    {
+      value: 'set page',
+      label: 'Page',
+    },
+  ],
+  gantt: [
     {
       value: 'set variable',
       label: 'Parameter',
@@ -151,14 +180,14 @@ export const NeoCustomReportActionsModal = ({
     if (!fields) {
       return [];
     }
-    if (type == 'graph' || type == 'map') {
+    if (type == 'graph' || type == 'map' || type == 'gantt') {
       return fields
         .map((node, index) => {
           if (!Array.isArray(node)) {
             return undefined;
           }
           return fields[index].map((property, propertyIndex) => {
-            if (!['Click', 'onNodeClick'].includes(c)) {
+            if (!['Click', 'onNodeClick', 'onTaskClick'].includes(c)) {
               return undefined;
             }
 
@@ -348,6 +377,7 @@ export const NeoCustomReportActionsModal = ({
                     (el) => el.value === rule.customization
                   );
                   const ruleTrigger = RULE_CONDITIONS[type].find((el) => el.value === rule.condition);
+
                   return (
                     <>
                       <tr>
@@ -363,7 +393,11 @@ export const NeoCustomReportActionsModal = ({
                             <Dropdown
                               type='select'
                               className={td2DropdownClassname(type)}
-                              style={{ minWidth: 80, display: 'inline-block' }}
+                              style={{
+                                minWidth: '140px',
+                                width: ruleTrigger.disableFieldSelection === true ? '100%' : '140px',
+                                display: 'inline-block',
+                              }}
                               selectProps={{
                                 onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
                                 options:
@@ -381,8 +415,10 @@ export const NeoCustomReportActionsModal = ({
 
                         {/* <--      td3       -->*/}
 
-                        <td style={{ width: '5%' }} className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>SET</span>
+                        <td style={{ width: '6%' }} className='n-text-center'>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
+                            {!ruleTrigger.multiple ? 'SET' : 'APPEND'}
+                          </span>
                         </td>
 
                         {/* <--      td4       -->*/}
@@ -412,7 +448,9 @@ export const NeoCustomReportActionsModal = ({
                         {/* <--      td5       -->*/}
 
                         <td width='5%' className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>TO</span>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
+                            {!ruleTrigger.multiple ? 'TO' : 'WITH'}
+                          </span>
                         </td>
 
                         {/* <--      td6       -->*/}

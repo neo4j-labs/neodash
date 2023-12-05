@@ -86,6 +86,10 @@
   border: none !important;
 }
 
+.MuiDataGrid-footerContainer > div {
+  margin-top: -40px;
+}
+
 .MuiChip-root:before {
   border: none !important;
 }
@@ -122,6 +126,10 @@
 
 .MuiDataGrid-virtualScroller {
   overflow-y: hidden !important;
+}
+
+.MuiDataGrid-panel{
+  translate: 0px -152%;
 }
 
 .MuiCard-root {
@@ -165,7 +173,6 @@
   overflow-x: scroll !important;
   overflow-y: scroll;
   min-height: 116px;
-  /*height: 200px !important;*/
 }
 
 .textinput-linenumbers::-webkit-scrollbar {
@@ -235,4 +242,14 @@
   z-index: 99 !important;
   position: absolute;
 }
+
 /* End workaround */
+
+/* Workaround for cleaning the Gantt chart UI */
+.gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div> div:not(:first-child) {
+  display: none;
+}
+.gantt-wrapper > div > div > div > div> div>  div> div:not(:first-child)  {
+  display: none;
+}
+/* End Gantt chart workaround */

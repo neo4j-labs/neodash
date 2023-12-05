@@ -109,7 +109,7 @@ const NeoScatterPlot = (props: ChartProps) => {
         }
       }
 
-      let x: any = row.get(selection.x) || 0;
+      let x: number | Date = row.get(selection.x) || 0;
       let y: any = recordToNative(row.get(key)) || 0;
       if (!isNaN(y)) {
         if (isDateTime(x)) {

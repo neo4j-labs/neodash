@@ -9,13 +9,16 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
 import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import NeoSaveModal from '../../modal/SaveModal';
-import NeoLoadModal from '../../modal/LoadModal';
-import NeoShareModal from '../../modal/ShareModal';
+import NeoShareModal from '../sidebar/modal/legacy/LegacyShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
 
 import { Tooltip } from '@mui/material';
+import NeoDashboardSidebarExportModal from '../sidebar/modal/DashboardSidebarExportModal';
+import NeoExportModal from '../../modal/ExportModal';
+import { setDraft } from '../../application/ApplicationActions';
+
+type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
@@ -32,7 +35,7 @@ export const NeoDashboardTitle = ({
   const [editing, setEditing] = React.useState(false);
   const debouncedDashboardTitleUpdate = useCallback(debounce(setDashboardTitle, 250), []);
 
-  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleSettingsMenuOpen = (event: SettingsMenuOpenEvent) => {
     setAnchorEl(event.currentTarget);
   };
   const handleSettingsMenuClose = () => {
@@ -50,11 +53,7 @@ export const NeoDashboardTitle = ({
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return (
-            <Suspense fallback='' key={`extS-${name}`}>
-              {Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>}
-            </Suspense>
-          );
+          return Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>;
         })}
       </>
     );
@@ -101,7 +100,7 @@ export const NeoDashboardTitle = ({
         </div>
       ) : (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
-          <Typography variant='h3'>{dashboardTitle}</Typography>
+          <Typography variant='h3'>{dashboardTitle ? dashboardTitle : '(no title)'}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
             {editable ? (
               <IconButton
@@ -122,6 +121,7 @@ export const NeoDashboardTitle = ({
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
       {!isStandalone ? (
         <div className='flex flex-row flex-wrap items-center gap-2'>
+          {editable ? renderExtensionsButtons() : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
           <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
             <EllipsisHorizontalIconOutline />
@@ -145,17 +145,8 @@ export const NeoDashboardTitle = ({
                 dashboardSettings={dashboardSettings}
                 updateDashboardSetting={updateDashboardSetting}
               ></NeoSettingsModal>
-              {/* Saving, loading, extensions, sharing is only enabled when the dashboard is editable. */}
-              {editable ? (
-                <>
-                  <NeoSaveModal />
-                  <NeoLoadModal />
-                  <NeoShareModal />
-                  {renderExtensionsButtons()}
-                </>
-              ) : (
-                <></>
-              )}
+
+              <NeoExportModal />
             </MenuItems>
           </Menu>
         </div>
@@ -180,6 +171,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setDashboardTitle(title));
   },
   updateDashboardSetting: (setting, value) => {
+    dispatch(setDraft(true));
     dispatch(updateDashboardSetting(setting, value));
   },
 });
