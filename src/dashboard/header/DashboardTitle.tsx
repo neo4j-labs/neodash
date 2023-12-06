@@ -124,34 +124,10 @@ export const NeoDashboardTitle = ({
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
       {!standaloneSettings.standalone ? (
         <div className='flex flex-row flex-wrap items-center gap-2'>
-          {editable ? renderExtensionsButtons() : <></>}
+          <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
+          {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
-          <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
-            <EllipsisHorizontalIconOutline />
-          </IconButton>
-          <Menu
-            anchorOrigin={{
-              horizontal: 'right',
-              vertical: 'bottom',
-            }}
-            transformOrigin={{
-              horizontal: 'right',
-              vertical: 'top',
-            }}
-            anchorEl={anchorEl}
-            open={menuOpen}
-            onClose={handleSettingsMenuClose}
-            size='large'
-          >
-            <MenuItems>
-              <NeoSettingsModal
-                dashboardSettings={dashboardSettings}
-                updateDashboardSetting={updateDashboardSetting}
-              ></NeoSettingsModal>
-
-              <NeoExportModal />
-            </MenuItems>
-          </Menu>
+          {editable ? renderExtensionsButtons() : <></>}
         </div>
       ) : (
         <></>

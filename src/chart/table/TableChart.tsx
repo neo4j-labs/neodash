@@ -243,7 +243,7 @@ export const NeoTableChart = (props: ChartProps) => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              className='n-absolute n-z-10 n-bottom-4 n-left-1'
+              className='n-absolute n-z-10 n-bottom-7 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />
