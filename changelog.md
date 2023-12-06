@@ -1,3 +1,5 @@
+## NeoDash 2.4.1
+
 ## NeoDash 2.4.0
 NeoDash 2.4 is out! 🎂 This release packs a ton of new features, as well as improvements to the existing visualizations.
 
