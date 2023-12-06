@@ -47,13 +47,7 @@ export const NeoDashboardSidebarImportModal = ({ open, onImport, handleClose }) 
           style={{ marginLeft: '10px' }}
           floating
         >
-          <input
-            value=""
-            type='file'
-            ref={loadFromFile}
-            onChange={onSelectFileClick}
-            hidden
-          />
+          <input value='' type='file' ref={loadFromFile} onChange={onSelectFileClick} hidden />
           Select From File
           <DocumentPlusIconOutline className='btn-icon-base-r' />
         </Button>
