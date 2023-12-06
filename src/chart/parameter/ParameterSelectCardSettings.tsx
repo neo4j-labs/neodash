@@ -299,13 +299,13 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
                 handleNodeLabelSelectionUpdate(value);
               } else if (settings.type == 'Node Property') {
                 queryCallback(
-                  'CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel LIMIT 5',
+                  'CALL db.labels() YIELD label WITH label as nodeLabel WHERE toLower(nodeLabel) CONTAINS toLower($input) RETURN DISTINCT nodeLabel ORDER BY size(nodeLabel) LIMIT 5',
                   { input: value },
                   setLabelRecords
                 );
               } else {
                 queryCallback(
-                  'CALL db.relationshipTypes() YIELD relationshipType WITH relationshipType as relType WHERE toLower(relType) CONTAINS toLower($input) RETURN DISTINCT relType LIMIT 5',
+                  'CALL db.relationshipTypes() YIELD relationshipType WITH relationshipType as relType WHERE toLower(relType) CONTAINS toLower($input) RETURN DISTINCT relType ORDER BY size(relType) LIMIT 5',
                   { input: value },
                   setLabelRecords
                 );
@@ -343,7 +343,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
                     handlePropertyNameSelectionUpdate(value);
                   } else {
                     queryCallback(
-                      'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5',
+                      'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName ORDER BY size(propertyName) LIMIT 5',
                       { input: value },
                       setPropertyRecords
                     );
@@ -379,7 +379,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
                       handlePropertyDisplayNameSelectionUpdate(value);
                     } else {
                       queryCallback(
-                        'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName LIMIT 5',
+                        'CALL db.propertyKeys() YIELD propertyKey as propertyName WITH propertyName WHERE toLower(propertyName) CONTAINS toLower($input) RETURN DISTINCT propertyName ORDER BY size(propertyName) LIMIT 5',
                         { input: value },
                         setPropertyRecords
                       );
