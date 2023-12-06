@@ -29,12 +29,12 @@ const NeoBarChart = (props: ChartProps) => {
   const { records, selection } = props;
 
   const [keys, setKeys] = React.useState<string[]>([]);
-  const [data, setData] = React.useState<Record<string, any>[]>([]);
+  const [data, setData] = React.useState<Record<string, unknown>[]>([]);
 
   useEffect(() => {
     let newKeys = {};
-    let newData: Record<string, any>[] = records
-      .reduce((data: Record<string, any>[], row: Record<string, any>) => {
+    let newData: Record<string, unknown>[] = records
+      .reduce((data: Record<string, unknown>[], row: Record<string, any>) => {
         try {
           if (!selection || !selection.index || !selection.value) {
             return data;
