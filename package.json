@@ -35,7 +35,6 @@
   "keywords": [],
   "author": "Neo4j Labs",
   "dependencies": {
-    "babel-runtime": "^6.26.0",
     "@azure/openai": "^1.0.0-beta.2",
     "@codemirror/lang-markdown": "^6.1.1",
     "@dnd-kit/core": "^6.0.8",
