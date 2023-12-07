@@ -15,11 +15,13 @@ import { getExampleReports } from '../../extensions/ExtensionUtils';
 import { NeoReportExamplesModal } from '../../modal/ReportExamplesModal';
 import { enterHandler, openTab } from '../../utils/accessibility';
 
+type HelpMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+
 await StyleConfig.getInstance();
 
 export const NeoAboutButton = ({ connection, onAboutModalOpen, extensions }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const handleHelpMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleHelpMenuOpen = (event: HelpMenuOpenEvent) => {
     setAnchorEl(event.currentTarget);
   };
   const handleHelpMenuClose = () => {

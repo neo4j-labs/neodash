@@ -10,6 +10,7 @@ import { DashboardSidebarListItem } from './DashboardSidebarListItem';
 import {
   applicationGetConnection,
   applicationGetConnectionDatabase,
+  applicationGetStandaloneSettings,
   applicationIsStandalone,
   dashboardIsDraft,
 } from '../../application/ApplicationSelectors';
@@ -41,23 +42,23 @@ import LegacyShareModal from './modal/legacy/LegacyShareModal';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
 enum Menu {
-  DASHBOARD,
-  DATABASE,
-  CREATE,
-  NONE,
+  DASHBOARD = 0,
+  DATABASE = 1,
+  CREATE = 2,
+  NONE = 3,
 }
 
 enum Modal {
-  CREATE,
-  IMPORT,
-  EXPORT,
-  DELETE,
-  SHARE,
-  SHARE_LEGACY,
-  INFO,
-  LOAD,
-  SAVE,
-  NONE,
+  CREATE = 0,
+  IMPORT = 1,
+  EXPORT = 2,
+  DELETE = 3,
+  SHARE = 4,
+  SHARE_LEGACY = 5,
+  INFO = 6,
+  LOAD = 7,
+  SAVE = 8,
+  NONE = 9,
 }
 
 /**
@@ -78,6 +79,7 @@ export const NeoDashboardSidebar = ({
   loadDashboardFromNeo4j,
   saveDashboardToNeo4j,
   deleteDashboardFromNeo4j,
+  standaloneSettings,
 }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
@@ -256,7 +258,9 @@ export const NeoDashboardSidebar = ({
               // We changed the active dashboard database, reload the list in the sidebar.
               loadDashboardListFromNeo4j(driver, newDatabase, (list) => {
                 setDashboards(list);
-                setDraft(true);
+                if (!readonly) {
+                  setDraft(true);
+                }
               });
             }}
             open={menuOpen == Menu.DATABASE}
@@ -338,7 +342,7 @@ export const NeoDashboardSidebar = ({
                 Dashboards
               </span>
               {/* Only let users create dashboards and change database when running in editor mode. */}
-              {readonly == false ? (
+              {!readonly || (readonly && standaloneSettings.standaloneLoadFromOtherDatabases) ? (
                 <>
                   <Tooltip title='Database' aria-label='database' disableInteractive>
                     <Button
@@ -358,6 +362,14 @@ export const NeoDashboardSidebar = ({
                         // Only when not yet retrieved, and needed, get the list of databases from Neo4j.
                         if (databases.length == 0) {
                           loadDatabaseListFromNeo4j(driver, (result) => {
+                            if (
+                              readonly &&
+                              standaloneSettings.standaloneMultiDatabase &&
+                              standaloneSettings.standaloneDatabaseList
+                            ) {
+                              let tmp = standaloneSettings.standaloneDatabaseList.split(',').map((x) => x.trim());
+                              result = result.filter((value) => tmp.includes(value));
+                            }
                             setDatabases(result);
                           });
                         }
@@ -368,27 +380,31 @@ export const NeoDashboardSidebar = ({
                     </Button>
                   </Tooltip>
 
-                  <Tooltip title='Create' aria-label='create' disableInteractive>
-                    <Button
-                      aria-label={'new dashboard'}
-                      fill='text'
-                      size='small'
-                      color='neutral'
-                      style={{
-                        float: 'right',
-                        marginLeft: '0px',
-                        marginRight: '5px',
-                        paddingLeft: 0,
-                        paddingRight: '3px',
-                      }}
-                      onClick={(event) => {
-                        setMenuAnchor(event.currentTarget);
-                        setMenuOpen(Menu.CREATE);
-                      }}
-                    >
-                      <PlusIconOutline className='btn-icon-base-r' />
-                    </Button>
-                  </Tooltip>
+                  {!readonly ? (
+                    <Tooltip title='Create' aria-label='create' disableInteractive>
+                      <Button
+                        aria-label={'new dashboard'}
+                        fill='text'
+                        size='small'
+                        color='neutral'
+                        style={{
+                          float: 'right',
+                          marginLeft: '0px',
+                          marginRight: '5px',
+                          paddingLeft: 0,
+                          paddingRight: '3px',
+                        }}
+                        onClick={(event) => {
+                          setMenuAnchor(event.currentTarget);
+                          setMenuOpen(Menu.CREATE);
+                        }}
+                      >
+                        <PlusIconOutline className='btn-icon-base-r' />
+                      </Button>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )}
                 </>
               ) : (
                 <></>
@@ -469,6 +485,7 @@ const mapStateToProps = (state) => ({
   dashboard: getDashboardJson(state),
   dashboardSettings: getDashboardSettings(state),
   database: applicationGetConnectionDatabase(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
