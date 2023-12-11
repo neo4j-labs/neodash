@@ -57,7 +57,7 @@ Log in with user name and password (detailed in docker compose file).
 Open the dashboard in browser: http://localhost:3000, choose "New Dashboard". 
 Log in with user name: neo4j, password: sindit-neo4j.
 
-If the database is empty, you can load one by opening Neo4j Browser at http://localhost:7474. Copy the content in samples/sample-data-updated.cypher and past it into the query box of the Neo4j browser, then execute the query. This query contains one example static data node and one analytics node. The name/type of the PCAP file needs to correspond to the name/type properties of the static node and vice-versa. 
+If the database is empty, you can load one by opening Neo4j Browser at http://localhost:7474. Copy the content in samples/sample-data-updated.cypher and past it into the query box of the Neo4j browser, then execute the query. This query contains one example static data node and one analytics node. The name/type of the PCAP file needs to correspond to the endpoint/type properties of the static node and vice-versa. 
 
 To load a dashboard, press load dashboard button in left side panel. Choose "Select from file", and choose a sample database (e.g. dashboard-2023-12-05.json) in the "samples" folder in this repo. 
 
