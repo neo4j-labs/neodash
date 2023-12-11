@@ -6,7 +6,7 @@ This software requires the following versions of node and yarn:
 
 ```
 node version v20.2.0
-yarn version 1.22.19
+yarn version v1.22.19
 ```
 
 Install dependencies:
@@ -21,6 +21,14 @@ Build local Docker image (the rest of the Docker images are pulled from web):
 docker build -t mqtt-kafka-bridge -f docker/Dockerfile .
 ```
 
+Create an environment and install Python (v3.9.18), flask (v3.0.0), minio (v7.1.17), neo4j (v5.15.0) OR use connection/environment.yml file to create Conda environment:
+```
+conda env create -f environment.yml
+```
+To verify installation: 
+```
+conda env list
+```
 
 ## Setup
 
@@ -36,13 +44,22 @@ Run in another terminal:
 yarn run dev
 ```
 
+Activate the environment, navigate to the connection folder and run both minio_api.py and neo4j_api.py files by using the following command: python (filename).py
+
+Open the minio database in browser: http://localhost:9099.
+Log in with user name and password (detailed in docker compose file).
+Create a user and set the policy to readwrite. The access and secret keys need to be updated in the connection/minio_config.ini file.
+Create a bucket and update the bucket name in connection/minio_api.py file. Add the PCAP file to the bucket. 
+
+Open the neo4j database in browser: http://localhost:7474.
+Log in with user name and password (detailed in docker compose file).
+
 Open the dashboard in browser: http://localhost:3000, choose "New Dashboard". 
 Log in with user name: neo4j, password: sindit-neo4j.
 
-If the database is empty, you can load one using one of these two approaches:
+If the database is empty, you can load one by opening Neo4j Browser at http://localhost:7474. Copy the content in samples/sample-data-updated.cypher and past it into the query box of the Neo4j browser, then execute the query. This query contains one example static data node and one analytics node. The name/type of the PCAP file needs to correspond to the name/type properties of the static node and vice-versa. 
 
-1. Press load dashboard button in left side panel. Choose "Select from file", and choose the sample database (json-file) in the "samples" folder in this repo.
-2. Open Neo4j Browser at http://localhost:747. Copy the content in samples/sample-data.cypher and past it into the query box of the Neo4j browser, then execute the query.
+To load a dashboard, press load dashboard button in left side panel. Choose "Select from file", and choose a sample database (e.g. dashboard-2023-12-05.json) in the "samples" folder in this repo. 
 
 
 ## User Guide for NeoDash

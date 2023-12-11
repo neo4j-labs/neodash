@@ -74,7 +74,8 @@
             "ATTACHMENT": "(label)",
             "ASSET": "name",
             "DATASOURCE": "(label)",
-            "STATICDATA": "name"
+            "STATICDATA": "(label)",
+            "ANALYTICS": "(label)"
           },
           "settings": {
             "enableEditing": true
@@ -123,6 +124,17 @@
           "x": 8,
           "y": 0,
           "type": "staticdata",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "Card: Analytics",
+          "query": "MATCH (n:ANALYTICS) WHERE id(n) = $main_selected_node RETURN n",
+          "width": 3,
+          "height": 2,
+          "x": 8,
+          "y": 0,
+          "type": "analytics",
           "selection": {},
           "settings": {}
         }

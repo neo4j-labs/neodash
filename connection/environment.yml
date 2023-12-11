@@ -1,0 +1,7 @@
+name: madt_environment
+dependencies:
+  - python=3.9
+  - neo4j
+  - minio
+  - flask
+  - pip

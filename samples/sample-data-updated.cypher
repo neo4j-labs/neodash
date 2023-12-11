@@ -29,4 +29,10 @@ MATCH (end:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`: row.end._id})
 CREATE (start)-[r:ConnectTo]->(end) SET r += row.properties;
 MATCH (n:`UNIQUE IMPORT LABEL`)  WITH n LIMIT 100 REMOVE n:`UNIQUE IMPORT LABEL` REMOVE n.`UNIQUE IMPORT ID`;
 DROP CONSTRAINT ON (node:`UNIQUE IMPORT LABEL`) ASSERT (node.`UNIQUE IMPORT ID`) IS UNIQUE;
+CREATE (n:STATICDATA {name:"pcap-data", endpoint:"pcap1_anom", type:"pcap", url:""});
+MATCH (a:STATICDATA), (b:ASSET) WHERE a.name = "pcap-data" AND b.name = "Switch2"
+CREATE (a)-[r:AttachTo]->(b);
+CREATE (n:ANALYTICS {name:"pcap-analytics", task:"", url:""});
+MATCH (a:ANALYTICS), (b:STATICDATA) WHERE a.name = "pcap-analytics" AND b.name = "pcap-data"
+CREATE (a)-[r:WorksOn]->(b);
 
