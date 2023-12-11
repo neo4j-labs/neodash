@@ -304,7 +304,6 @@ export const NeoTableChart = (props: ChartProps) => {
           }
           autoPageSize
           pagination
-          rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}
           disableSelectionOnClick
           components={{
             ColumnSortedDescendingIcon: () => <></>,
