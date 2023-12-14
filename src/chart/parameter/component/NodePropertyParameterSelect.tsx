@@ -48,9 +48,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   // index of the display value in the resulting extra records retrieved by the component when the user types. equals '1' for NeoDash 2.2.2 and later.
   const displayValueRowIndex = props.compatibilityMode
     ? 0
-    : extraRecords[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
-
-  const realValueRowIndex = props.compatibilityMode ? 0 : 1 - displayValueRowIndex;
+    : extraRecords[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 1;
 
   const manualHandleParametersUpdate = () => {
     handleParametersUpdate(paramValueLocal, paramValueDisplayLocal, false);
@@ -92,12 +90,17 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       return false;
     }
   };
-  const propagateSelection = (event, newDisplay) => {
+  const propagateSelection = (event, newDisplay, listOfValuesInput) => {
     const isMulti = Array.isArray(newDisplay);
     if (handleCrossClick(isMulti, newDisplay)) {
       return;
     }
     let newValue;
+    let listOfValues = event ? extraRecords : listOfValuesInput;
+    let displayIdx = listOfValues[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
+    let valIdx = props.compatibilityMode
+      ? 0
+      : listOfValues[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
     let valReference = manualParameterSave ? paramValueLocal : props.parameterValue;
     let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
@@ -105,9 +108,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
 
-      let val = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]._fields[
-        realValueRowIndex
-      ];
+      let val = listOfValues.filter((r) => r._fields[displayIdx].toString() == newDisplayValue)[0]._fields[valIdx];
 
       if (newValue.low) {
         newValue.push(toNumber(val));
@@ -115,8 +116,9 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         newValue.push(RenderSubValue(val));
       }
     } else if (!isMulti) {
-      newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
-        ._fields[realValueRowIndex];
+      newValue = listOfValues.filter((r) => (r?._fields?.[displayIdx]?.toString() || null) == newDisplay)[0]._fields[
+        valIdx
+      ];
 
       newValue = newValue.low ? toNumber(newValue) : RenderSubValue(newValue);
     } else {
@@ -132,6 +134,16 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
+
+  useEffect(() => {
+    debouncedQueryCallback(props.query, { input: ``, ...allParameters }, setExtraRecords);
+  }, []);
+
+  useEffect(() => {
+    if ((props.parameterDisplayValue == null || props.parameterDisplayValue == '') && autoPopulate) {
+      debouncedQueryCallback(props.query, { input: ``, ...allParameters }, autoPopulateCallback);
+    }
+  }, [props.parameterDisplayValue]);
 
   // If we don't have an error message, render the selector:
   useEffect(() => {
@@ -165,28 +177,22 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   }
 
   const autoPopulateCallback = (records) => {
-    const selection = records?.[0]?._fields?.[displayValueRowIndex] || null;
+    let record = records[0];
+    let displayIdx = record?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
+    const selection = record?._fields?.[displayIdx] || null;
     if (selection) {
-      propagateSelection(null, selection);
+      propagateSelection(null, selection, records);
     }
-    console.log('gotta love ma job');
   };
-  useEffect(() => {
-    if (autoPopulate) {
-      debouncedQueryCallback(props.query, { input: ``, ...allParameters }, autoPopulateCallback);
-      console.log('Be careful');
-    }
-  }, [props.allParameters]);
 
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
-        options={extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        options={extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)')}
         disabled={disabled}
         limitTags={multiSelectLimit}
-        options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
           maxWidth: 'calc(100% - 40px)',
           minWidth: `calc(100% - ${manualParameterSave ? '60' : '30'}px)`,
