@@ -4,6 +4,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { ParameterSelectProps } from './ParameterSelect';
 import { RenderSubValue } from '../../../report/ReportRecordProcessing';
 import { SelectionConfirmationButton } from './SelectionConfirmationButton';
+import NeoCodeViewerComponent from '../../../component/editor/CodeViewerComponent';
+import { getRecordType, toNumber } from '../../ChartUtils';
 
 const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const suggestionsUpdateTimeout =
@@ -13,6 +15,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       ? props.settings.defaultValue
       : '';
 
+  const disabled = props?.settings?.disabled ? props.settings.disabled : false;
   const getInitialValue = (value, multi) => {
     if (value && Array.isArray(value)) {
       return multi ? value : null;
@@ -65,12 +68,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   };
   const handleCrossClick = (isMulti, value) => {
     if (isMulti) {
-      if (value.length == 0 && clearParameterOnFieldClear) {
+      if (value !== null && value.length == 0 && clearParameterOnFieldClear) {
         setInputValue([]);
         handleParametersUpdate(undefined, undefined, manualParameterSave);
         return true;
       }
-      if (value.length == 0) {
+      if (value !== null && value.length == 0) {
         setInputValue([]);
         handleParametersUpdate([], [], manualParameterSave);
         return true;
@@ -98,7 +101,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     let valReference = manualParameterSave ? paramValueLocal : props.parameterValue;
     let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
-    if (isMulti && inputValue.length < newDisplay.length) {
+    if (isMulti && inputValue !== null && newDisplay !== null && inputValue.length < newDisplay.length) {
       newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
 
@@ -106,17 +109,23 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         realValueRowIndex
       ];
 
-      newValue.push(RenderSubValue(val));
+      if (newValue.low) {
+        newValue.push(toNumber(val));
+      } else {
+        newValue.push(RenderSubValue(val));
+      }
     } else if (!isMulti) {
       newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
         ._fields[realValueRowIndex];
 
-      newValue = RenderSubValue(newValue);
+      newValue = newValue.low ? toNumber(newValue) : RenderSubValue(newValue);
     } else {
       let ele = valDisplayReference.filter((x) => !newDisplay.includes(x))[0];
       newValue = [...valReference];
       newValue.splice(valDisplayReference.indexOf(ele), 1);
     }
+
+    newDisplay = newDisplay.low ? toNumber(newDisplay) : RenderSubValue(newDisplay);
 
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
@@ -124,6 +133,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
 
+  // If we don't have an error message, render the selector:
   useEffect(() => {
     // Handle external updates of parameter values, with varying value types and parameter selector types.
     // Handles multiple scenarios if an external parameter changes type from value to lists.
@@ -145,6 +155,15 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     }
   }, [props.parameterDisplayValue]);
 
+  // The query used to populate the selector is invalid.
+  if (extraRecords && extraRecords[0] && extraRecords[0].error) {
+    return (
+      <NeoCodeViewerComponent
+        value={`The parameter value retrieval query is invalid: \n${props.query}\n\nError message:\n${extraRecords[0].error}`}
+      />
+    );
+  }
+
   const autoPopulateCallback = (records) => {
     const selection = records?.[0]?._fields?.[displayValueRowIndex] || null;
     if (selection) {
@@ -164,6 +183,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
+        options={extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        disabled={disabled}
         limitTags={multiSelectLimit}
         options={extraRecords.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
         style={{
@@ -180,7 +201,12 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         isOptionEqualToValue={(option, value) => {
           return (option && option.toString()) === (value && value.toString());
         }}
-        value={inputValue}
+        onOpen={() => {
+          if (extraRecords && extraRecords.length == 0) {
+            debouncedQueryCallback(props.query, { input: `${inputDisplayText}`, ...allParameters }, setExtraRecords);
+          }
+        }}
+        value={inputValue || ''}
         onChange={propagateSelection}
         renderInput={(params) => (
           <TextField

@@ -2,26 +2,26 @@ import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
-import { applicationGetConnection, applicationIsStandalone } from '../../application/ApplicationSelectors';
+import { applicationGetConnection, applicationGetStandaloneSettings } from '../../application/ApplicationSelectors';
 import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
 import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
 import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
-import NeoShareModal from '../sidebar/modal/legacy/LegacyShareModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
-
 import { Tooltip } from '@mui/material';
-import NeoDashboardSidebarExportModal from '../sidebar/modal/DashboardSidebarExportModal';
 import NeoExportModal from '../../modal/ExportModal';
+import { setDraft } from '../../application/ApplicationActions';
+
+type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
 export const NeoDashboardTitle = ({
   dashboardTitle,
   setDashboardTitle,
   editable,
-  isStandalone,
+  standaloneSettings,
   dashboardSettings,
   extensions,
   updateDashboardSetting,
@@ -32,7 +32,7 @@ export const NeoDashboardTitle = ({
   const [editing, setEditing] = React.useState(false);
   const debouncedDashboardTitleUpdate = useCallback(debounce(setDashboardTitle, 250), []);
 
-  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleSettingsMenuOpen = (event: SettingsMenuOpenEvent) => {
     setAnchorEl(event.currentTarget);
   };
   const handleSettingsMenuClose = () => {
@@ -50,11 +50,7 @@ export const NeoDashboardTitle = ({
       <>
         {Object.keys(EXTENSIONS_DRAWER_BUTTONS).map((name) => {
           const Component = extensions[name] ? EXTENSIONS_DRAWER_BUTTONS[name] : '';
-          return (
-            <Suspense fallback='' key={`extS-${name}`}>
-              {Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>}
-            </Suspense>
-          );
+          return Component ? <Component key={`ext-${name}`} database={connection.database} /> : <></>;
         })}
       </>
     );
@@ -70,7 +66,8 @@ export const NeoDashboardTitle = ({
   return (
     <div className='n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'>
       {/* TODO : Replace with editable field if dashboard is editable */}
-      {editing ? (
+      {/* only allow edit title if dashboard is not standalone - here we are in Title edit mode*/}
+      {editing && !standaloneSettings.standalone ? (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <TextInput
             autoFocus={true}
@@ -99,7 +96,7 @@ export const NeoDashboardTitle = ({
             </IconButton>
           </Tooltip>
         </div>
-      ) : (
+      ) : !standaloneSettings.standalone /* out of edit mode - if Not Standalone we display the edit button */ ? (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
           <Typography variant='h3'>{dashboardTitle ? dashboardTitle : '(no title)'}</Typography>
           <Tooltip title={'Edit'} disableInteractive>
@@ -118,39 +115,19 @@ export const NeoDashboardTitle = ({
             )}
           </Tooltip>
         </div>
+      ) : (
+        /* if we are in Standalone just title is displayed with no edit button */
+        <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
+          <Typography variant='h3'>{dashboardTitle}</Typography>
+        </div>
       )}
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
-      {!isStandalone ? (
+      {!standaloneSettings.standalone ? (
         <div className='flex flex-row flex-wrap items-center gap-2'>
+          <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
+          {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
-          <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
-            <EllipsisHorizontalIconOutline />
-          </IconButton>
-          <Menu
-            anchorOrigin={{
-              horizontal: 'right',
-              vertical: 'bottom',
-            }}
-            transformOrigin={{
-              horizontal: 'right',
-              vertical: 'top',
-            }}
-            anchorEl={anchorEl}
-            open={menuOpen}
-            onClose={handleSettingsMenuClose}
-            size='large'
-          >
-            <MenuItems>
-              <NeoSettingsModal
-                dashboardSettings={dashboardSettings}
-                updateDashboardSetting={updateDashboardSetting}
-              ></NeoSettingsModal>
-
-              <NeoExportModal />
-              {/* Saving, loading, extensions, sharing is only enabled when the dashboard is editable. */}
-              {editable ? <>{renderExtensionsButtons()}</> : <></>}
-            </MenuItems>
-          </Menu>
+          {editable ? renderExtensionsButtons() : <></>}
         </div>
       ) : (
         <></>
@@ -162,7 +139,7 @@ export const NeoDashboardTitle = ({
 const mapStateToProps = (state) => ({
   dashboardTitle: getDashboardTitle(state),
   editable: getDashboardIsEditable(state),
-  isStandalone: applicationIsStandalone(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
   dashboardSettings: getDashboardSettings(state),
   extensions: getDashboardExtensions(state),
   connection: applicationGetConnection(state),
@@ -173,6 +150,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setDashboardTitle(title));
   },
   updateDashboardSetting: (setting, value) => {
+    dispatch(setDraft(true));
     dispatch(updateDashboardSetting(setting, value));
   },
 });

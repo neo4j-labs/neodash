@@ -1,13 +1,20 @@
-## NeoDash 2.3.5
-This is a bugfix / stability release directly following 2.3.4.
+## NeoDash 2.4.1
+This is a patch release following 2.4.0. It contains several new features for self-hosted (standalone) NeoDash deployments, as well as a variety of UX improvements for dashboard editors.
 
-Improvements:
-- Fixed issue where orphan relationships prevented graph charts from working ([@BennuFire](https://github.com/BennuFire), [#586](https://github.com/neo4j-labs/neodash/pull/586))
-- Fix issue where only one style rule was used a time on tables. ([@BennuFire](https://github.com/BennuFire), [#632](https://github.com/neo4j-labs/neodash/pull/632))
-- Added information about source and target on Graph Chart information modal . ([@BennuFire](https://github.com/BennuFire), [#627](https://github.com/neo4j-labs/neodash/pull/627)) Based on [@brahmprakashMishra](https://github.com/brahmprakashMishra) PR
-- Fixed issue where bar charts where displaying black bars instead of scheme colors. ([@BennuFire](https://github.com/BennuFire), [#626](https://github.com/neo4j-labs/neodash/pull/626))
-- Added right subpath replacement on shared links redirection while in self deployments. ([@m-o-n-i-s-h](https://github.com/m-o-n-i-s-h), [#618](https://github.com/neo4j-labs/neodash/pull/618))
-- Dark theme tweaks. ([@BennuFire](https://github.com/BennuFire), [#585](https://github.com/neo4j-labs/neodash/pull/585))
-- Fixed parameter selector search where numbers were not found and sporadically displayed with decimal points. ([@BennuFire](https://github.com/BennuFire), [#633](https://github.com/neo4j-labs/neodash/pull/633))
-- Added a configuration in order to list sso providers to be used whenever a database has more than one configured. ([@BennuFire](https://github.com/BennuFire), [#624](https://github.com/neo4j-labs/neodash/pull/624))
-- Added 'Ignore undefined parameters' advanced setting support for optional parameters on a query. Now queries will assume a null value instead of returning the error 'Parameter not defined'.  ([@BennuFire](https://github.com/BennuFire), [#625](https://github.com/neo4j-labs/neodash/pull/625))
+
+Included:
+- Improvements to customizability of the bar chart (styling, legend customization, report actions). [#689](https://github.com/neo4j-labs/neodash/pull/689)
+- Improved dashboard settings interface, fixed alignment for table download button. [#729](https://github.com/neo4j-labs/neodash/pull/729)
+- Adjusted ordering of suggested labels/properties for parameter selectors. [#728](https://github.com/neo4j-labs/neodash/pull/728)
+- Better handling of date parameters when saving/loading dashboards. [#727](https://github.com/neo4j-labs/neodash/pull/727)
+- Fixed incorrect z-index issue for form creation modals. [#726](https://github.com/neo4j-labs/neodash/pull/726)
+- Adjusted filtering tooltip on tables to avoid hiding result data. [#712](https://github.com/neo4j-labs/neodash/pull/712)
+- Fixed uncontrolled component issue for dashboard import modal. [#711](https://github.com/neo4j-labs/neodash/pull/711)
+- Adjusted font color of graph context popups to use theme colors. [#699](https://github.com/neo4j-labs/neodash/pull/699)
+- Adjust sidebar database selector to only show active databases. [#698](https://github.com/neo4j-labs/neodash/pull/698)
+- Incorporated logging functionality for self-hosted NeoDash deployments. [#705](https://github.com/neo4j-labs/neodash/pull/705)
+- Improved dashboard management in standalone-mode deployments. [#705](https://github.com/neo4j-labs/neodash/pull/705)
+- Added Docker parameter for overriding the app's logo & custom header.  [#705](https://github.com/neo4j-labs/neodash/pull/705)
+- Changed the dashboard 'save' action to a logical merge, rather than a delete + create, allowing to persist labels across saves. [#705](https://github.com/neo4j-labs/neodash/pull/705)
+- Docker: Updated Alpine base image to mitigate CVE-2023-38039 & CVE-2023-4863. [#705](https://github.com/neo4j-labs/neodash/pull/705)
+

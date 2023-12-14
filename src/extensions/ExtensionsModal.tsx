@@ -1,5 +1,4 @@
 import React from 'react';
-import { Tooltip } from '@mui/material';
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
@@ -9,6 +8,7 @@ import { setExtensionReducerEnabled } from './state/ExtensionActions';
 import { Dialog, Label, MenuItem, TextLink, Typography, Checkbox, IconButton } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
 import { Section, SectionContent } from '../modal/ModalUtils';
+import Tooltip from '@mui/material/Tooltip/Tooltip';
 
 const NeoExtensionsModal = ({
   extensions,
@@ -30,9 +30,11 @@ const NeoExtensionsModal = ({
 
   return (
     <>
-      <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
-        <PuzzlePieceIconSolid />
-      </IconButton>
+      <Tooltip title='Extensions' aria-label='extensions' disableInteractive>
+        <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
+          <PuzzlePieceIconSolid />
+        </IconButton>
+      </Tooltip>
 
       {open ? (
         <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
@@ -47,7 +49,7 @@ const NeoExtensionsModal = ({
                   <TextLink
                     externalLink
                     target='_blank'
-                    href='https://neo4j.com/labs/neodash/2.3/user-guide/extensions/'
+                    href='https://neo4j.com/labs/neodash/2.4/user-guide/extensions/'
                   >
                     Extensions
                   </TextLink>
@@ -67,7 +69,7 @@ const NeoExtensionsModal = ({
                             <tr>
                               <td>
                                 <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
-                                  <Typography variant='h4'>{e.label}</Typography>
+                                  <Typography variant='h5'>{e.label}</Typography>
                                   {e.enabled && e.author == 'Neo4j Professional Services' && (
                                     <Label color='info' fill='outlined'>
                                       Expert

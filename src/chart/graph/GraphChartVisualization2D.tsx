@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
-import { actionRule } from '../../extensions/actions/ActionsRule';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
@@ -29,6 +28,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       linkDirectionalArrowLength={props.style.linkDirectionalArrowLength}
       linkDirectionalArrowRelPos={1}
       dagMode={props.engine.layout}
+      dagLevelDistance={props.engine.graphDepthSep}
       linkWidth={(link: any) => link.width}
       linkLabel={(link: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(link)}</div>` : '')}
       nodeLabel={(node: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(node)}</div>` : '')}

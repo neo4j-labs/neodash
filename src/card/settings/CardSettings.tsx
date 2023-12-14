@@ -70,6 +70,7 @@ const NeoCardSettings = ({
       onQueryUpdate={onQueryUpdate}
       onReportSettingUpdate={onReportSettingUpdate}
       onTypeUpdate={onTypeUpdate}
+      forceRunQuery={onToggleCardSettings}
     ></NeoCardSettingsContent>
   ) : (
     <CardContent className='n-py-2' />
