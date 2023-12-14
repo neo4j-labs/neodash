@@ -100,7 +100,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     let displayIdx = listOfValues[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
     let valIdx = props.compatibilityMode
       ? 0
-      : listOfValues[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 0;
+      : listOfValues[0]?.keys?.findIndex((e) => e.toLowerCase() == 'display') || 1;
     let valReference = manualParameterSave ? paramValueLocal : props.parameterValue;
     let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
