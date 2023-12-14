@@ -9,8 +9,205 @@ import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
 import NeoAreaMapChart from './chart/areamap/AreaMapChart';
 import NeoGanttChart from './chart/gantt/GanttChart';
+import NeoGraphChart3D from './chart/graph3d/GraphChart3D';
 
 export const ADVANCED_REPORT_TYPES = {
+  graph3d: {
+    label: '3D Graph',
+    helperText:
+      'A 3D graph visualization will draw all returned nodes, relationships and paths... in three dimensions!',
+    selection: {
+      properties: {
+        label: 'Node Properties',
+        type: SELECTION_TYPES.NODE_PROPERTIES,
+      },
+    },
+    useNodePropsAsFields: true,
+    autoAssignSelectedProperties: true,
+    component: NeoGraphChart3D,
+    maxRecords: 1000,
+    // The idea is to match a setting to its dependency, the operator represents the kind of relationship
+    // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
+    disabledDependency: { relationshipParticleSpeed: { dependsOn: 'relationshipParticles', operator: false } },
+    settings: {
+      nodeColorScheme: {
+        label: 'Node Color Scheme',
+        type: SELECTION_TYPES.LIST,
+        values: [
+          'neodash',
+          'nivo',
+          'category10',
+          'accent',
+          'dark2',
+          'paired',
+          'pastel1',
+          'pastel2',
+          'set1',
+          'set2',
+          'set3',
+        ],
+        default: 'neodash',
+      },
+      nodeLabelColor: {
+        label: 'Node Label Color',
+        type: SELECTION_TYPES.COLOR,
+        default: 'black',
+      },
+      nodeLabelFontSize: {
+        label: 'Node Label Font Size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3.5,
+      },
+      defaultNodeSize: {
+        label: 'Node Size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 2,
+      },
+      nodeSizeProp: {
+        label: 'Node Size Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'size',
+      },
+      nodeColorProp: {
+        label: 'Node Color Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'color',
+      },
+      defaultRelColor: {
+        label: 'Relationship Color',
+        type: SELECTION_TYPES.TEXT,
+        default: '#a0a0a0',
+      },
+      defaultRelWidth: {
+        label: 'Relationship Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 1,
+      },
+      relLabelColor: {
+        label: 'Relationship Label Color',
+        type: SELECTION_TYPES.TEXT,
+        default: '#a0a0a0',
+      },
+      relLabelFontSize: {
+        label: 'Relationship Label Font Size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 2.75,
+      },
+      relColorProp: {
+        label: 'Relationship Color Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'color',
+      },
+      relWidthProp: {
+        label: 'Relationship Width Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'width',
+      },
+      relationshipParticles: {
+        label: 'Animated particles on Relationships',
+        type: SELECTION_TYPES.LIST,
+        default: false,
+        values: [false, true],
+      },
+      relationshipParticleSpeed: {
+        label: 'Speed of the particle animation',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.005,
+      },
+      arrowLengthProp: {
+        label: 'Arrow head size',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
+      },
+      layout: {
+        label: 'Graph Layout (experimental)',
+        type: SELECTION_TYPES.LIST,
+        values: ['force-directed', 'tree-top-down', 'tree-bottom-up', 'tree-left-right', 'tree-right-left', 'radial'],
+        default: 'force-directed',
+      },
+      graphDepthSep: {
+        label: 'Tree layout level distance',
+        type: SELECTION_TYPES.NUMBER,
+        default: '30',
+      },
+      enableExploration: {
+        label: 'Enable graph exploration',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      enableEditing: {
+        label: 'Enable graph editing',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      showPropertiesOnHover: {
+        label: 'Show pop-up on Hover',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      showPropertiesOnClick: {
+        label: 'Show properties on Click',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      drilldownLink: {
+        label: 'Drilldown Icon Link',
+        type: SELECTION_TYPES.TEXT,
+        placeholder: 'http://bloom.neo4j.io',
+        default: '',
+      },
+      allowDownload: {
+        label: 'Enable CSV Download',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      hideSelections: {
+        label: 'Hide Property Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      rightClickToExpandNodes: {
+        label: 'Right Click to Expand Nodes',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      noDataMessage: {
+        label: 'Override no data message',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Query returned no data.',
+      },
+    },
+  },
   gauge: {
     label: 'Gauge Chart',
     component: NeoGaugeChart,

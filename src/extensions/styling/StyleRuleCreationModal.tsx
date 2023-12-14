@@ -58,6 +58,21 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
       on: 'relationship',
     },
   ],
+  graph3d: [
+    {
+      value: 'node color',
+      label: 'Node Color',
+    },
+    {
+      value: 'node label color',
+      label: 'Node Label Color',
+    },
+    {
+      value: 'relationship color',
+      label: 'Relationship Color',
+      on: 'relationship',
+    },
+  ],
   map: [
     {
       value: 'marker color',
