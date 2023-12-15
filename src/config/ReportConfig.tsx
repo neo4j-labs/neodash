@@ -249,7 +249,7 @@ const _REPORT_TYPES = {
       drilldownLink: {
         label: 'Drilldown Icon Link',
         type: SELECTION_TYPES.TEXT,
-        placeholder: 'http://bloom.neo4j.io',
+        placeholder: 'https://bloom.neo4j.io',
         default: '',
       },
       allowDownload: {
