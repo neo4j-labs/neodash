@@ -13,6 +13,7 @@ const NeoCardViewFooter = ({
   extensions,
   showOptionalSelections,
   onSelectionUpdate,
+  dashboardSettings,
 }) => {
   /**
    * For each selectable field in the visualization, give the user an option to select them from the query output fields.
@@ -62,9 +63,13 @@ const NeoCardViewFooter = ({
                 totalColors > 0 && !ignoreLabelColors
                   ? categoricalColorSchemes[nodeColorScheme][i % totalColors]
                   : 'lightgrey';
+              const inputColor =
+                dashboardSettings.theme === 'dark' ? 'var(--palette-dark-neutral-border-strong)' : 'rgba(0, 0, 0, 0.6)';
               return (
                 <FormControl key={nodeLabel} size={'small'} variant='standard'>
-                  <InputLabel id={nodeLabel}>{nodeLabel}</InputLabel>
+                  <InputLabel id={nodeLabel} style={{ color: inputColor }}>
+                    {nodeLabel}
+                  </InputLabel>
                   <Select
                     labelId={nodeLabel}
                     id={nodeLabel}
@@ -121,7 +126,7 @@ const NeoCardViewFooter = ({
                       : { label: selection[selectable], value: selection[selectable] },
                     isMulti: selectableFields[selectable].multiple,
                     isClearable: false,
-                    menuPortalTarget: document.querySelector('body'),
+                    menuPortalTarget: document.querySelector('#overlay'),
                   }}
                   fluid
                   style={{

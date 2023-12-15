@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { XMarkIconOutline, PlusIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  AdjustmentsHorizontalIconOutline,
+  XMarkIconOutline,
+  PlusIconOutline,
+  PlayIconSolid,
+  SparklesIconOutline,
+} from '@neo4j-ndl/react/icons';
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
 import { Autocomplete, TextField } from '@mui/material';
@@ -15,6 +21,12 @@ const RULE_CONDITIONS = {
     {
       value: 'doubleClick',
       label: 'Cell Double Click',
+    },
+    {
+      value: 'rowCheck',
+      label: 'Row Checked',
+      disableFieldSelection: true,
+      multiple: true,
     },
   ],
   map: [
@@ -33,6 +45,13 @@ const RULE_CONDITIONS = {
     {
       value: 'onLinkClick',
       label: 'Link Click',
+    },
+  ],
+  gantt: [
+    {
+      value: 'onTaskClick',
+      label: 'Task Click',
+      default: true,
     },
   ],
 };
@@ -60,6 +79,16 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
     },
   ],
   graph: [
+    {
+      value: 'set variable',
+      label: 'Parameter',
+    },
+    {
+      value: 'set page',
+      label: 'Page',
+    },
+  ],
+  gantt: [
     {
       value: 'set variable',
       label: 'Parameter',
@@ -134,14 +163,14 @@ export const NeoCustomReportActionsModal = ({
     if (!fields) {
       return [];
     }
-    if (type == 'graph' || type == 'map') {
+    if (type == 'graph' || type == 'map' || type == 'gantt') {
       return fields
         .map((node, index) => {
           if (!Array.isArray(node)) {
             return undefined;
           }
           return fields[index].map((property, propertyIndex) => {
-            if (!['Click', 'onNodeClick'].includes(c)) {
+            if (!['Click', 'onNodeClick', 'onTaskClick'].includes(c)) {
               return undefined;
             }
 
@@ -274,6 +303,7 @@ export const NeoCustomReportActionsModal = ({
                     (el) => el.value === rule.customization
                   );
                   const ruleTrigger = RULE_CONDITIONS[type].find((el) => el.value === rule.condition);
+
                   return (
                     <>
                       <tr>
@@ -286,7 +316,11 @@ export const NeoCustomReportActionsModal = ({
                             <Dropdown
                               type='select'
                               className='n-align-middle n-w-2/5 n-pr-1'
-                              style={{ minWidth: 80, display: 'inline-block' }}
+                              style={{
+                                minWidth: '140px',
+                                width: ruleTrigger.disableFieldSelection === true ? '100%' : '140px',
+                                display: 'inline-block',
+                              }}
                               selectProps={{
                                 onChange: (newValue) => updateRuleField(index, 'condition', newValue.value),
                                 options:
@@ -298,40 +332,46 @@ export const NeoCustomReportActionsModal = ({
                                 value: { label: ruleTrigger ? ruleTrigger.label : '', value: rule.condition },
                               }}
                             ></Dropdown>
-                            <Autocomplete
-                              className='n-align-middle n-inline-block n-w-3/5'
-                              disableClearable={true}
-                              id='autocomplete-label-type'
-                              size='small'
-                              noOptionsText='*Specify an exact field name'
-                              options={createFieldVariableSuggestionsFromRule(rule, true)}
-                              value={rule.field ? rule.field : ''}
-                              inputValue={rule.field ? rule.field : ''}
-                              popupIcon={<></>}
-                              style={{
-                                minWidth: 125,
-                              }}
-                              onInputChange={(event, value) => {
-                                updateRuleField(index, 'field', value);
-                              }}
-                              onChange={(event, newValue) => {
-                                updateRuleField(index, 'field', newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  placeholder='Field name...'
-                                  style={{ padding: 0 }}
-                                  InputLabelProps={{ shrink: true }}
-                                />
-                              )}
-                            />
+                            {!ruleTrigger.disableFieldSelection ? (
+                              <Autocomplete
+                                className='n-align-middle n-inline-block n-w-3/5'
+                                disableClearable={true}
+                                id='autocomplete-label-type'
+                                size='small'
+                                noOptionsText='*Specify an exact field name'
+                                options={createFieldVariableSuggestionsFromRule(rule, true)}
+                                value={rule.field ? rule.field : ''}
+                                inputValue={rule.field ? rule.field : ''}
+                                popupIcon={<></>}
+                                style={{
+                                  minWidth: 125,
+                                }}
+                                onInputChange={(event, value) => {
+                                  updateRuleField(index, 'field', value);
+                                }}
+                                onChange={(event, newValue) => {
+                                  updateRuleField(index, 'field', newValue);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    placeholder='Field name...'
+                                    style={{ padding: 0 }}
+                                    InputLabelProps={{ shrink: true }}
+                                  />
+                                )}
+                              />
+                            ) : (
+                              <></>
+                            )}
                           </div>
                         </td>
-                        <td width='5%' className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>SET</span>
+                        <td width='6%' className='n-text-center'>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
+                            {!ruleTrigger.multiple ? 'SET' : 'APPEND'}
+                          </span>
                         </td>
-                        <td width='40%'>
+                        <td width='39%'>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>
                             <Dropdown
                               type='select'
@@ -354,7 +394,9 @@ export const NeoCustomReportActionsModal = ({
                         </td>
 
                         <td width='5%' className='n-text-center'>
-                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>TO</span>
+                          <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
+                            {!ruleTrigger.multiple ? 'TO' : 'WITH'}
+                          </span>
                         </td>
                         <td width='20%'>
                           <div style={{ border: '2px dashed grey' }} className='n-p-1'>

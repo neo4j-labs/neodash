@@ -20,8 +20,9 @@ import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
 import CustomSingleValueComponent from '../component/custom/CustomSingleValueComponent';
 import { checkParametersNameInGlobalParameter, extractAllParameterNames } from '../utils/parameterUtils';
+import { getReports } from '../page/PageSelectors';
 
-const DEFAULT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
+export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
 export const NeoReport = ({
   pagenumber = '', // page number that the report is on.
@@ -57,18 +58,18 @@ export const NeoReport = ({
   prepopulateExtensionName,
   deletePrepopulationReportFunction,
   theme,
+  reports = [],
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-  const [loadingIcon, setLoadingIcon] = React.useState(DEFAULT_LOADING_ICON);
+  const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
-
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
   const isQueryParametersDefined = (cypherQuery: string) => {
@@ -80,7 +81,7 @@ export const NeoReport = ({
   };
 
   const setSchema = (id, schema) => {
-    if (type === 'graph' || type === 'map') {
+    if (type === 'graph' || type === 'map' || type === 'gantt') {
       setSchemaDispatch(id, schema);
     }
   };
@@ -120,7 +121,7 @@ export const NeoReport = ({
 
     // Logic to run a query
     const executeQuery = (newQuery) => {
-      setLoadingIcon(DEFAULT_LOADING_ICON);
+      setLoadingIcon(REPORT_LOADING_ICON);
       if (debounced) {
         debouncedRunCypherQuery(
           driver,
@@ -187,6 +188,30 @@ export const NeoReport = ({
     }
   };
 
+  // Gets the original report height.
+  const getHeightOfTableReport = () =>
+    reports.find((report) => report.id === id && report.type === 'table')?.height || 1;
+
+  // Updates the table report grid height.
+  const updateHeightOfTableReport = (height) => {
+    let el: any = document.getElementById(id);
+    // Checks if the element exists and compactCanvas is enabled.
+    // If the compactCanvas=true setting is enabled then the report height is set to 210
+    if (el && settings?.compactCanvas) {
+      if (type === 'table') {
+        el.style.height = `${height * 210}px`;
+      }
+    }
+  };
+
+  // Resets the height of the grid when page changes.
+  useEffect(() => {
+    let el: any = document.getElementById(id);
+    if (el) {
+      el.style.height = '';
+    }
+  }, [pagenumber]);
+
   // When report parameters are changed, re-run the report.
   useEffect(() => {
     if (timer) {
@@ -221,7 +246,7 @@ export const NeoReport = ({
         parameters,
         1000,
         (status) => {
-          status == QueryStatus.NO_DATA ? setRecords([]) : null;
+          status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
         (result) => setRecords(result),
         () => {},
@@ -245,6 +270,7 @@ export const NeoReport = ({
    * isQueryParametersDefined is checked if the inputs required for the graph or table chart is given. if not "Waiting for input." is returned.
    */
   if (['graph', 'table'].includes(type) && isQueryParametersDefined(query)) {
+    updateHeightOfTableReport(1);
     return <NeoCodeViewerComponent value={'Waiting for input.'} />;
   }
 
@@ -252,11 +278,12 @@ export const NeoReport = ({
    * This component renders string response from the cypher query. This feature is only applicable for graph report.
    * https://mercedes-benz.atlassian.net/browse/VULCAN-235
    */
-  if (records !== null && records.length === 1) {
-    if (type === 'graph' && typeof records[0]?._fields[0] === 'string') {
+  if (records && records.length === 1) {
+    const singleValue = records[0]?._fields?.[0];
+    if (type === 'graph' && typeof singleValue === 'string') {
       return (
         <CustomSingleValueComponent
-          value={records[0]._fields[0]}
+          value={singleValue}
           sx={{
             fontSize: settings?.fontSize,
             color: settings?.color,
@@ -286,10 +313,13 @@ export const NeoReport = ({
   } else if (status == QueryStatus.RUNNING) {
     return loadingIcon;
   } else if (status == QueryStatus.NO_DATA) {
+    updateHeightOfTableReport(1);
     return <NeoCodeViewerComponent value={settings?.overrideDefaultMessage || 'Query returned no data.'} />;
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
     return <NoDrawableDataErrorMessage />;
   } else if (status == QueryStatus.COMPLETE) {
+    updateHeightOfTableReport(getHeightOfTableReport());
+
     if (records == null || records.length == 0) {
       return <div>Loading...</div>;
     }
@@ -307,6 +337,7 @@ export const NeoReport = ({
           fullscreen={expanded}
           dimensions={dimensions}
           parameters={parameters}
+          query={query}
           queryCallback={queryCallback}
           createNotification={createNotification}
           setGlobalParameter={setGlobalParameter}
@@ -383,6 +414,7 @@ const mapStateToProps = (state, ownProps) => ({
   pagenumber: getPageNumber(state),
   prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
   theme: getDashboardTheme(state),
+  reports: getReports(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

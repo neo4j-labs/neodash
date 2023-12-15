@@ -74,6 +74,9 @@ const NeoCardViewHeader = ({
       text: {
         primary: 'rgb(var(--palette-neutral-text))',
       },
+      action: {
+        disabled: 'rgb(var(--palette-neutral-text-weak))',
+      },
     },
   });
 
@@ -106,7 +109,7 @@ const NeoCardViewHeader = ({
                 onBlur={() => {
                   setEditing(false);
                 }}
-                className={'n-text-palette-neutral-text-default no-underline large'}
+                className={'no-underline large'}
                 label=''
                 disabled={!editable}
                 placeholder='Report name...'
@@ -120,6 +123,11 @@ const NeoCardViewHeader = ({
                 size={'small'}
                 style={{ paddingTop: '0px important!' }}
                 variant={'standard'}
+                sx={{
+                  '& .MuiInputBase-input.Mui-disabled': {
+                    WebkitTextFillColor: 'inherit',
+                  },
+                }}
               />
             </td>
           </tr>

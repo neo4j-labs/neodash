@@ -1,5 +1,5 @@
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useEffect } from 'react';
+import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
@@ -23,12 +23,12 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { renderCellExpand } from '../../component/misc/DataGridExpandRenderer';
+import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
-
 const theme = createTheme({
   typography: {
     fontFamily: "'Nunito Sans', sans-serif !important",
@@ -94,6 +94,7 @@ export const NeoTableChart = (props: ChartProps) => {
   );
 
   const [notificationOpen, setNotificationOpen] = React.useState(false);
+  const [columnVisibilityModel, setColumnVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
@@ -180,11 +181,18 @@ export const NeoTableChart = (props: ChartProps) => {
           useExpandedRenderer
         );
       });
-  const hiddenColumns = Object.assign(
-    {},
-    ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
-  );
 
+  useEffect(() => {
+    const hiddenColumns = Object.assign(
+      {},
+      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
+    );
+    setColumnVisibilityModel(hiddenColumns);
+  }, [records]);
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
   const getTransposedRows = (records) => {
     // Skip first key
     const rowKeys = [...records[0].keys];
@@ -275,7 +283,8 @@ export const NeoTableChart = (props: ChartProps) => {
           rows={rows}
           columns={columns}
           density={compact === 'on' || compact === true ? 'compact' : 'standard'}
-          columnVisibilityModel={hiddenColumns}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
           onCellClick={(e) =>
             performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
           }
@@ -288,22 +297,31 @@ export const NeoTableChart = (props: ChartProps) => {
               navigator.clipboard.writeText(e.value);
             }
           }}
+          checkboxSelection={hasCheckboxes(actionsRules)}
+          selectionModel={getCheckboxes(actionsRules, rows, props.getGlobalParameter)}
+          onSelectionModelChange={(selection) =>
+            updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter)
+          }
           autoPageSize
           pagination
-          rowsPerPageOptions={[5]}
           disableSelectionOnClick
           components={{
             ColumnSortedDescendingIcon: () => <></>,
             ColumnSortedAscendingIcon: () => <></>,
           }}
           getRowClassName={(params) => {
-            return `rule${evaluateRulesOnDict(params.row, styleRules, ['row color', 'row text color'])}`;
+            return ['row color', 'row text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
+              })
+              .join(' ');
           }}
           getCellClassName={(params) => {
-            return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [
-              'cell color',
-              'cell text color',
-            ])}`;
+            return ['cell color', 'cell text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
+              })
+              .join(' ');
           }}
         />
       </div>

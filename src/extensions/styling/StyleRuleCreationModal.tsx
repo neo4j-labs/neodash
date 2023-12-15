@@ -82,6 +82,12 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
       label: 'Slice Color',
     },
   ],
+  gantt: [
+    {
+      value: 'node color',
+      label: 'Task Color',
+    },
+  ],
   value: [
     {
       value: 'text color',
@@ -165,7 +171,7 @@ export const NeoCustomReportStyleModal = ({
     if (!schema && !fields) {
       return [];
     }
-    if (type == 'graph' || type == 'map') {
+    if (type == 'graph' || type == 'map' || type == 'gantt') {
       return schema
         .map((node, index) => {
           if (!Array.isArray(node)) {
@@ -206,7 +212,7 @@ export const NeoCustomReportStyleModal = ({
               Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is
               applied.
               <br />
-              {type == 'graph' || type == 'map' ? (
+              {type == 'graph' || type == 'map' || type == 'gantt' ? (
                 <p>
                   For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>,
                   for example: <code>Person.age</code>. This is case-sensitive.

@@ -22,15 +22,15 @@ const NeoCardSettingsContent = ({
   onQueryUpdate,
   onReportSettingUpdate,
   onTypeUpdate,
+  forceRunQuery, // Callback to force close the card settings.
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
 }) => {
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const [queryText, setQueryText] = React.useState(query);
-  const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-
+  const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 200), []);
   // State to manage the current database entry inside the form
   const [databaseText, setDatabaseText] = React.useState(database);
-  const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
+  const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 200), []);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -67,6 +67,10 @@ const NeoCardSettingsContent = ({
               reportId={reportId}
               reportType={type}
               extensions={extensions}
+              onExecute={() => {
+                onQueryUpdate(queryText);
+                forceRunQuery();
+              }}
               cypherQuery={queryText}
               updateCypherQuery={updateCypherQuery}
             />
@@ -85,6 +89,10 @@ const NeoCardSettingsContent = ({
         value={queryText}
         editable={true}
         language={report?.inputMode || 'cypher'}
+        onExecute={() => {
+          onQueryUpdate(queryText);
+          forceRunQuery();
+        }}
         onChange={(value) => {
           updateCypherQuery(value);
         }}
@@ -111,7 +119,7 @@ const NeoCardSettingsContent = ({
             label: report?.label || '',
             value: report?.label || '',
           },
-          menuPortalTarget: document.querySelector('body'),
+          menuPortalTarget: document.querySelector('#overlay'),
         }}
         fluid
         style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
@@ -133,7 +141,7 @@ const NeoCardSettingsContent = ({
               value: database,
             })),
             value: { label: databaseText, value: databaseText },
-            menuPortalTarget: document.querySelector('body'),
+            menuPortalTarget: document.querySelector('#overlay'),
           }}
           fluid
           style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
@@ -152,6 +160,10 @@ const NeoCardSettingsContent = ({
           database={database}
           query={query}
           onQueryUpdate={onQueryUpdate}
+          onExecute={() => {
+            onQueryUpdate(queryText);
+            forceRunQuery();
+          }}
         />
       ) : (
         <div>{hasExtensionComponents() ? renderExtensionsComponents() : defaultQueryBoxComponent}</div>

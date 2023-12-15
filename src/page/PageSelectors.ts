@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 export const getReports = (state: any) => {
   const { pagenumber } = state.dashboard.settings;
-  return state.dashboard.pages[pagenumber].reports;
+  return state.dashboard.pages[pagenumber] ? state.dashboard.pages[pagenumber].reports : [];
 };
 export const getPageDetails = (state: any) => {
   const { pagenumber } = state.dashboard.settings;

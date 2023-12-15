@@ -1,0 +1,13 @@
+= Forms
+
+The 'forms' extension lets you combine different parameter selectors to update / modify your graph data.
+Update queries are predefined by the dashboard builder, and the user is limited to specifying the parameters for the query only.
+
+See link:../../reports/form[Form] on how to create, configure, and use forms.
+
+> Keep in mind that data-altering forms require your Neo4j user to have **write-access** to the graph. Make sure you give access to a select group of power-users only.
+
+
+
+
+image::forms.png[Forms]

@@ -23,22 +23,27 @@ export const parseNodeIconConfig = (iconStyle) => {
     console.log(error);
   }
 };
+
 const getSelectedNodeProperty = (entity: any, sourceOrTarget: string, propertySelections: any) => {
-  const sourceOrTargetLabel = propertySelections[entity[sourceOrTarget]?.labels[0]];
-  return entity[sourceOrTarget]?.properties[sourceOrTargetLabel];
+  const selection = propertySelections[entity[sourceOrTarget]?.mainLabel];
+  switch (selection) {
+    case '(label)':
+      return entity[sourceOrTarget]?.mainLabel;
+    case '(id)':
+      return entity[sourceOrTarget]?.id;
+    default:
+      return entity[sourceOrTarget]?.properties[selection];
+  }
 };
 
-export const getEntityHeaderForEdge = (entity: any, propertySelections: any) => {
-  const sourceTitle = getSelectedNodeProperty(entity, 'source', propertySelections);
-  const targetTitle = getSelectedNodeProperty(entity, 'target', propertySelections);
-  return (
-    (entity?.labels && `${sourceTitle} >> ${entity.labels.join(', ')} >> ${targetTitle}`) ||
-    `${entity.type} (${sourceTitle} --> ${targetTitle})`
-  );
+const getRelPatternString = (entity: any, selection: any) => {
+  const sourceTitle = getSelectedNodeProperty(entity, 'source', selection);
+  const targetTitle = getSelectedNodeProperty(entity, 'target', selection);
+  return `(${sourceTitle ? sourceTitle : '[no value]'} --> ${targetTitle ? targetTitle : '[no value]'})`;
 };
 
-export const getEntityHeader = (entity: any) => {
-  return (entity.labels && entity.labels.join(', ')) || entity.type;
+export const getEntityHeader = (entity: any, selection: any) => {
+  return entity.labels?.join(', ') || `${entity.type} ${getRelPatternString(entity, selection)}`;
 };
 
 export const drawDataURIOnCanvas = (node, strDataURI, canvas, defaultNodeSize) => {
@@ -80,4 +85,13 @@ export const generateNodeCanvasObject = (
       node.fy = undefined;
     }
   }
+};
+
+export const getEntityHeaderForEdge = (entity: any, propertySelections: any) => {
+  const sourceTitle = getSelectedNodeProperty(entity, 'source', propertySelections);
+  const targetTitle = getSelectedNodeProperty(entity, 'target', propertySelections);
+  return (
+    (entity?.labels && `${sourceTitle} >> ${entity.labels.join(', ')} >> ${targetTitle}`) ||
+    `${entity.type} (${sourceTitle} --> ${targetTitle})`
+  );
 };

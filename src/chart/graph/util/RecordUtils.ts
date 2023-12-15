@@ -145,8 +145,8 @@ export function buildGraphVisualizationObjectFromRecords(
   relColorProperty: any,
   defaultRelColor: any,
   styleRules: any,
-  nodePositions: any,
-  frozen: any
+  nodePositions: any = {},
+  frozen: any = false
 ) {
   // Extract graph objects from result set.
   records.forEach((record) => {
@@ -198,7 +198,7 @@ export function buildGraphVisualizationObjectFromRecords(
       ? node.properties[nodeColorProperty]
       : totalColors > 0
       ? colorScheme[nodeLabelsList.indexOf(node.mainLabel) % totalColors]
-      : 'grey';
+      : defaultNodeColor;
     // Next, evaluate the custom styling rules to see if there's a rule-based override
     assignedColor = evaluateRulesOnNode(node, 'node color', assignedColor, styleRules);
     return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });
