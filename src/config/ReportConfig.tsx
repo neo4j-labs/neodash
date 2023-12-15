@@ -214,7 +214,7 @@ const _REPORT_TYPES = {
       graphDepthSep: {
         label: 'Tree layout level distance',
         type: SELECTION_TYPES.NUMBER,
-        default: '30',
+        default: 30,
       },
       enableExploration: {
         label: 'Enable graph exploration',

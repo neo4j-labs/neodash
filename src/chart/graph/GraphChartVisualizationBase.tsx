@@ -1,25 +1,21 @@
 import React, { useRef } from 'react';
-import ForceGraph2D from 'react-force-graph-2d';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../extensions/advancedcharts/Utils';
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
-import { generateNodeCanvasObject } from './util/NodeUtils';
-import { generateRelCanvasObject } from './util/RelUtils';
 
 /*
  * TODO: check if makes sense to change zoom logic from panning to buttons
  * (when i scroll the graphCharts has the priority )
  */
-export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps) => {
+export const NeoGraphChartVisualizationBase = (props: GraphChartVisualizationProps) => {
   const fgRef: React.MutableRefObject<any> = useRef();
-
+  const GraphComponent = props.config?.graphComponent;
   if (!props.style.width || !props.style.height) {
     return <></>;
   }
   props.interactivity.zoomToFit = () => fgRef.current && fgRef.current.zoomToFit(400);
-
   return (
-    <ForceGraph2D
+    <GraphComponent
       ref={fgRef}
       width={props.style.width - 20}
       height={props.style.height}
@@ -54,7 +50,7 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       linkDirectionalParticleSpeed={props.style.linkDirectionalParticleSpeed}
       cooldownTicks={props.engine.cooldownTicks}
       onEngineStop={() => {
-        props.engine.setCooldownTicks(0);
+        props.engine.setCooldownTicks(props.config.cooldownAfterengineStop);
         if (props.engine.recenterAfterEngineStop) {
           fgRef.current.zoomToFit(400);
           props.engine.setRecenterAfterEngineStop(false);
@@ -69,11 +65,15 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
         props.engine.setRecenterAfterEngineStop(false);
       }}
       onNodeDragEnd={(node) => {
-        props.engine.setCooldownTicks(0);
+        props.engine.setCooldownTicks(props.config.cooldownAfterengineStop);
         if (props.interactivity.fixNodeAfterDrag) {
           node.fx = node.x;
           node.fy = node.y;
+          if (node.z !== undefined) {
+            node.fz = node.z;
+          }
         }
+        // TODO - Frozen layout only works in 2D
         if (props.interactivity.layoutFrozen) {
           const key = node.id;
           const val = [node.x, node.y];
@@ -82,25 +82,18 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
           props.interactivity.setNodePositions(old);
         }
       }}
-      nodeCanvasObjectMode={() => 'after'}
-      nodeCanvasObject={(node: any, ctx: any) =>
-        generateNodeCanvasObject(
-          node,
-          ctx,
-          props.style.nodeIcons,
-          props.interactivity.layoutFrozen,
-          props.interactivity.nodePositions,
-          props.style.nodeLabelFontSize,
-          props.style.defaultNodeSize,
-          props.style.nodeLabelColor,
-          props.extensions.styleRules,
-          props.engine.selection
-        )
-      }
-      linkCanvasObjectMode={() => 'after'}
-      linkCanvasObject={(link: any, ctx: any) =>
-        generateRelCanvasObject(link, ctx, props.style.relLabelFontSize, props.style.relLabelColor)
-      }
+      // 2D-specific config settings
+      nodeCanvasObjectMode={props.config?.nodeCanvasObjectMode}
+      nodeCanvasObject={props.config?.nodeCanvasObject}
+      linkCanvasObjectMode={props.config?.linkCanvasObjectMode}
+      linkCanvasObject={props.config?.linkCanvasObject}
+      // 3D-specific config settings
+      nodeThreeObjectExtend={props.config?.nodeThreeObjectExtend}
+      nodeThreeObject={props.config?.nodeThreeObject}
+      linkThreeObjectExtend={props.config?.linkThreeObjectExtend}
+      linkThreeObject={props.config?.linkThreeObject}
+      linkPositionUpdate={props.config?.linkPositionUpdate}
+      // Data to populate graph
       graphData={props.style.width ? { nodes: props.data.nodes, links: props.data.links } : { nodes: [], links: [] }}
     />
   );
