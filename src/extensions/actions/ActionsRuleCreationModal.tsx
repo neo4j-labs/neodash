@@ -54,6 +54,17 @@ const RULE_CONDITIONS = {
       label: 'Link Click',
     },
   ],
+  graph3d: [
+    {
+      value: 'onNodeClick',
+      label: 'Node Click',
+      default: true,
+    },
+    {
+      value: 'onLinkClick',
+      label: 'Link Click',
+    },
+  ],
   gantt: [
     {
       value: 'onTaskClick',
@@ -96,6 +107,16 @@ export const RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS = {
     },
   ],
   graph: [
+    {
+      value: 'set variable',
+      label: 'Parameter',
+    },
+    {
+      value: 'set page',
+      label: 'Page',
+    },
+  ],
+  graph3d: [
     {
       value: 'set variable',
       label: 'Parameter',

@@ -157,7 +157,7 @@ export interface GraphChartVisualizationProps {
     nodeThreeObject?: (node) => void;
     linkThreeObjectExtend?: boolean;
     linkThreeObject?: (link) => void;
-    linkPositionUpdate?: (sprite: any, { start, end }: { start: any; end: any }, link: any) => void;
+    linkPositionUpdate?: (sprite: any, { start, end }: { start: any; end: any }, link: any, ref: any) => void;
   };
   /**
    * entries in 'extensions' let users plug in extra functionality into the visualization based on enabled plugins.

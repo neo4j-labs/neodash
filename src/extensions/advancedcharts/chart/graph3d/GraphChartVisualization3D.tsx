@@ -43,7 +43,8 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
       sprite.textHeight = fontSize;
       return sprite;
     },
-    linkPositionUpdate: (sprite, { start, end }, link) => {
+    linkPositionUpdate: (sprite, { start, end }, link, _) => {
+      console.log('a');
       if (link.source.id !== link.target.id) {
         // If this is a relationship with a different start and end node...
         const middle = Object.assign(
@@ -51,21 +52,19 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
             [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
           }))
         );
-        // TODO rotation https://codepen.io/prisoner849/pen/BaVZKWW
-        // sprite.material.rotation = Math.random()
-        // sprite.lookAt(target);
-        // let v2 = new THREE.Vector2();
-        // let v3 = new THREE.Vector3();
-        // // let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 1000);
-        // let camera = null;
-        // console.log(sprite);
-        // v3.copy(middle).project(camera);
-        // v3.x *= camera.aspect;
-        // v2.copy(end);
-        // v2.x *= camera.aspect;
-        // v2.sub(v3);
-
-        // sprite.material.map.rotation = v2.angle();
+        // TODO rotation... aim the 2D sprite along the rel's direction... currently not working.
+        // const camera = ref.current.camera();
+        // var endProj = new THREE.Vector3(end.x, end.y, end.z).project(camera);
+        // var startProj = new THREE.Vector3(start.x, start.y, start.z).project(camera);
+        // const vector = new THREE.Vector2(endProj.x, endProj.y).sub(startProj);
+        // var angle = - new THREE.Vector2(startProj.x + 1, 0).angleTo(vector);
+        // if (startProj.y < endProj.y) {
+        //   angle = Math.PI * 2 - angle;
+        // }
+        // if (startProj.x > endProj.x) {
+        //   angle += Math.PI;
+        // }
+        // sprite.material.rotation = angle;
 
         if (!link.curvature) {
           // Simple case - no curvature assigned, we position the label in the middle of the two nodes.

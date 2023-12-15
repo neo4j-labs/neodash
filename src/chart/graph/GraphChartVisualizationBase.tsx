@@ -92,7 +92,9 @@ export const NeoGraphChartVisualizationBase = (props: GraphChartVisualizationPro
       nodeThreeObject={props.config?.nodeThreeObject}
       linkThreeObjectExtend={props.config?.linkThreeObjectExtend}
       linkThreeObject={props.config?.linkThreeObject}
-      linkPositionUpdate={props.config?.linkPositionUpdate}
+      linkPositionUpdate={(sprite, { start, end }, link) =>
+        props.config?.linkPositionUpdate(sprite, { start, end }, link, fgRef)
+      }
       // Data to populate graph
       graphData={props.style.width ? { nodes: props.data.nodes, links: props.data.links } : { nodes: [], links: [] }}
     />
