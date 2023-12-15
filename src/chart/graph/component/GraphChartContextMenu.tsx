@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
-import { GraphChartVisualizationProps } from '../GraphChartVisualization';
+import { GraphChartVisualizationProps } from '../GraphChartVisualizationProps';
 import { Card, CardHeader } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
 import { MagnifyingGlassCircleIconOutline, PencilIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';

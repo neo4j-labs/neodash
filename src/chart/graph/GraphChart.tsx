@@ -9,7 +9,7 @@ import { NeoGraphChartLockButton } from './component/button/GraphChartLockButton
 import { NeoGraphChartFitViewButton } from './component/button/GraphChartFitViewButton';
 import { buildGraphVisualizationObjectFromRecords } from './util/RecordUtils';
 import { parseNodeIconConfig } from './util/NodeUtils';
-import { GraphChartVisualizationProps, Link, layouts } from './GraphChartVisualization';
+import { GraphChartVisualizationProps, Link, layouts } from './GraphChartVisualizationProps';
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { IconButtonArray, IconButton } from '@neo4j-ndl/react';
@@ -21,18 +21,27 @@ import { getSettings } from '../SettingsUtils';
 import { getPageNumbersAndNamesList } from '../../extensions/advancedcharts/Utils';
 import { CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 
+export interface GraphChartProps extends ChartProps {
+  lockable?: boolean;
+  component?: any;
+}
+
+const DEFAULT_VISUALIZATION_COMPONENT = NeoGraphChartVisualization2D;
+
 /**
  * Draws graph data using a force-directed-graph visualization.
  * This visualization is powered by `react-force-graph`.
  * See https://github.com/vasturiano/react-force-graph for examples on customization.
  */
-const NeoGraphChart = (props: ChartProps) => {
+const NeoGraphChart = (props: GraphChartProps) => {
   if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
     return <>No data, re-run the report.</>;
   }
+  const Visualization = props.component ? props.component : DEFAULT_VISUALIZATION_COMPONENT;
 
   // Retrieve config from advanced settings
   const settings = getSettings(props.settings, props.extensions, props.getGlobalParameter);
+  const lockable = props.lockable !== undefined ? props.lockable : true;
   const linkDirectionalParticles = props.settings && props.settings.relationshipParticles ? 5 : undefined;
   const arrowLengthProp = props?.settings?.arrowLengthProp ?? 3;
   let nodePositions = props.settings && props.settings.nodePositions ? props.settings.nodePositions : {};
@@ -218,7 +227,7 @@ const NeoGraphChart = (props: ChartProps) => {
   }, [props.records]);
 
   return (
-    <div ref={observe} style={{ width: '100%', height: '95%' }}>
+    <div ref={observe} style={{ width: '100%', height: '100%' }}>
       <NeoGraphChartCanvas>
         <IconButtonArray
           aria-label={'graph icon'}
@@ -228,10 +237,10 @@ const NeoGraphChart = (props: ChartProps) => {
         >
           <GraphChartContextMenu {...chartProps} />
           <NeoGraphChartFitViewButton {...chartProps} />
-          {settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
+          {lockable && settings.lockable ? <NeoGraphChartLockButton {...chartProps} /> : <></>}
           {settings.drilldownLink ? <NeoGraphChartDeepLinkButton {...chartProps} /> : <></>}
         </IconButtonArray>
-        <NeoGraphChartVisualization2D {...chartProps} />
+        <Visualization {...chartProps} />
         <NeoGraphChartInspectModal {...chartProps}></NeoGraphChartInspectModal>
         {settings.allowDownload && props.records && props.records.length > 0 ? (
           <IconButtonArray floating orientation='horizontal' className='n-z-10 n-absolute n-bottom-2 n-left-4'>

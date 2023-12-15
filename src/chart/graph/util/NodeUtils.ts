@@ -1,5 +1,5 @@
 import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
-import { GraphEntity } from '../GraphChartVisualization';
+import { GraphEntity } from '../GraphChartVisualizationProps';
 
 export const getNodeLabel = (selection, node) => {
   const selectedProp = selection && selection[node.mainLabel];

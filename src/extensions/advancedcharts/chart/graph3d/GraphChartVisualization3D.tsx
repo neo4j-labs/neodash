@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../../../extensions/advancedcharts/Utils';
 import { getTooltip } from '../../../../chart/graph/component/GraphChartTooltip';
-import { GraphChartVisualizationProps } from '../../../../chart/graph/GraphChartVisualization';
+import { GraphChartVisualizationProps } from '../../../../chart/graph/GraphChartVisualizationProps';
 import { generateNodeCanvasObject, getNodeLabel } from '../../../../chart/graph/util/NodeUtils';
 import { generateRelCanvasObject } from '../../../../chart/graph/util/RelUtils';
 import SpriteText from 'three-spritetext';
@@ -33,7 +33,7 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
       dagMode={props.engine.layout}
       dagLevelDistance={props.engine.graphDepthSep}
       linkWidth={(link: any) => link.width}
-      // linkLabel={(link: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(link)}</div>` : '')}
+      linkLabel={(link: any) => (props.interactivity.showPropertiesOnHover ? `<div>${getTooltip(link)}</div>` : '')}
       nodeThreeObjectExtend={true}
       nodeThreeObject={(node) => {
         const label =
@@ -56,9 +56,6 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
         // extend link with text sprite
         const label = link.properties.name || link.type || link.id;
         const fontSize = props.style.relLabelFontSize;
-        const { source } = link;
-        const { target } = link;
-
         const sprite = new SpriteText(label);
         sprite.color = props.style.relLabelColor;
         sprite.textHeight = fontSize;
@@ -72,6 +69,22 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
               [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
             }))
           );
+          // TODO rotation https://codepen.io/prisoner849/pen/BaVZKWW
+          // sprite.material.rotation = Math.random()
+          // sprite.lookAt(target);
+          // let v2 = new THREE.Vector2();
+          // let v3 = new THREE.Vector3();
+          // // let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 1000);
+          // let camera = null;
+          // console.log(sprite);
+          // v3.copy(middle).project(camera);
+          // v3.x *= camera.aspect;
+          // v2.copy(end);
+          // v2.x *= camera.aspect;
+          // v2.sub(v3);
+
+          // sprite.material.map.rotation = v2.angle();
+
           if (!link.curvature) {
             // Simple case - no curvature assigned, we position the label in the middle of the two nodes.
             Object.assign(sprite.position, middle);

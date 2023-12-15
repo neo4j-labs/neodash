@@ -1,7 +1,7 @@
 import { evaluateRulesOnNode, evaluateRulesOnLink } from '../../../extensions/styling/StyleRuleEvaluator';
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
-import { GraphChartVisualizationProps } from '../GraphChartVisualization';
+import { GraphChartVisualizationProps } from '../GraphChartVisualizationProps';
 import { assignCurvatureToLink } from './RelUtils';
 import { isNode } from 'neo4j-driver-core/lib/graph-types.js';
 
