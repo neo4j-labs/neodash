@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
-
 import { GraphChartVisualizationProps } from '../../../../chart/graph/GraphChartVisualization';
-import { generateNodeCanvasObject, getNodeLabel } from '../../../../chart/graph/util/NodeUtils';
-import { generateRelCanvasObject } from '../../../../chart/graph/util/RelUtils';
+import { getNodeLabel } from '../../../../chart/graph/util/NodeUtils';
 import SpriteText from 'three-spritetext';
 import { evaluateRulesOnNode } from '../../../styling/StyleRuleEvaluator';
 import { NeoGraphChartVisualizationBase } from '../../../../chart/graph/GraphChartVisualizationBase';
@@ -22,7 +20,6 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
         props.engine.selection && props.engine.selection[node.mainLabel]
           ? getNodeLabel(props.engine.selection, node)
           : '';
-      const fontSize = props.style.nodeLabelFontSize;
       const sprite = new SpriteText(label);
       sprite.color = evaluateRulesOnNode(
         node,
@@ -44,7 +41,6 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
       return sprite;
     },
     linkPositionUpdate: (sprite, { start, end }, link, _) => {
-      console.log('a');
       if (link.source.id !== link.target.id) {
         // If this is a relationship with a different start and end node...
         const middle = Object.assign(
@@ -52,7 +48,21 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
             [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
           }))
         );
-        // TODO rotation... aim the 2D sprite along the rel's direction... currently not working.
+        if (!link.curvature) {
+          // Simple case - no curvature assigned, we position the label in the middle of the two nodes.
+          Object.assign(sprite.position, middle);
+        } else {
+          // Complex case, multiple rels between a pair of nodes. Adjust the position to match each rel's curvature.
+          let vector = new THREE.Vector3(end.x - start.x, end.y - start.y, end.z - start.z);
+          let length = vector.length();
+          let axis = new THREE.Vector3(0, 0, 1);
+          let angle = -Math.PI / 2;
+          vector = vector.applyAxisAngle(axis, angle);
+          vector.multiplyScalar(0.5 * link.curvature * Math.pow(length / 30.0, 0.01));
+          const translated = { x: middle.x + vector.x, y: middle.y + vector.y, z: middle.z + vector.z };
+          Object.assign(sprite.position, translated);
+        }
+        // TODO: rotation... aim the 2D sprite along the rel's direction... currently not working.
         // const camera = ref.current.camera();
         // var endProj = new THREE.Vector3(end.x, end.y, end.z).project(camera);
         // var startProj = new THREE.Vector3(start.x, start.y, start.z).project(camera);
@@ -65,20 +75,6 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
         //   angle += Math.PI;
         // }
         // sprite.material.rotation = angle;
-
-        if (!link.curvature) {
-          // Simple case - no curvature assigned, we position the label in the middle of the two nodes.
-          Object.assign(sprite.position, middle);
-        } else {
-          // Complex case, multiple rels between a pair of nodes. Adjust the position to match each rel's curvature.
-          let vector = new THREE.Vector3(end.x - start.x, end.y - start.y, end.z - start.z);
-          let axis = new THREE.Vector3(0, 0, 1);
-          let angle = -Math.PI / 2;
-          vector = vector.applyAxisAngle(axis, angle);
-          vector.multiplyScalar(0.5 * link.curvature);
-          const translated = { x: middle.x + vector.x, y: middle.y + vector.y, z: middle.z + vector.z };
-          Object.assign(sprite.position, translated);
-        }
       } else {
         // If this is a relationship with an identical start and end node...
         const vector = { x: 26 * link.curvature, y: 26 * link.curvature, z: 0 };

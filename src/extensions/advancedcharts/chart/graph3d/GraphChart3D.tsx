@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ChartProps } from '../../../../chart/Chart';
 import { NeoGraphChartVisualization3D } from './GraphChartVisualization3D';
 import NeoGraphChart from '../../../../chart/graph/GraphChart';
