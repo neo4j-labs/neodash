@@ -278,11 +278,12 @@ export const NeoReport = ({
    * This component renders string response from the cypher query. This feature is only applicable for graph report.
    * https://mercedes-benz.atlassian.net/browse/VULCAN-235
    */
-  if (records !== null && records.length === 1) {
-    if (type === 'graph' && typeof records[0]?._fields[0] === 'string') {
+  if (records && records.length === 1) {
+    const singleValue = records[0]?._fields?.[0];
+    if (type === 'graph' && typeof singleValue === 'string') {
       return (
         <CustomSingleValueComponent
-          value={records[0]._fields[0]}
+          value={singleValue}
           sx={{
             fontSize: settings?.fontSize,
             color: settings?.color,
