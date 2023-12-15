@@ -1,4 +1,4 @@
-import { GraphChartVisualizationProps } from '../GraphChartVisualizationProps';
+import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import React, { useEffect } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { Button } from '@mui/material';

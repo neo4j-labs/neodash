@@ -1,8 +1,8 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Card } from '@mui/material';
 import ReactDOMServer from 'react-dom/server';
-import { GraphEntity, Link } from '../GraphChartVisualizationProps';
-import { Node } from '../GraphChartVisualizationProps';
+import { GraphEntity, Link } from '../GraphChartVisualization';
+import { Node } from '../GraphChartVisualization';
 
 /**
  * Renders a tooltip above the user's cursor showing information on the selected node/relationship.

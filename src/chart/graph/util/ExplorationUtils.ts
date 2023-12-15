@@ -1,4 +1,4 @@
-import { GraphChartVisualizationProps } from '../GraphChartVisualizationProps';
+import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { injectNewRecordsIntoGraphVisualization } from './RecordUtils';
 import { recomputeCurvatures } from './RelUtils';
 

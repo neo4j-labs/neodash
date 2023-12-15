@@ -1,5 +1,5 @@
 import React from 'react';
-import { GraphChartVisualizationProps } from '../../GraphChartVisualizationProps';
+import { GraphChartVisualizationProps } from '../../GraphChartVisualization';
 import { Tooltip } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
 import { LockOpenIconSolid, LockClosedIconSolid } from '@neo4j-ndl/react/icons';

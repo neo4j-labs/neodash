@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import { executeActionRule, getRuleWithFieldPropertyName } from '../../../../extensions/advancedcharts/Utils';
 import { getTooltip } from '../../../../chart/graph/component/GraphChartTooltip';
-import { GraphChartVisualizationProps } from '../../../../chart/graph/GraphChartVisualizationProps';
+import { GraphChartVisualizationProps } from '../../../../chart/graph/GraphChartVisualization';
 import { generateNodeCanvasObject, getNodeLabel } from '../../../../chart/graph/util/NodeUtils';
 import { generateRelCanvasObject } from '../../../../chart/graph/util/RelUtils';
 import SpriteText from 'three-spritetext';

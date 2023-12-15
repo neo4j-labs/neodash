@@ -9,7 +9,7 @@ import { NeoGraphChartLockButton } from './component/button/GraphChartLockButton
 import { NeoGraphChartFitViewButton } from './component/button/GraphChartFitViewButton';
 import { buildGraphVisualizationObjectFromRecords } from './util/RecordUtils';
 import { parseNodeIconConfig } from './util/NodeUtils';
-import { GraphChartVisualizationProps, Link, layouts } from './GraphChartVisualizationProps';
+import { GraphChartVisualizationProps, Link, layouts } from './GraphChartVisualization';
 import { handleExpand } from './util/ExplorationUtils';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { IconButtonArray, IconButton } from '@neo4j-ndl/react';

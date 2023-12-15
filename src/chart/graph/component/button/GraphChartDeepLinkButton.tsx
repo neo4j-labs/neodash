@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
 import { replaceDashboardParametersInString } from '../../../ChartUtils';
-import { GraphChartVisualizationProps } from '../../GraphChartVisualizationProps';
+import { GraphChartVisualizationProps } from '../../GraphChartVisualization';
 import { IconButton } from '@neo4j-ndl/react';
 import { MagnifyingGlassIconOutline } from '@neo4j-ndl/react/icons';
 
