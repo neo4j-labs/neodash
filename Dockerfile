@@ -35,4 +35,4 @@ EXPOSE 5005
 ## Launch webserver as non-root user.
 CMD ["nginx", "-g", "daemon off;"]
 HEALTHCHECK cmd curl --fail http://localhost:5005 || exit 1
-LABEL version="2.3.0"
+LABEL version="2.4.0"

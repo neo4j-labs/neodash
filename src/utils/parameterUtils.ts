@@ -12,9 +12,9 @@ export const extractAllParameterNames = (cypherQuery) => {
     return parameterNames;
 }
 
-export const checkParametersNameInGlobalParameter = (parameterNames: string[], globalParameterNames: any,) => {
+export const checkParametersNameInGlobalParameter = (parameterNames: string[], globalParameterNames: any): boolean => {
     for (const key of parameterNames) {
-        if (typeof globalParameterNames[key] === 'undefined' || globalParameterNames[key] === '') {
+        if (typeof globalParameterNames[key] === 'undefined' || globalParameterNames[key] === null || globalParameterNames[key] === '') {
             return true;
         }
     }

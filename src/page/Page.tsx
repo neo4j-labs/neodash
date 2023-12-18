@@ -242,6 +242,7 @@ export const NeoPage = ({
         cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
         rowHeight={100}
         compactType={GRID_COMPACTION_TYPE}
+        style={{ marginBottom: 100 }}
         onDrag={() => {
           if (!isDragging) {
             setAnimated(true);
