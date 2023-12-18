@@ -47,7 +47,7 @@ const Dashboard = ({
 
       {/* Navigation Bar */}
       <div
-        className='n-w-screen n-flex n-flex-row n-bg-neutral-bg-weak n-border-b'
+        className='n-w-screen n-flex n-flex-row n-bg-neutral-bg-weak n-border-b n-my-6 n-mx-2 n-px-1'
         style={{ borderColor: 'lightgrey' }}
       >
         <NeoDashboardHeader
@@ -55,7 +55,7 @@ const Dashboard = ({
           onDownloadImage={onDownloadDashboardAsImage}
           onAboutModalOpen={onAboutModalOpen}
         ></NeoDashboardHeader>
-        <div className='n-w-full n-mx-8 n-my-6'>
+        <div className='n-w-full'>
           <NeoDashboardTitle />
           <NeoDashboardHeaderPageList />
         </div>
