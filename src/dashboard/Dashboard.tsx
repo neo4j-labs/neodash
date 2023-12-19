@@ -10,6 +10,7 @@ import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConn
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
+import Chat from '../solutions/components/genai/Chat';
 
 const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -63,6 +64,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
             <></>
           )} */}
           <NeoPage></NeoPage>
+          <Chat></Chat>
         </Container>
       </main>
     </Neo4jProvider>

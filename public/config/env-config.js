@@ -37,4 +37,6 @@ window._dynamicEnv_ = {
   REACT_APP_GALLERY_GRAPHQL_URL: 'http://localhost:4001/graphql',
   REACT_APP_GALLERY_UI_URL: 'http://localhost:3002/solutions',
   REACT_APP_VERIFY_ACCESS: true,
+  REACT_APP_GEN_AI_CHAT_ENABLED: true,
+  REACT_APP_GEN_AI_URL: 'http://localhost:3001/embed?llmId=bom-llm-id',
 };
