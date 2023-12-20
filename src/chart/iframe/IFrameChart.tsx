@@ -21,7 +21,7 @@ const NeoIFrameChart = (props: ChartProps) => {
     .map((key) => `${key}=${mapParameters[key]}`)
     .join('&');
   const modifiedUrl =
-    (replaceGlobalParameters ? replaceDashboardParameters(url, parameters) : url) +
+    (replaceGlobalParameters ? replaceDashboardParameters(url, parameters, false) : url) +
     (passGlobalParameters ? `#${queryString}` : '');
 
   if (!modifiedUrl || !(modifiedUrl.startsWith('http://') || modifiedUrl.startsWith('https://'))) {

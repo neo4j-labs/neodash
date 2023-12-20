@@ -182,10 +182,12 @@ export const downloadCSV = (rows) => {
 
 /**
  * Replaces all global dashboard parameters inside a string with their values.
+ * It can return a component or a string, it depends on the value string_result (default: false)
  * @param str The string to replace the parameters in.
  * @param parameters The parameters to replace.
+ * @param string_result If true, won't render anything and it will just return the input string fully replaced
  */
-export function replaceDashboardParameters(str, parameters) {
+export function replaceDashboardParameters(str, parameters, render = true) {
   if (!str) {
     return '';
   }
@@ -212,14 +214,14 @@ export function replaceDashboardParameters(str, parameters) {
       val = val ? val[i] : null;
     });
 
-    return RenderSubValue(val);
+    return !render ? val : RenderSubValue(val);
   };
 
   const parameterSimpleReplacer = (_) => {
     let param = _.replace(`$`, '').trim();
     let val = parameters?.[param] || null;
     let type = getRecordType(val);
-    let valueRender = type === 'string' ? val : RenderSubValue(val);
+    let valueRender = !render ? val : type === 'string' ? val : RenderSubValue(val);
     return valueRender;
   };
 
