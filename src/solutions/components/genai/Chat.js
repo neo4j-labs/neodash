@@ -9,7 +9,23 @@ import { Button } from '@mui/material';
 import { getDynamicConfigValue } from '../../config/dynamicConfig';
 
 export default function Chat(props) {
-  const chatEnabled = getDynamicConfigValue('REACT_APP_GEN_AI_CHAT_ENABLED');
+  const urlParams = new URLSearchParams(window.location.search);
+  const chatEnabledUrlString = urlParams.get('genAiChatEnabled');
+  const genAiUrlString = urlParams.get('genAiUrl');
+
+  let chatEnabled = getDynamicConfigValue('REACT_APP_GEN_AI_CHAT_ENABLED');
+  if (chatEnabledUrlString) {
+    if (chatEnabledUrlString === 'true') {
+      chatEnabled = true;
+    } else {
+      chatEnabled = false;
+    }
+  }
+
+  let genAiUrl = getDynamicConfigValue('REACT_APP_GEN_AI_URL');
+  if (genAiUrlString) {
+    genAiUrl = genAiUrlString;
+  }
 
   const [fullScreen, setFullScreen] = useState(false);
   const [chatVisible, setChatVisible] = useState('hidden');
@@ -110,7 +126,7 @@ export default function Chat(props) {
               }}
               id='genAIChat'
               title='GenAI Embed'
-              src={getDynamicConfigValue('REACT_APP_GEN_AI_URL')}
+              src={genAiUrl}
             />
           </div>
         </div>
