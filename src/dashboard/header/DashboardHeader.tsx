@@ -35,6 +35,8 @@ export const NeoDashboardHeader = ({
   };
 
   useEffect(() => {
+    document.title = dashboardTitleText;
+
     // Reset text to the dashboard state when the page gets reorganized.
     if (dashboardTitle !== dashboardTitleText) {
       setDashboardTitleText(dashboardTitle);
