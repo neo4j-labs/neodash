@@ -5,6 +5,13 @@ import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import { DASHBOARD_PAGE_LIST_COLOR } from '../../config/ApplicationConfig';
 
+const debug = true;
+const logDebug = (message) => {
+  if (debug) {
+    console.log(`${new Date().toISOString()}: DashboardHeaderPageButton.ts: ${message}`);
+  }
+};
+
 export const NeoPageButton = ({ title, disabled = false, selected = false, onSelect, onRemove, onTitleUpdate }) => {
   // TODO - debounce page title update
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -34,11 +41,13 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
               onTitleUpdate(event);
               setTitleText(event.target.value);
             }}
-            onFocus={(e) => {
-              if (disabled) {
-                e.preventDefault();
-                e.stopPropagation();
-              }
+            // onFocus={(e) => {
+            onFocus={() => {
+              logDebug(`disabled = ${disabled}`);
+              // if (disabled) {
+              //   e.preventDefault();
+              //   e.stopPropagation();
+              // }
             }}
             readOnly={disabled}
             inputProps={{ style: { textTransform: 'none', cursor: 'pointer', fontWeight: 'normal' } }}
