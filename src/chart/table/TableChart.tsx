@@ -45,7 +45,7 @@ function renderAsButtonWrapper(renderer) {
         style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
         variant='contained'
         color='primary'
-      >{`${renderer(value)}`}</Button>
+      >{`${renderer(value, true)}`}</Button>
     );
   };
 }

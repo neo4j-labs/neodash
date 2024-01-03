@@ -219,7 +219,7 @@ export function replaceDashboardParameters(str, parameters) {
     let param = _.replace(`$`, '').trim();
     let val = parameters?.[param] || null;
     let type = getRecordType(val);
-    let valueRender = type === 'string' ? val : RenderSubValue(val);
+    let valueRender = type === 'string' || type == 'link' ? val : RenderSubValue(val);
     return valueRender;
   };
 

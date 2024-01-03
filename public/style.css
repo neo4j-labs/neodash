@@ -253,3 +253,7 @@
   display: none;
 }
 /* End Gantt chart workaround */
+
+.markdown-widget a {
+  text-decoration: underline;
+}
