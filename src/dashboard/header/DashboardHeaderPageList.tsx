@@ -126,6 +126,7 @@ export const NeoDashboardHeaderPageList = ({
         onDragStop={(newLayout, oldPosition, newPosition) => {
           // Calculate the old and new index of the page that was just dropped.
           logDebug(`onDragStop`);
+          logDebug(`editable: ${editable}`);
           if (isDragging) {
             logDebug(`onDragStop, isDragging = true`);
             const newXPositions = newLayout.map((page) => page.x);
@@ -181,7 +182,8 @@ export const NeoDashboardHeaderPageList = ({
             <NeoPageButton
               title={page.title}
               selected={pagenumber == i}
-              disabled={!editable}
+              // disabled={!editable}
+              disabled={false}
               onClick={() => {
                 logDebug(`NeoPageButton button clicked: ${page.title}, i: ${i}`);
               }}
