@@ -16,6 +16,13 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../../config/ApplicationConfig';
 const ReactGridLayout = WidthProvider(RGL);
 
+const debug = true;
+const logDebug = (message) => {
+  if (debug) {
+    console.log(`${new Date().toISOString()}: DashboardHeaderPageList.tsx: ${message}`);
+  }
+};
+
 /**
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.
  */
@@ -36,8 +43,14 @@ export const NeoDashboardHeaderPageList = ({
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
   const [lastElement, setLastElement] = React.useState(<></>);
 
+  const loggedSetCanSwitchPages = (value) => {
+    logDebug(`log-canSwitchPages: ${value}`);
+    setCanSwitchPages(value);
+  };
+
   // We debounce several state changes to improve user experience.
-  const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
+  // const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
+  const debouncedSetCanSwitchPages = useCallback(debounce(loggedSetCanSwitchPages, 50), []);
 
   const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
 
@@ -105,13 +118,16 @@ export const NeoDashboardHeaderPageList = ({
         isDraggable={editable}
         onDrag={() => {
           if (!isDragging) {
+            logDebug(`onDrag, inside isDragging`);
             setIsDragging(true);
             setCanSwitchPages(false);
           }
         }}
         onDragStop={(newLayout, oldPosition, newPosition) => {
           // Calculate the old and new index of the page that was just dropped.
+          logDebug(`onDragStop`);
           if (isDragging) {
+            logDebug(`onDragStop, isDragging = true`);
             const newXPositions = newLayout.map((page) => page.x);
             const oldIndex = oldPosition.i;
             const newIndex = Math.min(
@@ -119,11 +135,14 @@ export const NeoDashboardHeaderPageList = ({
               newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
             );
             if (oldIndex !== newIndex) {
+              logDebug(`movePage, oldIndex: ${oldIndex}, newIndex: ${newIndex}`);
               movePage(oldIndex, newIndex);
+              logDebug(`recomputeLayout`);
               recomputeLayout();
             }
             setIsDragging(false);
           }
+          logDebug(`calling debouncedSetCanSwitchPages(true)`);
           debouncedSetCanSwitchPages(true);
         }}
         style={{
@@ -160,7 +179,14 @@ export const NeoDashboardHeaderPageList = ({
               title={page.title}
               selected={pagenumber == i}
               disabled={!editable}
-              onSelect={() => (canSwitchPages ? selectPage(i) : null)}
+              onSelect={() => {
+                logDebug(`canSwitchPages: ${canSwitchPages}`);
+                if (canSwitchPages) {
+                  logDebug(`selectPage, i = ${i}, pagenumber = ${pagenumber}`);
+                  selectPage(i);
+                }
+                // (canSwitchPages ? selectPage(i) : null)
+              }}
               onRemove={() => removePage(i)}
               onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)}
             />

@@ -4,22 +4,33 @@ import { castToNeo4jDate, isCastableToNeo4jDate, valueIsNode } from '../chart/Ch
 import { createNotificationThunk } from '../page/PageThunks';
 import { updateDashboardSetting } from './SettingsActions';
 
+const debug = true;
+const logDebug = (message) => {
+  if (debug) {
+    console.log(`${new Date().toISOString()}: SettingsThunks.ts: ${message}`);
+  }
+};
+
 export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => {
   try {
+    logDebug(`setPageNumberThunk '${number}'`);
     if (number == undefined) {
+      logDebug(`The specified page could not be found, was it moved, removed, or renamed?`);
       throw 'The specified page could not be found, was it moved, removed, or renamed?';
     }
     const { pages } = getState().dashboard;
     // Make sure the page number is within bounds.
     number = Math.max(0, Math.min(pages.length - 1, number));
+    logDebug(`pages.length: '${pages.length}, number: '${number}'`);
     dispatch(updateDashboardSetting('pagenumber', number));
     // Make sure that we don't have weird transitions with the settings popups.
-
     const page = pages[number];
     page.reports.map((report) => {
+      logDebug(`hardResetCardSettings: number: ${number}, report.id: ${report.id}`);
       dispatch(hardResetCardSettings(number, report.id));
     });
   } catch (e) {
+    logDebug(`Unable to set page number: ${e}`);
     dispatch(createNotificationThunk('Unable to set page number', e));
   }
 };
