@@ -164,6 +164,9 @@ export const NeoDashboardHeaderPageList = ({
         {pages.map((page, i) => (
           <div
             key={i}
+            onClick={() => {
+              logDebug(`NeoPageButton parent div clicked page: ${page.title}, i: ${i}`);
+            }}
             style={{
               background: DASHBOARD_PAGE_LIST_COLOR,
               backgroundColor: pagenumber == i ? DASHBOARD_PAGE_LIST_ACTIVE_COLOR : 'inherit',
@@ -179,6 +182,9 @@ export const NeoDashboardHeaderPageList = ({
               title={page.title}
               selected={pagenumber == i}
               disabled={!editable}
+              onClick={() => {
+                logDebug(`NeoPageButton button clicked: ${page.title}, i: ${i}`);
+              }}
               onSelect={() => {
                 logDebug(`canSwitchPages: ${canSwitchPages}`);
                 if (canSwitchPages) {
