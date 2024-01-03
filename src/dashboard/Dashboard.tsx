@@ -64,7 +64,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
             <></>
           )} */}
           <NeoPage></NeoPage>
-          <Chat></Chat>
+          {/* <Chat></Chat> */}
         </Container>
       </main>
     </Neo4jProvider>
