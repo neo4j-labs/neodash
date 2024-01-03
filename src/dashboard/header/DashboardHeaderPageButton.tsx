@@ -30,7 +30,7 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
 
   const content = (
     <>
-      <Grid className='n-h-full' onClick={onSelect} container spacing={1} alignItems='flex-end'>
+      <Grid className='n-h-full' container spacing={1} alignItems='flex-end'>
         <Grid item key={1} style={{ width: '100%' }}>
           <InputBase
             value={titleText}
@@ -41,13 +41,15 @@ export const NeoPageButton = ({ title, disabled = false, selected = false, onSel
               onTitleUpdate(event);
               setTitleText(event.target.value);
             }}
-            // onFocus={(e) => {
-            onFocus={() => {
+            // moving onClick from top-level Grid to InputBase
+            onClick={onSelect}
+            onFocus={(e) => {
               logDebug(`disabled = ${disabled}`);
-              // if (disabled) {
-              //   e.preventDefault();
-              //   e.stopPropagation();
-              // }
+              if (disabled) {
+                logDebug('calling e.preventDefault and e.stopPropagation');
+                e.preventDefault();
+                e.stopPropagation();
+              }
             }}
             readOnly={disabled}
             inputProps={{ style: { textTransform: 'none', cursor: 'pointer', fontWeight: 'normal' } }}
