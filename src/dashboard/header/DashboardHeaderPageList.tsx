@@ -125,7 +125,7 @@ export const NeoDashboardHeaderPageList = ({
         }}
         onDragStop={(newLayout, oldPosition, newPosition) => {
           // Calculate the old and new index of the page that was just dropped.
-          logDebug(`new build 20240103 15:22`);
+          logDebug(`new build 20240103 16:17`);
           logDebug(`onDragStop`);
           logDebug(`editable: ${editable}`);
           logDebug(`onDragStop, isDragging = true`);
@@ -142,9 +142,14 @@ export const NeoDashboardHeaderPageList = ({
               logDebug(`recomputeLayout`);
               recomputeLayout();
             }
-          } else {
+            // this is put in place because there is react-grid-layout bug in the
+            // production build where it doesn't handle onSelect/onClick on child items
+            //  and always thinks you're in a drag
+          } else if (pagenumber !== newIndex) {
             logDebug(`selectPage ${newIndex}`);
             selectPage(newIndex);
+          } else {
+            logDebug(`already on page ${newIndex}`);
           }
           setIsDragging(false);
           logDebug(`calling debouncedSetCanSwitchPages(true)`);
