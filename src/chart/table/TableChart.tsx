@@ -40,12 +40,17 @@ const fallbackRenderer = (value) => {
 
 function renderAsButtonWrapper(renderer) {
   return function renderAsButton(value) {
+    const outputValue = renderer(value, true);
+    // If there's nothing to be rendered, there's no button needed.
+    if (outputValue == '') {
+      return <></>;
+    }
     return (
       <Button
         style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
         variant='contained'
         color='primary'
-      >{`${renderer(value, true)}`}</Button>
+      >{`${outputValue}`}</Button>
     );
   };
 }
