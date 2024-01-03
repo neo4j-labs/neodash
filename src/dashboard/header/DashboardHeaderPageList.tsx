@@ -125,24 +125,26 @@ export const NeoDashboardHeaderPageList = ({
         }}
         onDragStop={(newLayout, oldPosition, newPosition) => {
           // Calculate the old and new index of the page that was just dropped.
+          logDebug(`new build 20240103 15:22`);
           logDebug(`onDragStop`);
           logDebug(`editable: ${editable}`);
-          if (isDragging) {
-            logDebug(`onDragStop, isDragging = true`);
-            const newXPositions = newLayout.map((page) => page.x);
-            const oldIndex = oldPosition.i;
-            const newIndex = Math.min(
-              newXPositions.length - 2,
-              newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
-            );
-            if (oldIndex !== newIndex) {
-              logDebug(`movePage, oldIndex: ${oldIndex}, newIndex: ${newIndex}`);
-              movePage(oldIndex, newIndex);
-              logDebug(`recomputeLayout`);
-              recomputeLayout();
-            }
-            setIsDragging(false);
+          logDebug(`onDragStop, isDragging = true`);
+          const newXPositions = newLayout.map((page) => page.x);
+          const oldIndex = oldPosition.i;
+          const newIndex = Math.min(
+            newXPositions.length - 2,
+            newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
+          );
+          if (oldIndex !== newIndex) {
+            logDebug(`movePage, oldIndex: ${oldIndex}, newIndex: ${newIndex}`);
+            movePage(oldIndex, newIndex);
+            logDebug(`recomputeLayout`);
+            recomputeLayout();
+          } else {
+            logDebug(`selectPage ${oldPosition.i}`);
+            selectPage(i);
           }
+          setIsDragging(false);
           logDebug(`calling debouncedSetCanSwitchPages(true)`);
           debouncedSetCanSwitchPages(true);
         }}
@@ -182,8 +184,8 @@ export const NeoDashboardHeaderPageList = ({
             <NeoPageButton
               title={page.title}
               selected={pagenumber == i}
-              // disabled={!editable}
-              disabled={false}
+              disabled={!editable}
+              // disabled={false}
               onClick={() => {
                 logDebug(`NeoPageButton button clicked: ${page.title}, i: ${i}`);
               }}
