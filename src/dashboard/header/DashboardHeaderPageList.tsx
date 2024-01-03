@@ -130,19 +130,21 @@ export const NeoDashboardHeaderPageList = ({
           logDebug(`editable: ${editable}`);
           logDebug(`onDragStop, isDragging = true`);
           const newXPositions = newLayout.map((page) => page.x);
-          const oldIndex = oldPosition.i;
+          const oldIndex = parseInt(oldPosition.i);
           const newIndex = Math.min(
             newXPositions.length - 2,
             newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
           );
           if (oldIndex !== newIndex) {
-            logDebug(`movePage, oldIndex: ${oldIndex}, newIndex: ${newIndex}`);
-            movePage(oldIndex, newIndex);
-            logDebug(`recomputeLayout`);
-            recomputeLayout();
+            if (editable) {
+              logDebug(`movePage, oldIndex: ${oldIndex}, newIndex: ${newIndex}`);
+              movePage(oldIndex, newIndex);
+              logDebug(`recomputeLayout`);
+              recomputeLayout();
+            }
           } else {
-            logDebug(`selectPage ${oldPosition.i}`);
-            selectPage(i);
+            logDebug(`selectPage ${newIndex}`);
+            selectPage(newIndex);
           }
           setIsDragging(false);
           logDebug(`calling debouncedSetCanSwitchPages(true)`);
