@@ -213,6 +213,10 @@
 
 }
 
+iframe#webpack-dev-server-client-overlay {
+  display:none !important
+}
+
 @keyframes pulse {
 	0% {
 		transform: scale(0.95);

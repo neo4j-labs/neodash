@@ -105,23 +105,25 @@ export const NeoDashboardHeaderPageList = ({
         isDraggable={editable}
         onDrag={() => {
           if (!isDragging) {
-            setCanSwitchPages(false);
             setIsDragging(true);
+            setCanSwitchPages(false);
           }
         }}
         onDragStop={(newLayout, oldPosition, newPosition) => {
           // Calculate the old and new index of the page that was just dropped.
-          const newXPositions = newLayout.map((page) => page.x);
-          const oldIndex = oldPosition.i;
-          const newIndex = Math.min(
-            newXPositions.length - 2,
-            newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
-          );
-          if (oldIndex !== newIndex) {
-            movePage(oldIndex, newIndex);
-            recomputeLayout();
+          if (isDragging) {
+            const newXPositions = newLayout.map((page) => page.x);
+            const oldIndex = oldPosition.i;
+            const newIndex = Math.min(
+              newXPositions.length - 2,
+              newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
+            );
+            if (oldIndex !== newIndex) {
+              movePage(oldIndex, newIndex);
+              recomputeLayout();
+            }
+            setIsDragging(false);
           }
-          setIsDragging(false);
           debouncedSetCanSwitchPages(true);
         }}
         style={{
