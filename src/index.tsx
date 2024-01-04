@@ -10,7 +10,6 @@ import '/node_modules/react-resizable/css/styles.css';
 import './index.pcss';
 import StyleConfig from './config/StyleConfig';
 import * as Sentry from '@sentry/react';
-import { HelmetProvider } from 'react-helmet-async';
 
 if (window.location.href.includes('//neodash.graphapp.io/')) {
   Sentry.init({
@@ -46,9 +45,7 @@ await StyleConfig.getInstance();
 const provider = (
   <ReduxProvider store={store}>
     <PersistGate persistor={persister} loading={<div>Loading NeoDash...</div>}>
-      <HelmetProvider>
-        <Application />
-      </HelmetProvider>
+      <Application />
     </PersistGate>
   </ReduxProvider>
 );
