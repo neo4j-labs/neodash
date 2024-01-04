@@ -642,6 +642,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 50,
       },
+      hideSelections: {
+        label: 'Hide Property Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       refreshButtonEnabled: {
         label: 'Refreshable',
         type: SELECTION_TYPES.LIST,
