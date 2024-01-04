@@ -87,10 +87,9 @@ export const createConnectionThunk =
                 'ERR - connect to DB',
                 database,
                 '',
-                `Error while trying to establish connection to Neo4j DB in ${ 
-                  neodashMode 
-                  } mode at ${ 
-                  Date(Date.now()).substring(0, 33)}`
+                `Error while trying to establish connection to Neo4j DB in ${neodashMode} mode at ${Date(
+                  Date.now()
+                ).substring(0, 33)}`
               )
             );
           }
@@ -113,11 +112,10 @@ export const createConnectionThunk =
                 'INF - connect to DB',
                 database,
                 '',
-                `${username 
-                  } established connection to Neo4j DB in ${ 
-                  neodashMode 
-                  } mode at ${ 
-                  Date(Date.now()).substring(0, 33)}`
+                `${username} established connection to Neo4j DB in ${neodashMode} mode at ${Date(Date.now()).substring(
+                  0,
+                  33
+                )}`
               )
             );
           }
@@ -261,12 +259,12 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const skipConfirmation = urlParams.get('skipConfirmation') == 'Yes';
 
       const dashboardDatabase = urlParams.get('dashboardDatabase');
+      dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
       if (urlParams.get('credentials')) {
         const connection = decodeURIComponent(urlParams.get('credentials'));
         const protocol = connection.split('://')[0];
         const username = connection.split('://')[1].split(':')[0];
         const password = connection.split('://')[1].split(':')[1].split('@')[0];
-
         const database = connection.split('@')[1].split(':')[0];
         const url = connection.split('@')[1].split(':')[1];
         const port = connection.split('@')[1].split(':')[2];
