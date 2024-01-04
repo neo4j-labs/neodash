@@ -304,7 +304,7 @@ function RenderInteger(value) {
   if (!value || !value.toInt) {
     return RenderNumber(value);
   }
-  const integer = value.toNumber().toLocaleString();
+  const integer = value.toNumber().toLocaleString('en-US');
   return integer;
 }
 
@@ -312,7 +312,7 @@ function RenderNumber(value) {
   if (value === null || !value.toLocaleString) {
     return 'null';
   }
-  const number = value.toLocaleString();
+  const number = value.toLocaleString('en-US');
   return number;
 }
 
