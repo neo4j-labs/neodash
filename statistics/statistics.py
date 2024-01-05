@@ -12,16 +12,22 @@ import urllib.request
 
 app = Flask(__name__)
 
+ALLOWED_ORIGINS = [
+        "http://0.0.0.0:3000", 
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000", 
+        "http://172.0.18.1:3000", 
+        "http://192.168.0.44:3000",
+]
 
 # Define a function to set the CORS headers
 def add_cors_headers(response):
-    response.headers[
-        "Access-Control-Allow-Origin"
-    ] = "http://0.0.0.0:3000"  # allowed origin
+    request_origin = request.headers.get('Origin')
+    if request_origin in ALLOWED_ORIGINS:
+        response.headers["Access-Control-Allow-Origin"] = request_origin
     response.headers["Access-Control-Allow-Methods"] = "GET"  # Adjust as needed
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
-
 
 # Apply the CORS function to all routes using the after_request decorator
 @app.after_request
@@ -31,11 +37,11 @@ def apply_cors(response):
 
 @app.route("/get_statistics", methods=["GET"])
 def get_statistics():
-    node_name = request.args.get(
-        "node_name"
+    filename = request.args.get(
+        "endpoint"
     )  # You can pass the node name as a query parameter
 
-    url = url_object(bucket_name="pcap-ferro", object_name=node_name)
+    url = url_object(bucket_name="pcap-ferro", object_name=filename)
 
     # Download file
     urllib.request.urlretrieve(url, "file.pcap")

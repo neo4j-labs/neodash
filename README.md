@@ -53,7 +53,7 @@ python neo4j_api.py
 
 Open the minio database in browser: [http://localhost:9099](http://localhost:9099).
 Log in with user name and password (detailed in docker compose file).
-Create a user and set the policy to readwrite. The access and secret keys need to be updated in the `connection/minio_config.ini` file.
+Create a user and set the policy to readwrite. The access and secret keys need to be updated in the `connection/minio_config.ini` file, and in `statistics/minio_config.ini`.
 Create a bucket and update the bucket name in `connection/minio_api.py` file. Add the PCAP file to the bucket. 
 
 Open the neo4j database in browser: [http://localhost:7474](http://localhost:7474).
