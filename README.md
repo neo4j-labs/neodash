@@ -44,22 +44,34 @@ Run in another terminal:
 yarn run dev
 ```
 
-Activate the environment, navigate to the connection folder and run both minio_api.py and neo4j_api.py files by using the following command: python (filename).py
+Activate the environment, navigate to the connection folder and run both `minio_api.py` and `neo4j_api.py` files by using the following commands: 
 
-Open the minio database in browser: http://localhost:9099.
+```
+python minio_api.py
+python neo4j_api.py
+```
+
+Open the minio database in browser: [http://localhost:9099](http://localhost:9099).
 Log in with user name and password (detailed in docker compose file).
-Create a user and set the policy to readwrite. The access and secret keys need to be updated in the connection/minio_config.ini file.
-Create a bucket and update the bucket name in connection/minio_api.py file. Add the PCAP file to the bucket. 
+Create a user and set the policy to readwrite. The access and secret keys need to be updated in the `connection/minio_config.ini` file.
+Create a bucket and update the bucket name in `connection/minio_api.py` file. Add the PCAP file to the bucket. 
 
-Open the neo4j database in browser: http://localhost:7474.
+Open the neo4j database in browser: [http://localhost:7474](http://localhost:7474).
 Log in with user name and password (detailed in docker compose file).
 
-Open the dashboard in browser: http://localhost:3000, choose "New Dashboard". 
+Open the dashboard in browser: [http://localhost:3000](http://localhost:3000), choose "New Dashboard". 
 Log in with user name: neo4j, password: sindit-neo4j.
 
-If the database is empty, you can load one by opening Neo4j Browser at http://localhost:7474. Copy the content in samples/sample-data-updated.cypher and past it into the query box of the Neo4j browser, then execute the query. This query contains one example static data node and one analytics node. The name/type of the PCAP file needs to correspond to the endpoint/type properties of the static node and vice-versa. 
+**Create database**: If the database is empty, you can load one by opening Neo4j Browser at [http://localhost:7474](http:localhost:7474). Copy the content in `samples/sample-data-updated.cypher` and past it into the query box of the Neo4j browser, then execute the query. This query contains one example static data node and one analytics node. The name/type of the PCAP file needs to correspond to the endpoint/type properties of the static node and vice-versa. 
 
-To load a dashboard, press load dashboard button in left side panel. Choose "Select from file", and choose a sample database (e.g. dashboard-2023-12-05.json) in the "samples" folder in this repo. 
+**Load dashboard**: To load a dashboard, press load dashboard button in left side panel. Choose "Select from file", and choose a sample database (e.g. dashboard-2023-12-05.json) in the "samples" folder in this repo. 
+
+**Statistics module**: Navigate to the `statistics` directory, and run the following commands (after having started the rest of the services as explained above):
+
+```
+docker build -t statistics -f Dockerfile .
+docker run -p 5003:5003 --network=sindit_network -it statistics
+```
 
 
 ## User Guide for NeoDash
