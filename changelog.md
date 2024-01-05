@@ -1,3 +1,8 @@
+## NeoDash 2.4.2
+TODO
+
+
+
 ## NeoDash 2.4.1
 This is a patch release following 2.4.0. It contains several new features for self-hosted (standalone) NeoDash deployments, as well as a variety of UX improvements for dashboard editors.
 
