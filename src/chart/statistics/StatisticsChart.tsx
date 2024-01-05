@@ -6,13 +6,14 @@ import { generateCypher } from '../../openai/TextToCypher';
  * Renders Neo4j records as their JSON representation.
  */
 
-const AnalyticsChart = (props: ChartProps) => {
+const StatisticsChart = (props: ChartProps) => {
   //const { generated, setGenerated } = useState(0);
 
   const { records, settings, getGlobalParameter } = props;
   const node = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : {};
   const [url, setUrl] = useState('');
   const name = node.properties['name']
+  const endpoint = node.properties['endpoint']
   const type = node.properties['type']
   const nodename = name + '.' + type; // Add extension to name
 
