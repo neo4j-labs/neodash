@@ -238,7 +238,6 @@ export const NeoCustomReportActionsModal = ({
   };
 
   const handleOnInputchange = (customization, index, value) => {
-    console.log(customization, index, value);
     updateRuleField(index, 'value', value);
     if (type == 'bar' && customization !== 'set page') {
       // For bar charts, duplicate the value to rule.field

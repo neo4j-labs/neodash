@@ -261,6 +261,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const dashboardDatabase = urlParams.get('dashboardDatabase');
       dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
       if (urlParams.get('credentials')) {
+        setWelcomeScreenOpen(false);
         const connection = decodeURIComponent(urlParams.get('credentials'));
         const protocol = connection.split('://')[0];
         const username = connection.split('://')[1].split(':')[0];
@@ -268,17 +269,32 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         const database = connection.split('@')[1].split(':')[0];
         const url = connection.split('@')[1].split(':')[1];
         const port = connection.split('@')[1].split(':')[2];
-        if (url == password) {
-          // Special case where a connect link is generated without a password.
-          // Here, the format is parsed incorrectly and we open the connection window instead.
-
-          dispatch(resetShareDetails());
-          dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
-          dispatch(setWelcomeScreenOpen(false));
-          dispatch(setConnectionModalOpen(true));
-          // window.history.pushState({}, document.title, "/");
-          return;
-        }
+        // if (url == password) {
+        //   // Special case where a connect link is generated without a password.
+        //   // Here, the format is parsed incorrectly and we open the connection window instead.
+        //   dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
+        //   dispatch(
+        //     setShareDetailsFromUrl(
+        //       type,
+        //       id,
+        //       standalone,
+        //       protocol,
+        //       url,
+        //       port,
+        //       database,
+        //       username.split('@')[0],
+        //       '',
+        //       dashboardDatabase,
+        //       true
+        //     )
+        //   );
+        //   setDashboardToLoadAfterConnecting(id);
+        //   window.history.pushState({}, document.title, window.location.pathname);
+        //   dispatch(setConnectionModalOpen(true));
+        //   dispatch(setWelcomeScreenOpen(false));
+        //   // window.history.pushState({}, document.title, "/");
+        //   return;
+        // }
 
         dispatch(setConnectionModalOpen(false));
         dispatch(
