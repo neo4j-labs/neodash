@@ -38,6 +38,7 @@ import NeoDashboardSidebarExportModal from './modal/DashboardSidebarExportModal'
 import NeoDashboardSidebarDeleteModal from './modal/DashboardSidebarDeleteModal';
 import NeoDashboardSidebarInfoModal from './modal/DashboardSidebarInfoModal';
 import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
+import NeoDashboardSidebarAccessModal from './modal/DashboardSidebarAccessModal';
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
@@ -59,6 +60,7 @@ enum Modal {
   LOAD = 7,
   SAVE = 8,
   NONE = 9,
+  ACCESS = 10,
 }
 
 /**
@@ -234,6 +236,35 @@ export const NeoDashboardSidebar = ({
         }}
       />
 
+      <NeoDashboardSidebarAccessModal
+        open={modalOpen == Modal.ACCESS}
+        dashboard={cachedDashboard}
+        dashboardDatabase={dashboardDatabase}
+        onConfirm={() => {
+          saveDashboardToNeo4j(
+            driver,
+            dashboardDatabase,
+            dashboard,
+            new Date().toISOString(),
+            connection.username,
+            () => {
+              // After saving successfully, refresh the list after a small delay.
+              // The new dashboard will always be on top (the latest), so we select index 0.
+              setDashboards([]);
+              setTimeout(() => {
+                getDashboardListFromNeo4j();
+                setSelectedDashboardIndex(0);
+                setDraft(false);
+              }, 100);
+            }
+          );
+        }}
+        handleClose={() => {
+          setModalOpen(Modal.NONE);
+          setCachedDashboard('');
+        }}
+      />
+
       <SideNavigation
         position='left'
         type='overlay'
@@ -304,6 +335,14 @@ export const NeoDashboardSidebar = ({
             handleShareClicked={() => {
               setMenuOpen(Menu.NONE);
               setModalOpen(Modal.SHARE);
+            }}
+            handleAccessClicked={() => {
+              setMenuOpen(Menu.NONE);
+              const d = dashboards[inspectedIndex];
+              loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (text) => {
+                setCachedDashboard(JSON.parse(text));
+              });
+              setModalOpen(Modal.ACCESS);
             }}
             handleDeleteClicked={() => {
               setMenuOpen(Menu.NONE);

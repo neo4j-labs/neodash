@@ -6,6 +6,7 @@ import {
   DocumentTextIconOutline,
   InformationCircleIconOutline,
   ShareIconOutline,
+  FingerPrintIconOutline,
   TrashIconOutline,
 } from '@neo4j-ndl/react/icons';
 
@@ -19,6 +20,7 @@ export const NeoDashboardSidebarDashboardMenu = ({
   handleLoadClicked,
   handleExportClicked,
   handleShareClicked,
+  handleAccessClicked,
   handleDeleteClicked,
   handleClose,
 }) => {
@@ -43,6 +45,7 @@ export const NeoDashboardSidebarDashboardMenu = ({
         {/* <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' /> */}
         <MenuItem onClick={handleExportClicked} icon={<DocumentTextIconOutline />} title='Export' />
         <MenuItem onClick={handleShareClicked} icon={<ShareIconOutline />} title='Share' />
+        <MenuItem onClick={handleAccessClicked} icon={<FingerPrintIconOutline />} title='Access' />
         <MenuItem onClick={handleDeleteClicked} icon={<TrashIconOutline />} title='Delete' />
       </MenuItems>
     </Menu>
