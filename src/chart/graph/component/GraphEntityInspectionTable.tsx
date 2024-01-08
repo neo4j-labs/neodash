@@ -60,8 +60,12 @@ export const GraphEntityInspectionTable = ({
         {hasPropertyToShow ? (
           <TableHead>
             <TableRow>
-              <TableCell align='left' style={{color:tableTextColor}}>Property</TableCell>
-              <TableCell align='left' style={{color:tableTextColor}}>Value</TableCell>
+              <TableCell align='left' style={{ color: tableTextColor }}>
+                Property
+              </TableCell>
+              <TableCell align='left' style={{ color: tableTextColor }}>
+                Value
+              </TableCell>
               {checklistEnabled ? <TableCell align='center'>Select Property</TableCell> : <></>}
             </TableRow>
           </TableHead>
@@ -80,10 +84,10 @@ export const GraphEntityInspectionTable = ({
               .sort()
               .map((key) => (
                 <TableRow key={key}>
-                  <TableCell component='th' scope='row' style={{color:tableTextColor}}>
+                  <TableCell component='th' scope='row' style={{ color: tableTextColor }}>
                     {key}
                   </TableCell>
-                  <TableCell align={'left'} style={{color:tableTextColor}}>
+                  <TableCell align={'left'} style={{ color: tableTextColor }}>
                     <ShowMoreText lines={2}>{formatProperty(entity && entity.properties[key].toString())}</ShowMoreText>
                   </TableCell>
                   {checklistEnabled ? (
