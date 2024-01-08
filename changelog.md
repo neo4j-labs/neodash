@@ -1,8 +1,19 @@
 ## NeoDash 2.4.2
-TODO
+This release 
 
+New:
+- Visualize graphs in 3D with the new '3D graph' (advanced visualization). [#737](https://github.com/neo4j-labs/neodash/pull/737)
+-  Improved handling of draft
+- 
 
+Updated:
+- Unified common settings for each report type [#724](https://github.com/neo4j-labs/neodash/pull/724)
+- SSO auth tokens are now automatically refreshed on expiry. [#611](https://github.com/neo4j-labs/neodash/pull/611)
+- Title of the browser tab NeoDash runs on is now automatically set to the dashboard name.  [#708](https://github.com/neo4j-labs/neodash/pull/708)
 
+Fixes:
+- Fixed issue with hiding table columns prefixed by `__`. [#695](https://github.com/neo4j-labs/neodash/pull/695)
+- 
 ## NeoDash 2.4.1
 This is a patch release following 2.4.0. It contains several new features for self-hosted (standalone) NeoDash deployments, as well as a variety of UX improvements for dashboard editors.
 
