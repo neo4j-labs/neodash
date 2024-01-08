@@ -1,5 +1,5 @@
 import React from 'react';
-import NeoCardSettingsContentPropertySelect from '../card/settings/custom/CardSettingsContentPropertySelect';
+import ParameterSelectCardSettings from '../chart/parameter/ParameterSelectCardSettings';
 import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
@@ -208,8 +208,13 @@ const _REPORT_TYPES = {
       layout: {
         label: 'Graph Layout (experimental)',
         type: SELECTION_TYPES.LIST,
-        values: ['force-directed', 'tree', 'radial'],
+        values: ['force-directed', 'tree-top-down', 'tree-bottom-up', 'tree-left-right', 'tree-right-left', 'radial'],
         default: 'force-directed',
+      },
+      graphDepthSep: {
+        label: 'Tree layout level distance',
+        type: SELECTION_TYPES.NUMBER,
+        default: '30',
       },
       enableExploration: {
         label: 'Enable graph exploration',
@@ -343,6 +348,7 @@ const _REPORT_TYPES = {
       },
     },
     maxRecords: 250,
+    disabledDependency: { barWidth: { dependsOn: 'customDimensions', operator: false } },
     settings: {
       legend: {
         label: 'Show Legend',
@@ -391,18 +397,29 @@ const _REPORT_TYPES = {
         default: 'set2',
       },
       barValues: {
-        label: 'Show Value on Bars',
+        label: 'Show Values On Bars',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
+      customDimensions: {
+        label: 'Custom Dimensions',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      barWidth: {
+        label: 'Bar Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 10,
+      },
       labelSkipWidth: {
-        label: 'Skip label on width (px)',
+        label: 'Skip label if Bar Width < Xpx',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
       labelSkipHeight: {
-        label: 'Skip label on height (px)',
+        label: 'Skip label if Bar Height < Xpx',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
@@ -418,50 +435,50 @@ const _REPORT_TYPES = {
         default: 45,
       },
       marginLeft: {
-        label: 'Margin Left (px)',
+        label: 'Margin Left',
         type: SELECTION_TYPES.NUMBER,
         default: 50,
       },
       marginRight: {
-        label: 'Margin Right (px)',
+        label: 'Margin Right',
         type: SELECTION_TYPES.NUMBER,
         default: 24,
       },
       marginTop: {
-        label: 'Margin Top (px)',
+        label: 'Margin Top',
         type: SELECTION_TYPES.NUMBER,
         default: 24,
       },
       marginBottom: {
-        label: 'Margin Bottom (px)',
+        label: 'Margin Bottom',
         type: SELECTION_TYPES.NUMBER,
         default: 45,
       },
       legendWidth: {
-        label: 'Legend Width (px)',
+        label: 'Legend Width',
         type: SELECTION_TYPES.NUMBER,
         default: 128,
       },
       hideSelections: {
-        label: 'Hide Property Selection',
+        label: 'Hide Selections',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
       refreshButtonEnabled: {
-        label: 'Refreshable',
+        label: 'Refresh Button',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
       fullscreenEnabled: {
-        label: 'Fullscreen enabled',
+        label: 'Fullscreen',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
       downloadImageEnabled: {
-        label: 'Download Image enabled',
+        label: 'Download Image',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -473,9 +490,31 @@ const _REPORT_TYPES = {
         default: true,
       },
       refreshRate: {
-        label: 'Refresh rate (seconds)',
+        label: 'Refresh Rate',
         type: SELECTION_TYPES.NUMBER,
         default: '0 (No refresh)',
+      },
+      expandHeightForLegend: {
+        label: 'Expand Height For Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      innerPadding: {
+        label: 'Inner Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      legendPosition: {
+        label: 'Legend Position',
+        type: SELECTION_TYPES.LIST,
+        values: ['Horizontal', 'Vertical'],
+        default: 'Vertical',
+      },
+      padding: {
+        label: 'Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.25,
       },
     },
   },
@@ -1024,7 +1063,7 @@ const _REPORT_TYPES = {
         label: 'Seperate Overlapping Markers',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       nodeColorScheme: {
         label: 'Node Color Scheme',
@@ -1219,13 +1258,19 @@ const _REPORT_TYPES = {
     helperText:
       'This report will let users interactively select Cypher parameters that are available globally, in all reports. A parameter can either be a node property, relationship property, or a free text field.',
     component: NeoParameterSelectionChart,
-    settingsComponent: NeoCardSettingsContentPropertySelect,
+    settingsComponent: ParameterSelectCardSettings,
     disableCypherParameters: true,
     textOnly: true,
     maxRecords: 100,
     settings: {
       multiSelector: {
         label: 'Multiple Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      multiline: {
+        label: 'Multiline',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -1252,6 +1297,12 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['CONTAINS', 'STARTS WITH', 'ENDS WITH'],
         default: 'CONTAINS',
+      },
+      disabled: {
+        label: 'Disable the field',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       caseSensitive: {
         label: 'Case Sensitive Search',

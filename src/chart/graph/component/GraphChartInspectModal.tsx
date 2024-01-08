@@ -38,13 +38,14 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
       >
         <Dialog.Header id='form-dialog-title'>
           {props.interactivity.selectedEntity
-            ? getEntityHeader(props.interactivity.selectedEntity, props.engine.selection)
+            ? getEntityHeader(props.interactivity.selectedEntity, props?.engine?.selection)
             : ''}
         </Dialog.Header>
         <Dialog.Content>
           <GraphEntityInspectionTable
             entity={props.interactivity.selectedEntity}
             customTableDataSettingsForEntityType={customTableDataSettingsForEntityType}
+            theme={props.style.theme}
           ></GraphEntityInspectionTable>
         </Dialog.Content>
       </Dialog>
