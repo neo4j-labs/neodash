@@ -12,7 +12,7 @@ import NeoGanttChart from './chart/gantt/GanttChart';
 import { objectMap, objMerge } from '../../utils/ObjectManipulation';
 import { COMMON_REPORT_SETTINGS } from '../../config/ReportConfig';
 
-export const _ADVANCED_REPORT_TYPES = {
+const _ADVANCED_REPORT_TYPES = {
   gauge: {
     label: 'Gauge Chart',
     component: NeoGaugeChart,
