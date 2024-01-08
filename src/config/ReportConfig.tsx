@@ -311,6 +311,10 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      customTablePropertiesOfModal: {
+        label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
+        type: SELECTION_TYPES.DICTIONARY,
+      },
       noDataMessage: {
         label: 'Override no data message',
         type: SELECTION_TYPES.TEXT,

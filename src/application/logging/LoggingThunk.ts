@@ -33,13 +33,13 @@ export const createLogThunk =
         () => {},
         (records) => {
           if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
-            console.log(`log created: ${  uuid}`);
+            console.log(`log created: ${uuid}`);
           } else {
             // we only show error notification one time
             const state = getState();
             const loggingSettings = applicationGetLoggingSettings(state);
             let LogErrorNotificationNum = Number(loggingSettings.logErrorNotification);
-            console.log(`Error creating log for ${  (LogErrorNotificationNum - 4) * -1  } times`);
+            console.log(`Error creating log for ${(LogErrorNotificationNum - 4) * -1} times`);
             if (LogErrorNotificationNum > 0) {
               dispatch(
                 createNotificationThunk(
@@ -60,7 +60,7 @@ export const createLogThunk =
       const state = getState();
       const loggingSettings = applicationGetLoggingSettings(state);
       let LogErrorNotificationNum = Number(loggingSettings.logErrorNotification);
-      console.log(`Error creating log for ${  (LogErrorNotificationNum - 4) * -1  } times`);
+      console.log(`Error creating log for ${(LogErrorNotificationNum - 4) * -1} times`);
       if (LogErrorNotificationNum > 0) {
         dispatch(
           createNotificationThunk(

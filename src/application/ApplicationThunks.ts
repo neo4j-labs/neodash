@@ -87,10 +87,9 @@ export const createConnectionThunk =
                 'ERR - connect to DB',
                 database,
                 '',
-                `Error while trying to establish connection to Neo4j DB in ${ 
-                  neodashMode 
-                  } mode at ${ 
-                  Date(Date.now()).substring(0, 33)}`
+                `Error while trying to establish connection to Neo4j DB in ${neodashMode} mode at ${Date(
+                  Date.now()
+                ).substring(0, 33)}`
               )
             );
           }
@@ -113,11 +112,10 @@ export const createConnectionThunk =
                 'INF - connect to DB',
                 database,
                 '',
-                `${username 
-                  } established connection to Neo4j DB in ${ 
-                  neodashMode 
-                  } mode at ${ 
-                  Date(Date.now()).substring(0, 33)}`
+                `${username} established connection to Neo4j DB in ${neodashMode} mode at ${Date(Date.now()).substring(
+                  0,
+                  33
+                )}`
               )
             );
           }
