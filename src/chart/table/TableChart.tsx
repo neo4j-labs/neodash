@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
@@ -27,7 +27,7 @@ import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHe
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
-
+const HIDDEN_COLUMN_PREFIX = '__';
 const theme = createTheme({
   typography: {
     fontFamily: "'Nunito Sans', sans-serif !important",
@@ -87,10 +87,6 @@ export const NeoTableChart = (props: ChartProps) => {
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
-  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <>No data, re-run the report.</>;
-  }
-
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
   const pageSizeReducer = compact ? 3 : 1;
 
@@ -162,6 +158,17 @@ export const NeoTableChart = (props: ChartProps) => {
         );
       });
 
+  useEffect(() => {
+    const hiddenColumns = Object.assign(
+      {},
+      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
+    );
+    setColumnVisibilityModel(hiddenColumns);
+  }, [records]);
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
   const getTransposedRows = (records) => {
     // Skip first key
     const rowKeys = [...records[0].keys];
@@ -236,7 +243,7 @@ export const NeoTableChart = (props: ChartProps) => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              className='n-absolute n-z-10 n-bottom-4 n-left-1'
+              className='n-absolute n-z-10 n-bottom-7 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />

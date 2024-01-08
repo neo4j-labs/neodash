@@ -31,7 +31,15 @@ import {
   SET_STANDALONE_MODE,
   SET_WAIT_FOR_SSO,
   SET_WELCOME_SCREEN_OPEN,
+  SET_CUSTOM_HEADER,
 } from './ApplicationActions';
+import {
+  SET_LOGGING_MODE,
+  SET_LOGGING_DATABASE,
+  SET_LOG_ERROR_NOTIFICATION,
+  LOGGING_PREFIX,
+} from './logging/LoggingActions';
+import { loggingReducer, LOGGING_INITIAL_STATE } from './logging/LoggingReducer';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -57,6 +65,7 @@ const initialState = {
   dashboardToLoadAfterConnecting: null,
   waitForSSO: false,
   standalone: false,
+  logging: LOGGING_INITIAL_STATE,
 };
 export const applicationReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
@@ -82,6 +91,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
   // Ignore any non-application actions.
   if (!action.type.startsWith('APPLICATION/')) {
     return state;
+  }
+  if (action.type.startsWith(LOGGING_PREFIX)) {
+    const enrichedPayload = update(payload, { logging: state.logging });
+    const enrichedAction = { type, payload: enrichedPayload };
+    return { ...state, logging: loggingReducer(state.logging, enrichedAction) };
   }
 
   // Application state updates are handled here.
@@ -135,6 +149,21 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       state = update(state, { standalone: standalone });
       return state;
     }
+    case SET_LOGGING_MODE: {
+      const { loggingMode } = payload;
+      state = update(state, { loggingMode: loggingMode });
+      return state;
+    }
+    case SET_LOGGING_DATABASE: {
+      const { loggingDatabase } = payload;
+      state = update(state, { loggingDatabase: loggingDatabase });
+      return state;
+    }
+    case SET_LOG_ERROR_NOTIFICATION: {
+      const { logErrorNotification } = payload;
+      state = update(state, { logErrorNotification: logErrorNotification });
+      return state;
+    }
     case SET_SSO_ENABLED: {
       const { enabled, discoveryUrl } = payload;
       state = update(state, { ssoEnabled: enabled, ssoDiscoveryUrl: discoveryUrl });
@@ -167,6 +196,10 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standaloneDashboardURL,
         standaloneUsername,
         standalonePassword,
+        standaloneAllowLoad,
+        standaloneLoadFromOtherDatabases,
+        standaloneMultiDatabase,
+        standaloneDatabaseList,
       } = payload;
       state = update(state, {
         standalone: standalone,
@@ -179,6 +212,10 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
         standaloneDashboardURL: standaloneDashboardURL,
         standaloneUsername: standaloneUsername,
         standalonePassword: standalonePassword,
+        standaloneAllowLoad: standaloneAllowLoad,
+        standaloneLoadFromOtherDatabases: standaloneLoadFromOtherDatabases,
+        standaloneMultiDatabase: standaloneMultiDatabase,
+        standaloneDatabaseList: standaloneDatabaseList,
       });
       return state;
     }
@@ -268,6 +305,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
           skipConfirmation: skipConfirmation,
         },
       });
+      return state;
+    }
+    case SET_CUSTOM_HEADER: {
+      const { customHeader } = payload;
+      state = update(state, { customHeader: customHeader });
       return state;
     }
     default: {

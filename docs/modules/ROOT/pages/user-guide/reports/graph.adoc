@@ -97,10 +97,13 @@ If 0, no arrow will be drawn.
 |Background Color |Text |#fafafa |The background color of the
 visualization.
 
-|Layout (experimental) |List |force-directed |Use this to switch from
-the main (force-directed) layout to one of the two experimental layouts
-(tree/radial). For the experimental layouts, make sure your graph is a
-DAG (directed acyclic graph).
+|Layout (experimental) |List |force-directed |tree-top-down |tree-bottom-up |tree-left-right |tree-right-left |radial | Use this to switch from
+the main (force-directed) layout to one of the experimental layouts
+(tree, radial). For the experimental layouts, make sure
+your graph is a DAG (directed acyclic graph).
+
+| Graph Depth Separation | Number | 30 | Specify the level distance for the tree layout. 
+This setting controls the separation between different levels in the tree hierarchy. Adjusting this value impacts the overall spacing of the tree layout in your graph visualization.
 
 |Enable graph exploration |on/off |on |Enables basic exploration functionality for the graph. Exploration can be done by right clicking on a node, and choosing 'Expand' to choose a type to traverse. Data is retrieved real-time and not cached in the visualization.
 

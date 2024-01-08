@@ -44,6 +44,16 @@ export default function NeoConnectionModal({
 
   const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl;
 
+  // since config is loaded asynchronously, value may not be yet defined when this runs for first time
+  let standaloneDatabaseList = [standaloneSettings.standaloneDatabase];
+  try {
+    standaloneDatabaseList = standaloneSettings.standaloneDatabaseList
+      ? standaloneSettings.standaloneDatabaseList.split(',')
+      : standaloneDatabaseList;
+  } catch (e) {
+    console.log(e);
+  }
+
   return (
     <>
       <Dialog
@@ -65,8 +75,8 @@ export default function NeoConnectionModal({
               id='protocol'
               label='Protocol'
               type='select'
-              disabled={standalone}
               selectProps={{
+                isDisabled: standalone,
                 onChange: (newValue) => newValue && setProtocol(newValue.value),
                 options: protocols.map((option) => ({ label: option, value: option })),
                 value: { label: protocol, value: protocol },
@@ -131,15 +141,35 @@ export default function NeoConnectionModal({
               Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
             </div>
           ) : null}
-          <TextInput
-            id='database'
-            value={database}
-            disabled={standalone}
-            onChange={(e) => setDatabase(e.target.value)}
-            label='Database (optional)'
-            placeholder='neo4j'
-            fluid
-          />
+          {!standalone ? (
+            <TextInput
+              id='database'
+              value={database}
+              disabled={standalone}
+              onChange={(e) => setDatabase(e.target.value)}
+              label='Database (optional)'
+              placeholder='neo4j'
+              fluid
+            />
+          ) : (
+            <Dropdown
+              id='database'
+              label='Database'
+              type='select'
+              selectProps={{
+                onChange: (newValue) => {
+                  setDatabase(newValue.value);
+                },
+                options: standaloneDatabaseList.map((option) => ({
+                  label: option,
+                  value: option,
+                })),
+                value: { label: database, value: database },
+                menuPlacement: 'auto',
+              }}
+              fluid
+            ></Dropdown>
+          )}
 
           {!ssoVisible ? (
             <TextInput
@@ -223,7 +253,7 @@ export default function NeoConnectionModal({
             <div style={{ color: 'lightgrey' }}>
               {standaloneSettings.standaloneDashboardURL === '' ? (
                 <>
-                  Sign in to continue. You will be connected to Neo4j, and load a dashboard called
+                  Sign in to continue. You will be connected to Neo4j, and load a dashboard called&nbsp;
                   <b>{standaloneSettings.standaloneDashboardName}</b>.
                 </>
               ) : (
@@ -231,7 +261,7 @@ export default function NeoConnectionModal({
               )}
             </div>
           ) : (
-            <div style={{ color: 'lightgrey' }}>
+            <div style={{ color: 'white' }}>
               Enter your Neo4j database credentials to start. Don't have a Neo4j database yet? Create your own in&nbsp;
               <TextLink externalLink className='n-text-neutral-text-inverse' href='https://neo4j.com/download/'>
                 Neo4j Desktop

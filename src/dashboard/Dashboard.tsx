@@ -17,7 +17,7 @@ import NeoDashboardSidebar from './sidebar/DashboardSidebar';
 const Dashboard = ({
   pagenumber,
   connection,
-  applicationSettings,
+  standaloneSettings,
   onConnectionUpdate,
   onDownloadDashboardAsImage,
   onAboutModalOpen,
@@ -70,7 +70,11 @@ const Dashboard = ({
           position: 'relative',
         }}
       >
-        <NeoDashboardSidebar />
+        {!standaloneSettings.standalone || (standaloneSettings.standalone && standaloneSettings.standaloneAllowLoad) ? (
+          <NeoDashboardSidebar />
+        ) : (
+          <></>
+        )}
         <div className='n-w-full n-h-full n-flex n-flex-col n-items-center n-justify-center n-rounded-md'>
           <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
             {/* Main Content */}
@@ -80,7 +84,7 @@ const Dashboard = ({
                   {/* The main content of the page */}
 
                   <div>
-                    {applicationSettings.standalonePassword ? (
+                    {standaloneSettings.standalonePassword ? (
                       <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
                         Warning: NeoDash is running with a plaintext password in config.json.
                       </div>
@@ -105,7 +109,7 @@ const Dashboard = ({
 const mapStateToProps = (state) => ({
   connection: applicationGetConnection(state),
   pagenumber: getPageNumber(state),
-  applicationSettings: applicationGetStandaloneSettings(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
