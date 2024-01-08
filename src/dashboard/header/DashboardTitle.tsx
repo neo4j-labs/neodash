@@ -59,7 +59,7 @@ export const NeoDashboardTitle = ({
   }
 
   useEffect(() => {
-    document.title = dashboardTitle;
+    document.title = dashboardTitle ? `NeoDash - ${dashboardTitle}` : 'NeoDash - Neo4j Dashboard Builder';
     // Reset text to the dashboard state when the page gets reorganized.
     if (dashboardTitle !== dashboardTitleText) {
       setDashboardTitleText(dashboardTitle);
