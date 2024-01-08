@@ -36,8 +36,8 @@ export const NeoOverrideCardQueryEditor = ({
   deletePrepopulationReportFunction,
 }) => {
   enum Language {
-    ENGLISH,
-    CYPHER,
+    ENGLISH = 0,
+    CYPHER = 1,
   }
 
   const [language, setLanguage] = React.useState(Language.CYPHER);

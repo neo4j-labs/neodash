@@ -42,23 +42,23 @@ import LegacyShareModal from './modal/legacy/LegacyShareModal';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
 enum Menu {
-  DASHBOARD,
-  DATABASE,
-  CREATE,
-  NONE,
+  DASHBOARD = 0,
+  DATABASE = 1,
+  CREATE = 2,
+  NONE = 3,
 }
 
 enum Modal {
-  CREATE,
-  IMPORT,
-  EXPORT,
-  DELETE,
-  SHARE,
-  SHARE_LEGACY,
-  INFO,
-  LOAD,
-  SAVE,
-  NONE,
+  CREATE = 0,
+  IMPORT = 1,
+  EXPORT = 2,
+  DELETE = 3,
+  SHARE = 4,
+  SHARE_LEGACY = 5,
+  INFO = 6,
+  LOAD = 7,
+  SAVE = 8,
+  NONE = 9,
 }
 
 /**

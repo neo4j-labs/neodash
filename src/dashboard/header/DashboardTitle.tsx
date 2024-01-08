@@ -15,6 +15,8 @@ import { Tooltip } from '@mui/material';
 import NeoExportModal from '../../modal/ExportModal';
 import { setDraft } from '../../application/ApplicationActions';
 
+type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+
 export const NeoDashboardTitle = ({
   dashboardTitle,
   setDashboardTitle,
@@ -30,7 +32,7 @@ export const NeoDashboardTitle = ({
   const [editing, setEditing] = React.useState(false);
   const debouncedDashboardTitleUpdate = useCallback(debounce(setDashboardTitle, 250), []);
 
-  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleSettingsMenuOpen = (event: SettingsMenuOpenEvent) => {
     setAnchorEl(event.currentTarget);
   };
   const handleSettingsMenuClose = () => {
@@ -122,34 +124,10 @@ export const NeoDashboardTitle = ({
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
       {!standaloneSettings.standalone ? (
         <div className='flex flex-row flex-wrap items-center gap-2'>
-          {editable ? renderExtensionsButtons() : <></>}
+          <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
+          {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
-          <IconButton aria-label='Dashboard actions' onClick={handleSettingsMenuOpen}>
-            <EllipsisHorizontalIconOutline />
-          </IconButton>
-          <Menu
-            anchorOrigin={{
-              horizontal: 'right',
-              vertical: 'bottom',
-            }}
-            transformOrigin={{
-              horizontal: 'right',
-              vertical: 'top',
-            }}
-            anchorEl={anchorEl}
-            open={menuOpen}
-            onClose={handleSettingsMenuClose}
-            size='large'
-          >
-            <MenuItems>
-              <NeoSettingsModal
-                dashboardSettings={dashboardSettings}
-                updateDashboardSetting={updateDashboardSetting}
-              ></NeoSettingsModal>
-
-              <NeoExportModal />
-            </MenuItems>
-          </Menu>
+          {editable ? renderExtensionsButtons() : <></>}
         </div>
       ) : (
         <></>

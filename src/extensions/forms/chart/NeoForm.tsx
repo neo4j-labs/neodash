@@ -9,10 +9,10 @@ import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import NeoParameterSelectionChart from '../../../chart/parameter/ParameterSelectionChart';
 
 enum FormStatus {
-  DATA_ENTRY, // The user is filling in the form.
-  RUNNING, // The form is running.
-  SUBMITTED, // The form was successfully submitted.
-  ERROR, // Submitting the form has failed.
+  DATA_ENTRY = 0, // The user is filling in the form.
+  RUNNING = 1, // The form is running.
+  SUBMITTED = 2, // The form was successfully submitted.
+  ERROR = 3, // Submitting the form has failed.
 }
 
 /**
