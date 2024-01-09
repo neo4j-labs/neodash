@@ -134,7 +134,6 @@ const NeoGraphChart = (props: GraphChartProps) => {
   });
 
   const pageNames = getPageNumbersAndNamesList();
-
   const chartProps: GraphChartVisualizationProps = {
     data: {
       nodes: data.nodes,
@@ -151,12 +150,12 @@ const NeoGraphChart = (props: GraphChartProps) => {
     style: {
       width: width,
       height: height,
-      backgroundColor: settings.backgroundColor,
+      backgroundColor: theme == 'dark' && settings.backgroundColor == '#fafafa' ? '#040404' : settings.backgroundColor, // Temporary fix for default color adjustment in dark mode
       linkDirectionalParticles: linkDirectionalParticles,
       linkDirectionalArrowLength: arrowLengthProp,
       linkDirectionalParticleSpeed: settings.linkDirectionalParticleSpeed,
       nodeLabelFontSize: settings.nodeLabelFontSize,
-      nodeLabelColor: settings.nodeLabelColor,
+      nodeLabelColor: theme == 'dark' && settings.nodeLabelColor == 'black' ? 'white' : settings.nodeLabelColor, // Temporary fix for default color adjustment in dark mode
       relLabelFontSize: settings.relLabelFontSize,
       relLabelColor: settings.relLabelColor,
       defaultNodeSize: settings.defaultNodeSize,

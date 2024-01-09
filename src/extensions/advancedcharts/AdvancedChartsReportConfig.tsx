@@ -10,8 +10,10 @@ import NeoRadarChart from './chart/radar/RadarChart';
 import NeoAreaMapChart from './chart/areamap/AreaMapChart';
 import NeoGanttChart from './chart/gantt/GanttChart';
 import NeoGraphChart3D from './chart/graph3d/GraphChart3D';
+import { objectMap, objMerge } from '../../utils/ObjectManipulation';
+import { COMMON_REPORT_SETTINGS } from '../../config/ReportConfig';
 
-export const ADVANCED_REPORT_TYPES = {
+export const _ADVANCED_REPORT_TYPES = {
   graph3d: {
     label: '3D Graph',
     helperText:
@@ -172,39 +174,11 @@ export const ADVANCED_REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
       rightClickToExpandNodes: {
         label: 'Right Click to Expand Nodes',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
-      },
-      noDataMessage: {
-        label: 'Override no data message',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Query returned no data.',
       },
     },
   },
@@ -285,40 +259,6 @@ export const ADVANCED_REPORT_TYPES = {
         label: 'Margin Bottom (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 40,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
       },
     },
   },
@@ -413,40 +353,6 @@ export const ADVANCED_REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   circlePacking: {
@@ -524,40 +430,6 @@ export const ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 40,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   treeMap: {
@@ -628,40 +500,6 @@ export const ADVANCED_REPORT_TYPES = {
         label: 'Margin Bottom (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 40,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
       },
     },
   },
@@ -764,40 +602,6 @@ export const ADVANCED_REPORT_TYPES = {
         label: 'Spacing between nodes at an identical level (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 18,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
       },
     },
   },
@@ -902,40 +706,6 @@ export const ADVANCED_REPORT_TYPES = {
         label: 'Tooltip Property',
         type: SELECTION_TYPES.TEXT,
         default: 'properties.name',
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
       },
     },
   },
@@ -1068,40 +838,6 @@ export const ADVANCED_REPORT_TYPES = {
         values: ['basicClosed', 'cardinalClosed', 'catmullRomClosed', 'linearClosed'],
         default: 'linearClosed',
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   //
@@ -1163,40 +899,6 @@ export const ADVANCED_REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      description: {
-        label: 'Report Description',
-        type: SELECTION_TYPES.MULTILINE_TEXT,
-        default: 'Enter markdown here...',
-      },
     },
   },
   gantt: {
@@ -1250,23 +952,10 @@ export const ADVANCED_REPORT_TYPES = {
         values: ['auto', 'Half Day', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
         default: 'auto',
       },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
     },
   },
 };
+
+export const ADVANCED_REPORT_TYPES = objectMap(_ADVANCED_REPORT_TYPES, (value: any) => {
+  return objMerge({ settings: COMMON_REPORT_SETTINGS }, value);
+});

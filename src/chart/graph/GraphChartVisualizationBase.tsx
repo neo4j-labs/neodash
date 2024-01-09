@@ -3,10 +3,6 @@ import { executeActionRule, getRuleWithFieldPropertyName } from '../../extension
 import { getTooltip } from './component/GraphChartTooltip';
 import { GraphChartVisualizationProps } from './GraphChartVisualization';
 
-/*
- * TODO: check if makes sense to change zoom logic from panning to buttons
- * (when i scroll the graphCharts has the priority )
- */
 export const NeoGraphChartVisualizationBase = (props: GraphChartVisualizationProps) => {
   const fgRef: React.MutableRefObject<any> = useRef();
   const GraphComponent = props.config?.graphComponent;

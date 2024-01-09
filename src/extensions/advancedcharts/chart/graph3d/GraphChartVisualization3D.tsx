@@ -62,19 +62,6 @@ export const NeoGraphChartVisualization3D = (props: GraphChartVisualizationProps
           const translated = { x: middle.x + vector.x, y: middle.y + vector.y, z: middle.z + vector.z };
           Object.assign(sprite.position, translated);
         }
-        // TODO: rotation... aim the 2D sprite along the rel's direction... currently not working.
-        // const camera = ref.current.camera();
-        // var endProj = new THREE.Vector3(end.x, end.y, end.z).project(camera);
-        // var startProj = new THREE.Vector3(start.x, start.y, start.z).project(camera);
-        // const vector = new THREE.Vector2(endProj.x, endProj.y).sub(startProj);
-        // var angle = - new THREE.Vector2(startProj.x + 1, 0).angleTo(vector);
-        // if (startProj.y < endProj.y) {
-        //   angle = Math.PI * 2 - angle;
-        // }
-        // if (startProj.x > endProj.x) {
-        //   angle += Math.PI;
-        // }
-        // sprite.material.rotation = angle;
       } else {
         // If this is a relationship with an identical start and end node...
         const vector = { x: 26 * link.curvature, y: 26 * link.curvature, z: 0 };
