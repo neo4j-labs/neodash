@@ -1070,6 +1070,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      autoSelectFirstValue: {
+        label: 'Auto-select first value on no selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       manualPropertyNameSpecification: {
         label: 'Manual Label/Property Name Specification',
         type: SELECTION_TYPES.LIST,
