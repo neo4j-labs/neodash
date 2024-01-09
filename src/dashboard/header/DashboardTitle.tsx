@@ -7,7 +7,12 @@ import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from 
 import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
-import { CheckBadgeIconOutline, EllipsisHorizontalIconOutline, PencilSquareIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  CheckBadgeIconOutline,
+  CheckIconOutline,
+  EllipsisHorizontalIconOutline,
+  PencilSquareIconOutline,
+} from '@neo4j-ndl/react/icons';
 import NeoSettingsModal from '../../settings/SettingsModal';
 import NeoExtensionsModal from '../../extensions/ExtensionsModal';
 import { EXTENSIONS_DRAWER_BUTTONS } from '../../extensions/ExtensionConfig';
@@ -31,7 +36,7 @@ export const NeoDashboardTitle = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [editing, setEditing] = React.useState(false);
   const debouncedDashboardTitleUpdate = useCallback(debounce(setDashboardTitle, 250), []);
-
+  const [inputWidth, setInputWidth] = React.useState(350);
   const handleSettingsMenuOpen = (event: SettingsMenuOpenEvent) => {
     setAnchorEl(event.currentTarget);
   };
@@ -70,21 +75,40 @@ export const NeoDashboardTitle = ({
       {/* only allow edit title if dashboard is not standalone - here we are in Title edit mode*/}
       {editing && !standaloneSettings.standalone ? (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
-          <TextInput
-            autoFocus={true}
-            value={dashboardTitleText}
-            style={{
-              textAlign: 'center',
-              height: '1.9rem',
-            }}
-            placeholder='Dashboard name...'
-            onChange={(event) => {
-              if (editable) {
-                setDashboardTitleText(event.target.value);
-                debouncedDashboardTitleUpdate(event.target.value);
+          <form
+            onSubmit={() => {
+              if (editing) {
+                setEditing(false);
               }
             }}
-          />
+          >
+            <input
+              autoFocus={true}
+              value={dashboardTitleText}
+              style={{
+                height: '1.9rem',
+                fontSize: '1.875rem', // h3
+                fontWeight: 700, // h3
+                padding: 10,
+                width: inputWidth,
+              }}
+              placeholder='Dashboard name...'
+              onBlur={() => {
+                if (editing) {
+                  setEditing(false);
+                }
+              }}
+              onChange={(event) => {
+                if (editable) {
+                  const {target} = event;
+                  target.style.width = '350px';
+                  setInputWidth(target.scrollWidth);
+                  setDashboardTitleText(event.target.value);
+                  debouncedDashboardTitleUpdate(event.target.value);
+                }
+              }}
+            />
+          </form>
           <Tooltip title={'Stop Editing'} disableInteractive>
             <IconButton
               className='logo-btn n-p-1'
@@ -93,7 +117,7 @@ export const NeoDashboardTitle = ({
               onClick={() => setEditing(false)}
               clean
             >
-              <CheckBadgeIconOutline className='header-icon' type='outline' />
+              <CheckIconOutline className='header-icon' type='outline' />
             </IconButton>
           </Tooltip>
         </div>
