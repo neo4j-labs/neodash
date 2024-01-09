@@ -201,7 +201,7 @@ export const NeoCustomReportActionsModal = ({
     if (!fields) {
       return [];
     }
-    if (type == 'graph' || type == 'map' || type == 'gantt') {
+    if (type == 'graph' || type == 'map' || type == 'gantt' || type == 'graph3d') {
       return fields
         .map((node, index) => {
           if (!Array.isArray(node)) {

@@ -186,7 +186,7 @@ export const NeoCustomReportStyleModal = ({
     if (!schema && !fields) {
       return [];
     }
-    if (type == 'graph' || type == 'map' || type == 'gantt') {
+    if (type == 'graph' || type == 'map' || type == 'gantt' || type == 'graph3d') {
       return schema
         .map((node, index) => {
           if (!Array.isArray(node)) {
@@ -227,7 +227,7 @@ export const NeoCustomReportStyleModal = ({
               Style rules are checked in-order and override the default behaviour - if no rules are valid, no style is
               applied.
               <br />
-              {type == 'graph' || type == 'map' || type == 'gantt' ? (
+              {type == 'graph' || type == 'map' || type == 'gantt' || type == 'graph3d' ? (
                 <p>
                   For <b>{type}</b> reports, the field name should be specified in the format <code>label.name</code>,
                   for example: <code>Person.age</code>. This is case-sensitive.
