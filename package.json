@@ -98,7 +98,8 @@
     "reselect": "^4.1.8",
     "tailwindcss": "^3.3.2",
     "use-neo4j": "^0.3.13",
-    "yaml": "^2.2.1"
+    "yaml": "^2.2.1",
+    "yarn": "^1.22.21"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
