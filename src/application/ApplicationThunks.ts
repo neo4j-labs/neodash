@@ -271,7 +271,6 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         if (url == password) {
           // Special case where a connect link is generated without a password.
           // Here, the format is parsed incorrectly and we open the connection window instead.
-
           dispatch(resetShareDetails());
           dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
           dispatch(setWelcomeScreenOpen(false));
@@ -648,4 +647,5 @@ export const initializeApplicationAsStandaloneThunk =
     } else {
       dispatch(setConnectionModalOpen(true));
     }
+    dispatch(handleSharedDashboardsThunk());
   };
