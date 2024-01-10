@@ -111,10 +111,9 @@ const NeoBarChart = (props: ChartProps) => {
     if (legendPosition === 'Horizontal') {
       // Calculate margin based on whether the legend is shown
       return showLegend ? legendWidth * 0.3 + marginBottom + 50 : legendWidth * 0.3 + marginBottom;
-    } 
-      // Return the default marginBottom if legendPosition is not 'Horizontal'
-      return marginBottom;
-    
+    }
+    // Return the default marginBottom if legendPosition is not 'Horizontal'
+    return marginBottom;
   }
 
   // Using the function in your code
@@ -316,33 +315,32 @@ const NeoBarChart = (props: ChartProps) => {
           ],
         },
       ];
-    } 
-      // Vertical legend
-      return [
-        {
-          dataFrom: 'keys',
-          anchor: 'bottom-right',
-          direction: 'column',
-          justify: false,
-          translateX: legendWidth + 10,
-          translateY: 0,
-          itemsSpacing: 1,
-          itemWidth: legendWidth,
-          itemHeight: 20,
-          itemDirection: 'left-to-right',
-          itemOpacity: 0.85,
-          symbolSize: 15,
-          effects: [
-            {
-              on: 'hover',
-              style: {
-                itemOpacity: 1,
-              },
+    }
+    // Vertical legend
+    return [
+      {
+        dataFrom: 'keys',
+        anchor: 'bottom-right',
+        direction: 'column',
+        justify: false,
+        translateX: legendWidth + 10,
+        translateY: 0,
+        itemsSpacing: 1,
+        itemWidth: legendWidth,
+        itemHeight: 20,
+        itemDirection: 'left-to-right',
+        itemOpacity: 0.85,
+        symbolSize: 15,
+        effects: [
+          {
+            on: 'hover',
+            style: {
+              itemOpacity: 1,
             },
-          ],
-        },
-      ];
-    
+          },
+        ],
+      },
+    ];
   };
 
   // Height of each legend item

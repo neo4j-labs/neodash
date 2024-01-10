@@ -11,7 +11,7 @@ export function getOriginalRecordForNivoClickEvent(e, records, selection) {
   // TODO - rewrite this to be more optimal (using list comprehensions, etc.)
   const usesGroups = Object.keys(e.data).length > 2;
   const group = e.id;
-  const {value} = e;
+  const { value } = e;
   const category = e.indexValue;
 
   // Go through all records and find the first record `r` where the event's values match exactly.
@@ -34,12 +34,12 @@ export function getOriginalRecordForNivoClickEvent(e, records, selection) {
         return dict;
       }
     } else if (recordCategory == category && recordValue == value) {
-        const dict = {};
-        for (const i in Object.keys(r._fieldLookup)) {
-          const key = Object.keys(r._fieldLookup)[i];
-          dict[key] = r._fields[r._fieldLookup[key]];
-        }
-        return dict;
+      const dict = {};
+      for (const i in Object.keys(r._fieldLookup)) {
+        const key = Object.keys(r._fieldLookup)[i];
+        dict[key] = r._fields[r._fieldLookup[key]];
       }
+      return dict;
+    }
   }
 }
