@@ -84,7 +84,7 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
                 }
               }}
               onChange={(event) => {
-                const {target} = event;
+                const { target } = event;
                 target.style.width = '125px';
                 setInputWidth(target.scrollWidth);
 

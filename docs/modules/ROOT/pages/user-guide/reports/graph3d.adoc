@@ -1,18 +1,9 @@
-= Graph
+= 3D Graph
 
-The graph report will render all returned nodes, relationships and paths
-in a force-directed graph layout. This includes collections (lists) of
-these objects.
+link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
-The library `react-force-graph` is used to create the visualizations.
-Depending on your browser, the visualization should be able to handle
-drawing 1000-3000 nodes/relationships with custom styling options.
-
-The graph layout contains an extensive set of features, including:
-
-- Drag and drop nodes. 
-- Custom node/relationship styling. 
-- Tooltips/inspect window on nodes/relationships.
+The 3D graph report extends the default graph visualization with another dimensions.
+It supports ~95% of the features & customizations for the regular (2D) graph, including rule-based styling and report actions.
 
 == Examples
 
@@ -24,7 +15,7 @@ WHERE m.title = 'The Matrix'
 RETURN p, a, m
 ....
 
-image::graph.png[Basic Graph]
+image::graph3d.png[Basic 3D Graph]
 
 == Virtual Graph
 
@@ -34,7 +25,7 @@ WHERE m.title = "The Matrix"
 RETURN p, p2, apoc.create.vRelationship(p, "KNOWS", {}, p2)
 ....
 
-image::graph2.png[Virtual Graph]
+image::graph3dvirtual.png[Virtual 3D Graph]
 
 == Advanced Settings
 
@@ -117,9 +108,6 @@ The pop-up contains the label and properties of the node/relationship.
 when a user clicks on one of the nodes/relationships in the
 visualization. The window contains the label and properties of the
 node/relationship.
-
-|Fix node positions after drag |on/off |on |If enabled, locks in
-(freezes) the node positions after a user drags them.
 
 |Drilldown Link |Text (URL) |(no value) |Specifying a URL here will
 display a floating button on the top right of the visualization. This

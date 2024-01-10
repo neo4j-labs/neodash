@@ -100,7 +100,7 @@ export const NeoDashboardTitle = ({
               }}
               onChange={(event) => {
                 if (editable) {
-                  const {target} = event;
+                  const { target } = event;
                   target.style.width = '350px';
                   setInputWidth(target.scrollWidth);
                   setDashboardTitleText(event.target.value);
