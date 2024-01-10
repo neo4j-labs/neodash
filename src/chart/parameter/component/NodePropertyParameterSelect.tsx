@@ -198,9 +198,9 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
           if (autoSelectFirstValue && paramValueDisplayLocal == '') {
             debouncedQueryCallback(props.query, { input: '', ...allParameters }, (records) => {
               if (records && records.length > 0 && records[0] && records[0]._fields) {
-                const display = records.sort()[0]._fields[displayValueRowIndex];
+                const values = records?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort();
                 setExtraRecords(records);
-                propagateSelection(undefined, display);
+                propagateSelection(undefined, values[0]);
               }
             });
           }
