@@ -112,8 +112,7 @@ export const NeoTableChart = (props: ChartProps) => {
     return key != 'id' ? key : `${key} `;
   };
 
-  const actionableFields = actionsRules.map((r) => r.field);
-
+  const actionableFields = actionsRules.filter((r) => r.condition !== 'rowCheck').map((r) => r.field);
   const columns = transposed
     ? [records[0].keys[0]].concat(records.map((record) => record._fields[0]?.toString() || '')).map((key, i) => {
         const uniqueKey = `${String(key)}_${i}`;
@@ -131,7 +130,9 @@ export const NeoTableChart = (props: ChartProps) => {
           actionableFields.includes(key)
         );
       })
-    : records[0].keys.map((key, i) => {
+    : records[0] &&
+      records[0].keys &&
+      records[0].keys.map((key, i) => {
         const value = records[0].get(key);
         if (columnWidthsType == 'Relative (%)') {
           return ApplyColumnType(
