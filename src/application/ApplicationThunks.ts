@@ -664,4 +664,5 @@ export const initializeApplicationAsStandaloneThunk =
     } else {
       dispatch(setConnectionModalOpen(true));
     }
+    dispatch(handleSharedDashboardsThunk());
   };

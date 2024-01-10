@@ -5,12 +5,12 @@ import { Button, Dialog } from '@neo4j-ndl/react';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
-export const NeoDashboardSidebarSaveModal = ({ open, onConfirm, handleClose }) => {
+export const NeoDashboardSidebarSaveModal = ({ open, onConfirm, handleClose, overwrite }) => {
   return (
     <Dialog size='small' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
       <Dialog.Header id='form-dialog-title'>Save to Neo4j</Dialog.Header>
       <Dialog.Content>
-        This will save your current draft as a node to your Neo4j database.
+        This will <b>{overwrite ? 'overwrite' : 'save'}</b> your current draft as a node in your Neo4j database.
         <br />
         Ensure you have write permissions to the database to use this feature.
       </Dialog.Content>

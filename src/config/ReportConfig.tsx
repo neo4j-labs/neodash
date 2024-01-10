@@ -63,40 +63,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
-      noDataMessage: {
-        label: 'Override no data message',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Query returned no data.',
-      },
     },
   },
   graph: {
@@ -214,7 +180,7 @@ const _REPORT_TYPES = {
       graphDepthSep: {
         label: 'Tree layout level distance',
         type: SELECTION_TYPES.NUMBER,
-        default: '30',
+        default: 30,
       },
       enableExploration: {
         label: 'Enable graph exploration',
@@ -249,7 +215,7 @@ const _REPORT_TYPES = {
       drilldownLink: {
         label: 'Drilldown Icon Link',
         type: SELECTION_TYPES.TEXT,
-        placeholder: 'http://bloom.neo4j.io',
+        placeholder: 'https://bloom.neo4j.io',
         default: '',
       },
       allowDownload: {
@@ -264,32 +230,8 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       lockable: {
         label: 'Enable locking node positions',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      autorun: {
-        label: 'Auto-run query',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
@@ -300,21 +242,11 @@ const _REPORT_TYPES = {
         placeholder: '{label : url}',
         default: '',
       },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
       rightClickToExpandNodes: {
         label: 'Right Click to Expand Nodes',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
-      },
-      noDataMessage: {
-        label: 'Override no data message',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Query returned no data.',
       },
     },
   },
@@ -460,35 +392,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
-      },
-      refreshButtonEnabled: {
-        label: 'Refresh Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh Rate',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
       },
       expandHeightForLegend: {
         label: 'Expand Height For Legend',
@@ -642,41 +545,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 50,
       },
-      hideSelections: {
-        label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
     },
   },
   line: {
@@ -825,35 +693,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
     },
   },
   // TODO - move to advanced visualization.
@@ -1000,40 +839,6 @@ const _REPORT_TYPES = {
   //       values: [true, false],
   //       default: false,
   //     },
-  //     refreshButtonEnabled: {
-  //       label: 'Refreshable',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     fullscreenEnabled: {
-  //       label: 'Fullscreen enabled',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     downloadImageEnabled: {
-  //       label: 'Download Image enabled',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: false,
-  //     },
-  //     autorun: {
-  //       label: 'Auto-run query',
-  //       type: SELECTION_TYPES.LIST,
-  //       values: [true, false],
-  //       default: true,
-  //     },
-  //     refreshRate: {
-  //       label: 'Refresh rate (seconds)',
-  //       type: SELECTION_TYPES.NUMBER,
-  //       default: '0 (No refresh)',
-  //     },
-  //     description: {
-  //       label: 'Report Description',
-  //       type: SELECTION_TYPES.MULTILINE_TEXT,
-  //       default: 'Enter markdown here...',
-  //     },
   //   },
   // },
   map: {
@@ -1132,12 +937,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
     },
   },
   value: {
@@ -1180,35 +979,6 @@ const _REPORT_TYPES = {
         values: ['bottom', 'middle', 'top'],
         default: 'top',
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
-      },
     },
   },
   json: {
@@ -1223,35 +993,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: ['json', 'yml'],
         default: 'json',
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
       },
     },
   },
@@ -1355,12 +1096,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 1000,
       },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
     },
   },
   iframe: {
@@ -1386,12 +1121,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
     },
   },
   text: {
@@ -1409,18 +1138,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: true,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
       },
     },
   },
@@ -1443,6 +1160,40 @@ export const COMMON_REPORT_SETTINGS = {
     values: [true, false],
     default: false,
     refresh: true,
+  },
+  refreshButtonEnabled: {
+    label: 'Refreshable',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+  fullscreenEnabled: {
+    label: 'Fullscreen enabled',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+  downloadImageEnabled: {
+    label: 'Download Image enabled',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+  autorun: {
+    label: 'Auto-run query',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: true,
+  },
+  refreshRate: {
+    label: 'Refresh rate (seconds)',
+    type: SELECTION_TYPES.NUMBER,
+    default: '0 (No refresh)',
+  },
+  noDataMessage: {
+    label: 'Override no data message',
+    type: SELECTION_TYPES.TEXT,
+    default: 'Query returned no data.',
   },
 };
 
