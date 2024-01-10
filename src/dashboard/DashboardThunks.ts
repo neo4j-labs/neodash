@@ -502,7 +502,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
     runCypherQuery(
       driver,
       database,
-      'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC',
+      'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY toLower(n.title) ASC',
       {},
       1000,
       (status) => setStatus(status),
