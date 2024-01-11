@@ -95,7 +95,8 @@
 }
 
 .react-resizable-handle {
-  bottom: 1px !important;
+  bottom: 4px !important;
+  right: -2px !important;
   opacity: 0.5;
   color: rgb(222, 222, 222);
 }
@@ -216,7 +217,7 @@
 }
 
 .card-view .MuiTablePagination-root {
-  margin-top: -40px;
+  margin-top: 0px;
 
 }
 
