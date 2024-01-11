@@ -1,12 +1,12 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
+import { Button, Dialog, TextLink } from '@neo4j-ndl/react';
+import {
+  BoltIconSolid,
+  ExclamationTriangleIconSolid,
+  BackspaceIconOutline,
+  PlayIconSolid,
+} from '@neo4j-ndl/react/icons';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -37,15 +37,13 @@ export const NeoWelcomeScreenModal = ({
 
   return (
     <div>
-      <Dialog maxWidth='xs' open={welcomeScreenOpen == true} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>
+      <Dialog size='small' open={welcomeScreenOpen} aria-labelledby='form-dialog-title' disableCloseButton>
+        <Dialog.Header id='form-dialog-title'>
           NeoDash - Neo4j Dashboard Builder
-          <IconButton disabled style={{ color: 'white', padding: '5px', float: 'right' }}>
-            ⚡
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Tooltip title='Connect to Neo4j and create a new dashboard.' aria-label=''>
+          <BoltIconSolid className='icon-base' color='gold' style={{ float: 'right' }} />
+        </Dialog.Header>
+        <Dialog.Content>
+          <Tooltip title='Connect to Neo4j and create a new dashboard.' aria-label='create' disableInteractive>
             <Button
               onClick={() => {
                 if (hasCachedDashboard) {
@@ -56,31 +54,25 @@ export const NeoWelcomeScreenModal = ({
                   handleClose();
                 }
               }}
-              style={{ marginTop: '10px', width: '100%', backgroundColor: 'white' }}
-              color='default'
-              variant='contained'
+              style={{ marginTop: '10px', width: '100%' }}
+              fill='outlined'
+              color='primary'
               size='large'
             >
               New Dashboard
             </Button>
           </Tooltip>
 
-          <Tooltip title='Load the existing dashboard from cache (if it exists).' aria-label=''>
+          <Tooltip title='Load the existing dashboard from cache (if it exists).' aria-label='load' disableInteractive>
             {hasCachedDashboard ? (
               <Button
                 onClick={() => {
                   handleClose();
                   onConnectionModalOpen();
                 }}
-                style={{
-                  marginTop: '10px',
-                  width: '100%',
-                  backgroundColor: 'white',
-                  boxShadow:
-                    '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-                }}
-                color='default'
-                variant='contained'
+                style={{ marginTop: '10px', width: '100%' }}
+                fill='outlined'
+                color='primary'
                 size='large'
               >
                 Existing Dashboard
@@ -88,15 +80,9 @@ export const NeoWelcomeScreenModal = ({
             ) : (
               <Button
                 disabled
-                style={{
-                  marginTop: '10px',
-                  width: '100%',
-                  backgroundColor: 'white',
-                  boxShadow:
-                    '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-                }}
-                color='default'
-                variant='contained'
+                style={{ marginTop: '10px', width: '100%' }}
+                fill='outlined'
+                color='neutral'
                 size='large'
               >
                 Existing Dashboard
@@ -104,21 +90,15 @@ export const NeoWelcomeScreenModal = ({
             )}
           </Tooltip>
           {hasNeo4jDesktopConnection ? (
-            <Tooltip title='Connect to an active database in Neo4j Desktop.' aria-label=''>
+            <Tooltip title='Connect to an active database in Neo4j Desktop.' aria-label='connect' disableInteractive>
               <Button
                 onClick={() => {
                   handleClose();
                   createConnectionFromDesktopIntegration();
                 }}
-                style={{
-                  marginTop: '10px',
-                  width: '100%',
-                  backgroundColor: 'white',
-                  boxShadow:
-                    '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-                }}
-                color='default'
-                variant='contained'
+                style={{ marginTop: '10px', width: '100%' }}
+                fill='outlined'
+                color='neutral'
                 size='large'
               >
                 Connect to Neo4j Desktop
@@ -128,131 +108,101 @@ export const NeoWelcomeScreenModal = ({
             <Button
               disabled
               onClick={handleClose}
-              style={{
-                marginTop: '10px',
-                width: '100%',
-                backgroundColor: 'white',
-                boxShadow:
-                  '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-              }}
-              color='default'
-              variant='contained'
+              style={{ marginTop: '10px', width: '100%' }}
+              fill='outlined'
+              color='neutral'
               size='large'
             >
               Connect to Neo4j Desktop
             </Button>
           )}
 
-          <Tooltip title='View a gallery of live examples.' aria-label=''>
-            <a style={{ textDecoration: 'none' }} target='_blank' href='https://neodash-gallery.graphapp.io'>
-              <Button
-                style={{
-                  marginTop: '10px',
-                  width: '100%',
-                  backgroundColor: 'white',
-                  boxShadow:
-                    '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-                }}
-                color='default'
-                variant='contained'
-                size='large'
-              >
-                Examples
-              </Button>
-            </a>
+          <Tooltip title='View a gallery of live examples.' aria-label='demo' disableInteractive>
+            <Button
+              target='_blank'
+              href='https://neodash-gallery.graphapp.io'
+              style={{ marginTop: '10px', width: '100%' }}
+              fill='outlined'
+              color='neutral'
+              size='large'
+            >
+              Try a Demo
+            </Button>
           </Tooltip>
 
-          <Tooltip title='Show information about this application.' aria-label=''>
+          <Tooltip title='Show information about this application.' aria-label='' disableInteractive>
             <Button
               onClick={onAboutModalOpen}
-              style={{
-                marginTop: '10px',
-                width: '100%',
-                backgroundColor: 'white',
-                boxShadow:
-                  '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-              }}
-              color='default'
-              variant='contained'
+              style={{ marginTop: '10px', width: '100%' }}
+              fill='outlined'
+              color='neutral'
               size='large'
             >
               {/**/}
               About
             </Button>
           </Tooltip>
-
-          <br />
-          <IconButton aria-label='delete'></IconButton>
-        </DialogContent>
-        <DialogActions style={{ background: '#555' }}>
-          <DialogContent>
-            <DialogContentText style={{ color: 'lightgrey' }}>
-              NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated
-              solution?{' '}
-              <a style={{ color: 'white' }} href='https://neo4j.com/professional-services/'>
-                Get in touch
-              </a>
-              !
-            </DialogContentText>
-          </DialogContent>
-        </DialogActions>
+        </Dialog.Content>
+        <Dialog.Actions
+          style={{
+            background: '#555',
+            marginLeft: '-3rem',
+            marginRight: '-3rem',
+            marginBottom: '-3rem',
+            padding: '3rem',
+          }}
+        >
+          <div style={{ color: 'white' }}>
+            NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated solution?{' '}
+            <TextLink
+              href='https://neo4j.com/professional-services/'
+              className='n-text-neutral-text-inverse'
+              target='_blank'
+              style={{ color: 'white' }}
+            >
+              Get in touch
+            </TextLink>
+            !
+          </div>
+        </Dialog.Actions>
       </Dialog>
 
       {/* Prompt when creating new dashboard with existing cache */}
-      <Dialog maxWidth='xs' open={promptOpen == true} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>
-          Create new dashboard
-          <IconButton disabled style={{ color: 'white', padding: '5px', float: 'right' }}>
-            ⚠️
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
+      <Dialog size='small' open={promptOpen == true} aria-labelledby='form-dialog-title'>
+        <Dialog.Header id='form-dialog-title'>
+          Create New Dashboard
+          {/* <ExclamationTriangleIconSolid className='icon-base' color='orange' style={{ float: 'right' }} /> */}
+        </Dialog.Header>
+        <Dialog.Content>
           Are you sure you want to create a new dashboard? This will remove your currently cached dashboard.
-        </DialogContent>
-        <DialogActions style={{ background: 'white' }}>
-          <DialogContent>
-            <DialogContentText style={{ color: 'black' }}>
-              <Button
-                onClick={() => {
-                  handleOpen();
-                  handlePromptClose();
-                }}
-                style={{
-                  marginTop: '10px',
-                  float: 'right',
-                  backgroundColor: 'white',
-                  boxShadow:
-                    '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-                }}
-                color='default'
-                variant='contained'
-                size='large'
-              >
-                No
-              </Button>
-              <Button
-                onClick={() => {
-                  handleClose();
-                  handlePromptClose();
-                  resetDashboard();
-                  onConnectionModalOpen();
-                }}
-                style={{
-                  marginTop: '10px',
-                  float: 'right',
-                  backgroundColor: 'white',
-                  boxShadow:
-                    '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-                }}
-                color='default'
-                variant='contained'
-                size='large'
-              >
-                Yes
-              </Button>
-            </DialogContentText>
-          </DialogContent>
-        </DialogActions>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button
+            onClick={() => {
+              handleOpen();
+              handlePromptClose();
+            }}
+            style={{ marginTop: '10px', float: 'right' }}
+            color='primary'
+            fill='outlined'
+          >
+            <BackspaceIconOutline className='btn-icon-base-l' />
+            No
+          </Button>
+          <Button
+            onClick={() => {
+              handleClose();
+              handlePromptClose();
+              resetDashboard();
+              onConnectionModalOpen();
+            }}
+            style={{ marginTop: '10px', float: 'right', marginRight: '5px' }}
+            color='primary'
+          >
+            Yes
+            <PlayIconSolid className='btn-icon-base-r' />
+          </Button>
+        </Dialog.Actions>
       </Dialog>
     </div>
   );

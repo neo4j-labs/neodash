@@ -1,5 +1,5 @@
+import { tokens } from '@neo4j-ndl/base';
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
-
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;
@@ -84,3 +84,100 @@ export const flatten = (data) =>
     }
     return [...acc, item];
   }, []);
+
+export const rgbaToHex = (color: string): string => {
+  let rgba;
+  if (/^rgb/.test(color)) {
+    rgba = color.replace(/^rgba?\(|\s+|\)$/g, '').split(',');
+  } else {
+    rgba = color.split(',');
+  }
+
+  if (rgba) {
+    // rgb to hex
+    // eslint-disable-next-line no-bitwise
+    let hex = `#${((1 << 24) + (parseInt(rgba[0], 10) << 16) + (parseInt(rgba[1], 10) << 8) + parseInt(rgba[2], 10))
+      .toString(16)
+      .slice(1)}`;
+
+    // added alpha param if exists
+    if (rgba[4]) {
+      const alpha = Math.round(0o1 * 255);
+      const hexAlpha = (alpha + 0x10000).toString(16).substr(-2).toUpperCase();
+      hex += hexAlpha;
+    }
+
+    return hex;
+  }
+  return color;
+};
+
+export enum EntityType {
+  Node,
+  Relationship,
+}
+
+export const themeNivo = {
+  textColor: 'rgb(var(--palette-neutral-text-default))',
+  text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  axis: {
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    legend: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+  },
+  legends: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+    title: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    hidden: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+  },
+  markers: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  labels: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  annotations: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  tooltip: {
+    container: {
+      fill: 'rgb(var(--palette-neutral-text-default))',
+      background: 'rgb(var(--palette-neutral-bg-strong))',
+    },
+  },
+};
+
+export const themeNivoCanvas = (theme) => {
+  let baseDefault =
+    theme === 'light' ? tokens.palette.light.neutral.text.default : tokens.palette.dark.neutral.text.default;
+  let baseWeak = theme === 'light' ? tokens.palette.light.neutral.text.weak : tokens.palette.dark.neutral.text.weak;
+  return {
+    // textColor: 'rgb(var(--palette-neutral-text-default))',
+    text: { fill: baseDefault },
+    axis: {
+      ticks: { text: { fill: baseDefault } },
+      legend: { text: { fill: baseDefault } },
+    },
+    legends: {
+      text: { fill: baseWeak },
+      title: { text: { fill: baseWeak } },
+      ticks: { text: { fill: baseWeak } },
+      hidden: { text: { fill: baseWeak } },
+    },
+    markers: {
+      text: { fill: baseDefault },
+    },
+    labels: {
+      text: { fill: baseDefault },
+    },
+    annotations: {
+      text: { fill: baseDefault },
+    },
+    tooltip: {
+      container: {
+        fill: 'rgb(var(--palette-neutral-text-default))',
+        background: 'rgb(var(--palette-neutral-bg-strong))',
+      },
+    },
+  };
+};

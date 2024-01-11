@@ -18,7 +18,7 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, action: { type: 
   const { type, payload } = action;
 
   if (!action.type.startsWith('SETTINGS/')) {
-    return state.settings;
+    return state;
   }
 
   // Else, deal with page-level operations.

@@ -94,7 +94,11 @@ export function valueIsObject(value) {
   return className == 'Object';
 }
 
-export function toNumber({ low, high }) {
+export function toNumber(ref) {
+  if (ref === undefined) {
+    return ref;
+  }
+  let { low, high } = ref;
   let res = high;
 
   for (let i = 0; i < 32; i++) {
@@ -136,6 +140,11 @@ export function getRecordType(value) {
       return 'objectNumber';
     }
     return 'object';
+  } else if (typeof value === 'string' || value instanceof String) {
+    if (value.startsWith('http') || value.startsWith('https')) {
+      return 'link';
+    }
+    return 'string';
   }
 
   // Use string as default type
@@ -243,7 +252,6 @@ export const downloadComponentAsImage = (ref) => {
 
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
 import { RenderSubValue } from '../report/ReportRecordProcessing';
-import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 
 /**
  * Function to cast a value received from the Neo4j Driver to its TS native type
@@ -342,10 +350,6 @@ export const flatten = (data) =>
 export const processHierarchyFromRecords = (records: Record<string, any>[], selection: any) => {
   return records.reduce((data: Record<string, any>, row: Record<string, any>) => {
     try {
-      // const index = recordToNative(row.get('index'));
-      // const key = recordToNative(row.get('key'));
-      // const value = recordToNative(row.get('value'));
-
       const index = recordToNative(row.get(selection.index));
       // const idx = data.findIndex(item => item.index === index)
       // const key = selection['key'] !== "(none)" ? recordToNative(row.get(selection['key'])) : selection['value'];
@@ -442,3 +446,5 @@ export function getSelectionBasedOnFields(fields, oldSelection = {}, autoAssignS
   });
   return selection;
 }
+
+export const DEFAULT_NODE_LABELS = ['name', 'title', 'label', 'id', 'uid', '(label)'];

@@ -5,10 +5,10 @@ import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObj
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { evaluateRulesOnNode, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
-import { extensionEnabled } from '../../extensions/ExtensionUtils';
 import { createHeatmap } from './layers/HeatmapLayer';
 import { createMarkers } from './layers/MarkerLayer';
 import { createLines } from './layers/LineLayer';
+import { extensionEnabled } from '../../utils/ReportUtils';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -41,7 +41,10 @@ const NeoMapChart = (props: ChartProps) => {
       ? props.settings.attribution
       : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
-  const actionsRules = [];
+  const actionsRules =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
+      ? props.settings.actionsRules
+      : [];
 
   const [data, setData] = React.useState({ nodes: [], links: [], zoom: 0, centerLatitude: 0, centerLongitude: 0 });
 
@@ -246,7 +249,7 @@ const NeoMapChart = (props: ChartProps) => {
       scrollWheelZoom={false}
     >
       {heatmap}
-      <TileLayer attribution={attribution} url={mapProviderURL} />
+      <TileLayer attribution={attribution} url={mapProviderURL ? mapProviderURL : ''} />
       {markers}
       {lines}
     </MapContainer>

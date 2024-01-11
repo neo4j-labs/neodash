@@ -99,7 +99,6 @@ const NeoChoroplethMapChart = (props: ChartProps) => {
                     itemWidth: 94,
                     itemHeight: 18,
                     itemDirection: 'left-to-right',
-                    itemTextColor: '#444444',
                     itemOpacity: 0.85,
                     symbolSize: 18,
                     effects: [

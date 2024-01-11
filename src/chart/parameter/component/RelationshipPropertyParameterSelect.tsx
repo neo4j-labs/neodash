@@ -20,6 +20,8 @@ const RelationshipPropertyParameterSelectComponent = (props: ParameterSelectProp
       settings={props.settings}
       allParameters={props.allParameters}
       compatibilityMode={props.compatibilityMode}
+      multiSelector={props.multiSelector}
+      manualParameterSave={props.manualParameterSave}
     />
   );
 };

@@ -76,7 +76,7 @@ export const getDiscoveryDataInfo = async (discoveryAPIurl) => {
   return mergedSSOProviders;
 };
 
-export const initializeSSO = async (ssoDiscoveryUrl, _setCredentials) => {
+export const initializeSSO = async (cachedSSODiscoveryUrl, _setCredentials) => {
   const SSORedirectId = getSSOServerIdIfShouldRedirect();
 
   if (SSORedirectId) {
@@ -87,7 +87,7 @@ export const initializeSSO = async (ssoDiscoveryUrl, _setCredentials) => {
     removeSearchParamsInBrowserHistory(defaultSearchParamsToRemoveAfterAutoRedirect);
 
     try {
-      const mergedSSOProviders = await getDiscoveryDataInfo(ssoDiscoveryUrl);
+      const mergedSSOProviders = await getDiscoveryDataInfo(cachedSSODiscoveryUrl);
 
       // _setIsProcessing(false)
 
@@ -108,7 +108,7 @@ export const initializeSSO = async (ssoDiscoveryUrl, _setCredentials) => {
     restoreSearchAndHashParams(['connectURL', 'discoveryURL'], false);
 
     try {
-      const mergedSSOProviders = await getDiscoveryDataInfo(ssoDiscoveryUrl);
+      const mergedSSOProviders = await getDiscoveryDataInfo(cachedSSODiscoveryUrl);
       const credentials = await handleAuthFromRedirect(mergedSSOProviders);
       // _setIsProcessing(false)
 

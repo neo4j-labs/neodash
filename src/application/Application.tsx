@@ -1,10 +1,5 @@
-import React from 'react';
-import { hot } from 'react-hot-loader/root';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import NeoNotificationModal from '../modal/NotificationModal';
+import React, { Suspense, useEffect } from 'react';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
-import { ThemeProvider } from '@material-ui/styles';
-import { lightTheme } from '../component/theme/Themes';
 import { connect } from 'react-redux';
 import {
   applicationGetConnection,
@@ -20,6 +15,7 @@ import {
   applicationGetStandaloneSettings,
   applicationGetSsoSettings,
   applicationHasReportHelpModalOpen,
+  applicationIsStandalone,
 } from '../application/ApplicationSelectors';
 import {
   createConnectionThunk,
@@ -31,8 +27,10 @@ import {
   clearNotification,
   resetShareDetails,
   setAboutModalOpen,
+  setCachedSSODiscoveryUrl,
   setConnected,
   setConnectionModalOpen,
+  setConnectionProperties,
   setOldDashboard,
   setReportHelpModalOpen,
   setWaitForSSO,
@@ -41,13 +39,19 @@ import {
 import { resetDashboardState } from '../dashboard/DashboardActions';
 import { NeoDashboardPlaceholder } from '../dashboard/placeholder/DashboardPlaceholder';
 import NeoConnectionModal from '../modal/ConnectionModal';
-import Dashboard from '../dashboard/Dashboard';
-import NeoAboutModal from '../modal/AboutModal';
-import { NeoUpgradeOldDashboardModal } from '../modal/UpgradeOldDashboardModal';
+
 import { loadDashboardThunk } from '../dashboard/DashboardThunks';
-import { NeoLoadSharedDashboardModal } from '../modal/LoadSharedDashboardModal';
 import { downloadComponentAsImage } from '../chart/ChartUtils';
-import NeoReportHelpModal from '../modal/ReportHelpModal';
+import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
+import { resetSessionStorage } from '../sessionStorage/SessionStorageActions';
+import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+
+const NeoUpgradeOldDashboardModal = React.lazy(() => import('../modal/UpgradeOldDashboardModal'));
+const NeoLoadSharedDashboardModal = React.lazy(() => import('../modal/LoadSharedDashboardModal'));
+const NeoReportHelpModal = React.lazy(() => import('../modal/ReportHelpModal'));
+const NeoNotificationModal = React.lazy(() => import('../modal/NotificationModal'));
+const NeoAboutModal = React.lazy(() => import('../modal/AboutModal'));
+const Dashboard = React.lazy(() => import('../dashboard/Dashboard'));
 
 /**
  * This is the main application component for NeoDash.
@@ -67,6 +71,7 @@ const Application = ({
   connectionModalOpen,
   reportHelpModalOpen,
   ssoSettings,
+  standalone,
   standaloneSettings,
   aboutModalOpen,
   loadDashboard,
@@ -74,12 +79,14 @@ const Application = ({
   shareDetails,
   createConnection,
   createConnectionFromDesktopIntegration,
+  setConnectionDetails,
   onResetShareDetails,
   onConfirmLoadSharedDashboard,
   initializeApplication,
   resetDashboard,
   onAboutModalOpen,
   onAboutModalClose,
+  resetApplication,
   getDebugState,
   onReportHelpModalClose,
   welcomeScreenOpen,
@@ -87,66 +94,98 @@ const Application = ({
   onConnectionModalOpen,
   onConnectionModalClose,
   onSSOAttempt,
+  themeMode,
 }) => {
   const [initialized, setInitialized] = React.useState(false);
 
-  if (!initialized) {
-    // Tell Neo4j Desktop to disable capturing right clicking
-    window.neo4jDesktopApi &&
-      window.neo4jDesktopApi.showMenuOnRightClick &&
-      window.neo4jDesktopApi.showMenuOnRightClick(false);
-    setInitialized(true);
-    initializeApplication(initialized);
-  }
+  useEffect(() => {
+    if (!initialized) {
+      // Tell Neo4j Desktop to disable capturing right clicking
+      window.neo4jDesktopApi &&
+        window.neo4jDesktopApi.showMenuOnRightClick &&
+        window.neo4jDesktopApi.showMenuOnRightClick(false);
+      setInitialized(true);
+      initializeApplication(initialized);
+    }
+  }, []);
 
   const ref = React.useRef();
 
+  useEffect(() => {
+    if (themeMode === 'dark') {
+      document.body.classList.add('ndl-theme-dark');
+    } else {
+      document.body.classList.remove('ndl-theme-dark');
+    }
+  }, [themeMode]);
+
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
-    <ThemeProvider theme={lightTheme}>
-      <div ref={ref} style={{ display: 'flex' }}>
-        <CssBaseline />
-        {/* TODO - clean this up. Only draw the placeholder if the connection is not established. */}
-        <NeoDashboardPlaceholder connected={connected}></NeoDashboardPlaceholder>
-        {connected ? <Dashboard onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}></Dashboard> : <></>}
-        {/* TODO - move all models into a pop-ups (or modals) component. */}
+    <div
+      ref={ref}
+      className={`n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
+    >
+      {connected ? (
+        <Suspense fallback=''>
+          <Dashboard
+            onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}
+            onAboutModalOpen={onAboutModalOpen}
+            resetApplication={resetApplication}
+          ></Dashboard>
+        </Suspense>
+      ) : (
+        <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
+      )}
+      {/* TODO - move all models into a pop-ups (or modals) component. */}
+      <Suspense fallback=''>
         <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
-        <NeoConnectionModal
-          open={connectionModalOpen}
-          dismissable={connected}
-          connection={connection}
-          ssoSettings={ssoSettings}
-          standalone={standaloneSettings.standalone}
-          standaloneSettings={standaloneSettings}
-          createConnection={createConnection}
-          onSSOAttempt={onSSOAttempt}
-          onConnectionModalClose={onConnectionModalClose}
-        ></NeoConnectionModal>
-        <NeoWelcomeScreenModal
-          welcomeScreenOpen={welcomeScreenOpen}
-          setWelcomeScreenOpen={setWelcomeScreenOpen}
-          hasCachedDashboard={hasCachedDashboard}
-          hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
-          onConnectionModalOpen={onConnectionModalOpen}
-          createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
-          onAboutModalOpen={onAboutModalOpen}
-          resetDashboard={resetDashboard}
-        ></NeoWelcomeScreenModal>
+      </Suspense>
+      <NeoConnectionModal
+        open={connectionModalOpen}
+        connected={connected}
+        dismissable={!standalone}
+        connection={connection}
+        ssoSettings={ssoSettings}
+        standalone={standaloneSettings.standalone}
+        standaloneSettings={standaloneSettings}
+        createConnection={createConnection}
+        onSSOAttempt={onSSOAttempt}
+        setConnectionProperties={setConnectionDetails}
+        onConnectionModalClose={onConnectionModalClose}
+        setWelcomeScreenOpen={setWelcomeScreenOpen}
+      ></NeoConnectionModal>
+      <NeoWelcomeScreenModal
+        welcomeScreenOpen={welcomeScreenOpen}
+        setWelcomeScreenOpen={setWelcomeScreenOpen}
+        hasCachedDashboard={hasCachedDashboard}
+        hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
+        onConnectionModalOpen={onConnectionModalOpen}
+        createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
+        onAboutModalOpen={onAboutModalOpen}
+        resetDashboard={resetDashboard}
+      ></NeoWelcomeScreenModal>
+      <Suspense fallback=''>
         <NeoUpgradeOldDashboardModal
           open={oldDashboard}
           text={oldDashboard}
           loadDashboard={loadDashboard}
           clearOldDashboard={clearOldDashboard}
         />
+      </Suspense>
+      <Suspense fallback=''>
         <NeoLoadSharedDashboardModal
           shareDetails={shareDetails}
           onResetShareDetails={onResetShareDetails}
           onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
         />
+      </Suspense>
+      <Suspense fallback=''>
         <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
+      </Suspense>
+      <Suspense fallback=''>
         <NeoNotificationModal></NeoNotificationModal>
-      </div>
-    </ThemeProvider>
+      </Suspense>
+    </div>
   );
 };
 
@@ -156,6 +195,7 @@ const mapStateToProps = (state) => ({
   shareDetails: applicationGetShareDetails(state),
   oldDashboard: applicationGetOldDashboard(state),
   ssoSettings: applicationGetSsoSettings(state),
+  standalone: applicationIsStandalone(state),
   standaloneSettings: applicationGetStandaloneSettings(state),
   connectionModalOpen: applicationHasConnectionModalOpen(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
@@ -166,20 +206,22 @@ const mapStateToProps = (state) => ({
     return applicationGetDebugState(state);
   }, // TODO - change this to be variable instead of a function?
   hasNeo4jDesktopConnection: applicationHasNeo4jDesktopConnection(state),
+  themeMode: getDashboardTheme(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   createConnection: (protocol, url, port, database, username, password) => {
     dispatch(setConnected(false));
+    dispatch(resetSessionStorage());
     dispatch(createConnectionThunk(protocol, url, port, database, username, password));
   },
   createConnectionFromDesktopIntegration: () => {
     dispatch(setConnected(false));
     dispatch(createConnectionFromDesktopIntegrationThunk());
   },
-  loadDashboard: (text) => {
+  loadDashboard: (uuid, text) => {
     dispatch(clearNotification());
-    dispatch(loadDashboardThunk(text));
+    dispatch(loadDashboardThunk(uuid, text));
   },
   resetDashboard: () => dispatch(resetDashboardState()),
   clearOldDashboard: () => dispatch(setOldDashboard(null)),
@@ -192,8 +234,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setWelcomeScreenOpen(true));
     dispatch(resetShareDetails());
   },
-  onSSOAttempt: (_) => {
+  onSSOAttempt: (discoveryUrlValidated) => {
     dispatch(setWaitForSSO(true));
+    dispatch(setCachedSSODiscoveryUrl(discoveryUrlValidated));
+  },
+  setConnectionDetails: (protocol, url, port, database, username, password) => {
+    dispatch(setConnectionProperties(protocol, url, port, database, username, password));
   },
   onConfirmLoadSharedDashboard: (_) => dispatch(onConfirmLoadSharedDashboardThunk()),
   onConnectionModalOpen: (_) => dispatch(setConnectionModalOpen(true)),
@@ -202,8 +248,12 @@ const mapDispatchToProps = (dispatch) => ({
   onAboutModalOpen: (_) => dispatch(setAboutModalOpen(true)),
   setWelcomeScreenOpen: (open) => dispatch(setWelcomeScreenOpen(open)),
   onAboutModalClose: (_) => dispatch(setAboutModalOpen(false)),
+  resetApplication: () => {
+    dispatch(setWelcomeScreenOpen(true));
+    dispatch(setConnected(false));
+  },
 });
 
 Application.displayName = 'Application';
 
-export default connect(mapStateToProps, mapDispatchToProps)(hot(Application));
+export default connect(mapStateToProps, mapDispatchToProps)(Application);

@@ -1,13 +1,13 @@
 import React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
 import NeoField from './Field';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import NeoColorPicker from './ColorPicker';
 import { SELECTION_TYPES } from '../../config/CardConfig';
+import { Label } from '@neo4j-ndl/react';
 
 const generateListItem = (label, option) => {
   if (typeof option === 'boolean') {
-    return option ? 'on' : 'off';
+    return { label: option ? 'on' : 'off', value: Boolean(option) };
   }
   if (label == 'Color Scheme' || label == 'Node Color Scheme') {
     const colorsFull = categoricalColorSchemes[option];
@@ -16,22 +16,49 @@ const generateListItem = (label, option) => {
         ? colorsFull.slice(-1)[0]
         : colorsFull
       : colorsFull;
-    return (
-      <div>
-        {Array.isArray(colors)
-          ? colors.map((element) => {
-              return (
-                <span
-                  key={element}
-                  style={{ display: 'inline-block', background: element, width: '18px', height: '18px' }}
-                ></span>
-              );
-            })
-          : `${option}`}
-      </div>
-    );
+    return {
+      label: Array.isArray(colors) ? (
+        <>
+          {colors.map((element) => {
+            return (
+              <span
+                key={element}
+                style={{
+                  display: 'inline-block',
+                  background: element,
+                  width: '18px',
+                  height: '18px',
+                  position: 'relative',
+                  top: '3px',
+                }}
+              ></span>
+            );
+          })}
+          <Label color='info' fill='outlined' className='n-inline-block n-ml-2'>
+            {option}
+          </Label>
+        </>
+      ) : (
+        `${option}`
+      ),
+      value: option,
+    };
   }
-  return `${option}`;
+  return { label: option, value: option };
+};
+
+const generateValueLabel = (option) => {
+  if (typeof option === 'boolean') {
+    return option ? 'on' : 'off';
+  }
+  return option;
+};
+
+const generateValue = (option) => {
+  if (typeof option === 'boolean') {
+    return Boolean(option);
+  }
+  return option;
 };
 
 /**
@@ -45,6 +72,7 @@ const NeoSetting = ({
   defaultValue,
   disabled = undefined,
   helperText = undefined,
+  password = false,
   onChange,
   onClick = () => {},
   style = { width: '100%', marginBottom: '10px', marginRight: '10px', marginLeft: '10px' },
@@ -77,6 +105,7 @@ const NeoSetting = ({
             disabled={disabled}
             helperText={helperText}
             value={value}
+            password={password}
             defaultValue={''}
             placeholder={`${defaultValue}`}
             style={style}
@@ -129,14 +158,12 @@ const NeoSetting = ({
             disabled={disabled}
             helperText={helperText}
             key={label}
-            value={value}
-            defaultValue={defaultValue}
+            valueLabel={generateValueLabel(value)}
+            value={generateValue(value)}
+            defaultValueLabel={generateValueLabel(defaultValue)}
+            defaultValue={generateValue(defaultValue)}
             style={style}
-            choices={choices.map((option) => (
-              <MenuItem key={option} value={option}>
-                {generateListItem(label, option)}
-              </MenuItem>
-            ))}
+            choices={choices.map((option) => generateListItem(label, option))}
             onClick={(val) => onClick(val)}
             onChange={(val) => onChange(val)}
           />

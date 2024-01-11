@@ -1,4 +1,4 @@
-import { TextareaAutosize } from '@material-ui/core';
+import { TextareaAutosize } from '@mui/material';
 import React from 'react';
 
 /**
@@ -6,7 +6,10 @@ import React from 'react';
  */
 const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
   return (
-    <div style={{ overflowY: 'auto', marginLeft: '10px', marginRight: '10px', height: '100%' }}>
+    <div
+      className={'n-text-palette-neutral-text-default'}
+      style={{ overflowY: 'auto', marginLeft: '10px', marginRight: '10px', height: '100%' }}
+    >
       <TextareaAutosize
         style={{
           width: '100%',

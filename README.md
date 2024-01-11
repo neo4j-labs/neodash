@@ -50,7 +50,6 @@ Activate the environment, navigate to the connection folder and run both `minio_
 python minio_api.py
 python neo4j_api.py
 ```
-
 Open the minio database in browser: [http://localhost:9099](http://localhost:9099).
 Log in with user name and password (detailed in docker compose file).
 Create a user and set the policy to readwrite. The access and secret keys need to be updated in the `connection/minio_config.ini` file, and in `statistics/minio_config.ini`.
@@ -77,12 +76,11 @@ docker run -p 5003:5003 --network=sindit_network -it statistics
 ## User Guide for NeoDash
 
 NeoDash comes with built-in examples of dashboards and reports. For more details on the types of reports and how to customize them, see the [User Guide](
-https://neo4j.com/labs/neodash/2.2/user-guide/).
+https://neo4j.com/labs/neodash/2.3/user-guide/).
 
 ## Publish Dashboards
 
-After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://neo4j.com/labs/neodash/2.2/user-guide/publishing/) for more on publishing dashboards.
-
+After building a dashboard, you can chose to deploy a read-only, standalone instance for users. See [Publishing](https://neo4j.com/labs/neodash/2.3/user-guide/publishing/) for more on publishing dashboards.
 
 ## Questions / Suggestions
 

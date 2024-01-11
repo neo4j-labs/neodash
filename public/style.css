@@ -1,203 +1,255 @@
+/* Needle */
+.logo-btn.large .ndl-icon {
+  width: 36px !important;
+  height: 36px !important;
+}
+
+.ndl-modal hr {
+  margin-top: 0.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.MuiInputBase-root {
+  font-family: 'Nunito Sans', sans-serif !important;
+}
+/* End Needle */
+
 .MuiDrawer-paper {
-    position: relative !important;
+  position: relative !important;
 }
 
 .blue-grey {
-    background: #607d8b !important;
-    color: white !important;
+  background: #607d8b !important;
+  color: white !important;
 }
 
-.no-underline [class*='MuiInput-underline-']::before{
-    border-bottom: none;
+.no-underline .MuiInput-underline::before {
+  border-bottom: none;
 }
 
 .MuiContainer-root {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.MuiFormControl-root {
+  padding-top: 0px;
 }
 
 .large input {
-    font-size: 20px;
-    margin-top: -6px;
+  font-size: 20px;
+  margin-top: -6px;
 }
 
 .MuiChip-root {
-    border-radius: 16px;
+  border-radius: 16px !important;
 }
 
 .CodeMirror-lint-message-error {
-    background-image: none !important;
+  background-image: none !important;
 }
 
 .leaflet-custom-node-popup {
-    margin-left: 1px;
-    margin-bottom: 34px !important;
+  margin-left: 1px;
+  margin-bottom: 34px !important;
 }
 
 .leaflet-custom-rel-popup {
-    margin-left: 0px;
+  margin-left: 0px;
 }
 
 .leaflet-control-attribution {
-    display: none;
+  display: none;
 }
 
-.leaflet-custom-tooltip {}
+.leaflet-custom-tooltip {
+}
 
 .leaflet-marker-icon {
-    width: 50px !important;
-    margin-left: -25px !important;
-}
-
-.autosize .cm-editor {
-    height: auto;
+  width: 50px !important;
+  margin-left: -25px !important;
 }
 
 /* Hack to make the table header smaller, TODO - clean this up */
 .table-small-header {
-    height: 36px;
+  height: 36px;
 }
 
 .MuiDataGrid-root {
-    border: none !important;
+  border: none !important;
+}
+
+.MuiDataGrid-footerContainer > div {
+  margin-top: -40px;
 }
 
 .MuiChip-root:before {
-    border: none !important;
+  border: none !important;
 }
 
 .react-resizable-handle {
-    bottom: 1px !important;
-    opacity: 0.5;
-    color: rgb(199, 199, 199);
+  bottom: 1px !important;
+  opacity: 0.5;
+  color: rgb(222, 222, 222);
 }
 
 .MuiDataGrid-footerContainer {
-    border: none !important;
+  border: none !important;
 }
 .neodash-card-editable-false .react-resizable-handle {
-    display: none;
+  display: none;
 }
 
-.react-grid-item>.react-resizable-handle.react-resizable-handle-se {
-    cursor: nwse-resize !important;
+.react-grid-item > .react-resizable-handle.react-resizable-handle-se {
+  cursor: nwse-resize !important;
 }
 
-.react-grid-item>.react-resizable-handle::after {
-    border-right: 2px solid rgba(0, 0, 0, 0.4) !important;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.4) !important;
+.react-grid-item > .react-resizable-handle::after {
+  border-right: 2px solid rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.4) !important;
 }
 
-/* .MuiDataGrid-columnHeaders {
-    min-height: 32px !important;
-    max-height: 32px !important;
-    line-height: 32px !important;
-}
-
-.MuiDataGrid-columnSeparator{
-    height: 32px;
-}
-.MuiDataGrid-columnHeaderTitleContainer {
-    padding-left: 1px !important;
-}
-.MuiDataGrid-window{
-    top: 32px !important;
-    overflow-y: hidden !important;
-    overflow-x: hidden !important;
-}
-.MuiTablePagination-root{
-    margin-top: -10px;
-} */
 .MuiDataGrid-footerContainer {
-    border-top: none !important;
-}
-.chrome-picker {
-    margin-top: -285px;
-    margin-left: 10px;
+  border-top: none !important;
 }
 
 .MuiTablePagination-root {
-    margin-top: -10px;
+  margin-top: -10px;
 }
 
 .MuiDataGrid-virtualScroller {
-    overflow-y: hidden !important;
+  overflow-y: hidden !important;
 }
 
+.MuiDataGrid-panel{
+  translate: 0px -152%;
+}
+
+.MuiCard-root {
+  box-shadow: 0 0 #0000,0 0 #0000,var(--tw-shadow) !important;
+  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow) !important;
+}
+
+.white-text {
+  color: white !important;
+}
 .MuiCardHeader-content .MuiInputBase-root.Mui-disabled {
-    color: inherit !important;
+  color: inherit !important;
 }
 
 .MuiCardHeader-content .MuiInput-underline.Mui-disabled:before {
-    border-bottom-style: none !important;
+  border-bottom-style: none !important;
 }
 
 .textinput-linenumbers {
-    scrollbar-width: none;
-    resize: none;
-    background: url(linenumbers.png);
-    background-size: 20;
-    background-attachment: local;
-    background-repeat: no-repeat;
-    font-family: monospace;
-    font-size: 14px;
-    line-height: 16px;
-    border-color: #fff;
-    width: calc(100% + 30px);
-    display: block;
-    background-size: 26px;
-    white-space: pre;
-    background-position: 0px -11px;
-    /*line-height: 1.2em;*/
-    /* margin-left: -15px !important; */
-    padding-right: 0px !important;
-    /* margin-right: -35px !important; */
-    margin-top: 0px !important;
-    padding-left: 30px;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    margin-bottom: 0px !important;
-    overflow-x: scroll !important;
-    overflow-y: scroll;
-    min-height: 116px;
-    /*height: 200px !important;*/
+  scrollbar-width: none;
+  resize: none;
+  background: url(linenumbers.png);
+  background-size: 20;
+  background-attachment: local;
+  background-repeat: no-repeat;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 16px;
+  border-color: #fff;
+  width: calc(100% + 30px);
+  display: block;
+  background-size: 26px;
+  white-space: pre;
+  background-position: 0px -11px;
+  padding-right: 0px !important;
+  margin-top: 0px !important;
+  padding-left: 30px;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+  overflow-x: scroll !important;
+  overflow-y: scroll;
+  min-height: 116px;
 }
 
 .textinput-linenumbers::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .MuiDrawer-docked .MuiDrawer-paper {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 #center-aligned {
-    text-align: center;
+  text-align: center;
 }
 
+
 .card-view.expanded {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: white;
-    z-index: 1299;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 1299;
 }
 
 .force-graph-container .graph-tooltip {
-    color: black !important;
-    background: none !important;
+  color: black !important;
+  background: none !important;
 }
 
 .not-animated .react-grid-item.cssTransforms {
-    transition-property: none !important;
+  transition-property: none !important;
 }
 
 .react-grid-layout {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .cm-tooltip-autocomplete {
-    margin-top: 4px;
+  margin-top: 4px;
 }
+
+.card-view .MuiTablePagination-root {
+  margin-top: -40px;
+
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
+
+/* Workaround for Needle not handling menu placement of dropdowns on modals */
+#overlay {
+  z-index: 99 !important;
+  position: absolute;
+}
+
+/* End workaround */
+
+/* Workaround for cleaning the Gantt chart UI */
+.gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div> div:not(:first-child) {
+  display: none;
+}
+.gantt-wrapper > div > div > div > div> div>  div> div:not(:first-child)  {
+  display: none;
+}
+/* End Gantt chart workaround */

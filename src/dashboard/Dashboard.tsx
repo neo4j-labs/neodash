@@ -1,38 +1,41 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import NeoPage from '../page/Page';
-import Container from '@material-ui/core/Container';
-import NeoDrawer from './drawer/DashboardDrawer';
 import NeoDashboardHeader from './header/DashboardHeader';
-import { createDriver, Neo4jProvider, useConnection } from 'use-neo4j';
-import {
-  applicationGetConnection,
-  applicationGetStandaloneSettings,
-  applicationHasAboutModalOpen,
-} from '../application/ApplicationSelectors';
+import NeoDashboardTitle from './header/DashboardTitle';
+import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
+import { createDriver, Neo4jProvider } from 'use-neo4j';
+import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
-import { createNotification } from '../application/ApplicationActions';
 import { createNotificationThunk } from '../page/PageThunks';
-import { downloadComponentAsImage } from '../chart/ChartUtils';
+import { version } from '../modal/AboutModal';
+import NeoDashboardSidebar from './sidebar/DashboardSidebar';
 
-const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUpdate, onDownloadDashboardAsImage }) => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const driver = createDriver(
-    connection.protocol,
-    connection.url,
-    connection.port,
-    connection.username,
-    connection.password
-  );
+const Dashboard = ({
+  pagenumber,
+  connection,
+  standaloneSettings,
+  onConnectionUpdate,
+  onDownloadDashboardAsImage,
+  onAboutModalOpen,
+  resetApplication,
+}) => {
+  const [driver, setDriver] = React.useState(undefined);
 
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
-  };
+  // If no driver is yet instantiated, create a new one.
+  if (driver == undefined) {
+    const newDriver = createDriver(
+      connection.protocol,
+      connection.url,
+      connection.port,
+      connection.username,
+      connection.password,
+      { userAgent: `neodash/v${version}` }
+    );
+    setDriver(newDriver);
+  }
 
   const content = (
     <Neo4jProvider driver={driver}>
@@ -41,25 +44,60 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
         connection={connection}
         onConnectionUpdate={onConnectionUpdate}
       />
-      <NeoDrawer open={drawerOpen} handleDrawerClose={handleDrawerClose}></NeoDrawer>
-      <NeoDashboardHeader
-        open={drawerOpen}
-        connection={connection}
-        onDownloadImage={onDownloadDashboardAsImage}
-        handleDrawerOpen={handleDrawerOpen}
-      ></NeoDashboardHeader>
-      <main style={{ flexGrow: 1, height: '100vh', overflow: 'auto', backgroundColor: '#fafafa' }}>
-        <Container maxWidth='xl' style={{ marginTop: '60px' }}>
-          {applicationSettings.standalonePassword ? (
-            <div style={{ textAlign: 'center', color: 'red', zIndex: 999, paddingTop: 60, marginBottom: -50 }}>
-              Warning: NeoDash is running with a plaintext password in config.json.
-            </div>
-          ) : (
-            <></>
-          )}
-          <NeoPage></NeoPage>
-        </Container>
-      </main>
+
+      {/* Navigation Bar */}
+      <div
+        className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b'
+        style={{ borderColor: 'lightgrey' }}
+      >
+        <NeoDashboardHeader
+          connection={connection}
+          onDownloadImage={onDownloadDashboardAsImage}
+          onAboutModalOpen={onAboutModalOpen}
+          resetApplication={resetApplication}
+        ></NeoDashboardHeader>
+      </div>
+      {/* Main Page */}
+      <div
+        style={{
+          display: 'flex',
+          height: 'calc(40vh - 32px)',
+          minHeight: window.innerHeight - 62,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+      >
+        {!standaloneSettings.standalone || (standaloneSettings.standalone && standaloneSettings.standaloneAllowLoad) ? (
+          <NeoDashboardSidebar />
+        ) : (
+          <></>
+        )}
+        <div className='n-w-full n-h-full n-flex n-flex-col n-items-center n-justify-center n-rounded-md'>
+          <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
+            {/* Main Content */}
+            <main className='n-flex-1 n-relative n-z-0 n-scroll-smooth n-w-full'>
+              <div className='n-absolute n-inset-0 page-spacing'>
+                <div className='page-spacing-overflow'>
+                  {/* The main content of the page */}
+
+                  <div>
+                    {standaloneSettings.standalonePassword ? (
+                      <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
+                        Warning: NeoDash is running with a plaintext password in config.json.
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    <NeoDashboardTitle />
+                    <NeoDashboardHeaderPageList />
+                    <NeoPage></NeoPage>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
     </Neo4jProvider>
   );
   return content;
@@ -68,7 +106,7 @@ const Dashboard = ({ pagenumber, connection, applicationSettings, onConnectionUp
 const mapStateToProps = (state) => ({
   connection: applicationGetConnection(state),
   pagenumber: getPageNumber(state),
-  applicationSettings: applicationGetStandaloneSettings(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

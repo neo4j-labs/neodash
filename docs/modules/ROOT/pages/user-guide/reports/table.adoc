@@ -20,7 +20,7 @@ Double-clicking on a table cell will copy that cell's value to the user's clipbo
 
 ....
 MATCH (n:Movie)<-[:ACTED_IN]-(p:Person)
-RETURN n.title, n.released, count(p) as actors
+RETURN n.title AS Title, n.released AS Released, count(p) as Actors
 ....
 
 image::table1.png[Basic Table]
@@ -54,6 +54,8 @@ set to ``[2, 1, 1]''.
 the bottom right of the table footer. This button lets the user download
 the complete set of table results (all pages) as a CSV file.
 
+|Override no data message |Text |Query returned no data. |Override the message displayed to the user when their query returns no data.
+
 |Auto-run query |on/off |on |when activated automatically runs the query
 when the report is displayed. When set to `off', the query is displayed
 and will need to be executed manually.
@@ -71,3 +73,22 @@ following style rules can be applied to the table:
 - The text color of a single cell in the table.
 
 If a column is hidden (header prefixed with __ double underscore), it can still be used as an entry point for a styling rule.
+
+== Report Actions
+
+With the link:../../extensions/report-actions[Report Actions] extension, tables can be turned into interactive components that set parameters.
+Two flavours of report actions for tables exist:
+
+=== 1. Select a value from a row
+Adding a **Cell Click** action to a table column, turns the values in that row into clickable buttons.
+When the user clicks on the button, a predefined parameter is set to one of the columns in that row.
+
+image::select-single-table.png[Select a value from a table to be used as a parameter]
+
+=== 2. Select multiple from a row
+Adding a **Row Clicked** action to a table prepends each row with a checkbox.
+The user can then check one or more boxes to update a dashboard parameter.
+
+> Keep in mind that regardless if one or more values are selected, the type of the dashboard parameter is a list of values. The queries using the parameter must ensure that the list type is handled correctly.
+
+image::select-multiple-table.png[Select multiple values to be used as a parameter]

@@ -1,5 +1,6 @@
-import { extensionEnabled, getReportTypes } from '../extensions/ExtensionUtils';
+import { getReportTypes } from '../extensions/ExtensionUtils';
 import { useStyleRules } from '../extensions/styling/StyleRuleEvaluator';
+import { extensionEnabled } from '../utils/ReportUtils';
 
 /**
  * Gets the user specified settings and merges it with the defaults from ReportConfig.tsx.
@@ -29,6 +30,7 @@ export const getSettings = (
     userSettings && userSettings.styleRules,
     getGlobalParameter
   );
-
+  settings.actionsRules =
+    extensionEnabled(extensions, 'actions') && settings && userSettings.actionsRules ? userSettings.actionsRules : [];
   return settings;
 };

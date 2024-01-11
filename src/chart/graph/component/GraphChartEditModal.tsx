@@ -1,16 +1,11 @@
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import React, { useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@mui/material/Button';
-import { Badge, IconButton } from '@material-ui/core';
-import { Fab, TextField, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { Autocomplete } from '@material-ui/lab';
-import CloseIcon from '@material-ui/icons/Close';
-import PlayArrow from '@material-ui/icons/PlayArrow';
+import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
+
+import { PlusIconOutline, XMarkIconOutline, PlayIconOutline } from '@neo4j-ndl/react/icons';
+import { IconButton } from '@neo4j-ndl/react';
 import { LabelTypeAutocomplete } from './autocomplete/LabelTypeAutocomplete';
 import { DeletePropertyButton } from './button/modal/DeletePropertyButton';
 import {
@@ -24,14 +19,14 @@ import {
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
 export enum EditType {
-  Node,
-  Relationship,
+  Node = 0,
+  Relationship = 1,
 }
 
 export enum EditAction {
-  Create,
-  Edit,
-  Delete,
+  Create = 0,
+  Edit = 1,
+  Delete = 2,
 }
 
 interface GraphChartEditorVisualizationProps extends GraphChartVisualizationProps {
@@ -109,10 +104,9 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
             setProperties([{ name: '', value: '' }]);
           }}
           style={{ marginLeft: '40px', padding: '3px', float: 'right' }}
+          clean
         >
-          <Badge overlap='rectangular' badgeContent={''}>
-            <CloseIcon />
-          </Badge>
+          <XMarkIconOutline />
         </IconButton>
       </DialogTitle>
 
@@ -132,16 +126,16 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
           <h4>Properties</h4>
 
           <table>
-            {properties.map((property, index) => {
-              const disabled = !(
-                typeof property.value == 'string' ||
-                typeof property.value == 'number' ||
-                property.value.toNumber !== undefined
-              );
+            <tbody>
+              {properties.map((property, index) => {
+                const disabled = !(
+                  typeof property.value == 'string' ||
+                  typeof property.value == 'number' ||
+                  property.value.toNumber !== undefined
+                );
 
-              return (
-                <>
-                  <tr style={{ height: 40 }}>
+                return (
+                  <tr key={`trEditProp${index}`} style={{ height: 40 }}>
                     <td style={{ paddingLeft: '2px', paddingRight: '2px' }}>
                       <span style={{ color: 'black', width: '50px' }}>{index + 1}.</span>
                     </td>
@@ -160,6 +154,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                     </td>
                     <td style={{ paddingLeft: '5px', paddingRight: '5px' }}>
                       <TextField
+                        key={`txtFieldEditProp${index}`}
                         style={{ width: '100%' }}
                         placeholder='Value...'
                         disabled={disabled}
@@ -174,6 +169,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
 
                     <td>
                       <DeletePropertyButton
+                        key={`deletePropBtn${index}`}
                         onClick={() => {
                           setProperties([...properties.slice(0, index), ...properties.slice(index + 1)]);
                           setPropertyInputTexts([
@@ -184,30 +180,32 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                       />
                     </td>
                   </tr>
-                </>
-              );
-            })}
+                );
+              })}
 
-            <tr>
-              <td style={{ minWidth: '450px' }} colSpan={4}>
-                <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
-                  <Fab
-                    size='small'
-                    aria-label='add'
-                    style={{ background: 'white', color: 'black' }}
-                    onClick={() => {
-                      const newProperty = { name: '', value: '' };
-                      setProperties(properties.concat(newProperty));
-                    }}
-                  >
-                    <AddIcon />
-                  </Fab>
-                </Typography>
-              </td>
-            </tr>
+              <tr key={'trEditButtons'}>
+                <td style={{ minWidth: '450px' }} colSpan={4}>
+                  <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
+                    <IconButton
+                      key={'btnAddProp'}
+                      size='small'
+                      aria-label='add'
+                      style={{ background: 'white', color: 'black' }}
+                      onClick={() => {
+                        const newProperty = { name: '', value: '' };
+                        setProperties(properties.concat(newProperty));
+                      }}
+                    >
+                      <PlusIconOutline />
+                    </IconButton>
+                  </Typography>
+                </td>
+              </tr>
+            </tbody>
           </table>
           <hr />
           <Button
+            key={'btnEditProp'}
             style={{ marginBottom: '10px' }}
             disabled={label === undefined || label == '' || labelInputText !== label}
             onClick={() => {
@@ -247,7 +245,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
             style={{ float: 'right', marginBottom: 15 }}
             variant='contained'
             size='medium'
-            endIcon={<PlayArrow />}
+            endIcon={<PlayIconOutline className='btn-icon-base-r' />}
           >
             {props.action == EditAction.Create ? 'Create' : 'Save'}
           </Button>

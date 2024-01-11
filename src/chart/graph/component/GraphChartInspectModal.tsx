@@ -1,12 +1,7 @@
-import React, { useCallback } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Badge from '@material-ui/core/Badge';
+import React from 'react';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { getEntityHeader } from '../util/NodeUtils';
+import { Dialog } from '@neo4j-ndl/react';
 import GraphEntityInspectionTable from './GraphEntityInspectionTable';
 
 /**
@@ -16,7 +11,7 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
   return (
     <div>
       <Dialog
-        maxWidth={'lg'}
+        size='large'
         open={props.interactivity.showPropertyInspector}
         onClose={() => {
             props.interactivity.setPropertyInspectorOpen(false)
@@ -26,20 +21,17 @@ export const NeoGraphChartInspectModal = (props: GraphChartVisualizationProps) =
         }
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>
-          {props.interactivity.selectedEntity ? getEntityHeader(props.interactivity.selectedEntity) : ''}
-          <IconButton
-            onClick={() => props.interactivity.setPropertyInspectorOpen(false)}
-            style={{ padding: '3px', marginLeft: '20px', float: 'right' }}
-          >
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <GraphEntityInspectionTable entity={props.interactivity.selectedEntity}></GraphEntityInspectionTable>
-        </DialogContent>
+        <Dialog.Header id='form-dialog-title'>
+          {props.interactivity.selectedEntity
+            ? getEntityHeader(props.interactivity.selectedEntity, props?.engine?.selection)
+            : ''}
+        </Dialog.Header>
+        <Dialog.Content>
+          <GraphEntityInspectionTable
+            entity={props.interactivity.selectedEntity}
+            theme={props.style.theme}
+          ></GraphEntityInspectionTable>
+        </Dialog.Content>
       </Dialog>
     </div>
   );

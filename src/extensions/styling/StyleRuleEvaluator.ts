@@ -1,6 +1,5 @@
-import { makeStyles } from '@material-ui/styles';
-import { extensionEnabled } from '../ExtensionUtils';
-import React, { useEffect } from 'react';
+import { makeStyles } from '@mui/styles';
+import { EntityType } from '../../chart/Utils';
 
 /**
  * Evaluates the specified rule set on a row returned by the Neo4j driver.
@@ -88,17 +87,30 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
  * @returns a user-defined value if a rule is met, or the default value if none are.
  */
 export const evaluateRulesOnNode = (node, customization, defaultValue, rules) => {
-  if (!node || !customization || !rules) {
+  return evaluateRules(node, customization, defaultValue, rules, EntityType.Node);
+};
+
+export const evaluateRulesOnLink = (link, customization, defaultValue, rules) => {
+  return evaluateRules(link, customization, defaultValue, rules, EntityType.Relationship);
+};
+
+export const evaluateRules = (entity, customization, defaultValue, rules, entityType) => {
+  if (!entity || !customization || !rules) {
     return defaultValue;
   }
+
   for (const [index, rule] of rules.entries()) {
     // Only look at rules relevant to the target customization.
     if (rule.customization == customization) {
       // if the row contains the specified field...
-      const label = rule.field.split('.')[0];
+      const typeOrLabel = rule.field.split('.')[0];
       const property = rule.field.split('.')[1];
-      if (node.labels.includes(label)) {
-        const realValue = node.properties[property] ? node.properties[property] : '';
+
+      if (
+        (entityType === EntityType.Node && entity.labels.includes(typeOrLabel)) ||
+        (entityType === EntityType.Relationship && entity.type == typeOrLabel)
+      ) {
+        const realValue = entity?.properties?.[property] || '';
         const ruleValue = rule.value;
         if (evaluateCondition(realValue, rule.condition, ruleValue)) {
           return rule.customizationValue;
@@ -120,14 +132,17 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
     // If something is null, rules are never met.
     return false;
   }
-  if (!isNaN(parseFloat(ruleValue))) {
-    ruleValue = parseFloat(ruleValue);
+  if (!isNaN(Number(ruleValue))) {
+    ruleValue = Number(ruleValue);
   }
   if (condition == '=') {
-    return realValue == ruleValue;
+    return realValue === ruleValue;
   }
   if (condition == '!=') {
     return realValue !== ruleValue;
+  }
+  if (!isNaN(Number(ruleValue))) {
+    ruleValue = Number(ruleValue);
   }
   if (condition == '<=') {
     return realValue <= ruleValue;
@@ -148,7 +163,7 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
 };
 
 /**
- * Uses the material-ui `makeStyles` functionality to generate classes for each of the rules.
+ * Uses the mui `makeStyles` functionality to generate classes for each of the rules.
  * This is used for styling table rows and columns.
  */
 export const generateClassDefinitionsBasedOnRules = (rules) => {

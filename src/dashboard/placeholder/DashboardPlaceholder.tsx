@@ -1,85 +1,37 @@
-import { AppBar, Toolbar, IconButton, Typography, InputBase, CircularProgress } from '@material-ui/core';
 import React from 'react';
-import {
-  APPLY_CUSTOM_BRAND_LOGO,
-  DASHBOARD_HEADER_BRAND_LOGO,
-  DASHBOARD_HEADER_COLOR,
-} from '../../config/ApplicationConfig';
-import MenuIcon from '@material-ui/icons/Menu';
+import { LoadingSpinner } from '@neo4j-ndl/react';
+import { BoltIconSolid } from '@neo4j-ndl/react/icons';
+import { NeoDashboardHeaderLogo } from '../header/DashboardHeaderLogo';
 
-export const NeoDashboardPlaceholder = ({ connected }) => {
-  const defaultToolbarContent = (
+export const NeoDashboardPlaceholder = () => {
+  return (
     <>
-      <InputBase
-        disabled
-        id='center-aligned'
-        label='placeholder'
-        style={{ textAlign: 'center', fontSize: '22px', flexGrow: 1, color: 'white' }}
-        placeholder='Dashboard Name...'
-        fullWidth
-        maxRows={4}
-        value={'NeoDash ⚡'}
-      />
+      <div className='n-w-screen n-flex n-flex-row n-items-center n-bg-neutral-bg-weak n-border-b n-border-neutral-border-weak'>
+        <div className='n-relative n-bg-neutral-bg-weak n-w-full'>
+          <div className='n-min-w-full'>
+            <div className='n-flex n-justify-between n-h-16 n-items-center n-py-6 md:n-justify-start md:n-space-x-10 n-mx-4'>
+              <NeoDashboardHeaderLogo />
+              <nav className='n-items-center n-justify-center n-flex n-flex-1 n-w-full'>
+                NeoDash <BoltIconSolid className='icon-base' color='gold' />
+              </nav>
+              <div className='sm:n-flex n-items-center n-justify-end md:n-flex-1 lg:n-w-0 n-gap-6'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
+        <div className='n-flex-1 n-relative n-z-0  n-scroll-smooth n-w-full'>
+          <div className='n-absolute n-inset-0 page-spacing'>
+            <div className='page-spacing-overflow'>
+              <div className='n-absolute n-w-full n-h-full'>
+                <LoadingSpinner size='large' className='centered' />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
-
-  const brandedToolbarContent = (
-    <img style={{ height: '54px', marginLeft: 'auto', marginRight: 'auto' }} src={DASHBOARD_HEADER_BRAND_LOGO} />
-  );
-
-  const content = (
-    <div style={{ zIndex: -99 }}>
-      <AppBar
-        position='absolute'
-        style={{
-          zIndex: 'auto',
-          boxShadow: 'none',
-          transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-        }}
-      >
-        <Toolbar style={{ paddingRight: 24, minHeight: '64px', background: DASHBOARD_HEADER_COLOR, zIndex: 1201 }}>
-          {APPLY_CUSTOM_BRAND_LOGO ? brandedToolbarContent : defaultToolbarContent}
-        </Toolbar>
-        <Toolbar
-          style={{ zIndex: 10, minHeight: '50px', paddingLeft: '0px', paddingRight: '0px', background: 'white' }}
-        >
-          <div
-            style={{
-              width: '100%',
-              zIndex: -112,
-              height: '48px',
-              overflowX: 'hidden',
-              overflowY: 'auto',
-              background: 'rgba(240,240,240)',
-              boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 12%)',
-              borderBottom: '1px solid lightgrey',
-            }}
-          ></div>
-        </Toolbar>
-      </AppBar>
-      <div
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-        }}
-      >
-        <Typography
-          variant='h2'
-          color='textSecondary'
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          {!connected ? <CircularProgress color='inherit' /> : <></>}
-        </Typography>
-      </div>
-    </div>
-  );
-  return content;
 };
 
 export default NeoDashboardPlaceholder;

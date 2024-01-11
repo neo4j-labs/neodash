@@ -1,16 +1,38 @@
-const path = require('path');
-const webpack = require('webpack');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+
+const circularPlugin = new CircularDependencyPlugin({
+  // exclude detection of files based on a RegExp
+  exclude: /a\.js|node_modules/,
+  // add errors to webpack instead of warnings
+  failOnError: false,
+  // allow import cycles that include an asyncronous import,
+  // e.g. via import(/* webpackMode: "weak" */ './file.js')
+  allowAsyncCycles: false,
+  // set the current working directory for displaying module paths
+  cwd: process.cwd(),
+});
+
+const circularValidation = false;
 
 const rules = [
   {
     test: /\.(js|jsx|ts|tsx)$/,
     exclude: /(node_modules)/,
     loader: 'babel-loader',
-    options: { presets: ['@babel/env'] },
+    options: {
+      presets: ['@babel/env'],
+      //plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean),
+    },
   },
   {
     test: /\.css$/,
     use: ['style-loader', 'css-loader'],
+  },
+  {
+    test: /\.pcss$/,
+    use: ['style-loader', 'css-loader', 'postcss-loader'],
   },
   {
     test: /\.js$/,
@@ -29,9 +51,12 @@ const rules = [
 module.exports = (env) => {
   const production = env.production;
   return {
-    entry: './src/index.tsx',
+    experiments: {
+      topLevelAwait: true,
+    },
+    entry: ['./src/index.tsx'],
     mode: production ? 'production' : 'development',
-    devtool: production ? undefined : 'source-map',
+    devtool: production ? 'source-map' : 'eval-cheap-module-source-map',
     module: {
       rules: rules,
     },
@@ -51,8 +76,22 @@ module.exports = (env) => {
     devServer: {
       port: 3000,
       hot: true,
+      compress: true,
+      client: {
+        overlay: {
+          warnings: false,
+        },
+      },
     },
-    plugins: production ? [] : [new webpack.HotModuleReplacementPlugin()],
+    plugins: production
+      ? [
+          sentryWebpackPlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: 'neo4j-inc',
+            project: 'neodash',
+          }),
+        ]
+      : [new ReactRefreshWebpackPlugin(), ...(circularValidation ? [circularPlugin] : [])],
     ignoreWarnings: [/Failed to parse source map/],
   };
 };

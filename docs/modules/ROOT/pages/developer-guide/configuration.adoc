@@ -16,6 +16,7 @@ will look like this:
 ....
 {
     "ssoEnabled": false,
+    "ssoProviders": [],
     "ssoDiscoveryUrl": "https://example.com",
     "standalone": false,
     "standaloneProtocol": "neo4j",
@@ -24,7 +25,14 @@ will look like this:
     "standaloneDatabase": "neo4j",
     "standaloneDashboardName": "My Dashboard",
     "standaloneDashboardDatabase": "dashboards",
-    "standaloneDashboardURL": ""
+    "standaloneDashboardURL": "",
+    "standaloneAllowLoad": false,
+    "standaloneLoadFromOtherDatabases": false,
+    "standaloneMultiDatabase": false,
+    "standaloneDatabaseList": "neo4j"    
+    "loggingMode": "0",
+    "loggingDatabase": "logs",
+    "customHeader": "",
 }
 ....
 
@@ -36,6 +44,8 @@ will look like this:
 |ssoEnabled |boolean |false |If enabled, lets users connect to Neo4j
 using SSO. This requires the app to be running in standalone mode, and a
 valid ssoDiscoveryUrl to be set.
+
+|ssoProviders |List |[] |When using multiple SSO providers on the database, you can configure the list of providers (by id) to be used on Neodash. If empty, all providers will be displayed.
 
 |ssoDiscoveryUrl |string |https://example.com |If ssoEnabled is true &
 standalone mode is enabled, the URL to retrieve SSO auth config from.
@@ -71,7 +81,7 @@ risk, as it exposes the Neo4j username to anyone who can access the
 NeoDash deployment.
 
 |standaloneDashboardName |string |My Dashboard |The exact name
-(case-sensentive) of the dashboard to be loaded when running in
+(case-sensitive) of the dashboard to be loaded when running in
 standalone mode. This must be a dashboard that is saved as a node in the
 graph.
 
@@ -84,6 +94,52 @@ use multiple databases.
 inside Neo4j and would like to run a standalone mode deployment with a
 dashboard from a URL, set this parameter to the complete URL pointing to
 the dashboard JSON.
+
+|standaloneAllowLoad |boolean |false |If set to yes the "Load Dashboard"
+button will be enabled in standalone mode, allowing users to load
+additional dashboards from Neo4J. This parameter is false by default 
+_unless you are using Neo4j Enterprise Edition_, which lets you use multiple 
+databases.
+*NOTE*: when Load is enabled in standalone mode, only Database is available
+as a source, not file.
+
+|standaloneLoadFromOtherDatabases |boolean |false |If _standaloneAllowLoad_ is
+set to true, this parmeter enables or not users to load dashboards from
+other databases than the one deifned in _standaloneDashboardDatabase_. If
+_standaloneAllowLoad_ is set to false this parameters has no effect.
+
+|standaloneMultiDatabase |boolean |false |If this parameter set to true, the
+standalone configuration will ignore the _standaloneDatabase_ parameter and
+allow users to choose which database to connect to in the login screen, among
+the ones provided in _standaloneDatabaseList_, with a dropdown list. This
+parameter is false by default _unless you are using Neo4j Enterprise Edition_,
+which lets you use multiple databases.
+
+|standaloneDatabaseList |string |neo4j |If _standaloneMultiDatabase_ is
+set to true, this parmeter must contain a comma separated list of database
+names that will be displayed as options in the Database dropdown at user
+login (e.g. 'neo4j,database1,database2' will populate the database dropdown
+with the values 'neo4j','database1' and 'database2' in the connection screen).
+If _standaloneMultiDatabase_ is set to false this parameters has no effect. 
+
+|loggingMode |string |none |Determines whether neodash should create any
+user activity logs. possible values include: `0` (no log is created), 
+`1` (user login are tracked), `2` (tracks when a specific dashboard is 
+accessed/loaded or saved by a user*). 
+
+⚠️ Logs are created in Neo4J DB using the current user credentials 
+(or standaloneUsername if configured); write access to the log database 
+must be granted to enble any user to create logs.
+
+⚠️ * Load/Save from/to file are not logged (only from/to Database)   
+
+|loggingDatabase |string |neo4j |When loggingMode is set to anything 
+else than '0', the database to use for logging. Log records (nodes)
+will be created in this database.
+
+|customHeader |string |none |When set the dashboard header will display
+the prameter value as a fixed string, otherwise it will display the host 
+and port of current connection.
 |===
 
 == Configuring SSO
@@ -126,7 +182,7 @@ be enabled by changing the `standalone` config parameter:
 * If standalone mode is `false`, all other configuration parameters are
 ignored. NeoDash will run in Editor mode, and require a manual sign-in.
 * If standalone mode is `true`, NeoDash will read all configuration
-parameters. A *fixed dashboard* will be auto-loaded, and no changes to
+parameters. A *predefined dashboard* will be auto-loaded, and no changes to
 the dashboard can be made. There are two types of valid standalone
 deployments:
 ** A standalone deployment that *reads the fixed dashboard from Neo4j*.
@@ -134,3 +190,15 @@ The `standaloneDashboardName` and `standaloneDashboardDatabase` config
 parameters are used to define these.
 ** A standalone deployment that *reads the fixed dashboard from a URL*.
 The `standaloneDashboardURL` config parameter is used to define this.
+
+* Standalone mode can also be configured to allow users load a different
+dashboard after the predefined one is loaded (a `Load Dashboard` button
+will be displayed on the right side of dashboard title). 
+The `standaloneAllowLoad` and `standaloneLoadFromOtherDatabases` are used
+to define this.
+* When allowing users to load dashboards dyamically in standalone mode,
+they may also need to connect to different databases, depending on the
+specific dashboard bing loaded. this can be enabled setting 
+`standaloneMultiDatabase` to true and providing a comma separated list
+of the allowed database names in the`standaloneDatabaseList` parameter.
+

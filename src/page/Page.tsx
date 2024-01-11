@@ -4,7 +4,7 @@ import NeoAddCard from '../card/CardAddButton';
 import NeoCard from '../card/Card';
 import { getReports } from './PageSelectors';
 import { addReportThunk, removeReportThunk, updatePageLayoutThunk, cloneReportThunk } from './PageThunks';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { getDashboardIsEditable, getPageNumber } from '../settings/SettingsSelectors';
 import { getDashboardSettings } from '../dashboard/DashboardSelectors';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -23,28 +23,28 @@ export const NeoPage = ({
   onCreatePressed = () => {}, // callback for when the user wants to add a new report.
   onClonePressed = () => {}, // callback/action to take when a user wants to clone a report
   onRemovePressed = () => {}, // action to take when a report gets removed.
-  isLoaded = true, // Whether the page is loaded and the cards can be displayed.
   onPageLayoutUpdate = () => {}, // action to take when the page layout is updated.
 }) => {
-  const getReportIndex = (pagenumber: number, index: number) => {
-    return `${pagenumber}:${index}`;
+  const getReportKey = (pagenumber: number, id: string) => {
+    return `${pagenumber}:${id}`;
   };
 
-  const defaultLayouts = [
-    {
-      x: 0,
-      y: 0,
-      i: getReportIndex(pagenumber, 999999),
-      w: 3,
-      h: 2,
-      isDraggable: false,
-    },
-  ];
+  const defaultLayouts = {
+    lg: [
+      {
+        x: 0,
+        y: 0,
+        i: getReportKey(pagenumber, '999999'),
+        w: 6,
+        h: 3,
+        isDraggable: false,
+      },
+    ],
+  };
 
-  const loadingMessage = <div>Loading card...</div>;
   const [isDragging, setIsDragging] = React.useState(false);
   const [layouts, setLayouts] = React.useState(defaultLayouts);
-  const [lastElement, setLastElement] = React.useState(<div key={getReportIndex(pagenumber, 999999)}></div>);
+  const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
 
   const availableHandles = () => {
@@ -87,7 +87,7 @@ export const NeoPage = ({
     }
 
     for (let level = 0; level < maxY; level++) {
-      if (maxXbyYLevel[level] <= 9 && (maxXbyYLevel[level + 1] === undefined || maxXbyYLevel[level + 1] <= 9)) {
+      if (maxXbyYLevel[level] <= 18 && (maxXbyYLevel[level + 1] === undefined || maxXbyYLevel[level + 1] <= 18)) {
         return { x: maxXbyYLevel[level] !== undefined ? maxXbyYLevel[level] : 0, y: level };
       }
     }
@@ -101,37 +101,38 @@ export const NeoPage = ({
     setLayouts({
       // @ts-ignore
       lg: [
-        ...reports.map((report, index) => {
+        ...reports.map((report) => {
           return {
-            x: report.x !== undefined ? report.x : 0,
-            y: report.y !== undefined ? report.y : 0,
-            i: getReportIndex(pagenumber, index),
-            w: report.width !== undefined ? Math.max(parseInt(report.width), 2) : 3,
-            h: report.height !== undefined ? Math.max(parseInt(report.height), 1) : 2,
-            minW: 2,
-            minH: 1,
+            x: report.x || 0,
+            y: report.y || 0,
+            i: getReportKey(pagenumber, report.id),
+            w: Math.max(parseInt(report.width), 4) || 4,
+            h: Math.max(parseInt(report.height), 2) || 2,
+            minW: 4,
+            minH: 2,
             resizeHandles: availableHandles(),
+            isDraggable: true,
           };
         }),
         {
           x: x,
           y: y,
-          i: getReportIndex(pagenumber, 999999),
-          w: 3,
-          h: 2,
-          minW: 3,
-          minH: 2,
+          i: getReportKey(pagenumber, '999999'),
+          w: 6,
+          h: 4,
+          minW: 6,
+          minH: 4,
           isDraggable: false,
           isResizable: false,
         },
       ],
     });
     setLastElement(
-      <Grid style={{ paddingBottom: '6px' }} key={getReportIndex(pagenumber, 999999)}>
+      <Grid style={{ paddingBottom: '6px' }} key={getReportKey(pagenumber, '999999')}>
         <NeoAddCard
           onCreatePressed={() => {
             const { x, y } = getAddCardButtonPosition();
-            onCreatePressed(x, y, 3, 2);
+            onCreatePressed(x, y, 6, 4);
           }}
         />
       </Grid>
@@ -141,17 +142,17 @@ export const NeoPage = ({
   useEffect(() => {
     setAnimated(false);
     recomputeLayout();
-  }, [reports, dashboardSettings.resizing]);
+  }, [reports, dashboardSettings.resizing, pagenumber]);
 
   const content = (
-    <div style={{ paddingTop: '52px' }}>
+    <div className='n-pt-3'>
       <ResponsiveGridLayout
         draggableHandle='.drag-handle'
         layouts={layouts}
         className={`layout neodash-card-editable-${editable} ${animated ? 'animated' : 'not-animated'}`}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-        rowHeight={210}
+        cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+        rowHeight={100}
         compactType={GRID_COMPACTION_TYPE}
         onDrag={() => {
           if (!isDragging) {
@@ -177,43 +178,42 @@ export const NeoPage = ({
           onPageLayoutUpdate(newLayout);
         }}
       >
-        {reports.map((report, index) => {
-          const w = 12;
+        {reports.map((report) => {
+          const w = 24;
+          const { id } = report;
           // @ts-ignore
           return (
             <Grid
-              index={getReportIndex(pagenumber, index)}
-              key={getReportIndex(pagenumber, index)}
+              key={getReportKey(pagenumber, id)}
               style={{ paddingBottom: '6px' }}
               item
-              xs={Math.min(w * 4, 12)}
-              sm={Math.min(w * 2, 12)}
-              md={Math.min(w * 2, 12)}
-              lg={Math.min(w, 12)}
-              xl={Math.min(w, 12)}
+              xs={Math.min(w * 4, 24)}
+              sm={Math.min(w * 2, 24)}
+              md={Math.min(w * 2, 24)}
+              lg={Math.min(w, 24)}
+              xl={Math.min(w, 24)}
             >
               <NeoCard
-                index={index}
-                key={getReportIndex(pagenumber, index)}
+                id={id}
+                key={getReportKey(pagenumber, id)}
                 dashboardSettings={dashboardSettings}
                 onRemovePressed={onRemovePressed}
-                onClonePressed={(index) => {
+                onClonePressed={(id) => {
                   const { x, y } = getAddCardButtonPosition();
-                  onClonePressed(index, x, y);
+                  onClonePressed(id, x, y);
                 }}
               />
             </Grid>
           );
         })}
-        {editable && !isDragging ? lastElement : <div key={getReportIndex(pagenumber, 999999)}></div>}
+        {editable && !isDragging ? lastElement : <div key={getReportKey(pagenumber, '999999')}></div>}
       </ResponsiveGridLayout>
     </div>
   );
-  return !isLoaded ? loadingMessage : content;
+  return content;
 };
 
 const mapStateToProps = (state) => ({
-  isLoaded: true,
   pagenumber: getPageNumber(state),
   editable: getDashboardIsEditable(state),
   dashboardSettings: getDashboardSettings(state),
@@ -221,8 +221,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onRemovePressed: (index) => dispatch(removeReportThunk(index)),
-  onClonePressed: (index, x, y) => dispatch(cloneReportThunk(index, x, y)),
+  onRemovePressed: (id) => dispatch(removeReportThunk(id)),
+  onClonePressed: (id, x, y) => dispatch(cloneReportThunk(id, x, y)),
   onCreatePressed: (x, y, width, height) => dispatch(addReportThunk(x, y, width, height, undefined)),
   onPageLayoutUpdate: (layout) => dispatch(updatePageLayoutThunk(layout)),
 });

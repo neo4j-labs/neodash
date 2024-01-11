@@ -1,21 +1,23 @@
 import React, { useEffect } from 'react';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import FullscreenExit from '@material-ui/icons/FullscreenExit';
-import { Badge, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import { Badge, CardHeader, Dialog, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
-import { Tooltip } from '@material-ui/core';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import ImageIcon from '@material-ui/icons/Image';
-import CloseIcon from '@material-ui/icons/Close';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import { replaceDashboardParameters } from '../../chart/ChartUtils';
+
+import { IconButton } from '@neo4j-ndl/react';
+import {
+  DragIcon,
+  EllipsisVerticalIconOutline,
+  ArrowPathIconOutline,
+  ExpandIcon,
+  ShrinkIcon,
+  CameraIconSolid,
+  InformationCircleIconOutline,
+  XMarkIconOutline,
+} from '@neo4j-ndl/react/icons';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const NeoCardViewHeader = ({
   title,
@@ -60,17 +62,37 @@ const NeoCardViewHeader = ({
     }
   }, [title]);
 
+  const theme = createTheme({
+    typography: {
+      fontFamily: "'Nunito Sans', sans-serif !important",
+      allVariants: { color: 'rgb(var(--palette-neutral-text-weak))' },
+    },
+    palette: {
+      text: {
+        primary: 'rgb(var(--palette-neutral-text))',
+      },
+      action: {
+        disabled: 'rgb(var(--palette-neutral-text-weak))',
+      },
+    },
+  });
+
   const cardTitle = (
-    <>
+    <ThemeProvider theme={theme}>
       <table style={{ width: '100%' }}>
         <tbody>
           <tr>
             {editable ? (
               <td>
-                <DragIndicatorIcon
-                  className='drag-handle'
-                  style={{ color: 'grey', cursor: 'pointer', marginLeft: '-10px', marginRight: '10px' }}
-                ></DragIndicatorIcon>
+                <IconButton
+                  className='n-mb-3 n-relative -n-left-3 drag-handle'
+                  clean
+                  size='medium'
+                  aria-label={'drag'}
+                  onClick={() => {}}
+                >
+                  <DragIcon />
+                </IconButton>
               </td>
             ) : (
               <></>
@@ -95,59 +117,67 @@ const NeoCardViewHeader = ({
                   setText(event.target.value);
                   debouncedTitleUpdate(event.target.value);
                 }}
+                size={'small'}
+                style={{ paddingTop: '0px important!' }}
+                variant={'standard'}
+                sx={{
+                  '& .MuiInputBase-input.Mui-disabled': {
+                    WebkitTextFillColor: 'inherit',
+                  },
+                }}
               />
             </td>
           </tr>
         </tbody>
       </table>
-    </>
+    </ThemeProvider>
   );
 
   const descriptionEnabled = description && description.length > 0;
 
   // TODO: all components like buttons should probably be seperate files
   const settingsButton = (
-    <Tooltip title='Settings' aria-label='settings'>
-      <IconButton aria-label='settings' onClick={onToggleCardSettings}>
-        <MoreVertIcon />
+    <Tooltip title='Settings' aria-label='settings' disableInteractive>
+      <IconButton aria-label='settings' onClick={onToggleCardSettings} clean size='medium'>
+        <EllipsisVerticalIconOutline />
       </IconButton>
     </Tooltip>
   );
 
   const refreshButton = (
-    <Tooltip title='Refresh' aria-label='refresh'>
-      <IconButton aria-label='refresh' onClick={onManualRefreshCard}>
-        <RefreshIcon />
+    <Tooltip title='Refresh' aria-label='refresh' disableInteractive>
+      <IconButton aria-label='refresh' onClick={onManualRefreshCard} clean size='medium'>
+        <ArrowPathIconOutline />
       </IconButton>
     </Tooltip>
   );
 
   const maximizeButton = (
-    <Tooltip title='Maximize' aria-label='maximize'>
-      <IconButton aria-label='maximize' onClick={onToggleCardExpand}>
-        <FullscreenIcon />
+    <Tooltip title='Maximize' aria-label='maximize' disableInteractive>
+      <IconButton aria-label='maximize' onClick={onToggleCardExpand} clean size='medium'>
+        <ExpandIcon />
       </IconButton>
     </Tooltip>
   );
 
   const unMaximizeButton = (
-    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand}>
-      <FullscreenExit />
+    <IconButton aria-label='un-maximize' onClick={onToggleCardExpand} clean size='medium'>
+      <ShrinkIcon />
     </IconButton>
   );
 
   const downloadImageButton = (
-    <Tooltip title='Download as Image' aria-label='download'>
-      <IconButton onClick={onDownloadImage} aria-label='download csv'>
-        <ImageIcon style={{ fontSize: '1.3rem', zIndex: 5 }} fontSize='small'></ImageIcon>
+    <Tooltip title='Download as Image' aria-label='download' disableInteractive>
+      <IconButton onClick={onDownloadImage} aria-label='download csv' clean size='medium'>
+        <CameraIconSolid />
       </IconButton>
     </Tooltip>
   );
 
   const descriptionButton = (
-    <Tooltip title='Details' aria-label='details'>
-      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details'>
-        <InfoOutlinedIcon />
+    <Tooltip title='Details' aria-label='details' disableInteractive>
+      <IconButton onClick={() => setDescriptionModalOpen(true)} aria-label='details' clean size='medium'>
+        <InformationCircleIconOutline />
       </IconButton>
     </Tooltip>
   );
@@ -156,16 +186,19 @@ const NeoCardViewHeader = ({
     <>
       <Dialog
         maxWidth={'lg'}
-        open={descriptionModalOpen == true}
+        open={descriptionModalOpen}
         onClose={() => setDescriptionModalOpen(false)}
         aria-labelledby='form-dialog-title'
       >
         <DialogTitle id='form-dialog-title'>
           {title}
-          <IconButton onClick={() => setDescriptionModalOpen(false)} style={{ padding: '3px', float: 'right' }}>
-            <Badge overlap='rectangular' badgeContent={''}>
-              <CloseIcon />
-            </Badge>
+          <IconButton
+            onClick={() => setDescriptionModalOpen(false)}
+            style={{ padding: '3px', float: 'right' }}
+            aria-label={'rect badge'}
+            clean
+          >
+            <XMarkIconOutline />
           </IconButton>
         </DialogTitle>
         <DialogContent style={{ minWidth: '400px' }}>

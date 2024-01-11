@@ -1,4 +1,4 @@
-import { evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnNode, evaluateRulesOnLink } from '../../../extensions/styling/StyleRuleEvaluator';
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
@@ -122,6 +122,12 @@ function extractGraphEntitiesFromField(
   }
 }
 
+const isValidLink = (link, nodes) => {
+  if (nodes[link.source] == null || nodes[link.target] == null) {
+    return false;
+  }
+  return true;
+};
 export function buildGraphVisualizationObjectFromRecords(
   records: any[], // Neo4jRecord[],
   nodes: Record<string, any>[],
@@ -139,8 +145,8 @@ export function buildGraphVisualizationObjectFromRecords(
   relColorProperty: any,
   defaultRelColor: any,
   styleRules: any,
-  nodePositions: any,
-  frozen: any
+  nodePositions: any = {},
+  frozen: any = false
 ) {
   // Extract graph objects from result set.
   records.forEach((record) => {
@@ -162,13 +168,25 @@ export function buildGraphVisualizationObjectFromRecords(
       );
     });
   });
-  // Assign proper curvatures to relationships.
-  // This is needed for pairs of nodes that have multiple relationships between them, or self-loops.
+
+  // Assign proper curvatures and colors to relationships.
+  // Assigning curvature is needed for pairs of nodes that have multiple relationships between them, or self-loops.
   const linksList = Object.values(links).map((linkArray) => {
     return linkArray.map((link, i) => {
+      let defaultColor = link.color;
+
+      // Assign color from json based on style rule evaluation if specified
+      let evaluatedColor = evaluateRulesOnLink(link, 'relationship color', defaultColor, styleRules);
+      link.color = evaluatedColor;
       const mirroredNodePair = links[`${link.target},${link.source}`];
       return assignCurvatureToLink(link, i, linkArray.length, mirroredNodePair ? mirroredNodePair.length : 0);
     });
+  });
+
+  linksList.forEach((link, idx, object) => {
+    if (!isValidLink(link[0], nodes)) {
+      object.splice(idx, 1);
+    }
   });
 
   // Assign proper colors to nodes.
@@ -180,7 +198,7 @@ export function buildGraphVisualizationObjectFromRecords(
       ? node.properties[nodeColorProperty]
       : totalColors > 0
       ? colorScheme[nodeLabelsList.indexOf(node.mainLabel) % totalColors]
-      : 'grey';
+      : defaultNodeColor;
     // Next, evaluate the custom styling rules to see if there's a rule-based override
     assignedColor = evaluateRulesOnNode(node, 'node color', assignedColor, styleRules);
     return update(node, { color: assignedColor ? assignedColor : defaultNodeColor });

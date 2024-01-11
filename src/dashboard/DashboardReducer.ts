@@ -3,8 +3,10 @@
  */
 
 import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
-import { FIRST_PAGE_INITIAL_STATE, pageReducer, PAGE_INITIAL_STATE } from '../page/PageReducer';
+import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/state/ExtensionReducer';
+import { PAGE_EXAMPLE_STATE, pageReducer, PAGE_EMPTY_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
+
 import {
   CREATE_PAGE,
   REMOVE_PAGE,
@@ -13,17 +15,28 @@ import {
   SET_DASHBOARD,
   MOVE_PAGE,
   SET_EXTENSION_ENABLED,
+  SET_DASHBOARD_UUID,
 } from './DashboardActions';
 
-export const NEODASH_VERSION = '2.2';
+export const NEODASH_VERSION = '2.4';
+export const VERSION_TO_MIGRATE = { '1.1': '2.0', '2.0': '2.1', '2.1': '2.2', '2.2': '2.3', '2.3': '2.4' };
 
 export const initialState = {
   title: DEFAULT_DASHBOARD_TITLE,
   version: NEODASH_VERSION,
   settings: SETTINGS_INITIAL_STATE,
-  pages: [FIRST_PAGE_INITIAL_STATE],
+  pages: [PAGE_EXAMPLE_STATE],
   parameters: {},
-  extensions: {},
+  extensions: INITIAL_EXTENSIONS_STATE,
+};
+
+export const emptyDashboardState = {
+  title: DEFAULT_DASHBOARD_TITLE,
+  version: NEODASH_VERSION,
+  settings: SETTINGS_INITIAL_STATE,
+  pages: [PAGE_EMPTY_STATE],
+  parameters: {},
+  extensions: INITIAL_EXTENSIONS_STATE,
 };
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
@@ -54,14 +67,26 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     };
   }
 
+  // Extensions-specific updates are deferred to the extensions reducer.
+  if (action.type.startsWith('DASHBOARD/EXTENSIONS')) {
+    return {
+      ...state,
+      extensions: extensionsReducer(state.extensions, action),
+    };
+  }
+
   // Global dashboard updates are handled here.
   switch (type) {
     case RESET_DASHBOARD_STATE: {
-      return { ...initialState };
+      return { ...emptyDashboardState };
     }
     case SET_DASHBOARD: {
       const { dashboard } = payload;
       return { ...dashboard };
+    }
+    case SET_DASHBOARD_UUID: {
+      const { uuid } = payload;
+      return { uuid: uuid, ...state };
     }
     case SET_DASHBOARD_TITLE: {
       const { title } = payload;
@@ -70,11 +95,12 @@ export const dashboardReducer = (state = initialState, action: { type: any; payl
     case SET_EXTENSION_ENABLED: {
       const { name, enabled } = payload;
       const extensions = state.extensions ? { ...state.extensions } : {};
-      extensions[name] = enabled;
+      // If the extension was enabled before, remember the old settings and toggle the 'active' switch.
+      extensions[name] = extensions[name] == undefined ? { active: enabled } : { ...extensions[name], active: enabled };
       return { ...state, extensions: extensions };
     }
     case CREATE_PAGE: {
-      return { ...state, pages: [...state.pages, PAGE_INITIAL_STATE] };
+      return { ...state, pages: [...state.pages, PAGE_EMPTY_STATE] };
     }
     case REMOVE_PAGE: {
       // Removes the card at a given index on a selected page number.
