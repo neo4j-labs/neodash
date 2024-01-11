@@ -4,16 +4,7 @@ import { CloudArrowUpIconOutline, EllipsisVerticalIconOutline } from '@neo4j-ndl
 import Tooltip from '@mui/material/Tooltip';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
-export const DashboardSidebarListItem = ({
-  title,
-  selected,
-  readonly,
-  saved,
-  version,
-  onSelect,
-  onSave,
-  onSettingsOpen,
-}) => {
+export const DashboardSidebarListItem = ({ title, selected, readonly, saved, version, onSelect, onSettingsOpen }) => {
   return (
     <SideNavigationGroupHeader>
       <div style={{ display: 'contents', width: '100%' }}>
@@ -56,7 +47,7 @@ export const DashboardSidebarListItem = ({
               marginRight: '10px',
             }}
             onClick={(event) => {
-              saved == false ? onSave() : onSettingsOpen(event);
+              saved == false ? onSettingsOpen(event) : onSettingsOpen(event);
             }}
           >
             {saved == true ? (
@@ -67,8 +58,8 @@ export const DashboardSidebarListItem = ({
                 />
               </Tooltip>
             ) : (
-              <Tooltip title='Save' aria-label='save' disableInteractive>
-                <CloudArrowUpIconOutline
+              <Tooltip title='Settings' aria-label='settings' disableInteractive>
+                <EllipsisVerticalIconOutline
                   color='rgb(var(--palette-warning-text))'
                   style={{ float: 'right', marginRight: '-6px' }}
                   className='btn-icon-base-r'

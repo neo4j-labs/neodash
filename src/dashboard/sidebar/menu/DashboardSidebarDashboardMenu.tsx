@@ -1,12 +1,15 @@
 import React from 'react';
 import { Menu, MenuItem, MenuItems } from '@neo4j-ndl/react';
 import {
+  ArchiveBoxIconOutline,
+  ArrowUturnLeftIconOutline,
   CloudArrowUpIconOutline,
   DocumentDuplicateIconOutline,
   DocumentTextIconOutline,
   InformationCircleIconOutline,
   ShareIconOutline,
   TrashIconOutline,
+  XMarkIconOutline,
 } from '@neo4j-ndl/react/icons';
 
 /**
@@ -14,8 +17,11 @@ import {
  */
 export const NeoDashboardSidebarDashboardMenu = ({
   anchorEl,
+  draft,
   open,
   handleInfoClicked,
+  handleSaveClicked,
+  handleDiscardClicked,
   handleLoadClicked,
   handleExportClicked,
   handleShareClicked,
@@ -37,14 +43,21 @@ export const NeoDashboardSidebarDashboardMenu = ({
       onClose={handleClose}
       size='small'
     >
-      <MenuItems>
-        <MenuItem onClick={handleInfoClicked} icon={<InformationCircleIconOutline />} title='Info' />
-        <MenuItem onClick={handleLoadClicked} icon={<CloudArrowUpIconOutline />} title='Load' />
-        {/* <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' /> */}
-        <MenuItem onClick={handleExportClicked} icon={<DocumentTextIconOutline />} title='Export' />
-        <MenuItem onClick={handleShareClicked} icon={<ShareIconOutline />} title='Share' />
-        <MenuItem onClick={handleDeleteClicked} icon={<TrashIconOutline />} title='Delete' />
-      </MenuItems>
+      {!draft ? (
+        <MenuItems>
+          <MenuItem onClick={handleInfoClicked} icon={<InformationCircleIconOutline />} title='Info' />
+          <MenuItem onClick={handleLoadClicked} icon={<CloudArrowUpIconOutline />} title='Load' />
+          {/* <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' /> */}
+          <MenuItem onClick={handleExportClicked} icon={<DocumentTextIconOutline />} title='Export' />
+          <MenuItem onClick={handleShareClicked} icon={<ShareIconOutline />} title='Share' />
+          <MenuItem onClick={handleDeleteClicked} icon={<TrashIconOutline />} title='Delete' />
+        </MenuItems>
+      ) : (
+        <MenuItems>
+          <MenuItem onClick={handleSaveClicked} icon={<CloudArrowUpIconOutline />} title='Save' />
+          <MenuItem onClick={handleDiscardClicked} icon={<ArrowUturnLeftIconOutline />} title='Discard Draft' />
+        </MenuItems>
+      )}
     </Menu>
   );
 };

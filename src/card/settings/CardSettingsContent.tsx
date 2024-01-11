@@ -8,7 +8,7 @@ import NeoCodeEditorComponent, {
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
 import { EXTENSIONS_CARD_SETTINGS_COMPONENT } from '../../extensions/ExtensionConfig';
-import { update } from '../../utils/ObjectManipulation';
+import { objMerge } from '../../utils/ObjectManipulation';
 
 const NeoCardSettingsContent = ({
   pagenumber,
@@ -156,7 +156,7 @@ const NeoCardSettingsContent = ({
       {report && report.settingsComponent ? (
         <SettingsComponent
           onReportSettingUpdate={onReportSettingUpdate}
-          settings={update({ helperText: report.helperText, inputMode: report.inputMode }, reportSettings)}
+          settings={objMerge({ helperText: report.helperText, inputMode: report.inputMode }, reportSettings)}
           database={database}
           query={query}
           onQueryUpdate={onQueryUpdate}
