@@ -37,6 +37,11 @@ def apply_cors(response):
 
 @app.route("/get_statistics", methods=["GET"])
 def get_statistics():
+
+    import time
+
+    start = time.time()
+
     filename = request.args.get(
         "endpoint"
     )  # You can pass the node name as a query parameter
@@ -49,6 +54,11 @@ def get_statistics():
     # Run analysis
     df = pcap_analysis("file.pcap")
     print(df)
+
+    end = time.time()
+    print("=======================")
+    print(f"Time used: {end-start}")
+    print("=======================")
 
     return df.to_json()
 
