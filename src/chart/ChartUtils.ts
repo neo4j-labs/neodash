@@ -406,6 +406,9 @@ export const isEmptyObject = (obj: object) => {
  * @returns True if it's an object castable to date
  */
 export function isCastableToNeo4jDate(value: object) {
+  if (value == null || value == undefined) {
+    return false;
+  }
   let keys = Object.keys(value);
   return keys.length == 3 && keys.includes('day') && keys.includes('month') && keys.includes('year');
 }

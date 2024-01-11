@@ -464,6 +464,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standaloneDashboardURL,
         config.standaloneUsername,
         config.standalonePassword,
+        config.standalonePasswordWarningHidden,
         config.standaloneAllowLoad,
         config.standaloneLoadFromOtherDatabases,
         config.standaloneMultiDatabase,
@@ -621,7 +622,6 @@ export const initializeApplicationAsStandaloneThunk =
   (config, paramsToSetAfterConnecting) => (dispatch: any, getState: any) => {
     const clearNotificationAfterLoad = true;
     const state = getState();
-
     // If we are running in standalone mode, auto-set the connection details that are configured.
     dispatch(
       setConnectionProperties(
