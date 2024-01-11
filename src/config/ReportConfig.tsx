@@ -380,7 +380,7 @@ const _REPORT_TYPES = {
       marginBottom: {
         label: 'Margin Bottom',
         type: SELECTION_TYPES.NUMBER,
-        default: 45,
+        default: 30,
       },
       legendWidth: {
         label: 'Legend Width',
