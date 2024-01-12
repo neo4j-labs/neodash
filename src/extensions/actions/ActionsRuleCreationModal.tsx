@@ -334,7 +334,7 @@ export const NeoCustomReportActionsModal = ({
   const td2Styling = (type) => ({ width: type === 'bar' ? '15%' : '30%' });
   const td2DropdownClassname = (type) => `n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`;
   const td2Autocomplete = (type, index, rule) =>
-    (type !== 'bar' ? (
+    (type !== 'bar' && rule.condition !== 'rowCheck' ? (
       <Autocomplete
         className='n-align-middle n-inline-block n-w-/5'
         disableClearable={true}
@@ -418,7 +418,7 @@ export const NeoCustomReportActionsModal = ({
                               className={td2DropdownClassname(type)}
                               style={{
                                 minWidth: '140px',
-                                width: ruleTrigger.disableFieldSelection === true ? '100%' : '140px',
+                                width: ruleTrigger?.disableFieldSelection === true ? '100%' : '140px',
                                 display: 'inline-block',
                               }}
                               selectProps={{
@@ -440,7 +440,7 @@ export const NeoCustomReportActionsModal = ({
 
                         <td style={{ width: '6%' }} className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
-                            {!ruleTrigger.multiple ? 'SET' : 'APPEND'}
+                            {!ruleTrigger?.multiple ? 'SET' : 'APPEND'}
                           </span>
                         </td>
 
@@ -472,7 +472,7 @@ export const NeoCustomReportActionsModal = ({
 
                         <td width='5%' className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
-                            {!ruleTrigger.multiple ? 'TO' : 'WITH'}
+                            {!ruleTrigger?.multiple ? 'TO' : 'WITH'}
                           </span>
                         </td>
 
