@@ -9,6 +9,7 @@
 *** xref:user-guide/reports/bar-chart.adoc[Bar Chart]
 *** xref:user-guide/reports/pie-chart.adoc[Pie Chart]
 *** xref:user-guide/reports/line-chart.adoc[Line Chart]
+*** xref:user-guide/reports/graph3d.adoc[3D Graph]
 *** xref:user-guide/reports/sunburst.adoc[Sunburst]
 *** xref:user-guide/reports/circle-packing.adoc[Circle Packing]
 *** xref:user-guide/reports/choropleth.adoc[Choropleth]

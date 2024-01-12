@@ -70,7 +70,7 @@ export const NeoReport = ({
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {
-    if (type === 'graph' || type === 'map' || type === 'gantt') {
+    if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
       setSchemaDispatch(id, schema);
     }
   };
