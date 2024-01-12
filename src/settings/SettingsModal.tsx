@@ -44,7 +44,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) 
   return (
     <>
       <Tooltip title='Settings' aria-label='settings' disableInteractive>
-        <IconButton className='n-mx-1' onClick={handleClickOpen} aria-label='Settings' title='Settings'>
+        <IconButton className='n-mx-1' onClick={handleClickOpen} aria-label='Settings'>
           <Cog6ToothIconOutline />
         </IconButton>
       </Tooltip>

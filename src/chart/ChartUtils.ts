@@ -219,7 +219,7 @@ export function replaceDashboardParameters(str, parameters) {
     let param = _.replace(`$`, '').trim();
     let val = parameters?.[param] || null;
     let type = getRecordType(val);
-    let valueRender = type === 'string' ? val : RenderSubValue(val);
+    let valueRender = type === 'string' || type == 'link' ? val : RenderSubValue(val);
     return valueRender;
   };
 
@@ -406,6 +406,9 @@ export const isEmptyObject = (obj: object) => {
  * @returns True if it's an object castable to date
  */
 export function isCastableToNeo4jDate(value: object) {
+  if (value == null || value == undefined) {
+    return false;
+  }
   let keys = Object.keys(value);
   return keys.length == 3 && keys.includes('day') && keys.includes('month') && keys.includes('year');
 }
