@@ -238,27 +238,8 @@ export const NeoDashboardSidebar = ({
 
       <NeoDashboardSidebarAccessModal
         open={modalOpen == Modal.ACCESS}
-        dashboard={cachedDashboard}
-        dashboardDatabase={dashboardDatabase}
-        onConfirm={() => {
-          saveDashboardToNeo4j(
-            driver,
-            dashboardDatabase,
-            dashboard,
-            new Date().toISOString(),
-            connection.username,
-            () => {
-              // After saving successfully, refresh the list after a small delay.
-              // The new dashboard will always be on top (the latest), so we select index 0.
-              setDashboards([]);
-              setTimeout(() => {
-                getDashboardListFromNeo4j();
-                setSelectedDashboardIndex(0);
-                setDraft(false);
-              }, 100);
-            }
-          );
-        }}
+        database={dashboardDatabase}
+        dashboard={dashboards[inspectedIndex]}
         handleClose={() => {
           setModalOpen(Modal.NONE);
           setCachedDashboard('');
