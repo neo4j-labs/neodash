@@ -251,6 +251,7 @@ export const NeoCustomReportActionsModal = ({
     }
 
     // When we are accessing node properties (not page names), parse the node label + property pair to only show properties.
+    // Fields for graph and map reports are structured differently than regular reports (table, bar, etc.), so we access suggestions differently.
     if (rule.customization !== 'set page' && (type == 'graph' || type == 'map')) {
       suggestions = suggestions.map((e) => e.split('.')[1] || e);
     }
