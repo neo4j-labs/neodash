@@ -415,6 +415,28 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 0.25,
       },
+      expandHeightForLegend: {
+        label: 'Expand Height For Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      innerPadding: {
+        label: 'Inner Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      legendPosition: {
+        label: 'Legend Position',
+        type: SELECTION_TYPES.LIST,
+        values: ['Horizontal', 'Vertical'],
+        default: 'Vertical',
+      },
+      padding: {
+        label: 'Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.25,
+      },
     },
   },
   pie: {
