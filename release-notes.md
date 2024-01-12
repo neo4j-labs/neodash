@@ -1,20 +1,12 @@
-## NeoDash 2.4.1
-This is a patch release following 2.4.0. It contains several new features for self-hosted (standalone) NeoDash deployments, as well as a variety of UX improvements for dashboard editors.
+## NeoDash 2.4.2
+This is a release with a large amount of quality of life improvements, as well as some new features:
 
-
-Included:
-- Improvements to customizability of the bar chart (styling, legend customization, report actions). [#689](https://github.com/neo4j-labs/neodash/pull/689)
-- Improved dashboard settings interface, fixed alignment for table download button. [#729](https://github.com/neo4j-labs/neodash/pull/729)
-- Adjusted ordering of suggested labels/properties for parameter selectors. [#728](https://github.com/neo4j-labs/neodash/pull/728)
-- Better handling of date parameters when saving/loading dashboards. [#727](https://github.com/neo4j-labs/neodash/pull/727)
-- Fixed incorrect z-index issue for form creation modals. [#726](https://github.com/neo4j-labs/neodash/pull/726)
-- Adjusted filtering tooltip on tables to avoid hiding result data. [#712](https://github.com/neo4j-labs/neodash/pull/712)
-- Fixed uncontrolled component issue for dashboard import modal. [#711](https://github.com/neo4j-labs/neodash/pull/711)
-- Adjusted font color of graph context popups to use theme colors. [#699](https://github.com/neo4j-labs/neodash/pull/699)
-- Adjust sidebar database selector to only show active databases. [#698](https://github.com/neo4j-labs/neodash/pull/698)
-- Incorporated logging functionality for self-hosted NeoDash deployments. [#705](https://github.com/neo4j-labs/neodash/pull/705)
-- Improved dashboard management in standalone-mode deployments. [#705](https://github.com/neo4j-labs/neodash/pull/705)
-- Added Docker parameter for overriding the app's logo & custom header.  [#705](https://github.com/neo4j-labs/neodash/pull/705)
-- Changed the dashboard 'save' action to a logical merge, rather than a delete + create, allowing to persist labels across saves. [#705](https://github.com/neo4j-labs/neodash/pull/705)
-- Docker: Updated Alpine base image to mitigate CVE-2023-38039 & CVE-2023-4863. [#705](https://github.com/neo4j-labs/neodash/pull/705)
-
+- Visualize graphs in 3D with the new 3D graph report. [#737](https://github.com/neo4j-labs/neodash/pull/737)
+- Improved dashboard management sidebar and handling of drafts. [#734](https://github.com/neo4j-labs/neodash/pull/734)
+- Added parameter select setting for autopopulating first selector value. [#746](https://github.com/neo4j-labs/neodash/pull/746)
+- Improved UX for editing page names & dashboard titles. [#743](https://github.com/neo4j-labs/neodash/pull/743)
+- Unified common settings for each report type. [#724](https://github.com/neo4j-labs/neodash/pull/724)
+- SSO auth tokens are now automatically refreshed on expiry. [#611](https://github.com/neo4j-labs/neodash/pull/611)
+- Title of the browser tab NeoDash runs on is now automatically set to the dashboard name.  [#708](https://github.com/neo4j-labs/neodash/pull/708)
+- Fixed issue where invisible table columns were not handled correctly. [#695](https://github.com/neo4j-labs/neodash/pull/695)
+- Miscellaneous bug fixes, style improvements & stability fixes. [#744](https://github.com/neo4j-labs/neodash/pull/744)
