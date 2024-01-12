@@ -18,7 +18,7 @@ This is a patch release following 2.4.0. It contains several new features for se
 Included:
 - Improvements to customizability of the bar chart (styling, legend customization, report actions). [#689](https://github.com/neo4j-labs/neodash/pull/689)
 - Improved dashboard settings interface, fixed alignment for table download button. [#729](https://github.com/neo4j-labs/neodash/pull/729)
-- Adjusted ordering of suggested labels/properties for parameter selectors. [#728](https://github.com/neo4j-labs/neodash/pull/728)
+- Adjusted ordering of suggested labels/proFperties for parameter selectors. [#728](https://github.com/neo4j-labs/neodash/pull/728)
 - Better handling of date parameters when saving/loading dashboards. [#727](https://github.com/neo4j-labs/neodash/pull/727)
 - Fixed incorrect z-index issue for form creation modals. [#726](https://github.com/neo4j-labs/neodash/pull/726)
 - Adjusted filtering tooltip on tables to avoid hiding result data. [#712](https://github.com/neo4j-labs/neodash/pull/712)
