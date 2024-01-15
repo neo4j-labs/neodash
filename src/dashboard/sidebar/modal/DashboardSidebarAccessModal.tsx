@@ -14,9 +14,11 @@ import { useDispatch } from 'react-redux';
 export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, handleClose }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedLabels, setSelectedLabels] = useState([]);
+  const [allLabels, setAllLabels] = useState([]);
   const [neo4jLabels, setNeo4jLabels] = useState([]);
   const [newLabel, setNewLabel] = useState('');
-  const initialLabel = '_Neodash_Dashboard';
+  // TODO: Ideally this should stay in a const file (used in multiple files across the project)
+  const INITIAL_LABEL = '_Neodash_Dashboard';
   const [feedback, setFeedback] = useState('');
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const dispatch = useDispatch();
@@ -52,12 +54,14 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
       (records) => {
         // Set the selectedLabels state to the labels of the dashboard
         setSelectedLabels(records[0].get('labels'));
+        setAllLabels(records[0].get('labels'));
       }
     );
   }, [open]);
 
   useEffect(() => {
-    setSelectedLabels([initialLabel]);
+    setAllLabels([INITIAL_LABEL]);
+    setSelectedLabels([INITIAL_LABEL]);
   }, []);
 
   const handleOpenMenu = (event) => {
@@ -69,14 +73,14 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
   };
 
   const handleLabelSelect = (label) => {
-    if (!selectedLabels.includes(label) && label !== initialLabel) {
+    if (!selectedLabels.includes(label) && label !== INITIAL_LABEL) {
       setSelectedLabels([...selectedLabels, label]);
     }
     handleCloseMenu();
   };
 
   const handleDeleteLabel = (label) => {
-    if (label !== initialLabel) {
+    if (label !== INITIAL_LABEL) {
       const updatedLabels = selectedLabels.filter((selectedLabel) => selectedLabel !== label);
       setSelectedLabels(updatedLabels);
     }
@@ -98,11 +102,14 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
   };
 
   const handleSave = () => {
+    // Finding the difference between what is stored and what has been selected in the UI
+    let toDelete = allLabels.filter((item) => selectedLabels.indexOf(item) < 0);
+
     const query = `
-    MATCH (d {uuid: "${dashboard.uuid}"})
-    CALL apoc.create.setLabels( d, $selectedLabels)
-    YIELD node
-    return node
+    MATCH (d:${INITIAL_LABEL} {uuid: "${dashboard.uuid}"})
+    SET d:${selectedLabels.join(':')}
+    ${toDelete.length > 0 ? `REMOVE d:${toDelete.join(':')}` : ''}
+    RETURN 1;
     `;
 
     runCypherQuery(
@@ -170,7 +177,7 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
               key={label}
               label={label}
               variant='outlined'
-              onDelete={label === initialLabel ? undefined : () => handleDeleteLabel(label)}
+              onDelete={label === INITIAL_LABEL ? undefined : () => handleDeleteLabel(label)}
               style={{ marginRight: '5px', marginBottom: '5px' }}
             />
           ))}
