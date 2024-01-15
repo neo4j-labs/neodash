@@ -6,8 +6,6 @@ import { PlusCircleIconOutline } from '@neo4j-ndl/react/icons';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { createNotificationThunk } from '../../../page/PageThunks';
 import { useDispatch } from 'react-redux';
-import { set } from 'yaml/dist/schema/yaml-1.1/set';
-
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  * @param open - Whether the modal is open or not.
