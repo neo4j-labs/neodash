@@ -137,8 +137,8 @@ const NeoCardViewHeader = ({
 
   // TODO: all components like buttons should probably be seperate files
   const settingsButton = (
-    <Tooltip title='Settings' aria-label='settings' disableInteractive>
-      <IconButton aria-label='settings' onClick={onToggleCardSettings} clean size='medium'>
+    <Tooltip title='Settings' aria-label='settings'  disableInteractive>
+      <IconButton aria-label='settings' data-test='report-card-settings-button' onClick={onToggleCardSettings} clean size='medium'>
         <EllipsisVerticalIconOutline />
       </IconButton>
     </Tooltip>
