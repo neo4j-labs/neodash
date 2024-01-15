@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { IconButton, Button, Dialog } from '@neo4j-ndl/react';
-import { Menu, MenuItem, Chip, TextField } from '@mui/material';
+import { IconButton, Button, Dialog, TextInput } from '@neo4j-ndl/react';
+import { Menu, MenuItem, Chip } from '@mui/material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { PlusCircleIconOutline } from '@neo4j-ndl/react/icons';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
@@ -9,8 +9,7 @@ import { useDispatch } from 'react-redux';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
- * TODO: whenever you add a new label to a specific dashboard then it should not show up in the other dashboards.
- * Same if you remove a label it should not be removed in both dashboards.
+ * TODO: Change the text + the button design align with the chips.
  */
 export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, handleClose }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -34,6 +33,26 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
       1000,
       () => {},
       (records) => setNeo4jLabels(records.map((record) => record.get('label')))
+    );
+
+    // Fetch labels of the dashboard node
+    const query = `
+    MATCH (d {uuid: "${dashboard.uuid}"})
+    RETURN labels(d) as labels
+    `;
+    runCypherQuery(
+      driver,
+      database,
+      query,
+      {},
+      1000,
+      (error) => {
+        console.error(error);
+      },
+      (records) => {
+        // Set the selectedLabels state to the labels of the dashboard
+        setSelectedLabels(records[0].get('labels'));
+      }
     );
   }, [open]);
 
@@ -67,6 +86,7 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
     if (e.key === 'Enter' && newLabel.trim() !== '') {
       if (selectedLabels.includes(newLabel)) {
         setFeedback('Label already exists. Please enter a unique label.');
+        handleCloseMenu();
       } else {
         setSelectedLabels([...selectedLabels, newLabel]);
         handleLabelSelect(newLabel);
@@ -134,32 +154,28 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
               </MenuItem>
             ))}
           <MenuItem>
-            <TextField
+            <TextInput
               label='Add New Label'
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
               onKeyDown={handleAddNewLabel}
-              helperText={feedback}
-              error={Boolean(feedback)}
+              helpText={feedback}
+              errorText={feedback}
             />
           </MenuItem>
         </Menu>
-        <div style={{ marginTop: '10px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: '10px' }}>
           {selectedLabels.map((label) => (
             <Chip
               key={label}
               label={label}
+              variant='outlined'
               onDelete={label === initialLabel ? undefined : () => handleDeleteLabel(label)}
               style={{ marginRight: '5px', marginBottom: '5px' }}
             />
           ))}
-          <IconButton
-            title='Add Label'
-            clean
-            onClick={handleOpenMenu}
-            style={{ marginLeft: '5px', marginBottom: '5px' }}
-          >
-            <PlusCircleIconOutline />
+          <IconButton title='Add Label' size='medium' clean style={{ marginBottom: '5px' }} onClick={handleOpenMenu}>
+            <PlusCircleIconOutline color='#018BFF' />
           </IconButton>
         </div>
       </div>
