@@ -6,10 +6,14 @@ import { PlusCircleIconOutline } from '@neo4j-ndl/react/icons';
 import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { createNotificationThunk } from '../../../page/PageThunks';
 import { useDispatch } from 'react-redux';
+import { set } from 'yaml/dist/schema/yaml-1.1/set';
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
- * TODO: Change the text + the button design align with the chips.
+ * @param open - Whether the modal is open or not.
+ * @param database - The current Neo4j database.
+ * @param dashboard - The current dashboard.
+ * @param handleClose - The function to close the modal.
  */
 export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, handleClose }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,9 +41,8 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
       (records) => setNeo4jLabels(records.map((record) => record.get('label')))
     );
 
-    // Fetch labels of the dashboard node
     const query = `
-    MATCH (d {uuid: "${dashboard.uuid}"})
+    MATCH (d:${INITIAL_LABEL} {uuid: "${dashboard.uuid}"})
     RETURN labels(d) as labels
     `;
     runCypherQuery(
@@ -57,6 +60,8 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
         setAllLabels(records[0].get('labels'));
       }
     );
+    setFeedback('');
+    setNewLabel('');
   }, [open]);
 
   useEffect(() => {
@@ -120,14 +125,12 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
       1000,
       (status) => {
         if (status == QueryStatus.COMPLETE) {
-          // Dispatch a success notification
           dispatch(
             createNotificationThunk(
               '🎉 Success!',
               'Selected Labels have successfully been added to the dashboard node.'
             )
           );
-          // Close the modal after the labels are saved
           handleClose();
         } else {
           dispatch(
@@ -146,9 +149,20 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
     <Dialog size='small' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
       <Dialog.Header id='form-dialog-title'>Dasboard Access Control - '{dashboard && dashboard.title}'</Dialog.Header>
       <Dialog.Content>
-        Welcome to the Dashboard Access settings! This window empowers you to fine-tune
+        Welcome to the Dashboard Access settings!
         <br />
-        who can access your dashboards through the use of labels.
+        In this modal, you can select the labels that you want to add to the current dashboard node.
+        <br />
+        For more information, please refer to the{' '}
+        <a
+          href='https://neo4j.com/labs/neodash/2.4/user-guide/access-control/'
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{ color: 'blue', textDecoration: 'underline' }}
+        >
+          documentation
+        </a>
+        .
       </Dialog.Content>
       <div>
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
@@ -162,12 +176,15 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
             ))}
           <MenuItem>
             <TextInput
-              label='Add New Label'
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
-              onKeyDown={handleAddNewLabel}
-              helpText={feedback}
+              onKeyDown={(e: KeyboardEvent) => {
+                handleAddNewLabel(e);
+                e.stopPropagation();
+              }}
               errorText={feedback}
+              placeholder='Create New label'
+              autoComplete='off'
             />
           </MenuItem>
         </Menu>
