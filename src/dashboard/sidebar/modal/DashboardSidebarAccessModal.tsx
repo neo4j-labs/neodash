@@ -19,7 +19,6 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
   const [allLabels, setAllLabels] = useState([]);
   const [neo4jLabels, setNeo4jLabels] = useState([]);
   const [newLabel, setNewLabel] = useState('');
-  // TODO: Ideally this should stay in a const file (used in multiple files across the project)
   const INITIAL_LABEL = '_Neodash_Dashboard';
   const [feedback, setFeedback] = useState('');
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -145,7 +144,7 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
 
   return (
     <Dialog size='small' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-      <Dialog.Header id='form-dialog-title'>Dasboard Access Control - '{dashboard && dashboard.title}'</Dialog.Header>
+      <Dialog.Header id='form-dialog-title'>Dasboard Access Control - '{dashboard?.title}'</Dialog.Header>
       <Dialog.Content>
         Welcome to the Dashboard Access settings!
         <br />
