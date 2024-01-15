@@ -174,7 +174,7 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
               style={{ marginRight: '5px', marginBottom: '5px' }}
             />
           ))}
-          <IconButton title='Add Label' size='medium' clean style={{ marginBottom: '5px' }} onClick={handleOpenMenu}>
+          <IconButton title='Add Label' size='large' clean style={{ marginBottom: '5px' }} onClick={handleOpenMenu}>
             <PlusCircleIconOutline color='#018BFF' />
           </IconButton>
         </div>
