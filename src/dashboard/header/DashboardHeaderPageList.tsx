@@ -15,13 +15,6 @@ import { DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { KeyboardSensor, MouseSensor } from '../../utils/accessibility';
 
-const debug = true;
-const logDebug = (message) => {
-  if (debug) {
-    console.log(`${new Date().toISOString()}: DashboardHeaderPageList.tsx: ${message}`);
-  }
-};
-
 /**
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.
  */
@@ -36,14 +29,8 @@ export const NeoDashboardHeaderPageList = ({
 }) => {
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
 
-  const loggedSetCanSwitchPages = (value) => {
-    logDebug(`log-canSwitchPages: ${value}`);
-    setCanSwitchPages(value);
-  };
-
   // We debounce several state changes to improve user experience.
-  // const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
-  const debouncedSetCanSwitchPages = useCallback(debounce(loggedSetCanSwitchPages, 50), []);
+  const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
 
   const pageAddButton = (
     <IconButton aria-label={'add page'} className='n-relative -n-top-1' size='large' onClick={addPage} clean>
