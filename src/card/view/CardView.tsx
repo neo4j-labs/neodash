@@ -4,17 +4,16 @@ import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
 import { CardContent } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
-import { extensionEnabled, getReportTypes } from '../../extensions/ExtensionUtils';
+import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
-import { ThemeProvider } from '@mui/material/styles';
-import { lightTheme, darkHeaderTheme, luma } from '../../component/theme/Themes';
-
 import { IconButton } from '@neo4j-ndl/react';
 import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
+import { extensionEnabled } from '../../utils/ReportUtils';
+import { objMerge } from '../../utils/ObjectManipulation';
+import { REPORT_TYPES } from '../../config/ReportConfig';
 
 const NeoCardView = ({
   id,
@@ -45,9 +44,17 @@ const NeoCardView = ({
   expanded,
   onToggleCardExpand,
 }) => {
-  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 22;
+  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 20;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
   const ref = React.useRef();
+
+  const settingsSelector = Object.keys(
+    Object.fromEntries(Object.entries(REPORT_TYPES[type]?.settings || {}).filter(([_, value]) => value.refresh))
+  ).reduce((obj, key) => {
+    return Object.assign(obj, {
+      [key]: settings[key],
+    });
+  }, {});
 
   const [lastRunTimestamp, setLastRunTimestamp] = useState(Date.now());
 
@@ -55,7 +62,7 @@ const NeoCardView = ({
   // e.g. Change of query, type, some advanced settings...
   const [selectorChange, setSelectorChange] = useState(false);
 
-  const getLocalParameters = (parse_string): any => {
+  const getLocalParameters = (parse_string, drilldown = true): unknown => {
     if (!parse_string || !globalParameters) {
       return {};
     }
@@ -67,42 +74,49 @@ const NeoCardView = ({
     const styleRules = settings.styleRules ? settings.styleRules : [];
     const styleParams = extensionEnabled(extensions, 'styling') ? identifyStyleRuleParameters(styleRules) : [];
 
-    let localQueryVariables: string[] = [...styleParams];
+    // Similarly, if the forms extension is enabled, extract nested parameters used by parameter selectors inside the form.
+    const formFields = settings.formFields ? settings.formFields : [];
+    const formsParams =
+      drilldown && extensionEnabled(extensions, 'forms')
+        ? formFields
+            .map((f) => {
+              return Object.keys(getLocalParameters(f.query, false));
+            })
+            .flat()
+        : [];
+
+    let localQueryVariables: string[] = [...styleParams, ...formsParams];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);
     }
 
-    return Object.fromEntries(
+    let params = Object.fromEntries(
       Object.entries(globalParameters).filter(([local]) => localQueryVariables.includes(local))
     );
+
+    return settings.ignoreNonDefinedParams
+      ? objMerge(Object.fromEntries(localQueryVariables.map((name) => [name, null])), params)
+      : params;
   };
 
   // @ts-ignore
   const reportHeader = (
-    <ThemeProvider
-      theme={
-        settings.backgroundColor && luma(settings.backgroundColor) < (dashboardSettings.darkLuma || 40)
-          ? darkHeaderTheme
-          : lightTheme
-      }
-    >
-      <NeoCardViewHeader
-        title={title}
-        editable={editable}
-        description={settings.description}
-        fullscreenEnabled={settings.fullscreenEnabled}
-        downloadImageEnabled={settings.downloadImageEnabled}
-        refreshButtonEnabled={settings.refreshButtonEnabled}
-        onTitleUpdate={onTitleUpdate}
-        onToggleCardSettings={onToggleCardSettings}
-        onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
-        settings={settings}
-        onDownloadImage={onDownloadImage}
-        onToggleCardExpand={onToggleCardExpand}
-        expanded={expanded}
-        parameters={getLocalParameters(title)}
-      ></NeoCardViewHeader>
-    </ThemeProvider>
+    <NeoCardViewHeader
+      title={title}
+      editable={editable}
+      description={settings.description}
+      fullscreenEnabled={settings.fullscreenEnabled}
+      downloadImageEnabled={settings.downloadImageEnabled}
+      refreshButtonEnabled={settings.refreshButtonEnabled}
+      onTitleUpdate={onTitleUpdate}
+      onToggleCardSettings={onToggleCardSettings}
+      onManualRefreshCard={() => setLastRunTimestamp(Date.now())}
+      settings={settings}
+      onDownloadImage={onDownloadImage}
+      onToggleCardExpand={onToggleCardExpand}
+      expanded={expanded}
+      parameters={getLocalParameters(title)}
+    ></NeoCardViewHeader>
   );
 
   // @ts-ignore
@@ -115,6 +129,7 @@ const NeoCardView = ({
       type={type}
       onSelectionUpdate={onSelectionUpdate}
       showOptionalSelections={settings.showOptionalSelections}
+      dashboardSettings={dashboardSettings}
     ></NeoCardViewFooter>
   ) : (
     <></>
@@ -122,12 +137,12 @@ const NeoCardView = ({
 
   const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
-  const withoutFooter =
-    reportTypes[type] && reportTypes[type].withoutFooter
-      ? reportTypes[type].withoutFooter
-      : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
+  const reportTypeHasNoFooter = reportTypes[type] && reportTypes[type].withoutFooter;
+  const withoutFooter = reportTypeHasNoFooter
+    ? reportTypes[type].withoutFooter
+    : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
 
-  const getGlobalParameter = (key: string): any => {
+  const getGlobalParameter = (key: string): unknown => {
     return globalParameters ? globalParameters[key] : undefined;
   };
 
@@ -138,7 +153,7 @@ const NeoCardView = ({
   }, [JSON.stringify(localParameters)]);
 
   useEffect(() => {
-    if (!settingsOpen) {
+    if (!settingsOpen && (selectorChange || type === 'select')) {
       setLastRunTimestamp(Date.now());
     }
     setSelectorChange(false);
@@ -146,7 +161,7 @@ const NeoCardView = ({
 
   useEffect(() => {
     setSelectorChange(true);
-  }, [query, type]);
+  }, [query, type, database, JSON.stringify(settingsSelector)]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
@@ -155,13 +170,13 @@ const NeoCardView = ({
     paddingRight: '0px',
     paddingTop: '0px',
     width: '100%',
-    marginTop: '-3px',
+    marginTop: '-9px',
     height: expanded
       ? withoutFooter
         ? '100%'
         : `calc(100% - ${CARD_FOOTER_HEIGHT}px)`
       : withoutFooter
-      ? `${reportHeight + CARD_FOOTER_HEIGHT}px`
+      ? `${reportHeight + CARD_FOOTER_HEIGHT - (reportTypeHasNoFooter ? 0 : 20)}px`
       : `${reportHeight}px`,
     overflow: 'auto',
   };
@@ -224,7 +239,9 @@ const NeoCardView = ({
 
   return (
     <div
-      className={`card-view ${expanded ? 'expanded' : ''}`}
+      className={`card-view n-bg-palette-neutral-bg-weak n-text-palette-neutral-text-default ${
+        expanded ? 'expanded' : ''
+      }`}
       style={settings && settings.backgroundColor ? { backgroundColor: settings.backgroundColor } : {}}
     >
       {reportHeader}

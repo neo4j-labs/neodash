@@ -1,15 +1,15 @@
 import React from 'react';
-import { Fab } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { IconButton } from '@neo4j-ndl/react';
 
 /**
  * Returns a button to delete a property entry from the table inside the GraphChartEditModal.
  */
 export const DeletePropertyButton = ({ onClick, key }) => {
   return (
-    <Fab
+    <IconButton
       key={key}
-      size='small'
+      size='medium'
       aria-label='remove'
       style={{
         background: 'white',
@@ -21,8 +21,9 @@ export const DeletePropertyButton = ({ onClick, key }) => {
         minHeight: '26px',
       }}
       onClick={onClick}
+      clean
     >
-      <CloseIcon key={`icon${key}`} />
-    </Fab>
+      <XMarkIconOutline key={`icon${key}`} />
+    </IconButton>
   );
 };

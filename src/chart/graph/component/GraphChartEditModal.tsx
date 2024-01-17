@@ -1,11 +1,11 @@
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import React, { useEffect } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { Badge, Button, IconButton } from '@mui/material';
-import { Fab, TextField, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import PlayArrow from '@mui/icons-material/PlayArrow';
+import { Button } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
+
+import { PlusIconOutline, XMarkIconOutline, PlayIconOutline } from '@neo4j-ndl/react/icons';
+import { IconButton } from '@neo4j-ndl/react';
 import { LabelTypeAutocomplete } from './autocomplete/LabelTypeAutocomplete';
 import { DeletePropertyButton } from './button/modal/DeletePropertyButton';
 import {
@@ -19,14 +19,14 @@ import {
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
 export enum EditType {
-  Node,
-  Relationship,
+  Node = 0,
+  Relationship = 1,
 }
 
 export enum EditAction {
-  Create,
-  Edit,
-  Delete,
+  Create = 0,
+  Edit = 1,
+  Delete = 2,
 }
 
 interface GraphChartEditorVisualizationProps extends GraphChartVisualizationProps {
@@ -104,10 +104,9 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
             setProperties([{ name: '', value: '' }]);
           }}
           style={{ marginLeft: '40px', padding: '3px', float: 'right' }}
+          clean
         >
-          <Badge overlap='rectangular' badgeContent={''}>
-            <CloseIcon />
-          </Badge>
+          <XMarkIconOutline />
         </IconButton>
       </DialogTitle>
 
@@ -187,7 +186,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
               <tr key={'trEditButtons'}>
                 <td style={{ minWidth: '450px' }} colSpan={4}>
                   <Typography variant='h3' color='primary' style={{ textAlign: 'center', marginBottom: '5px' }}>
-                    <Fab
+                    <IconButton
                       key={'btnAddProp'}
                       size='small'
                       aria-label='add'
@@ -197,14 +196,13 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
                         setProperties(properties.concat(newProperty));
                       }}
                     >
-                      <AddIcon />
-                    </Fab>
+                      <PlusIconOutline />
+                    </IconButton>
                   </Typography>
                 </td>
               </tr>
             </tbody>
           </table>
-          <hr />
           <Button
             key={'btnEditProp'}
             style={{ marginBottom: '10px' }}
@@ -246,7 +244,7 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
             style={{ float: 'right', marginBottom: 15 }}
             variant='contained'
             size='medium'
-            endIcon={<PlayArrow />}
+            endIcon={<PlayIconOutline className='btn-icon-base-r' />}
           >
             {props.action == EditAction.Create ? 'Create' : 'Save'}
           </Button>

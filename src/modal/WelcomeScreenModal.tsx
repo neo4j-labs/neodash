@@ -37,7 +37,7 @@ export const NeoWelcomeScreenModal = ({
 
   return (
     <div>
-      <Dialog size='small' open={welcomeScreenOpen == true} aria-labelledby='form-dialog-title' disableCloseButton>
+      <Dialog size='small' open={welcomeScreenOpen} aria-labelledby='form-dialog-title' disableCloseButton>
         <Dialog.Header id='form-dialog-title'>
           NeoDash - Neo4j Dashboard Builder
           <BoltIconSolid className='icon-base' color='gold' style={{ float: 'right' }} />
@@ -152,12 +152,13 @@ export const NeoWelcomeScreenModal = ({
             padding: '3rem',
           }}
         >
-          <div className='n-text-light-neutral-text-weakest'>
+          <div style={{ color: 'white' }}>
             NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated solution?{' '}
             <TextLink
               href='https://neo4j.com/professional-services/'
-              className='n-text-light-neutral-text-inverse'
-              externalLink
+              className='n-text-neutral-text-inverse'
+              target='_blank'
+              style={{ color: 'white' }}
             >
               Get in touch
             </TextLink>

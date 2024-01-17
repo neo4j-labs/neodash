@@ -7,10 +7,8 @@ import NeoCodeEditorComponent, {
 } from '../../component/editor/CodeEditorComponent';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
-import {
-  EXTENSIONS_CARD_SETTINGS_COMPONENT,
-  getExtensionCardSettingsComponents,
-} from '../../extensions/ExtensionConfig';
+import { EXTENSIONS_CARD_SETTINGS_COMPONENT } from '../../extensions/ExtensionConfig';
+import { objMerge } from '../../utils/ObjectManipulation';
 
 const NeoCardSettingsContent = ({
   pagenumber,
@@ -24,15 +22,15 @@ const NeoCardSettingsContent = ({
   onQueryUpdate,
   onReportSettingUpdate,
   onTypeUpdate,
+  forceRunQuery, // Callback to force close the card settings.
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
 }) => {
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const [queryText, setQueryText] = React.useState(query);
-  const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-
+  const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 200), []);
   // State to manage the current database entry inside the form
   const [databaseText, setDatabaseText] = React.useState(database);
-  const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
+  const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 200), []);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -42,7 +40,8 @@ const NeoCardSettingsContent = ({
   }, [query]);
 
   const reportTypes = getReportTypes(extensions);
-  const SettingsComponent = reportTypes[type] && reportTypes[type].settingsComponent;
+  const report = reportTypes[type];
+  const SettingsComponent = report?.settingsComponent || {};
 
   function hasExtensionComponents() {
     return (
@@ -68,6 +67,10 @@ const NeoCardSettingsContent = ({
               reportId={reportId}
               reportType={type}
               extensions={extensions}
+              onExecute={() => {
+                onQueryUpdate(queryText);
+                forceRunQuery();
+              }}
               cypherQuery={queryText}
               updateCypherQuery={updateCypherQuery}
             />
@@ -85,13 +88,17 @@ const NeoCardSettingsContent = ({
       <NeoCodeEditorComponent
         value={queryText}
         editable={true}
-        language={reportTypes[type] && reportTypes[type].inputMode ? reportTypes[type].inputMode : 'cypher'}
+        language={report?.inputMode || 'cypher'}
+        onExecute={() => {
+          onQueryUpdate(queryText);
+          forceRunQuery();
+        }}
         onChange={(value) => {
           updateCypherQuery(value);
         }}
         placeholder={`Enter Cypher here...`}
       />
-      <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>{reportTypes[type] && reportTypes[type].helperText}</div>
+      <div style={DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE}>{report?.helperText || ''}</div>
     </>
   );
 
@@ -105,17 +112,20 @@ const NeoCardSettingsContent = ({
           onChange: (newValue) =>
             newValue && onTypeUpdate(Object.keys(reportTypes).find((key) => reportTypes[key].label === newValue.value)),
           options: Object.keys(reportTypes).map((option) => ({
-            label: reportTypes[option].label,
-            value: reportTypes[option].label,
+            label: report && reportTypes[option].label,
+            value: report && reportTypes[option].label,
           })),
-          value: { label: reportTypes[type].label, value: reportTypes[type].label },
-          menuPortalTarget: document.querySelector('body'),
+          value: {
+            label: report?.label || '',
+            value: report?.label || '',
+          },
+          menuPortalTarget: document.querySelector('#overlay'),
         }}
         fluid
         style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
       />
 
-      {reportTypes[type] && reportTypes[type].disableDatabaseSelector == undefined ? (
+      {report?.disableDatabaseSelector == undefined ? (
         <Dropdown
           id='databaseSelector'
           label='Database'
@@ -131,7 +141,7 @@ const NeoCardSettingsContent = ({
               value: database,
             })),
             value: { label: databaseText, value: databaseText },
-            menuPortalTarget: document.querySelector('body'),
+            menuPortalTarget: document.querySelector('#overlay'),
           }}
           fluid
           style={{ marginLeft: '0px', marginRight: '10px', width: '47%', maxWidth: '200px', display: 'inline-block' }}
@@ -143,14 +153,17 @@ const NeoCardSettingsContent = ({
       <br />
       <br />
       {/* Allow for overriding the code box with a custom component */}
-      {reportTypes[type] && reportTypes[type].settingsComponent ? (
+      {report && report.settingsComponent ? (
         <SettingsComponent
-          type={type}
           onReportSettingUpdate={onReportSettingUpdate}
-          settings={reportSettings}
+          settings={objMerge({ helperText: report.helperText, inputMode: report.inputMode }, reportSettings)}
           database={database}
           query={query}
           onQueryUpdate={onQueryUpdate}
+          onExecute={() => {
+            onQueryUpdate(queryText);
+            forceRunQuery();
+          }}
         />
       ) : (
         <div>{hasExtensionComponents() ? renderExtensionsComponents() : defaultQueryBoxComponent}</div>

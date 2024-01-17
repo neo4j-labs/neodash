@@ -5,6 +5,7 @@ import {
   UPDATE_ALL_SELECTIONS,
   UPDATE_CYPHER_PARAMETERS,
   UPDATE_FIELDS,
+  UPDATE_SCHEMA,
   UPDATE_REPORT_QUERY,
   UPDATE_REPORT_SETTING,
   UPDATE_REPORT_SIZE,
@@ -14,7 +15,7 @@ import {
   UPDATE_REPORT_DATABASE,
 } from './CardActions';
 import { TOGGLE_CARD_SETTINGS } from './CardActions';
-import { createUUID } from '../dashboard/DashboardThunks';
+import { createUUID } from '../utils/uuid';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -70,6 +71,11 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
     case UPDATE_FIELDS: {
       const { fields } = payload;
       state = update(state, { fields: fields });
+      return state;
+    }
+    case UPDATE_SCHEMA: {
+      const { schema } = payload;
+      state = update(state, { schema: schema });
       return state;
     }
     case UPDATE_REPORT_TYPE: {

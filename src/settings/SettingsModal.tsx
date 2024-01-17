@@ -1,12 +1,11 @@
 import React from 'react';
-import { Tooltip } from '@mui/material';
 import NeoSetting from '../component/field/Setting';
 import { DASHBOARD_SETTINGS } from '../config/DashboardConfig';
-import { SideNavigationItem } from '@neo4j-ndl/react';
+import { Dialog, IconButton, MenuItem } from '@neo4j-ndl/react';
 import { Cog6ToothIconOutline } from '@neo4j-ndl/react/icons';
-import { Dialog } from '@neo4j-ndl/react';
+import Tooltip from '@mui/material/Tooltip/Tooltip';
 
-export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, navItemClass }) => {
+export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -43,11 +42,11 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
   );
 
   return (
-    <div>
+    <>
       <Tooltip title='Settings' aria-label='settings' disableInteractive>
-        <SideNavigationItem onClick={handleClickOpen} icon={<Cog6ToothIconOutline className={navItemClass} />}>
-          Settings
-        </SideNavigationItem>
+        <IconButton className='n-mx-1' onClick={handleClickOpen} aria-label='Settings'>
+          <Cog6ToothIconOutline />
+        </IconButton>
       </Tooltip>
 
       <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
@@ -63,7 +62,7 @@ export const NeoSettingsModal = ({ dashboardSettings, updateDashboardSetting, na
           <br />
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 

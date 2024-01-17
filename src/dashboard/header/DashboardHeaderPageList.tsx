@@ -1,20 +1,19 @@
-import { Toolbar } from '@mui/material';
-import React, { useCallback, useEffect } from 'react';
-import NeoPageButton from './DashboardHeaderPageButton';
-import NeoPageAddButton from './DashboardHeaderPageAddButton';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getPages } from '../DashboardSelectors';
 import debounce from 'lodash/debounce';
-import { setPageTitle } from '../../page/PageActions';
-import { addPageThunk, movePageThunk, removePageThunk } from '../DashboardThunks';
+import { addPageThunk, movePageThunk } from '../DashboardThunks';
 import { setConnectionModalOpen } from '../../application/ApplicationActions';
 import { setPageNumberThunk } from '../../settings/SettingsThunks';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { applicationIsStandalone } from '../../application/ApplicationSelectors';
-import RGL, { WidthProvider } from 'react-grid-layout';
-import { DASHBOARD_PAGE_LIST_COLOR, DASHBOARD_PAGE_LIST_ACTIVE_COLOR } from '../../config/ApplicationConfig';
-const ReactGridLayout = WidthProvider(RGL);
+import { Tabs, IconButton } from '@neo4j-ndl/react';
+import { PlusIconOutline } from '@neo4j-ndl/react/icons';
+import DashboardHeaderPageTitle from './DashboardHeaderPageTitle';
+import { DndContext, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { KeyboardSensor, MouseSensor } from '../../utils/accessibility';
 
 const debug = true;
 const logDebug = (message) => {
@@ -27,21 +26,15 @@ const logDebug = (message) => {
  * The component responsible for rendering the list of pages, as well as the logic for adding, removing, selecting and updating pages.
  */
 export const NeoDashboardHeaderPageList = ({
-  open,
-  standalone,
+  // standalone,
   editable,
   pages,
   pagenumber,
   addPage,
   movePage,
-  removePage,
   selectPage,
-  setPageTitle,
 }) => {
-  const [layout, setLayout] = React.useState([]);
-  const [isDragging, setIsDragging] = React.useState(false);
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
-  const [lastElement, setLastElement] = React.useState(<></>);
 
   const loggedSetCanSwitchPages = (value) => {
     logDebug(`log-canSwitchPages: ${value}`);
@@ -52,166 +45,61 @@ export const NeoDashboardHeaderPageList = ({
   // const debouncedSetCanSwitchPages = useCallback(debounce(setCanSwitchPages, 50), []);
   const debouncedSetCanSwitchPages = useCallback(debounce(loggedSetCanSwitchPages, 50), []);
 
-  const debouncedSetPageTitle = useCallback(debounce(setPageTitle, 250), []);
+  const pageAddButton = (
+    <IconButton aria-label={'add page'} className='n-relative -n-top-1' size='large' onClick={addPage} clean>
+      <PlusIconOutline />
+    </IconButton>
+  );
 
-  /**
-   * Recompute the layout of the page buttons.This is called whenever the pages get reorganized.
-   */
-  function recomputeLayout() {
-    const timestamp = Date.now();
-    // @ts-ignore
-    setLayout([
-      ...pages.map((page, index) => {
-        return { x: index, y: 0, i: `${index}`, w: Math.min(2.0, 11.3 / pages.length), h: 1 };
-      }),
-      { x: pages.length, y: 0, i: `${timestamp}`, minW: 0.1, w: 0.1, h: 1, isDraggable: false },
-    ]);
+  function handleDragEnd(event) {
+    const { active, over } = event;
 
-    setLastElement(
-      <div
-        key={timestamp}
-        style={{
-          background: 'inherit',
-          display: 'inline-block',
-          padding: 0,
-          margin: 0,
-          height: '100%',
-        }}
-      >
-        <NeoPageAddButton onClick={addPage}></NeoPageAddButton>
-      </div>
-    );
+    if (!over || !editable) {
+      return;
+    }
+    if (active.id !== over.id) {
+      const oldIndex = parseInt(active.id.split('_')[1]);
+      const newIndex = parseInt(over.id.split('_')[1]);
+      movePage(oldIndex, newIndex);
+    }
+
+    debouncedSetCanSwitchPages(true);
   }
 
-  useEffect(() => {
-    recomputeLayout();
-  }, [pages]);
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 5, // Enable sort function when dragging 10px
+    },
+  });
+
+  const keySensor = useSensor(KeyboardSensor, {
+    keyboardCodes: {
+      start: ['Space'],
+      cancel: ['Escape'],
+      end: ['Space'],
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, keySensor);
 
   const content = (
-    <Toolbar
-      key={2}
-      className='n-z-20'
-      style={{
-        minHeight: '50px',
-        paddingLeft: '0px',
-        paddingRight: '0px',
-        background: DASHBOARD_PAGE_LIST_COLOR,
-      }}
-    >
-      {!standalone ? (
-        <div
-          className='n-z-30'
-          style={{
-            width: open ? '0px' : '67px',
-            transition: 'width 125ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
-            height: '0px',
-            background: DASHBOARD_PAGE_LIST_COLOR,
-          }}
-        ></div>
-      ) : (
-        <></>
-      )}
-      <ReactGridLayout
-        className='layout -n-z-50'
-        layout={layout}
-        isResizable={false}
-        isDraggable={editable}
-        onDrag={() => {
-          if (!isDragging) {
-            logDebug(`onDrag, inside isDragging`);
-            setIsDragging(true);
-            setCanSwitchPages(false);
-          }
-        }}
-        onDragStop={(newLayout, oldPosition, newPosition) => {
-          // Calculate the old and new index of the page that was just dropped.
-          logDebug(`new build 20240103 16:17`);
-          logDebug(`onDragStop`);
-          logDebug(`editable: ${editable}`);
-          logDebug(`onDragStop, isDragging = true`);
-          const newXPositions = newLayout.map((page) => page.x);
-          const oldIndex = parseInt(oldPosition.i);
-          const newIndex = Math.min(
-            newXPositions.length - 2,
-            newXPositions.sort((a, b) => a - b).indexOf(newPosition.x)
-          );
-          if (oldIndex !== newIndex) {
-            if (editable) {
-              logDebug(`movePage, oldIndex: ${oldIndex}, newIndex: ${newIndex}`);
-              movePage(oldIndex, newIndex);
-              logDebug(`recomputeLayout`);
-              recomputeLayout();
-            }
-            // this is put in place because there is react-grid-layout bug in the
-            // production build where it doesn't handle onSelect/onClick on child items
-            //  and always thinks you're in a drag
-          } else if (pagenumber !== newIndex) {
-            logDebug(`selectPage ${newIndex}`);
-            selectPage(newIndex);
-          } else {
-            logDebug(`already on page ${newIndex}`);
-          }
-          setIsDragging(false);
-          logDebug(`calling debouncedSetCanSwitchPages(true)`);
-          debouncedSetCanSwitchPages(true);
-        }}
-        style={{
-          width: '100%',
-          height: '47px',
-          overflowY: 'hidden',
-          overflowX: 'hidden',
-          background: DASHBOARD_PAGE_LIST_COLOR,
-          padding: 0,
-          margin: 0,
-          boxShadow: '2px 1px 10px 0px rgb(0 0 0 / 15%)',
-        }}
-        margin={[0, 0]}
-        maxRows={1}
-        rowHeight={47}
-        isBounded={true}
-        compactType={'horizontal'}
-      >
-        {pages.map((page, i) => (
-          <div
-            key={i}
-            onClick={() => {
-              logDebug(`NeoPageButton parent div clicked page: ${page.title}, i: ${i}`);
-            }}
-            style={{
-              background: DASHBOARD_PAGE_LIST_COLOR,
-              backgroundColor: pagenumber == i ? DASHBOARD_PAGE_LIST_ACTIVE_COLOR : 'inherit',
-              display: 'inline-block',
-              height: '100%',
-              padding: 0,
-              margin: 0,
-              borderRight: '1px solid #ddd',
-              borderLeft: '1px solid #ddd',
-            }}
-          >
-            <NeoPageButton
-              title={page.title}
-              selected={pagenumber == i}
-              disabled={!editable}
-              // disabled={false}
-              onClick={() => {
-                logDebug(`NeoPageButton button clicked: ${page.title}, i: ${i}`);
-              }}
-              onSelect={() => {
-                logDebug(`canSwitchPages: ${canSwitchPages}`);
-                if (canSwitchPages) {
-                  logDebug(`selectPage, i = ${i}, pagenumber = ${pagenumber}`);
-                  selectPage(i);
-                }
-                // (canSwitchPages ? selectPage(i) : null)
-              }}
-              onRemove={() => removePage(i)}
-              onTitleUpdate={(e) => debouncedSetPageTitle(i, e.target.value)}
-            />
-          </div>
-        ))}
-        {editable && !isDragging ? lastElement : <></>}
-      </ReactGridLayout>
-    </Toolbar>
+    <div className='n-flex n-flex-row n-w-full'>
+      <Tabs fill='underline' onChange={(tabId) => (canSwitchPages ? selectPage(tabId) : null)} value={pagenumber}>
+        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+          <SortableContext items={pages} strategy={horizontalListSortingStrategy}>
+            {pages.map((page, i) => (
+              <DashboardHeaderPageTitle
+                title={page.title}
+                tabIndex={i}
+                key={`DashboardHeaderPageTitle_${i}`}
+                disabled={!editable}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
+      </Tabs>
+      {editable && pageAddButton}
+    </div>
   );
   return content;
 };
@@ -230,14 +118,8 @@ const mapDispatchToProps = (dispatch) => ({
   selectPage: (number: any) => {
     dispatch(setPageNumberThunk(number));
   },
-  setPageTitle: (number: any, title: any) => {
-    dispatch(setPageTitle(number, title));
-  },
   addPage: () => {
     dispatch(addPageThunk());
-  },
-  removePage: (index: any) => {
-    dispatch(removePageThunk(index));
   },
   movePage: (oldIndex: number, newIndex: number) => {
     dispatch(movePageThunk(oldIndex, newIndex));

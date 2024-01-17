@@ -10,6 +10,7 @@ import {
   clearSelection,
   updateAllSelections,
   updateReportDatabase,
+  updateSchema,
 } from './CardActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getReportTypes } from '../extensions/ExtensionUtils';
@@ -67,68 +68,76 @@ export const updateReportTypeThunk = (id, type) => (dispatch: any, getState: any
 
     dispatch(updateReportType(pagenumber, id, type));
     dispatch(updateFields(pagenumber, id, []));
+    dispatch(updateSchema(pagenumber, id, []));
     dispatch(clearSelection(pagenumber, id));
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update report type', e));
   }
 };
 
-export const updateFieldsThunk = (id, fields) => (dispatch: any, getState: any) => {
-  try {
-    const state = getState();
-    const { pagenumber } = state.dashboard.settings;
-    const extensions = Object.fromEntries(Object.entries(state.dashboard.extensions).filter(([_, v]) => v.active));
-    const oldReport = state.dashboard.pages[pagenumber].reports.find((o) => o.id === id);
+export const updateFieldsThunk =
+  (id, fields, schema = false) =>
+  (dispatch: any, getState: any) => {
+    try {
+      const state = getState();
+      const { pagenumber } = state.dashboard.settings;
+      const extensions = Object.fromEntries(Object.entries(state.dashboard.extensions).filter(([_, v]) => v.active));
+      const oldReport = state.dashboard.pages[pagenumber].reports.find((o) => o.id === id);
 
-    if (!oldReport) {
-      return;
-    }
-    const oldFields = oldReport.fields;
-    const reportType = oldReport.type;
-    const oldSelection = oldReport.selection;
-    const reportTypes = getReportTypes(extensions);
-    const selectableFields = reportTypes[reportType].selection; // The dictionary of selectable fields as defined in the config.
-    const { autoAssignSelectedProperties } = reportTypes[reportType];
-    const selectables = selectableFields ? Object.keys(selectableFields) : [];
+      if (!oldReport) {
+        return;
+      }
+      const oldFields = schema ? oldReport.schema : oldReport.fields;
+      const reportType = oldReport.type;
+      const oldSelection = oldReport.selection;
+      const reportTypes = getReportTypes(extensions);
+      const selectableFields = reportTypes[reportType].selection; // The dictionary of selectable fields as defined in the config.
+      const { autoAssignSelectedProperties } = reportTypes[reportType];
+      const selectables = selectableFields ? Object.keys(selectableFields) : [];
 
-    // If the new set of fields is not equal to the current set of fields, we ned to update the field selection.
-    if (!isEqual(oldFields, fields) || Object.keys(oldSelection).length === 0) {
-      selectables.forEach((selection, i) => {
-        if (fields.includes(oldSelection[selection])) {
-          // If the current selection is still present in the new set of fields, no need to reset.
-          // Also we ignore this on a node property selector.
-          /* continue */
-        } else if (selectableFields[selection].optional) {
-          // If the fields change, always set optional selections to none.
-          if (selectableFields[selection].multiple) {
-            dispatch(updateSelection(pagenumber, id, selection, ['(none)']));
-          } else {
-            dispatch(updateSelection(pagenumber, id, selection, '(none)'));
-          }
-        } else if (fields.length > 0) {
-          // For multi selections, select the Nth item of the result fields as a single item array.
-          if (selectableFields[selection].multiple) {
-            // only update if the old selection no longer covers the new set of fields...
-            if (!oldSelection[selection] || !oldSelection[selection].every((v) => fields.includes(v))) {
-              dispatch(updateSelection(pagenumber, id, selection, [fields[Math.min(i, fields.length - 1)]]));
+      // If the new set of fields is not equal to the current set of fields, we ned to update the field selection.
+      if (!isEqual(oldFields, fields) || Object.keys(oldSelection).length === 0) {
+        selectables.forEach((selection, i) => {
+          if (fields.includes(oldSelection[selection])) {
+            // If the current selection is still present in the new set of fields, no need to reset.
+            // Also we ignore this on a node property selector.
+            /* continue */
+          } else if (selectableFields[selection].optional) {
+            // If the fields change, always set optional selections to none.
+            if (selectableFields[selection].multiple) {
+              dispatch(updateSelection(pagenumber, id, selection, ['(none)']));
+            } else {
+              dispatch(updateSelection(pagenumber, id, selection, '(none)'));
             }
-          } else if (selectableFields[selection].type == SELECTION_TYPES.NODE_PROPERTIES) {
-            // For node property selections, select the most obvious properties of the node to display.
-            const selection = getSelectionBasedOnFields(fields, oldSelection, autoAssignSelectedProperties);
-            dispatch(updateAllSelections(pagenumber, id, selection));
-          } else {
-            // Else, default the selection to the Nth item of the result set fields.
-            dispatch(updateSelection(pagenumber, id, selection, fields[Math.min(i, fields.length - 1)]));
+          } else if (fields.length > 0) {
+            // For multi selections, select the Nth item of the result fields as a single item array.
+            if (selectableFields[selection].multiple) {
+              // only update if the old selection no longer covers the new set of fields...
+              if (!oldSelection[selection] || !oldSelection[selection].every((v) => fields.includes(v))) {
+                dispatch(updateSelection(pagenumber, id, selection, [fields[Math.min(i, fields.length - 1)]]));
+              }
+            } else if (selectableFields[selection].type == SELECTION_TYPES.NODE_PROPERTIES) {
+              // For node property selections, select the most obvious properties of the node to display.
+              const selection = getSelectionBasedOnFields(fields, oldSelection, autoAssignSelectedProperties);
+              dispatch(updateAllSelections(pagenumber, id, selection));
+            } else {
+              // Else, default the selection to the Nth item of the result set fields.
+              dispatch(updateSelection(pagenumber, id, selection, fields[Math.min(i, fields.length - 1)]));
+            }
           }
+        });
+        // Set the new set of fields for the report so that we may select them.
+
+        if (schema) {
+          dispatch(updateSchema(pagenumber, id, fields));
+        } else {
+          dispatch(updateFields(pagenumber, id, fields));
         }
-      });
-      // Set the new set of fields for the report so that we may select them.
-      dispatch(updateFields(pagenumber, id, fields));
+      }
+    } catch (e) {
+      dispatch(createNotificationThunk('Cannot update report fields', e));
     }
-  } catch (e) {
-    dispatch(createNotificationThunk('Cannot update report fields', e));
-  }
-};
+  };
 
 export const updateSelectionThunk = (id, selectable, field) => (dispatch: any, getState: any) => {
   try {

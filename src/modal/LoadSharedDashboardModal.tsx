@@ -1,5 +1,4 @@
 import React from 'react';
-import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { PlayIconSolid, AdjustmentsVerticalIconOutline, BackspaceIconOutline } from '@neo4j-ndl/react/icons';
@@ -8,8 +7,6 @@ import { PlayIconSolid, AdjustmentsVerticalIconOutline, BackspaceIconOutline } f
  * A modal to save a dashboard as a JSON text string.
  * The button to open the modal is intended to use in a drawer at the side of the page.
  */
-
-const styles = {};
 
 export const NeoLoadSharedDashboardModal = ({ shareDetails, onResetShareDetails, onConfirmLoadSharedDashboard }) => {
   const handleClose = () => {
@@ -84,4 +81,4 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = () => ({});
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NeoLoadSharedDashboardModal));
+export default connect(mapStateToProps, mapDispatchToProps)(NeoLoadSharedDashboardModal);

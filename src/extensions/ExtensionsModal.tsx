@@ -1,21 +1,21 @@
 import React from 'react';
-import { Tooltip } from '@mui/material';
 import { EXTENSIONS } from './ExtensionConfig';
 import { connect } from 'react-redux';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
 import { setExtensionEnabled } from '../dashboard/DashboardActions';
 import { setExtensionReducerEnabled } from './state/ExtensionActions';
-import { Dialog, Label, SideNavigationItem, TextLink, Typography, Checkbox } from '@neo4j-ndl/react';
+import { Dialog, Label, MenuItem, TextLink, Typography, Checkbox, IconButton } from '@neo4j-ndl/react';
 import { PuzzlePieceIconSolid } from '@neo4j-ndl/react/icons';
 import { Section, SectionContent } from '../modal/ModalUtils';
+import Tooltip from '@mui/material/Tooltip/Tooltip';
 
 const NeoExtensionsModal = ({
   extensions,
   setExtensionEnabled,
   onExtensionUnavailableTriggered, // Action to take when the user tries to enable a disabled extension.
   setExtensionReducerEnabled,
-  navItemClass,
+  closeMenu,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -25,18 +25,15 @@ const NeoExtensionsModal = ({
 
   const handleClose = () => {
     setOpen(false);
+    closeMenu();
   };
 
   return (
-    <div>
+    <>
       <Tooltip title='Extensions' aria-label='extensions' disableInteractive>
-        <SideNavigationItem
-          id='extensions-sidebar-button'
-          onClick={handleClickOpen}
-          icon={<PuzzlePieceIconSolid className={navItemClass} />}
-        >
-          Extensions
-        </SideNavigationItem>
+        <IconButton className='n-mx-1' aria-label='Extensions' onClick={handleClickOpen}>
+          <PuzzlePieceIconSolid />
+        </IconButton>
       </Tooltip>
 
       {open ? (
@@ -46,13 +43,13 @@ const NeoExtensionsModal = ({
             Extensions
           </Dialog.Header>
           <Dialog.Content>
-            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
+            <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-neutral-border-strong'>
               <Section>
                 <SectionContent>
                   <TextLink
                     externalLink
                     target='_blank'
-                    href='https://neo4j.com/labs/neodash/2.3/user-guide/extensions/'
+                    href='https://neo4j.com/labs/neodash/2.4/user-guide/extensions/'
                   >
                     Extensions
                   </TextLink>
@@ -72,7 +69,7 @@ const NeoExtensionsModal = ({
                             <tr>
                               <td>
                                 <div className='n-flex n-flex-row n-gap-token-4 n-items-center'>
-                                  <Typography variant='h4'>{e.label}</Typography>
+                                  <Typography variant='h5'>{e.label}</Typography>
                                   {e.enabled && e.author == 'Neo4j Professional Services' && (
                                     <Label color='info' fill='outlined'>
                                       Expert
@@ -143,7 +140,7 @@ const NeoExtensionsModal = ({
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 };
 

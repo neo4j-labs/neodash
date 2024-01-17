@@ -3,9 +3,9 @@ import { Button, Dialog, TextLink } from '@neo4j-ndl/react';
 import { BookOpenIconOutline, BeakerIconOutline } from '@neo4j-ndl/react/icons';
 import { Section, SectionTitle, SectionContent } from './ModalUtils';
 
-export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
-  const version = '2.3.0';
+export const version = '2.4.2';
 
+export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
   const downloadDebugFile = () => {
     const element = document.createElement('a');
     const state = getDebugState();
@@ -18,11 +18,11 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
   };
 
   return (
-    <div>
-      <Dialog onClose={handleClose} open={open == true} aria-labelledby='form-dialog-title' size='large'>
+    <>
+      <Dialog onClose={handleClose} open={open} aria-labelledby='form-dialog-title' size='large'>
         <Dialog.Header>About NeoDash</Dialog.Header>
         <Dialog.Content>
-          <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-light-neutral-border-strong'>
+          <div className='n-flex n-flex-col n-gap-token-4 n-divide-y n-divide-neutral-border-strong'>
             <Section>
               <SectionContent>
                 NeoDash is a dashboard builder for the Neo4j graph database. With NeoDash, all you need to do is write
@@ -116,7 +116,7 @@ export const NeoAboutModal = ({ open, handleClose, getDebugState }) => {
           </div>
         </Dialog.Content>
       </Dialog>
-    </div>
+    </>
   );
 };
 

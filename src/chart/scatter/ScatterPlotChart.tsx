@@ -5,6 +5,7 @@ import { recordToNative } from '../ChartUtils';
 import { ResponsiveScatterPlot, ResponsiveScatterPlotCanvas } from '@nivo/scatterplot';
 import { animated } from '@react-spring/web';
 import chroma from 'chroma-js';
+import { themeNivo } from '../Utils';
 
 /**
  * Embeds a Nivo ResponsiveScatterPlot and a ResponsiveScatterPlotCanvas into NeoDash.
@@ -108,7 +109,7 @@ const NeoScatterPlot = (props: ChartProps) => {
         }
       }
 
-      let x: any = row.get(selection.x) || 0;
+      let x: number | Date = row.get(selection.x) || 0;
       let y: any = recordToNative(row.get(key)) || 0;
       if (!isNaN(y)) {
         if (isDateTime(x)) {
@@ -281,6 +282,7 @@ const NeoScatterPlot = (props: ChartProps) => {
       }}
     >
       <ComponentType
+        theme={themeNivo}
         data={[data]}
         key={`${selection.value}`}
         xScale={

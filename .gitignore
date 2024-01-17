@@ -39,3 +39,5 @@ jspm_packages
 
 # Serverless directories
 .serverless
+# Sentry Auth Token
+.env.sentry-build-plugin

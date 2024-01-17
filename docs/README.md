@@ -6,7 +6,7 @@ An external workflow picks up this directory, embeds it into the Neo4j docs, and
 ```
 https://neo4j.com/labs/neodash/{version}
 ```
-For example: https://neo4j.com/labs/neodash/2.3
+For example: https://neo4j.com/labs/neodash/2.4
 
 ## Local Build
 To compile and view the documentation locally, navigate to this (`./docs`) folder and run:

@@ -1,5 +1,5 @@
+import { tokens } from '@neo4j-ndl/base';
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
-
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;
@@ -110,4 +110,74 @@ export const rgbaToHex = (color: string): string => {
     return hex;
   }
   return color;
+};
+
+export enum EntityType {
+  Node,
+  Relationship,
+}
+
+export const themeNivo = {
+  textColor: 'rgb(var(--palette-neutral-text-default))',
+  text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  axis: {
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    legend: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+  },
+  legends: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+    title: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    ticks: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+    hidden: { text: { fill: 'rgb(var(--palette-neutral-text-default))' } },
+  },
+  markers: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  labels: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  annotations: {
+    text: { fill: 'rgb(var(--palette-neutral-text-default))' },
+  },
+  tooltip: {
+    container: {
+      fill: 'rgb(var(--palette-neutral-text-default))',
+      background: 'rgb(var(--palette-neutral-bg-strong))',
+    },
+  },
+};
+
+export const themeNivoCanvas = (theme) => {
+  let baseDefault =
+    theme === 'light' ? tokens.palette.light.neutral.text.default : tokens.palette.dark.neutral.text.default;
+  let baseWeak = theme === 'light' ? tokens.palette.light.neutral.text.weak : tokens.palette.dark.neutral.text.weak;
+  return {
+    // textColor: 'rgb(var(--palette-neutral-text-default))',
+    text: { fill: baseDefault },
+    axis: {
+      ticks: { text: { fill: baseDefault } },
+      legend: { text: { fill: baseDefault } },
+    },
+    legends: {
+      text: { fill: baseWeak },
+      title: { text: { fill: baseWeak } },
+      ticks: { text: { fill: baseWeak } },
+      hidden: { text: { fill: baseWeak } },
+    },
+    markers: {
+      text: { fill: baseDefault },
+    },
+    labels: {
+      text: { fill: baseDefault },
+    },
+    annotations: {
+      text: { fill: baseDefault },
+    },
+    tooltip: {
+      container: {
+        fill: 'rgb(var(--palette-neutral-text-default))',
+        background: 'rgb(var(--palette-neutral-bg-strong))',
+      },
+    },
+  };
 };

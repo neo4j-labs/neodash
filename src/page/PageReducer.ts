@@ -6,12 +6,12 @@ import {
   FORCE_REFRESH_PAGE,
   UPDATE_ALL_CARD_POSITIONS_IN_PAGE,
 } from './PageActions';
-import { createUUID } from '../dashboard/DashboardThunks';
+import { createUUID } from '../utils/uuid';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
 // TODO : Alfredo: this should source the card config defined inside the reducer and then define the first page initial state
-export const FIRST_PAGE_INITIAL_STATE = {
+export const PAGE_EXAMPLE_STATE = {
   title: 'Main Page',
   reports: [
     {
@@ -19,8 +19,8 @@ export const FIRST_PAGE_INITIAL_STATE = {
       title: 'Hi there 👋',
       query:
         '**This is your first dashboard!** \n \nYou can click (⋮) to edit this report, or add a new report to get started. You can run any Cypher query directly from each report and render data in a variety of formats. \n \nTip: try _renaming_ this report by editing the title text. You can also edit the dashboard header at the top of the screen.\n\n\n',
-      width: 3,
-      height: 2,
+      width: 6,
+      height: 4,
       x: 0,
       y: 0,
       type: 'text',
@@ -31,9 +31,9 @@ export const FIRST_PAGE_INITIAL_STATE = {
       id: createUUID(),
       title: '',
       query: 'MATCH (n)-[e]->(m) RETURN n,e,m LIMIT 20\n\n\n',
-      width: 3,
-      height: 2,
-      x: 3,
+      width: 6,
+      height: 4,
+      x: 6,
       y: 0,
       type: 'graph',
       selection: {},
@@ -42,8 +42,8 @@ export const FIRST_PAGE_INITIAL_STATE = {
   ],
 };
 
-export const PAGE_INITIAL_STATE = {
-  title: '',
+export const PAGE_EMPTY_STATE = {
+  title: 'New page',
   reports: [],
 };
 
@@ -52,7 +52,7 @@ export const PAGE_INITIAL_STATE = {
  * This reducer handles updates to a single page of the dashboard.
  * TODO - pagenumbers can be cut from here with new reducer architecture.
  */
-export const pageReducer = (state = PAGE_INITIAL_STATE, action: { type: any; payload: any }) => {
+export const pageReducer = (state = PAGE_EMPTY_STATE, action: { type: any; payload: any }) => {
   const { type, payload } = action;
 
   if (!action.type.startsWith('PAGE/')) {

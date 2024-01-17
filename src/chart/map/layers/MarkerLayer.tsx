@@ -1,20 +1,18 @@
 import React from 'react';
 import Marker from 'react-leaflet-enhanced-marker';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import LocationOn from '@mui/icons-material/LocationOn';
+import { MapPinIconSolid } from '@neo4j-ndl/react/icons';
 import 'leaflet/dist/leaflet.css';
 import { Popup, Tooltip } from 'react-leaflet';
 import { Button, Typography } from '@neo4j-ndl/react';
-import { extensionEnabled } from '../../../extensions/ExtensionUtils';
 import { getRule } from '../../../extensions/advancedcharts/Utils';
+import { extensionEnabled } from '../../../utils/ReportUtils';
 
 export function createMarkers(data, props) {
-  const clusterMarkers =
-    props.settings && typeof props.settings.clusterMarkers !== 'undefined' ? props.settings.clusterMarkers : false;
-  const separateOverlappingMarkers =
-    props.settings && typeof props.settings.separateOverlappingMarkers !== 'undefined'
-      ? props.settings.separateOverlappingMarkers
-      : true;
+  const clusterMarkers = props.settings?.clusterMarkers ? props.settings.clusterMarkers : false;
+  const separateOverlappingMarkers = props.settings?.separateOverlappingMarkers
+    ? props.settings.separateOverlappingMarkers
+    : false;
 
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
   const actionsRules =
@@ -23,16 +21,24 @@ export function createMarkers(data, props) {
       : [];
 
   let markerMarginTop;
+  let markerIconClass;
+  let markerMarginLeft;
   // Render a node label tooltip
   switch (defaultNodeSize) {
     case 'large':
-      markerMarginTop = '-5px';
+      markerMarginTop = '-20px';
+      markerMarginLeft = '0px';
+      markerIconClass = '';
       break;
     case 'medium':
-      markerMarginTop = '3px';
+      markerMarginTop = '-5px';
+      markerMarginLeft = '2px';
+      markerIconClass = 'btn-icon-lg-r';
       break;
     default:
       markerMarginTop = '6px';
+      markerMarginLeft = '10px';
+      markerIconClass = 'btn-icon-base-r';
       break;
   }
 
@@ -127,8 +133,10 @@ export function createMarkers(data, props) {
         position={node.pos}
         key={i}
         icon={
-          <div style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop }}>
-            <LocationOn fontSize={node.size}></LocationOn>
+          <div
+            style={{ color: node.color, textAlign: 'center', marginTop: markerMarginTop, marginLeft: markerMarginLeft }}
+          >
+            <MapPinIconSolid className={markerIconClass} />
           </div>
         }
       >

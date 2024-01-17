@@ -8,6 +8,7 @@ import {
   loadDashboardURL,
   sankeyChartCypherQuery,
   gaugeChartCypherQuery,
+  formCypherQuery,
 } from '../fixtures/cypher_queries';
 
 const WAITING_TIME = 20000;
@@ -27,7 +28,7 @@ describe('NeoDash E2E Tests', () => {
       },
     });
 
-    cy.get('#form-dialog-title', { timeout: 2000 }).should('be.visible');
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'NeoDash - Neo4j Dashboard Builder').click();
 
     cy.get('#form-dialog-title').then(($div) => {
       const text = $div.text();
@@ -43,7 +44,7 @@ describe('NeoDash E2E Tests', () => {
     //     cy.contains('Yes').click()
     // }
 
-    cy.get('#form-dialog-title').should('contain', 'Connect to Neo4j');
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'Connect to Neo4j');
 
     // Connect to Neo4j database
     // cy.get('#protocol').click()
@@ -244,13 +245,28 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1', { timeout: 45000 }).should('have.text', 'Hello');
   });
 
-  // it('creates a radar report', () => {
-  //     // TODO - create a test for radar.
-  // })
+  it.skip('creates a form report', () => {
+    enableFormsExtension();
+    checkInitialState();
+    createReportOfType('Form', formCypherQuery, true, false);
+    cy.get('main .react-grid-item:eq(2) .form-add-parameter').click();
+    cy.wait(200);
+    cy.get('#autocomplete-label-type').type('Movie');
+    cy.get('#autocomplete-label-type-option-0').click();
+    cy.wait(200);
+    cy.get('#autocomplete-property').type('title');
+    cy.get('#autocomplete-property-option-0').click();
 
-  // it('creates a sankey report', () => {
-  //     // TODO - create a test for sankey charts.
-  // })
+    cy.get('.ndl-dialog-close').click();
+
+    cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').scrollIntoView().should('be.visible').click();
+    cy.wait(500);
+    cy.get('#autocomplete').type('The Matrix');
+    cy.get('#autocomplete-option-0').click();
+    cy.get('#form-submit').click();
+    cy.wait(500);
+    cy.get('.form-submitted-message').should('have.text', 'Form Submitted.Reset Form');
+  });
 
   // Test load stress-test dashboard from file
   // TODO - this test is flaky, especially in GitHub actions environment.
@@ -279,8 +295,16 @@ describe('NeoDash E2E Tests', () => {
 });
 
 function enableAdvancedVisualizations() {
-  cy.get('#extensions-sidebar-button').should('be.visible').click();
+  cy.get('main button[aria-label="Extensions').should('be.visible').click();
   cy.get('#checkbox-advanced-charts').should('be.visible').click();
+  cy.get('.ndl-dialog-close').scrollIntoView().should('be.visible').click();
+  cy.wait(200);
+}
+
+function enableFormsExtension() {
+  cy.get('main button[aria-label="Extensions').should('be.visible').click();
+  cy.get('#checkbox-forms').scrollIntoView();
+  cy.get('#checkbox-forms').should('be.visible').click();
   cy.get('.ndl-dialog-close').scrollIntoView().should('be.visible').click();
   cy.wait(200);
 }
@@ -298,7 +322,7 @@ function selectReportOfType(type) {
   cy.wait(100);
 }
 
-function createReportOfType(type, query, fast = false) {
+function createReportOfType(type, query, fast = false, run = true) {
   selectReportOfType(type);
   if (fast) {
     cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { delay: 1, parseSpecialCharSequences: false });
@@ -308,8 +332,9 @@ function createReportOfType(type, query, fast = false) {
   cy.wait(400);
 
   cy.get('main .react-grid-item:eq(2)').contains('Advanced settings').click();
-
-  cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
+  if (run) {
+    cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
+  }
 }
 
 function checkInitialState() {
@@ -321,6 +346,9 @@ function checkInitialState() {
 
 function createCard() {
   // Check the starter cards
-  cy.get('main .react-grid-item:eq(2)  button[aria-label="add report"]').click();
+  cy.get('main .react-grid-item button[aria-label="add report"]', { timeout: WAITING_TIME })
+    .should('be.visible')
+    .click();
+  cy.wait(1000);
   cy.get('main .react-grid-item:eq(2)').should('contain', 'No query specified.');
 }

@@ -20,6 +20,12 @@ export const setConnected = (connected: boolean) => ({
   payload: { connected },
 });
 
+export const SET_DRAFT = 'APPLICATION/SET_DRAFT';
+export const setDraft = (draft: boolean) => ({
+  type: SET_DRAFT,
+  payload: { draft },
+});
+
 export const SET_CONNECTION_MODAL_OPEN = 'APPLICATION/SET_CONNECTION_MODAL_OPEN';
 export const setConnectionModalOpen = (open: boolean) => ({
   type: SET_CONNECTION_MODAL_OPEN,
@@ -143,7 +149,12 @@ export const setStandaloneEnabled = (
   standaloneDashboardDatabase: string,
   standaloneDashboardURL: string,
   standaloneUsername: string,
-  standalonePassword: string
+  standalonePassword: string,
+  standalonePasswordWarningHidden: boolean,
+  standaloneAllowLoad: boolean,
+  standaloneLoadFromOtherDatabases: boolean,
+  standaloneMultiDatabase: boolean,
+  standaloneDatabaseList: string
 ) => ({
   type: SET_STANDALONE_ENABLED,
   payload: {
@@ -157,6 +168,11 @@ export const setStandaloneEnabled = (
     standaloneDashboardURL,
     standaloneUsername,
     standalonePassword,
+    standalonePasswordWarningHidden,
+    standaloneAllowLoad,
+    standaloneLoadFromOtherDatabases,
+    standaloneMultiDatabase,
+    standaloneDatabaseList,
   },
 });
 
@@ -176,6 +192,12 @@ export const SET_SSO_ENABLED = 'APPLICATION/SET_SSO_ENABLED';
 export const setSSOEnabled = (enabled: boolean, discoveryUrl: string) => ({
   type: SET_SSO_ENABLED,
   payload: { enabled, discoveryUrl },
+});
+
+export const SET_SSO_PROVIDERS = 'APPLICATION/SET_SSO_PROVIDERS';
+export const setSSOProviders = (providers: []) => ({
+  type: SET_SSO_PROVIDERS,
+  payload: { providers },
 });
 
 export const SET_WAIT_FOR_SSO = 'APPLICATION/SET_WAIT_FOR_SSO';
@@ -206,4 +228,10 @@ export const SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_PARAMETE
 export const setParametersToLoadAfterConnecting = (parameters: any) => ({
   type: SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING,
   payload: { parameters },
+});
+
+export const SET_CUSTOM_HEADER = 'APPLICATION/SET_CUSTOM_HEADER';
+export const setCustomHeader = (customHeader: any) => ({
+  type: SET_CUSTOM_HEADER,
+  payload: { customHeader },
 });

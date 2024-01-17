@@ -1,5 +1,21 @@
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const webpack = require('webpack');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+
+const circularPlugin = new CircularDependencyPlugin({
+  // exclude detection of files based on a RegExp
+  exclude: /a\.js|node_modules/,
+  // add errors to webpack instead of warnings
+  failOnError: false,
+  // allow import cycles that include an asyncronous import,
+  // e.g. via import(/* webpackMode: "weak" */ './file.js')
+  allowAsyncCycles: false,
+  // set the current working directory for displaying module paths
+  cwd: process.cwd(),
+});
+
+const circularValidation = false;
 
 const rules = [
   {
@@ -41,7 +57,7 @@ module.exports = (env) => {
     },
     entry: ['./src/index.tsx'],
     mode: production ? 'production' : 'development',
-    devtool: production ? undefined : 'source-map',
+    devtool: production ? 'source-map' : 'eval-cheap-module-source-map',
     module: {
       rules: rules,
     },
@@ -56,9 +72,20 @@ module.exports = (env) => {
       historyApiFallback: {
         index: 'index.html',
       },
+      compress: true,
+      client: {
+        overlay: {
+          warnings: false,
+        },
+      },
     },
     plugins: production
       ? [
+          sentryWebpackPlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: 'neo4j-inc',
+            project: 'neodash',
+          }),
           new webpack.DefinePlugin({
             process: { env: {} },
           }),
@@ -70,6 +97,7 @@ module.exports = (env) => {
             process: { env: {} },
           }),
           new ReactRefreshWebpackPlugin(),
+          ...(circularValidation ? [circularPlugin] : []),
         ],
     ignoreWarnings: [/Failed to parse source map/],
   };

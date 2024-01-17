@@ -30,6 +30,24 @@ export function extractNodePropertiesFromRecords(records: any) {
 }
 
 /**
+ * Collects all node labels and node properties in a set of Neo4j records.
+ * @param records : a list of Neo4j records.
+ * @returns a list of lists, where each inner list is [NodeLabel] + [prop1, prop2, prop3]...
+ */
+export function extractNodeAndRelPropertiesFromRecords(records: any) {
+  const fieldsDict = {};
+  records.forEach((record) => {
+    record._fields.forEach((field) => {
+      saveNodeAndRelPropertiesToDictionary(field, fieldsDict);
+    });
+  });
+  const fields = Object.keys(fieldsDict).map((label) => {
+    return [label].concat(Object.values(fieldsDict[label]));
+  });
+  return fields.length > 0 ? fields : [];
+}
+
+/**
  * Merges an existing set of fields (node labels and their properties) with a new one.
  * This is used when we explore the graph and want to update the report footer.
  * @param oldFields a list of string[].
@@ -75,11 +93,37 @@ export function saveNodePropertiesToDictionary(field, fieldsDict) {
   }
 }
 
+export function saveNodeAndRelPropertiesToDictionary(field, fieldsDict) {
+  // TODO - instead of doing this discovery ad-hoc, we could also use CALL db.schema.nodeTypeProperties().
+  if (field == undefined) {
+    return;
+  }
+  if (valueIsArray(field)) {
+    field.forEach((v) => saveNodeAndRelPropertiesToDictionary(v, fieldsDict));
+  } else if (valueIsNode(field)) {
+    field.labels.forEach((l) => {
+      fieldsDict[l] = fieldsDict[l]
+        ? [...new Set(fieldsDict[l].concat(Object.keys(field.properties)))]
+        : Object.keys(field.properties);
+    });
+  } else if (valueIsRelationship(field)) {
+    let l = field.type;
+    fieldsDict[l] = fieldsDict[l]
+      ? [...new Set(fieldsDict[l].concat(Object.keys(field.properties)))]
+      : Object.keys(field.properties);
+  } else if (valueIsPath(field)) {
+    field.segments.forEach((segment) => {
+      saveNodeAndRelPropertiesToDictionary(segment.start, fieldsDict);
+      saveNodeAndRelPropertiesToDictionary(segment.end, fieldsDict);
+    });
+  }
+}
+
 /* HELPER FUNCTIONS FOR RENDERING A FIELD BASED ON TYPE */
-const HtmlTooltip = withStyles((theme) => ({
+const HtmlTooltip = withStyles(() => ({
   tooltip: {
     color: 'white',
-    fontSize: theme.typography.pxToRem(12),
+    fontSize: 12,
     border: '1px solid #fcfffa',
   },
 }))(Tooltip);
@@ -204,7 +248,7 @@ function RenderPath(value) {
 function RenderArray(value) {
   const mapped = value.map((v, i) => {
     return (
-      <div>
+      <div key={String(`k${i}`) + v}>
         {RenderSubValue(v)}
         {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
       </div>
@@ -214,15 +258,28 @@ function RenderArray(value) {
 }
 
 function RenderString(value) {
-  const str = value ? value.toString() : '';
+  const str = value?.toString() || '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
-      <TextLink externalLink target='_blank' href={str}>
+      <TextLink key={value} externalLink target='_blank' href={str}>
         {str}
       </TextLink>
     );
   }
   return str;
+}
+
+function RenderLink(value, disabled = false) {
+  // If the link is embedded in a button (disabled), it's not a hyperlink, so we just return the string.
+  if (disabled) {
+    return value;
+  }
+  // Else, it's a 'real' link, and return a React object
+  return (
+    <TextLink key={value} externalLink target='_blank' href={value}>
+      {value}
+    </TextLink>
+  );
 }
 
 function RenderPoint(value) {
@@ -247,7 +304,7 @@ function RenderInteger(value) {
   if (!value || !value.toInt) {
     return RenderNumber(value);
   }
-  const integer = value.toNumber().toLocaleString();
+  const integer = value.toNumber().toLocaleString('en-US');
   return integer;
 }
 
@@ -255,7 +312,7 @@ function RenderNumber(value) {
   if (value === null || !value.toLocaleString) {
     return 'null';
   }
-  const number = value.toLocaleString();
+  const number = value.toLocaleString('en-US');
   return number;
 }
 
@@ -330,6 +387,14 @@ export const rendererForType: any = {
   undefined: {
     type: 'string',
     renderValue: (c) => RenderString(c.value),
+  },
+  boolean: {
+    type: 'string',
+    renderValue: (c) => RenderString(c.value),
+  },
+  link: {
+    type: 'link',
+    renderValue: (c, disabled = false) => RenderLink(c.value, disabled),
   },
 };
 

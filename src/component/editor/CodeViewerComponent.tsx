@@ -6,7 +6,10 @@ import React from 'react';
  */
 const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
   return (
-    <div style={{ overflowY: 'auto', marginLeft: '10px', marginRight: '10px', height: '100%' }}>
+    <div
+      className={'n-text-palette-neutral-text-default'}
+      style={{ overflowY: 'auto', marginLeft: '10px', marginRight: '10px', height: '100%' }}
+    >
       <TextareaAutosize
         style={{
           width: '100%',
@@ -15,6 +18,7 @@ const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
           paddingLeft: '10px',
           background: 'none',
           overflow: 'scroll !important',
+          marginTop: '5px',
           border: '1px solid lightgray',
         }}
         className={'textinput-linenumbers'}

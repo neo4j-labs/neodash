@@ -12,13 +12,15 @@ export interface ChartProps {
   dimensions?: Record<string, number>; // a dictionary with the dimensions of the report (likely not needed, charts automatically fill up space).
   fullscreen?: boolean; // flag indicating whether the report is rendered in a fullscreen view.
   parameters?: Record<string, any>; // A dictionary with the global dashboard parameters.
+  query?: string; // The original query that was used to populate the `records`.
   queryCallback?: (query: string | undefined, parameters: Record<string, any>, setRecords: any) => void; // Callback to query the database with a given set of parameters. Calls 'setReccords' upon completion.
   createNotification?: (title: string, message: string) => void; // Callback to create a notification that overlays the entire application.
-  setGlobalParameter?: (name: string, value: string) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
+  setGlobalParameter?: (name: string, value: any) => void; // Allows a chart to update a global dashboard parameter to be used in Cypher queries for other reports.
   getGlobalParameter?: (name) => string; // Allows a chart to get a global dashboard parameter.
   updateReportSetting?: (name, value) => void; // Callback to update a setting for this report.
   fields: (fields) => string[]; // List of fields (return values) available for the report.
   setFields?: (fields) => void; // Update the list of fields for this report.
+  theme?: string; // Dashboard theme value.
 }
 
 /**

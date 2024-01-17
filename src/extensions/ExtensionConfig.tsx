@@ -1,9 +1,10 @@
-import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
-import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
-import QueryTranslatorButton from './query-translator/component/QueryTranslator';
-import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
-import { translateQuery } from './query-translator/util/Util';
-import { GPT_LOADING_ICON } from './query-translator/component/LoadingIcon';
+import React from 'react';
+import { QUERY_TRANSLATOR_ACTION_PREFIX } from './text2cypher/state/QueryTranslatorActions';
+import { queryTranslatorReducer } from './text2cypher/state/QueryTranslatorReducer';
+import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQueryEditor';
+import { translateQuery } from './text2cypher/util/Util';
+import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
+import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -16,7 +17,7 @@ interface Extension {
   link: string;
   reducerPrefix?: string;
   reducerObject?: any;
-  drawerButton?: JSX.Element;
+  settingsMenuButton?: JSX.Element;
   cardSettingsComponent?: JSX.Element;
   settingsModal?: JSX.Element;
   prepopulateReportFunction?: any; // function
@@ -33,7 +34,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     description:
       'Advanced visualizations let you take your dashboard to the next level. This extension adds a sankey chart to visualize flows, three charts to plot hierarchical data (Sunburst, Circle Packing, Treemap). A Gauge Chart to show percentages, a Radar chart to show radial data, and an Area map to visualize country-data.',
-    link: 'https://neo4j.com/labs/neodash/2.3/user-guide',
+    link: 'https://neo4j.com/labs/neodash/2.4/user-guide',
   },
   'rule-based-styling': {
     name: 'styling',
@@ -43,7 +44,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     description:
       "The rule-based styling extension allows users to dynamically color elements in a visualization based on output values. This can be applied to tables, graphs, bar charts, line charts, and more. To use the extension, click on the 'rule-based styling' icon inside the settings of a report.",
-    link: 'https://neo4j.com/labs/neodash/2.3/user-guide',
+    link: 'https://neo4j.com/labs/neodash/2.4/user-guide',
   },
   'report-actions': {
     name: 'actions',
@@ -55,35 +56,9 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Report actions let dashboard builders add extra interactivity into dashboards. For example, setting parameter values when a cell in a table or a node in a graph is clicked.',
     link: 'https://neo4j.com/professional-services/',
   },
-  // 'node-sidebar': {
-  //   name: 'node-sidebar',
-  //   label: 'Node Sidebar',
-  //   author: 'Neo4j Professional Services',
-  //   image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-  //   enabled: true,
-  //   reducerPrefix: NODE_SIDEBAR_ACTION_PREFIX,
-  //   reducerObject: sidebarReducer,
-  //   drawerButton: SidebarDrawerButton,
-  //   description:
-  //     'The node sidebar allows you to create a customer drawer on the side of the page. This drawer will contain nodes from the graph, which can be inspected, and drilled down into by setting dashboard parameters.',
-  //   link: 'https://neo4j.com/professional-services/',
-  // },
-  // workflows: {
-  //   name: 'workflows',
-  //   label: 'Cypher Workflows',
-  //   author: 'Neo4j Professional Services',
-  //   image: 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png', // TODO: Fix placeholder image.
-  //   enabled: false,
-  //   reducerPrefix: WORKFLOWS_ACTION_PREFIX,
-  //   reducerObject: workflowReducer,
-  //   drawerButton: NeoWorkflowDrawerButton,
-  //   description:
-  //     'An extension to create, manage, and run workflows consisting of Cypher queries. Workflows can be used to run ETL flows, complex query chains, or run graph data science workloads.',
-  //   link: 'https://neo4j.com/professional-services/',
-  // },
   'query-translator': {
     name: 'query-translator',
-    label: 'Natural Language Queries',
+    label: 'Text2Cypher: Natural Language Queries',
     author: 'Neo4j Professional Services',
     image: 'translator.png',
     enabled: true,
@@ -92,7 +67,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     cardSettingsComponent: NeoOverrideCardQueryEditor,
     prepopulateReportFunction: translateQuery,
     customLoadingIcon: GPT_LOADING_ICON,
-    drawerButton: QueryTranslatorButton,
+    settingsMenuButton: QueryTranslatorButton,
     description:
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
     link: 'https://neo4j.com/professional-services/',
@@ -105,6 +80,16 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     description: 'Extension to enable NeoDash integration in Hive. This is a work in progress.',
     link: 'https://neo4j.solutions',
+  },
+  forms: {
+    name: 'forms',
+    label: 'Forms',
+    author: 'Neo4j Professional Services',
+    image: 'form.png',
+    enabled: true,
+    description:
+      'Forms let you craft Cypher queries with multiple inputs, that are fired on demand. Using parameters from the dashboard, or form specific input, you will be able to trigger custom logic with forms.',
+    link: 'https://neo4j.com/professional-services/',
   },
 };
 
@@ -135,8 +120,8 @@ function getExtensionDrawerButtons() {
   let buttons = {};
   Object.values(EXTENSIONS).forEach((extension) => {
     try {
-      if (extension.drawerButton) {
-        buttons[extension.name] = extension.drawerButton;
+      if (extension.settingsMenuButton) {
+        buttons[extension.name] = extension.settingsMenuButton;
       }
     } catch (e) {
       console.log(`Something wrong happened while loading the drawer extension : ${e}`);

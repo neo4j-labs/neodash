@@ -19,6 +19,7 @@ const NeoCardSettings = ({
   reportSettings,
   reportSettingsOpen,
   fields,
+  schema,
   heightPx,
   extensions, // A set of enabled extensions.
   onQueryUpdate,
@@ -35,7 +36,7 @@ const NeoCardSettings = ({
   expanded,
   onToggleCardExpand,
 }) => {
-  const reportHeight = heightPx - CARD_HEADER_HEIGHT + 24;
+  const reportHeight = heightPx - CARD_HEADER_HEIGHT + 19;
 
   const cardSettingsHeader = (
     <NeoCardSettingsHeader
@@ -69,6 +70,7 @@ const NeoCardSettings = ({
       onQueryUpdate={onQueryUpdate}
       onReportSettingUpdate={onReportSettingUpdate}
       onTypeUpdate={onTypeUpdate}
+      forceRunQuery={onToggleCardSettings}
     ></NeoCardSettingsContent>
   ) : (
     <CardContent className='n-py-2' />
@@ -78,6 +80,7 @@ const NeoCardSettings = ({
     <NeoCardSettingsFooter
       type={type}
       fields={fields}
+      schema={schema}
       extensions={extensions}
       reportSettings={reportSettings}
       reportSettingsOpen={reportSettingsOpen}
@@ -89,7 +92,11 @@ const NeoCardSettings = ({
   );
 
   return (
-    <div className={`card-view ${expanded ? 'expanded' : ''} n-overflow-y-auto n-h-full`}>
+    <div
+      className={`card-view n-bg-palette-neutral-bg-weak n-text-palette-neutral-text-default ${
+        expanded ? 'expanded' : ''
+      } n-overflow-y-auto n-h-full`}
+    >
       {cardSettingsHeader}
       <ReportItemContainer style={{ height: reportHeight }} className='-n-mt-2'>
         {cardSettingsContent}

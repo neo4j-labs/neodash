@@ -140,6 +140,11 @@ export function getRecordType(value) {
       return 'objectNumber';
     }
     return 'object';
+  } else if (typeof value === 'string' || value instanceof String) {
+    if (value.startsWith('http') || value.startsWith('https')) {
+      return 'link';
+    }
+    return 'string';
   }
 
   // Use string as default type
@@ -214,7 +219,7 @@ export function replaceDashboardParameters(str, parameters) {
     let param = _.replace(`$`, '').trim();
     let val = parameters?.[param] || null;
     let type = getRecordType(val);
-    let valueRender = type === 'string' ? val : RenderSubValue(val);
+    let valueRender = type === 'string' || type == 'link' ? val : RenderSubValue(val);
     return valueRender;
   };
 
@@ -247,7 +252,6 @@ export const downloadComponentAsImage = (ref) => {
 
 import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
 import { RenderSubValue } from '../report/ReportRecordProcessing';
-import { DEFAULT_NODE_LABELS } from '../config/ReportConfig';
 
 /**
  * Function to cast a value received from the Neo4j Driver to its TS native type
@@ -402,6 +406,9 @@ export const isEmptyObject = (obj: object) => {
  * @returns True if it's an object castable to date
  */
 export function isCastableToNeo4jDate(value: object) {
+  if (value == null || value == undefined) {
+    return false;
+  }
   let keys = Object.keys(value);
   return keys.length == 3 && keys.includes('day') && keys.includes('month') && keys.includes('year');
 }
@@ -442,3 +449,5 @@ export function getSelectionBasedOnFields(fields, oldSelection = {}, autoAssignS
   });
   return selection;
 }
+
+export const DEFAULT_NODE_LABELS = ['name', 'title', 'label', 'id', 'uid', '(label)'];

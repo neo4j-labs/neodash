@@ -6,7 +6,8 @@ import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { evaluateRulesOnDict, evaluateRulesOnNode, useStyleRules } from '../../../styling/StyleRuleEvaluator';
 import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
 import { isCyclic } from '../../Utils';
-import { extensionEnabled } from '../../../ExtensionUtils';
+import { themeNivo } from '../../../../chart/Utils';
+import { extensionEnabled } from '../../../../utils/ReportUtils';
 
 const UNWEIGHTED_SANKEY_PROPERTY = 'SANKEY_UNWEIGHTED';
 
@@ -190,6 +191,7 @@ const NeoSankeyChart = (props: ChartProps) => {
 
   return (
     <ResponsiveSankey
+      theme={themeNivo}
       data={data}
       margin={{
         top: marginTop,
@@ -234,7 +236,6 @@ const NeoSankeyChart = (props: ChartProps) => {
                 itemHeight: 14,
                 itemDirection: 'right-to-left',
                 itemsSpacing: 2,
-                itemTextColor: '#999',
                 symbolSize: 14,
                 effects: [
                   {

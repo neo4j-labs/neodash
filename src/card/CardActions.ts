@@ -50,6 +50,12 @@ export const updateFields = (pagenumber: number, id: number, fields: any) => ({
   payload: { pagenumber, id, fields },
 });
 
+export const UPDATE_SCHEMA = 'PAGE/CARD/UPDATE_SCHEMA';
+export const updateSchema = (pagenumber: number, id: number, schema: any) => ({
+  type: UPDATE_SCHEMA,
+  payload: { pagenumber, id, schema },
+});
+
 export const UPDATE_SELECTION = 'PAGE/CARD/UPDATE_SELECTION';
 export const updateSelection = (pagenumber: number, id: number, selectable: any, field: any) => ({
   type: UPDATE_SELECTION,
