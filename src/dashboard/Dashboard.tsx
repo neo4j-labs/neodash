@@ -42,14 +42,6 @@ const Dashboard = ({
     setDriver(newDriver);
   }
 
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
-  };
-  const plainTextPassword = applicationSettings.standalonePassword;
-
   const content = (
     <Neo4jProvider driver={driver}>
       <NeoDashboardConnectionUpdateHandler
