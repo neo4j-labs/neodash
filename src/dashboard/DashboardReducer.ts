@@ -6,7 +6,6 @@ import { DEFAULT_DASHBOARD_TITLE } from '../config/ApplicationConfig';
 import { extensionsReducer, INITIAL_EXTENSIONS_STATE } from '../extensions/state/ExtensionReducer';
 import { PAGE_EXAMPLE_STATE, pageReducer, PAGE_EMPTY_STATE } from '../page/PageReducer';
 import { settingsReducer, SETTINGS_INITIAL_STATE } from '../settings/SettingsReducer';
-import { hiveReducer, HIVE_INITIAL_STATE } from '../solutions/persistence/HiveReducer';
 import {
   CREATE_PAGE,
   REMOVE_PAGE,
