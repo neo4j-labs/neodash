@@ -296,7 +296,7 @@ export const NeoPage = ({
             </Grid>
           );
         })}
-        {editable && !isDragging ? lastElement : null}
+        {editable && !isDragging ? lastElement : <div key={getReportKey(pagenumber, '999999')}></div>}
       </ResponsiveGridLayout>
     </div>
   );
