@@ -81,7 +81,7 @@ describe('Testing table', () => {
           });
       });
 
-    cy.wait(1000);
+    cy.wait(500);
   });
 
   it('Checking Colour Picker settings', () => {
@@ -135,7 +135,7 @@ describe('Testing table', () => {
     cy.get('div[role="dialog"]').parent().click(-100, -100, { force: true });
   });
 
-  it.only('Checking full screen bar chart setting', () => {
+  it('Checking full screen bar chart setting', () => {
     //Opens first 2nd card
     cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
       // Opening settings
@@ -163,4 +163,60 @@ describe('Testing table', () => {
     // Check that the div is no longer in the DOM
     cy.get('div[data-focus-lock-disabled="false"]').should('not.exist');
   });
+
+  it('Checking "Autorun Query" works as intended', () => {
+    // Custom command to open advanced settings
+    cy.advancedSettings(() => {
+      // Finding 'Auto-run query setting and changing it to 'off'
+      cy.get('.ndl-dropdown')
+        .contains('label', 'Auto-run query')
+        .scrollIntoView()
+        .should('be.visible')
+        .click()
+        .type('off{enter}');
+      cy.wait(200);
+      cy.get('button[aria-label="run"]').click();
+      cy.get('.ndl-cypher-editor').should('be.visible');
+      cy.get('g').should('not.exist');
+      cy.wait(100);
+      cy.get('.MuiCardContent-root').find('button[aria-label="run"]').filter(':visible').click();
+      cy.get('g').should('exist');
+    });
+  });
+
+  it('Checking Legend integration works as intended', () => {
+    cy.advancedSettings(() => {
+      // Checking that legend appears
+      cy.setDropdownValue('Show Legend', 'on');
+      cy.wait(100);
+      cy.get('button[aria-label="run"]').click();
+      cy.wait(100);
+      //Checking that legend matches value specified: in the case - 'count'
+      cy.get('svg g g text').last().contains(/count/i)
+    });
+    cy.advancedSettings(() => {
+      // Activating advanced settings
+      cy.get('[role="switch"]').click();
+      // Checking that legend disappears
+      cy.setDropdownValue('Show Legend', 'off');
+      cy.wait(100);
+      cy.get('button[aria-label="run"]').click();
+      cy.wait(100);
+      cy.get('svg g g text').last().contains(/count/i).should('not.exist')
+    })
+  });
+
+  it.only('Checking the grouping function works as intended', () => {
+    cy.advancedSettings(() => {
+      cy.get('.ndl-cypher-editor div[role="textbox"]')
+              .should('be.visible')
+              .click()
+              .clear()
+              .type('MATCH (p:Person)-[:DIRECTED]->(n:Movie) RETURN n.released AS released, p.name AS Director, count(n.title) AS count LIMIT 5');
+      cy.setDropdownValue('Grouping', 'on')
+      cy.wait(100);
+      cy.get('button[aria-label="run"]').click();
+      cy.get('.ndl-dropdown').contains('label', 'Group').find('[class$="container"]:eq(0)').click().type('Director{enter}')
+    })
+  })
 });

@@ -27,3 +27,26 @@
 Cypress.Commands.add('getDataTest', (dataTestSelector) => {
     return cy.get(`[data-test="${dataTestSelector}"]`)
 })
+
+/**
+ * Function to interact with a specific element and execute additional custom commands.
+ * @param {Function} customAction - A callback function containing custom Cypress commands.
+ */
+Cypress.Commands.add('advancedSettings', (customAction) => {
+    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
+        // Opening settings
+        cy.get('button').eq(1).click();
+        // Activating advanced settings
+        cy.get('[role="switch"]').click();
+        cy.wait(200);
+        customAction();
+    });
+})
+
+Cypress.Commands.add('setDropdownValue', (labelName, setting) => {
+    cy.get('.ndl-dropdown').contains('label', labelName)
+      .scrollIntoView()
+      .should('be.visible')
+      .click()
+      .type(`${setting}{enter}`);
+});
