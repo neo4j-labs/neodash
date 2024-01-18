@@ -60,11 +60,13 @@ export const NeoDashboardTitle = ({
   }
 
   useEffect(() => {
+    document.title = dashboardTitle;
     // Reset text to the dashboard state when the page gets reorganized.
     if (dashboardTitle !== dashboardTitleText) {
       setDashboardTitleText(dashboardTitle);
     }
   }, [dashboardTitle]);
+
   return (
     <div className='n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'>
       {/* TODO : Replace with editable field if dashboard is editable */}
@@ -99,22 +101,22 @@ export const NeoDashboardTitle = ({
         </div>
       ) : (
         <div className={'n-flex n-flex-row n-flex-wrap n-justify-between n-items-center'}>
-          {isStandalone && <NeoDashboardHeaderLogo/>}
+          {isStandalone && <NeoDashboardHeaderLogo />}
           <div className='n-flex n-flex-row n-mx-8'>
             <Typography variant='h3'>{dashboardTitle ? dashboardTitle : '(no title)'}</Typography>
             <Tooltip title={'Edit'} disableInteractive>
               {editable ? (
-                  <IconButton
-                      className='logo-btn n-p-1'
-                      aria-label={'edit'}
-                      size='large'
-                      onClick={() => setEditing(true)}
-                      clean
-                  >
-                    <PencilSquareIconOutline className='header-icon' type='outline' />
-                  </IconButton>
+                <IconButton
+                  className='logo-btn n-p-1'
+                  aria-label={'edit'}
+                  size='large'
+                  onClick={() => setEditing(true)}
+                  clean
+                >
+                  <PencilSquareIconOutline className='header-icon' type='outline' />
+                </IconButton>
               ) : (
-                  <></>
+                <></>
               )}
             </Tooltip>
           </div>
