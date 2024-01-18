@@ -199,7 +199,7 @@ export const NeoReport = ({
     // If the compactCanvas=true setting is enabled then the report height is set to 210
     if (el && settings?.compactCanvas) {
       if (type === 'table') {
-        el.style.height = `${height * 100}px`;
+        el.style.height = `${height * 210}px`;
       }
     }
   };
