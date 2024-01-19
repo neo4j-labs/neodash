@@ -545,6 +545,22 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 50,
       },
+      legendWidth: {
+        label: 'Legend Width (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 128
+      },
+      legendPosition: {
+        label: 'Legend Position',
+        type: SELECTION_TYPES.LIST,
+        values: ['Horizontal', 'Vertical'],
+        default: 'Horizontal'
+      },
+      legendTranslate: {
+        label: 'Translate Legend Horizontally (px)',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      }
     },
   },
   line: {
