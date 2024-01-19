@@ -5,6 +5,7 @@ import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQuer
 import { translateQuery } from './text2cypher/util/Util';
 import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
 import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
+import RBACLabelButton from './rbac/RBACLabelButton';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -72,15 +73,15 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
     link: 'https://neo4j.com/professional-services/',
   },
-  forms: {
-    name: 'forms',
-    label: 'Forms',
+  'role-label-management': {
+    name: 'role-label-management',
+    label: 'Role Label Management',
     author: 'Neo4j Professional Services',
     image: 'form.png',
     enabled: true,
-    description:
-      'Forms let you craft Cypher queries with multiple inputs, that are fired on demand. Using parameters from the dashboard, or form specific input, you will be able to trigger custom logic with forms.',
+    description: 'This extension lets you manage role access to dashboard labels.',
     link: 'https://neo4j.com/professional-services/',
+    settingsMenuButton: RBACLabelButton,
   },
 };
 
