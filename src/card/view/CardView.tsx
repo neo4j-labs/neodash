@@ -44,7 +44,7 @@ const NeoCardView = ({
   expanded,
   onToggleCardExpand,
 }) => {
-  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 22;
+  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 20;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
   const ref = React.useRef();
 
@@ -137,10 +137,10 @@ const NeoCardView = ({
 
   const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
-  const withoutFooter =
-    reportTypes[type] && reportTypes[type].withoutFooter
-      ? reportTypes[type].withoutFooter
-      : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
+  const reportTypeHasNoFooter = reportTypes[type] && reportTypes[type].withoutFooter;
+  const withoutFooter = reportTypeHasNoFooter
+    ? reportTypes[type].withoutFooter
+    : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
 
   const getGlobalParameter = (key: string): unknown => {
     return globalParameters ? globalParameters[key] : undefined;
@@ -170,13 +170,13 @@ const NeoCardView = ({
     paddingRight: '0px',
     paddingTop: '0px',
     width: '100%',
-    marginTop: '-3px',
+    marginTop: '-9px',
     height: expanded
       ? withoutFooter
         ? '100%'
         : `calc(100% - ${CARD_FOOTER_HEIGHT}px)`
       : withoutFooter
-      ? `${reportHeight + CARD_FOOTER_HEIGHT}px`
+      ? `${reportHeight + CARD_FOOTER_HEIGHT - (reportTypeHasNoFooter ? 0 : 20)}px`
       : `${reportHeight}px`,
     overflow: 'auto',
   };

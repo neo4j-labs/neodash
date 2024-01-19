@@ -42,6 +42,7 @@ import NeoDashboardSidebarAccessModal from './modal/DashboardSidebarAccessModal'
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
+// Which (small) pop-up menu is currently open for the sidebar.
 enum Menu {
   DASHBOARD = 0,
   DATABASE = 1,
@@ -49,6 +50,7 @@ enum Menu {
   NONE = 3,
 }
 
+// Which (large) pop-up modal is currently open for the sidebar.
 enum Modal {
   CREATE = 0,
   IMPORT = 1,
@@ -62,6 +64,9 @@ enum Modal {
   NONE = 9,
   ACCESS = 10,
 }
+
+// We use "index = -1" to represent a non-saved draft dashboard in the sidebar's dashboard list.
+const UNSAVED_DASHBOARD_INDEX = -1;
 
 /**
  * A component responsible for rendering the sidebar on the left of the screen.
@@ -85,10 +90,10 @@ export const NeoDashboardSidebar = ({
 }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
-  const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(-1);
+  const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(UNSAVED_DASHBOARD_INDEX);
   const [dashboardDatabase, setDashboardDatabase] = React.useState(database ? database : 'neo4j');
   const [databases, setDatabases] = useState([]);
-  const [inspectedIndex, setInspectedIndex] = useState(-1);
+  const [inspectedIndex, setInspectedIndex] = useState(UNSAVED_DASHBOARD_INDEX);
   const [searchText, setSearchText] = useState('');
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
@@ -105,7 +110,7 @@ export const NeoDashboardSidebar = ({
       if (dashboard && dashboard.uuid) {
         const index = list.findIndex((element) => element.uuid == dashboard.uuid);
         setSelectedDashboardIndex(index);
-        if (index == -1) {
+        if (index == UNSAVED_DASHBOARD_INDEX) {
           // If we can't find the currently dashboard in the database, we are drafting a new one.
           setDraft(true);
         }
@@ -123,8 +128,9 @@ export const NeoDashboardSidebar = ({
     // Creates new dashboard in draft state (not yet saved to Neo4j)
     deleteDashboardFromNeo4j(driver, dashboardDatabase, uuid, () => {
       if (uuid == dashboard.uuid) {
-        setSelectedDashboardIndex(0);
+        setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
         resetLocalDashboard();
+        loadDashboardListFromNeo4j();
         setDraft(true);
       }
       setTimeout(() => {
@@ -156,19 +162,27 @@ export const NeoDashboardSidebar = ({
             }
           );
         }}
+        overwrite={selectedDashboardIndex >= 0}
         handleClose={() => setModalOpen(Modal.NONE)}
       />
 
       <NeoDashboardSidebarLoadModal
         open={modalOpen == Modal.LOAD}
         onConfirm={() => {
-          setModalOpen(Modal.LOAD);
-          const { uuid } = dashboards[inspectedIndex];
-          loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
-            setDraft(false);
-            loadDashboard(uuid, file);
-            setSelectedDashboardIndex(inspectedIndex);
-          });
+          if (inspectedIndex == UNSAVED_DASHBOARD_INDEX) {
+            // Someone attempted to load the unsaved draft dashboard... this isn't possible, we create a fresh one.
+            setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
+            createDashboard();
+          } else {
+            // Load one of the dashboards from the database.
+            setModalOpen(Modal.LOAD);
+            const { uuid } = dashboards[inspectedIndex];
+            loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
+              setDraft(false);
+              loadDashboard(uuid, file);
+              setSelectedDashboardIndex(inspectedIndex);
+            });
+          }
         }}
         handleClose={() => setModalOpen(Modal.NONE)}
       />
@@ -192,6 +206,7 @@ export const NeoDashboardSidebar = ({
         onConfirm={() => {
           setModalOpen(Modal.NONE);
           createDashboard();
+          setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
         }}
         handleClose={() => setModalOpen(Modal.NONE)}
       />
@@ -213,6 +228,7 @@ export const NeoDashboardSidebar = ({
         onImport={(text) => {
           setModalOpen(Modal.NONE);
           setDraft(true);
+          setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
           loadDashboard(createUUID(), text);
         }}
         handleClose={() => setModalOpen(Modal.NONE)}
@@ -283,6 +299,7 @@ export const NeoDashboardSidebar = ({
             }}
           />
           <NeoDashboardSidebarDashboardMenu
+            draft={draft && selectedDashboardIndex == inspectedIndex}
             open={menuOpen == Menu.DASHBOARD}
             anchorEl={menuAnchor}
             handleInfoClicked={() => {
@@ -292,6 +309,14 @@ export const NeoDashboardSidebar = ({
                 setCachedDashboard(JSON.parse(text));
               });
               setModalOpen(Modal.INFO);
+            }}
+            handleDiscardClicked={() => {
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.LOAD);
+            }}
+            handleSaveClicked={() => {
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.SAVE);
             }}
             handleLoadClicked={() => {
               setMenuOpen(Menu.NONE);
@@ -343,6 +368,7 @@ export const NeoDashboardSidebar = ({
               if (draft) {
                 setModalOpen(Modal.CREATE);
               } else {
+                setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
                 createDashboard();
               }
             }}
@@ -445,15 +471,18 @@ export const NeoDashboardSidebar = ({
               onChange={(e) => setSearchText(e.target.value)}
             />
           </SideNavigationGroupHeader>
-          {draft && !readonly ? (
+          {draft && selectedDashboardIndex == UNSAVED_DASHBOARD_INDEX && !readonly ? (
             <DashboardSidebarListItem
               version={NEODASH_VERSION}
               selected={draft}
               title={title}
               saved={false}
               onSelect={() => {}}
-              onSave={() => setModalOpen(Modal.SAVE)}
-              onSettingsOpen={() => {}}
+              onSettingsOpen={(event) => {
+                setInspectedIndex(UNSAVED_DASHBOARD_INDEX);
+                setMenuOpen(Menu.DASHBOARD);
+                setMenuAnchor(event.currentTarget);
+              }}
             />
           ) : (
             <></>
@@ -464,13 +493,13 @@ export const NeoDashboardSidebar = ({
               // index stored in list
               return (
                 <DashboardSidebarListItem
-                  selected={!draft && selectedDashboardIndex == d.index}
-                  title={d.title}
+                  selected={selectedDashboardIndex == d.index}
+                  title={draft && selectedDashboardIndex == d.index ? title : d.title}
                   version={d.version}
-                  saved={true}
+                  saved={!(draft && selectedDashboardIndex == d.index)}
                   readonly={readonly}
                   onSelect={() => {
-                    if (draft) {
+                    if (draft && d.index !== selectedDashboardIndex) {
                       setInspectedIndex(d.index);
                       setModalOpen(Modal.LOAD);
                     } else {
@@ -480,7 +509,6 @@ export const NeoDashboardSidebar = ({
                       });
                     }
                   }}
-                  onSave={() => {}}
                   onSettingsOpen={(event) => {
                     setInspectedIndex(d.index);
                     setMenuOpen(Menu.DASHBOARD);
