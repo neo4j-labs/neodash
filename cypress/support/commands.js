@@ -43,6 +43,15 @@ Cypress.Commands.add('advancedSettings', (customAction) => {
     });
 })
 
+Cypress.Commands.add('openSettings', (customAction) => {
+    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
+        // Opening settings
+        cy.get('button').eq(1).click();
+        cy.wait(200);
+        customAction();
+    });
+})
+
 Cypress.Commands.add('setDropdownValue', (labelName, setting) => {
     cy.get('.ndl-dropdown').contains('label', labelName)
       .scrollIntoView()

@@ -192,7 +192,7 @@ describe('Testing table', () => {
       cy.get('button[aria-label="run"]').click();
       cy.wait(100);
       //Checking that legend matches value specified: in the case - 'count'
-      cy.get('svg g g text').last().contains(/count/i)
+      cy.get('svg g g text').last().contains(/count/i);
     });
     cy.advancedSettings(() => {
       // Activating advanced settings
@@ -202,21 +202,117 @@ describe('Testing table', () => {
       cy.wait(100);
       cy.get('button[aria-label="run"]').click();
       cy.wait(100);
-      cy.get('svg g g text').last().contains(/count/i).should('not.exist')
-    })
+      cy.get('svg g g text').last().contains(/count/i).should('not.exist');
+    });
   });
 
-  it.only('Checking the grouping function works as intended', () => {
+  it('Checking the stacked grouping function works as intended', () => {
     cy.advancedSettings(() => {
       cy.get('.ndl-cypher-editor div[role="textbox"]')
-              .should('be.visible')
-              .click()
-              .clear()
-              .type('MATCH (p:Person)-[:DIRECTED]->(n:Movie) RETURN n.released AS released, p.name AS Director, count(n.title) AS count LIMIT 5');
-      cy.setDropdownValue('Grouping', 'on')
+        .should('be.visible')
+        .click()
+        .clear()
+        .type(
+          'MATCH (p:Person)-[:DIRECTED]->(n:Movie) RETURN n.released AS released, p.name AS Director, count(n.title) AS count LIMIT 5'
+        );
+      cy.setDropdownValue('Grouping', 'on');
       cy.wait(100);
       cy.get('button[aria-label="run"]').click();
-      cy.get('.ndl-dropdown').contains('label', 'Group').find('[class$="container"]:eq(0)').click().type('Director{enter}')
+      cy.get('.ndl-dropdown:contains("Group")').find('svg').parent().click().type('Director{enter}');
+      // Checking that the groups are stacked
+      cy.get('.MuiCardContent-root')
+        .find('g')
+        .children('g')
+        .eq(3) // Get the fourth g element (index starts from 0)
+        .invoke('attr', 'transform')
+        .then((transformValue) => {
+          // Captures the first number in the tranlsate attribute using the parenthisis to capture the first digit and put it in the second value of the resulting array
+          // if transformValue is translate(100,200), then transformValue.match(/translate\((\d+),\d+\)/) will produce an array like ["translate(100,200)", "100"],
+          const match = transformValue.match(/translate\((\d+),\d+\)/);
+          if (match && match[1]) {
+            const xValue = match[1];
+            console.log('xValue: ', xValue);
+
+            // Now find sibling g elements with the same x transform value
+            cy.get('.MuiCardContent-root')
+              .find('g')
+              .children('g')
+              .filter((index, element) => {
+                const siblingTransform = Cypress.$(element).attr('transform');
+                return siblingTransform && siblingTransform.includes(`translate(${xValue},`);
+              })
+              .should('have.length', 3); // Check that there's at least one element
+          } else {
+            throw new Error('Transform attribute not found or invalid format');
+          }
+        });
+    });
+    cy.get('.ndl-dropdown:contains("Group")').find('svg').parent().click().type('(none){enter}');
+    // Checking that the stacked grouped elements do not exist
+    cy.get('.MuiCardContent-root')
+      .find('g')
+      .children('g')
+      .eq(3) // Get the fourth g element (index starts from 0)
+      .invoke('attr', 'transform')
+      .then((transformValue) => {
+        // Captures the first number in the tranlsate attribute using the parenthisis to capture the first digit and put it in the second value of the resulting array
+        // if transformValue is translate(100,200), then transformValue.match(/translate\((\d+),\d+\)/) will produce an array like ["translate(100,200)", "100"],
+        const match = transformValue.match(/translate\((\d+),\d+\)/);
+        if (match && match[1]) {
+          const xValue = match[1];
+          console.log('xValue: ', xValue);
+
+          // Now find sibling g elements with the same x transform value
+          cy.get('.MuiCardContent-root')
+            .find('g')
+            .children('g')
+            .filter((index, element) => {
+              const siblingTransform = Cypress.$(element).attr('transform');
+              return siblingTransform && siblingTransform.includes(`translate(${xValue},`);
+            })
+            .should('have.length', 1); // Check that there are no matching elements
+        } else {
+          throw new Error('Transform attribute not found or invalid format');
+        }
+      });
+  });
+
+  // How to properly test this?
+  it('Testing grouped grouping mode', () => {
+    cy.advancedSettings(() => {
+      cy.get('.ndl-cypher-editor div[role="textbox"]')
+        .should('be.visible')
+        .click()
+        .clear()
+        .type(
+          'MATCH (p:Person)-[:DIRECTED]->(n:Movie) RETURN n.released AS released, p.name AS Director, count(n.title) AS count LIMIT 5'
+        );
+      cy.setDropdownValue('Grouping', 'on');
+      cy.setDropdownValue('Group Mode', 'grouped');
+      cy.wait(400);
+      cy.get('button[aria-label="run"]').click();
+      cy.get('.ndl-dropdown:contains("Group")').find('svg').parent().click().type('Director{enter}');
+    });
+  });
+
+  it.only('Testing "Show Value on Bars"', () => {
+    cy.advancedSettings(() => {
+      cy.setDropdownValue('Show Values On Bars', 'on');
+      cy.get('button[aria-label="run"]').click();
+      cy.get('.MuiCardContent-root')
+        .find('div svg > g > g > text')
+        .should('have.length', 5)
+        .then((textElements) => {
+          cy.log('Number of text elements:', textElements.length);
+        });
+    });
+    cy.wait(100)
+    cy.openSettings(()=> {
+      cy.setDropdownValue('Show Values On Bars', 'off')
+      cy.get('button[aria-label="run"]').click();
+      cy.get('.MuiCardContent-root')
+        .find('div svg > g > g > text')
+        .should('not.exist')
     })
-  })
+  });
 });
