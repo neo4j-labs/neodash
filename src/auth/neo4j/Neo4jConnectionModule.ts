@@ -1,7 +1,5 @@
 import { Record as Neo4jRecord } from 'neo4j-driver';
 import { ConnectionModule } from '../ConnectionModule';
-import { useContext } from 'react';
-import { Neo4jContextState, Neo4jContext } from 'use-neo4j/dist/neo4j.context';
 import { runCypherQuery } from './runCypherQuery';
 import { extractQueryCallbacks, extractQueryParams } from './utils';
 

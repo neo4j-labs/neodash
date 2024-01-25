@@ -1,7 +1,7 @@
 export interface QueryParams {
   query: string;
   database?: string;
-  parameters?;
+  parameters?: Record<any, any>;
   rowLimit?: number;
   fields?: never[];
   useNodePropsAsFields?: boolean;

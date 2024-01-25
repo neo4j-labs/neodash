@@ -22,7 +22,7 @@ export const setErrorDummy = (error) => {
 
 export function extractQueryParams(queryParams): QueryParams {
   try {
-    let {query} = queryParams;
+    let { query } = queryParams;
     let database = queryParams.database ?? '';
     let parameters = queryParams.parameters ?? {};
     let rowLimit = queryParams.rowLimit ?? 1000;
@@ -49,8 +49,6 @@ export function extractQueryParams(queryParams): QueryParams {
 }
 
 export function extractQueryCallbacks(callbacks): QueryCallback {
-  let res = {};
-
   try {
     let setRecords = callbacks.setRecords ?? setRecordsDummy;
     let setFields = callbacks.setFields ?? setFieldsDummy;

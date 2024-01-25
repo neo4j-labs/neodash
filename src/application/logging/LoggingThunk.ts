@@ -1,8 +1,9 @@
 import { createNotificationThunk } from '../../page/PageThunks';
-import { runCypherQuery } from '../../report/ReportQueryRunner';
 import { setLogErrorNotification } from './LoggingActions';
 import { applicationGetLoggingSettings } from './LoggingSelectors';
 import { createUUID } from '../../utils/uuid';
+import { Neo4jConnectionModule } from '../../auth/neo4j/Neo4jConnectionModule';
+import { QueryCallback, QueryParams } from '../../auth/interfaces';
 
 // Thunk to handle log events.
 
@@ -10,6 +11,7 @@ export const createLogThunk =
   (loggingDriver, loggingDatabase, neodashMode, logUser, logAction, logDatabase, logDashboard = '', logMessage) =>
   (dispatch: any, getState: any) => {
     try {
+      const neo4jConnectionModule = new Neo4jConnectionModule('report');
       const uuid = createUUID();
       // Generate a cypher query to save the log.
       const query =
@@ -24,14 +26,10 @@ export const createLogThunk =
         logDashboard: logDashboard,
         logMessage: logMessage,
       };
-      runCypherQuery(
-        loggingDriver,
-        loggingDatabase,
-        query,
-        parameters,
-        1,
-        () => {},
-        (records) => {
+
+      const queryParams: QueryParams = { query, database: loggingDatabase, parameters, rowLimit: 1 };
+      const queryCallback: QueryCallback = {
+        setRecords: (records) => {
           if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
             console.log(`log created: ${uuid}`);
           } else {
@@ -53,8 +51,9 @@ export const createLogThunk =
             LogErrorNotificationNum -= 1;
             dispatch(setLogErrorNotification(LogErrorNotificationNum.toString()));
           }
-        }
-      );
+        },
+      };
+      neo4jConnectionModule.runQuery(loggingDriver, queryParams, queryCallback);
     } catch (e) {
       // we only show error notification 3 times
       const state = getState();
