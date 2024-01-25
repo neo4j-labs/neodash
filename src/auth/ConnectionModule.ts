@@ -1,5 +1,3 @@
-import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
-
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
@@ -27,7 +25,7 @@ export abstract class ConnectionModule {
     return notImplementedError('deleteDashboard');
   }
 
-  async runQuery(_query: string): Promise<QueryResult> {
+  async runQuery(_driver, _queryParams: Record<string, any>, _queryCallbacks: Record<string, any>): Promise<void> {
     return notImplementedError('runQuery');
   }
 

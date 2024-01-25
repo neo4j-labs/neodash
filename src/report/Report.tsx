@@ -1,6 +1,6 @@
 import { Chip, Tooltip } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { QueryStatus, runCypherQuery } from './ReportQueryRunner';
+import { QueryStatus } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
@@ -20,6 +20,8 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import { Neo4jConnectionModule } from '../auth/neo4j/Neo4jConnectionModule';
+import { QueryCallback, QueryParams } from '../auth/interfaces';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -67,7 +69,9 @@ export const NeoReport = ({
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
-  const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
+  // TODO : abstract connection module call (maybe selector at application level)
+  const neo4jConnectionModule = new Neo4jConnectionModule('report');
+  const debouncedRunCypherQuery = useCallback(debounce(neo4jConnectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {
     if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
@@ -111,44 +115,25 @@ export const NeoReport = ({
     // Logic to run a query
     const executeQuery = (newQuery) => {
       setLoadingIcon(REPORT_LOADING_ICON);
+      let queryParams: QueryParams = {
+        database,
+        query: newQuery,
+        parameters,
+        rowLimit,
+        fields: [],
+        useNodePropsAsFields: useNodePropsAsFields,
+        useReturnValuesAsFields: useReturnValuesAsFields,
+        useHardRowLimit: HARD_ROW_LIMITING,
+      };
+      let setSchemaCallback = (schema) => {
+        setSchema(id, schema);
+      };
+      let queryCallback: QueryCallback = { setStatus, setRecords, setFields, setSchema: setSchemaCallback };
+
       if (debounced) {
-        debouncedRunCypherQuery(
-          driver,
-          database,
-          newQuery,
-          parameters,
-          rowLimit,
-          setStatus,
-          setRecords,
-          setFields,
-          fields,
-          useNodePropsAsFields,
-          useReturnValuesAsFields,
-          HARD_ROW_LIMITING,
-          queryTimeLimit,
-          (schema) => {
-            setSchema(id, schema);
-          }
-        );
+        debouncedRunCypherQuery(driver, queryParams, queryCallback);
       } else {
-        runCypherQuery(
-          driver,
-          database,
-          newQuery,
-          parameters,
-          rowLimit,
-          setStatus,
-          setRecords,
-          setFields,
-          fields,
-          useNodePropsAsFields,
-          useReturnValuesAsFields,
-          HARD_ROW_LIMITING,
-          queryTimeLimit,
-          (schema) => {
-            setSchema(id, schema);
-          }
-        );
+        neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
       }
     };
 
@@ -204,26 +189,29 @@ export const NeoReport = ({
   // Can retrieve a maximum of 1000 rows at a time.
   const queryCallback = useCallback(
     (query, parameters, setRecords) => {
-      runCypherQuery(
-        driver,
+      let queryParams: QueryParams = {
         database,
         query,
         parameters,
-        1000,
-        (status) => {
+        rowLimit: 1000,
+        fields: [],
+        useHardRowLimit: HARD_ROW_LIMITING,
+        queryTimeLimit: queryTimeLimit,
+      };
+
+      let setSchemaCallback = (schema) => {
+        setSchema(id, schema);
+      };
+      let queryCallback: QueryCallback = {
+        setStatus: (status) => {
           status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
-        (result) => setRecords(result),
-        () => {},
-        fields,
-        false,
-        false,
-        HARD_ROW_LIMITING,
-        queryTimeLimit,
-        (schema) => {
-          setSchema(id, schema);
-        }
-      );
+        setRecords,
+        setFields: () => {},
+        setSchema: setSchemaCallback,
+      };
+
+      neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
     },
     [database]
   );
