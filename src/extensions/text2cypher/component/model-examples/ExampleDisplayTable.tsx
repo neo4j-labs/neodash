@@ -7,6 +7,7 @@ import {
   ChevronDoubleRightIconOutline,
   ChevronRightIconOutline,
 } from '@neo4j-ndl/react/icons';
+import ShowMoreText from 'react-show-more-text';
 import {
   createColumnHelper,
   flexRender,
@@ -57,11 +58,15 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
   const columns = React.useMemo(
     () => [
       columnHelper.accessor('question', {
-        cell: (info) => info.getValue(),
+        cell: (info) => <ShowMoreText lines={3}>{info.getValue()}</ShowMoreText>,
         header: () => 'Question',
       }),
       columnHelper.accessor('answer', {
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <div>
+            <ShowMoreText lines={3}>{info.getValue()}</ShowMoreText>
+          </div>
+        ),
         header: 'Answer',
       }),
       {
