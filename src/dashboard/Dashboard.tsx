@@ -10,9 +10,9 @@ import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConn
 import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
-import Chat from '../solutions/components/genai/Chat';
 import { version } from '../modal/AboutModal';
 import NeoDashboardSidebar from './sidebar/DashboardSidebar';
+import Chat from '../extensions/hive/components/genai/Chat';
 
 const Dashboard = ({
   pagenumber,

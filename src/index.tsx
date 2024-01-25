@@ -34,8 +34,8 @@ if (window.location.href.includes('//neodash.graphapp.io/')) {
 
 // new imports
 import { Route, BrowserRouter as Router } from 'react-router-dom';
-import Callback from './solutions/auth/callback';
-import PrivateRoute from './solutions/auth/privateRoute';
+import Callback from './extensions/hive/auth/callback';
+import PrivateRoute from './extensions/hive/auth/privateRoute';
 
 /**
  * Set up the NeoDash application and wrap it in the needed providers.

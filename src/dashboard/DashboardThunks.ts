@@ -4,13 +4,13 @@ import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDa
 import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
-import { fetchDashboardFromHive } from '../solutions/launch/launch';
 import { createUUID } from '../utils/uuid';
 import { createLogThunk } from '../application/logging/LoggingThunk';
 import { applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
 import { applicationGetLoggingSettings } from '../application/logging/LoggingSelectors';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
+import { fetchDashboardFromHive } from '../extensions/hive/launch/launch';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {

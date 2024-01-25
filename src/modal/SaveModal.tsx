@@ -15,7 +15,7 @@ import {
   BackspaceIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { Button, Checkbox, Dialog, Dropdown } from '@neo4j-ndl/react';
-import SaveToHiveModal from '../solutions/components/SaveToHiveModal';
+import SaveToHiveModal from '../extensions/hive/components/SaveToHiveModal';
 
 /**
  * A modal to save a dashboard as a JSON text string.

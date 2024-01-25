@@ -50,8 +50,8 @@ import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
+import { handleNeoDashLaunch } from '../extensions/hive/launch/launch';
 
-import { handleNeoDashLaunch } from '../solutions/launch/launch';
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
  * Several actions/other thunks may be dispatched from here.
