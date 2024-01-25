@@ -58,17 +58,17 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('initializes the dashboard', () => {
-    checkInitialState();
+    cy.checkInitialState();
   });
 
   it('creates a new card', () => {
-    checkInitialState();
-    createCard();
+    cy.checkInitialState();
+    cy.createCard();
   });
 
   // Test each type of card
   it('creates a table report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     cy.get('main .react-grid-item button[aria-label="add report"]').should('be.visible').click();
     cy.get('main .react-grid-item')
       .contains('No query specified.')
@@ -96,7 +96,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a bar chart report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Bar Chart', barChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) #index input[name="Category"]', { timeout: WAITING_TIME }).should(
       'have.value',
@@ -107,7 +107,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a pie chart report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Pie Chart', barChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) #index input[name="Category"]', { timeout: WAITING_TIME }).should(
       'have.value',
@@ -119,7 +119,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a line chart report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Line Chart', barChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) #x input[name="X-value"]', { timeout: WAITING_TIME }).should(
       'have.value',
@@ -134,7 +134,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a map chart report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Map', mapChartCypherQuery, true);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path', { timeout: WAITING_TIME }).should(
       'have.length',
@@ -143,7 +143,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a single value report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Single Value', barChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root > div > div:nth-child(2) > span', {
       timeout: WAITING_TIME,
@@ -156,14 +156,14 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a gauge chart report', () => {
     enableAdvancedVisualizations();
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Gauge Chart', gaugeChartCypherQuery);
     cy.get('.text-group > text', { timeout: WAITING_TIME }).contains('69');
   });
 
   it('creates a sunburst chart report', () => {
     enableAdvancedVisualizations();
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Sunburst Chart', sunburstChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: WAITING_TIME }).should(
       'have.value',
@@ -175,7 +175,7 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a circle packing report', () => {
     enableAdvancedVisualizations();
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Circle Packing', sunburstChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: WAITING_TIME }).should(
       'have.value',
@@ -187,7 +187,7 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a tree map report', () => {
     enableAdvancedVisualizations();
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Treemap', sunburstChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) #index input[name="Path"]', { timeout: WAITING_TIME }).should(
       'have.value',
@@ -199,7 +199,7 @@ describe('NeoDash E2E Tests', () => {
 
   it('creates a sankey chart report', () => {
     enableAdvancedVisualizations();
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Sankey Chart', sankeyChartCypherQuery, true);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > path', { timeout: WAITING_TIME }).should(
       'have.attr',
@@ -209,7 +209,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a raw json report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Raw JSON', barChartCypherQuery);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root textarea:nth-child(1)', { timeout: 45000 }).should(
       ($div) => {
@@ -220,7 +220,7 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates a parameter select report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     selectReportOfType('Parameter Select');
     cy.wait(500);
     cy.get('#autocomplete-label-type').type('Movie');
@@ -234,20 +234,20 @@ describe('NeoDash E2E Tests', () => {
   });
 
   it('creates an iframe report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('iFrame', iFrameText);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root iframe', { timeout: 45000 }).should('be.visible');
   });
 
   it('creates a markdown report', () => {
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Markdown', markdownText);
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1', { timeout: 45000 }).should('have.text', 'Hello');
   });
 
-  it.skip('creates a form report', () => {
+  it('creates a form report', () => {
     enableFormsExtension();
-    checkInitialState();
+    cy.checkInitialState();
     createReportOfType('Form', formCypherQuery, true, false);
     cy.get('main .react-grid-item:eq(2) .form-add-parameter').click();
     cy.wait(200);
@@ -337,18 +337,3 @@ function createReportOfType(type, query, fast = false, run = true) {
   }
 }
 
-function checkInitialState() {
-  // Check the starter cards
-  cy.get('main .react-grid-item:eq(0)').should('contain', 'This is your first dashboard!');
-  cy.get('main .react-grid-item:eq(1) .force-graph-container canvas').should('be.visible');
-  cy.get('main .react-grid-item:eq(2) button').should('have.attr', 'aria-label', 'add report');
-}
-
-function createCard() {
-  // Check the starter cards
-  cy.get('main .react-grid-item button[aria-label="add report"]', { timeout: WAITING_TIME })
-    .should('be.visible')
-    .click();
-  cy.wait(1000);
-  cy.get('main .react-grid-item:eq(2)').should('contain', 'No query specified.');
-}
