@@ -73,8 +73,8 @@ Cypress.Commands.add('checkInitialState', () => {
   cy.get('main .react-grid-item:eq(2) button').should('have.attr', 'aria-label', 'add report');
 });
 
+// Creates a card
 const WAITING_TIME = 20000;
-
 Cypress.Commands.add('createCard', () => {
   // Check the starter cards
   cy.get('main .react-grid-item button[aria-label="add report"]', { timeout: WAITING_TIME })
