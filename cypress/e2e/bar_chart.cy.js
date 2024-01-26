@@ -239,7 +239,7 @@ describe('Testing table', () => {
               .children('g')
               .filter((index, element) => {
                 const siblingTransform = Cypress.$(element).attr('transform');
-                return siblingTransform && siblingTransform.includes(`translate(${xValue},`);
+                return siblingTransform?.includes(`translate(${xValue},`);
               })
               .should('have.length', 3); // Check that there's at least one element
           } else {
@@ -255,7 +255,7 @@ describe('Testing table', () => {
       .eq(3) // Get the fourth g element (index starts from 0)
       .invoke('attr', 'transform')
       .then((transformValue) => {
-        // Captures the first number in the tranlsate attribute using the parenthisis to capture the first digit and put it in the second value of the resulting array
+        // Captures the first number in the translate attribute using the parenthesis to capture the first digit and put it in the second value of the resulting array
         // if transformValue is translate(100,200), then transformValue.match(/translate\((\d+),\d+\)/) will produce an array like ["translate(100,200)", "100"],
         const match = transformValue.match(/translate\((\d+),\d+\)/);
         if (match && match[1]) {
@@ -268,7 +268,7 @@ describe('Testing table', () => {
             .children('g')
             .filter((index, element) => {
               const siblingTransform = Cypress.$(element).attr('transform');
-              return siblingTransform && siblingTransform.includes(`translate(${xValue},`);
+              return siblingTransform?.includes(`translate(${xValue},`);
             })
             .should('have.length', 1); // Check that there are no matching elements
         } else {
@@ -306,13 +306,11 @@ describe('Testing table', () => {
           cy.log('Number of text elements:', textElements.length);
         });
     });
-    cy.wait(100)
-    cy.openSettings(()=> {
-      cy.setDropdownValue('Show Values On Bars', 'off')
+    cy.wait(100);
+    cy.openSettings(() => {
+      cy.setDropdownValue('Show Values On Bars', 'off');
       cy.get('button[aria-label="run"]').click();
-      cy.get('.MuiCardContent-root')
-        .find('div svg > g > g > text')
-        .should('not.exist')
-    })
+      cy.get('.MuiCardContent-root').find('div svg > g > g > text').should('not.exist');
+    });
   });
 });

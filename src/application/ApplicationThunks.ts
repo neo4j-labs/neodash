@@ -276,7 +276,6 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
           dispatch(setWelcomeScreenOpen(false));
           dispatch(setConnectionModalOpen(true));
-          // window.history.pushState({}, document.title, "/");
           return;
         }
 
