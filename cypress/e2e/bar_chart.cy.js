@@ -295,7 +295,7 @@ describe('Testing bar chart', () => {
     });
   });
 
-  it.only('Testing "Show Value on Bars"', () => {
+  it('Testing "Show Value on Bars"', () => {
     cy.advancedSettings(() => {
       cy.setDropdownValue('Show Values On Bars', 'on');
       cy.get('button[aria-label="run"]').click();
