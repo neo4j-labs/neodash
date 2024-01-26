@@ -38,11 +38,6 @@ import {
       cy.wait(100);
     });
   
-    //To find a report card containing a particular type of chart. Ensure a data-test attribute is returned in the chart component
-    //
-    // cy.getDataTest('graph-chart').closest('.MuiGrid-root').within(() => {
-    //   //Action here
-    // })
   
     it('create a table', () => {
       //Opens the div containing all report cards
@@ -73,19 +68,6 @@ import {
           //Replaces default query with new query
           cy.get('.ndl-cypher-editor div[role="textbox"]').clear().type(tableCypherQuery)
           cy.get('button[aria-label="run"]').click()
-        })
-      })
-  
-      //Opens advanced settings
-      cy.get('.react-grid-layout').first().within(() => {
-        //Finds the 2nd card
-        cy.get('.MuiGrid-root').eq(1).within(() => {
-  
-          cy.get("button").eq(1).click()
-          cy.get('[role="switch"]').click()
-  
-          //Selecting Advanced Settings
-          //Select settings and verify here  ************
         })
       })
     });

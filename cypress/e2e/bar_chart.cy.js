@@ -54,7 +54,7 @@ describe('Testing bar chart', () => {
           cy.getDataTest('type-dropdown').click();
         });
     });
-    // Selects the Table option
+    // Selects the Bar option
     cy.get('[id^="react-select-5-option"]')
       .contains(/Bar Chart/i)
       .should('be.visible')
