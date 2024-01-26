@@ -11,7 +11,6 @@ import {
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
 import { createNotificationThunk } from '../page/PageThunks';
-import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
   setPageNumberThunk,
   updateParametersToNeo4jTypeThunk,
@@ -49,6 +48,7 @@ import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
 import { Neo4jConnectionModule } from '../auth/neo4j/Neo4jConnectionModule';
+import { QueryCallback, QueryParams } from '../auth/interfaces';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -166,15 +166,14 @@ export const createConnectionThunk =
       };
       const query = 'RETURN true as connected';
       const parameters = {};
-      runCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        1,
-        () => {},
-        (records) => validateConnection(records)
-      );
+      const neo4jConnectionModule = new Neo4jConnectionModule('application');
+      const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
+
+      let queryCallback: QueryCallback = {
+        setRecords: (records) => validateConnection(records),
+      };
+
+      neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
     } catch (e) {
       dispatch(createNotificationThunk('Unable to establish connection', e));
     }
