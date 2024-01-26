@@ -229,7 +229,7 @@ describe('Testing bar chart', () => {
           // Captures the first number in the tranlsate attribute using the parenthisis to capture the first digit and put it in the second value of the resulting array
           // if transformValue is translate(100,200), then transformValue.match(/translate\((\d+),\d+\)/) will produce an array like ["translate(100,200)", "100"],
           const match = transformValue.match(/translate\((\d+),\d+\)/);
-          if (match && match[1]) {
+          if (match?.[1]) {
             const xValue = match[1];
             console.log('xValue: ', xValue);
 
@@ -239,7 +239,7 @@ describe('Testing bar chart', () => {
               .children('g')
               .filter((index, element) => {
                 const siblingTransform = Cypress.$(element).attr('transform');
-                return siblingTransform && siblingTransform.includes(`translate(${xValue},`);
+                return siblingTransform?.includes(`translate(${xValue},`);
               })
               .should('have.length', 3); // Check that there's at least one element
           } else {
@@ -258,7 +258,7 @@ describe('Testing bar chart', () => {
         // Captures the first number in the tranlsate attribute using the parenthisis to capture the first digit and put it in the second value of the resulting array
         // if transformValue is translate(100,200), then transformValue.match(/translate\((\d+),\d+\)/) will produce an array like ["translate(100,200)", "100"],
         const match = transformValue.match(/translate\((\d+),\d+\)/);
-        if (match && match[1]) {
+        if (match?.[1]) {
           const xValue = match[1];
           console.log('xValue: ', xValue);
 
@@ -268,7 +268,7 @@ describe('Testing bar chart', () => {
             .children('g')
             .filter((index, element) => {
               const siblingTransform = Cypress.$(element).attr('transform');
-              return siblingTransform && siblingTransform.includes(`translate(${xValue},`);
+              return siblingTransform?.includes(`translate(${xValue},`);
             })
             .should('have.length', 1); // Check that there are no matching elements
         } else {
