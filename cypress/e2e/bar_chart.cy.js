@@ -7,7 +7,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   return false;
 });
 
-describe('Testing table', () => {
+describe('Testing bar chart', () => {
   beforeEach('open neodash', () => {
     cy.viewport(1920, 1080);
     cy.visit('/', {
