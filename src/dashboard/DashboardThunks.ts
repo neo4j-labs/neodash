@@ -10,8 +10,8 @@ import { applicationGetConnectionUser, applicationIsStandalone } from '../applic
 import { applicationGetLoggingSettings } from '../application/logging/LoggingSelectors';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
-import { Neo4jConnectionModule } from '../auth/neo4j/Neo4jConnectionModule';
-import { QueryCallback, QueryParams } from '../auth/interfaces';
+import { Neo4jConnectionModule } from '../connection/neo4j/Neo4jConnectionModule';
+import { QueryCallback, QueryParams } from '../connection/interfaces';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {

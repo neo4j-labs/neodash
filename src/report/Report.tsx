@@ -20,8 +20,8 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
-import { Neo4jConnectionModule } from '../auth/neo4j/Neo4jConnectionModule';
-import { QueryCallback, QueryParams } from '../auth/interfaces';
+import { Neo4jConnectionModule } from '../connection/neo4j/Neo4jConnectionModule';
+import { QueryCallback, QueryParams } from '../connection/interfaces';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 

@@ -24,5 +24,8 @@ export class Neo4jConnectionModule extends ConnectionModule {
 
   deleteDashboard(_id: string): void | never {}
 
-  parseRecords(_records: Neo4jRecord[]): any | never {}
+  // TODO: understand how to implement it using only JS objects
+  parseRecords(records: Neo4jRecord[]): any | never {
+    return records;
+  }
 }

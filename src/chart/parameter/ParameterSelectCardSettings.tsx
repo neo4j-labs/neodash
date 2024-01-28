@@ -7,8 +7,8 @@ import { Autocomplete, debounce, TextField } from '@mui/material';
 import NeoField from '../../component/field/Field';
 import { Dropdown } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
-import { QueryCallback, QueryParams, QueryStatus } from '../../auth/interfaces';
-import { Neo4jConnectionModule } from '../../auth/neo4j/Neo4jConnectionModule';
+import { QueryCallback, QueryParams, QueryStatus } from '../../connection/interfaces';
+import { Neo4jConnectionModule } from '../../connection/neo4j/Neo4jConnectionModule';
 
 type ParameterId = string | undefined | null;
 

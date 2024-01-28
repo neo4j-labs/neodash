@@ -2,8 +2,8 @@ import { createNotificationThunk } from '../../page/PageThunks';
 import { setLogErrorNotification } from './LoggingActions';
 import { applicationGetLoggingSettings } from './LoggingSelectors';
 import { createUUID } from '../../utils/uuid';
-import { Neo4jConnectionModule } from '../../auth/neo4j/Neo4jConnectionModule';
-import { QueryCallback, QueryParams } from '../../auth/interfaces';
+import { Neo4jConnectionModule } from '../../connection/neo4j/Neo4jConnectionModule';
+import { QueryCallback, QueryParams } from '../../connection/interfaces';
 
 // Thunk to handle log events.
 
