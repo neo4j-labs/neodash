@@ -3,19 +3,8 @@ import {
   extractNodeAndRelPropertiesFromRecords,
   extractNodePropertiesFromRecords,
 } from '../../report/ReportRecordProcessing';
+import { QueryStatus } from '../interfaces';
 import { setErrorDummy, setFieldsDummy, setRecordsDummy, setSchemaDummy, setStatusDummy } from './utils';
-
-export enum QueryStatus {
-  NO_QUERY, // No query specified
-  NO_DATA, // No data was returned, therefore we can't draw it.
-  NO_DRAWABLE_DATA, // There is data returned, but we can't draw it
-  WAITING, // The report is waiting for custom logic to be executed.
-  RUNNING, // The report query is running.
-  TIMED_OUT, // Query has reached the time limit.
-  COMPLETE, // There is data returned, and we can visualize it all.
-  COMPLETE_TRUNCATED, // There is data returned, but it's too much so we truncate it.
-  ERROR, // Something broke, likely the cypher query is invalid.
-}
 
 // TODO: create a readOnly version of this method or inject a property
 /**

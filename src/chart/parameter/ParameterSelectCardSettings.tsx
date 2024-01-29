@@ -8,8 +8,6 @@ import NeoField from '../../component/field/Field';
 import { Dropdown } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { QueryCallback, QueryParams, QueryStatus } from '../../connection/interfaces';
-import { Neo4jConnectionModule } from '../../connection/neo4j/Neo4jConnectionModule';
-import { getConnectionModule } from '../../connection/utils';
 import { useConnectionModuleContext } from '../../application/Application';
 
 type ParameterId = string | undefined | null;

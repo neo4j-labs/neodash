@@ -1,5 +1,3 @@
-import { createContext, useContext } from 'react';
-
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
@@ -15,7 +13,7 @@ export abstract class ConnectionModule {
     return notImplementedError('authenticate');
   }
 
-  loadDashboard(_id: string): any | never {
+  loadDashboard(_id: string): any {
     return notImplementedError('loadDashboard');
   }
 
@@ -44,5 +42,3 @@ export abstract class ConnectionModule {
 export interface ConnectionModuleState {
   connectionModule: ConnectionModule;
 }
-
-export declare const ConnectionModuleContext: import('react').Context<ConnectionModuleState>;

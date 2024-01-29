@@ -3,28 +3,33 @@ import { ConnectionModule } from '../ConnectionModule';
 import { runCypherQuery } from './runCypherQuery';
 import { extractQueryCallbacks, extractQueryParams } from './utils';
 
+const notImplementedError = (functionName: string): never => {
+  throw new Error(`Not Implemented: ${functionName}`);
+};
+
 export class Neo4jConnectionModule extends ConnectionModule {
-  constructor(name) {
-    super(name);
+  authenticate(_credentials: Record<any, any>): void | never {
+    return notImplementedError('authenticate');
   }
 
-  authenticate(_credentials: Record<any, any>): void | never {}
-
-  async runQuery(driver, inputQueryParams, inputQuerycallbacks): Promise<void> {
+  async runQuery(driver, inputQueryParams, inputQueryCallbacks): Promise<void> {
     let queryParams = extractQueryParams(inputQueryParams);
-    let callbacks = extractQueryCallbacks(inputQuerycallbacks);
+    let callbacks = extractQueryCallbacks(inputQueryCallbacks);
     return runCypherQuery({ driver, ...queryParams, ...callbacks });
   }
 
-  loadDashboard(_id: string): any | never {}
-
-  saveDashboard(_dashboard: any): boolean | never {
-    return true;
+  loadDashboard(_id: string): any | never {
+    return notImplementedError('loadDashboard');
   }
 
-  deleteDashboard(_id: string): void | never {}
+  saveDashboard(_dashboard: any): boolean | never {
+    return notImplementedError('saveDashboard');
+  }
 
-  // TODO: understand how to implement it using only JS objects
+  deleteDashboard(_id: string): void | never {
+    return notImplementedError('deleteDashboard');
+  }
+
   parseRecords(records: Neo4jRecord[]): any | never {
     return records;
   }

@@ -47,7 +47,6 @@ import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
-import { Neo4jConnectionModule } from '../connection/neo4j/Neo4jConnectionModule';
 import { QueryCallback, QueryParams } from '../connection/interfaces';
 import { getConnectionModule } from '../connection/utils';
 
