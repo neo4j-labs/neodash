@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { createContext, Suspense, useContext, useEffect } from 'react';
 import NeoWelcomeScreenModal from '../modal/WelcomeScreenModal';
 import { connect } from 'react-redux';
 import {
@@ -45,6 +45,8 @@ import { downloadComponentAsImage } from '../chart/ChartUtils';
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
 import { resetSessionStorage } from '../sessionStorage/SessionStorageActions';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import { ConnectionModuleState } from '../connection/ConnectionModule';
+import { getConnectionModule } from '../connection/utils';
 
 const NeoUpgradeOldDashboardModal = React.lazy(() => import('../modal/UpgradeOldDashboardModal'));
 const NeoLoadSharedDashboardModal = React.lazy(() => import('../modal/LoadSharedDashboardModal'));
@@ -52,6 +54,12 @@ const NeoReportHelpModal = React.lazy(() => import('../modal/ReportHelpModal'));
 const NeoNotificationModal = React.lazy(() => import('../modal/NotificationModal'));
 const NeoAboutModal = React.lazy(() => import('../modal/AboutModal'));
 const Dashboard = React.lazy(() => import('../dashboard/Dashboard'));
+
+const ConnectionModuleContext = createContext<ConnectionModuleState>(getConnectionModule());
+
+export function useConnectionModuleContext() {
+  return useContext<ConnectionModuleState>(ConnectionModuleContext);
+}
 
 /**
  * This is the main application component for NeoDash.
@@ -125,66 +133,68 @@ const Application = ({
       ref={ref}
       className={`n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
     >
-      {connected ? (
+      <ConnectionModuleContext.Provider value={getConnectionModule()}>
+        {connected ? (
+          <Suspense fallback=''>
+            <Dashboard
+              onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}
+              onAboutModalOpen={onAboutModalOpen}
+              resetApplication={resetApplication}
+            ></Dashboard>
+          </Suspense>
+        ) : (
+          <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
+        )}
+        {/* TODO - move all models into a pop-ups (or modals) component. */}
         <Suspense fallback=''>
-          <Dashboard
-            onDownloadDashboardAsImage={(_) => downloadComponentAsImage(ref)}
-            onAboutModalOpen={onAboutModalOpen}
-            resetApplication={resetApplication}
-          ></Dashboard>
+          <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
         </Suspense>
-      ) : (
-        <NeoDashboardPlaceholder></NeoDashboardPlaceholder>
-      )}
-      {/* TODO - move all models into a pop-ups (or modals) component. */}
-      <Suspense fallback=''>
-        <NeoAboutModal open={aboutModalOpen} handleClose={onAboutModalClose} getDebugState={getDebugState} />
-      </Suspense>
-      <NeoConnectionModal
-        open={connectionModalOpen}
-        connected={connected}
-        dismissable={!standalone}
-        connection={connection}
-        ssoSettings={ssoSettings}
-        standalone={standaloneSettings.standalone}
-        standaloneSettings={standaloneSettings}
-        createConnection={createConnection}
-        onSSOAttempt={onSSOAttempt}
-        setConnectionProperties={setConnectionDetails}
-        onConnectionModalClose={onConnectionModalClose}
-        setWelcomeScreenOpen={setWelcomeScreenOpen}
-      ></NeoConnectionModal>
-      <NeoWelcomeScreenModal
-        welcomeScreenOpen={welcomeScreenOpen}
-        setWelcomeScreenOpen={setWelcomeScreenOpen}
-        hasCachedDashboard={hasCachedDashboard}
-        hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
-        onConnectionModalOpen={onConnectionModalOpen}
-        createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
-        onAboutModalOpen={onAboutModalOpen}
-        resetDashboard={resetDashboard}
-      ></NeoWelcomeScreenModal>
-      <Suspense fallback=''>
-        <NeoUpgradeOldDashboardModal
-          open={oldDashboard}
-          text={oldDashboard}
-          loadDashboard={loadDashboard}
-          clearOldDashboard={clearOldDashboard}
-        />
-      </Suspense>
-      <Suspense fallback=''>
-        <NeoLoadSharedDashboardModal
-          shareDetails={shareDetails}
-          onResetShareDetails={onResetShareDetails}
-          onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
-        />
-      </Suspense>
-      <Suspense fallback=''>
-        <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
-      </Suspense>
-      <Suspense fallback=''>
-        <NeoNotificationModal></NeoNotificationModal>
-      </Suspense>
+        <NeoConnectionModal
+          open={connectionModalOpen}
+          connected={connected}
+          dismissable={!standalone}
+          connection={connection}
+          ssoSettings={ssoSettings}
+          standalone={standaloneSettings.standalone}
+          standaloneSettings={standaloneSettings}
+          createConnection={createConnection}
+          onSSOAttempt={onSSOAttempt}
+          setConnectionProperties={setConnectionDetails}
+          onConnectionModalClose={onConnectionModalClose}
+          setWelcomeScreenOpen={setWelcomeScreenOpen}
+        ></NeoConnectionModal>
+        <NeoWelcomeScreenModal
+          welcomeScreenOpen={welcomeScreenOpen}
+          setWelcomeScreenOpen={setWelcomeScreenOpen}
+          hasCachedDashboard={hasCachedDashboard}
+          hasNeo4jDesktopConnection={hasNeo4jDesktopConnection}
+          onConnectionModalOpen={onConnectionModalOpen}
+          createConnectionFromDesktopIntegration={createConnectionFromDesktopIntegration}
+          onAboutModalOpen={onAboutModalOpen}
+          resetDashboard={resetDashboard}
+        ></NeoWelcomeScreenModal>
+        <Suspense fallback=''>
+          <NeoUpgradeOldDashboardModal
+            open={oldDashboard}
+            text={oldDashboard}
+            loadDashboard={loadDashboard}
+            clearOldDashboard={clearOldDashboard}
+          />
+        </Suspense>
+        <Suspense fallback=''>
+          <NeoLoadSharedDashboardModal
+            shareDetails={shareDetails}
+            onResetShareDetails={onResetShareDetails}
+            onConfirmLoadSharedDashboard={onConfirmLoadSharedDashboard}
+          />
+        </Suspense>
+        <Suspense fallback=''>
+          <NeoReportHelpModal open={reportHelpModalOpen} handleClose={onReportHelpModalClose} />
+        </Suspense>
+        <Suspense fallback=''>
+          <NeoNotificationModal></NeoNotificationModal>
+        </Suspense>
+      </ConnectionModuleContext.Provider>
     </div>
   );
 };

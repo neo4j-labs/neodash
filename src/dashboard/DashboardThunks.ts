@@ -1,7 +1,6 @@
 import { createNotificationThunk } from '../page/PageThunks';
 import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDashboardUuid } from './DashboardActions';
-import { QueryStatus } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
 import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
@@ -10,8 +9,8 @@ import { applicationGetConnectionUser, applicationIsStandalone } from '../applic
 import { applicationGetLoggingSettings } from '../application/logging/LoggingSelectors';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
-import { Neo4jConnectionModule } from '../connection/neo4j/Neo4jConnectionModule';
-import { QueryCallback, QueryParams } from '../connection/interfaces';
+import { QueryCallback, QueryParams, QueryStatus } from '../connection/interfaces';
+import { getConnectionModule } from '../connection/utils';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -175,7 +174,7 @@ export const saveDashboardToNeo4jThunk =
         content: JSON.stringify(dashboard, null, 2),
         date: date,
       };
-      const neo4jConnectionModule = new Neo4jConnectionModule('report');
+      const { connectionModule } = getConnectionModule();
 
       const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
 
@@ -230,7 +229,7 @@ export const saveDashboardToNeo4jThunk =
       let queryCallback: QueryCallback = {
         setRecords: setRecords,
       };
-      neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     } catch (e) {
       dispatch(createNotificationThunk('Unable to save dashboard to Neo4j', e));
       if (loggingSettings.loggingMode > '1') {
@@ -260,7 +259,7 @@ export const deleteDashboardFromNeo4jThunk = (driver, database, uuid, onSuccess)
     const parameters = {
       uuid: uuid,
     };
-    const neo4jConnectionModule = new Neo4jConnectionModule('report');
+    const { connectionModule } = getConnectionModule();
     const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
     const setRecords = (records) => {
       if (records && records[0] && records[0]._fields && records[0]._fields[0] && records[0]._fields[0] == uuid) {
@@ -279,7 +278,7 @@ export const deleteDashboardFromNeo4jThunk = (driver, database, uuid, onSuccess)
       setRecords: setRecords,
     };
 
-    neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+    connectionModule.runQuery(driver, queryParams, queryCallback);
   } catch (e) {
     dispatch(createNotificationThunk('Unable to delete dashboard from Neo4j', e));
   }
@@ -294,7 +293,7 @@ export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) =>
   try {
     const query = 'MATCH (n:_Neodash_Dashboard) WHERE n.uuid = $uuid RETURN n.content as dashboard';
     const parameters = { uuid: uuid };
-    const neo4jConnectionModule = new Neo4jConnectionModule('report');
+    const { connectionModule } = getConnectionModule();
     const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
     const setStatus = (status) => {
       if (status == QueryStatus.NO_DATA) {
@@ -357,7 +356,7 @@ export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) =>
       setRecords: setRecords,
     };
 
-    neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+    connectionModule.runQuery(driver, queryParams, queryCallback);
   } catch (e) {
     dispatch(createNotificationThunk('Unable to load dashboard to Neo4j', e));
     if (loggingSettings.loggingMode > '1') {
@@ -387,7 +386,7 @@ export const loadDashboardFromNeo4jByNameThunk =
       const query =
         'MATCH (d:_Neodash_Dashboard) WHERE d.title = $name RETURN d.content as dashboard ORDER by d.date DESC LIMIT 1';
       const parameters = { name: name };
-      const neo4jConnectionModule = new Neo4jConnectionModule('report');
+      const { connectionModule } = getConnectionModule();
       const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
       const setStatus = (status) => {
         if (status == QueryStatus.NO_DATA) {
@@ -471,7 +470,7 @@ export const loadDashboardFromNeo4jByNameThunk =
         setRecords: setRecords,
       };
 
-      neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     } catch (e) {
       dispatch(createNotificationThunk('Unable to load dashboard from Neo4j', e));
     }
@@ -503,7 +502,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
 
   const query =
     'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY toLower(n.title) ASC';
-  const neo4jConnectionModule = new Neo4jConnectionModule('report');
+  const { connectionModule } = getConnectionModule();
   const queryParams: QueryParams = { query, database, rowLimit: 1000 };
 
   let queryCallback: QueryCallback = {
@@ -512,7 +511,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
   };
 
   try {
-    neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+    connectionModule.runQuery(driver, queryParams, queryCallback);
   } catch (e) {
     dispatch(createNotificationThunk('Unable to load dashboard list from Neo4j', e));
   }
@@ -522,7 +521,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
   try {
     const database = 'system';
     const query = 'SHOW DATABASES yield name, currentStatus WHERE currentStatus = "online" RETURN DISTINCT name';
-    const neo4jConnectionModule = new Neo4jConnectionModule('report');
+    const { connectionModule } = getConnectionModule();
     const queryParams: QueryParams = { query, database, rowLimit: 1000 };
 
     let queryCallback: QueryCallback = {
@@ -534,7 +533,7 @@ export const loadDatabaseListFromNeo4jThunk = (driver, callback) => (dispatch: a
         callback(result);
       },
     };
-    neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+    connectionModule.runQuery(driver, queryParams, queryCallback);
   } catch (e) {
     dispatch(createNotificationThunk('Unable to list databases from Neo4j', e));
   }

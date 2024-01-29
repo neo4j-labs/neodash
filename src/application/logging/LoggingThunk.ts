@@ -2,8 +2,8 @@ import { createNotificationThunk } from '../../page/PageThunks';
 import { setLogErrorNotification } from './LoggingActions';
 import { applicationGetLoggingSettings } from './LoggingSelectors';
 import { createUUID } from '../../utils/uuid';
-import { Neo4jConnectionModule } from '../../connection/neo4j/Neo4jConnectionModule';
 import { QueryCallback, QueryParams } from '../../connection/interfaces';
+import { getConnectionModule } from '../../connection/utils';
 
 // Thunk to handle log events.
 
@@ -11,7 +11,7 @@ export const createLogThunk =
   (loggingDriver, loggingDatabase, neodashMode, logUser, logAction, logDatabase, logDashboard = '', logMessage) =>
   (dispatch: any, getState: any) => {
     try {
-      const neo4jConnectionModule = new Neo4jConnectionModule('report');
+      const { connectionModule } = getConnectionModule();
       const uuid = createUUID();
       // Generate a cypher query to save the log.
       const query =
@@ -53,7 +53,7 @@ export const createLogThunk =
           }
         },
       };
-      neo4jConnectionModule.runQuery(loggingDriver, queryParams, queryCallback);
+      connectionModule.runQuery(loggingDriver, queryParams, queryCallback);
     } catch (e) {
       // we only show error notification 3 times
       const state = getState();

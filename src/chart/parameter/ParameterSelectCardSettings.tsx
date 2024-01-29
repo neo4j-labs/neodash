@@ -9,6 +9,8 @@ import { Dropdown } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { QueryCallback, QueryParams, QueryStatus } from '../../connection/interfaces';
 import { Neo4jConnectionModule } from '../../connection/neo4j/Neo4jConnectionModule';
+import { getConnectionModule } from '../../connection/utils';
+import { useConnectionModuleContext } from '../../application/Application';
 
 type ParameterId = string | undefined | null;
 
@@ -19,7 +21,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
-  const connectionModule = new Neo4jConnectionModule('report');
+  const { connectionModule } = useConnectionModuleContext();
 
   const [queryText, setQueryText] = React.useState(query);
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);

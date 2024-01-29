@@ -23,7 +23,6 @@ const Dashboard = ({
   resetApplication,
 }) => {
   const [driver, setDriver] = React.useState(undefined);
-
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
     const newDriver = createDriver(

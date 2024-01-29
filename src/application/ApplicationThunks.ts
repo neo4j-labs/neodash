@@ -49,6 +49,7 @@ import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
 import { Neo4jConnectionModule } from '../connection/neo4j/Neo4jConnectionModule';
 import { QueryCallback, QueryParams } from '../connection/interfaces';
+import { getConnectionModule } from '../connection/utils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -166,14 +167,14 @@ export const createConnectionThunk =
       };
       const query = 'RETURN true as connected';
       const parameters = {};
-      const neo4jConnectionModule = new Neo4jConnectionModule('application');
+      const { connectionModule } = getConnectionModule();
       const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
 
       let queryCallback: QueryCallback = {
         setRecords: (records) => validateConnection(records),
       };
 
-      neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     } catch (e) {
       dispatch(createNotificationThunk('Unable to establish connection', e));
     }

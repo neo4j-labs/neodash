@@ -1,6 +1,5 @@
 import { Chip, Tooltip } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { QueryStatus } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
@@ -20,8 +19,8 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
-import { Neo4jConnectionModule } from '../connection/neo4j/Neo4jConnectionModule';
-import { QueryCallback, QueryParams } from '../connection/interfaces';
+import { QueryCallback, QueryParams, QueryStatus } from '../connection/interfaces';
+import { useConnectionModuleContext } from '../application/Application';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -63,6 +62,7 @@ export const NeoReport = ({
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+  const { connectionModule } = useConnectionModuleContext();
   const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
   if (!driver) {
     throw new Error(
@@ -70,8 +70,7 @@ export const NeoReport = ({
     );
   }
   // TODO : abstract connection module call (maybe selector at application level)
-  const neo4jConnectionModule = new Neo4jConnectionModule('report');
-  const debouncedRunCypherQuery = useCallback(debounce(neo4jConnectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
+  const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {
     if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
@@ -133,7 +132,7 @@ export const NeoReport = ({
       if (debounced) {
         debouncedRunCypherQuery(driver, queryParams, queryCallback);
       } else {
-        neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+        connectionModule.runQuery(driver, queryParams, queryCallback);
       }
     };
 
@@ -211,7 +210,7 @@ export const NeoReport = ({
         setSchema: setSchemaCallback,
       };
 
-      neo4jConnectionModule.runQuery(driver, queryParams, queryCallback);
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     },
     [database]
   );
