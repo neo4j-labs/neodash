@@ -69,7 +69,6 @@ export async function runCypherQuery({
       // TODO - check query summary to ensure that no writes are made in safe-mode.
       if (records.length == 0) {
         setStatus(QueryStatus.NO_DATA);
-        // console.log("TODO remove this - QUERY RETURNED NO DATA!")
         transaction.commit();
         return;
       }
@@ -89,27 +88,26 @@ export async function runCypherQuery({
 
       setSchema(extractNodeAndRelPropertiesFromRecords(records));
 
+      // QUERY RETURNED NO DRAWABLE DATA
       if (records == null) {
         setStatus(QueryStatus.NO_DRAWABLE_DATA);
         // console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
         transaction.commit();
         return;
+        // QUERY RETURNED TO BE TRUNCATED
       } else if (records.length > rowLimit) {
         setStatus(QueryStatus.COMPLETE_TRUNCATED);
         setRecords(records.slice(0, rowLimit));
-        // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
         transaction.commit();
         return;
       }
+      // QUERY WAS EXECUTED SUCCESSFULLY
       setStatus(QueryStatus.COMPLETE);
       setRecords(records);
-      // console.log("TODO remove this - QUERY WAS EXECUTED SUCCESFULLY!")
 
       transaction.commit();
     })
     .catch((e) => {
-      // setFields([]);
-
       // Process timeout errors.
       if (
         e.message.startsWith(
@@ -118,12 +116,13 @@ export async function runCypherQuery({
             'The transaction has not completed within the specified timeout (dbms.transaction.timeout).'
         )
       ) {
+        // QUERY TIMED OUT
         setStatus(QueryStatus.TIMED_OUT);
         setRecords([{ error: e.message }]);
         transaction.rollback();
         return e.message;
       }
-
+      // QUERY RAISED AN ERROR
       setStatus(QueryStatus.ERROR);
       // Process other errors.
       if (setRecords) {

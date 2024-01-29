@@ -18,7 +18,7 @@ export class Neo4jConnectionModule extends ConnectionModule {
     return runCypherQuery({ driver, ...queryParams, ...callbacks });
   }
 
-  loadDashboard(_id: string): any | never {
+  loadDashboard(_id: string): any {
     return notImplementedError('loadDashboard');
   }
 
@@ -30,7 +30,7 @@ export class Neo4jConnectionModule extends ConnectionModule {
     return notImplementedError('deleteDashboard');
   }
 
-  parseRecords(records: Neo4jRecord[]): any | never {
+  parseRecords(records: Neo4jRecord[]): Record<any, any>[] {
     return records;
   }
 }
