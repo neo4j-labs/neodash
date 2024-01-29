@@ -2,6 +2,7 @@ import auth from '../auth/auth';
 import { config } from '../config/dynamicConfig';
 import { DatabaseUploadType } from '../config/SolutionsConstants';
 import { handleErrors } from '../util/util';
+import { handleSavedQueryString, saveQueryString } from './launchHelper';
 
 export const fetchDashboardFromHive = async ({ uuid }) => {
   const promise = new Promise((resolve, reject) => {
@@ -46,43 +47,16 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
   return promise;
 };
 
-const QueryStorageKey = 'neoDashPreAuthQueryString';
-
-// https://stackoverflow.com/questions/8648892/how-to-convert-url-parameters-to-a-javascript-object
-const getUrlQueryParamObject = (queryString) => {
-  const urlParams = new URLSearchParams(queryString);
-  const entries = urlParams.entries(); //returns an iterator of decoded [key,value] tuples
-  const result = {};
-  for (const [key, value] of entries) {
-    // each 'entry' is a [key, value] tupple
-    result[key] = value;
-  }
-  return result;
-};
-
 export const handleNeoDashLaunch = async ({ queryString }) => {
   try {
     //console.log('handleNeoDashLaunch before silentAuth')
     await auth.silentAuth();
-    //console.log('handleNeoDashLaunch after silentAuth')
-    if (!queryString) {
-      //console.log('handleNeoDashLaunch localStorage - getting query string')
-      queryString = localStorage.getItem(QueryStorageKey) || '';
-      if (queryString) {
-        //console.log('handleNeoDashLaunch query string from local storage is', queryString)
-        const queryObject = getUrlQueryParamObject(queryString);
-        window.history.pushState(queryObject, document.title, new URL(queryString, window.location.href));
-      }
-    }
-    localStorage.removeItem(QueryStorageKey);
+    queryString = handleSavedQueryString(queryString);
   } catch (err) {
-    //console.log('handleNeoDashLaunch err')
+    //console.log('handleNeoDashLaunch err: ', err)
     if (err.message === 'login_required' || err.error === 'login_required') {
       //console.log('handleNeoDashLaunch login_required')
-      if (queryString) {
-        //console.log('handleNeoDashLaunch localStorage - storing query string')
-        localStorage.setItem(QueryStorageKey, queryString);
-      }
+      saveQueryString(queryString);
       auth.login();
     } else {
       alert('An unknown error occurred, check the console for details.');

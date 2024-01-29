@@ -20,11 +20,15 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import auth from './auth';
 import { getDynamicConfigValue } from '../config/dynamicConfig';
+import { handleSavedQueryString } from '../launch/launchHelper';
 
 class Callback extends Component {
   async componentDidMount() {
     await auth.handleAuthentication({ caller: 'callback' });
-    window.location.replace(getDynamicConfigValue('REACT_APP_NEODASH_BASE_DEMO_URL'));
+    let queryString = handleSavedQueryString();
+    let baseUri = getDynamicConfigValue('REACT_APP_NEODASH_BASE_DEMO_URL');
+    let redirectUri = queryString ? `${baseUri}${queryString}` : baseUri;
+    window.location.replace(redirectUri);
   }
 
   render() {
