@@ -17,6 +17,7 @@
  */
 
 import auth0 from 'auth0-js';
+import { saveQueryString } from '../launch/launchHelper';
 
 export const AuthConstants = {
   auth0: 'auth0',
@@ -86,7 +87,10 @@ export class Auth {
     }
   };
 
-  login = () => this.auth0.authorize(this.auth0AuthorizeParams);
+  login = () => {
+    saveQueryString(window.location.search);
+    this.auth0.authorize(this.auth0AuthorizeParams);
+  };
 
   isAuth0 = () => this.authMethod === AuthConstants.auth0;
 
@@ -132,7 +136,14 @@ export class Auth {
       this.auth0.parseHash((err, authResult) => {
         if (err) return reject(err);
         if (!authResult || !authResult.idToken) {
-          return reject(err);
+          // if (authResult) {
+          //   if (!authResult.idToken) {
+          //     console.log("handleAuthentication checkSession no authResult.idToken")
+          //   }
+          // } else {
+          //   console.log("handleAuthentication checkSession no authResult")
+          // }
+          return reject();
         }
         this.setSession(authResult);
         //this.handleSignUp();
@@ -160,7 +171,14 @@ export class Auth {
       this.auth0.checkSession({}, async (err, authResult) => {
         if (err) return reject(err);
         if (!authResult || !authResult.idToken) {
-          return reject(err);
+          // if (authResult) {
+          //   if (!authResult.idToken) {
+          //     console.log("silentAuth checkSession no authResult.idToken")
+          //   }
+          // } else {
+          //   console.log("silentAuth checkSession no authResult")
+          // }
+          return reject();
         }
         this.setSession(authResult);
 
