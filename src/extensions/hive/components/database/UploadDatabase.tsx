@@ -1,4 +1,4 @@
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import React, { useState } from 'react';
 import { Dropzone } from './Dropzone';
 import { InlineBox } from '../common/Common';
@@ -14,7 +14,7 @@ export const UploadDatabase = (props) => {
     setUploadCompleted(true);
     setFileUploadResponse(uploadInfo);
 
-    const parsedUri = uploadInfo.neo4jDriverUri?.match(/(.+):\/\/([\w\.\-]+):?(\d+)?/) || [];
+    const parsedUri = uploadInfo.neo4jDriverUri?.match(/(.+):\/\/([\w.-]+):?(\d+)?/) || [];
 
     setConnection({
       protocol: parsedUri[1],
@@ -36,9 +36,8 @@ export const UploadDatabase = (props) => {
           </Alert>
         </div>
       );
-    } else {
-      return <></>;
     }
+    return <></>;
   };
 
   const getDropzoneMessage = () => {

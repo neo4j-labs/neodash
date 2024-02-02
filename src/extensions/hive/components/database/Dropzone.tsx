@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { config } from '../../config/dynamicConfig';
 import { uploadFile } from '../../persistence/FileUpload';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import SyncIcon from '@material-ui/icons/Sync';
-import SyncProblemIcon from '@material-ui/icons/SyncProblem';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { Checkbox, FormGroup, FormControlLabel } from '@material-ui/core';
+import { Checkbox, FormGroup, FormControlLabel, LinearProgress } from '@mui/material';
+import SyncIcon from '@mui/icons-material/Sync';
+import SyncProblemIcon from '@mui/icons-material/SyncProblem';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import './Dropzone.css';
 
 const DEFAULT_MAX_UPLOAD_SIZE = 1024 * 1024 * 1024; // 1GB
@@ -30,7 +29,7 @@ export function Dropzone(props) {
         */
     maxSize: getMaxSize(),
     onDropAccepted: async (acceptedFiles) => {
-      //const req = request.post('/upload')
+      // const req = request.post('/upload')
 
       if (acceptedFiles.length === 1) {
         try {
@@ -42,7 +41,7 @@ export function Dropzone(props) {
             overwrite: overwriteDatabase,
           });
           setIsUploading(false);
-          //console.log("response: " , response);
+          // console.log("response: " , response);
           if (onUploadComplete) {
             onUploadComplete(response);
           }
@@ -56,9 +55,9 @@ export function Dropzone(props) {
         setUploadError('Only 1 file can be uploaded.');
       }
 
-      //req.end(callback)
+      // req.end(callback)
     },
-    onDropRejected: async (fileRejections, event) => {
+    onDropRejected: async () => {
       setIsUploading(false);
       setUploadError('Maximum file upload size is 1GB. Larger size file please contact solutions@neo4j.com.');
     },

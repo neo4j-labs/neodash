@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 
 import { getDynamicConfigValue } from '../../config/dynamicConfig';
 
-export default function Chat(props) {
+export default function Chat() {
   const urlParams = new URLSearchParams(window.location.search);
   const chatEnabledUrlString = urlParams.get('genAiChatEnabled');
   const genAiUrlString = urlParams.get('genAiUrl');
@@ -96,7 +96,7 @@ export default function Chat(props) {
               <div
                 style={
                   {
-                    //marginTop: '2px'
+                    // marginTop: '2px'
                   }
                 }
                 onClick={() => toggleFullScreen()}

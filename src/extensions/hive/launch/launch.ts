@@ -21,7 +21,7 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
                     dbUsername
                     dbPassword
                 }
-            }	 
+            } 
         `;
     const uri = config('GALLERY_GRAPHQL_URL');
     fetch(uri, {
@@ -49,13 +49,13 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
 
 export const handleNeoDashLaunch = async ({ queryString }) => {
   try {
-    //console.log('handleNeoDashLaunch before silentAuth')
+    // console.log('handleNeoDashLaunch before silentAuth')
     await auth.silentAuth();
     queryString = handleSavedQueryString(queryString);
   } catch (err) {
-    //console.log('handleNeoDashLaunch err: ', err)
+    // console.log('handleNeoDashLaunch err: ', err)
     if (err.message === 'login_required' || err.error === 'login_required') {
-      //console.log('handleNeoDashLaunch login_required')
+      // console.log('handleNeoDashLaunch login_required')
       saveQueryString(queryString);
       auth.login();
     } else {
@@ -66,9 +66,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
 
   const urlParams = new URLSearchParams(queryString);
   const dashboardUuid = urlParams.get('hivedashboarduuid');
-  if (!dashboardUuid) {
-    return { isHandled: false };
-  } else {
+  if (dashboardUuid) {
     try {
       const response = await fetchDashboardFromHive({ uuid: dashboardUuid });
       const data = response?.data?.getDashboardByUUID;
@@ -81,7 +79,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
       let password;
 
       // Extract port, schema and hostname info from connection url
-      const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w\.\-]+):?(\d+)?/);
+      const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w.-]+):?(\d+)?/);
       port = connectionComps[3] ? connectionComps[3] : '7687';
       hostName = connectionComps[2];
       schema = connectionComps[1];
@@ -94,7 +92,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
         config: {
           ssoEnabled: false,
           ssoDiscoveryUrl: 'https://example.com',
-          standalone: data.user == auth.getEmail() ? false : true,
+          standalone: data.user == auth.getEmail() ? false : true, // eslint-disable-line
           standaloneProtocol: schema,
           standaloneHost: hostName,
           standalonePort: port,
@@ -104,13 +102,13 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
           standaloneDashboardURL: data.uuid,
           standaloneUsername: userName,
           standalonePassword: password,
-          isOwner: data.user == auth.getEmail() ? true : false,
+          isOwner: data.user == auth.getEmail() ? true : false, // eslint-disable-line
         },
       };
     } catch (e) {
       // TODO: display error?
       console.log('error calling fetchDashboardFromHive: ', e);
-      return { isHandled: false };
     }
   }
+  return { isHandled: false };
 };

@@ -1,7 +1,5 @@
 import React from 'react';
-import { Alert } from '@material-ui/lab';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { Alert, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { config } from '../config/dynamicConfig';
 import { getDbConnectionUrl } from '../util/util';
 import './PublishInfo.css';

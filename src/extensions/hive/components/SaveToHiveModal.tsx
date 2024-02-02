@@ -1,37 +1,39 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import SaveIcon from '@material-ui/icons/Save';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import CloseIcon from '@material-ui/icons/Close';
 import {
-  Checkbox,
-  Input,
-  FormControl,
-  FormControlLabel,
-  Tooltip,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  TextField,
-  Select,
+  Badge,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  Input,
   MenuItem,
-} from '@material-ui/core';
-import { Tabs, Tab, Typography } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { getDashboardJson } from '../../modal/ModalSelectors';
-import { applicationGetConnection } from '../../application/ApplicationSelectors';
+  Tab,
+  Tabs,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CloseIcon from '@mui/icons-material/Close';
+import { ExpandMore } from '@mui/icons-material';
+import { makeStyles, withStyles } from '@mui/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import { getDashboardJson } from '../../../modal/ModalSelectors';
+import { applicationGetConnection } from '../../../application/ApplicationSelectors';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { saveDashboardToHiveThunk, listUserDashboards } from '../persistence/SolutionsThunks';
-import { ExpandMore } from '@material-ui/icons';
 import { DatabaseUploadType, HiveSolutionDomain } from '../config/SolutionsConstants';
 import { SelectDatabase } from './database/SelectDatabase';
 import { TabPanel } from './tabs/TabPanel';
@@ -46,26 +48,45 @@ import { GetSolutionById } from './graphql/HiveGraphQL';
  * A modal to save the dashboard and database to Hive
  */
 
+// copied from CardViewHeader
+const theme = createTheme({
+  typography: {
+    fontFamily: "'Nunito Sans', sans-serif !important",
+    allVariants: { color: 'rgb(var(--palette-neutral-text-weak))' },
+  },
+  palette: {
+    text: {
+      primary: 'rgb(var(--palette-neutral-text))',
+    },
+    action: {
+      disabled: 'rgb(var(--palette-neutral-text-weak))',
+    },
+  },
+});
+
 const styles = {};
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    borderTop: `1px solid ${theme.palette.divider}`,
-    height: '340px',
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    minWidth: '12em',
-  },
-  tabPanel: {
-    paddingLeft: '15px',
-  },
-}));
+const useStyles = makeStyles((theme) => {
+  return {
+    root: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
+      display: 'flex',
+      borderTop: `1px solid ${theme.palette.divider}`,
+      height: '340px',
+    },
+    tabs: {
+      borderRight: `1px solid ${theme.palette.divider}`,
+      minWidth: '12em',
+    },
+    tabPanel: {
+      paddingLeft: '15px',
+      paddingTop: '5px',
+    },
+  };
+});
 
-export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, modalOpen, closeDialog }) => {
+const SaveToHiveModalContent = ({ dashboard, connection, saveDashboardToHive, modalOpen, closeDialog }) => {
   // pieces of code pulled from https://www.pluralsight.com/guides/uploading-files-with-reactjs
   // and pieces of code pulled from https://blog.logrocket.com/multer-nodejs-express-upload-file/
 
@@ -173,7 +194,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
   const finishPublish = () => {
     setSolutionId(0);
     setHasPublished(false);
-    closeDialog(false);
+    closeDialog({ closeSaveDialog: true });
   };
 
   const [dbType, setDbType] = useState(DatabaseUploadType.DatabaseUpload);
@@ -255,6 +276,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
             </Tabs>
             <TabPanel idroot='hive-publish' value={tabIndex} index={0} boxClass={classes.tabPanel}>
               <SelectDatabase
+                theme={theme}
                 existingDbName={existingDbName}
                 connection={dbConnection}
                 setConnection={setDbConnection}
@@ -277,7 +299,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
           component='label'
           onClick={goForwardAndPublish}
           style={{ backgroundColor: onPublishStep() ? null : 'white', marginTop: '20px', float: 'right' }}
-          color={onPublishStep() ? 'primary' : 'default'}
+          color={onPublishStep() ? 'primary' : 'inherit'}
           variant='contained'
           endIcon={lastStep() ? <></> : <ArrowForwardIcon />}
           size='medium'
@@ -289,7 +311,7 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
           onClick={goBack}
           disabled={firstStep()}
           style={{ float: 'right', marginTop: '20px', marginRight: '10px', backgroundColor: 'white' }}
-          color='default'
+          color='inherit'
           variant='contained'
           startIcon={<ArrowBackIcon />}
           size='medium'
@@ -304,6 +326,14 @@ export const SaveToHiveModal = ({ dashboard, connection, saveDashboardToHive, mo
       </DialogContent>
       <DialogActions></DialogActions>
     </Dialog>
+  );
+};
+
+export const SaveToHiveModal = (props) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <SaveToHiveModalContent {...props} />
+    </ThemeProvider>
   );
 };
 

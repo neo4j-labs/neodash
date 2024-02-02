@@ -1,5 +1,5 @@
-import { createUUID } from '../../dashboard/DashboardThunks';
-import { createNotificationThunk } from '../../page/PageThunks';
+import { createUUID } from '../../../utils/uuid';
+import { createNotificationThunk } from '../../../page/PageThunks';
 import { config } from '../config/dynamicConfig';
 import auth from '../auth/auth';
 import { handleErrors } from '../util/util';

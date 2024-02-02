@@ -34,11 +34,11 @@ export const StorageConstants = {
 
 export class Auth {
   constructor(properties) {
-    var { domain, clientID, redirectUri, logoutUrl, authMethod, auth0Settings, galleryInfo, storageProvider } =
+    let { domain, clientID, redirectUri, logoutUrl, authMethod, auth0Settings, galleryInfo, storageProvider } =
       properties;
 
     auth0Settings = auth0Settings || {};
-    var webAuth = auth0Settings.webAuth || {};
+    let webAuth = auth0Settings.webAuth || {};
     if (!webAuth.responseType) {
       webAuth.responseType = 'token id_token';
     }
@@ -67,7 +67,7 @@ export class Auth {
     this.galleryGraphQLUrl = galleryInfo.galleryGraphQLUrl;
     this.galleryUiUrl = galleryInfo.galleryUiUrl;
     this.neoDashBaseUrl = galleryInfo.neoDashBaseUrl;
-    this.verifyAccess = galleryInfo.verifyAccess === true || galleryInfo.verifyAccess === 'true' ? true : false;
+    this.verifyAccess = galleryInfo.verifyAccess === true || galleryInfo.verifyAccess === 'true';
 
     this.authMethod = authMethod;
     this.auth0AuthorizeParams = auth0Settings.authorize;
@@ -80,9 +80,7 @@ export class Auth {
   }
 
   getEmail = () => {
-    if (this.authMethod !== AuthConstants.auth0) {
-      return;
-    } else {
+    if (this.authMethod === AuthConstants.auth0) {
       return this.email;
     }
   };
@@ -134,7 +132,9 @@ export class Auth {
   handleAuthentication = () => {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => {
-        if (err) return reject(err);
+        if (err) {
+          return reject(err);
+        }
         if (!authResult || !authResult.idToken) {
           // if (authResult) {
           //   if (!authResult.idToken) {
@@ -146,7 +146,7 @@ export class Auth {
           return reject();
         }
         this.setSession(authResult);
-        //this.handleSignUp();
+        // this.handleSignUp();
         resolve();
       });
     });
@@ -167,9 +167,11 @@ export class Auth {
   };
 
   silentAuth = async () => {
-    var promise = new Promise((resolve, reject) => {
+    let promise = new Promise((resolve, reject) => {
       this.auth0.checkSession({}, async (err, authResult) => {
-        if (err) return reject(err);
+        if (err) {
+          return reject(err);
+        }
         if (!authResult || !authResult.idToken) {
           // if (authResult) {
           //   if (!authResult.idToken) {
@@ -194,7 +196,7 @@ export class Auth {
         }
       });
     });
-    return await promise;
+    return await promise; // eslint-disable-line
   };
 
   logout = () => {
@@ -213,9 +215,8 @@ export class Auth {
     if (this.isAuth0()) {
       let expiresAt = JSON.parse(this.storageProvider.getItem(StorageConstants.expires_at));
       return parseInt(new Date().getTime()) < parseInt(expiresAt);
-    } else {
-      return true;
     }
+    return true;
   };
 
   verifyDemoAccess = async ({ caller }) => {
@@ -244,7 +245,7 @@ export class Auth {
     };
     const token = this.getIdToken();
 
-    var promise = new Promise((resolve, reject) => {
+    let promise = new Promise((resolve, _) => {
       this.fetchGraphQL({ uri, query, variables, token })
         .then((result) => {
           const { data, errors } = result;
@@ -260,10 +261,8 @@ export class Auth {
           } else {
             if (data.result && data.result.hasAccess === false) {
               alert('You have not been granted access to this demo, returning to NeoDash Gallery.');
-              resolve(data.result);
-            } else {
-              resolve(data.result);
             }
+            resolve(data.result);
           }
         })
         .catch((error) => {
@@ -275,7 +274,7 @@ export class Auth {
           resolve({ hasAccess: false });
         });
     });
-    return await promise;
+    return await promise; // eslint-disable-line
   };
 
   removeLocalStorageItems() {

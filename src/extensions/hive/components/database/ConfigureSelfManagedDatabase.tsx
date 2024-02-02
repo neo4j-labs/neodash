@@ -1,8 +1,7 @@
 // Note: originally copied from ConnectionModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import TextField from '@material-ui/core/TextField';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 export const ConfigureSelfManagedDatabase = (props) => {
   const { connection, setConnection } = props;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Tabs, Tab, Typography } from '@mui/material';
 import { UploadDatabase } from './UploadDatabase';
 import { ConfigureSelfManagedDatabase } from './ConfigureSelfManagedDatabase';
-import { Tabs, Tab, Typography } from '@material-ui/core';
 import { TabPanel } from '../tabs/TabPanel';
 
 const useStyles = makeStyles((theme) => ({
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SelectDatabase = (props) => {
-  const { existingDbName, connection, setConnection } = props;
+  const { existingDbName, connection, setConnection, theme } = props;
 
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -26,6 +26,8 @@ export const SelectDatabase = (props) => {
 
   return (
     <div className={classes.root}>
+      <ConfigureSelfManagedDatabase connection={connection} setConnection={setConnection} />
+      {/*
       <Tabs
         orientation='horizontal'
         variant='scrollable'
@@ -49,6 +51,7 @@ export const SelectDatabase = (props) => {
           want to use. <b>Upload only supports Neo4j 5 databases.</b>
         </Typography>
       </div>
+       */}
     </div>
   );
 };
