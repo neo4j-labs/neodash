@@ -5,7 +5,7 @@ import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQuer
 import { translateQuery } from './text2cypher/util/Util';
 import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
 import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
-import RBACLabelButton from './rbac/RBACLabelButton';
+import RBACManagementLabelButton from './rbac/RBACManagementLabelButton';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -91,7 +91,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     description: 'This extension lets you manage role access to dashboard labels.',
     link: 'https://neo4j.com/professional-services/',
-    settingsMenuButton: RBACLabelButton,
+    settingsMenuButton: RBACManagementLabelButton,
   },
 };
 
