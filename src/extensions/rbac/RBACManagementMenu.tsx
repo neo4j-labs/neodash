@@ -8,7 +8,7 @@ import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
  * Component for providing a menu of all the roles in the neo4j database to the user whenever they press on the
  * RBACManagementLabelButton.
  */
-export const RBACManagementMenu = ({ anchorEl, open, handleRoleClicked, handleClose, database }) => {
+export const RBACManagementMenu = ({ anchorEl, open, handleRoleClicked, handleClose }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [roles, setRoles] = useState([]);
 
@@ -20,17 +20,26 @@ export const RBACManagementMenu = ({ anchorEl, open, handleRoleClicked, handleCl
     const query = `SHOW ROLES YIELD role return role`;
     runCypherQuery(
       driver,
-      database,
+      'system',
       query,
       {},
       1000,
       (error) => {
         console.error(error);
       },
-      (records) => setRoles(records.map((record) => record._fields[0]))
+      (records) => {
+        if (records[0].error) {
+          return;
+        }
+        setRoles(records.map((record) => record._fields[0]));
+      }
     );
   }, [open]);
-  console.log(roles);
+
+  if (roles.length == 0) {
+    return <></>;
+  }
+
   return (
     <Menu
       anchorOrigin={{
@@ -48,9 +57,7 @@ export const RBACManagementMenu = ({ anchorEl, open, handleRoleClicked, handleCl
     >
       <MenuItems>
         {roles.map((role) => (
-          <MenuItem key={role} onClick={handleRoleClicked} icon={<UserIconOutline />} title={role}>
-            {role}
-          </MenuItem>
+          <MenuItem key={role} onClick={handleRoleClicked} icon={<UserIconOutline />} title={role} />
         ))}
       </MenuItems>
     </Menu>
