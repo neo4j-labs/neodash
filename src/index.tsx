@@ -11,6 +11,8 @@ import './index.pcss';
 import StyleConfig from './config/StyleConfig';
 import * as Sentry from '@sentry/react';
 
+import { RDKitLoader } from "@rdkit/rdkit";
+
 if (window.location.href.includes('//neodash.graphapp.io/')) {
   Sentry.init({
     dsn: 'https://25edb17cc4c14c8cb726e7ac1ff74e3b@o110884.ingest.sentry.io/4505397810167808',
@@ -51,3 +53,10 @@ const provider = (
 );
 
 ReactDOM.render(<React.StrictMode>{provider}</React.StrictMode>, document.getElementById('root'));
+
+declare global {
+    interface Window {
+        RDKit: RDKitModule
+    }
+}
+
