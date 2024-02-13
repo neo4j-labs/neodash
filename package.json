@@ -57,6 +57,7 @@
     "@nivo/scatterplot": "^0.83.0",
     "@nivo/sunburst": "^0.83.0",
     "@nivo/treemap": "^0.83.0",
+    "@rdkit/rdkit": "^2023.9.2-1.0.0",
     "@sentry/react": "^7.57.0",
     "@sentry/webpack-plugin": "^2.7.1",
     "babel-runtime": "^6.26.0",

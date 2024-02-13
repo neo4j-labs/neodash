@@ -1,5 +1,6 @@
 import React from 'react';
 import ParameterSelectCardSettings from '../chart/parameter/ParameterSelectCardSettings';
+import NeoRdkitReport from '../chart/rdkit';
 import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
@@ -27,6 +28,13 @@ export const DEFAULT_ROW_LIMIT = 100;
 
 // A dictionary of available reports (visualizations).
 const _REPORT_TYPES = {
+  rdkit: {
+    label: "rdkit",
+    helperText: "rdkit",
+    component: NeoRdkitReport,
+    maxRecords: 10,
+    settings: {}
+  },
   table: {
     label: 'Table',
     helperText: 'A table will contain all returned data.',
