@@ -10,8 +10,13 @@ import {
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { RULE_BASED_REPORT_ACTIONS_CUSTOMIZATIONS } from '../../extensions/actions/ActionsRuleCreationModal';
 import NeoCustomReportActionsModal from '../../extensions/actions/ActionsRuleCreationModal';
-import { AdjustmentsHorizontalIconOutline, SparklesIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  AdjustmentsHorizontalIconOutline,
+  CubeTransparentIconOutline,
+  SparklesIconOutline,
+} from '@neo4j-ndl/react/icons';
 import { IconButton, Switch } from '@neo4j-ndl/react';
+import NeoApiConfigModal from '../../extensions/api-config/ApiConfigModal';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -34,6 +39,10 @@ const NeoCardSettingsFooter = ({
   // Variables related to customizing report actions
   const [customReportActionsModalOpen, setCustomReportActionsModalOpen] = React.useState(false);
   const actionsToCustomize = 'actionsRules';
+
+  // Variables related to api configuration
+  const [apiConfigModalOpen, setApiConfigurationApi] = React.useState(false);
+  const apiSpec = 'apiSpec';
 
   const debouncedReportSettingUpdate = useCallback(debounce(onReportSettingUpdate, 250), []);
 
@@ -147,6 +156,18 @@ const NeoCardSettingsFooter = ({
         <></>
       )}
 
+      {extensions['api-config'] && extensions['api-config'].active ? (
+        <NeoApiConfigModal
+          settingName={apiSpec}
+          settingValue={reportSettings[apiSpec]}
+          isOpen={apiConfigModalOpen}
+          onClose={() => setApiConfigurationApi(false)}
+          onReportSettingUpdate={onReportSettingUpdate}
+        ></NeoApiConfigModal>
+      ) : (
+        <></>
+      )}
+
       <table
         style={{
           borderTop: '1px dashed lightgrey',
@@ -193,6 +214,22 @@ const NeoCardSettingsFooter = ({
                     }}
                   >
                     <SparklesIconOutline />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <></>
+              )}
+              {extensions['api-config'] && extensions['api-config'].active && type === 'table' ? (
+                <Tooltip title='Enable API configuration' aria-label='' disableInteractive>
+                  <IconButton
+                    style={{ float: 'right' }}
+                    aria-label='api configuration'
+                    clean
+                    onClick={() => {
+                      setApiConfigurationApi(true);
+                    }}
+                  >
+                    <CubeTransparentIconOutline />
                   </IconButton>
                 </Tooltip>
               ) : (
