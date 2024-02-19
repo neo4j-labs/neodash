@@ -174,11 +174,11 @@ export const downloadCSV = (rows) => {
     });
     csv += '\n';
   });
-
-  const file = new Blob([csv], { type: 'text/plain' });
+  const file = new Blob([csv], { type: 'text/plain;charset=utf8' });
   element.href = URL.createObjectURL(file);
   element.download = 'table.csv';
   document.body.appendChild(element); // Required for this to work in FireFox
+  console.log(element);
   element.click();
 };
 
