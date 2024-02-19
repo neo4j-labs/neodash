@@ -161,14 +161,16 @@ export const downloadCSV = (rows) => {
   const headers = Object.keys(rows[0]).slice(1);
   csv += `${headers.join(', ')}\n`;
   rows.forEach((row) => {
+    console.log(headers);
     headers.forEach((header) => {
       // Parse value
+      console.log(row[header]);
       let value = row[header];
       if (value && value.low) {
         value = value.low;
       }
-      csv += JSON.stringify(value).replaceAll(',', ';');
-      csv += headers.indexOf(header) < headers.length - 1 ? ', ' : '';
+      csv += `${JSON.stringify(value)}`;
+      csv += headers.indexOf(header) < headers.length - 1 ? ',' : '';
     });
     csv += '\n';
   });
