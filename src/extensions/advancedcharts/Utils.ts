@@ -63,10 +63,13 @@ export const executeActionRule = (rule, e, props, _type = 'default') => {
     if (rule.customization == 'set variable' && props && props.setGlobalParameter) {
       // call thunk for $neodash_customizationValue
       let rValue = rule.value == 'id' ? 'id ' : rule.value;
+      let shortenedRValue = rValue.split('.')[rValue.split('.').length - 1];
       if (rValue != '' && e.row && e.row[rValue]) {
         props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.row[rule.value]);
       } else if (rule.value != '' && e.properties && e.properties[rule.value]) {
         props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.properties[rule.value]);
+      } else if (shortenedRValue != '' && e.properties && e.properties[shortenedRValue]) {
+        props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.properties[shortenedRValue]);
       } else {
         props.setGlobalParameter(`neodash_${rule.customizationValue}`, e.value);
       }
