@@ -161,10 +161,8 @@ export const downloadCSV = (rows) => {
   const headers = Object.keys(rows[0]).slice(1);
   csv += `${headers.join(', ')}\n`;
   rows.forEach((row) => {
-    console.log(headers);
     headers.forEach((header) => {
       // Parse value
-      console.log(row[header]);
       let value = row[header];
       if (value && value.low) {
         value = value.low;
@@ -178,7 +176,6 @@ export const downloadCSV = (rows) => {
   element.href = URL.createObjectURL(file);
   element.download = 'table.csv';
   document.body.appendChild(element); // Required for this to work in FireFox
-  console.log(element);
   element.click();
 };
 
