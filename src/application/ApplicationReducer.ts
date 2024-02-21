@@ -2,7 +2,13 @@
  * Reducers define changes to the application state when a given action is taken.
  */
 
-import { HARD_RESET_CARD_SETTINGS, UPDATE_ALL_SELECTIONS, UPDATE_FIELDS, UPDATE_SCHEMA } from '../card/CardActions';
+import {
+  HARD_RESET_CARD_SETTINGS,
+  TOGGLE_CARD_SETTINGS,
+  UPDATE_ALL_SELECTIONS,
+  UPDATE_FIELDS,
+  UPDATE_SCHEMA,
+} from '../card/CardActions';
 import { DEFAULT_NEO4J_URL } from '../config/ApplicationConfig';
 import { SET_DASHBOARD, SET_DASHBOARD_UUID } from '../dashboard/DashboardActions';
 import { UPDATE_DASHBOARD_SETTING } from '../settings/SettingsActions';
@@ -80,6 +86,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       UPDATE_ALL_SELECTIONS,
       UPDATE_FIELDS,
       SET_DASHBOARD_UUID,
+      TOGGLE_CARD_SETTINGS,
     ];
     if (!state.draft && !NON_TRANSFORMATIVE_ACTIONS.includes(type)) {
       state = update(state, { draft: true });
