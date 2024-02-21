@@ -391,10 +391,9 @@ export const NeoDashboardSidebar = ({
                       getDashboardListFromNeo4j();
                       // When reloading, if the dashboard is not in DRAFT mode, we can directly refresh it.
                       if (!draft) {
-                        const d = dashboards[inspectedIndex];
+                        const d = dashboards[selectedDashboardIndex];
                         loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
                           loadDashboard(d.uuid, file);
-                          setSelectedDashboardIndex(inspectedIndex);
                         });
                       }
                     }, 100);
@@ -515,7 +514,7 @@ export const NeoDashboardSidebar = ({
                   saved={!(draft && selectedDashboardIndex == d.index)}
                   readonly={readonly}
                   onSelect={() => {
-                    if (draft && d.index !== selectedDashboardIndex) {
+                    if (draft) {
                       setInspectedIndex(d.index);
                       setModalOpen(Modal.LOAD);
                     } else {
