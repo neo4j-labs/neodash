@@ -24,7 +24,6 @@ const Dashboard = ({
   resetApplication,
 }) => {
   const [driver, setDriver] = React.useState(undefined);
-
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
     let driverConfig = { userAgent: `neodash/v${version}` };

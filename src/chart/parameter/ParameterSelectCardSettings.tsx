@@ -2,12 +2,13 @@
 
 import React, { useCallback, useContext, useEffect } from 'react';
 import { RUN_QUERY_DELAY_MS } from '../../config/ReportConfig';
-import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { Autocomplete, debounce, TextField } from '@mui/material';
 import NeoField from '../../component/field/Field';
 import { Dropdown } from '@neo4j-ndl/react';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
+import { QueryCallback, QueryParams, QueryStatus } from '../../connection/interfaces';
+import { useConnectionModuleContext } from '../../application/Application';
 
 type ParameterId = string | undefined | null;
 
@@ -18,10 +19,11 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
+  const { connectionModule } = useConnectionModuleContext();
 
   const [queryText, setQueryText] = React.useState(query);
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-  const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
+  const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
 
   const { manualPropertyNameSpecification } = settings;
   const [labelInputText, setLabelInputText] = React.useState(settings.entityType);
@@ -60,21 +62,27 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
 
     onReportSettingUpdate('parameterName', parameterName);
   }
-  // Define query callback to allow reports to get extra data on interactions.
+
   const queryCallback = useCallback(
     (query, parameters, setRecords) => {
-      debouncedRunCypherQuery(
-        driver,
+      let queryParams: QueryParams = {
         database,
         query,
         parameters,
-        10,
-        (status) => {
+        rowLimit: 10,
+        fields: [],
+      };
+
+      let queryCallback: QueryCallback = {
+        setStatus: (status) => {
           status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
-        (result) => setRecords(result),
-        () => {}
-      );
+        setRecords,
+        setFields: () => {},
+        setSchema: () => {},
+      };
+
+      debouncedRunCypherQuery(driver, queryParams, queryCallback);
     },
     [database]
   );

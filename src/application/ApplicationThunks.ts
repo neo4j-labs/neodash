@@ -13,7 +13,6 @@ import {
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
 import { createNotificationThunk } from '../page/PageThunks';
-import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
   setPageNumberThunk,
   updateParametersToNeo4jTypeThunk,
@@ -51,6 +50,8 @@ import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
 import { handleNeoDashLaunch } from '../extensions/hive/launch/launch';
+import { QueryCallback, QueryParams } from '../connection/interfaces';
+import { getConnectionModule } from '../connection/utils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -180,15 +181,14 @@ export const createConnectionThunk =
       };
       const query = 'RETURN true as connected';
       const parameters = {};
-      runCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        1,
-        () => {},
-        (records) => validateConnection(records)
-      );
+      const { connectionModule } = getConnectionModule();
+      const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
+
+      let queryCallback: QueryCallback = {
+        setRecords: (records) => validateConnection(records),
+      };
+
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     } catch (e) {
       dispatch(createNotificationThunk('Unable to establish connection', e));
     }

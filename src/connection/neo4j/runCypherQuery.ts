@@ -1,17 +1,10 @@
-import { extractNodePropertiesFromRecords, extractNodeAndRelPropertiesFromRecords } from './ReportRecordProcessing';
 import isEqual from 'lodash.isequal';
-
-export enum QueryStatus {
-  NO_QUERY, // No query specified
-  NO_DATA, // No data was returned, therefore we can't draw it.
-  NO_DRAWABLE_DATA, // There is data returned, but we can't draw it
-  WAITING, // The report is waiting for custom logic to be executed.
-  RUNNING, // The report query is running.
-  TIMED_OUT, // Query has reached the time limit.
-  COMPLETE, // There is data returned, and we can visualize it all.
-  COMPLETE_TRUNCATED, // There is data returned, but it's too much so we truncate it.
-  ERROR, // Something broke, likely the cypher query is invalid.
-}
+import {
+  extractNodeAndRelPropertiesFromRecords,
+  extractNodePropertiesFromRecords,
+} from '../../report/ReportRecordProcessing';
+import { QueryStatus } from '../interfaces';
+import { setErrorDummy, setFieldsDummy, setRecordsDummy, setSchemaDummy, setStatusDummy } from './utils';
 
 // TODO: create a readOnly version of this method or inject a property
 /**
@@ -27,34 +20,23 @@ export enum QueryStatus {
  * @param queryTimeLimit - maximum query time in seconds.
  * @returns
  */
-export async function runCypherQuery(
+export async function runCypherQuery({
   driver,
   database = '',
   query = '',
   parameters = {},
   rowLimit = 1000,
-  setStatus = (status) => {
-    // eslint-disable-next-line no-console
-    console.log(`Query runner attempted to set status: ${JSON.stringify(status)}`);
-  },
-  setRecords = (records) => {
-    // eslint-disable-next-line no-console
-    console.log(`Query runner attempted to set records: ${JSON.stringify(records)}`);
-  },
-  setFields = (fields) => {
-    // eslint-disable-next-line no-console
-    console.log(`Query runner attempted to set fields: ${JSON.stringify(fields)}`);
-  },
   fields = [],
   useNodePropsAsFields = false,
   useReturnValuesAsFields = false,
   useHardRowLimit = false,
   queryTimeLimit = 20,
-  setSchema = () => {
-    // eslint-disable-next-line no-console
-    // console.log(`Query runner attempted to set schema: ${JSON.stringify(schema)}`);
-  }
-) {
+  setSchema = (schema) => setSchemaDummy(schema),
+  setStatus = (status) => setStatusDummy(status),
+  setRecords = (records) => setRecordsDummy(records),
+  setFields = (fields) => setFieldsDummy(fields),
+  setError = (error) => setErrorDummy(error),
+}) {
   // If no query specified, we don't do anything.
   if (query.trim() == '') {
     setFields([]);
@@ -87,7 +69,6 @@ export async function runCypherQuery(
       // TODO - check query summary to ensure that no writes are made in safe-mode.
       if (records.length == 0) {
         setStatus(QueryStatus.NO_DATA);
-        // console.log("TODO remove this - QUERY RETURNED NO DATA!")
         transaction.commit();
         return;
       }
@@ -107,27 +88,26 @@ export async function runCypherQuery(
 
       setSchema(extractNodeAndRelPropertiesFromRecords(records));
 
+      // QUERY RETURNED NO DRAWABLE DATA
       if (records == null) {
         setStatus(QueryStatus.NO_DRAWABLE_DATA);
         // console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
         transaction.commit();
         return;
+        // QUERY RETURNED TO BE TRUNCATED
       } else if (records.length > rowLimit) {
         setStatus(QueryStatus.COMPLETE_TRUNCATED);
         setRecords(records.slice(0, rowLimit));
-        // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
         transaction.commit();
         return;
       }
+      // QUERY WAS EXECUTED SUCCESSFULLY
       setStatus(QueryStatus.COMPLETE);
       setRecords(records);
-      // console.log("TODO remove this - QUERY WAS EXECUTED SUCCESFULLY!")
 
       transaction.commit();
     })
     .catch((e) => {
-      // setFields([]);
-
       // Process timeout errors.
       if (
         e.message.startsWith(
@@ -136,15 +116,17 @@ export async function runCypherQuery(
             'The transaction has not completed within the specified timeout (dbms.transaction.timeout).'
         )
       ) {
+        // QUERY TIMED OUT
         setStatus(QueryStatus.TIMED_OUT);
         setRecords([{ error: e.message }]);
         transaction.rollback();
         return e.message;
       }
-
+      // QUERY RAISED AN ERROR
       setStatus(QueryStatus.ERROR);
       // Process other errors.
       if (setRecords) {
+        setError(e.message);
         setRecords([{ error: e.message }]);
       }
       transaction.rollback();
