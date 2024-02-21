@@ -380,7 +380,7 @@ const _REPORT_TYPES = {
       marginBottom: {
         label: 'Margin Bottom',
         type: SELECTION_TYPES.NUMBER,
-        default: 45,
+        default: 30,
       },
       legendWidth: {
         label: 'Legend Width',
@@ -392,6 +392,28 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      expandHeightForLegend: {
+        label: 'Expand Height For Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      innerPadding: {
+        label: 'Inner Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0,
+      },
+      legendPosition: {
+        label: 'Legend Position',
+        type: SELECTION_TYPES.LIST,
+        values: ['Horizontal', 'Vertical'],
+        default: 'Vertical',
+      },
+      padding: {
+        label: 'Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.25,
       },
       expandHeightForLegend: {
         label: 'Expand Height For Legend',
@@ -1066,6 +1088,12 @@ const _REPORT_TYPES = {
       },
       clearParameterOnFieldClear: {
         label: 'Clear Parameter on Field Reset',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autoSelectFirstValue: {
+        label: 'Auto-select first value on no selection',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,

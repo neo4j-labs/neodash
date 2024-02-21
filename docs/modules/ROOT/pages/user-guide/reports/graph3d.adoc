@@ -2,8 +2,10 @@
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
-The 3D graph report extends the default graph visualization with another dimensions.
-It supports ~95% of the features & customizations for the regular (2D) graph, including rule-based styling and report actions.
+The 3D graph report extends the default graph visualization with another dimension.
+It supports most of the features & customizations for the regular (2D) graph, including rule-based styling and report actions.
+Users can explore the 3D graph by zooming and panning through 3D space.
+
 
 == Examples
 

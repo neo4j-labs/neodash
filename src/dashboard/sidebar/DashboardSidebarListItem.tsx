@@ -19,7 +19,7 @@ export const DashboardSidebarListItem = ({ title, selected, readonly, saved, ver
             size='medium'
             color={selected == true ? (saved == true ? 'primary' : 'warning') : 'neutral'}
             style={{
-              width: '300px',
+              width: '240px',
               whiteSpace: 'nowrap',
               overflowX: 'clip',
               justifyContent: 'left',

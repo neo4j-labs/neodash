@@ -269,7 +269,12 @@ function RenderString(value) {
   return str;
 }
 
-function RenderLink(value) {
+function RenderLink(value, disabled = false) {
+  // If the link is embedded in a button (disabled), it's not a hyperlink, so we just return the string.
+  if (disabled) {
+    return value;
+  }
+  // Else, it's a 'real' link, and return a React object
   return (
     <TextLink key={value} externalLink target='_blank' href={value}>
       {value}
@@ -299,7 +304,7 @@ function RenderInteger(value) {
   if (!value || !value.toInt) {
     return RenderNumber(value);
   }
-  const integer = value.toNumber().toLocaleString();
+  const integer = value.toNumber().toLocaleString('en-US');
   return integer;
 }
 
@@ -307,7 +312,7 @@ function RenderNumber(value) {
   if (value === null || !value.toLocaleString) {
     return 'null';
   }
-  const number = value.toLocaleString();
+  const number = value.toLocaleString('en-US');
   return number;
 }
 
@@ -389,7 +394,7 @@ export const rendererForType: any = {
   },
   link: {
     type: 'link',
-    renderValue: (c) => RenderLink(c.value),
+    renderValue: (c, disabled = false) => RenderLink(c.value, disabled),
   },
 };
 
