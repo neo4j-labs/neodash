@@ -94,6 +94,7 @@ export const applicationGetStandaloneSettings = (state: any) => {
     standaloneDashboardURL: state.application.standaloneDashboardURL,
     standaloneUsername: state.application.standaloneUsername,
     standalonePassword: state.application.standalonePassword,
+    standalonePasswordWarningHidden: state.application.standalonePasswordWarningHidden,
     standaloneAllowLoad: state.application.standaloneAllowLoad,
     standaloneLoadFromOtherDatabases: state.application.standaloneLoadFromOtherDatabases,
     standaloneMultiDatabase: state.application.standaloneMultiDatabase,

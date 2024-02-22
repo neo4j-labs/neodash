@@ -404,7 +404,7 @@ export const loadDashboardFromNeo4jByNameThunk =
           if (records.length == 0) {
             dispatch(
               createNotificationThunk(
-                'Unable to load dashboard.',
+                `Unable to load dashboard "${name}".`,
                 'A dashboard with the provided name could not be found.'
               )
             );
@@ -429,7 +429,7 @@ export const loadDashboardFromNeo4jByNameThunk =
           }
 
           if (records[0].error) {
-            dispatch(createNotificationThunk('Unable to load dashboard.', records[0].error));
+            dispatch(createNotificationThunk(`Unable to load dashboard "${name}".`, records[0].error));
             if (loggingSettings.loggingMode > '1') {
               dispatch(
                 createLogThunk(
@@ -502,7 +502,7 @@ export const loadDashboardListFromNeo4jThunk = (driver, database, callback) => (
     runCypherQuery(
       driver,
       database,
-      'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY date DESC',
+      'MATCH (n:_Neodash_Dashboard) RETURN n.uuid as uuid, n.title as title, toString(n.date) as date,  n.user as author, n.version as version ORDER BY toLower(n.title) ASC',
       {},
       1000,
       (status) => setStatus(status),
