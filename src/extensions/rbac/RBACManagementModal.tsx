@@ -16,7 +16,6 @@ import { set } from 'yaml/dist/schema/yaml-1.1/set';
  */
 export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [neo4jUsers, setNeo4jUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedDatabase, setSelectedDatabase] = useState('');
@@ -45,6 +44,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
         setDatabases(records.map((record) => record._fields[0]));
       }
     );
+    retrieveNeo4jUsers();
   }, [open]);
 
   const retrieveAllowAndDenyLists = (database) => {
@@ -73,6 +73,21 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
       }
     );
   };
+
+  const retrieveNeo4jUsers = () => {
+    runCypherQuery(
+      driver,
+      'system',
+      'SHOW users yield user return distinct user',
+      {},
+      1000,
+      () => {},
+      (records) => {
+        setNeo4jUsers(records.map((record) => record._fields[0]));
+      }
+    );
+  };
+
   const handleDatabaseSelect = (selectedOption) => {
     setSelectedDatabase(selectedOption.value);
     runCypherQuery(
@@ -102,6 +117,10 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
       selectedDatabase,
       `DENY MATCH ON GRAPH ${selectedDatabase} NODES ${denyList.join(',')} TO ${currentRole}`
     );
+
+    selectedUsers.forEach((user) => {
+      runCypherQuery(driver, selectedDatabase, `GRANT ROLE ${currentRole} TO ${user}`);
+    });
     handleClose();
   };
 
