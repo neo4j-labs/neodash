@@ -8,6 +8,7 @@ import {
   UPDATE_ALL_SELECTIONS,
   UPDATE_FIELDS,
   UPDATE_SCHEMA,
+  UPDATE_SELECTION,
 } from '../card/CardActions';
 import { DEFAULT_NEO4J_URL } from '../config/ApplicationConfig';
 import { SET_DASHBOARD, SET_DASHBOARD_UUID } from '../dashboard/DashboardActions';
@@ -87,7 +88,9 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       UPDATE_FIELDS,
       SET_DASHBOARD_UUID,
       TOGGLE_CARD_SETTINGS,
+      UPDATE_SELECTION,
     ];
+
     if (!state.draft && !NON_TRANSFORMATIVE_ACTIONS.includes(type)) {
       state = update(state, { draft: true });
       return state;
