@@ -375,31 +375,29 @@ export const NeoDashboardSidebar = ({
               </span>
               <Tooltip title='Refresh' aria-label='refresh' disableInteractive>
                 <Button
-                  aria-label={'settings'}
+                  aria-label={'refresh'}
                   fill='text'
                   size='small'
                   color='neutral'
                   style={{
                     float: 'right',
-                    marginLeft: '0px',
+                    marginLeft: '3px',
                     marginRight: '12px',
                     paddingLeft: 0,
                     paddingRight: '3px',
                   }}
                   onClick={() => {
-                    setTimeout(() => {
-                      getDashboardListFromNeo4j();
-                      // When reloading, if the dashboard is not in DRAFT mode, we can directly refresh it.
-                      if (!draft) {
-                        const d = dashboards[selectedDashboardIndex];
-                        loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
-                          loadDashboard(d.uuid, file);
-                        });
-                      }
-                    }, 100);
+                    getDashboardListFromNeo4j();
+                    // When reloading, if the dashboard is not in DRAFT mode, we can directly refresh it.
+                    if (!draft) {
+                      const d = dashboards[selectedDashboardIndex];
+                      loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
+                        loadDashboard(d.uuid, file);
+                      });
+                    }
                   }}
                 >
-                  <ArrowPathIconOutline className='btn-icon-base-r' />
+                  <ArrowPathIconOutline className='btn-icon-base-r-m' />
                 </Button>
               </Tooltip>
               {/* Only let users create dashboards and change database when running in editor mode. */}
@@ -414,7 +412,7 @@ export const NeoDashboardSidebar = ({
                       style={{
                         float: 'right',
                         marginLeft: '0px',
-                        marginRight: '12px',
+                        marginRight: '3px',
                         paddingLeft: 0,
                         paddingRight: '3px',
                       }}
