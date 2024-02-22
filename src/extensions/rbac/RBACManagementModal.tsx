@@ -106,7 +106,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
   };
 
   return (
-    <Dialog size='small' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+    <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
       <Dialog.Header id='form-dialog-title'> RBAC Access Control Management - '{currentRole}'</Dialog.Header>
       <Dialog.Content>
         Welcome to the Dashboard Access settings!

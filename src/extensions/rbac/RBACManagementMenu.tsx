@@ -44,7 +44,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, handleErro
   }
 
   const handleRoleClicked = (role) => {
-    console.log(role);
+    handleClose();
     setSelectedRole(role);
     setIsModalOpen(true);
   };
