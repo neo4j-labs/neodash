@@ -21,8 +21,8 @@ const RBACManagementLabelButton = ({ createNotification }) => {
   };
 
   const button = (
-    <Tooltip title='RBAC Label Management' aria-label='RBAC Label Management' disableInteractive>
-      <IconButton className='n-mx-1' aria-label='RBAC Label Management' onClick={handleButtonClick}>
+    <Tooltip title='Access Control' aria-label='Access Control' disableInteractive>
+      <IconButton className='n-mx-1' aria-label='Access Control' onClick={handleButtonClick}>
         <UserCircleIconOutline />
       </IconButton>
     </Tooltip>

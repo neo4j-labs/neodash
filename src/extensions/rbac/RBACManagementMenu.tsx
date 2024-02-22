@@ -53,11 +53,11 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, handleErro
     <>
       <Menu
         anchorOrigin={{
-          horizontal: 'left',
+          horizontal: 'right',
           vertical: 'bottom',
         }}
         transformOrigin={{
-          horizontal: 'left',
+          horizontal: 'right',
           vertical: 'top',
         }}
         anchorEl={anchorEl}

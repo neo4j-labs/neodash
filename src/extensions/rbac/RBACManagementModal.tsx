@@ -84,7 +84,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
       () => {},
       (records) => {
         const newLabels = records.map((record) => record._fields[0]).filter((l) => l !== '_Neodash_Dashboard');
-        setLabels(newLabels);
+        setLabels(['*'].concat(newLabels));
         retrieveAllowAndDenyLists(selectedOption.value);
       }
     );
@@ -107,7 +107,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
 
   return (
     <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-      <Dialog.Header id='form-dialog-title'> RBAC Access Control Management - '{currentRole}'</Dialog.Header>
+      <Dialog.Header id='form-dialog-title'>Access Control - '{currentRole}'</Dialog.Header>
       <Dialog.Content>
         Welcome to the Dashboard Access settings!
         <br />
@@ -127,7 +127,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
       <div>
         <Dropdown
           type='select'
-          label='Database List'
+          label='Database'
           helpText='Choose a database for updating role privileges'
           errorText={!selectedDatabase && 'Please choose a database in order to proceed'}
           selectProps={{
@@ -147,13 +147,17 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
               <Dropdown
                 type='select'
                 label='Allow List'
+                helpText={
+                  allowList.find((i) => i == '*') &&
+                  'Selecting (*) grants access to all labels, overriding other selections.'
+                }
                 selectProps={{
                   placeholder: 'Select labels',
                   isClearable: false,
                   value: allowList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
-                  options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })), // allowList.map((label) => ({ value: label, label })),
+                  options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                   isMulti: true,
-                  // onChange: setAllowList,
+                  onChange: (val) => setAllowList(val.map((v) => v.value)),
                 }}
               />
             </div>
@@ -161,17 +165,23 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
               <Dropdown
                 type='select'
                 label='Deny List'
+                helpText={
+                  denyList.find((i) => i == '*') &&
+                  'Selecting (*) denies access to all labels, overriding other selections.'
+                }
                 selectProps={{
                   placeholder: 'Select labels',
                   isClearable: false,
                   value: denyList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
-                  options: labels.map((label) => ({ value: label, label })), // denyList.map((label) => ({ value: label, label })),
+                  options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                   isMulti: true,
-                  onChange: setDenyList,
+                  onChange: (val) => setDenyList(val.map((v) => v.value)),
                 }}
               />
             </div>
           </div>
+          <br />
+
           <div>
             <Dropdown
               type='select'

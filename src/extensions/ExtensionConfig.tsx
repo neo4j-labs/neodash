@@ -85,7 +85,7 @@ export const EXTENSIONS: Record<string, Extension> = {
   },
   'role-label-management': {
     name: 'role-label-management',
-    label: 'Role Label Management',
+    label: 'Access Control',
     author: 'Neo4j Professional Services',
     image: 'form.png',
     enabled: true,
