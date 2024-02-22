@@ -95,7 +95,8 @@
 }
 
 .react-resizable-handle {
-  bottom: 1px !important;
+  bottom: 4px !important;
+  right: -2px !important;
   opacity: 0.5;
   color: rgb(222, 222, 222);
 }
@@ -165,7 +166,7 @@
   white-space: pre;
   background-position: 0px -11px;
   padding-right: 0px !important;
-  margin-top: 0px !important;
+  margin-top: 0px;
   padding-left: 30px;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
@@ -216,7 +217,7 @@
 }
 
 .card-view .MuiTablePagination-root {
-  margin-top: -40px;
+  margin-top: 0px;
 
 }
 
@@ -253,3 +254,7 @@
   display: none;
 }
 /* End Gantt chart workaround */
+
+.markdown-widget a {
+  text-decoration: underline;
+}
