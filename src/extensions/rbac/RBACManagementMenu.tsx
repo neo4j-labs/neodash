@@ -3,21 +3,23 @@ import { Menu, MenuItem, MenuItems } from '@neo4j-ndl/react';
 import { UserIconOutline } from '@neo4j-ndl/react/icons';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
+import RBACManagementModal from './RBACManagementModal';
 
 /**
  * Component for providing a menu of all the roles in the neo4j database to the user whenever they press on the
  * RBACManagementLabelButton.
  */
-export const RBACManagementMenu = ({ anchorEl, open, handleRoleClicked, handleClose }) => {
+export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [roles, setRoles] = useState([]);
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!open) {
+    if (!MenuOpen) {
       return;
     }
-
-    const query = `SHOW ROLES YIELD role return role`;
+    const query = `SHOW ROLES YIELD role WHERE role <> "PUBLIC" return role`;
     runCypherQuery(
       driver,
       'system',
@@ -34,33 +36,48 @@ export const RBACManagementMenu = ({ anchorEl, open, handleRoleClicked, handleCl
         setRoles(records.map((record) => record._fields[0]));
       }
     );
-  }, [open]);
+  }, [MenuOpen]);
 
   if (roles.length == 0) {
     return <></>;
   }
 
+  const handleRoleClicked = (role) => {
+    setSelectedRole(role);
+    setIsModalOpen(true);
+  };
+
   return (
-    <Menu
-      anchorOrigin={{
-        horizontal: 'left',
-        vertical: 'bottom',
-      }}
-      transformOrigin={{
-        horizontal: 'left',
-        vertical: 'top',
-      }}
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      size='small'
-    >
-      <MenuItems>
-        {roles.map((role) => (
-          <MenuItem key={role} onClick={handleRoleClicked} icon={<UserIconOutline />} title={role} />
-        ))}
-      </MenuItems>
-    </Menu>
+    <>
+      <Menu
+        anchorOrigin={{
+          horizontal: 'left',
+          vertical: 'bottom',
+        }}
+        transformOrigin={{
+          horizontal: 'left',
+          vertical: 'top',
+        }}
+        anchorEl={anchorEl}
+        open={MenuOpen}
+        onClose={handleClose}
+        size='small'
+      >
+        <MenuItems>
+          {roles.map((role) => (
+            <MenuItem key={role} onClick={() => handleRoleClicked(role)} icon={<UserIconOutline />} title={role} />
+          ))}
+        </MenuItems>
+      </Menu>
+
+      <RBACManagementModal
+        open={isModalOpen == true}
+        handleClose={() => {
+          setIsModalOpen(false);
+        }}
+        currentRole={selectedRole}
+      />
+    </>
   );
 };
 

@@ -7,21 +7,16 @@ import { RBACManagementMenu } from './RBACManagementMenu';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 
 const RBACManagementLabelButton = () => {
-  const [open, setOpen] = React.useState(false);
+  const [MenuOpen, setMenuOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleButtonClick = (event) => {
-    setOpen(true);
+    setMenuOpen(true);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleRoleClicked = (role) => {
-    console.log(role);
-    setOpen(false);
+    setMenuOpen(false);
   };
 
   const button = (
@@ -35,13 +30,7 @@ const RBACManagementLabelButton = () => {
   return (
     <div style={{ display: 'inline' }}>
       {button}
-      <RBACManagementMenu
-        anchorEl={anchorEl}
-        open={open}
-        handleRoleClicked={handleRoleClicked}
-        handleClose={handleClose}
-        database='neo4j'
-      />
+      <RBACManagementMenu anchorEl={anchorEl} MenuOpen={MenuOpen} handleClose={handleClose} />
     </div>
   );
 };
