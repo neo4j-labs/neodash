@@ -4,6 +4,7 @@
 
 import {
   HARD_RESET_CARD_SETTINGS,
+  TOGGLE_CARD_SETTINGS,
   UPDATE_ALL_SELECTIONS,
   UPDATE_FIELDS,
   UPDATE_SCHEMA,
@@ -86,6 +87,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       UPDATE_ALL_SELECTIONS,
       UPDATE_FIELDS,
       SET_DASHBOARD_UUID,
+      TOGGLE_CARD_SETTINGS,
       UPDATE_SELECTION,
     ];
 
