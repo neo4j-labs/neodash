@@ -69,6 +69,12 @@ will be almost completely visualized as a thin disc.
 slice reserved for white space. For example, when set to 3.6, there will
 be 1/100th of the total circle space reserved between each slice.
 
+|Legend Width (px) |number |128 |The width of the legend (if enabled).
+
+|Legend Position |number |Horizontal | The type of legend positioning to use, horizontal or vertical.
+
+|Horizontal Legend Translation (px) |number |0 | The amount in pixels the legend is shifted horizontally.
+
 |Slice border with (px) |number |0 |The width of the border of each
 slice.
 
