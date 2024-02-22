@@ -35,7 +35,7 @@ const RBACManagementLabelButton = ({ createNotification }) => {
         anchorEl={anchorEl}
         MenuOpen={MenuOpen}
         handleClose={handleClose}
-        handleError={createNotification}
+        createNotification={createNotification}
       />
     </div>
   );

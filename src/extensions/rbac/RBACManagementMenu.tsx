@@ -9,7 +9,7 @@ import RBACManagementModal from './RBACManagementModal';
  * Component for providing a menu of all the roles in the neo4j database to the user whenever they press on the
  * RBACManagementLabelButton.
  */
-export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, handleError }) => {
+export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNotification }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
@@ -31,7 +31,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, handleErro
       },
       (records) => {
         if (records[0].error) {
-          handleError('Unable to retrieve roles', records[0].error);
+          createNotification('Unable to retrieve roles', records[0].error);
           return;
         }
         setRoles(records.map((record) => record._fields[0]));

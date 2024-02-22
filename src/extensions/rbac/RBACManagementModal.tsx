@@ -14,7 +14,7 @@ import { set } from 'yaml/dist/schema/yaml-1.1/set';
  * @param currentRole - The currently selected role.
  * @param handleClose - The function to close the modal.
  */
-export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
+export const RBACManagementModal = ({ open, handleClose, currentRole, createNotification }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [neo4jUsers, setNeo4jUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -47,13 +47,13 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
     retrieveNeo4jUsers();
   }, [open]);
 
-  const retrieveAllowAndDenyLists = (database) => {
+  const retrieveAllowAndDenyLists = (newLabels, database) => {
     runCypherQuery(
       driver,
       'system',
       `SHOW PRIVILEGES
       YIELD graph, role, access, action, segment
-      WHERE (graph = $database OR graph = '*') 
+      WHERE (graph = $database OR graph = '*' OR graph = (CASE WHEN $database = 'neo4j' THEN '' ELSE '*****' END ))
       AND role = $rolename
       AND action = 'match' 
       AND segment STARTS WITH 'NODE('
@@ -65,10 +65,15 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
         // Extract granted and denied label list from the result of the SHOW PRIVILEGES query
         const grants = records.filter((r) => r._fields[0] == 'GRANTED');
         const denies = records.filter((r) => r._fields[0] == 'DENIED');
-        const grantedLabels = grants[0] ? grants[0]._fields[1] : [];
-        const deniedLabels = denies[0] ? denies[0]._fields[1] : [];
+        const grantedLabels = grants[0] ? [...new Set(grants[0]._fields[1])] : [];
+        const deniedLabels = denies[0] ? [...new Set(denies[0]._fields[1])] : [];
         setAllowList(grantedLabels);
         setDenyList(deniedLabels);
+
+        // Here we build a set of all POSSIBLE labels, that includes the list in the database, plus those in denies and grants.
+        const possibleLabels = [...new Set(newLabels.concat(grantedLabels).concat(deniedLabels))];
+        // Add '*' as an extra option.
+        setLabels(['*'].concat(possibleLabels));
         setLoaded(true);
       }
     );
@@ -99,28 +104,48 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
       () => {},
       (records) => {
         const newLabels = records.map((record) => record._fields[0]).filter((l) => l !== '_Neodash_Dashboard');
-        setLabels(['*'].concat(newLabels));
-        retrieveAllowAndDenyLists(selectedOption.value);
+        retrieveAllowAndDenyLists(newLabels, selectedOption.value);
       }
     );
   };
 
   const handleSave = () => {
+    // runCypherQuery(
+    //   driver,
+    //   'system',
+    //   `GRANT MATCH {*} ON GRAPH ${selectedDatabase} NODES ${allowList.join(',')} TO ${currentRole}`
+    // );
+
+    // Remove old DENY list (all labels to catch all old denies)
+    // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
+    console.log(
+      `REVOKE DENY MATCH {*} ON GRAPH ${selectedDatabase} NODES ${labels
+        .filter((l) => l !== '*')
+        .join(',')} FROM ${currentRole}`
+    );
     runCypherQuery(
       driver,
-      selectedDatabase,
-      `GRANT MATCH {*} ON GRAPH ${selectedDatabase} NODES ${allowList.join(',')} TO ${currentRole}`
+      'system',
+      `REVOKE DENY MATCH {*} ON GRAPH ${selectedDatabase} NODES ${labels
+        .filter((l) => l !== '*')
+        .join(',')} FROM ${currentRole}`,
+      {},
+      1000,
+      () => {},
+      () => {
+        createNotification('Success', `Access for role ${  currentRole  } was successfully updated.`);
+      }
     );
 
+    // Create new DENY list
     runCypherQuery(
       driver,
-      selectedDatabase,
-      `DENY MATCH ON GRAPH ${selectedDatabase} NODES ${denyList.join(',')} TO ${currentRole}`
+      'system',
+      `DENY MATCH {*} ON GRAPH ${selectedDatabase} NODES ${denyList.join(',')} TO ${currentRole}`
     );
 
-    selectedUsers.forEach((user) => {
-      runCypherQuery(driver, selectedDatabase, `GRANT ROLE ${currentRole} TO ${user}`);
-    });
+    // runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
+
     handleClose();
   };
 
@@ -202,6 +227,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
           <br />
 
           <div>
+            <p>Manage the list of users for this role</p>
             <Dropdown
               type='select'
               label='Users'
