@@ -91,7 +91,7 @@ const NeoPieChart = (props: ChartProps) => {
   const cornerRadius = settings.cornerRadius ? settings.cornerRadius : 1;
   const arcLabelsSkipAngle = settings.arcLabelsSkipAngle ? settings.arcLabelsSkipAngle : 10;
   const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
-  const legendPosition = settings.legendPosition ? settings.legendPosition : 'Horizontal'
+  const legendPosition = settings.legendPosition ? settings.legendPosition : 'Horizontal';
   const legendTranslate = settings.legendTranslate ? settings.legendTranslate : 0;
 
   const arcLabelsFontSize = settings.arcLabelsFontSize ? settings.arcLabelsFontSize : 13;
@@ -106,14 +106,14 @@ const NeoPieChart = (props: ChartProps) => {
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
 
-  const margin = () => {
+  const calculateMargin = () => {
     return {
       top: marginTop,
-      right: legend? legendPosition === 'horizontal' ? marginRight : marginRight + legendWidth : marginRight,
-      bottom: legend ? legendPosition === 'horizontal' ? legendHeight + marginBottom : marginBottom : marginBottom,
+      right: legend ? (legendPosition === 'horizontal' ? marginRight : marginRight + legendWidth) : marginRight,
+      bottom: legend ? (legendPosition === 'horizontal' ? legendHeight + marginBottom : marginBottom) : marginBottom,
       left: marginLeft,
-    }
-  }
+    };
+  };
 
   const calculateLegendConfig = () => {
     if (!legend) {
@@ -121,7 +121,6 @@ const NeoPieChart = (props: ChartProps) => {
     }
 
     if (legendPosition === 'Horizontal') {
-      console.log('Translate X: ', legendTranslate)
       return [
         {
           dataFrom: 'keys',
@@ -226,7 +225,7 @@ const NeoPieChart = (props: ChartProps) => {
       arcLinkLabelsSkipAngle={arcLinkLabelsSkipAngle}
       arcLinkLabelsOffset={arcLinkLabelsOffset}
       arcLabelsSkipAngle={arcLabelsSkipAngle}
-      margin={margin()}
+      margin={calculateMargin()}
       colors={computedChartColors}
       legends={calculateLegendConfig()}
       animate={true}

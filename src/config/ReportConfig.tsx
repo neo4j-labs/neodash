@@ -466,12 +466,6 @@ const _REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
-      legend: {
-        label: 'Show Legend',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       sortByValue: {
         label: 'Auto-sort slices by value',
         type: SELECTION_TYPES.LIST,
@@ -566,6 +560,12 @@ const _REPORT_TYPES = {
         label: 'Margin Bottom (px)',
         type: SELECTION_TYPES.NUMBER,
         default: 50,
+      },
+      legend: {
+        label: 'Show Legend',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       legendWidth: {
         label: 'Legend Width (px)',
