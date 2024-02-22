@@ -21,6 +21,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedDatabase, setSelectedDatabase] = useState('');
   const [databases, setDatabases] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [labels, setLabels] = useState([]);
   const [allowList, setAllowList] = useState([]);
   const [denyList, setDenyList] = useState([]);
 
@@ -35,30 +37,57 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
     runCypherQuery(
       driver,
       'system',
-      'SHOW DATABASES',
+      'SHOW DATABASES yield name return distinct name',
       {},
       1000,
       () => {},
       (records) => {
-        setDatabases(records.map((record) => record.get('name')));
-      }
-    );
-
-    runCypherQuery(
-      driver,
-      selectedDatabase,
-      'SHOW DATABASES',
-      {},
-      1000,
-      () => {},
-      (records) => {
-        setDatabases(records.map((record) => record.get('name')));
+        setDatabases(records.map((record) => record._fields[0]));
       }
     );
   }, [open]);
 
+  const retrieveAllowAndDenyLists = (database) => {
+    runCypherQuery(
+      driver,
+      'system',
+      `SHOW PRIVILEGES
+      YIELD graph, role, access, action, segment
+      WHERE (graph = $database OR graph = '*') 
+      AND role = $rolename
+      AND action = 'match' 
+      AND segment STARTS WITH 'NODE('
+      RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes`,
+      { rolename: currentRole, database: database },
+      1000,
+      () => {},
+      (records) => {
+        // Extract granted and denied label list from the result of the SHOW PRIVILEGES query
+        const grants = records.filter((r) => r._fields[0] == 'GRANTED');
+        const denies = records.filter((r) => r._fields[0] == 'DENIED');
+        const grantedLabels = grants[0] ? grants[0]._fields[1] : [];
+        const deniedLabels = denies[0] ? denies[0]._fields[1] : [];
+        setAllowList(grantedLabels);
+        setDenyList(deniedLabels);
+        setLoaded(true);
+      }
+    );
+  };
   const handleDatabaseSelect = (selectedOption) => {
     setSelectedDatabase(selectedOption.value);
+    runCypherQuery(
+      driver,
+      selectedOption.value,
+      'CALL db.labels()',
+      {},
+      1000,
+      () => {},
+      (records) => {
+        const newLabels = records.map((record) => record._fields[0]).filter((l) => l !== '_Neodash_Dashboard');
+        setLabels(newLabels);
+        retrieveAllowAndDenyLists(selectedOption.value);
+      }
+    );
   };
 
   const handleSave = () => {
@@ -100,8 +129,9 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
           type='select'
           label='Database List'
           helpText='Choose a database for updating role privileges'
-          errorText='Please choose a database in order to proceed'
+          errorText={!selectedDatabase && 'Please choose a database in order to proceed'}
           selectProps={{
+            value: { value: selectedDatabase, label: selectedDatabase },
             placeholder: 'Select a database',
             options: databases
               .filter((database) => database !== 'system')
@@ -110,7 +140,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
           }}
         />
       </div>
-      {selectedDatabase && (
+      {selectedDatabase && loaded && (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ width: '45%' }}>
@@ -119,9 +149,11 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
                 label='Allow List'
                 selectProps={{
                   placeholder: 'Select labels',
-                  options: allowList.map((label) => ({ value: label, label })),
+                  isClearable: false,
+                  value: allowList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
+                  options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })), // allowList.map((label) => ({ value: label, label })),
                   isMulti: true,
-                  onChange: setAllowList,
+                  // onChange: setAllowList,
                 }}
               />
             </div>
@@ -131,7 +163,9 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
                 label='Deny List'
                 selectProps={{
                   placeholder: 'Select labels',
-                  options: denyList.map((label) => ({ value: label, label })),
+                  isClearable: false,
+                  value: denyList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
+                  options: labels.map((label) => ({ value: label, label })), // denyList.map((label) => ({ value: label, label })),
                   isMulti: true,
                   onChange: setDenyList,
                 }}

@@ -5,8 +5,9 @@ import { UserCircleIconOutline } from '@neo4j-ndl/react/icons';
 import { RBACManagementMenu } from './RBACManagementMenu';
 
 import Tooltip from '@mui/material/Tooltip/Tooltip';
+import { createNotificationThunk } from '../../page/PageThunks';
 
-const RBACManagementLabelButton = () => {
+const RBACManagementLabelButton = ({ createNotification }) => {
   const [MenuOpen, setMenuOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -30,13 +31,22 @@ const RBACManagementLabelButton = () => {
   return (
     <div style={{ display: 'inline' }}>
       {button}
-      <RBACManagementMenu anchorEl={anchorEl} MenuOpen={MenuOpen} handleClose={handleClose} />
+      <RBACManagementMenu
+        anchorEl={anchorEl}
+        MenuOpen={MenuOpen}
+        handleClose={handleClose}
+        handleError={createNotification}
+      />
     </div>
   );
 };
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = (_dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  createNotification: (title: any, message: any) => {
+    dispatch(createNotificationThunk(title, message));
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(RBACManagementLabelButton);
