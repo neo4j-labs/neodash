@@ -121,8 +121,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
                   placeholder: 'Select labels',
                   options: allowList.map((label) => ({ value: label, label })),
                   isMulti: true,
+                  onChange: setAllowList,
                 }}
-                onChange={setAllowList}
               />
             </div>
             <div style={{ width: '45%' }}>
@@ -133,8 +133,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole }) => {
                   placeholder: 'Select labels',
                   options: denyList.map((label) => ({ value: label, label })),
                   isMulti: true,
+                  onChange: setDenyList,
                 }}
-                onChange={setDenyList}
               />
             </div>
           </div>
