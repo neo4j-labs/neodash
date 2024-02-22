@@ -40,12 +40,17 @@ const fallbackRenderer = (value) => {
 
 function renderAsButtonWrapper(renderer) {
   return function renderAsButton(value) {
+    const outputValue = renderer(value, true);
+    // If there's nothing to be rendered, there's no button needed.
+    if (outputValue == '') {
+      return <></>;
+    }
     return (
       <Button
         style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
         variant='contained'
         color='primary'
-      >{`${renderer(value)}`}</Button>
+      >{`${outputValue}`}</Button>
     );
   };
 }
@@ -107,8 +112,7 @@ export const NeoTableChart = (props: ChartProps) => {
     return key != 'id' ? key : `${key} `;
   };
 
-  const actionableFields = actionsRules.map((r) => r.field);
-
+  const actionableFields = actionsRules.filter((r) => r.condition !== 'rowCheck').map((r) => r.field);
   const columns = transposed
     ? [records[0].keys[0]].concat(records.map((record) => record._fields[0]?.toString() || '')).map((key, i) => {
         const uniqueKey = `${String(key)}_${i}`;
@@ -126,7 +130,9 @@ export const NeoTableChart = (props: ChartProps) => {
           actionableFields.includes(key)
         );
       })
-    : records[0].keys.map((key, i) => {
+    : records[0] &&
+      records[0].keys &&
+      records[0].keys.map((key, i) => {
         const value = records[0].get(key);
         if (columnWidthsType == 'Relative (%)') {
           return ApplyColumnType(
@@ -243,7 +249,7 @@ export const NeoTableChart = (props: ChartProps) => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              className='n-absolute n-z-10 n-bottom-7 n-left-1'
+              className='n-absolute n-z-10 n-bottom-2 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />

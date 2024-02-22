@@ -236,9 +236,9 @@ export const NeoCustomReportActionsModal = ({
     return [];
   };
 
-  const createFieldVariableSuggestionsFromRule = (rule, type) => {
-    let suggestions;
-    if (type) {
+  const createFieldVariableSuggestionsFromRule = (rule, skipRuleFieldCheck) => {
+    let suggestions: string[];
+    if (skipRuleFieldCheck) {
       suggestions = createFieldVariableSuggestions(rule.condition, true, null).filter((e) =>
         e.toLowerCase().startsWith(rule.field.toLowerCase())
       );
@@ -249,17 +249,15 @@ export const NeoCustomReportActionsModal = ({
         e.toLowerCase().startsWith(rule.value.toLowerCase())
       );
     }
-
     // When we are accessing node properties (not page names), parse the node label + property pair to only show properties.
-    if (rule.customization !== 'set page') {
+    // Fields for graph and map reports are structured differently than regular reports (table, bar, etc.), so we access suggestions differently.
+    if (rule.customization !== 'set page' && (type == 'graph' || type == 'map' || type == 'graph3d')) {
       suggestions = suggestions.map((e) => e.split('.')[1] || e);
     }
-
     return suggestions;
   };
 
   const handleOnInputchange = (customization, index, value) => {
-    console.log(customization, index, value);
     updateRuleField(index, 'value', value);
     if (type == 'bar' && customization !== 'set page') {
       // For bar charts, duplicate the value to rule.field
@@ -335,7 +333,7 @@ export const NeoCustomReportActionsModal = ({
   const td2Styling = (type) => ({ width: type === 'bar' ? '15%' : '30%' });
   const td2DropdownClassname = (type) => `n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`;
   const td2Autocomplete = (type, index, rule) =>
-    (type !== 'bar' ? (
+    (type !== 'bar' && rule.condition !== 'rowCheck' ? (
       <Autocomplete
         className='n-align-middle n-inline-block n-w-/5'
         disableClearable={true}
@@ -419,7 +417,7 @@ export const NeoCustomReportActionsModal = ({
                               className={td2DropdownClassname(type)}
                               style={{
                                 minWidth: '140px',
-                                width: ruleTrigger.disableFieldSelection === true ? '100%' : '140px',
+                                width: ruleTrigger?.disableFieldSelection === true ? '100%' : '140px',
                                 display: 'inline-block',
                               }}
                               selectProps={{
@@ -441,7 +439,7 @@ export const NeoCustomReportActionsModal = ({
 
                         <td style={{ width: '6%' }} className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
-                            {!ruleTrigger.multiple ? 'SET' : 'APPEND'}
+                            {!ruleTrigger?.multiple ? 'SET' : 'APPEND'}
                           </span>
                         </td>
 
@@ -473,7 +471,7 @@ export const NeoCustomReportActionsModal = ({
 
                         <td width='5%' className='n-text-center'>
                           <span style={{ fontWeight: 'bold', color: 'black', marginLeft: 5, marginRight: 5 }}>
-                            {!ruleTrigger.multiple ? 'TO' : 'WITH'}
+                            {!ruleTrigger?.multiple ? 'TO' : 'WITH'}
                           </span>
                         </td>
 

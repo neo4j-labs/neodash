@@ -81,7 +81,11 @@ const FreeTextParameterSelectComponent = (props: ParameterSelectProps) => {
         }}
       />
       {manualParameterSave ? <SelectionConfirmationButton onClick={() => manualHandleParametersUpdate()} /> : <></>}
-      {running ? <CircularProgress size={18} style={{ position: 'absolute', right: '20px' }} /> : <></>}
+      {running && !manualParameterSave ? (
+        <CircularProgress size={18} style={{ position: 'absolute', right: '20px' }} />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

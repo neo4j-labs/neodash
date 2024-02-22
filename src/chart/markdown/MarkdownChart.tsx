@@ -19,7 +19,10 @@ const NeoMarkdownChart = (props: ChartProps) => {
   const modifiedMarkdown = replaceGlobalParameters ? replaceDashboardParameters(markdown, parameters) : markdown;
   // TODO: we should check if the gfm plugin has an impact on the standard security provided by ReactMarkdown
   return (
-    <div style={{ marginTop: '0px', marginLeft: '15px', marginRight: '15px', marginBottom: '0px' }}>
+    <div
+      className='markdown-widget'
+      style={{ marginTop: '0px', marginLeft: '15px', marginRight: '15px', marginBottom: '0px' }}
+    >
       <base target='_blank' /> <ReactMarkdown remarkPLugins={[gfm]} children={modifiedMarkdown} />
     </div>
   );
