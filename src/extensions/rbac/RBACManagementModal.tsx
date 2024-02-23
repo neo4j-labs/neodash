@@ -133,7 +133,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       1000,
       () => {},
       () => {
-        createNotification('Success', `Access for role ${  currentRole  } was successfully updated.`);
+        createNotification('Success', `Access for role ${currentRole} was successfully updated.`);
       }
     );
 
@@ -144,7 +144,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       `DENY MATCH {*} ON GRAPH ${selectedDatabase} NODES ${denyList.join(',')} TO ${currentRole}`
     );
 
-    // runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
+    // query to remove all users:
+    // query to add new users: runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
 
     handleClose();
   };
