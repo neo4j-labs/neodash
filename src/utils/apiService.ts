@@ -28,8 +28,8 @@ class ApiService {
         return this.axiosInstance.get(url, { params });
     }
 
-    public post<T>(url: string, data?: object): Promise<AxiosResponse<T>> {
-        return this.axiosInstance.post(url, data);
+    public post<T>(url: string, data?: object, options?: object): Promise<AxiosResponse<T>> {
+        return this.axiosInstance.post(url, data, options);
     }
 
     public put<T>(url: string, data?: object): Promise<AxiosResponse<T>> {
