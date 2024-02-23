@@ -3,7 +3,11 @@ This extension is only visible to users with the role of "Administrator" or "Sup
 
 
 == How it works ==
-If you have logged in to Neodash as an admin user, you will be able to see the extension in the "Extensions" menu. Clicking on this extension will give the user an new button next to settings button in the main dashboard page. If the user click on this button, a menu will appear with all the roles in the database. The user can then click on any role and a modal will appear with the selected roles context. Inside the modal, the next step would be to select a database from a dropdown as this will be the database you will be updating the what label will be granted for the role and what labels willl be denied for the role. After the database has been selected, 3 new dropdowns will appear:
+If you have logged in to Neodash as an admin user, you will be able to see the extension in the "Extensions" menu. Clicking on this extension will give the user an new button next to settings button in the main dashboard page. If the user click on this button, a menu will appear with all the roles in the database. 
+
+image::../images/rolesmenu.png[Role menu]
+
+The user can then click on any role and a modal will appear with the selected roles context. Inside the modal, the next step would be to select a database from a dropdown as this will be the database you will be updating the what label will be granted for the role and what labels willl be denied for the role. After the database has been selected, 3 new dropdowns will appear:
 
 * Allow list - This is a list of labels that the role will be granted. You can select multiple labels from the list or if you want every label to be granted, you can select "*" from the list.
 
@@ -13,5 +17,7 @@ If you have logged in to Neodash as an admin user, you will be able to see the e
 
 
 Finally when the admin user clicks on the "Save" button, the role will be updated in the database and the labels will be granted or denied to the users that were selected for the specific role and database.
+
+image::../images/rolelabelmodal.png[Role modal]
 
 
