@@ -121,7 +121,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
         ._fields[realValueRowIndex];
 
-      newValue = newValue.low ? toNumber(newValue) : RenderSubValue(newValue);
+      newValue =
+        (newValue.low && newValue.low != null) || newValue.low === 0 ? toNumber(newValue) : RenderSubValue(newValue);
     } else {
       let ele = valDisplayReference.filter((x) => !newDisplay.includes(x))[0];
       newValue = [...valReference];
@@ -129,7 +130,6 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     }
 
     newDisplay = newDisplay.low ? toNumber(newDisplay) : RenderSubValue(newDisplay);
-
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
