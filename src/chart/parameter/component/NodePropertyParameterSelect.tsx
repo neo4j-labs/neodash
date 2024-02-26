@@ -103,13 +103,15 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
     if (isMulti && inputValue !== null && newDisplay !== null && inputValue.length < newDisplay.length) {
-      newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
+      newValue = Array.isArray(valReference)
+        ? [...valReference]
+        : valReference && valReference !== null
+        ? [valReference]
+        : [];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
-
       let val = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]._fields[
         realValueRowIndex
       ];
-
       if (newValue.low) {
         newValue.push(toNumber(val));
       } else {
@@ -130,7 +132,6 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
-
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
 
@@ -164,7 +165,6 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       />
     );
   }
-
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
@@ -179,7 +179,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
           marginLeft: '15px',
           marginTop: '5px',
         }}
-        inputValue={inputDisplayText || ''}
+        inputValue={inputDisplayText.toString() || ''}
         onInputChange={(event, value) => {
           setInputDisplayText(value);
           debouncedQueryCallback(props.query, { input: `${value}`, ...allParameters }, setExtraRecords);
