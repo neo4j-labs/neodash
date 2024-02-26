@@ -53,7 +53,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       'system',
       `SHOW PRIVILEGES
       YIELD graph, role, access, action, segment
-      WHERE (graph = $database OR graph = '*' OR graph = (CASE WHEN $database = 'neo4j' THEN '' ELSE '*****' END ))
+      WHERE (graph = $database OR graph = '*' OR graph = (CASE WHEN $database = 'neo4j' THEN '' ELSE null END ))
       AND role = $rolename
       AND action = 'match' 
       AND segment STARTS WITH 'NODE('
@@ -74,6 +74,10 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
         const possibleLabels = [...new Set(newLabels.concat(grantedLabels).concat(deniedLabels))];
         // Add '*' as an extra option.
         setLabels(['*'].concat(possibleLabels));
+        setLoaded(true);
+      },
+      () => {
+        // This is a new error callback. If the query fails, we still set loaded to true to show the rest of the modal.
         setLoaded(true);
       }
     );
@@ -118,6 +122,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
 
     // Remove old DENY list (all labels to catch all old denies)
     // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
+
     console.log(
       `REVOKE DENY MATCH {*} ON GRAPH ${selectedDatabase} NODES ${labels
         .filter((l) => l !== '*')

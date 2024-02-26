@@ -30,7 +30,7 @@ const RBACManagementLabelButton = ({ createNotification }) => {
 
   return (
     <div style={{ display: 'inline' }}>
-      {button} only show in reader mode
+      {button}
       <RBACManagementMenu
         anchorEl={anchorEl}
         MenuOpen={MenuOpen}
