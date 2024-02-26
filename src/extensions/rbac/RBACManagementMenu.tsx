@@ -26,9 +26,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNoti
       query,
       {},
       1000,
-      (error) => {
-        console.error(error);
-      },
+      () => {},
       (records) => {
         if (records[0].error) {
           createNotification('Unable to retrieve roles', records[0].error);
@@ -78,6 +76,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNoti
           setIsModalOpen(false);
         }}
         currentRole={selectedRole}
+        createNotification={createNotification}
       />
     </>
   );
