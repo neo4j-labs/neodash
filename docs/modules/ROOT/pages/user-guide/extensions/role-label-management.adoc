@@ -20,4 +20,4 @@ Finally when the admin user clicks on the "Save" button, the role will be update
 
 image::../images/rolelabelmodal.png[Role modal]
 
-
+> Universal (Cross-database) `GRANT` and `DENY` privileges are not supported by this extension. Privileges must be added on a database-specific level.

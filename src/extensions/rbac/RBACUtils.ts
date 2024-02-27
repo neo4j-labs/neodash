@@ -15,45 +15,72 @@ export enum Operation {
  * @param newLabels list of new labels in the database, for which priveleges are changed.
  * @param operation The operation, either 'GRANT' or 'DENY'
  */
-export const updatePrivileges = (driver, database, role, allLabels, newLabels, operation: Operation) => {
+export const updatePrivileges = (
+  driver,
+  database,
+  role,
+  allLabels,
+  newLabels,
+  operation: Operation,
+  createNotification
+) => {
   // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
-
+  // TODO - there
   // 1. Special case for '*'. Create it if needed to be there, otherwise revoke it.
-  setTimeout(() => {
-    runCypherQuery(driver, 'system', buildAccessQuery(database, role, ['*'], operation, !newLabels.includes('*')));
-  }, 0);
-
-  // 2. Build the query that revokes all possible priveleges, returning to a 'blank slate'
-  setTimeout(() => {
-    runCypherQuery(
-      driver,
-      'system',
-      buildAccessQuery(
-        database,
-        role,
-        allLabels.filter((l) => l !== '*'),
-        operation,
-        true
-      )
-    );
-  }, 250);
-
-  // 3. Create the new privileges as specified in the `newLabels` list by the user.
-  setTimeout(() => {
-    if (newLabels.filter((l) => l !== '*').length > 0) {
-      runCypherQuery(
-        driver,
-        'system',
-        buildAccessQuery(
-          database,
-          role,
-          newLabels.filter((l) => l !== '*'),
-          operation,
-          false
-        )
-      );
+  runCypherQuery(
+    driver,
+    'system',
+    buildAccessQuery(database, role, ['*'], operation, !newLabels.includes('*')),
+    {},
+    1000,
+    (status) => {
+      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+        // 2. Build the query that revokes all possible priveleges, returning to a 'blank slate'
+        runCypherQuery(
+          driver,
+          'system',
+          buildAccessQuery(
+            database,
+            role,
+            allLabels.filter((l) => l !== '*'),
+            operation,
+            true
+          ),
+          {},
+          1000,
+          (status) => {
+            if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+              //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
+              // We build in an artificial delay...
+              const timeout = setTimeout(() => {
+                // 3. Create the new privileges as specified in the `newLabels` list by the user.
+                if (newLabels.filter((l) => l !== '*').length > 0) {
+                  runCypherQuery(
+                    driver,
+                    'system',
+                    buildAccessQuery(
+                      database,
+                      role,
+                      newLabels.filter((l) => l !== '*'),
+                      operation,
+                      false
+                    ),
+                    {},
+                    1000,
+                    () => {
+                      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+                        createNotification('Success', `Access for role '${role}' updated.`);
+                      }
+                    }
+                  );
+                }
+              }, 1000);
+            }
+          }
+        );
+      }
     }
-  }, 500);
+  );
 };
 
 /**
@@ -71,6 +98,8 @@ function buildAccessQuery(database, role, labels, operation: Operation, revoke: 
             MATCH {*} ON GRAPH ${database} 
             NODES ${labels.join(',')} 
             ${revoke ? 'FROM' : 'TO'} ${role}`;
+
+  console.log(query);
   return query;
 }
 
@@ -107,7 +136,12 @@ export const retrieveAllowAndDenyLists = (
       RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes`,
     { rolename: currentRole, database: database },
     1000,
-    () => {},
+    (status) => {
+      if (status == QueryStatus.NO_DATA) {
+        setLabels(['*'].concat(allLabels));
+        setLoaded(true);
+      }
+    },
     (records) => {
       // Extract granted and denied label list from the result of the SHOW PRIVILEGES query
       const grants = records.filter((r) => r._fields[0] == 'GRANTED');
@@ -122,10 +156,6 @@ export const retrieveAllowAndDenyLists = (
       // Add '*' as an extra option.
       setLabels(['*'].concat(possibleLabels));
       setLoaded(true);
-    },
-    () => {
-      // This is a new error callback. If the query fails, we still set loaded to true to show the rest of the modal.
-      // setLoaded(true);
     }
   );
 };
@@ -198,16 +228,25 @@ export function retrieveDatabaseList(driver, setDatabases: React.Dispatch<React.
  * @param allUsers list of all users.
  * @param selectedUsers list of users to have the role after the operation completes.
  */
-export const updateUsers = (driver, currentRole, allUsers, selectedUsers) => {
+export const updateUsers = async (driver, currentRole, allUsers, selectedUsers) => {
   // 1. Build the query that removes all users from the role.
-  setTimeout(() => {
-    runCypherQuery(driver, 'system', `REVOKE ROLE ${currentRole} FROM ${allUsers.join(',')}`);
-  }, 0);
-
-  // 2. Re-assign only selected users to the role.
-  if (selectedUsers.length > 0) {
-    setTimeout(() => {
-      runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
-    }, 250);
-  }
+  await runCypherQuery(
+    driver,
+    'system',
+    `REVOKE ROLE ${currentRole} FROM ${allUsers.join(',')}`,
+    {},
+    1000,
+    (status) => {
+      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+        //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
+        // We build in an artificial delay...
+        const timeout = setTimeout(() => {
+          // 2. Re-assign only selected users to the role.
+          if (selectedUsers.length > 0) {
+            runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
+          }
+        }, 1000);
+      }
+    }
+  );
 };
