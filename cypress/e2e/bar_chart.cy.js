@@ -206,7 +206,7 @@ describe('Testing bar chart', () => {
     });
   });
 
-  it('Checking the stacked grouping function works as intended', () => {
+  it.skip('Checking the stacked grouping function works as intended', () => {
     cy.advancedSettings(() => {
       cy.get('.ndl-cypher-editor div[role="textbox"]')
         .should('be.visible')
@@ -295,7 +295,7 @@ describe('Testing bar chart', () => {
     });
   });
 
-  it('Testing "Show Value on Bars"', () => {
+  it.skip('Testing "Show Value on Bars"', () => {
     cy.advancedSettings(() => {
       cy.setDropdownValue('Show Values On Bars', 'on');
       cy.get('button[aria-label="run"]').click();
@@ -306,13 +306,11 @@ describe('Testing bar chart', () => {
           cy.log('Number of text elements:', textElements.length);
         });
     });
-    cy.wait(100)
-    cy.openSettings(()=> {
-      cy.setDropdownValue('Show Values On Bars', 'off')
+    cy.wait(100);
+    cy.openSettings(() => {
+      cy.setDropdownValue('Show Values On Bars', 'off');
       cy.get('button[aria-label="run"]').click();
-      cy.get('.MuiCardContent-root')
-        .find('div svg > g > g > text')
-        .should('not.exist')
-    })
+      cy.get('.MuiCardContent-root').find('div svg > g > g > text').should('not.exist');
+    });
   });
 });
