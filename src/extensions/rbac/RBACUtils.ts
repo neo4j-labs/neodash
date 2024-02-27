@@ -133,17 +133,21 @@ export const retrieveAllowAndDenyLists = (
 /**
  * Retrieve the set of all users from the database.
  * @param driver Neo4j driver object with active session.
- * @param setNeo4jUsers callback to update the list of users.
+ * @param  currentRole selected role.
+ * @param setNeo4jUsers callback to update the list of all users.
+ * @param setRoleUsers callback to update the list of role-specific users.
  */
-export const retrieveNeo4jUsers = (driver, setNeo4jUsers) => {
+export const retrieveNeo4jUsers = (driver, currentRole, setNeo4jUsers, setRoleUsers) => {
   runCypherQuery(
     driver,
     'system',
-    'SHOW users yield user return distinct user',
+    'SHOW users yield user, roles return user, roles',
     {},
     1000,
     () => {},
     (records) => {
+      const roleRecords = records.filter((r) => r._fields[1].includes(currentRole));
+      setRoleUsers(roleRecords.map((record) => record._fields[0]));
       setNeo4jUsers(records.map((record) => record._fields[0]));
     }
   );
@@ -191,11 +195,19 @@ export function retrieveDatabaseList(driver, setDatabases: React.Dispatch<React.
  * This is a two step operation: clear the users assigned to the role currently, and recreate them with a new list.
  * @param driver Neo4j driver with active session.
  * @param currentRole selected role
+ * @param allUsers list of all users.
  * @param selectedUsers list of users to have the role after the operation completes.
  */
-export const updateUsers = (driver, currentRole, selectedUsers) => {
-  // query to add new users: runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
-  // query to remove all users:
-  console.log(driver, currentRole, selectedUsers);
-  alert('NOT IMPLEMENTED');
+export const updateUsers = (driver, currentRole, allUsers, selectedUsers) => {
+  // 1. Build the query that removes all users from the role.
+  setTimeout(() => {
+    runCypherQuery(driver, 'system', `REVOKE ROLE ${currentRole} FROM ${allUsers.join(',')}`);
+  }, 0);
+
+  // 2. Re-assign only selected users to the role.
+  if (selectedUsers.length > 0) {
+    setTimeout(() => {
+      runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
+    }, 250);
+  }
 };
