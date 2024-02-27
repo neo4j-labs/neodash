@@ -7,7 +7,7 @@ import {
   retrieveDatabaseList,
   retrieveLabelsList,
   retrieveNeo4jUsers,
-  updatePriveleges,
+  updatePrivileges,
   updateUsers,
 } from './RBACUtils';
 /**
@@ -60,8 +60,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
 
   const handleSave = () => {
     if (selectedDatabase) {
-      updatePriveleges(driver, selectedDatabase, currentRole, labels, denyList, Operation.DENY);
-      updatePriveleges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT);
+      updatePrivileges(driver, selectedDatabase, currentRole, labels, denyList, Operation.DENY);
+      updatePrivileges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT);
     }
     updateUsers(driver, currentRole, neo4jUsers, selectedUsers);
     createNotification('Success', `Access for role '${currentRole}' updated.`);
