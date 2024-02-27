@@ -296,10 +296,10 @@ export const NeoTableChart = (props: ChartProps) => {
     <Stack direction='row' spacing={2} justifyContent='flex-end' marginRight={2}>
       <ButtonGroup color='primary' variant='outlined' aria-label='button group'>
         <Button size='small' onClick={handleApiCall} disabled={isApiLoading}>
-          {isApiLoading ? 'Loading...' : 'Send'}
+          {isApiLoading ? 'Loading...' : props.settings?.sendRequestButtonName || 'send'}
         </Button>
         <Button size='small' onClick={handlePopHoverClick} disabled={!props.settings.apiSpec.response}>
-          View Response
+          {isApiLoading ? 'Loading...' : props.settings?.viewResponseButtonName || 'view response'}
         </Button>
         {props.settings.apiSpec.response ? (
           <Popover
@@ -408,6 +408,7 @@ export const NeoTableChart = (props: ChartProps) => {
           autoPageSize
           pagination
           disableSelectionOnClick
+          hideFooterSelectedRowCount
           components={{
             ColumnSortedDescendingIcon: () => <></>,
             ColumnSortedAscendingIcon: () => <></>,
