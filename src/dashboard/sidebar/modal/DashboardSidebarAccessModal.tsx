@@ -152,7 +152,7 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
         <br />
         For more information, please refer to the{' '}
         <a
-          href='https://neo4j.com/labs/neodash/2.4/user-guide/access-control/'
+          href='https://neo4j.com/labs/neodash/2.4/user-guide/access-control-management/'
           target='_blank'
           rel='noopener noreferrer'
           style={{ color: 'blue', textDecoration: 'underline' }}

@@ -83,13 +83,14 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Forms let you craft Cypher queries with multiple inputs, that are fired on demand. Using parameters from the dashboard, or form specific input, you will be able to trigger custom logic with forms.',
     link: 'https://neo4j.com/professional-services/',
   },
-  'role-label-management': {
-    name: 'role-label-management',
-    label: 'Access Control',
+  'access-control-management': {
+    name: 'access-control-management',
+    label: 'Access Control Management',
     author: 'Neo4j Professional Services',
     image: 'form.png',
     enabled: true,
-    description: 'This extension lets you manage role access to dashboard labels.',
+    description:
+      'This extension lets you manage access control for roles and users, letting you assign, users to roles as well as controlling which node labels can be read by a user.',
     link: 'https://neo4j.com/professional-services/',
     settingsMenuButton: RBACManagementLabelButton,
   },

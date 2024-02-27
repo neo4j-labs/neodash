@@ -98,8 +98,6 @@ function buildAccessQuery(database, role, labels, operation: Operation, revoke: 
             MATCH {*} ON GRAPH ${database} 
             NODES ${labels.join(',')} 
             ${revoke ? 'FROM' : 'TO'} ${role}`;
-
-  console.log(query);
   return query;
 }
 
