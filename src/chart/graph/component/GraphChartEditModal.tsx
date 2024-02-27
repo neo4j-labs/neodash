@@ -203,7 +203,6 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
               </tr>
             </tbody>
           </table>
-          <hr />
           <Button
             key={'btnEditProp'}
             style={{ marginBottom: '10px' }}

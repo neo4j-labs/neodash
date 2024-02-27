@@ -21,7 +21,7 @@ const NeoBarChart = (props: ChartProps) => {
   const customDimensions = settings.customDimensions ? settings.customDimensions : false;
   const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
   const marginTop = settings.marginTop ? settings.marginTop : 24;
-  const marginBottom = settings.marginBottom ? settings.marginBottom : 60;
+  const marginBottom = settings.marginBottom ? settings.marginBottom : 30;
   const legend = settings.legend ? settings.legend : false;
   const labelRotation = settings.labelRotation != undefined ? settings.labelRotation : 45;
   const barWidth = settings.barWidth ? settings.barWidth : 10;
@@ -272,7 +272,7 @@ const NeoBarChart = (props: ChartProps) => {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
 
-  const extraProperties = positionLabel ? { barComponent: BarComponent } : {};
+  const extraProperties = positionLabel !== 'off' ? { barComponent: BarComponent } : {};
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 

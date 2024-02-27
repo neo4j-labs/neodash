@@ -312,26 +312,42 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const skipConfirmation = urlParams.get('skipConfirmation') == 'Yes';
 
       const dashboardDatabase = urlParams.get('dashboardDatabase');
+      dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
       if (urlParams.get('credentials')) {
+        setWelcomeScreenOpen(false);
         const connection = decodeURIComponent(urlParams.get('credentials'));
         const protocol = connection.split('://')[0];
         const username = connection.split('://')[1].split(':')[0];
         const password = connection.split('://')[1].split(':')[1].split('@')[0];
-
         const database = connection.split('@')[1].split(':')[0];
         const url = connection.split('@')[1].split(':')[1];
         const port = connection.split('@')[1].split(':')[2];
-        if (url == password) {
-          // Special case where a connect link is generated without a password.
-          // Here, the format is parsed incorrectly and we open the connection window instead.
-
-          dispatch(resetShareDetails());
-          dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
-          dispatch(setWelcomeScreenOpen(false));
-          dispatch(setConnectionModalOpen(true));
-          // window.history.pushState({}, document.title, "/");
-          return;
-        }
+        // if (url == password) {
+        //   // Special case where a connect link is generated without a password.
+        //   // Here, the format is parsed incorrectly and we open the connection window instead.
+        //   dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
+        //   dispatch(
+        //     setShareDetailsFromUrl(
+        //       type,
+        //       id,
+        //       standalone,
+        //       protocol,
+        //       url,
+        //       port,
+        //       database,
+        //       username.split('@')[0],
+        //       '',
+        //       dashboardDatabase,
+        //       true
+        //     )
+        //   );
+        //   setDashboardToLoadAfterConnecting(id);
+        //   window.history.pushState({}, document.title, window.location.pathname);
+        //   dispatch(setConnectionModalOpen(true));
+        //   dispatch(setWelcomeScreenOpen(false));
+        //   // window.history.pushState({}, document.title, "/");
+        //   return;
+        // }
 
         dispatch(setConnectionModalOpen(false));
         dispatch(
@@ -501,6 +517,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standaloneDashboardURL,
         config.standaloneUsername,
         config.standalonePassword,
+        config.standalonePasswordWarningHidden,
         config.standaloneAllowLoad,
         config.standaloneLoadFromOtherDatabases,
         config.standaloneMultiDatabase,
@@ -661,7 +678,6 @@ export const initializeApplicationAsStandaloneThunk =
   (config, paramsToSetAfterConnecting) => (dispatch: any, getState: any) => {
     const clearNotificationAfterLoad = true;
     const state = getState();
-
     // If we are running in standalone mode, auto-set the connection details that are configured.
     dispatch(
       setConnectionProperties(
@@ -704,4 +720,5 @@ export const initializeApplicationAsStandaloneThunk =
     } else {
       dispatch(setConnectionModalOpen(true));
     }
+    dispatch(handleSharedDashboardsThunk());
   };

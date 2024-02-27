@@ -404,7 +404,7 @@ export const loadDashboardFromNeo4jByNameThunk =
           if (records.length == 0) {
             dispatch(
               createNotificationThunk(
-                'Unable to load dashboard.',
+                `Unable to load dashboard "${name}".`,
                 'A dashboard with the provided name could not be found.'
               )
             );
@@ -429,7 +429,7 @@ export const loadDashboardFromNeo4jByNameThunk =
           }
 
           if (records[0].error) {
-            dispatch(createNotificationThunk('Unable to load dashboard.', records[0].error));
+            dispatch(createNotificationThunk(`Unable to load dashboard "${name}".`, records[0].error));
             if (loggingSettings.loggingMode > '1') {
               dispatch(
                 createLogThunk(

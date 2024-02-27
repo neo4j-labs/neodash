@@ -39,7 +39,6 @@ const Dashboard = ({
     // @ts-ignore wrong driver version
     setDriver(newDriver);
   }
-
   const content = (
     <Neo4jProvider driver={driver}>
       <NeoDashboardConnectionUpdateHandler
@@ -84,7 +83,8 @@ const Dashboard = ({
                   {/* The main content of the page */}
 
                   <div>
-                    {standaloneSettings.standalonePassword ? (
+                    {standaloneSettings.standalonePassword &&
+                    standaloneSettings.standalonePasswordWarningHidden !== true ? (
                       <div style={{ textAlign: 'center', color: 'red', paddingTop: 60, marginBottom: -50 }}>
                         Warning: NeoDash is running with a plaintext password in config.json.
                       </div>
