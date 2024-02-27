@@ -55,7 +55,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
 
   const handleDatabaseSelect = (selectedOption) => {
     setSelectedDatabase(selectedOption.value);
-    retrieveLabelsList(driver, selectedOption, (records) => parseLabelsList(selectedOption.value, records));
+    retrieveLabelsList(driver, selectedOption.value, (records) => parseLabelsList(selectedOption.value, records));
   };
 
   const handleSave = () => {
@@ -105,7 +105,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
         <div>
           <br />
           <h5>Label Access</h5>
-          <p>For a given database, control what labels the role is / is not allowed to see.</p>
+          <p>For a given database, control what labels the role is or is not allowed to see.</p>
           <Dropdown
             type='select'
             label='Database'

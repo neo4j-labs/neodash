@@ -127,7 +127,7 @@ export const retrieveAllowAndDenyLists = (
     'system',
     `SHOW PRIVILEGES
       YIELD graph, role, access, action, segment
-      WHERE (graph = $database OR graph = '*' OR graph = (CASE WHEN $database = 'neo4j' THEN '' ELSE null END ))
+      WHERE (graph = $database OR graph = '*')
       AND role = $rolename
       AND action = 'match' 
       AND segment STARTS WITH 'NODE('
