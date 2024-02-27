@@ -7,15 +7,15 @@ export enum Operation {
 
 /**
  * Sets the privileges for a role to a new list provided by the user.
- * This involves wiping old priveleges, including a special case for '*' privileges.
+ * This involves wiping old privileges, including a special case for '*' privileges.
  * @param driver the Neo4j driver.
- * @param database a database name for which privileges must be changed.
+ * @param database a database name for which Privileges must be changed.
  * @param role role for which privileges are updated.
  * @param allLabels list of all labels in the given database.
  * @param newLabels list of new labels in the database, for which priveleges are changed.
  * @param operation The operation, either 'GRANT' or 'DENY'
  */
-export const updatePriveleges = (driver, database, role, allLabels, newLabels, operation: Operation) => {
+export const updatePrivileges = (driver, database, role, allLabels, newLabels, operation: Operation) => {
   // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
 
   // 1. Special case for '*'. Create it if needed to be there, otherwise revoke it.

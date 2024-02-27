@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { IconButton, Button, Dialog, TextInput, Dropdown } from '@neo4j-ndl/react';
-import { Menu, MenuItem, Chip } from '@mui/material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { PlusCircleIconOutline } from '@neo4j-ndl/react/icons';
 import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
 import { createNotificationThunk } from '../../page/PageThunks';
 import { useDispatch } from 'react-redux';
-import { DndContext } from '@dnd-kit/core';
 import { set } from 'yaml/dist/schema/yaml-1.1/set';
 import {
   Operation,
@@ -14,7 +11,7 @@ import {
   retrieveDatabaseList,
   retrieveLabelsList,
   retrieveNeo4jUsers,
-  updatePriveleges,
+  updatePrivileges,
   updateUsers,
 } from './RBACUtils';
 /**
@@ -66,8 +63,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   };
 
   const handleSave = () => {
-    updatePriveleges(driver, selectedDatabase, currentRole, labels, denyList, Operation.DENY);
-    updatePriveleges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT);
+    updatePrivileges(driver, selectedDatabase, currentRole, labels, denyList, Operation.DENY);
+    updatePrivileges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT);
     updateUsers(driver, currentRole, selectedUsers);
     createNotification('Success', `Access for role ${currentRole} was successfully updated.`);
     handleClose();
