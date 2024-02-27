@@ -87,10 +87,10 @@ export const EXTENSIONS: Record<string, Extension> = {
     name: 'access-control-management',
     label: 'Access Control Management',
     author: 'Neo4j Professional Services',
-    image: 'form.png',
+    image: 'accesscontrol2.png',
     enabled: true,
     description:
-      'This extension lets you manage access control for roles and users, letting you assign, users to roles as well as controlling which node labels can be read by a user.',
+      'This extension lets you manage access control for roles and users, letting you assign users to roles as well as controlling which node labels can be read by a user.',
     link: 'https://neo4j.com/professional-services/',
     settingsMenuButton: RBACManagementLabelButton,
   },
