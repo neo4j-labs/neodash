@@ -557,7 +557,7 @@ export function patchDashboardVersion(dashboard: any, version: any) {
     dashboard.pages.forEach((p) => {
       p.reports.forEach((r) => {
         if (r.type == 'graph' || r.type == 'map' || r.type == 'graph3d') {
-          r.settings?.actionsRules.forEach((rule) => {
+          r.settings?.actionsRules?.forEach((rule) => {
             if (
               rule?.field &&
               (rule?.condition === 'onNodeClick' || rule?.condition == 'Click') &&
@@ -585,7 +585,7 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
         r.height *= 2;
 
         if (r.type == 'graph' || r.type == 'map' || r.type == 'graph3d') {
-          r.settings?.actionsRules.forEach((rule) => {
+          r.settings?.actionsRules?.forEach((rule) => {
             if (
               rule?.field &&
               (rule?.condition === 'onNodeClick' || rule?.condition == 'Click') &&
