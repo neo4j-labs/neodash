@@ -19,9 +19,9 @@ Bug fixes and testing:
 
 Thanks to all the contributors for this release: 
 - [OskarDamkjaer](https://github.com/OskarDamkjaer)
-- [josepmonclus](https://github.com/josepmonclus)
 - [alfredorubin96](https://github.com/alfredorubin96),
 - [AleSim94](https://github.com/AleSim94),
 - [BennuFire](https://github.com/BennuFire),
 - [jacobbleakley-neo4j](https://github.com/jacobbleakley-neo4j),
+- [josepmonclus](https://github.com/josepmonclus)
 - [nielsdejong](https://github.com/nielsdejong)
