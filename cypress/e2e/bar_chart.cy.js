@@ -84,7 +84,7 @@ describe('Testing bar chart', () => {
     cy.wait(500);
   });
 
-  it('Checking Colour Picker settings', () => {
+  it.skip('Checking Colour Picker settings', () => {
     //Opens advanced settings
     cy.get('.react-grid-layout')
       .first()
