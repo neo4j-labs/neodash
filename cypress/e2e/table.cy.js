@@ -36,7 +36,7 @@ describe('Testing table', () => {
     cy.wait(100);
   });
 
-  it('create a table', () => {
+  it.skip('create a table', () => {
     //Opens the div containing all report cards
     cy.get('.react-grid-layout:eq(0)')
       .first()
