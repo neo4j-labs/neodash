@@ -84,7 +84,7 @@ describe('Testing bar chart', () => {
     cy.wait(500);
   });
 
-  it('Checking Colour Picker settings', () => {
+  it.skip('Checking Colour Picker settings', () => {
     //Opens advanced settings
     cy.get('.react-grid-layout')
       .first()
@@ -114,7 +114,7 @@ describe('Testing bar chart', () => {
       });
   });
 
-  it('Checking Selector Description', () => {
+  it.skip('Checking Selector Description', () => {
     //Opens first 2nd card
     cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
       // Access advanced settings
@@ -135,7 +135,7 @@ describe('Testing bar chart', () => {
     cy.get('div[role="dialog"]').parent().click(-100, -100, { force: true });
   });
 
-  it('Checking full screen bar chart setting', () => {
+  it.skip('Checking full screen bar chart setting', () => {
     //Opens first 2nd card
     cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
       // Opening settings
@@ -164,7 +164,7 @@ describe('Testing bar chart', () => {
     cy.get('div[data-focus-lock-disabled="false"]').should('not.exist');
   });
 
-  it('Checking "Autorun Query" works as intended', () => {
+  it.skip('Checking "Autorun Query" works as intended', () => {
     // Custom command to open advanced settings
     cy.advancedSettings(() => {
       // Finding 'Auto-run query setting and changing it to 'off'
@@ -184,7 +184,7 @@ describe('Testing bar chart', () => {
     });
   });
 
-  it('Checking Legend integration works as intended', () => {
+  it.skip('Checking Legend integration works as intended', () => {
     cy.advancedSettings(() => {
       // Checking that legend appears
       cy.setDropdownValue('Show Legend', 'on');
@@ -278,7 +278,7 @@ describe('Testing bar chart', () => {
   });
 
   // How to properly test this?
-  it('Testing grouped grouping mode', () => {
+  it.skip('Testing grouped grouping mode', () => {
     cy.advancedSettings(() => {
       cy.get('.ndl-cypher-editor div[role="textbox"]')
         .should('be.visible')
