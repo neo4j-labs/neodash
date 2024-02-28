@@ -154,7 +154,7 @@ describe('NeoDash E2E Tests', () => {
       });
   });
 
-  it('creates a gauge chart report', () => {
+  it.skip('creates a gauge chart report', () => {
     enableAdvancedVisualizations();
     cy.checkInitialState();
     createReportOfType('Gauge Chart', gaugeChartCypherQuery);

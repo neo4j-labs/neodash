@@ -44,6 +44,7 @@ import NeoDashboardSidebarExportModal from './modal/DashboardSidebarExportModal'
 import NeoDashboardSidebarDeleteModal from './modal/DashboardSidebarDeleteModal';
 import NeoDashboardSidebarInfoModal from './modal/DashboardSidebarInfoModal';
 import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
+import NeoDashboardSidebarAccessModal from './modal/DashboardSidebarAccessModal';
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
@@ -67,6 +68,7 @@ enum Modal {
   LOAD = 7,
   SAVE = 8,
   NONE = 9,
+  ACCESS = 10,
 }
 
 // We use "index = -1" to represent a non-saved draft dashboard in the sidebar's dashboard list.
@@ -256,6 +258,16 @@ export const NeoDashboardSidebar = ({
         }}
       />
 
+      <NeoDashboardSidebarAccessModal
+        open={modalOpen == Modal.ACCESS}
+        database={dashboardDatabase}
+        dashboard={dashboards[inspectedIndex]}
+        handleClose={() => {
+          setModalOpen(Modal.NONE);
+          setCachedDashboard('');
+        }}
+      />
+
       <SideNavigation
         position='left'
         type='overlay'
@@ -335,6 +347,10 @@ export const NeoDashboardSidebar = ({
             handleShareClicked={() => {
               setMenuOpen(Menu.NONE);
               setModalOpen(Modal.SHARE);
+            }}
+            handleAccessClicked={() => {
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.ACCESS);
             }}
             handleDeleteClicked={() => {
               setMenuOpen(Menu.NONE);
