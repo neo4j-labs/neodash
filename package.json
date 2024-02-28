@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -72,6 +72,7 @@
     "mui-color": "^2.0.0-beta.2",
     "mui-nested-menu": "^3.2.1",
     "neo4j-client-sso": "^1.2.2",
+    "neo4j-driver": "^5.12.0",
     "openai": "^3.3.0",
     "postcss": "^8.4.21",
     "postcss-loader": "^7.2.4",

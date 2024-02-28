@@ -80,6 +80,17 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
       dashboard = dashboard.dashboard;
     }
 
+    let patched;
+    [dashboard, patched] = patchDashboardVersion(dashboard, dashboard.version);
+    if (patched) {
+      dispatch(
+        createNotificationThunk(
+          'Successfully patched dashboard',
+          `Your old dashboard has been patched. You might need to refresh this page and reactivate extensions.`
+        )
+      );
+    }
+
     // Attempt upgrade if dashboard version is outdated.
     while (VERSION_TO_MIGRATE[dashboard.version]) {
       const upgradedDashboard = upgradeDashboardVersion(
@@ -540,6 +551,29 @@ export const assignDashboardUuidIfNotPresentThunk = () => (dispatch: any, getSta
     dispatch(setDashboardUuid(createUUID()));
   }
 };
+export function patchDashboardVersion(dashboard: any, version: any) {
+  let patched = false;
+  if (version == '2.4') {
+    dashboard.pages.forEach((p) => {
+      p.reports.forEach((r) => {
+        if (r.type == 'graph' || r.type == 'map' || r.type == 'graph3d') {
+          r.settings?.actionsRules?.forEach((rule) => {
+            if (
+              rule?.field &&
+              (rule?.condition === 'onNodeClick' || rule?.condition == 'Click') &&
+              rule.value.includes('.')
+            ) {
+              let val = rule.value.split('.');
+              rule.value = val[val.length - 1] || rule.value;
+              patched = true;
+            }
+          });
+        }
+      });
+    });
+  }
+  return [dashboard, patched];
+}
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
   if (origin == '2.3' && target == '2.4') {
@@ -549,6 +583,19 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
         r.y *= 2;
         r.width *= 2;
         r.height *= 2;
+
+        if (r.type == 'graph' || r.type == 'map' || r.type == 'graph3d') {
+          r.settings?.actionsRules?.forEach((rule) => {
+            if (
+              rule?.field &&
+              (rule?.condition === 'onNodeClick' || rule?.condition == 'Click') &&
+              rule.value.includes('.')
+            ) {
+              let val = rule.value.split('.');
+              rule.value = val[val.length - 1] || rule.value;
+            }
+          });
+        }
       });
     });
     dashboard.version = '2.4';
