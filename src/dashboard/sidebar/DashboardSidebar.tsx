@@ -512,7 +512,7 @@ export const NeoDashboardSidebar = ({
                   saved={!(draft && selectedDashboardIndex == d.index)}
                   readonly={readonly}
                   onSelect={() => {
-                    if (draft) {
+                    if (draft && d.index !== selectedDashboardIndex) {
                       setInspectedIndex(d.index);
                       setModalOpen(Modal.LOAD);
                     } else {

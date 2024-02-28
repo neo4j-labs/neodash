@@ -10435,6 +10435,15 @@ neo4j-client-sso@^1.2.2:
     jwt-decode "^3.1.2"
     lodash.pick "^4.4.0"
 
+neo4j-driver-bolt-connection@5.12.0:
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.12.0.tgz#aff161367d287579d7bdd3ee4179eed324398210"
+  integrity sha512-dlYbFsfT0HopGItitG5uDK4nAkcqSPNtRqMz318qy//7fb/7OXVLGYikj57Ve1toJiJD8IIVErt/dVuEUHVxGA==
+  dependencies:
+    buffer "^6.0.3"
+    neo4j-driver-core "5.12.0"
+    string_decoder "^1.3.0"
+
 neo4j-driver-bolt-connection@^4.4.10:
   version "4.4.10"
   resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-4.4.10.tgz#a8b5b7f82b1d6f9a71a43eafcb0e21512ea24908"
@@ -10443,6 +10452,11 @@ neo4j-driver-bolt-connection@^4.4.10:
     buffer "^6.0.3"
     neo4j-driver-core "^4.4.10"
     string_decoder "^1.3.0"
+
+neo4j-driver-core@5.12.0:
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.12.0.tgz#1f8616da7e945921574811368a68f5d2501bfd35"
+  integrity sha512-xBRi5oezysDUvtvBiIgBchzumkDZxvR9ol9sUtA9PBgVENeSmPH3CncitY8S979CFELS6wH7kydcjPLB4QMOzA==
 
 neo4j-driver-core@^4.4.10:
   version "4.4.10"
@@ -10458,6 +10472,15 @@ neo4j-driver@^4.4.5:
     neo4j-driver-bolt-connection "^4.4.10"
     neo4j-driver-core "^4.4.10"
     rxjs "^6.6.3"
+
+neo4j-driver@^5.12.0:
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-5.12.0.tgz#1b2d7db1672ad224f0146542efee306a0a156a11"
+  integrity sha512-T2Vz63XDkL9TomM16dBusuXbo7d9SIGw2g3VR/rmrWTdbl1V1LYFx/u1P7AwBsFuX08oncKHfZwHGsWrCvdMyA==
+  dependencies:
+    neo4j-driver-bolt-connection "5.12.0"
+    neo4j-driver-core "5.12.0"
+    rxjs "^7.8.1"
 
 next-tick@1, next-tick@^1.0.0, next-tick@^1.1.0:
   version "1.1.0"
@@ -12285,6 +12308,13 @@ rxjs@^7.5.1, rxjs@^7.5.5, rxjs@^7.8.0:
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.0.tgz#90a938862a82888ff4c7359811a595e14e1e09a4"
   integrity sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg==
+  dependencies:
+    tslib "^2.1.0"
+
+rxjs@^7.8.1:
+  version "7.8.1"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.1.tgz#6f6f3d99ea8044291efd92e7c7fcf562c4057543"
+  integrity sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==
   dependencies:
     tslib "^2.1.0"
 
