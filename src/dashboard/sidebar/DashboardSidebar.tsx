@@ -350,10 +350,6 @@ export const NeoDashboardSidebar = ({
             }}
             handleAccessClicked={() => {
               setMenuOpen(Menu.NONE);
-              const d = dashboards[inspectedIndex];
-              loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (text) => {
-                setCachedDashboard(JSON.parse(text));
-              });
               setModalOpen(Modal.ACCESS);
             }}
             handleDeleteClicked={() => {
