@@ -272,7 +272,7 @@ const NeoBarChart = (props: ChartProps) => {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
 
-  const extraProperties = positionLabel ? { barComponent: BarComponent } : {};
+  const extraProperties = positionLabel !== 'off' ? { barComponent: BarComponent } : {};
   const canvas = data.length > 30;
   const BarChartComponent = canvas ? ResponsiveBarCanvas : ResponsiveBar;
 

@@ -21,6 +21,7 @@ echo " \
     \"standaloneLoadFromOtherDatabases\": ${standaloneLoadFromOtherDatabases:=false},  \
     \"standaloneMultiDatabase\": ${standaloneMultiDatabase:=false}, \
     \"standaloneDatabaseList\": \"${standaloneDatabaseList:='neo4j'}\", \
+    \"standalonePasswordWarningHidden\": ${standalonePasswordWarningHidden:=false},  \
     \"loggingMode\": \"${loggingMode:='0'}\",  \
     \"loggingDatabase\": \"${loggingDatabase:='logs'}\",  \
     \"customHeader\": \"${customHeader:=}\"  \

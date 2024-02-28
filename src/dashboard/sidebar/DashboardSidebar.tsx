@@ -4,7 +4,13 @@ import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSe
 import { getDashboardSettings, getDashboardTitle } from '../DashboardSelectors';
 import { Button, SideNavigation, SideNavigationGroupHeader, SideNavigationList, TextInput } from '@neo4j-ndl/react';
 import { removeReportThunk } from '../../page/PageThunks';
-import { PlusIconOutline, MagnifyingGlassIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  PlusIconOutline,
+  MagnifyingGlassIconOutline,
+  CircleStackIconOutline,
+  ArrowPathIconOutline,
+} from '@neo4j-ndl/react/icons';
+
 import Tooltip from '@mui/material/Tooltip';
 import { DashboardSidebarListItem } from './DashboardSidebarListItem';
 import {
@@ -387,6 +393,33 @@ export const NeoDashboardSidebar = ({
               <span className='n-text-palette-neutral-text-weak' style={{ lineHeight: '28px' }}>
                 Dashboards
               </span>
+              <Tooltip title='Refresh' aria-label='refresh' disableInteractive>
+                <Button
+                  aria-label={'refresh'}
+                  fill='text'
+                  size='small'
+                  color='neutral'
+                  style={{
+                    float: 'right',
+                    marginLeft: '3px',
+                    marginRight: '12px',
+                    paddingLeft: 0,
+                    paddingRight: '3px',
+                  }}
+                  onClick={() => {
+                    getDashboardListFromNeo4j();
+                    // When reloading, if the dashboard is not in DRAFT mode, we can directly refresh it.
+                    if (!draft) {
+                      const d = dashboards[selectedDashboardIndex];
+                      loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
+                        loadDashboard(d.uuid, file);
+                      });
+                    }
+                  }}
+                >
+                  <ArrowPathIconOutline className='btn-icon-base-r-m' />
+                </Button>
+              </Tooltip>
               {/* Only let users create dashboards and change database when running in editor mode. */}
               {!readonly || (readonly && standaloneSettings.standaloneLoadFromOtherDatabases) ? (
                 <>
@@ -399,7 +432,7 @@ export const NeoDashboardSidebar = ({
                       style={{
                         float: 'right',
                         marginLeft: '0px',
-                        marginRight: '12px',
+                        marginRight: '3px',
                         paddingLeft: 0,
                         paddingRight: '3px',
                       }}
@@ -499,7 +532,7 @@ export const NeoDashboardSidebar = ({
                   saved={!(draft && selectedDashboardIndex == d.index)}
                   readonly={readonly}
                   onSelect={() => {
-                    if (draft && d.index !== selectedDashboardIndex) {
+                    if (draft) {
                       setInspectedIndex(d.index);
                       setModalOpen(Modal.LOAD);
                     } else {
