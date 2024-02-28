@@ -10,6 +10,7 @@ import { applicationGetConnectionUser, applicationIsStandalone } from '../applic
 import { applicationGetLoggingSettings } from '../application/logging/LoggingSelectors';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
+import { settingsReducer } from '../settings/SettingsReducer';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -542,6 +543,27 @@ export const assignDashboardUuidIfNotPresentThunk = () => (dispatch: any, getSta
 };
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
+  if (origin == '2.4' && target == '2.4.3') {
+    dashboard.pages.forEach((p) => {
+      p.reports.forEach((r) => {
+        if (r.type == 'graph' || r.type == 'map' || r.type == 'graph3d') {
+          r.settings?.actionsRules.forEach((rule) => {
+            if (
+              rule &&
+              rule.field &&
+              rule.condition !== 'set page' &&
+              (rule.condition === 'onNodeClick' || rule.condition == 'Click')
+            ) {
+              let val = rule.value.split('.');
+              rule.value = val[val.length - 1] || rule.value;
+            }
+          });
+        }
+      });
+    });
+    dashboard.version = '2.4.3';
+    return dashboard;
+  }
   if (origin == '2.3' && target == '2.4') {
     dashboard.pages.forEach((p) => {
       p.reports.forEach((r) => {
