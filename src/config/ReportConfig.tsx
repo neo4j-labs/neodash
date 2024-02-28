@@ -131,6 +131,16 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      sendRequestButtonName: {
+        label: 'Send Request Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Send Request',
+      },
+      viewResponseButtonName: {
+        label: 'View Response Button Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'View Response',
+      },
     },
   },
   graph: {

@@ -26,6 +26,16 @@ interface Extension {
 
 // TODO: define extension config interface
 export const EXTENSIONS: Record<string, Extension> = {
+  'api-config': {
+    name: 'api-config',
+    label: 'API Configuration',
+    author: 'Mercedes-Benz',
+    image: '',
+    enabled: true,
+    description:
+      'The API Configuration feature enhances the Neodash by providing users with the ability to seamlessly integrate and manage external APIs directly from the dashboard interface. This feature allows administrators to store and configure essential API details, including the API URL and custom headers, empowering them to tailor their interactions with external services.',
+    link: 'https://neo4j.com/labs/neodash/2.4/user-guide',
+  },
   'advanced-charts': {
     name: 'advanced-charts',
     label: 'Advanced Visualizations',
