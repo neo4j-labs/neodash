@@ -1,4 +1,3 @@
-import { toNumber } from '../../../../chart/ChartUtils';
 import { buildGraphVisualizationObjectFromRecords } from '../../../../chart/graph/util/RecordUtils';
 import date_utils from './frappe/lib/date_utils';
 
@@ -98,9 +97,9 @@ export function createTasksList(
           return undefined;
         }
       }
-      let res = {
-        start: new Date(toNumber(neoStartDate.year), toNumber(neoStartDate.month), toNumber(neoStartDate.day)),
-        end: new Date(toNumber(neoEndDate.year), toNumber(neoEndDate.month), toNumber(neoEndDate.day)),
+      return {
+        start: new Date(neoStartDate.year, neoStartDate.month, neoStartDate.day),
+        end: new Date(neoEndDate.year, neoEndDate.month, neoEndDate.day),
         name: name || '(undefined)',
         labels: n.labels,
         dependencies: dependencies[n.id],
@@ -113,7 +112,6 @@ export function createTasksList(
         isDisabled: true,
         styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
       };
-      return res;
     })
     .filter((i) => i !== undefined);
 }
