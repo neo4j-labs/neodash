@@ -86,7 +86,7 @@ const NeoSankeyChart = (props: ChartProps) => {
           properties: value.properties,
           value: 1,
         });
-      } else if (value.properties[labelProperty] !== undefined && !Number.isNaN(value.properties[labelProperty])) {
+      } else if (value.properties[labelProperty] !== undefined && !isNaN(value.properties[labelProperty])) {
         addItem(links[`${value.start.low},${value.end.low}`], {
           id: value.identity.low,
           source: value.start.low,
