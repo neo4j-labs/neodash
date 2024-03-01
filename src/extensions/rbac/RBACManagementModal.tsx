@@ -58,12 +58,21 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
     retrieveLabelsList(driver, selectedOption.value, (records) => parseLabelsList(selectedOption.value, records));
   };
 
-  const handleSave = () => {
-    updateUsers(driver, currentRole, neo4jUsers, selectedUsers);
+  const handleSave = async () => {
+    await updateUsers(driver, currentRole, neo4jUsers, selectedUsers);
     if (selectedDatabase) {
       createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-      updatePrivileges(driver, selectedDatabase, currentRole, labels, denyList, Operation.DENY, createNotification);
-      updatePrivileges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT, createNotification);
+      updatePrivileges(
+        driver,
+        selectedDatabase,
+        currentRole,
+        labels,
+        denyList,
+        Operation.DENY,
+        createNotification
+      ).then(() =>
+        updatePrivileges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT, createNotification)
+      );
     } else {
       createNotification('Success', `Users have been updated for role '${currentRole}'.`);
     }

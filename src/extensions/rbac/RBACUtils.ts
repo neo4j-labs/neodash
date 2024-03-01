@@ -15,7 +15,7 @@ export enum Operation {
  * @param newLabels list of new labels in the database, for which priveleges are changed.
  * @param operation The operation, either 'GRANT' or 'DENY'
  */
-export const updatePrivileges = (
+export async function updatePrivileges(
   driver,
   database,
   role,
@@ -23,65 +23,71 @@ export const updatePrivileges = (
   newLabels,
   operation: Operation,
   createNotification
-) => {
+) {
+  let totalStatus = -1;
   // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
   // TODO - there
   // 1. Special case for '*'. Create it if needed to be there, otherwise revoke it.
-  runCypherQuery(
+  console.log(1);
+  await runCypherQuery(
     driver,
     'system',
     buildAccessQuery(database, role, ['*'], operation, !newLabels.includes('*')),
     {},
     1000,
     (status) => {
-      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-        // 2. Build the query that revokes all possible priveleges, returning to a 'blank slate'
-        runCypherQuery(
+      totalStatus = status;
+    }
+  );
+
+  if (totalStatus == QueryStatus.NO_DATA || totalStatus == QueryStatus.COMPLETE) {
+    // 2. Build the query that revokes all possible priveleges, returning to a 'blank slate'
+    console.log(2);
+
+    await runCypherQuery(
+      driver,
+      'system',
+      buildAccessQuery(
+        database,
+        role,
+        allLabels.filter((l) => l !== '*'),
+        operation,
+        true
+      ),
+      {},
+      1000,
+      (status) => {
+        totalStatus = status;
+      }
+    );
+    if (totalStatus == QueryStatus.NO_DATA || totalStatus == QueryStatus.COMPLETE) {
+      if (newLabels.filter((l) => l !== '*').length > 0) {
+        console.log(3);
+        await runCypherQuery(
           driver,
           'system',
           buildAccessQuery(
             database,
             role,
-            allLabels.filter((l) => l !== '*'),
+            newLabels.filter((l) => l !== '*'),
             operation,
-            true
+            false
           ),
           {},
           1000,
           (status) => {
-            if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-              //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
-              // We build in an artificial delay...
-              const timeout = setTimeout(() => {
-                // 3. Create the new privileges as specified in the `newLabels` list by the user.
-                if (newLabels.filter((l) => l !== '*').length > 0) {
-                  runCypherQuery(
-                    driver,
-                    'system',
-                    buildAccessQuery(
-                      database,
-                      role,
-                      newLabels.filter((l) => l !== '*'),
-                      operation,
-                      false
-                    ),
-                    {},
-                    1000,
-                    () => {
-                      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-                        createNotification('Success', `Access for role '${role}' updated.`);
-                      }
-                    }
-                  );
-                }
-              }, 1000);
+            if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
+              createNotification('Success', `Access for role '${role}' updated.`);
             }
           }
         );
+      } else {
+        console.log(4);
+        createNotification('Success', `Access for role '${role}' updated.`);
       }
     }
-  );
-};
+  }
+}
 
 /**
  * Generic query builder for adding/removing grants/denies for a list of labels.
@@ -98,6 +104,7 @@ function buildAccessQuery(database, role, labels, operation: Operation, revoke: 
             MATCH {*} ON GRAPH ${database} 
             NODES ${labels.join(',')} 
             ${revoke ? 'FROM' : 'TO'} ${role}`;
+  console.log(query);
   return query;
 }
 
@@ -235,7 +242,7 @@ export const updateUsers = async (driver, currentRole, allUsers, selectedUsers) 
     {},
     1000,
     (status) => {
-      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+      if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
         //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
         // We build in an artificial delay...
         const timeout = setTimeout(() => {
