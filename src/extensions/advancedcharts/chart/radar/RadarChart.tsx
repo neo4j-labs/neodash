@@ -67,7 +67,7 @@ const NeoRadarChart = (props: ChartProps) => {
     const entry = {};
     selection.values.concat([selection.index]).forEach((k) => {
       const fieldIndex = r._fieldLookup[k];
-      if (k !== selection.index && isNaN(r._fields[fieldIndex])) {
+      if (k !== selection.index && Number.isNaN(r._fields[fieldIndex])) {
         valid = false;
       }
       entry[k] = `${r._fields[fieldIndex]}`;
