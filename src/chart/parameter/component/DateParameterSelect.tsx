@@ -55,7 +55,7 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
           setInputDate(newValue);
 
           // Check whether the user has inputted a valid year. If not, do not update the parameter.
-          if (!newValue || isNaN(newValue.$y) || isNaN(newValue.$m) || isNaN(newValue.$d)) {
+          if (!newValue || Number.isNaN(newValue.$y) || Number.isNaN(newValue.$m) || Number.isNaN(newValue.$d)) {
             return;
           }
           if (newValue == null && clearParameterOnFieldClear) {
