@@ -42,7 +42,7 @@ const NeoGaugeChart = (props: ChartProps) => {
   const chartId = createUUID();
   let score = records && records[0] && records[0]._fields && records[0]._fields[0] ? records[0]._fields[0] : '';
 
-  if (isNaN(score)) {
+  if (Number.isNaN(score)) {
     return <NoDrawableDataErrorMessage />;
   }
   if (score.low != undefined) {
