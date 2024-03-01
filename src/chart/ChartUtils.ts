@@ -95,7 +95,7 @@ export function valueIsObject(value) {
 }
 
 export function toNumber(ref) {
-  if (ref === undefined) {
+  if (ref === undefined || typeof ref === 'number') {
     return ref;
   }
   let { low, high } = ref;
@@ -172,7 +172,7 @@ export const downloadCSV = (rows) => {
     });
     csv += '\n';
   });
-  const file = new Blob([`\ufeff${  csv}`], { type: 'text/plain;charset=utf8' });
+  const file = new Blob([`\ufeff${csv}`], { type: 'text/plain;charset=utf8' });
   element.href = URL.createObjectURL(file);
   element.download = 'table.csv';
   document.body.appendChild(element); // Required for this to work in FireFox
