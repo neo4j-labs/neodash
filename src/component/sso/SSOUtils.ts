@@ -118,7 +118,7 @@ export const initializeSSO = async (cachedSSODiscoveryUrl, _setCredentials) => {
       // Successful credentials retrieval.
       // Log in at the Neo4j dbms now using the Neo4j (js) driver.
       //
-      _setCredentials(credentials, mergedSSOProviders);
+      _setCredentials(credentials);
 
       // Exemplifying retrieval of stored URL paramenters
       _retrieveAdditionalURLParameters();
