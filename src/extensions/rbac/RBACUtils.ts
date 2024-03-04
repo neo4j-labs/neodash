@@ -152,8 +152,8 @@ export const retrieveAllowAndDenyLists = (
       // Do the same for fixed grants (those stored under the '*' graph permission)
       const fixedGrants = records.filter((r) => r._fields[0] == 'GRANTED' && r._fields[2] == true);
       const fixedDenies = records.filter((r) => r._fields[0] == 'DENIED' && r._fields[2] == true);
-      const fixedGrantedLabels = grants[0] ? [...new Set(fixedGrants[0]._fields[1])] : [];
-      const fixedDeniedLabels = denies[0] ? [...new Set(fixedDenies[0]._fields[1])] : [];
+      const fixedGrantedLabels = fixedGrants[0] ? [...new Set(fixedGrants[0]._fields[1])] : [];
+      const fixedDeniedLabels = fixedDenies[0] ? [...new Set(fixedDenies[0]._fields[1])] : [];
 
       setAllowList([...new Set(grantedLabels.concat(fixedGrantedLabels))]);
       setDenyList([...new Set(deniedLabels.concat(fixedDeniedLabels))]);
