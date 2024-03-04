@@ -120,6 +120,8 @@ export const retrieveAllowAndDenyLists = (
   setLabels,
   setAllowList,
   setDenyList,
+  setFixedAllowList,
+  setFixedDenyList,
   setLoaded
 ) => {
   runCypherQuery(
@@ -131,7 +133,7 @@ export const retrieveAllowAndDenyLists = (
       AND role = $rolename
       AND action = 'match' 
       AND segment STARTS WITH 'NODE('
-      RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes`,
+      RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes, graph = "*" as fixed`,
     { rolename: currentRole, database: database },
     1000,
     (status) => {
@@ -142,12 +144,21 @@ export const retrieveAllowAndDenyLists = (
     },
     (records) => {
       // Extract granted and denied label list from the result of the SHOW PRIVILEGES query
-      const grants = records.filter((r) => r._fields[0] == 'GRANTED');
-      const denies = records.filter((r) => r._fields[0] == 'DENIED');
+      const grants = records.filter((r) => r._fields[0] == 'GRANTED' && r._fields[2] == false);
+      const denies = records.filter((r) => r._fields[0] == 'DENIED' && r._fields[2] == false);
       const grantedLabels = grants[0] ? [...new Set(grants[0]._fields[1])] : [];
       const deniedLabels = denies[0] ? [...new Set(denies[0]._fields[1])] : [];
-      setAllowList(grantedLabels);
-      setDenyList(deniedLabels);
+
+      // Do the same for fixed grants (those stored under the '*' graph permission)
+      const fixedGrants = records.filter((r) => r._fields[0] == 'GRANTED' && r._fields[2] == true);
+      const fixedDenies = records.filter((r) => r._fields[0] == 'DENIED' && r._fields[2] == true);
+      const fixedGrantedLabels = grants[0] ? [...new Set(fixedGrants[0]._fields[1])] : [];
+      const fixedDeniedLabels = denies[0] ? [...new Set(fixedDenies[0]._fields[1])] : [];
+
+      setAllowList([...new Set(grantedLabels.concat(fixedGrantedLabels))]);
+      setDenyList([...new Set(deniedLabels.concat(fixedDeniedLabels))]);
+      setFixedAllowList(fixedGrantedLabels);
+      setFixedDenyList(fixedDeniedLabels);
 
       // Here we build a set of all POSSIBLE labels, that includes the list in the database, plus those in denies and grants.
       const possibleLabels = [...new Set(allLabels.concat(grantedLabels).concat(deniedLabels))];

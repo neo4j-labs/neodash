@@ -26,7 +26,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   const [labels, setLabels] = useState([]);
   const [allowList, setAllowList] = useState([]);
   const [denyList, setDenyList] = useState([]);
-
+  const [fixedAllowList, setFixedAllowList] = useState([]);
+  const [fixedDenyList, setFixedDenyList] = useState([]);
   useEffect(() => {
     if (!open) {
       setSelectedUsers([]);
@@ -49,6 +50,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       setLabels,
       setAllowList,
       setDenyList,
+      setFixedAllowList,
+      setFixedDenyList,
       setLoaded
     );
   };
@@ -62,8 +65,27 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
     updateUsers(driver, currentRole, neo4jUsers, selectedUsers);
     if (selectedDatabase) {
       createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-      updatePrivileges(driver, selectedDatabase, currentRole, labels, denyList, Operation.DENY, createNotification);
-      updatePrivileges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT, createNotification);
+
+      const nonFixedDenyList = denyList.filter((n) => !fixedDenyList.includes(n));
+      const nonFixedAllowList = allowList.filter((n) => !fixedDenyList.includes(n));
+      updatePrivileges(
+        driver,
+        selectedDatabase,
+        currentRole,
+        labels,
+        nonFixedDenyList,
+        Operation.DENY,
+        createNotification
+      );
+      updatePrivileges(
+        driver,
+        selectedDatabase,
+        currentRole,
+        labels,
+        nonFixedAllowList,
+        Operation.GRANT,
+        createNotification
+      );
     } else {
       createNotification('Success', `Users have been updated for role '${currentRole}'.`);
     }
@@ -138,7 +160,17 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
                     value: allowList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                     options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                     isMulti: true,
-                    onChange: (val) => setAllowList(val.map((v) => v.value)),
+                    onChange: (val) => {
+                      // Make sure that only database-specific label access rules can be changed from this UI.
+                      if (fixedAllowList.every((v) => val.map((selected) => selected.value).includes(v))) {
+                        setAllowList(val.map((v) => v.value));
+                      } else {
+                        createNotification(
+                          'Label cannot be removed',
+                          'The selected label is allowed access across all databases. You cannot remove this privilege using this interface.'
+                        );
+                      }
+                    },
                   }}
                 />
               </div>
@@ -154,9 +186,21 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
                     placeholder: 'Select labels',
                     isClearable: false,
                     value: denyList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
-                    options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
+                    options: labels
+                      .filter((l) => l !== '*')
+                      .map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                     isMulti: true,
-                    onChange: (val) => setDenyList(val.map((v) => v.value)),
+                    onChange: (val) => {
+                      // Make sure that only database-specific label access rules can be changed from this UI.
+                      if (fixedDenyList.every((v) => val.map((selected) => selected.value).includes(v))) {
+                        setDenyList(val.map((v) => v.value));
+                      } else {
+                        createNotification(
+                          'Label cannot be removed',
+                          'The selected label is denied access across all databases. You cannot remove this privilege using this interface.'
+                        );
+                      }
+                    },
                   }}
                 />
               </div>
