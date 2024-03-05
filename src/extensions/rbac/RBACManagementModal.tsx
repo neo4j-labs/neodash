@@ -28,6 +28,12 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   const [denyList, setDenyList] = useState([]);
   const [fixedAllowList, setFixedAllowList] = useState([]);
   const [fixedDenyList, setFixedDenyList] = useState([]);
+
+  const [denyCompleted, setDenyCompleted] = useState(false);
+  const [allowCompleted, setAllowCompleted] = useState(false);
+  const [usersCompleted, setUsersCompleted] = useState(false);
+  const [failed, setFailed] = useState(false);
+
   useEffect(() => {
     if (!open) {
       setSelectedUsers([]);
@@ -39,6 +45,14 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
     retrieveDatabaseList(driver, setDatabases);
     retrieveNeo4jUsers(driver, currentRole, setNeo4jUsers, setSelectedUsers);
   }, [open]);
+
+  useEffect(() => {
+    if (failed !== false) {
+      createNotification('Unable to update privileges', `${failed}`);
+    } else if (denyCompleted && allowCompleted && usersCompleted) {
+      createNotification('Success', `Access for role '${currentRole}' updated.`);
+    }
+  }, [denyCompleted, allowCompleted, usersCompleted, failed]);
 
   const parseLabelsList = (database, records) => {
     const allLabels = records.map((record) => record._fields[0]).filter((l) => l !== '_Neodash_Dashboard');
@@ -62,10 +76,16 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   };
 
   const handleSave = () => {
-    updateUsers(driver, currentRole, neo4jUsers, selectedUsers);
+    createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
+    updateUsers(
+      driver,
+      currentRole,
+      neo4jUsers,
+      selectedUsers,
+      () => setUsersCompleted(true),
+      (failReason) => setFailed(`Operation 'ROLE-USER ASSIGNMENT' failed.\n Reason: ${failReason}`)
+    );
     if (selectedDatabase) {
-      createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-
       const nonFixedDenyList = denyList.filter((n) => !fixedDenyList.includes(n));
       const nonFixedAllowList = allowList.filter((n) => !fixedDenyList.includes(n));
       updatePrivileges(
@@ -75,7 +95,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
         labels,
         nonFixedDenyList,
         Operation.DENY,
-        createNotification
+        () => setDenyCompleted(true),
+        (failReason) => setFailed(`Operation 'DENY LABEL ACCESS' failed.\n Reason: ${failReason}`)
       );
       updatePrivileges(
         driver,
@@ -84,10 +105,14 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
         labels,
         nonFixedAllowList,
         Operation.GRANT,
-        createNotification
+        () => setAllowCompleted(true),
+        (failReason) => setFailed(`Operation 'ALLOW LABEL ACCESS' failed.\n Reason: ${failReason}`)
       );
     } else {
-      createNotification('Success', `Users have been updated for role '${currentRole}'.`);
+      // Since there is no database selected, we don't run the DENY/ALLOW queries.
+      // We just mark them as completed so the success message shows up.
+      setDenyCompleted(true);
+      setAllowCompleted(true);
     }
 
     handleClose();

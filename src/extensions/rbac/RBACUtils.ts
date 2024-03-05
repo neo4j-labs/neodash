@@ -22,7 +22,8 @@ export const updatePrivileges = (
   allLabels,
   newLabels,
   operation: Operation,
-  createNotification
+  onSuccess,
+  onFail
 ) => {
   // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
   // TODO - there
@@ -67,17 +68,34 @@ export const updatePrivileges = (
                     ),
                     {},
                     1000,
-                    () => {
+                    (status) => {
                       if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-                        createNotification('Success', `Access for role '${role}' updated.`);
+                        onSuccess();
+                      }
+                    },
+                    (records) => {
+                      if (records && records[0] && records[0].error) {
+                        onFail(records[0].error);
                       }
                     }
                   );
+                } else {
+                  onSuccess();
                 }
               }, 1000);
             }
+          },
+          (records) => {
+            if (records && records[0] && records[0].error) {
+              onFail(records[0].error);
+            }
           }
         );
+      }
+    },
+    (records) => {
+      if (records && records[0] && records[0].error) {
+        onFail(records[0].error);
       }
     }
   );
@@ -237,7 +255,7 @@ export function retrieveDatabaseList(driver, setDatabases: React.Dispatch<React.
  * @param allUsers list of all users.
  * @param selectedUsers list of users to have the role after the operation completes.
  */
-export const updateUsers = async (driver, currentRole, allUsers, selectedUsers) => {
+export const updateUsers = async (driver, currentRole, allUsers, selectedUsers, onSuccess, onFail) => {
   // 1. Build the query that removes all users from the role.
   await runCypherQuery(
     driver,
@@ -252,9 +270,25 @@ export const updateUsers = async (driver, currentRole, allUsers, selectedUsers) 
         const timeout = setTimeout(() => {
           // 2. Re-assign only selected users to the role.
           if (selectedUsers.length > 0) {
-            runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
+            runCypherQuery(
+              driver,
+              'system',
+              `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`,
+              {},
+              1000,
+              (status) => {
+                if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+                  onSuccess();
+                }
+              }
+            );
           }
         }, 1000);
+      }
+    },
+    (records) => {
+      if (records && records[0] && records[0].error) {
+        onFail(records[0].error);
       }
     }
   );
