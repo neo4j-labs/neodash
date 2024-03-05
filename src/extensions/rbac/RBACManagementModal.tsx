@@ -28,7 +28,6 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   const [denyList, setDenyList] = useState([]);
   const [fixedAllowList, setFixedAllowList] = useState([]);
   const [fixedDenyList, setFixedDenyList] = useState([]);
-
   const [denyCompleted, setDenyCompleted] = useState(false);
   const [allowCompleted, setAllowCompleted] = useState(false);
   const [usersCompleted, setUsersCompleted] = useState(false);
@@ -42,11 +41,16 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       setSelectedDatabase('');
       return;
     }
+    setDenyCompleted(false);
+    setAllowCompleted(false);
+    setUsersCompleted(false);
+    setFailed(false);
     retrieveDatabaseList(driver, setDatabases);
     retrieveNeo4jUsers(driver, currentRole, setNeo4jUsers, setSelectedUsers);
   }, [open]);
 
   useEffect(() => {
+    console.log([denyCompleted, allowCompleted, usersCompleted, failed]);
     if (failed !== false) {
       createNotification('Unable to update privileges', `${failed}`);
     } else if (denyCompleted && allowCompleted && usersCompleted) {
@@ -77,7 +81,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
 
   const handleSave = async () => {
     createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-    await updateUsers(
+    console.log(selectedUsers);
+    updateUsers(
       driver,
       currentRole,
       neo4jUsers,
@@ -85,6 +90,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       () => setUsersCompleted(true),
       (failReason) => setFailed(`Operation 'ROLE-USER ASSIGNMENT' failed.\n Reason: ${failReason}`)
     );
+
     if (selectedDatabase) {
       const nonFixedDenyList = denyList.filter((n) => !fixedDenyList.includes(n));
       const nonFixedAllowList = allowList.filter((n) => !fixedDenyList.includes(n));
@@ -115,7 +121,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       setDenyCompleted(true);
       setAllowCompleted(true);
     }
-
+    console.log([denyCompleted, allowCompleted, usersCompleted, failed]);
     handleClose();
   };
 

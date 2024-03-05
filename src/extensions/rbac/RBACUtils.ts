@@ -50,7 +50,7 @@ export async function updatePrivileges(
           {},
           1000,
           (status) => {
-            if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+            if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
               //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
               // We build in an artificial delay...
               const timeout = setTimeout(() => {
@@ -69,7 +69,7 @@ export async function updatePrivileges(
                     {},
                     1000,
                     (status) => {
-                      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+                      if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
                         onSuccess();
                       }
                     },
@@ -257,6 +257,7 @@ export function retrieveDatabaseList(driver, setDatabases: React.Dispatch<React.
  */
 export async function updateUsers(driver, currentRole, allUsers, selectedUsers, onSuccess, onFail) {
   // 1. Build the query that removes all users from the role.
+  let globalStatus = -1;
   await runCypherQuery(
     driver,
     'system',
@@ -264,27 +265,7 @@ export async function updateUsers(driver, currentRole, allUsers, selectedUsers, 
     {},
     1000,
     (status) => {
-      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-        //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
-        // We build in an artificial delay...
-        const timeout = setTimeout(() => {
-          // 2. Re-assign only selected users to the role.
-          if (selectedUsers.length > 0) {
-            runCypherQuery(
-              driver,
-              'system',
-              `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`,
-              {},
-              1000,
-              (status) => {
-                if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-                  onSuccess();
-                }
-              }
-            );
-          }
-        }, 1000);
-      }
+      globalStatus = status;
     },
     (records) => {
       if (records && records[0] && records[0].error) {
@@ -292,4 +273,24 @@ export async function updateUsers(driver, currentRole, allUsers, selectedUsers, 
       }
     }
   );
+  if (globalStatus == QueryStatus.NO_DATA || globalStatus == QueryStatus.COMPLETE) {
+    //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
+    // We build in an artificial delay...
+    if (selectedUsers.length > 0) {
+      await runCypherQuery(
+        driver,
+        'system',
+        `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`,
+        {},
+        1000,
+        (status) => {
+          if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+            onSuccess();
+          }
+        }
+      );
+    } else {
+      onSuccess();
+    }
+  }
 }

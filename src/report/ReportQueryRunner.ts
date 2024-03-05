@@ -65,6 +65,7 @@ export async function runCypherQuery(
     setStatus(QueryStatus.ERROR);
     return;
   }
+  console.log(query);
   const session = database ? driver.session({ database: database }) : driver.session();
   const transaction = session.beginTransaction({ timeout: queryTimeLimit * 1000, connectionTimeout: 2000 });
 

@@ -72,7 +72,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNoti
       </Menu>
 
       <RBACManagementModal
-        open={isModalOpen == true}
+        open={isModalOpen}
         handleClose={() => {
           setIsModalOpen(false);
         }}
