@@ -75,9 +75,9 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
     retrieveLabelsList(driver, selectedOption.value, (records) => parseLabelsList(selectedOption.value, records));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-    updateUsers(
+    await updateUsers(
       driver,
       currentRole,
       neo4jUsers,
