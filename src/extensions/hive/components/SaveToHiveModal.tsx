@@ -86,10 +86,21 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const SaveToHiveModalContent = ({ dashboard, connection, saveDashboardToHive, modalOpen, closeDialog }) => {
+// cachedDashboard comes from loading the dashboard from a database,
+// e.g. like from a menu item looking at a list of dashboards
+// dashboard is the active dashboard currently loaded
+const SaveToHiveModalContent = ({
+  cachedDashboard,
+  dashboard,
+  connection,
+  saveDashboardToHive,
+  modalOpen,
+  closeDialog,
+}) => {
   // pieces of code pulled from https://www.pluralsight.com/guides/uploading-files-with-reactjs
   // and pieces of code pulled from https://blog.logrocket.com/multer-nodejs-express-upload-file/
 
+  dashboard = cachedDashboard ? cachedDashboard : dashboard;
   const tabCount = 2;
   const title = dashboard?.title;
   const existingSolutionId = dashboard?.extensions?.solutionsHive?.uuid;

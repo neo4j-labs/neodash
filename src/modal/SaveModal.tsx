@@ -15,7 +15,7 @@ import {
   BackspaceIconOutline,
 } from '@neo4j-ndl/react/icons';
 import { Button, Checkbox, Dialog, Dropdown } from '@neo4j-ndl/react';
-import SaveToHiveModal from '../extensions/hive/components/SaveToHiveModal';
+import { getConnectionModule } from '../connection/utils';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -23,6 +23,8 @@ import SaveToHiveModal from '../extensions/hive/components/SaveToHiveModal';
  */
 
 const styles = {};
+
+const { connectionModule } = getConnectionModule();
 
 /**
  * Removes the specified set of keys from the nested dictionary.
@@ -59,10 +61,11 @@ export const NeoSaveModal = ({
 }) => {
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveToNeo4jModalOpen, setSaveToNeo4jModalOpen] = React.useState(false);
-  const [saveToHiveModalOpen, setSaveToHiveModalOpen] = React.useState(false);
   const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
   const [dashboardDatabase, setDashboardDatabase] = React.useState('neo4j');
   const [databases, setDatabases] = React.useState(['neo4j']);
+
+  const [publishUIDialogOpen, setPublishUIDialogOpen] = React.useState(false);
 
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
@@ -128,23 +131,17 @@ export const NeoSaveModal = ({
               Save to file
               <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
             </Button>
-            <Button
-              fill='outlined'
-              color='neutral'
-              floating
-              onClick={() => {
-                if (!dashboard.title) {
-                  dispatch(createNotificationThunk('Dashboard Name Missing', 'Please add dashboard name'));
-                } else {
-                  setSaveModalOpen(false);
-                  setSaveToHiveModalOpen(true);
-                }
-              }}
-              style={{ marginLeft: '10px' }}
-              endIcon={<img src='/hive.png' width='24' height='24' />}
-            >
-              Publish to Hive
-            </Button>
+            {connectionModule.hasCustomPublishUI() &&
+              connectionModule.getPublishUIButton({
+                onClick: () => {
+                  if (!dashboard.title) {
+                    dispatch(createNotificationThunk('Dashboard Name Missing', 'Please add dashboard name'));
+                  } else {
+                    setSaveModalOpen(false);
+                    setPublishUIDialogOpen(true);
+                  }
+                },
+              })}
           </div>
           <TextareaAutosize
             style={{ minHeight: '500px', width: '100%', border: '1px solid lightgray' }}
@@ -241,16 +238,12 @@ export const NeoSaveModal = ({
           </Button>
         </Dialog.Actions>
       </Dialog>
-      <SaveToHiveModal
-        modalOpen={saveToHiveModalOpen}
-        closeDialog={(options) => {
-          options = options || {};
-          setSaveToHiveModalOpen(false);
-          if (options.closeSaveDialog) {
-            setSaveModalOpen(false);
-          }
-        }}
-      />
+      {connectionModule.hasCustomPublishUI() &&
+        connectionModule.getPublishUIDialog({
+          parentClose: () => setSaveModalOpen(false),
+          publishUIDialogOpen: publishUIDialogOpen,
+          closePublishUIDialog: () => setPublishUIDialogOpen(false),
+        })}
     </div>
   );
 };

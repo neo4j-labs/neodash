@@ -10,6 +10,7 @@ import '/node_modules/react-resizable/css/styles.css';
 import './index.pcss';
 import StyleConfig from './config/StyleConfig';
 import * as Sentry from '@sentry/react';
+import { getConnectionModule } from './connection/utils';
 
 if (window.location.href.includes('//neodash.graphapp.io/')) {
   Sentry.init({
@@ -32,11 +33,6 @@ if (window.location.href.includes('//neodash.graphapp.io/')) {
   });
 }
 
-// new imports
-import { Route, BrowserRouter as Router } from 'react-router-dom';
-import Callback from './extensions/hive/auth/callback';
-import PrivateRoute from './extensions/hive/auth/privateRoute';
-
 /**
  * Set up the NeoDash application and wrap it in the needed providers.
  */
@@ -45,16 +41,16 @@ const store = configureStore();
 // @ts-ignore - persist state in browser cache.
 const persister = persistStore(store);
 
+// connection module to determine how to load the Application
+const { connectionModule } = getConnectionModule();
+
 await StyleConfig.getInstance();
 
 /** Wrap the application in a redux provider / browser cache persistance gate **/
 const provider = (
   <ReduxProvider store={store}>
     <PersistGate persistor={persister} loading={<div>Loading NeoDash...</div>}>
-      <Router>
-        <Route exact path='/callback' component={Callback} />
-        <PrivateRoute exact path='/' component={Application} />
-      </Router>
+      {connectionModule.getApplicationRouting(Application)}
     </PersistGate>
   </ReduxProvider>
 );

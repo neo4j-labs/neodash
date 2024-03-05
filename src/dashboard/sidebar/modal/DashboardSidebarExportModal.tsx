@@ -4,13 +4,15 @@ import { CloudArrowUpIconOutline } from '@neo4j-ndl/react/icons';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { valueIsArray, valueIsObject } from '../../../chart/ChartUtils';
 import { TextareaAutosize } from '@mui/material';
-import SaveToHiveModal from '../../../extensions/hive/components/SaveToHiveModal';
+import { getConnectionModule } from '../../../connection/utils';
+
+const { connectionModule } = getConnectionModule();
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
 export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose }) => {
-  const [saveToHiveModalOpen, setSaveToHiveModalOpen] = React.useState(false);
+  const [publishUIDialogOpen, setPublishUIDialogOpen] = React.useState(false);
 
   /**
    * Removes the specified set of keys from the nested dictionary.
@@ -67,16 +69,13 @@ export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose })
             Save to file
             <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
           </Button>
-          <Button
-            style={{ marginLeft: '10px' }}
-            onClick={() => setSaveToHiveModalOpen(true)}
-            fill='outlined'
-            color='neutral'
-            floating
-          >
-            Publish to Hive
-            <CloudArrowUpIconOutline className='btn-icon-base-r' aria-label={'publish to cloud'} />
-          </Button>
+          {connectionModule.hasCustomPublishUI() &&
+            connectionModule.getPublishUIButton({
+              onClick: () => {
+                handleClose();
+                setPublishUIDialogOpen(true);
+              },
+            })}
           <br />
           <br />
           <TextareaAutosize
@@ -88,17 +87,12 @@ export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose })
           />
         </Dialog.Content>
       </Dialog>
-      <SaveToHiveModal
-        dashboard={dashboardString}
-        modalOpen={saveToHiveModalOpen}
-        closeDialog={(options) => {
-          options = options || {};
-          setSaveToHiveModalOpen(false);
-          if (options.closeSaveDialog) {
-            handleClose();
-          }
-        }}
-      />
+      {connectionModule.hasCustomPublishUI() &&
+        connectionModule.getPublishUIDialog({
+          parentClose: () => handleClose(),
+          publishUIDialogOpen: publishUIDialogOpen,
+          closePublishUIDialog: () => setPublishUIDialogOpen(false),
+        })}
     </>
   );
 };

@@ -9,7 +9,6 @@ import { applicationGetConnectionUser, applicationIsStandalone } from '../applic
 import { applicationGetLoggingSettings } from '../application/logging/LoggingSelectors';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
-import { fetchDashboardFromHive } from '../extensions/hive/launch/launch';
 import { QueryCallback, QueryParams, QueryStatus } from '../connection/interfaces';
 import { getConnectionModule } from '../connection/utils';
 
@@ -285,24 +284,25 @@ export const deleteDashboardFromNeo4jThunk = (driver, database, uuid, onSuccess)
   }
 };
 
-export const loadDashboardFromNeo4jByHiveUUIDThunk = (uuid, callback) => (dispatch: any) => {
-  const loadHiveDash = async () => {
+export const loadDashboardFromNeo4jByConnectionModuleUUIDThunk = (uuid, callback) => (dispatch: any) => {
+  const { connectionModule } = getConnectionModule();
+  const loadDash = async () => {
     try {
-      const hivedash = await fetchDashboardFromHive({ uuid: uuid });
-      if (!hivedash.data.getDashboardByUUID) {
+      const loadedDashboard = await connectionModule.loadDashboard(uuid);
+      if (!loadedDashboard.data.getDashboardByUUID) {
         dispatch(
           createNotificationThunk(
-            `Unable to load dashboard from database Hive.`,
+            `Unable to load dashboard from connection module ${connectionModule.name}.`,
             `A dashboard with UUID '${uuid}' could not be found.`
           )
         );
       }
-      callback(hivedash.data.getDashboardByUUID.content);
+      callback(loadedDashboard.data.getDashboardByUUID.content);
     } catch (e) {
-      dispatch(createNotificationThunk('Unable to load dashboard to Hive', e));
+      dispatch(createNotificationThunk(`Unable to load dashboard from connection module ${connectionModule.name}`, e));
     }
   };
-  loadHiveDash();
+  loadDash();
 };
 
 export const loadDashboardFromNeo4jThunk = (driver, database, uuid, callback) => (dispatch: any, getState: any) => {

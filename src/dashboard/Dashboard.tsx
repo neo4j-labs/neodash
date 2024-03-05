@@ -12,7 +12,9 @@ import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
 import NeoDashboardSidebar from './sidebar/DashboardSidebar';
-import Chat from '../extensions/hive/components/genai/Chat';
+import { getConnectionModule } from '../connection/utils';
+
+const { connectionModule } = getConnectionModule();
 
 const Dashboard = ({
   pagenumber,
@@ -96,7 +98,7 @@ const Dashboard = ({
                     <NeoDashboardTitle />
                     <NeoDashboardHeaderPageList />
                     <NeoPage></NeoPage>
-                    <Chat></Chat>
+                    {connectionModule.hasChat() && connectionModule.getChatUIButton()}
                   </div>
                 </div>
               </div>

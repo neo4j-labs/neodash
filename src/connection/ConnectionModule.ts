@@ -9,20 +9,67 @@ export abstract class ConnectionModule {
     this.name = name;
   }
 
-  authenticate(_credentials: Record<any, any>): void | never {
+  // implementation of an authentication mechanism to use NeoDash
+  async authenticate(_params: any): void | never {
     return notImplementedError('authenticate');
   }
 
-  loadDashboard(_id: string): any {
+  // custom routing logic if needed by the authentication implementation
+  getApplicationRouting(_application: any): any {
+    return notImplementedError('getApplicationRouting');
+  }
+
+  // load a dashboard from info in the url
+  //  _params is expected to be { querystring: <value-of-url-query-string> }
+  async loadDashboardFromUrl(_params: any): any {
+    return notImplementedError('loadDashboardFromUrl');
+  }
+
+  // place to clean up after success if needed
+  loadDashboardFromUrlSuccess(): void {
+    return notImplementedError('loadDashboardFromUrlSuccess');
+  }
+
+  // load dashboard from backend
+  async loadDashboard(_id: string): any {
     return notImplementedError('loadDashboard');
   }
 
-  saveDashboard(_dashboard: any): boolean | never {
+  // save dashboard to backend
+  async saveDashboard(_dashboard: any): boolean | never {
     return notImplementedError('saveDashboard');
   }
 
-  deleteDashboard(_id: string): void | never {
+  // delete dashboard from backend
+  async deleteDashboard(_id: string): void | never {
     return notImplementedError('deleteDashboard');
+  }
+
+  // true if the module contains a custom publish UI
+  hasCustomPublishUI(): boolean {
+    return false;
+  }
+
+  getPublishMenuText(): string {
+    return notImplementedError('getPublishUIButton');
+  }
+
+  // a button to appear along side the Save button in SaveModal
+  getPublishUIButton(): any {
+    return notImplementedError('getPublishUIButton');
+  }
+
+  // a dialog to appear when the publish button is pushed
+  getPublishUIDialog(): any {
+    return notImplementedError('getPublishUIComponent');
+  }
+
+  hasChat(): boolean {
+    return notImplementedError('hasChat');
+  }
+
+  getChatUIButton(): any {
+    return notImplementedError('getChatUIButton');
   }
 
   async runQuery(_driver, _queryParams: Record<string, any>, _queryCallbacks: Record<string, any>): Promise<void> {

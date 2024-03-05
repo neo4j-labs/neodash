@@ -23,8 +23,12 @@ export const handleSavedQueryString = (queryString) => {
       window.history.pushState(queryObject, document.title, new URL(queryString, window.location.href));
     }
   }
-  localStorage.removeItem(QueryStorageKey);
+  // localStorage.removeItem(QueryStorageKey);
   return queryString;
+};
+
+export const removeSavedQueryString = () => {
+  localStorage.removeItem(QueryStorageKey);
 };
 
 export const saveQueryString = (queryString) => {
