@@ -22,71 +22,83 @@ export async function updatePrivileges(
   allLabels,
   newLabels,
   operation: Operation,
-  createNotification
+  onSuccess,
+  onFail
 ) {
-  let totalStatus = -1;
   // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
   // TODO - there
   // 1. Special case for '*'. Create it if needed to be there, otherwise revoke it.
-  console.log(1);
-  await runCypherQuery(
+  runCypherQuery(
     driver,
     'system',
     buildAccessQuery(database, role, ['*'], operation, !newLabels.includes('*')),
     {},
     1000,
     (status) => {
-      totalStatus = status;
-    }
-  );
-
-  if (totalStatus == QueryStatus.NO_DATA || totalStatus == QueryStatus.COMPLETE) {
-    // 2. Build the query that revokes all possible priveleges, returning to a 'blank slate'
-    console.log(2);
-
-    await runCypherQuery(
-      driver,
-      'system',
-      buildAccessQuery(
-        database,
-        role,
-        allLabels.filter((l) => l !== '*'),
-        operation,
-        true
-      ),
-      {},
-      1000,
-      (status) => {
-        totalStatus = status;
-      }
-    );
-    if (totalStatus == QueryStatus.NO_DATA || totalStatus == QueryStatus.COMPLETE) {
-      if (newLabels.filter((l) => l !== '*').length > 0) {
-        console.log(3);
-        await runCypherQuery(
+      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+        // 2. Build the query that revokes all possible priveleges, returning to a 'blank slate'
+        runCypherQuery(
           driver,
           'system',
           buildAccessQuery(
             database,
             role,
-            newLabels.filter((l) => l !== '*'),
+            allLabels.filter((l) => l !== '*'),
             operation,
-            false
+            true
           ),
           {},
           1000,
           (status) => {
-            if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
-              createNotification('Success', `Access for role '${role}' updated.`);
+            if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+              //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
+              // We build in an artificial delay...
+              const timeout = setTimeout(() => {
+                // 3. Create the new privileges as specified in the `newLabels` list by the user.
+                if (newLabels.filter((l) => l !== '*').length > 0) {
+                  runCypherQuery(
+                    driver,
+                    'system',
+                    buildAccessQuery(
+                      database,
+                      role,
+                      newLabels.filter((l) => l !== '*'),
+                      operation,
+                      false
+                    ),
+                    {},
+                    1000,
+                    (status) => {
+                      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+                        onSuccess();
+                      }
+                    },
+                    (records) => {
+                      if (records && records[0] && records[0].error) {
+                        onFail(records[0].error);
+                      }
+                    }
+                  );
+                } else {
+                  onSuccess();
+                }
+              }, 1000);
+            }
+          },
+          (records) => {
+            if (records && records[0] && records[0].error) {
+              onFail(records[0].error);
             }
           }
         );
-      } else {
-        console.log(4);
-        createNotification('Success', `Access for role '${role}' updated.`);
+      }
+    },
+    (records) => {
+      if (records && records[0] && records[0].error) {
+        onFail(records[0].error);
       }
     }
-  }
+  );
 }
 
 /**
@@ -104,7 +116,6 @@ function buildAccessQuery(database, role, labels, operation: Operation, revoke: 
             MATCH {*} ON GRAPH ${database} 
             NODES ${labels.join(',')} 
             ${revoke ? 'FROM' : 'TO'} ${role}`;
-  console.log(query);
   return query;
 }
 
@@ -127,6 +138,8 @@ export const retrieveAllowAndDenyLists = (
   setLabels,
   setAllowList,
   setDenyList,
+  setFixedAllowList,
+  setFixedDenyList,
   setLoaded
 ) => {
   runCypherQuery(
@@ -138,7 +151,7 @@ export const retrieveAllowAndDenyLists = (
       AND role = $rolename
       AND action = 'match' 
       AND segment STARTS WITH 'NODE('
-      RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes`,
+      RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes, graph = "*" as fixed`,
     { rolename: currentRole, database: database },
     1000,
     (status) => {
@@ -149,12 +162,21 @@ export const retrieveAllowAndDenyLists = (
     },
     (records) => {
       // Extract granted and denied label list from the result of the SHOW PRIVILEGES query
-      const grants = records.filter((r) => r._fields[0] == 'GRANTED');
-      const denies = records.filter((r) => r._fields[0] == 'DENIED');
+      const grants = records.filter((r) => r._fields[0] == 'GRANTED' && r._fields[2] == false);
+      const denies = records.filter((r) => r._fields[0] == 'DENIED' && r._fields[2] == false);
       const grantedLabels = grants[0] ? [...new Set(grants[0]._fields[1])] : [];
       const deniedLabels = denies[0] ? [...new Set(denies[0]._fields[1])] : [];
-      setAllowList(grantedLabels);
-      setDenyList(deniedLabels);
+
+      // Do the same for fixed grants (those stored under the '*' graph permission)
+      const fixedGrants = records.filter((r) => r._fields[0] == 'GRANTED' && r._fields[2] == true);
+      const fixedDenies = records.filter((r) => r._fields[0] == 'DENIED' && r._fields[2] == true);
+      const fixedGrantedLabels = fixedGrants[0] ? [...new Set(fixedGrants[0]._fields[1])] : [];
+      const fixedDeniedLabels = fixedDenies[0] ? [...new Set(fixedDenies[0]._fields[1])] : [];
+
+      setAllowList([...new Set(grantedLabels.concat(fixedGrantedLabels))]);
+      setDenyList([...new Set(deniedLabels.concat(fixedDeniedLabels))]);
+      setFixedAllowList(fixedGrantedLabels);
+      setFixedDenyList(fixedDeniedLabels);
 
       // Here we build a set of all POSSIBLE labels, that includes the list in the database, plus those in denies and grants.
       const possibleLabels = [...new Set(allLabels.concat(grantedLabels).concat(deniedLabels))];
@@ -233,7 +255,7 @@ export function retrieveDatabaseList(driver, setDatabases: React.Dispatch<React.
  * @param allUsers list of all users.
  * @param selectedUsers list of users to have the role after the operation completes.
  */
-export const updateUsers = async (driver, currentRole, allUsers, selectedUsers) => {
+export async function updateUsers(driver, currentRole, allUsers, selectedUsers, onSuccess, onFail) {
   // 1. Build the query that removes all users from the role.
   await runCypherQuery(
     driver,
@@ -242,16 +264,32 @@ export const updateUsers = async (driver, currentRole, allUsers, selectedUsers) 
     {},
     1000,
     (status) => {
-      if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
+      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
         //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
         // We build in an artificial delay...
         const timeout = setTimeout(() => {
           // 2. Re-assign only selected users to the role.
           if (selectedUsers.length > 0) {
-            runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
+            runCypherQuery(
+              driver,
+              'system',
+              `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`,
+              {},
+              1000,
+              (status) => {
+                if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+                  onSuccess();
+                }
+              }
+            );
           }
         }, 1000);
       }
+    },
+    (records) => {
+      if (records && records[0] && records[0].error) {
+        onFail(records[0].error);
+      }
     }
   );
-};
+}
