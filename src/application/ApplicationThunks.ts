@@ -7,7 +7,7 @@ import {
   assignDashboardUuidIfNotPresentThunk,
   loadDashboardFromNeo4jByNameThunk,
   loadDashboardFromNeo4jByUUIDThunk,
-  loadDashboardFromNeo4jByHiveUUIDThunk,
+  loadDashboardFromNeo4jByConnectionModuleUUIDThunk,
   loadDashboardFromNeo4jThunk,
   loadDashboardThunk,
   upgradeDashboardVersion,
@@ -49,7 +49,6 @@ import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
-import { handleNeoDashLaunch } from '../extensions/hive/launch/launch';
 import { QueryCallback, QueryParams } from '../connection/interfaces';
 import { getConnectionModule } from '../connection/utils';
 
@@ -147,6 +146,7 @@ export const createConnectionThunk =
 
             // If we specify a dashboard by name, load the latest version of it.
             // If we specify a dashboard by UUID, load it directly.
+
             if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
               dispatch(
                 loadDashboardFromNeo4jByNameThunk(
@@ -156,9 +156,9 @@ export const createConnectionThunk =
                   setDashboardAfterLoadingFromDatabase
                 )
               );
-            } else if (application.dashboardToLoadAfterConnecting.startsWith('hive:')) {
+            } else if (application.dashboardToLoadAfterConnecting.startsWith(`${connectionModule.name}:`)) {
               dispatch(
-                loadDashboardFromNeo4jByHiveUUIDThunk(
+                loadDashboardFromNeo4jByConnectionModuleUUIDThunk(
                   application.dashboardToLoadAfterConnecting.substring(5),
                   setDashboardAfterLoadingFromDatabase
                 )
@@ -410,12 +410,29 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 
 async function getConfigDynamically() {
   // for now putting auth code here
-  console.log('This line is logged once.');
-  const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
-  console.log('This line used to be logged twice, before useEffect()');
-  if (launchResult.isHandled) {
-    return launchResult.config;
+  // console.log('This line is logged once.');
+
+  // const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
+  // console.log('This line used to be logged twice, before useEffect()');
+  // if (launchResult.isHandled) {
+  //   return launchResult.config;
+  // }
+
+  const { connectionModule } = getConnectionModule();
+  try {
+    const launchResult = await connectionModule.loadDashboardFromUrl({ queryString: window.location.search });
+    connectionModule.loadDashboardFromUrlSuccess();
+    console.log('This line used to be logged twice, before useEffect()');
+    if (launchResult.isHandled) {
+      return launchResult.config;
+    }
+  } catch (e) {
+    let message = `${e}`;
+    if (!message.match(/Not Implemented/)) {
+      console.log(`Connection module '${connectionModule.name}': error calling loadDashboardFromUrl`, e);
+    }
   }
+
   try {
     return (await fetch('config.json')).json();
   } catch (e) {
@@ -457,7 +474,23 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDatabaseList: 'neo4j',
     customHeader: '',
   };
+
+  const { connectionModule } = getConnectionModule();
+  try {
+    let response = await connectionModule.authenticate({ queryString: window.location.search });
+    if (response && !response.isAuthenticated) {
+      return;
+    }
+  } catch (e) {
+    let message = `${e}`;
+    if (!message.match(/Not Implemented/)) {
+      console.log(`Connection module '${connectionModule.name}': error calling authentication`, e);
+      return;
+    }
+  }
+
   const config = await getConfigDynamically();
+
   // If the config isn't loaded yet, cancel the initialization. This line will be re-executed when the config is there.
   if (!config) {
     return;
@@ -621,6 +654,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
 // Set up NeoDash to run in editor mode.
 export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConnecting) => (dispatch: any) => {
+  const { connectionModule } = getConnectionModule();
+
   const clearNotificationAfterLoad = true;
   dispatch(clearDesktopConnectionProperties());
   dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
@@ -635,8 +670,8 @@ export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConne
   }
 
   if (config.isOwner == true && config.standalone == false) {
-    if (window.location.search.includes('hive')) {
-      dispatch(setDashboardToLoadAfterConnecting(`hive:${config.standaloneDashboardURL}`));
+    if (window.location.search.includes(connectionModule.name)) {
+      dispatch(setDashboardToLoadAfterConnecting(`${connectionModule.name}:${config.standaloneDashboardURL}`));
     } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
       dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
     } else {
@@ -679,8 +714,11 @@ export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConne
 // Set up NeoDash to run in standalone mode.
 export const initializeApplicationAsStandaloneThunk =
   (config, paramsToSetAfterConnecting) => (dispatch: any, getState: any) => {
+    const { connectionModule } = getConnectionModule();
+
     const clearNotificationAfterLoad = true;
     const state = getState();
+
     // If we are running in standalone mode, auto-set the connection details that are configured.
     dispatch(
       setConnectionProperties(
@@ -697,8 +735,8 @@ export const initializeApplicationAsStandaloneThunk =
     dispatch(setConnected(false));
     dispatch(setWelcomeScreenOpen(false));
 
-    if (window.location.search.includes('hive')) {
-      dispatch(setDashboardToLoadAfterConnecting(`hive:${config.standaloneDashboardURL}`));
+    if (window.location.search.includes(connectionModule.name)) {
+      dispatch(setDashboardToLoadAfterConnecting(`${connectionModule.name}:${config.standaloneDashboardURL}`));
     } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
       dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
     } else {

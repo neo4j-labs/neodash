@@ -47,7 +47,27 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
   return promise;
 };
 
+export const hiveAuthenticate = async ({ queryString }) => {
+  try {
+    // console.log('handleNeoDashLaunch before silentAuth')
+    let response = await auth.silentAuth();
+    return { isAuthenticated: response };
+    // queryString = handleSavedQueryString(queryString);
+  } catch (err) {
+    // console.log('handleNeoDashLaunch err: ', err)
+    if (err.message === 'login_required' || err.error === 'login_required') {
+      // console.log('handleNeoDashLaunch login_required')
+      saveQueryString(queryString);
+      auth.login();
+      return { isAuthenticated: false };
+    }
+    alert('An unknown error occurred, check the console for details.');
+    return { isHandled: false };
+  }
+};
+
 export const handleNeoDashLaunch = async ({ queryString }) => {
+  /*
   try {
     // console.log('handleNeoDashLaunch before silentAuth')
     await auth.silentAuth();
@@ -63,6 +83,8 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
       return { isHandled: false };
     }
   }
+  */
+  queryString = handleSavedQueryString(queryString);
 
   const urlParams = new URLSearchParams(queryString);
   const dashboardUuid = urlParams.get('hivedashboarduuid');
