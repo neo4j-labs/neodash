@@ -50,7 +50,6 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   }, [open]);
 
   useEffect(() => {
-    console.log([denyCompleted, allowCompleted, usersCompleted, failed]);
     if (failed !== false) {
       createNotification('Unable to update privileges', `${failed}`);
     } else if (denyCompleted && allowCompleted && usersCompleted) {
@@ -121,7 +120,6 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       setDenyCompleted(true);
       setAllowCompleted(true);
     }
-    console.log([denyCompleted, allowCompleted, usersCompleted, failed]);
     handleClose();
   };
 
