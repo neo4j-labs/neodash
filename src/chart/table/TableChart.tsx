@@ -6,9 +6,11 @@ import {
   generateClassDefinitionsBasedOnRules,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
-import { Tooltip, Snackbar } from '@mui/material';
+import { Tooltip, Snackbar, Stack, ButtonGroup, Popover, Typography } from '@mui/material';
 import { downloadCSV } from '../ChartUtils';
 import { getRendererForValue, rendererForType, RenderSubValue } from '../../report/ReportRecordProcessing';
+import ApiService from '../../utils/apiService';
+import { AxiosResponse } from 'axios';
 
 import {
   getRule,
@@ -72,6 +74,10 @@ export const generateSafeColumnKey = (key) => {
 };
 
 export const NeoTableChart = (props: ChartProps) => {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+  const [isApiLoading, setApiLoading] = React.useState(false);
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
@@ -110,6 +116,14 @@ export const NeoTableChart = (props: ChartProps) => {
 
   const generateSafeColumnKey = (key) => {
     return key != 'id' ? key : `${key} `;
+  };
+
+  const handlePopHoverClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopHoverClose = () => {
+    setAnchorEl(null);
   };
 
   const actionableFields = actionsRules.filter((r) => r.condition !== 'rowCheck').map((r) => r.field);
@@ -215,9 +229,94 @@ export const NeoTableChart = (props: ChartProps) => {
 
   const pageNames = getPageNumbersAndNamesList();
 
+  const handleApiCall = async () => {
+    setApiLoading(true);
+    let response: AxiosResponse;
+    const { method = '', endpoint = '', params } = props.settings?.apiSpec || {};
+    const headers = {
+      // 'Authorization': 'Bearer YOUR_TOKEN',
+      // Add any other custom headers you need
+    };
+    const api = new ApiService({ headers });
+    const appendParams = new URLSearchParams();
+
+    if (params) {
+      params.forEach((param) => appendParams.append(param.key, param.value));
+    }
+
+    try {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          response = await api.get(endpoint, appendParams);
+          break;
+        case 'POST':
+          response = await api.post(endpoint, rows);
+          break;
+        case 'PUT':
+          response = await api.put(endpoint, rows);
+          break;
+        case 'PATCH':
+          response = await api.patch(endpoint, rows);
+          break;
+        case 'DELETE':
+          response = await api.delete(endpoint);
+          break;
+        default:
+          throw new Error(`Unsupported method: ${method}`);
+      }
+
+      props.updateReportSetting('apiSpec', { ...props.settings.apiSpec, response });
+    } catch (error) {
+      // Handle errors here
+      console.error('API call error:', error);
+    } finally {
+      setApiLoading(false);
+    }
+  };
+
+  const apiCallButton = () => (
+    <Stack direction='row' spacing={2} justifyContent='flex-end' marginRight={2}>
+      <ButtonGroup color='primary' variant='outlined' aria-label='button group'>
+        <Button size='small' onClick={handleApiCall} disabled={isApiLoading}>
+          {isApiLoading ? 'Loading...' : 'Send'}
+        </Button>
+        <Button size='small' onClick={handlePopHoverClick} disabled={!props.settings.apiSpec.response}>
+          View Response
+        </Button>
+        {props.settings.apiSpec.response ? (
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handlePopHoverClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          >
+            <Typography sx={{ p: 2 }}>{props.settings?.apiSpec.response.data}</Typography>
+          </Popover>
+        ) : (
+          <></>
+        )}
+      </ButtonGroup>
+    </Stack>
+  );
+
+  const isApiSpecEnabled = props.settings?.apiSpec && props.settings?.apiSpec.apiEnabled;
+
+  const tableStyle: any = isApiSpecEnabled
+    ? { marginTop: 10, height: '90%', width: '100%', position: 'relative' }
+    : { height: '100%', width: '100%', position: 'relative' };
+
   return (
     <ThemeProvider theme={theme}>
-      <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
+      {isApiSpecEnabled ? apiCallButton() : <></>}
+      <div className={classes.root} style={tableStyle}>
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
