@@ -26,6 +26,12 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   const [labels, setLabels] = useState([]);
   const [allowList, setAllowList] = useState([]);
   const [denyList, setDenyList] = useState([]);
+  const [fixedAllowList, setFixedAllowList] = useState([]);
+  const [fixedDenyList, setFixedDenyList] = useState([]);
+  const [denyCompleted, setDenyCompleted] = useState(false);
+  const [allowCompleted, setAllowCompleted] = useState(false);
+  const [usersCompleted, setUsersCompleted] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     if (!open) {
@@ -35,9 +41,21 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       setSelectedDatabase('');
       return;
     }
+    setDenyCompleted(false);
+    setAllowCompleted(false);
+    setUsersCompleted(false);
+    setFailed(false);
     retrieveDatabaseList(driver, setDatabases);
     retrieveNeo4jUsers(driver, currentRole, setNeo4jUsers, setSelectedUsers);
   }, [open]);
+
+  useEffect(() => {
+    if (failed !== false) {
+      createNotification('Unable to update privileges', `${failed}`);
+    } else if (denyCompleted && allowCompleted && usersCompleted) {
+      createNotification('Success', `Access for role '${currentRole}' updated.`);
+    }
+  }, [denyCompleted, allowCompleted, usersCompleted, failed]);
 
   const parseLabelsList = (database, records) => {
     const allLabels = records.map((record) => record._fields[0]).filter((l) => l !== '_Neodash_Dashboard');
@@ -49,6 +67,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
       setLabels,
       setAllowList,
       setDenyList,
+      setFixedAllowList,
+      setFixedDenyList,
       setLoaded
     );
   };
@@ -58,16 +78,48 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
     retrieveLabelsList(driver, selectedOption.value, (records) => parseLabelsList(selectedOption.value, records));
   };
 
-  const handleSave = () => {
-    updateUsers(driver, currentRole, neo4jUsers, selectedUsers);
-    if (selectedDatabase) {
-      createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-      updatePrivileges(driver, selectedDatabase, currentRole, labels, denyList, Operation.DENY, createNotification);
-      updatePrivileges(driver, selectedDatabase, currentRole, labels, allowList, Operation.GRANT, createNotification);
-    } else {
-      createNotification('Success', `Users have been updated for role '${currentRole}'.`);
-    }
+  const handleSave = async () => {
+    createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
+    console.log(selectedUsers);
+    updateUsers(
+      driver,
+      currentRole,
+      neo4jUsers,
+      selectedUsers,
+      () => setUsersCompleted(true),
+      (failReason) => setFailed(`Operation 'ROLE-USER ASSIGNMENT' failed.\n Reason: ${failReason}`)
+    );
 
+    if (selectedDatabase) {
+      const nonFixedDenyList = denyList.filter((n) => !fixedDenyList.includes(n));
+      const nonFixedAllowList = allowList.filter((n) => !fixedDenyList.includes(n));
+      updatePrivileges(
+        driver,
+        selectedDatabase,
+        currentRole,
+        labels,
+        nonFixedDenyList,
+        Operation.DENY,
+        () => setDenyCompleted(true),
+        (failReason) => setFailed(`Operation 'DENY LABEL ACCESS' failed.\n Reason: ${failReason}`)
+      ).then(() => {
+        updatePrivileges(
+          driver,
+          selectedDatabase,
+          currentRole,
+          labels,
+          nonFixedAllowList,
+          Operation.GRANT,
+          () => setAllowCompleted(true),
+          (failReason) => setFailed(`Operation 'ALLOW LABEL ACCESS' failed.\n Reason: ${failReason}`)
+        );
+      });
+    } else {
+      // Since there is no database selected, we don't run the DENY/ALLOW queries.
+      // We just mark them as completed so the success message shows up.
+      setDenyCompleted(true);
+      setAllowCompleted(true);
+    }
     handleClose();
   };
 
@@ -138,7 +190,17 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
                     value: allowList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                     options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                     isMulti: true,
-                    onChange: (val) => setAllowList(val.map((v) => v.value)),
+                    onChange: (val) => {
+                      // Make sure that only database-specific label access rules can be changed from this UI.
+                      if (fixedAllowList.every((v) => val.map((selected) => selected.value).includes(v))) {
+                        setAllowList(val.map((v) => v.value));
+                      } else {
+                        createNotification(
+                          'Label cannot be removed',
+                          'The selected label is allowed access across all databases. You cannot remove this privilege using this interface.'
+                        );
+                      }
+                    },
                   }}
                 />
               </div>
@@ -154,9 +216,21 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
                     placeholder: 'Select labels',
                     isClearable: false,
                     value: denyList.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
-                    options: labels.map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
+                    options: labels
+                      .filter((l) => l !== '*')
+                      .map((nodelabel) => ({ value: nodelabel, label: nodelabel })),
                     isMulti: true,
-                    onChange: (val) => setDenyList(val.map((v) => v.value)),
+                    onChange: (val) => {
+                      // Make sure that only database-specific label access rules can be changed from this UI.
+                      if (fixedDenyList.every((v) => val.map((selected) => selected.value).includes(v))) {
+                        setDenyList(val.map((v) => v.value));
+                      } else {
+                        createNotification(
+                          'Label cannot be removed',
+                          'The selected label is denied access across all databases. You cannot remove this privilege using this interface.'
+                        );
+                      }
+                    },
                   }}
                 />
               </div>

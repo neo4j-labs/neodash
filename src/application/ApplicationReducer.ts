@@ -64,7 +64,6 @@ const initialState = {
     database: '',
     username: 'neo4j',
     password: '',
-    ssoProviders: [],
   },
   shareDetails: undefined,
   desktopConnection: null,
@@ -247,7 +246,7 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       return state;
     }
     case SET_CONNECTION_PROPERTIES: {
-      const { protocol, url, port, database, username, password, ssoProviders } = payload;
+      const { protocol, url, port, database, username, password } = payload;
       state = update(state, {
         connection: {
           protocol: protocol,
@@ -256,7 +255,6 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
           database: database,
           username: username,
           password: password,
-          ssoProviders,
         },
       });
       return state;
