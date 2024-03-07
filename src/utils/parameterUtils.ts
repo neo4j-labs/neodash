@@ -14,7 +14,7 @@ export const extractAllParameterNames = (cypherQuery) => {
 
 export const checkParametersNameInGlobalParameter = (parameterNames: string[], globalParameterNames: any) => {
     for (const key of parameterNames) {
-        if (!globalParameterNames[key] || (Array.isArray(globalParameterNames[key]) && globalParameterNames[key].length === 0)) {
+        if (!globalParameterNames[key] || (Array.isArray(globalParameterNames[key]) && globalParameterNames[key].length === 0) || globalParameterNames[key] === '') {
             return true;
         }
     }
