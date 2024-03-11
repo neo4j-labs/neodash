@@ -4,7 +4,6 @@ import NeoDatePicker from '../../../component/field/DateField';
 import dayjs from 'dayjs';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
 import { isCastableToNeo4jDate, isEmptyObject } from '../../ChartUtils';
-import { debounce } from '@mui/material';
 
 function castPropsToBoltDate(dict) {
   if (isEmptyObject(dict)) {
@@ -56,7 +55,7 @@ const DatePickerParameterSelectComponent = (props: ParameterSelectProps) => {
           setInputDate(newValue);
 
           // Check whether the user has inputted a valid year. If not, do not update the parameter.
-          if (!newValue || isNaN(newValue.$y) || isNaN(newValue.$m) || isNaN(newValue.$d)) {
+          if (!newValue || Number.isNaN(newValue.$y) || Number.isNaN(newValue.$m) || Number.isNaN(newValue.$d)) {
             return;
           }
           if (newValue == null && clearParameterOnFieldClear) {

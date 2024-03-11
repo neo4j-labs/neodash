@@ -1,4 +1,3 @@
-import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
 import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
@@ -43,6 +42,9 @@ import {
 } from './ApplicationActions';
 import { setLoggingMode, setLoggingDatabase, setLogErrorNotification } from './logging/LoggingActions';
 import { version } from '../modal/AboutModal';
+import neo4j, { auth, authTokenManagers } from 'neo4j-driver';
+import type { Neo4jScheme } from 'use-neo4j/dist/neo4j-config.interface';
+import { SSOProviderOriginal, handleRefreshingToken } from 'neo4j-client-sso';
 import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
@@ -55,6 +57,47 @@ import { getConnectionModule } from '../connection/utils';
  * Several actions/other thunks may be dispatched from here.
  */
 
+export const createDriver = (
+  scheme: Neo4jScheme,
+  host: string,
+  port: string | number,
+  username?: string,
+  password?: string,
+  config?: { userAgent?: string },
+  ssoProviders: SSOProviderOriginal[] = []
+) => {
+  if (ssoProviders.length > 0) {
+    const authTokenMgr = authTokenManagers.bearer({
+      tokenProvider: async () => {
+        const credentials = await handleRefreshingToken(ssoProviders);
+        const token = auth.bearer(credentials.password);
+        // Get the expiration from the JWT's payload, which is a JSON string encoded
+        // using base64. You could also use a JWT parsing lib
+        const [, payloadBase64] = credentials.password.split('.');
+        const payload: unknown = JSON.parse(window.atob(payloadBase64 ?? ''));
+        let expiration: Date;
+        if (typeof payload === 'object' && payload !== null && 'exp' in payload) {
+          expiration = new Date(Number(payload.exp) * 1000);
+        } else {
+          expiration = new Date();
+        }
+
+        return {
+          expiration,
+          token,
+        };
+      },
+    });
+    return neo4j.driver(`${scheme}://${host}:${port}`, authTokenMgr, config);
+  }
+
+  if (!username || !password) {
+    return neo4j.driver(`${scheme}://${host}:${port}`);
+  }
+
+  return neo4j.driver(`${scheme}://${host}:${port}`, neo4j.auth.basic(username, password), config);
+};
+
 /**
  * Establish a connection to Neo4j with the specified credentials. Open/close the relevant windows when connection is made (un)successfully.
  * @param protocol - the neo4j protocol (e.g. bolt, bolt+s, neo4j+s, ...)
@@ -63,14 +106,24 @@ import { getConnectionModule } from '../connection/utils';
  * @param database - the Neo4j database to connect to.
  * @param username - Neo4j username.
  * @param password - Neo4j password.
+ * @param SSOProviders - List of available SSO providers
  */
 export const createConnectionThunk =
-  (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
+  (protocol, url, port, database, username, password, SSOProviders = []) =>
+  (dispatch: any, getState: any) => {
     const loggingState = getState();
     const loggingSettings = applicationGetLoggingSettings(loggingState);
     const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
     try {
-      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
+      const driver = createDriver(
+        protocol,
+        url,
+        port,
+        username,
+        password,
+        { userAgent: `neodash/v${version}` },
+        SSOProviders
+      );
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
@@ -508,7 +561,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(setAboutModalOpen(false));
       dispatch(setConnected(false));
       dispatch(setWelcomeScreenOpen(false));
-      const success = await initializeSSO(state.application.cachedSSODiscoveryUrl, (credentials) => {
+      const success = await initializeSSO(state.application.cachedSSODiscoveryUrl, (credentials, ssoProviders) => {
         if (standalone) {
           // Redirected from SSO and running in viewer mode, merge retrieved config with hardcoded credentials.
           dispatch(
@@ -518,7 +571,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               config.standalonePort,
               config.standaloneDatabase,
               credentials.username,
-              credentials.password
+              credentials.password,
+              ssoProviders
             )
           );
           dispatch(
@@ -528,7 +582,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               config.standalonePort,
               config.standaloneDatabase,
               credentials.username,
-              credentials.password
+              credentials.password,
+              ssoProviders
             )
           );
         } else {
@@ -540,7 +595,8 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
               state.application.connection.port,
               state.application.connection.database,
               credentials.username,
-              credentials.password
+              credentials.password,
+              ssoProviders
             )
           );
           dispatch(setConnected(true));
