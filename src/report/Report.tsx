@@ -70,7 +70,7 @@ export const NeoReport = ({
     );
   }
   // TODO : abstract connection module call (maybe selector at application level)
-  const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
+  const debouncedRunQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {
     if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
@@ -130,7 +130,7 @@ export const NeoReport = ({
       let queryCallback: QueryCallback = { setStatus, setRecords, setFields, setSchema: setSchemaCallback };
 
       if (debounced) {
-        debouncedRunCypherQuery(driver, queryParams, queryCallback);
+        debouncedRunQuery(driver, queryParams, queryCallback);
       } else {
         connectionModule.runQuery(driver, queryParams, queryCallback);
       }

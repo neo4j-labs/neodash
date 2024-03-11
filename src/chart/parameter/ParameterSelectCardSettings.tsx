@@ -23,7 +23,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
 
   const [queryText, setQueryText] = React.useState(query);
   const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-  const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
+  const debouncedRunQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
 
   const { manualPropertyNameSpecification } = settings;
   const [labelInputText, setLabelInputText] = React.useState(settings.entityType);
@@ -82,7 +82,7 @@ const ParameterSelectCardSettings = ({ query, database, settings, onReportSettin
         setSchema: () => {},
       };
 
-      debouncedRunCypherQuery(driver, queryParams, queryCallback);
+      debouncedRunQuery(driver, queryParams, queryCallback);
     },
     [database]
   );

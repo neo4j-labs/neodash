@@ -3,9 +3,10 @@ import { IconButton, Button, Dialog, TextInput } from '@neo4j-ndl/react';
 import { Menu, MenuItem, Chip } from '@mui/material';
 import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import { PlusCircleIconOutline } from '@neo4j-ndl/react/icons';
-import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
 import { createNotificationThunk } from '../../../page/PageThunks';
 import { useDispatch } from 'react-redux';
+import { runCypherQuery } from '../../../connection/neo4j/runCypherQuery';
+import { QueryStatus } from '../../../connection/interfaces';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  * @param open - Whether the modal is open or not.
@@ -15,8 +16,8 @@ import { useDispatch } from 'react-redux';
  */
 export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, handleClose }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedLabels, setSelectedLabels] = useState([]);
-  const [allLabels, setAllLabels] = useState([]);
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const [allLabels, setAllLabels] = useState<string[]>([]);
   const [neo4jLabels, setNeo4jLabels] = useState([]);
   const [newLabel, setNewLabel] = useState('');
   const INITIAL_LABEL = '_Neodash_Dashboard';
@@ -28,35 +29,30 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
     if (!open) {
       return;
     }
-    runCypherQuery(
+    runCypherQuery({
       driver,
       database,
-      'CALL db.labels()',
-      {},
-      1000,
-      () => {},
-      (records) => setNeo4jLabels(records.map((record) => record.get('label')))
-    );
+      query: 'CALL db.labels()',
+      setRecords: (records) => setNeo4jLabels(records.map((record) => record.get('label'))),
+    });
 
     const query = `
     MATCH (d:${INITIAL_LABEL} {uuid: "${dashboard.uuid}"})
     RETURN labels(d) as labels
     `;
-    runCypherQuery(
+    runCypherQuery({
       driver,
       database,
       query,
-      {},
-      1000,
-      (error) => {
+      setError: (error) => {
         console.error(error);
       },
-      (records) => {
+      setRecords: (records) => {
         // Set the selectedLabels state to the labels of the dashboard
         setSelectedLabels(records[0].get('labels'));
         setAllLabels(records[0].get('labels'));
-      }
-    );
+      },
+    });
     setFeedback('');
     setNewLabel('');
   }, [open]);
@@ -114,13 +110,12 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
     RETURN 1;
     `;
 
-    runCypherQuery(
+    runCypherQuery({
       driver,
       database,
       query,
-      { selectedLabels: selectedLabels },
-      1000,
-      (status) => {
+      parameters: { selectedLabels: selectedLabels },
+      setStatus: (status) => {
         if (status == QueryStatus.COMPLETE) {
           dispatch(
             createNotificationThunk(
@@ -138,8 +133,7 @@ export const NeoDashboardSidebarAccessModal = ({ open, database, dashboard, hand
           );
         }
       },
-      () => {}
-    );
+    });
   };
 
   return (
