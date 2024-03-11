@@ -68,6 +68,21 @@ export const generateNodeCanvasObject = (
   if (icons && icons[node.mainLabel]) {
     drawDataURIOnCanvas(node, icons[node.mainLabel], ctx, defaultNodeSize);
   } else {
+    /* eslint-disable no-constant-condition */
+    if (node.selected || true) {
+      const nodeSize = Math.sqrt(node.size ? node.size : defaultNodeSize);
+      const innerBorderRadius = Math.max(0, 4 * nodeSize - 1.25);
+      const outerBorderRadius = Math.max(0, 4 * nodeSize - 0.25);
+      ctx.beginPath();
+      ctx.strokeStyle = 'white';
+      ctx.arc(node.x, node.y, innerBorderRadius, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.strokeStyle = 'red';
+      ctx.arc(node.x, node.y, outerBorderRadius, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
     const label = selection && selection[node.mainLabel] ? getNodeLabel(selection, node) : '';
     const fontSize = nodeLabelFontSize;
     ctx.font = `${fontSize}px Sans-Serif`;
