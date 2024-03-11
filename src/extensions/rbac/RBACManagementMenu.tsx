@@ -19,7 +19,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNoti
     if (!MenuOpen) {
       return;
     }
-    const query = `SHOW ROLES YIELD role WHERE role <> "PUBLIC" return role`;
+    const query = `SHOW PRIVILEGES YIELD role, action WHERE role <> "PUBLIC" RETURN role, 'dbms_actions' in collect(action)`;
     runCypherQuery(
       driver,
       'system',
@@ -32,7 +32,8 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNoti
           createNotification('Unable to retrieve roles', records[0].error);
           return;
         }
-        setRoles(records.map((record) => record._fields[0]));
+        // Only display roles which are not able to do 'dbms_actions', i.e. they are not admins.
+        setRoles(records.filter((r) => r._fields[1] == false).map((record) => record._fields[0]));
       }
     );
   }, [MenuOpen]);
@@ -71,7 +72,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNoti
       </Menu>
 
       <RBACManagementModal
-        open={isModalOpen == true}
+        open={isModalOpen}
         handleClose={() => {
           setIsModalOpen(false);
         }}
