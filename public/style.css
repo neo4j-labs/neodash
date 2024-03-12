@@ -86,6 +86,10 @@
   border: none !important;
 }
 
+.MuiBox-root {
+  line-height: normal;
+}
+
 .MuiDataGrid-footerContainer > div {
   margin-top: -40px;
 }
@@ -129,8 +133,8 @@
 }
 
 .MuiCard-root {
-  box-shadow: 0 0 #0000,0 0 #0000,var(--tw-shadow) !important;
-  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow) !important;
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--tw-shadow) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
 
 .white-text {
@@ -183,7 +187,6 @@
   text-align: center;
 }
 
-
 .card-view.expanded {
   position: absolute;
   top: 0;
@@ -213,24 +216,23 @@
 
 .card-view .MuiTablePagination-root {
   margin-top: -40px;
-
 }
 
 @keyframes pulse {
-	0% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-	}
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+  }
 
-	70% {
-		transform: scale(1);
-		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-	}
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
 
-	100% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-	}
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
 }
 
 /* Workaround for Needle not handling menu placement of dropdowns on modals */
@@ -242,10 +244,10 @@
 /* End workaround */
 
 /* Workaround for cleaning the Gantt chart UI */
-.gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div> div:not(:first-child) {
+.gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div > div:not(:first-child) {
   display: none;
 }
-.gantt-wrapper > div > div > div > div> div>  div> div:not(:first-child)  {
+.gantt-wrapper > div > div > div > div > div > div > div:not(:first-child) {
   display: none;
 }
 /* End Gantt chart workaround */

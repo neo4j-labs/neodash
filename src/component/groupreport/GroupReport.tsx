@@ -15,13 +15,13 @@ export default function GroupReport({
   onClonePressed,
 }) {
   return groupedReports[groupId].length > 0 ? (
-    <Box display='grid' gridTemplateColumns='repeat(12, 1fr)' columnGap={1} sx={getBorderSpecsForGroupId(groupId)}>
+    <Box display='grid' gridTemplateColumns='repeat(24, 1fr)' columnGap={1} sx={getBorderSpecsForGroupId(groupId)}>
       {groupedReports[groupId]
         .sort((a: any, b: any) => a.groupOrder - b.groupOrder)
         .map((report: { id: any; width: any; height: any }) => {
           const { id, width: w, height: h } = report;
           return (
-            <Box id={id} gridColumn={`span ${w}`} gridRow={`span ${h}`} sx={{ height: h * 210, paddingBottom: '15px' }}>
+            <Box id={id} gridColumn={`span ${w}`} gridRow={`span ${h}`} sx={{ height: h * 100, paddingBottom: '15px' }}>
               <NeoCard
                 id={id}
                 key={getReportKey(pagenumber, id)}

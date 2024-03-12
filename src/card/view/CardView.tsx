@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { ReportItemContainer } from '../CardStyle';
 import NeoCardViewHeader from './CardViewHeader';
 import NeoCardViewFooter from './CardViewFooter';
-import { CardContent, Fab } from '@mui/material';
+import { CardContent } from '@mui/material';
 import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
 import { CARD_FOOTER_HEIGHT, CARD_HEADER_HEIGHT } from '../../config/CardConfig';
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import NeoCodeViewerComponent from '../../component/editor/CodeViewerComponent';
 import { NeoReportWrapper } from '../../report/ReportWrapper';
 import { identifyStyleRuleParameters } from '../../extensions/styling/StyleRuleEvaluator';
-import { IconButton } from '@neo4j-ndl/react';
-import { PlayCircleIconSolid } from '@neo4j-ndl/react/icons';
+import { Button, IconButton } from '@neo4j-ndl/react';
+import { PlayCircleIconSolid, PlayIconSolid } from '@neo4j-ndl/react/icons';
 import { extensionEnabled } from '../../utils/ReportUtils';
-import { PlayArrowOutlined } from '@mui/icons-material';
 import { checkParametersNameInGlobalParameter, extractAllParameterNames } from '../../utils/parameterUtils';
 import { objMerge } from '../../utils/ObjectManipulation';
 import { REPORT_TYPES } from '../../config/ReportConfig';
@@ -203,18 +202,15 @@ const NeoCardView = ({
 
   const executeButton = (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Fab
-        variant='extended'
+      <Button
         disabled={isParametersDefined(query)}
         onClick={() => {
           setActive(true);
         }}
-        color='success'
-        size='small'
       >
-        <PlayArrowOutlined aria-label={'play'} />
         {settings.executeButtonName ?? 'Execute'}
-      </Fab>
+        <PlayIconSolid className='btn-icon-base-r' />
+      </Button>
     </div>
   );
 
