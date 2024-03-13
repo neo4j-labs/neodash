@@ -23,6 +23,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
+import { Neo4jRecordParser } from '../../connection/neo4j/Neo4jRecordParser';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
@@ -114,7 +115,7 @@ export const NeoTableChart = (props: ChartProps) => {
 
   const actionableFields = actionsRules.filter((r) => r.condition !== 'rowCheck').map((r) => r.field);
   const columns = transposed
-    ? [records[0].keys[0]].concat(records.map((record) => record.fields[0]?.toString() || '')).map((key, i) => {
+    ? [records[0].keys[0]].concat(records.map((record) => record._fields[0]?.toString() || '')).map((key, i) => {
         const uniqueKey = `${String(key)}_${i}`;
         return ApplyColumnType(
           {
@@ -185,7 +186,7 @@ export const NeoTableChart = (props: ChartProps) => {
       Object.assign(
         { id: i, Field: key },
         ...records.map((record, j) => ({
-          [`${record.fields[0]}_${j + 1}`]: RenderSubValue(record.fields[i + 1]),
+          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1]),
         }))
       )
     );
@@ -204,7 +205,7 @@ export const NeoTableChart = (props: ChartProps) => {
     : records.map((record, rownumber) => {
         return Object.assign(
           { id: rownumber },
-          ...record.fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
+          ...record._fields.map((field, i) => ({ [generateSafeColumnKey(record.keys[i])]: field }))
         );
       });
 
