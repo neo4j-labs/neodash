@@ -1,6 +1,5 @@
 import { QueryStatus } from '../../connection/interfaces';
 import { runCypherQuery } from '../../connection/neo4j/runCypherQuery';
-import { setRecordsDummy } from '../../connection/neo4j/utils';
 
 export enum Operation {
   GRANT,

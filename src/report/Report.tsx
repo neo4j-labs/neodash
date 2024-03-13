@@ -21,6 +21,7 @@ import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
 import { QueryCallback, QueryParams, QueryStatus } from '../connection/interfaces';
 import { useConnectionModuleContext } from '../application/Application';
+import { NeodashRecord } from '../connection/NeodashRecord';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -58,12 +59,17 @@ export const NeoReport = ({
   deletePrepopulationReportFunction,
   theme,
 }) => {
-  const [records, setRecords] = useState(null);
+  const [records, setStateRecords] = useState<NeodashRecord[]>([]);
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const { connectionModule } = useConnectionModuleContext();
   const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
+
+  const setRecords = (records) => {
+    const parsedRecords = connectionModule.getParser().bulkParse(records);
+    setStateRecords(parsedRecords);
+  };
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'

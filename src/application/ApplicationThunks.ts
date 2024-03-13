@@ -1,4 +1,3 @@
-import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
 import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
@@ -70,7 +69,15 @@ export const createConnectionThunk =
     const loggingSettings = applicationGetLoggingSettings(loggingState);
     const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
     try {
-      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
+      const { connectionModule } = getConnectionModule();
+      const driver = connectionModule.createDriver({
+        scheme: protocol,
+        host: url,
+        port,
+        username,
+        password,
+        config: { userAgent: `neodash/v${version}` },
+      });
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
@@ -166,7 +173,6 @@ export const createConnectionThunk =
       };
       const query = 'RETURN true as connected';
       const parameters = {};
-      const { connectionModule } = getConnectionModule();
       const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
 
       let queryCallback: QueryCallback = {

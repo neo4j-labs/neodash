@@ -3,7 +3,7 @@ import NeoPage from '../page/Page';
 import NeoDashboardHeader from './header/DashboardHeader';
 import NeoDashboardTitle from './header/DashboardTitle';
 import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
-import { createDriver, Neo4jProvider } from 'use-neo4j';
+import { Neo4jProvider } from 'use-neo4j';
 import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
@@ -12,6 +12,7 @@ import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
 import NeoDashboardSidebar from './sidebar/DashboardSidebar';
+import { useConnectionModuleContext } from '../application/Application';
 
 const Dashboard = ({
   pagenumber,
@@ -23,16 +24,19 @@ const Dashboard = ({
   resetApplication,
 }) => {
   const [driver, setDriver] = React.useState(undefined);
+  const { connectionModule } = useConnectionModuleContext();
+
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
-    const newDriver = createDriver(
-      connection.protocol,
-      connection.url,
-      connection.port,
-      connection.username,
-      connection.password,
-      { userAgent: `neodash/v${version}` }
-    );
+    let driverConfig = {
+      scheme: connection.protocol,
+      host: connection.url,
+      port: connection.port,
+      username: connection.username,
+      password: connection.password,
+      config: { userAgent: `neodash/v${version}` },
+    };
+    const newDriver = connectionModule.createDriver(driverConfig);
     setDriver(newDriver);
   }
   const content = (

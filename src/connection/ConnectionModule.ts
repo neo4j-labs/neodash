@@ -1,3 +1,5 @@
+import { NeodashRecordParser } from './NeodashRecordParser';
+
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
@@ -7,6 +9,10 @@ export abstract class ConnectionModule {
 
   constructor(name: string) {
     this.name = name;
+  }
+
+  createDriver(_config: any): any {
+    return notImplementedError('createDriver');
   }
 
   authenticate(_credentials: Record<any, any>): void | never {
@@ -29,13 +35,8 @@ export abstract class ConnectionModule {
     return notImplementedError('runQuery');
   }
 
-  /**
-   * Parse Records received from the driver to `Neo4jRecord` (t.b.d. refactor to JS dictionaries)
-   * @param records
-   * @returns
-   */
-  parseRecords(_records: any[]): Record<any, any>[] {
-    return notImplementedError('parseRecords');
+  getParser(): NeodashRecordParser {
+    return notImplementedError('getParser');
   }
 }
 
