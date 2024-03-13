@@ -8,7 +8,10 @@ import { Date as Neo4jDate, Integer } from 'neo4j-driver';
 
 export class Neo4jRecordParser extends NeodashRecordParser {
   parse(record: Record): NeodashRecord {
-    let {keys} = record;
+    if (record.error) {
+      return record;
+    }
+    let { keys } = record;
     let fields = record._fields.map((f) => this.fieldToNative(f));
     return new NeodashRecord(keys, fields);
   }

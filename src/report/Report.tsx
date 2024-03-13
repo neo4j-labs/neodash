@@ -67,9 +67,13 @@ export const NeoReport = ({
   const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
 
   const setRecords = (records) => {
-    const parsedRecords = connectionModule.getParser().bulkParse(records);
-    setStateRecords(parsedRecords);
+    let toSet = records;
+    if (['table'].includes(type)) {
+      toSet = connectionModule.getParser().bulkParse(records);
+    }
+    setStateRecords(toSet);
   };
+
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
