@@ -10,6 +10,7 @@ WORKDIR /usr/local/src/neodash
 
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
+COPY ./yarn.lock /usr/local/src/neodash/yarn.lock
 
 RUN yarn install
 COPY ./ /usr/local/src/neodash
