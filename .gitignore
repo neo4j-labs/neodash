@@ -10,13 +10,12 @@ target
 /.pnp
 .pnp.js
 .vscode
-package-lock.json
 
 # testing
 /coverage
 /.nyc_output
 cypress/videos
-
+cypress/screenshots
 # production
 /build
 /dist

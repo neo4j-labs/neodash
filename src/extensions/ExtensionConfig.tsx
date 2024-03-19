@@ -5,6 +5,7 @@ import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQuer
 import { translateQuery } from './text2cypher/util/Util';
 import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
 import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
+import RBACManagementLabelButton from './rbac/RBACManagementLabelButton';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -90,6 +91,17 @@ export const EXTENSIONS: Record<string, Extension> = {
     description:
       'Forms let you craft Cypher queries with multiple inputs, that are fired on demand. Using parameters from the dashboard, or form specific input, you will be able to trigger custom logic with forms.',
     link: 'https://neo4j.com/professional-services/',
+  },
+  'access-control-management': {
+    name: 'access-control-management',
+    label: 'Access Control Management',
+    author: 'Neo4j Professional Services',
+    image: 'accesscontrol2.jpg',
+    enabled: true,
+    description:
+      'This extension lets you manage access control, letting you assign users to roles, as well as controlling which node labels can be read by a user.',
+    link: 'https://neo4j.com/professional-services/',
+    settingsMenuButton: RBACManagementLabelButton,
   },
 };
 

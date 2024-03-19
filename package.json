@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.4.2",
+  "version": "2.4.4",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -38,10 +38,6 @@
     "@azure/openai": "^1.0.0-beta.2",
     "@codemirror/lang-markdown": "^6.1.1",
     "@codemirror/language-data": "^6.3.1",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.60",
-    "@material-ui/styles": "^4.11.4",
     "@mui/icons-material": "^5.11.16",
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",

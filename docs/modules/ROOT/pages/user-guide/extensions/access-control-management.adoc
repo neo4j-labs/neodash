@@ -1,0 +1,26 @@
+= Access Control Management
+
+This extension lets you manage access control for roles and users, letting you assign users to roles as well as controlling which node labels can be read by a user.
+
+This extension is only visible to users with the role of "Administrator" or "Super User". Enabling this extension will allow the admin user to manage the labels of the roles in the database and then attach them to the users.
+
+
+== Using the Extension ==
+If you have logged in to Neodash as an admin user, you will be able to enable the extension in the "Extensions" menu. Clicking on this extension will give the user a new button next to the settings button in the dashboard header. If the user click on this button, a menu will appear with all the roles in the database. 
+
+image::rolesmenu.png[Role menu]
+
+The user can then click on any role and a window will appear with the role's context:
+
+* User list - This is a list of users from your database. You can select multiple users from the list and the role will be added to all the selected users.
+
+* Allow list - This is a list of labels that the role will be granted to read. You can select multiple labels from the list or if you want every label to be granted, you can select "*" from the list. (Requires a database to be selected)
+
+* Deny list - This is a list of labels that the role will be denied to read. You can select multiple labels from the list or if you want every label to be denied, you can select "*" from the list.  (Requires a database to be selected)
+
+
+Finally when the admin user clicks on the "Save" button, the role will be updated in the database and the labels will be granted or denied to the users that were selected for the specific role and database.
+
+image::rolelabelmodal.png[Role modal]
+
+> Universal (Cross-database) `GRANT` and `DENY` privileges are not supported by this extension. Privileges must be added on a database-specific level. See the Neo4j https://neo4j.com/docs/operations-manual/current/authentication-authorization/privileges-reads/[documentation on read privileges] for more information.

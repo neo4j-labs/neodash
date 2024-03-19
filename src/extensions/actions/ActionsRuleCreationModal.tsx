@@ -236,9 +236,9 @@ export const NeoCustomReportActionsModal = ({
     return [];
   };
 
-  const createFieldVariableSuggestionsFromRule = (rule, type) => {
-    let suggestions;
-    if (type) {
+  const createFieldVariableSuggestionsFromRule = (rule, skipRuleFieldCheck) => {
+    let suggestions: string[];
+    if (skipRuleFieldCheck) {
       suggestions = createFieldVariableSuggestions(rule.condition, true, null).filter((e) =>
         e.toLowerCase().startsWith(rule.field.toLowerCase())
       );
@@ -249,13 +249,11 @@ export const NeoCustomReportActionsModal = ({
         e.toLowerCase().startsWith(rule.value.toLowerCase())
       );
     }
-
     // When we are accessing node properties (not page names), parse the node label + property pair to only show properties.
     // Fields for graph and map reports are structured differently than regular reports (table, bar, etc.), so we access suggestions differently.
     if (rule.customization !== 'set page' && (type == 'graph' || type == 'map' || type == 'graph3d')) {
       suggestions = suggestions.map((e) => e.split('.')[1] || e);
     }
-
     return suggestions;
   };
 

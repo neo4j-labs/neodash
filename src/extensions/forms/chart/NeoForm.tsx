@@ -26,7 +26,7 @@ const NeoForm = (props: ChartProps) => {
   const hasResetButton = settings?.hasResetButton ?? true;
   const hasSubmitButton = settings?.hasSubmitButton ?? true;
   const hasSubmitMessage = settings?.hasSubmitMessage ?? true;
-  const clearParametersAfterSubmit = settings?.clearParametersAfterSubmit ?? false;
+  const clearParametersAfterSubmit = settings?.clearParametersAfterSubmit ?? true;
   const [submitButtonActive, setSubmitButtonActive] = React.useState(true);
   const [status, setStatus] = React.useState(FormStatus.DATA_ENTRY);
   const [formResults, setFormResults] = React.useState([]);
