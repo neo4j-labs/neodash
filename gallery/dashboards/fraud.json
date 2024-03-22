@@ -1,282 +1,361 @@
 {
-    "title": "Financial Crimes Enforcement Dashboard 🕵️",
-    "version": "2.1",
-    "settings": {
-      "pagenumber": 0,
-      "editable": true,
-      "parameters": {
-        "neodash_entity_name": null,
-        "neodash_country_name": null
-      },
-      "fullscreenEnabled": true
+  "uuid": "b3236f88-ff8b-492d-8a84-d620a3dd629d",
+  "title": "Financial Crimes Enforcement Dashboard 🕵️",
+  "version": "2.4",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "parameters": {
+      "neodash_entity_name": null,
+      "neodash_country_name": null
     },
-    "pages": [
-      {
-        "title": "Countries",
-        "reports": [
-          {
-            "x": 0,
-            "y": 0,
-            "title": "About this dashboard",
-            "query": "This is an example dashboard on financial crime data. It uses the `fincen` dataset from \n[https://demo.neo4jlabs.com/](https://demo.neo4jlabs.com/).\n\nThis dashboard's purpose is to provide examples on how to use and customize all the different NeoDash report types.\n\nIt consists of three pages:\n- **Countries**: high-level data on specific countries.\n- **Investigate Entity**: a way to drill down into a specific entity.\n- **Statistics**: high-level statistics about the data.\n\nTry out the Documentation 📄 button on the left for basic examples of the different visualization reports.",
-            "width": "4",
-            "type": "text",
-            "height": 2,
-            "selection": {},
-            "settings": {}
+    "fullscreenEnabled": true
+  },
+  "pages": [
+    {
+      "title": "Countries",
+      "reports": [
+        {
+          "x": 0,
+          "y": 0,
+          "title": "About this dashboard",
+          "query": "This is an example dashboard on financial crime data. It uses the `fincen` dataset from \n[https://demo.neo4jlabs.com/](https://demo.neo4jlabs.com/).\n\nThis dashboard's purpose is to provide examples on how to use and customize all the different NeoDash report types.\n\nIt consists of three pages:\n- **Countries**: high-level data on specific countries.\n- **Investigate Entity**: a way to drill down into a specific entity.\n- **Statistics**: high-level statistics about the data.\n\nTry out the Documentation 📄 button on the left for basic examples of the different visualization reports.",
+          "width": 8,
+          "type": "text",
+          "height": 4,
+          "selection": {},
+          "settings": {},
+          "id": "bd17ccad-c12e-4e5a-8e45-48504b071698"
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "title": "How much does each entity benefit in total? (Hint: try clicking the table headers to sort/filter data)",
+          "query": "MATCH Path=(e:Entity)-[:COUNTRY]->(c:Country), (f:Filing)-[:BENEFITS]->(e)\nRETURN Path, e.name as Entity, c.name as Country, suM(f.amount) as `Total Benefit ($)`\nLIMIT 1000",
+          "width": 16,
+          "type": "table",
+          "height": 4,
+          "selection": {},
+          "settings": {},
+          "id": "6db3061c-12c5-4a92-a1a1-bf7e40c068a4"
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "title": "Where in Europe does the Netherlands send money to?",
+          "query": "MATCH (c1:Country)--(:Entity)<-[:ORIGINATOR]-(f:Filing)-[:BENEFITS]->(:Entity)--(c2:Country)\nWHERE c1.name =  \"Netherlands\"\nAND point.distance(c2.location, point({latitude: 53, longitude: 9})) < 3000000\nWITH c1, c2, sum(f.amount) as amount ORDER BY amount DESC\nRETURN c1, c2, apoc.create.vRelationship(c1, \"TRANSFER\", {amount: amount}, c2) ",
+          "width": 12,
+          "type": "map",
+          "height": 4,
+          "selection": {
+            "Country": "(no label)",
+            "TRANSFER": "(label)"
           },
-          {
-            "x": 4,
-            "y": 0,
-            "title": "How much does each entity benefit in total? (Hint: try clicking the table headers to sort/filter data)",
-            "query": "MATCH Path=(e:Entity)-[:COUNTRY]->(c:Country), (f:Filing)-[:BENEFITS]->(e)\nRETURN Path, e.name as Entity, c.name as Country, suM(f.amount) as `Total Benefit ($)`\nLIMIT 1000",
-            "width": "8",
-            "type": "table",
-            "height": 2,
-            "selection": {},
-            "settings": {}
+          "settings": {
+            "defaultRelColor": "rgba(120,120,120,0.5)",
+            "defaultRelWidth": 5,
+            "defaultNodeSize": "medium",
+            "nodeColorScheme": "category10"
           },
-          {
-            "x": 0,
-            "y": 2,
-            "title": "Where in Europe does the Netherlands send money to?",
-            "query": "MATCH (c1:Country)--(:Entity)<-[:ORIGINATOR]-(f:Filing)-[:BENEFITS]->(:Entity)--(c2:Country)\nWHERE c1.name =  \"Netherlands\"\nAND distance(c2.location, point({latitude: 53, longitude: 9})) < 3000000\nWITH c1, c2, sum(f.amount) as amount ORDER BY amount DESC\nRETURN c1, c2, apoc.create.vRelationship(c1, \"TRANSFER\", {amount: amount}, c2) ",
-            "width": "6",
-            "type": "map",
-            "height": 2,
-            "selection": {
-              "Country": "(no label)"
-            },
-            "settings": {
-              "defaultRelColor": "rgba(120,120,120,0.5)",
-              "defaultRelWidth": 5,
-              "defaultNodeSize": "medium",
-              "nodeColorScheme": "category10"
-            }
+          "id": "5484e81c-52b2-416d-8b7f-fa112887fbec",
+          "schema": [
+            [
+              "Country",
+              "code",
+              "name",
+              "location",
+              "tld"
+            ],
+            [
+              "TRANSFER",
+              "amount"
+            ]
+          ]
+        },
+        {
+          "x": 12,
+          "y": 4,
+          "title": "Which entities are involved?",
+          "query": "MATCH (c1:Country)--(:Entity)<-[:ORIGINATOR]-(f:Filing)-[:BENEFITS]->(:Entity)--(c2:Country)\nWHERE c1.name =  \"Netherlands\"\nAND point.distance(c2.location, point({latitude: 53, longitude: 9})) < 3000000\nWITH c1, c2, sum(f.amount) as amount\nWITH c1, c2, apoc.create.vRelationship(c1, \"TRANSFER\", {amount: amount}, c2) as t\n\nMATCH path=(c2:Country)-[r]-(e:Entity)\nRETURN c1, t, c2, collect(path)[0..10]",
+          "width": 12,
+          "type": "graph",
+          "height": 4,
+          "selection": {
+            "Country": "name",
+            "TRANSFER": "(label)",
+            "Entity": "name"
           },
-          {
-            "x": 6,
-            "y": 2,
-            "title": "Which entities are involved?",
-            "query": "MATCH (c1:Country)--(:Entity)<-[:ORIGINATOR]-(f:Filing)-[:BENEFITS]->(:Entity)--(c2:Country)\nWHERE c1.name =  \"Netherlands\"\nAND distance(c2.location, point({latitude: 53, longitude: 9})) < 3000000\nWITH c1, c2, sum(f.amount) as amount\nWITH c1, c2, apoc.create.vRelationship(c1, \"TRANSFER\", {amount: amount}, c2) as t\n\nMATCH path=(c2:Country)-[r]-(e:Entity)\nRETURN c1, t, c2, collect(path)[0..10]",
-            "width": "6",
-            "type": "graph",
-            "height": 2,
-            "selection": {
-              "Country": "name",
-              "Entity": "name"
-            },
-            "settings": {
-              "nodePositions": {}
-            }
-          }
-        ]
-      },
-      {
-        "title": "Entities",
-        "reports": [
-          {
-            "x": 0,
-            "y": 0,
-            "title": "Entity Investigator 🔎",
-            "query": "You can use this page to explore information about a single entity in the dataset. All reports are automatically updated based on the selected entity.\n\n**Hint**: Try typing **ING Bank NV** \nin the \"Entity name\" box to the right of this text.\n\n\n",
-            "width": 3,
-            "type": "text",
-            "height": 2,
-            "selection": {},
-            "settings": {}
+          "settings": {
+            "nodePositions": {}
           },
-          {
-            "x": 3,
-            "y": 0,
-            "title": "Select an entity to view reports",
-            "query": "MATCH (n:`Entity`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value LIMIT 5",
-            "width": 3,
-            "type": "select",
-            "height": 2,
-            "selection": {},
-            "settings": {
-              "type": "Node Property",
-              "entityType": "Entity",
-              "propertyType": "name",
-              "parameterName": "neodash_entity_name"
-            }
+          "id": "a4f84cff-996b-4bfd-b5de-2d8f0c9aa8b1",
+          "schema": [
+            [
+              "Country",
+              "code",
+              "name",
+              "location",
+              "tld"
+            ],
+            [
+              "TRANSFER",
+              "amount"
+            ],
+            [
+              "Entity",
+              "name",
+              "location",
+              "id",
+              "country"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Entities",
+      "reports": [
+        {
+          "x": 0,
+          "y": 0,
+          "title": "Entity Investigator 🔎",
+          "query": "You can use this page to explore information about a single entity in the dataset. All reports are automatically updated based on the selected entity.\n\n**Hint**: Try typing **ING Bank NV** \nin the \"Entity name\" box to the right of this text.\n\n\n",
+          "width": 6,
+          "type": "text",
+          "height": 4,
+          "selection": {},
+          "settings": {},
+          "id": "e33482d3-a7a2-4090-8868-0ed3931bc99e"
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "title": "Select an entity to view reports",
+          "query": "MATCH (n:`Entity`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 5,
+          "type": "select",
+          "height": 4,
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Entity",
+            "propertyType": "name",
+            "parameterName": "neodash_entity_name"
           },
-          {
-            "x": 6,
-            "y": 0,
-            "title": "Details ",
-            "query": "MATCH (e:Entity)\nWHERE e.name = $neodash_entity_name\nWITH e LIMIT 1\nMATCH (c:Country)--(e)--(f:Filing)\nWITH [\"Entity full name: \" + e.name, \n      \"Country of origin: \"+c.name,  \n      \"Total filings: $\"+ toInteger(sum(f.amount)/1000000) + \" million\",\n      \"Start of operations: \"+ toString(date((min(f.begin))))\n] as data\nUNWIND data as Information\nRETURN Information\n",
-            "width": "3",
-            "type": "table",
-            "height": 2,
-            "selection": {},
-            "settings": {}
+          "id": "5a5a46cb-d586-4831-88bc-b193edfa9e9c"
+        },
+        {
+          "x": 11,
+          "y": 0,
+          "title": "Details ",
+          "query": "  MATCH (e:Entity)\nWHERE e.name = $neodash_entity_name\nWITH e LIMIT 1\nMATCH (c:Country)--(e)--(f:Filing)\nWITH e, c, sum(f.amount) AS totalAmount, min(f.begin) AS startOperation\nWITH e, c, totalAmount, startOperation\nRETURN e.name as `Entity full name`,\n  c.name as `Country of origin`,\n  \"$\" + toInteger(totalAmount/1000000) + \" million\" as `Total filings`,\n  toString(date(startOperation)) as `Start of operations`\n",
+          "width": 7,
+          "type": "table",
+          "height": 4,
+          "selection": {},
+          "settings": {
+            "compact": false
           },
-          {
-            "x": 9,
-            "y": 0,
-            "title": "Entity interactions",
-            "query": "MATCH path=(e:Entity)<--()-->(e2:Entity)\nWHERE e.name = $neodash_entity_name\nWITH DISTINCT e, e2\nRETURN e, e2, apoc.create.vRelationship(e, \"INTERACTS\", {}, e2) \n\n\n",
-            "width": 3,
-            "type": "map",
-            "height": 2,
-            "selection": {
-              "Entity": "(no label)"
-            },
-            "settings": {
-              "hideSelections": true
-            }
+          "id": "6e2e57b7-09c8-46cf-b33e-19fd3645693b",
+          "schema": []
+        },
+        {
+          "x": 18,
+          "y": 0,
+          "title": "Entity interactions",
+          "query": "MATCH path=(e:Entity)<--()-->(e2:Entity)\nWHERE e.name = $neodash_entity_name\nWITH DISTINCT e, e2\nRETURN e, e2, apoc.create.vRelationship(e, \"INTERACTS\", {}, e2) \n\n\n",
+          "width": 6,
+          "type": "map",
+          "height": 4,
+          "selection": {
+            "Entity": "(no label)",
+            "INTERACTS": "(label)"
           },
-          {
-            "x": 0,
-            "y": 2,
-            "title": "Who receives most money from this entity?",
-            "query": "MATCH path=(e:Entity)<--(f:Filing)-->(e2:Entity)\nWHERE e.name = $neodash_entity_name\nWITH DISTINCT e, f, e2\nRETURN e2.name as `Other`, sum(f.amount) as Amount\nORDER BY Amount ASC",
-            "width": "6",
-            "type": "bar",
-            "height": 2,
-            "selection": {
-              "index": "Other",
-              "value": "Amount",
-              "key": "(none)"
-            },
-            "settings": {
-              "valueScale": "linear",
-              "marginLeft": 90,
-              "marginBottom": 100,
-              "marginRight": 50,
-              "colors": "paired",
-              "groupMode": "grouped"
-            }
+          "settings": {
+            "hideSelections": true
           },
-          {
-            "x": 6,
-            "y": 2,
-            "title": "Details on a filing by the entity",
-            "query": "MATCH path=(e:Entity)<--(f:Filing)\nWHERE e.name = $neodash_entity_name\nRETURN f LIMIT 1\n",
-            "width": 3,
-            "type": "json",
-            "height": 2,
-            "selection": {},
-            "settings": {}
+          "id": "6070f205-23ce-42bb-abc1-96ec3839e531",
+          "schema": [
+            [
+              "Entity",
+              "name",
+              "location",
+              "id",
+              "country"
+            ],
+            [
+              "INTERACTS"
+            ]
+          ]
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "title": "Who receives most money from this entity?",
+          "query": "MATCH path=(e:Entity)<--(f:Filing)-->(e2:Entity)\nWHERE e.name = $neodash_entity_name\nWITH DISTINCT e, f, e2\nRETURN e2.name as `Other`, sum(f.amount) as Amount\nORDER BY Amount ASC",
+          "width": 12,
+          "type": "bar",
+          "height": 4,
+          "selection": {
+            "index": "Other",
+            "value": "Amount",
+            "key": "(none)"
           },
-          {
-            "x": 9,
-            "y": 2,
-            "title": "Number of Filings",
-            "query": "MATCH (e:Entity)--(:Filing)\nWHERE e.name = $neodash_entity_name\nRETURN COUNT(*)\n\n",
-            "width": 3,
-            "type": "value",
-            "height": 2,
-            "selection": {},
-            "settings": {
-              "fontSize": 80
-            }
-          }
-        ]
-      },
-      {
-        "title": "Statistics",
-        "reports": [
-          {
-            "x": 0,
-            "y": 0,
-            "title": "Total number of nodes",
-            "query": "MATCH (n)\nRETURN COUNT(n)",
-            "width": 3,
-            "type": "value",
-            "height": 2,
-            "selection": {},
-            "settings": {
-              "textAlign": "center",
-              "fontSize": 80,
-              "marginTop": 50
-            }
+          "settings": {
+            "valueScale": "linear",
+            "marginLeft": 90,
+            "marginBottom": 100,
+            "marginRight": 50,
+            "colors": "paired",
+            "groupMode": "grouped"
           },
-          {
-            "x": 3,
-            "y": 0,
-            "title": "Total number of relationships",
-            "query": "MATCH (n)-[e]->(m)\nRETURN COUNT(e)\n\n\n",
-            "width": 3,
-            "type": "value",
-            "height": 2,
-            "selection": {},
-            "settings": {
-              "fontSize": 80,
-              "marginTop": 50,
-              "textAlign": "center"
-            }
+          "id": "7023ae0c-68af-4fa6-8c59-3ba91d7980aa"
+        },
+        {
+          "x": 12,
+          "y": 4,
+          "title": "Details on a filing by the entity",
+          "query": "MATCH path=(e:Entity)<--(f:Filing)\nWHERE e.name = $neodash_entity_name\nRETURN f LIMIT 1\n",
+          "width": 6,
+          "type": "json",
+          "height": 4,
+          "selection": {},
+          "settings": {},
+          "id": "ceb4d37e-8d9c-45c9-9062-485d40bed6cd"
+        },
+        {
+          "x": 18,
+          "y": 4,
+          "title": "Number of Filings",
+          "query": "MATCH (e:Entity)--(:Filing)\nWHERE e.name = $neodash_entity_name\nRETURN COUNT(*)\n\n",
+          "width": 6,
+          "type": "value",
+          "height": 4,
+          "selection": {},
+          "settings": {
+            "fontSize": 80
           },
-          {
-            "x": 6,
-            "y": 0,
-            "title": "Number of nodes by label",
-            "query": "MATCH (n)\nRETURN labels(n), count(*) as count\nORDER BY count ASC\n\n\n",
-            "width": 3,
-            "type": "pie",
-            "height": 2,
-            "selection": {
-              "index": "labels(n)",
-              "value": "count",
-              "key": "(none)"
-            },
-            "settings": {
-              "colors": "pastel1",
-              "marginBottom": 60
-            }
+          "id": "0efecd19-10ea-4475-b649-19b3b1b1e511"
+        }
+      ]
+    },
+    {
+      "title": "Statistics",
+      "reports": [
+        {
+          "x": 0,
+          "y": 0,
+          "title": "Total number of nodes",
+          "query": "MATCH (n)\nRETURN COUNT(n)",
+          "width": 6,
+          "type": "value",
+          "height": 4,
+          "selection": {},
+          "settings": {
+            "textAlign": "center",
+            "fontSize": 80,
+            "marginTop": 50
           },
-          {
-            "x": 9,
-            "y": 0,
-            "title": "Number of relationship types",
-            "query": "MATCH (n)-[e]->(m)\nRETURN type(e),count(*) as count\nORDER BY count ASC\n\n\n\n\n\n\n",
-            "width": 3,
-            "type": "pie",
-            "height": 2,
-            "selection": {
-              "index": "type(e)",
-              "value": "count",
-              "key": "(none)"
-            },
-            "settings": {
-              "colors": "pastel1",
-              "marginBottom": 60,
-              "marginLeft": 120,
-              "marginRight": 120
-            }
+          "id": "073fc2f0-c1a8-4206-ac48-53171ed98696"
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "title": "Total number of relationships",
+          "query": "MATCH (n)-[e]->(m)\nRETURN COUNT(e)\n\n\n",
+          "width": 6,
+          "type": "value",
+          "height": 4,
+          "selection": {},
+          "settings": {
+            "fontSize": 80,
+            "marginTop": 50,
+            "textAlign": "center"
           },
-          {
-            "x": 0,
-            "y": 2,
-            "title": "Number of filing per year",
-            "query": "MATCH (f:Filing)\nWHERE f.begin IS NOT NULL\nWITH f, date(f.begin).year as Year\nRETURN Year, COUNT(f) as Total\nORDER BY Year ASC\n",
-            "width": 6,
-            "type": "line",
-            "height": 2,
-            "selection": {
-              "x": "Year",
-              "value": [
-                "Total"
-              ]
-            },
-            "settings": {
-              "marginLeft": 60
-            }
+          "id": "294a7cc4-bd1e-4d6f-b440-16e9ad9a95f8"
+        },
+        {
+          "x": 12,
+          "y": 0,
+          "title": "Number of nodes by label",
+          "query": "MATCH (n)\nRETURN labels(n), count(*) as count\nORDER BY count ASC\n\n\n",
+          "width": 6,
+          "type": "pie",
+          "height": 4,
+          "selection": {
+            "index": "labels(n)",
+            "value": "count",
+            "key": "(none)"
           },
-          {
-            "x": 6,
-            "y": 2,
-            "title": "Example: using iFrames to embed custom visualizations (3D graph)",
-            "query": "https://vasturiano.github.io/react-force-graph/example/basic/",
-            "width": 6,
-            "type": "iframe",
-            "height": 2,
-            "selection": {},
-            "settings": {}
-          }
-        ]
-      }
-    ]
+          "settings": {
+            "colors": "pastel1",
+            "marginBottom": 60
+          },
+          "id": "bb995076-94b4-4e58-822b-19d4f8c62ac8"
+        },
+        {
+          "x": 18,
+          "y": 0,
+          "title": "Number of relationship types",
+          "query": "MATCH (n)-[e]->(m)\nRETURN type(e),count(*) as count\nORDER BY count ASC\n\n\n\n\n\n\n",
+          "width": 6,
+          "type": "pie",
+          "height": 4,
+          "selection": {
+            "index": "type(e)",
+            "value": "count",
+            "key": "(none)"
+          },
+          "settings": {
+            "colors": "pastel1",
+            "marginBottom": 60,
+            "marginLeft": 120,
+            "marginRight": 120
+          },
+          "id": "6b604fad-6104-49e7-9aea-0a878a887e49"
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "title": "Number of filing per year",
+          "query": "MATCH (f:Filing)\nWHERE f.begin IS NOT NULL\nWITH f, date(f.begin).year as Year\nRETURN Year, COUNT(f) as Total\nORDER BY Year ASC\n",
+          "width": 12,
+          "type": "line",
+          "height": 4,
+          "selection": {
+            "x": "Year",
+            "value": [
+              "Total"
+            ]
+          },
+          "settings": {
+            "marginLeft": 60
+          },
+          "id": "93ce2eab-4f7e-4e6e-a71e-257ebf5f68a9"
+        },
+        {
+          "x": 12,
+          "y": 4,
+          "title": "Example: using iFrames to embed custom visualizations (3D graph)",
+          "query": "https://vasturiano.github.io/react-force-graph/example/basic/",
+          "width": 12,
+          "type": "iframe",
+          "height": 4,
+          "selection": {},
+          "settings": {},
+          "id": "94463630-ed46-4cbe-b140-316151e23ed1"
+        }
+      ]
+    }
+  ],
+  "extensions": {
+    "advanced-charts": {
+      "active": true
+    },
+    "styling": {
+      "active": true
+    },
+    "active": true,
+    "activeReducers": []
   }
+}
