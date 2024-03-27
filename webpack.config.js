@@ -1,4 +1,5 @@
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const webpack = require('webpack');
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
@@ -67,6 +68,10 @@ module.exports = (env) => {
     devServer: {
       port: 3000,
       hot: true,
+      // https://stackoverflow.com/questions/31945763/how-to-tell-webpack-dev-server-to-serve-index-html-for-any-route
+      historyApiFallback: {
+        index: 'index.html',
+      },
       compress: true,
       client: {
         overlay: {
@@ -81,8 +86,18 @@ module.exports = (env) => {
             org: 'neo4j-inc',
             project: 'neodash',
           }),
+          new webpack.DefinePlugin({
+            process: { env: {} },
+          }),
         ]
-      : [new ReactRefreshWebpackPlugin(), ...(circularValidation ? [circularPlugin] : [])],
+      : [
+          // https://stackoverflow.com/questions/70368760/react-uncaught-referenceerror-process-is-not-defined
+          new webpack.DefinePlugin({
+            process: { env: {} },
+          }),
+          new ReactRefreshWebpackPlugin(),
+          ...(circularValidation ? [circularPlugin] : []),
+        ],
     ignoreWarnings: [/Failed to parse source map/],
   };
 };
