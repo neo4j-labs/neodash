@@ -50,7 +50,7 @@ import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
 import { QueryCallback, QueryParams } from '../connection/interfaces';
-import { getConnectionModule } from '../connection/utils';
+import { setConnectionModule, getConnectionModule } from '../connection/utils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -408,21 +408,23 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
   }
 };
 
-async function getConfigDynamically() {
-  // for now putting auth code here
-  // console.log('This line is logged once.');
+async function getConfigJson() {
+  let configJson = null;
+  try {
+    let response = await fetch('config.json');
+    configJson = await response.json();
+  } catch (e) {
+    // Config may not be found, for example when we are in Neo4j Desktop.
+    // eslint-disable-next-line no-console
+    console.log('No config file detected. Setting to safe defaults.');
+  }
+  return configJson;
+}
 
-  // const launchResult = await handleNeoDashLaunch({ queryString: window.location.search });
-  // console.log('This line used to be logged twice, before useEffect()');
-  // if (launchResult.isHandled) {
-  //   return launchResult.config;
-  // }
-
-  const { connectionModule } = getConnectionModule();
+async function getConfigDynamically(connectionModule, configJson) {
   try {
     const launchResult = await connectionModule.loadDashboardFromUrl({ queryString: window.location.search });
     connectionModule.loadDashboardFromUrlSuccess();
-    console.log('This line used to be logged twice, before useEffect()');
     if (launchResult.isHandled) {
       return launchResult.config;
     }
@@ -433,13 +435,7 @@ async function getConfigDynamically() {
     }
   }
 
-  try {
-    return (await fetch('config.json')).json();
-  } catch (e) {
-    // Config may not be found, for example when we are in Neo4j Desktop.
-    // eslint-disable-next-line no-console
-    console.log('No config file detected. Setting to safe defaults.');
-  }
+  return configJson;
 }
 /**
  * Initializes the NeoDash application.
@@ -473,9 +469,17 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneMultiDatabase: false,
     standaloneDatabaseList: 'neo4j',
     customHeader: '',
+    connectionModule: 'neo4j',
   };
 
+  let configJson = await getConfigJson();
+  let connectionModuleKey =
+    configJson && configJson.connectionModule ? configJson.connectionModule : DEFAULT_CONFIG.connectionModule;
+  setConnectionModule(connectionModuleKey);
+
   const { connectionModule } = getConnectionModule();
+  await connectionModule.initialize(configJson);
+
   try {
     let response = await connectionModule.authenticate({ queryString: window.location.search });
     if (response && !response.isAuthenticated) {
@@ -489,7 +493,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     }
   }
 
-  const config = await getConfigDynamically();
+  const config = connectionModule.canLoadFromUrl()
+    ? await getConfigDynamically(connectionModule, configJson)
+    : configJson;
 
   // If the config isn't loaded yet, cancel the initialization. This line will be re-executed when the config is there.
   if (!config) {
@@ -670,27 +676,12 @@ export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConne
   }
 
   if (config.isOwner == true && config.standalone == false) {
-    if (window.location.search.includes(connectionModule.name)) {
-      dispatch(setDashboardToLoadAfterConnecting(`${connectionModule.name}:${config.standaloneDashboardURL}`));
-    } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
-      dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
-    } else {
-      dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
-    }
+    dispatch(setDashboardToLoadAfterConnecting(connectionModule.getDashboardToLoadAfterConnecting(config)));
 
     // Override for when username and password are specified in the config - automatically connect to the specified URL.
-    if (config.standaloneUsername && config.standalonePassword) {
+    if (connectionModule.canConnect(config)) {
       dispatch(setWelcomeScreenOpen(false));
-      dispatch(
-        createConnectionThunk(
-          config.standaloneProtocol,
-          config.standaloneHost,
-          config.standalonePort,
-          config.standaloneDatabase,
-          config.standaloneUsername,
-          config.standalonePassword
-        )
-      );
+      connectionModule.connect({ dispatch, createConnectionThunk, config });
     } else {
       dispatch(setWelcomeScreenOpen(false));
       dispatch(setDashboardToLoadAfterConnecting(null));

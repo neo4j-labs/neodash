@@ -1,10 +1,11 @@
-import auth from '../auth/auth';
+import { getAuth } from '../auth/auth';
 import { config } from '../config/dynamicConfig';
 import { DatabaseUploadType } from '../config/SolutionsConstants';
 import { handleErrors } from '../util/util';
 import { handleSavedQueryString, saveQueryString } from './launchHelper';
 
 export const fetchDashboardFromHive = async ({ uuid }) => {
+  let auth = await getAuth();
   const promise = new Promise((resolve, reject) => {
     const query = `
             query GetDashboardByUUID ($uuid: ID!) {
@@ -23,7 +24,7 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
                 }
             } 
         `;
-    const uri = config('GALLERY_GRAPHQL_URL');
+    const uri = config('GalleryGraphQLUrl');
     fetch(uri, {
       method: 'POST',
       headers: {
@@ -48,6 +49,7 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
 };
 
 export const hiveAuthenticate = async ({ queryString }) => {
+  let auth = await getAuth();
   try {
     // console.log('handleNeoDashLaunch before silentAuth')
     let response = await auth.silentAuth();
@@ -67,23 +69,7 @@ export const hiveAuthenticate = async ({ queryString }) => {
 };
 
 export const handleNeoDashLaunch = async ({ queryString }) => {
-  /*
-  try {
-    // console.log('handleNeoDashLaunch before silentAuth')
-    await auth.silentAuth();
-    queryString = handleSavedQueryString(queryString);
-  } catch (err) {
-    // console.log('handleNeoDashLaunch err: ', err)
-    if (err.message === 'login_required' || err.error === 'login_required') {
-      // console.log('handleNeoDashLaunch login_required')
-      saveQueryString(queryString);
-      auth.login();
-    } else {
-      alert('An unknown error occurred, check the console for details.');
-      return { isHandled: false };
-    }
-  }
-  */
+  let auth = await getAuth();
   queryString = handleSavedQueryString(queryString);
 
   const urlParams = new URLSearchParams(queryString);
@@ -124,6 +110,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
           standaloneDashboardURL: data.uuid,
           standaloneUsername: userName,
           standalonePassword: password,
+          standalonePasswordWarningHidden: true,
           isOwner: data.user == auth.getEmail() ? true : false, // eslint-disable-line
         },
       };

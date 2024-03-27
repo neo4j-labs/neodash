@@ -2,8 +2,14 @@ import { ConnectionModuleState } from './ConnectionModule';
 import { Neo4jConnectionModule } from './neo4j/Neo4jConnectionModule';
 import { HiveConnectionModule } from './hive/HiveConnectionModule';
 
-// TODO: get this from the Neodash configuration
-const connectionModule = 'hive';
+const ValidConnectionModules = ['neo4j', 'hive'];
+let connectionModule = 'neo4j';
+
+export function setConnectionModule(_connectionModule: string): void {
+  if (ValidConnectionModules.includes(_connectionModule)) {
+    connectionModule = _connectionModule;
+  }
+}
 
 export function getConnectionModule(): ConnectionModuleState {
   if (connectionModule === 'hive') {

@@ -69,7 +69,6 @@ export const NeoReport = ({
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
-  // TODO : abstract connection module call (maybe selector at application level)
   const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {

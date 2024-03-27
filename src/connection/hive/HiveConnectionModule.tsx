@@ -8,14 +8,18 @@ import { runCypherQuery } from '../neo4j/runCypherQuery';
 import { extractQueryCallbacks, extractQueryParams } from '../neo4j/utils';
 import { hiveAuthenticate, handleNeoDashLaunch, fetchDashboardFromHive } from '../../extensions/hive/launch/launch';
 import { removeSavedQueryString } from '../../extensions/hive/launch/launchHelper';
-import { getHivePublishUIDialog, getHivePublishUIButton } from './HivePublishUI';
-import Chat from '../../extensions/hive/components/genai/Chat';
+import { getHivePublishUIDialog, getHivePublishUIButton } from '../../extensions/hive/components/HivePublishUI';
+import { loadConfig } from '../../extensions/hive/config/dynamicConfig';
 
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
 
 export class HiveConnectionModule extends ConnectionModule {
+  async initialize(configJson: any): void {
+    await loadConfig(configJson);
+  }
+
   async authenticate(_params: any): any | never {
     return await hiveAuthenticate(_params); // eslint-disable-line
   }
@@ -33,6 +37,20 @@ export class HiveConnectionModule extends ConnectionModule {
     let queryParams = extractQueryParams(inputQueryParams);
     let callbacks = extractQueryCallbacks(inputQueryCallbacks);
     return runCypherQuery({ driver, ...queryParams, ...callbacks });
+  }
+
+  getDashboardToLoadAfterConnecting = (config: any): string => {
+    let dashboardToLoad = null;
+    if (window.location.search.includes(this.name)) {
+      dashboardToLoad = `${this.name}:${config.standaloneDashboardURL}`;
+    } else {
+      dashboardToLoad = super.getDashboardToLoadAfterConnecting(config);
+    }
+    return dashboardToLoad;
+  };
+
+  canLoadFromUrl(): boolean {
+    return true;
   }
 
   async loadDashboardFromUrl(_params: any): any {
@@ -69,14 +87,6 @@ export class HiveConnectionModule extends ConnectionModule {
 
   getPublishUIDialog(_params: any): any {
     return getHivePublishUIDialog(_params);
-  }
-
-  hasChat(): boolean {
-    return true;
-  }
-
-  getChatUIButton(): any {
-    return <Chat />;
   }
 
   parseRecords(records: Neo4jRecord[]): Record<any, any>[] {

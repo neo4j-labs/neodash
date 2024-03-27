@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@neo4j-ndl/react';
-import SaveToHiveModal from '../../extensions/hive/components/SaveToHiveModal';
+import SaveToHiveModal from './SaveToHiveModal';
 import { CloudArrowUpIconOutline } from '@neo4j-ndl/react/icons';
 
 export function getHivePublishUIButton(_params: any): any {

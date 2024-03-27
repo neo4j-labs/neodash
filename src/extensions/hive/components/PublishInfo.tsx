@@ -2,14 +2,13 @@ import React from 'react';
 import { Alert, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { config } from '../config/dynamicConfig';
 import { getDbConnectionUrl } from '../util/util';
-import './PublishInfo.css';
 import { HiveSolutionDomain } from '../config/SolutionsConstants';
 
 export const PublishInfo = (props) => {
   const { hasPublished, solutionId, connection, title, domain, setDomain } = props;
 
-  const baseDemoUrl = config('NEODASH_BASE_DEMO_URL');
-  const hiveUiSolutionsUrl = config('GALLERY_UI_URL');
+  const baseDemoUrl = config('NeoDashBaseDemoUrl');
+  const hiveUiSolutionsUrl = config('GalleryUIUrl');
 
   const neoDashDemoUrl = `${baseDemoUrl}/?hivedashboarduuid=${solutionId}`;
   const hiveCardUrl = `${hiveUiSolutionsUrl}/${solutionId}`;
@@ -61,7 +60,16 @@ export const PublishInfo = (props) => {
               <FormControlLabel value={HiveSolutionDomain.Public} control={<Radio />} label='Public' />
             </RadioGroup>
           </FormControl>
-          <div className='publishInfo'>
+          <div
+            style={{
+              display: 'flex',
+              marginTop: '10px',
+              height: '240px',
+              alignItems: 'center',
+              width: '650px',
+              justifyContent: 'center',
+            }}
+          >
             <Alert className='alert' severity='info'>
               Click the Publish button to publish to Hive
             </Alert>

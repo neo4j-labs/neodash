@@ -1,7 +1,7 @@
 import { createUUID } from '../../../utils/uuid';
 import { createNotificationThunk } from '../../../page/PageThunks';
 import { config } from '../config/dynamicConfig';
-import auth from '../auth/auth';
+import { getAuth } from '../auth/auth';
 import { handleErrors } from '../util/util';
 import { updateHiveInformation } from './HiveActions';
 import { DatabaseUploadType } from '../config/SolutionsConstants';
@@ -26,12 +26,13 @@ const listUserDashboardsQuery = `query ListUserDashboards($user: String) {
 }`;
 
 export const listUserDashboards = async () => {
+  let auth = await getAuth();
   const promise = new Promise((resolve, reject) => {
     const variables = {
       user: auth.getEmail(),
     };
 
-    const uri = config('GALLERY_GRAPHQL_URL');
+    const uri = config('GalleryGraphQLUrl');
     fetch(uri, {
       method: 'POST',
       headers: {
@@ -67,6 +68,7 @@ const saveDashboardToHiveGraphQL = async ({
   domain,
   image,
 }) => {
+  let auth = await getAuth();
   const promise = new Promise((resolve, reject) => {
     let dashboardCopy = JSON.parse(JSON.stringify(dashboard));
     dashboardCopy.extensions = dashboardCopy.extensions || {};
@@ -82,7 +84,7 @@ const saveDashboardToHiveGraphQL = async ({
     dispatch(updateHiveInformation('uuid', uuid));
     dispatch(updateHiveInformation('dbName', dbName));
 
-    const baseNeoDashUrl = config('NEODASH_BASE_DEMO_URL');
+    const baseNeoDashUrl = config('NeoDashBaseDemoUrl');
     const url = `${baseNeoDashUrl}/?hivedashboarduuid=${uuid}`;
 
     const variables = {
@@ -116,7 +118,7 @@ const saveDashboardToHiveGraphQL = async ({
       },
     };
 
-    const uri = config('GALLERY_GRAPHQL_URL');
+    const uri = config('GalleryGraphQLUrl');
     fetch(uri, {
       method: 'POST',
       headers: {

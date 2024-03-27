@@ -98,7 +98,6 @@ const Dashboard = ({
                     <NeoDashboardTitle />
                     <NeoDashboardHeaderPageList />
                     <NeoPage></NeoPage>
-                    {connectionModule.hasChat() && connectionModule.getChatUIButton()}
                   </div>
                 </div>
               </div>

@@ -77,9 +77,9 @@ export const EXTENSIONS: Record<string, Extension> = {
     name: 'solutionsHive',
     label: 'Hive Extension',
     author: 'Neo4j Solutions',
-    image: 'https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Begrippenlijst.svg',
+    image: 'https://storage.googleapis.com/neo4j-solutions-public/neodash_hive_gallery.png',
     enabled: true,
-    description: 'Extension to enable NeoDash integration in Hive. This is a work in progress.',
+    description: 'Extension to enable NeoDash integration in Hive. Hive is a Neo4j gallery of demos.',
     link: 'https://neo4j.solutions',
   },
   forms: {

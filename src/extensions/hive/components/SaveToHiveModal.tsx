@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Component, useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   Accordion,
@@ -41,7 +41,8 @@ import { PublishInfo } from './PublishInfo';
 import { getDbConnectionUrl } from '../util/util';
 import { config } from '../config/dynamicConfig';
 import { handleErrors } from '../util/util';
-import auth from '../auth/auth';
+import { getAuth } from '../auth/auth';
+import { delayedRender } from '../util/delayedRender';
 import { GetSolutionById } from './graphql/HiveGraphQL';
 
 /**
@@ -90,6 +91,7 @@ const useStyles = makeStyles((theme) => {
 // e.g. like from a menu item looking at a list of dashboards
 // dashboard is the active dashboard currently loaded
 const SaveToHiveModalContent = ({
+  auth,
   cachedDashboard,
   dashboard,
   connection,
@@ -99,6 +101,7 @@ const SaveToHiveModalContent = ({
 }) => {
   // pieces of code pulled from https://www.pluralsight.com/guides/uploading-files-with-reactjs
   // and pieces of code pulled from https://blog.logrocket.com/multer-nodejs-express-upload-file/
+  console.log('SaveToHiveModalContent modalOpen: ', modalOpen);
 
   dashboard = cachedDashboard ? cachedDashboard : dashboard;
   const tabCount = 2;
@@ -123,7 +126,7 @@ const SaveToHiveModalContent = ({
   useEffect(() => {
     const getHiveSolution = async () => {
       console.log('in getHiveSolution');
-      const uri = config('GALLERY_GRAPHQL_URL');
+      const uri = config('GalleryGraphQLUrl');
       console.log('hive uri is: ', uri);
       fetch(uri, {
         method: 'POST',
@@ -172,8 +175,6 @@ const SaveToHiveModalContent = ({
   const lastStep = () => tabIndex === tabCount - 1;
   const firstStep = () => tabIndex === 0;
   const onPublishStep = () => lastStep() && !hasPublished;
-
-  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   const classes = useStyles();
 
@@ -231,7 +232,6 @@ const SaveToHiveModalContent = ({
   const doPublish = () => {
     setHasPublished(true);
     saveDashboardToHive({
-      driver,
       selectedFile,
       dashboard,
       date: new Date().toISOString(),
@@ -340,13 +340,32 @@ const SaveToHiveModalContent = ({
   );
 };
 
-export const SaveToHiveModal = (props) => {
-  return (
-    <ThemeProvider theme={theme}>
-      <SaveToHiveModalContent {...props} />
-    </ThemeProvider>
-  );
+const SaveToHiveModal = (props) => {
+  console.log('props: ', props);
+  return <SaveToHiveModalComponent {...props} />;
 };
+
+class SaveToHiveModalComponent extends Component {
+  state = {
+    authInitialized: false,
+  };
+
+  async componentDidMount() {
+    this.auth = await getAuth();
+    this.setState({ authInitialized: true });
+  }
+
+  render() {
+    let { authInitialized } = this.state;
+    let properties = { auth: this.auth, ...this.props };
+    console.log('render properties: ', properties);
+
+    if (authInitialized) {
+      return <ThemeProvider theme={theme}>{React.createElement(SaveToHiveModalContent, properties)}</ThemeProvider>;
+    }
+    return <p>One moment please...</p>;
+  }
+}
 
 const mapStateToProps = (state) => ({
   dashboard: getDashboardJson(state),
@@ -355,7 +374,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   saveDashboardToHive: ({
-    driver,
     selectedFile,
     dashboard,
     date,
@@ -372,7 +390,6 @@ const mapDispatchToProps = (dispatch) => ({
   }) => {
     dispatch(
       saveDashboardToHiveThunk({
-        driver,
         selectedFile,
         dashboard,
         date,

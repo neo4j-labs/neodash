@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DocumentArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 import { CloudArrowUpIconOutline } from '@neo4j-ndl/react/icons';
 import { Button, Dialog } from '@neo4j-ndl/react';
@@ -89,8 +89,8 @@ export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose })
       </Dialog>
       {connectionModule.hasCustomPublishUI() &&
         connectionModule.getPublishUIDialog({
-          parentClose: () => handleClose(),
           publishUIDialogOpen: publishUIDialogOpen,
+          parentClose: () => handleClose(),
           closePublishUIDialog: () => setPublishUIDialogOpen(false),
         })}
     </>

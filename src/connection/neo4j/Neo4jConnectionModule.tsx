@@ -9,6 +9,10 @@ const notImplementedError = (functionName: string): never => {
 };
 
 export class Neo4jConnectionModule extends ConnectionModule {
+  async initialize(_configJson: any): void {
+    // do nothing
+  }
+
   async authenticate(_params: any): void | never {
     return notImplementedError('authenticate');
   }
@@ -21,6 +25,14 @@ export class Neo4jConnectionModule extends ConnectionModule {
     let queryParams = extractQueryParams(inputQueryParams);
     let callbacks = extractQueryCallbacks(inputQueryCallbacks);
     return runCypherQuery({ driver, ...queryParams, ...callbacks });
+  }
+
+  getDashboardToLoadAfterConnecting = (config: any): string => {
+    return super.getDashboardToLoadAfterConnecting(config);
+  };
+
+  canLoadFromUrl(): boolean {
+    return false;
   }
 
   async loadDashboardFromUrl(_params: any): any {
@@ -56,14 +68,6 @@ export class Neo4jConnectionModule extends ConnectionModule {
   }
 
   getPublishUIDialog(): any {
-    return <></>;
-  }
-
-  hasChat(): boolean {
-    return false;
-  }
-
-  getChatUIButton(): any {
     return <></>;
   }
 
