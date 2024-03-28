@@ -1,5 +1,7 @@
 import domtoimage from 'dom-to-image';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
+import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
+import { RenderSubValue } from '../report/ReportRecordProcessing';
 
 /**
  * Converts a neo4j record entry to a readable string representation.
@@ -248,9 +250,6 @@ export const downloadComponentAsImage = (ref) => {
     link.click();
   });
 };
-
-import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
-import { RenderSubValue } from '../report/ReportRecordProcessing';
 
 /**
  * Function to cast a value received from the Neo4j Driver to its TS native type

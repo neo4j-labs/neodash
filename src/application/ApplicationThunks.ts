@@ -1,4 +1,3 @@
-import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
 import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
@@ -11,7 +10,6 @@ import {
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
 import { createNotificationThunk } from '../page/PageThunks';
-import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
   setPageNumberThunk,
   updateParametersToNeo4jTypeThunk,
@@ -48,6 +46,8 @@ import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
+import { QueryCallback, QueryParams } from '../connection/interfaces';
+import { getConnectionModule } from '../connection/utils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -69,7 +69,15 @@ export const createConnectionThunk =
     const loggingSettings = applicationGetLoggingSettings(loggingState);
     const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
     try {
-      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
+      const { connectionModule } = getConnectionModule();
+      const driver = connectionModule.createDriver({
+        scheme: protocol,
+        host: url,
+        port,
+        username,
+        password,
+        config: { userAgent: `neodash/v${version}` },
+      });
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
@@ -165,15 +173,13 @@ export const createConnectionThunk =
       };
       const query = 'RETURN true as connected';
       const parameters = {};
-      runCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        1,
-        () => {},
-        (records) => validateConnection(records)
-      );
+      const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
+
+      let queryCallback: QueryCallback = {
+        setRecords: (records) => validateConnection(records),
+      };
+
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     } catch (e) {
       dispatch(createNotificationThunk('Unable to establish connection', e));
     }

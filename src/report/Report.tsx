@@ -1,6 +1,5 @@
 import { Chip, Tooltip } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { QueryStatus, runCypherQuery } from './ReportQueryRunner';
 import debounce from 'lodash/debounce';
 import { useCallback } from 'react';
 import NeoCodeViewerComponent, { NoDrawableDataErrorMessage } from '../component/editor/CodeViewerComponent';
@@ -20,6 +19,9 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import { QueryCallback, QueryParams, QueryStatus } from '../connection/interfaces';
+import { useConnectionModuleContext } from '../application/Application';
+import { NeodashRecord } from '../connection/NeodashRecord';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -57,17 +59,30 @@ export const NeoReport = ({
   deletePrepopulationReportFunction,
   theme,
 }) => {
-  const [records, setRecords] = useState(null);
+  // TODO: change type to NeodashRecord[]
+  const [stateRecords, setStateRecords] = useState([]);
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+  const { connectionModule } = useConnectionModuleContext();
   const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
+
+  // TODO: implement record parsing to use ONLY NeodashRecords
+  const setRecords = (records) => {
+    let toSet = records;
+    //   if (['table'].includes(type)) {
+    //     toSet = connectionModule.getParser().bulkParse(records);
+    //   }
+    setStateRecords(toSet);
+  };
+
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
-  const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
+  // TODO : abstract connection module call (maybe selector at application level)
+  const debouncedRunQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {
     if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
@@ -111,44 +126,25 @@ export const NeoReport = ({
     // Logic to run a query
     const executeQuery = (newQuery) => {
       setLoadingIcon(REPORT_LOADING_ICON);
+      let queryParams: QueryParams = {
+        database,
+        query: newQuery,
+        parameters,
+        rowLimit,
+        fields: [],
+        useNodePropsAsFields: useNodePropsAsFields,
+        useReturnValuesAsFields: useReturnValuesAsFields,
+        useHardRowLimit: HARD_ROW_LIMITING,
+      };
+      let setSchemaCallback = (schema) => {
+        setSchema(id, schema);
+      };
+      let queryCallback: QueryCallback = { setStatus, setRecords, setFields, setSchema: setSchemaCallback };
+
       if (debounced) {
-        debouncedRunCypherQuery(
-          driver,
-          database,
-          newQuery,
-          parameters,
-          rowLimit,
-          setStatus,
-          setRecords,
-          setFields,
-          fields,
-          useNodePropsAsFields,
-          useReturnValuesAsFields,
-          HARD_ROW_LIMITING,
-          queryTimeLimit,
-          (schema) => {
-            setSchema(id, schema);
-          }
-        );
+        debouncedRunQuery(driver, queryParams, queryCallback);
       } else {
-        runCypherQuery(
-          driver,
-          database,
-          newQuery,
-          parameters,
-          rowLimit,
-          setStatus,
-          setRecords,
-          setFields,
-          fields,
-          useNodePropsAsFields,
-          useReturnValuesAsFields,
-          HARD_ROW_LIMITING,
-          queryTimeLimit,
-          (schema) => {
-            setSchema(id, schema);
-          }
-        );
+        connectionModule.runQuery(driver, queryParams, queryCallback);
       }
     };
 
@@ -204,26 +200,29 @@ export const NeoReport = ({
   // Can retrieve a maximum of 1000 rows at a time.
   const queryCallback = useCallback(
     (query, parameters, setRecords) => {
-      runCypherQuery(
-        driver,
+      let queryParams: QueryParams = {
         database,
         query,
         parameters,
-        1000,
-        (status) => {
+        rowLimit: 1000,
+        fields: [],
+        useHardRowLimit: HARD_ROW_LIMITING,
+        queryTimeLimit: queryTimeLimit,
+      };
+
+      let setSchemaCallback = (schema) => {
+        setSchema(id, schema);
+      };
+      let queryCallback: QueryCallback = {
+        setStatus: (status) => {
           status == QueryStatus.NO_DATA ? setRecords([]) : () => {};
         },
-        (result) => setRecords(result),
-        () => {},
-        fields,
-        false,
-        false,
-        HARD_ROW_LIMITING,
-        queryTimeLimit,
-        (schema) => {
-          setSchema(id, schema);
-        }
-      );
+        setRecords,
+        setFields: () => {},
+        setSchema: setSchemaCallback,
+      };
+
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     },
     [database]
   );
@@ -253,7 +252,7 @@ export const NeoReport = ({
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
     return <NoDrawableDataErrorMessage />;
   } else if (status == QueryStatus.COMPLETE) {
-    if (records == null || records.length == 0) {
+    if (stateRecords == null || stateRecords.length == 0) {
       return <div>Loading...</div>;
     }
     return (
@@ -263,7 +262,7 @@ export const NeoReport = ({
       >
         <ChartType
           setPageNumber={setPageNumber}
-          records={records}
+          records={stateRecords}
           extensions={extensions}
           selection={selection}
           settings={settings}
@@ -283,7 +282,7 @@ export const NeoReport = ({
       </div>
     );
   } else if (status == QueryStatus.COMPLETE_TRUNCATED) {
-    if (records == null || records.length == 0) {
+    if (stateRecords == null || stateRecords.length == 0) {
       return <div>Loading...</div>;
     }
     return (
@@ -306,7 +305,7 @@ export const NeoReport = ({
         </div>
         <ChartType
           setPageNumber={setPageNumber}
-          records={records}
+          records={stateRecords}
           extensions={extensions}
           selection={selection}
           settings={settings}
@@ -335,7 +334,7 @@ export const NeoReport = ({
   }
   return (
     <NeoCodeViewerComponent
-      value={records && records[0] && records[0].error && records[0].error}
+      value={stateRecords && stateRecords[0] && stateRecords[0].error && stateRecords[0].error}
       placeholder={'Unknown query error, check the browser console.'}
     />
   );
