@@ -1,9 +1,7 @@
-import { Record as Neo4jRecord } from 'neo4j-driver';
 import { ConnectionModule } from '../ConnectionModule';
 import { runCypherQuery } from './runCypherQuery';
 import { extractQueryCallbacks, extractQueryParams } from './utils';
 import neo4j, { Config } from 'neo4j-driver';
-import { config } from 'webpack';
 import { NeodashRecordParser } from '../NeodashRecordParser';
 import { Neo4jRecordParser } from './Neo4jRecordParser';
 
@@ -19,7 +17,7 @@ interface Neo4jConfig {
   port: number | string;
   username: string | undefined;
   password: string | undefined;
-  database?: string | undefined;
+  database: string | undefined;
   config?: Config;
 }
 

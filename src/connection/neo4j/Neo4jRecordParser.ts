@@ -22,7 +22,7 @@ export class Neo4jRecordParser extends NeodashRecordParser {
     } else if (this.isNumber(input)) {
       return this.toNumber(input);
     } else if (Array.isArray(input)) {
-      return (input as Array<any>).map((item) => this.fieldToNative(item));
+      return input.map((item) => this.fieldToNative(item));
     } else if (this.isDate(input)) {
       return this.toDate(input);
     } else if (typeof input === 'object') {

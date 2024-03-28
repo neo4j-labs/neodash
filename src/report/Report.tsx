@@ -59,7 +59,8 @@ export const NeoReport = ({
   deletePrepopulationReportFunction,
   theme,
 }) => {
-  const [records, setStateRecords] = useState<NeodashRecord[]>([]);
+  // TODO: change type to NeodashRecord[]
+  const [stateRecords, setStateRecords] = useState([]);
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
@@ -251,7 +252,7 @@ export const NeoReport = ({
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
     return <NoDrawableDataErrorMessage />;
   } else if (status == QueryStatus.COMPLETE) {
-    if (records == null || records.length == 0) {
+    if (stateRecords == null || stateRecords.length == 0) {
       return <div>Loading...</div>;
     }
     return (
@@ -261,7 +262,7 @@ export const NeoReport = ({
       >
         <ChartType
           setPageNumber={setPageNumber}
-          records={records}
+          records={stateRecords}
           extensions={extensions}
           selection={selection}
           settings={settings}
@@ -281,7 +282,7 @@ export const NeoReport = ({
       </div>
     );
   } else if (status == QueryStatus.COMPLETE_TRUNCATED) {
-    if (records == null || records.length == 0) {
+    if (stateRecords == null || stateRecords.length == 0) {
       return <div>Loading...</div>;
     }
     return (
@@ -304,7 +305,7 @@ export const NeoReport = ({
         </div>
         <ChartType
           setPageNumber={setPageNumber}
-          records={records}
+          records={stateRecords}
           extensions={extensions}
           selection={selection}
           settings={settings}
@@ -333,7 +334,7 @@ export const NeoReport = ({
   }
   return (
     <NeoCodeViewerComponent
-      value={records && records[0] && records[0].error && records[0].error}
+      value={stateRecords && stateRecords[0] && stateRecords[0].error && stateRecords[0].error}
       placeholder={'Unknown query error, check the browser console.'}
     />
   );
