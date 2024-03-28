@@ -4,6 +4,13 @@ const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
 
+/**
+ * This abstract class is the definition of a ConnectionModule, a component that will have the responsability to:
+ * 1. Create the driver to connect to its db
+ * 2. Manage the whole communication with the db (auth, query)
+ * 3. Parse queries into the NeodashRecord format
+ * 4. CRUD operations for the dashboards
+ */
 export abstract class ConnectionModule {
   name: string;
 

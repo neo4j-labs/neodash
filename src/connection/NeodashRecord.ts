@@ -1,3 +1,7 @@
+/**
+ * This class represent the new format of records into Neodash, instead of relying on the Record returned from each possible
+ * ConnectionModule.
+ */
 export class NeodashRecord {
   keys: string[];
 

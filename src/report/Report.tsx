@@ -66,11 +66,12 @@ export const NeoReport = ({
   const { connectionModule } = useConnectionModuleContext();
   const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
 
+  // TODO: implement record parsing to use ONLY NeodashRecords
   const setRecords = (records) => {
     let toSet = records;
-    if (['table'].includes(type)) {
-      toSet = connectionModule.getParser().bulkParse(records);
-    }
+    //   if (['table'].includes(type)) {
+    //     toSet = connectionModule.getParser().bulkParse(records);
+    //   }
     setStateRecords(toSet);
   };
 
