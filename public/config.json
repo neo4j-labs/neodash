@@ -28,7 +28,9 @@
       "NeoDashBaseDemoUrl": "http://localhost:3000",
       "GalleryGraphQLUrl": "http://localhost:4001/graphql",
       "GalleryUIUrl": "http://localhost:3002/solutions",
-      "VerifyAccess": true
+      "VerifyAccess": true,
+      "GenAIChatEnabled": true,
+      "GenAIURL": "http://localhost:3001/embed?llmId=bom-llm-id"
     }
   }
 }
