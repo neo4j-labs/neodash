@@ -19,7 +19,7 @@ export abstract class ConnectionModule {
   }
 
   // return true if the config contains enough information to connect to the backend Neo4j/Aura database
-  canConnect(config: any): boolean {
+  canConnectToStandaloneDatabase(config: any): boolean {
     return config.standaloneUsername && config.standalonePassword;
   }
 

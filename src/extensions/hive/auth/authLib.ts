@@ -91,26 +91,6 @@ export class Auth {
     }).then((res) => res.json());
   };
 
-  /*
-    handleSignUp = async () => {
-        const uri = this.galleryGraphQLUrl;
-        const query = `
-            mutation MergeUserAndLogSignIn($id: ID!) {
-                mergeUserAndLogSignIn(id: $id) {
-                    email
-                }
-            }
-        `;
-        const variables = {
-            id: this.solutionName
-        };
-        const token = this.getIdToken();
-        await this.fetchGraphQL({ uri, query, variables, token }).catch(error => {
-            console.log(error);
-        });
-    }
-    */
-
   handleAuthentication = () => {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => {
@@ -118,17 +98,9 @@ export class Auth {
           return reject(err);
         }
         if (!authResult || !authResult.idToken) {
-          // if (authResult) {
-          //   if (!authResult.idToken) {
-          //     console.log("handleAuthentication checkSession no authResult.idToken")
-          //   }
-          // } else {
-          //   console.log("handleAuthentication checkSession no authResult")
-          // }
           return reject();
         }
         this.setSession(authResult);
-        // this.handleSignUp();
         resolve();
       });
     });
@@ -155,13 +127,6 @@ export class Auth {
           return reject(err);
         }
         if (!authResult || !authResult.idToken) {
-          // if (authResult) {
-          //   if (!authResult.idToken) {
-          //     console.log("silentAuth checkSession no authResult.idToken")
-          //   }
-          // } else {
-          //   console.log("silentAuth checkSession no authResult")
-          // }
           return reject();
         }
         this.setSession(authResult);

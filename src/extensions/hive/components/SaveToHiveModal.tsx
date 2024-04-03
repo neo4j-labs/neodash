@@ -23,10 +23,10 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CloseIcon from '@mui/icons-material/Close';
-import { ExpandMore } from '@mui/icons-material';
+import { ArrowLeftIconOutline } from '@neo4j-ndl/react/icons';
+import { ArrowRightIconOutline } from '@neo4j-ndl/react/icons';
+import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
+
 import { makeStyles, withStyles } from '@mui/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -101,7 +101,6 @@ const SaveToHiveModalContent = ({
 }) => {
   // pieces of code pulled from https://www.pluralsight.com/guides/uploading-files-with-reactjs
   // and pieces of code pulled from https://blog.logrocket.com/multer-nodejs-express-upload-file/
-  console.log('SaveToHiveModalContent modalOpen: ', modalOpen);
 
   dashboard = cachedDashboard ? cachedDashboard : dashboard;
   const tabCount = 2;
@@ -111,23 +110,19 @@ const SaveToHiveModalContent = ({
 
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
-  // const [overwriteExistingDashboard, setOverwriteExistingDashboard] = React.useState(false);
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
   const [dbConnection, setDbConnection] = useState(connection);
   const [hasPublished, setHasPublished] = useState(false);
   const [solutionId, setSolutionId] = useState(0);
   const [image, setImage] = useState('');
   const [domain, setDomain] = useState(HiveSolutionDomain.Private);
-  // console.log('tabIndex: ', tabIndex);
 
   const [hiveSolutionInfoBeenCalled, setHiveSolutionInfoBeenCalled] = useState(false);
   const [hiveSolutionInfo, setHiveSolutionInfo] = useState({});
 
   useEffect(() => {
     const getHiveSolution = async () => {
-      console.log('in getHiveSolution');
       const uri = config('GalleryGraphQLUrl');
-      console.log('hive uri is: ', uri);
       fetch(uri, {
         method: 'POST',
         headers: {
@@ -143,7 +138,6 @@ const SaveToHiveModalContent = ({
         .then(async (res) => {
           const jsonResponse = await res.json();
           const solution = jsonResponse?.data?.solution || {};
-          // console.log('Solution info is: ', solution);
           setHiveSolutionInfo(solution);
           if (domain !== solution.domain) {
             setDomain(solution.domain);
@@ -160,7 +154,6 @@ const SaveToHiveModalContent = ({
     if (!hiveSolutionInfoBeenCalled) {
       setHiveSolutionInfoBeenCalled(true);
       if (existingSolutionId) {
-        console.log('Calling getHiveSolution with solutionId: ', existingSolutionId);
         try {
           getHiveSolution();
         } catch (e) {
@@ -212,17 +205,11 @@ const SaveToHiveModalContent = ({
   const [dbType, setDbType] = useState(DatabaseUploadType.DatabaseUpload);
   const [expandedPanel, setExpandedPanel] = useState(false);
   const handleAccordionChange = (panel) => (event, isExpanded) => {
-    console.log({ event, isExpanded });
     if (isExpanded) {
       setDbType(panel);
     }
     setExpandedPanel(isExpanded ? panel : false);
   };
-
-  // const [userSavedDashboards, setuserSavedDashboards] = React.useState([]);
-  // if(modalOpen === true && userSavedDashboards.length == 0) {
-  //   listUserDashboards().then(jsonResponse => console.log(setuserSavedDashboards(jsonResponse.data.dashboards)));
-  // }
 
   const progressCallback = (progress) => {
     const { solutionId } = progress;
@@ -265,7 +252,7 @@ const SaveToHiveModalContent = ({
           style={{ padding: '3px', float: 'right' }}
         >
           <Badge badgeContent={''}>
-            <CloseIcon />
+            <XMarkIconOutline className='btn-icon-base-r' />
           </Badge>
         </IconButton>
       </DialogTitle>
@@ -312,7 +299,7 @@ const SaveToHiveModalContent = ({
           style={{ backgroundColor: onPublishStep() ? null : 'white', marginTop: '20px', float: 'right' }}
           color={onPublishStep() ? 'primary' : 'inherit'}
           variant='contained'
-          endIcon={lastStep() ? <></> : <ArrowForwardIcon />}
+          endIcon={lastStep() ? <></> : <ArrowRightIconOutline className='btn-icon-base-r' />}
           size='medium'
         >
           {lastStep() ? (hasPublished ? 'Done' : 'Publish') : 'Next'}
@@ -324,7 +311,7 @@ const SaveToHiveModalContent = ({
           style={{ float: 'right', marginTop: '20px', marginRight: '10px', backgroundColor: 'white' }}
           color='inherit'
           variant='contained'
-          startIcon={<ArrowBackIcon />}
+          startIcon={<ArrowLeftIconOutline className='btn-icon-base-r' />}
           size='medium'
         >
           Previous
@@ -341,7 +328,6 @@ const SaveToHiveModalContent = ({
 };
 
 const SaveToHiveModal = (props) => {
-  console.log('props: ', props);
   return <SaveToHiveModalComponent {...props} />;
 };
 
@@ -358,7 +344,6 @@ class SaveToHiveModalComponent extends Component {
   render() {
     let { authInitialized } = this.state;
     let properties = { auth: this.auth, ...this.props };
-    console.log('render properties: ', properties);
 
     if (authInitialized) {
       return <ThemeProvider theme={theme}>{React.createElement(SaveToHiveModalContent, properties)}</ThemeProvider>;

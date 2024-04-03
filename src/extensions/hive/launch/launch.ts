@@ -51,14 +51,10 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
 export const hiveAuthenticate = async ({ queryString }) => {
   let auth = await getAuth();
   try {
-    // console.log('handleNeoDashLaunch before silentAuth')
     let response = await auth.silentAuth();
     return { isAuthenticated: response };
-    // queryString = handleSavedQueryString(queryString);
   } catch (err) {
-    // console.log('handleNeoDashLaunch err: ', err)
     if (err.message === 'login_required' || err.error === 'login_required') {
-      // console.log('handleNeoDashLaunch login_required')
       saveQueryString(queryString);
       auth.login();
       return { isAuthenticated: false };
@@ -115,7 +111,6 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
         },
       };
     } catch (e) {
-      // TODO: display error?
       console.log('error calling fetchDashboardFromHive: ', e);
     }
   }

@@ -37,7 +37,6 @@
   "dependencies": {
     "@azure/openai": "^1.0.0-beta.2",
     "@codemirror/lang-markdown": "^6.1.1",
-    "@mui/icons-material": "^5.11.16",
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",
     "@mui/material": "^5.12.3",

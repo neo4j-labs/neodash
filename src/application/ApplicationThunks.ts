@@ -679,7 +679,7 @@ export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConne
     dispatch(setDashboardToLoadAfterConnecting(connectionModule.getDashboardToLoadAfterConnecting(config)));
 
     // Override for when username and password are specified in the config - automatically connect to the specified URL.
-    if (connectionModule.canConnect(config)) {
+    if (connectionModule.canConnectToStandaloneDatabase(config)) {
       dispatch(setWelcomeScreenOpen(false));
       connectionModule.connect({ dispatch, createConnectionThunk, config });
     } else {
