@@ -73,9 +73,11 @@ export const NeoReport = ({
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
   const isQueryParametersDefined = (cypherQuery: string) => {
-    const parameterNames = extractAllParameterNames(cypherQuery);
-    if (parameters) {
-      return checkParametersNameInGlobalParameter(parameterNames, parameters);
+    if (!settings?.disableParameterCheck) {
+      const parameterNames = extractAllParameterNames(cypherQuery);
+      if (parameters) {
+        return checkParametersNameInGlobalParameter(parameterNames, parameters);
+      }
     }
     return false;
   };

@@ -141,6 +141,11 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'View Response',
       },
+      disableParameterCheck: {
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
     },
   },
   graph: {
@@ -389,6 +394,11 @@ const _REPORT_TYPES = {
         label: 'Override default message',
         type: SELECTION_TYPES.TEXT,
         default: 'Query returned no data.',
+      },
+      disableParameterCheck: {
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
     },
   },
