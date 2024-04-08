@@ -29,8 +29,8 @@
       "GalleryGraphQLUrl": "http://localhost:4001/graphql",
       "GalleryUIUrl": "http://localhost:3002/solutions",
       "VerifyAccess": true,
-      "GenAIChatEnabled": true,
-      "GenAIURL": "https://genai.neo4j.solutions/embed?llmId=bom-llm-id"
+      "GenAIChatEnabled": false,
+      "GenAIURL": ""
     }
   }
 }
