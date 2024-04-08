@@ -6,12 +6,13 @@ import { NEODASH_VERSION, VERSION_TO_MIGRATE } from '../dashboard/DashboardReduc
 import {
   assignDashboardUuidIfNotPresentThunk,
   loadDashboardFromNeo4jByNameThunk,
+  loadDashboardFromNeo4jByUUIDThunk,
+  loadDashboardFromNeo4jByConnectionModuleUUIDThunk,
   loadDashboardFromNeo4jThunk,
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
 import { createNotificationThunk } from '../page/PageThunks';
-import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
   setPageNumberThunk,
   updateParametersToNeo4jTypeThunk,
@@ -48,6 +49,8 @@ import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
+import { QueryCallback, QueryParams } from '../connection/interfaces';
+import { setConnectionModule, getConnectionModule } from '../connection/utils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -69,7 +72,12 @@ export const createConnectionThunk =
     const loggingSettings = applicationGetLoggingSettings(loggingState);
     const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
     try {
-      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
+      let driverConfig = { userAgent: `neodash/v${version}` };
+      if (url == 'localhost') {
+        driverConfig = { userAgent: `neodash/v${version}`, encrypted: false };
+      }
+      const driver = createDriver(protocol, url, port, username, password, driverConfig);
+
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {
@@ -138,11 +146,19 @@ export const createConnectionThunk =
 
             // If we specify a dashboard by name, load the latest version of it.
             // If we specify a dashboard by UUID, load it directly.
+
             if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
               dispatch(
                 loadDashboardFromNeo4jByNameThunk(
                   driver,
                   application.standaloneDashboardDatabase,
+                  application.dashboardToLoadAfterConnecting.substring(5),
+                  setDashboardAfterLoadingFromDatabase
+                )
+              );
+            } else if (application.dashboardToLoadAfterConnecting.startsWith(`${connectionModule.name}:`)) {
+              dispatch(
+                loadDashboardFromNeo4jByConnectionModuleUUIDThunk(
                   application.dashboardToLoadAfterConnecting.substring(5),
                   setDashboardAfterLoadingFromDatabase
                 )
@@ -165,15 +181,14 @@ export const createConnectionThunk =
       };
       const query = 'RETURN true as connected';
       const parameters = {};
-      runCypherQuery(
-        driver,
-        database,
-        query,
-        parameters,
-        1,
-        () => {},
-        (records) => validateConnection(records)
-      );
+      const { connectionModule } = getConnectionModule();
+      const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
+
+      let queryCallback: QueryCallback = {
+        setRecords: (records) => validateConnection(records),
+      };
+
+      connectionModule.runQuery(driver, queryParams, queryCallback);
     } catch (e) {
       dispatch(createNotificationThunk('Unable to establish connection', e));
     }
@@ -393,6 +408,35 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
   }
 };
 
+async function getConfigJson() {
+  let configJson = null;
+  try {
+    let response = await fetch('config.json');
+    configJson = await response.json();
+  } catch (e) {
+    // Config may not be found, for example when we are in Neo4j Desktop.
+    // eslint-disable-next-line no-console
+    console.log('No config file detected. Setting to safe defaults.');
+  }
+  return configJson;
+}
+
+async function getConfigDynamically(connectionModule, configJson) {
+  try {
+    const launchResult = await connectionModule.loadDashboardFromUrl({ queryString: window.location.search });
+    connectionModule.loadDashboardFromUrlSuccess();
+    if (launchResult.isHandled) {
+      return launchResult.config;
+    }
+  } catch (e) {
+    let message = `${e}`;
+    if (!message.match(/Not Implemented/)) {
+      console.log(`Connection module '${connectionModule.name}': error calling loadDashboardFromUrl`, e);
+    }
+  }
+
+  return configJson;
+}
 /**
  * Initializes the NeoDash application.
  *
@@ -401,7 +445,11 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
  * Note: this does not work in Neo4j Desktop, so we revert to defaults.
  */
 export const loadApplicationConfigThunk = () => async (dispatch: any, getState: any) => {
-  let config = {
+  dispatch(setConnected(false));
+  dispatch(setWelcomeScreenOpen(false));
+
+  //
+  let DEFAULT_CONFIG = {
     ssoEnabled: false,
     ssoProviders: [],
     ssoDiscoveryUrl: 'http://example.com',
@@ -421,13 +469,37 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneMultiDatabase: false,
     standaloneDatabaseList: 'neo4j',
     customHeader: '',
+    connectionModule: 'neo4j',
   };
+
+  let configJson = await getConfigJson();
+  let connectionModuleKey =
+    configJson && configJson.connectionModule ? configJson.connectionModule : DEFAULT_CONFIG.connectionModule;
+  setConnectionModule(connectionModuleKey);
+
+  const { connectionModule } = getConnectionModule();
+  await connectionModule.initialize(configJson);
+
   try {
-    config = await (await fetch('config.json')).json();
+    let response = await connectionModule.authenticate({ queryString: window.location.search });
+    if (response && !response.isAuthenticated) {
+      return;
+    }
   } catch (e) {
-    // Config may not be found, for example when we are in Neo4j Desktop.
-    // eslint-disable-next-line no-console
-    console.log('No config file detected. Setting to safe defaults.');
+    let message = `${e}`;
+    if (!message.match(/Not Implemented/)) {
+      console.log(`Connection module '${connectionModule.name}': error calling authentication`, e);
+      return;
+    }
+  }
+
+  const config = connectionModule.canLoadFromUrl()
+    ? await getConfigDynamically(connectionModule, configJson)
+    : configJson;
+
+  // If the config isn't loaded yet, cancel the initialization. This line will be re-executed when the config is there.
+  if (!config) {
+    return;
   }
 
   try {
@@ -587,22 +659,35 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 };
 
 // Set up NeoDash to run in editor mode.
-export const initializeApplicationAsEditorThunk = (_, paramsToSetAfterConnecting) => (dispatch: any) => {
+export const initializeApplicationAsEditorThunk = (config, paramsToSetAfterConnecting) => (dispatch: any) => {
+  const { connectionModule } = getConnectionModule();
+
   const clearNotificationAfterLoad = true;
   dispatch(clearDesktopConnectionProperties());
   dispatch(setDatabaseFromNeo4jDesktopIntegrationThunk());
   const old = localStorage.getItem('neodash-dashboard');
   dispatch(setOldDashboard(old));
   dispatch(setConnected(false));
-  dispatch(setDashboardToLoadAfterConnecting(null));
+
   dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
   // TODO: this logic around loading/saving/upgrading/migrating dashboards needs a cleanup
   if (Object.keys(paramsToSetAfterConnecting).length > 0) {
     dispatch(setParametersToLoadAfterConnecting(null));
   }
 
-  // Check config to determine which screen is shown by default.
-  if (DEFAULT_SCREEN == Screens.CONNECTION_MODAL) {
+  if (config.isOwner == true && config.standalone == false) {
+    dispatch(setDashboardToLoadAfterConnecting(connectionModule.getDashboardToLoadAfterConnecting(config)));
+
+    // Override for when username and password are specified in the config - automatically connect to the specified URL.
+    if (connectionModule.canConnect(config)) {
+      dispatch(setWelcomeScreenOpen(false));
+      connectionModule.connect({ dispatch, createConnectionThunk, config });
+    } else {
+      dispatch(setWelcomeScreenOpen(false));
+      dispatch(setDashboardToLoadAfterConnecting(null));
+      dispatch(setConnectionModalOpen(true));
+    }
+  } else if (DEFAULT_SCREEN == Screens.CONNECTION_MODAL) {
     dispatch(setWelcomeScreenOpen(false));
     dispatch(setConnectionModalOpen(true));
   } else if (DEFAULT_SCREEN == Screens.WELCOME_SCREEN) {
@@ -620,8 +705,11 @@ export const initializeApplicationAsEditorThunk = (_, paramsToSetAfterConnecting
 // Set up NeoDash to run in standalone mode.
 export const initializeApplicationAsStandaloneThunk =
   (config, paramsToSetAfterConnecting) => (dispatch: any, getState: any) => {
+    const { connectionModule } = getConnectionModule();
+
     const clearNotificationAfterLoad = true;
     const state = getState();
+
     // If we are running in standalone mode, auto-set the connection details that are configured.
     dispatch(
       setConnectionProperties(
@@ -637,7 +725,10 @@ export const initializeApplicationAsStandaloneThunk =
     dispatch(setAboutModalOpen(false));
     dispatch(setConnected(false));
     dispatch(setWelcomeScreenOpen(false));
-    if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+
+    if (window.location.search.includes(connectionModule.name)) {
+      dispatch(setDashboardToLoadAfterConnecting(`${connectionModule.name}:${config.standaloneDashboardURL}`));
+    } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
       dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
     } else {
       dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));

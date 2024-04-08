@@ -16,5 +16,21 @@
   "standaloneDatabaseList": "neo4j",
   "loggingMode": "0",
   "loggingDatabase": "logs",
-  "customHeader": ""
+  "customHeader": "",
+  "connectionModule": "hive",
+  "extensions": {
+    "solutionsHive": {
+      "AuthDomain": "dev-o8s8b52y.auth0.com",
+      "AuthClientID": "3OOrQh3TYyNOT8Y0AeE2tWek3wX0PAef",
+      "AuthMethod": "auth0",
+      "AuthCallback": "http://localhost:3000/callback",
+      "AuthLogoutUrl": "http%3A%2F%2Flocalhost:3000",
+      "NeoDashBaseDemoUrl": "http://localhost:3000",
+      "GalleryGraphQLUrl": "http://localhost:4001/graphql",
+      "GalleryUIUrl": "http://localhost:3002/solutions",
+      "VerifyAccess": true,
+      "GenAIChatEnabled": false,
+      "GenAIURL": ""
+    }
+  }
 }

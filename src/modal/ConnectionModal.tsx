@@ -121,7 +121,9 @@ export default function NeoConnectionModal({
             </div>
           </div>
 
-          {window.location.href.startsWith('https') && !(protocol.endsWith('+s') || protocol.endsWith('+scc')) ? (
+          {window.location.href.startsWith('https') &&
+          !(protocol.endsWith('+s') || protocol.endsWith('+scc')) &&
+          url !== 'localhost' ? (
             <div>
               You're running NeoDash from a secure (https) webpage. You can't connect to a Neo4j database with an
               unencrypted protocol. Change the protocol, or use NeoDash using http instead: &nbsp;
@@ -136,7 +138,7 @@ export default function NeoConnectionModal({
               A local host with an encrypted connection will likely not work - try an unencrypted protocol instead.
             </div>
           )}
-          {url.endsWith('neo4j.io') && !protocol.endsWith('+s') ? (
+          {url && url.endsWith('neo4j.io') && !protocol.endsWith('+s') ? (
             <div>
               Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
             </div>

@@ -12,6 +12,10 @@ import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
 import NeoDashboardSidebar from './sidebar/DashboardSidebar';
+import { getConnectionModule } from '../connection/utils';
+import Chat from '../extensions/hive/components/genai/Chat';
+
+const { connectionModule } = getConnectionModule();
 
 const Dashboard = ({
   pagenumber,
@@ -23,19 +27,23 @@ const Dashboard = ({
   resetApplication,
 }) => {
   const [driver, setDriver] = React.useState(undefined);
-
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
+    let driverConfig = { userAgent: `neodash/v${version}` };
+    if (connection.url == 'localhost') {
+      driverConfig = { userAgent: `neodash/v${version}`, encrypted: false };
+    }
     const newDriver = createDriver(
       connection.protocol,
       connection.url,
       connection.port,
       connection.username,
       connection.password,
-      { userAgent: `neodash/v${version}` }
+      driverConfig
     );
     setDriver(newDriver);
   }
+
   const content = (
     <Neo4jProvider driver={driver}>
       <NeoDashboardConnectionUpdateHandler
@@ -91,6 +99,7 @@ const Dashboard = ({
                     <NeoDashboardTitle />
                     <NeoDashboardHeaderPageList />
                     <NeoPage></NeoPage>
+                    <Chat></Chat>
                   </div>
                 </div>
               </div>
