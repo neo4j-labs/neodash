@@ -64,7 +64,7 @@ export const RBACManagementMenu = ({ anchorEl, MenuOpen, handleClose, createNoti
         onClose={handleClose}
         size='small'
       >
-        <MenuItems style={{ maxHeight: '200px', overflowY: 'auto' }}>
+        <MenuItems className='n-overflow-y-scroll n-h-48'>
           {roles.map((role) => (
             <MenuItem key={role} onClick={() => handleRoleClicked(role)} icon={<UserIconOutline />} title={role} />
           ))}
