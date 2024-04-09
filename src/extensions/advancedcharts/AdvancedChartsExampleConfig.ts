@@ -264,7 +264,7 @@ WITH code, sum(value) as totalCount
 RETURN code,totalCount
     `,
     syntheticQuery: `
-        UNWIND [["FR", 1], ["IT", 3], ["FR.32", 1], ["IT.02", 2], ["IT.01", 1]] as v
+        UNWIND [["FR", 1], ["IT", 3], ["FR-HDF", 1], ["IT-65", 2], ["IT-72", 1]] as v
         RETURN v[0] as code, v[1] as value 
         `,
     settings: { mapDrillDown: true, showLegend: false },

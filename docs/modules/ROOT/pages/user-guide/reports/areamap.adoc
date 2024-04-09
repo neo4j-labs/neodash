@@ -5,7 +5,7 @@ link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[
 The Area Map charts can be used to render geographical based information on geoJson polygons. It's possible to click a polygon to visualize its regions and their related data.
 It takes two fields: 
 
-- *code*: String. This represents the country code or regional code that must be binded to the visualization. The map supports Alpha-3 and Alpha-2 country codes (by default Alpha-2). Instead the supported format for the region polygons is ISO 3166.
+- *code*: String. This represents the country code or regional code that must be binded to the visualization. The map supports Alpha-3 and Alpha-2 country codes (by default Alpha-2). Instead the supported format for the region polygons is ISO 3166-2.
 - *value*:  Number. Cardinal data to be used on the chart.
 
 == Examples
