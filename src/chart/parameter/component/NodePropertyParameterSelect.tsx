@@ -165,12 +165,14 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       />
     );
   }
+  let options = extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)');
+  options = props.autoSort ? options.sort() : options;
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
-        options={extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        options={options}
         disabled={disabled}
         limitTags={multiSelectLimit}
         style={{
@@ -198,7 +200,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
           if (autoSelectFirstValue && paramValueDisplayLocal == '') {
             debouncedQueryCallback(props.query, { input: '', ...allParameters }, (records) => {
               if (records && records.length > 0 && records[0] && records[0]._fields) {
-                const values = records?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort();
+                let values = records?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)');
+                values = props.autoSort ? values.sort() : values;
                 setExtraRecords(records);
                 propagateSelection(undefined, values[0]);
               }

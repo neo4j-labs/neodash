@@ -62,4 +62,8 @@ export interface ParameterSelectProps {
    * Add the possibility for manual selection confirmation
    */
   manualParameterSave?: boolean;
+  /**
+   * Pass true if results should be sorted automatically
+   */
+  autoSort?: boolean;
 }
