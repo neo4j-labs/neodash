@@ -91,7 +91,7 @@ export const GraphEntityInspectionTable = ({
                     {key}
                   </TableCell>
                   <TableCell align={'left'} style={{ color: tableTextColor }}>
-                    <ShowMoreText lines={2}>{formatProperty(entity && entity.properties[key])}</ShowMoreText>
+                    <ShowMoreText lines={2}>{formatProperty(entity?.properties[key])}</ShowMoreText>
                   </TableCell>
                   {checklistEnabled ? (
                     <TableCell align={'center'}>

@@ -23,7 +23,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
-import DOMPurify from 'dompurify';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
@@ -45,7 +44,7 @@ function htmlToPlainText(html): string {
   // Set the HTML content directly as innerHTML of the temporary element
   tempElement.innerHTML = html.props.dangerouslySetInnerHTML.__html;
   // Extract plain text using textContent
-  return tempElement.textContent || '';
+  return tempElement.textContent ?? '';
 }
 
 function renderAsButtonWrapper(renderer) {
