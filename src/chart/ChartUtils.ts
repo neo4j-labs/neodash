@@ -218,8 +218,14 @@ export function replaceDashboardParameters(str, parameters) {
     let param = _.replace(`$`, '').trim();
     let val = parameters?.[param] || null;
     let type = getRecordType(val);
-    let valueRender = type === 'string' || type == 'link' ? val : RenderSubValue(val);
-    return valueRender;
+
+    // Arrays weren't playing nicely with RenderSubValue(). Each object would be passed separately and return [oject Object].
+    if (type === 'string' || type == 'link' ) {
+      return val;
+    } else if (type === 'array') {
+      return RenderSubValue(val.join(', '));
+    }
+    return RenderSubValue(val);
   };
 
   let newString = str.replace(rx, parameterElementReplacer).replace(rxSimple, parameterSimpleReplacer);
