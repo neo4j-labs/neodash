@@ -38,6 +38,15 @@ const fallbackRenderer = (value) => {
   return JSON.stringify(value);
 };
 
+function htmlToPlainText(html): string {
+  // Create a temporary div element to hold the sanitized HTML content
+  const tempElement = document.createElement('div');
+  // Set the HTML content directly as innerHTML of the temporary element
+  tempElement.innerHTML = html.props.dangerouslySetInnerHTML.__html;
+  // Extract plain text using textContent
+  return tempElement.textContent ?? '';
+}
+
 function renderAsButtonWrapper(renderer) {
   return function renderAsButton(value) {
     const outputValue = renderer(value, true);
@@ -50,7 +59,7 @@ function renderAsButtonWrapper(renderer) {
         style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
         variant='contained'
         color='primary'
-      >{outputValue}</Button>
+      >{`${htmlToPlainText(outputValue)}`}</Button>
     );
   };
 }
@@ -262,7 +271,8 @@ export const NeoTableChart = (props: ChartProps) => {
         <DataGrid
           key={'tableKey'}
           headerHeight={32}
-          rowHeight={tableRowHeight}
+          density={compact ? 'compact' : 'standard'}
+          getRowHeight={() => 'auto'}
           rows={rows}
           columns={columns}
           columnVisibilityModel={columnVisibilityModel}
@@ -304,6 +314,12 @@ export const NeoTableChart = (props: ChartProps) => {
                 return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
               })
               .join(' ');
+          }}
+          sx={{
+            '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '3px' },
+            '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+            '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+            '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
           }}
         />
       </div>

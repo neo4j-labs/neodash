@@ -258,10 +258,11 @@ export function retrieveDatabaseList(driver, setDatabases: React.Dispatch<React.
 export async function updateUsers(driver, currentRole, allUsers, selectedUsers, onSuccess, onFail) {
   // 1. Build the query that removes all users from the role.
   let globalStatus = -1;
+  const escapedAllUsers = allUsers.map((user) => `\`${user}\``).join(',');
   await runCypherQuery(
     driver,
     'system',
-    `REVOKE ROLE ${currentRole} FROM ${allUsers.join(',')}`,
+    `REVOKE ROLE ${currentRole} FROM ${escapedAllUsers}`,
     {},
     1000,
     (status) => {
@@ -277,10 +278,11 @@ export async function updateUsers(driver, currentRole, allUsers, selectedUsers, 
     //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
     // We build in an artificial delay...
     if (selectedUsers.length > 0) {
+      const escapedSelectedUsers = selectedUsers.map((user) => `\`${user}\``).join(',');
       await runCypherQuery(
         driver,
         'system',
-        `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`,
+        `GRANT ROLE ${currentRole} TO ${escapedSelectedUsers}`,
         {},
         1000,
         (status) => {
