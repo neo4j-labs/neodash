@@ -247,15 +247,19 @@ function RenderPath(value) {
 }
 
 function RenderArray(value) {
-  const mapped = value.map((v, i) => {
-    return (
-      <div key={String(`k${i}`) + v}>
-        {RenderSubValue(v)}
-        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
-      </div>
-    );
-  });
-  return mapped;
+  if (value.length > 0 && !valueIsNode(value[0]) && !valueIsRelationship(value[0])) {
+    return RenderString(value.join(','));
+  } 
+    const mapped = value.map((v, i) => {
+      return (
+        <span key={String(`k${i}`) + v}>
+          {RenderSubValue(v)}
+          {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
+        </span>
+      );
+    });
+    return mapped;
+  
 }
 
 function RenderString(value) {
