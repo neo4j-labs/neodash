@@ -10,7 +10,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
-import DOMPurify from 'dompurify';
+// import DOMPurify from 'dompurify';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -267,8 +267,10 @@ function RenderString(value) {
       </TextLink>
     );
   }
-  const cleanValue = DOMPurify.sanitize(str);
-  return <div dangerouslySetInnerHTML={{ __html: cleanValue }} />;
+  return str;
+  // html render rollback
+  // const cleanValue = DOMPurify.sanitize(str);
+  // return <div dangerouslySetInnerHTML={{ __html: cleanValue }} />;
 }
 
 function RenderLink(value, disabled = false) {
