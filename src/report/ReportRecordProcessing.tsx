@@ -268,9 +268,6 @@ function RenderString(value) {
     );
   }
   return str;
-  // html render rollback
-  // const cleanValue = DOMPurify.sanitize(str);
-  // return <div dangerouslySetInnerHTML={{ __html: cleanValue }} />;
 }
 
 function RenderLink(value, disabled = false) {

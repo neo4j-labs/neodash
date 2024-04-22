@@ -14,10 +14,6 @@ export const formatProperty = (property) => {
     );
   }
   return str; 
-
-  // html render rollback
-  // const cleanValue = DOMPurify.sanitize(str);
-  // return <div dangerouslySetInnerHTML={{ __html: cleanValue }} />;
 };
 
 /**
@@ -94,8 +90,7 @@ export const GraphEntityInspectionTable = ({
                     {key}
                   </TableCell>
                   <TableCell align={'left'} style={{ color: tableTextColor }}>
-                    <ShowMoreText lines={2}>{formatProperty(entity && entity.properties[key].toString())}</ShowMoreText>
-                    {/* <ShowMoreText lines={2}>{formatProperty(entity?.properties[key])}</ShowMoreText>  */}
+                    <ShowMoreText lines={2}>{formatProperty(entity?.properties[key])}</ShowMoreText> 
                   </TableCell>
                   {checklistEnabled ? (
                     <TableCell align={'center'}>

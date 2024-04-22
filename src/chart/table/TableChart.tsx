@@ -38,16 +38,6 @@ const fallbackRenderer = (value) => {
   return JSON.stringify(value);
 };
 
-// html Render Rollback
-// function htmlToPlainText(html): string {
-//   // Create a temporary div element to hold the sanitized HTML content
-//   const tempElement = document.createElement('div');
-//   // Set the HTML content directly as innerHTML of the temporary element
-//   tempElement.innerHTML = html.props.dangerouslySetInnerHTML.__html;
-//   // Extract plain text using textContent
-//   return tempElement.textContent ?? '';
-// }
-
 function renderAsButtonWrapper(renderer) {
   return function renderAsButton(value) {
     const outputValue = renderer(value, true);
