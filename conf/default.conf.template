@@ -2,6 +2,10 @@ server {
     listen       ${NGINX_PORT};
     server_name  localhost;
     include      mime.types;
+    location /neodash {
+        alias /usr/share/nginx/html/neodash;
+        try_files $uri $uri/ /neodash/index.html;
+    }
     location / {
         root   /usr/share/nginx/html;
         try_files $uri $uri/ /index.html;

@@ -63,6 +63,7 @@ module.exports = (env) => {
     resolve: { extensions: ['*', '.js', '.jsx', '.ts', '.tsx'] },
     output: {
       filename: 'bundle.js',
+      publicPath: '/neodash/'
     },
     devServer: {
       port: 3000,
@@ -73,6 +74,9 @@ module.exports = (env) => {
           warnings: false,
         },
       },
+      historyApiFallback: {
+        index: '/neodash/'  // Ensures that the dev server handles deep links correctly
+      }
     },
     plugins: production
       ? [

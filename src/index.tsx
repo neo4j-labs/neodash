@@ -1,3 +1,4 @@
+__webpack_public_path__ = '/neodash/';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider as ReduxProvider } from 'react-redux';

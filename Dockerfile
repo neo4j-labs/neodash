@@ -14,6 +14,8 @@ COPY ./yarn.lock /usr/local/src/neodash/yarn.lock
 
 RUN yarn install
 COPY ./ /usr/local/src/neodash
+
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 RUN yarn run build-minimal
 
 # production stage
@@ -22,7 +24,7 @@ RUN apk upgrade
 
 ENV NGINX_PORT=5005
 
-COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
+COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html/neodash
 COPY ./conf/default.conf.template /etc/nginx/templates/
 COPY ./scripts/config-entrypoint.sh /docker-entrypoint.d/config-entrypoint.sh
 COPY ./scripts/message-entrypoint.sh /docker-entrypoint.d/message-entrypoint.sh
@@ -44,4 +46,4 @@ USER nginx
 EXPOSE $NGINX_PORT
 
 HEALTHCHECK cmd curl --fail "http://localhost:$NGINX_PORT" || exit 1
-LABEL version="2.4.5"
+LABEL version="2.4.4"
