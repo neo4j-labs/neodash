@@ -13,7 +13,7 @@ export const formatProperty = (property) => {
       </TextLink>
     );
   }
-  return property; 
+  return str; 
 
   // html render rollback
   // const cleanValue = DOMPurify.sanitize(str);
