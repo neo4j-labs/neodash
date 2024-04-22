@@ -10,6 +10,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
+// import DOMPurify from 'dompurify';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.

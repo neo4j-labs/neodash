@@ -50,7 +50,7 @@ function renderAsButtonWrapper(renderer) {
         style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
         variant='contained'
         color='primary'
-      >{`${outputValue}`}</Button>
+      >{outputValue}</Button>
     );
   };
 }
@@ -262,7 +262,8 @@ export const NeoTableChart = (props: ChartProps) => {
         <DataGrid
           key={'tableKey'}
           headerHeight={32}
-          rowHeight={tableRowHeight}
+          density={compact ? 'compact' : 'standard'}
+          getRowHeight={() => 'auto'}
           rows={rows}
           columns={columns}
           columnVisibilityModel={columnVisibilityModel}
@@ -304,6 +305,13 @@ export const NeoTableChart = (props: ChartProps) => {
                 return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
               })
               .join(' ');
+          }}
+          sx={{
+            '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '3px' },
+            '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell:has(button)': { py: '0px' },
+            '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+            '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+            '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
           }}
         />
       </div>
