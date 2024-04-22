@@ -38,15 +38,6 @@ const fallbackRenderer = (value) => {
   return JSON.stringify(value);
 };
 
-function htmlToPlainText(html): string {
-  // Create a temporary div element to hold the sanitized HTML content
-  const tempElement = document.createElement('div');
-  // Set the HTML content directly as innerHTML of the temporary element
-  tempElement.innerHTML = html.props.dangerouslySetInnerHTML.__html;
-  // Extract plain text using textContent
-  return tempElement.textContent ?? '';
-}
-
 function renderAsButtonWrapper(renderer) {
   return function renderAsButton(value) {
     const outputValue = renderer(value, true);
@@ -59,7 +50,7 @@ function renderAsButtonWrapper(renderer) {
         style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
         variant='contained'
         color='primary'
-      >{`${htmlToPlainText(outputValue)}`}</Button>
+      >{outputValue}</Button>
     );
   };
 }
