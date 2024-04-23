@@ -108,7 +108,8 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
 export function renderCellExpand(params: GridRenderCellParams<any, string>, lineBreakAfterListEntry: boolean) {
   let value = params.value?.low ? params.value.low : params.value;
   if (typeof value === 'string' || value instanceof String) {
-    return RenderString(value)
+    const displayLink = RenderString(value);
+    return <GridCellExpand value={displayLink || ''} width={params.colDef.computedWidth} />;
   }
 
   const stringifiedObj = value
