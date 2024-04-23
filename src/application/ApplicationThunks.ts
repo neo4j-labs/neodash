@@ -639,8 +639,8 @@ export const initializeApplicationAsStandaloneThunk =
     } else {
       dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
     }
-
     dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
+    dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
 
     if (clearNotificationAfterLoad) {
       dispatch(clearNotification());

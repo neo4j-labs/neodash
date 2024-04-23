@@ -9,7 +9,6 @@ import { createLogThunk } from '../application/logging/LoggingThunk';
 import { applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
 import { applicationGetLoggingSettings } from '../application/logging/LoggingSelectors';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
-import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -113,16 +112,6 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
       throw `Invalid dashboard version: ${dashboard.version}. Try restarting the application, or retrieve your cached dashboard using a debug report.`;
     }
 
-    // Cast dashboard parameters from serialized format to correct types
-    Object.keys(dashboard.settings.parameters).forEach((key) => {
-      const value = dashboard.settings.parameters[key];
-
-      // Serialized Date to Neo4jDate
-      if (value && value.year && value.month && value.day) {
-        dashboard.settings.parameters[key] = new Neo4jDate(value.year, value.month, value.day);
-      }
-    });
-
     // Reverse engineer the minimal set of fields from the selection loaded.
     dashboard.pages.forEach((p) => {
       p.reports.forEach((r) => {
@@ -140,8 +129,8 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
     const { application } = getState();
 
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
+    dispatch(updateGlobalParametersThunk(dashboard.settings.parameters));
     dispatch(setParametersToLoadAfterConnecting(null));
-
     // Pre-2.3.4 dashboards might now always have a UUID. Set it if not present.
     if (!dashboard.uuid) {
       dispatch(setDashboardUuid(uuid));
