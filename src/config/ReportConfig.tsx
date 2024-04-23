@@ -46,6 +46,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      wrapContent: {
+        label: 'Wrap overflowing content',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
       columnWidthsType: {
         label: 'Column Widths Specification',
         type: SELECTION_TYPES.LIST,
