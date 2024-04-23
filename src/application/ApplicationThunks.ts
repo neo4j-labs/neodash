@@ -468,7 +468,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standalonePort,
         config.standaloneDatabase,
         config.standaloneDashboardName,
-        dashboardDatabase ? dashboardDatabase : config.standaloneDashboardDatabase,
+        dashboardDatabase || config.standaloneDashboardDatabase,
         config.standaloneDashboardURL,
         config.standaloneUsername,
         config.standalonePassword,
