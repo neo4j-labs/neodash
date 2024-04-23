@@ -3,7 +3,7 @@ import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDashboardUuid } from './DashboardActions';
 import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
-import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
+import { updateGlobalParametersThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
 import { createLogThunk } from '../application/logging/LoggingThunk';
 import { applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
@@ -141,7 +141,6 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
 
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
     dispatch(setParametersToLoadAfterConnecting(null));
-    dispatch(updateParametersToNeo4jTypeThunk());
 
     // Pre-2.3.4 dashboards might now always have a UUID. Set it if not present.
     if (!dashboard.uuid) {

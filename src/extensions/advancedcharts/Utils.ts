@@ -1,7 +1,6 @@
 import { valueIsArray } from '../../chart/ChartUtils';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getPageNumbersAndNames } from '../../dashboard/DashboardSelectors';
-import { updateDashboardSetting } from '../../settings/SettingsActions';
 
 export const getRule = (e, rules, type) => {
   let r = getRuleWithFieldPropertyName(e, rules, type, null);
