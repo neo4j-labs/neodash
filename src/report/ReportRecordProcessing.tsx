@@ -10,6 +10,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
+// import DOMPurify from 'dompurify';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -120,10 +121,10 @@ export function saveNodeAndRelPropertiesToDictionary(field, fieldsDict) {
 }
 
 /* HELPER FUNCTIONS FOR RENDERING A FIELD BASED ON TYPE */
-const HtmlTooltip = withStyles((theme) => ({
+const HtmlTooltip = withStyles(() => ({
   tooltip: {
     color: 'white',
-    fontSize: theme.typography.pxToRem(12),
+    fontSize: 12,
     border: '1px solid #fcfffa',
   },
 }))(Tooltip);
@@ -269,7 +270,12 @@ function RenderString(value) {
   return str;
 }
 
-function RenderLink(value) {
+function RenderLink(value, disabled = false) {
+  // If the link is embedded in a button (disabled), it's not a hyperlink, so we just return the string.
+  if (disabled) {
+    return value;
+  }
+  // Else, it's a 'real' link, and return a React object
   return (
     <TextLink key={value} externalLink target='_blank' href={value}>
       {value}
@@ -299,7 +305,7 @@ function RenderInteger(value) {
   if (!value || !value.toInt) {
     return RenderNumber(value);
   }
-  const integer = value.toNumber().toLocaleString();
+  const integer = value.toNumber().toLocaleString('en-US');
   return integer;
 }
 
@@ -307,7 +313,7 @@ function RenderNumber(value) {
   if (value === null || !value.toLocaleString) {
     return 'null';
   }
-  const number = value.toLocaleString();
+  const number = value.toLocaleString('en-US');
   return number;
 }
 
@@ -389,7 +395,7 @@ export const rendererForType: any = {
   },
   link: {
     type: 'link',
-    renderValue: (c) => RenderLink(c.value),
+    renderValue: (c, disabled = false) => RenderLink(c.value, disabled),
   },
 };
 

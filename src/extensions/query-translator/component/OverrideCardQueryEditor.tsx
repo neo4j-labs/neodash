@@ -28,6 +28,7 @@ export const NeoOverrideCardQueryEditor = ({
   updateCypherQuery,
   lastMessage,
   prepopulateExtensionName,
+  onExecute,
   translateQuery,
   updateEnglishQuery,
   displayError,
@@ -35,8 +36,8 @@ export const NeoOverrideCardQueryEditor = ({
   deletePrepopulationReportFunction,
 }) => {
   enum Language {
-    ENGLISH,
-    CYPHER,
+    ENGLISH = 0,
+    CYPHER = 1,
   }
 
   const [language, setLanguage] = React.useState(Language.CYPHER);
@@ -57,6 +58,7 @@ export const NeoOverrideCardQueryEditor = ({
     <NeoCodeEditorComponent
       value={cypherQuery}
       editable={true}
+      onExecute={onExecute}
       language={
         reportTypes[reportType] && reportTypes[reportType].inputMode ? reportTypes[reportType].inputMode : 'cypher'
       }
@@ -102,7 +104,6 @@ export const NeoOverrideCardQueryEditor = ({
       },
       (e) => {
         setRunningTranslation(false);
-        console.log(e);
         displayError(e);
       }
     );
@@ -176,7 +177,7 @@ export const NeoOverrideCardQueryEditor = ({
                 <a
                   target='_blank'
                   style={{ textDecoration: 'underline' }}
-                  href='https://neo4j.com/labs/neodash/2.3/user-guide/extensions/natural-language-queries/'
+                  href='https://neo4j.com/labs/neodash/2.4/user-guide/extensions/natural-language-queries/'
                 >
                   documentation
                 </a>

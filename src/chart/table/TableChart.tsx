@@ -1,5 +1,5 @@
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useEffect } from 'react';
+import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
@@ -22,12 +22,12 @@ import { CloudArrowDownIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/ic
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
-
 const theme = createTheme({
   typography: {
     fontFamily: "'Nunito Sans', sans-serif !important",
@@ -40,12 +40,17 @@ const fallbackRenderer = (value) => {
 
 function renderAsButtonWrapper(renderer) {
   return function renderAsButton(value) {
+    const outputValue = renderer(value, true);
+    // If there's nothing to be rendered, there's no button needed.
+    if (outputValue == '') {
+      return <></>;
+    }
     return (
       <Button
         style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
         variant='contained'
         color='primary'
-      >{`${renderer(value)}`}</Button>
+      >{outputValue}</Button>
     );
   };
 }
@@ -83,13 +88,10 @@ export const NeoTableChart = (props: ChartProps) => {
   );
 
   const [notificationOpen, setNotificationOpen] = React.useState(false);
+  const [columnVisibilityModel, setColumnVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
 
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
-  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
-    return <>No data, re-run the report.</>;
-  }
-
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
   const pageSizeReducer = compact ? 3 : 1;
 
@@ -110,8 +112,7 @@ export const NeoTableChart = (props: ChartProps) => {
     return key != 'id' ? key : `${key} `;
   };
 
-  const actionableFields = actionsRules.map((r) => r.field);
-
+  const actionableFields = actionsRules.filter((r) => r.condition !== 'rowCheck').map((r) => r.field);
   const columns = transposed
     ? [records[0].keys[0]].concat(records.map((record) => record._fields[0]?.toString() || '')).map((key, i) => {
         const uniqueKey = `${String(key)}_${i}`;
@@ -129,7 +130,9 @@ export const NeoTableChart = (props: ChartProps) => {
           actionableFields.includes(key)
         );
       })
-    : records[0].keys.map((key, i) => {
+    : records[0] &&
+      records[0].keys &&
+      records[0].keys.map((key, i) => {
         const value = records[0].get(key);
         if (columnWidthsType == 'Relative (%)') {
           return ApplyColumnType(
@@ -160,11 +163,18 @@ export const NeoTableChart = (props: ChartProps) => {
           actionableFields.includes(key)
         );
       });
-  const hiddenColumns = Object.assign(
-    {},
-    ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
-  );
 
+  useEffect(() => {
+    const hiddenColumns = Object.assign(
+      {},
+      ...columns.filter((x) => x.field.startsWith(HIDDEN_COLUMN_PREFIX)).map((x) => ({ [x.field]: false }))
+    );
+    setColumnVisibilityModel(hiddenColumns);
+  }, [records]);
+
+  if (props.records == null || props.records.length == 0 || props.records[0].keys == null) {
+    return <>No data, re-run the report.</>;
+  }
   const getTransposedRows = (records) => {
     // Skip first key
     const rowKeys = [...records[0].keys];
@@ -239,7 +249,7 @@ export const NeoTableChart = (props: ChartProps) => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              className='n-absolute n-z-10 n-bottom-4 n-left-1'
+              className='n-absolute n-z-10 n-bottom-2 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />
@@ -252,10 +262,12 @@ export const NeoTableChart = (props: ChartProps) => {
         <DataGrid
           key={'tableKey'}
           headerHeight={32}
-          rowHeight={tableRowHeight}
+          density={compact ? 'compact' : 'standard'}
+          getRowHeight={() => 'auto'}
           rows={rows}
           columns={columns}
-          columnVisibilityModel={hiddenColumns}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
           onCellClick={(e) =>
             performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
           }
@@ -268,6 +280,11 @@ export const NeoTableChart = (props: ChartProps) => {
               navigator.clipboard.writeText(e.value);
             }
           }}
+          checkboxSelection={hasCheckboxes(actionsRules)}
+          selectionModel={getCheckboxes(actionsRules, rows, props.getGlobalParameter)}
+          onSelectionModelChange={(selection) =>
+            updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter)
+          }
           pageSize={tablePageSize > 0 ? tablePageSize : 5}
           rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}
           disableSelectionOnClick
@@ -288,6 +305,13 @@ export const NeoTableChart = (props: ChartProps) => {
                 return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
               })
               .join(' ');
+          }}
+          sx={{
+            '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '3px' },
+            '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell:has(button)': { py: '0px' },
+            '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+            '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+            '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
           }}
         />
       </div>
