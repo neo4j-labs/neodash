@@ -50,7 +50,7 @@ const _REPORT_TYPES = {
         label: 'Wrap overflowing content',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: true,
+        default: false,
       },
       columnWidthsType: {
         label: 'Column Widths Specification',

@@ -71,7 +71,7 @@ export const generateSafeColumnKey = (key) => {
 
 export const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
-  const wrapContent = props.settings && props.settings.wrapContent !== undefined ? props.settings.wrapContent : true;
+  const wrapContent = props.settings && props.settings.wrapContent ? props.settings.wrapContent : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
 
