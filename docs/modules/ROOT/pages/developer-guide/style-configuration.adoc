@@ -6,9 +6,15 @@ link:https://cdn.jsdelivr.net/npm/@neo4j-ndl/base@1.4.0/lib/tokens/css/tokens.cs
 
 For a simple (non-Dockerized) deployment, these configuration parameters
 can be changed by modifying `dist/style.config.json` after you have built the
-application. When Docker image, these can not be passed as environment
-variables.
+application. When using the NeoDash Docker image, these can be passed as environment
+variables. For example:
 
+....
+docker run -p 5005:5005 \
+ -e DASHBOARD_HEADER_BRAND_LOGO=https://picsum.photos/500/100 \
+ neo4jlabs/neodash
+....
+ 
 An example configuration for NeoDash
 
 ....
