@@ -275,7 +275,7 @@ function RenderArray(value, transposedTable = false) {
     return (
       <span key={String(`k${i}`) + v}>
         {RenderSubValue(v)}
-        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
+        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>, </span> : <></>}
       </span>
     );
   });

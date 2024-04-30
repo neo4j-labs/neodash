@@ -10,6 +10,7 @@ import {
   gaugeChartCypherQuery,
   formCypherQuery,
 } from '../fixtures/cypher_queries';
+import { createReportOfType, selectReportOfType, enableAdvancedVisualizations, enableFormsExtension } from './utils';
 
 const WAITING_TIME = 20000;
 // Ignore warnings that may appear when using the Cypress dev server
@@ -293,46 +294,3 @@ describe('NeoDash E2E Tests', () => {
     }
   });
 });
-
-function enableAdvancedVisualizations() {
-  cy.get('main button[aria-label="Extensions').should('be.visible').click();
-  cy.get('#checkbox-advanced-charts').should('be.visible').click();
-  cy.get('.ndl-dialog-close').scrollIntoView().should('be.visible').click();
-  cy.wait(200);
-}
-
-function enableFormsExtension() {
-  cy.get('main button[aria-label="Extensions').should('be.visible').click();
-  cy.get('#checkbox-forms').scrollIntoView();
-  cy.get('#checkbox-forms').should('be.visible').click();
-  cy.get('.ndl-dialog-close').scrollIntoView().should('be.visible').click();
-  cy.wait(200);
-}
-
-function selectReportOfType(type) {
-  cy.get('main .react-grid-item button[aria-label="add report"]').should('be.visible').click();
-  cy.get('main .react-grid-item')
-    .contains('No query specified.')
-    .parentsUntil('.react-grid-item')
-    .find('button[aria-label="settings"]', { timeout: 2000 })
-    .should('be.visible')
-    .click();
-  cy.get('main .react-grid-item:eq(2) #type', { timeout: 2000 }).should('be.visible').click();
-  cy.contains(type).click();
-  cy.wait(100);
-}
-
-function createReportOfType(type, query, fast = false, run = true) {
-  selectReportOfType(type);
-  if (fast) {
-    cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { delay: 1, parseSpecialCharSequences: false });
-  } else {
-    cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
-  }
-  cy.wait(400);
-
-  cy.get('main .react-grid-item:eq(2)').contains('Advanced settings').click();
-  if (run) {
-    cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').click();
-  }
-}
