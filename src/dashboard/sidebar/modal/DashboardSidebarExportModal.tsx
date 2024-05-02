@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { DocumentArrowDownIconOutline } from '@neo4j-ndl/react/icons';
-import { CloudArrowUpIconOutline } from '@neo4j-ndl/react/icons';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { valueIsArray, valueIsObject } from '../../../chart/ChartUtils';
 import { TextareaAutosize } from '@mui/material';

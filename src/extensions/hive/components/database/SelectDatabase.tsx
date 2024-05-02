@@ -11,13 +11,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SelectDatabase = (props) => {
-  const { existingDbName, connection, setConnection, theme } = props;
-
-  const [tabIndex, setTabIndex] = useState(0);
-
-  const handleTabChange = (event, newValue) => {
-    setTabIndex(newValue);
-  };
+  const { connection, setConnection } = props;
 
   const classes = useStyles();
 

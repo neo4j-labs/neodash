@@ -14,7 +14,7 @@ class PrivateRoute extends Component {
 
   render() {
     let { authInitialized } = this.state;
-    let { path, component, ...rest } = this.props;
+    let { path, component } = this.props;
 
     if (authInitialized) {
       return (
@@ -32,7 +32,6 @@ class PrivateRoute extends Component {
                 </p>
               );
             }
-            // return <Component {...props} {...rest} />;
             return React.createElement(component, { ...props });
           }}
         />

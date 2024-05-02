@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { SSOLoginButton } from '../component/sso/SSOLoginButton';
-import { Button, Dialog, Switch, TextInput, Dropdown, TextLink, IconButton } from '@neo4j-ndl/react';
-import { PlayIconOutline, ArrowLeftIconOutline } from '@neo4j-ndl/react/icons';
+import { Button, Dialog, Switch, TextInput, Dropdown, TextLink } from '@neo4j-ndl/react';
+import { PlayIconOutline } from '@neo4j-ndl/react/icons';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */

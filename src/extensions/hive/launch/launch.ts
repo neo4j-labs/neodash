@@ -1,6 +1,5 @@
 import { getAuth } from '../auth/auth';
 import { config } from '../config/dynamicConfig';
-import { DatabaseUploadType } from '../config/SolutionsConstants';
 import { handleErrors } from '../util/util';
 import { handleSavedQueryString, saveQueryString } from './launchHelper';
 
@@ -75,21 +74,14 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
       const response = await fetchDashboardFromHive({ uuid: dashboardUuid });
       const data = response?.data?.getDashboardByUUID;
 
-      let port = '7687';
-      let hostName;
-      let schema = 'neo4j';
-      let dbName = 'neo4j';
-      let userName = 'neo4j';
-      let password;
-
       // Extract port, schema and hostname info from connection url
       const connectionComps = data.dbConnectionUrl.match(/(.+):\/\/([\w.-]+):?(\d+)?/);
-      port = connectionComps[3] ? connectionComps[3] : '7687';
-      hostName = connectionComps[2];
-      schema = connectionComps[1];
-      dbName = data.dbName ? data.dbName : 'neo4j';
-      userName = data.dbUsername ? data.dbUsername : 'neo4j';
-      password = data.dbPassword;
+      const port = connectionComps[3] ? connectionComps[3] : '7687';
+      const hostName = connectionComps[2];
+      const schema = connectionComps[1];
+      const dbName = data.dbName ? data.dbName : 'neo4j';
+      const userName = data.dbUsername ? data.dbUsername : 'neo4j';
+      const password = data.dbPassword;
 
       return {
         isHandled: true,

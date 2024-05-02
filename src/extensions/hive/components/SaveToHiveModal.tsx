@@ -1,26 +1,16 @@
-import React, { Component, useContext, useEffect, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Badge,
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  FormControl,
-  FormControlLabel,
   IconButton,
-  Input,
-  MenuItem,
   Tab,
   Tabs,
-  TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import { ArrowLeftIconOutline } from '@neo4j-ndl/react/icons';
@@ -32,8 +22,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { getDashboardJson } from '../../../modal/ModalSelectors';
 import { applicationGetConnection } from '../../../application/ApplicationSelectors';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { saveDashboardToHiveThunk, listUserDashboards } from '../persistence/SolutionsThunks';
+import { saveDashboardToHiveThunk } from '../persistence/SolutionsThunks';
 import { DatabaseUploadType, HiveSolutionDomain } from '../config/SolutionsConstants';
 import { SelectDatabase } from './database/SelectDatabase';
 import { TabPanel } from './tabs/TabPanel';
@@ -42,7 +31,6 @@ import { getDbConnectionUrl } from '../util/util';
 import { config } from '../config/dynamicConfig';
 import { handleErrors } from '../util/util';
 import { getAuth } from '../auth/auth';
-import { delayedRender } from '../util/delayedRender';
 import { GetSolutionById } from './graphql/HiveGraphQL';
 
 /**
@@ -109,7 +97,6 @@ const SaveToHiveModalContent = ({
   const initialTabIndex = existingSolutionId ? tabCount - 1 : 0;
 
   const [selectedFile, setSelectedFile] = useState();
-  const [isSelected, setIsSelected] = useState(false);
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
   const [dbConnection, setDbConnection] = useState(connection);
   const [hasPublished, setHasPublished] = useState(false);
@@ -171,11 +158,6 @@ const SaveToHiveModalContent = ({
 
   const classes = useStyles();
 
-  const changeHandler = (event) => {
-    setSelectedFile(event.target.files[0]);
-    setIsSelected(true);
-  };
-
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -203,13 +185,6 @@ const SaveToHiveModalContent = ({
   };
 
   const [dbType, setDbType] = useState(DatabaseUploadType.DatabaseUpload);
-  const [expandedPanel, setExpandedPanel] = useState(false);
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    if (isExpanded) {
-      setDbType(panel);
-    }
-    setExpandedPanel(isExpanded ? panel : false);
-  };
 
   const progressCallback = (progress) => {
     const { solutionId } = progress;

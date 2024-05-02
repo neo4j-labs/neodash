@@ -4,7 +4,6 @@ import { config } from '../config/dynamicConfig';
 import { getAuth } from '../auth/auth';
 import { handleErrors } from '../util/util';
 import { updateHiveInformation } from './HiveActions';
-import { DatabaseUploadType } from '../config/SolutionsConstants';
 
 const MergeSolutionAndDashboard = `
   mutation MergeSolutionAndDashboard ($cardInput: SolutionInput!, $deploymentInput: DeploymentInput!, $neoDashInput: UploadDashboardInput!, $caller: String!) {

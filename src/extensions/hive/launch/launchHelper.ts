@@ -16,14 +16,13 @@ export const handleSavedQueryString = (queryString) => {
   // console.log('handleNeoDashLaunch after silentAuth')
   if (!queryString) {
     // console.log('handleNeoDashLaunch localStorage - getting query string')
-    queryString = localStorage.getItem(QueryStorageKey) || '';
+    queryString = localStorage.getItem(QueryStorageKey) ?? '';
     if (queryString) {
       // console.log('handleNeoDashLaunch query string from local storage is', queryString)
       const queryObject = getUrlQueryParamObject(queryString);
       window.history.pushState(queryObject, document.title, new URL(queryString, window.location.href));
     }
   }
-  // localStorage.removeItem(QueryStorageKey);
   return queryString;
 };
 

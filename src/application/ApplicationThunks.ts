@@ -6,7 +6,6 @@ import { NEODASH_VERSION, VERSION_TO_MIGRATE } from '../dashboard/DashboardReduc
 import {
   assignDashboardUuidIfNotPresentThunk,
   loadDashboardFromNeo4jByNameThunk,
-  loadDashboardFromNeo4jByUUIDThunk,
   loadDashboardFromNeo4jByConnectionModuleUUIDThunk,
   loadDashboardFromNeo4jThunk,
   loadDashboardThunk,
@@ -473,8 +472,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
   };
 
   let configJson = await getConfigJson();
-  let connectionModuleKey =
-    configJson && configJson.connectionModule ? configJson.connectionModule : DEFAULT_CONFIG.connectionModule;
+  let connectionModuleKey = configJson?.connectionModule
+    ? configJson.connectionModule
+    : DEFAULT_CONFIG.connectionModule;
   setConnectionModule(connectionModuleKey);
 
   const { connectionModule } = getConnectionModule();
