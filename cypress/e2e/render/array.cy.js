@@ -140,6 +140,7 @@ describe('Testing array rendering', () => {
     cy.wait(1000);
     cy.get('.MuiAutocomplete-popper').contains('title').click();
     // Enable multiple selection
+    closeSettings(CARD_SELECTOR);
     updateDropdownAdvancedSetting(CARD_SELECTOR, 'Multiple Selection', 'on');
     // Finally, select a few values in the parameter select
     cy.get(CARD_SELECTOR).contains('Movie title').click();

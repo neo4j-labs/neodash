@@ -57,12 +57,8 @@ export function closeSettings(cardSelector) {
 }
 
 export function openAdvancedSettings(cardSelector) {
-  if (cy.get(cardSelector).contains('Advanced settings').should('be.visible')) {
-    cy.get(cardSelector).contains('Advanced settings').click();
-  } else {
-    openSettings(cardSelector);
-    cy.get(cardSelector).contains('Advanced settings').click();
-  }
+  openSettings(cardSelector);
+  cy.get(cardSelector).contains('Advanced settings').click();
 }
 
 export function closeAdvancedSettings(cardSelector) {
