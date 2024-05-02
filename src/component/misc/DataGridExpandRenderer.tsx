@@ -109,7 +109,7 @@ export function renderCellExpand(params: GridRenderCellParams<any, string>, line
   let value = params.value?.low ? params.value.low : params.value;
   const displayLink = typeof value === 'string' || value instanceof String ? RenderString(value) : '';
     return <GridCellExpand value={displayLink} width={params.colDef.computedWidth} />;
-  }
+  
 
   const stringifiedObj = value
     ? JSON.stringify(value)
@@ -119,5 +119,5 @@ export function renderCellExpand(params: GridRenderCellParams<any, string>, line
       .replaceAll('"', '')
     : '';
 
-  return <GridCellExpand value={stringifiedObj || ''} width={params.colDef.computedWidth} />;
+  //return <GridCellExpand value={stringifiedObj || ''} width={params.colDef.computedWidth} />;
 }
