@@ -5,6 +5,9 @@ import {
   closeSettings,
   toggleTableTranspose,
   openReportActionsMenu,
+  selectReportOfType,
+  openAdvancedSettings,
+  updateDropdownAdvancedSetting,
 } from '../utils';
 
 const WAITING_TIME = 20000;
@@ -119,5 +122,32 @@ describe('Testing array rendering', () => {
     cy.checkInitialState();
     createReportOfType('Single Value', stringArrayCypherQuery, true, true);
     cy.get(CARD_SELECTOR).should('have.text', 'initial, list');
+  });
+
+  it('creates a multi parameter select', () => {
+    cy.checkInitialState();
+    selectReportOfType('Parameter Select');
+    cy.get('main .react-grid-item:eq(2) label[for="Selection Type"]').siblings('div').click();
+    // Set up the parameter select
+    cy.contains('Node Property').click();
+    cy.wait(100);
+    cy.contains('Node Label').click();
+    cy.contains('Node Label').siblings('div').find('input').type('Movie');
+    cy.wait(1000);
+    cy.get('.MuiAutocomplete-popper').contains('Movie').click();
+    cy.contains('Property Name').click();
+    cy.contains('Property Name').siblings('div').find('input').type('title');
+    cy.wait(1000);
+    cy.get('.MuiAutocomplete-popper').contains('title').click();
+    // Enable multiple selection
+    updateDropdownAdvancedSetting(CARD_SELECTOR, 'Multiple Selection', 'on');
+    // Finally, select a few values in the parameter select
+    cy.get(CARD_SELECTOR).contains('Movie title').click();
+    cy.get(CARD_SELECTOR).contains('Movie title').siblings('div').find('input').type('a');
+    cy.get('.MuiAutocomplete-popper').contains('Apollo 13').click();
+    cy.get(CARD_SELECTOR).contains('Movie title').siblings('div').find('input').type('t');
+    cy.get('.MuiAutocomplete-popper').contains('The Matrix').click();
+    cy.get(CARD_SELECTOR).contains('Apollo 13').should('be.visible');
+    cy.get(CARD_SELECTOR).contains('The Matrix').should('be.visible');
   });
 });
