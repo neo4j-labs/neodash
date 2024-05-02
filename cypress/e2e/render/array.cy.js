@@ -85,7 +85,7 @@ describe('Testing array rendering', () => {
     cy.get(`${CARD_SELECTOR} .MuiCardHeader-root`).find('input').should('have.value', 'initial, list');
   });
 
-  it.skip('creates a table that contains int arrays', () => {
+  it('creates a table that contains int arrays', () => {
     cy.checkInitialState();
     createReportOfType('Table', intArrayCypherQuery, true, true);
 
@@ -102,7 +102,7 @@ describe('Testing array rendering', () => {
     cy.get(`${CARD_SELECTOR} .MuiDataGrid-cell:eq(1)`).should('have.text', '3, 4');
   });
 
-  it.skip('creates a table that contains nodes and rels', () => {
+  it('creates a table that contains nodes and rels', () => {
     cy.checkInitialState();
     createReportOfType('Table', pathArrayCypherQuery, true, true);
 
@@ -115,7 +115,7 @@ describe('Testing array rendering', () => {
     cy.get(`${CARD_SELECTOR} .MuiDataGrid-cell:eq(0) .MuiChip-root`).should('have.text', 'ACTED_IN');
   });
 
-  it.skip('creates a single value report which is an array', () => {
+  it('creates a single value report which is an array', () => {
     cy.checkInitialState();
     createReportOfType('Single Value', stringArrayCypherQuery, true, true);
     cy.get(CARD_SELECTOR).should('have.text', 'initial, list');
