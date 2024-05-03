@@ -36,7 +36,7 @@ const NeoCardSettings = ({
   expanded,
   onToggleCardExpand,
 }) => {
-  const reportHeight = heightPx - CARD_HEADER_HEIGHT + 24;
+  const reportHeight = heightPx - CARD_HEADER_HEIGHT + 19;
 
   const cardSettingsHeader = (
     <NeoCardSettingsHeader
@@ -70,6 +70,7 @@ const NeoCardSettings = ({
       onQueryUpdate={onQueryUpdate}
       onReportSettingUpdate={onReportSettingUpdate}
       onTypeUpdate={onTypeUpdate}
+      forceRunQuery={onToggleCardSettings}
     ></NeoCardSettingsContent>
   ) : (
     <CardContent className='n-py-2' />

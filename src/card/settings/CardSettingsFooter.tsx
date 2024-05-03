@@ -17,11 +17,11 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 
 const NeoCardSettingsFooter = ({
   type,
-  fields,
-  schema,
+  fields = [],
+  schema = [],
   reportSettings,
   reportSettingsOpen,
-  extensions,
+  extensions = {},
   onToggleReportSettings,
   onReportSettingUpdate,
 }) => {
@@ -37,7 +37,7 @@ const NeoCardSettingsFooter = ({
 
   const debouncedReportSettingUpdate = useCallback(debounce(onReportSettingUpdate, 250), []);
 
-  const updateSpecificReportSetting = (field: string, value: any) => {
+  const updateSpecificReportSetting = (field: string, value: unknown) => {
     const entry = {};
     entry[field] = value;
     setReportSettingsText(update(reportSettingsText, entry));

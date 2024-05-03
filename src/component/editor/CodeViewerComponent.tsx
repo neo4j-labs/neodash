@@ -18,6 +18,7 @@ const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
           paddingLeft: '10px',
           background: 'none',
           overflow: 'scroll !important',
+          marginTop: '5px',
           border: '1px solid lightgray',
         }}
         className={'textinput-linenumbers'}

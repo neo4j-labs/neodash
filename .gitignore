@@ -15,7 +15,7 @@ target
 /coverage
 /.nyc_output
 cypress/videos
-
+cypress/screenshots
 # production
 /build
 /dist

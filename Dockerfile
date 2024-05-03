@@ -1,5 +1,5 @@
 # build stage
-FROM node:lts-alpine AS build-stage
+FROM node:lts-alpine3.18 AS build-stage
 
 RUN yarn global add typescript jest
 WORKDIR /usr/local/src/neodash
@@ -10,13 +10,14 @@ WORKDIR /usr/local/src/neodash
 
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
+COPY ./yarn.lock /usr/local/src/neodash/yarn.lock
 
 RUN yarn install
 COPY ./ /usr/local/src/neodash
 RUN yarn run build-minimal
 
 # production stage
-FROM nginx:alpine AS neodash
+FROM nginx:alpine3.18 AS neodash
 RUN apk upgrade
 
 ENV NGINX_PORT=5005
@@ -43,4 +44,4 @@ USER nginx
 EXPOSE $NGINX_PORT
 
 HEALTHCHECK cmd curl --fail "http://localhost:$NGINX_PORT" || exit 1
-LABEL version="2.3.5"
+LABEL version="2.4.6"

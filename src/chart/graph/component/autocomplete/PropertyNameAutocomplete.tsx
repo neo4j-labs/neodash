@@ -22,7 +22,7 @@ export const PropertyNameAutocomplete = ({
       id='autocomplete-property'
       disabled={disabled}
       options={records.map((r) => (r._fields ? r._fields[0] : '(no data)'))}
-      getOptionLabel={(option) => (option ? option : '')}
+      getOptionLabel={(option) => option || ''}
       style={{ display: 'inline-block', width: 170, marginLeft: '5px', marginTop: '0px' }}
       inputValue={inputs[index]}
       onInputChange={(event, value) => {

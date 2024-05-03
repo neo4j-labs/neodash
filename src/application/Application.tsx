@@ -15,6 +15,7 @@ import {
   applicationGetStandaloneSettings,
   applicationGetSsoSettings,
   applicationHasReportHelpModalOpen,
+  applicationIsStandalone,
 } from '../application/ApplicationSelectors';
 import {
   createConnectionThunk,
@@ -70,6 +71,7 @@ const Application = ({
   connectionModalOpen,
   reportHelpModalOpen,
   ssoSettings,
+  standalone,
   standaloneSettings,
   aboutModalOpen,
   loadDashboard,
@@ -140,7 +142,8 @@ const Application = ({
       </Suspense>
       <NeoConnectionModal
         open={connectionModalOpen}
-        dismissable={connected}
+        connected={connected}
+        dismissable={!standalone}
         connection={connection}
         ssoSettings={ssoSettings}
         standalone={standaloneSettings.standalone}
@@ -149,6 +152,7 @@ const Application = ({
         onSSOAttempt={onSSOAttempt}
         setConnectionProperties={setConnectionDetails}
         onConnectionModalClose={onConnectionModalClose}
+        setWelcomeScreenOpen={setWelcomeScreenOpen}
       ></NeoConnectionModal>
       <NeoWelcomeScreenModal
         welcomeScreenOpen={welcomeScreenOpen}
@@ -191,6 +195,7 @@ const mapStateToProps = (state) => ({
   shareDetails: applicationGetShareDetails(state),
   oldDashboard: applicationGetOldDashboard(state),
   ssoSettings: applicationGetSsoSettings(state),
+  standalone: applicationIsStandalone(state),
   standaloneSettings: applicationGetStandaloneSettings(state),
   connectionModalOpen: applicationHasConnectionModalOpen(state),
   aboutModalOpen: applicationHasAboutModalOpen(state),
@@ -214,9 +219,9 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setConnected(false));
     dispatch(createConnectionFromDesktopIntegrationThunk());
   },
-  loadDashboard: (text) => {
+  loadDashboard: (uuid, text) => {
     dispatch(clearNotification());
-    dispatch(loadDashboardThunk(text));
+    dispatch(loadDashboardThunk(uuid, text));
   },
   resetDashboard: () => dispatch(resetDashboardState()),
   clearOldDashboard: () => dispatch(setOldDashboard(null)),

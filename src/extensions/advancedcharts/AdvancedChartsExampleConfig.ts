@@ -6,8 +6,60 @@ import NeoSunburstChart from './chart/sunburst/SunburstChart';
 import NeoTreeMapChart from './chart/treemap/TreeMapChart';
 import NeoRadarChart from './chart/radar/RadarChart';
 import NeoAreaMapChart from './chart/areamap/AreaMapChart';
+import NeoGanttChart from './chart/gantt/GanttChart';
+import NeoGraphChart3D from './chart/graph3d/GraphChart3D';
 
 export const EXAMPLE_ADVANCED_REPORTS = [
+  {
+    title: 'Graph 3D',
+    description:
+      'A 3D graph visualization will draw all returned nodes, relationships and paths... in three dimensions!',
+    exampleQuery: 'MATCH (p:Person)-[r:RATES]->(m:Movie)\nRETURN p, r, m',
+    syntheticQuery: `
+        WITH [
+            {
+                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 11, identity: 10001, properties: {rating: 4.5}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Jim", movie: "The Matrix", rating: 4.5
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 11, identity: 10002, properties: {rating: 3.8}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Mike", movie: "The Matrix", rating: 3.8
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 11, identity: 10003, properties: {rating: 5.0}}, end: {labels: ["Movie"], identity: 11,properties: {title: "The Matrix", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix", rating: 5.0
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 12, identity: 10004, properties: {rating: 3.5}}, end: {labels: ["Movie"], identity: 12, properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Jim", movie: "The Matrix - Reloaded", rating: 3.5
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 12, identity: 10005, properties: {rating: 2.7}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Sarah", movie: "The Matrix - Reloaded", rating: 2.7
+            },
+            {
+                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 12},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 12, identity: 10006, properties: {rating: 4.1}}, end: {labels: ["Movie"], identity: 12,properties: {title: "The Matrix - Reloaded", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Reloaded", rating: 4.1
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 1, properties: {name: "Jim"}}, relationship: {type: "RATES", start: 1, end: 13, identity: 10007, properties: {rating: 4.9}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Jim", movie: "The Matrix - Revolutions", rating: 4.9
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 2, properties: {name: "Mike"}}, relationship: {type: "RATES", start: 2, end: 13, identity: 10008, properties: {rating: 4.8}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Mike", movie: "The Matrix - Revolutions", rating: 4.8
+            },
+            {
+                path: {  start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 3, properties: {name: "Sarah"}}, relationship: {type: "RATES", start: 3, end: 13, identity: 10009, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 1999}} } ] }, person: "Sarah", movie: "The Matrix - Revolutions", rating: 4.0
+            },
+            {
+                path: { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}},  end:  {identity: 13},  length: 1, segments: [ { start: {labels: ["Person"], identity: 4, properties: {name: "Anna"}}, relationship: {type: "RATES", start: 4, end: 13, identity: 10010, properties: {rating: 4.0}}, end: {labels: ["Movie"], identity: 13,properties: {title: "The Matrix - Revolutions", released: 2003}} } ] }, person: "Anna", movie: "The Matrix - Revolutions", rating: 4.0
+            }
+          ] as data
+          UNWIND data as row
+          RETURN row.path as Path
+        `,
+    settings: { lockable: false, enableExploration: false, enableEditing: false },
+    fields: [],
+    selection: {
+      Person: 'name',
+      Movie: 'title',
+    },
+    type: 'graph3d',
+    chartType: NeoGraphChart3D,
+  },
   {
     title: 'Sunburst Chart',
     description: 'Sunburst charts can be used to visualize hierarchical data, where each leaf has a numeric value.',
@@ -236,5 +288,37 @@ RETURN code,totalCount
     fields: [],
     type: 'gauge',
     chartType: NeoGaugeChart,
+  },
+  {
+    title: 'Gantt',
+    description:
+      'A Gantt chart models nodes as tasks, and relationships as dependencies between them. A relationship property can be used to display different dependency types.',
+    exampleQuery: 'MATCH (a:Activity)-[r:NEXT]->(a2:Activity)\nRETURN a, r, a2',
+    syntheticQuery: `
+        WITH [
+            {
+                path: {  start: {labels: ["Task"], identity: 1, properties: {name: "Task A", startDate: "2023-10-10",  endDate: "2023-10-11"}},  end:  {identity: 2},  length: 1, segments: [ { start: {labels: ["Task"], identity: 1, properties: {name: "Task A", startDate: "2023-10-10",  endDate: "2023-10-11"}}, relationship: {type: "NEXT", start: 1, end: 2, identity: 10001, properties: {rel_type: 'ES'}}, end: {labels: ["Task"], identity: 2,properties: {name: "Task B", startDate: "2023-10-11",  endDate: "2023-10-12"}} } ] }, person: "Jim", movie: "The Matrix", rating: 4.5
+            },
+            {
+                path: {  start: {labels: ["Task"], identity: 2, properties: {name: "Task B", startDate: "2023-10-11",  endDate: "2023-10-12"}},  end:  {identity: 3},  length: 1, segments: [ { start: {labels: ["Task"], identity: 2, properties: {name: "Task B", startDate: "2023-10-11",  endDate: "2023-10-12"}}, relationship: {type: "NEXT", start: 2, end: 3, identity: 10002, properties: {rel_type: 'EE'}}, end: {labels: ["Task"], identity: 3,properties: {name: "Task C", startDate: "2023-10-12",  endDate: "2023-10-13"}} } ] }, person: "Mike", movie: "The Matrix", rating: 3.8
+            },
+            {
+                path: {  start: {labels: ["Task"], identity: 3, properties: {name: "Task C", startDate: "2023-10-12",  endDate: "2023-10-13"}},  end:  {identity: 4},  length: 1, segments: [ { start: {labels: ["Task"], identity: 3, properties: {name: "Task C", startDate: "2023-10-12",  endDate: "2023-10-13"}}, relationship: {type: "NEXT", start: 3, end: 4, identity: 10003, properties: {rel_type: 'SE'}}, end: {labels: ["Task"], identity: 4,properties: {name: "Task D", startDate: "2023-10-13",  endDate: "2023-10-14"}} } ] }, person: "Sarah", movie: "The Matrix", rating: 5.0
+            },
+            {
+                path: {  start: {labels: ["Task"], identity: 4, properties: {name: "Task D", startDate: "2023-10-13",  endDate: "2023-10-14"}},  end:  {identity: 5},  length: 1, segments: [ { start: {labels: ["Task"], identity: 4, properties: {name: "Task D", startDate: "2023-10-13",  endDate: "2023-10-14"}}, relationship: {type: "NEXT", start: 4, end: 5, identity: 10004, properties: {rel_type: 'SS'}}, end: {labels: ["Task"], identity: 5, properties: {name: "Task E", startDate: "2023-10-14",  endDate: "2023-10-15"}} } ] }, person: "Jim", movie: "The Matrix - Reloaded", rating: 3.5
+            }
+          ] as data
+          UNWIND data as row
+          RETURN row.path as Path
+        `,
+    settings: {},
+    fields: [],
+    dimensions: {
+      height: 420,
+    },
+    selection: {},
+    type: 'gantt',
+    chartType: NeoGanttChart,
   },
 ];
