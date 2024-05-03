@@ -10,6 +10,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
+// import DOMPurify from 'dompurify';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -246,12 +247,15 @@ function RenderPath(value) {
 }
 
 function RenderArray(value) {
+  if (value.length > 0 && !valueIsNode(value[0]) && !valueIsRelationship(value[0])) {
+    return RenderString(value.join(', '));
+  }
   const mapped = value.map((v, i) => {
     return (
-      <div key={String(`k${i}`) + v}>
+      <span key={String(`k${i}`) + v}>
         {RenderSubValue(v)}
         {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
-      </div>
+      </span>
     );
   });
   return mapped;

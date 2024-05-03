@@ -1,3 +1,32 @@
+## NeoDash 2.4.6
+This is a minor release containing a few critical fixes and some extra style customizations:
+
+- Fix bad text wrapping for arrays in tables ([868](https://github.com/neo4j-labs/neodash/pull/868)).
+- Make wrapping in table optional, disabled by default ([872](https://github.com/neo4j-labs/neodash/pull/872)).
+- Fixed issues where cross database dashboard sharing always reverted back to the default database ([873](https://github.com/neo4j-labs/neodash/pull/873)).
+- Added option to define style config using environment variables for the Docker image ([876](https://github.com/neo4j-labs/neodash/pull/876)). 
+
+## NeoDash 2.4.5
+This is a small release containing a few fixes:
+- Fixed rendering of string arrays inside tables, report titles, and report action buttons [849](https://github.com/neo4j-labs/neodash/pull/849)
+- Allowed text to wrap in tables, preserving the number of rows [852](https://github.com/neo4j-labs/neodash/pull/852)
+- Disabled auto-sorting of Cypher query-based Parameter Select ; use Cypher ORDER BY to control result order [857](https://github.com/neo4j-labs/neodash/pull/857)
+- Updated role selector menu, and made user updates more robust [854](https://github.com/neo4j-labs/neodash/pull/854)
+
+Thanks to all the contributors for this release: 
+- [MariusC](https://github.com/mariusconjeaud),
+- [LiamEdwardsLamarche](https://github.com/LiamEdwardsLamarche),
+- [AleSim94](https://github.com/AleSim94)
+
+## NeoDash 2.4.4
+This is a hotfix release fixing some breaking issues in the 2.4.3:
+- Fixed number parsing using newer versions of the Neo4j driver. [811](https://github.com/neo4j-labs/neodash/pull/811)
+- Reverted new connection handler for auto-renewed SSO sessions. [815](https://github.com/neo4j-labs/neodash/pull/815)
+- Improved handling of parameters in form extension, resolved local state issues. [813](https://github.com/neo4j-labs/neodash/pull/813)
+- Updated Role management extension to no longer execute queries in parallel, improved UX and error handling [813](https://github.com/neo4j-labs/neodash/pull/813)
+
+If you are currently using NeoDash version 2.4.3, we recommend updating as soon as possible.
+
 ## NeoDash 2.4.3
 This release contains several improvements and additions to multi-dashboard management, as well as a bug fixes and a variety of quality-of-life improvements:
 

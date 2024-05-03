@@ -14,7 +14,7 @@ export const NeoExportModal = ({ dashboard }) => {
   return (
     <>
       <Tooltip title='Export' aria-label='export' disableInteractive>
-        <IconButton className='n-mx-1' onClick={() => setOpen(true)} aria-label='Export' title='Export'>
+        <IconButton className='n-mx-1' onClick={() => setOpen(true)} aria-label='Export'>
           <DocumentArrowDownIconOutline />
         </IconButton>
       </Tooltip>

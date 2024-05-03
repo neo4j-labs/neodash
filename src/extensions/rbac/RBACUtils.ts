@@ -15,15 +15,16 @@ export enum Operation {
  * @param newLabels list of new labels in the database, for which priveleges are changed.
  * @param operation The operation, either 'GRANT' or 'DENY'
  */
-export const updatePrivileges = (
+export async function updatePrivileges(
   driver,
   database,
   role,
   allLabels,
   newLabels,
   operation: Operation,
-  createNotification
-) => {
+  onSuccess,
+  onFail
+) {
   // TODO - should we also drop cross-database DENYs (`ON GRAPH *`) to catch the true full set?
   // TODO - there
   // 1. Special case for '*'. Create it if needed to be there, otherwise revoke it.
@@ -49,7 +50,7 @@ export const updatePrivileges = (
           {},
           1000,
           (status) => {
-            if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+            if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
               //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
               // We build in an artificial delay...
               const timeout = setTimeout(() => {
@@ -67,21 +68,38 @@ export const updatePrivileges = (
                     ),
                     {},
                     1000,
-                    () => {
-                      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-                        createNotification('Success', `Access for role '${role}' updated.`);
+                    (status) => {
+                      if (status == QueryStatus.NO_DATA || status == QueryStatus.COMPLETE) {
+                        onSuccess();
+                      }
+                    },
+                    (records) => {
+                      if (records && records[0] && records[0].error) {
+                        onFail(records[0].error);
                       }
                     }
                   );
+                } else {
+                  onSuccess();
                 }
               }, 1000);
+            }
+          },
+          (records) => {
+            if (records && records[0] && records[0].error) {
+              onFail(records[0].error);
             }
           }
         );
       }
+    },
+    (records) => {
+      if (records && records[0] && records[0].error) {
+        onFail(records[0].error);
+      }
     }
   );
-};
+}
 
 /**
  * Generic query builder for adding/removing grants/denies for a list of labels.
@@ -120,6 +138,8 @@ export const retrieveAllowAndDenyLists = (
   setLabels,
   setAllowList,
   setDenyList,
+  setFixedAllowList,
+  setFixedDenyList,
   setLoaded
 ) => {
   runCypherQuery(
@@ -131,7 +151,7 @@ export const retrieveAllowAndDenyLists = (
       AND role = $rolename
       AND action = 'match' 
       AND segment STARTS WITH 'NODE('
-      RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes`,
+      RETURN access, collect(substring(segment, 5, size(segment)-6)) as nodes, graph = "*" as fixed`,
     { rolename: currentRole, database: database },
     1000,
     (status) => {
@@ -142,12 +162,21 @@ export const retrieveAllowAndDenyLists = (
     },
     (records) => {
       // Extract granted and denied label list from the result of the SHOW PRIVILEGES query
-      const grants = records.filter((r) => r._fields[0] == 'GRANTED');
-      const denies = records.filter((r) => r._fields[0] == 'DENIED');
+      const grants = records.filter((r) => r._fields[0] == 'GRANTED' && r._fields[2] == false);
+      const denies = records.filter((r) => r._fields[0] == 'DENIED' && r._fields[2] == false);
       const grantedLabels = grants[0] ? [...new Set(grants[0]._fields[1])] : [];
       const deniedLabels = denies[0] ? [...new Set(denies[0]._fields[1])] : [];
-      setAllowList(grantedLabels);
-      setDenyList(deniedLabels);
+
+      // Do the same for fixed grants (those stored under the '*' graph permission)
+      const fixedGrants = records.filter((r) => r._fields[0] == 'GRANTED' && r._fields[2] == true);
+      const fixedDenies = records.filter((r) => r._fields[0] == 'DENIED' && r._fields[2] == true);
+      const fixedGrantedLabels = fixedGrants[0] ? [...new Set(fixedGrants[0]._fields[1])] : [];
+      const fixedDeniedLabels = fixedDenies[0] ? [...new Set(fixedDenies[0]._fields[1])] : [];
+
+      setAllowList([...new Set(grantedLabels.concat(fixedGrantedLabels))]);
+      setDenyList([...new Set(deniedLabels.concat(fixedDeniedLabels))]);
+      setFixedAllowList(fixedGrantedLabels);
+      setFixedDenyList(fixedDeniedLabels);
 
       // Here we build a set of all POSSIBLE labels, that includes the list in the database, plus those in denies and grants.
       const possibleLabels = [...new Set(allLabels.concat(grantedLabels).concat(deniedLabels))];
@@ -226,25 +255,44 @@ export function retrieveDatabaseList(driver, setDatabases: React.Dispatch<React.
  * @param allUsers list of all users.
  * @param selectedUsers list of users to have the role after the operation completes.
  */
-export const updateUsers = async (driver, currentRole, allUsers, selectedUsers) => {
+export async function updateUsers(driver, currentRole, allUsers, selectedUsers, onSuccess, onFail) {
   // 1. Build the query that removes all users from the role.
+  let globalStatus = -1;
+  const escapedAllUsers = allUsers.map((user) => `\`${user}\``).join(',');
   await runCypherQuery(
     driver,
     'system',
-    `REVOKE ROLE ${currentRole} FROM ${allUsers.join(',')}`,
+    `REVOKE ROLE ${currentRole} FROM ${escapedAllUsers}`,
     {},
     1000,
     (status) => {
-      if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-        //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
-        // We build in an artificial delay...
-        const timeout = setTimeout(() => {
-          // 2. Re-assign only selected users to the role.
-          if (selectedUsers.length > 0) {
-            runCypherQuery(driver, 'system', `GRANT ROLE ${currentRole} TO ${selectedUsers.join(',')}`);
-          }
-        }, 1000);
+      globalStatus = status;
+    },
+    (records) => {
+      if (records && records[0] && records[0].error) {
+        onFail(records[0].error);
       }
     }
   );
-};
+  if (globalStatus == QueryStatus.NO_DATA || globalStatus == QueryStatus.COMPLETE) {
+    //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
+    // We build in an artificial delay...
+    if (selectedUsers.length > 0) {
+      const escapedSelectedUsers = selectedUsers.map((user) => `\`${user}\``).join(',');
+      await runCypherQuery(
+        driver,
+        'system',
+        `GRANT ROLE ${currentRole} TO ${escapedSelectedUsers}`,
+        {},
+        1000,
+        (status) => {
+          if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+            onSuccess();
+          }
+        }
+      );
+    } else {
+      onSuccess();
+    }
+  }
+}
