@@ -47,7 +47,7 @@ const NeoCardView = ({
   expanded,
   onToggleCardExpand,
 }) => {
-  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 22;
+  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 20;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
   const ref = React.useRef();
 
@@ -65,7 +65,7 @@ const NeoCardView = ({
   // e.g. Change of query, type, some advanced settings...
   const [selectorChange, setSelectorChange] = useState(false);
 
-  const getLocalParameters = (parse_string): any => {
+  const getLocalParameters = (parse_string, drilldown = true): unknown => {
     if (!parse_string || !globalParameters) {
       return {};
     }
@@ -77,7 +77,18 @@ const NeoCardView = ({
     const styleRules = settings.styleRules ? settings.styleRules : [];
     const styleParams = extensionEnabled(extensions, 'styling') ? identifyStyleRuleParameters(styleRules) : [];
 
-    let localQueryVariables: string[] = [...styleParams];
+    // Similarly, if the forms extension is enabled, extract nested parameters used by parameter selectors inside the form.
+    const formFields = settings.formFields ? settings.formFields : [];
+    const formsParams =
+      drilldown && extensionEnabled(extensions, 'forms')
+        ? formFields
+            .map((f) => {
+              return Object.keys(getLocalParameters(f.query, false));
+            })
+            .flat()
+        : [];
+
+    let localQueryVariables: string[] = [...styleParams, ...formsParams];
     while ((match = re.exec(parse_string))) {
       localQueryVariables.push(match[1]);
     }
@@ -121,6 +132,7 @@ const NeoCardView = ({
       type={type}
       onSelectionUpdate={onSelectionUpdate}
       showOptionalSelections={settings.showOptionalSelections}
+      dashboardSettings={dashboardSettings}
     ></NeoCardViewFooter>
   ) : (
     <></>
@@ -128,12 +140,12 @@ const NeoCardView = ({
 
   const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
-  const withoutFooter =
-    reportTypes[type] && reportTypes[type].withoutFooter
-      ? reportTypes[type].withoutFooter
-      : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
+  const reportTypeHasNoFooter = reportTypes[type] && reportTypes[type].withoutFooter;
+  const withoutFooter = reportTypeHasNoFooter
+    ? reportTypes[type].withoutFooter
+    : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
 
-  const getGlobalParameter = (key: string): any => {
+  const getGlobalParameter = (key: string): unknown => {
     return globalParameters ? globalParameters[key] : undefined;
   };
 
@@ -157,7 +169,7 @@ const NeoCardView = ({
 
   useEffect(() => {
     setSelectorChange(true);
-  }, [query, type, JSON.stringify(settingsSelector)]);
+  }, [query, type, database, JSON.stringify(settingsSelector)]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {
@@ -166,13 +178,13 @@ const NeoCardView = ({
     paddingRight: '0px',
     paddingTop: '0px',
     width: '100%',
-    marginTop: '-3px',
+    marginTop: '-9px',
     height: expanded
       ? withoutFooter
         ? '100%'
         : `calc(100% - ${CARD_FOOTER_HEIGHT}px)`
       : withoutFooter
-      ? `${reportHeight + CARD_FOOTER_HEIGHT}px`
+      ? `${reportHeight + CARD_FOOTER_HEIGHT - (reportTypeHasNoFooter ? 0 : 20)}px`
       : `${reportHeight}px`,
     overflow: 'auto',
   };

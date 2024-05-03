@@ -15,11 +15,13 @@ import { getExampleReports } from '../../extensions/ExtensionUtils';
 import { NeoReportExamplesModal } from '../../modal/ReportExamplesModal';
 import { enterHandler, openTab } from '../../utils/accessibility';
 
+type HelpMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+
 await StyleConfig.getInstance();
 
 export const NeoAboutButton = ({ connection, onAboutModalOpen, extensions }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const handleHelpMenuOpen = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleHelpMenuOpen = (event: HelpMenuOpenEvent) => {
     setAnchorEl(event.currentTarget);
   };
   const handleHelpMenuClose = () => {
@@ -67,8 +69,8 @@ export const NeoAboutButton = ({ connection, onAboutModalOpen, extensions }) => 
             database={connection.database}
           ></NeoReportExamplesModal>
           <MenuItem
-            onKeyDown={(e) => enterHandler(e, () => openTab('https://neo4j.com/labs/neodash/2.3/user-guide/'))}
-            onClick={() => openTab('https://neo4j.com/labs/neodash/2.3/user-guide/')}
+            onKeyDown={(e) => enterHandler(e, () => openTab('https://neo4j.com/labs/neodash/2.4/user-guide/'))}
+            onClick={() => openTab('https://neo4j.com/labs/neodash/2.4/user-guide/')}
             title={'Documentation'}
             icon={<BookOpenIconOutline />}
           />
