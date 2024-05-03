@@ -387,7 +387,7 @@ export const rendererForType: any = {
   },
   array: {
     type: 'string',
-    renderValue: (c) => RenderArray(c.value, c.transposedTable ? c.transposedTable : false),
+    renderValue: (c) => RenderArray(c.value, c.transposedTable),
   },
   string: {
     type: 'string',
