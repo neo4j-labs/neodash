@@ -48,6 +48,11 @@ docker run  -it --rm -p 5005:5005 \
     -e standaloneDatabase="neo4j" \
     -e standaloneDashboardName="My Dashboard" \
     -e standaloneDashboardDatabase="dashboards" \
+    -e standaloneDashboardURL="dashboards" \
+    -e standaloneAllowLoad=false \
+    -e standaloneLoadFromOtherDatabases=false \
+    -e standaloneMultiDatabase=false \
+    -e standaloneDatabaseList="neo4j" \
     neo4jlabs/neodash
 ....
 

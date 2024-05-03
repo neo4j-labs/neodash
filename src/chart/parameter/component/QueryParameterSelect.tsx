@@ -17,6 +17,7 @@ const QueryParameterSelectComponent = (props: ParameterSelectProps) => {
       allParameters={props.allParameters}
       compatibilityMode={props.compatibilityMode}
       multiSelector={props.multiSelector}
+      autoSort={props.autoSort}
     />
   );
 };

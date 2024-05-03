@@ -39,9 +39,7 @@ image::barstacked.png[Basic Table]
 |Show Legend |on/off |off |If enabled, shows a legend at the top right
 of the visualization.
 
-|Grouping |on/off |off |If enabled, lets users specify a third, grouping
-field. This is used to distinguish between different groups in the
-stacked bar chart.
+|Custom Dimensions |on/off |off |If enabled, the chart will no longer autofit to the size of the report card. If width extends beyond the report card, a scroll bar will be introduced to explore the chart horizontally.
 
 |Value Scale |List |linear |When set to symlog, uses a Symmetric
 logarithmic scale instead of the default linear scale.
@@ -98,7 +96,16 @@ label on top of the visualization (if enabled).
 |Auto-run query |on/off |on |when activated automatically runs the query
 when the report is displayed. When set to `off', the query is displayed
 and will need to be executed manually.
+
 |Report Description |markdown text | | When specified, adds another button the report header that opens a pop-up. This pop-up contains the rendered markdown from this setting. 
+
+|Bar Width |number |10 |*Only active when 'Custom Dimensions' is on.* The width of each bar. Increasing the bar width will increase the width of the chart. This setting will have the largest influence on the width of the chart.
+
+|Expand Height For Legend |on/off |off |Useful for when the legend has many labels. When enabled the chart height will adjust to the number of rows returned by the query and therefore will prevent legend labels being cut off.
+
+|Inner Padding |number |0 |When specified, will add padding between any grouped elements.
+
+|Legend Position |Vertical/Horizontal |Vertical |Will dictate whether the lagend is displayed vertically on the right hand side of the chart or horizontally on the bottom of the chart.
 |===
 
 == Rule-Based Styling

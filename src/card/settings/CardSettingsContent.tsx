@@ -8,7 +8,7 @@ import NeoCodeEditorComponent, {
 import { getReportTypes } from '../../extensions/ExtensionUtils';
 import { Dropdown } from '@neo4j-ndl/react';
 import { EXTENSIONS_CARD_SETTINGS_COMPONENT } from '../../extensions/ExtensionConfig';
-import { update } from '../../utils/ObjectManipulation';
+import { objMerge } from '../../utils/ObjectManipulation';
 
 const NeoCardSettingsContent = ({
   pagenumber,
@@ -22,15 +22,15 @@ const NeoCardSettingsContent = ({
   onQueryUpdate,
   onReportSettingUpdate,
   onTypeUpdate,
+  forceRunQuery, // Callback to force close the card settings.
   onDatabaseChanged, // When the database related to a report is changed it must be stored in the report state
 }) => {
   // Ensure that we only trigger a text update event after the user has stopped typing.
   const [queryText, setQueryText] = React.useState(query);
-  const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 250), []);
-
+  const debouncedQueryUpdate = useCallback(debounce(onQueryUpdate, 200), []);
   // State to manage the current database entry inside the form
   const [databaseText, setDatabaseText] = React.useState(database);
-  const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 250), []);
+  const debouncedDatabaseUpdate = useCallback(debounce(onDatabaseChanged, 200), []);
 
   useEffect(() => {
     // Reset text to the dashboard state when the page gets reorganized.
@@ -67,6 +67,10 @@ const NeoCardSettingsContent = ({
               reportId={reportId}
               reportType={type}
               extensions={extensions}
+              onExecute={() => {
+                onQueryUpdate(queryText);
+                forceRunQuery();
+              }}
               cypherQuery={queryText}
               updateCypherQuery={updateCypherQuery}
             />
@@ -85,6 +89,10 @@ const NeoCardSettingsContent = ({
         value={queryText}
         editable={true}
         language={report?.inputMode || 'cypher'}
+        onExecute={() => {
+          onQueryUpdate(queryText);
+          forceRunQuery();
+        }}
         onChange={(value) => {
           updateCypherQuery(value);
         }}
@@ -97,6 +105,7 @@ const NeoCardSettingsContent = ({
   return (
     <CardContent className='n-py-2'>
       <Dropdown
+        data-test='type-dropdown'
         id='type'
         label='Type'
         type='select'
@@ -148,10 +157,14 @@ const NeoCardSettingsContent = ({
       {report && report.settingsComponent ? (
         <SettingsComponent
           onReportSettingUpdate={onReportSettingUpdate}
-          settings={update({ helperText: report.helperText, inputMode: report.inputMode }, reportSettings)}
+          settings={objMerge({ helperText: report.helperText, inputMode: report.inputMode }, reportSettings)}
           database={database}
           query={query}
           onQueryUpdate={onQueryUpdate}
+          onExecute={() => {
+            onQueryUpdate(queryText);
+            forceRunQuery();
+          }}
         />
       ) : (
         <div>{hasExtensionComponents() ? renderExtensionsComponents() : defaultQueryBoxComponent}</div>

@@ -1,11 +1,11 @@
 import React from 'react';
-import { QUERY_TRANSLATOR_ACTION_PREFIX } from './query-translator/state/QueryTranslatorActions';
-import { queryTranslatorReducer } from './query-translator/state/QueryTranslatorReducer';
-import NeoOverrideCardQueryEditor from './query-translator/component/OverrideCardQueryEditor';
-import { translateQuery } from './query-translator/util/Util';
-import { GPT_LOADING_ICON } from './query-translator/component/LoadingIcon';
-
-const QueryTranslatorButton = React.lazy(() => import('./query-translator/component/QueryTranslator'));
+import { QUERY_TRANSLATOR_ACTION_PREFIX } from './text2cypher/state/QueryTranslatorActions';
+import { queryTranslatorReducer } from './text2cypher/state/QueryTranslatorReducer';
+import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQueryEditor';
+import { translateQuery } from './text2cypher/util/Util';
+import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
+import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
+import RBACManagementLabelButton from './rbac/RBACManagementLabelButton';
 
 // TODO: continue documenting interface
 interface Extension {
@@ -35,7 +35,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     description:
       'Advanced visualizations let you take your dashboard to the next level. This extension adds a sankey chart to visualize flows, three charts to plot hierarchical data (Sunburst, Circle Packing, Treemap). A Gauge Chart to show percentages, a Radar chart to show radial data, and an Area map to visualize country-data.',
-    link: 'https://neo4j.com/labs/neodash/2.3/user-guide',
+    link: 'https://neo4j.com/labs/neodash/2.4/user-guide',
   },
   'rule-based-styling': {
     name: 'styling',
@@ -45,7 +45,7 @@ export const EXTENSIONS: Record<string, Extension> = {
     enabled: true,
     description:
       "The rule-based styling extension allows users to dynamically color elements in a visualization based on output values. This can be applied to tables, graphs, bar charts, line charts, and more. To use the extension, click on the 'rule-based styling' icon inside the settings of a report.",
-    link: 'https://neo4j.com/labs/neodash/2.3/user-guide',
+    link: 'https://neo4j.com/labs/neodash/2.4/user-guide',
   },
   'report-actions': {
     name: 'actions',
@@ -59,7 +59,7 @@ export const EXTENSIONS: Record<string, Extension> = {
   },
   'query-translator': {
     name: 'query-translator',
-    label: 'Natural Language Queries',
+    label: 'Text2Cypher: Natural Language Queries',
     author: 'Neo4j Professional Services',
     image: 'translator.png',
     enabled: true,
@@ -72,6 +72,27 @@ export const EXTENSIONS: Record<string, Extension> = {
     description:
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
     link: 'https://neo4j.com/professional-services/',
+  },
+  forms: {
+    name: 'forms',
+    label: 'Forms',
+    author: 'Neo4j Professional Services',
+    image: 'form.png',
+    enabled: true,
+    description:
+      'Forms let you craft Cypher queries with multiple inputs, that are fired on demand. Using parameters from the dashboard, or form specific input, you will be able to trigger custom logic with forms.',
+    link: 'https://neo4j.com/professional-services/',
+  },
+  'access-control-management': {
+    name: 'access-control-management',
+    label: 'Access Control Management',
+    author: 'Neo4j Professional Services',
+    image: 'accesscontrol2.jpg',
+    enabled: true,
+    description:
+      'This extension lets you manage access control, letting you assign users to roles, as well as controlling which node labels can be read by a user.',
+    link: 'https://neo4j.com/professional-services/',
+    settingsMenuButton: RBACManagementLabelButton,
   },
 };
 

@@ -1,0 +1,9 @@
+= Access Control
+
+The Access Control feature in NeoDash is a security measure that allows Users with write access or higher privileges to manage who has access to specific dashboards.
+
+
+== How it Works
+
+Navigate to a specific dashboard and inside the dashboard settings click on the 'Access Control' option in the dashboard sidebar. This opens a modal where users can add labels to the dashboard. These labels are then used to determine which users have access to the dashboard. Please keep in mind that prior to doing this, an administrator needs to provide certain privileges for different user roles for each label in order for this to work.  You can read more about how RBAC works in Neo4j by reading the [Neo4j RBAC documentation](https://neo4j.com/docs/operations-manual/current/authentication-authorization/manage-privileges/).
+

@@ -19,14 +19,14 @@ import {
 import { PropertyNameAutocomplete } from './autocomplete/PropertyNameAutocomplete';
 
 export enum EditType {
-  Node,
-  Relationship,
+  Node = 0,
+  Relationship = 1,
 }
 
 export enum EditAction {
-  Create,
-  Edit,
-  Delete,
+  Create = 0,
+  Edit = 1,
+  Delete = 2,
 }
 
 interface GraphChartEditorVisualizationProps extends GraphChartVisualizationProps {
@@ -203,7 +203,6 @@ export const GraphChartEditModal = (props: GraphChartEditorVisualizationProps) =
               </tr>
             </tbody>
           </table>
-          <hr />
           <Button
             key={'btnEditProp'}
             style={{ marginBottom: '10px' }}

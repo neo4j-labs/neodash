@@ -27,6 +27,10 @@ export interface ParameterSelectProps {
    */
   setParameterDisplayValue: (value) => void;
   /**
+   * Callback for when any character is typed, without neccesary saving / submission.
+   */
+  onInputChange?: (value) => void;
+  /**
    * The query that can be used to retrieve parameter value suggestions from the database.
    */
   query: string | undefined;
@@ -51,7 +55,15 @@ export interface ParameterSelectProps {
    */
   multiSelector?: boolean;
   /**
+   * Add the possibility for users to insert multiple lines (freetext only)
+   */
+  multiline?: boolean;
+  /**
    * Add the possibility for manual selection confirmation
    */
   manualParameterSave?: boolean;
+  /**
+   * Pass true if results should be sorted automatically
+   */
+  autoSort?: boolean;
 }

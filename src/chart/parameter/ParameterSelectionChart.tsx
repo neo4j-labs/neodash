@@ -29,6 +29,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const setParameterDisplayValue = (value) => setGlobalParameter(parameterDisplayName, value);
   const allParameters = props.parameters;
   const multiSelector = props?.settings?.multiSelector;
+  const multiline = props?.settings?.multiline;
   const manualParameterSave = props?.settings?.manualParameterSave;
   // in NeoDash 2.2.1 or earlier, there was no means to have a different display value in the selector. This condition handles that.
   const compatibilityMode = !query?.toLowerCase().includes('as display') || false;
@@ -60,14 +61,21 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           parameterDisplayName={parameterName}
           parameterValue={parameterValue}
           parameterDisplayValue={parameterDisplayValue}
-          setParameterValue={setParameterValue}
+          setParameterValue={(value) => {
+            setParameterValue(value);
+            props.updateReportSetting && props.updateReportSetting('typing', undefined);
+          }}
           setParameterDisplayValue={setParameterDisplayValue}
           query={query}
           queryCallback={queryCallback}
+          onInputChange={() => {
+            props.updateReportSetting && props.updateReportSetting('typing', true);
+          }}
           settings={props.settings}
           allParameters={allParameters}
           compatibilityMode={compatibilityMode}
           manualParameterSave={manualParameterSave}
+          multiline={multiline}
         />
       );
     } else if (type == 'Node Property') {
@@ -86,6 +94,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           compatibilityMode={compatibilityMode}
           multiSelector={multiSelector}
           manualParameterSave={manualParameterSave}
+          autoSort={true}
         />
       );
     } else if (type == 'Relationship Property') {
@@ -104,6 +113,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           compatibilityMode={compatibilityMode}
           multiSelector={multiSelector}
           manualParameterSave={manualParameterSave}
+          autoSort={true}
         />
       );
     } else if (type == 'Date Picker') {
@@ -139,6 +149,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           compatibilityMode={compatibilityMode}
           multiSelector={multiSelector}
           manualParameterSave={manualParameterSave}
+          autoSort={false}
         />
       );
     }

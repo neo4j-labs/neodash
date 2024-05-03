@@ -209,7 +209,7 @@ const NeoCard = ({
   if (expanded) {
     return (
       <Dialog open={expanded} aria-labelledby='form-dialog-title' className='dialog-xxl'>
-        <Dialog.Content style={{ height: document.documentElement.clientHeight }}>{component}</Dialog.Content>
+        <Dialog.Content style={{ height: document.documentElement.clientHeight - 200 }}>{component}</Dialog.Content>
       </Dialog>
     );
   }
