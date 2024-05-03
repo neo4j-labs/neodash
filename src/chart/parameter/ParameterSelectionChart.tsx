@@ -14,7 +14,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
   const query = props.records[0].input ? props.records[0].input : undefined;
   const parameterName = props.settings && props.settings.parameterName ? props.settings.parameterName : undefined;
   const parameterDisplayName = `${parameterName}_display`;
-  const clearParameterValueOnTabChange = props.settings && props.settings.clearParameterValueOnTabChange;
+  const clearParameterValueOnTabChange = props.settings?.clearParameterValueOnTabChange;
   const type = props.settings && props.settings.type ? props.settings.type : undefined;
   const queryCallback = props.queryCallback ? props.queryCallback : () => {};
   const setGlobalParameter = props.setGlobalParameter ? props.setGlobalParameter : () => {};
