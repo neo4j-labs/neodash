@@ -10,6 +10,7 @@ WORKDIR /usr/local/src/neodash
 
 # Copy sources and install/build
 COPY ./package.json /usr/local/src/neodash/package.json
+COPY ./yarn.lock /usr/local/src/neodash/yarn.lock
 
 RUN yarn install
 COPY ./ /usr/local/src/neodash
@@ -43,4 +44,4 @@ USER nginx
 EXPOSE $NGINX_PORT
 
 HEALTHCHECK cmd curl --fail "http://localhost:$NGINX_PORT" || exit 1
-LABEL version="2.4.4"
+LABEL version="2.4.6"
