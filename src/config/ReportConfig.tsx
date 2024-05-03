@@ -25,6 +25,23 @@ export const RUN_QUERY_DELAY_MS = 300;
 // The default number of rows to process in a visualization.
 export const DEFAULT_ROW_LIMIT = 100;
 
+const hideQueryEditorInAutoRunOnMode = {
+  hideQueryEditorInAutoRunOnMode: {
+    label: 'Hide query editor on auto run on mode',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+};
+
+const executeButtonName = {
+  executeButtonName: {
+    label: 'Execute Button Name',
+    type: SELECTION_TYPES.TEXT,
+    default: 'Execute',
+  },
+};
+
 // A dictionary of available reports (visualizations).
 const _REPORT_TYPES = {
   table: {
@@ -68,6 +85,36 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      ...hideQueryEditorInAutoRunOnMode,
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
       },
     },
   },
@@ -242,6 +289,13 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      ...hideQueryEditorInAutoRunOnMode,
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
@@ -254,6 +308,26 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      customTablePropertiesOfModal: {
+        label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
+        type: SELECTION_TYPES.DICTIONARY,
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      pageIdAndParameterName: {
+        label: '<PageId>:<ParameterName>:<NodeType>',
+        type: SELECTION_TYPES.TEXT,
+      },
+      ...executeButtonName,
     },
   },
   bar: {
@@ -438,11 +512,24 @@ const _REPORT_TYPES = {
         values: ['Horizontal', 'Vertical'],
         default: 'Vertical',
       },
-      padding: {
-        label: 'Padding',
+      ...hideQueryEditorInAutoRunOnMode,
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
-        default: 0.25,
+         default: '0 (No refresh)',
       },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      ...executeButtonName,
     },
   },
   pie: {
@@ -573,6 +660,48 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 50,
       },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      ...hideQueryEditorInAutoRunOnMode,
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      ...executeButtonName,
     },
   },
   line: {
@@ -721,6 +850,48 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      ...hideQueryEditorInAutoRunOnMode,
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      ...executeButtonName,
     },
   },
   // TODO - move to advanced visualization.
@@ -867,6 +1038,46 @@ const _REPORT_TYPES = {
   //       values: [true, false],
   //       default: false,
   //     },
+  //     refreshButtonEnabled: {
+  //       label: 'Refreshable',
+  //       type: SELECTION_TYPES.LIST,
+  //       values: [true, false],
+  //       default: false,
+  //     },
+  //     fullscreenEnabled: {
+  //       label: 'Fullscreen enabled',
+  //       type: SELECTION_TYPES.LIST,
+  //       values: [true, false],
+  //       default: false,
+  //     },
+  //     downloadImageEnabled: {
+  //       label: 'Download Image enabled',
+  //       type: SELECTION_TYPES.LIST,
+  //       values: [true, false],
+  //       default: false,
+  //     },
+  //     autorun: {
+  //       label: 'Auto-run query',
+  //       type: SELECTION_TYPES.LIST,
+  //       values: [true, false],
+  //       default: true,
+  //     },
+  // ...hideQueryEditorInAutoRunOnMode,
+  //     refreshRate: {
+  //       label: 'Refresh rate (seconds)',
+  //       type: SELECTION_TYPES.NUMBER,
+  //       default: '0 (No refresh)',
+  //     },
+  //     description: {
+  //       label: 'Report Description',
+  //       type: SELECTION_TYPES.MULTILINE_TEXT,
+  //       default: 'Enter markdown here...',
+  //     },
+  // executeButtonName: {
+  //   label: 'Execute Button Name',
+  //   type: SELECTION_TYPES.TEXT,
+  //   default: 'Execute',
+  // },
   //   },
   // },
   map: {
@@ -965,6 +1176,30 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      hideQueryEditorInAutoRunOnMode: {
+        label: 'Hide query editor on auto run on mode',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      ...executeButtonName,
     },
   },
   value: {
@@ -1007,6 +1242,48 @@ const _REPORT_TYPES = {
         values: ['bottom', 'middle', 'top'],
         default: 'top',
       },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      ...hideQueryEditorInAutoRunOnMode,
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      ...executeButtonName,
     },
   },
   json: {
@@ -1022,6 +1299,48 @@ const _REPORT_TYPES = {
         values: ['json', 'yml'],
         default: 'json',
       },
+      refreshButtonEnabled: {
+        label: 'Refreshable',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      fullscreenEnabled: {
+        label: 'Fullscreen enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      downloadImageEnabled: {
+        label: 'Download Image enabled',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      autorun: {
+        label: 'Auto-run query',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      ...hideQueryEditorInAutoRunOnMode,
+      refreshRate: {
+        label: 'Refresh rate (seconds)',
+        type: SELECTION_TYPES.NUMBER,
+        default: '0 (No refresh)',
+      },
+      description: {
+        label: 'Report Description',
+        type: SELECTION_TYPES.MULTILINE_TEXT,
+        default: 'Enter markdown here...',
+      },
+      minimizable: {
+        label: 'Minimize Button',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      ...executeButtonName,
     },
   },
   select: {
