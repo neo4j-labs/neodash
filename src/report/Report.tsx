@@ -20,6 +20,7 @@ import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSele
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
 import { updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import { getReports } from '../page/PageSelectors';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -56,6 +57,7 @@ export const NeoReport = ({
   prepopulateExtensionName,
   deletePrepopulationReportFunction,
   theme,
+  reports = [],
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -177,6 +179,30 @@ export const NeoReport = ({
     }
   };
 
+  // Gets the original report height.
+  const getHeightOfTableReport = () =>
+    reports.find((report) => report.id === id && report.type === 'table')?.height || 1;
+
+  // Updates the table report grid height.
+  const updateHeightOfTableReport = (height) => {
+    let el: any = document.getElementById(id);
+    // Checks if the element exists and compactCanvas is enabled.
+    // If the compactCanvas=true setting is enabled then the report height is set to 210
+    if (el && settings?.compactCanvas) {
+      if (type === 'table') {
+        el.style.height = `${height * 210}px`;
+      }
+    }
+  };
+
+  // Resets the height of the grid when page changes.
+  useEffect(() => {
+    let el: any = document.getElementById(id);
+    if (el) {
+      el.style.height = '';
+    }
+  }, [pagenumber]);
+
   // When report parameters are changed, re-run the report.
   useEffect(() => {
     if (timer) {
@@ -249,10 +275,13 @@ export const NeoReport = ({
   } else if (status == QueryStatus.RUNNING) {
     return loadingIcon;
   } else if (status == QueryStatus.NO_DATA) {
-    return <NeoCodeViewerComponent value={settings?.noDataMessage || 'Query returned no data.'} />;
+    updateHeightOfTableReport(1);
+    return <NeoCodeViewerComponent value={settings?.overrideDefaultMessage || 'Query returned no data.'} />;
   } else if (status == QueryStatus.NO_DRAWABLE_DATA) {
     return <NoDrawableDataErrorMessage />;
   } else if (status == QueryStatus.COMPLETE) {
+    updateHeightOfTableReport(getHeightOfTableReport());
+
     if (records == null || records.length == 0) {
       return <div>Loading...</div>;
     }
@@ -345,6 +374,7 @@ const mapStateToProps = (state, ownProps) => ({
   pagenumber: getPageNumber(state),
   prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
   theme: getDashboardTheme(state),
+  reports: getReports(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
