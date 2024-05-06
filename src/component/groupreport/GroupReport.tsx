@@ -21,7 +21,7 @@ export default function GroupReport({
         .map((report: { id: any; width: any; height: any }) => {
           const { id, width: w, height: h } = report;
           return (
-            <Box id={id} gridColumn={`span ${w}`} gridRow={`span ${h}`} sx={{ height: h * 210, paddingBottom: '15px' }}>
+            <Box id={id} gridColumn={`span ${w}`} gridRow={`span ${h}`} sx={{ height: h * 100, paddingBottom: '15px' }}>
               <NeoCard
                 id={id}
                 key={getReportKey(pagenumber, id)}
