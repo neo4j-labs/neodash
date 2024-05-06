@@ -95,7 +95,8 @@
 }
 
 .react-resizable-handle {
-  bottom: 1px !important;
+  bottom: 4px !important;
+  right: -2px !important;
   opacity: 0.5;
   color: rgb(222, 222, 222);
 }
@@ -124,13 +125,13 @@
   margin-top: -10px;
 }
 
-.MuiDataGrid-virtualScroller {
-  overflow-y: hidden !important;
+.MuiDataGrid-panel {
+  translate: 0px -152%;
 }
 
 .MuiCard-root {
-  box-shadow: 0 0 #0000,0 0 #0000,var(--tw-shadow) !important;
-  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow) !important;
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--tw-shadow) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
 
 .white-text {
@@ -161,7 +162,7 @@
   white-space: pre;
   background-position: 0px -11px;
   padding-right: 0px !important;
-  margin-top: 0px !important;
+  margin-top: 0px;
   padding-left: 30px;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
@@ -182,7 +183,6 @@
 #center-aligned {
   text-align: center;
 }
-
 
 .card-view.expanded {
   position: absolute;
@@ -212,25 +212,24 @@
 }
 
 .card-view .MuiTablePagination-root {
-  margin-top: -40px;
-
+  margin-top: 0px;
 }
 
 @keyframes pulse {
-	0% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-	}
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+  }
 
-	70% {
-		transform: scale(1);
-		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-	}
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
 
-	100% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-	}
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
 }
 
 /* Workaround for Needle not handling menu placement of dropdowns on modals */
@@ -242,10 +241,14 @@
 /* End workaround */
 
 /* Workaround for cleaning the Gantt chart UI */
-.gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div> div:not(:first-child) {
+.gantt-wrapper > div > div:first-child > div:first-child > div:first-child > div > div:not(:first-child) {
   display: none;
 }
-.gantt-wrapper > div > div > div > div> div>  div> div:not(:first-child)  {
+.gantt-wrapper > div > div > div > div > div > div > div:not(:first-child) {
   display: none;
 }
 /* End Gantt chart workaround */
+
+.markdown-widget a {
+  text-decoration: underline;
+}

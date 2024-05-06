@@ -4,6 +4,7 @@ import React from 'react';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import ParameterSelectCardSettings from '../../../chart/parameter/ParameterSelectCardSettings';
 import NeoCardSettingsFooter from '../../../card/settings/CardSettingsFooter';
+import { objMerge } from '../../../utils/ObjectManipulation';
 
 const NeoFormCardSettingsModal = ({ open, setOpen, index, formFields, setFormFields, database, extensions }) => {
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = React.useState(false);
@@ -24,15 +25,19 @@ const NeoFormCardSettingsModal = ({ open, setOpen, index, formFields, setFormFie
               query={formFields[index].query}
               type={'select'}
               database={database}
-              settings={formFields[index].settings}
+              settings={objMerge({ inputMode: 'cypher' }, formFields[index].settings)}
               extensions={extensions}
               onReportSettingUpdate={(key, value) => {
                 const newFormFields = [...formFields];
                 newFormFields[index].settings[key] = value;
+                if (key == 'type') {
+                  newFormFields[index].type = value;
+                }
                 setFormFields(newFormFields);
               }}
               onQueryUpdate={(query) => {
                 const newFormFields = [...formFields];
+
                 newFormFields[index].query = query;
                 setFormFields(newFormFields);
               }}

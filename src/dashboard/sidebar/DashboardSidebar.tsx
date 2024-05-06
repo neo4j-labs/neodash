@@ -4,12 +4,19 @@ import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSe
 import { getDashboardSettings, getDashboardTitle } from '../DashboardSelectors';
 import { Button, SideNavigation, SideNavigationGroupHeader, SideNavigationList, TextInput } from '@neo4j-ndl/react';
 import { removeReportThunk } from '../../page/PageThunks';
-import { PlusIconOutline, MagnifyingGlassIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  PlusIconOutline,
+  MagnifyingGlassIconOutline,
+  CircleStackIconOutline,
+  ArrowPathIconOutline,
+} from '@neo4j-ndl/react/icons';
+
 import Tooltip from '@mui/material/Tooltip';
 import { DashboardSidebarListItem } from './DashboardSidebarListItem';
 import {
   applicationGetConnection,
   applicationGetConnectionDatabase,
+  applicationGetStandaloneSettings,
   applicationIsStandalone,
   dashboardIsDraft,
 } from '../../application/ApplicationSelectors';
@@ -37,28 +44,35 @@ import NeoDashboardSidebarExportModal from './modal/DashboardSidebarExportModal'
 import NeoDashboardSidebarDeleteModal from './modal/DashboardSidebarDeleteModal';
 import NeoDashboardSidebarInfoModal from './modal/DashboardSidebarInfoModal';
 import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
+import NeoDashboardSidebarAccessModal from './modal/DashboardSidebarAccessModal';
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
 import { NEODASH_VERSION } from '../DashboardReducer';
 
+// Which (small) pop-up menu is currently open for the sidebar.
 enum Menu {
-  DASHBOARD,
-  DATABASE,
-  CREATE,
-  NONE,
+  DASHBOARD = 0,
+  DATABASE = 1,
+  CREATE = 2,
+  NONE = 3,
 }
 
+// Which (large) pop-up modal is currently open for the sidebar.
 enum Modal {
-  CREATE,
-  IMPORT,
-  EXPORT,
-  DELETE,
-  SHARE,
-  SHARE_LEGACY,
-  INFO,
-  LOAD,
-  SAVE,
-  NONE,
+  CREATE = 0,
+  IMPORT = 1,
+  EXPORT = 2,
+  DELETE = 3,
+  SHARE = 4,
+  SHARE_LEGACY = 5,
+  INFO = 6,
+  LOAD = 7,
+  SAVE = 8,
+  NONE = 9,
+  ACCESS = 10,
 }
+
+// We use "index = -1" to represent a non-saved draft dashboard in the sidebar's dashboard list.
+const UNSAVED_DASHBOARD_INDEX = -1;
 
 /**
  * A component responsible for rendering the sidebar on the left of the screen.
@@ -78,13 +92,14 @@ export const NeoDashboardSidebar = ({
   loadDashboardFromNeo4j,
   saveDashboardToNeo4j,
   deleteDashboardFromNeo4j,
+  standaloneSettings,
 }) => {
   const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const [expanded, setOnExpanded] = useState(false);
-  const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(-1);
+  const [selectedDashboardIndex, setSelectedDashboardIndex] = React.useState(UNSAVED_DASHBOARD_INDEX);
   const [dashboardDatabase, setDashboardDatabase] = React.useState(database ? database : 'neo4j');
   const [databases, setDatabases] = useState([]);
-  const [inspectedIndex, setInspectedIndex] = useState(-1);
+  const [inspectedIndex, setInspectedIndex] = useState(UNSAVED_DASHBOARD_INDEX);
   const [searchText, setSearchText] = useState('');
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
@@ -101,7 +116,7 @@ export const NeoDashboardSidebar = ({
       if (dashboard && dashboard.uuid) {
         const index = list.findIndex((element) => element.uuid == dashboard.uuid);
         setSelectedDashboardIndex(index);
-        if (index == -1) {
+        if (index == UNSAVED_DASHBOARD_INDEX) {
           // If we can't find the currently dashboard in the database, we are drafting a new one.
           setDraft(true);
         }
@@ -119,8 +134,9 @@ export const NeoDashboardSidebar = ({
     // Creates new dashboard in draft state (not yet saved to Neo4j)
     deleteDashboardFromNeo4j(driver, dashboardDatabase, uuid, () => {
       if (uuid == dashboard.uuid) {
-        setSelectedDashboardIndex(0);
+        setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
         resetLocalDashboard();
+        loadDashboardListFromNeo4j();
         setDraft(true);
       }
       setTimeout(() => {
@@ -152,19 +168,27 @@ export const NeoDashboardSidebar = ({
             }
           );
         }}
+        overwrite={selectedDashboardIndex >= 0}
         handleClose={() => setModalOpen(Modal.NONE)}
       />
 
       <NeoDashboardSidebarLoadModal
         open={modalOpen == Modal.LOAD}
         onConfirm={() => {
-          setModalOpen(Modal.LOAD);
-          const { uuid } = dashboards[inspectedIndex];
-          loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
-            setDraft(false);
-            loadDashboard(uuid, file);
-            setSelectedDashboardIndex(inspectedIndex);
-          });
+          if (inspectedIndex == UNSAVED_DASHBOARD_INDEX) {
+            // Someone attempted to load the unsaved draft dashboard... this isn't possible, we create a fresh one.
+            setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
+            createDashboard();
+          } else {
+            // Load one of the dashboards from the database.
+            setModalOpen(Modal.LOAD);
+            const { uuid } = dashboards[inspectedIndex];
+            loadDashboardFromNeo4j(driver, dashboardDatabase, uuid, (file) => {
+              setDraft(false);
+              loadDashboard(uuid, file);
+              setSelectedDashboardIndex(inspectedIndex);
+            });
+          }
         }}
         handleClose={() => setModalOpen(Modal.NONE)}
       />
@@ -188,6 +212,7 @@ export const NeoDashboardSidebar = ({
         onConfirm={() => {
           setModalOpen(Modal.NONE);
           createDashboard();
+          setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
         }}
         handleClose={() => setModalOpen(Modal.NONE)}
       />
@@ -209,6 +234,7 @@ export const NeoDashboardSidebar = ({
         onImport={(text) => {
           setModalOpen(Modal.NONE);
           setDraft(true);
+          setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
           loadDashboard(createUUID(), text);
         }}
         handleClose={() => setModalOpen(Modal.NONE)}
@@ -226,6 +252,16 @@ export const NeoDashboardSidebar = ({
       <NeoDashboardSidebarExportModal
         open={modalOpen == Modal.EXPORT}
         dashboard={cachedDashboard}
+        handleClose={() => {
+          setModalOpen(Modal.NONE);
+          setCachedDashboard('');
+        }}
+      />
+
+      <NeoDashboardSidebarAccessModal
+        open={modalOpen == Modal.ACCESS}
+        database={dashboardDatabase}
+        dashboard={dashboards[inspectedIndex]}
         handleClose={() => {
           setModalOpen(Modal.NONE);
           setCachedDashboard('');
@@ -256,7 +292,9 @@ export const NeoDashboardSidebar = ({
               // We changed the active dashboard database, reload the list in the sidebar.
               loadDashboardListFromNeo4j(driver, newDatabase, (list) => {
                 setDashboards(list);
-                setDraft(true);
+                if (!readonly) {
+                  setDraft(true);
+                }
               });
             }}
             open={menuOpen == Menu.DATABASE}
@@ -267,6 +305,7 @@ export const NeoDashboardSidebar = ({
             }}
           />
           <NeoDashboardSidebarDashboardMenu
+            draft={draft && selectedDashboardIndex == inspectedIndex}
             open={menuOpen == Menu.DASHBOARD}
             anchorEl={menuAnchor}
             handleInfoClicked={() => {
@@ -276,6 +315,14 @@ export const NeoDashboardSidebar = ({
                 setCachedDashboard(JSON.parse(text));
               });
               setModalOpen(Modal.INFO);
+            }}
+            handleDiscardClicked={() => {
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.LOAD);
+            }}
+            handleSaveClicked={() => {
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.SAVE);
             }}
             handleLoadClicked={() => {
               setMenuOpen(Menu.NONE);
@@ -301,6 +348,10 @@ export const NeoDashboardSidebar = ({
               setMenuOpen(Menu.NONE);
               setModalOpen(Modal.SHARE);
             }}
+            handleAccessClicked={() => {
+              setMenuOpen(Menu.NONE);
+              setModalOpen(Modal.ACCESS);
+            }}
             handleDeleteClicked={() => {
               setMenuOpen(Menu.NONE);
               setModalOpen(Modal.DELETE);
@@ -319,6 +370,7 @@ export const NeoDashboardSidebar = ({
               if (draft) {
                 setModalOpen(Modal.CREATE);
               } else {
+                setSelectedDashboardIndex(UNSAVED_DASHBOARD_INDEX);
                 createDashboard();
               }
             }}
@@ -337,8 +389,35 @@ export const NeoDashboardSidebar = ({
               <span className='n-text-palette-neutral-text-weak' style={{ lineHeight: '28px' }}>
                 Dashboards
               </span>
+              <Tooltip title='Refresh' aria-label='refresh' disableInteractive>
+                <Button
+                  aria-label={'refresh'}
+                  fill='text'
+                  size='small'
+                  color='neutral'
+                  style={{
+                    float: 'right',
+                    marginLeft: '3px',
+                    marginRight: '12px',
+                    paddingLeft: 0,
+                    paddingRight: '3px',
+                  }}
+                  onClick={() => {
+                    getDashboardListFromNeo4j();
+                    // When reloading, if the dashboard is not in DRAFT mode, we can directly refresh it.
+                    if (!draft) {
+                      const d = dashboards[selectedDashboardIndex];
+                      loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (file) => {
+                        loadDashboard(d.uuid, file);
+                      });
+                    }
+                  }}
+                >
+                  <ArrowPathIconOutline className='btn-icon-base-r-m' />
+                </Button>
+              </Tooltip>
               {/* Only let users create dashboards and change database when running in editor mode. */}
-              {readonly == false ? (
+              {!readonly || (readonly && standaloneSettings.standaloneLoadFromOtherDatabases) ? (
                 <>
                   <Tooltip title='Database' aria-label='database' disableInteractive>
                     <Button
@@ -349,7 +428,7 @@ export const NeoDashboardSidebar = ({
                       style={{
                         float: 'right',
                         marginLeft: '0px',
-                        marginRight: '12px',
+                        marginRight: '3px',
                         paddingLeft: 0,
                         paddingRight: '3px',
                       }}
@@ -358,6 +437,14 @@ export const NeoDashboardSidebar = ({
                         // Only when not yet retrieved, and needed, get the list of databases from Neo4j.
                         if (databases.length == 0) {
                           loadDatabaseListFromNeo4j(driver, (result) => {
+                            if (
+                              readonly &&
+                              standaloneSettings.standaloneMultiDatabase &&
+                              standaloneSettings.standaloneDatabaseList
+                            ) {
+                              let tmp = standaloneSettings.standaloneDatabaseList.split(',').map((x) => x.trim());
+                              result = result.filter((value) => tmp.includes(value));
+                            }
                             setDatabases(result);
                           });
                         }
@@ -368,27 +455,31 @@ export const NeoDashboardSidebar = ({
                     </Button>
                   </Tooltip>
 
-                  <Tooltip title='Create' aria-label='create' disableInteractive>
-                    <Button
-                      aria-label={'new dashboard'}
-                      fill='text'
-                      size='small'
-                      color='neutral'
-                      style={{
-                        float: 'right',
-                        marginLeft: '0px',
-                        marginRight: '5px',
-                        paddingLeft: 0,
-                        paddingRight: '3px',
-                      }}
-                      onClick={(event) => {
-                        setMenuAnchor(event.currentTarget);
-                        setMenuOpen(Menu.CREATE);
-                      }}
-                    >
-                      <PlusIconOutline className='btn-icon-base-r' />
-                    </Button>
-                  </Tooltip>
+                  {!readonly ? (
+                    <Tooltip title='Create' aria-label='create' disableInteractive>
+                      <Button
+                        aria-label={'new dashboard'}
+                        fill='text'
+                        size='small'
+                        color='neutral'
+                        style={{
+                          float: 'right',
+                          marginLeft: '0px',
+                          marginRight: '5px',
+                          paddingLeft: 0,
+                          paddingRight: '3px',
+                        }}
+                        onClick={(event) => {
+                          setMenuAnchor(event.currentTarget);
+                          setMenuOpen(Menu.CREATE);
+                        }}
+                      >
+                        <PlusIconOutline className='btn-icon-base-r' />
+                      </Button>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )}
                 </>
               ) : (
                 <></>
@@ -409,15 +500,18 @@ export const NeoDashboardSidebar = ({
               onChange={(e) => setSearchText(e.target.value)}
             />
           </SideNavigationGroupHeader>
-          {draft && !readonly ? (
+          {draft && selectedDashboardIndex == UNSAVED_DASHBOARD_INDEX && !readonly ? (
             <DashboardSidebarListItem
               version={NEODASH_VERSION}
               selected={draft}
               title={title}
               saved={false}
               onSelect={() => {}}
-              onSave={() => setModalOpen(Modal.SAVE)}
-              onSettingsOpen={() => {}}
+              onSettingsOpen={(event) => {
+                setInspectedIndex(UNSAVED_DASHBOARD_INDEX);
+                setMenuOpen(Menu.DASHBOARD);
+                setMenuAnchor(event.currentTarget);
+              }}
             />
           ) : (
             <></>
@@ -428,13 +522,13 @@ export const NeoDashboardSidebar = ({
               // index stored in list
               return (
                 <DashboardSidebarListItem
-                  selected={!draft && selectedDashboardIndex == d.index}
-                  title={d.title}
+                  selected={selectedDashboardIndex == d.index}
+                  title={draft && selectedDashboardIndex == d.index ? title : d.title}
                   version={d.version}
-                  saved={true}
+                  saved={!(draft && selectedDashboardIndex == d.index)}
                   readonly={readonly}
                   onSelect={() => {
-                    if (draft) {
+                    if (draft && d.index !== selectedDashboardIndex) {
                       setInspectedIndex(d.index);
                       setModalOpen(Modal.LOAD);
                     } else {
@@ -444,7 +538,6 @@ export const NeoDashboardSidebar = ({
                       });
                     }
                   }}
-                  onSave={() => {}}
                   onSettingsOpen={(event) => {
                     setInspectedIndex(d.index);
                     setMenuOpen(Menu.DASHBOARD);
@@ -469,6 +562,7 @@ const mapStateToProps = (state) => ({
   dashboard: getDashboardJson(state),
   dashboardSettings: getDashboardSettings(state),
   database: applicationGetConnectionDatabase(state),
+  standaloneSettings: applicationGetStandaloneSettings(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

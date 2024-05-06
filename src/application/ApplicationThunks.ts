@@ -40,8 +40,13 @@ import {
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
   setDraft,
+  setCustomHeader,
 } from './ApplicationActions';
+import { setLoggingMode, setLoggingDatabase, setLogErrorNotification } from './logging/LoggingActions';
 import { version } from '../modal/AboutModal';
+import { applicationIsStandalone } from './ApplicationSelectors';
+import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
+import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
 
 /**
@@ -60,6 +65,9 @@ import { createUUID } from '../utils/uuid';
  */
 export const createConnectionThunk =
   (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
+    const loggingState = getState();
+    const loggingSettings = applicationGetLoggingSettings(loggingState);
+    const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
     try {
       const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
       // eslint-disable-next-line no-console
@@ -69,8 +77,23 @@ export const createConnectionThunk =
         console.log('Confirming connection was established...');
         if (records && records[0] && records[0].error) {
           dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
+          if (loggingSettings.loggingMode > '0') {
+            dispatch(
+              createLogThunk(
+                driver,
+                loggingSettings.loggingDatabase,
+                neodashMode,
+                username,
+                'ERR - connect to DB',
+                database,
+                '',
+                `Error while trying to establish connection to Neo4j DB in ${neodashMode} mode at ${Date(
+                  Date.now()
+                ).substring(0, 33)}`
+              )
+            );
+          }
         } else if (records && records[0] && records[0].keys[0] == 'connected') {
-          // Connected to Neo4j. Set state accordingly.
           dispatch(setConnectionProperties(protocol, url, port, database, username, password));
           dispatch(setConnectionModalOpen(false));
           dispatch(setConnected(true));
@@ -79,6 +102,23 @@ export const createConnectionThunk =
           dispatch(updateSessionParameterThunk('session_uri', `${protocol}://${url}:${port}`));
           dispatch(updateSessionParameterThunk('session_database', database));
           dispatch(updateSessionParameterThunk('session_username', username));
+          if (loggingSettings.loggingMode > '0') {
+            dispatch(
+              createLogThunk(
+                driver,
+                loggingSettings.loggingDatabase,
+                neodashMode,
+                username,
+                'INF - connect to DB',
+                database,
+                '',
+                `${username} established connection to Neo4j DB in ${neodashMode} mode at ${Date(Date.now()).substring(
+                  0,
+                  33
+                )}`
+              )
+            );
+          }
           // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
           const { application } = getState();
           if (
@@ -219,26 +259,45 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const skipConfirmation = urlParams.get('skipConfirmation') == 'Yes';
 
       const dashboardDatabase = urlParams.get('dashboardDatabase');
+      if (dashboardDatabase) {
+        dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
+      }
+
       if (urlParams.get('credentials')) {
+        setWelcomeScreenOpen(false);
         const connection = decodeURIComponent(urlParams.get('credentials'));
         const protocol = connection.split('://')[0];
         const username = connection.split('://')[1].split(':')[0];
         const password = connection.split('://')[1].split(':')[1].split('@')[0];
-
         const database = connection.split('@')[1].split(':')[0];
         const url = connection.split('@')[1].split(':')[1];
         const port = connection.split('@')[1].split(':')[2];
-        if (url == password) {
-          // Special case where a connect link is generated without a password.
-          // Here, the format is parsed incorrectly and we open the connection window instead.
-
-          dispatch(resetShareDetails());
-          dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
-          dispatch(setWelcomeScreenOpen(false));
-          dispatch(setConnectionModalOpen(true));
-          // window.history.pushState({}, document.title, "/");
-          return;
-        }
+        // if (url == password) {
+        //   // Special case where a connect link is generated without a password.
+        //   // Here, the format is parsed incorrectly and we open the connection window instead.
+        //   dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
+        //   dispatch(
+        //     setShareDetailsFromUrl(
+        //       type,
+        //       id,
+        //       standalone,
+        //       protocol,
+        //       url,
+        //       port,
+        //       database,
+        //       username.split('@')[0],
+        //       '',
+        //       dashboardDatabase,
+        //       true
+        //     )
+        //   );
+        //   setDashboardToLoadAfterConnecting(id);
+        //   window.history.pushState({}, document.title, window.location.pathname);
+        //   dispatch(setConnectionModalOpen(true));
+        //   dispatch(setWelcomeScreenOpen(false));
+        //   // window.history.pushState({}, document.title, "/");
+        //   return;
+        // }
 
         dispatch(setConnectionModalOpen(false));
         dispatch(
@@ -307,6 +366,8 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 
     if (shareDetails.dashboardDatabase) {
       dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
+    } else if (!state.application.standaloneDashboardDatabase) {
+      // No standalone dashboard database configured, fall back to default
       dispatch(setStandaloneDashboardDatabase(shareDetails.database));
     }
     if (shareDetails.url) {
@@ -357,6 +418,14 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDashboardName: 'My Dashboard',
     standaloneDashboardDatabase: 'dashboards',
     standaloneDashboardURL: '',
+    loggingMode: '0',
+    loggingDatabase: 'logs',
+    logErrorNotification: '3',
+    standaloneAllowLoad: false,
+    standaloneLoadFromOtherDatabases: false,
+    standaloneMultiDatabase: false,
+    standaloneDatabaseList: 'neo4j',
+    customHeader: '',
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -388,6 +457,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     dispatch(setSSOProviders(config.ssoProviders));
 
     const { standalone } = config;
+    // if a dashboard database was previously set, remember to use it.
+    const dashboardDatabase = state.application.standaloneDashboardDatabase;
+
     dispatch(
       setStandaloneEnabled(
         standalone,
@@ -396,13 +468,25 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standalonePort,
         config.standaloneDatabase,
         config.standaloneDashboardName,
-        config.standaloneDashboardDatabase,
+        dashboardDatabase || config.standaloneDashboardDatabase,
         config.standaloneDashboardURL,
         config.standaloneUsername,
-        config.standalonePassword
+        config.standalonePassword,
+        config.standalonePasswordWarningHidden,
+        config.standaloneAllowLoad,
+        config.standaloneLoadFromOtherDatabases,
+        config.standaloneMultiDatabase,
+        config.standaloneDatabaseList
       )
     );
+
+    dispatch(setLoggingMode(config.loggingMode));
+    dispatch(setLoggingDatabase(config.loggingDatabase));
+    dispatch(setLogErrorNotification('3'));
+
     dispatch(setConnectionModalOpen(false));
+
+    dispatch(setCustomHeader(config.customHeader));
 
     // Auto-upgrade the dashboard version if an old version is cached.
     if (state.dashboard && state.dashboard.version !== NEODASH_VERSION) {
@@ -546,7 +630,6 @@ export const initializeApplicationAsStandaloneThunk =
   (config, paramsToSetAfterConnecting) => (dispatch: any, getState: any) => {
     const clearNotificationAfterLoad = true;
     const state = getState();
-
     // If we are running in standalone mode, auto-set the connection details that are configured.
     dispatch(
       setConnectionProperties(
@@ -589,4 +672,5 @@ export const initializeApplicationAsStandaloneThunk =
     } else {
       dispatch(setConnectionModalOpen(true));
     }
+    dispatch(handleSharedDashboardsThunk());
   };

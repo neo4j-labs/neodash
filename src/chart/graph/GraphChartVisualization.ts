@@ -88,6 +88,7 @@ export interface GraphChartVisualizationProps {
     defaultRelWidth: number;
     relColorProp: string;
     defaultRelColor: string;
+    theme?: string;
   };
   /**
    * The keys in 'engine' are related to the graph rendering engine (force-directed layout) or the NeoDash query engine.
@@ -141,6 +142,22 @@ export interface GraphChartVisualizationProps {
     pageNames: [];
     customTablePropertiesOfModal: any[];
     pageIdAndParameterName: string;
+  };
+  /**
+   * A set of configuration parameters used for the visualization engine.
+   */
+  config?: {
+    graphComponent: any;
+    cooldownAfterengineStop: number;
+    nodeCanvasObjectMode?: () => void;
+    nodeCanvasObject?: (node: any, ctx: any) => void;
+    linkCanvasObjectMode?: () => void;
+    linkCanvasObject?: (link: any, ctx: any) => void;
+    nodeThreeObjectExtend?: boolean;
+    nodeThreeObject?: (node) => void;
+    linkThreeObjectExtend?: boolean;
+    linkThreeObject?: (link) => void;
+    linkPositionUpdate?: (sprite: any, { start, end }: { start: any; end: any }, link: any, ref: any) => void;
   };
   /**
    * entries in 'extensions' let users plug in extra functionality into the visualization based on enabled plugins.
