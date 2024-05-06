@@ -245,7 +245,7 @@ describe('NeoDash E2E Tests', () => {
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root h1', { timeout: 45000 }).should('have.text', 'Hello');
   });
 
-  it.skip('creates a form report', () => {
+  it.only('creates a form report', () => {
     enableFormsExtension();
     cy.checkInitialState();
     createReportOfType('Form', formCypherQuery, true, false);
@@ -261,8 +261,10 @@ describe('NeoDash E2E Tests', () => {
 
     cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').scrollIntoView().should('be.visible').click();
     cy.wait(500);
+    cy.get('#form-submit').should('be.disabled');
     cy.get('#autocomplete').type('The Matrix');
     cy.get('#autocomplete-option-0').click();
+    cy.get('#form-submit').should('not.be.disabled');
     cy.get('#form-submit').click();
     cy.wait(500);
     cy.get('.form-submitted-message').should('have.text', 'Form Submitted.Reset Form');
