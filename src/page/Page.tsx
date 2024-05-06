@@ -219,9 +219,9 @@ export const NeoPage = ({
         />
       )}
       {groupedReports &&
-        Object.keys(groupedReports).map((groupId, index) => (
+        Object.keys(groupedReports).map((groupId) => (
           <GroupReport
-            key={index}
+            key={Math.random() * 10}
             groupedReports={groupedReports}
             groupId={groupId}
             getBorderSpecsForGroupId={getBorderSpecsForGroupId}

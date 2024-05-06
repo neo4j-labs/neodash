@@ -23,7 +23,7 @@ export default function GroupReport({
           return (
             <Box
               id={id}
-              key={index}
+              key={Math.random() * 10}
               gridColumn={`span ${w}`}
               gridRow={`span ${h}`}
               sx={{ height: h * 100, paddingBottom: '15px' }}
