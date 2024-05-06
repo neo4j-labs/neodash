@@ -257,7 +257,7 @@ function RenderArray(value) {
   return mapped;
 }
 
-function RenderString(value) {
+export function RenderString(value) {
   const str = value?.toString() || '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
