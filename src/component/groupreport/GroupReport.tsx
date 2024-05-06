@@ -18,10 +18,16 @@ export default function GroupReport({
     <Box display='grid' gridTemplateColumns='repeat(12, 1fr)' columnGap={1} sx={getBorderSpecsForGroupId(groupId)}>
       {groupedReports[groupId]
         .sort((a: any, b: any) => a.groupOrder - b.groupOrder)
-        .map((report: { id: any; width: any; height: any }) => {
+        .map((report: { id: any; width: any; height: any }, index) => {
           const { id, width: w, height: h } = report;
           return (
-            <Box id={id} gridColumn={`span ${w}`} gridRow={`span ${h}`} sx={{ height: h * 100, paddingBottom: '15px' }}>
+            <Box
+              id={id}
+              key={index}
+              gridColumn={`span ${w}`}
+              gridRow={`span ${h}`}
+              sx={{ height: h * 100, paddingBottom: '15px' }}
+            >
               <NeoCard
                 id={id}
                 key={getReportKey(pagenumber, id)}

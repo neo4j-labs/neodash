@@ -59,7 +59,7 @@ export const NeoPage = ({
   const [layouts, setLayouts] = React.useState(defaultLayouts);
   const [lastElement, setLastElement] = React.useState(<div key={getReportKey(pagenumber, '999999')}></div>);
   const [animated, setAnimated] = React.useState(false); // To turn off animations when cards are dragged around.
-  const [isListOpen, setListOpen] = React.useState(true);
+  const [isListOpen, setIsListOpen] = React.useState(true);
   const notGroupReports = reports.filter((report: any) => !report.groupId);
   const filteredReports = reports.filter((report: any) => report.groupId); // Filter only reports with groupId
 
@@ -71,7 +71,7 @@ export const NeoPage = ({
   };
 
   const toggleToolBox = () => {
-    setListOpen(!isListOpen);
+    setIsListOpen(!isListOpen);
   };
 
   const groupReportsByGroupId = (reports: any[]) => {
@@ -219,8 +219,9 @@ export const NeoPage = ({
         />
       )}
       {groupedReports &&
-        Object.keys(groupedReports).map((groupId) => (
+        Object.keys(groupedReports).map((groupId, index) => (
           <GroupReport
+            key={index}
             groupedReports={groupedReports}
             groupId={groupId}
             getBorderSpecsForGroupId={getBorderSpecsForGroupId}
