@@ -18,12 +18,12 @@ export default function GroupReport({
     <Box display='grid' gridTemplateColumns='repeat(12, 1fr)' columnGap={1} sx={getBorderSpecsForGroupId(groupId)}>
       {groupedReports[groupId]
         .sort((a: any, b: any) => a.groupOrder - b.groupOrder)
-        .map((report: { id: any; width: any; height: any }, index) => {
+        .map((report: { id: any; width: any; height: any }) => {
           const { id, width: w, height: h } = report;
           return (
             <Box
               id={id}
-              key={Math.random() * 10}
+              key={getReportKey(pagenumber, id)}
               gridColumn={`span ${w}`}
               gridRow={`span ${h}`}
               sx={{ height: h * 100, paddingBottom: '15px' }}
