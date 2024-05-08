@@ -88,7 +88,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
         config: {
           ssoEnabled: false,
           ssoDiscoveryUrl: 'https://example.com',
-          standalone: data.user == auth.getEmail() ? false : true, // eslint-disable-line
+          standalone: data.user != auth.getEmail(), // eslint-disable-line
           standaloneProtocol: schema,
           standaloneHost: hostName,
           standalonePort: port,
@@ -99,7 +99,7 @@ export const handleNeoDashLaunch = async ({ queryString }) => {
           standaloneUsername: userName,
           standalonePassword: password,
           standalonePasswordWarningHidden: true,
-          isOwner: data.user == auth.getEmail() ? true : false, // eslint-disable-line
+          isOwner: data.user == auth.getEmail(), // eslint-disable-line
         },
       };
     } catch (e) {

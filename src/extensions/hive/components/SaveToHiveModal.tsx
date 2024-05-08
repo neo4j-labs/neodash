@@ -13,9 +13,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import { ArrowLeftIconOutline } from '@neo4j-ndl/react/icons';
-import { ArrowRightIconOutline } from '@neo4j-ndl/react/icons';
-import { XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { ArrowLeftIconOutline, ArrowRightIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
 
 import { makeStyles, withStyles } from '@mui/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -27,9 +25,8 @@ import { DatabaseUploadType, HiveSolutionDomain } from '../config/SolutionsConst
 import { SelectDatabase } from './database/SelectDatabase';
 import { TabPanel } from './tabs/TabPanel';
 import { PublishInfo } from './PublishInfo';
-import { getDbConnectionUrl } from '../util/util';
+import { getDbConnectionUrl, handleErrors } from '../util/util';
 import { config } from '../config/dynamicConfig';
-import { handleErrors } from '../util/util';
 import { getAuth } from '../auth/auth';
 import { GetSolutionById } from './graphql/HiveGraphQL';
 
@@ -90,7 +87,7 @@ const SaveToHiveModalContent = ({
   // pieces of code pulled from https://www.pluralsight.com/guides/uploading-files-with-reactjs
   // and pieces of code pulled from https://blog.logrocket.com/multer-nodejs-express-upload-file/
 
-  dashboard = cachedDashboard ? cachedDashboard : dashboard;
+  dashboard = cachedDashboard || dashboard;
   const tabCount = 2;
   const title = dashboard?.title;
   const existingSolutionId = dashboard?.extensions?.solutionsHive?.uuid;
