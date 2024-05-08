@@ -97,7 +97,7 @@ export class Auth {
         if (err) {
           return reject(err);
         }
-        if (!authResult || !authResult.idToken) {
+        if (!authResult?.idToken) {
           return reject();
         }
         this.setSession(authResult);
@@ -126,7 +126,7 @@ export class Auth {
         if (err) {
           return reject(err);
         }
-        if (!authResult || !authResult.idToken) {
+        if (!authResult?.idToken) {
           return reject();
         }
         this.setSession(authResult);

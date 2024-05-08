@@ -96,7 +96,6 @@ const SaveToHiveModalContent = ({
   const existingSolutionId = dashboard?.extensions?.solutionsHive?.uuid;
   const initialTabIndex = existingSolutionId ? tabCount - 1 : 0;
 
-  const [selectedFile, setSelectedFile] = useState();
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
   const [dbConnection, setDbConnection] = useState(connection);
   const [hasPublished, setHasPublished] = useState(false);
@@ -155,6 +154,7 @@ const SaveToHiveModalContent = ({
   const lastStep = () => tabIndex === tabCount - 1;
   const firstStep = () => tabIndex === 0;
   const onPublishStep = () => lastStep() && !hasPublished;
+  const getButtonLabel = () => (hasPublished ? 'Done' : 'Publish');
 
   const classes = useStyles();
 
@@ -184,7 +184,7 @@ const SaveToHiveModalContent = ({
     closeDialog({ closeSaveDialog: true });
   };
 
-  const [dbType, setDbType] = useState(DatabaseUploadType.DatabaseUpload);
+  const [dbType] = useState(DatabaseUploadType.DatabaseUpload);
 
   const progressCallback = (progress) => {
     const { solutionId } = progress;
@@ -194,7 +194,6 @@ const SaveToHiveModalContent = ({
   const doPublish = () => {
     setHasPublished(true);
     saveDashboardToHive({
-      selectedFile,
       dashboard,
       date: new Date().toISOString(),
       user: dbConnection.username,
@@ -277,7 +276,7 @@ const SaveToHiveModalContent = ({
           endIcon={lastStep() ? <></> : <ArrowRightIconOutline className='btn-icon-base-r' />}
           size='medium'
         >
-          {lastStep() ? (hasPublished ? 'Done' : 'Publish') : 'Next'}
+          {lastStep() ? getButtonLabel() : 'Next'}
         </Button>
         <Button
           component='label'
@@ -334,7 +333,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   saveDashboardToHive: ({
-    selectedFile,
     dashboard,
     date,
     user,
@@ -350,7 +348,6 @@ const mapDispatchToProps = (dispatch) => ({
   }) => {
     dispatch(
       saveDashboardToHiveThunk({
-        selectedFile,
         dashboard,
         date,
         user,

@@ -138,7 +138,7 @@ export default function NeoConnectionModal({
               A local host with an encrypted connection will likely not work - try an unencrypted protocol instead.
             </div>
           )}
-          {url && url.endsWith('neo4j.io') && !protocol.endsWith('+s') ? (
+          {url?.endsWith('neo4j.io') && !protocol.endsWith('+s') ? (
             <div>
               Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
             </div>

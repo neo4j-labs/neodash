@@ -6,5 +6,7 @@ export const handleErrors = (response) => {
   return response;
 };
 
-export const getDbConnectionUrl = (dbConnection) =>
-  `${dbConnection.protocol}://${dbConnection.url}${dbConnection.port ? `:${dbConnection.port}` : ''}`;
+export const getDbConnectionUrl = (dbConnection) => {
+  const port = `:${dbConnection.port}`;
+  return `${dbConnection.protocol}://${dbConnection.url}${dbConnection.port ? port : ''}`;
+};

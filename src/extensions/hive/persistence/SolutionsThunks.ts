@@ -179,7 +179,6 @@ export const saveDashboardToHiveThunk =
       progressCallback({
         solutionId: savedId,
       });
-      // dispatch(createNotificationThunk('🎉 Success!', 'Your current dashboard was saved to Hive.'));
     } catch (e) {
       dispatch(createNotificationThunk('Unable to save dashboard to Hive (errno: 2)', e));
     }
