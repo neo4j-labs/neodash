@@ -20,7 +20,7 @@ export class HiveConnectionModule extends ConnectionModule {
     await loadConfig(configJson);
   }
 
-  async authenticate(_params: any): any | never {
+  async authenticate(_params: any): any {
     return await hiveAuthenticate(_params); // eslint-disable-line
   }
 

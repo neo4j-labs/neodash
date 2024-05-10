@@ -13,7 +13,7 @@ export const config = (envKey) => {
     throw new Error('loadConfig must be called before calling config');
   }
 
-  if (!solutionsConfig?.extensions || !solutionsConfig?.extensions?.solutionsHive) {
+  if (!solutionsConfig?.extensions?.solutionsHive) {
     throw new Error('expected extensions.solutionsHive key');
   }
 

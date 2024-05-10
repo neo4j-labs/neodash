@@ -82,13 +82,13 @@ export const PublishInfo = (props) => {
           </Alert>
           <ul style={{ lineHeight: '1.8em' }}>
             <li>
-              Your published demo URL is:
+              Your published demo URL is:{' '}
               <a style={{ marginLeft: '5px' }} href={neoDashDemoUrl} target='_blank'>
                 {neoDashDemoUrl}
               </a>
             </li>
             <li>
-              You can configure your demo card in Hive here:
+              You can configure your demo card in Hive here:{' '}
               <a style={{ marginLeft: '5px' }} href={hiveCardUrl} target='_blank'>
                 {hiveCardUrl}
               </a>

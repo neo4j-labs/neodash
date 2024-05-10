@@ -137,11 +137,9 @@ const SaveToHiveModalContent = ({
     if (!hiveSolutionInfoBeenCalled) {
       setHiveSolutionInfoBeenCalled(true);
       if (existingSolutionId) {
-        try {
-          getHiveSolution();
-        } catch (e) {
-          console.log(`Error fetching Solution info for Solution ID ${existingSolutionId}`, e);
-        }
+        getHiveSolution().catch((e) =>
+          console.log(`Error fetching Solution info for Solution ID ${existingSolutionId}`, e)
+        );
       }
     }
   }, [hiveSolutionInfo, hiveSolutionInfoBeenCalled, existingSolutionId]);
