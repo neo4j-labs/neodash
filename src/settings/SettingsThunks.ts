@@ -90,14 +90,12 @@ export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: 
     // iterate over the key value pairs in parameters
     Object.keys(parameters).forEach((key) => {
       if (isCastableToNeo4jDate(parameters[key])) {
-        console.log(key, 'date');
         parameters[key] = castToNeo4jDate(parameters[key]);
       } else if (
         parameters[key] &&
         !isNaN(toNumber(parameters[key])) &&
         typeof toNumber(parameters[key]) === 'number'
       ) {
-        console.log(key, 'number');
         parameters[key] = toNumber(parameters[key]);
       } else if (parameters[key] == undefined) {
         delete parameters[key];
