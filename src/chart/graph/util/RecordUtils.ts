@@ -69,9 +69,10 @@ function extractGraphEntitiesFromField(
       source: value.start.low,
       target: value.end.low,
       type: value.type,
-      width: !Number.isNaN(value.properties[relWidthProperty])
-        ? toNumber(value.properties[relWidthProperty])
-        : defaultRelWidth,
+      width:
+        value.properties[relWidthProperty] !== undefined && !Number.isNaN(value.properties[relWidthProperty])
+          ? toNumber(value.properties[relWidthProperty])
+          : defaultRelWidth,
       color: value.properties[relColorProperty] ? value.properties[relColorProperty] : defaultRelColor,
       properties: value.properties,
     });

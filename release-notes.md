@@ -1,7 +1,9 @@
-## NeoDash 2.4.6
-This is a minor release containing a few critical fixes and some extra style customizations:
+## NeoDash 2.4.8
+This is a minor release containing an important fix and other minor fixes:
 
-- Fix bad text wrapping for arrays in tables ([868](https://github.com/neo4j-labs/neodash/pull/868)).
-- Make wrapping in table optional, disabled by default ([872](https://github.com/neo4j-labs/neodash/pull/872)).
-- Fixed issues where cross database dashboard sharing always reverted back to the default database ([873](https://github.com/neo4j-labs/neodash/pull/873)).
-- Added option to define style config using environment variables for the Docker image ([876](https://github.com/neo4j-labs/neodash/pull/876)).
+- Fixed a bug where loading a dashboard would reset parameters to null ([887](https://github.com/neo4j-labs/neodash/pull/887)).
+- Fix relationship width parameter for Graph report ([889](https://github.com/neo4j-labs/neodash/pull/889)).
+  
+Thanks to all the contributors for this release: 
+- [alfredorubin96](https://github.com/alfredorubin96),
+- [nielsdejong](https://github.com/nielsdejong).

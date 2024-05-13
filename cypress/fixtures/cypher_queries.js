@@ -1,3 +1,4 @@
+// Cypher queries - for component testing
 export const defaultCypherQuery = 'MATCH (n) RETURN n LIMIT 25';
 export const tableCypherQuery =
   'MATCH (n:Movie) RETURN n.title AS title, n.released AS released, id(n) AS __id LIMIT 8';
@@ -13,6 +14,13 @@ export const sankeyChartCypherQuery =
   "WITH [ { path: {  start: {labels: ['Person'], identity: 1, properties: {name: 'Jim'}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ['Person'], identity: 1, properties: {name: 'Jim'}}, relationship: {type: 'RATES', start: 1, end: 11, identity: 10001, properties: {value: 4.5}}, end: {labels: ['Movie'], identity: 11,properties: {title: 'The Matrix', released: 1999}} } ] }, person: 'Jim', movie: 'The Matrix', value: 4.5 }, { path: {  start: {labels: ['Person'], identity: 2, properties: {name: 'Mike'}},  end:  {identity: 11},  length: 1, segments: [ { start: {labels: ['Person'], identity: 2, properties: {name: 'Mike'}}, relationship: {type: 'RATES', start: 2, end: 11, identity: 10002, properties: {value: 3.8}}, end: {labels: ['Movie'], identity: 11,properties: {title: 'The Matrix', released: 1999}} } ] }, person: 'Mike', movie: 'The Matrix', value: 3.8 } ] as data UNWIND data as row RETURN row.path as Path";
 export const gaugeChartCypherQuery = 'RETURN 69';
 export const formCypherQuery = 'MATCH (n:Movie) WHERE n.title = $neodash_movie_title SET n.rating = 92';
+
+// Cypher queries - for renderer testing
+export const stringArrayCypherQuery = "RETURN ['initial', 'list'] AS column, ['other', 'list'] AS otherColumn";
+export const intArrayCypherQuery = 'RETURN [1, 2] AS column, [3, 4] AS otherColumn';
+export const pathArrayCypherQuery = 'MATCH p=(:Person)-[:ACTED_IN]->(:Movie) WITH p LIMIT 1 RETURN p';
+
+// Other content fixtures
 export const iFrameText = 'https://www.wikipedia.org/';
 export const markdownText = '# Hello';
 export const loadDashboardURL =
