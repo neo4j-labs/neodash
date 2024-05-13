@@ -95,7 +95,7 @@ export function valueIsObject(value) {
 }
 
 export function toNumber(ref) {
-  if (ref === undefined) {
+  if (ref === undefined || typeof ref === 'number') {
     return ref;
   }
   let { low, high } = ref;
@@ -167,13 +167,12 @@ export const downloadCSV = (rows) => {
       if (value && value.low) {
         value = value.low;
       }
-      csv += JSON.stringify(value).replaceAll(',', ';');
-      csv += headers.indexOf(header) < headers.length - 1 ? ', ' : '';
+      csv += `${JSON.stringify(value)}`;
+      csv += headers.indexOf(header) < headers.length - 1 ? ',' : '';
     });
     csv += '\n';
   });
-
-  const file = new Blob([csv], { type: 'text/plain' });
+  const file = new Blob([`\ufeff${csv}`], { type: 'text/plain;charset=utf8' });
   element.href = URL.createObjectURL(file);
   element.download = 'table.csv';
   document.body.appendChild(element); // Required for this to work in FireFox
@@ -219,8 +218,14 @@ export function replaceDashboardParameters(str, parameters) {
     let param = _.replace(`$`, '').trim();
     let val = parameters?.[param] || null;
     let type = getRecordType(val);
-    let valueRender = type === 'string' || type == 'link' ? val : RenderSubValue(val);
-    return valueRender;
+
+    // Arrays weren't playing nicely with RenderSubValue(). Each object would be passed separately and return [oject Object].
+    if (type === 'string' || type == 'link') {
+      return val;
+    } else if (type === 'array') {
+      return RenderSubValue(val.join(', '));
+    }
+    return RenderSubValue(val);
   };
 
   let newString = str.replace(rx, parameterElementReplacer).replace(rxSimple, parameterSimpleReplacer);
@@ -410,7 +415,7 @@ export function isCastableToNeo4jDate(value: object) {
     return false;
   }
   let keys = Object.keys(value);
-  return keys.length == 3 && keys.includes('day') && keys.includes('month') && keys.includes('year');
+  return keys.includes('day') && keys.includes('month') && keys.includes('year');
 }
 
 /**
@@ -420,7 +425,7 @@ export function isCastableToNeo4jDate(value: object) {
  */
 export function castToNeo4jDate(value: object) {
   if (isCastableToNeo4jDate(value)) {
-    return new Neo4jDate(value.year, value.month, value.day);
+    return new Neo4jDate(toNumber(value.year), toNumber(value.month), toNumber(value.day));
   }
   throw new Error(`Invalid input for castToNeo4jDate: ${value}`);
 }

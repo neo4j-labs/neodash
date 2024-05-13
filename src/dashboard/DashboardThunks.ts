@@ -3,13 +3,12 @@ import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDashboardUuid } from './DashboardActions';
 import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
-import { updateGlobalParametersThunk, updateParametersToNeo4jTypeThunk } from '../settings/SettingsThunks';
+import { updateGlobalParametersThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
 import { createLogThunk } from '../application/logging/LoggingThunk';
 import { applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
 import { applicationGetLoggingSettings } from '../application/logging/LoggingSelectors';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from './DashboardReducer';
-import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
 
 export const removePageThunk = (number) => (dispatch: any, getState: any) => {
   try {
@@ -80,6 +79,17 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
       dashboard = dashboard.dashboard;
     }
 
+    let patched;
+    [dashboard, patched] = patchDashboardVersion(dashboard, dashboard.version);
+    if (patched) {
+      dispatch(
+        createNotificationThunk(
+          'Successfully patched dashboard',
+          `Your old dashboard has been patched. You might need to refresh this page and reactivate extensions.`
+        )
+      );
+    }
+
     // Attempt upgrade if dashboard version is outdated.
     while (VERSION_TO_MIGRATE[dashboard.version]) {
       const upgradedDashboard = upgradeDashboardVersion(
@@ -102,16 +112,6 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
       throw `Invalid dashboard version: ${dashboard.version}. Try restarting the application, or retrieve your cached dashboard using a debug report.`;
     }
 
-    // Cast dashboard parameters from serialized format to correct types
-    Object.keys(dashboard.settings.parameters).forEach((key) => {
-      const value = dashboard.settings.parameters[key];
-
-      // Serialized Date to Neo4jDate
-      if (value && value.year && value.month && value.day) {
-        dashboard.settings.parameters[key] = new Neo4jDate(value.year, value.month, value.day);
-      }
-    });
-
     // Reverse engineer the minimal set of fields from the selection loaded.
     dashboard.pages.forEach((p) => {
       p.reports.forEach((r) => {
@@ -129,9 +129,8 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
     const { application } = getState();
 
     dispatch(updateGlobalParametersThunk(application.parametersToLoadAfterConnecting));
+    dispatch(updateGlobalParametersThunk(dashboard.settings.parameters));
     dispatch(setParametersToLoadAfterConnecting(null));
-    dispatch(updateParametersToNeo4jTypeThunk());
-
     // Pre-2.3.4 dashboards might now always have a UUID. Set it if not present.
     if (!dashboard.uuid) {
       dispatch(setDashboardUuid(uuid));
@@ -540,6 +539,29 @@ export const assignDashboardUuidIfNotPresentThunk = () => (dispatch: any, getSta
     dispatch(setDashboardUuid(createUUID()));
   }
 };
+export function patchDashboardVersion(dashboard: any, version: any) {
+  let patched = false;
+  if (version == '2.4') {
+    dashboard.pages.forEach((p) => {
+      p.reports.forEach((r) => {
+        if (r.type == 'graph' || r.type == 'map' || r.type == 'graph3d') {
+          r.settings?.actionsRules?.forEach((rule) => {
+            if (
+              rule?.field &&
+              (rule?.condition === 'onNodeClick' || rule?.condition == 'Click') &&
+              rule.value.includes('.')
+            ) {
+              let val = rule.value.split('.');
+              rule.value = val[val.length - 1] || rule.value;
+              patched = true;
+            }
+          });
+        }
+      });
+    });
+  }
+  return [dashboard, patched];
+}
 
 export function upgradeDashboardVersion(dashboard: any, origin: string, target: string) {
   if (origin == '2.3' && target == '2.4') {
@@ -549,6 +571,19 @@ export function upgradeDashboardVersion(dashboard: any, origin: string, target: 
         r.y *= 2;
         r.width *= 2;
         r.height *= 2;
+
+        if (r.type == 'graph' || r.type == 'map' || r.type == 'graph3d') {
+          r.settings?.actionsRules?.forEach((rule) => {
+            if (
+              rule?.field &&
+              (rule?.condition === 'onNodeClick' || rule?.condition == 'Click') &&
+              rule.value.includes('.')
+            ) {
+              let val = rule.value.split('.');
+              rule.value = val[val.length - 1] || rule.value;
+            }
+          });
+        }
       });
     });
     dashboard.version = '2.4';

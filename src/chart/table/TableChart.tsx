@@ -46,11 +46,9 @@ function renderAsButtonWrapper(renderer) {
       return <></>;
     }
     return (
-      <Button
-        style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
-        variant='contained'
-        color='primary'
-      >{`${outputValue}`}</Button>
+      <Button style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }} variant='contained' color='primary'>
+        {outputValue}
+      </Button>
     );
   };
 }
@@ -73,6 +71,7 @@ export const generateSafeColumnKey = (key) => {
 
 export const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
+  const wrapContent = props.settings && props.settings.wrapContent ? props.settings.wrapContent : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
 
@@ -185,7 +184,9 @@ export const NeoTableChart = (props: ChartProps) => {
       Object.assign(
         { id: i, Field: key },
         ...records.map((record, j) => ({
-          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1]),
+          // Note the true here is for the rendered to know we are inside a transposed table
+          // It will be needed for rendering the records properly, if they are arrays
+          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1], true),
         }))
       )
     );
@@ -214,6 +215,49 @@ export const NeoTableChart = (props: ChartProps) => {
     : Math.floor(availableRowHeight) - pageSizeReducer;
 
   const pageNames = getPageNumbersAndNamesList();
+  const commonGridProps = {
+    key: 'tableKey',
+    headerHeight: 32,
+    density: compact ? 'compact' : 'standard',
+    rows: rows,
+    columns: columns,
+    columnVisibilityModel: columnVisibilityModel,
+    onColumnVisibilityModelChange: (newModel) => setColumnVisibilityModel(newModel),
+    onCellClick: (e) => performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table'),
+    onCellDoubleClick: (e) => {
+      let rules = getRule(e, actionsRules, 'doubleClick');
+      if (rules !== null) {
+        rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
+      } else {
+        setNotificationOpen(true);
+        navigator.clipboard.writeText(e.value);
+      }
+    },
+    checkboxSelection: hasCheckboxes(actionsRules),
+    selectionModel: getCheckboxes(actionsRules, rows, props.getGlobalParameter),
+    onSelectionModelChange: (selection) => updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter),
+    pageSize: tablePageSize > 0 ? tablePageSize : 5,
+    rowsPerPageOptions: rows.length < 5 ? [rows.length, 5] : [5],
+    disableSelectionOnClick: true,
+    components: {
+      ColumnSortedDescendingIcon: () => <></>,
+      ColumnSortedAscendingIcon: () => <></>,
+    },
+    getRowClassName: (params) => {
+      return ['row color', 'row text color']
+        .map((e) => {
+          return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
+        })
+        .join(' ');
+    },
+    getCellClassName: (params) => {
+      return ['cell color', 'cell text color']
+        .map((e) => {
+          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
+        })
+        .join(' ');
+    },
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -249,7 +293,7 @@ export const NeoTableChart = (props: ChartProps) => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              className='n-absolute n-z-10 n-bottom-7 n-left-1'
+              className='n-absolute n-z-10 n-bottom-2 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />
@@ -259,53 +303,21 @@ export const NeoTableChart = (props: ChartProps) => {
           <></>
         )}
 
-        <DataGrid
-          key={'tableKey'}
-          headerHeight={32}
-          rowHeight={tableRowHeight}
-          rows={rows}
-          columns={columns}
-          columnVisibilityModel={columnVisibilityModel}
-          onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
-          onCellClick={(e) =>
-            performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
-          }
-          onCellDoubleClick={(e) => {
-            let rules = getRule(e, actionsRules, 'doubleClick');
-            if (rules !== null) {
-              rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
-            } else {
-              setNotificationOpen(true);
-              navigator.clipboard.writeText(e.value);
-            }
-          }}
-          checkboxSelection={hasCheckboxes(actionsRules)}
-          selectionModel={getCheckboxes(actionsRules, rows, props.getGlobalParameter)}
-          onSelectionModelChange={(selection) =>
-            updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter)
-          }
-          pageSize={tablePageSize > 0 ? tablePageSize : 5}
-          rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}
-          disableSelectionOnClick
-          components={{
-            ColumnSortedDescendingIcon: () => <></>,
-            ColumnSortedAscendingIcon: () => <></>,
-          }}
-          getRowClassName={(params) => {
-            return ['row color', 'row text color']
-              .map((e) => {
-                return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
-              })
-              .join(' ');
-          }}
-          getCellClassName={(params) => {
-            return ['cell color', 'cell text color']
-              .map((e) => {
-                return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
-              })
-              .join(' ');
-          }}
-        />
+        {wrapContent ? (
+          <DataGrid
+            {...commonGridProps}
+            getRowHeight={() => 'auto'}
+            sx={{
+              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '3px' },
+              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell:has(button)': { py: '0px' },
+              '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+              '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+              '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
+            }}
+          />
+        ) : (
+          <DataGrid {...commonGridProps} rowHeight={tableRowHeight} />
+        )}
       </div>
     </ThemeProvider>
   );

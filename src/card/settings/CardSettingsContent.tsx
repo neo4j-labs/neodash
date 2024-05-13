@@ -105,6 +105,7 @@ const NeoCardSettingsContent = ({
   return (
     <CardContent className='n-py-2'>
       <Dropdown
+        data-test='type-dropdown'
         id='type'
         label='Type'
         type='select'

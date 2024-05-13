@@ -1,6 +1,6 @@
 import { evaluateRulesOnNode, evaluateRulesOnLink } from '../../../extensions/styling/StyleRuleEvaluator';
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath } from '../../ChartUtils';
+import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, toNumber } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { assignCurvatureToLink } from './RelUtils';
 import { isNode } from 'neo4j-driver-core/lib/graph-types.js';
@@ -49,7 +49,9 @@ function extractGraphEntitiesFromField(
     nodes[value.identity.low] = {
       id: value.identity.low,
       labels: value.labels,
-      size: value.properties[nodeSizeProperty] ? value.properties[nodeSizeProperty] : defaultNodeSize,
+      size: !Number.isNaN(value.properties[nodeSizeProperty])
+        ? toNumber(value.properties[nodeSizeProperty])
+        : defaultNodeSize,
       properties: value.properties,
       mainLabel: value.labels[value.labels.length - 1],
     };
@@ -67,7 +69,10 @@ function extractGraphEntitiesFromField(
       source: value.start.low,
       target: value.end.low,
       type: value.type,
-      width: value.properties[relWidthProperty] ? value.properties[relWidthProperty] : defaultRelWidth,
+      width:
+        value.properties[relWidthProperty] !== undefined && !Number.isNaN(value.properties[relWidthProperty])
+          ? toNumber(value.properties[relWidthProperty])
+          : defaultRelWidth,
       color: value.properties[relColorProperty] ? value.properties[relColorProperty] : defaultRelColor,
       properties: value.properties,
     });

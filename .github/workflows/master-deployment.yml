@@ -31,7 +31,7 @@ jobs:
         with:
           build: yarn run build
           start: yarn run dev
-          wait-on: "http://localhost:3000"
+          wait-on: 'http://localhost:3000'
           browser: chrome
   build-s3:
     needs: build-test
@@ -79,7 +79,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:2.4.2
+          tags: ${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:2.4.8
   build-docker-legacy:
     needs: build-test
     runs-on: neodash-runners
@@ -103,7 +103,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.4.2
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.4.8
   deploy-gallery:
     runs-on: neodash-runners
     strategy:

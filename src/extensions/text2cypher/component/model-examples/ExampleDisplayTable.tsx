@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TrashIconOutline,
   PencilSquareIconOutline,
@@ -7,6 +7,7 @@ import {
   ChevronDoubleRightIconOutline,
   ChevronRightIconOutline,
 } from '@neo4j-ndl/react/icons';
+import ShowMoreText from 'react-show-more-text';
 import {
   createColumnHelper,
   flexRender,
@@ -57,11 +58,15 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
   const columns = React.useMemo(
     () => [
       columnHelper.accessor('question', {
-        cell: (info) => info.getValue(),
+        cell: (info) => <ShowMoreText lines={3}>{info.getValue()}</ShowMoreText>,
         header: () => 'Question',
       }),
       columnHelper.accessor('answer', {
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <div>
+            <ShowMoreText lines={3}>{info.getValue()}</ShowMoreText>
+          </div>
+        ),
         header: 'Answer',
       }),
       {
@@ -87,19 +92,52 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
     },
   });
 
+  const [cellWidth, setCellWidth] = useState('600px');
+
+  // For screens with 1080 x pixels or less
+  useEffect(() => {
+    const updateCellWidth = () => {
+      if (window.innerWidth <= 1080) {
+        // Example breakpoint for smaller screens
+        setCellWidth('463px');
+      } else {
+        setCellWidth('600px');
+      }
+    };
+
+    window.addEventListener('resize', updateCellWidth);
+    updateCellWidth(); // Initialize on component mount
+
+    return () => window.removeEventListener('resize', updateCellWidth);
+  }, []);
+
   return (
     <div className='n-flex n-flex-col n-gap-2 n-mb-[15px]'>
-      <div className='ndl-table-root n-rounded-lg'>
+      <div className='ndl-table-root n-rounded-lg' style={{ maxWidth: '100%', overflowX: 'auto' }}>
         <table className='ndl-div-table'>
           <thead className='ndl-table-thead'>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 className='ndl-table-tr'
-                style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px' }}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr 120px',
+                  textAlign: 'left', // Aligns text to the left
+                }}
                 key={headerGroup.id}
               >
                 {headerGroup.headers.map((header) => (
-                  <th className='ndl-table-th ndl-focusable-cell ndl-header-group ndl-header-cell' key={header.id}>
+                  <th
+                    className='ndl-table-th ndl-focusable-cell ndl-header-group ndl-header-cell'
+                    key={header.id}
+                    style={{
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      borderBottom: '1px solid #ccc', // Adds bottom border to each cell
+                      padding: '8px', // Adds padding for readability
+                      maxWidth: cellWidth,
+                    }}
+                  >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
@@ -110,11 +148,23 @@ function ExampleDisplayTable({ examples, deleteModelExample, handleEdit }) {
             {table.getRowModel().rows.map((row) => (
               <tr
                 className='ndl-table-tr'
-                style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px' }}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr 120px',
+                }}
                 key={row.id}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <td className='ndl-table-td ndl-focusable-cell' key={cell.id}>
+                  <td
+                    className='ndl-table-td ndl-focusable-cell'
+                    key={cell.id}
+                    style={{
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      padding: '8px', // Adds padding for readability
+                      maxWidth: cellWidth,
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
