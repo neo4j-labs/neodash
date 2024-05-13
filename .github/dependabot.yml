@@ -11,3 +11,9 @@ updates:
     schedule:
       interval: 'weekly'
     target-branch: 'develop'
+
+  - package-ecosystem: 'yarn'
+    directory: '/docs'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
