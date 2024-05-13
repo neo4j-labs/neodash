@@ -1,3 +1,45 @@
+## NeoDash 2.4.8
+This is a minor release containing an important fix and other minor fixes:
+
+- Fixed a bug where loading a dashboard would reset parameters to null ([887](https://github.com/neo4j-labs/neodash/pull/887)).
+- Fix relationship width parameter for Graph report ([889](https://github.com/neo4j-labs/neodash/pull/889)).
+  
+Thanks to all the contributors for this release: 
+- [alfredorubin96](https://github.com/alfredorubin96),
+- [nielsdejong](https://github.com/nielsdejong).
+
+## NeoDash 2.4.7
+This is a minor release containing a few critical fixes and general code quality improvements:
+
+- Fix multiple parameter select ([881](https://github.com/neo4j-labs/neodash/pull/881)).
+- Fix parameter casting error when loading dashboards([874](https://github.com/neo4j-labs/neodash/pull/874)).
+- Fix the fraud demo in the [Example Gallery](https://neodash-gallery.graphapp.io/).
+  
+Thanks to all the contributors for this release: 
+- [alfredorubin96](https://github.com/alfredorubin96),
+- [MariusC](https://github.com/mariusconjeaud),
+- [elizarp](https://github.com/elizarp).
+
+## NeoDash 2.4.6
+This is a minor release containing a few critical fixes and some extra style customizations:
+
+- Fix bad text wrapping for arrays in tables ([868](https://github.com/neo4j-labs/neodash/pull/868)).
+- Make wrapping in table optional, disabled by default ([872](https://github.com/neo4j-labs/neodash/pull/872)).
+- Fixed issues where cross database dashboard sharing always reverted back to the default database ([873](https://github.com/neo4j-labs/neodash/pull/873)).
+- Added option to define style config using environment variables for the Docker image ([876](https://github.com/neo4j-labs/neodash/pull/876)). 
+
+## NeoDash 2.4.5
+This is a small release containing a few fixes:
+- Fixed rendering of string arrays inside tables, report titles, and report action buttons [849](https://github.com/neo4j-labs/neodash/pull/849)
+- Allowed text to wrap in tables, preserving the number of rows [852](https://github.com/neo4j-labs/neodash/pull/852)
+- Disabled auto-sorting of Cypher query-based Parameter Select ; use Cypher ORDER BY to control result order [857](https://github.com/neo4j-labs/neodash/pull/857)
+- Updated role selector menu, and made user updates more robust [854](https://github.com/neo4j-labs/neodash/pull/854)
+
+Thanks to all the contributors for this release: 
+- [MariusC](https://github.com/mariusconjeaud),
+- [LiamEdwardsLamarche](https://github.com/LiamEdwardsLamarche),
+- [AleSim94](https://github.com/AleSim94)
+
 ## NeoDash 2.4.4
 This is a hotfix release fixing some breaking issues in the 2.4.3:
 - Fixed number parsing using newer versions of the Neo4j driver. [811](https://github.com/neo4j-labs/neodash/pull/811)

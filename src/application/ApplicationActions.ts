@@ -178,7 +178,7 @@ export const setStandaloneEnabled = (
 
 export const SET_STANDALONE_MODE = 'APPLICATION/SET_STANDALONE_MODE';
 export const setStandaloneMode = (standalone: boolean) => ({
-  type: SET_STANDALONE_ENABLED,
+  type: SET_STANDALONE_MODE,
   payload: { standalone },
 });
 
