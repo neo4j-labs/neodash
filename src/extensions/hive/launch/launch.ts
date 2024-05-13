@@ -41,7 +41,7 @@ export const fetchDashboardFromHive = async ({ uuid }) => {
         resolve(jsonResponse);
       })
       .catch((error) => {
-        reject(error);
+        reject(new Error(error.message));
       });
   });
   return promise;

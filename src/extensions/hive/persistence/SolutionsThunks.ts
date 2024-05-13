@@ -49,7 +49,7 @@ export const listUserDashboards = async () => {
         resolve(jsonResponse);
       })
       .catch((error) => {
-        reject(error);
+        reject(new Error(error.message));
       });
   });
   return promise;
@@ -138,7 +138,7 @@ const saveDashboardToHiveGraphQL = async ({
         });
       })
       .catch((error) => {
-        reject(error);
+        reject(new Error(error.message));
       });
   });
   return promise;

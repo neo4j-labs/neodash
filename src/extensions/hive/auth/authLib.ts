@@ -95,10 +95,10 @@ export class Auth {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => {
         if (err) {
-          return reject(err);
+          return reject(new Error(err.error));
         }
         if (!authResult?.idToken) {
-          return reject();
+          return reject(new Error('auth_token_missing'));
         }
         this.setSession(authResult);
         resolve();
@@ -124,10 +124,10 @@ export class Auth {
     let promise = new Promise((resolve, reject) => {
       this.auth0.checkSession({}, async (err, authResult) => {
         if (err) {
-          return reject(err);
+          return reject(new Error(err.error));
         }
         if (!authResult?.idToken) {
-          return reject();
+          return reject(new Error('auth_token_missing'));
         }
         this.setSession(authResult);
 
