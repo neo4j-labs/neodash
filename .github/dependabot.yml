@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: 'yarn'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
+
+  - package-ecosystem: 'yarn'
+    directory: '/gallery'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
