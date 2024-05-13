@@ -61,7 +61,6 @@ export const updateGlobalParametersThunk = (newParameters) => (dispatch: any, ge
   try {
     const { settings } = getState().dashboard;
     const parameters = settings.parameters ? settings.parameters : {};
-
     // if new parameters are set...
     if (newParameters) {
       // iterate over the key value pairs in parameters
@@ -92,7 +91,11 @@ export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: 
     Object.keys(parameters).forEach((key) => {
       if (isCastableToNeo4jDate(parameters[key])) {
         parameters[key] = castToNeo4jDate(parameters[key]);
-      } else if (parameters[key] && typeof toNumber(parameters[key]) === 'number') {
+      } else if (
+        parameters[key] &&
+        !isNaN(toNumber(parameters[key])) &&
+        typeof toNumber(parameters[key]) === 'number'
+      ) {
         parameters[key] = toNumber(parameters[key]);
       } else if (parameters[key] == undefined) {
         delete parameters[key];
