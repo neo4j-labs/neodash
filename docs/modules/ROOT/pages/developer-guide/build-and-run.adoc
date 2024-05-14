@@ -78,7 +78,7 @@ docker run -it –rm -p 5005:5005 neodash
 
 === To deploy using YAML files
 
-YAML examples are available in the https://github.com/neo4j-labs/neodash[the NeoDash repository]. Here is an example of a pod definition YAML file to create a NeoDash pod in a cluster:
+YAML examples are available in the https://github.com/neo4j-labs/neodash[NeoDash repository]. Here is an example of a pod definition YAML file to create a NeoDash pod in a cluster:
 
 ....
 apiVersion: v1
