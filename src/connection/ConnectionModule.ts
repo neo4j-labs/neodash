@@ -10,14 +10,12 @@ export abstract class ConnectionModule {
   }
 
   async initialize(_configJson: any): Promise<any> {
-    const error = await notImplementedError('initialize');
-    return error;
+    return notImplementedError('initialize');
   }
 
   // implementation of an authentication mechanism to use NeoDash
   async authenticate(_params: any): Promise<any> {
-    const error = await notImplementedError('authenticate');
-    return error;
+    return notImplementedError('authenticate');
   }
 
   // return true if the config contains enough information to connect to the backend Neo4j/Aura database
