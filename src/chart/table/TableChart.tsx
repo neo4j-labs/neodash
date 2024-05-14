@@ -92,7 +92,6 @@ export const NeoTableChart = (props: ChartProps) => {
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
-  const pageSizeReducer = compact ? 3 : 1;
 
   const columnWidthsType =
     props.settings && props.settings.columnWidthsType ? props.settings.columnWidthsType : 'Relative (%)';
@@ -209,15 +208,10 @@ export const NeoTableChart = (props: ChartProps) => {
         );
       });
 
-  const availableRowHeight = (props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight;
-  const tablePageSize = compact
-    ? Math.round(availableRowHeight) - pageSizeReducer
-    : Math.floor(availableRowHeight) - pageSizeReducer;
-
   const pageNames = getPageNumbersAndNamesList();
   const commonGridProps = {
     key: 'tableKey',
-    headerHeight: 32,
+    columnHeaderHeight: 32,
     density: compact ? 'compact' : 'standard',
     rows: rows,
     columns: columns,
@@ -234,11 +228,10 @@ export const NeoTableChart = (props: ChartProps) => {
       }
     },
     checkboxSelection: hasCheckboxes(actionsRules),
-    selectionModel: getCheckboxes(actionsRules, rows, props.getGlobalParameter),
-    onSelectionModelChange: (selection) => updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter),
-    pageSize: tablePageSize > 0 ? tablePageSize : 5,
-    rowsPerPageOptions: rows.length < 5 ? [rows.length, 5] : [5],
-    disableSelectionOnClick: true,
+    rowSelectionModel: getCheckboxes(actionsRules, rows, props.getGlobalParameter),
+    onRowSelectionModelChange: (selection) => updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter),
+    autoPageSize: true,
+    disableRowSelectionOnClick: true,
     components: {
       ColumnSortedDescendingIcon: () => <></>,
       ColumnSortedAscendingIcon: () => <></>,

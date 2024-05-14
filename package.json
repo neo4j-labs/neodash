@@ -41,7 +41,7 @@
     "@dnd-kit/sortable": "^7.0.2",
     "@mui/material": "^5.12.3",
     "@mui/styles": "^5.12.3",
-    "@mui/x-data-grid": "5.17.26",
+    "@mui/x-data-grid": "7.4.0",
     "@mui/x-date-pickers": "^5.0.17",
     "@neo4j-cypher/react-codemirror": "^1.0.3",
     "@neo4j-ndl/base": "1.10.3",
