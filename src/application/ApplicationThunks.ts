@@ -429,7 +429,7 @@ async function getConfigDynamically(connectionModule, configJson) {
     }
   } catch (e) {
     let message = `${e}`;
-    if (!message.match(/Not Implemented/)) {
+    if (!/Not Implemented/.exec(message)) {
       console.log(`Connection module '${connectionModule.name}': error calling loadDashboardFromUrl`, e);
     }
   }
@@ -487,7 +487,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     }
   } catch (e) {
     let message = `${e}`;
-    if (!message.match(/Not Implemented/)) {
+    if (!/Not Implemented/.exec(message)) {
       console.log(`Connection module '${connectionModule.name}': error calling authentication`, e);
       return;
     }

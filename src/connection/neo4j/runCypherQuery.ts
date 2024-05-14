@@ -76,7 +76,7 @@ export async function runCypherQuery({
 
       if (useReturnValuesAsFields) {
         // Send a deep copy of the returned record keys as the set of fields.
-        const newFields = records && records[0] && records[0].keys ? records[0].keys.slice() : [];
+        const newFields = records?.[0]?.keys ? records[0].keys.slice() : [];
 
         if (!isEqual(newFields, fields)) {
           setFields(newFields);
@@ -92,7 +92,6 @@ export async function runCypherQuery({
       // QUERY RETURNED NO DRAWABLE DATA
       if (records == null) {
         setStatus(QueryStatus.NO_DRAWABLE_DATA);
-        // console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
         transaction.commit();
         return;
         // QUERY RETURNED TO BE TRUNCATED
