@@ -20,7 +20,3 @@ The NeoDash application has been successfully deployed, here is the application 
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
-
-Note: Give it a couple of minutes for the ingress to acquire a certificate and setup the DNS records for hostname specified.
-
-If the above url is not working, please run the kubectl describe ingress -n {{ .Release.Namespace }} command and check the events for any errors.
