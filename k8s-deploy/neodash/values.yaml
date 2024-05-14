@@ -1,0 +1,108 @@
+# Name override or full name override
+nameOverride: ''
+fullnameOverride: neodash-test
+
+# Number of pods
+replicaCount: 1
+
+# Image Details
+image:
+  repository: neo4jlabs/neodash
+  pullPolicy: IfNotPresent
+  tag: 'latest'
+imagePullSecrets: [] # Image pull secret if any
+
+# Pod annotations, labels and security context
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+
+# Mode configuration using environment variables
+# Set reader mode environment variables when enable_reader_mode is true
+enable_reader_mode: true
+env: 
+  - name: "ssoEnabled"
+    value: "false"
+  - name: "standalone"
+    value: "true"
+  - name: "standaloneProtocol"
+    value: "neo4j+s"
+  - name: "standaloneHost"
+    value: "localhost"
+  - name: "standalonePort"
+    value: "7687"
+  - name: "standaloneDatabase"
+    value: neo4j
+  - name: "standaloneDashboardName"
+    value: "test"
+  - name: "standaloneDashboardDatabase"
+    value: neo4j
+  - name: "standaloneAllowLoad"
+    value: "false"
+  - name: "standaloneLoadFromOtherDatabases"
+    value: "false"
+  - name: "standaloneMultiDatabase"
+    value: "false"
+
+# Environment variable from secret
+envFromSecrets: []
+  # standaloneUsername: 
+      # secretName: "neo4j-connection-secrets"
+      # key: "username"
+  # standalonePassword: 
+      # secretName: "neo4j-connection-secrets"
+      # key: "password"
+
+# Service details
+service:
+  type: LoadBalancer # Can also be ClusterIP or NodePort  
+  port: 5005 # For the service to listen in for Traffic
+  targetPort: 5005 # Target port is the container port
+  annotations: {} # Service annotations for the LoadBalance
+
+# Ingress
+ingress:
+  enabled: false # Enable Kubernetes Ingress
+  className: 'alb' # Class Name
+  annotations: {} # Cloud LoadBalancer annotations
+  hosts: []
+    # - host: neodash.example.com
+    #   paths:
+    #     - path: '/'
+    #       pathType: Prefix
+  tls: []
+
+# Pod resources request, limits and health check
+resources: 
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
+livenessProbe:
+  httpGet:
+    path: /*
+    port: 5005
+readinessProbe:
+  httpGet:
+    path: /*
+    port: 5005
+
+# Pod Autoscaler
+autoscaling:
+  enabled: false
+  # minReplicas: 1
+  # maxReplicas: 100
+  # targetCPUUtilizationPercentage: 80
+
+# Pod Volumes
+volumes: []
+volumeMounts: []
+
+# Service Account
+serviceAccount:
+  create: true
+  automount: true
+  # annotations: {}
+  # name: ''
