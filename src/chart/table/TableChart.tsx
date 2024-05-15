@@ -24,8 +24,6 @@ import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
 
-const TABLE_HEADER_HEIGHT = 32;
-const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 const theme = createTheme({
@@ -209,10 +207,13 @@ export const NeoTableChart = (props: ChartProps) => {
       });
 
   const pageNames = getPageNumbersAndNamesList();
+  const customStyles = { '&.MuiDataGrid-root .MuiDataGrid-footerContainer > div': { marginTop: '0px' } };
+
   const commonGridProps = {
     key: 'tableKey',
     columnHeaderHeight: 32,
-    density: compact ? 'compact' : 'standard',
+    rowHeight: tableRowHeight,
+    autoPageSize: true,
     rows: rows,
     columns: columns,
     columnVisibilityModel: columnVisibilityModel,
@@ -230,7 +231,6 @@ export const NeoTableChart = (props: ChartProps) => {
     checkboxSelection: hasCheckboxes(actionsRules),
     rowSelectionModel: getCheckboxes(actionsRules, rows, props.getGlobalParameter),
     onRowSelectionModelChange: (selection) => updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter),
-    autoPageSize: true,
     disableRowSelectionOnClick: true,
     components: {
       ColumnSortedDescendingIcon: () => <></>,
@@ -301,15 +301,12 @@ export const NeoTableChart = (props: ChartProps) => {
             {...commonGridProps}
             getRowHeight={() => 'auto'}
             sx={{
-              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '3px' },
-              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell:has(button)': { py: '0px' },
-              '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
-              '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+              ...customStyles,
               '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
             }}
           />
         ) : (
-          <DataGrid {...commonGridProps} rowHeight={tableRowHeight} />
+          <DataGrid {...commonGridProps} sx={customStyles} />
         )}
       </div>
     </ThemeProvider>
