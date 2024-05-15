@@ -11,7 +11,7 @@ import { forceRefreshPage } from '../page/PageActions';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
-// import NeoDashboardSidebar from './sidebar/DashboardSidebar';
+import NeoDashboardSidebar from './sidebar/DashboardSidebar';
 
 const Dashboard = ({
   pagenumber,
@@ -71,9 +71,9 @@ const Dashboard = ({
           position: 'relative',
         }}
       >
-        {/* <div>
+        <div>
           <NeoDashboardSidebar />
-        </div> */}
+        </div>
         <div className='n-w-full n-h-full n-overflow-y-scroll n-flex n-flex-row'>
           {/* Main Content */}
           <main className='n-flex-1 n-relative n-z-0 n-scroll-smooth n-w-full'>
