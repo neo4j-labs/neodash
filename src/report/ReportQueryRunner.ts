@@ -13,7 +13,6 @@ export enum QueryStatus {
   ERROR, // Something broke, likely the cypher query is invalid.
 }
 
-// TODO: create a readOnly version of this method or inject a property
 /**
  * Runs a Cypher query using the specified driver.
  * @param driver - an instance of a Neo4j driver.
@@ -77,10 +76,8 @@ export async function runCypherQuery(
     .then((res) => {
       // @ts-ignore
       const { records } = res;
-      // TODO - check query summary to ensure that no writes are made in safe-mode.
       if (records.length == 0) {
         setStatus(QueryStatus.NO_DATA);
-        // console.log("TODO remove this - QUERY RETURNED NO DATA!")
         transaction.commit();
         return;
       }
@@ -106,19 +103,15 @@ export async function runCypherQuery(
       } else if (records.length > rowLimit) {
         setStatus(QueryStatus.COMPLETE_TRUNCATED);
         setRecords(records.slice(0, rowLimit));
-        // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
         transaction.commit();
         return;
       }
       setStatus(QueryStatus.COMPLETE);
       setRecords(records);
-      // console.log("TODO remove this - QUERY WAS EXECUTED SUCCESFULLY!")
 
       transaction.commit();
     })
     .catch((e) => {
-      // setFields([]);
-
       // Process timeout errors.
       if (
         e.message.startsWith(
