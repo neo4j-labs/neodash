@@ -5,6 +5,7 @@ import { GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect } from 'react';
 import {RenderString } from '../../report/ReportRecordProcessing';
 
+
 interface GridCellExpandProps {
   value: string;
   width: number;
@@ -116,4 +117,5 @@ export function renderCellExpand(params: GridRenderCellParams<any, string>, line
       .replaceAll(']', '')
       .replaceAll('[', '')
       .replaceAll('"', '')} width={params.colDef.computedWidth} />;
+
 }
