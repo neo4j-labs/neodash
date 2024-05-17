@@ -10,7 +10,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
-// import DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -256,24 +256,17 @@ function RenderPath(value) {
 function RenderArray(value, transposedTable = false) {
   let mapped = [];
   // If the first value is neither a Node nor a Relationship object
-  // It is safe to assume that all values should be renedered as strings
-  if (value.length > 0 && !valueIsNode(value[0]) && !valueIsRelationship(value[0])) {
-    // If this request comes up from a transposed table
-    // The returned value must be a single value, not an array
-    // Otherwise, it will cast to [Object object], [Object object]
-    if (transposedTable) {
-      return RenderString(value.join(', '));
-    }
-    // Nominal case of a list of values renderable as strings
-    // These should be joined by commas, and not inside <span> tags
-    mapped = value.map((v, i) => {
-      return RenderSubValue(v) + (i < value.length - 1 ? ', ' : '');
-    });
+  // It is safe to assume that all values should be rendered as strings
+  // And if this request comes up from a transposed table
+  // The returned value must be a single value, not an array
+  // Otherwise, it will cast to [Object object], [Object object]
+  if (value.length > 0 && transposedTable && !valueIsNode(value[0]) && !valueIsRelationship(value[0])) {
+    return RenderString(value.join(', '), transposedTable).props.dangerouslySetInnerHTML.__html;
   }
   // Render Node and Relationship objects, which will look like a Path
   mapped = value.map((v, i) => {
     return (
-      <span key={String(`k${i}`) + v}>
+      <span className='n-inline' key={String(`k${i}`) + v}>
         {RenderSubValue(v)}
         {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>, </span> : <></>}
       </span>
@@ -282,7 +275,10 @@ function RenderArray(value, transposedTable = false) {
   return mapped;
 }
 
-function RenderString(value) {
+function RenderString(value, transposedTable = false) {
+  if (transposedTable) {
+    console.log('I was here');
+  }
   const str = value?.toString() || '';
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
@@ -291,7 +287,8 @@ function RenderString(value) {
       </TextLink>
     );
   }
-  return str;
+  const cleanValue = DOMPurify.sanitize(str);
+  return <div className='n-inline' dangerouslySetInnerHTML={{ __html: cleanValue }} />;
 }
 
 function RenderLink(value, disabled = false) {
