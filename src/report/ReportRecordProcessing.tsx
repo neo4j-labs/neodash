@@ -260,6 +260,7 @@ function RenderArray(value, transposedTable = false) {
   // And if this request comes up from a transposed table
   // The returned value must be a single value, not an array
   // Otherwise, it will cast to [Object object], [Object object]
+  // It must also return a plain string and not a React div element
   if (value.length > 0 && transposedTable && !valueIsNode(value[0]) && !valueIsRelationship(value[0])) {
     return RenderString(value.join(', '), transposedTable).props.dangerouslySetInnerHTML.__html;
   }
