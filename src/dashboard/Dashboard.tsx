@@ -7,7 +7,7 @@ import NeoPage from '../page/Page';
 import { forceRefreshPage } from '../page/PageActions';
 import { createNotificationThunk } from '../page/PageThunks';
 import { getPageNumber } from '../settings/SettingsSelectors';
-import { createDriver, Neo4jProvider } from '../use-neo4j';
+import { Neo4jProvider, createDriver } from '../use-neo4j';
 import NeoDashboardHeader from './header/DashboardHeader';
 import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
 import NeoDashboardTitle from './header/DashboardTitle';
@@ -26,14 +26,9 @@ const Dashboard = ({
 
   // If no driver is yet instantiated, create a new one.
   if (driver == undefined) {
-    const newDriver = createDriver(
-      connection.protocol,
-      connection.url,
-      connection.port,
-      connection.username,
-      connection.password,
-      { userAgent: `neodash/v${version}` }
-    );
+    const newDriver = createDriver('http', connection.url, connection.port, connection.username, connection.password, {
+      userAgent: `neodash/v${version}`,
+    });
     setDriver(newDriver);
   }
   const content = (

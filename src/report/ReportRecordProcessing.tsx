@@ -1,7 +1,7 @@
-import React from 'react';
 import { Chip, Tooltip } from '@mui/material';
-import { GraphLabel, TextLink } from '@neo4j-ndl/react';
 import { withStyles } from '@mui/styles';
+import { GraphLabel, TextLink } from '@neo4j-ndl/react';
+import React from 'react';
 import {
   getRecordType,
   toNumber,
@@ -129,6 +129,7 @@ const HtmlTooltip = withStyles(() => ({
   },
 }))(Tooltip);
 
+// TODO please antionio could you add elementId
 function addDirection(relationship, start) {
   relationship.direction = relationship.start.low == start.identity.low;
   return relationship;

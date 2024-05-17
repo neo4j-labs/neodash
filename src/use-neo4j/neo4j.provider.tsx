@@ -42,7 +42,7 @@ export const Neo4jProvider: React.FC<Neo4jProviderProps> = (props: Neo4jProvider
     setDatabase(database);
     setAuthenticating(true);
 
-    const newDriver = createDriver(config.scheme, config.host, config.port, config.username, config.password);
+    const newDriver = createDriver('http', config.host, config.port, config.username, config.password);
 
     newDriver
       .verifyConnectivity()

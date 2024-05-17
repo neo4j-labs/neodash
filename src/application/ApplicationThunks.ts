@@ -68,7 +68,8 @@ export const createConnectionThunk =
     const loggingSettings = applicationGetLoggingSettings(loggingState);
     const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
     try {
-      const driver = createDriver(protocol, url, port, username, password, { userAgent: `neodash/v${version}` });
+      // TODO remember the 7474 port needs to be used
+      const driver = createDriver('http', url, port, username, password, { userAgent: `neodash/v${version}` });
       // eslint-disable-next-line no-console
       console.log('Attempting to connect...');
       const validateConnection = (records) => {

@@ -1,5 +1,5 @@
-import { extractNodePropertiesFromRecords, extractNodeAndRelPropertiesFromRecords } from './ReportRecordProcessing';
 import isEqual from 'lodash.isequal';
+import { extractNodeAndRelPropertiesFromRecords, extractNodePropertiesFromRecords } from './ReportRecordProcessing';
 
 export enum QueryStatus {
   NO_QUERY, // No query specified
@@ -66,8 +66,9 @@ export async function runCypherQuery(
     return;
   }
 
+  // we need to ensure the databse ame is set
   const session = database ? driver.session({ database: database }) : driver.session();
-  const transaction = session.beginTransaction({ timeout: queryTimeLimit * 1000, connectionTimeout: 2000 });
+  // const transaction = session.beginTransaction({ timeout: queryTimeLimit * 1000, connectionTimeout: 2000 });
 
   // For usuability reasons, we can set a hard cap on the query result size by wrapping it a subquery (Neo4j 4.0 and later).
   // This unfortunately does not preserve ordering on the return fields.
@@ -79,9 +80,11 @@ export async function runCypherQuery(
       query = `CALL { ${query}} RETURN * LIMIT ${rowLimit + 1}`;
     }
   }
+  // we use async iteratiors in workspace to archieve this, pro tip!
 
-  await transaction
-    .run(query, parameters)
+  await session
+    // TODO seems the timeout doesn't work poreoprly eitehr
+    .run(query, parameters) // , { timeout: queryTimeLimit * 1000, connectionTimeout: 2000 })
     .then((res) => {
       // @ts-ignore
       const { records } = res;
@@ -89,7 +92,6 @@ export async function runCypherQuery(
       if (records.length == 0) {
         setStatus(QueryStatus.NO_DATA);
         // console.log("TODO remove this - QUERY RETURNED NO DATA!")
-        transaction.commit();
         return;
       }
 
@@ -111,20 +113,16 @@ export async function runCypherQuery(
       if (records == null) {
         setStatus(QueryStatus.NO_DRAWABLE_DATA);
         // console.log("TODO remove this - QUERY RETURNED NO DRAWABLE DATA!")
-        transaction.commit();
         return;
       } else if (records.length > rowLimit) {
         setStatus(QueryStatus.COMPLETE_TRUNCATED);
         setRecords(records.slice(0, rowLimit));
         // console.log("TODO remove this - QUERY RETURNED WAS TRUNCTURED!")
-        transaction.commit();
         return;
       }
       setStatus(QueryStatus.COMPLETE);
       setRecords(records);
       // console.log("TODO remove this - QUERY WAS EXECUTED SUCCESFULLY!")
-
-      transaction.commit();
     })
     .catch((e) => {
       // setFields([]);
@@ -139,7 +137,6 @@ export async function runCypherQuery(
       ) {
         setStatus(QueryStatus.TIMED_OUT);
         setRecords([{ error: e.message }]);
-        transaction.rollback();
         return e.message;
       }
 
@@ -148,7 +145,6 @@ export async function runCypherQuery(
       if (setRecords) {
         setRecords([{ error: e.message }]);
       }
-      transaction.rollback();
       return e.message;
     });
 }
