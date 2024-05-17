@@ -1,16 +1,16 @@
 import React from 'react';
-import NeoPage from '../page/Page';
-import NeoDashboardHeader from './header/DashboardHeader';
-import NeoDashboardTitle from './header/DashboardTitle';
-import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
-import { createDriver, Neo4jProvider } from 'use-neo4j';
-import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import { connect } from 'react-redux';
+import { applicationGetConnection, applicationGetStandaloneSettings } from '../application/ApplicationSelectors';
 import NeoDashboardConnectionUpdateHandler from '../component/misc/DashboardConnectionUpdateHandler';
-import { forceRefreshPage } from '../page/PageActions';
-import { getPageNumber } from '../settings/SettingsSelectors';
-import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
+import NeoPage from '../page/Page';
+import { forceRefreshPage } from '../page/PageActions';
+import { createNotificationThunk } from '../page/PageThunks';
+import { getPageNumber } from '../settings/SettingsSelectors';
+import { createDriver, Neo4jProvider } from '../use-neo4j';
+import NeoDashboardHeader from './header/DashboardHeader';
+import NeoDashboardHeaderPageList from './header/DashboardHeaderPageList';
+import NeoDashboardTitle from './header/DashboardTitle';
 import NeoDashboardSidebar from './sidebar/DashboardSidebar';
 
 const Dashboard = ({

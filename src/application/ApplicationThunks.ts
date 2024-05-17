@@ -1,4 +1,3 @@
-import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
 import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
 import { setDashboard } from '../dashboard/DashboardActions';
@@ -10,6 +9,7 @@ import {
   loadDashboardThunk,
   upgradeDashboardVersion,
 } from '../dashboard/DashboardThunks';
+import { version } from '../modal/AboutModal';
 import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
@@ -17,36 +17,36 @@ import {
   updateGlobalParametersThunk,
   updateSessionParameterThunk,
 } from '../settings/SettingsThunks';
+import { createDriver } from '../use-neo4j';
+import { createUUID } from '../utils/uuid';
 import {
+  clearDesktopConnectionProperties,
+  clearNotification,
+  resetShareDetails,
+  setAboutModalOpen,
   setConnected,
   setConnectionModalOpen,
   setConnectionProperties,
-  setDesktopConnectionProperties,
-  resetShareDetails,
-  setShareDetailsFromUrl,
-  setWelcomeScreenOpen,
+  setCustomHeader,
   setDashboardToLoadAfterConnecting,
+  setDesktopConnectionProperties,
+  setDraft,
   setOldDashboard,
-  clearDesktopConnectionProperties,
-  clearNotification,
-  setSSOEnabled,
-  setSSOProviders,
-  setStandaloneEnabled,
-  setAboutModalOpen,
-  setStandaloneMode,
-  setStandaloneDashboardDatabase,
-  setWaitForSSO,
   setParametersToLoadAfterConnecting,
   setReportHelpModalOpen,
-  setDraft,
-  setCustomHeader,
+  setSSOEnabled,
+  setSSOProviders,
+  setShareDetailsFromUrl,
+  setStandaloneDashboardDatabase,
+  setStandaloneEnabled,
+  setStandaloneMode,
+  setWaitForSSO,
+  setWelcomeScreenOpen,
 } from './ApplicationActions';
-import { setLoggingMode, setLoggingDatabase, setLogErrorNotification } from './logging/LoggingActions';
-import { version } from '../modal/AboutModal';
 import { applicationIsStandalone } from './ApplicationSelectors';
+import { setLogErrorNotification, setLoggingDatabase, setLoggingMode } from './logging/LoggingActions';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
-import { createUUID } from '../utils/uuid';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.

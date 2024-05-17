@@ -73,6 +73,7 @@
     "mui-color": "^2.0.0-beta.2",
     "mui-nested-menu": "^3.2.1",
     "neo4j-client-sso": "^1.2.2",
+    "neo4j-driver": "^4.4.5",
     "openai": "^3.3.0",
     "postcss": "^8.4.21",
     "postcss-loader": "^7.2.4",
@@ -101,7 +102,6 @@
     "tailwindcss": "^3.3.2",
     "three": "^0.159.0",
     "three-spritetext": "^1.8.1",
-    "use-neo4j": "^0.3.13",
     "yaml": "^2.2.1"
   },
   "devDependencies": {

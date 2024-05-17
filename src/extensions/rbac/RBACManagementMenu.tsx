@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
 import { Menu, MenuItem, MenuItems } from '@neo4j-ndl/react';
 import { UserIconOutline } from '@neo4j-ndl/react/icons';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
+import React, { useContext, useEffect, useState } from 'react';
+import { runCypherQuery } from '../../report/ReportQueryRunner';
+import { Neo4jContext, Neo4jContextState } from '../../use-neo4j';
 import RBACManagementModal from './RBACManagementModal';
 
 /**
