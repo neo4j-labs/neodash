@@ -1,5 +1,5 @@
-import { Driver } from 'neo4j-driver';
 import React, { useEffect, useState } from 'react';
+import { Driver } from '../neo4j-driver-lite';
 
 import { createDriver } from './driver';
 import { LOCAL_STORAGE_KEY, Neo4jConfig, Neo4jScheme } from './neo4j-config.interface';

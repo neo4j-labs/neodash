@@ -1,6 +1,6 @@
 import { Neo4jConfig, Neo4jScheme } from "./neo4j-config.interface"
 
-import neo4j, { Config } from 'neo4j-driver'
+import neo4j, { Config } from '../neo4j-driver-lite/neo4j-lite-web.esm'
 
 export const createDriver = (scheme: Neo4jScheme, host: string, port: string | number, username?: string, password?: string, config?: Config) => {
     if ( !username || !password ) {

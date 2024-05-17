@@ -1,9 +1,9 @@
-import { evaluateRulesOnNode, evaluateRulesOnLink } from '../../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnLink, evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
+import { isNode } from '../../../neo4j-driver-lite/neo4j-lite-web.esm';
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, toNumber } from '../../ChartUtils';
+import { toNumber, valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { assignCurvatureToLink } from './RelUtils';
-import { isNode } from 'neo4j-driver-core/lib/graph-types.js';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 

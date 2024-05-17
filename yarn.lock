@@ -5533,14 +5533,6 @@ buffer@^5.2.1, buffer@^5.5.0, buffer@^5.6.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
-buffer@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
-  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
-  dependencies:
-    base64-js "^1.3.1"
-    ieee754 "^1.2.1"
-
 builtin-modules@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.3.0.tgz#cae62812b89801e9656336e46223e030386be7b6"
@@ -10117,29 +10109,6 @@ neo4j-client-sso@^1.2.2:
     jwt-decode "^3.1.2"
     lodash.pick "^4.4.0"
 
-neo4j-driver-bolt-connection@5.20.0:
-  version "5.20.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.20.0.tgz#5b7f662a640e01b19f1e116313d3284d61d887e5"
-  integrity sha512-jSF2S/kBJBKGCUsOA0z4HFffVKQnHivSQagU1+lQH2fN2WIWy8iJIBngZWkvUaFIvE54a++WCVjE28CAtyzmPw==
-  dependencies:
-    buffer "^6.0.3"
-    neo4j-driver-core "5.20.0"
-    string_decoder "^1.3.0"
-
-neo4j-driver-core@5.20.0:
-  version "5.20.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.20.0.tgz#5bacdabf17249dc730c5ab2f7c3e7769dedc194f"
-  integrity sha512-TJx4MyKPGw+ocev8mo+3MPI4tt7KirHPM/c3Oa6X8s4jvCKucoslld5MoBYRfBXeqqVZL4FfWoFP1pOn9U0HuQ==
-
-neo4j-driver@^5.12.0:
-  version "5.20.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-5.20.0.tgz#2730995bb5380228e0230a85530bfe13a9b8d38a"
-  integrity sha512-VCH/ay+fmaGkl5wr6lnDZE/QLFDXzamCtF22QMjPHAcBuwee9PWq0ZbtRlkUfpYVCduWm5HjSNBbNu8SZmUn+A==
-  dependencies:
-    neo4j-driver-bolt-connection "5.20.0"
-    neo4j-driver-core "5.20.0"
-    rxjs "^7.8.1"
-
 next-tick@1, next-tick@^1.0.0, next-tick@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.1.0.tgz#1836ee30ad56d67ef281b22bd199f709449b35eb"
@@ -11932,13 +11901,6 @@ rxjs@^7.5.1, rxjs@^7.5.5, rxjs@^7.8.0:
   dependencies:
     tslib "^2.1.0"
 
-rxjs@^7.8.1:
-  version "7.8.1"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.1.tgz#6f6f3d99ea8044291efd92e7c7fcf562c4057543"
-  integrity sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==
-  dependencies:
-    tslib "^2.1.0"
-
 sade@^1.7.3:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/sade/-/sade-1.8.1.tgz#0a78e81d658d394887be57d2a409bf703a3b2701"
@@ -12446,7 +12408,7 @@ string.prototype.trimstart@^1.0.5:
     define-properties "^1.1.4"
     es-abstract "^1.20.4"
 
-string_decoder@^1.1.1, string_decoder@^1.3.0:
+string_decoder@^1.1.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.3.0.tgz#42f114594a46cf1a8e30b0a84f56c78c3edac21e"
   integrity sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==
