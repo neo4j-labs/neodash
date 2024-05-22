@@ -12,6 +12,9 @@ import {
   TrashIconOutline,
   XMarkIconOutline,
 } from '@neo4j-ndl/react/icons';
+import { getConnectionModule } from '../../../connection/utils';
+
+const { connectionModule } = getConnectionModule();
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
@@ -29,6 +32,7 @@ export const NeoDashboardSidebarDashboardMenu = ({
   handleAccessClicked,
   handleDeleteClicked,
   handleClose,
+  handleCustomPublish,
 }) => {
   return (
     <Menu
@@ -51,6 +55,13 @@ export const NeoDashboardSidebarDashboardMenu = ({
           <MenuItem onClick={handleLoadClicked} icon={<CloudArrowUpIconOutline />} title='Load' />
           {/* <MenuItem onClick={() => {}} icon={<DocumentDuplicateIconOutline />} title='Clone' /> */}
           <MenuItem onClick={handleExportClicked} icon={<DocumentTextIconOutline />} title='Export' />
+          {connectionModule.hasCustomPublishUI() && (
+            <MenuItem
+              onClick={handleCustomPublish}
+              icon={<CloudArrowUpIconOutline />}
+              title={connectionModule.getPublishMenuText()}
+            />
+          )}
           <MenuItem onClick={handleAccessClicked} icon={<FingerPrintIconOutline />} title='Access' />
           <MenuItem onClick={handleShareClicked} icon={<ShareIconOutline />} title='Share' />
           <MenuItem onClick={handleDeleteClicked} icon={<TrashIconOutline />} title='Delete' />

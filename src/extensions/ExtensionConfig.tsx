@@ -73,6 +73,15 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
     link: 'https://neo4j.com/professional-services/',
   },
+  solutionsHive: {
+    name: 'solutionsHive',
+    label: 'Hive Extension',
+    author: 'Neo4j Solutions',
+    image: 'https://storage.googleapis.com/neo4j-solutions-public/neodash_hive_gallery.png',
+    enabled: true,
+    description: 'Extension to enable NeoDash integration in Hive. Hive is a Neo4j gallery of demos.',
+    link: 'https://neo4j.solutions',
+  },
   forms: {
     name: 'forms',
     label: 'Forms',

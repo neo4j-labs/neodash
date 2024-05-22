@@ -47,6 +47,7 @@ import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
 import NeoDashboardSidebarAccessModal from './modal/DashboardSidebarAccessModal';
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
 import { NEODASH_VERSION } from '../DashboardReducer';
+import { getConnectionModule } from '../../connection/utils';
 
 // Which (small) pop-up menu is currently open for the sidebar.
 enum Menu {
@@ -68,11 +69,14 @@ enum Modal {
   LOAD = 7,
   SAVE = 8,
   NONE = 9,
-  ACCESS = 10,
+  CUSTOM_PUBLISH = 10,
+  ACCESS = 11,
 }
 
 // We use "index = -1" to represent a non-saved draft dashboard in the sidebar's dashboard list.
 const UNSAVED_DASHBOARD_INDEX = -1;
+
+const { connectionModule } = getConnectionModule();
 
 /**
  * A component responsible for rendering the sidebar on the left of the screen.
@@ -258,6 +262,15 @@ export const NeoDashboardSidebar = ({
         }}
       />
 
+      {connectionModule.hasCustomPublishUI() &&
+        connectionModule.getPublishUIDialog({
+          cachedDashboard: cachedDashboard,
+          publishUIDialogOpen: modalOpen === Modal.CUSTOM_PUBLISH,
+          closePublishUIDialog: () => {
+            setModalOpen(Modal.NONE);
+            setCachedDashboard('');
+          },
+        })}
       <NeoDashboardSidebarAccessModal
         open={modalOpen == Modal.ACCESS}
         database={dashboardDatabase}
@@ -359,6 +372,14 @@ export const NeoDashboardSidebar = ({
             handleClose={() => {
               setMenuOpen(Menu.NONE);
               setMenuAnchor(null);
+            }}
+            handleCustomPublish={() => {
+              setMenuOpen(Menu.NONE);
+              const d = dashboards[inspectedIndex];
+              loadDashboardFromNeo4j(driver, dashboardDatabase, d.uuid, (text) => {
+                setCachedDashboard(JSON.parse(text));
+              });
+              setModalOpen(Modal.CUSTOM_PUBLISH);
             }}
           />
 

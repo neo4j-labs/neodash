@@ -1,13 +1,8 @@
 import React, { useEffect } from 'react';
-import { Autocomplete, TextField, MenuItem } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 import NeoColorPicker from '../../component/field/ColorPicker';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
-import {
-  AdjustmentsHorizontalIconOutline,
-  XMarkIconOutline,
-  PlusIconOutline,
-  PlayIconSolid,
-} from '@neo4j-ndl/react/icons';
+import { AdjustmentsHorizontalIconOutline, XMarkIconOutline, PlusIconOutline } from '@neo4j-ndl/react/icons';
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = [
