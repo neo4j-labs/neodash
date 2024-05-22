@@ -1,6 +1,5 @@
 import { barChartCypherQuery } from '../fixtures/cypher_queries';
 
-const WAITING_TIME = 20000;
 // Ignore warnings that may appear when using the Cypress dev server
 Cypress.on('uncaught:exception', (err, runnable) => {
   console.log(err, runnable);
@@ -84,7 +83,7 @@ describe('Testing bar chart', () => {
     cy.wait(500);
   });
 
-  it.skip('Checking Colour Picker settings', () => {
+  it('Checking Colour Picker settings', () => {
     //Opens advanced settings
     cy.get('.react-grid-layout')
       .first()
@@ -114,7 +113,7 @@ describe('Testing bar chart', () => {
       });
   });
 
-  it.skip('Checking Selector Description', () => {
+  it('Checking Selector Description', () => {
     //Opens first 2nd card
     cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
       // Access advanced settings
@@ -135,7 +134,7 @@ describe('Testing bar chart', () => {
     cy.get('div[role="dialog"]').parent().click(-100, -100, { force: true });
   });
 
-  it.skip('Checking full screen bar chart setting', () => {
+  it('Checking full screen bar chart setting', () => {
     //Opens first 2nd card
     cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
       // Opening settings
@@ -164,7 +163,7 @@ describe('Testing bar chart', () => {
     cy.get('div[data-focus-lock-disabled="false"]').should('not.exist');
   });
 
-  it.skip('Checking "Autorun Query" works as intended', () => {
+  it('Checking "Autorun Query" works as intended', () => {
     // Custom command to open advanced settings
     cy.advancedSettings(() => {
       // Finding 'Auto-run query setting and changing it to 'off'
@@ -184,7 +183,7 @@ describe('Testing bar chart', () => {
     });
   });
 
-  it.skip('Checking Legend integration works as intended', () => {
+  it('Checking Legend integration works as intended', () => {
     cy.advancedSettings(() => {
       // Checking that legend appears
       cy.setDropdownValue('Show Legend', 'on');
@@ -206,7 +205,9 @@ describe('Testing bar chart', () => {
     });
   });
 
-  it.skip('Checking the stacked grouping function works as intended', () => {
+  it('Checking the stacked grouping function works as intended', () => {
+    const TRANSLATE_REGEXP = /translate\(([0-9]{1,3}), [0-9]{1,3}\)/;
+
     cy.advancedSettings(() => {
       cy.get('.ndl-cypher-editor div[role="textbox"]')
         .should('be.visible')
@@ -226,18 +227,16 @@ describe('Testing bar chart', () => {
         .eq(3) // Get the fourth g element (index starts from 0)
         .invoke('attr', 'transform')
         .then((transformValue) => {
-          // Captures the first number in the tranlsate attribute using the parenthisis to capture the first digit and put it in the second value of the resulting array
-          // if transformValue is translate(100,200), then transformValue.match(/translate\((\d+),\d+\)/) will produce an array like ["translate(100,200)", "100"],
-          const match = transformValue.match(/translate\((\d+),\d+\)/);
+          // Captures the first number in the translate attribute using the parenthesis to capture the first digit and put it in the second value of the resulting array
+          // if transformValue is translate(100,200), then it will produce an array like ["translate(100,200)", "100"],
+          const match = transformValue.match(TRANSLATE_REGEXP);
           if (match?.[1]) {
             const xValue = match[1];
-            console.log('xValue: ', xValue);
-
             // Now find sibling g elements with the same x transform value
             cy.get('.MuiCardContent-root')
               .find('g')
               .children('g')
-              .filter((index, element) => {
+              .filter((_, element) => {
                 const siblingTransform = Cypress.$(element).attr('transform');
                 return siblingTransform?.includes(`translate(${xValue},`);
               })
@@ -248,25 +247,23 @@ describe('Testing bar chart', () => {
         });
     });
     cy.get('.ndl-dropdown:contains("Group")').find('svg').parent().click().type('(none){enter}');
-    // Checking that the stacked grouped elements do not exist
+    //Checking that the stacked grouped elements do not exist
     cy.get('.MuiCardContent-root')
       .find('g')
       .children('g')
       .eq(3) // Get the fourth g element (index starts from 0)
       .invoke('attr', 'transform')
       .then((transformValue) => {
-        // Captures the first number in the tranlsate attribute using the parenthisis to capture the first digit and put it in the second value of the resulting array
-        // if transformValue is translate(100,200), then transformValue.match(/translate\((\d+),\d+\)/) will produce an array like ["translate(100,200)", "100"],
-        const match = transformValue.match(/translate\((\d+),\d+\)/);
+        // Captures the first number in the translate attribute using the parenthesis to capture the first digit and put it in the second value of the resulting array
+        // if transformValue is translate(100,200), then it will produce an array like ["translate(100,200)", "100"],
+        const match = transformValue.match(TRANSLATE_REGEXP);
         if (match?.[1]) {
           const xValue = match[1];
-          console.log('xValue: ', xValue);
-
           // Now find sibling g elements with the same x transform value
           cy.get('.MuiCardContent-root')
             .find('g')
             .children('g')
-            .filter((index, element) => {
+            .filter((_, element) => {
               const siblingTransform = Cypress.$(element).attr('transform');
               return siblingTransform?.includes(`translate(${xValue},`);
             })
