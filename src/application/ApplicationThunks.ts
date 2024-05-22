@@ -14,7 +14,6 @@ import {
 import { createNotificationThunk } from '../page/PageThunks';
 import {
   setPageNumberThunk,
-  updateParametersToNeo4jTypeThunk,
   updateGlobalParametersThunk,
   updateSessionParameterThunk,
 } from '../settings/SettingsThunks';
@@ -273,7 +272,10 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       const skipConfirmation = urlParams.get('skipConfirmation') == 'Yes';
 
       const dashboardDatabase = urlParams.get('dashboardDatabase');
-      dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
+      if (dashboardDatabase) {
+        dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
+      }
+
       if (urlParams.get('credentials')) {
         setWelcomeScreenOpen(false);
         const connection = decodeURIComponent(urlParams.get('credentials'));
@@ -377,6 +379,8 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
 
     if (shareDetails.dashboardDatabase) {
       dispatch(setStandaloneDashboardDatabase(shareDetails.dashboardDatabase));
+    } else if (!state.application.standaloneDashboardDatabase) {
+      // No standalone dashboard database configured, fall back to default
       dispatch(setStandaloneDashboardDatabase(shareDetails.database));
     }
     if (shareDetails.url) {
@@ -524,6 +528,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     dispatch(setSSOProviders(config.ssoProviders));
 
     const { standalone } = config;
+    // if a dashboard database was previously set, remember to use it.
+    const dashboardDatabase = state.application.standaloneDashboardDatabase;
+
     dispatch(
       setStandaloneEnabled(
         standalone,
@@ -532,7 +539,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standalonePort,
         config.standaloneDatabase,
         config.standaloneDashboardName,
-        config.standaloneDashboardDatabase,
+        dashboardDatabase || config.standaloneDashboardDatabase,
         config.standaloneDashboardURL,
         config.standaloneUsername,
         config.standalonePassword,
@@ -571,8 +578,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         );
       }
     }
-    // At the load of a dashboard, we want to ensure correct casting types
-    dispatch(updateParametersToNeo4jTypeThunk());
 
     // SSO - specific case starts here.
     if (state.application.waitForSSO) {
@@ -733,8 +738,8 @@ export const initializeApplicationAsStandaloneThunk =
     } else {
       dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
     }
-
     dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
+    dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
 
     if (clearNotificationAfterLoad) {
       dispatch(clearNotification());

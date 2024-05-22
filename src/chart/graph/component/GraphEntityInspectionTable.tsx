@@ -2,16 +2,18 @@ import React from 'react';
 import ShowMoreText from 'react-show-more-text';
 import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { TextLink } from '@neo4j-ndl/react';
+// import DOMPurify from 'dompurify';
 
 export const formatProperty = (property) => {
-  if (property.startsWith('http://') || property.startsWith('https://')) {
+  const str = property?.toString() || '';
+  if (str.startsWith('http://') || str.startsWith('https://')) {
     return (
-      <TextLink externalLink href={property}>
-        {property}
+      <TextLink externalLink href={str}>
+        {str}
       </TextLink>
     );
   }
-  return property;
+  return str;
 };
 
 /**
@@ -88,7 +90,7 @@ export const GraphEntityInspectionTable = ({
                     {key}
                   </TableCell>
                   <TableCell align={'left'} style={{ color: tableTextColor }}>
-                    <ShowMoreText lines={2}>{formatProperty(entity && entity.properties[key].toString())}</ShowMoreText>
+                    <ShowMoreText lines={2}>{formatProperty(entity?.properties[key])}</ShowMoreText>
                   </TableCell>
                   {checklistEnabled ? (
                     <TableCell align={'center'}>
