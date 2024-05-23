@@ -116,7 +116,7 @@ describe('NeoDash E2E Tests', () => {
     );
     cy.get('main .react-grid-item:eq(2) #value input[name="Value"]').should('have.value', 'count');
     cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g').should('have.length', 3);
-    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g:nth-child(2) > path').should('have.length', 5);
+    cy.get('main .react-grid-item:eq(2) .MuiCardContent-root svg > g > g > path').should('have.length', 5);
   });
 
   it('creates a line chart report', () => {
