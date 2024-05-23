@@ -187,7 +187,6 @@ describe('Testing bar chart', () => {
     cy.advancedSettings(() => {
       // Checking that legend appears
       cy.setDropdownValue('Show Legend', 'on');
-      cy.wait(100);
       cy.get('button[aria-label="run"]').click();
       cy.wait(100);
       //Checking that legend matches value specified: in the case - 'count'
@@ -198,7 +197,6 @@ describe('Testing bar chart', () => {
       cy.get('[role="switch"]').click();
       // Checking that legend disappears
       cy.setDropdownValue('Show Legend', 'off');
-      cy.wait(100);
       cy.get('button[aria-label="run"]').click();
       cy.wait(100);
       cy.get('svg g g text').last().contains(/count/i).should('not.exist');
@@ -217,7 +215,6 @@ describe('Testing bar chart', () => {
           'MATCH (p:Person)-[:DIRECTED]->(n:Movie) RETURN n.released AS released, p.name AS Director, count(n.title) AS count LIMIT 5'
         );
       cy.setDropdownValue('Grouping', 'on');
-      cy.wait(100);
       cy.get('button[aria-label="run"]').click();
       cy.get('.ndl-dropdown:contains("Group")').find('svg').parent().click().type('Director{enter}');
       // Checking that the groups are stacked
@@ -286,7 +283,6 @@ describe('Testing bar chart', () => {
         );
       cy.setDropdownValue('Grouping', 'on');
       cy.setDropdownValue('Group Mode', 'grouped');
-      cy.wait(400);
       cy.get('button[aria-label="run"]').click();
       cy.get('.ndl-dropdown:contains("Group")').find('svg').parent().click().type('Director{enter}');
     });
@@ -308,6 +304,72 @@ describe('Testing bar chart', () => {
       cy.setDropdownValue('Show Values On Bars', 'off');
       cy.get('button[aria-label="run"]').click();
       cy.get('.MuiCardContent-root').find('div svg > g > g > text').should('not.exist');
+    });
+  });
+
+  describe('Y axis display', () => {
+    it('Checking Y axis is displayed', () => {
+      cy.advancedSettings(() => {
+        // Checking that legend appears
+        cy.setDropdownValue('Display Y axis', 'on');
+        cy.get('button[aria-label="run"]').click();
+        cy.wait(100);
+        cy.get('.MuiCardContent-root')
+          .find('g')
+          .children('g')
+          .eq(2)
+          .invoke('attr', 'transform')
+          .should('eq', 'translate(0,0)');
+      });
+    });
+
+    it('Checking Y axis is hidden', () => {
+      cy.advancedSettings(() => {
+        // Checking that legend appears
+        cy.setDropdownValue('Display Y axis', 'off');
+        cy.get('button[aria-label="run"]').click();
+        cy.wait(100);
+        cy.get('.MuiCardContent-root')
+          .find('g')
+          .children('g')
+          .eq(2)
+          .invoke('attr', 'transform')
+          .should('not.eq', 'translate(0,0)');
+      });
+    });
+  });
+
+  describe('Y grid lines display', () => {
+    it('Checking Y grid lines are displayed', () => {
+      cy.advancedSettings(() => {
+        // Checking that legend appears
+        cy.setDropdownValue('Display Y grid lines', 'on');
+        cy.get('button[aria-label="run"]').click();
+        cy.wait(100);
+        cy.get('.MuiCardContent-root')
+          .find('g')
+          .children('g')
+          .eq(0)
+          .children('line')
+          .invoke('attr', 'stroke')
+          .should('eq', '#dddddd');
+      });
+    });
+
+    it('Checking Y grid lines are hidden', () => {
+      cy.advancedSettings(() => {
+        // Checking that legend appears
+        cy.setDropdownValue('Display Y grid lines', 'off');
+        cy.get('button[aria-label="run"]').click();
+        cy.wait(100);
+        cy.get('.MuiCardContent-root')
+          .find('g')
+          .children('g')
+          .eq(0)
+          .children('line')
+          .invoke('attr', 'stroke')
+          .should('not.eq', '#dddddd');
+      });
     });
   });
 });
