@@ -3,7 +3,12 @@ import MenuItem from '@mui/material/MenuItem';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { Card, CardHeader } from '@mui/material';
 import { IconButton } from '@neo4j-ndl/react';
-import { MagnifyingGlassCircleIconOutline, PencilIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import {
+  MagnifyingGlassCircleIconOutline,
+  PencilIconOutline,
+  XMarkIconOutline,
+  InformationCircleIconOutline,
+} from '@neo4j-ndl/react/icons';
 import { NestedMenuItem, IconMenuItem } from 'mui-nested-menu';
 import { RenderNode, RenderNodeChip, RenderRelationshipChip } from '../../../report/ReportRecordProcessing';
 import { getNodeLabel } from '../util/NodeUtils';
@@ -29,6 +34,8 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
   const dialogProps = { ...props, selectedNode: editableEntity, dialogOpen: dialogOpen, setDialogOpen: setDialogOpen };
   const expandable = props.interactivity.selectedEntity && props.interactivity.selectedEntity.labels !== undefined;
   const [cachedNeighbours, setCachedNeighbours] = React.useState(false);
+  const isShowDetailsValid = expandable && Boolean(props.interactivity.pageIdAndParameterName);
+
   // Clear neighbour cache when selection changes.
   useEffect(() => {
     setCachedNeighbours(false);
@@ -60,6 +67,29 @@ export const GraphChartContextMenu = (props: GraphChartVisualizationProps) => {
               : ''
           }
         />
+
+        {/* Clicking on this redirects to the pageId and sets the global parameter */}
+        {isShowDetailsValid && (
+          <IconMenuItem
+            rightIcon={<InformationCircleIconOutline className='btn-icon-base-r' />}
+            label='Show details'
+            onClick={() => {
+              const { interactivity } = props;
+              const { pageIdAndParameterName, selectedEntity = {} } = interactivity;
+              const title = selectedEntity?.properties?.title || '';
+              // Get pageId, parameterName and nodeType from settings
+              const [pageId, parameterName, nodeType] = pageIdAndParameterName.split(':');
+              interactivity.setContextMenuOpen(false);
+
+              // Only set if the nodeType is valid
+              if (title && selectedEntity?.labels.join(', ') === nodeType) {
+                interactivity?.setPageNumber(pageId);
+                interactivity?.setGlobalParameter(parameterName, selectedEntity?.properties.title);
+              }
+            }}
+          ></IconMenuItem>
+        )}
+
         <IconMenuItem
           rightIcon={<MagnifyingGlassCircleIconOutline className='btn-icon-base-r' />}
           label='Inspect'
