@@ -4,7 +4,8 @@
   "extends": ["eslint:recommended", "prettier", "plugin:@typescript-eslint/recommended"], // this is optional
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "settings": {
     "react": {
@@ -166,5 +167,9 @@
     ],
     "symbol-description": "error",
     "yoda": "error"
+  },
+  "globals": {
+    "cy": "readonly",
+    "Cypress": "readonly"
   }
 }
