@@ -32,39 +32,6 @@ Cypress.Commands.add('getDataTest', (dataTestSelector) => {
  * @param {Function} customAction - A callback function containing custom Cypress commands.
  */
 
-// Used to open the 2nd report card and activate 'advanced settings'
-Cypress.Commands.add('advancedSettings', (customAction) => {
-  cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
-    // Opening settings
-    cy.get('button').eq(1).click();
-    // Activating advanced settings
-    cy.get('[role="switch"]').click();
-    cy.wait(200);
-    customAction();
-  });
-});
-
-// Used to open 2nd the report card
-Cypress.Commands.add('openSettings', (customAction) => {
-  cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
-    // Opening settings
-    cy.get('button').eq(1).click();
-    cy.wait(200);
-    customAction();
-  });
-});
-
-// Needs to be used when already inside scole of a report card
-Cypress.Commands.add('setDropdownValue', (labelName, setting) => {
-  cy.get('.ndl-dropdown')
-    .contains('label', labelName)
-    .scrollIntoView()
-    .should('be.visible')
-    .click()
-    .type(`${setting}{enter}`);
-  cy.wait(100);
-});
-
 //Used in start_page.cy.js
 Cypress.Commands.add('checkInitialState', () => {
   // Check the starter cards
