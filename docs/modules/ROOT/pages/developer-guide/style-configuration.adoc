@@ -14,7 +14,7 @@ docker run -p 5005:5005 \
  -e DASHBOARD_HEADER_BRAND_LOGO=https://picsum.photos/500/100 \
  neo4jlabs/neodash
 ....
- 
+
 An example configuration for NeoDash
 
 ....

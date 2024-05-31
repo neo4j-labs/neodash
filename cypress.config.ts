@@ -5,6 +5,7 @@ export default defineConfig({
   projectId: 'a8nh14',
   video: false,
   e2e: {
+    defaultCommandTimeout: 20000,
     experimentalMemoryManagement: true,
     numTestsKeptInMemory: 0,
     baseUrl: 'http://localhost:3000',

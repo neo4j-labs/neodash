@@ -28,6 +28,9 @@ const NeoBarChart = (props: ChartProps) => {
   const padding = settings.padding ? settings.padding : 0.25;
   const innerPadding = settings.innerPadding ? settings.innerPadding : 0;
   const expandHeightForLegend = settings.expandHeightForLegend ? settings.expandHeightForLegend : false;
+  const displayYAxis = settings.displayYAxis ?? true;
+  const displayYGridLines = settings.displayYGridLines ?? true;
+
   const actionsRules =
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
       ? props.settings.actionsRules
@@ -408,11 +411,16 @@ const NeoBarChart = (props: ChartProps) => {
             tickPadding: 5,
             tickRotation: labelRotation,
           }}
-          axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-          }}
+          axisLeft={
+            displayYAxis
+              ? {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                }
+              : null
+          }
+          enableGridY={displayYGridLines}
           labelSkipWidth={labelSkipWidth}
           labelSkipHeight={labelSkipHeight}
           labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
