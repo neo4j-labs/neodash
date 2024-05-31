@@ -4,7 +4,6 @@ import { Page } from '../../Page';
 const CARD_SELECTOR = 'main .react-grid-item:eq(2)';
 const page = new Page(CARD_SELECTOR);
 
-const WAITING_TIME = 20000;
 // Ignore warnings that may appear when using the Cypress dev server
 Cypress.on('uncaught:exception', (err, runnable) => {
   console.log(err, runnable);
@@ -28,10 +27,7 @@ describe('Testing array rendering', () => {
 
     // Now, transpose the table
     page.updateDropdownAdvancedSetting('Transpose Rows & Columns', 'on');
-    cy.get(`${CARD_SELECTOR} .MuiDataGrid-columnHeaderTitle:eq(1)`, { timeout: WAITING_TIME }).should(
-      'have.text',
-      'initial,list'
-    );
+    cy.get(`${CARD_SELECTOR} .MuiDataGrid-columnHeaderTitle:eq(1)`).should('have.text', 'initial,list');
     cy.get(`${CARD_SELECTOR} .MuiDataGrid-cell:eq(1)`).should('have.text', 'other, list');
 
     // Transpose back
@@ -66,10 +62,7 @@ describe('Testing array rendering', () => {
 
     // Now, transpose the table
     page.updateDropdownAdvancedSetting('Transpose Rows & Columns', 'on');
-    cy.get(`${CARD_SELECTOR} .MuiDataGrid-columnHeaderTitle:eq(1)`, { timeout: WAITING_TIME }).should(
-      'have.text',
-      '1,2'
-    );
+    cy.get(`${CARD_SELECTOR} .MuiDataGrid-columnHeaderTitle:eq(1)`).should('have.text', '1,2');
     cy.get(`${CARD_SELECTOR} .MuiDataGrid-cell:eq(1)`).should('have.text', '3, 4');
   });
 

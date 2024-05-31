@@ -1,7 +1,7 @@
 import { barChartCypherQuery } from '../../fixtures/cypher_queries';
 import { Page } from '../../Page';
 
-const CARD_SELECTOR = '.react-grid-layout:eq(0) .MuiGrid-root:eq(1)';
+const CARD_SELECTOR = '.react-grid-layout:eq(0) .MuiGrid-root:eq(2)';
 const page = new Page(CARD_SELECTOR);
 
 // Ignore warnings that may appear when using the Cypress dev server
@@ -12,53 +12,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Testing bar chart', () => {
   beforeEach('open neodash', () => {
-    page.init().createNewDashboard().connectToNeo4j();
-    cy.wait(100);
-
-    //Opens the div containing all report cards
-    cy.get('.react-grid-layout:eq(0)').within(() => {
-      //Finds the 2nd card
-      cy.get('.MuiGrid-root')
-        .eq(1)
-        .within(() => {
-          //Clicks the 2nd button (opens settings)
-          cy.get('button').eq(1).click();
-          cy.getDataTest('type-dropdown').click();
-        });
-    });
-
-    cy.wait(100);
-
-    // Selects the Bar option
-    cy.get('[id^="react-select-5-option"]')
-      .contains(/Bar Chart/i)
-      .should('be.visible')
-      .click({ force: true });
-    cy.get('.react-grid-layout .MuiGrid-root:eq(1) #type input[name="Type"]').should('have.value', 'Bar Chart');
-
-    cy.wait(100);
-
-    // Creates basic bar chart
-    cy.get('.react-grid-layout')
-      .first()
-      .within(() => {
-        //Finds the 2nd card
-        cy.get('.MuiGrid-root')
-          .eq(1)
-          .within(() => {
-            //Removes text in cypher editor and types new query
-            cy.get('.ndl-cypher-editor div[role="textbox"]')
-              .should('be.visible')
-              .click()
-              .clear()
-              .type(barChartCypherQuery);
-
-            cy.wait(100);
-            cy.get('button[aria-label="run"]').click();
-          });
-      });
-
-    cy.wait(100);
+    page.init().createNewDashboard().connectToNeo4j().createReportOfType('Bar Chart', barChartCypherQuery);
   });
 
   it('Checking Colour Picker settings', () => {
@@ -67,33 +21,31 @@ describe('Testing bar chart', () => {
       .first()
       .within(() => {
         //Finds the 2nd card
-        cy.get('.MuiGrid-root')
-          .eq(1)
-          .within(() => {
-            // Access advanced settings
-            cy.get('button').eq(1).click();
-            cy.get('[role="switch"]').click();
-            cy.wait(200);
-            // Changing setting for colour picker
-            cy.get('[data-testid="colorpicker-input"]').find('input').click().type('{selectall}').type('red');
-            cy.get('button[aria-label="run"]').click();
-            // Checking that colour picker was applied correctly
-            cy.get('.card-view').should('have.css', 'background-color', 'rgb(255, 0, 0)');
-            cy.wait(200);
-            // Changing colour back to white
-            cy.get('button').eq(1).click();
-            cy.get('[data-testid="colorpicker-input"]').find('input').click().type('{selectall}').type('white');
-            cy.get('button[aria-label="run"]').click();
-            // Checking colour has been set back to white
-            cy.wait(200);
-            cy.get('.card-view').should('have.css', 'background-color', 'rgb(255, 255, 255)');
-          });
+        cy.get('.MuiGrid-root:eq(2)').within(() => {
+          // Access advanced settings
+          cy.get('button').eq(1).click();
+          cy.get('[role="switch"]').click();
+          cy.wait(200);
+          // Changing setting for colour picker
+          cy.get('[data-testid="colorpicker-input"]').find('input').click().type('{selectall}').type('red');
+          cy.get('button[aria-label="run"]').click();
+          // Checking that colour picker was applied correctly
+          cy.get('.card-view').should('have.css', 'background-color', 'rgb(255, 0, 0)');
+          cy.wait(200);
+          // Changing colour back to white
+          cy.get('button').eq(1).click();
+          cy.get('[data-testid="colorpicker-input"]').find('input').click().type('{selectall}').type('white');
+          cy.get('button[aria-label="run"]').click();
+          // Checking colour has been set back to white
+          cy.wait(200);
+          cy.get('.card-view').should('have.css', 'background-color', 'rgb(255, 255, 255)');
+        });
       });
   });
 
   it('Checking Selector Description', () => {
     //Opens first 2nd card
-    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').within(() => {
+    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(2)').within(() => {
       // Access advanced settings
       cy.get('button').eq(1).click();
       cy.get('[role="switch"]').click();
@@ -151,14 +103,14 @@ describe('Testing bar chart', () => {
       )
       .updateDropdownAdvancedSetting('Grouping', 'on');
 
-    cy.get('.MuiGrid-root:eq(1)')
+    cy.get('.MuiGrid-root:eq(2)')
       .find('.ndl-dropdown:contains("Group")')
       .find('svg')
       .parent()
       .click()
       .type('Director{enter}');
     // Checking that the groups are stacked
-    cy.get('.MuiGrid-root:eq(1)')
+    cy.get('.MuiGrid-root:eq(2)')
       .find('g')
       .children('g')
       .eq(3) // Get the fourth g element (index starts from 0)
@@ -223,10 +175,10 @@ describe('Testing bar chart', () => {
 
   it('Testing "Show Value on Bars"', () => {
     page.updateDropdownAdvancedSetting('Show Values On Bars', 'on');
-    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').find('div svg > g > g > text').should('have.length', 5);
+    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(2)').find('div svg > g > g > text').should('have.length', 5);
 
     page.updateDropdownAdvancedSetting('Show Values On Bars', 'off');
-    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(1)').find('div svg > g > g > text').should('not.exist');
+    cy.get('.react-grid-layout:eq(0) .MuiGrid-root:eq(2)').find('div svg > g > g > text').should('not.exist');
   });
 
   describe('Y axis display', () => {

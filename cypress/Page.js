@@ -35,6 +35,7 @@ export class Page {
     cy.get('#dbusername').clear().type(DB_USERNAME);
     cy.get('#dbpassword').type(DB_PASSWORD);
     cy.get('button').contains('Connect').click();
+    cy.wait(100);
     return this;
   }
 
@@ -72,7 +73,7 @@ export class Page {
       .find('button[aria-label="settings"]', { timeout: 2000 })
       .should('be.visible')
       .click();
-    cy.get('main .react-grid-item:eq(2) #type', { timeout: 2000 }).should('be.visible').click();
+    cy.get(`${this.cardSelector} #type`, { timeout: 2000 }).should('be.visible').click();
     cy.contains(type).click();
     cy.wait(100);
     return this;
@@ -81,12 +82,12 @@ export class Page {
   createReportOfType(type, query, fast = false, run = true) {
     this.selectReportOfType(type);
     if (fast) {
-      cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, {
+      cy.get(`${this.cardSelector} .ReactCodeMirror`).type(query, {
         delay: 1,
         parseSpecialCharSequences: false,
       });
     } else {
-      cy.get('main .react-grid-item:eq(2) .ReactCodeMirror').type(query, { parseSpecialCharSequences: false });
+      cy.get(`${this.cardSelector} .ReactCodeMirror`).type(query, { parseSpecialCharSequences: false });
     }
     cy.wait(400);
 
