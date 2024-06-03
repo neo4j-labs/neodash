@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import NeoDatePicker from '../../../component/field/DateField';
-import { Date as Neo4jDate } from '../../../neo4j-driver-lite/neo4j-lite-web.esm';
+import { Date as Neo4jDate } from '@neo4j-labs/experimental-query-api-wrapper';
 import { isCastableToNeo4jDate, isEmptyObject } from '../../ChartUtils';
 import { ParameterSelectProps } from './ParameterSelect';
 

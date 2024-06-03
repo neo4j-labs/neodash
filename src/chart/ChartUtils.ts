@@ -1,5 +1,5 @@
 import domtoimage from 'dom-to-image';
-import { Date as Neo4jDate } from '../neo4j-driver-lite/neo4j-lite-web.esm';
+import { Date as Neo4jDate } from '@neo4j-labs/experimental-query-api-wrapper';
 
 /**
  * Converts a neo4j record entry to a readable string representation.
@@ -255,7 +255,7 @@ export const downloadComponentAsImage = (ref) => {
   });
 };
 
-import { Record as Neo4jRecord, QueryResult } from '../neo4j-driver-lite/neo4j-lite-web.esm';
+import { Record as Neo4jRecord, QueryResult } from '@neo4j-labs/experimental-query-api-wrapper';
 import { RenderSubValue } from '../report/ReportRecordProcessing';
 
 /**

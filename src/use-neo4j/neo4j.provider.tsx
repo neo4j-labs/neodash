@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Driver } from '../neo4j-driver-lite';
+import { Driver } from '@neo4j-labs/experimental-query-api-wrapper';
 
 import { createDriver } from './driver';
 import { LOCAL_STORAGE_KEY, Neo4jConfig, Neo4jScheme } from './neo4j-config.interface';
@@ -44,8 +44,9 @@ export const Neo4jProvider: React.FC<Neo4jProviderProps> = (props: Neo4jProvider
 
     const newDriver = createDriver('http', config.host, config.port, config.username, config.password);
 
+    // TODO: Fetch default database somehow instead of hardcoding to neo4j
     newDriver
-      .verifyConnectivity()
+      .verifyConnectivity({ database: config.database ?? 'neo4j' })
       .then(() => {
         setDriver(newDriver);
 
@@ -59,7 +60,7 @@ export const Neo4jProvider: React.FC<Neo4jProviderProps> = (props: Neo4jProvider
     // Has Driver been Passed?
     if (props.driver) {
       props.driver
-        .verifyConnectivity()
+        .verifyConnectivity({ database: config.database ?? 'neo4j' })
         .catch((e) => setError(e))
         .finally(() => {
           setDriver(props.driver);

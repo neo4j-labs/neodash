@@ -2574,6 +2574,13 @@
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/codemirror" "1.0.2"
 
+"@neo4j-labs/experimental-query-api-wrapper@^0.0.1-alpha01":
+  version "0.0.1-alpha01"
+  resolved "https://registry.yarnpkg.com/@neo4j-labs/experimental-query-api-wrapper/-/experimental-query-api-wrapper-0.0.1-alpha01.tgz#79534aa364c304aa9281421fcc7ce3f2bd32b177"
+  integrity sha512-YD/EEmiN5dUMeqZ44UGOWAJXV04Dsxqj/fbHWp2bMUWoxce/64pI2N9rQFc1N/uoSj24pYPBRjwJfRUrOx4Ibg==
+  dependencies:
+    neo4j-driver-core "5.21.0"
+
 "@neo4j-ndl/base@1.10.3", "@neo4j-ndl/base@^1.10.3":
   version "1.10.3"
   resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-1.10.3.tgz#99557e3bede274510fc465a781d2e52e0cca47ea"
@@ -10108,6 +10115,11 @@ neo4j-client-sso@^1.2.2:
     file-saver "^2.0.5"
     jwt-decode "^3.1.2"
     lodash.pick "^4.4.0"
+
+neo4j-driver-core@5.21.0:
+  version "5.21.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.21.0.tgz#5eed82306f3115ab6f5eb3131f1b0a8f9af8f8e0"
+  integrity sha512-YhbaKcDZU3JIzxNH+GIPhsPVvGaLoRhAkqJrgWPhviqOmMON/OggLmnH/x1bms5zvAJMG/7m9BBxC/J8Z3Lkgg==
 
 next-tick@1, next-tick@^1.0.0, next-tick@^1.1.0:
   version "1.1.0"

@@ -1,5 +1,5 @@
 import { evaluateRulesOnLink, evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
-import { isNode } from '../../../neo4j-driver-lite/neo4j-lite-web.esm';
+import { isNode } from '@neo4j-labs/experimental-query-api-wrapper';
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
 import { toNumber, valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';

@@ -9,7 +9,7 @@ const password = 'gallery';
 
 async function loadDashboards(setResults: any) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const neo4j = require('../neo4j-driver-lite/neo4j-lite-web.');
+  const neo4j = require('@neo4j-labs/experimental-query-api-wrapper');
   const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
   const session = driver.session();
 

@@ -1,4 +1,4 @@
-import { Driver } from '../neo4j-driver-lite/neo4j-lite-web.esm'
+import { Driver } from '@neo4j-labs/experimental-query-api-wrapper';
 import { createContext } from 'react'
 import { Neo4jConfig } from './neo4j-config.interface'
 

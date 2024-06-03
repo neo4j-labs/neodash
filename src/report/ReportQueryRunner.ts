@@ -66,8 +66,8 @@ export async function runCypherQuery(
     return;
   }
 
-  // we need to ensure the databse ame is set
-  const session = database ? driver.session({ database: database }) : driver.session();
+  // TODO: we need to ensure the database name is set or select the right default
+  const session = database ? driver.session({ database: database }) : driver.session({database: "neo4j"});
   // const transaction = session.beginTransaction({ timeout: queryTimeLimit * 1000, connectionTimeout: 2000 });
 
   // For usuability reasons, we can set a hard cap on the query result size by wrapping it a subquery (Neo4j 4.0 and later).
@@ -80,7 +80,7 @@ export async function runCypherQuery(
       query = `CALL { ${query}} RETURN * LIMIT ${rowLimit + 1}`;
     }
   }
-  // we use async iteratiors in workspace to archieve this, pro tip!
+  // TODO: we use async iteratiors in workspace to archieve this, pro tip!
 
   await session
     // TODO seems the timeout doesn't work poreoprly eitehr
