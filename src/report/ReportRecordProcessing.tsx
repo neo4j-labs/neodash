@@ -129,9 +129,8 @@ const HtmlTooltip = withStyles(() => ({
   },
 }))(Tooltip);
 
-// TODO please antionio could you add elementId
 function addDirection(relationship, start) {
-  relationship.direction = relationship.start.low == start.identity.low;
+  relationship.direction = relationship.startNodeElementId == start.elementId;
   return relationship;
 }
 
@@ -147,7 +146,7 @@ export function RenderNode(value, hoverable = true) {
   }
   return (
     <HtmlTooltip
-      key={`${0}-${value.identity}`}
+      key={`${0}-${value.elementId}`}
       arrow
       title={
         <div>
@@ -205,7 +204,7 @@ export function RenderRelationshipChip(text, direction = undefined, color = 'lig
 function RenderRelationship(value, key = 0) {
   return (
     <HtmlTooltip
-      key={`${key}-${value.identity}`}
+      key={`${key}-${value.elementId}`}
       arrow
       title={
         <div>

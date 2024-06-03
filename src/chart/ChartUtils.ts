@@ -45,7 +45,7 @@ const convertNodeToString = (nodeEntry) => {
   if (nodeEntry.properties.uid) {
     return `${nodeEntry.labels}(${nodeEntry.properties.uid})`;
   }
-  return `${nodeEntry.labels}(` + `_id=${nodeEntry.identity})`;
+  return `${nodeEntry.labels}(` + `_id=${nodeEntry.elementId})`;
 };
 
 // if it's a fieldType == "Relationship"
@@ -68,13 +68,13 @@ export function valueIsArray(value) {
 export function valueIsNode(value) {
   // const className = value.__proto__.constructor.name;
   // return className == "Node";
-  return value && value.labels && value.identity && value.properties;
+  return value && value.labels && value.elementId && value.properties;
 }
 
 export function valueIsRelationship(value) {
   // const className = value.__proto__.constructor.name;
   // return className == "Relationship";
-  return value && value.type && value.start && value.end && value.identity && value.properties;
+  return value && value.type && value.startNodeElementId && value.endNodeElementId && value.elementId && value.properties;
 }
 
 export function valueIsPath(value) {
