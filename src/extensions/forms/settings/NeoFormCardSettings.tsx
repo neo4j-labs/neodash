@@ -1,13 +1,13 @@
 // TODO: this file (in a way) belongs to chart/parameter/ParameterSelectionChart. It would make sense to move it there
 
+import { Banner, IconButton } from '@neo4j-ndl/react';
+import { PencilIconOutline, PlusIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import debounce from 'lodash/debounce';
 import React, { useCallback, useContext, useEffect } from 'react';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
 import NeoCodeEditorComponent, {
   DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
 } from '../../../component/editor/CodeEditorComponent';
-import debounce from 'lodash/debounce';
-import { Banner, IconButton } from '@neo4j-ndl/react';
-import { PencilIconOutline, PlusIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { Neo4jContext, Neo4jContextState } from '../../../use-neo4j';
 import NeoFormCardSettingsModal from './NeoFormCardSettingsModal';
 import { SortableList } from './list/NeoFormSortableList';
 

@@ -103,22 +103,22 @@ const NeoMapChart = (props: ChartProps) => {
       }
     } else if (valueIsNode(value)) {
       value.labels.forEach((l) => (nodeLabels[l] = true));
-      nodes[value.identity.low] = {
-        id: value.identity.low,
+      nodes[value.elementId] = {
+        id: value.elementId,
         labels: value.labels,
         size: defaultNodeSize,
         properties: value.properties,
         firstLabel: value.labels[0],
       };
     } else if (valueIsRelationship(value)) {
-      if (links[`${value.start.low},${value.end.low}`] == undefined) {
-        links[`${value.start.low},${value.end.low}`] = [];
+      if (links[`${value.startNodeElementId},${value.endNodeElementId}`] == undefined) {
+        links[`${value.startNodeElementId},${value.endNodeElementId}`] = [];
       }
       const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
-      addItem(links[`${value.start.low},${value.end.low}`], {
-        id: value.identity.low,
-        source: value.start.low,
-        target: value.end.low,
+      addItem(links[`${value.startNodeElementId},${value.endNodeElementId}`], {
+        id: value.elementId,
+        source: value.startNodeElementId,
+        target: value.NodeElementId,
         type: value.type,
         width: value.properties[relWidthProp] ? value.properties[relWidthProp] : defaultRelWidth,
         color: value.properties[relColorProp] ? value.properties[relColorProp] : defaultRelColor,

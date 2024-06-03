@@ -1,20 +1,13 @@
 import { Card, Collapse, debounce } from '@mui/material';
+import { Dialog } from '@neo4j-ndl/react';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import NeoCardSettings from './settings/CardSettings';
-import NeoCardView from './view/CardView';
+import useDimensions from 'react-cool-dimensions';
 import { connect } from 'react-redux';
-import {
-  updateFieldsThunk,
-  updateSelectionThunk,
-  updateReportQueryThunk,
-  toggleCardSettingsThunk,
-  updateReportSettingThunk,
-  updateReportTitleThunk,
-  updateReportTypeThunk,
-  updateReportDatabaseThunk,
-} from './CardThunks';
-import { toggleReportSettings } from './CardActions';
-import { getReportState } from './CardSelectors';
+import { setReportHelpModalOpen } from '../application/ApplicationActions';
+import { downloadComponentAsImage } from '../chart/ChartUtils';
+import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
+import { loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
+import { createNotificationThunk } from '../page/PageThunks';
 import {
   getDashboardIsEditable,
   getDatabase,
@@ -22,14 +15,21 @@ import {
   getSessionParameters,
 } from '../settings/SettingsSelectors';
 import { updateGlobalParameterThunk } from '../settings/SettingsThunks';
-import useDimensions from 'react-cool-dimensions';
-import { setReportHelpModalOpen } from '../application/ApplicationActions';
-import { loadDatabaseListFromNeo4jThunk } from '../dashboard/DashboardThunks';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { getDashboardExtensions } from '../dashboard/DashboardSelectors';
-import { downloadComponentAsImage } from '../chart/ChartUtils';
-import { Dialog } from '@neo4j-ndl/react';
-import { createNotificationThunk } from '../page/PageThunks';
+import { Neo4jContext, Neo4jContextState } from '../use-neo4j';
+import { toggleReportSettings } from './CardActions';
+import { getReportState } from './CardSelectors';
+import {
+  toggleCardSettingsThunk,
+  updateFieldsThunk,
+  updateReportDatabaseThunk,
+  updateReportQueryThunk,
+  updateReportSettingThunk,
+  updateReportTitleThunk,
+  updateReportTypeThunk,
+  updateSelectionThunk,
+} from './CardThunks';
+import NeoCardSettings from './settings/CardSettings';
+import NeoCardView from './view/CardView';
 
 const NeoCard = ({
   id, // id of the card.

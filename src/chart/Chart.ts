@@ -1,4 +1,4 @@
-import { Record as Neo4jRecord } from 'neo4j-driver';
+import { Record as Neo4jRecord } from '@neo4j-labs/experimental-query-api-wrapper';
 
 /**
  * Interface for all charts that NeoDash can render.

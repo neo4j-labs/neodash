@@ -1,10 +1,10 @@
+import { ResponsiveRadar } from '@nivo/radar';
 import React from 'react';
 import { ChartProps } from '../../../../chart/Chart';
-import { ResponsiveRadar } from '@nivo/radar';
-import { evaluateRulesOnDict, useStyleRules } from '../../../styling/StyleRuleEvaluator';
-import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { themeNivo } from '../../../../chart/Utils';
+import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
+import { evaluateRulesOnDict, useStyleRules } from '../../../styling/StyleRuleEvaluator';
 
 /**
  * Embeds a RadarChart (from Charts) into NeoDash.
@@ -67,7 +67,7 @@ const NeoRadarChart = (props: ChartProps) => {
     const entry = {};
     selection.values.concat([selection.index]).forEach((k) => {
       const fieldIndex = r._fieldLookup[k];
-      if (k !== selection.index && isNaN(r._fields[fieldIndex])) {
+      if (k !== selection.index && Number.isNaN(r._fields[fieldIndex])) {
         valid = false;
       }
       entry[k] = `${r._fields[fieldIndex]}`;

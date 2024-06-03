@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { IconButton, Button, Dialog, TextInput } from '@neo4j-ndl/react';
-import { Menu, MenuItem, Chip } from '@mui/material';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import { Chip, Menu, MenuItem } from '@mui/material';
+import { Button, Dialog, IconButton, TextInput } from '@neo4j-ndl/react';
 import { PlusCircleIconOutline } from '@neo4j-ndl/react/icons';
-import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
-import { createNotificationThunk } from '../../../page/PageThunks';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { createNotificationThunk } from '../../../page/PageThunks';
+import { QueryStatus, runCypherQuery } from '../../../report/ReportQueryRunner';
+import { Neo4jContext, Neo4jContextState } from '../../../use-neo4j';
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  * @param open - Whether the modal is open or not.

@@ -1,5 +1,5 @@
 import domtoimage from 'dom-to-image';
-import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
+import { Date as Neo4jDate } from '@neo4j-labs/experimental-query-api-wrapper';
 
 /**
  * Converts a neo4j record entry to a readable string representation.
@@ -45,7 +45,7 @@ const convertNodeToString = (nodeEntry) => {
   if (nodeEntry.properties.uid) {
     return `${nodeEntry.labels}(${nodeEntry.properties.uid})`;
   }
-  return `${nodeEntry.labels}(` + `_id=${nodeEntry.identity})`;
+  return `${nodeEntry.labels}(` + `_id=${nodeEntry.elementId})`;
 };
 
 // if it's a fieldType == "Relationship"
@@ -68,13 +68,13 @@ export function valueIsArray(value) {
 export function valueIsNode(value) {
   // const className = value.__proto__.constructor.name;
   // return className == "Node";
-  return value && value.labels && value.identity && value.properties;
+  return value && value.labels && value.elementId && value.properties;
 }
 
 export function valueIsRelationship(value) {
   // const className = value.__proto__.constructor.name;
   // return className == "Relationship";
-  return value && value.type && value.start && value.end && value.identity && value.properties;
+  return value && value.type && value.startNodeElementId && value.endNodeElementId && value.elementId && value.properties;
 }
 
 export function valueIsPath(value) {
@@ -255,7 +255,7 @@ export const downloadComponentAsImage = (ref) => {
   });
 };
 
-import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
+import { Record as Neo4jRecord, QueryResult } from '@neo4j-labs/experimental-query-api-wrapper';
 import { RenderSubValue } from '../report/ReportRecordProcessing';
 
 /**

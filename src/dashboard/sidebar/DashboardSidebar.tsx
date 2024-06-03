@@ -1,18 +1,18 @@
+import { Button, SideNavigation, SideNavigationGroupHeader, SideNavigationList, TextInput } from '@neo4j-ndl/react';
+import {
+  ArrowPathIconOutline,
+  CircleStackIconOutline,
+  MagnifyingGlassIconOutline,
+  PlusIconOutline,
+} from '@neo4j-ndl/react/icons';
 import React, { useContext, useState } from 'react';
 import { connect } from 'react-redux';
+import { removeReportThunk } from '../../page/PageThunks';
 import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { getDashboardSettings, getDashboardTitle } from '../DashboardSelectors';
-import { Button, SideNavigation, SideNavigationGroupHeader, SideNavigationList, TextInput } from '@neo4j-ndl/react';
-import { removeReportThunk } from '../../page/PageThunks';
-import {
-  PlusIconOutline,
-  MagnifyingGlassIconOutline,
-  CircleStackIconOutline,
-  ArrowPathIconOutline,
-} from '@neo4j-ndl/react/icons';
 
 import Tooltip from '@mui/material/Tooltip';
-import { DashboardSidebarListItem } from './DashboardSidebarListItem';
+import { setDraft } from '../../application/ApplicationActions';
 import {
   applicationGetConnection,
   applicationGetConnectionDatabase,
@@ -20,12 +20,11 @@ import {
   applicationIsStandalone,
   dashboardIsDraft,
 } from '../../application/ApplicationSelectors';
-import { setDraft } from '../../application/ApplicationActions';
-import NeoDashboardSidebarLoadModal from './modal/DashboardSidebarLoadModal';
+import { getDashboardJson } from '../../modal/ModalSelectors';
+import { Neo4jContext, Neo4jContextState } from '../../use-neo4j';
+import { createUUID } from '../../utils/uuid';
 import { resetDashboardState } from '../DashboardActions';
-import NeoDashboardSidebarCreateModal from './modal/DashboardSidebarCreateModal';
-import NeoDashboardSidebarDatabaseMenu from './menu/DashboardSidebarDatabaseMenu';
-import NeoDashboardSidebarDashboardMenu from './menu/DashboardSidebarDashboardMenu';
+import { NEODASH_VERSION } from '../DashboardReducer';
 import {
   deleteDashboardFromNeo4jThunk,
   loadDashboardFromNeo4jThunk,
@@ -34,19 +33,20 @@ import {
   loadDatabaseListFromNeo4jThunk,
   saveDashboardToNeo4jThunk,
 } from '../DashboardThunks';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import NeoDashboardSidebarSaveModal from './modal/DashboardSidebarSaveModal';
-import { getDashboardJson } from '../../modal/ModalSelectors';
+import { DashboardSidebarListItem } from './DashboardSidebarListItem';
 import NeoDashboardSidebarCreateMenu from './menu/DashboardSidebarCreateMenu';
-import NeoDashboardSidebarImportModal from './modal/DashboardSidebarImportModal';
-import { createUUID } from '../../utils/uuid';
-import NeoDashboardSidebarExportModal from './modal/DashboardSidebarExportModal';
-import NeoDashboardSidebarDeleteModal from './modal/DashboardSidebarDeleteModal';
-import NeoDashboardSidebarInfoModal from './modal/DashboardSidebarInfoModal';
-import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
+import NeoDashboardSidebarDashboardMenu from './menu/DashboardSidebarDashboardMenu';
+import NeoDashboardSidebarDatabaseMenu from './menu/DashboardSidebarDatabaseMenu';
 import NeoDashboardSidebarAccessModal from './modal/DashboardSidebarAccessModal';
+import NeoDashboardSidebarCreateModal from './modal/DashboardSidebarCreateModal';
+import NeoDashboardSidebarDeleteModal from './modal/DashboardSidebarDeleteModal';
+import NeoDashboardSidebarExportModal from './modal/DashboardSidebarExportModal';
+import NeoDashboardSidebarImportModal from './modal/DashboardSidebarImportModal';
+import NeoDashboardSidebarInfoModal from './modal/DashboardSidebarInfoModal';
+import NeoDashboardSidebarLoadModal from './modal/DashboardSidebarLoadModal';
+import NeoDashboardSidebarSaveModal from './modal/DashboardSidebarSaveModal';
+import NeoDashboardSidebarShareModal from './modal/DashboardSidebarShareModal';
 import LegacyShareModal from './modal/legacy/LegacyShareModal';
-import { NEODASH_VERSION } from '../DashboardReducer';
 
 // Which (small) pop-up menu is currently open for the sidebar.
 enum Menu {

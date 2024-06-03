@@ -1,13 +1,13 @@
 // TODO: this file (in a way) belongs to chart/parameter/ParameterSelectionChart. It would make sense to move it there
 
+import { Autocomplete, TextField, debounce } from '@mui/material';
+import { Dropdown } from '@neo4j-ndl/react';
 import React, { useCallback, useContext, useEffect } from 'react';
+import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
+import NeoField from '../../component/field/Field';
 import { RUN_QUERY_DELAY_MS } from '../../config/ReportConfig';
 import { QueryStatus, runCypherQuery } from '../../report/ReportQueryRunner';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import { Autocomplete, debounce, TextField } from '@mui/material';
-import NeoField from '../../component/field/Field';
-import { Dropdown } from '@neo4j-ndl/react';
-import NeoCodeEditorComponent from '../../component/editor/CodeEditorComponent';
+import { Neo4jContext, Neo4jContextState } from '../../use-neo4j';
 
 type ParameterId = string | undefined | null;
 

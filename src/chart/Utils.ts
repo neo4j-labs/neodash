@@ -1,5 +1,5 @@
 import { tokens } from '@neo4j-ndl/base';
-import { QueryResult, Record as Neo4jRecord } from 'neo4j-driver';
+import { Record as Neo4jRecord, QueryResult } from '@neo4j-labs/experimental-query-api-wrapper';
 export function recordToNative(input: any): any {
   if (!input && input !== false) {
     return null;

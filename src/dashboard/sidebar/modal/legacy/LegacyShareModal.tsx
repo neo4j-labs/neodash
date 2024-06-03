@@ -1,18 +1,12 @@
 import React, { useContext } from 'react';
 
+import { Button, Dialog, TextLink } from '@neo4j-ndl/react';
+import { PlayIconSolid, ShareIconOutline } from '@neo4j-ndl/react/icons';
 import { connect } from 'react-redux';
-import { DataGrid } from '@mui/x-data-grid';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import NeoSetting from '../../../../component/field/Setting';
 import { applicationGetConnection } from '../../../../application/ApplicationSelectors';
+import NeoSetting from '../../../../component/field/Setting';
 import { SELECTION_TYPES } from '../../../../config/CardConfig';
-import { MenuItem, Button, Dialog, Dropdown, TextLink } from '@neo4j-ndl/react';
-import {
-  ShareIconOutline,
-  PlayIconSolid,
-  DocumentCheckIconOutline,
-  DatabaseAddCircleIcon,
-} from '@neo4j-ndl/react/icons';
+import { Neo4jContext, Neo4jContextState } from '../../../../use-neo4j';
 
 const shareBaseURL = 'http://neodash.graphapp.io';
 const shareLocalURL = window.location.origin.startsWith('file') ? shareBaseURL : window.location.origin;

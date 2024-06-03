@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
 import { Button, Dialog, Dropdown } from '@neo4j-ndl/react';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import React, { useContext, useEffect, useState } from 'react';
+import { Neo4jContext, Neo4jContextState } from '../../use-neo4j';
 import {
   Operation,
   retrieveAllowAndDenyLists,

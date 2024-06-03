@@ -19,7 +19,7 @@ export default function NeoConnectionModal({
   onSSOAttempt,
   setWelcomeScreenOpen,
 }) {
-  const protocols = ['neo4j', 'neo4j+s', 'neo4j+ssc', 'bolt', 'bolt+s', 'bolt+ssc'];
+  const protocols = ['neo4j', 'neo4j+s', 'neo4j+ssc', 'bolt', 'bolt+s', 'bolt+ssc', 'http'];
   const [ssoVisible, setSsoVisible] = React.useState(ssoSettings.ssoEnabled);
   const [protocol, setProtocol] = React.useState(connection.protocol);
   const [url, setUrl] = React.useState(connection.url);

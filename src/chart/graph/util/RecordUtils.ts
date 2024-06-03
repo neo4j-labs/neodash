@@ -1,9 +1,9 @@
-import { evaluateRulesOnNode, evaluateRulesOnLink } from '../../../extensions/styling/StyleRuleEvaluator';
+import { evaluateRulesOnLink, evaluateRulesOnNode } from '../../../extensions/styling/StyleRuleEvaluator';
+import { isNode } from '@neo4j-labs/experimental-query-api-wrapper';
 import { extractNodePropertiesFromRecords, mergeNodePropsFieldsLists } from '../../../report/ReportRecordProcessing';
-import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, toNumber } from '../../ChartUtils';
+import { toNumber, valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../ChartUtils';
 import { GraphChartVisualizationProps } from '../GraphChartVisualization';
 import { assignCurvatureToLink } from './RelUtils';
-import { isNode } from 'neo4j-driver-core/lib/graph-types.js';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -46,8 +46,8 @@ function extractGraphEntitiesFromField(
     );
   } else if (valueIsNode(value)) {
     value.labels.forEach((l) => (nodeLabels[l] = true));
-    nodes[value.identity.low] = {
-      id: value.identity.low,
+    nodes[value.elementId] = {
+      id: value.elementId,
       labels: value.labels,
       size: !Number.isNaN(value.properties[nodeSizeProperty])
         ? toNumber(value.properties[nodeSizeProperty])
@@ -55,19 +55,19 @@ function extractGraphEntitiesFromField(
       properties: value.properties,
       mainLabel: value.labels[value.labels.length - 1],
     };
-    if (frozen && nodePositions && nodePositions[value.identity.low]) {
-      nodes[value.identity.low].fx = nodePositions[value.identity.low][0];
-      nodes[value.identity.low].fy = nodePositions[value.identity.low][1];
+    if (frozen && nodePositions && nodePositions[value.elementId]) {
+      nodes[value.elementId].fx = nodePositions[value.elementId][0];
+      nodes[value.elementId].fy = nodePositions[value.elementId][1];
     }
   } else if (valueIsRelationship(value)) {
-    if (links[`${value.start.low},${value.end.low}`] == undefined) {
-      links[`${value.start.low},${value.end.low}`] = [];
+    if (links[`${value.startNodeElementId},${value.endNodeElementId}`] == undefined) {
+      links[`${value.startNodeElementId},${value.endNodeElementId}`] = [];
     }
     const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
-    addItem(links[`${value.start.low},${value.end.low}`], {
-      id: value.identity.low,
-      source: value.start.low,
-      target: value.end.low,
+    addItem(links[`${value.startNodeElementId},${value.endNodeElementId}`], {
+      id: value.elementId,
+      source: value.startNodeElementId,
+      target: value.endNodeElementId,
       type: value.type,
       width:
         value.properties[relWidthProperty] !== undefined && !Number.isNaN(value.properties[relWidthProperty])

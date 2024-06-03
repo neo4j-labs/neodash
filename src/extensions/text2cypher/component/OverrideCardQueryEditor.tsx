@@ -1,22 +1,22 @@
+import { Button, Switch } from '@neo4j-ndl/react';
+import debounce from 'lodash/debounce';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Switch } from '@neo4j-ndl/react';
+import { createNotification } from '../../../application/ApplicationActions';
 import NeoCodeEditorComponent, {
   DEFAULT_CARD_SETTINGS_HELPER_TEXT_STYLE,
 } from '../../../component/editor/CodeEditorComponent';
+import { Neo4jContext, Neo4jContextState } from '../../../use-neo4j';
 import { getReportTypes } from '../../ExtensionUtils';
-import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
-import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
-import debounce from 'lodash/debounce';
-import { updateLastMessage } from '../state/QueryTranslatorActions';
-import { createNotification } from '../../../application/ApplicationActions';
-import { getLastMessage, QUERY_TRANSLATOR_EXTENSION_NAME } from '../state/QueryTranslatorSelector';
-import { GPT_LOADING_ICON } from './LoadingIcon';
 import {
   deleteSessionStoragePrepopulationReportFunction,
   setSessionStoragePrepopulationReportFunction,
 } from '../../state/ExtensionActions';
 import { getPrepopulateReportExtension } from '../../state/ExtensionSelectors';
+import { updateLastMessage } from '../state/QueryTranslatorActions';
+import { QUERY_TRANSLATOR_EXTENSION_NAME, getLastMessage } from '../state/QueryTranslatorSelector';
+import { queryTranslationThunk } from '../state/QueryTranslatorThunks';
+import { GPT_LOADING_ICON } from './LoadingIcon';
 
 // TODO: right now if we change the database in the cardSelector, it should forgot the card history
 export const NeoOverrideCardQueryEditor = ({

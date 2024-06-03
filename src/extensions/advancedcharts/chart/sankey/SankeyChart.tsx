@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
 import { ResponsiveSankey } from '@nivo/sankey';
+import React, { useEffect, useState } from 'react';
 import { ChartProps } from '../../../../chart/Chart';
 import { valueIsArray, valueIsNode, valueIsPath, valueIsRelationship } from '../../../../chart/ChartUtils';
-import { categoricalColorSchemes } from '../../../../config/ColorConfig';
-import { evaluateRulesOnDict, evaluateRulesOnNode, useStyleRules } from '../../../styling/StyleRuleEvaluator';
-import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
-import { isCyclic } from '../../Utils';
 import { themeNivo } from '../../../../chart/Utils';
+import NeoCodeViewerComponent from '../../../../component/editor/CodeViewerComponent';
+import { categoricalColorSchemes } from '../../../../config/ColorConfig';
 import { extensionEnabled } from '../../../../utils/ReportUtils';
+import { evaluateRulesOnDict, evaluateRulesOnNode, useStyleRules } from '../../../styling/StyleRuleEvaluator';
+import { isCyclic } from '../../Utils';
 
 const UNWEIGHTED_SANKEY_PROPERTY = 'SANKEY_UNWEIGHTED';
 
@@ -66,31 +66,31 @@ const NeoSankeyChart = (props: ChartProps) => {
       value.forEach((v) => extractGraphEntitiesFromField(v));
     } else if (valueIsNode(value)) {
       value.labels.forEach((l) => (nodeLabels[l] = true));
-      nodes[value.identity.low] = {
-        id: value.identity.low,
+      nodes[value.elementId] = {
+        id: value.elementId,
         labels: value.labels,
         properties: value.properties,
         lastLabel: value.labels[value.labels.length - 1],
       };
     } else if (valueIsRelationship(value)) {
-      if (links[`${value.start.low},${value.end.low}`] == undefined) {
-        links[`${value.start.low},${value.end.low}`] = [];
+      if (links[`${value.startNodeElementId},${value.endNodeElementId}`] == undefined) {
+        links[`${value.startNodeElementId},${value.endNodeElementId}`] = [];
       }
       const addItem = (arr, item) => arr.find((x) => x.id === item.id) || arr.push(item);
       if (labelProperty === UNWEIGHTED_SANKEY_PROPERTY) {
-        addItem(links[`${value.start.low},${value.end.low}`], {
-          id: value.identity.low,
-          source: value.start.low,
-          target: value.end.low,
+        addItem(links[`${value.startNodeElementId},${value.endNodeElementId}`], {
+          id: value.elementId,
+          source: value.startNodeElementId,
+          target: value.endNodeElementId,
           type: value.type,
           properties: value.properties,
           value: 1,
         });
-      } else if (value.properties[labelProperty] !== undefined && !isNaN(value.properties[labelProperty])) {
-        addItem(links[`${value.start.low},${value.end.low}`], {
-          id: value.identity.low,
-          source: value.start.low,
-          target: value.end.low,
+      } else if (value.properties[labelProperty] !== undefined && !Number.isNaN(value.properties[labelProperty])) {
+        addItem(links[`${value.startNodeElementId},${value.endNodeElementId}`], {
+          id: value.elementId,
+          source: value.startNodeElementId,
+          target: value.endNodeElementId,
           type: value.type,
           properties: value.properties,
           value: value.properties[labelProperty],

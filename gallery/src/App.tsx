@@ -1,6 +1,6 @@
+import { Button, HeroIcon, Tag, TextInput } from '@neo4j-ndl/react';
 import React from 'react';
 import './App.css';
-import { Button, TextInput, HeroIcon, Tag } from '@neo4j-ndl/react';
 
 // These are the read-only credentials of the public database where the gallery exists.
 const uri = 'neo4j+s://acb5b6ae.databases.neo4j.io';
@@ -9,7 +9,7 @@ const password = 'gallery';
 
 async function loadDashboards(setResults: any) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const neo4j = require('neo4j-driver');
+  const neo4j = require('@neo4j-labs/experimental-query-api-wrapper');
   const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
   const session = driver.session();
 
