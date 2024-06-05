@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "neodash.fullname" . }}-test-connection"
+  labels:
+    {{- include "neodash.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  automountServiceAccountToken: false
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "neodash.fullname" . }}:{{ .Values.service.port }}']
+      resources:
+        {{- toYaml .Values.resources | nindent 8 }}
+  restartPolicy: Never

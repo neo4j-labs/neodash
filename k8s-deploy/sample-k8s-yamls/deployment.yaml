@@ -1,0 +1,66 @@
+---
+# Source: neodash/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neodash
+  labels:
+    application: neodash-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: neodash-deploy
+  template:
+    metadata:
+      labels:
+        application: neodash-deploy
+    spec:
+      serviceAccountName: neodash-test
+      automountServiceAccountToken: false
+      containers:
+        - name: neodash
+          image: "neo4jlabs/neodash:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 5005
+              protocol: TCP
+          env:
+            - name: ssoEnabled
+              value: "false"
+            - name: standalone
+              value: "true"
+            - name: standaloneProtocol
+              value: neo4j+s
+            - name: standaloneHost
+              value: localhost
+            - name: standalonePort
+              value: "7687"
+            - name: standaloneDatabase
+              value: neo4j
+            - name: standaloneDashboardName
+              value: test
+            - name: standaloneDashboardDatabase
+              value: neo4j
+            - name: standaloneAllowLoad
+              value: "false"
+            - name: standaloneLoadFromOtherDatabases
+              value: "false"
+            - name: standaloneMultiDatabase
+              value: "false"
+          livenessProbe:
+            httpGet:
+              path: /*
+              port: 5005
+          readinessProbe:
+            httpGet:
+              path: /*
+              port: 5005
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
