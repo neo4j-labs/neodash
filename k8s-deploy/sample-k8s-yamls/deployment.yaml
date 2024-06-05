@@ -17,6 +17,7 @@ spec:
         application: neodash-deploy
     spec:
       serviceAccountName: neodash-test
+      automountServiceAccountToken: false
       containers:
         - name: neodash
           image: "neo4jlabs/neodash:latest"

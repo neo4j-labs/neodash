@@ -7,9 +7,12 @@ metadata:
   annotations:
     "helm.sh/hook": test
 spec:
+  automountServiceAccountToken: false
   containers:
     - name: wget
       image: busybox
       command: ['wget']
       args: ['{{ include "neodash.fullname" . }}:{{ .Values.service.port }}']
+      resources:
+        {{- toYaml .Values.resources | nindent 8 }}
   restartPolicy: Never
