@@ -61,15 +61,18 @@ export const NeoReport = ({
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
   const [status, setStatus] = useState(QueryStatus.NO_QUERY);
-  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
+  // const { driver } = useContext<Neo4jContextState>(Neo4jContext);
   const { connectionModule } = useConnectionModuleContext();
   const [loadingIcon, setLoadingIcon] = React.useState(REPORT_LOADING_ICON);
+  /*
   if (!driver) {
     throw new Error(
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
-  const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
+  */
+  // const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQuery, RUN_QUERY_DELAY_MS), []);
+  const debouncedRunCypherQuery = useCallback(debounce(connectionModule.runQueryNew, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {
     if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
@@ -126,12 +129,28 @@ export const NeoReport = ({
       let setSchemaCallback = (schema) => {
         setSchema(id, schema);
       };
-      let queryCallback: QueryCallback = { setStatus, setRecords, setFields, setSchema: setSchemaCallback };
+      let queryCallback: QueryCallback = {
+        setStatus: (status) => {
+          console.log('status: ', status);
+          setStatus(status);
+        },
+        setRecords: (records) => {
+          console.log('records: ', records);
+          setRecords(records);
+        },
+        setFields: (fields) => {
+          console.log('fields: ', fields);
+          setFields(fields);
+        },
+        setSchema: setSchemaCallback,
+      };
 
       if (debounced) {
-        debouncedRunCypherQuery(driver, queryParams, queryCallback);
+        // debouncedRunCypherQuery(driver, queryParams, queryCallback);
+        debouncedRunCypherQuery(queryParams, queryCallback);
       } else {
-        connectionModule.runQuery(driver, queryParams, queryCallback);
+        // connectionModule.runQuery(driver, queryParams, queryCallback);
+        connectionModule.runQueryNew(queryParams, queryCallback);
       }
     };
 
@@ -141,10 +160,12 @@ export const NeoReport = ({
     //  ... Await for the prepopulating function to complete before running the (normal) query logic.
     // Else just run the normal query.
     // Finally, remove the prepopulating function from session storage.
+
     if (prepopulateExtensionName) {
       setLoadingIcon(EXTENSIONS[prepopulateExtensionName].customLoadingIcon);
       EXTENSIONS[prepopulateExtensionName].prepopulateReportFunction(
-        driver,
+        // driver,
+        connectionModule.getDriver(),
         getCustomDispatcher(),
         pagenumber,
         id,
@@ -209,7 +230,8 @@ export const NeoReport = ({
         setSchema: setSchemaCallback,
       };
 
-      connectionModule.runQuery(driver, queryParams, queryCallback);
+      // connectionModule.runQuery(driver, queryParams, queryCallback);
+      connectionModule.runQueryNew(queryParams, queryCallback);
     },
     [database]
   );

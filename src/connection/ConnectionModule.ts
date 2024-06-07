@@ -1,9 +1,13 @@
+import { createDriver } from 'use-neo4j';
+
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
 
 export abstract class ConnectionModule {
   name: string;
+
+  driver: any;
 
   constructor(name: string) {
     this.name = name;
@@ -23,19 +27,22 @@ export abstract class ConnectionModule {
     return config.standaloneUsername && config.standalonePassword;
   }
 
-  // connect to the backend Neo4j/Aura database
-  connect(params: any): void {
-    const { dispatch, createConnectionThunk, config } = params;
-    dispatch(
-      createConnectionThunk(
-        config.standaloneProtocol,
-        config.standaloneHost,
-        config.standalonePort,
-        config.standaloneDatabase,
-        config.standaloneUsername,
-        config.standalonePassword
-      )
-    );
+  createDriver(_params: any): any {
+    const { protocol, url, port, username, password, driverConfig } = _params;
+    return createDriver(protocol, url, port, username, password, driverConfig);
+  }
+
+  setDriver = (driver: any): any => {
+    // console.log('ConnectionModule setDriver: ', driver);
+    this.driver = driver;
+  };
+
+  getDriver = (): any => {
+    return this.driver;
+  };
+
+  connect(_params: any): void {
+    return notImplementedError('connect');
   }
 
   // custom routing logic if needed by the authentication implementation
@@ -104,6 +111,10 @@ export abstract class ConnectionModule {
   }
 
   async runQuery(_driver, _queryParams: Record<string, any>, _queryCallbacks: Record<string, any>): Promise<void> {
+    return notImplementedError('runQuery');
+  }
+
+  async runQueryNew(_queryParams: Record<string, any>, _queryCallbacks: Record<string, any>): Promise<void> {
     return notImplementedError('runQuery');
   }
 

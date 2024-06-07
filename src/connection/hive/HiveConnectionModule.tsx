@@ -10,18 +10,37 @@ import { hiveAuthenticate, handleNeoDashLaunch, fetchDashboardFromHive } from '.
 import { removeSavedQueryString } from '../../extensions/hive/launch/launchHelper';
 import { getHivePublishUIDialog, getHivePublishUIButton } from '../../extensions/hive/components/HivePublishUI';
 import { loadConfig } from '../../extensions/hive/config/dynamicConfig';
+import { QueryStatus } from '../interfaces';
+import { LineCanvas } from '@nivo/line';
 
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
 
 export class HiveConnectionModule extends ConnectionModule {
-  async initialize(configJson: any): void {
+  cachedConfig = null;
+
+  initialize = async (configJson: any): void => {
+    this.cachedConfig = configJson;
     await loadConfig(configJson);
-  }
+  };
 
   async authenticate(_params: any): any {
     return await hiveAuthenticate(_params); // eslint-disable-line
+  }
+
+  // connect to the backend Neo4j/Aura database
+  connect(params: any): void {
+    const { dispatch, createConnectionThunk, config } = params;
+    const connectionConfig = {
+      protocol: config.standaloneProtocol,
+      url: config.standaloneHost,
+      port: config.standalonePort,
+      database: config.standaloneDatabase,
+      username: config.standaloneUsername,
+      password: config.standalonePassword,
+    };
+    dispatch(createConnectionThunk(connectionConfig));
   }
 
   getApplicationRouting(Application: any): any {
@@ -38,6 +57,150 @@ export class HiveConnectionModule extends ConnectionModule {
     let callbacks = extractQueryCallbacks(inputQueryCallbacks);
     return runCypherQuery({ driver, ...queryParams, ...callbacks });
   }
+
+  runQueryNew = async (inputQueryParams, inputQueryCallbacks): Promise<void> => {
+    let queryParams = extractQueryParams(inputQueryParams);
+    let callbacks = extractQueryCallbacks(inputQueryCallbacks);
+    let driver = this.getDriver();
+    // console.log('driver: ', driver);
+    let { language, query, formatExpand } = this.preprocessQuery(queryParams.query);
+    if (language === 'graphql') {
+      /*
+    let graphql = query.match(/graphql:(.+)/);
+    if (graphql) {
+      graphql = graphql[1];
+        let query = `
+        query {
+          recommendations(
+            engineID: "movies-cold-start-4x"
+            params: { startMovieTitle: "" }
+            first: 20
+            skip: 0
+          ) {
+            item
+            score
+          }
+        }    
+      `
+      */
+      let variables = {};
+      let graphqlResponse = await this.runGraphQLQuery(query, variables);
+      console.log('graphqlResponse: ', graphqlResponse);
+      let { setRecords, setStatus } = callbacks;
+      let recommendations = graphqlResponse?.data?.recommendations;
+      let records = this.convertGraphQLResponseToRecords(recommendations, formatExpand);
+      /*
+      let records = [new Neo4jRecord(['count(n)'], [200])];
+      */
+      setRecords(records);
+      setStatus(QueryStatus.COMPLETE);
+    } else {
+      return runCypherQuery({ driver, ...queryParams, ...callbacks });
+    }
+  };
+
+  preprocessQuery = (query) => {
+    let lines = query.split('\n').map((line) => line.trim());
+
+    let directives = lines
+      .filter((line) => line.startsWith('//'))
+      .map((line) => line.substring(2).trim())
+      .reduce((acc, line) => {
+        let tokens = line.split(':');
+        acc[tokens[0]?.trim()] = tokens[1]?.trim();
+        return acc;
+      }, {});
+
+    let newQuery = lines.filter((line) => !line.startsWith('//')).join('\n');
+
+    return {
+      language: directives.language ? directives.language : 'cypher',
+      formatExpand: this.processFormat(directives.formatExpand),
+      query: newQuery,
+    };
+  };
+
+  processFormat = (formatValue) => {
+    if (formatValue) {
+      return formatValue.split(',').map((x) => x.trim());
+    } 
+      return [];
+    
+  };
+
+  convertGraphQLResponseToRecords = (recommendations, formatExpand) => {
+    // formatExpand is expected to be an array of variables that return nodes
+    //   e.g. formatExpand = ['item']
+    //   any variable in the array will have its properties appear as keys and values in the Neo4jRecord
+
+    return recommendations.map((recommendation) => {
+      console.log('recommendation: ', recommendation);
+
+      let allKeys = [];
+      let allValues = [];
+
+      Object.keys(recommendation).forEach((key) => {
+        if (formatExpand.includes(key)) {
+          let value = recommendation[key];
+          allKeys = allKeys.concat(Object.keys(value));
+          allValues = allValues.concat(Object.values(value));
+        } else {
+          allKeys.push(key);
+          allValues.push(recommendation[key]);
+        }
+      }, []);
+      return new Neo4jRecord(allKeys, allValues);
+    });
+
+    /*
+    return recommendations.map(recommendation => {
+      return new Neo4jRecord(
+          Object.keys(recommendation), 
+          Object.values(recommendation)
+      )
+    })
+    */
+  };
+
+  handleErrors = (response) => {
+    if (!response.ok) {
+      throw Error(`${response.status}: ${response.statusText}`);
+    }
+    return response;
+  };
+
+  runGraphQLQuery = async (query, variables): any => {
+    let graphql = this.cachedConfig?.standaloneGraphql || {};
+
+    // TODO: throw error if standaloneGraphql not configured
+
+    let port = graphql.port ? `:${graphql.port}` : '';
+    let uri = `${graphql.protocol}://${graphql.host}${port}${graphql.uri}`;
+    let httpHeaders = graphql.httpHeaders || {};
+
+    const promise = new Promise((resolve, reject) => {
+      fetch(uri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...httpHeaders,
+        },
+        body: JSON.stringify({
+          query: query,
+          variables,
+        }),
+      })
+        .then(this.handleErrors)
+        .then(async (res) => {
+          const jsonResponse = await res.json();
+          resolve(jsonResponse);
+        })
+        .catch((error) => {
+          reject(new Error(error.message));
+        });
+    });
+    return promise;
+  };
 
   getDashboardToLoadAfterConnecting = (config: any): string => {
     let dashboardToLoad = null;

@@ -48,7 +48,7 @@ import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
 import { QueryCallback, QueryParams } from '../connection/interfaces';
-import { setConnectionModule, getConnectionModule } from '../connection/utils';
+import { setConnectionModule, getConnectionModule, cacheConnectionModule } from '../connection/utils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -64,133 +64,140 @@ import { setConnectionModule, getConnectionModule } from '../connection/utils';
  * @param username - Neo4j username.
  * @param password - Neo4j password.
  */
-export const createConnectionThunk =
-  (protocol, url, port, database, username, password) => (dispatch: any, getState: any) => {
-    const loggingState = getState();
-    const loggingSettings = applicationGetLoggingSettings(loggingState);
-    const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
-    try {
-      let driverConfig = { userAgent: `neodash/v${version}` };
-      if (url == 'localhost') {
-        driverConfig = { userAgent: `neodash/v${version}`, encrypted: false };
-      }
-      const driver = createDriver(protocol, url, port, username, password, driverConfig);
-
-      // eslint-disable-next-line no-console
-      console.log('Attempting to connect...');
-      const validateConnection = (records) => {
-        // eslint-disable-next-line no-console
-        console.log('Confirming connection was established...');
-        if (records && records[0] && records[0].error) {
-          dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
-          if (loggingSettings.loggingMode > '0') {
-            dispatch(
-              createLogThunk(
-                driver,
-                loggingSettings.loggingDatabase,
-                neodashMode,
-                username,
-                'ERR - connect to DB',
-                database,
-                '',
-                `Error while trying to establish connection to Neo4j DB in ${neodashMode} mode at ${Date(
-                  Date.now()
-                ).substring(0, 33)}`
-              )
-            );
-          }
-        } else if (records && records[0] && records[0].keys[0] == 'connected') {
-          dispatch(setConnectionProperties(protocol, url, port, database, username, password));
-          dispatch(setConnectionModalOpen(false));
-          dispatch(setConnected(true));
-          // An old dashboard (pre-2.3.5) may not always have a UUID. We catch this case here.
-          dispatch(assignDashboardUuidIfNotPresentThunk());
-          dispatch(updateSessionParameterThunk('session_uri', `${protocol}://${url}:${port}`));
-          dispatch(updateSessionParameterThunk('session_database', database));
-          dispatch(updateSessionParameterThunk('session_username', username));
-          if (loggingSettings.loggingMode > '0') {
-            dispatch(
-              createLogThunk(
-                driver,
-                loggingSettings.loggingDatabase,
-                neodashMode,
-                username,
-                'INF - connect to DB',
-                database,
-                '',
-                `${username} established connection to Neo4j DB in ${neodashMode} mode at ${Date(Date.now()).substring(
-                  0,
-                  33
-                )}`
-              )
-            );
-          }
-          // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
-          const { application } = getState();
-          if (
-            application.dashboardToLoadAfterConnecting &&
-            (application.dashboardToLoadAfterConnecting.startsWith('http') ||
-              application.dashboardToLoadAfterConnecting.startsWith('./') ||
-              application.dashboardToLoadAfterConnecting.startsWith('/'))
-          ) {
-            fetch(application.dashboardToLoadAfterConnecting)
-              .then((response) => response.text())
-              .then((data) => dispatch(loadDashboardThunk(createUUID(), data)));
-            dispatch(setDashboardToLoadAfterConnecting(null));
-          } else if (application.dashboardToLoadAfterConnecting) {
-            const setDashboardAfterLoadingFromDatabase = (value) => {
-              dispatch(loadDashboardThunk(createUUID(), value));
-            };
-
-            // If we specify a dashboard by name, load the latest version of it.
-            // If we specify a dashboard by UUID, load it directly.
-
-            if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
-              dispatch(
-                loadDashboardFromNeo4jByNameThunk(
-                  driver,
-                  application.standaloneDashboardDatabase,
-                  application.dashboardToLoadAfterConnecting.substring(5),
-                  setDashboardAfterLoadingFromDatabase
-                )
-              );
-            } else if (application.dashboardToLoadAfterConnecting.startsWith(`${connectionModule.name}:`)) {
-              dispatch(
-                loadDashboardFromNeo4jByConnectionModuleUUIDThunk(
-                  application.dashboardToLoadAfterConnecting.substring(5),
-                  setDashboardAfterLoadingFromDatabase
-                )
-              );
-            } else {
-              dispatch(
-                loadDashboardFromNeo4jThunk(
-                  driver,
-                  application.standaloneDashboardDatabase,
-                  application.dashboardToLoadAfterConnecting,
-                  setDashboardAfterLoadingFromDatabase
-                )
-              );
-            }
-            dispatch(setDashboardToLoadAfterConnecting(null));
-          }
-        } else {
-          dispatch(createNotificationThunk('Unknown Connection Error', 'Check the browser console.'));
-        }
-      };
-      const query = 'RETURN true as connected';
-      const parameters = {};
-      const { connectionModule } = getConnectionModule();
-      const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
-
-      let queryCallback: QueryCallback = {
-        setRecords: (records) => validateConnection(records),
-      };
-
-      connectionModule.runQuery(driver, queryParams, queryCallback);
-    } catch (e) {
-      dispatch(createNotificationThunk('Unable to establish connection', e));
+export const createConnectionThunk = (connectionParams) => (dispatch: any, getState: any) => {
+  const { protocol, url, port, database, username, password } = connectionParams || {};
+  const loggingState = getState();
+  const loggingSettings = applicationGetLoggingSettings(loggingState);
+  const neodashMode = applicationIsStandalone(loggingState) ? 'Standalone' : 'Editor';
+  try {
+    let driverConfig = { userAgent: `neodash/v${version}` };
+    if (url == 'localhost') {
+      driverConfig = { userAgent: `neodash/v${version}`, encrypted: false };
     }
-  };
+    const { connectionModule } = getConnectionModule();
+    const driver = connectionModule.createDriver({
+      protocol,
+      url,
+      port,
+      username,
+      password,
+      driverConfig,
+    });
+
+    // eslint-disable-next-line no-console
+    console.log('Attempting to connect...');
+    const validateConnection = (records) => {
+      // eslint-disable-next-line no-console
+      console.log('Confirming connection was established...');
+      if (records && records[0] && records[0].error) {
+        dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
+        if (loggingSettings.loggingMode > '0') {
+          dispatch(
+            createLogThunk(
+              driver,
+              loggingSettings.loggingDatabase,
+              neodashMode,
+              username,
+              'ERR - connect to DB',
+              database,
+              '',
+              `Error while trying to establish connection to Neo4j DB in ${neodashMode} mode at ${Date(
+                Date.now()
+              ).substring(0, 33)}`
+            )
+          );
+        }
+      } else if (records && records[0] && records[0].keys[0] == 'connected') {
+        dispatch(setConnectionProperties(protocol, url, port, database, username, password));
+        dispatch(setConnectionModalOpen(false));
+        dispatch(setConnected(true));
+        // An old dashboard (pre-2.3.5) may not always have a UUID. We catch this case here.
+        dispatch(assignDashboardUuidIfNotPresentThunk());
+        dispatch(updateSessionParameterThunk('session_uri', `${protocol}://${url}:${port}`));
+        dispatch(updateSessionParameterThunk('session_database', database));
+        dispatch(updateSessionParameterThunk('session_username', username));
+        if (loggingSettings.loggingMode > '0') {
+          dispatch(
+            createLogThunk(
+              driver,
+              loggingSettings.loggingDatabase,
+              neodashMode,
+              username,
+              'INF - connect to DB',
+              database,
+              '',
+              `${username} established connection to Neo4j DB in ${neodashMode} mode at ${Date(Date.now()).substring(
+                0,
+                33
+              )}`
+            )
+          );
+        }
+        // If we have remembered to load a specific dashboard after connecting to the database, take care of it here.
+        const { application } = getState();
+        if (
+          application.dashboardToLoadAfterConnecting &&
+          (application.dashboardToLoadAfterConnecting.startsWith('http') ||
+            application.dashboardToLoadAfterConnecting.startsWith('./') ||
+            application.dashboardToLoadAfterConnecting.startsWith('/'))
+        ) {
+          fetch(application.dashboardToLoadAfterConnecting)
+            .then((response) => response.text())
+            .then((data) => dispatch(loadDashboardThunk(createUUID(), data)));
+          dispatch(setDashboardToLoadAfterConnecting(null));
+        } else if (application.dashboardToLoadAfterConnecting) {
+          const setDashboardAfterLoadingFromDatabase = (value) => {
+            dispatch(loadDashboardThunk(createUUID(), value));
+          };
+
+          // If we specify a dashboard by name, load the latest version of it.
+          // If we specify a dashboard by UUID, load it directly.
+
+          if (application.dashboardToLoadAfterConnecting.startsWith('name:')) {
+            dispatch(
+              loadDashboardFromNeo4jByNameThunk(
+                driver,
+                application.standaloneDashboardDatabase,
+                application.dashboardToLoadAfterConnecting.substring(5),
+                setDashboardAfterLoadingFromDatabase
+              )
+            );
+          } else if (application.dashboardToLoadAfterConnecting.startsWith(`${connectionModule.name}:`)) {
+            dispatch(
+              loadDashboardFromNeo4jByConnectionModuleUUIDThunk(
+                application.dashboardToLoadAfterConnecting.substring(5),
+                setDashboardAfterLoadingFromDatabase
+              )
+            );
+          } else {
+            dispatch(
+              loadDashboardFromNeo4jThunk(
+                driver,
+                application.standaloneDashboardDatabase,
+                application.dashboardToLoadAfterConnecting,
+                setDashboardAfterLoadingFromDatabase
+              )
+            );
+          }
+          dispatch(setDashboardToLoadAfterConnecting(null));
+        }
+      } else {
+        dispatch(createNotificationThunk('Unknown Connection Error', 'Check the browser console.'));
+      }
+    };
+    const query = 'RETURN true as connected';
+    const parameters = {};
+    const queryParams: QueryParams = { query, database, parameters, rowLimit: 1 };
+
+    let queryCallback: QueryCallback = {
+      setRecords: (records) => validateConnection(records),
+    };
+
+    connectionModule.runQuery(driver, queryParams, queryCallback);
+  } catch (e) {
+    dispatch(createNotificationThunk('Unable to establish connection', e));
+  }
+};
 
 /**
  * Establish a connection directly from the Neo4j Desktop integration (if running inside Neo4j Desktop)
@@ -199,7 +206,7 @@ export const createConnectionFromDesktopIntegrationThunk = () => (dispatch: any,
   try {
     const desktopConnectionDetails = getState().application.desktopConnection;
     const { protocol, url, port, database, username, password } = desktopConnectionDetails;
-    dispatch(createConnectionThunk(protocol, url, port, database, username, password));
+    dispatch(createConnectionThunk({ protocol, url, port, database, username, password }));
   } catch (e) {
     dispatch(createNotificationThunk('Unable to establish connection to Neo4j Desktop', e));
   }
@@ -384,16 +391,7 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
       dispatch(setStandaloneDashboardDatabase(shareDetails.database));
     }
     if (shareDetails.url) {
-      dispatch(
-        createConnectionThunk(
-          shareDetails.protocol,
-          shareDetails.url,
-          shareDetails.port,
-          shareDetails.database,
-          shareDetails.username,
-          shareDetails.password
-        )
-      );
+      dispatch(createConnectionThunk(shareDetails));
     } else {
       dispatch(setConnectionModalOpen(true));
     }
@@ -473,6 +471,15 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDatabaseList: 'neo4j',
     customHeader: '',
     connectionModule: 'neo4j',
+    /*
+    standaloneGraphql: {
+      protocol: 'https',
+      host: 'recommendations.neo4j.solutions',
+      port: '',
+      uri: '/graphql',
+      httpHeaders: []
+    }
+    */
   };
 
   let configJson = await getConfigJson();
@@ -483,6 +490,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
   const { connectionModule } = getConnectionModule();
   await connectionModule.initialize(configJson);
+  cacheConnectionModule(connectionModule);
 
   try {
     let response = await connectionModule.authenticate({ queryString: window.location.search });
@@ -599,14 +607,14 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
             )
           );
           dispatch(
-            createConnectionThunk(
-              config.standaloneProtocol,
-              config.standaloneHost,
-              config.standalonePort,
-              config.standaloneDatabase,
-              credentials.username,
-              credentials.password
-            )
+            createConnectionThunk({
+              protocol: config.standaloneProtocol,
+              url: config.standaloneHost,
+              port: config.standalonePort,
+              database: config.standaloneDatabase,
+              username: credentials.username,
+              password: credentials.password,
+            })
           );
         } else {
           // Redirected from SSO and running in editor mode, merge retrieved config with existing details.
@@ -748,14 +756,14 @@ export const initializeApplicationAsStandaloneThunk =
     // Override for when username and password are specified in the config - automatically connect to the specified URL.
     if (config.standaloneUsername && config.standalonePassword) {
       dispatch(
-        createConnectionThunk(
-          config.standaloneProtocol,
-          config.standaloneHost,
-          config.standalonePort,
-          config.standaloneDatabase,
-          config.standaloneUsername,
-          config.standalonePassword
-        )
+        createConnectionThunk({
+          protocol: config.standaloneProtocol,
+          url: config.standaloneHost,
+          port: config.standalonePort,
+          database: config.standaloneDatabase,
+          username: credentials.standaloneUsername,
+          password: credentials.standalonePassword,
+        })
       );
     } else {
       dispatch(setConnectionModalOpen(true));

@@ -17,6 +17,20 @@ export class Neo4jConnectionModule extends ConnectionModule {
     return notImplementedError('authenticate');
   }
 
+  // connect to the backend Neo4j/Aura database
+  connect(params: any): void {
+    const { dispatch, createConnectionThunk, config } = params;
+    const connectionConfig = {
+      protocol: config.standaloneProtocol,
+      url: config.standaloneHost,
+      port: config.standalonePort,
+      database: config.standaloneDatabase,
+      username: config.standaloneUsername,
+      password: config.standalonePassword,
+    };
+    dispatch(createConnectionThunk(connectionConfig));
+  }
+
   getApplicationRouting(Application: any): any {
     return <Application />;
   }
@@ -25,6 +39,12 @@ export class Neo4jConnectionModule extends ConnectionModule {
     let queryParams = extractQueryParams(inputQueryParams);
     let callbacks = extractQueryCallbacks(inputQueryCallbacks);
     return runCypherQuery({ driver, ...queryParams, ...callbacks });
+  }
+
+  async runQueryNew(inputQueryParams, inputQueryCallbacks): Promise<void> {
+    let queryParams = extractQueryParams(inputQueryParams);
+    let callbacks = extractQueryCallbacks(inputQueryCallbacks);
+    return runCypherQuery({ driver: super.getDriver(), ...queryParams, ...callbacks });
   }
 
   getDashboardToLoadAfterConnecting = (config: any): string => {

@@ -22,6 +22,7 @@ export const config = (envKey) => {
 
 export const loadConfig = async (configJson) => {
   if (!solutionsConfig) {
+    console.log('loading solutionsConfig');
     try {
       if (configJson) {
         solutionsConfig = configJson;
@@ -35,5 +36,7 @@ export const loadConfig = async (configJson) => {
       console.log('error during loadConfig: ', e);
       throw new Error('config.json must be configured and must have an extensions.solutionsHive key');
     }
+  } else {
+    console.log('solutionsConfig already loaded');
   }
 };

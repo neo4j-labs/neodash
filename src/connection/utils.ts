@@ -5,15 +5,26 @@ import { HiveConnectionModule } from './hive/HiveConnectionModule';
 const ValidConnectionModules = ['neo4j', 'hive'];
 let connectionModule = 'neo4j';
 
+let _cachedConnectionModule = null;
+
 export function setConnectionModule(_connectionModule: string): void {
   if (ValidConnectionModules.includes(_connectionModule)) {
     connectionModule = _connectionModule;
   }
 }
 
+export function cacheConnectionModule(_connectionModule: any): void {
+  _cachedConnectionModule = _connectionModule;
+}
+
 export function getConnectionModule(): ConnectionModuleState {
-  if (connectionModule === 'hive') {
-    return { connectionModule: new HiveConnectionModule('hive') };
+  let connectionModuleObject = null;
+  if (_cachedConnectionModule) {
+    connectionModuleObject = _cachedConnectionModule;
+  } else if (connectionModule === 'hive') {
+    connectionModuleObject = new HiveConnectionModule('hive');
+  } else {
+    connectionModuleObject = new Neo4jConnectionModule('neo4j');
   }
-  return { connectionModule: new Neo4jConnectionModule('neo4j') };
+  return { connectionModule: connectionModuleObject };
 }

@@ -32,15 +32,17 @@ const Dashboard = ({
     if (connection.url == 'localhost') {
       driverConfig = { userAgent: `neodash/v${version}`, encrypted: false };
     }
-    const newDriver = createDriver(
-      connection.protocol,
-      connection.url,
-      connection.port,
-      connection.username,
-      connection.password,
-      driverConfig
-    );
+    const newDriver = connectionModule.createDriver({
+      protocol: connection.protocol,
+      url: connection.url,
+      port: connection.port,
+      username: connection.username,
+      password: connection.password,
+      driverConfig,
+    });
+    connectionModule.setDriver(newDriver);
     setDriver(newDriver);
+    // console.log('Dashboard connectionModule.getDriver(): ', connectionModule.getDriver());
   }
 
   const content = (

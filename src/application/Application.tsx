@@ -223,7 +223,16 @@ const mapDispatchToProps = (dispatch) => ({
   createConnection: (protocol, url, port, database, username, password) => {
     dispatch(setConnected(false));
     dispatch(resetSessionStorage());
-    dispatch(createConnectionThunk(protocol, url, port, database, username, password));
+    dispatch(
+      createConnectionThunk({
+        protocol,
+        url,
+        port,
+        database,
+        username,
+        password,
+      })
+    );
   },
   createConnectionFromDesktopIntegration: () => {
     dispatch(setConnected(false));
