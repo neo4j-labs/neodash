@@ -265,8 +265,31 @@ export async function updateUsers(driver, currentRole, allUsers, selectedUsers, 
     `REVOKE ROLE ${currentRole} FROM ${escapedAllUsers}`,
     {},
     1000,
-    (status) => {
+    async (status) => {
       globalStatus = status;
+      if (globalStatus == QueryStatus.NO_DATA || globalStatus == QueryStatus.COMPLETE) {
+        //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
+        // We build in an artificial delay... This must be improved the future.
+        setTimeout(async () => {
+          if (selectedUsers.length > 0) {
+            const escapedSelectedUsers = selectedUsers.map((user) => `\`${user}\``).join(',');
+            await runCypherQuery(
+              driver,
+              'system',
+              `GRANT ROLE ${currentRole} TO ${escapedSelectedUsers};`,
+              {},
+              1000,
+              (status) => {
+                if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+                  onSuccess();
+                }
+              }
+            );
+          } else {
+            onSuccess();
+          }
+        }, 2000);
+      }
     },
     (records) => {
       if (records && records[0] && records[0].error) {
@@ -274,25 +297,4 @@ export async function updateUsers(driver, currentRole, allUsers, selectedUsers, 
       }
     }
   );
-  if (globalStatus == QueryStatus.NO_DATA || globalStatus == QueryStatus.COMPLETE) {
-    //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
-    // We build in an artificial delay...
-    if (selectedUsers.length > 0) {
-      const escapedSelectedUsers = selectedUsers.map((user) => `\`${user}\``).join(',');
-      await runCypherQuery(
-        driver,
-        'system',
-        `GRANT ROLE ${currentRole} TO ${escapedSelectedUsers}`,
-        {},
-        1000,
-        (status) => {
-          if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-            onSuccess();
-          }
-        }
-      );
-    } else {
-      onSuccess();
-    }
-  }
 }
