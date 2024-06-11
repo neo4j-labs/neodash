@@ -80,7 +80,6 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
 
   const handleSave = async () => {
     createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-    console.log(selectedUsers);
     updateUsers(
       driver,
       currentRole,
