@@ -761,8 +761,8 @@ export const initializeApplicationAsStandaloneThunk =
           url: config.standaloneHost,
           port: config.standalonePort,
           database: config.standaloneDatabase,
-          username: credentials.standaloneUsername,
-          password: credentials.standalonePassword,
+          username: config.standaloneUsername,
+          password: config.standalonePassword,
         })
       );
     } else {

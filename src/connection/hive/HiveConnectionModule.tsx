@@ -12,6 +12,7 @@ import { getHivePublishUIDialog, getHivePublishUIButton } from '../../extensions
 import { loadConfig } from '../../extensions/hive/config/dynamicConfig';
 import { QueryStatus } from '../interfaces';
 import { LineCanvas } from '@nivo/line';
+import { getEndpointUrl, getApiKey } from '../../extensions/graphql/state/GraphQLSelector';
 
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
@@ -58,7 +59,9 @@ export class HiveConnectionModule extends ConnectionModule {
     return runCypherQuery({ driver, ...queryParams, ...callbacks });
   }
 
-  runQueryNew = async (inputQueryParams, inputQueryCallbacks): Promise<void> => {
+  runQueryNew = async (inputQueryParams, inputQueryCallbacks, state): Promise<void> => {
+    const endpointUrl = getEndpointUrl(state);
+    const apiKey = getApiKey(state);
     let queryParams = extractQueryParams(inputQueryParams);
     let callbacks = extractQueryCallbacks(inputQueryCallbacks);
     let driver = this.getDriver();
@@ -84,7 +87,7 @@ export class HiveConnectionModule extends ConnectionModule {
       `
       */
       let variables = {};
-      let graphqlResponse = await this.runGraphQLQuery(query, variables);
+      let graphqlResponse = await this.runGraphQLQuery(endpointUrl, apiKey, query, variables);
       console.log('graphqlResponse: ', graphqlResponse);
       let { setRecords, setStatus } = callbacks;
       let recommendations = graphqlResponse?.data?.recommendations;
@@ -123,9 +126,20 @@ export class HiveConnectionModule extends ConnectionModule {
   processFormat = (formatValue) => {
     if (formatValue) {
       return formatValue.split(',').map((x) => x.trim());
-    } 
-      return [];
-    
+    }
+    return [];
+  };
+
+  getNestedValue = (obj, path) => {
+    const keys = path.split('.');
+    let value = obj;
+    for (const key of keys) {
+      value = value[key];
+      if (value === undefined) {
+        return `Property ${key} not found`;
+      }
+    }
+    return value;
   };
 
   convertGraphQLResponseToRecords = (recommendations, formatExpand) => {
@@ -134,21 +148,35 @@ export class HiveConnectionModule extends ConnectionModule {
     //   any variable in the array will have its properties appear as keys and values in the Neo4jRecord
 
     return recommendations.map((recommendation) => {
-      console.log('recommendation: ', recommendation);
+      // console.log('recommendation: ', recommendation);
 
       let allKeys = [];
       let allValues = [];
 
-      Object.keys(recommendation).forEach((key) => {
-        if (formatExpand.includes(key)) {
-          let value = recommendation[key];
-          allKeys = allKeys.concat(Object.keys(value));
-          allValues = allValues.concat(Object.values(value));
-        } else {
+      if (formatExpand && formatExpand.length > 0) {
+        // let formatExpandStrings = formatExpand.split(',')
+        formatExpand.forEach((key) => {
+          let value = this.getNestedValue(recommendation, key);
+          allKeys = allKeys.concat(key);
+          allValues = allValues.concat(value);
+        });
+      } else {
+        Object.keys(recommendation).forEach((key) => {
           allKeys.push(key);
           allValues.push(recommendation[key]);
-        }
-      }, []);
+        });
+      }
+
+      // Object.keys(recommendation).forEach((key) => {
+      //   if (formatExpand.includes(key)) {
+      //     let value = recommendation[key];
+      //     allKeys = allKeys.concat(Object.keys(value));
+      //     allValues = allValues.concat(Object.values(value));
+      //   } else {
+      //     allKeys.push(key);
+      //     allValues.push(recommendation[key]);
+      //   }
+      // }, []);
       return new Neo4jRecord(allKeys, allValues);
     });
 
@@ -169,14 +197,16 @@ export class HiveConnectionModule extends ConnectionModule {
     return response;
   };
 
-  runGraphQLQuery = async (query, variables): any => {
+  runGraphQLQuery = async (endpointUrl, apiKey, query, variables): any => {
     let graphql = this.cachedConfig?.standaloneGraphql || {};
 
     // TODO: throw error if standaloneGraphql not configured
 
     let port = graphql.port ? `:${graphql.port}` : '';
-    let uri = `${graphql.protocol}://${graphql.host}${port}${graphql.uri}`;
-    let httpHeaders = graphql.httpHeaders || {};
+    let uri = endpointUrl; // `${graphql.protocol}://${graphql.host}${port}${graphql.uri}`;
+    let httpHeaders = {
+      'api-key': apiKey,
+    }; // graphql.httpHeaders || {};
 
     const promise = new Promise((resolve, reject) => {
       fetch(uri, {

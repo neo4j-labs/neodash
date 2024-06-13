@@ -57,6 +57,7 @@ export const NeoReport = ({
   prepopulateExtensionName,
   deletePrepopulationReportFunction,
   theme,
+  state,
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -147,10 +148,10 @@ export const NeoReport = ({
 
       if (debounced) {
         // debouncedRunCypherQuery(driver, queryParams, queryCallback);
-        debouncedRunCypherQuery(queryParams, queryCallback);
+        debouncedRunCypherQuery(queryParams, queryCallback, state);
       } else {
         // connectionModule.runQuery(driver, queryParams, queryCallback);
-        connectionModule.runQueryNew(queryParams, queryCallback);
+        connectionModule.runQueryNew(queryParams, queryCallback, state);
       }
     };
 
@@ -231,7 +232,7 @@ export const NeoReport = ({
       };
 
       // connectionModule.runQuery(driver, queryParams, queryCallback);
-      connectionModule.runQueryNew(queryParams, queryCallback);
+      connectionModule.runQueryNew(queryParams, queryCallback, state);
     },
     [database]
   );
@@ -353,6 +354,7 @@ const mapStateToProps = (state, ownProps) => ({
   pagenumber: getPageNumber(state),
   prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
   theme: getDashboardTheme(state),
+  state: state,
 });
 
 const mapDispatchToProps = (dispatch) => ({

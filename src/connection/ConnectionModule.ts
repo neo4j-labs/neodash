@@ -114,7 +114,8 @@ export abstract class ConnectionModule {
     return notImplementedError('runQuery');
   }
 
-  async runQueryNew(_queryParams: Record<string, any>, _queryCallbacks: Record<string, any>): Promise<void> {
+  // TODO: passing a state is an anti pattern, so need to find better approach.
+  async runQueryNew(_queryParams: Record<string, any>, _queryCallbacks: Record<string, any>, _state): Promise<void> {
     return notImplementedError('runQuery');
   }
 

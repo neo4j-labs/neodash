@@ -5,6 +5,9 @@ import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQuer
 import { translateQuery } from './text2cypher/util/Util';
 import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
 import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
+import GraphQLButton from './graphql/component/GraphQLButton';
+import { GRAPHQL_ACTION_PREFIX } from './graphql/state/GraphQLActions';
+import { graphQLReducer } from './graphql/state/GraphQLReducer';
 import RBACManagementLabelButton from './rbac/RBACManagementLabelButton';
 
 // TODO: continue documenting interface
@@ -71,6 +74,18 @@ export const EXTENSIONS: Record<string, Extension> = {
     settingsMenuButton: QueryTranslatorButton,
     description:
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
+    link: 'https://neo4j.com/professional-services/',
+  },
+  graphql: {
+    name: 'graphql',
+    label: 'GraphQL endpoint invocation',
+    author: 'Neo4j Professional Services',
+    image: 'translator.png',
+    enabled: true,
+    reducerPrefix: GRAPHQL_ACTION_PREFIX,
+    reducerObject: graphQLReducer,
+    settingsMenuButton: GraphQLButton,
+    description: 'Use this to invoke graphql endpoint in your reports',
     link: 'https://neo4j.com/professional-services/',
   },
   solutionsHive: {
