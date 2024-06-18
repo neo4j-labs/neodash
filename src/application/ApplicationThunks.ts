@@ -415,7 +415,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standalonePort: '7687',
     standaloneDatabase: 'neo4j',
     standaloneDashboardName: 'My Dashboard',
-    standaloneDashboardDatabase: 'dashboards',
+    standaloneDashboardDatabase: 'neo4j',
     standaloneDashboardURL: '',
     loggingMode: '0',
     loggingDatabase: 'logs',
