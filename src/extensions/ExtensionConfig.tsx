@@ -5,9 +5,9 @@ import NeoOverrideCardQueryEditor from './text2cypher/component/OverrideCardQuer
 import { translateQuery } from './text2cypher/util/Util';
 import { GPT_LOADING_ICON } from './text2cypher/component/LoadingIcon';
 import QueryTranslatorButton from './text2cypher/component/QueryTranslatorButton';
-import GraphQLButton from './graphql/component/GraphQLButton';
-import { GRAPHQL_ACTION_PREFIX } from './graphql/state/GraphQLActions';
-import { graphQLReducer } from './graphql/state/GraphQLReducer';
+import KeymakerButton from './keymaker/component/KeymakerButton';
+import { KEYMAKER_ACTION_PREFIX } from './keymaker/state/KeymakerActions';
+import { keymakerReducer } from './keymaker/state/KeymakerReducer';
 import RBACManagementLabelButton from './rbac/RBACManagementLabelButton';
 
 // TODO: continue documenting interface
@@ -76,17 +76,18 @@ export const EXTENSIONS: Record<string, Extension> = {
       'Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically. This extension requires APOC Core installed inside Neo4j.',
     link: 'https://neo4j.com/professional-services/',
   },
-  graphql: {
-    name: 'graphql',
-    label: 'GraphQL endpoint invocation',
-    author: 'Neo4j Professional Services',
-    image: 'translator.png',
+  keymaker: {
+    name: 'keymaker',
+    label: 'Keymaker',
+    author: 'Neo4j Solutions',
+    image: 'keymaker.png',
     enabled: true,
-    reducerPrefix: GRAPHQL_ACTION_PREFIX,
-    reducerObject: graphQLReducer,
-    settingsMenuButton: GraphQLButton,
-    description: 'Use this to invoke graphql endpoint in your reports',
-    link: 'https://neo4j.com/professional-services/',
+    reducerPrefix: KEYMAKER_ACTION_PREFIX,
+    reducerObject: keymakerReducer,
+    settingsMenuButton: KeymakerButton,
+    description:
+      'Keymaker, Neo4j’s Applied Analytics Framework, is a data model agnostic tool designed to help organizations operationalize their graph based analytical queries.',
+    link: 'https://neo4j.solutions',
   },
   solutionsHive: {
     name: 'solutionsHive',

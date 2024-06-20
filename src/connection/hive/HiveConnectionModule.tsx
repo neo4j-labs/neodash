@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import Callback from '../../extensions/hive/auth/callback';
 import PrivateRoute from '../../extensions/hive/auth/privateRoute';
-import { Record as Neo4jRecord } from 'neo4j-driver';
+import { Integer, Record as Neo4jRecord } from 'neo4j-driver';
 import { ConnectionModule } from '../ConnectionModule';
 import { runCypherQuery } from '../neo4j/runCypherQuery';
 import { extractQueryCallbacks, extractQueryParams } from '../neo4j/utils';
@@ -11,18 +11,18 @@ import { removeSavedQueryString } from '../../extensions/hive/launch/launchHelpe
 import { getHivePublishUIDialog, getHivePublishUIButton } from '../../extensions/hive/components/HivePublishUI';
 import { loadConfig } from '../../extensions/hive/config/dynamicConfig';
 import { QueryStatus } from '../interfaces';
-import { LineCanvas } from '@nivo/line';
-import { getEndpointUrl, getApiKey } from '../../extensions/graphql/state/GraphQLSelector';
+import {
+  extractNodeAndRelPropertiesFromRecords,
+  extractNodePropertiesFromRecords,
+} from '../../report/ReportRecordProcessing';
+import { getEndpointUrl, getApiKey } from '../../extensions/keymaker/state/KeymakerSelector';
 
 const notImplementedError = (functionName: string): never => {
   throw new Error(`Not Implemented: ${functionName}`);
 };
 
 export class HiveConnectionModule extends ConnectionModule {
-  cachedConfig = null;
-
   initialize = async (configJson: any): void => {
-    this.cachedConfig = configJson;
     await loadConfig(configJson);
   };
 
@@ -65,38 +65,31 @@ export class HiveConnectionModule extends ConnectionModule {
     let queryParams = extractQueryParams(inputQueryParams);
     let callbacks = extractQueryCallbacks(inputQueryCallbacks);
     let driver = this.getDriver();
-    // console.log('driver: ', driver);
-    let { language, query, formatExpand } = this.preprocessQuery(queryParams.query);
+    let { language, query, returnFormat } = this.preprocessQuery(queryParams.query);
     if (language === 'graphql') {
-      /*
-    let graphql = query.match(/graphql:(.+)/);
-    if (graphql) {
-      graphql = graphql[1];
-        let query = `
-        query {
-          recommendations(
-            engineID: "movies-cold-start-4x"
-            params: { startMovieTitle: "" }
-            first: 20
-            skip: 0
-          ) {
-            item
-            score
-          }
-        }    
-      `
-      */
-      let variables = {};
-      let graphqlResponse = await this.runGraphQLQuery(endpointUrl, apiKey, query, variables);
-      console.log('graphqlResponse: ', graphqlResponse);
-      let { setRecords, setStatus } = callbacks;
-      let recommendations = graphqlResponse?.data?.recommendations;
-      let records = this.convertGraphQLResponseToRecords(recommendations, formatExpand);
-      /*
-      let records = [new Neo4jRecord(['count(n)'], [200])];
-      */
-      setRecords(records);
-      setStatus(QueryStatus.COMPLETE);
+      let { useNodePropsAsFields = false, useReturnValuesAsFields = false } = queryParams;
+      let variables = queryParams.parameters || {};
+      let { setFields, setRecords, setSchema, setStatus, setError } = callbacks;
+      try {
+        let graphqlResponse = await this.runGraphQLQuery(endpointUrl, apiKey, query, variables);
+        let recommendations = graphqlResponse?.data?.recommendations;
+        let { keys, records } = this.convertGraphQLResponseToRecords(recommendations, returnFormat);
+
+        if (useReturnValuesAsFields) {
+          setFields(keys);
+        } else if (useNodePropsAsFields) {
+          // If we don't use dynamic field mapping, but we do have a selection, use the discovered node properties as fields.
+          const nodePropsAsFields = extractNodePropertiesFromRecords(records);
+          setFields(nodePropsAsFields);
+        }
+        setSchema(extractNodeAndRelPropertiesFromRecords(records));
+        setRecords(records);
+        setStatus(QueryStatus.COMPLETE);
+      } catch (e) {
+        setError(e.message);
+        setRecords([{ error: e.message }]);
+        setStatus(QueryStatus.ERROR);
+      }
     } else {
       return runCypherQuery({ driver, ...queryParams, ...callbacks });
     }
@@ -110,7 +103,16 @@ export class HiveConnectionModule extends ConnectionModule {
       .map((line) => line.substring(2).trim())
       .reduce((acc, line) => {
         let tokens = line.split(':');
-        acc[tokens[0]?.trim()] = tokens[1]?.trim();
+        let key = tokens[0]?.trim();
+        let value = tokens[1]?.trim();
+        let prevValue = acc[key];
+        if (prevValue === undefined) {
+          acc[key] = value;
+        } else if (Array.isArray(prevValue)) {
+          acc[key] = prevValue.concat(value);
+        } else {
+          acc[key] = [prevValue].concat(value);
+        }
         return acc;
       }, {});
 
@@ -118,14 +120,29 @@ export class HiveConnectionModule extends ConnectionModule {
 
     return {
       language: directives.language ? directives.language : 'cypher',
-      formatExpand: this.processFormat(directives.formatExpand),
+      returnFormat: this.processFormat(directives.returnFormat),
       query: newQuery,
     };
   };
 
   processFormat = (formatValue) => {
     if (formatValue) {
-      return formatValue.split(',').map((x) => x.trim());
+      if (Array.isArray(formatValue)) {
+        formatValue = formatValue.join(',');
+      }
+      return formatValue
+        .split(',')
+        .map((x) => x.trim())
+        .map((x) => {
+          let variableAndAlias = x.split(/\s+AS\s+/i);
+          if (variableAndAlias.length === 1) {
+            return { variable: variableAndAlias[0], alias: variableAndAlias[0] };
+          } else if (variableAndAlias.length > 1) {
+            return { variable: variableAndAlias[0], alias: variableAndAlias[1] };
+          } 
+            return { variable: 'error_not_specified', alias: 'error_not_specified' };
+          
+        });
     }
     return [];
   };
@@ -142,22 +159,43 @@ export class HiveConnectionModule extends ConnectionModule {
     return value;
   };
 
-  convertGraphQLResponseToRecords = (recommendations, formatExpand) => {
-    // formatExpand is expected to be an array of variables that return nodes
-    //   e.g. formatExpand = ['item']
-    //   any variable in the array will have its properties appear as keys and values in the Neo4jRecord
+  rewriteIntegers = (value, key) => {
+    if (value === null) {
+      return null;
+    } else if (Array.isArray(value)) {
+      return value.map((x) => this.rewriteIntegers(x));
+    } else if (typeof value === 'object') {
+      return Object.keys(value).reduce((newValue, key) => {
+        newValue[key] = this.rewriteIntegers(value[key], key);
+        return newValue;
+      }, {});
+    } else if (Number.isInteger(value) && ['start', 'end', 'identity'].includes(key)) {
+      return new Integer(value, 0);
+    } 
+      return value;
+    
+  };
 
-    return recommendations.map((recommendation) => {
-      // console.log('recommendation: ', recommendation);
+  convertGraphQLResponseToRecords = (recommendations, returnFormat) => {
+    // returnFormat contains an array of variables and aliases
+    //   a variable can have a nested property accessor, such as item.id, or details.company.name
+    /* for example:
+      returnFormat = [
+            {variable:'item.id',alias:'id'},
+            {variable:'score',alias:'score'}
+      ]
+    */
+    // if unspecified, the graphql response will be returned directly without transformation
 
+    let records = recommendations.map((recommendation) => {
+      recommendation = this.rewriteIntegers(recommendation);
       let allKeys = [];
       let allValues = [];
 
-      if (formatExpand && formatExpand.length > 0) {
-        // let formatExpandStrings = formatExpand.split(',')
-        formatExpand.forEach((key) => {
-          let value = this.getNestedValue(recommendation, key);
-          allKeys = allKeys.concat(key);
+      if (returnFormat && returnFormat.length > 0) {
+        returnFormat.forEach(({ variable, alias }) => {
+          let value = this.getNestedValue(recommendation, variable);
+          allKeys = allKeys.concat(alias);
           allValues = allValues.concat(value);
         });
       } else {
@@ -166,28 +204,15 @@ export class HiveConnectionModule extends ConnectionModule {
           allValues.push(recommendation[key]);
         });
       }
-
-      // Object.keys(recommendation).forEach((key) => {
-      //   if (formatExpand.includes(key)) {
-      //     let value = recommendation[key];
-      //     allKeys = allKeys.concat(Object.keys(value));
-      //     allValues = allValues.concat(Object.values(value));
-      //   } else {
-      //     allKeys.push(key);
-      //     allValues.push(recommendation[key]);
-      //   }
-      // }, []);
       return new Neo4jRecord(allKeys, allValues);
     });
 
-    /*
-    return recommendations.map(recommendation => {
-      return new Neo4jRecord(
-          Object.keys(recommendation), 
-          Object.values(recommendation)
-      )
-    })
-    */
+    let keys = [];
+    if (records.length > 0) {
+      keys = records[0].keys;
+    }
+
+    return { keys, records };
   };
 
   handleErrors = (response) => {
@@ -198,15 +223,16 @@ export class HiveConnectionModule extends ConnectionModule {
   };
 
   runGraphQLQuery = async (endpointUrl, apiKey, query, variables): any => {
-    let graphql = this.cachedConfig?.standaloneGraphql || {};
+    if (!endpointUrl || !apiKey) {
+      throw new Error(
+        'Ensure you have the Keymaker plugin enabled, and that you have specified both a GraphQL URL and an API Key'
+      );
+    }
 
-    // TODO: throw error if standaloneGraphql not configured
-
-    let port = graphql.port ? `:${graphql.port}` : '';
-    let uri = endpointUrl; // `${graphql.protocol}://${graphql.host}${port}${graphql.uri}`;
+    let uri = endpointUrl;
     let httpHeaders = {
       'api-key': apiKey,
-    }; // graphql.httpHeaders || {};
+    };
 
     const promise = new Promise((resolve, reject) => {
       fetch(uri, {

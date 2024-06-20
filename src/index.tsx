@@ -10,7 +10,7 @@ import '/node_modules/react-resizable/css/styles.css';
 import './index.pcss';
 import StyleConfig from './config/StyleConfig';
 import * as Sentry from '@sentry/react';
-import { getConnectionModule } from './connection/utils';
+import { getConnectionModule, setConnectionModule, cacheConnectionModule } from './connection/utils';
 
 if (window.location.href.includes('//neodash.graphapp.io/')) {
   Sentry.init({
@@ -42,7 +42,27 @@ const store = configureStore();
 const persister = persistStore(store);
 
 // connection module to determine how to load the Application
+
+async function getConfigJson() {
+  let configJson = null;
+  try {
+    let response = await fetch('config.json');
+    configJson = await response.json();
+  } catch (e) {
+    // Config may not be found, for example when we are in Neo4j Desktop.
+    // eslint-disable-next-line no-console
+    console.log('No config file detected. Setting to safe defaults.');
+  }
+  return configJson;
+}
+
+let configJson = await getConfigJson();
+let connectionModuleKey = configJson?.connectionModule ? configJson.connectionModule : 'neo4j';
+setConnectionModule(connectionModuleKey);
+
 const { connectionModule } = getConnectionModule();
+await connectionModule.initialize(configJson);
+cacheConnectionModule(connectionModule);
 
 await StyleConfig.getInstance();
 

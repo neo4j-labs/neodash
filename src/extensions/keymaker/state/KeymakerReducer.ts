@@ -2,7 +2,7 @@
  * Reducers define changes to the application state when a given action
  */
 
-import { SET_CLIENT_SETTINGS } from './GraphQLActions';
+import { SET_CLIENT_SETTINGS } from './KeymakerActions';
 
 export const INITIAL_EXTENSION_STATE = {
   settings: {}, // Settings needed by the client to operate
@@ -10,7 +10,7 @@ export const INITIAL_EXTENSION_STATE = {
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
-export const graphQLReducer = (state = INITIAL_EXTENSION_STATE, action: { type: any; payload: any }) => {
+export const keymakerReducer = (state = INITIAL_EXTENSION_STATE, action: { type: any; payload: any }) => {
   const { type, payload } = action;
   switch (type) {
     case SET_CLIENT_SETTINGS: {

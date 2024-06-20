@@ -252,3 +252,12 @@
 .markdown-widget a {
   text-decoration: underline;
 }
+
+/* enables a TextInput to be wrapped with a div with class 'text-input-style' to change the width of the label */
+.text-input-style .ndl-type-text {
+  width: inherit;
+}
+
+.text-input-style .ndl-type-text .ndl-form-item-label {
+  width: inherit;
+}

@@ -471,26 +471,18 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneDatabaseList: 'neo4j',
     customHeader: '',
     connectionModule: 'neo4j',
-    /*
-    standaloneGraphql: {
-      protocol: 'https',
-      host: 'recommendations.neo4j.solutions',
-      port: '',
-      uri: '/graphql',
-      httpHeaders: []
-    }
-    */
   };
 
+  // moved to index.tsx
   let configJson = await getConfigJson();
-  let connectionModuleKey = configJson?.connectionModule
-    ? configJson.connectionModule
-    : DEFAULT_CONFIG.connectionModule;
-  setConnectionModule(connectionModuleKey);
+  // let connectionModuleKey = configJson?.connectionModule
+  //   ? configJson.connectionModule
+  //   : DEFAULT_CONFIG.connectionModule;
+  // setConnectionModule(connectionModuleKey);
 
   const { connectionModule } = getConnectionModule();
-  await connectionModule.initialize(configJson);
-  cacheConnectionModule(connectionModule);
+  // await connectionModule.initialize(configJson);
+  // cacheConnectionModule(connectionModule);
 
   try {
     let response = await connectionModule.authenticate({ queryString: window.location.search });
