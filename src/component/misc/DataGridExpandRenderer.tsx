@@ -110,6 +110,9 @@ export function renderCellExpand(params: GridRenderCellParams<any, string>, line
  
   let value = params.value?.low ? params.value.low : params.value;
   
+  if(!value){
+    value=""
+  }
   return (typeof value==="string" || value instanceof String)
     ? <GridCellExpand value={RenderString(value)} width={params.colDef.computedWidth} />
     : <GridCellExpand value={JSON.stringify(value)
