@@ -14,7 +14,6 @@ import { createNotificationThunk } from '../page/PageThunks';
 import { runCypherQuery } from '../report/ReportQueryRunner';
 import {
   setPageNumberThunk,
-  updateParametersToNeo4jTypeThunk,
   updateGlobalParametersThunk,
   updateSessionParameterThunk,
 } from '../settings/SettingsThunks';
@@ -507,8 +506,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         );
       }
     }
-    // At the load of a dashboard, we want to ensure correct casting types
-    dispatch(updateParametersToNeo4jTypeThunk());
 
     // SSO - specific case starts here.
     if (state.application.waitForSSO) {
@@ -650,8 +647,8 @@ export const initializeApplicationAsStandaloneThunk =
     } else {
       dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
     }
-
     dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
+    dispatch(updateGlobalParametersThunk(paramsToSetAfterConnecting));
 
     if (clearNotificationAfterLoad) {
       dispatch(clearNotification());

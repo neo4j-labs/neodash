@@ -184,7 +184,9 @@ export const NeoTableChart = (props: ChartProps) => {
       Object.assign(
         { id: i, Field: key },
         ...records.map((record, j) => ({
-          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1]),
+          // Note the true here is for the rendered to know we are inside a transposed table
+          // It will be needed for rendering the records properly, if they are arrays
+          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1], true),
         }))
       )
     );
