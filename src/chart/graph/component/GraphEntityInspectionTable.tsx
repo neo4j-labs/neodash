@@ -2,16 +2,18 @@ import React from 'react';
 import ShowMoreText from 'react-show-more-text';
 import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { TextLink } from '@neo4j-ndl/react';
+// import DOMPurify from 'dompurify';
 
 export const formatProperty = (property) => {
-  if (property.startsWith('http://') || property.startsWith('https://')) {
+  const str = property?.toString() || '';
+  if (str.startsWith('http://') || str.startsWith('https://')) {
     return (
-      <TextLink externalLink href={property}>
-        {property}
+      <TextLink externalLink href={str}>
+        {str}
       </TextLink>
     );
   }
-  return property.replace(/,(?=[^\s])/g, ', ');
+  return str;
 };
 
 /**
@@ -19,6 +21,7 @@ export const formatProperty = (property) => {
  */
 export const GraphEntityInspectionTable = ({
   entity,
+  theme,
   setSelectedParameters = (_value) => {
     console.log('undefined function in GraphEntityInspectionTable');
   },
@@ -64,6 +67,8 @@ export const GraphEntityInspectionTable = ({
     }
   }
 
+  const tableTextColor = theme === 'dark' ? 'var(--palette-dark-neutral-border-strong)' : 'rgba(0, 0, 0, 0.6)';
+
   const attributesList = (key: any) => (
     <TableRow key={key}>
       <TableCell component='th' scope='row'>
@@ -96,8 +101,12 @@ export const GraphEntityInspectionTable = ({
         {hasPropertyToShow ? (
           <TableHead>
             <TableRow>
-              <TableCell align='left'>Property</TableCell>
-              <TableCell align='left'>Value</TableCell>
+              <TableCell align='left' style={{ color: tableTextColor }}>
+                Property
+              </TableCell>
+              <TableCell align='left' style={{ color: tableTextColor }}>
+                Value
+              </TableCell>
               {checklistEnabled ? <TableCell align='center'>Select Property</TableCell> : <></>}
             </TableRow>
           </TableHead>

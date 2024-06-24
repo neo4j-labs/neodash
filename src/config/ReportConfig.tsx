@@ -14,6 +14,13 @@ import { SELECTION_TYPES } from './CardConfig';
 import NeoLineChart from '../chart/line/LineChart';
 import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
 import { objMerge, objectMap } from '../utils/ObjectManipulation';
+import {
+  customTableConfig,
+  customGraphConfig,
+  customSelectCardConfig,
+  customMinimizableConfig,
+  customCommonChartConfig,
+} from './MbConfig';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -34,6 +41,7 @@ const _REPORT_TYPES = {
     useReturnValuesAsFields: true,
     maxRecords: 1000,
     settings: {
+      ...customTableConfig,
       transposed: {
         label: 'Transpose Rows & Columns',
         type: SELECTION_TYPES.LIST,
@@ -87,12 +95,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -108,43 +110,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
-      overrideDefaultMessage: {
-        label: 'Override default message',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Query returned no data.',
-      },
-      compactCanvas: {
-        label: 'Compact canvas',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      sendRequestButtonName: {
-        label: 'Send Request Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Send Request',
-      },
-      viewResponseButtonName: {
-        label: 'View Response Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'View Response',
-      },
-      disableParameterCheck: {
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
       },
     },
   },
@@ -165,6 +130,7 @@ const _REPORT_TYPES = {
     // between the different options (EX: if operator is false, then it must be the opposite of the setting it depends on)
     disabledDependency: { relationshipParticleSpeed: { dependsOn: 'relationshipParticles', operator: false } },
     settings: {
+      ...customGraphConfig,
       nodeColorScheme: {
         label: 'Node Color Scheme',
         type: SELECTION_TYPES.LIST,
@@ -263,7 +229,7 @@ const _REPORT_TYPES = {
       graphDepthSep: {
         label: 'Tree layout level distance',
         type: SELECTION_TYPES.NUMBER,
-        default: '30',
+        default: 30,
       },
       enableExploration: {
         label: 'Enable graph exploration',
@@ -298,7 +264,7 @@ const _REPORT_TYPES = {
       drilldownLink: {
         label: 'Drilldown Icon Link',
         type: SELECTION_TYPES.TEXT,
-        placeholder: 'http://bloom.neo4j.io',
+        placeholder: 'https://bloom.neo4j.io',
         default: '',
       },
       allowDownload: {
@@ -309,24 +275,6 @@ const _REPORT_TYPES = {
       },
       hideSelections: {
         label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
@@ -343,22 +291,11 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       iconStyle: {
         label: 'Node Label images',
         type: SELECTION_TYPES.TEXT,
         placeholder: '{label : url}',
         default: '',
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
-        type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
       },
       rightClickToExpandNodes: {
         label: 'Right Click to Expand Nodes',
@@ -370,35 +307,6 @@ const _REPORT_TYPES = {
         label: 'Override no data message',
         type: SELECTION_TYPES.TEXT,
         default: 'Query returned no data.',
-      },
-      customTablePropertiesOfModal: {
-        label: 'Customized Ordering and Hide Features Of Attributes In Detailed Modal',
-        type: SELECTION_TYPES.DICTIONARY,
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      pageIdAndParameterName: {
-        label: '<PageId>:<ParameterName>:<NodeType>',
-        type: SELECTION_TYPES.TEXT,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
-      overrideDefaultMessage: {
-        label: 'Override default message',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Query returned no data.',
-      },
-      disableParameterCheck: {
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
       },
     },
   },
@@ -428,7 +336,9 @@ const _REPORT_TYPES = {
       },
     },
     maxRecords: 250,
+    disabledDependency: { barWidth: { dependsOn: 'customDimensions', operator: false } },
     settings: {
+      ...customCommonChartConfig,
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -476,18 +386,29 @@ const _REPORT_TYPES = {
         default: 'set2',
       },
       barValues: {
-        label: 'Show Value on Bars',
+        label: 'Show Values On Bars',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
+      customDimensions: {
+        label: 'Custom Dimensions',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      barWidth: {
+        label: 'Bar Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 10,
+      },
       labelSkipWidth: {
-        label: 'Skip label on width (px)',
+        label: 'Skip label if Bar Width < Xpx',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
       labelSkipHeight: {
-        label: 'Skip label on height (px)',
+        label: 'Skip label if Bar Height < Xpx',
         type: SELECTION_TYPES.NUMBER,
         default: 0,
       },
@@ -503,86 +424,62 @@ const _REPORT_TYPES = {
         default: 45,
       },
       marginLeft: {
-        label: 'Margin Left (px)',
+        label: 'Margin Left',
         type: SELECTION_TYPES.NUMBER,
         default: 50,
       },
       marginRight: {
-        label: 'Margin Right (px)',
+        label: 'Margin Right',
         type: SELECTION_TYPES.NUMBER,
         default: 24,
       },
       marginTop: {
-        label: 'Margin Top (px)',
+        label: 'Margin Top',
         type: SELECTION_TYPES.NUMBER,
         default: 24,
       },
       marginBottom: {
-        label: 'Margin Bottom (px)',
+        label: 'Margin Bottom',
         type: SELECTION_TYPES.NUMBER,
-        default: 45,
+        default: 30,
       },
       legendWidth: {
-        label: 'Legend Width (px)',
+        label: 'Legend Width',
         type: SELECTION_TYPES.NUMBER,
         default: 128,
       },
       hideSelections: {
-        label: 'Hide Property Selection',
+        label: 'Hide Selections',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
-      refreshButtonEnabled: {
-        label: 'Refreshable',
+      expandHeightForLegend: {
+        label: 'Expand Height For Legend',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
       },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      downloadImageEnabled: {
-        label: 'Download Image enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      autorun: {
-        label: 'Auto-run query',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: true,
-      },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      refreshRate: {
-        label: 'Refresh rate (seconds)',
+      innerPadding: {
+        label: 'Inner Padding',
         type: SELECTION_TYPES.NUMBER,
-        default: '0 (No refresh)',
+        default: 0,
+      },
+      legendPosition: {
+        label: 'Legend Position',
+        type: SELECTION_TYPES.LIST,
+        values: ['Horizontal', 'Vertical'],
+        default: 'Vertical',
+      },
+      padding: {
+        label: 'Padding',
+        type: SELECTION_TYPES.NUMBER,
+        default: 0.25,
       },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
       },
     },
   },
@@ -613,6 +510,7 @@ const _REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
+      ...customCommonChartConfig,
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -738,12 +636,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -753,17 +645,6 @@ const _REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
       },
     },
   },
@@ -791,6 +672,7 @@ const _REPORT_TYPES = {
     },
     maxRecords: 250,
     settings: {
+      ...customCommonChartConfig,
       legend: {
         label: 'Show Legend',
         type: SELECTION_TYPES.LIST,
@@ -937,12 +819,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -952,17 +828,6 @@ const _REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
       },
     },
   },
@@ -1134,12 +999,6 @@ const _REPORT_TYPES = {
   //       values: [true, false],
   //       default: true,
   //     },
-  //     hideQueryEditorInAutoRunOnMode: {
-  //        label: 'Hide query editor on auto run on mode',
-  //        type: SELECTION_TYPES.LIST,
-  //        values: [true, false],
-  //        default: false,
-  //      },
   //     refreshRate: {
   //       label: 'Refresh rate (seconds)',
   //       type: SELECTION_TYPES.NUMBER,
@@ -1150,11 +1009,6 @@ const _REPORT_TYPES = {
   //       type: SELECTION_TYPES.MULTILINE_TEXT,
   //       default: 'Enter markdown here...',
   //     },
-  // executeButtonName: {
-  //   label: 'Execute Button Name',
-  //   type: SELECTION_TYPES.TEXT,
-  //   default: 'Execute',
-  // },
   //   },
   // },
   map: {
@@ -1170,6 +1024,7 @@ const _REPORT_TYPES = {
     component: NeoMapChart,
     maxRecords: 1000,
     settings: {
+      ...customCommonChartConfig,
       layerType: {
         label: 'Layer Type',
         type: SELECTION_TYPES.LIST,
@@ -1259,27 +1114,10 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
       },
     },
   },
@@ -1289,6 +1127,7 @@ const _REPORT_TYPES = {
     component: NeoSingleValueChart,
     maxRecords: 1,
     settings: {
+      ...customCommonChartConfig,
       fontSize: {
         label: 'Font Size',
         type: SELECTION_TYPES.NUMBER,
@@ -1347,12 +1186,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -1363,17 +1196,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
-      },
     },
   },
   json: {
@@ -1383,6 +1205,7 @@ const _REPORT_TYPES = {
     allowScrolling: true,
     maxRecords: 500,
     settings: {
+      ...customCommonChartConfig,
       format: {
         label: 'Format',
         type: SELECTION_TYPES.LIST,
@@ -1413,12 +1236,6 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: true,
       },
-      hideQueryEditorInAutoRunOnMode: {
-        label: 'Hide query editor on auto run on mode',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       refreshRate: {
         label: 'Refresh rate (seconds)',
         type: SELECTION_TYPES.NUMBER,
@@ -1428,17 +1245,6 @@ const _REPORT_TYPES = {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      executeButtonName: {
-        label: 'Execute Button Name',
-        type: SELECTION_TYPES.TEXT,
-        default: 'Execute',
       },
     },
   },
@@ -1452,16 +1258,11 @@ const _REPORT_TYPES = {
     textOnly: true,
     maxRecords: 100,
     settings: {
+      ...customSelectCardConfig,
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,
         default: '#fafafa',
-      },
-      clearParameterValueOnTabChange: {
-        label: 'Clear parameter value on tab change',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
       },
       multiSelector: {
         label: 'Multiple Selection',
@@ -1527,10 +1328,11 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      predefinedOptions: {
-        label: 'Predefined Options, If type is Basic Select',
-        type: SELECTION_TYPES.TEXT,
-        default: null,
+      autoSelectFirstValue: {
+        label: 'Auto-select first value on no selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
       },
       manualPropertyNameSpecification: {
         label: 'Manual Label/Property Name Specification',
@@ -1569,12 +1371,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
     },
   },
   iframe: {
@@ -1588,6 +1384,7 @@ const _REPORT_TYPES = {
     maxRecords: 1,
     allowScrolling: true,
     settings: {
+      ...customMinimizableConfig,
       replaceGlobalParameters: {
         label: 'Replace global parameters in URL',
         type: SELECTION_TYPES.LIST,
@@ -1600,22 +1397,10 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
-      fullscreenEnabled: {
-        label: 'Fullscreen enabled',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       description: {
         label: 'Report Description',
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
-      },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
       },
     },
   },
@@ -1652,12 +1437,6 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.MULTILINE_TEXT,
         default: 'Enter markdown here...',
       },
-      minimizable: {
-        label: 'Minimize Button',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
     },
   },
 };
@@ -1679,6 +1458,40 @@ export const COMMON_REPORT_SETTINGS = {
     values: [true, false],
     default: false,
     refresh: true,
+  },
+  refreshButtonEnabled: {
+    label: 'Refreshable',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+  fullscreenEnabled: {
+    label: 'Fullscreen enabled',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+  downloadImageEnabled: {
+    label: 'Download Image enabled',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+  },
+  autorun: {
+    label: 'Auto-run query',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: true,
+  },
+  refreshRate: {
+    label: 'Refresh rate (seconds)',
+    type: SELECTION_TYPES.NUMBER,
+    default: '0 (No refresh)',
+  },
+  noDataMessage: {
+    label: 'Override no data message',
+    type: SELECTION_TYPES.TEXT,
+    default: 'Query returned no data.',
   },
 };
 

@@ -150,6 +150,7 @@ const NeoGanttChart = (props: ChartProps) => {
   return (
     <div>
       <NeoGraphChartInspectModal
+        style={{ theme: props.theme }}
         interactivity={{
           selectedEntity: selectedTask,
           showPropertyInspector: selectedTask !== undefined,

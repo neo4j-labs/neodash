@@ -10,6 +10,7 @@ import {
   valueIsPath,
   valueIsRelationship,
 } from '../chart/ChartUtils';
+// import DOMPurify from 'dompurify';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -245,13 +246,37 @@ function RenderPath(value) {
   });
 }
 
-function RenderArray(value) {
-  const mapped = value.map((v, i) => {
+/**
+ * Renders an array of values.
+ *
+ * @param value - The array of values to render.
+ * @param transposedTable - Optional. Specifies whether the table should be transposed. Default is false.
+ * @returns The rendered array of values.
+ */
+function RenderArray(value, transposedTable = false) {
+  let mapped = [];
+  // If the first value is neither a Node nor a Relationship object
+  // It is safe to assume that all values should be renedered as strings
+  if (value.length > 0 && !valueIsNode(value[0]) && !valueIsRelationship(value[0])) {
+    // If this request comes up from a transposed table
+    // The returned value must be a single value, not an array
+    // Otherwise, it will cast to [Object object], [Object object]
+    if (transposedTable) {
+      return RenderString(value.join(', '));
+    }
+    // Nominal case of a list of values renderable as strings
+    // These should be joined by commas, and not inside <span> tags
+    mapped = value.map((v, i) => {
+      return RenderSubValue(v) + (i < value.length - 1 ? ', ' : '');
+    });
+  }
+  // Render Node and Relationship objects, which will look like a Path
+  mapped = value.map((v, i) => {
     return (
-      <div key={String(`k${i}`) + v}>
+      <span key={String(`k${i}`) + v}>
         {RenderSubValue(v)}
-        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>,&nbsp;</span> : <></>}
-      </div>
+        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>, </span> : <></>}
+      </span>
     );
   });
   return mapped;
@@ -269,7 +294,12 @@ export function RenderString(value) {
   return str;
 }
 
-function RenderLink(value) {
+function RenderLink(value, disabled = false) {
+  // If the link is embedded in a button (disabled), it's not a hyperlink, so we just return the string.
+  if (disabled) {
+    return value;
+  }
+  // Else, it's a 'real' link, and return a React object
   return (
     <TextLink key={value} externalLink target='_blank' href={value}>
       {value}
@@ -299,7 +329,7 @@ function RenderInteger(value) {
   if (!value || !value.toInt) {
     return RenderNumber(value);
   }
-  const integer = value.toNumber().toLocaleString();
+  const integer = value.toNumber().toLocaleString('en-US');
   return integer;
 }
 
@@ -307,11 +337,11 @@ function RenderNumber(value) {
   if (value === null || !value.toLocaleString) {
     return 'null';
   }
-  const number = value.toLocaleString();
+  const number = value.toLocaleString('en-US');
   return number;
 }
 
-export function RenderSubValue(value) {
+export function RenderSubValue(value, transposedTable = false) {
   if (value == undefined) {
     return '';
   }
@@ -319,7 +349,7 @@ export function RenderSubValue(value) {
   const columnProperties = rendererForType[type];
   if (columnProperties) {
     if (columnProperties.renderValue) {
-      return columnProperties.renderValue({ value: value });
+      return columnProperties.renderValue({ value: value, transposedTable: transposedTable });
     } else if (columnProperties.valueGetter) {
       return columnProperties.valueGetter({ value: value });
     }
@@ -357,7 +387,7 @@ export const rendererForType: any = {
   },
   array: {
     type: 'string',
-    renderValue: (c) => RenderArray(c.value),
+    renderValue: (c) => RenderArray(c.value, c.transposedTable),
   },
   string: {
     type: 'string',
@@ -389,7 +419,7 @@ export const rendererForType: any = {
   },
   link: {
     type: 'link',
-    renderValue: (c) => RenderLink(c.value),
+    renderValue: (c, disabled = false) => RenderLink(c.value, disabled),
   },
 };
 

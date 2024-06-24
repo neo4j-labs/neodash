@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import Gantt from './lib';
 import { createUUID } from '../../../../../utils/uuid';
 
+type GantRef = SVGSVGElement | undefined;
+
 const TASK_PADDING = 9;
 const HEADER_HEIGHT = 50;
 const STEP_SIZE = 8;
@@ -18,7 +20,7 @@ const VIEW_MODE = 'Day';
 export default class ReactGantt extends Component {
   props: any;
 
-  ganttRef: SVGSVGElement | undefined = undefined;
+  ganttRef: GantRef = undefined;
 
   key: any;
 

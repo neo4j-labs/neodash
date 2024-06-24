@@ -12,7 +12,7 @@ content:
     - '!**/README.adoc'
 ui:
   bundle:
-    url: https://s3-eu-west-1.amazonaws.com/static-content.neo4j.com/build/ui-bundle.zip
+    url: https://static-content.neo4j.com/build/ui-bundle-latest.zip
     snapshot: true
 urls:
   html_extension_style: indexify

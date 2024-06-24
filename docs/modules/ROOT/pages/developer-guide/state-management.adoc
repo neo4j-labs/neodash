@@ -135,6 +135,13 @@ standalone mode.
     "standaloneDatabase": "neo4j",
     "standaloneDashboardName": "My Dashboard",
     "standaloneDashboardDatabase": "dashboards",
+    "standaloneDashboardURL": "dashboards",
+    "loggingMode": "0",
+    "loggingDatabase": "logging",
+    "standaloneAllowLoad": false,
+    "standaloneLoadFromOtherDatabases ": false,
+    "standaloneMultiDatabase": false,
+    "standaloneDatabaseList": "neo4j",
     "notificationIsDismissable": null
 }
 ....

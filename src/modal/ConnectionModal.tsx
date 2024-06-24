@@ -56,6 +56,16 @@ export default function NeoConnectionModal({
 
   const discoveryAPIUrl = ssoSettings && ssoSettings.ssoDiscoveryUrl;
 
+  // since config is loaded asynchronously, value may not be yet defined when this runs for first time
+  let standaloneDatabaseList = [standaloneSettings.standaloneDatabase];
+  try {
+    standaloneDatabaseList = standaloneSettings.standaloneDatabaseList
+      ? standaloneSettings.standaloneDatabaseList.split(',')
+      : standaloneDatabaseList;
+  } catch (e) {
+    console.log(e);
+  }
+
   return (
     <>
       <Dialog
@@ -143,15 +153,35 @@ export default function NeoConnectionModal({
               Neo4j Aura databases require a <code>neo4j+s</code> protocol. Your current configuration may not work.
             </div>
           ) : null}
-          <TextInput
-            id='database'
-            value={database}
-            disabled={standalone}
-            onChange={(e) => setDatabase(e.target.value)}
-            label='Database (optional)'
-            placeholder='neo4j'
-            fluid
-          />
+          {!standalone ? (
+            <TextInput
+              id='database'
+              value={database}
+              disabled={standalone}
+              onChange={(e) => setDatabase(e.target.value)}
+              label='Database (optional)'
+              placeholder='neo4j'
+              fluid
+            />
+          ) : (
+            <Dropdown
+              id='database'
+              label='Database'
+              type='select'
+              selectProps={{
+                onChange: (newValue) => {
+                  setDatabase(newValue.value);
+                },
+                options: standaloneDatabaseList.map((option) => ({
+                  label: option,
+                  value: option,
+                })),
+                value: { label: database, value: database },
+                menuPlacement: 'auto',
+              }}
+              fluid
+            ></Dropdown>
+          )}
 
           {!ssoVisible ? (
             <TextInput

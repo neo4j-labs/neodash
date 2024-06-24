@@ -1,5 +1,5 @@
 # build stage
-FROM node:lts-alpine AS build-stage
+FROM node:lts-alpine3.18 AS build-stage
 
 RUN yarn global add typescript jest
 WORKDIR /usr/local/src/neodash
@@ -9,7 +9,8 @@ WORKDIR /usr/local/src/neodash
 #RUN git clone https://github.com/neo4j-labs/neodash.git /usr/local/src/neodash
 
 # Copy sources and install/build
-COPY ./package.json ./yarn.lock /usr/local/src/neodash/
+COPY ./package.json /usr/local/src/neodash/package.json
+COPY ./yarn.lock /usr/local/src/neodash/yarn.lock
 
 RUN yarn install
 COPY --chown=101:101 ./ /usr/local/src/neodash

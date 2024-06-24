@@ -172,7 +172,7 @@ export const setStandaloneEnabled = (
 
 export const SET_STANDALONE_MODE = 'APPLICATION/SET_STANDALONE_MODE';
 export const setStandaloneMode = (standalone: boolean) => ({
-  type: SET_STANDALONE_ENABLED,
+  type: SET_STANDALONE_MODE,
   payload: { standalone },
 });
 
@@ -222,4 +222,10 @@ export const SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING = 'APPLICATION/SET_PARAMETE
 export const setParametersToLoadAfterConnecting = (parameters: any) => ({
   type: SET_PARAMETERS_TO_LOAD_AFTER_CONNECTING,
   payload: { parameters },
+});
+
+export const SET_CUSTOM_HEADER = 'APPLICATION/SET_CUSTOM_HEADER';
+export const setCustomHeader = (customHeader: any) => ({
+  type: SET_CUSTOM_HEADER,
+  payload: { customHeader },
 });
