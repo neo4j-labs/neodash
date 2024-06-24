@@ -13,6 +13,7 @@ import { createNotificationThunk } from '../page/PageThunks';
 import { version } from '../modal/AboutModal';
 import NeoDashboardSidebar from './sidebar/DashboardSidebar';
 import { getConnectionModule } from '../connection/utils';
+import Chat from '../extensions/hive/components/genai/Chat';
 
 const { connectionModule } = getConnectionModule();
 
@@ -100,6 +101,7 @@ const Dashboard = ({
                     <NeoDashboardTitle />
                     <NeoDashboardHeaderPageList />
                     <NeoPage></NeoPage>
+                    <Chat></Chat>
                   </div>
                 </div>
               </div>

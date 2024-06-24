@@ -23,16 +23,14 @@ RUN apk upgrade
 ENV NGINX_PORT=5005
 
 COPY --from=build-stage /usr/local/src/neodash/dist /usr/share/nginx/html
+COPY ./public/config.json /usr/share/nginx/html
 COPY ./conf/default.conf.template /etc/nginx/templates/
-COPY ./scripts/config-entrypoint.sh /docker-entrypoint.d/config-entrypoint.sh
 COPY ./scripts/message-entrypoint.sh /docker-entrypoint.d/message-entrypoint.sh
 
 RUN chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
     chown -R nginx:nginx /etc/nginx/conf.d && \
     chown -R nginx:nginx /etc/nginx/templates && \
-    chown -R nginx:nginx /docker-entrypoint.d/config-entrypoint.sh && \
-    chmod +x /docker-entrypoint.d/config-entrypoint.sh  && \
     chmod +x /docker-entrypoint.d/message-entrypoint.sh
 RUN touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
