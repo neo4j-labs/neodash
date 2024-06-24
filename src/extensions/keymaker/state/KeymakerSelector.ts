@@ -1,5 +1,4 @@
 import { getSessionStorageValue } from '../../../sessionStorage/SessionStorageSelectors';
-// import { decryptString } from '../Util';
 
 export const KEYMAKER_EXTENSION_NAME = 'keymaker';
 

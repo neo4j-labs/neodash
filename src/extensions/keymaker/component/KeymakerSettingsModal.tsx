@@ -4,7 +4,6 @@ import { setClientSettings } from '../state/KeymakerActions';
 import { getSettings } from '../state/KeymakerSelector';
 import { Dialog } from '@neo4j-ndl/react';
 import { Button, IconButton, TextInput } from '@neo4j-ndl/react';
-// import { encryptString } from '../Util';
 
 const KeymakerSettingsModal = ({
   open,
