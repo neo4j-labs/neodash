@@ -430,21 +430,54 @@ export const NeoTableChart = (props: ChartProps) => {
           <></>
         )}
 
-        {wrapContent ? (
-          <DataGrid
-            {...commonGridProps}
-            getRowHeight={() => 'auto'}
-            sx={{
-              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '3px' },
-              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell:has(button)': { py: '0px' },
-              '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
-              '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
-              '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
-            }}
-          />
-        ) : (
-          <DataGrid {...commonGridProps} rowHeight={tableRowHeight} />
-        )}
+        <DataGrid
+          key={'tableKey'}
+          headerHeight={32}
+          rows={rows}
+          columns={columns}
+          density={compact === 'on' || compact === true ? 'compact' : 'standard'}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
+          onCellClick={(e) =>
+            performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
+          }
+          onCellDoubleClick={(e) => {
+            let rules = getRule(e, actionsRules, 'doubleClick');
+            if (rules !== null) {
+              rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
+            } else {
+              setNotificationOpen(true);
+              navigator.clipboard.writeText(e.value);
+            }
+          }}
+          checkboxSelection={hasCheckboxes(actionsRules)}
+          selectionModel={getCheckboxes(actionsRules, rows, props.getGlobalParameter)}
+          onSelectionModelChange={(selection) =>
+            updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter)
+          }
+          autoPageSize
+          pagination
+          disableSelectionOnClick
+          hideFooterSelectedRowCount
+          components={{
+            ColumnSortedDescendingIcon: () => <></>,
+            ColumnSortedAscendingIcon: () => <></>,
+          }}
+          getRowClassName={(params) => {
+            return ['row color', 'row text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
+              })
+              .join(' ');
+          }}
+          getCellClassName={(params) => {
+            return ['cell color', 'cell text color']
+              .map((e) => {
+                return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
+              })
+              .join(' ');
+          }}
+        />
       </div>
     </ThemeProvider>
   );
