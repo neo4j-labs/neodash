@@ -10,9 +10,9 @@ export const NeoDashboardSidebarLoadModal = ({ open, onConfirm, handleClose }) =
     <Dialog size='small' open={open == true} onClose={handleClose} aria-labelledby='form-dialog-title'>
       <Dialog.Header id='form-dialog-title'>Discard Draft?</Dialog.Header>
       <Dialog.Subtitle>
-        Switching your active dashboard will delete your current draft.
+        You are discarding your current draft dashboard.
         <br />
-        <b>Save the draft first to ensure your dashboard is stored.</b>
+        <b>Your draft will not be recoverable.</b>
       </Dialog.Subtitle>
       <Dialog.Actions>
         <Button

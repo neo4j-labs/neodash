@@ -1,7 +1,7 @@
 import { setSessionParameters } from '../application/ApplicationActions';
 import { applicationGetConnection } from '../application/ApplicationSelectors';
 import { hardResetCardSettings } from '../card/CardActions';
-import { castToNeo4jDate, isCastableToNeo4jDate, valueIsNode } from '../chart/ChartUtils';
+import { castToNeo4jDate, isCastableToNeo4jDate, toNumber, valueIsNode } from '../chart/ChartUtils';
 import { createNotificationThunk } from '../page/PageThunks';
 import { updateDashboardSetting } from './SettingsActions';
 
@@ -62,7 +62,6 @@ export const updateGlobalParametersThunk = (newParameters) => (dispatch: any, ge
   try {
     const { settings } = getState().dashboard;
     const parameters = settings.parameters ? settings.parameters : {};
-
     // if new parameters are set...
     if (newParameters) {
       // iterate over the key value pairs in parameters
@@ -74,6 +73,7 @@ export const updateGlobalParametersThunk = (newParameters) => (dispatch: any, ge
         }
       });
       dispatch(updateDashboardSetting('parameters', { ...parameters }));
+      dispatch(updateParametersToNeo4jTypeThunk());
     }
   } catch (e) {
     dispatch(createNotificationThunk('Unable to update global parameters', e));
@@ -89,12 +89,17 @@ export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: 
     const { settings } = getState().dashboard;
 
     const parameters = settings.parameters ? settings.parameters : {};
-
     // if new parameters are set...
     // iterate over the key value pairs in parameters
     Object.keys(parameters).forEach((key) => {
       if (isCastableToNeo4jDate(parameters[key])) {
         parameters[key] = castToNeo4jDate(parameters[key]);
+      } else if (
+        parameters[key] &&
+        !isNaN(toNumber(parameters[key])) &&
+        typeof toNumber(parameters[key]) === 'number'
+      ) {
+        parameters[key] = toNumber(parameters[key]);
       } else if (parameters[key] == undefined) {
         delete parameters[key];
       }

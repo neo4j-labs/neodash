@@ -93,6 +93,7 @@ pages:
 - link:bar-chart[Bar Chart]
 - link:pie-chart[Pie Chart] 
 - link:line-chart[Line Chart] 
+- link:graph3d[3D Graph]
 - link:sunburst[Sunburst]
 - link:circle-packing[Circle Packing] 
 - link:treemap[Treemap]

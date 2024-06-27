@@ -70,7 +70,7 @@ export const NeoOverrideCardQueryEditor = ({
     debouncedEnglishQuestionUpdate(pagenumber, reportId, value);
     setEnglishQuestion(value);
     if (needsUpdate) {
-      updateCypherQuery(`${cypherQuery  } `);
+      updateCypherQuery(`${cypherQuery} `);
       setNeedsUpdate(false);
     }
   }
