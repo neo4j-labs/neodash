@@ -10,7 +10,7 @@ const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
       className={'n-text-palette-neutral-text-default'}
       style={{ overflowY: 'auto', marginLeft: '10px', marginRight: '10px', height: '100%' }}
     >
-      <TextareaAutosize
+      <textarea
         style={{
           width: '100%',
           overflowY: 'hidden',
