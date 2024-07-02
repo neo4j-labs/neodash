@@ -12,6 +12,7 @@ const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
     >
       <textarea
         style={{
+          resize:'none',
           width: '100%',
           overflowY: 'hidden',
           scrollbarWidth: 'auto',
@@ -21,7 +22,6 @@ const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
           marginTop: '5px',
           border: '1px solid lightgray',
         }}
-        className={'textinput-linenumbers'}
         aria-label=''
         value={value}
         placeholder={placeholder}
