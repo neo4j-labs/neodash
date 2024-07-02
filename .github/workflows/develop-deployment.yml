@@ -12,6 +12,12 @@ jobs:
       matrix:
         node-version: [18.x]
     steps:
+      - name: Checkout Develop Branch
+        uses: actions/checkout@v2
+
+      - name: Removing Docs Folder
+        run: rm -rf docs
+      
       - name: Run Synopsys Detect
         uses: synopsys-sig/detect-action@v0.3.0
         env:
@@ -23,13 +29,7 @@ jobs:
             detect-version: 9.2.0
             blackduck-url: https://bdscan.i.mercedes-benz.com
             blackduck-api-token: ${{ secrets.BLACKDUCK_TOKEN }}
-
-      - name: Checkout Develop Branch
-        uses: actions/checkout@v2
-
-      - name: Removing Docs Folder
-        run: rm -rf docs
-
+            
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
