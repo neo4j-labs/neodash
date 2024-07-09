@@ -217,15 +217,24 @@ export const retrieveNeo4jUsers = (driver, currentRole, setNeo4jUsers, setRoleUs
  * @param setLabels callback to update the list of labels.
  */
 export function retrieveLabelsList(driver, database: any, setLabels: (records: any) => void) {
-  runCypherQuery(
-    driver,
-    database.value,
-    'CALL db.labels()',
-    {},
-    1000,
-    () => {},
-    (records) => setLabels(records)
-  );
+  let labelsSet = false; // Flag to track if setLabels was called
+
+  // Wrapper around the original setLabels to set the flag when called
+  const wrappedSetLabels = (records) => {
+    labelsSet = true;
+    setLabels(records);
+  };
+
+  runCypherQuery(driver, database, 'CALL db.labels()', {}, 1000, () => {}, wrappedSetLabels)
+    .then(() => {
+      if (!labelsSet) {
+        setLabels([]);
+      }
+    })
+    .catch((error) => {
+      console.error('Error retrieving labels:', error);
+      setLabels([]);
+    });
 }
 
 /**
