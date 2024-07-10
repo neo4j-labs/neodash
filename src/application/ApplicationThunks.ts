@@ -300,7 +300,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           setShareDetailsFromUrl(
             type,
             id,
-            undefined,
+            standalone,
             undefined,
             undefined,
             undefined,
@@ -331,6 +331,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
  */
 export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState: any) => {
   try {
+    console.log('IN');
     const state = getState();
     const { shareDetails } = state.application;
     dispatch(setWelcomeScreenOpen(false));
@@ -430,12 +431,14 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     dispatch(setSSOProviders(config.ssoProviders));
 
     // Check if we are in standalone mode
-    const standaloneShared = localStorage.getItem('standaloneShared') == 'true'; // EDGE case: from url param it could happen that we lose the value due to SSO redirect
-    const standalone = config.standalone || standaloneShared;
+    // const standaloneShared = localStorage.getItem('standaloneShared') == 'true'; // EDGE case: from url param it could happen that we lose the value due to SSO redirect
+    const {standalone} = config;
+    // || standaloneShared;
 
     // if a dashboard database was previously set, remember to use it.
     const dashboardDatabase = state.application.standaloneDashboardDatabase;
-
+    console.log(`Standalone: ${  standalone}`);
+    console.log(`Standalone Shared${  localStorage.getItem('standaloneShared')}`);
     dispatch(
       setStandaloneEnabled(
         standalone,
