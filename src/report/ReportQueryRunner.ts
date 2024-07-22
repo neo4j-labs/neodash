@@ -8,6 +8,7 @@ export enum QueryStatus {
   WAITING, // The report is waiting for custom logic to be executed.
   RUNNING, // The report query is running.
   TIMED_OUT, // Query has reached the time limit.
+  OVER_LOAD, // Dashboard doesn't load if too many tabs opened at the same time. (VULCAN-315)
   COMPLETE, // There is data returned, and we can visualize it all.
   COMPLETE_TRUNCATED, // There is data returned, but it's too much so we truncate it.
   ERROR, // Something broke, likely the cypher query is invalid.
@@ -141,6 +142,13 @@ export async function runCypherQuery(
         setRecords([{ error: e.message }]);
         transaction.rollback();
         return e.message;
+      }
+
+      if (e.message.startsWith('Failed to establish connection in 30000ms')) {
+        setStatus(QueryStatus.OVER_LOAD);
+        setRecords([{ error: 'Loading took too long. Please reload page.' }]);
+        transaction.rollback();
+        return 'Loading took too long. Please reload page.';
       }
 
       setStatus(QueryStatus.ERROR);

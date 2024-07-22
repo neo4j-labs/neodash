@@ -403,6 +403,8 @@ export const NeoReport = ({
         }
       />
     );
+  } else if (status == QueryStatus.OVER_LOAD) {
+    return <NeoCodeViewerComponent value={`Loading took too long. Please reload report or complete page.`} />;
   }
   return (
     <NeoCodeViewerComponent
