@@ -28,7 +28,14 @@ jobs:
             detect-version: 9.2.0
             blackduck-url: https://bdscan.i.mercedes-benz.com
             blackduck-api-token: ${{ secrets.BLACKDUCK_TOKEN }}
-            extraArgs: --detect.blackduck.signature.scanner.snippet.matching="SNIPPET_MATCHING" --detect.blackduck.signature.scanner.license.search=true --detect.blackduck.signature.scanner.upload.source.mode=true --detect.blackduck.signature.scanner.copyright.search=true --detect.tools=SIGNATURE_SCAN --detect.tools=DETECTOR --blackduck.trust.cert=true --detect.detector.search.depth=10 --detect.excluded.directories=Test,test,doc
+            blackduck-signature-scanner-snippet-matching: "SNIPPET_MATCHING"
+            blackduck-signature-scanner-license-search: true 
+            blackduck-signature-scanner-upload-source-mode: true 
+            blackduck-signature-scanner-copyright-search: true 
+            detect-tools: SIGNATURE_SCAN 
+            blackduck-trust-cert: true 
+            detector-search-depth: 10 
+            excluded-directories: Test,test,doc
             
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
