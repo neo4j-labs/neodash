@@ -16,26 +16,41 @@ jobs:
         uses: actions/checkout@v2
       - name: Removing Docs Folder
         run: rm -rf docs
+
+      - name: 🦆 Scan
+        run: bash <(curl -s https://detect.synopsys.com/detect9.sh) 
+               --blackduck.url=https://bdscan.i.mercedes-benz.com
+               --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN }}"
+               --detect.project.name="Neodash Open Source fork"
+               --detect.project.version.name="develop"
+               --detect.code.location.name="."
+               --detect.blackduck.signature.scanner.snippet.matching="SNIPPET_MATCHING"
+               --detect.blackduck.signature.scanner.license.search=true
+               --detect.blackduck.signature.scanner.upload.source.mode=true
+               --detect.blackduck.signature.scanner.copyright.search=true
+               --blackduck.trust.cert=true
+               --detect.detector.search.depth=10
+               --detect.excluded.directories=Test,test,doc,workflows
       
-      - name: Run Synopsys Detect
-        uses: synopsys-sig/detect-action@v0.3.0
-        env:
-          DETECT_PROJECT_NAME: "Neodash Open Source fork"
-          DETECT_PROJECT_VERSION_NAME: "develop"
-        with:
-            scan-mode: INTELLIGENT
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            detect-version: 9.2.0
-            blackduck-url: https://bdscan.i.mercedes-benz.com
-            blackduck-api-token: ${{ secrets.BLACKDUCK_TOKEN }}
-            blackduck-signature-scanner-snippet-matching: "SNIPPET_MATCHING"
-            blackduck-signature-scanner-license-search: true 
-            blackduck-signature-scanner-upload-source-mode: true 
-            blackduck-signature-scanner-copyright-search: true 
-            detect-tools: SIGNATURE_SCAN 
-            blackduck-trust-cert: true 
-            detector-search-depth: 10 
-            excluded-directories: Test,test,doc
+      # - name: Run Synopsys Detect
+      #   uses: synopsys-sig/detect-action@v0.3.0
+      #   env:
+      #     DETECT_PROJECT_NAME: "Neodash Open Source fork"
+      #     DETECT_PROJECT_VERSION_NAME: "develop"
+      #   with:
+      #       scan-mode: INTELLIGENT
+      #       github-token: ${{ secrets.GITHUB_TOKEN }}
+      #       detect-version: 9.2.0
+      #       blackduck-url: https://bdscan.i.mercedes-benz.com
+      #       blackduck-api-token: ${{ secrets.BLACKDUCK_TOKEN }}
+      #       blackduck-signature-scanner-snippet-matching: "SNIPPET_MATCHING"
+      #       blackduck-signature-scanner-license-search: true 
+      #       blackduck-signature-scanner-upload-source-mode: true 
+      #       blackduck-signature-scanner-copyright-search: true 
+      #       detect-tools: SIGNATURE_SCAN 
+      #       blackduck-trust-cert: true 
+      #       detector-search-depth: 10 
+      #       excluded-directories: Test,test,doc
             
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
