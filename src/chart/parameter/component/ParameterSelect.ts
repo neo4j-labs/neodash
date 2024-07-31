@@ -63,6 +63,10 @@ export interface ParameterSelectProps {
    */
   manualParameterSave?: boolean;
   /**
+   * Pass true if results should be sorted automatically
+   */
+  autoSort?: boolean;
+  /**
    * Predefined options
    */
   predefinedOptions?: string | undefined

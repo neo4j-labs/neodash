@@ -47,7 +47,7 @@ const NeoCardView = ({
   onToggleCardExpand,
   onHandleMinimize,
 }) => {
-  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 22;
+  const reportHeight = heightPx - CARD_FOOTER_HEIGHT - CARD_HEADER_HEIGHT + 20;
   const cardHeight = heightPx - CARD_FOOTER_HEIGHT + 23;
   const ref = React.useRef();
 
@@ -65,7 +65,7 @@ const NeoCardView = ({
   // e.g. Change of query, type, some advanced settings...
   const [selectorChange, setSelectorChange] = useState(false);
 
-  const getLocalParameters = (parse_string, drilldown = true): any => {
+  const getLocalParameters = (parse_string, drilldown = true): unknown => {
     if (!parse_string || !globalParameters) {
       return {};
     }
@@ -148,12 +148,12 @@ const NeoCardView = ({
 
   const localParameters = { ...getLocalParameters(query), ...getLocalParameters(settings.drilldownLink) };
   const reportTypes = getReportTypes(extensions);
-  const withoutFooter =
-    reportTypes[type] && reportTypes[type].withoutFooter
-      ? reportTypes[type].withoutFooter
-      : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
+  const reportTypeHasNoFooter = reportTypes[type] && reportTypes[type].withoutFooter;
+  const withoutFooter = reportTypeHasNoFooter
+    ? reportTypes[type].withoutFooter
+    : (reportTypes[type] && !reportTypes[type].selection) || (settings && settings.hideSelections);
 
-  const getGlobalParameter = (key: string): any => {
+  const getGlobalParameter = (key: string): unknown => {
     return globalParameters ? globalParameters[key] : undefined;
   };
 
@@ -181,13 +181,13 @@ const NeoCardView = ({
     paddingRight: '0px',
     paddingTop: '0px',
     width: '100%',
-    marginTop: '-3px',
+    marginTop: '-9px',
     height: expanded
       ? withoutFooter
         ? '100%'
         : `calc(100% - ${CARD_FOOTER_HEIGHT}px)`
       : withoutFooter
-      ? `${reportHeight + CARD_FOOTER_HEIGHT}px`
+      ? `${reportHeight + CARD_FOOTER_HEIGHT - (reportTypeHasNoFooter ? 0 : 20)}px`
       : `${reportHeight}px`,
     overflow: 'auto',
   };

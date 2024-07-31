@@ -43,6 +43,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   const helperText = props.settings && props.settings.helperText ? props.settings.helperText : '';
   const clearParameterOnFieldClear =
     props.settings && props.settings.clearParameterOnFieldClear ? props.settings.clearParameterOnFieldClear : false;
+  const autoSelectFirstValue =
+    props.settings && props.settings.autoSelectFirstValue ? props.settings.autoSelectFirstValue : false;
 
   // index of the display value in the resulting extra records retrieved by the component when the user types. equals '1' for NeoDash 2.2.2 and later.
   const displayValueRowIndex = props.compatibilityMode
@@ -101,13 +103,15 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     let valDisplayReference = manualParameterSave ? paramValueDisplayLocal : props.parameterDisplayValue;
     // Multiple and new entry
     if (isMulti && inputValue !== null && newDisplay !== null && inputValue.length < newDisplay.length) {
-      newValue = Array.isArray(valReference) ? [...valReference] : [valReference];
+      newValue = Array.isArray(valReference)
+        ? [...valReference]
+        : valReference && valReference !== null
+        ? [valReference]
+        : [];
       const newDisplayValue = [...newDisplay].slice(-1)[0];
-
       let val = extraRecords.filter((r) => r._fields[displayValueRowIndex].toString() == newDisplayValue)[0]._fields[
         realValueRowIndex
       ];
-
       if (newValue.low) {
         newValue.push(toNumber(val));
       } else {
@@ -117,7 +121,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
         ._fields[realValueRowIndex];
 
-      newValue = newValue.low ? toNumber(newValue) : RenderSubValue(newValue);
+      newValue =
+        (newValue.low && newValue.low != null) || newValue.low === 0 ? toNumber(newValue) : RenderSubValue(newValue);
     } else {
       let ele = valDisplayReference.filter((x) => !newDisplay.includes(x))[0];
       newValue = [...valReference];
@@ -125,10 +130,8 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     }
 
     newDisplay = newDisplay.low ? toNumber(newDisplay) : RenderSubValue(newDisplay);
-
     setInputDisplayText(isMulti ? '' : newDisplay);
     setInputValue(newDisplay);
-
     handleParametersUpdate(newValue, newDisplay, manualParameterSave);
   };
 
@@ -162,13 +165,14 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       />
     );
   }
-
+  let options = extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)');
+  options = props.autoSort ? options.sort() : options;
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
         multiple={multiSelector}
-        options={extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)').sort()}
+        options={options}
         disabled={disabled}
         limitTags={multiSelectLimit}
         style={{
@@ -177,7 +181,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
           marginLeft: '15px',
           marginTop: '5px',
         }}
-        inputValue={inputDisplayText || ''}
+        inputValue={inputDisplayText.toString() || ''}
         onInputChange={(event, value) => {
           setInputDisplayText(value);
           debouncedQueryCallback(props.query, { input: `${value}`, ...allParameters }, setExtraRecords);
@@ -188,6 +192,20 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         onOpen={() => {
           if (extraRecords && extraRecords.length == 0) {
             debouncedQueryCallback(props.query, { input: `${inputDisplayText}`, ...allParameters }, setExtraRecords);
+          }
+        }}
+        onBlur={() => {
+          // If the user loses focus of the selector, and nothing is selected
+          // We may want to auto-select the first value produced by the selector query (`autoSelectFirstValue == true`)
+          if (autoSelectFirstValue && paramValueDisplayLocal == '') {
+            debouncedQueryCallback(props.query, { input: '', ...allParameters }, (records) => {
+              if (records && records.length > 0 && records[0] && records[0]._fields) {
+                let values = records?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)');
+                values = props.autoSort ? values.sort() : values;
+                setExtraRecords(records);
+                propagateSelection(undefined, values[0]);
+              }
+            });
           }
         }}
         value={inputValue || ''}

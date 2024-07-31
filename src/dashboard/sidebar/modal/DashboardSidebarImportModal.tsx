@@ -7,9 +7,17 @@ export const NeoDashboardSidebarImportModal = ({ open, onImport, handleClose }) 
   const [text, setText] = React.useState('');
   const loadFromFile = useRef(null);
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    setText(e.target.result);
+  const onSelectFileClick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    if (e.target.files == null) {
+      return;
+    }
+
+    const file = e.target.files[0];
+    const text = await file.text();
+
+    setText(text);
   };
 
   return (
@@ -39,15 +47,7 @@ export const NeoDashboardSidebarImportModal = ({ open, onImport, handleClose }) 
           style={{ marginLeft: '10px' }}
           floating
         >
-          <input
-            type='file'
-            ref={loadFromFile}
-            onChange={(e) => {
-              e.preventDefault();
-              reader.readAsText(e.target.files[0]);
-            }}
-            hidden
-          />
+          <input value='' type='file' ref={loadFromFile} onChange={onSelectFileClick} hidden />
           Select From File
           <DocumentPlusIconOutline className='btn-icon-base-r' />
         </Button>

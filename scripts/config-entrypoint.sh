@@ -7,7 +7,7 @@ echo " \
     \"ssoEnabled\": ${ssoEnabled:=false}, \
     \"ssoProviders\": ${ssoProviders:=[]}, \
     \"ssoDiscoveryUrl\": \"${ssoDiscoveryUrl:='https://example.com'}\",  \
-    \"standalone\": "${standalone:=false}", \
+    \"standalone\": ${standalone:=false}, \
     \"standaloneProtocol\": \"${standaloneProtocol:='neo4j+s'}\", \
     \"standaloneHost\": \"${standaloneHost:='test.databases.neo4j.io'}\", \
     \"standalonePort\": ${standalonePort:=7687}, \

@@ -2,7 +2,14 @@
  * Reducers define changes to the application state when a given action is taken.
  */
 
-import { HARD_RESET_CARD_SETTINGS, UPDATE_ALL_SELECTIONS, UPDATE_FIELDS, UPDATE_SCHEMA } from '../card/CardActions';
+import {
+  HARD_RESET_CARD_SETTINGS,
+  TOGGLE_CARD_SETTINGS,
+  UPDATE_ALL_SELECTIONS,
+  UPDATE_FIELDS,
+  UPDATE_SCHEMA,
+  UPDATE_SELECTION,
+} from '../card/CardActions';
 import { DEFAULT_NEO4J_URL } from '../config/ApplicationConfig';
 import { SET_DASHBOARD, SET_DASHBOARD_UUID } from '../dashboard/DashboardActions';
 import { UPDATE_DASHBOARD_SETTING } from '../settings/SettingsActions';
@@ -31,7 +38,15 @@ import {
   SET_STANDALONE_MODE,
   SET_WAIT_FOR_SSO,
   SET_WELCOME_SCREEN_OPEN,
+  SET_CUSTOM_HEADER,
 } from './ApplicationActions';
+import {
+  SET_LOGGING_MODE,
+  SET_LOGGING_DATABASE,
+  SET_LOG_ERROR_NOTIFICATION,
+  LOGGING_PREFIX,
+} from './logging/LoggingActions';
+import { loggingReducer, LOGGING_INITIAL_STATE } from './logging/LoggingReducer';
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -56,6 +71,7 @@ const initialState = {
   dashboardToLoadAfterConnecting: null,
   waitForSSO: false,
   standalone: false,
+  logging: LOGGING_INITIAL_STATE,
 };
 export const applicationReducer = (state = initialState, action: { type: any; payload: any }) => {
   const { type, payload } = action;
@@ -71,7 +87,10 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
       UPDATE_ALL_SELECTIONS,
       UPDATE_FIELDS,
       SET_DASHBOARD_UUID,
+      TOGGLE_CARD_SETTINGS,
+      UPDATE_SELECTION,
     ];
+
     if (!state.draft && !NON_TRANSFORMATIVE_ACTIONS.includes(type)) {
       state = update(state, { draft: true });
       return state;
@@ -81,6 +100,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
   // Ignore any non-application actions.
   if (!action.type.startsWith('APPLICATION/')) {
     return state;
+  }
+  if (action.type.startsWith(LOGGING_PREFIX)) {
+    const enrichedPayload = update(payload, { logging: state.logging });
+    const enrichedAction = { type, payload: enrichedPayload };
+    return { ...state, logging: loggingReducer(state.logging, enrichedAction) };
   }
 
   // Application state updates are handled here.
@@ -132,6 +156,21 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
     case SET_STANDALONE_MODE: {
       const { standalone } = payload;
       state = update(state, { standalone: standalone });
+      return state;
+    }
+    case SET_LOGGING_MODE: {
+      const { loggingMode } = payload;
+      state = update(state, { loggingMode: loggingMode });
+      return state;
+    }
+    case SET_LOGGING_DATABASE: {
+      const { loggingDatabase } = payload;
+      state = update(state, { loggingDatabase: loggingDatabase });
+      return state;
+    }
+    case SET_LOG_ERROR_NOTIFICATION: {
+      const { logErrorNotification } = payload;
+      state = update(state, { logErrorNotification: logErrorNotification });
       return state;
     }
     case SET_SSO_ENABLED: {
@@ -270,6 +309,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
           skipConfirmation: skipConfirmation,
         },
       });
+      return state;
+    }
+    case SET_CUSTOM_HEADER: {
+      const { customHeader } = payload;
+      state = update(state, { customHeader: customHeader });
       return state;
     }
     default: {

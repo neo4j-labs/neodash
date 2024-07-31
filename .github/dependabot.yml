@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
+
+  - package-ecosystem: 'npm'
+    directory: '/gallery'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
+
+  - package-ecosystem: 'npm'
+    directory: '/docs'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'

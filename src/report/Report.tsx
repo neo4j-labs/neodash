@@ -83,7 +83,7 @@ export const NeoReport = ({
   };
 
   const setSchema = (id, schema) => {
-    if (type === 'graph' || type === 'map' || type === 'gantt') {
+    if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
       setSchemaDispatch(id, schema);
     }
   };
@@ -403,6 +403,8 @@ export const NeoReport = ({
         }
       />
     );
+  } else if (status == QueryStatus.OVER_LOAD) {
+    return <NeoCodeViewerComponent value={`Loading took too long. Please reload report or complete page.`} />;
   }
   return (
     <NeoCodeViewerComponent

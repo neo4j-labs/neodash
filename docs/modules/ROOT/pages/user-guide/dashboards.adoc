@@ -3,7 +3,7 @@
 In NeoDash, a dashboard consists of several pages, each of which can
 consist of multiple reports.
 
-image::dashboard2.png[Dashboard]
+image::dashboardnew.png[Dashboard]
 
 As an example: The screenshot above shows a dashboard with three pages:
 `Breweries`, `Beer Ratings` and `Styles`. The dashboard title `My
@@ -21,7 +21,7 @@ dashboard or open an existing one (if available). After being connected,
 the buttons on the sidebar can be used to save, load or share a
 dashboard.
 
-image::saveloadshare.png[Save/Load/Share Button]
+image::dashboardnewsettings.png[Save/Load/Share Button]
 
 === Save a Dashboard
 
@@ -114,6 +114,15 @@ database credentials, which can be a security risk.
 When creating a NeoDash deployment on a production database, it is not
 recommended to use the `Share' feature. Rather, set up a dedicated
 standalone deployment of NeoDash. See Publishing for more infomation.
+
+=== Dashboard Access Control
+With this feature, you can manage dashboard access by leveraging the native Neo4j Role-based Access Control (RBAC) functionality. Attach additional labels to the currently selected dashboard node within this window, either by utilizing existing labels in your database or creating new ones, to regulate access permissions. 
+
+You can find the Dashboard Access Control feature by clicking on the three dots next to the dashboard name in the sidebar and selecting the "Access Control" option.
+
+> This approach should be used together with restricted privileges on labels, assigned to certain roles. See link:../extensions/access-control-management[Access Control Management] for details.
+
+image::dashboardaccesscontrol.png[Dashboard Access Control]
 
 == Dashboard Settings
 

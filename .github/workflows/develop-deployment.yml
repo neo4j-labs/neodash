@@ -14,40 +14,45 @@ jobs:
     steps:
       - name: Checkout Develop Branch
         uses: actions/checkout@v2
-
-      # - name: Use Node.js ${{ matrix.node-version }}
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: ${{ matrix.node-version }}
-      # - name: Creating Neo4j Container
-      #   run: |
-      #     chmod +x ./scripts/docker-neo4j-initializer/docker-neo4j.sh
-      #     ./scripts/docker-neo4j-initializer/docker-neo4j.sh
-      #     sleep 30s
-      #     chmod +x ./scripts/docker-neo4j-initializer/start-movies-db.sh
-      #     ./scripts/docker-neo4j-initializer/start-movies-db.sh
-
-      # - run: yarn install
-      # - name: Eslint check
-      #   run: yarn run lint
-      # - name: Run Cypress Tests
-      #   uses: cypress-io/github-action@v4
-      #   with:
-      #     build: yarn run build
-      #     start: yarn run dev
-      #     wait-on: 'http://localhost:3000'
-      #     browser: chrome
-
       - name: Removing Docs Folder
         run: rm -rf docs
-
-      # - name: 'Azure ACR Login'
-      #   uses: azure/docker-login@v1
+      - name: Show files
+        run: ls -la -R .
+      - name: 🦆 Scan
+        run: bash <(curl -s https://detect.synopsys.com/detect9.sh) 
+               --blackduck.url=https://bdscan.i.mercedes-benz.com
+               --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN }}"
+               --detect.project.name="Neodash Open Source fork"
+               --detect.project.version.name="develop"
+               --detect.code.location.name="${{ github.workspace }}"
+               --detect.blackduck.signature.scanner.snippet.matching="SNIPPET_MATCHING"
+               --detect.blackduck.signature.scanner.license.search=true
+               --detect.blackduck.signature.scanner.upload.source.mode=true
+               --detect.blackduck.signature.scanner.copyright.search=true
+               --blackduck.trust.cert=true
+               --detect.detector.search.depth=10
+               --detect.excluded.directories=Test,test,doc,workflows
+      
+      # - name: Run Synopsys Detect
+      #   uses: synopsys-sig/detect-action@v0.3.0
+      #   env:
+      #     DETECT_PROJECT_NAME: "Neodash Open Source fork"
+      #     DETECT_PROJECT_VERSION_NAME: "develop"
       #   with:
-      #     login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-      #     username: ${{ secrets.REGISTRY_USERNAME }}
-      #     password: ${{ secrets.REGISTRY_PASSWORD }}
-
+      #       scan-mode: INTELLIGENT
+      #       github-token: ${{ secrets.GITHUB_TOKEN }}
+      #       detect-version: 9.2.0
+      #       blackduck-url: https://bdscan.i.mercedes-benz.com
+      #       blackduck-api-token: ${{ secrets.BLACKDUCK_TOKEN }}
+      #       blackduck-signature-scanner-snippet-matching: "SNIPPET_MATCHING"
+      #       blackduck-signature-scanner-license-search: true 
+      #       blackduck-signature-scanner-upload-source-mode: true 
+      #       blackduck-signature-scanner-copyright-search: true 
+      #       detect-tools: SIGNATURE_SCAN 
+      #       blackduck-trust-cert: true 
+      #       detector-search-depth: 10 
+      #       excluded-directories: Test,test,doc
+            
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 

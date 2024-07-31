@@ -10,17 +10,18 @@ const NeoCodeViewerComponent = ({ value = '', placeholder = '' }) => {
       className={'n-text-palette-neutral-text-default'}
       style={{ overflowY: 'auto', marginLeft: '10px', marginRight: '10px', height: '100%' }}
     >
-      <TextareaAutosize
+      <textarea
         style={{
+          resize:'none',
           width: '100%',
           overflowY: 'hidden',
           scrollbarWidth: 'auto',
           paddingLeft: '10px',
           background: 'none',
           overflow: 'scroll !important',
+          marginTop: '5px',
           border: '1px solid lightgray',
         }}
-        className={'textinput-linenumbers'}
         aria-label=''
         value={value}
         placeholder={placeholder}
