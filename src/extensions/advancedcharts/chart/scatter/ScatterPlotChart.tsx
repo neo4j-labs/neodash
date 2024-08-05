@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
-import { ChartProps } from '../Chart';
-import { recordToNative } from '../ChartUtils';
+import { NoDrawableDataErrorMessage } from '../../../../component/editor/CodeViewerComponent';
+import { ChartProps } from '../../../../chart/Chart';
+import { recordToNative } from '../../../../chart/ChartUtils';
 import { ResponsiveScatterPlot, ResponsiveScatterPlotCanvas } from '@nivo/scatterplot';
 import { animated } from '@react-spring/web';
 import chroma from 'chroma-js';
-import { themeNivo } from '../Utils';
+import { themeNivo } from '../../../../chart/Utils';
 
 /**
  * Embeds a Nivo ResponsiveScatterPlot and a ResponsiveScatterPlotCanvas into NeoDash.
@@ -252,10 +252,7 @@ const NeoScatterPlot = (props: ChartProps) => {
   const generateTooltip = (node) => {
     return (
       <div style={{ color: 'black', background: 'white', border: '1px solid black', padding: '12px 16px' }}>
-        <strong>{node.data.label ? `${labelProp}: ${node.data.label} ` : ''}</strong>
-        <br />
-        <strong>{node.data.intensity ? `${colorIntensityProp}: ${node.data.intensity}` : ''}</strong>
-        {node.data.label ? <br /> : <></>}
+        <strong>{JSON.stringify(node)}</strong>
         {`x: ${node.formattedX}`}
         <br />
         {`y: ${node.formattedY}`}
@@ -263,11 +260,37 @@ const NeoScatterPlot = (props: ChartProps) => {
       </div>
     );
   };
+  
 
   // Fixing canvas bug, from https://github.com/plouc/nivo/issues/2162
   HTMLCanvasElement.prototype.getBBox = function tooltipMapper() {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
+
+  const legends = [
+    {
+      anchor: 'bottom-right',
+      direction: 'column',
+      justify: false,
+      translateX: 130,
+      translateY: 0,
+      itemsSpacing: 2,
+      itemWidth: 100,
+      itemHeight: 12,
+      itemDirection: 'left-to-right',
+      itemOpacity: 0.85,
+      symbolSize: 12,
+      symbolShape: 'circle',
+      effects: [
+        {
+          on: 'hover',
+          style: {
+            itemOpacity: 1,
+          },
+        },
+      ],
+    },
+  ];
 
   // If the query returns too many nodes, pass to a Canvas verison of the chart (scales easier than a normal plot)
   const ComponentType = data.data.length <= 50 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
@@ -335,8 +358,9 @@ const NeoScatterPlot = (props: ChartProps) => {
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}
         pointLabelYOffset={-12}
-        tooltip={(node) => generateTooltip(node.node)}
+        tooltip={(node) => generateTooltip(node)}
         renderNode={renderNode}
+        legends={legends}
       />
     </div>
   );
