@@ -40,16 +40,12 @@ const NeoScatterPlot = (props: ChartProps) => {
     data: [] as any[],
   });
 
-  const [legendRange, setLegendRange] = React.useState({ min: 1, max: 2 });
-
   const settings = props.settings ? props.settings : {};
   const labelProp = settings.labelProp != undefined ? settings.labelProp : 'label';
   const colorScale = chroma.scale('Spectral');
 
   const pointSize = settings.pointSize ? settings.pointSize : 10;
   const showGrid = settings.showGrid != undefined ? settings.showGrid : true;
-  const showLegend = settings.legend !== undefined ? settings.legend : false;
-  const legendWidth = settings.legendWidth !== undefined ? settings.legendWidth : 20;
   const xScale = settings.xScale ? settings.xScale : 'linear';
   const yScale = settings.yScale ? settings.yScale : 'linear';
 
@@ -163,26 +159,6 @@ const NeoScatterPlot = (props: ChartProps) => {
     );
   }
 
-  /**
-   * Color gradient showing the possible colors binded to the viz
-   * @returns Legend based on the intensity
-   */
-  const generateColorLegend = () => {
-    return (
-      <div
-        style={{
-          backgroundImage: `linear-gradient(0deg, ${[...Array(11)].map((_, i) => colorScale(i / 10)).join(', ')})`,
-          height: props.dimensions.height - marginBottom - marginTop - 100,
-          marginTop: 20,
-          marginBottom: 50,
-          marginRight: 10,
-          width: legendWidth,
-          float: 'right',
-        }}
-      ></div>
-    );
-  };
-
   const getNodeColor = (node, record) => {
     let color = 'green';
     const data = {};
@@ -253,38 +229,13 @@ const NeoScatterPlot = (props: ChartProps) => {
     return { width: this.offsetWidth, height: this.offsetHeight };
   };
 
-  const legends = [
-    {
-      anchor: 'bottom-right',
-      direction: 'column',
-      justify: false,
-      translateX: 130,
-      translateY: 0,
-      itemsSpacing: 2,
-      itemWidth: 100,
-      itemHeight: 12,
-      itemDirection: 'left-to-right',
-      itemOpacity: 0.85,
-      symbolSize: 12,
-      symbolShape: 'circle',
-      effects: [
-        {
-          on: 'hover',
-          style: {
-            itemOpacity: 1,
-          },
-        },
-      ],
-    },
-  ];
-
   // If the query returns too many nodes, pass to a Canvas verison of the chart (scales easier than a normal plot)
   const ComponentType = data.data.length <= 200 ? ResponsiveScatterPlot : ResponsiveScatterPlotCanvas;
 
   const scatterplot = (
     <div
       style={{
-        width: !keepLegend ? '100%' : props.dimensions.width - legendWidth - 10,
+        width: !keepLegend ? '100%' : props.dimensions.width - 10,
         height: '100%',
         float: 'left',
         display: 'flex',
@@ -347,7 +298,6 @@ const NeoScatterPlot = (props: ChartProps) => {
         pointLabelYOffset={-12}
         tooltip={(node) => generateTooltip(node.node, records[node.node.index])}
         renderNode={(ctx, node) => renderNode(ctx, node, records[node.index])}
-        legends={legends}
       />
     </div>
   );

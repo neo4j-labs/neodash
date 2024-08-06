@@ -639,17 +639,6 @@ export const _ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.TEXT,
         default: 'label',
       },
-      legend: {
-        label: 'Show Legend',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      legendWidth: {
-        label: 'Legend Width (px)',
-        type: SELECTION_TYPES.NUMBER,
-        default: 20,
-      },
       xScale: {
         label: 'X Scale',
         type: SELECTION_TYPES.LIST,
