@@ -85,6 +85,12 @@ export const RULE_BASED_REPORT_CUSTOMIZATIONS = {
       label: 'Bar Color',
     },
   ],
+  scatterPlot: [
+    {
+      value: 'point color',
+      label: 'Point Color',
+    },
+  ],
   line: [
     {
       value: 'line color',

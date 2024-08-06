@@ -626,33 +626,13 @@ export const _ADVANCED_REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         key: true,
       },
-      label: {
-        label: 'Caption',
-        type: SELECTION_TYPES.TEXT,
-      },
-      key: {
-        label: 'Group',
-        type: SELECTION_TYPES.TEXT,
-        optional: true,
-      },
     },
     maxRecords: 2000,
     settings: {
-      showOptionalSelections: {
-        label: 'Grouping',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
       backgroundColor: {
         label: 'Background Color',
         type: SELECTION_TYPES.COLOR,
         default: '#fafafa',
-      },
-      colorIntensityProp: {
-        label: 'Intensity value field',
-        type: SELECTION_TYPES.TEXT,
-        default: 'intensity',
       },
       labelProp: {
         label: 'Point label field',
