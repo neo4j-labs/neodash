@@ -269,16 +269,17 @@ function RenderArray(value, transposedTable = false) {
     mapped = value.map((v, i) => {
       return RenderSubValue(v) + (i < value.length - 1 ? ', ' : '');
     });
-  }
-  // Render Node and Relationship objects, which will look like a Path
-  mapped = value.map((v, i) => {
-    return (
-      <span key={String(`k${i}`) + v}>
-        {RenderSubValue(v)}
-        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>, </span> : <></>}
-      </span>
-    );
-  });
+  } else {
+    // Render Node and Relationship objects, which will look like a Path
+    mapped = value.map((v, i) => {
+      return (
+        <span key={String(`k${i}`) + v}>
+          {RenderSubValue(v)}
+          {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>, </span> : <></>}
+        </span>
+      );
+    });
+  };
   return mapped;
 }
 
