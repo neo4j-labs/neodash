@@ -3,6 +3,7 @@ import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
+  evaluateSingleRuleOnDict,
   generateClassDefinitionsBasedOnRules,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
@@ -253,7 +254,15 @@ export const NeoTableChart = (props: ChartProps) => {
     getCellClassName: (params) => {
       return ['cell color', 'cell text color']
         .map((e) => {
-          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
+          for (const [index, rule] of styleRules.entries()) {
+            if (rule.targetField) {
+              if (rule.targetField === params.field) {
+                return `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [e])}`;
+              }
+            } else {
+              return `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
+            }
+          }
         })
         .join(' ');
     },
