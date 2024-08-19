@@ -59,6 +59,7 @@ export const hiveAuthenticate = async ({ queryString }) => {
       return { isAuthenticated: false };
     }
     alert('An unknown error occurred, check the console for details.');
+    console.log('unhandled error: ', err);
     return { isHandled: false };
   }
 };

@@ -84,7 +84,11 @@ export class HiveConnectionModule extends ConnectionModule {
         }
         setSchema(extractNodeAndRelPropertiesFromRecords(records));
         setRecords(records);
-        setStatus(QueryStatus.COMPLETE);
+        if (records.length === 0) {
+          setStatus(QueryStatus.NO_DATA);
+        } else {
+          setStatus(QueryStatus.COMPLETE);
+        }
       } catch (e) {
         setError(e.message);
         setRecords([{ error: e.message }]);
@@ -139,9 +143,8 @@ export class HiveConnectionModule extends ConnectionModule {
             return { variable: variableAndAlias[0], alias: variableAndAlias[0] };
           } else if (variableAndAlias.length > 1) {
             return { variable: variableAndAlias[0], alias: variableAndAlias[1] };
-          } 
-            return { variable: 'error_not_specified', alias: 'error_not_specified' };
-          
+          }
+          return { variable: 'error_not_specified', alias: 'error_not_specified' };
         });
     }
     return [];
@@ -171,9 +174,8 @@ export class HiveConnectionModule extends ConnectionModule {
       }, {});
     } else if (Number.isInteger(value) && ['start', 'end', 'identity'].includes(key)) {
       return new Integer(value, 0);
-    } 
-      return value;
-    
+    }
+    return value;
   };
 
   convertGraphQLResponseToRecords = (recommendations, returnFormat) => {
