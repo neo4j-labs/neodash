@@ -279,7 +279,7 @@ function RenderArray(value, transposedTable = false) {
         </span>
       );
     });
-  };
+  }
   return mapped;
 }
 
