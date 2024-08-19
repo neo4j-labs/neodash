@@ -122,26 +122,30 @@ export class Auth {
 
   silentAuth = async () => {
     let promise = new Promise((resolve, reject) => {
-      this.auth0.checkSession({}, async (err, authResult) => {
-        if (err) {
-          return reject(new Error(err.error));
-        }
-        if (!authResult?.idToken) {
-          return reject(new Error('auth_token_missing'));
-        }
-        this.setSession(authResult);
-
-        if (this.verifyAccess) {
-          const result = await this.verifyDemoAccess({ caller: AuthConstants.silentAuth });
-          if (!result.hasAccess) {
-            this.removeLocalStorageItems();
-            window.location.replace(this.galleryUiUrl);
+      if (this.isAuth0()) {
+        this.auth0.checkSession({}, async (err, authResult) => {
+          if (err) {
+            return reject(new Error(err.error));
           }
-          resolve(result.hasAccess);
-        } else {
-          resolve(true);
-        }
-      });
+          if (!authResult?.idToken) {
+            return reject(new Error('auth_token_missing'));
+          }
+          this.setSession(authResult);
+
+          if (this.verifyAccess) {
+            const result = await this.verifyDemoAccess({ caller: AuthConstants.silentAuth });
+            if (!result.hasAccess) {
+              this.removeLocalStorageItems();
+              window.location.replace(this.galleryUiUrl);
+            }
+            resolve(result.hasAccess);
+          } else {
+            resolve(true);
+          }
+        });
+      } else {
+        resolve(true);
+      }
     });
     return await promise; // eslint-disable-line
   };
