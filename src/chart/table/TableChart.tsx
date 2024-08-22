@@ -244,6 +244,7 @@ export const NeoTableChart = (props: ChartProps) => {
       ColumnSortedDescendingIcon: () => <></>,
       ColumnSortedAscendingIcon: () => <></>,
     },
+    // TODO: if mixing and matching row and cell styling, row rules MUST be set first or will not populate correctly
     getRowClassName: (params) => {
       return ['row color', 'row text color']
         .map((e) => {
