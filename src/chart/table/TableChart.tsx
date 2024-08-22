@@ -254,15 +254,19 @@ export const NeoTableChart = (props: ChartProps) => {
     getCellClassName: (params) => {
       return ['cell color', 'cell text color']
         .map((e) => {
+          let trueRulesList = [''];
+          let trueRule;
           for (const [index, rule] of styleRules.entries()) {
             if (rule.targetField) {
               if (rule.targetField === params.field) {
-                return `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [e])}`;
+                trueRule = `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [e])}`;
               }
             } else {
-              return `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
+              trueRule = `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
             }
+            trueRulesList.push(trueRule);
           }
+          return trueRulesList.join(' ');
         })
         .join(' ');
     },
