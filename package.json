@@ -21,7 +21,7 @@
     }
   ],
   "scripts": {
-    "dev": "yarn webpack-dev-server --mode development",
+    "dev": "yarn webpack-dev-server --port 8080 --mode development",
     "prod": "yarn webpack-dev-server --mode production",
     "debug": "yarn --node-options='--inspect' webpack-dev-server --mode development",
     "build": "yarn webpack --mode production --env production && cp -r public/* dist/",

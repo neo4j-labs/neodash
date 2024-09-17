@@ -14,6 +14,7 @@ import { SELECTION_TYPES } from './CardConfig';
 import NeoLineChart from '../chart/line/LineChart';
 import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
 import { objMerge, objectMap } from '../utils/ObjectManipulation';
+import EasydbDetailView from '../chart/easydb/EasydbDetailView';
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -1152,6 +1153,14 @@ const _REPORT_TYPES = {
         default: true,
       },
     },
+  },
+  easydbdetail: {
+    label: "EasyDB Detail",
+    helperText: "This report will show the details of a single EasyDB record.",
+    component: EasydbDetailView,
+    maxRecords: 1,
+    settings: {},
+    allowScrolling: true
   },
 };
 
