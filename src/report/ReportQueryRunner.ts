@@ -12,6 +12,7 @@ export enum QueryStatus {
   COMPLETE, // There is data returned, and we can visualize it all.
   COMPLETE_TRUNCATED, // There is data returned, but it's too much so we truncate it.
   ERROR, // Something broke, likely the cypher query is invalid.
+  INACTIVE, // If dashboard is inactive for too long and we use a custom message instead of error message from backend. (VULCAN-819)
 }
 
 // TODO: create a readOnly version of this method or inject a property
@@ -149,6 +150,13 @@ export async function runCypherQuery(
         setRecords([{ error: 'Loading took too long. Please reload page.' }]);
         transaction.rollback();
         return 'Loading took too long. Please reload page.';
+      }
+
+      if (e.message.startsWith('WebSocket connection failure.')) {
+        setStatus(QueryStatus.INACTIVE);
+        setRecords([{ error: 'Access token timed out. Please reload report or complete page.' }]);
+        transaction.rollback();
+        return 'Access token timed out. Please reload report or complete page.';
       }
 
       setStatus(QueryStatus.ERROR);
