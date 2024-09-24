@@ -15,9 +15,9 @@ const EasydbDetailView = (props: ChartProps) => {
             }
     }, []);
 
-   const records = props.records;
+   const { records, settings } = props;
    return records.map(r => {
-       return <div class="w-[800px] overflow-y-auto"><easydb-detail-view id="easydb" uuid={r._fields[0]}/></div>
+       return <div class="w-[800px] overflow-y-auto"><easydb-detail-view id="easydb" systemid={r._fields[0]} appLanguage={settings.language} easydbInstance={settings.instance} token={settings.token} /></div>
    })
 }
 

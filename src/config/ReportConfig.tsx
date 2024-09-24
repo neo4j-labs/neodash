@@ -1160,7 +1160,25 @@ const _REPORT_TYPES = {
     component: EasydbDetailView,
     maxRecords: 1,
     settings: {},
-    allowScrolling: true
+    allowScrolling: true,
+    settings: {
+      token: {
+        label: "EasyDB Access Token (private instance only)",
+        type: SELECTION_TYPES.TEXT,
+        default: ""
+      },
+      instance: {
+        label: "EasyDB Instance URL",
+        type: SELECTION_TYPES.TEXT,
+        default: "https://dmmp.ub.uni-heidelberg.de"
+      },
+      language: {
+        label: "Application Language",
+        type: SELECTION_TYPES.LIST,
+        values: ["en-US", "de-DE"],
+        default: "en-US"
+      }
+    }
   },
 };
 
