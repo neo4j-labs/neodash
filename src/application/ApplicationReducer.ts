@@ -58,7 +58,7 @@ const initialState = {
   draft: false,
   aboutModalOpen: false,
   connection: {
-    protocol: 'neo4j',
+    protocol: 'neo4j+s',
     url: DEFAULT_NEO4J_URL,
     port: '7687',
     database: '',
