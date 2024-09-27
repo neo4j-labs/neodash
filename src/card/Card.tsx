@@ -39,8 +39,8 @@ const NeoCard = ({
   extensions, // A set of enabled extensions.
   globalParameters, // Query parameters that are globally set for the entire dashboard.
   dashboardSettings, // Dictionary of settings for the entire dashboard.
-  onRemovePressed, // action to take when the card is removed. (passed from parent)
-  onClonePressed, // action to take when user presses the clone button
+  onRemovePressed, // action to take when the card is removed. (passed from parent).
+  onClonePressed, // action to take when user presses the clone button.
   onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
   onTitleUpdate, // action to take when the card title is updated.
   onTypeUpdate, // action to take when the card report type is updated.
@@ -51,8 +51,8 @@ const NeoCard = ({
   onGlobalParameterUpdate, // action to take when a report updates a dashboard parameter.
   onToggleCardSettings, // action to take when the card settings button is clicked.
   onToggleReportSettings, // action to take when the report settings (advanced settings) button is clicked.
-  onDatabaseChanged, // action to take when the user changes the database related to the card
-  loadDatabaseListFromNeo4j, // Thunk to get the list of databases
+  onDatabaseChanged, // action to take when the user changes the database related to the card.
+  loadDatabaseListFromNeo4j, // Thunk to get the list of databases.
   createNotification, // Thunk to create a global notification pop-up.
   onPutItem, // Method to remove report from ui and move it to toolbox
 }) => {
