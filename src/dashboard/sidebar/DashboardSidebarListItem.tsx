@@ -1,6 +1,6 @@
 import { Button, IconButton, SideNavigationGroupHeader } from '@neo4j-ndl/react';
 import React from 'react';
-import { CloudArrowUpIconOutline, EllipsisVerticalIconOutline } from '@neo4j-ndl/react/icons';
+import { EllipsisVerticalIconOutline } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip';
 import { NEODASH_VERSION } from '../DashboardReducer';
 

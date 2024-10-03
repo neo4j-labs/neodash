@@ -3,11 +3,16 @@ import { DocumentArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 import { Button, Dialog } from '@neo4j-ndl/react';
 import { valueIsArray, valueIsObject } from '../../../chart/ChartUtils';
 import { TextareaAutosize } from '@mui/material';
+import { getConnectionModule } from '../../../connection/utils';
+
+const { connectionModule } = getConnectionModule();
 
 /**
  * Configures setting the current Neo4j database connection for the dashboard.
  */
 export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose }) => {
+  const [publishUIDialogOpen, setPublishUIDialogOpen] = React.useState(false);
+
   /**
    * Removes the specified set of keys from the nested dictionary.
    */
@@ -53,26 +58,41 @@ export const NeoDashboardSidebarExportModal = ({ open, dashboard, handleClose })
   };
 
   return (
-    <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-      <Dialog.Header id='form-dialog-title'>Export Dashboard</Dialog.Header>
-      <Dialog.Content>
-        Export your dashboard as a JSON file, or copy-paste the file from here.
-        <br />
-        <Button onClick={downloadDashboard} fill='outlined' color='neutral' floating>
-          Save to file
-          <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
-        </Button>
-        <br />
-        <br />
-        <TextareaAutosize
-          style={{ minHeight: '500px', width: '100%', border: '1px solid lightgray' }}
-          className={'textinput-linenumbers'}
-          value={dashboardString}
-          aria-label=''
-          placeholder='Your dashboard JSON should be displayed here.'
-        />
-      </Dialog.Content>
-    </Dialog>
+    <>
+      <Dialog size='large' open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <Dialog.Header id='form-dialog-title'>Export Dashboard</Dialog.Header>
+        <Dialog.Content>
+          Export your dashboard as a JSON file, or copy-paste the file from here.
+          <br />
+          <Button onClick={downloadDashboard} fill='outlined' color='neutral' floating>
+            Save to file
+            <DocumentArrowDownIconOutline className='btn-icon-base-r' aria-label={'save arrow'} />
+          </Button>
+          {connectionModule.hasCustomPublishUI() &&
+            connectionModule.getPublishUIButton({
+              onClick: () => {
+                handleClose();
+                setPublishUIDialogOpen(true);
+              },
+            })}
+          <br />
+          <br />
+          <TextareaAutosize
+            style={{ minHeight: '500px', width: '100%', border: '1px solid lightgray' }}
+            className={'textinput-linenumbers'}
+            value={dashboardString}
+            aria-label=''
+            placeholder='Your dashboard JSON should be displayed here.'
+          />
+        </Dialog.Content>
+      </Dialog>
+      {connectionModule.hasCustomPublishUI() &&
+        connectionModule.getPublishUIDialog({
+          publishUIDialogOpen: publishUIDialogOpen,
+          parentClose: () => handleClose(),
+          closePublishUIDialog: () => setPublishUIDialogOpen(false),
+        })}
+    </>
   );
 };
 
