@@ -1,7 +1,7 @@
 {
-  "ssoEnabled": false,
+  "ssoEnabled": true,
   "ssoProviders": [],
-  "ssoDiscoveryUrl": "https://example.com",
+  "ssoDiscoveryUrl": "http://localhost:7687/auth_provider",
   "standalone": false,
   "standaloneProtocol": "neo4j",
   "standaloneHost": "localhost",

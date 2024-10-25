@@ -13,6 +13,7 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
 import { Tooltip } from '@mui/material';
+import { resetDashboardState } from '../DashboardActions';
 
 export const NeoDashboardHeader = ({
   standaloneSettings,
@@ -105,6 +106,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
 
   onConnectionModalOpen: () => {
+    dispatch(resetDashboardState());
     dispatch(setConnectionModalOpen(true));
   },
 });

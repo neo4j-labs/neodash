@@ -1,7 +1,7 @@
 import { createDriver } from 'use-neo4j';
 import { initializeSSO } from '../component/sso/SSOUtils';
 import { DEFAULT_SCREEN, Screens } from '../config/ApplicationConfig';
-import { setDashboard } from '../dashboard/DashboardActions';
+import { setDashboard, resetDashboardState } from '../dashboard/DashboardActions';
 import { NEODASH_VERSION, VERSION_TO_MIGRATE } from '../dashboard/DashboardReducer';
 import {
   assignDashboardUuidIfNotPresentThunk,
@@ -452,6 +452,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       }
     }
     const state = getState();
+    dispatch(resetDashboardState());
     dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
     dispatch(setSSOProviders(config.ssoProviders));
 
