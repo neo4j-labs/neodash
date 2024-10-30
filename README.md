@@ -3,7 +3,7 @@
 
 ![screenshot](evolving.png)
 
-In September 2024 **Neo4j [announced](https://www.datanami.com/2024/09/04/neo4j-simplifies-graph-database-in-the-cloud/#:~:text=NeoDash%20is%20an%20open%20source,was%20open%20source%2C%20not%20supported) is evolving into a fully supported dashboard builder, as of the Neo4j product suite**. 
+In September 2024 **Neo4j [announced](https://www.datanami.com/2024/09/04/neo4j-simplifies-graph-database-in-the-cloud/#:~:text=NeoDash%20is%20an%20open%20source,was%20open%20source%2C%20not%20supported) NeoDash is evolving into a fully supported dashboard builder, as of the Neo4j product suite**. 
 
 This project (NeoDash Labs) will continue to exist and contain experimental features. If you're interested to get official support for NeoDash as part of a Neo4j License agreement, please reach out to your Neo4j contact person.
 
