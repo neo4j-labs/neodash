@@ -1,8 +1,16 @@
 
-## NeoDash - Neo4j Dashboard Builder
-NeoDash is an open source tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
+## NeoDash Labs - Neo4j Dashboard Builder
 
-![screenshot](public/screenshot.png)
+![screenshot](evolving.png)
+
+In September 2024 **Neo4j [announced](https://www.datanami.com/2024/09/04/neo4j-simplifies-graph-database-in-the-cloud/#:~:text=NeoDash%20is%20an%20open%20source,was%20open%20source%2C%20not%20supported) is evolving into a fully supported dashboard builder, as of the Neo4j product suite**. 
+
+This project (NeoDash Labs) will continue to exist and contain experimental features. If you're interested to get official support for NeoDash as part of a Neo4j License agreement, please reach out to your Neo4j contact person.
+
+## About NeoDash
+NeoDash is a web-based tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
+
+
 
 Neodash supports presenting your data as tables, graphs, bar charts, line charts, maps and more. It contains a Cypher editor to directly write the Cypher queries that populate the reports. You can save dashboards to your database, and share them with others.
 
@@ -79,4 +87,4 @@ If you have any questions about NeoDash, please reach out to the maintainers:
 - Connect with us on the [Neo4j Discord](https://neo4j.com/developer/discord/).
 - Create a post on the Neo4j [Community Forum](https://community.neo4j.com/).
 
-> NeoDash is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. If you have a need for a commercial agreement around training, custom extensions or other services, please contact the [Neo4j Professional Services](https://neo4j.com/professional-services/) team.
+> NeoDash Labs is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. If you have a need for a commercial agreement around training, custom extensions or other services, please contact your [Neo4j Account Manager](hhttps://neo4j.com/contact-us/).
