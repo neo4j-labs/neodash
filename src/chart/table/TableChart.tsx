@@ -17,7 +17,7 @@ import {
   performActionOnElement,
 } from '../../extensions/advancedcharts/Utils';
 import { IconButton } from '@neo4j-ndl/react';
-import { CloudArrowDownIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
+import { CloudArrowDownIconOutline, ArrowPathIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/icons';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
@@ -333,7 +333,7 @@ export const NeoTableChart = (props: ChartProps) => {
           throw new Error(`Unsupported method: ${method}`);
       }
 
-      props.updateReportSetting('apiSpec', { ...props.settings.apiSpec, response });
+      props.updateReportSetting('apiSpec', { ...props.settings?.apiSpec, response });
     } catch (error) {
       // Handle errors here
       console.error('API call error:', error);
@@ -342,40 +342,52 @@ export const NeoTableChart = (props: ChartProps) => {
     }
   };
 
+  const handleResetApiResponse = () => {
+    props.updateReportSetting('apiSpec', { ...props.settings?.apiSpec, response: null });
+  };
+
   const apiCallButton = () => (
     <Stack direction='row' spacing={2} justifyContent='flex-end' marginRight={2}>
-      <ButtonGroup color='primary' variant='outlined' aria-label='button group'>
-        <Button size='small' onClick={handleApiCall} disabled={isApiLoading}>
-          {isApiLoading ? 'Loading...' : props.settings?.sendRequestButtonName || 'send'}
-        </Button>
-        <Button size='small' onClick={handlePopHoverClick} disabled={!props.settings.apiSpec.response}>
+      <Button variant='outlined' size='small' onClick={handleApiCall} disabled={isApiLoading}>
+        {isApiLoading ? 'Loading...' : props.settings?.sendRequestButtonName || 'send'}
+      </Button>
+      {props.settings?.apiSpec.response && (
+        <Button
+          size='small'
+          variant='outlined'
+          onClick={handlePopHoverClick}
+          disabled={!props.settings?.apiSpec.response}
+        >
           {isApiLoading ? 'Loading...' : props.settings?.viewResponseButtonName || 'view response'}
         </Button>
-        {props.settings.apiSpec.response ? (
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handlePopHoverClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-          >
-            <Typography sx={{ p: 2 }}>
-              <a href={props.settings?.apiSpec.response.data} target='_blank'>
-                {props.settings?.apiSpec.response.data}
-              </a>
-            </Typography>
-          </Popover>
-        ) : (
-          <></>
-        )}
-      </ButtonGroup>
+      )}
+      <IconButton clean={true} grouped={true} aria-label={'Reset'} onClick={handleResetApiResponse}>
+        <ArrowPathIconOutline aria-label={'Reset'} />
+      </IconButton>
+      {props.settings?.apiSpec.response ? (
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handlePopHoverClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+        >
+          <Typography sx={{ p: 2 }}>
+            <a href={props.settings?.apiSpec.response.data} target='_blank'>
+              {props.settings?.apiSpec.response.data}
+            </a>
+          </Typography>
+        </Popover>
+      ) : (
+        <></>
+      )}
     </Stack>
   );
 
