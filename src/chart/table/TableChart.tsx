@@ -129,6 +129,7 @@ export const NeoTableChart = (props: ChartProps) => {
   }
 
   const { records } = props;
+  const isApiSpecEnabled = props.settings?.apiSpec && props.settings?.apiSpec.apiEnabled;
 
   const generateSafeColumnKey = (key) => {
     return key != 'id' ? key : `${key} `;
@@ -346,6 +347,12 @@ export const NeoTableChart = (props: ChartProps) => {
     props.updateReportSetting('apiSpec', { ...props.settings?.apiSpec, response: null });
   };
 
+  useEffect(() => {
+    if (isApiSpecEnabled) {
+      handleResetApiResponse();
+    }
+  }, [records]);
+
   const apiCallButton = () => (
     <Stack direction='row' spacing={2} justifyContent='flex-end' marginRight={2}>
       <Button variant='outlined' size='small' onClick={handleApiCall} disabled={isApiLoading}>
@@ -361,9 +368,6 @@ export const NeoTableChart = (props: ChartProps) => {
           {isApiLoading ? 'Loading...' : props.settings?.viewResponseButtonName || 'view response'}
         </Button>
       )}
-      <IconButton clean={true} grouped={true} aria-label={'Reset'} onClick={handleResetApiResponse}>
-        <ArrowPathIconOutline aria-label={'Reset'} />
-      </IconButton>
       {props.settings?.apiSpec.response ? (
         <Popover
           id={id}
@@ -390,8 +394,6 @@ export const NeoTableChart = (props: ChartProps) => {
       )}
     </Stack>
   );
-
-  const isApiSpecEnabled = props.settings?.apiSpec && props.settings?.apiSpec.apiEnabled;
 
   const tableStyle: any = isApiSpecEnabled
     ? { marginTop: 10, height: '90%', width: '100%', position: 'relative' }
