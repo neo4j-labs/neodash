@@ -25,6 +25,7 @@ import { renderCellExpand } from '../../component/misc/DataGridExpandRenderer';
 import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
 import ApiService from '../../utils/apiService';
 import { AxiosResponse } from 'axios';
+import Notification from '../../component/custom/Notification';
 
 const TABLE_HEADER_HEIGHT = 32;
 const TABLE_FOOTER_HEIGHT = 62;
@@ -143,6 +144,13 @@ export const NeoTableChart = (props: ChartProps) => {
     setAnchorEl(null);
   };
 
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [notificationMessage, setNotificationMessage] = React.useState('');
+  const [notificationSeverity, setNotificationSeverity] = React.useState<'success' | 'warning' | 'error'>('success');
+
+  const handleNotificationClose = () => {
+    setAlertOpen(false);
+  };
   const lineBreakColumns: string[] = props.settings?.lineBreaksAfterListEntry;
 
   const actionableFields = actionsRules.filter((r) => r.condition !== 'rowCheck').map((r) => r.field);
@@ -335,9 +343,15 @@ export const NeoTableChart = (props: ChartProps) => {
       }
 
       props.updateReportSetting('apiSpec', { ...props.settings?.apiSpec, response });
+      setNotificationMessage('RUPS package created. Please find the link above');
+      setNotificationSeverity('success');
+      setAlertOpen(true);
     } catch (error) {
       // Handle errors here
       console.error('API call error:', error);
+      setNotificationMessage('RUPS package creation is currently not working. Please try again later.');
+      setNotificationSeverity('error');
+      setAlertOpen(true);
     } finally {
       setApiLoading(false);
     }
@@ -401,6 +415,12 @@ export const NeoTableChart = (props: ChartProps) => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Notification
+        open={alertOpen}
+        message={notificationMessage}
+        severity={notificationSeverity}
+        onClose={handleNotificationClose}
+      />
       {isApiSpecEnabled ? apiCallButton() : <></>}
       <div className={classes.root} style={tableStyle}>
         <Snackbar
