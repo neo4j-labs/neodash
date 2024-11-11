@@ -421,6 +421,18 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 0.25,
       },
+      displayYAxis: {
+        label: 'Display Y axis',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      displayYGridLines: {
+        label: 'Display Y grid lines',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
     },
   },
   pie: {
