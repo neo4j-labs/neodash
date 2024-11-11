@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Deploy a Build
 If you have a pre-built NeoDash application, you can easily deploy it on an any webserver.
 A NeoDash build is "just" a collection of HTML, CSS and JavaScript files, so it can run virtually anywhere.

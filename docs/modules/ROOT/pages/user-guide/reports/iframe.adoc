@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = iFrame
 
 An iFrame report lets you embed a webpage inside your NeoDash dashboard.

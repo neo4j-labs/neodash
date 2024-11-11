@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Build & Run
 
 To start developing the application, you will need to set up the

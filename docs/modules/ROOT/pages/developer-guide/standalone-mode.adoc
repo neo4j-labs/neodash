@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Standalone Mode
 
 Next to being a dashboard editor, NeoDash can be deployed in a

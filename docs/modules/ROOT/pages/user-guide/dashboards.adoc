@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Dashboards
 
 In NeoDash, a dashboard consists of several pages, each of which can

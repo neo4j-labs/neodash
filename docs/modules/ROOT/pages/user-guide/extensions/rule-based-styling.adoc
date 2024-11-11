@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Rule-Based Styling 
 
 

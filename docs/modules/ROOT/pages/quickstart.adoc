@@ -1,3 +1,5 @@
+include::/banner.adoc[]
+
 = Quickstart
 
 There are three easy ways to run NeoDash and start dashboarding your Neo4j data:
