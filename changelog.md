@@ -1,3 +1,7 @@
+## NeoDash 2.4.9
+This release adds some minor changes to documentation and resolves some open legacy issues.
+- Added notice about project evolution.
+
 ## NeoDash 2.4.8
 This is a minor release containing an important fix and other minor fixes:
 
