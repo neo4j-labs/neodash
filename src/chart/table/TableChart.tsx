@@ -3,6 +3,7 @@ import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
+  evaluateSingleRuleOnDict,
   generateClassDefinitionsBasedOnRules,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
@@ -243,6 +244,7 @@ export const NeoTableChart = (props: ChartProps) => {
       ColumnSortedDescendingIcon: () => <></>,
       ColumnSortedAscendingIcon: () => <></>,
     },
+    // TODO: if mixing and matching row and cell styling, row rules MUST be set first or will not populate correctly
     getRowClassName: (params) => {
       return ['row color', 'row text color']
         .map((e) => {
@@ -253,7 +255,19 @@ export const NeoTableChart = (props: ChartProps) => {
     getCellClassName: (params) => {
       return ['cell color', 'cell text color']
         .map((e) => {
-          return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
+          let trueRulesList = [''];
+          let trueRule;
+          for (const [index, rule] of styleRules.entries()) {
+            if (rule.targetField) {
+              if (rule.targetField === params.field) {
+                trueRule = `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [e])}`;
+              }
+            } else {
+              trueRule = `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
+            }
+            trueRulesList.push(trueRule);
+          }
+          return trueRulesList.join(' ');
         })
         .join(' ');
     },
