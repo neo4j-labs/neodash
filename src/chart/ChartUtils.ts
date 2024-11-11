@@ -164,7 +164,7 @@ export const downloadCSV = (rows) => {
     headers.forEach((header) => {
       // Parse value
       let value = row[header];
-      if (value && value.low) {
+      if (value && 'low' in value) {
         value = value.low;
       }
       csv += `${JSON.stringify(value)}`;
