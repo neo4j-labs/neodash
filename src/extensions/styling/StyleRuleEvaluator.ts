@@ -63,20 +63,26 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
   }
   for (const [index, rule] of rules.entries()) {
     // Only check customizations that are specified
-    if (customizations.includes(rule.customization)) {
-      // if the row contains the specified field...
-      if (dict[rule.field] !== undefined && dict[rule.field] !== null) {
-        const realValue = dict[rule.field].low ? dict[rule.field].low : dict[rule.field];
-        const ruleValue = rule.value;
-        if (evaluateCondition(realValue, rule.condition, ruleValue)) {
-          return index;
-        }
-      }
-    }
+    return evaluateSingleRuleOnDict (dict, rule, index, customizations)
   }
   // If no rules are met, return not found (index=-1)
   return -1;
 };
+
+export const evaluateSingleRuleOnDict = (dict, rule, ruleIndex, customizations) => {
+  if (customizations.includes(rule.customization)) {
+    // if the row contains the specified field...
+    if (dict[rule.field] !== undefined && dict[rule.field] !== null) {
+      const realValue = dict[rule.field].low ? dict[rule.field].low : dict[rule.field];
+      const ruleValue = rule.value;
+      if (evaluateCondition(realValue, rule.condition, ruleValue)) {
+        return ruleIndex;
+      }
+    }
+  }
+  return -1;
+}
+
 
 /**
  *  Evaluates the specified rule set on a node object returned by the Neo4j driver.
