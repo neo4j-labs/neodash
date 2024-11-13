@@ -58,13 +58,13 @@ Following are the Kubernetes resources utilized for the NeoDash.
 - To install this helm chart run the following command,
 
     ```bash
-    helm install ./neodash <release-name> -n <namespace-name>
+    helm install <release-name> ./neodash -n <namespace-name>
     ```
 
 - To upgrade the release run the following command,
 
     ```bash
-    helm upgrade ./neodash <release-name> -n <namespace-name>
+    helm upgrade <release-name> ./neodash -n <namespace-name>
     ```
 
 - To uninstall the release run the following command,
@@ -74,3 +74,5 @@ Following are the Kubernetes resources utilized for the NeoDash.
     ```
 
 > **Note:** To use custom values files, pass `-f <path-to-values-file>.yaml` for the above command.
+> **Note:** To use custom values, pass `--set param=value` for the above command.
+For example, to install neodash and set the service type to NodePort, run: `helm install <release-name> ./neodash -n <namespace-name> --set service.type=NodePort`
