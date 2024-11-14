@@ -53,7 +53,7 @@
     "@nivo/geo": "^0.83.0",
     "@nivo/line": "^0.83.0",
     "@nivo/pie": "^0.83.0",
-    "@nivo/radar": "^0.83.0",
+    "@nivo/radar": "^0.88.0",
     "@nivo/sankey": "^0.83.0",
     "@nivo/scatterplot": "^0.83.0",
     "@nivo/sunburst": "^0.83.0",
