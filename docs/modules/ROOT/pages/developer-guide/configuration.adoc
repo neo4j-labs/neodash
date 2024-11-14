@@ -135,7 +135,7 @@ must be granted to enble any user to create logs.
 
 ⚠️ * Load/Save from/to file are not logged (only from/to Database)   
 
-|loggingDatabase |string |neo4j |When loggingMode is set to anything 
+|loggingDatabase |string |logs |When loggingMode is set to anything 
 else than '0', the database to use for logging. Log records (nodes)
 will be created in this database.
 

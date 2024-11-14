@@ -30,7 +30,8 @@
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
     "test": "yarn cypress open",
-    "test-headless": "yarn cypress run"
+    "test-headless": "yarn cypress run",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "Neo4j Labs",
@@ -101,6 +102,7 @@
     "tailwindcss": "^3.3.2",
     "three": "^0.159.0",
     "three-spritetext": "^1.8.1",
+    "urijs": "^1.19.11",
     "use-neo4j": "^0.3.13",
     "yaml": "^2.2.1"
   },

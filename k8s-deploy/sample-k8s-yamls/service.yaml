@@ -1,0 +1,17 @@
+---
+# Source: neodash/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: neodash
+  labels:
+    application: neodash-deploy
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5005
+      targetPort: 5005
+      protocol: TCP
+      name: http
+  selector:
+    application: neodash-deploy
