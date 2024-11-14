@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Configuration
 
 When using a custom NeoDash deployment, there are several settings that
@@ -42,7 +44,7 @@ will look like this:
 |===
 |Name |Type |Default Value |Description
 |ssoEnabled |boolean |false |If enabled, lets users connect to Neo4j
-using SSO. This requires the app to be running in standalone mode, and a
+using SSO. This requires a
 valid ssoDiscoveryUrl to be set.
 
 |ssoProviders |List |[] |When using multiple SSO providers on the database, you can configure the list of providers (by id) to be used on Neodash. If empty, all providers will be displayed.
@@ -133,7 +135,7 @@ must be granted to enble any user to create logs.
 
 ⚠️ * Load/Save from/to file are not logged (only from/to Database)   
 
-|loggingDatabase |string |neo4j |When loggingMode is set to anything 
+|loggingDatabase |string |logs |When loggingMode is set to anything 
 else than '0', the database to use for logging. Log records (nodes)
 will be created in this database.
 

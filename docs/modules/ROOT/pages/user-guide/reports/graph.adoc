@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Graph
 
 The graph report will render all returned nodes, relationships and paths

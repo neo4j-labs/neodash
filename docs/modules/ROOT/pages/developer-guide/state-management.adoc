@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = State Management
 
 NeoDash is an application with a complex internal state. If you are

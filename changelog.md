@@ -1,3 +1,103 @@
+## NeoDash 2.4.9
+This release adds some minor changes to documentation and implements some community contributions.
+- Added notice about project evolution: [#967](https://github.com/neo4j-labs/neodash/pull/967)
+- Added community contributions and bug fixes: 
+[#967](https://github.com/neo4j-labs/neodash/pull/967)
+[#894](https://github.com/neo4j-labs/neodash/pull/894)
+[#822](https://github.com/neo4j-labs/neodash/pull/822)
+[#951](https://github.com/neo4j-labs/neodash/pull/951)
+[#946](https://github.com/neo4j-labs/neodash/pull/946)
+[#944](https://github.com/neo4j-labs/neodash/pull/944)
+[#943](https://github.com/neo4j-labs/neodash/pull/943)
+[#938](https://github.com/neo4j-labs/neodash/pull/938)
+[#935](https://github.com/neo4j-labs/neodash/pull/935)
+[#918](https://github.com/neo4j-labs/neodash/pull/918)
+[#908](https://github.com/neo4j-labs/neodash/pull/908)
+[#906](https://github.com/neo4j-labs/neodash/pull/906)
+[#902](https://github.com/neo4j-labs/neodash/pull/902)
+[#895](https://github.com/neo4j-labs/neodash/pull/895)
+[#893](https://github.com/neo4j-labs/neodash/pull/893)
+
+## NeoDash 2.4.8
+This is a minor release containing an important fix and other minor fixes:
+
+- Fixed a bug where loading a dashboard would reset parameters to null ([887](https://github.com/neo4j-labs/neodash/pull/887)).
+- Fix relationship width parameter for Graph report ([889](https://github.com/neo4j-labs/neodash/pull/889)).
+  
+Thanks to all the contributors for this release: 
+- [alfredorubin96](https://github.com/alfredorubin96),
+- [nielsdejong](https://github.com/nielsdejong).
+
+## NeoDash 2.4.7
+This is a minor release containing a few critical fixes and general code quality improvements:
+
+- Fix multiple parameter select ([881](https://github.com/neo4j-labs/neodash/pull/881)).
+- Fix parameter casting error when loading dashboards([874](https://github.com/neo4j-labs/neodash/pull/874)).
+- Fix the fraud demo in the [Example Gallery](https://neodash-gallery.graphapp.io/).
+  
+Thanks to all the contributors for this release: 
+- [alfredorubin96](https://github.com/alfredorubin96),
+- [MariusC](https://github.com/mariusconjeaud),
+- [elizarp](https://github.com/elizarp).
+
+## NeoDash 2.4.6
+This is a minor release containing a few critical fixes and some extra style customizations:
+
+- Fix bad text wrapping for arrays in tables ([868](https://github.com/neo4j-labs/neodash/pull/868)).
+- Make wrapping in table optional, disabled by default ([872](https://github.com/neo4j-labs/neodash/pull/872)).
+- Fixed issues where cross database dashboard sharing always reverted back to the default database ([873](https://github.com/neo4j-labs/neodash/pull/873)).
+- Added option to define style config using environment variables for the Docker image ([876](https://github.com/neo4j-labs/neodash/pull/876)). 
+
+## NeoDash 2.4.5
+This is a small release containing a few fixes:
+- Fixed rendering of string arrays inside tables, report titles, and report action buttons [849](https://github.com/neo4j-labs/neodash/pull/849)
+- Allowed text to wrap in tables, preserving the number of rows [852](https://github.com/neo4j-labs/neodash/pull/852)
+- Disabled auto-sorting of Cypher query-based Parameter Select ; use Cypher ORDER BY to control result order [857](https://github.com/neo4j-labs/neodash/pull/857)
+- Updated role selector menu, and made user updates more robust [854](https://github.com/neo4j-labs/neodash/pull/854)
+
+Thanks to all the contributors for this release: 
+- [MariusC](https://github.com/mariusconjeaud),
+- [LiamEdwardsLamarche](https://github.com/LiamEdwardsLamarche),
+- [AleSim94](https://github.com/AleSim94)
+
+## NeoDash 2.4.4
+This is a hotfix release fixing some breaking issues in the 2.4.3:
+- Fixed number parsing using newer versions of the Neo4j driver. [811](https://github.com/neo4j-labs/neodash/pull/811)
+- Reverted new connection handler for auto-renewed SSO sessions. [815](https://github.com/neo4j-labs/neodash/pull/815)
+- Improved handling of parameters in form extension, resolved local state issues. [813](https://github.com/neo4j-labs/neodash/pull/813)
+- Updated Role management extension to no longer execute queries in parallel, improved UX and error handling [813](https://github.com/neo4j-labs/neodash/pull/813)
+
+If you are currently using NeoDash version 2.4.3, we recommend updating as soon as possible.
+
+## NeoDash 2.4.3
+This release contains several improvements and additions to multi-dashboard management, as well as a bug fixes and a variety of quality-of-life improvements:
+
+Dashboard management and access control:
+- Added a UI for handling dashboard access using RBAC, as well as a new extension to simply access control.
+- Added button to sidebar to refresh the list of dashboards saved in the database.
+- Improved handling and detection of draft dashboards in the dashboard sidebar.
+
+Other improvements:
+- Changed CSV export functionality for tables to use UTF-8 format.
+- Various improvements / fixes to the documentation to include new images, and up-to-date functionality.
+- Added logic for handling refresh tokens when connected to NeoDash via SSO.
+- Incorporated tooltips for bar charts with and without custom labels.
+
+Bug fixes and testing:
+- Implemented bug fixes on type casting for numeric parameter selectors.
+- Fixed issue with report actions not functioning properly on node click events.
+- Extended test suite with Cypress tests for advanced settings in the bar chart.
+
+Thanks to all the contributors for this release: 
+- [OskarDamkjaer](https://github.com/OskarDamkjaer)
+- [alfredorubin96](https://github.com/alfredorubin96),
+- [AleSim94](https://github.com/AleSim94),
+- [BennuFire](https://github.com/BennuFire),
+- [jacobbleakley-neo4j](https://github.com/jacobbleakley-neo4j),
+- [josepmonclus](https://github.com/josepmonclus)
+- [nielsdejong](https://github.com/nielsdejong)
+
+
 ## NeoDash 2.4.2
 This is a release with a large amount of quality of life improvements, as well as some new features:
 

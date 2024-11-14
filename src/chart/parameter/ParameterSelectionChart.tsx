@@ -94,6 +94,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           compatibilityMode={compatibilityMode}
           multiSelector={multiSelector}
           manualParameterSave={manualParameterSave}
+          autoSort={true}
         />
       );
     } else if (type == 'Relationship Property') {
@@ -112,6 +113,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           compatibilityMode={compatibilityMode}
           multiSelector={multiSelector}
           manualParameterSave={manualParameterSave}
+          autoSort={true}
         />
       );
     } else if (type == 'Date Picker') {
@@ -147,6 +149,7 @@ export const NeoParameterSelectionChart = (props: ChartProps) => {
           compatibilityMode={compatibilityMode}
           multiSelector={multiSelector}
           manualParameterSave={manualParameterSave}
+          autoSort={false}
         />
       );
     }

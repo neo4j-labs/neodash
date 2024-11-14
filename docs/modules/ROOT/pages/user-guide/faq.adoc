@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = FAQ
 
 == 1. How can I learn more about NeoDash?

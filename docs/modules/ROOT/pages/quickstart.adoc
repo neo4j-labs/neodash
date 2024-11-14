@@ -1,3 +1,5 @@
+include::/banner.adoc[]
+
 = Quickstart
 
 There are three easy ways to run NeoDash and start dashboarding your Neo4j data:
@@ -21,7 +23,7 @@ yarn run dev
 
 NeoDash connects to any recent version of the Neo4j database. (Neo4j 4.0
 or later). The quickest way to get started is to create a free cloud
-database on https://neo4j.io[Neo4j Aura].
+database on https://console.neo4j.io[Neo4j Aura].
 
 To get started with building your own dashboard, see the Dashboards
 page.

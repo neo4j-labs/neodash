@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Extensions
 
 Extensions provide a way to expand the basic functionality of NeoDash with extra features.
@@ -19,6 +21,7 @@ The currently available extensions in NeoDash are:
 - link:report-actions[Report Actions]
 - link:natural-language-queries[Text2Cypher - Natural Language Queries]
 - link:forms[Forms]
+- link:access-control-management[Access Control Management]
 
 == Types of Extensions
 

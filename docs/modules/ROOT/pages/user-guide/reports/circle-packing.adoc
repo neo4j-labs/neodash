@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Circle Packing
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]

@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Markdown
 
 Markdown reports let you specify

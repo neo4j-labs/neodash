@@ -46,6 +46,12 @@ const _REPORT_TYPES = {
         values: [true, false],
         default: false,
       },
+      wrapContent: {
+        label: 'Wrap overflowing content',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       columnWidthsType: {
         label: 'Column Widths Specification',
         type: SELECTION_TYPES.LIST,
@@ -415,27 +421,17 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.NUMBER,
         default: 0.25,
       },
-      expandHeightForLegend: {
-        label: 'Expand Height For Legend',
+      displayYAxis: {
+        label: 'Display Y axis',
         type: SELECTION_TYPES.LIST,
         values: [true, false],
-        default: false,
+        default: true,
       },
-      innerPadding: {
-        label: 'Inner Padding',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0,
-      },
-      legendPosition: {
-        label: 'Legend Position',
+      displayYGridLines: {
+        label: 'Display Y grid lines',
         type: SELECTION_TYPES.LIST,
-        values: ['Horizontal', 'Vertical'],
-        default: 'Vertical',
-      },
-      padding: {
-        label: 'Padding',
-        type: SELECTION_TYPES.NUMBER,
-        default: 0.25,
+        values: [true, false],
+        default: true,
       },
     },
   },

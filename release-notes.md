@@ -1,11 +1,19 @@
-## NeoDash 2.4.2
-This is a release with a large amount of quality of life improvements, as well as some new features:
-
-- Visualize graphs in 3D with the new 3D graph report. [#737](https://github.com/neo4j-labs/neodash/pull/737)
-- Improved dashboard management sidebar and handling of drafts. [#734](https://github.com/neo4j-labs/neodash/pull/734)
-- Added parameter select setting for autopopulating first selector value. [#746](https://github.com/neo4j-labs/neodash/pull/746)
-- Improved UX for editing page names & dashboard titles. [#743](https://github.com/neo4j-labs/neodash/pull/743)
-- Unified common settings for each report type. [#724](https://github.com/neo4j-labs/neodash/pull/724)
-- Title of the browser tab NeoDash runs on is now automatically set to the dashboard name.  [#708](https://github.com/neo4j-labs/neodash/pull/708)
-- Fixed issue where invisible table columns were not handled correctly. [#695](https://github.com/neo4j-labs/neodash/pull/695)
-- Miscellaneous bug fixes, style improvements & stability fixes. [#744](https://github.com/neo4j-labs/neodash/pull/744)
+## NeoDash 2.4.9
+This release adds some minor changes to documentation and implements some community contributions.
+- Added notice about project evolution: [#967](https://github.com/neo4j-labs/neodash/pull/967)
+- Added community contributions and bug fixes: 
+[#967](https://github.com/neo4j-labs/neodash/pull/967)
+[#894](https://github.com/neo4j-labs/neodash/pull/894)
+[#822](https://github.com/neo4j-labs/neodash/pull/822)
+[#951](https://github.com/neo4j-labs/neodash/pull/951)
+[#946](https://github.com/neo4j-labs/neodash/pull/946)
+[#944](https://github.com/neo4j-labs/neodash/pull/944)
+[#943](https://github.com/neo4j-labs/neodash/pull/943)
+[#938](https://github.com/neo4j-labs/neodash/pull/938)
+[#935](https://github.com/neo4j-labs/neodash/pull/935)
+[#918](https://github.com/neo4j-labs/neodash/pull/918)
+[#908](https://github.com/neo4j-labs/neodash/pull/908)
+[#906](https://github.com/neo4j-labs/neodash/pull/906)
+[#902](https://github.com/neo4j-labs/neodash/pull/902)
+[#895](https://github.com/neo4j-labs/neodash/pull/895)
+[#893](https://github.com/neo4j-labs/neodash/pull/893)

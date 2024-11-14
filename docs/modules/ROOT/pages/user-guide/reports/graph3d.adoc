@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = 3D Graph
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]

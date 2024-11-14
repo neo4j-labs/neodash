@@ -4,7 +4,6 @@ import NeoDatePicker from '../../../component/field/DateField';
 import dayjs from 'dayjs';
 import { Date as Neo4jDate } from 'neo4j-driver-core/lib/temporal-types.js';
 import { isCastableToNeo4jDate, isEmptyObject } from '../../ChartUtils';
-import { debounce } from '@mui/material';
 
 function castPropsToBoltDate(dict) {
   if (isEmptyObject(dict)) {

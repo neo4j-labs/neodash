@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Map
 
 The map report will render all returned nodes, relationships and paths

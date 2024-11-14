@@ -3,6 +3,7 @@ import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
+  evaluateSingleRuleOnDict,
   generateClassDefinitionsBasedOnRules,
   useStyleRules,
 } from '../../extensions/styling/StyleRuleEvaluator';
@@ -24,8 +25,6 @@ import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
 
-const TABLE_HEADER_HEIGHT = 32;
-const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 const theme = createTheme({
@@ -46,11 +45,9 @@ function renderAsButtonWrapper(renderer) {
       return <></>;
     }
     return (
-      <Button
-        style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }}
-        variant='contained'
-        color='primary'
-      >{`${outputValue}`}</Button>
+      <Button style={{ width: '100%', marginLeft: '5px', marginRight: '5px' }} variant='contained' color='primary'>
+        {outputValue}
+      </Button>
     );
   };
 }
@@ -73,6 +70,7 @@ export const generateSafeColumnKey = (key) => {
 
 export const NeoTableChart = (props: ChartProps) => {
   const transposed = props.settings && props.settings.transposed ? props.settings.transposed : false;
+  const wrapContent = props.settings && props.settings.wrapContent ? props.settings.wrapContent : false;
   const allowDownload =
     props.settings && props.settings.allowDownload !== undefined ? props.settings.allowDownload : false;
 
@@ -93,7 +91,6 @@ export const NeoTableChart = (props: ChartProps) => {
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
-  const pageSizeReducer = compact ? 3 : 1;
 
   const columnWidthsType =
     props.settings && props.settings.columnWidthsType ? props.settings.columnWidthsType : 'Relative (%)';
@@ -185,7 +182,9 @@ export const NeoTableChart = (props: ChartProps) => {
       Object.assign(
         { id: i, Field: key },
         ...records.map((record, j) => ({
-          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1]),
+          // Note the true here is for the rendered to know we are inside a transposed table
+          // It will be needed for rendering the records properly, if they are arrays
+          [`${record._fields[0]}_${j + 1}`]: RenderSubValue(record._fields[i + 1], true),
         }))
       )
     );
@@ -208,12 +207,64 @@ export const NeoTableChart = (props: ChartProps) => {
         );
       });
 
-  const availableRowHeight = (props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight;
-  const tablePageSize = compact
-    ? Math.round(availableRowHeight) - pageSizeReducer
-    : Math.floor(availableRowHeight) - pageSizeReducer;
-
   const pageNames = getPageNumbersAndNamesList();
+  const customStyles = { '&.MuiDataGrid-root .MuiDataGrid-footerContainer > div': { marginTop: '0px' } };
+
+  const commonGridProps = {
+    key: 'tableKey',
+    columnHeaderHeight: 32,
+    rowHeight: tableRowHeight,
+    autoPageSize: true,
+    rows: rows,
+    columns: columns,
+    columnVisibilityModel: columnVisibilityModel,
+    onColumnVisibilityModelChange: (newModel) => setColumnVisibilityModel(newModel),
+    onCellClick: (e) => performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table'),
+    onCellDoubleClick: (e) => {
+      let rules = getRule(e, actionsRules, 'doubleClick');
+      if (rules !== null) {
+        rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
+      } else {
+        setNotificationOpen(true);
+        navigator.clipboard.writeText(e.value);
+      }
+    },
+    checkboxSelection: hasCheckboxes(actionsRules),
+    rowSelectionModel: getCheckboxes(actionsRules, rows, props.getGlobalParameter),
+    onRowSelectionModelChange: (selection) => updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter),
+    disableRowSelectionOnClick: true,
+    components: {
+      ColumnSortedDescendingIcon: () => <></>,
+      ColumnSortedAscendingIcon: () => <></>,
+    },
+    // TODO: if mixing and matching row and cell styling, row rules MUST be set first or will not populate correctly
+    getRowClassName: (params) => {
+      return ['row color', 'row text color']
+        .map((e) => {
+          return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
+        })
+        .join(' ');
+    },
+    getCellClassName: (params) => {
+      return ['cell color', 'cell text color']
+        .map((e) => {
+          let trueRulesList = [''];
+          let trueRule;
+          for (const [index, rule] of styleRules.entries()) {
+            if (rule.targetField) {
+              if (rule.targetField === params.field) {
+                trueRule = `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [e])}`;
+              }
+            } else {
+              trueRule = `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
+            }
+            trueRulesList.push(trueRule);
+          }
+          return trueRulesList.join(' ');
+        })
+        .join(' ');
+    },
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -249,7 +300,7 @@ export const NeoTableChart = (props: ChartProps) => {
                 downloadCSV(rows);
               }}
               aria-label='download csv'
-              className='n-absolute n-z-10 n-bottom-7 n-left-1'
+              className='n-absolute n-z-10 n-bottom-2 n-left-1'
               clean
             >
               <CloudArrowDownIconOutline />
@@ -259,53 +310,18 @@ export const NeoTableChart = (props: ChartProps) => {
           <></>
         )}
 
-        <DataGrid
-          key={'tableKey'}
-          headerHeight={32}
-          rowHeight={tableRowHeight}
-          rows={rows}
-          columns={columns}
-          columnVisibilityModel={columnVisibilityModel}
-          onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
-          onCellClick={(e) =>
-            performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table')
-          }
-          onCellDoubleClick={(e) => {
-            let rules = getRule(e, actionsRules, 'doubleClick');
-            if (rules !== null) {
-              rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
-            } else {
-              setNotificationOpen(true);
-              navigator.clipboard.writeText(e.value);
-            }
-          }}
-          checkboxSelection={hasCheckboxes(actionsRules)}
-          selectionModel={getCheckboxes(actionsRules, rows, props.getGlobalParameter)}
-          onSelectionModelChange={(selection) =>
-            updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter)
-          }
-          pageSize={tablePageSize > 0 ? tablePageSize : 5}
-          rowsPerPageOptions={rows.length < 5 ? [rows.length, 5] : [5]}
-          disableSelectionOnClick
-          components={{
-            ColumnSortedDescendingIcon: () => <></>,
-            ColumnSortedAscendingIcon: () => <></>,
-          }}
-          getRowClassName={(params) => {
-            return ['row color', 'row text color']
-              .map((e) => {
-                return `rule${evaluateRulesOnDict(params.row, styleRules, [e])}`;
-              })
-              .join(' ');
-          }}
-          getCellClassName={(params) => {
-            return ['cell color', 'cell text color']
-              .map((e) => {
-                return `rule${evaluateRulesOnDict({ [params.field]: params.value }, styleRules, [e])}`;
-              })
-              .join(' ');
-          }}
-        />
+        {wrapContent ? (
+          <DataGrid
+            {...commonGridProps}
+            getRowHeight={() => 'auto'}
+            sx={{
+              ...customStyles,
+              '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
+            }}
+          />
+        ) : (
+          <DataGrid {...commonGridProps} sx={customStyles} />
+        )}
       </div>
     </ThemeProvider>
   );
