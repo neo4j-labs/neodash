@@ -25,8 +25,6 @@ import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
 
-const TABLE_HEADER_HEIGHT = 32;
-const TABLE_FOOTER_HEIGHT = 62;
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
 const theme = createTheme({
@@ -93,7 +91,6 @@ export const NeoTableChart = (props: ChartProps) => {
   const useStyles = generateClassDefinitionsBasedOnRules(styleRules);
   const classes = useStyles();
   const tableRowHeight = compact ? TABLE_ROW_HEIGHT / 2 : TABLE_ROW_HEIGHT;
-  const pageSizeReducer = compact ? 3 : 1;
 
   const columnWidthsType =
     props.settings && props.settings.columnWidthsType ? props.settings.columnWidthsType : 'Relative (%)';
@@ -210,16 +207,14 @@ export const NeoTableChart = (props: ChartProps) => {
         );
       });
 
-  const availableRowHeight = (props.dimensions.height - TABLE_HEADER_HEIGHT - TABLE_FOOTER_HEIGHT) / tableRowHeight;
-  const tablePageSize = compact
-    ? Math.round(availableRowHeight) - pageSizeReducer
-    : Math.floor(availableRowHeight) - pageSizeReducer;
-
   const pageNames = getPageNumbersAndNamesList();
+  const customStyles = { '&.MuiDataGrid-root .MuiDataGrid-footerContainer > div': { marginTop: '0px' } };
+
   const commonGridProps = {
     key: 'tableKey',
-    headerHeight: 32,
-    density: compact ? 'compact' : 'standard',
+    columnHeaderHeight: 32,
+    rowHeight: tableRowHeight,
+    autoPageSize: true,
     rows: rows,
     columns: columns,
     columnVisibilityModel: columnVisibilityModel,
@@ -235,11 +230,9 @@ export const NeoTableChart = (props: ChartProps) => {
       }
     },
     checkboxSelection: hasCheckboxes(actionsRules),
-    selectionModel: getCheckboxes(actionsRules, rows, props.getGlobalParameter),
-    onSelectionModelChange: (selection) => updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter),
-    pageSize: tablePageSize > 0 ? tablePageSize : 5,
-    rowsPerPageOptions: rows.length < 5 ? [rows.length, 5] : [5],
-    disableSelectionOnClick: true,
+    rowSelectionModel: getCheckboxes(actionsRules, rows, props.getGlobalParameter),
+    onRowSelectionModelChange: (selection) => updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter),
+    disableRowSelectionOnClick: true,
     components: {
       ColumnSortedDescendingIcon: () => <></>,
       ColumnSortedAscendingIcon: () => <></>,
@@ -322,15 +315,12 @@ export const NeoTableChart = (props: ChartProps) => {
             {...commonGridProps}
             getRowHeight={() => 'auto'}
             sx={{
-              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '3px' },
-              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell:has(button)': { py: '0px' },
-              '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
-              '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+              ...customStyles,
               '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
             }}
           />
         ) : (
-          <DataGrid {...commonGridProps} rowHeight={tableRowHeight} />
+          <DataGrid {...commonGridProps} sx={customStyles} />
         )}
       </div>
     </ThemeProvider>
