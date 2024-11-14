@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Reports
 
 A report is the smallest building build of your dashboard. Each report

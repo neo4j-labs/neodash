@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Forms
 
 The 'forms' extension lets you combine different parameter selectors to update / modify your graph data.

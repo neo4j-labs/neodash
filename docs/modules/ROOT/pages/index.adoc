@@ -1,3 +1,5 @@
+include::/banner.adoc[]
+
 = Introduction
 This portal contains information on getting started with NeoDash - A Low-Code Dashboard Builder for Neo4j.
 

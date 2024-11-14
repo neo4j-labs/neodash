@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.4.8",
+  "version": "2.4.9",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -30,7 +30,8 @@
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
     "test": "yarn cypress open",
-    "test-headless": "yarn cypress run"
+    "test-headless": "yarn cypress run",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "Neo4j Labs",
@@ -41,7 +42,7 @@
     "@dnd-kit/sortable": "^7.0.2",
     "@mui/material": "^5.12.3",
     "@mui/styles": "^5.12.3",
-    "@mui/x-data-grid": "5.17.26",
+    "@mui/x-data-grid": "7.4.0",
     "@mui/x-date-pickers": "^5.0.17",
     "@neo4j-cypher/react-codemirror": "^1.0.3",
     "@neo4j-ndl/base": "1.10.3",
@@ -101,6 +102,7 @@
     "tailwindcss": "^3.3.2",
     "three": "^0.159.0",
     "three-spritetext": "^1.8.1",
+    "urijs": "^1.19.11",
     "use-neo4j": "^0.3.13",
     "yaml": "^2.2.1"
   },

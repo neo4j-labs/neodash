@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Design
 
 This page contains some key guidelines for design of the application.

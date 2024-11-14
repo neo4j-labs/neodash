@@ -74,6 +74,11 @@
     @apply n-ml-token-3;
   }
 
+  /* DataGrid overrides */
+  .MuiDataGrid-footerContainer > div {
+    @apply n-mt-0;
+  }
+
   /* Make bullet list points in Markdown card view */
   .card-view ul {
     @apply n-list-disc n-ml-token-7;
@@ -89,5 +94,23 @@
 
   .n-bg-dark-neutral-text-weak {
     background-color: rgb(196 200 205 / var(--tw-bg-opacity)) !important;
+  }
+
+  /* Markdown table styles */
+  .markdown-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .markdown-table th,
+  .markdown-table td {
+    border: 1px solid #ddd; /* Light gray border */
+    padding: 8px; /* Padding around text */
+    text-align: left; /* Align text to the left */
+  }
+
+  .markdown-table th {
+    background-color: #f4f4f4; /* Light gray background for header */
+    color: #333; /* Dark text color for contrast */
   }
 }

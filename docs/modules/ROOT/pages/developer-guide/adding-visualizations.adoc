@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Adding Visualizations
 
 You can extend NeoDash with your own visualizations without diving deep

@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Pages
 
 A page is a collection of link:../reports[reports] that can be viewed at

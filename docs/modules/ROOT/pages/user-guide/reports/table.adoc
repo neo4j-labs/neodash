@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Table
 
 The most common report in a dashboard is often a simple table view.
