@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Style Configuration
 
 When using a custom NeoDash deployment, there are several theme variables that

@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Radar Chart
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]

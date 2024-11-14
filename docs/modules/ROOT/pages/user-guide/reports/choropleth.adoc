@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Choropleth
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]

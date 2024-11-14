@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Line Chart
 
 A line chart can be used to draw one or more lines in a two-dimensional

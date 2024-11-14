@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Session Storage
 
 This reducer serves only to store data that we want to reset at each new session.

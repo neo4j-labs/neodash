@@ -1,16 +1,24 @@
 
-## NeoDash - Neo4j Dashboard Builder
-NeoDash is an open source tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
+## NeoDash Labs - Neo4j Dashboard Builder
 
-![screenshot](public/screenshot.png)
+![screenshot](evolving.png)
+
+In September 2024 **Neo4j [announced](https://www.datanami.com/2024/09/04/neo4j-simplifies-graph-database-in-the-cloud/#:~:text=NeoDash%20is%20an%20open%20source,was%20open%20source%2C%20not%20supported) NeoDash is evolving into a fully supported dashboard builder, as part of the Neo4j product suite**. 
+
+This project (NeoDash Labs) will still be available and contain experimental features, but will **not** have official support. If you're interested to get official support for NeoDash as part of a Neo4j License agreement, please reach out to your Neo4j contact person.
+
+## About NeoDash Labs
+NeoDash is a web-based tool for visualizing your Neo4j data. It lets you group visualizations together as dashboards, and allow for interactions between reports.
 
 Neodash supports presenting your data as tables, graphs, bar charts, line charts, maps and more. It contains a Cypher editor to directly write the Cypher queries that populate the reports. You can save dashboards to your database, and share them with others.
 
-## Try NeoDash
+## Try NeoDash Labs
 You can run NeoDash in one of three ways:
 
-1. You can install NeoDash into Neo4j Desktop from the [graph app gallery](https://install.graphapp.io). NeoDash will automatically connect to your active database.
-2. You can run NeoDash from a web browser by visiting http://neodash.graphapp.io.
+1. You can install NeoDash Labs into Neo4j Desktop from the [graph app gallery](https://install.graphapp.io). NeoDash will automatically connect to your active database.
+> Note: never versions of Neo4j Desktop do not support adding experimental graph apps such as NeoDash.
+
+2. You can run NeoDash Labs from a web browser by visiting http://neodash.graphapp.io.
 3. For on-prem deployments, you can build the application yourself, or pull the latest Docker image from Docker Hub.
 ```
 # Run the application on http://localhost:5005
@@ -79,4 +87,4 @@ If you have any questions about NeoDash, please reach out to the maintainers:
 - Connect with us on the [Neo4j Discord](https://neo4j.com/developer/discord/).
 - Create a post on the Neo4j [Community Forum](https://community.neo4j.com/).
 
-> NeoDash is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. If you have a need for a commercial agreement around training, custom extensions or other services, please contact the [Neo4j Professional Services](https://neo4j.com/professional-services/) team.
+> NeoDash Labs is a free and open-source tool developed by the Neo4j community - not an official Neo4j product. Use at your own risk!

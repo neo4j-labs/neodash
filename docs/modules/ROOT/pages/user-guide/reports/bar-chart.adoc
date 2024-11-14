@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Bar Chart
 
 A bar chart will draw categories and values in a familiar bar-layout.

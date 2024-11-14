@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Pie Chart
 
 A pie chart will draw categories and values in a circular disc layout.

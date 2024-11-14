@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Configuration
 
 When using a custom NeoDash deployment, there are several settings that

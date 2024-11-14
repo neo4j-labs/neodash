@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Extensions
 
 Extensions provide a way to expand the basic functionality of NeoDash with extra features.

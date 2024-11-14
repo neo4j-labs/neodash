@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Text2Cypher - Natural Language Queries
 Use natural language to generate Cypher queries in NeoDash. Connect to an LLM through an API, and let NeoDash use your database schema + the report types to generate queries automatically.
 

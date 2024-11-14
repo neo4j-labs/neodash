@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Bloom Integration
 
 NeoDash can be linked to Neo4j Bloom perspectives by using
