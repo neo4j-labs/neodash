@@ -205,8 +205,10 @@ describe('NeoDash E2E Tests', () => {
 
     cy.get('main .react-grid-item:eq(2) button[aria-label="run"]').scrollIntoView().should('be.visible').click();
     cy.wait(500);
+    cy.get('#form-submit').should('be.disabled');
     cy.get('#autocomplete').type('The Matrix');
     cy.get('#autocomplete-option-0').click();
+    cy.get('#form-submit').should('not.be.disabled');
     cy.get('#form-submit').click();
     cy.wait(500);
     cy.get('.form-submitted-message').should('have.text', 'Form Submitted.Reset Form');
