@@ -30,8 +30,7 @@
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
     "test": "yarn cypress open",
-    "test-headless": "yarn cypress run",
-    "prepare": "husky install"
+    "test-headless": "yarn cypress run"
   },
   "keywords": [],
   "author": "Neo4j Labs",
