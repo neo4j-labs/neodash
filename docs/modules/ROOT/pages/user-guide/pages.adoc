@@ -1,6 +1,6 @@
-include::../banner.adoc[]
-
 = Pages
+
+include::../banner.adoc[]
 
 A page is a collection of link:../reports[reports] that can be viewed at
 the same time. Each page can have an unlimited number of reports in it,

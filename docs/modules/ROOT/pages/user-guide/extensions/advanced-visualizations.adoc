@@ -1,6 +1,7 @@
-include::../../banner.adoc[]
 
 = Advanced Visualizations
+
+include::../../banner.adoc[]
 
 Advanced visualizations let you extend your dashboard with complex, powerful visualizations beyond the standard visualizations.
 For specific use-cases, these visualizations may convey information that a simple visualization cannot.

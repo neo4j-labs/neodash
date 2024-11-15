@@ -1,6 +1,6 @@
-include::../banner.adoc[]
-
 = FAQ
+
+include::../banner.adoc[]
 
 == 1. How can I learn more about NeoDash?
 

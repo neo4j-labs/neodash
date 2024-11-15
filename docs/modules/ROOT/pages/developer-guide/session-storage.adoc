@@ -1,6 +1,6 @@
-include::../banner.adoc[]
-
 = Session Storage
+
+include::../banner.adoc[]
 
 This reducer serves only to store data that we want to reset at each new session.
 To connect to it, just define a key and use the predefined actions to set a new pair (key,value) inside of it. 

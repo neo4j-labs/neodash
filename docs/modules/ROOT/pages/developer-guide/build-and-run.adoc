@@ -1,6 +1,6 @@
-include::../banner.adoc[]
-
 = Build & Run
+
+include::../banner.adoc[]
 
 To start developing the application, you will need to set up the
 development environment.
