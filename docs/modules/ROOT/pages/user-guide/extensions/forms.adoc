@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = Forms
 
 include::../../banner.adoc[]

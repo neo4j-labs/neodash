@@ -1,5 +1,3 @@
-include::../banner.adoc[]
-
 = Configuration
 
 include::../banner.adoc[]

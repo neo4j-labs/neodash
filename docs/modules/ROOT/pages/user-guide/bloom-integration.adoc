@@ -1,5 +1,3 @@
-include::../banner.adoc[]
-
 = Bloom Integration
 
 include::../banner.adoc[]

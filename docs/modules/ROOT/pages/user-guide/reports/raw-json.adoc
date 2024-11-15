@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = Raw JSON
 
 include::../../banner.adoc[]

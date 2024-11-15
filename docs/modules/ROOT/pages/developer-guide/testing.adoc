@@ -1,5 +1,3 @@
-include::../banner.adoc[]
-
 = Testing 
 
 include::../banner.adoc[]

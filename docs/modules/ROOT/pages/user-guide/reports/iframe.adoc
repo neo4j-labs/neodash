@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = iFrame
 
 include::../../banner.adoc[]

@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = Parameter Select
 
 include::../../banner.adoc[]

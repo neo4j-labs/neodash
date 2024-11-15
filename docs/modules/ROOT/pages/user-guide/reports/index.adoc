@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = Reports
 
 include::../../banner.adoc[]

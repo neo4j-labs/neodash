@@ -1,5 +1,3 @@
-include::../banner.adoc[]
-
 = Style Configuration
 
 include::../banner.adoc[]

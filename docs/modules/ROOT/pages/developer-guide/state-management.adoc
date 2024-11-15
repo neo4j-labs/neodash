@@ -1,5 +1,3 @@
-include::../banner.adoc[]
-
 = State Management
 
 include::../banner.adoc[]

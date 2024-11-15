@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = Area Map
 
 include::../../banner.adoc[]

@@ -1,5 +1,3 @@
-include::../banner.adoc[]
-
 = Adding Visualizations
 
 include::../banner.adoc[]

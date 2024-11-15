@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = Circle Packing
 
 include::../../banner.adoc[]

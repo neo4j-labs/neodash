@@ -1,5 +1,3 @@
-include::../banner.adoc[]
-
 = Dashboards
 
 include::../banner.adoc[]

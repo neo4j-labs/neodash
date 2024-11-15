@@ -1,5 +1,3 @@
-include::../../banner.adoc[]
-
 = Rule-Based Styling 
 
 include::../../banner.adoc[]
