@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = User Guide
 
 include::../banner.adoc[]

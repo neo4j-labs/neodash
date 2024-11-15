@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Workflows
 
 include::../../banner.adoc[]

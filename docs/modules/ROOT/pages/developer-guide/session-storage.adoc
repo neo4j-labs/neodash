@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Session Storage
 
 include::../banner.adoc[]

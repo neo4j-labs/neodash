@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Build & Run
 
 include::../banner.adoc[]

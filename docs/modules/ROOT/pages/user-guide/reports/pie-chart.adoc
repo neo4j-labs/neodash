@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Pie Chart
 
 include::../../banner.adoc[]

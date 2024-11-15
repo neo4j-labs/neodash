@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Extensions
 
 include::../../banner.adoc[]

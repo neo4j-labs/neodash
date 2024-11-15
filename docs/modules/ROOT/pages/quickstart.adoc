@@ -1,3 +1,5 @@
+include::/banner.adoc[]
+
 = Quickstart
 
 include::/banner.adoc[]
