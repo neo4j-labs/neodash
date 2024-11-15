@@ -1,6 +1,6 @@
-include::../banner.adoc[]
-
 = Contributing
+
+include::../banner.adoc[]
 
 Contributions to the project are highly welcomed. Please consider
 creating a https://github.com/neo4j-labs/neodash/pulls[Pull Request].

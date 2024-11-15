@@ -1,6 +1,6 @@
-include::../../banner.adoc[]
-
 = Raw JSON
+
+include::../../banner.adoc[]
 
 The Raw JSON report renders the JSON response received from Neo4j
 directly. This is typically used for debugging queries, or,

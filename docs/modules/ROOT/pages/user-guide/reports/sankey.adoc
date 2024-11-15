@@ -1,6 +1,6 @@
-include::../../banner.adoc[]
-
 = Sankey Chart
+
+include::../../banner.adoc[]
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 

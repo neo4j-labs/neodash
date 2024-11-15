@@ -1,6 +1,6 @@
-include::../banner.adoc[]
-
 = Testing 
+
+include::../banner.adoc[]
 
 NeoDash uses *Cypress* for automated testing. To install Cypress, check
 out the official

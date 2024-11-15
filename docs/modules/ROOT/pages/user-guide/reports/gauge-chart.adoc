@@ -1,6 +1,6 @@
-include::../../banner.adoc[]
-
 = Gauge Chart
+
+include::../../banner.adoc[]
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
