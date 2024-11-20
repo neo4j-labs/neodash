@@ -193,7 +193,7 @@ export const NeoCustomReportActionsModal = ({
   fields,
   setCustomReportActionsModalOpen,
   onReportSettingUpdate,
-  _preConditions,
+  preConditionsSetting,
 }) => {
   // The rule set defined in this modal is updated whenever the setting value is externally changed.
   const [rules, setRules] = React.useState([]);
@@ -201,8 +201,8 @@ export const NeoCustomReportActionsModal = ({
   useEffect(() => {
     if (settingValue) {
       setRules(settingValue);
-      if (_preConditions) {
-        setPreConditions(_preConditions);
+      if (preConditionsSetting) {
+        setPreConditions(preConditionsSetting);
       }
     }
   }, [settingValue]);
