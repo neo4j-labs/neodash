@@ -7,16 +7,39 @@ export const hasPreCondition = (preConditions) => {
   return preConditions.length > 0;
 };
 
+const groupConditionsByField = (conditions) => {
+  return conditions.reduce((acc, condition) => {
+    if (!acc[condition.field]) {
+      acc[condition.field] = [];
+    }
+    acc[condition.field].push(condition);
+    return acc;
+  }, {});
+};
+
+const evaluateGroupedConditions = (groupedConditions, row) => {
+  return Object.keys(groupedConditions).every((field) => {
+    // Logical OR between conditions for the same field
+    return groupedConditions[field].some((condition) => evaluateCondition(condition, row));
+  });
+};
+
 export const convertConditionsToExpression = (conditions, row) => {
-  return !conditions.every((condition) => evaluateCondition(condition, row));
+  const groupedConditions = groupConditionsByField(conditions);
+  return !evaluateGroupedConditions(groupedConditions, row);
 };
 
 const evaluateCondition = (condition, row) => {
+  const fieldValue = row[condition.field];
   switch (condition.condition) {
     case '=':
-      return row[condition.field] === condition.value;
+      return fieldValue === condition.value;
     case '!=':
-      return row[condition.field] !== condition.value;
+      return fieldValue !== condition.value;
+    case 'contains':
+      return typeof fieldValue === 'string' && fieldValue.includes(condition.value);
+    case 'not_contains':
+      return typeof fieldValue === 'string' && !fieldValue.includes(condition.value);
     default:
       return false;
   }

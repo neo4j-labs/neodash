@@ -21,6 +21,14 @@ const PRE_CONDITIONS_RULES = [
     value: '!=',
     label: '!=',
   },
+  {
+    value: 'contains',
+    label: 'contains',
+  },
+  {
+    value: 'not_contains',
+    label: 'not_contains',
+  },
 ];
 
 const defaultPreCondition = {

@@ -399,7 +399,7 @@ export const NeoTableChart = (props: ChartProps) => {
     if (hasPreCondition(preConditions)) {
       return convertConditionsToExpression(preConditions, params.row);
     }
-    return false;
+    return true;
   };
 
   return (
