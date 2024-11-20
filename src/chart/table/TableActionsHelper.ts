@@ -8,7 +8,18 @@ export const hasPreCondition = (preConditions) => {
 };
 
 export const convertConditionsToExpression = (conditions, row) => {
-  return !conditions.every((condition) => row[condition.field] === condition.value);
+  return !conditions.every((condition) => evaluateCondition(condition, row));
+};
+
+const evaluateCondition = (condition, row) => {
+  switch (condition.condition) {
+    case '=':
+      return row[condition.field] === condition.value;
+    case '!=':
+      return row[condition.field] !== condition.value;
+    default:
+      return false;
+  }
 };
 
 export const getCheckboxes = (actionsRules, rows, getGlobalParameter) => {

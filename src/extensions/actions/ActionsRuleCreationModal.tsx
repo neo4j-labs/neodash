@@ -14,11 +14,11 @@ import { Autocomplete, TextField, Typography } from '@mui/material';
 
 const PRE_CONDITIONS_RULES = [
   {
-    value: '===',
+    value: '=',
     label: '=',
   },
   {
-    value: '!==',
+    value: '!=',
     label: '!=',
   },
 ];
