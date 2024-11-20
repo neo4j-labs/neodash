@@ -8,7 +8,26 @@ import {
 } from '@neo4j-ndl/react/icons';
 import { getPageNumbersAndNamesList } from '../advancedcharts/Utils';
 import { IconButton, Button, Dialog, Dropdown, TextInput } from '@neo4j-ndl/react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, Typography } from '@mui/material';
+
+// Pre conditions
+
+const PRE_CONDITIONS_RULES = [
+  {
+    value: '===',
+    label: '=',
+  },
+  {
+    value: '!==',
+    label: '!=',
+  },
+];
+
+const defaultPreCondition = {
+  condition: '=',
+  field: '',
+  value: '',
+};
 
 // The set of conditional checks that are included in the rule specification.
 const RULE_CONDITIONS = {
@@ -166,12 +185,17 @@ export const NeoCustomReportActionsModal = ({
   fields,
   setCustomReportActionsModalOpen,
   onReportSettingUpdate,
+  _preConditions,
 }) => {
   // The rule set defined in this modal is updated whenever the setting value is externally changed.
   const [rules, setRules] = React.useState([]);
+  const [preConditions, setPreConditions] = React.useState([defaultPreCondition]);
   useEffect(() => {
     if (settingValue) {
       setRules(settingValue);
+      if (_preConditions) {
+        setPreConditions(_preConditions);
+      }
     }
   }, [settingValue]);
 
@@ -183,6 +207,12 @@ export const NeoCustomReportActionsModal = ({
     } else {
       onReportSettingUpdate(settingName, rules);
     }
+
+    if (preConditions.length === 0) {
+      onReportSettingUpdate('preConditions', undefined);
+    } else {
+      onReportSettingUpdate('preConditions', preConditions);
+    }
     setCustomReportActionsModalOpen(false);
   };
 
@@ -191,6 +221,10 @@ export const NeoCustomReportActionsModal = ({
     let newRules = [...rules]; // Deep copy
     newRules[ruleIndex][ruleField] = ruleFieldValue;
     setRules(newRules);
+  };
+
+  const updatePreConditionFieldById = (j, field, value) => {
+    setPreConditions((prevItems) => prevItems.map((item, i) => (i === j ? { ...item, [field]: value } : item)));
   };
 
   /**
@@ -333,7 +367,7 @@ export const NeoCustomReportActionsModal = ({
   const td2Styling = (type) => ({ width: type === 'bar' ? '15%' : '30%' });
   const td2DropdownClassname = (type) => `n-align-middle n-pr-1 ${type === 'bar' ? 'n-w-full' : 'n-w-2/5'}`;
   const td2Autocomplete = (type, index, rule) =>
-    (type !== 'bar' && rule.condition !== 'rowCheck' ? (
+    type !== 'bar' && rule.condition !== 'rowCheck' ? (
       <Autocomplete
         className='n-align-middle n-inline-block n-w-/5'
         disableClearable={true}
@@ -364,7 +398,7 @@ export const NeoCustomReportActionsModal = ({
       />
     ) : (
       <></>
-    ));
+    );
   const td4Styling = (type) => ({ width: type === 'bar' ? '45%' : '40%' });
   const td4DropdownClassname = 'n-align-middle, n-w-1/3';
   const td6Styling = (type) => ({ width: type === 'bar' ? '30%' : '20%' });
@@ -527,6 +561,114 @@ export const NeoCustomReportActionsModal = ({
                         onClick={() => {
                           const newRule = getDefaultRule(type);
                           setRules(rules.concat(newRule));
+                        }}
+                      >
+                        <PlusIconOutline />
+                      </IconButton>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table>
+                <tr>
+                  <td colSpan={7}>
+                    <tr>
+                      <th colSpan={7} className='n-text-center n-font-bold n-py-2'>
+                        Report Pre Conditions
+                      </th>
+                    </tr>
+                  </td>
+                </tr>
+                {preConditions.map((con, i) => {
+                  return (
+                    <tr>
+                      <td width='2.5%' className='n-pr-1'>
+                        <span className='n-pr-1'>{i + 1}.</span>
+                        <span className='n-font-bold'>IF</span>
+                      </td>
+                      <td width='100%'>
+                        <div style={{ border: '2px dashed grey' }} className='n-p-1'>
+                          <Autocomplete
+                            className='n-align-middle n-inline-block n-w-5/12 n-pr-1'
+                            disableClearable={true}
+                            id={`autocomplete-label-type${i}`}
+                            size='small'
+                            noOptionsText='*Specify an exact field name'
+                            options={createFieldVariableSuggestions(null, null, null).filter((e) =>
+                              e.toLowerCase().includes(con.field.toLowerCase())
+                            )}
+                            value={con.field ? con.field : ''}
+                            inputValue={con.field ? con.field : ''}
+                            popupIcon={<></>}
+                            style={{ minWidth: 125 }}
+                            onInputChange={(event, value) => {
+                              updatePreConditionFieldById(i, 'field', value);
+                            }}
+                            onChange={(event, newValue) => {
+                              updatePreConditionFieldById(i, 'field', newValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                placeholder='Field name...'
+                                InputLabelProps={{ shrink: true }}
+                                style={{ padding: '6px 0 7px' }}
+                                size={'small'}
+                              />
+                            )}
+                          />
+                          <Dropdown
+                            type='select'
+                            className='n-align-middle n-w-2/12 n-pr-1'
+                            selectProps={{
+                              onChange: (newValue) => updatePreConditionFieldById(i, 'condition', newValue?.value),
+                              options: PRE_CONDITIONS_RULES.map((option) => ({
+                                label: option.label,
+                                value: option.value,
+                              })),
+                              value: { label: con.condition, value: con.condition },
+                            }}
+                            style={{ minWidth: 70, display: 'inline-block' }}
+                            fluid
+                          />
+                          <TextInput
+                            className='n-align-middle n-inline-block n-w-5/12'
+                            style={{ minWidth: 100 }}
+                            placeholder='Value...'
+                            value={con.value}
+                            onChange={(e) => updatePreConditionFieldById(i, 'value', e.target.value)}
+                            fluid
+                          ></TextInput>
+                        </div>
+                      </td>
+
+                      <td width='5%'>
+                        <IconButton
+                          aria-label='remove rule'
+                          size='medium'
+                          style={{ marginLeft: 10 }}
+                          floating
+                          onClick={() => {
+                            setPreConditions((prevItems) => prevItems.filter((_, j) => j !== i));
+                          }}
+                        >
+                          <XMarkIconOutline />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  );
+                })}
+
+                <tr>
+                  <td colSpan={7}>
+                    <div className='n-text-center n-mt-1'>
+                      <IconButton
+                        aria-label='add'
+                        size='medium'
+                        floating
+                        onClick={() => {
+                          setPreConditions([...preConditions, defaultPreCondition]);
                         }}
                       >
                         <PlusIconOutline />

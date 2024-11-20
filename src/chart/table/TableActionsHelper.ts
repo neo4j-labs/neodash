@@ -3,6 +3,14 @@ export const hasCheckboxes = (actionsRules) => {
   return rules.length > 0;
 };
 
+export const hasPreCondition = (preConditions) => {
+  return preConditions.length > 0;
+};
+
+export const convertConditionsToExpression = (conditions, row) => {
+  return !conditions.every((condition) => row[condition.field] === condition.value);
+};
+
 export const getCheckboxes = (actionsRules, rows, getGlobalParameter) => {
   let rules = actionsRules.filter((rule) => rule.condition && rule.condition == 'rowCheck');
   const params = rules.map((rule) => `neodash_${rule.customizationValue}`);

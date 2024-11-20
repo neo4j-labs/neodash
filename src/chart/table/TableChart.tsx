@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
+import { DataGrid, GridColumnVisibilityModel, GridRowId } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
@@ -22,7 +22,13 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
 import { renderCellExpand } from '../../component/misc/DataGridExpandRenderer';
-import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
+import {
+  convertConditionsToExpression,
+  getCheckboxes,
+  hasCheckboxes,
+  hasPreCondition,
+  updateCheckBoxes,
+} from './TableActionsHelper';
 import ApiService from '../../utils/apiService';
 import { AxiosResponse } from 'axios';
 
@@ -95,6 +101,10 @@ export const NeoTableChart = (props: ChartProps) => {
   const actionsRules =
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
       ? props.settings.actionsRules
+      : [];
+  const preConditions =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.preConditions
+      ? props.settings.preConditions
       : [];
   const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
   const styleRules = useStyleRules(
@@ -385,6 +395,13 @@ export const NeoTableChart = (props: ChartProps) => {
     ? { marginTop: 10, height: '90%', width: '100%', position: 'relative' }
     : { height: '100%', width: '100%', position: 'relative' };
 
+  const isRowSelectable = (params: { id: GridRowId; row: any }) => {
+    if (hasPreCondition(preConditions)) {
+      return convertConditionsToExpression(preConditions, params.row);
+    }
+    return false;
+  };
+
   return (
     <ThemeProvider theme={theme}>
       {isApiSpecEnabled ? apiCallButton() : <></>}
@@ -455,6 +472,7 @@ export const NeoTableChart = (props: ChartProps) => {
           onSelectionModelChange={(selection) =>
             updateCheckBoxes(actionsRules, rows, selection, props.setGlobalParameter)
           }
+          isRowSelectable={isRowSelectable}
           autoPageSize
           pagination
           disableSelectionOnClick
