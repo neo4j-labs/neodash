@@ -379,9 +379,11 @@ export const NeoTableChart = (props: ChartProps) => {
 
   const apiCallButton = () => (
     <Stack direction='row' spacing={2} justifyContent='flex-end' marginRight={2}>
-      <Button variant='outlined' size='small' onClick={handleApiCall} disabled={isApiLoading}>
-        {isApiLoading ? 'Loading...' : props.settings?.sendRequestButtonName || 'send'}
-      </Button>
+      {!props.settings?.apiSpec.response && (
+        <Button variant='outlined' size='small' onClick={handleApiCall} disabled={isApiLoading}>
+          {isApiLoading ? 'Loading...' : props.settings?.sendRequestButtonName || 'send'}
+        </Button>
+      )}
       {props.settings?.apiSpec.response && (
         <Button
           size='small'
