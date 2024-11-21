@@ -148,6 +148,7 @@ const NeoCardSettingsFooter = ({
           settingValue={reportSettings[actionsToCustomize]}
           type={type}
           fields={fields}
+          preConditionsSetting={reportSettings?.preConditions}
           customReportActionsModalOpen={customReportActionsModalOpen}
           setCustomReportActionsModalOpen={setCustomReportActionsModalOpen}
           onReportSettingUpdate={onReportSettingUpdate}
