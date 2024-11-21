@@ -30,7 +30,14 @@ export const convertConditionsToExpression = (conditions, row) => {
 };
 
 const evaluateCondition = (condition, row) => {
-  const fieldValue = row[condition.field];
+  let fieldValue = row[condition.field];
+
+  // Handle Neo4j integer format
+  if (fieldValue && typeof fieldValue === 'object' && 'low' in fieldValue && 'high' in fieldValue) {
+    // Assuming we only care about the 'low' value for comparisons
+    fieldValue = String(fieldValue.low);
+  }
+
   switch (condition.condition) {
     case '=':
       return fieldValue === condition.value;
