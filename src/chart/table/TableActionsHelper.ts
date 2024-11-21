@@ -64,7 +64,7 @@ const evaluateCondition = (condition, row) => {
 
   // Handle Neo4j integer format
   if (fieldValue && typeof fieldValue === 'object' && 'low' in fieldValue && 'high' in fieldValue) {
-    // Assuming you only care about the 'low' value for comparisons
+    // Assuming we only care about the 'low' value for comparisons
     fieldValue = String(fieldValue.low);
   }
 
