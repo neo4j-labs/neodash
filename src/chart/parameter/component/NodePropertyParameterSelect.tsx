@@ -171,6 +171,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete
         id='autocomplete'
+        autoHighlight
         multiple={multiSelector}
         options={options}
         disabled={disabled}
