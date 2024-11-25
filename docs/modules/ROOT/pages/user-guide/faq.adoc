@@ -46,28 +46,14 @@ Mode] deployment of NeoDash.
 
 If you need help setting this up, please contact the NeoDash team.
 
-== 4. Is NeoDash Production Ready?
-
-NeoDash is safe to be used in a production environment. As it is a
-reporting tool, keep the following things in mind: 
-
-- Always use *read-only* Neo4j accounts when connecting to a dashboard. 
-- Always deploy NeoDash with SSL, so that an encrypted Neo4j connection must be
-used. 
-- As NeoDash accesses Neo4j directly, make sure you only give
-access to the right people. As a rule of thumb, you should give NeoDash
-access to the people that can also see Bloom.
-
-For other questions regarding setting up your own production deployment, contact the NeoDash team.
-
-== 5. Can I use NeoDash with Neo4j Community Edition?
+== 4. Can I use NeoDash with Neo4j Community Edition?
 
 Yes, NeoDash can be used with any type of Neo4j deployment (On-premise,
 cloud, or fully managed in Neo4j Aura). We do however recommend that you use the
 Enterprise version, as it lets you create a
 dedicated read-only user for reporting.
 
-== 6. I’m missing a feature. Can I ask for help?
+== 5. I’m missing a feature. Can I ask for help?
 Feature requests and bug reports are more than welcome. Please open an
 issue on https://github.com/neo4j-labs/neodash/issues[Github]. Issues
 will be addressed on a best-effort basis.
@@ -75,7 +61,7 @@ will be addressed on a best-effort basis.
 If you’re looking for a specific feature with high priority, you can
 reach out to the Neo4j team.
 
-== 7. How can I contribute to NeoDash myself?
+== 6. How can I contribute to NeoDash myself?
 
 NeoDash is an open-source tool that can be extended by anyone. If you
 are interested in contributing, please check out the
@@ -85,7 +71,7 @@ Aside from code contributions, we are also very happy to hear about how
 you use NeoDash. If you have a blog post, podcast or video of your graph
 dashboard, let us know!
 
-== 8. Can I get professional help with NeoDash?
+== 7. Can I get professional help with NeoDash?
 
 If you are interested in a services agreement to support your NeoDash deployment, please reach out to the
 https://neo4j.com/professional-services/[Neo4j Services Team].
