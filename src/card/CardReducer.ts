@@ -13,6 +13,7 @@ import {
   UPDATE_REPORT_TYPE,
   UPDATE_SELECTION,
   UPDATE_REPORT_DATABASE,
+  UPDATE_LAST_POPULATE_QUERY_TIMESTAMP,
 } from './CardActions';
 import { TOGGLE_CARD_SETTINGS } from './CardActions';
 import { createUUID } from '../utils/uuid';
@@ -38,6 +39,7 @@ export const CARD_INITIAL_STATE = {
   selection: {},
   settings: {},
   collapseTimeout: 'auto',
+  lastPopulateQueryTimestamp: -1,
 };
 
 export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; payload: any }) => {
@@ -48,6 +50,11 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
   }
 
   switch (type) {
+    case UPDATE_LAST_POPULATE_QUERY_TIMESTAMP: {
+      const { lastPopulateQueryTimestamp } = payload;
+      state = update(state, { lastPopulateQueryTimestamp });
+      return state;
+    }
     case UPDATE_REPORT_TITLE: {
       const { title } = payload;
       state = update(state, { title: title });

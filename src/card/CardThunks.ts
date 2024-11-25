@@ -182,3 +182,15 @@ export const updateReportSettingThunk = (id, setting, value) => (dispatch: any, 
     dispatch(createNotificationThunk('Error when updating report settings', e));
   }
 };
+
+/** GET thunk semaphore to be able to retrieve last timestamp to prevent displaying stale result */
+export const getLastPopulateQueryTimestampThunk = (id) => (dispatch: any, getState: any) => {
+  try {
+    const state = getState();
+    const { pagenumber } = state.dashboard.settings;
+    const report = state.dashboard.pages[pagenumber].reports.find((o) => o.id === id);
+    return report ? report.lastPopulateQueryTimestamp : -1;
+  } catch (e) {
+    dispatch(createNotificationThunk('error', e));
+  }
+};

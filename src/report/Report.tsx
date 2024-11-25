@@ -18,8 +18,10 @@ import { EXTENSIONS } from '../extensions/ExtensionConfig';
 import { getPageNumber } from '../settings/SettingsSelectors';
 import { getPrepopulateReportExtension } from '../extensions/state/ExtensionSelectors';
 import { deleteSessionStoragePrepopulationReportFunction } from '../extensions/state/ExtensionActions';
-import { updateFieldsThunk } from '../card/CardThunks';
+import { getLastPopulateQueryTimestampThunk, updateFieldsThunk } from '../card/CardThunks';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import { getReportState } from '../card/CardSelectors';
+import { updateLastPopulateQueryTimestamp } from '../card/CardActions';
 
 export const REPORT_LOADING_ICON = <LoadingSpinner size='large' className='centered' style={{ marginTop: '-30px' }} />;
 
@@ -56,6 +58,9 @@ export const NeoReport = ({
   prepopulateExtensionName,
   deletePrepopulationReportFunction,
   theme,
+  report,
+  setLastPopulateQueryTimestamp,
+  getLastTimestampDispatch,
 }) => {
   const [records, setRecords] = useState(null);
   const [timer, setTimer] = useState(null);
@@ -67,6 +72,7 @@ export const NeoReport = ({
       '`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?'
     );
   }
+  const getLastTimestampDispatchWrap = () => getLastTimestampDispatch(id);
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
   const setSchema = (id, schema) => {
@@ -111,6 +117,11 @@ export const NeoReport = ({
     // Logic to run a query
     const executeQuery = (newQuery) => {
       setLoadingIcon(REPORT_LOADING_ICON);
+
+      const ts = Date.now();
+      if (ts > report.lastPopulateQueryTimestamp) {
+        setLastPopulateQueryTimestamp(pagenumber, id, ts);
+      }
       if (debounced) {
         debouncedRunCypherQuery(
           driver,
@@ -128,7 +139,9 @@ export const NeoReport = ({
           queryTimeLimit,
           (schema) => {
             setSchema(id, schema);
-          }
+          },
+          ts,
+          getLastTimestampDispatchWrap
         );
       } else {
         runCypherQuery(
@@ -147,7 +160,9 @@ export const NeoReport = ({
           queryTimeLimit,
           (schema) => {
             setSchema(id, schema);
-          }
+          },
+          ts,
+          getLastTimestampDispatchWrap
         );
       }
     };
@@ -342,6 +357,7 @@ export const NeoReport = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
+  report: getReportState(state, ownProps.id),
   pagenumber: getPageNumber(state),
   prepopulateExtensionName: getPrepopulateReportExtension(state, ownProps.id),
   theme: getDashboardTheme(state),
@@ -359,6 +375,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setSchemaDispatch: (id: any, schema: any) => {
     dispatch(updateFieldsThunk(id, schema, true));
+  },
+  setLastPopulateQueryTimestamp: (pageNumber: any, id: any, ts: number) => {
+    dispatch(updateLastPopulateQueryTimestamp(pageNumber, id, ts));
+  },
+  getLastTimestampDispatch: (id: any) => {
+    return dispatch(getLastPopulateQueryTimestampThunk(id));
   },
 });
 
