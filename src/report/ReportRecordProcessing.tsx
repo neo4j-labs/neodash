@@ -284,6 +284,11 @@ function RenderArray(value, transposedTable = false) {
 
 export function RenderString(value) {
   const str = value?.toString() || '';
+
+  if (str.startsWith('<a href=')) {
+    return <div dangerouslySetInnerHTML={{ __html: str }} className='anchor' />;
+  }
+
   if (str.startsWith('http') || str.startsWith('https')) {
     return (
       <TextLink key={value} externalLink target='_blank' href={str}>
