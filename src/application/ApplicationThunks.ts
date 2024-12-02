@@ -435,8 +435,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
     // Check if we are in standalone mode
     const standalone = config.standalone || urlParams.get('standalone') == 'Yes';
-    console.log(urlParams.get('standalone'));
-    console.log(standalone);
 
     // if a dashboard database was previously set, remember to use it.
     const dashboardDatabase = state.application.standaloneDashboardDatabase;
@@ -494,7 +492,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       dispatch(setAboutModalOpen(false));
       dispatch(setConnected(false));
       dispatch(setWelcomeScreenOpen(false));
-      console.log('EDDAJE');
       const success = await initializeSSO(state.application.cachedSSODiscoveryUrl, (credentials) => {
         if (standalone) {
           // Redirected from SSO and running in viewer mode, merge retrieved config with hardcoded credentials.
