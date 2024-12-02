@@ -534,7 +534,9 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
 
         if (standalone) {
-          if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+          if (urlParams.get('id')) {
+            dispatch(setDashboardToLoadAfterConnecting(urlParams.get('id')));
+          } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
             dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
           } else {
             dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
@@ -543,6 +545,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
         sessionStorage.removeItem('SSO_PARAMS_BEFORE_REDIRECT');
       });
+
       dispatch(setWaitForSSO(false));
       if (!success) {
         alert('Unable to connect using SSO. See the browser console for more details.');
@@ -556,12 +559,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         return;
       }
     } else if (state.application.ssoEnabled && !state.application.waitForSSO && urlParams) {
-        let paramsToStore = {};
-        urlParams.forEach((value, key) => {
-          paramsToStore[key] = value;
-        });
-        sessionStorage.setItem('SSO_PARAMS_BEFORE_REDIRECT', JSON.stringify(paramsToStore));
-      }
+      let paramsToStore = {};
+      urlParams.forEach((value, key) => {
+        paramsToStore[key] = value;
+      });
+      sessionStorage.setItem('SSO_PARAMS_BEFORE_REDIRECT', JSON.stringify(paramsToStore));
+    }
 
     if (standalone) {
       dispatch(initializeApplicationAsStandaloneThunk(config, paramsToSetAfterConnecting));
