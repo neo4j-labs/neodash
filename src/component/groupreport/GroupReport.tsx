@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 import NeoCard from '../../card/Card';
+import useUltraWide from '../../utils/useUltraWide';
 
 export default function GroupReport({
   groupedReports,
@@ -14,14 +15,37 @@ export default function GroupReport({
   getAddCardButtonPosition,
   onClonePressed,
 }) {
+  const isUltraWide = useUltraWide();
   return groupedReports[groupId].length > 0 ? (
     <Box display='grid' gridTemplateColumns='repeat(24, 1fr)' columnGap={1} sx={getBorderSpecsForGroupId(groupId)}>
       {groupedReports[groupId]
-        .sort((a: any, b: any) => a.groupOrder - b.groupOrder)
-        .map((report: { id: any; width: any; height: any }) => {
-          const { id, width: w, height: h } = report;
+        .sort((a: any, b: any) => {
+          const aGroupOrder = a.groupOrder;
+          const bGroupOrder = b.groupOrder;
+          const aUwGroupOrder = a.uwGroupOrder ?? 0;
+          const bUwGroupOrder = b.uwGroupOrder ?? 0;
+
+          if (isUltraWide) {
+            return aUwGroupOrder - bUwGroupOrder;
+          }
+          return aGroupOrder - bGroupOrder;
+        })
+        .map((report: { id: any; width: any; height: any; x: any; y: any; ultraWideHeight: number }) => {
+          const { id, width: w, height: h, ultraWideHeight } = report;
+          let modifiedWidth = w;
+          let modifiedHeight = h;
+          if (isUltraWide) {
+            modifiedWidth = w / 2;
+            modifiedHeight = ultraWideHeight;
+          }
+
           return (
-            <Box id={id} gridColumn={`span ${w}`} gridRow={`span ${h}`} sx={{ height: h * 100, paddingBottom: '15px' }}>
+            <Box
+              id={id}
+              gridColumn={`span ${modifiedWidth}`}
+              gridRow={`span ${modifiedHeight}`}
+              sx={{ height: modifiedHeight * 100, paddingBottom: '15px' }}
+            >
               <NeoCard
                 id={id}
                 key={getReportKey(pagenumber, id)}
