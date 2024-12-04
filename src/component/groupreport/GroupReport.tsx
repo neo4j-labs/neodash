@@ -30,13 +30,13 @@ export default function GroupReport({
           }
           return aGroupOrder - bGroupOrder;
         })
-        .map((report: { id: any; width: any; height: any; x: any; y: any; ultraWideHeight: number }) => {
-          const { id, width: w, height: h, ultraWideHeight } = report;
+        .map((report: { id: any; width: any; height: any; x: any; y: any; uwHeight: number }) => {
+          const { id, width: w, height: h, uwHeight } = report;
           let modifiedWidth = w;
           let modifiedHeight = h;
           if (isUltraWide) {
             modifiedWidth = w / 2;
-            modifiedHeight = ultraWideHeight;
+            modifiedHeight = uwHeight ?? 2;
           }
 
           return (
