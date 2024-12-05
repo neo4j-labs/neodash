@@ -119,7 +119,7 @@ export const NeoReport = ({
       setLoadingIcon(REPORT_LOADING_ICON);
 
       const ts = Date.now();
-      if (ts > report.lastPopulateQueryTimestamp) {
+      if (!report.lastPopulateQueryTimestamp || ts > report.lastPopulateQueryTimestamp) {
         setLastPopulateQueryTimestamp(pagenumber, id, ts);
       }
       if (debounced) {

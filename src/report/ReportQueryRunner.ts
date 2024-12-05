@@ -126,7 +126,7 @@ export async function runCypherQuery(
       if (getLastTimestampDispatch && typeof getLastTimestampDispatch === 'function') {
         const lastTimestamp = getLastTimestampDispatch();
         // console.log(thisPopulateQueryTimestamp, `Query complete, report.lastQueryTs =`, lastTimestamp);
-        if (thisPopulateQueryTimestamp >= lastTimestamp) {
+        if (!lastTimestamp || thisPopulateQueryTimestamp >= lastTimestamp) {
           setRecords(records);
         }
       } else {
