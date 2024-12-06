@@ -24,8 +24,9 @@ export default function GroupReport({
           const bGroupOrder = b.groupOrder;
           const aUwGroupOrder = a.uwGroupOrder ?? 0;
           const bUwGroupOrder = b.uwGroupOrder ?? 0;
+          const isUwHeightPresent = a.uwHeight && b.uwHeight;
 
-          if (isUltraWide) {
+          if (isUltraWide && isUwHeightPresent) {
             return aUwGroupOrder - bUwGroupOrder;
           }
           return aGroupOrder - bGroupOrder;
@@ -34,7 +35,7 @@ export default function GroupReport({
           const { id, width: w, height: h, uwHeight } = report;
           let modifiedWidth = w;
           let modifiedHeight = h;
-          if (isUltraWide) {
+          if (isUltraWide && uwHeight) {
             modifiedWidth = w / 2;
             modifiedHeight = uwHeight ?? 2;
           }
