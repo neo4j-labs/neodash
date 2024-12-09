@@ -496,6 +496,21 @@ export const NeoTableChart = (props: ChartProps) => {
           }
           onCellDoubleClick={(e) => {
             let rules = getRule(e, actionsRules, 'doubleClick');
+            let ruleCellCopy = getRule(e, actionsRules, 'ruleCellCopy');
+
+            if (ruleCellCopy?.length > 0) {
+              const fieldDetails = ruleCellCopy.find((rule) => rule.field === e.field);
+              if (fieldDetails) {
+                const regex = new RegExp(fieldDetails?.customizationValue, 'g');
+                setNotificationOpen(true);
+                navigator.clipboard.writeText(e.value.replace(regex, ''));
+              } else {
+                setNotificationOpen(true);
+                navigator.clipboard.writeText(e.value);
+              }
+              return;
+            }
+
             if (rules !== null) {
               rules.forEach((rule) => executeActionRule(rule, e, { ...props, pageNames: pageNames }, 'table'));
             } else {
