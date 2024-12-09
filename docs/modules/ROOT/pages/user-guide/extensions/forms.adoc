@@ -1,5 +1,7 @@
 = Forms
 
+include::../../banner.adoc[]
+
 The 'forms' extension lets you combine different parameter selectors to update / modify your graph data.
 Update queries are predefined by the dashboard builder, and the user is limited to specifying the parameters for the query only.
 

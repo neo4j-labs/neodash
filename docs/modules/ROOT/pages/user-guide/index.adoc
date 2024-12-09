@@ -1,5 +1,7 @@
 = User Guide
 
+include::../banner.adoc[]
+
 The following pages contain everything you need to get started with NeoDash.
 
 

@@ -79,7 +79,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:2.4.8
+          tags: ${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_LABS_USERNAME }}/neodash:2.4.9
   build-docker-legacy:
     needs: build-test
     runs-on: neodash-runners
@@ -103,7 +103,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.4.8
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/neodash:latest,${{ secrets.DOCKER_HUB_USERNAME }}/neodash:2.4.9
   deploy-gallery:
     runs-on: neodash-runners
     strategy:

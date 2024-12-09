@@ -1,5 +1,7 @@
 = Report Actions 
 
+include::../../banner.adoc[]
+
 link:../#_2_pro_extensions[label:Pro&nbsp;Extension[]]
 
 Report actions let dashboard builders add interactivity into dashboards. Actions can be used to achieve:

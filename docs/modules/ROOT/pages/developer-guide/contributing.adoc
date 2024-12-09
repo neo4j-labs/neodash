@@ -1,5 +1,7 @@
 = Contributing
 
+include::../banner.adoc[]
+
 Contributions to the project are highly welcomed. Please consider
 creating a https://github.com/neo4j-labs/neodash/pulls[Pull Request].
 Ensure you start from the `develop` branch, and set the merge base to

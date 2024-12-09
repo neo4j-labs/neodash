@@ -1,0 +1,6 @@
+[NOTE]
+====
+This documentation pertains to the unsupported version of NeoDash, as part of Neo4j Labs.
+For users of the supported NeoDash offering, refer to https://neo4j.com/docs/neodash-commercial/[NeoDash commercial].
+
+====

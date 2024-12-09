@@ -1,5 +1,7 @@
 = Area Map
 
+include::../../banner.adoc[]
+
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
 The Area Map charts can be used to render geographical based information on geoJson polygons. It's possible to click a polygon to visualize its regions and their related data.
