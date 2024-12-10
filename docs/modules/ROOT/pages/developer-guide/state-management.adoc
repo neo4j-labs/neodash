@@ -1,5 +1,7 @@
 = State Management
 
+include::../banner.adoc[]
+
 NeoDash is an application with a complex internal state. If you are
 planning to extend the application state in some way, make sure you are
 familiar with https://redux.js.org/[Redux] design patterns.

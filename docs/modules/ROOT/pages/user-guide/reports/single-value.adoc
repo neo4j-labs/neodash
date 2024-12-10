@@ -1,5 +1,7 @@
 = Single Value
 
+include::../../banner.adoc[]
+
 A single value report will render the first column of the first row
 returned by the Cypher query. Single value reports are typically used
 for key metrics: 

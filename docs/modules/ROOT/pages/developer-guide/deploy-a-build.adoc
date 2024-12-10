@@ -1,4 +1,7 @@
 = Deploy a Build
+
+include::../banner.adoc[]
+
 If you have a pre-built NeoDash application, you can easily deploy it on an any webserver.
 A NeoDash build is "just" a collection of HTML, CSS and JavaScript files, so it can run virtually anywhere.
 
@@ -37,7 +40,7 @@ Depending on the webserver type and version, this could be different directory.
 As an example - to copy the files to an nginx webserver using `scp`:
 
 ```bash
-scp neodash-2.4.8 username@host:/usr/share/nginx/html
+scp neodash-2.4.9-labs username@host:/usr/share/nginx/html
 ```
 
 NeoDash should now be visible by visiting your (sub)domain in the browser.

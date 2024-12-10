@@ -1,5 +1,7 @@
 = Session Storage
 
+include::../banner.adoc[]
+
 This reducer serves only to store data that we want to reset at each new session.
 To connect to it, just define a key and use the predefined actions to set a new pair (key,value) inside of it. 
 Inside the actions there is also an action to delete all the keys that match a precise prefix, it can be useful, for example, to wipe the sessionStorage state for a certain extension, if it stores the data inside the sessionStorage using a prefix (for example look at the query-translator extension at getSessionStorageHistoryKey).

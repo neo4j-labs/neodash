@@ -1,5 +1,7 @@
 = Map
 
+include::../../banner.adoc[]
+
 The map report will render all returned nodes, relationships and paths
 on a geomap. https://www.openstreetmap.org[Open Street Map] is used to
 visualize the data on the map.

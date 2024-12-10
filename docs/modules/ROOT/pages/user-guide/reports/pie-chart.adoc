@@ -1,5 +1,7 @@
 = Pie Chart
 
+include::../../banner.adoc[]
+
 A pie chart will draw categories and values in a circular disc layout.
 The pie chart will require you to choose the following selections:
 

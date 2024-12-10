@@ -1,5 +1,7 @@
 = Bar Chart
 
+include::../../banner.adoc[]
+
 A bar chart will draw categories and values in a familiar bar-layout.
 The bar chart will require you to choose the following selections:
 

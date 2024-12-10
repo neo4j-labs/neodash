@@ -1,5 +1,11 @@
 = Developer Guide
 
+include::../banner.adoc[]
+
+
+include::../banner.adoc[]
+
+
 This guide contains information for developers looking to deploy NeoDash, or extend it for their own needs. 
 
 - link:build-and-run[Build & Run] 

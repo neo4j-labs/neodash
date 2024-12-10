@@ -1,5 +1,7 @@
 = Form
 
+include::../../banner.adoc[]
+
 A form is a special type of report that lets users run predefined, parameterized queries.
 A single form can consist of:
 

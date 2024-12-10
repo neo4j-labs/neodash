@@ -1,5 +1,7 @@
 = Gantt Chart
 
+include::../../banner.adoc[]
+
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
 A Gantt chart can be used to visualize tasks on a timeline, as well as their dependencies.

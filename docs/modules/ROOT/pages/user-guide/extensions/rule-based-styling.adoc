@@ -1,5 +1,6 @@
 = Rule-Based Styling 
 
+include::../../banner.adoc[]
 
 The rule-based styling extension allows users to dynamically color elements in a visualization based on output values. This can be applied to tables, graphs, bar charts, line charts, and more. To use the extension, click on the 'rule-based styling' icon inside the settings of a report.
 
