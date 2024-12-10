@@ -1,5 +1,6 @@
 = Component Overview
 
+include::../banner.adoc[]
 
 The image below contains a high-level overview of the component
 hierarchy within the application. The following conceptual building

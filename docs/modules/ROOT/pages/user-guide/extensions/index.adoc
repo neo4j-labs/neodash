@@ -1,5 +1,7 @@
 = Extensions
 
+include::../../banner.adoc[]
+
 Extensions provide a way to expand the basic functionality of NeoDash with extra features.
 To enable an extension, open up the extensions window by clicking the puzzle piece icon in the left-sidebar of the screen.
 This will open up the **Extensions Window**, which lets you toggle active extensions for the current dashboard.

@@ -1,5 +1,7 @@
 = Radar Chart
 
+include::../../banner.adoc[]
+
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
 A Radar chart can be used to render multivariate data from an array of nodes

@@ -1,5 +1,7 @@
 = Adding Visualizations
 
+include::../banner.adoc[]
+
 You can extend NeoDash with your own visualizations without diving deep
 into the core application. Likewise, adding a new customization to an
 existing report requires minimal changes.

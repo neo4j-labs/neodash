@@ -1,5 +1,7 @@
 = 3D Graph
 
+include::../../banner.adoc[]
+
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
 The 3D graph report extends the default graph visualization with another dimension.

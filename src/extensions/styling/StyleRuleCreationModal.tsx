@@ -338,6 +338,35 @@ export const NeoCustomReportStyleModal = ({
                                 }}
                                 fluid
                               />
+                              <Autocomplete
+                                className='n-align-middle n-inline-block n-w-5/12 n-pr-1'
+                                disableClearable={true}
+                                id={`autocomplete-label-type${index}`}
+                                size='small'
+                                noOptionsText='*Specify an exact field name'
+                                options={createFieldVariableSuggestions().filter((e) =>
+                                  e.toLowerCase().includes(rule.targetField)
+                                )}
+                                value={rule.targetField ? rule.targetField : (rule.field ? rule.field : '')}
+                                inputValue={rule.targetField ? rule.targetField : (rule.field ? rule.field : '')}
+                                popupIcon={<></>}
+                                style={{ minWidth: 125, visibility: rule.customization.includes("cell") ? 'visible' : 'hidden', display: rule.customization.includes("cell") ? '' : 'none' }}
+                                onInputChange={(event, value) => {
+                                  updateRuleField(index, 'targetField', value);
+                                }}
+                                onChange={(event, newValue) => {
+                                  updateRuleField(index, 'targetField', newValue);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    placeholder='Target field name...'
+                                    InputLabelProps={{ shrink: true }}
+                                    style={{ padding: '6px 0 7px' }}
+                                    size={'small'}
+                                  />
+                                )}
+                              />
                               <TextInput
                                 className='n-align-middle n-inline-block n-w-1/12 n-pr-1'
                                 style={{ minWidth: 30 }}

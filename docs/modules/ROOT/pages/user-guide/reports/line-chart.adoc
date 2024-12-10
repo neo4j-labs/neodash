@@ -1,5 +1,7 @@
 = Line Chart
 
+include::../../banner.adoc[]
+
 A line chart can be used to draw one or more lines in a two-dimensional
 plane. It requires two numeric fields:
 
