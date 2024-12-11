@@ -217,24 +217,15 @@ export const retrieveNeo4jUsers = (driver, currentRole, setNeo4jUsers, setRoleUs
  * @param setLabels callback to update the list of labels.
  */
 export function retrieveLabelsList(driver, database: any, setLabels: (records: any) => void) {
-  let labelsSet = false; // Flag to track if setLabels was called
-
-  // Wrapper around the original setLabels to set the flag when called
-  const wrappedSetLabels = (records) => {
-    labelsSet = true;
-    setLabels(records);
-  };
-
-  runCypherQuery(driver, database, 'CALL db.labels()', {}, 1000, () => {}, wrappedSetLabels)
-    .then(() => {
-      if (!labelsSet) {
-        setLabels([]);
-      }
-    })
-    .catch((error) => {
-      console.error('Error retrieving labels:', error);
-      setLabels([]);
-    });
+  runCypherQuery(
+    driver,
+    database.value,
+    'CALL db.labels()',
+    {},
+    1000,
+    () => {},
+    (records) => setLabels(records)
+  );
 }
 
 /**
@@ -274,31 +265,8 @@ export async function updateUsers(driver, currentRole, allUsers, selectedUsers, 
     `REVOKE ROLE ${currentRole} FROM ${escapedAllUsers}`,
     {},
     1000,
-    async (status) => {
+    (status) => {
       globalStatus = status;
-      if (globalStatus == QueryStatus.NO_DATA || globalStatus == QueryStatus.COMPLETE) {
-        //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
-        // We build in an artificial delay... This must be improved the future.
-        setTimeout(async () => {
-          if (selectedUsers.length > 0) {
-            const escapedSelectedUsers = selectedUsers.map((user) => `\`${user}\``).join(',');
-            await runCypherQuery(
-              driver,
-              'system',
-              `GRANT ROLE ${currentRole} TO ${escapedSelectedUsers};`,
-              {},
-              1000,
-              (status) => {
-                if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
-                  onSuccess();
-                }
-              }
-            );
-          } else {
-            onSuccess();
-          }
-        }, 2000);
-      }
     },
     (records) => {
       if (records && records[0] && records[0].error) {
@@ -306,4 +274,25 @@ export async function updateUsers(driver, currentRole, allUsers, selectedUsers, 
       }
     }
   );
+  if (globalStatus == QueryStatus.NO_DATA || globalStatus == QueryStatus.COMPLETE) {
+    //  TODO: Neo4j is very slow in updating after the previous query, even though it is technically a finished query.
+    // We build in an artificial delay...
+    if (selectedUsers.length > 0) {
+      const escapedSelectedUsers = selectedUsers.map((user) => `\`${user}\``).join(',');
+      await runCypherQuery(
+        driver,
+        'system',
+        `GRANT ROLE ${currentRole} TO ${escapedSelectedUsers}`,
+        {},
+        1000,
+        (status) => {
+          if (status == QueryStatus.NO_DATA || QueryStatus.COMPLETE) {
+            onSuccess();
+          }
+        }
+      );
+    } else {
+      onSuccess();
+    }
+  }
 }

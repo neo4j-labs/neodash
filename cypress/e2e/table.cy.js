@@ -1,7 +1,6 @@
-import { tableCypherQuery } from '../../fixtures/cypher_queries';
-import { Page } from '../../Page';
+import { tableCypherQuery } from '../fixtures/cypher_queries';
 
-const page = new Page();
+const WAITING_TIME = 20000;
 // Ignore warnings that may appear when using the Cypress dev server
 Cypress.on('uncaught:exception', (err, runnable) => {
   console.log(err, runnable);
@@ -10,7 +9,30 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Testing table', () => {
   beforeEach('open neodash', () => {
-    page.init().createNewDashboard().connectToNeo4j();
+    cy.viewport(1920, 1080);
+    cy.visit('/', {
+      onBeforeLoad(win) {
+        win.localStorage.clear();
+      },
+    });
+
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'NeoDash - Neo4j Dashboard Builder').click();
+
+    cy.get('#form-dialog-title').then(($div) => {
+      const text = $div.text();
+      if (text == 'NeoDash - Neo4j Dashboard Builder') {
+        cy.wait(500);
+        // Create new dashboard
+        cy.contains('New Dashboard').click();
+      }
+    });
+
+    cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'Connect to Neo4j');
+
+    cy.get('#url').clear().type('localhost');
+    cy.get('#dbusername').clear().type('neo4j');
+    cy.get('#dbpassword').type('test1234');
+    cy.get('button').contains('Connect').click();
     cy.wait(100);
   });
 
