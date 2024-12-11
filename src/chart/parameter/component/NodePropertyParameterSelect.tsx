@@ -161,7 +161,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
   if (extraRecords && extraRecords[0] && extraRecords[0].error) {
     return (
       <NeoCodeViewerComponent
-        value={`Please reload page: \n Detailed error ${props.query}\n\nError message:\n${extraRecords[0].error}`}
+        value={`The parameter value retrieval query is invalid: \n${props.query}\n\nError message:\n${extraRecords[0].error}`}
       />
     );
   }

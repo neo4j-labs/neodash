@@ -261,6 +261,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       if (dashboardDatabase) {
         dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
       }
+
       if (urlParams.get('credentials')) {
         setWelcomeScreenOpen(false);
         const connection = decodeURIComponent(urlParams.get('credentials'));
@@ -270,6 +271,32 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         const database = connection.split('@')[1].split(':')[0];
         const url = connection.split('@')[1].split(':')[1];
         const port = connection.split('@')[1].split(':')[2];
+        // if (url == password) {
+        //   // Special case where a connect link is generated without a password.
+        //   // Here, the format is parsed incorrectly and we open the connection window instead.
+        //   dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
+        //   dispatch(
+        //     setShareDetailsFromUrl(
+        //       type,
+        //       id,
+        //       standalone,
+        //       protocol,
+        //       url,
+        //       port,
+        //       database,
+        //       username.split('@')[0],
+        //       '',
+        //       dashboardDatabase,
+        //       true
+        //     )
+        //   );
+        //   setDashboardToLoadAfterConnecting(id);
+        //   window.history.pushState({}, document.title, window.location.pathname);
+        //   dispatch(setConnectionModalOpen(true));
+        //   dispatch(setWelcomeScreenOpen(false));
+        //   // window.history.pushState({}, document.title, "/");
+        //   return;
+        // }
 
         dispatch(setConnectionModalOpen(false));
         dispatch(
@@ -300,7 +327,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           setShareDetailsFromUrl(
             type,
             id,
-            standalone,
+            undefined,
             undefined,
             undefined,
             undefined,
@@ -358,7 +385,6 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
     }
     if (shareDetails.standalone == true) {
       dispatch(setStandaloneMode(true));
-      localStorage.setItem('standaloneShared', 'true'); // EDGE CASE: redirect SSO removes the shareDetails when redirecting
     }
     dispatch(resetShareDetails());
   } catch (e) {
@@ -425,13 +451,10 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
     dispatch(setSSOProviders(config.ssoProviders));
 
-    // Check if we are in standalone mode
-    // const standaloneShared = localStorage.getItem('standaloneShared') == 'true'; // EDGE case: from url param it could happen that we lose the value due to SSO redirect
     const { standalone } = config;
-    // || standaloneShared;
-
     // if a dashboard database was previously set, remember to use it.
     const dashboardDatabase = state.application.standaloneDashboardDatabase;
+
     dispatch(
       setStandaloneEnabled(
         standalone,
@@ -448,7 +471,6 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.skipAddDashErrorPopup
       )
     );
-    localStorage.removeItem('standaloneShared');
 
     dispatch(setLoggingMode(config.loggingMode));
     dispatch(setLoggingDatabase(config.loggingDatabase));
