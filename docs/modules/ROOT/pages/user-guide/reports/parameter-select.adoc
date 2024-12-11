@@ -1,7 +1,4 @@
 = Parameter Select
-
-include::../../banner.adoc[]
-
 Parameter select reports provide you with an easy way to add
 interactivity into your dashboards.
 

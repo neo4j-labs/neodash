@@ -32,7 +32,6 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
   const [allowCompleted, setAllowCompleted] = useState(false);
   const [usersCompleted, setUsersCompleted] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [isDatabaseEmpty, setIsDatabaseEmpty] = useState(false);
 
   useEffect(() => {
     if (!open) {
@@ -76,48 +75,35 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
 
   const handleDatabaseSelect = (selectedOption) => {
     setSelectedDatabase(selectedOption.value);
-    setLabels([]);
-    setAllowList([]);
-    setDenyList([]);
-    retrieveLabelsList(driver, selectedOption.value, (records) => {
-      if (records.length === 0) {
-        setIsDatabaseEmpty(true);
-      } else {
-        parseLabelsList(selectedOption.value, records);
-        setIsDatabaseEmpty(false);
-      }
-    });
+    retrieveLabelsList(driver, selectedOption.value, (records) => parseLabelsList(selectedOption.value, records));
   };
 
   const handleSave = async () => {
     createNotification('Updating', `Access for role '${currentRole}' is being updated, please wait...`);
-    try {
-      await updateUsers(
+    console.log(selectedUsers);
+    updateUsers(
+      driver,
+      currentRole,
+      neo4jUsers,
+      selectedUsers,
+      () => setUsersCompleted(true),
+      (failReason) => setFailed(`Operation 'ROLE-USER ASSIGNMENT' failed.\n Reason: ${failReason}`)
+    );
+
+    if (selectedDatabase) {
+      const nonFixedDenyList = denyList.filter((n) => !fixedDenyList.includes(n));
+      const nonFixedAllowList = allowList.filter((n) => !fixedDenyList.includes(n));
+      updatePrivileges(
         driver,
+        selectedDatabase,
         currentRole,
-        neo4jUsers,
-        selectedUsers,
-        () => setUsersCompleted(true),
-        (failReason) => setFailed(`Operation 'ROLE-USER ASSIGNMENT' failed.\n Reason: ${failReason}`)
-      );
-
-      if (selectedDatabase && labels.length > 0) {
-        // Check if there are labels to update
-        const nonFixedDenyList = denyList.filter((n) => !fixedDenyList.includes(n));
-        const nonFixedAllowList = allowList.filter((n) => !fixedDenyList.includes(n));
-
-        await updatePrivileges(
-          driver,
-          selectedDatabase,
-          currentRole,
-          labels,
-          nonFixedDenyList,
-          Operation.DENY,
-          () => setDenyCompleted(true),
-          (failReason) => setFailed(`Operation 'DENY LABEL ACCESS' failed.\n Reason: ${failReason}`)
-        );
-
-        await updatePrivileges(
+        labels,
+        nonFixedDenyList,
+        Operation.DENY,
+        () => setDenyCompleted(true),
+        (failReason) => setFailed(`Operation 'DENY LABEL ACCESS' failed.\n Reason: ${failReason}`)
+      ).then(() => {
+        updatePrivileges(
           driver,
           selectedDatabase,
           currentRole,
@@ -127,18 +113,14 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
           () => setAllowCompleted(true),
           (failReason) => setFailed(`Operation 'ALLOW LABEL ACCESS' failed.\n Reason: ${failReason}`)
         );
-      } else {
-        // Since there is no database or labels selected, we don't run the DENY/ALLOW queries.
-        // We just mark them as completed so the success message shows up.
-        setDenyCompleted(true);
-        setAllowCompleted(true);
-      }
-    } catch (error) {
-      // Handle any errors that occur during the update process
-      createNotification('error', `An error occurred: ${error.message}`);
-    } finally {
-      handleClose();
+      });
+    } else {
+      // Since there is no database selected, we don't run the DENY/ALLOW queries.
+      // We just mark them as completed so the success message shows up.
+      setDenyCompleted(true);
+      setAllowCompleted(true);
     }
+    handleClose();
   };
 
   return (
@@ -189,13 +171,8 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
               onChange: handleDatabaseSelect,
             }}
           />
-          {selectedDatabase && isDatabaseEmpty && (
-            <p style={{ color: 'red' }}>
-              This database is currently empty. Please select a different database or add labels to manage access.
-            </p>
-          )}
         </div>
-        {selectedDatabase && !isDatabaseEmpty && loaded && (
+        {selectedDatabase && loaded && (
           <>
             <br />
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
