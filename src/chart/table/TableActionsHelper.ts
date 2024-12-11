@@ -64,17 +64,17 @@ export const getCheckboxes = (actionsRules, rows, getGlobalParameter) => {
     // If the parameter is an array (to be expected), iterate over it to find the rows to check.
     if (Array.isArray(values)) {
       values.forEach((value) => {
-        rows.forEach((row) => {
+        rows.forEach((row, index) => {
           if (row[fieldName] == value) {
-            selection.push(row.id);
+            selection.push(index);
           }
         });
       });
     } else {
       // Else (special case), still check the row if it's a single value parameter.
-      rows.forEach((row) => {
+      rows.forEach((row, index) => {
         if (row[fieldName] == values) {
-          selection.push(row.id);
+          selection.push(index);
         }
       });
     }
@@ -84,8 +84,7 @@ export const getCheckboxes = (actionsRules, rows, getGlobalParameter) => {
 
 export const updateCheckBoxes = (actionsRules, rows, selection, setGlobalParameter) => {
   if (hasCheckboxes(actionsRules)) {
-    const selectedRows = rows.filter((row) => selection.includes(row.id));
-    console.log(selectedRows);
+    const selectedRows = rows.filter((_, i) => selection.includes(i));
     let rules = actionsRules.filter((rule) => rule.condition && rule.condition == 'rowCheck');
     rules.forEach((rule) => {
       const parameterValues = selectedRows.map((row) => row[rule.value]).filter((v) => v !== undefined);
