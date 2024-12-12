@@ -159,11 +159,7 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
 
   // The query used to populate the selector is invalid.
   if (extraRecords && extraRecords[0] && extraRecords[0].error) {
-    return (
-      <NeoCodeViewerComponent
-        value={`The parameter value retrieval query is invalid: \n${props.query}\n\nError message:\n${extraRecords[0].error}`}
-      />
-    );
+    return <NeoCodeViewerComponent value={`Please reload page`} />;
   }
   let options = extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)');
   options = props.autoSort ? options.sort() : options;
