@@ -2417,6 +2417,13 @@
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.15.11.tgz#dcaf6156880e81e4547237fb781700485453e964"
   integrity sha512-JVrJ9Jo4gyU707ujnRzmE8ABBWpXd6FwL9GYULmwZRtfPg89ggXs/S3MStQkpJ1JRWfdLL6S5syXmgQGq5EDAw==
 
+"@mui/icons-material@^5.11.16":
+  version "5.16.9"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.16.9.tgz#0f754ef0b943e3bea78343cd2861e8d95a114617"
+  integrity sha512-nnOJIqan6FS6zEsLX3vf8LZ4vXpZjP5xfCFezeXmqfQConypCOZG4nangoVwKwROlas7b6/bqOdacFUb/HuM/g==
+  dependencies:
+    "@babel/runtime" "^7.23.9"
+
 "@mui/material@^5.12.3":
   version "5.15.11"
   resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.15.11.tgz#4f42ee30443699ffb5836029c6d8464154eca603"

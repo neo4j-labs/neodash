@@ -120,6 +120,7 @@ export const NeoReport = ({
       let queryParams: QueryParams = {
         database,
         query: newQuery,
+        queryTimeLimit,
         parameters,
         rowLimit,
         fields: [],

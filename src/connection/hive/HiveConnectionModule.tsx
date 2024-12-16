@@ -69,9 +69,10 @@ export class HiveConnectionModule extends ConnectionModule {
     if (language === 'graphql') {
       let { useNodePropsAsFields = false, useReturnValuesAsFields = false } = queryParams;
       let variables = queryParams.parameters || {};
+      let queryTimeLimit = queryParams.queryTimeLimit;
       let { setFields, setRecords, setSchema, setStatus, setError } = callbacks;
       try {
-        let graphqlResponse = await this.runGraphQLQuery(endpointUrl, apiKey, query, variables);
+        let graphqlResponse = await this.runGraphQLQuery(endpointUrl, apiKey, query, variables, queryTimeLimit);
         let recommendations = graphqlResponse?.data?.recommendations;
         let { keys, records } = this.convertGraphQLResponseToRecords(recommendations, returnFormat);
 
@@ -224,42 +225,57 @@ export class HiveConnectionModule extends ConnectionModule {
     return response;
   };
 
-  runGraphQLQuery = async (endpointUrl, apiKey, query, variables): any => {
+  runGraphQLQuery = async (endpointUrl, apiKey, query, variables, queryTimeLimit): any => {
     if (!endpointUrl || !apiKey) {
       throw new Error(
         'Ensure you have the Keymaker plugin enabled, and that you have specified both a GraphQL URL and an API Key'
       );
     }
 
+    const controller = new AbortController();
+    const { signal } = controller;
+
     let uri = endpointUrl;
     let httpHeaders = {
       'api-key': apiKey,
     };
 
-    const promise = new Promise((resolve, reject) => {
-      fetch(uri, {
+    // Set a timer to abort the request after queryTimeLimit ms
+    const timeoutId = setTimeout(() => controller.abort(), queryTimeLimit * 1000);
+
+    try {
+      const response = await fetch(uri, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...httpHeaders,
         },
-        body: JSON.stringify({
-          query: query,
-          variables,
-        }),
-      })
-        .then(this.handleErrors)
-        .then(async (res) => {
-          const jsonResponse = await res.json();
-          resolve(jsonResponse);
-        })
-        .catch((error) => {
-          reject(new Error(error.message));
-        });
-    });
-    return promise;
-  };
+        body: JSON.stringify({ query, variables }),
+        signal,
+      });
+  
+      // Clear the timeout since the request completed
+      clearTimeout(timeoutId);
+  
+      // Check for HTTP-level errors
+      this.handleErrors(response);
+  
+      // Parse the JSON response
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    } catch (error) {
+      clearTimeout(timeoutId);
+  
+      // If the fetch was aborted, throw a timeout error
+      if (error.name === 'AbortError') {
+        throw new Error('Query timed out');
+      }
 
+      // Otherwise, rethrow the original error
+      throw new Error(error.message);
+    }
+  };
+  
   getDashboardToLoadAfterConnecting = (config: any): string => {
     let dashboardToLoad = null;
     if (window.location.search.includes(this.name)) {
