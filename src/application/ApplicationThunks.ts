@@ -74,8 +74,23 @@ export const createConnectionThunk =
       const validateConnection = (records) => {
         // eslint-disable-next-line no-console
         console.log('Confirming connection was established...');
+        records[0].error = 'The client is unauthorized due to authentication failure';
         if (records && records[0] && records[0].error) {
-          dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
+          if (
+            records[0].error.startsWith('The client is unauthorized due to authentication failure') ||
+            records[0].error.startsWith(
+              'The client has provided incorrect authentication details too many times in a row.'
+            )
+          ) {
+            dispatch(
+              createNotificationThunk(
+                'Something went wrong!',
+                'We are working on it. You can try to reload without cache.'
+              )
+            );
+          } else {
+            dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
+          }
           if (loggingSettings.loggingMode > '0') {
             dispatch(
               createLogThunk(
@@ -170,7 +185,7 @@ export const createConnectionThunk =
         query,
         parameters,
         1,
-        () => { },
+        () => {},
         (records) => validateConnection(records)
       );
     } catch (e) {
@@ -420,7 +435,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneUsername: '',
     standalonePassword: '',
     skipConfirmation: false,
-    skipAddDashErrorPopup: false
+    skipAddDashErrorPopup: false,
   };
   try {
     config = await (await fetch('config.json')).json();

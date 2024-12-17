@@ -10,6 +10,7 @@ import {
 } from '../application/ApplicationSelectors';
 import { clearNotification, setConnectionModalOpen } from '../application/ApplicationActions';
 import { Dialog } from '@neo4j-ndl/react';
+import { Button, DialogActions } from '@mui/material';
 
 /**
  * A modal to save a dashboard as a JSON text string.
@@ -24,6 +25,9 @@ export const NeoNotificationModal = ({
   setConnectionModalOpen,
   onNotificationClose,
 }) => {
+  const handleReload = () => {
+    window.location.reload();
+  };
   return (
     <div>
       <Dialog
@@ -42,7 +46,14 @@ export const NeoNotificationModal = ({
       >
         <Dialog.Header id='form-dialog-title'>{title}</Dialog.Header>
 
-        <Dialog.Content style={{ minWidth: '300px' }}>{text && text.toString()}</Dialog.Content>
+        <Dialog.Content style={{ minWidth: '300px' }}>
+          {text && text.toString()}
+          <DialogActions>
+            <Button onClick={handleReload} autoFocus variant='contained'>
+              Reload without cache
+            </Button>
+          </DialogActions>
+        </Dialog.Content>
       </Dialog>
     </div>
   );
