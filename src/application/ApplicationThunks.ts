@@ -74,7 +74,6 @@ export const createConnectionThunk =
       const validateConnection = (records) => {
         // eslint-disable-next-line no-console
         console.log('Confirming connection was established...');
-        records[0].error = 'The client is unauthorized due to authentication failure';
         if (records && records[0] && records[0].error) {
           if (
             records[0].error.startsWith('The client is unauthorized due to authentication failure') ||
