@@ -75,21 +75,7 @@ export const createConnectionThunk =
         // eslint-disable-next-line no-console
         console.log('Confirming connection was established...');
         if (records && records[0] && records[0].error) {
-          if (
-            records[0].error.startsWith('The client is unauthorized due to authentication failure') ||
-            records[0].error.startsWith(
-              'The client has provided incorrect authentication details too many times in a row.'
-            )
-          ) {
-            dispatch(
-              createNotificationThunk(
-                'Something went wrong!',
-                'We are working on it. You can try to reload without cache.'
-              )
-            );
-          } else {
-            dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
-          }
+          dispatch(createNotificationThunk('Unable to establish connection', records[0].error));
           if (loggingSettings.loggingMode > '0') {
             dispatch(
               createLogThunk(
@@ -107,6 +93,7 @@ export const createConnectionThunk =
             );
           }
         } else if (records && records[0] && records[0].keys[0] == 'connected') {
+          dispatch(clearNotification());
           dispatch(setConnectionProperties(protocol, url, port, database, username, password));
           dispatch(setConnectionModalOpen(false));
           dispatch(setConnected(true));
