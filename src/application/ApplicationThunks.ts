@@ -107,6 +107,7 @@ export const createConnectionThunk =
             );
           }
         } else if (records && records[0] && records[0].keys[0] == 'connected') {
+          dispatch(clearNotification());
           dispatch(setConnectionProperties(protocol, url, port, database, username, password));
           dispatch(setConnectionModalOpen(false));
           dispatch(setConnected(true));
