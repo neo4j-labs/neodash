@@ -155,7 +155,7 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
     return isLooselyEqual(realValue, ruleValue);
   }
   if (condition == '!=') {
-    return realValue !== ruleValue;
+    return !isLooselyEqual(realValue, ruleValue);
   }
   if (!isNaN(Number(ruleValue))) {
     ruleValue = Number(ruleValue);
