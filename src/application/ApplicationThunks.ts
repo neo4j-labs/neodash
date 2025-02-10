@@ -261,7 +261,6 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
       if (dashboardDatabase) {
         dispatch(setStandaloneDashboardDatabase(dashboardDatabase));
       }
-
       if (urlParams.get('credentials')) {
         setWelcomeScreenOpen(false);
         const connection = decodeURIComponent(urlParams.get('credentials'));
@@ -271,32 +270,6 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         const database = connection.split('@')[1].split(':')[0];
         const url = connection.split('@')[1].split(':')[1];
         const port = connection.split('@')[1].split(':')[2];
-        // if (url == password) {
-        //   // Special case where a connect link is generated without a password.
-        //   // Here, the format is parsed incorrectly and we open the connection window instead.
-        //   dispatch(setConnectionProperties(protocol, url, port, database, username.split('@')[0], ''));
-        //   dispatch(
-        //     setShareDetailsFromUrl(
-        //       type,
-        //       id,
-        //       standalone,
-        //       protocol,
-        //       url,
-        //       port,
-        //       database,
-        //       username.split('@')[0],
-        //       '',
-        //       dashboardDatabase,
-        //       true
-        //     )
-        //   );
-        //   setDashboardToLoadAfterConnecting(id);
-        //   window.history.pushState({}, document.title, window.location.pathname);
-        //   dispatch(setConnectionModalOpen(true));
-        //   dispatch(setWelcomeScreenOpen(false));
-        //   // window.history.pushState({}, document.title, "/");
-        //   return;
-        // }
 
         dispatch(setConnectionModalOpen(false));
         dispatch(
@@ -318,7 +291,6 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         if (skipConfirmation === true) {
           dispatch(onConfirmLoadSharedDashboardThunk());
         }
-
         window.history.pushState({}, document.title, window.location.pathname);
       } else {
         dispatch(setConnectionModalOpen(false));
@@ -327,7 +299,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
           setShareDetailsFromUrl(
             type,
             id,
-            undefined,
+            standalone,
             undefined,
             undefined,
             undefined,
@@ -436,29 +408,36 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
   try {
     // Parse the URL parameters to see if there's any deep linking of parameters.
+    const state = getState();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+    if (state.application.waitForSSO) {
+      const paramsBeforeSSO = JSON.parse(sessionStorage.getItem('SSO_PARAMS_BEFORE_REDIRECT') || '{}');
+      Object.entries(paramsBeforeSSO).forEach(([key, value]) => {
+        urlParams.set(key, value);
+      });
+    }
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
         paramsToSetAfterConnecting[key] = value;
       }
     });
-
+    sessionStorage.getItem('SSO_PARAMS_BEFORE_REDIRECT');
     const page = urlParams.get('page');
     if (page !== '' && page !== null) {
       if (!isNaN(page)) {
         dispatch(setPageNumberThunk(parseInt(page)));
       }
     }
-    const state = getState();
     dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
     dispatch(setSSOProviders(config.ssoProviders));
 
-    const { standalone } = config;
+    // Check if we are in standalone mode
+    const standalone = config.standalone || urlParams.get('standalone') == 'Yes';
+
     // if a dashboard database was previously set, remember to use it.
     const dashboardDatabase = state.application.standaloneDashboardDatabase;
-
     dispatch(
       setStandaloneEnabled(
         standalone,
@@ -552,14 +531,18 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
 
         if (standalone) {
-          if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+          if (urlParams.get('id')) {
+            dispatch(setDashboardToLoadAfterConnecting(urlParams.get('id')));
+          } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
             dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
           } else {
             dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
           }
           dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
         }
+        sessionStorage.removeItem('SSO_PARAMS_BEFORE_REDIRECT');
       });
+
       dispatch(setWaitForSSO(false));
       if (!success) {
         alert('Unable to connect using SSO. See the browser console for more details.');
@@ -572,6 +555,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       } else {
         return;
       }
+    } else if (state.application.ssoEnabled && !state.application.waitForSSO && urlParams) {
+      let paramsToStore = {};
+      urlParams.forEach((value, key) => {
+        paramsToStore[key] = value;
+      });
+      sessionStorage.setItem('SSO_PARAMS_BEFORE_REDIRECT', JSON.stringify(paramsToStore));
     }
 
     if (standalone) {

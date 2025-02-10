@@ -1,5 +1,11 @@
 = Design
 
+include::../banner.adoc[]
+
+
+include::../banner.adoc[]
+
+
 This page contains some key guidelines for design of the application.
 This entails code architecture, as well as UX/UI design.
 

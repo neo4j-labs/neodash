@@ -1,5 +1,7 @@
 = Choropleth
 
+include::../../banner.adoc[]
+
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
 A Choropleth chart will render geographical data in geoJson polygons

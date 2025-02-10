@@ -1,5 +1,7 @@
 = Advanced Visualizations
 
+include::../../banner.adoc[]
+
 Advanced visualizations let you extend your dashboard with complex, powerful visualizations beyond the standard visualizations.
 For specific use-cases, these visualizations may convey information that a simple visualization cannot.
 To use advanced visualizations, enable them in the **Extensions Window**. This makes them selectable inside reports, as well as add examples to the Example window.

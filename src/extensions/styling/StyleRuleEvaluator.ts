@@ -63,18 +63,23 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
   }
   for (const [index, rule] of rules.entries()) {
     // Only check customizations that are specified
-    if (customizations.includes(rule.customization)) {
-      // if the row contains the specified field...
-      if (dict[rule.field] !== undefined && dict[rule.field] !== null) {
-        const realValue = dict[rule.field].low ? dict[rule.field].low : dict[rule.field];
-        const ruleValue = rule.value;
-        if (evaluateCondition(realValue, rule.condition, ruleValue)) {
-          return index;
-        }
+    return evaluateSingleRuleOnDict(dict, rule, index, customizations);
+  }
+  // If no rules are met, return not found (index=-1)
+  return -1;
+};
+
+export const evaluateSingleRuleOnDict = (dict, rule, ruleIndex, customizations) => {
+  if (customizations.includes(rule.customization)) {
+    // if the row contains the specified field...
+    if (dict[rule.field] !== undefined && dict[rule.field] !== null) {
+      const realValue = dict[rule.field].low ? dict[rule.field].low : dict[rule.field];
+      const ruleValue = rule.value;
+      if (evaluateCondition(realValue, rule.condition, ruleValue)) {
+        return ruleIndex;
       }
     }
   }
-  // If no rules are met, return not found (index=-1)
   return -1;
 };
 
@@ -123,6 +128,20 @@ export const evaluateRules = (entity, customization, defaultValue, rules, entity
 
 /**
  * @param realValue the value found in the real data returned by the query
+ * @param ruleValue the value specified in the rule.
+ * @returns whether the condition is met.
+ */
+const isLooselyEqual = (realValue, ruleValue) => {
+  // In order to avoid having '5' <> {low: 5, high: 0} OR '5' <> 5
+  const sensitiveTypes = ['string', 'number', 'object'];
+  if (sensitiveTypes.includes(typeof realValue) && sensitiveTypes.includes(typeof ruleValue)) {
+    return realValue == ruleValue;
+  }
+  return realValue === ruleValue;
+};
+
+/**
+ * @param realValue the value found in the real data returned by the query
  * @param condition the condition, one of [=,!=,<,<=,>,>=,contains].
  * @param ruleValue the value specified in the rule.
  * @return whether the condition is met.
@@ -133,10 +152,10 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
     return false;
   }
   if (condition == '=') {
-    return realValue === ruleValue;
+    return isLooselyEqual(realValue, ruleValue);
   }
   if (condition == '!=') {
-    return realValue !== ruleValue;
+    return !isLooselyEqual(realValue, ruleValue);
   }
   if (!isNaN(Number(ruleValue))) {
     ruleValue = Number(ruleValue);

@@ -1,5 +1,7 @@
 = Style Configuration
 
+include::../banner.adoc[]
+
 When using a custom NeoDash deployment, there are several theme variables that
 can be configured. These mostly relate to css tokens for
 link:https://cdn.jsdelivr.net/npm/@neo4j-ndl/base@1.4.0/lib/tokens/css/tokens.css[Needle] and some other brand specific options.
@@ -14,7 +16,7 @@ docker run -p 5005:5005 \
  -e DASHBOARD_HEADER_BRAND_LOGO=https://picsum.photos/500/100 \
  neo4jlabs/neodash
 ....
- 
+
 An example configuration for NeoDash
 
 ....

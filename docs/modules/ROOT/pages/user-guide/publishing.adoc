@@ -1,5 +1,7 @@
 = Publishing
 
+include::/banner.adoc[]
+
 When you are done building a dashboard, you may want to *publish* that
 dashboard for others to view. The workflow for a continuous dashboarding
 cycle may look something like this:

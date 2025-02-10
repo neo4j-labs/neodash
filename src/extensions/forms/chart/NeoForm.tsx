@@ -7,6 +7,7 @@ import { REPORT_LOADING_ICON } from '../../../report/Report';
 import debounce from 'lodash/debounce';
 import { RUN_QUERY_DELAY_MS } from '../../../config/ReportConfig';
 import NeoParameterSelectionChart from '../../../chart/parameter/ParameterSelectionChart';
+import { checkParametersNameInGlobalParameter, extractAllParameterNames } from '../../../utils/parameterUtils';
 
 enum FormStatus {
   DATA_ENTRY = 0, // The user is filling in the form.
@@ -41,6 +42,14 @@ const NeoForm = (props: ChartProps) => {
       props.setGlobalParameter && props.setGlobalParameter(key, paramCache[key]);
     });
   }
+
+  const isParametersDefined = (cypherQuery: string | undefined) => {
+    const parameterNames = extractAllParameterNames(cypherQuery);
+    if (props.parameters) {
+      return checkParametersNameInGlobalParameter(parameterNames, props.parameters);
+    }
+    return false;
+  };
 
   useEffect(() => {
     // If the parameters change after the form is completed, reset it, as there might be another submission.
@@ -77,7 +86,7 @@ const NeoForm = (props: ChartProps) => {
           <Button
             style={{ marginLeft: 15 }}
             id='form-submit'
-            disabled={!submitButtonActive}
+            disabled={!submitButtonActive || isParametersDefined(props.query)}
             onClick={() => {
               if (!props.query || !props.query.trim()) {
                 props.createNotification(

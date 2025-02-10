@@ -1,5 +1,7 @@
 = Graph
 
+include::../../banner.adoc[]
+
 The graph report will render all returned nodes, relationships and paths
 in a force-directed graph layout. This includes collections (lists) of
 these objects.

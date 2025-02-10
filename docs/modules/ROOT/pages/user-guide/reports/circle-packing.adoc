@@ -1,5 +1,7 @@
 = Circle Packing
 
+include::../../banner.adoc[]
+
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 
 A circle packing chart will render hierarchical data in a group of

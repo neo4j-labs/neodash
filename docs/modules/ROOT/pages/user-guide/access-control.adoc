@@ -1,5 +1,7 @@
 = Access Control
 
+include::../banner.adoc[]
+
 The Access Control feature in NeoDash is a security measure that allows Users with write access or higher privileges to manage who has access to specific dashboards.
 
 

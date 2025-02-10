@@ -1,5 +1,7 @@
 = Access Control Management
 
+include::../../banner.adoc[]
+
 This extension lets you manage access control for roles and users, letting you assign users to roles as well as controlling which node labels can be read by a user.
 
 This extension is only visible to users with the role of "Administrator" or "Super User". Enabling this extension will allow the admin user to manage the labels of the roles in the database and then attach them to the users.
