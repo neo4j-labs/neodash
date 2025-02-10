@@ -110,6 +110,10 @@
   border-bottom: 2px solid rgba(0, 0, 0, 0.4) !important;
 }
 
+div:has(> .table-small-header) {
+  background: unset !important;
+}
+
 .MuiDataGrid-footerContainer {
   border-top: none !important;
 }
