@@ -51,6 +51,7 @@ describe('NeoDash E2E Tests', () => {
     // cy.get('#protocol').click()
     // cy.contains('neo4j').click()
     cy.get('#url').clear().type('localhost');
+    cy.get('#protocol').clear().type('neo4j');
     // cy.get('#database').type('neo4j')
     cy.get('#dbusername').clear().type('neo4j');
     cy.get('#dbpassword').type('test1234');

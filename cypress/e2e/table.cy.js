@@ -30,6 +30,7 @@ describe('Testing table', () => {
     cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'Connect to Neo4j');
 
     cy.get('#url').clear().type('localhost');
+    cy.get('#protocol').clear().type('neo4j');
     cy.get('#dbusername').clear().type('neo4j');
     cy.get('#dbpassword').type('test1234');
     cy.get('button').contains('Connect').click();
