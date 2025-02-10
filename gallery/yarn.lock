@@ -1709,10 +1709,15 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@neo4j-ndl/base@^0.8.3", "@neo4j-ndl/base@^0.8.4":
+"@neo4j-ndl/base@^0.8.4":
   version "0.8.7"
   resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-0.8.7.tgz#ac2c949cd1571eb561c527fdb0db3634bd87c476"
   integrity sha512-EU6avQRTBK8Hog6A0xwXoCk5FtGBnzz7p+ZWjHI1DmXByWHY/IbpJmuDwQFVIU6WMUNOlz0dGSZGtcxLHuimgw==
+
+"@neo4j-ndl/base@^3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-3.2.8.tgz#15f2a517cea195f099030b010aeeade06a39f47a"
+  integrity sha512-ymAHLVaHQD4gEKtk5buP2C+Jhulg34GFk4x9H6NO1IlalxaFh1cQ38BSlx8ydLTI8lXqfZXHX1vJRCDz4a+sjA==
 
 "@neo4j-ndl/react@^0.8.3":
   version "0.8.4"
@@ -4612,13 +4617,6 @@ filesize@^8.0.6:
   version "8.0.7"
   resolved "https://registry.yarnpkg.com/filesize/-/filesize-8.0.7.tgz#695e70d80f4e47012c132d57a059e80c6b580bd8"
   integrity sha512-pjmC+bkIF8XI7fWaH8KxHcZL3DPybs1roSKP4rKDvy20tAWwIObE4+JIseG2byfGKhud5ZnM4YSGKBz7Sh0ndQ==
-
-fill-range@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/fill-range/-/fill-range-7.1.1.tgz#44265d3cac07e3ea7dc247516380643754a05292"
-  integrity sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==
-  dependencies:
-    to-regex-range "^5.0.1"
 
 fill-range@^7.1.1:
   version "7.1.1"
