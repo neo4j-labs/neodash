@@ -214,7 +214,6 @@ export const NeoTableChart = (props: ChartProps) => {
     key: 'tableKey',
     columnHeaderHeight: 32,
     rowHeight: tableRowHeight,
-    autoPageSize: true,
     rows: rows,
     columns: columns,
     columnVisibilityModel: columnVisibilityModel,
@@ -253,7 +252,9 @@ export const NeoTableChart = (props: ChartProps) => {
           for (const [index, rule] of styleRules.entries()) {
             if (rule.targetField) {
               if (rule.targetField === params.field) {
-                trueRule = `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [e])}`;
+                trueRule = `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [
+                  e,
+                ])}`;
               }
             } else {
               trueRule = `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
