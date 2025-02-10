@@ -216,6 +216,15 @@ export const NeoTableChart = (props: ChartProps) => {
     rowHeight: tableRowHeight,
     rows: rows,
     columns: columns,
+    pageSizeOptions: [5, 10, 25, 50, 100],
+    initialState: {
+      pagination: {
+        paginationModel: {
+          pageSize: 5,
+          pageIndex: 0,
+        },
+      },
+    },
     columnVisibilityModel: columnVisibilityModel,
     onColumnVisibilityModelChange: (newModel) => setColumnVisibilityModel(newModel),
     onCellClick: (e) => performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table'),
