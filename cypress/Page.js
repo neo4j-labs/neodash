@@ -31,6 +31,7 @@ export class Page {
 
   connectToNeo4j() {
     cy.get('#form-dialog-title', { timeout: 20000 }).should('contain', 'Connect to Neo4j');
+    cy.get('#protocol').type('neo4j{enter}');
     cy.get('#url').clear().type(DB_URL);
     cy.get('#dbusername').clear().type(DB_USERNAME);
     cy.get('#dbpassword').type(DB_PASSWORD);

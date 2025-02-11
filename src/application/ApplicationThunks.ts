@@ -382,7 +382,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     ssoProviders: [],
     ssoDiscoveryUrl: 'http://example.com',
     standalone: false,
-    standaloneProtocol: 'neo4j',
+    standaloneProtocol: 'neo4j+s',
     standaloneHost: 'localhost',
     standalonePort: '7687',
     standaloneDatabase: 'neo4j',

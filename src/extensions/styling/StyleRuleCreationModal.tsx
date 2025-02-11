@@ -347,10 +347,14 @@ export const NeoCustomReportStyleModal = ({
                                 options={createFieldVariableSuggestions().filter((e) =>
                                   e.toLowerCase().includes(rule.targetField)
                                 )}
-                                value={rule.targetField ? rule.targetField : (rule.field ? rule.field : '')}
-                                inputValue={rule.targetField ? rule.targetField : (rule.field ? rule.field : '')}
+                                value={rule.targetField ? rule.targetField : rule.field ? rule.field : ''}
+                                inputValue={rule.targetField ? rule.targetField : rule.field ? rule.field : ''}
                                 popupIcon={<></>}
-                                style={{ minWidth: 125, visibility: rule.customization.includes("cell") ? 'visible' : 'hidden', display: rule.customization.includes("cell") ? '' : 'none' }}
+                                style={{
+                                  minWidth: 125,
+                                  visibility: rule.customization.includes('cell') ? 'visible' : 'hidden',
+                                  display: rule.customization.includes('cell') ? '' : 'none',
+                                }}
                                 onInputChange={(event, value) => {
                                   updateRuleField(index, 'targetField', value);
                                 }}
