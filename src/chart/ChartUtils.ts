@@ -433,8 +433,16 @@ export function castToNeo4jDate(value: object) {
 /**
  * Creates a default selection config for a node-property based chart footer.
  */
-export function getSelectionBasedOnFields(fields, oldSelection = {}, autoAssignSelectedProperties = true) {
-  const selection = {};
+export function getSelectionBasedOnFields(
+  fields,
+  oldSelection = {},
+  autoAssignSelectedProperties = true,
+  additive: boolean
+) {
+  // if additive, keep the old selection
+  const selection = additive ? structuredClone(oldSelection) : {};
+
+  // if new field not found in old selection, use a default
   fields.forEach((nodeLabelAndProperties) => {
     const label = nodeLabelAndProperties[0];
     const properties = nodeLabelAndProperties.slice(1);
