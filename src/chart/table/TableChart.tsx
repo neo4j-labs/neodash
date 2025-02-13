@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
+import { DataGrid, GridColumnVisibilityModel, GridRowId } from '@mui/x-data-grid';
 import { ChartProps } from '../Chart';
 import {
   evaluateRulesOnDict,
@@ -23,7 +23,13 @@ import { CloudArrowDownIconOutline, XMarkIconOutline } from '@neo4j-ndl/react/ic
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { extensionEnabled } from '../../utils/ReportUtils';
-import { getCheckboxes, hasCheckboxes, updateCheckBoxes } from './TableActionsHelper';
+import {
+  convertConditionsToExpression,
+  getCheckboxes,
+  hasCheckboxes,
+  hasPreCondition,
+  updateCheckBoxes,
+} from './TableActionsHelper';
 
 const TABLE_ROW_HEIGHT = 52;
 const HIDDEN_COLUMN_PREFIX = '__';
@@ -78,6 +84,12 @@ export const NeoTableChart = (props: ChartProps) => {
     extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.actionsRules
       ? props.settings.actionsRules
       : [];
+
+  const preConditions =
+    extensionEnabled(props.extensions, 'actions') && props.settings && props.settings.preConditions
+      ? props.settings.preConditions
+      : [];
+
   const compact = props.settings && props.settings.compact !== undefined ? props.settings.compact : false;
   const styleRules = useStyleRules(
     extensionEnabled(props.extensions, 'styling'),
@@ -276,6 +288,13 @@ export const NeoTableChart = (props: ChartProps) => {
     },
   };
 
+  const isRowSelectable = (params: { id: GridRowId; row: any }) => {
+    if (hasPreCondition(preConditions)) {
+      return convertConditionsToExpression(preConditions, params.row);
+    }
+    return true;
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.root} style={{ height: '100%', width: '100%', position: 'relative' }}>
@@ -324,13 +343,14 @@ export const NeoTableChart = (props: ChartProps) => {
           <DataGrid
             {...commonGridProps}
             getRowHeight={() => 'auto'}
+            isRowSelectable={isRowSelectable}
             sx={{
               ...customStyles,
               '&.MuiDataGrid-root .MuiDataGrid-cell': { wordBreak: 'break-word' },
             }}
           />
         ) : (
-          <DataGrid {...commonGridProps} sx={customStyles} />
+          <DataGrid {...commonGridProps} sx={customStyles} isRowSelectable={isRowSelectable} />
         )}
       </div>
     </ThemeProvider>
