@@ -168,23 +168,25 @@ const NeoBarChart = (props: ChartProps) => {
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
   // Compute bar color based on rules - overrides default color scheme completely.
   const getBarColor = (bar) => {
-    let { id } = bar;
-    let colorIndex = keys.indexOf(id);
+    let { index: colorIndex } = bar;
     if (colorIndex >= chartColorsByScheme.length) {
       colorIndex %= chartColorsByScheme.length;
     }
 
-    const dict = {};
     if (!props.selection) {
       return chartColorsByScheme[colorIndex];
     }
+
+    const dict = {};
     dict[selection.index] = bar.indexValue;
     dict[selection.value] = bar.value;
     dict[selection.key] = bar.id;
+
     const validRuleIndex = evaluateRulesOnDict(dict, styleRules, ['bar color']);
     if (validRuleIndex !== -1) {
       return styleRules[validRuleIndex].customizationValue;
     }
+
     return chartColorsByScheme[colorIndex];
   };
 
