@@ -1,6 +1,7 @@
-include::../../banner.adoc[]
 
 = Treemap
+
+include::../../banner.adoc[]
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 

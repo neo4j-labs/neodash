@@ -1,6 +1,7 @@
-include::../../banner.adoc[]
 
 = Access Control Management
+
+include::../../banner.adoc[]
 
 This extension lets you manage access control for roles and users, letting you assign users to roles as well as controlling which node labels can be read by a user.
 

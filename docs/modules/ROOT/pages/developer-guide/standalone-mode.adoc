@@ -2,6 +2,8 @@ include::../banner.adoc[]
 
 = Standalone Mode
 
+include::../banner.adoc[]
+
 Next to being a dashboard editor, NeoDash can be deployed in a
 `standalone mode' - allowing you set up a architecture to publish and
 read dashboards.
@@ -44,7 +46,7 @@ docker run  -it --rm -p 5005:5005 \
     -e ssoProviders=[] \
     -e ssoDiscoveryUrl="https://example.com" \
     -e standalone=true \
-    -e standaloneProtocol="neo4j" \
+    -e standaloneProtocol="neo4j+s" \
     -e standaloneHost="localhost" \
     -e standalonePort="7687" \
     -e standaloneDatabase="neo4j" \

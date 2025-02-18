@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.4.9",
+  "version": "2.4.10",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"

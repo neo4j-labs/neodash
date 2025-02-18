@@ -3,13 +3,7 @@ import React, { useEffect } from 'react';
 import { NoDrawableDataErrorMessage } from '../../component/editor/CodeViewerComponent';
 import { evaluateRulesOnDict, useStyleRules } from '../../extensions/styling/StyleRuleEvaluator';
 import { ChartProps } from '../Chart';
-import {
-  convertRecordObjectToString,
-  mutateName,
-  processHierarchyFromRecords,
-  recordToNative,
-  toNumber,
-} from '../ChartUtils';
+import { recordToNative, toNumber } from '../ChartUtils';
 import { themeNivo } from '../Utils';
 import { extensionEnabled } from '../../utils/ReportUtils';
 
@@ -77,17 +71,18 @@ const NeoLineChart = (props: ChartProps) => {
   // For line charts, the line color is overridden if at least one value meets the criteria.
   const getLineColors = (line) => {
     const xFieldName = props.selection && props.selection.x;
-    const yFieldName = line.id && line.id.split('(')[1] && line.id.split('(')[1].split(')')[0];
+    const yFieldName = line.id;
     let color = 'black';
-    line.data.forEach((entry) => {
+    for (const entry of line.data) {
       const data = {};
-      data[xFieldName] = entry[selection.x];
-      data[yFieldName] = entry[selection.value];
+      data[xFieldName] = entry.x;
+      data[yFieldName] = entry.y;
       const validRuleIndex = evaluateRulesOnDict(data, styleRules, ['line color']);
       if (validRuleIndex !== -1) {
         color = styleRules[validRuleIndex].customizationValue;
+        break;
       }
-    });
+    }
     return color;
   };
 

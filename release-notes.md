@@ -1,19 +1,14 @@
-## NeoDash 2.4.9
-This release adds some minor changes to documentation and implements some community contributions.
-- Added notice about project evolution: [#967](https://github.com/neo4j-labs/neodash/pull/967)
-- Added community contributions and bug fixes: 
-[#967](https://github.com/neo4j-labs/neodash/pull/967)
-[#894](https://github.com/neo4j-labs/neodash/pull/894)
-[#822](https://github.com/neo4j-labs/neodash/pull/822)
-[#951](https://github.com/neo4j-labs/neodash/pull/951)
-[#946](https://github.com/neo4j-labs/neodash/pull/946)
-[#944](https://github.com/neo4j-labs/neodash/pull/944)
-[#943](https://github.com/neo4j-labs/neodash/pull/943)
-[#938](https://github.com/neo4j-labs/neodash/pull/938)
-[#935](https://github.com/neo4j-labs/neodash/pull/935)
-[#918](https://github.com/neo4j-labs/neodash/pull/918)
-[#908](https://github.com/neo4j-labs/neodash/pull/908)
-[#906](https://github.com/neo4j-labs/neodash/pull/906)
-[#902](https://github.com/neo4j-labs/neodash/pull/902)
-[#895](https://github.com/neo4j-labs/neodash/pull/895)
-[#893](https://github.com/neo4j-labs/neodash/pull/893)
+## NeoDash 2.4.10 - Community contributions
+- [#1039](https://github.com/neo4j-labs/neodash/pull/1039) - Fix default color scheme for bar charts
+- [#1038](https://github.com/neo4j-labs/neodash/pull/1038) - Fix rule-based styling for line charts
+- [#1036](https://github.com/neo4j-labs/neodash/pull/1036) - Fix table cell rule-based styling
+- [#1029](https://github.com/neo4j-labs/neodash/pull/1029) - Fix rule-based styling for numeric values
+- [#1028](https://github.com/neo4j-labs/neodash/pull/1028) - Fix OpenStreetMap leaflet display
+- [#1020](https://github.com/neo4j-labs/neodash/pull/1020) - Fix boolean handling in parameter selection
+- [#1014](https://github.com/neo4j-labs/neodash/pull/1014) - Remove autoPageSize flag (defaults to 0)
+- [#1009](https://github.com/neo4j-labs/neodash/pull/1009) - Fix SSO parameters lost on browser redirect
+- [#1008](https://github.com/neo4j-labs/neodash/pull/1008) - Fix existence check for `value.low`
+- [#1005](https://github.com/neo4j-labs/neodash/pull/1005) - Replace Neo4j Logo
+- [#1002](https://github.com/neo4j-labs/neodash/pull/1002) - Patch FAQ on supportability
+- [#999](https://github.com/neo4j-labs/neodash/pull/999) - Fix dark mode table header styling
+- [#956](https://github.com/neo4j-labs/neodash/pull/956) - Change default protocol to `neo4j+s`

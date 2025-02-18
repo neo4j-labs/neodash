@@ -1,6 +1,7 @@
-include::../../banner.adoc[]
 
 = Reports
+
+include::../../banner.adoc[]
 
 A report is the smallest building build of your dashboard. Each report
 will have a single Cypher query behind it that is used to populate the

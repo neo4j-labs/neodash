@@ -118,7 +118,9 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
         newValue.push(RenderSubValue(val));
       }
     } else if (!isMulti) {
-      newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay)[0]
+      // if records are toStringed before comparison, toString the comparing variable
+      const newDisplay2 = typeof newDisplay === 'boolean' ? newDisplay.toString() : newDisplay;
+      newValue = extraRecords.filter((r) => (r?._fields?.[displayValueRowIndex]?.toString() || null) == newDisplay2)[0]
         ._fields[realValueRowIndex];
 
       newValue =
@@ -165,8 +167,13 @@ const NodePropertyParameterSelectComponent = (props: ParameterSelectProps) => {
       />
     );
   }
-  let options = extraRecords?.map((r) => r?._fields?.[displayValueRowIndex] || '(no data)');
+
+  // "false" will not be mapped to "(no data)"
+  let options = extraRecords
+    ?.map((r) => r?._fields?.[displayValueRowIndex])
+    .map((f) => (f === undefined || f === null ? '(no data)' : f));
   options = props.autoSort ? options.sort() : options;
+
   return (
     <div className={'n-flex n-flex-row n-flex-wrap n-items-center'}>
       <Autocomplete

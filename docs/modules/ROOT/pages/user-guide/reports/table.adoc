@@ -1,6 +1,7 @@
-include::../../banner.adoc[]
 
 = Table
+
+include::../../banner.adoc[]
 
 The most common report in a dashboard is often a simple table view.
 NeoDash contains a powerful table component that can render all the data

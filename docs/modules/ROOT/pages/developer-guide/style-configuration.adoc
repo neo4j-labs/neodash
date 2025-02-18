@@ -2,6 +2,8 @@ include::../banner.adoc[]
 
 = Style Configuration
 
+include::../banner.adoc[]
+
 When using a custom NeoDash deployment, there are several theme variables that
 can be configured. These mostly relate to css tokens for
 link:https://cdn.jsdelivr.net/npm/@neo4j-ndl/base@1.4.0/lib/tokens/css/tokens.css[Needle] and some other brand specific options.

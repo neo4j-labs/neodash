@@ -1,6 +1,7 @@
-include::../../banner.adoc[]
 
 = Area Map
+
+include::../../banner.adoc[]
 
 link:../../extensions/advanced-visualizations[label:Advanced&nbsp;Visualization[]]
 

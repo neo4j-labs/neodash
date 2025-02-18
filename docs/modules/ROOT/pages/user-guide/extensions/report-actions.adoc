@@ -1,6 +1,7 @@
-include::../../banner.adoc[]
 
 = Report Actions 
+
+include::../../banner.adoc[]
 
 link:../#_2_pro_extensions[label:Pro&nbsp;Extension[]]
 

@@ -6,7 +6,7 @@ import { Button, IconButton } from '@neo4j-ndl/react';
 
 export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, onClick, providers }) => {
   const [savedSSOProviders, setSSOProviders] = useState([]);
-  const [discoveryUrlValidated, setDiscoveryUrlValidated] = useState(undefined);
+  const [discoveryUrlValidated, setDiscoveryUrlValidated] = useState<string | undefined>(undefined);
 
   const filterByProvidersList = (discoveredProviders, validProviders) => {
     return validProviders == null || validProviders.length == 0
@@ -15,18 +15,25 @@ export const SSOLoginButton = ({ discoveryAPIUrl, hostname, port, onSSOAttempt, 
   };
   const attemptManualSSOProviderRetrieval = () => {
     // Do an extra check to see if the hostname provides some SSO provider configuration.
-    getDiscoveryDataInfo(`https://${hostname}:${port}`)
+    const protocol = isLocalhost(hostname) ? 'http' : 'https';
+    const discoveryUrl = `${protocol}://${hostname}:${port}`;
+    getDiscoveryDataInfo(discoveryUrl)
       .then((mergedSSOProviders) => {
         setSSOProviders(filterByProvidersList(mergedSSOProviders, providers));
         if (mergedSSOProviders.length == 0) {
           setDiscoveryUrlValidated(undefined);
         } else {
-          setDiscoveryUrlValidated(`https://${hostname}:${port}`);
+          setDiscoveryUrlValidated(discoveryUrl);
         }
       })
       // eslint-disable-next-line no-console
       .catch((err) => console.error('Error in getDiscoveryDataInfo of Login component', err));
   };
+
+  function isLocalhost(hostname) {
+    const localhostNames = ['localhost', '127.0.0.1', '::1'];
+    return localhostNames.includes(hostname);
+  }
 
   useEffect(() => {
     // First, try to get the SSO discovery URL from the config.json configuration file and see if it contains anything.
