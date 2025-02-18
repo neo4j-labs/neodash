@@ -63,7 +63,10 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
   }
   for (const [index, rule] of rules.entries()) {
     // Only check customizations that are specified
-    return evaluateSingleRuleOnDict(dict, rule, index, customizations);
+    const evaluationResult = evaluateSingleRuleOnDict(dict, rule, index, customizations);
+    if (evaluationResult !== -1) {
+      return evaluationResult;
+    }
   }
   // If no rules are met, return not found (index=-1)
   return -1;
