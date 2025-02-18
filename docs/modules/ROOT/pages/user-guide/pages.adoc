@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Pages
 
 include::../banner.adoc[]

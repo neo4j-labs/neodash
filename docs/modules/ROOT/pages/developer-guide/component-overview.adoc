@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Component Overview
 
 include::../banner.adoc[]

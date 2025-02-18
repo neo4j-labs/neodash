@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Gauge Chart
 
 include::../../banner.adoc[]

@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Design
 
 include::../banner.adoc[]

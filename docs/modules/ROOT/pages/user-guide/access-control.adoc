@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Access Control
 
 include::../banner.adoc[]

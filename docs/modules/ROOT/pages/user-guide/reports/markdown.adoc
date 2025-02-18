@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Markdown
 
 include::../../banner.adoc[]

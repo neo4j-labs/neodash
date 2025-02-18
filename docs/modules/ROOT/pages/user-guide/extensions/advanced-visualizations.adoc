@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Advanced Visualizations
 
 include::../../banner.adoc[]

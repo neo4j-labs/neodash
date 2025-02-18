@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = 3D Graph
 
 include::../../banner.adoc[]

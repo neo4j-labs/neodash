@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Radar Chart
 
 include::../../banner.adoc[]

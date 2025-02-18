@@ -1,3 +1,5 @@
+include::../../banner.adoc[]
+
 = Gantt Chart
 
 include::../../banner.adoc[]
