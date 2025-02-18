@@ -40,7 +40,7 @@ Depending on the webserver type and version, this could be different directory.
 As an example - to copy the files to an nginx webserver using `scp`:
 
 ```bash
-scp neodash-2.4.9-labs username@host:/usr/share/nginx/html
+scp neodash-2.4.10-labs username@host:/usr/share/nginx/html
 ```
 
 NeoDash should now be visible by visiting your (sub)domain in the browser.
