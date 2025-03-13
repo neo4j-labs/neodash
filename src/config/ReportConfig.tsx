@@ -1024,6 +1024,17 @@ const _REPORT_TYPES = {
     textOnly: true,
     maxRecords: 100,
     settings: {
+      backgroundColor: {
+        label: 'Background Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#fafafa',
+      },
+      clearParameterValueOnTabChange: {
+        label: 'Clear parameter value on tab change',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
       multiSelector: {
         label: 'Multiple Selection',
         type: SELECTION_TYPES.LIST,
