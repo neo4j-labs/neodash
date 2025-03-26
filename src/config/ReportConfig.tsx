@@ -5,6 +5,7 @@ import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoJSONChart from '../chart/json/JSONChart';
 import NeoMapChart from '../chart/map/MapChart';
+import NeoMapChartPolygonDrawable from '../chart/map/MapChartPolygonDrawable';
 import NeoPieChart from '../chart/pie/PieChart';
 import NeoTableChart from '../chart/table/TableChart';
 import NeoSingleValueChart from '../chart/single/SingleValueChart';
@@ -1179,6 +1180,104 @@ const _REPORT_TYPES = {
         default: "en-US"
       }
     }
+  },
+  polygonDrawableMap: {
+    label: 'Polygon Drawable Map',
+    helperText: 'A map which has spatial properties AND allows you to draw polygons to filter queries. Calls MapChart.',
+    selection: {
+      properties: {
+        label: 'Node Properties',
+        type: SELECTION_TYPES.NODE_PROPERTIES,
+      },
+    },
+    useNodePropsAsFields: true,
+    component: NeoMapChartPolygonDrawable,
+    maxRecords: 1000,
+    settings: {
+      layerType: {
+        label: 'Layer Type',
+        type: SELECTION_TYPES.LIST,
+        values: ['markers', 'heatmap'],
+        default: 'markers',
+      },
+      clusterMarkers: {
+        label: 'Cluster Markers',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      separateOverlappingMarkers: {
+        label: 'Seperate Overlapping Markers',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+      nodeColorScheme: {
+        label: 'Node Color Scheme',
+        type: SELECTION_TYPES.LIST,
+        values: [
+          'neodash',
+          'nivo',
+          'category10',
+          'accent',
+          'dark2',
+          'paired',
+          'pastel1',
+          'pastel2',
+          'set1',
+          'set2',
+          'set3',
+        ],
+        default: 'neodash',
+      },
+      defaultNodeSize: {
+        label: 'Node Marker Size',
+        type: SELECTION_TYPES.LIST,
+        values: ['small', 'medium', 'large'],
+        default: 'large',
+      },
+      nodeColorProp: {
+        label: 'Node Color Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'color',
+      },
+      defaultRelColor: {
+        label: 'Relationship Color',
+        type: SELECTION_TYPES.TEXT,
+        default: '#a0a0a0',
+      },
+      defaultRelWidth: {
+        label: 'Relationship Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 1,
+      },
+      relColorProp: {
+        label: 'Relationship Color Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'color',
+      },
+      relWidthProp: {
+        label: 'Relationship Width Property',
+        type: SELECTION_TYPES.TEXT,
+        default: 'width',
+      },
+      providerUrl: {
+        label: 'Map Provider URL',
+        type: SELECTION_TYPES.TEXT,
+        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      intensityProp: {
+        label: 'Intensity Property (for heatmap)',
+        type: SELECTION_TYPES.TEXT,
+        default: 'intensity',
+      },
+      hideSelections: {
+        label: 'Hide Property Selection',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: false,
+      },
+    },
   },
 };
 

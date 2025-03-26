@@ -23,6 +23,12 @@ export interface ChartProps {
   theme?: string; // Dashboard theme value.
 }
 
+// Used for: The polygon drawable JSX element modification to MapChart + Drawing arrows component for map.
+// As it is JSX, if you wnat multiple, wrap them in <JSX.element><ExtraComponent1 /><ExtraComponent2 /></JSX.element>
+export interface ChartPropsWithAdditionalElement extends ChartProps {
+  additionalRenderElement: JSX.Element
+}
+
 /**
  * A simplified schema of the Neo4j database.
  */

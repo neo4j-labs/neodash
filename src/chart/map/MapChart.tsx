@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ChartProps } from '../Chart';
+import { ChartProps, ChartPropsWithAdditionalElement } from '../Chart';
 import { categoricalColorSchemes } from '../../config/ColorConfig';
 import { valueIsArray, valueIsNode, valueIsRelationship, valueIsPath, valueIsObject } from '../../chart/ChartUtils';
 import { MapContainer, TileLayer } from 'react-leaflet';
@@ -15,7 +15,7 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 /**
  * Renders Neo4j records as their JSON representation.
  */
-const NeoMapChart = (props: ChartProps, additionalRenderElements: JSX.Element) => {
+const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
   // Retrieve config from advanced settings
   const layerType = props.settings && props.settings.layerType ? props.settings.layerType : 'markers';
   const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : 'color';
@@ -252,7 +252,7 @@ const NeoMapChart = (props: ChartProps, additionalRenderElements: JSX.Element) =
       <TileLayer attribution={attribution} url={mapProviderURL ? mapProviderURL : ''} />
       {markers}
       {lines}
-      {additionalRenderElements}
+      {props.additionalRenderElement}
     </MapContainer>
   );
 };
