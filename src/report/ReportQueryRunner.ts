@@ -53,7 +53,9 @@ export async function runCypherQuery(
   setSchema = () => {
     // eslint-disable-next-line no-console
     // console.log(`Query runner attempted to set schema: ${JSON.stringify(schema)}`);
-  }
+  },
+  thisPopulateQueryTimestamp = -1,
+  getLastTimestampDispatch
 ) {
   // If no query specified, we don't do anything.
   if (query.trim() == '') {
@@ -121,7 +123,16 @@ export async function runCypherQuery(
         return;
       }
       setStatus(QueryStatus.COMPLETE);
-      setRecords(records);
+      if (getLastTimestampDispatch && typeof getLastTimestampDispatch === 'function') {
+        const lastTimestamp = getLastTimestampDispatch();
+        // console.log(thisPopulateQueryTimestamp, `Query complete, report.lastQueryTs =`, lastTimestamp);
+        if (!lastTimestamp || thisPopulateQueryTimestamp >= lastTimestamp) {
+          setRecords(records);
+        }
+      } else {
+        setRecords(records);
+      }
+
       // console.log("TODO remove this - QUERY WAS EXECUTED SUCCESFULLY!")
 
       transaction.commit();

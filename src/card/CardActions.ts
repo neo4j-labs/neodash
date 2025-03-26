@@ -91,3 +91,9 @@ export const updateReportDatabase = (pagenumber: number, id: number, database: a
   type: UPDATE_REPORT_DATABASE,
   payload: { pagenumber, id, database },
 });
+
+export const UPDATE_LAST_POPULATE_QUERY_TIMESTAMP = 'PAGE/CARD/UPDATE_LAST_POPULATE_QUERY_TIMESTAMP';
+export const updateLastPopulateQueryTimestamp = (pagenumber: number, id: number, timestamp: number) => ({
+  type: UPDATE_LAST_POPULATE_QUERY_TIMESTAMP,
+  payload: { pagenumber, id, lastPopulateQueryTimestamp: timestamp },
+});
