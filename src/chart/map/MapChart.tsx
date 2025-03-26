@@ -15,7 +15,7 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 /**
  * Renders Neo4j records as their JSON representation.
  */
-const NeoMapChart = (props: ChartProps) => {
+const NeoMapChart = (props: ChartProps, additionalRenderElements: JSX.Element) => {
   // Retrieve config from advanced settings
   const layerType = props.settings && props.settings.layerType ? props.settings.layerType : 'markers';
   const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : 'color';
@@ -252,6 +252,7 @@ const NeoMapChart = (props: ChartProps) => {
       <TileLayer attribution={attribution} url={mapProviderURL ? mapProviderURL : ''} />
       {markers}
       {lines}
+      {additionalRenderElements}
     </MapContainer>
   );
 };
