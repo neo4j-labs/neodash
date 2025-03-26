@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { FeatureGroup } from 'react-leaflet';
-import { EditControl } from 'react-leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 
 import NeoMapChart from './MapChart';
 import { ChartProps } from '../Chart';
+import { EditControl } from 'react-leaflet-draw';
 
 const polygonInputVariableKey = 'Input_PolygonsForMapQuery'
 
@@ -62,6 +62,7 @@ const NeoMapChartWithPolygons: React.FC<ChartProps> = (props) => {
                 marker: false,
                 circlemarker: false
               }}
+
             />
           </FeatureGroup>
         }
