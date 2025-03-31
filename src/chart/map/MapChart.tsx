@@ -9,6 +9,7 @@ import { createHeatmap } from './layers/HeatmapLayer';
 import { createMarkers } from './layers/MarkerLayer';
 import { createLines } from './layers/LineLayer';
 import { extensionEnabled } from '../../utils/ReportUtils';
+import * as turf from '@turf/turf'
 
 const update = (state, mutations) => Object.assign({}, state, mutations);
 
@@ -17,6 +18,7 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
  */
 const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
   // Retrieve config from advanced settings
+  console.log('Neo vmap chart polygon coordinates props: ', props.filterPolygonCoordinates)
   const layerType = props.settings && props.settings.layerType ? props.settings.layerType : 'markers';
   const nodeColorProp = props.settings && props.settings.nodeColorProp ? props.settings.nodeColorProp : 'color';
   const defaultNodeSize = props.settings && props.settings.defaultNodeSize ? props.settings.defaultNodeSize : 'large';
@@ -59,7 +61,7 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
 
   useEffect(() => {
     buildVisualizationDictionaryFromRecords(props.records);
-  }, []);
+  }, [props.filterPolygonCoordinates]);
 
   let nodes = {};
   let nodeLabels = {};
@@ -132,6 +134,53 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
       });
     }
   }
+
+  const filterNodesWithinPolygonCoordinates = (
+    nodes: Node[]
+  ): Node[] => {
+    console.log('Filtering nodes now', nodes)
+
+    if (!props.filterPolygonCoordinates) {
+      console.log('No filter polygon coordinates found to filter with.');
+      return nodes
+    }
+
+
+    const bboxpois = nodes.map((node) => [node.pos[0], node.pos[1]]);
+
+    console.log('POIs: ', bboxpois);
+    console.log('Poolygon shape coords: ', props.filterPolygonCoordinates)
+
+    // filter results of bounding box query to polygon bounds
+    const poisWithin = turf.pointsWithinPolygon(
+      turf.points(bboxpois),
+      props.filterPolygonCoordinates,
+    );
+
+    console.log('Reutrned information was: ', poisWithin);
+
+    const withinIndices = new Set<number>();
+    poisWithin.features.forEach((feature, index) => {
+      if (feature.properties && feature.properties.pointIndex !== undefined) {
+        withinIndices.add(feature.properties.pointIndex);
+      } else {
+        // If pointIndex isn't available, use the coordinates to find the matching node
+        const coords = feature.geometry.coordinates;
+        console.log('This POI was within the area in the returned check.. not necessarily node..:', feature.geometry.coordinates);
+        const matchingIndex = bboxpois.findIndex(
+          point => point[0] === coords[0] && point[1] === coords[1]
+        );
+        if (matchingIndex !== -1) {
+          withinIndices.add(matchingIndex);
+        }
+      }
+    });
+
+    console.log('Returning filtered POIs...')
+
+    return nodes.filter((_, index) => withinIndices.has(index));
+  }
+
 
   // TODO this should be in Utils.ts
   function buildVisualizationDictionaryFromRecords(records) {
@@ -227,10 +276,11 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
       zoom: Math.min(latZoomFit, longZoomFit),
       centerLatitude: latitudes ? latitudes.reduce((a, b) => a + b, 0) / latitudes.length : 0,
       centerLongitude: longitudes ? longitudes.reduce((a, b) => a + b, 0) / longitudes.length : 0,
-      nodes: nodesList,
+      nodes: filterNodesWithinPolygonCoordinates(nodesList),
       links: linksList,
     });
   }
+
 
   // TODO this should definitely be refactored as an if/case statement.
   const markers = layerType == 'markers' ? createMarkers(data, props) : '';

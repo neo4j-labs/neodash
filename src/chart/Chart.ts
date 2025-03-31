@@ -27,6 +27,7 @@ export interface ChartProps {
 // As it is JSX, if you wnat multiple, wrap them in <JSX.element><ExtraComponent1 /><ExtraComponent2 /></JSX.element>
 export interface ChartPropsWithAdditionalElement extends ChartProps {
   additionalRenderElement: JSX.Element
+  filterPolygonCoordinates: any // todo: Type better
 }
 
 /**

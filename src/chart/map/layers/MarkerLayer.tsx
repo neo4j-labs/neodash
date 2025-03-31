@@ -125,6 +125,24 @@ export function createMarkers(data, props) {
     return node.properties[selectedProp] ? node.properties[selectedProp].toString() : '';
   };
 
+  /*
+  // Clientside polygon filtering mechanism...
+  data.nodes.map((node) => {
+    console.log('This marker had POS of: ', node.pos)
+  })
+
+  const bboxpois = [];
+  data.nodes.forEach((node) => {
+    const point = [node.pos[0], node.pos[1]];
+    bboxpois.push(point);
+  });
+  // filter results of bouding box query to polygon bounds
+  const poisWithin = turf.pointsWithinPolygon(
+    turf.points(bboxpois),
+    polygon
+  );
+  */
+
   // Create markers to plot on the map
   let markers = data.nodes
     .filter((node) => node.pos && !isNaN(node.pos[0]) && !isNaN(node.pos[1]))
