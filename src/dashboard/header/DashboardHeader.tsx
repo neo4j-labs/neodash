@@ -154,11 +154,14 @@ export const NeoDashboardHeader = ({
         databases={databases}
         selected={dataDatabase}
         setSelected={(newDatabase) => {
-          setModalOpen(Modal.CHANGE);
-          setDataDatabase(newDatabase);
-          console.log(newDatabase)
-          console.log(dataDatabase)
-          refreshPage(newDatabase)
+          let ChangeDatabaseConfirmBoolean = sessionStorage.getItem("ChangeDatabaseConfirmBoolean") || "False"
+          if (ChangeDatabaseConfirmBoolean == 'True'){
+            setDataDatabase(newDatabase);
+            refreshPage(newDatabase)
+          }
+          else{
+            setModalOpen(Modal.CHANGE);
+          }
         }}
         open={menuOpen == Menu.DATABASE}
         anchorEl={menuAnchor}
