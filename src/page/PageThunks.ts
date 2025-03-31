@@ -55,14 +55,11 @@ export const updatePageLayoutThunk = (layout: any) => (dispatch: any, getState: 
 
 export const updateAllReportsDatabaseThunk = (database) => (dispatch: any, getState: any) => {
   try{
-    console.log('updateAllReportsDatabaseThunk')
     const state = getState();
     const { pages } = state.dashboard;
     const { pagenumber } = getState().dashboard.settings;
     pages.map((page, index) => {
-          console.log(page);
           page.reports.map((report) => {
-            console.log("page: " + index + " | id: " + report.id);
             dispatch(updateReportDatabase(index,report.id, database));
             if (pagenumber === index){
               dispatch(forceRefreshCard(index,report.id));

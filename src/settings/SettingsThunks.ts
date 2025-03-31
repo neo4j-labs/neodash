@@ -6,7 +6,6 @@ import { updateDashboardSetting } from './SettingsActions';
 
 export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => {
   try {
-    console.log("setPageNumberThunk")
     if (number == undefined) {
       throw 'The specified page could not be found, was it moved, removed, or renamed?';
     }
@@ -18,7 +17,6 @@ export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => 
 
     const page = pages[number];
     page.reports.map((report) => {
-      console.log("pg: " + number + " | " + report.id)
       dispatch(hardResetCardSettings(number, report.id));
     });
   } catch (e) {
@@ -28,13 +26,9 @@ export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => 
 
 export const hardResetAllCardsThunk = () => (dispatch: any, getState: any) => {
   try{
-    console.log("hardResetAllCardsThunk")
     const { pages } = getState().dashboard;
-
     pages.map((page, index) => {
-      console.log(page);
       page.reports.map((report) => {
-        console.log("page: " + index + " | id: " + report.id)
         dispatch(hardResetCardSettings(index,report.id))
       })
     });

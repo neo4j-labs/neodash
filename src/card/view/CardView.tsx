@@ -161,7 +161,6 @@ const NeoCardView = ({
   }, [settingsOpen, forceRefresh]);
 
   useEffect(() => {
-    console.log(forceRefresh);
     setSelectorChange(true);
   }, [query, type, database, JSON.stringify(settingsSelector), forceRefresh]);
 

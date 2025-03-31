@@ -53,6 +53,7 @@ export const NeoDashboardHeader = ({
   const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [databases, setDatabases] = useState([]);
+  const [newDataDatabase, setNewDataDatabase] = useState(null);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
   const [modalOpen, setModalOpen] = useState(Modal.NONE);
   const [isDarkMode, setDarkMode] = React.useState(themeMode !== 'light');
@@ -72,6 +73,17 @@ export const NeoDashboardHeader = ({
   }, [dashboardTitle]);
 
   useEffect(() => {
+    let ChangeDatabaseConfirmBoolean = sessionStorage.getItem("ChangeDatabaseConfirmBoolean") || "False"
+    if (ChangeDatabaseConfirmBoolean == 'True' && newDataDatabase) {
+      setDataDatabase(newDataDatabase);
+      refreshPage(newDataDatabase);
+    }
+    else{
+      setModalOpen(Modal.CHANGE);
+    }
+  }, [newDataDatabase]);
+
+  useEffect(() => {
     setTheme(isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
   const content = (
@@ -80,6 +92,8 @@ export const NeoDashboardHeader = ({
               open={modalOpen == Modal.CHANGE}
               onConfirm={() => {
                 setModalOpen(Modal.NONE);
+                setDataDatabase(newDataDatabase);
+                refreshPage(newDataDatabase);
               }}
               handleClose={() => setModalOpen(Modal.NONE)}
             />
@@ -154,14 +168,7 @@ export const NeoDashboardHeader = ({
         databases={databases}
         selected={dataDatabase}
         setSelected={(newDatabase) => {
-          let ChangeDatabaseConfirmBoolean = sessionStorage.getItem("ChangeDatabaseConfirmBoolean") || "False"
-          if (ChangeDatabaseConfirmBoolean == 'True'){
-            setDataDatabase(newDatabase);
-            refreshPage(newDatabase)
-          }
-          else{
-            setModalOpen(Modal.CHANGE);
-          }
+          setNewDataDatabase(newDatabase);
         }}
         open={menuOpen == Menu.DATABASE}
         anchorEl={menuAnchor}
@@ -204,8 +211,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
 
   refreshPage: (database: string) => {
-    console.log("refreshPage")
-    // dispatch(hardResetAllCardsThunk());
     dispatch(updateAllReportsDatabaseThunk(database));
   },
 });
