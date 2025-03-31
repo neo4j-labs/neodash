@@ -78,7 +78,7 @@ export const NeoDashboardHeader = ({
       setDataDatabase(newDataDatabase);
       refreshPage(newDataDatabase);
     }
-    else{
+    else if (ChangeDatabaseConfirmBoolean == 'False' && newDataDatabase){
       setModalOpen(Modal.CHANGE);
     }
   }, [newDataDatabase]);
