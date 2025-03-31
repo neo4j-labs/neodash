@@ -6,18 +6,25 @@ import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 export default ({setFilterPolygonCoordinates, setOnResetFn}) => {
   const context = useLeafletContext();
 
+  const drawingControlsConfig = {
+    drawMarker: false,
+    drawCircleMarker: false,
+    drawPolyline: false,
+    drawLine: false,
+    drawText: false,
+    drawCircle: false, // does not work with polygon based coordinate system filtering.
+  }
+
   useEffect(() => {
     const leafletContainer = context.layerContainer || context.map;
 
-    leafletContainer.pm.addControls({
-      drawMarker: false
-    });
+    leafletContainer.pm.addControls(drawingControlsConfig);
 
     leafletContainer.pm.setGlobalOptions({ pmIgnore: false });
 
     leafletContainer.on("pm:create", (e) => {
       // This triggers when the user finishes drawing (e.g. connects the last part of a polygon).
-      // We can then use the layer to get the polygon points in a turf (polygon-fitlering-module compatible) format.
+      // We can then use the layer to get the polygon points in a turf (polygon-filtering-module compatible) format.
 
       // then we can either send the filtering through via props to the MarkerLayer or through dashboard state
       // I prefer sending them back up to MapChartPolygonDrawable then down to MarkerLayer in this circumstance, as it
@@ -27,6 +34,7 @@ export default ({setFilterPolygonCoordinates, setOnResetFn}) => {
         const polygon = e.layer.toGeoJSON();
         const coordinates = polygon.geometry.coordinates;
 
+        // necessary because turf module + leaflet uses the opposite format(x, y) to the default geoman output (y, x)
         const swapCoordinates = (coords)=>  {
           if (Array.isArray(coords) && coords.length === 2 &&
             typeof coords[0] === 'number' && typeof coords[1] === 'number') {
@@ -41,9 +49,7 @@ export default ({setFilterPolygonCoordinates, setOnResetFn}) => {
         polygon.geometry.coordinates = swapCoordinates(coordinates);
         setFilterPolygonCoordinates(polygon);
         setOnResetFn(() => () => {
-          leafletContainer.pm.addControls({
-            drawMarker: false
-          })
+          leafletContainer.pm.addControls(drawingControlsConfig)
           console.log('Layer had properties: ', e.layer)
           e.layer.remove()
         }) // redisplay controls when they reset the board.
