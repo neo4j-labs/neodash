@@ -26,6 +26,7 @@ export const NeoDashboardHeaderPageList = ({
   addPage,
   movePage,
   selectPage,
+  refreshPage,
 }) => {
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
 
@@ -114,6 +115,9 @@ const mapDispatchToProps = (dispatch) => ({
   onConnectionModalOpen: () => {
     dispatch(setConnectionModalOpen(true));
   },
+  refreshPage: () => {
+    dispatch(setPageNumberThunk(0))
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoDashboardHeaderPageList);

@@ -13,7 +13,7 @@ import {
   updateReportTypeThunk,
   updateReportDatabaseThunk,
 } from './CardThunks';
-import { toggleReportSettings } from './CardActions';
+import { forceRefreshCard, toggleReportSettings } from './CardActions';
 import { getReportState } from './CardSelectors';
 import {
   getDashboardIsEditable,
@@ -149,6 +149,7 @@ const NeoCard = ({
             title={report.title}
             expanded={expanded}
             onToggleCardExpand={onToggleCardExpand}
+            onForceRefresh={forceRefreshCard(0,id)}
             onGlobalParameterUpdate={onGlobalParameterUpdate}
             onSelectionUpdate={(selectable, field) => onSelectionUpdate(id, selectable, field)}
             onTitleUpdate={(title) => onTitleUpdate(id, title)}

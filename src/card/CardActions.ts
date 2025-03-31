@@ -91,3 +91,9 @@ export const updateReportDatabase = (pagenumber: number, id: number, database: a
   type: UPDATE_REPORT_DATABASE,
   payload: { pagenumber, id, database },
 });
+
+export const FORCE_REFRESH_CARD = 'PAGE/CARD/FORCE_REFRESH_CARD';
+export const forceRefreshCard = (pagenumber: number, id: number) => ({
+  type: FORCE_REFRESH_CARD,
+  payload: { pagenumber, id },
+});

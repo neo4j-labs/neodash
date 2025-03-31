@@ -41,6 +41,7 @@ const NeoCardView = ({
   onToggleCardSettings,
   onTitleUpdate,
   onFieldsUpdate,
+  onForceRefresh,
   expanded,
   onToggleCardExpand,
 }) => {

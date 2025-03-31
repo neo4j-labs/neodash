@@ -1,7 +1,8 @@
 import { createNotification } from '../application/ApplicationActions';
 import { CARD_INITIAL_STATE } from '../card/CardReducer';
-import { createReport, removeReport, updateAllCardPositionsInPage } from './PageActions';
+import { createReport, forceRefreshPage, removeReport, updateAllCardPositionsInPage } from './PageActions';
 import { createUUID } from '../utils/uuid';
+import { forceRefreshCard, hardResetCardSettings, toggleCardSettings, updateReportDatabase } from '../card/CardActions';
 
 export const createNotificationThunk = (title: any, message: any) => (dispatch: any) => {
   dispatch(createNotification(title, message));
@@ -50,4 +51,25 @@ export const updatePageLayoutThunk = (layout: any) => (dispatch: any, getState: 
   } catch (e) {
     dispatch(createNotificationThunk('Cannot update page layout', e));
   }
+};
+
+export const updateAllReportsDatabaseThunk = (database) => (dispatch: any, getState: any) => {
+  try{
+    console.log('updateAllReportsDatabaseThunk')
+    const state = getState();
+    const { pages } = state.dashboard;
+    const { pagenumber } = getState().dashboard.settings;
+    pages.map((page, index) => {
+          console.log(page);
+          page.reports.map((report) => {
+            console.log("page: " + index + " | id: " + report.id);
+            dispatch(updateReportDatabase(index,report.id, database));
+            if (pagenumber === index){
+              dispatch(forceRefreshCard(index,report.id));
+            }
+          });
+        });
+      } catch (e) {
+        dispatch(createNotificationThunk('Unable to set database for all cards', e));
+      }
 };

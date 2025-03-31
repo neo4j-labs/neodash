@@ -18,10 +18,18 @@ import { Button } from '@neo4j-ndl/react';
 import { CircleStackIconOutline } from '@neo4j-ndl/react/icons';
 import { loadDatabaseListFromNeo4jThunk } from '../DashboardThunks';
 import NeoDashboardSidebarDatabaseMenu from '../sidebar/menu/DashboardSidebarDatabaseMenu';
+import { hardResetAllCardsThunk, setPageNumberThunk } from '../../settings/SettingsThunks';
+import { updateAllReportsDatabaseThunk } from '../../page/PageThunks';
+import NeoDashboardChangeDatabaseConfirm from './DashboardChangeDatabaseConfirmDialog';
 
 // Which (small) pop-up menu is currently open for the sidebar.
 enum Menu {
   DATABASE = 0,
+  NONE = 1,
+}
+
+enum Modal {
+  CHANGE = 0,
   NONE = 1,
 }
 
@@ -40,11 +48,13 @@ export const NeoDashboardHeader = ({
   setTheme,
   loadDatabaseListFromNeo4j,
   readonly,
+  refreshPage
 }) => {
   const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [databases, setDatabases] = useState([]);
   const [menuOpen, setMenuOpen] = useState(Menu.NONE);
+  const [modalOpen, setModalOpen] = useState(Modal.NONE);
   const [isDarkMode, setDarkMode] = React.useState(themeMode !== 'light');
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [dataDatabase, setDataDatabase] = React.useState(database ? database : 'neo4j');
@@ -66,6 +76,13 @@ export const NeoDashboardHeader = ({
   }, [isDarkMode]);
   const content = (
     <div className='n-relative n-bg-palette-neutral-bg-weak n-w-full'>
+            <NeoDashboardChangeDatabaseConfirm
+              open={modalOpen == Modal.CHANGE}
+              onConfirm={() => {
+                setModalOpen(Modal.NONE);
+              }}
+              handleClose={() => setModalOpen(Modal.NONE)}
+            />
       <div className='n-min-w-full'>
         <div className='n-flex n-justify-between n-h-16 n-items-center n-py-6 md:n-justify-start md:n-space-x-10 n-mx-4'>
           <NeoDashboardHeaderLogo resetApplication={resetApplication} />
@@ -136,7 +153,11 @@ export const NeoDashboardHeader = ({
         databases={databases}
         selected={dataDatabase}
         setSelected={(newDatabase) => {
+          setModalOpen(Modal.CHANGE);
           setDataDatabase(newDatabase);
+          console.log(newDatabase)
+          console.log(dataDatabase)
+          refreshPage(newDatabase)
         }}
         open={menuOpen == Menu.DATABASE}
         anchorEl={menuAnchor}
@@ -176,6 +197,12 @@ const mapDispatchToProps = (dispatch) => ({
 
   loadDatabaseListFromNeo4j: (driver, callback) => {
     dispatch(loadDatabaseListFromNeo4jThunk(driver, callback))
+  },
+
+  refreshPage: (database: string) => {
+    console.log("refreshPage")
+    // dispatch(hardResetAllCardsThunk());
+    dispatch(updateAllReportsDatabaseThunk(database));
   },
 });
 
