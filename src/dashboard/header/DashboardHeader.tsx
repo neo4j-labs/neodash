@@ -132,6 +132,7 @@ export const NeoDashboardHeader = ({
                           let tmp = standaloneSettings.standaloneDatabaseList.split(',').map((x) => x.trim());
                           result = result.filter((value) => tmp.includes(value));
                         }
+                        result = result.filter((value) => result.includes(value) && value !== 'system');
                         setDatabases(result);
                       });
                     }
