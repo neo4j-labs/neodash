@@ -26,7 +26,6 @@ export const NeoDashboardHeaderPageList = ({
   addPage,
   movePage,
   selectPage,
-  refreshPage,
 }) => {
   const [canSwitchPages, setCanSwitchPages] = React.useState(true);
 
