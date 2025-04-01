@@ -145,19 +145,14 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
       return nodes
     }
 
+    const possiblePointsToInclude = nodes.filter((node) => node.hasOwnProperty("pos"))
+        .map((node) => [node.pos[0], node.pos[1]]);
 
-    const bboxpois = nodes.map((node) => [node.pos[0], node.pos[1]]);
-
-    console.log('POIs: ', bboxpois);
-    console.log('Poolygon shape coords: ', props.filterPolygonCoordinates)
-
-    // filter results of bounding box query to polygon bounds
+    // Filter results of bounding box query to polygon bounds
     const poisWithin = turf.pointsWithinPolygon(
-      turf.points(bboxpois),
+      turf.points(possiblePointsToInclude),
       props.filterPolygonCoordinates,
     );
-
-    console.log('Reutrned information was: ', poisWithin);
 
     const withinIndices = new Set<number>();
     poisWithin.features.forEach((feature, index) => {
@@ -166,8 +161,7 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
       } else {
         // If pointIndex isn't available, use the coordinates to find the matching node
         const coords = feature.geometry.coordinates;
-        console.log('This POI was within the area in the returned check.. not necessarily node..:', feature.geometry.coordinates);
-        const matchingIndex = bboxpois.findIndex(
+        const matchingIndex = possiblePointsToInclude.findIndex(
           point => point[0] === coords[0] && point[1] === coords[1]
         );
         if (matchingIndex !== -1) {
@@ -175,8 +169,6 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
         }
       }
     });
-
-    console.log('Returning filtered POIs...')
 
     return nodes.filter((_, index) => withinIndices.has(index));
   }
