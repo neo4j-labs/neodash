@@ -33,6 +33,7 @@ export default ({setFilterPolygonCoordinates, setOnResetFn}) => {
       if (e.layer) {
         const polygon = e.layer.toGeoJSON();
         const coordinates = polygon.geometry.coordinates;
+        console.log('Geoman drawing layer polygon coordinates:', coordinates);
 
         // necessary because turf module + leaflet uses the opposite format(x, y) to the default geoman output (y, x)
         const swapCoordinates = (coords)=>  {

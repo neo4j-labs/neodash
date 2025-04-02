@@ -145,32 +145,39 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
       return nodes
     }
 
-    const possiblePointsToInclude = nodes.filter((node) => node.hasOwnProperty("pos"))
-        .map((node) => [node.pos[0], node.pos[1]]);
+    const possiblePointsToInclude = nodes.filter((node) => node.pos)
+    // Possibly due to the point grouping, there are some items without pos or with pos undefined.
+    const pointsIncludedAsCoordinates = possiblePointsToInclude.map((node) => [node.pos[0], node.pos[1]]);
+
+    console.log('Positions of points: ', possiblePointsToInclude);
+    console.log('Polygon-at-filter-time-coords:', props.filterPolygonCoordinates)
 
     // Filter results of bounding box query to polygon bounds
     const poisWithin = turf.pointsWithinPolygon(
-      turf.points(possiblePointsToInclude),
+      turf.points(pointsIncludedAsCoordinates),
       props.filterPolygonCoordinates,
     );
 
+    console.log('Considering these returned points..', poisWithin.features.length, poisWithin);
+
     const withinIndices = new Set<number>();
     poisWithin.features.forEach((feature, index) => {
-      if (feature.properties && feature.properties.pointIndex !== undefined) {
-        withinIndices.add(feature.properties.pointIndex);
-      } else {
+
         // If pointIndex isn't available, use the coordinates to find the matching node
         const coords = feature.geometry.coordinates;
         const matchingIndex = possiblePointsToInclude.findIndex(
-          point => point[0] === coords[0] && point[1] === coords[1]
+          point => point.pos && point.pos[0] === coords[0] && point.pos[1] === coords[1]
         );
         if (matchingIndex !== -1) {
           withinIndices.add(matchingIndex);
         }
-      }
+
     });
 
-    return nodes.filter((_, index) => withinIndices.has(index));
+    const kept = possiblePointsToInclude.filter((_, index) => withinIndices.has(index));
+    console.log('Kept nodes: ', kept.map((node) => node.pos));
+    // index doesm'y slihn.
+    return kept;
   }
 
 
