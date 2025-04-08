@@ -4,7 +4,6 @@ import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoJSONChart from '../chart/json/JSONChart';
-import NeoMapChart from '../chart/map/MapChart';
 import NeoPieChart from '../chart/pie/PieChart';
 import NeoTableChart from '../chart/table/TableChart';
 import NeoSingleValueChart from '../chart/single/SingleValueChart';
@@ -859,104 +858,6 @@ const _REPORT_TYPES = {
   //     },
   //   },
   // },
-  map: {
-    label: 'Map',
-    helperText: 'A map will draw all nodes and relationships with spatial properties.',
-    selection: {
-      properties: {
-        label: 'Node Properties',
-        type: SELECTION_TYPES.NODE_PROPERTIES,
-      },
-    },
-    useNodePropsAsFields: true,
-    component: NeoMapChart,
-    maxRecords: 1000,
-    settings: {
-      layerType: {
-        label: 'Layer Type',
-        type: SELECTION_TYPES.LIST,
-        values: ['markers', 'heatmap'],
-        default: 'markers',
-      },
-      clusterMarkers: {
-        label: 'Cluster Markers',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      separateOverlappingMarkers: {
-        label: 'Seperate Overlapping Markers',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-      nodeColorScheme: {
-        label: 'Node Color Scheme',
-        type: SELECTION_TYPES.LIST,
-        values: [
-          'neodash',
-          'nivo',
-          'category10',
-          'accent',
-          'dark2',
-          'paired',
-          'pastel1',
-          'pastel2',
-          'set1',
-          'set2',
-          'set3',
-        ],
-        default: 'neodash',
-      },
-      defaultNodeSize: {
-        label: 'Node Marker Size',
-        type: SELECTION_TYPES.LIST,
-        values: ['small', 'medium', 'large'],
-        default: 'large',
-      },
-      nodeColorProp: {
-        label: 'Node Color Property',
-        type: SELECTION_TYPES.TEXT,
-        default: 'color',
-      },
-      defaultRelColor: {
-        label: 'Relationship Color',
-        type: SELECTION_TYPES.TEXT,
-        default: '#a0a0a0',
-      },
-      defaultRelWidth: {
-        label: 'Relationship Width',
-        type: SELECTION_TYPES.NUMBER,
-        default: 1,
-      },
-      relColorProp: {
-        label: 'Relationship Color Property',
-        type: SELECTION_TYPES.TEXT,
-        default: 'color',
-      },
-      relWidthProp: {
-        label: 'Relationship Width Property',
-        type: SELECTION_TYPES.TEXT,
-        default: 'width',
-      },
-      providerUrl: {
-        label: 'Map Provider URL',
-        type: SELECTION_TYPES.TEXT,
-        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      },
-      intensityProp: {
-        label: 'Intensity Property (for heatmap)',
-        type: SELECTION_TYPES.TEXT,
-        default: 'intensity',
-      },
-      hideSelections: {
-        label: 'Hide Property Selection',
-        type: SELECTION_TYPES.LIST,
-        values: [true, false],
-        default: false,
-      },
-    },
-  },
   value: {
     label: 'Single Value',
     helperText: 'This report will show only the first value of the first row returned.',

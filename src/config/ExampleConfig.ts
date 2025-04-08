@@ -2,7 +2,6 @@ import NeoBarChart from '../chart/bar/BarChart';
 import NeoGraphChart from '../chart/graph/GraphChart';
 import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoLineChart from '../chart/line/LineChart';
-import NeoMapChart from '../chart/map/MapChart';
 import NeoPieChart from '../chart/pie/PieChart';
 import NeoTableChart from '../chart/table/TableChart';
 
@@ -177,52 +176,6 @@ export const EXAMPLE_REPORTS = [
     fields: ['Year', 'Revenue', 'Profit'],
     type: 'line',
     chartType: NeoLineChart,
-  },
-  {
-    title: 'Map',
-    description: 'A map report visualizes nodes and relationships with spatial (geographical) properties.',
-    exampleQuery:
-      '// Find all routes between cinemas.\n // Each cinema node has a point property.\nMATCH (c:Cinema),\n      (c)-[r:ROUTE_TO]->(c2:Cinema)\nRETURN c, r, c2',
-    syntheticQuery: `
-        UNWIND [{id: "Tilburg", label: "Cinema", point: point({latitude:51.59444886664065 , longitude:5.088862976119185})},
-{id: "Antwerp", label: "Cinema", point: point({latitude:51.22065200961528  , longitude:4.414094044161085})},
-{id: "Brussels", label: "Cinema", point: point({latitude:50.854284724408664, longitude:4.344177490986771})},
-{id: "Cologne", label: "Cinema", point: point({latitude:50.94247712506476  , longitude:6.9699327434361855 })},
-{id: "Nijmegen", label: "Cinema", point: point({latitude:51.81283449474347 , longitude:5.866804797140869})},
-{start: "Tilburg", end: "Antwerp", type: "ROUTE_TO", distance: "125km", id: 100},
-{start: "Antwerp", end: "Brussels", type: "ROUTE_TO", distance: "70km", id: 101},
-{start: "Brussels", end: "Cologne", type: "ROUTE_TO", distance: "259km", id: 102},
-{start: "Cologne", end: "Nijmegen", type: "ROUTE_TO", distance: "180km", id: 103},
-{start: "Nijmegen", end: "Tilburg", type: "ROUTE_TO", distance: "92km", id: 104}
-] as value
-RETURN value
-        `,
-    settings: {},
-    fields: [],
-    selection: {},
-    type: 'map',
-    chartType: NeoMapChart,
-  },
-  {
-    title: 'Map (from properties)',
-    description: 'Use dictionaries to visualize entities that are not real nodes and relationships.',
-    exampleQuery: `// Plot an artificial relationship.\nMATCH (l1:Location)<--(a:Person),\n      (a:Person)-[:KNOWS]-(b:Person),\n      (b:Person)-->(l2:Location)
-RETURN {id: a.name, label: "Person", point: l1.point},
-       {id: b.name, label: "Person", point: l2.point},
-       {start: a.name, end: b.name, type: "KNOWS", id: 1}
-`,
-    syntheticQuery: `
-        UNWIND [{id: "Dwight", label: "Person", point: point({latitude:41.45954418871592, longitude:-75.75265878192192})},
-{id: "Jim", label: "Person", point: point({latitude:41.41492119160039,longitude: -75.6470002887925})},
-{start: "Dwight", end: "Jim", type: "KNOWS", id: 1}
-] as value
-RETURN value
-        `,
-    settings: {},
-    fields: [],
-    selection: {},
-    type: 'map',
-    chartType: NeoMapChart,
   },
   {
     title: 'iFrame',
