@@ -128,6 +128,7 @@ const NeoCardSettingsContent = ({
 
       {report?.disableDatabaseSelector == undefined ? (
         <Dropdown
+          data-test='database-dropdown'
           id='databaseSelector'
           label='Database'
           placeholder='neo4j'

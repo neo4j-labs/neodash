@@ -122,7 +122,7 @@ export const NeoDashboardHeader = ({
               </Tooltip>
               <Tooltip title='Database' aria-label='database' disableInteractive>
                 <Button
-                  aria-label={'settings'}
+                  aria-label='database'
                   fill='text'
                   size='large'
                   color='neutral'
