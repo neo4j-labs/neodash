@@ -20,6 +20,8 @@ export const stringArrayCypherQuery = "RETURN ['initial', 'list'] AS column, ['o
 export const intArrayCypherQuery = 'RETURN [1, 2] AS column, [3, 4] AS otherColumn';
 export const pathArrayCypherQuery = 'MATCH p=(:Person)-[:ACTED_IN]->(:Movie) WITH p LIMIT 1 RETURN p';
 
+export const createDB2 = 'CREATE DATABASE db2 IF NOT EXISTS'
+
 // Other content fixtures
 export const iFrameText = 'https://www.wikipedia.org/';
 export const markdownText = '# Hello';

@@ -41,6 +41,7 @@ const NeoCardView = ({
   onToggleCardSettings,
   onTitleUpdate,
   onFieldsUpdate,
+  forceRefresh,
   expanded,
   onToggleCardExpand,
 }) => {
@@ -157,11 +158,11 @@ const NeoCardView = ({
       setLastRunTimestamp(Date.now());
     }
     setSelectorChange(false);
-  }, [settingsOpen]);
+  }, [settingsOpen, forceRefresh]);
 
   useEffect(() => {
     setSelectorChange(true);
-  }, [query, type, database, JSON.stringify(settingsSelector)]);
+  }, [query, type, database, JSON.stringify(settingsSelector), forceRefresh]);
 
   // TODO - understand why CardContent is throwing a warning based on this style config.
   const cardContentStyle = {

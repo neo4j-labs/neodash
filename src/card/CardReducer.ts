@@ -13,6 +13,7 @@ import {
   UPDATE_REPORT_TYPE,
   UPDATE_SELECTION,
   UPDATE_REPORT_DATABASE,
+  FORCE_REFRESH_CARD
 } from './CardActions';
 import { TOGGLE_CARD_SETTINGS } from './CardActions';
 import { createUUID } from '../utils/uuid';
@@ -25,6 +26,7 @@ const update = (state, mutations) => Object.assign({}, state, mutations);
 
 export const CARD_INITIAL_STATE = {
   id: createUUID(),
+  forceRefresh: 0,
   title: '',
   query: '\n\n\n',
   settingsOpen: false,
@@ -134,6 +136,10 @@ export const cardReducer = (state = CARD_INITIAL_STATE, action: { type: any; pay
     case UPDATE_REPORT_DATABASE: {
       const { database } = payload;
       state = update(state, { database: database });
+      return state;
+    }
+    case FORCE_REFRESH_CARD: {
+      state = update(state, {forceRefresh: state.forceRefresh + 1});
       return state;
     }
     default: {

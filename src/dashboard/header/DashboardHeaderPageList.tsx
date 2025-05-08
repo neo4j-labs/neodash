@@ -114,6 +114,9 @@ const mapDispatchToProps = (dispatch) => ({
   onConnectionModalOpen: () => {
     dispatch(setConnectionModalOpen(true));
   },
+  refreshPage: () => {
+    dispatch(setPageNumberThunk(0))
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NeoDashboardHeaderPageList);

@@ -24,6 +24,19 @@ export const setPageNumberThunk = (number) => (dispatch: any, getState: any) => 
   }
 };
 
+export const hardResetAllCardsThunk = () => (dispatch: any, getState: any) => {
+  try{
+    const { pages } = getState().dashboard;
+    pages.map((page, index) => {
+      page.reports.map((report) => {
+        dispatch(hardResetCardSettings(index,report.id))
+      })
+    });
+  } catch (e) {
+    dispatch(createNotificationThunk('Unable to refresh cards', e));
+  }
+}
+
 export const updateGlobalParameterThunk = (key, value) => (dispatch: any, getState: any) => {
   try {
     const { settings } = getState().dashboard;
