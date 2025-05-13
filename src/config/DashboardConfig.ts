@@ -64,4 +64,12 @@ export const DASHBOARD_SETTINGS = {
     default: false,
     hidden: true,
   },
+  enableEmbeddedTags: {
+    label: 'Enable embedded HTML tags in reports',
+    type: SELECTION_TYPES.LIST,
+    values: [true, false],
+    default: false,
+    helperText:
+      'This controls whether embedded HTML tags are allowed in report. Disable this to not allow embedded HTML.',
+  },
 };

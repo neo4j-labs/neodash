@@ -7,6 +7,7 @@ export const SETTINGS_INITIAL_STATE = {
   editable: true,
   fullscreenEnabled: false,
   parameters: {},
+  enableEmbeddedTags: false
 };
 
 /**
