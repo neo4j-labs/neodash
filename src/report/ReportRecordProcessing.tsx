@@ -11,7 +11,7 @@ import {
   valueIsRelationship,
 } from '../chart/ChartUtils';
 import DOMPurify from 'dompurify';
-import { useSelector } from 'react-redux';
+import { store } from '../index'
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -283,17 +283,23 @@ export function RenderArray(value, transposedTable = false) {
   return mapped;
 }
 
+let allowEmbeddedHTMLFlag;
+
 export function RenderString(value) {
   const str = value?.toString() || '';
-  const allowEmbeddedHTML = useSelector((state) => state.dashboard?.settings?.enableEmbeddedTags)
-  if(allowEmbeddedHTML){
+  
+  if(allowEmbeddedHTMLFlag == undefined){
+    allowEmbeddedHTMLFlag = store.getState()?.dashboard?.settings?.enableEmbeddedTags || false;
+  }
+  if(allowEmbeddedHTMLFlag){
+    const cleanHTML = DOMPurify.sanitize(str, { USE_PROFILES: { html: true } });
+    
     if (str.startsWith('<a href=')) {
-      return <span dangerouslySetInnerHTML={{ __html: str }} className='anchor' />;
+      return <span dangerouslySetInnerHTML={{ __html: cleanHTML }} className='anchor' />;
     }
   
     if(isHTMLString(str)){
-      const cleanHTML = DOMPurify.sanitize(str, { USE_PROFILES: { html: true } });
-      return <span dangerouslySetInnerHTML={{ __html: str }} />;
+      return <span dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
     }
   }
 
