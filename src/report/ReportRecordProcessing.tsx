@@ -289,15 +289,10 @@ export function RenderString(value) {
   const str = value?.toString() || '';
   
   if(allowEmbeddedHTMLFlag == undefined){
-    allowEmbeddedHTMLFlag = store.getState()?.dashboard?.settings?.enableEmbeddedTags || false;
+    allowEmbeddedHTMLFlag = store.getState()?.dashboard?.settings?.enableEmbeddedHtml || false;
   }
   if(allowEmbeddedHTMLFlag){
     const cleanHTML = DOMPurify.sanitize(str, { USE_PROFILES: { html: true } });
-    
-    if (str.startsWith('<a href=')) {
-      return <span dangerouslySetInnerHTML={{ __html: cleanHTML }} className='anchor' />;
-    }
-  
     if(isHTMLString(str)){
       return <span dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
     }

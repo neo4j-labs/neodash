@@ -64,7 +64,7 @@ export const DASHBOARD_SETTINGS = {
     default: false,
     hidden: true,
   },
-  enableEmbeddedTags: {
+  enableEmbeddedHtml: {
     label: 'Enable embedded HTML tags in reports',
     type: SELECTION_TYPES.LIST,
     values: [true, false],
