@@ -34,7 +34,7 @@ if (window.location.href.includes('//neodash.graphapp.io/')) {
 /**
  * Set up the NeoDash application and wrap it in the needed providers.
  */
-const store = configureStore();
+export const store = configureStore();
 
 // @ts-ignore - persist state in browser cache.
 const persister = persistStore(store);
