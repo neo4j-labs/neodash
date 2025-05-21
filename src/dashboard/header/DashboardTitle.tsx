@@ -3,8 +3,8 @@ import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { applicationGetConnection, applicationGetStandaloneSettings } from '../../application/ApplicationSelectors';
-import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
-import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
+import { getDashboardTitle, getDashboardExtensions, getDashboardSettings, getPages } from '../DashboardSelectors';
+import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
 import {
@@ -33,6 +33,8 @@ export const NeoDashboardTitle = ({
   extensions,
   updateDashboardSetting,
   connection,
+  pages,
+  pageNumber
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -159,7 +161,7 @@ export const NeoDashboardTitle = ({
         <div className='flex flex-row flex-wrap items-center gap-2'>
           {editable ? renderExtensionsButtons() : <></>}
           <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
-          <ShareDashboardURL/>
+          <ShareDashboardURL pages={pages} pageNumber={pageNumber} parameters={dashboardSettings?.parameters} />
           {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
         </div>
@@ -177,6 +179,8 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   extensions: getDashboardExtensions(state),
   connection: applicationGetConnection(state),
+  pages: getPages(state),
+  pageNumber: getPageNumber(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({

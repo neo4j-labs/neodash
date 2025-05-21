@@ -1,17 +1,19 @@
-import React, { SyntheticEvent } from 'react';
+import React from 'react';
 import { IconButton } from '@neo4j-ndl/react';
 import { ShareIconSolid } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
-import { Snackbar, Alert, SnackbarCloseReason } from '@mui/material';
-import { store } from '../../index';
+import { Snackbar, Alert } from '@mui/material';
+import { connect } from 'react-redux';
+import { getPages } from '../DashboardSelectors';
+import { getGlobalParameters, getPageNumber } from '../../settings/SettingsSelectors';
 
-export const ShareDashboardURL = () => {
+export const ShareDashboardURL = ({ pages, pageNumber, parameters }) => {
   const [isSuccess, setIsSuccess] = React.useState(false);
   const TIMEOUT_DURATION = 2000;
   const currentUrl = window.location.href;
   const handleClickShare = async () => {
     try {
-      const url = buildURL(getPath(currentUrl), extractQueryParams(getPage()));
+      const url = buildURL(getPath(currentUrl), extractQueryParams(pages, pageNumber, parameters));
       await navigator.clipboard.writeText(url);
       setIsSuccess(true);
       console.log('Generated URL: ', url);
@@ -28,52 +30,40 @@ export const ShareDashboardURL = () => {
           <ShareIconSolid />
         </IconButton>
       </Tooltip>
-      {
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={isSuccess}
-          autoHideDuration={TIMEOUT_DURATION}
-          onClose={() => setIsSuccess(false)}
-        >
-          <Alert severity='success' variant='filled' sx={{ width: '100%' }}>
-            Link copied!
-          </Alert>
-        </Snackbar>
-      }
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isSuccess}
+        autoHideDuration={TIMEOUT_DURATION}
+        onClose={() => setIsSuccess(false)}
+      >
+        <Alert severity='success' variant='filled' sx={{ width: '100%' }}>
+          Link copied!
+        </Alert>
+      </Snackbar>
     </>
   );
 };
 
 function buildURL(baseUrlWithPath: string, queryParams: string): string {
-  console.log('appendQueryParams', queryParams);
-  console.log('Base URL ', baseUrlWithPath);
-  const res = baseUrlWithPath + queryParams;
-  console.log('Result', res);
-  return res;
+  return baseUrlWithPath + queryParams;
 }
 
-function extractQueryParams(pageNumber: number = 0): string {
-  const objParams = store.getState()?.dashboard?.settings?.parameters || null;
-
-  if (!objParams) {
-    console.log('No params found');
+function extractQueryParams(pages, pageNumber = 0, parameters): string {
+    console.log("reports: ", pages[pageNumber].reports);
+  if (!parameters) {
     return '';
   }
-
-  const map = new Map(Object.entries(objParams));
+  const map = new Map(Object.entries(parameters));
 
   //TODO: Handle case for only adding particular page params
   //TODO: Handle case when page is added in query params for app in standalone mode
   const filteredEntries = [...map]
-    .filter(([key, val]) => key.startsWith('neodash_') && !key.endsWith('_display') && val != null && val != undefined)
+    .filter(([key, val]) => filterParams(key, String(val), pageNumber, pages))
     .map(([key, val]) => {
-      const str: string = JSON.stringify(val);
-      const cleanStr: string = typeof str === 'string' ? str.replace(/^"|"$/g, '') : str;
-      console.log('cleanStr: ', cleanStr);
+      const cleanStr = JSON.stringify(val).replace(/^"|"$/g, '');
       return `${encodeURIComponent(key)}=${encodeURIComponent(cleanStr)}`;
     });
   filteredEntries.push(`${encodeURIComponent('page')}=${encodeURIComponent(pageNumber)}`);
-  console.log('filteredEntries: ', filteredEntries);
   return filteredEntries.length ? `?${filteredEntries.join('&')}` : '';
 }
 
@@ -82,6 +72,15 @@ function getPath(currentUrl: string): string {
   return parsedURL.origin + parsedURL.pathname;
 }
 
-function getPage(): number {
-  return store.getState()?.dashboard.settings?.pagenumber || 0;
+function filterParams(key: string, val: string, pageNumber: number, pages): boolean {
+  const filterValidKeyValue: boolean = key.startsWith('neodash_') && !key.endsWith('_display') && val != null;
+  return filterValidKeyValue;
 }
+
+const mapStateToProps = (state) => ({
+  pages: getPages(state),
+  pageNumber: getPageNumber(state), 
+  parameters: getGlobalParameters(state)
+});
+
+export default connect(mapStateToProps)(ShareDashboardURL);
