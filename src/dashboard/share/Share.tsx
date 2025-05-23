@@ -60,7 +60,7 @@ return (
       onClose={() => setIsSuccess(false)}
     >
       <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
-        {exportPageParameters? "Page link copied!" :"Dashboard Link copied!"}
+        {exportPageParameters? "Page link copied!" :"Dashboard link copied!"}
       </Alert>
     </Snackbar>
   </>
