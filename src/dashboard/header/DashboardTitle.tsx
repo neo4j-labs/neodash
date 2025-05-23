@@ -20,7 +20,7 @@ import { Tooltip } from '@mui/material';
 import NeoExportModal from '../../modal/ExportModal';
 import { setDraft } from '../../application/ApplicationActions';
 import NeoDashboardHeaderLogo from './DashboardHeaderLogo';
-import {ShareDashboardURL} from '../share/Share'
+import { ShareDashboardURL } from '../share/Share'
 
 type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
@@ -32,9 +32,7 @@ export const NeoDashboardTitle = ({
   dashboardSettings,
   extensions,
   updateDashboardSetting,
-  connection,
-  pages,
-  pageNumber
+  connection
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -161,7 +159,7 @@ export const NeoDashboardTitle = ({
         <div className='flex flex-row flex-wrap items-center gap-2'>
           {editable ? renderExtensionsButtons() : <></>}
           <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
-          <ShareDashboardURL pages={pages} pageNumber={pageNumber} parameters={dashboardSettings?.parameters} />
+          <ShareDashboardURL exportPageParameters={false}/>
           {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
         </div>
@@ -179,8 +177,6 @@ const mapStateToProps = (state) => ({
   dashboardSettings: getDashboardSettings(state),
   extensions: getDashboardExtensions(state),
   connection: applicationGetConnection(state),
-  pages: getPages(state),
-  pageNumber: getPageNumber(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
