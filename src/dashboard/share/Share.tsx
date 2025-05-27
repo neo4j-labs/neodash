@@ -121,7 +121,7 @@ function filterMapByReports(inputMap: Map<string, string>, paramSet: (Set<string
 
   for (const [key, val] of inputMap) {
     if (paramSet.has(key)) {
-      filteredMap.set(key, Array.isArray(val) ? val.join(",") : String(val));  
+      filteredMap.set(key, handleArrayOfValues(val));  
     }
   }
 
@@ -147,3 +147,13 @@ const encodeIntoURIParams = (map: Map<string, any>, pageNumber: number, pages: a
 
   return urlParams.toString();
 };
+
+function handleArrayOfValues(val: string): string {
+  let res = "";
+  if(Array.isArray(val)){
+    val.length >= 1 ? val.forEach((v) => (res = res.concat(`${v},`))) : (res=res.concat(','))
+  } else {
+    res = val;
+  }
+  return res;
+}
