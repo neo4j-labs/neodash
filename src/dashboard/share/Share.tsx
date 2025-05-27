@@ -1,12 +1,11 @@
 import React from 'react';
 import { IconButton } from '@neo4j-ndl/react';
-import { ShareIconOutline, ShareIconSolid, DocumentDuplicateIconOutline, EllipsisHorizontalIconOutline  } from '@neo4j-ndl/react/icons';
+import { ShareIconSolid  } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 import { Snackbar, Alert } from '@mui/material';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getPages } from '../DashboardSelectors';
 import { getGlobalParameters, getPageNumber } from '../../settings/SettingsSelectors';
-import classnames from 'classnames';
 
 
 interface ShareDashboardURLProps { exportPageParameters, pageNumber? }
@@ -118,11 +117,11 @@ function filterMapByReports(inputMap: Map<string, string>, paramSet: (Set<string
   if(paramSet == null){
     return new Map();
   }
-    const filteredMap = new Map<string, string>();
+  const filteredMap = new Map<string, string>();
 
   for (const [key, val] of inputMap) {
     if (paramSet.has(key)) {
-      filteredMap.set(key, String(val));  
+      filteredMap.set(key, Array.isArray(val) ? val.join(",") : String(val));  
     }
   }
 
@@ -141,8 +140,7 @@ const encodeIntoURIParams = (map: Map<string, any>, pageNumber: number, pages: a
 
   [...filteredMap.entries()]
     .map(([key, val]) => {
-      const cleanStr = JSON.stringify(val).replace(/^"|"$/g, ''); 
-      urlParams.set(key, cleanStr);
+      urlParams.set(key, val);
     });
 
   urlParams.set('page', String(pageNumber));

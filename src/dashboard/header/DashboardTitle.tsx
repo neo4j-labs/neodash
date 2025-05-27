@@ -164,7 +164,7 @@ export const NeoDashboardTitle = ({
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
         </div>
       ) : (
-        <></>
+        <><ShareDashboardURL exportPageParameters={false}/></>
       )}
     </div>
   );

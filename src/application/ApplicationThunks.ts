@@ -259,7 +259,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
-        paramsToSetAfterConnecting[key] = value;
+        paramsToSetAfterConnecting[key] = value.includes(",") ? value.split(",") : value;
       }
     });
     if (Object.keys(paramsToSetAfterConnecting).length > 0) {
@@ -452,7 +452,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
-        paramsToSetAfterConnecting[key] = value;
+        paramsToSetAfterConnecting[key] = value && value.includes(",") ? value.split(",") : value;
       }
     });
 
