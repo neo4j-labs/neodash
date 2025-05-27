@@ -16,6 +16,7 @@ import NeoLineChart from '../chart/line/LineChart';
 import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
 import { objMerge, objectMap } from '../utils/ObjectManipulation';
 import EasydbDetailView from '../chart/easydb/EasydbDetailView';
+import TimelineInput from "../chart/timelineinput/TimelineInput";
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -1276,6 +1277,41 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+    },
+  },
+  timeline: {
+    label: 'Timeline',
+    helperText: 'A draggable timeline component for selecting years. The selected year will be saved as a dashboard parameter.',
+    component: TimelineInput,
+    textOnly: true, // No query execution needed
+    disableDatabaseSelector: true,
+    maxRecords: 1,
+    settings: {
+      minimumYear: {
+        label: 'Minimum Year',
+        type: SELECTION_TYPES.NUMBER,
+        default: 1200,
+      },
+      maximumYear: {
+        label: 'Maximum Year',
+        type: SELECTION_TYPES.NUMBER,
+        default: 1900,
+      },
+      updateDashboardVariableID: {
+        label: 'Dashboard Parameter Name',
+        type: SELECTION_TYPES.TEXT,
+        default: 'selectedYear',
+      },
+      defaultValue: {
+        label: 'Default Year',
+        type: SELECTION_TYPES.NUMBER,
+        default: 1550,
+      },
+      timelineTitle: {
+        label: 'Timeline Title',
+        type: SELECTION_TYPES.TEXT,
+        default: 'Selected Year',
       },
     },
   },
