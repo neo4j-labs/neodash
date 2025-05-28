@@ -20,7 +20,7 @@ import { Tooltip } from '@mui/material';
 import NeoExportModal from '../../modal/ExportModal';
 import { setDraft } from '../../application/ApplicationActions';
 import NeoDashboardHeaderLogo from './DashboardHeaderLogo';
-import { ShareDashboardURL } from '../share/Share'
+import { ShareableButton } from '../../component/custom/ShareableButton'
 
 type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
@@ -159,12 +159,12 @@ export const NeoDashboardTitle = ({
         <div className='flex flex-row flex-wrap items-center gap-2'>
           {editable ? renderExtensionsButtons() : <></>}
           <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
-          <ShareDashboardURL exportPageParameters={false}/>
+          <ShareableButton exportPageParameters={false}/>
           {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
         </div>
       ) : (
-        <><ShareDashboardURL exportPageParameters={false}/></>
+        <><ShareableButton exportPageParameters={false}/></>
       )}
     </div>
   );

@@ -9,7 +9,7 @@ import { EllipsisHorizontalIconOutline, PencilIconOutline, TrashIconOutline } fr
 import { NeoDeletePageModal } from '../../modal/DeletePageModal';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ShareDashboardURL } from '../share/Share';
+import { ShareableButton } from '../../component/custom/ShareableButton';
 
 type MenuEditEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
@@ -106,7 +106,7 @@ export const DashboardHeaderPageTitle = ({ title, tabIndex, removePage, setPageT
             />
           </form>
         )}
-        <ShareDashboardURL exportPageParameters={true} pageNumber={tabIndex} />
+        <ShareableButton exportPageParameters={true} pageNumber={tabIndex} />
         {!disabled && !editing && (
           <>
             <IconButton

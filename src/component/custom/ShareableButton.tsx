@@ -4,12 +4,12 @@ import { ShareIconSolid  } from '@neo4j-ndl/react/icons';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 import { Snackbar, Alert } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { getPages } from '../DashboardSelectors';
+import { getPages } from '../../dashboard/DashboardSelectors';
 import { getGlobalParameters, getPageNumber } from '../../settings/SettingsSelectors';
 
 
-interface ShareDashboardURLProps { exportPageParameters, pageNumber? }
-export const ShareDashboardURL:React.FC<ShareDashboardURLProps> = ({ exportPageParameters = false, pageNumber }) => {
+interface ShareableButtonProps { exportPageParameters, pageNumber? }
+export const ShareableButton:React.FC<ShareableButtonProps> = ({ exportPageParameters = false, pageNumber }) => {
   const [isSuccess, setIsSuccess] = React.useState(false);
 
   if(pageNumber == undefined){
@@ -67,13 +67,13 @@ return (
 
 };
 
-function buildURL(baseUrlWithPath: string, queryParams: string): URL {
+const buildURL = (baseUrlWithPath: string, queryParams: string): URL => {
   const shareableURL = new URL(baseUrlWithPath);
   shareableURL.search = queryParams;
   return shareableURL;
 }
 
-function extractQueryParams(pages, pageNumber = 0, parameters, exportPageParameters: boolean): string {
+const extractQueryParams = (pages, pageNumber = 0, parameters, exportPageParameters: boolean): string => {
   if (!parameters) {
     return '';
   }
@@ -81,16 +81,16 @@ function extractQueryParams(pages, pageNumber = 0, parameters, exportPageParamet
   return encodeIntoURIParams(map, pageNumber, pages, exportPageParameters);
 }
 
-function getPath(currentUrl: string): string {
+const getPath = (currentUrl: string): string => {
   const parsedURL = new URL(currentUrl, window.location.origin);
   return parsedURL.origin + parsedURL.pathname;
 }
 
-function filterParams(key: string, val: string): boolean {
+const filterParams = (key: string, val: string): boolean => {
   return key.startsWith('neodash_') && !key.endsWith('_display') && val != null;
 }
 
-function extractParametersFromReports(reports: any[]): Set<string> {
+const extractParametersFromReports = (reports: any[]): Set<string> => {
   const paramSet = new Set<string>();
 
   for (const report of reports) {
@@ -113,7 +113,7 @@ function extractParametersFromReports(reports: any[]): Set<string> {
   return paramSet;
 }
 
-function filterMapByReports(inputMap: Map<string, string>, paramSet: (Set<string> | null)): Map<string, string> {
+const filterMapByReports = (inputMap: Map<string, string>, paramSet: (Set<string> | null)): Map<string, string> => {
   if(paramSet == null){
     return new Map();
   }
@@ -148,7 +148,7 @@ const encodeIntoURIParams = (map: Map<string, any>, pageNumber: number, pages: a
   return urlParams.toString();
 };
 
-function handleArrayOfValues(val: string): string {
+const handleArrayOfValues = (val: string): string => {
   let res = "";
   if(Array.isArray(val)){
     val.length >= 1 ? val.forEach((v) => (res = res.concat(`${v},`))) : (res=res.concat(','))
