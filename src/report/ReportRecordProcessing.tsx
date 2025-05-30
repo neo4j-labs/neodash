@@ -11,7 +11,7 @@ import {
   valueIsRelationship,
 } from '../chart/ChartUtils';
 import DOMPurify from 'dompurify';
-import { store } from '../index'
+import { store } from '../index';
 
 /**
  * Collects all node labels and node properties in a set of Neo4j records.
@@ -275,8 +275,12 @@ export function RenderArray(value, transposedTable = false, lineBreakAfterListEn
   mapped = value.map((v, i) => {
     return (
       <span key={String(`k${i}`) + v}>
-        {RenderSubValue(v + (i < value.length-1 && lineBreakAfterListEntry ? ', \r\n' : ''))}
-        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) && !lineBreakAfterListEntry ? <span>, </span> : <></>}
+        {RenderSubValue(v + (i < value.length - 1 && lineBreakAfterListEntry ? ', \r\n' : ''))}
+        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) && !lineBreakAfterListEntry ? (
+          <span>, </span>
+        ) : (
+          <></>
+        )}
       </span>
     );
   });
