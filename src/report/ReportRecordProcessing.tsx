@@ -254,7 +254,7 @@ function RenderPath(value) {
  * @param transposedTable - Optional. Specifies whether the table should be transposed. Default is false.
  * @returns The rendered array of values.
  */
-export function RenderArray(value, transposedTable = false) {
+export function RenderArray(value, transposedTable = false, lineBreakAfterListEntry = false) {
   let mapped = [];
   // If the first value is neither a Node nor a Relationship object
   // It is safe to assume that all values should be renedered as strings
@@ -275,8 +275,8 @@ export function RenderArray(value, transposedTable = false) {
   mapped = value.map((v, i) => {
     return (
       <span key={String(`k${i}`) + v}>
-        {RenderSubValue(v)}
-        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) ? <span>, </span> : <></>}
+        {RenderSubValue(v + (i < value.length-1 && lineBreakAfterListEntry ? ', \r\n' : ''))}
+        {i < value.length - 1 && !valueIsNode(v) && !valueIsRelationship(v) && !lineBreakAfterListEntry ? <span>, </span> : <></>}
       </span>
     );
   });
@@ -287,13 +287,16 @@ let allowEmbeddedHTMLFlag;
 
 export function RenderString(value) {
   const str = value?.toString() || '';
-  
-  if(allowEmbeddedHTMLFlag == undefined){
+
+  if (allowEmbeddedHTMLFlag == undefined) {
     allowEmbeddedHTMLFlag = store.getState()?.dashboard?.settings?.enableEmbeddedHtml || false;
   }
-  if(allowEmbeddedHTMLFlag){
+  if (allowEmbeddedHTMLFlag) {
     const cleanHTML = DOMPurify.sanitize(str, { USE_PROFILES: { html: true } });
-    if(isHTMLString(str)){
+    if (str.startsWith('<a href=')) {
+      return <span dangerouslySetInnerHTML={{ __html: str }} className='anchor' />;
+    }
+    if (isHTMLString(str)) {
       return <span dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
     }
   }
@@ -401,7 +404,7 @@ export const rendererForType: any = {
   },
   array: {
     type: 'string',
-    renderValue: (c) => RenderArray(c.value, c.transposedTable),
+    renderValue: (c) => RenderArray(c.value, c.transposedTable, c.lineBreakAfterListEntry),
   },
   string: {
     type: 'string',
