@@ -294,7 +294,8 @@ export function RenderString(value) {
   if (allowEmbeddedHTMLFlag) {
     const cleanHTML = DOMPurify.sanitize(str, { USE_PROFILES: { html: true } });
     if (str.startsWith('<a href=')) {
-      return <span dangerouslySetInnerHTML={{ __html: str }} className='anchor' />;
+      const replaced = cleanHTML.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
+      return <span dangerouslySetInnerHTML={{ __html: replaced }} className='anchor' />;
     }
     if (isHTMLString(str)) {
       return <span dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
