@@ -47,7 +47,6 @@ import { applicationIsStandalone } from './ApplicationSelectors';
 import { applicationGetLoggingSettings } from './logging/LoggingSelectors';
 import { createLogThunk } from './logging/LoggingThunk';
 import { createUUID } from '../utils/uuid';
-import { isEmptyObject } from '../chart/ChartUtils';
 
 /**
  * Application Thunks (https://redux.js.org/usage/writing-logic-thunks) handle complex state manipulations.
@@ -260,9 +259,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
-        paramsToSetAfterConnecting[key] = value.includes(",") 
-          ? value.split(",").filter((v) =>  v!=null && (String(v).length > 1)) 
-          : value; 
+        paramsToSetAfterConnecting[key] = value.includes(',') ? value.split(',').filter((v) => v.length > 1) : value;
       }
     });
     if (Object.keys(paramsToSetAfterConnecting).length > 0) {
@@ -455,9 +452,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
-          paramsToSetAfterConnecting[key] = value.includes(",") 
-          ? value.split(",").filter((v) =>  v != null && String(v).length > 1) 
-          : value;    
+        paramsToSetAfterConnecting[key] = value.includes(',') ? value.split(',').filter((v) => v.length > 1) : value;
       }
     });
 
