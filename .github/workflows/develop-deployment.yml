@@ -20,7 +20,7 @@ jobs:
         run: ls -la -R .
       - name: 🦆 Scan
         run: bash <(curl -s https://detect.synopsys.com/detect9.sh) 
-               --blackduck.url=https://bdscan.i.mercedes-benz.com
+               --blackduck.url=https://mercedes-benz.app.blackduck.com
                --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN }}"
                --detect.project.name="Neodash Open Source fork"
                --detect.project.version.name="develop"
