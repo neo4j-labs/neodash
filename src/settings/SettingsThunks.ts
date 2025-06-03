@@ -111,3 +111,15 @@ export const updateParametersToNeo4jTypeThunk = () => (dispatch: any, getState: 
     }
   }
 };
+
+export const updateDashboardPageThunk = () => (dispatch: any) => {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const page = urlParams.get('page');
+      
+  if (page !== '' && page !== null) {
+    if (!isNaN(parseInt(page))) {
+      dispatch(setPageNumberThunk(parseInt(page)));
+    }
+  }
+}

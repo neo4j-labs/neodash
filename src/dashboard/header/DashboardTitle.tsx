@@ -3,8 +3,8 @@ import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { applicationGetConnection, applicationGetStandaloneSettings } from '../../application/ApplicationSelectors';
-import { getDashboardTitle, getDashboardExtensions, getDashboardSettings } from '../DashboardSelectors';
-import { getDashboardIsEditable } from '../../settings/SettingsSelectors';
+import { getDashboardTitle, getDashboardExtensions, getDashboardSettings, getPages } from '../DashboardSelectors';
+import { getDashboardIsEditable, getPageNumber } from '../../settings/SettingsSelectors';
 import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { Typography, IconButton, Menu, MenuItems, TextInput } from '@neo4j-ndl/react';
 import {
@@ -20,6 +20,7 @@ import { Tooltip } from '@mui/material';
 import NeoExportModal from '../../modal/ExportModal';
 import { setDraft } from '../../application/ApplicationActions';
 import NeoDashboardHeaderLogo from './DashboardHeaderLogo';
+import { ShareableButton } from '../../component/custom/ShareableButton'
 
 type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
@@ -31,7 +32,7 @@ export const NeoDashboardTitle = ({
   dashboardSettings,
   extensions,
   updateDashboardSetting,
-  connection,
+  connection
 }) => {
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -158,11 +159,12 @@ export const NeoDashboardTitle = ({
         <div className='flex flex-row flex-wrap items-center gap-2'>
           {editable ? renderExtensionsButtons() : <></>}
           <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
+          <ShareableButton exportPageParameters={false}/>
           {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
         </div>
       ) : (
-        <></>
+        <><ShareableButton exportPageParameters={false}/></>
       )}
     </div>
   );

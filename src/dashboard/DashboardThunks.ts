@@ -3,7 +3,7 @@ import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDashboardUuid } from './DashboardActions';
 import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
-import { updateGlobalParametersThunk } from '../settings/SettingsThunks';
+import { updateDashboardPageThunk, updateGlobalParametersThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
 import { createLogThunk } from '../application/logging/LoggingThunk';
 import { applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
@@ -135,6 +135,7 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
     if (!dashboard.uuid) {
       dispatch(setDashboardUuid(uuid));
     }
+    dispatch(updateDashboardPageThunk());
   } catch (e) {
     console.log(e);
     dispatch(createNotificationThunk('Unable to load dashboard', e));
