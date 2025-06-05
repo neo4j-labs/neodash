@@ -8,6 +8,7 @@ import { valueIsArray } from '../../chart/ChartUtils';
 interface GridCellExpandProps {
   value: string;
   width: number;
+  lineBreakAfterListEntry?: boolean;
 }
 
 function isOverflown(element: Element): boolean {
@@ -15,7 +16,7 @@ function isOverflown(element: Element): boolean {
 }
 
 const GridCellExpand = React.memo((props: GridCellExpandProps) => {
-  const { width, value } = props;
+  const { width, value, lineBreakAfterListEntry } = props;
   const wrapper = React.useRef<HTMLDivElement | null>(null);
   const cellDiv = React.useRef(null);
   const cellValue = React.useRef(null);
@@ -95,7 +96,14 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
       {showPopper && (
         <Popper open={showFullCell && anchorEl !== null} anchorEl={anchorEl} style={{ width, marginLeft: -17 }}>
           <Paper elevation={1} style={{ minHeight: wrapper.current!.offsetHeight - 3 }}>
-            <Typography variant='body2' style={{ padding: 8, whiteSpace: 'normal', wordBreak: 'break-word' }}>
+            <Typography
+              variant='body2'
+              style={{
+                padding: 8,
+                whiteSpace: lineBreakAfterListEntry ? 'pre-line' : 'normal',
+                wordBreak: 'break-word',
+              }}
+            >
               {value}
             </Typography>
           </Paper>
@@ -106,19 +114,28 @@ const GridCellExpand = React.memo((props: GridCellExpandProps) => {
 });
 
 export function renderCellExpand(params: GridRenderCellParams<any, string>, lineBreakAfterListEntry: boolean) {
- 
   let value = params.value?.low ? params.value.low : params.value;
-  
-  if(!value){
-    value=""
-  }
-  return (typeof value==="string" || value instanceof String)
-    ? <GridCellExpand value={RenderString(value)} width={params.colDef.computedWidth} />
-    : (valueIsArray(value)) ? <GridCellExpand value={RenderArray(Array.from(value), false, lineBreakAfterListEntry)} width={params.colDef.computedWidth} /> 
-    : <GridCellExpand value={JSON.stringify(value)
-      .replaceAll(',', lineBreakAfterListEntry ? ',\r\n' : ', ') 
-      .replaceAll(']', '')
-      .replaceAll('[', '')
-      .replaceAll('"', '')} width={params.colDef.computedWidth} />;
 
+  if (!value) {
+    value = '';
+  }
+  return typeof value === 'string' || value instanceof String ? (
+    <GridCellExpand value={RenderString(value)} width={params.colDef.computedWidth} lineBreakAfterListEntry />
+  ) : valueIsArray(value) ? (
+    <GridCellExpand
+      value={RenderArray(Array.from(value), false, lineBreakAfterListEntry)}
+      width={params.colDef.computedWidth}
+      lineBreakAfterListEntry
+    />
+  ) : (
+    <GridCellExpand
+      value={JSON.stringify(value)
+        .replaceAll(',', lineBreakAfterListEntry ? ',\r\n' : ', ')
+        .replaceAll(']', '')
+        .replaceAll('[', '')
+        .replaceAll('"', '')}
+      width={params.colDef.computedWidth}
+      lineBreakAfterListEntry
+    />
+  );
 }
