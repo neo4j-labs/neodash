@@ -33,5 +33,12 @@ export const NeoGraphChartVisualization2D = (props: GraphChartVisualizationProps
       generateRelCanvasObject(link, ctx, props.style.relLabelFontSize, props.style.relLabelColor),
   };
   const props2d = { ...props, config: config2d };
-  return <NeoGraphChartVisualizationBase {...props2d} />;
+  const handleContextMenu = (e) => {
+    e.stopPropagation();
+  };
+  return (
+    <div onContextMenu={handleContextMenu}>
+      <NeoGraphChartVisualizationBase {...props2d} />
+    </div>
+  );
 };
