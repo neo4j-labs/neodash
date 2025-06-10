@@ -119,9 +119,14 @@ const Application = ({
     }
   }, [themeMode]);
 
+  const disableContextMenu = (e) => {
+    e.preventDefault();
+  };
+
   // Only render the dashboard component if we have an active Neo4j connection.
   return (
     <div
+      onContextMenu={disableContextMenu}
       ref={ref}
       className={`n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
     >
