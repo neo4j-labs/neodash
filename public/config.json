@@ -10,5 +10,8 @@
   "standaloneDashboardName": "My Dashboard",
   "standaloneDashboardDatabase": "dashboards",
   "standaloneDashboardURL": "",
-  "skipAddDashErrorPopup": true
+  "skipAddDashErrorPopup": true,
+  "datadogenv": "dev",
+  "sessionSampleRate": 20,
+  "sessionReplaySampleRate": 20
 }
