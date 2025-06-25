@@ -12,24 +12,23 @@ import StyleConfig from './config/StyleConfig';
 import { datadogRum } from '@datadog/browser-rum';
 import { ErrorBoundary, reactPlugin } from '@datadog/browser-rum-react';
 
-(async () => {
-  const config = await (await fetch('config.json')).json();
+datadogRum.init({
+  applicationId: '70d24417-1080-494c-b15a-a18ea479da7c',
+  clientToken: 'pub0b97bee959db42713ec1f74093f60876',
+  // `site` refers to the Datadog site parameter of your organization
+  // see https://docs.datadoghq.com/getting_started/site/
+  site: 'datadoghq.com',
+  service: 'oupt',
+  env: 'dev',
+  // Specify a version number to identify the deployed version of your application in Datadog
+  version: '1.0.0',
+  sessionSampleRate: 20,
+  sessionReplaySampleRate: 20,
+  defaultPrivacyLevel: 'mask-user-input',
+  plugins: [reactPlugin()],
+});
 
-  datadogRum.init({
-    applicationId: '70d24417-1080-494c-b15a-a18ea479da7c',
-    clientToken: 'pub0b97bee959db42713ec1f74093f60876',
-    site: config.datadog.site || 'datadoghq.com',
-    service: config.standaloneDashboardName || 'default-service',
-    env: config.datadogenv || 'dev',
-    version: '1.0.0',
-    sessionSampleRate: config.sessionSampleRate || 100,
-    sessionReplaySampleRate: config.sessionReplaySampleRate || 100,
-    defaultPrivacyLevel: config.defaultPrivacyLevel || 'mask-user-input',
-    plugins: [reactPlugin()],
-  });
-
-  datadogRum.startSessionReplayRecording();
-})();
+datadogRum.startSessionReplayRecording();
 
 /**
  * Set up the NeoDash application and wrap it in the needed providers.
