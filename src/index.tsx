@@ -9,28 +9,28 @@ import '/node_modules/react-grid-layout/css/styles.css';
 import '/node_modules/react-resizable/css/styles.css';
 import './index.pcss';
 import StyleConfig from './config/StyleConfig';
-import * as Sentry from '@sentry/react';
+import { datadogRum } from '@datadog/browser-rum';
+import { ErrorBoundary, reactPlugin } from '@datadog/browser-rum-react';
 
-if (window.location.href.includes('//neodash.graphapp.io/')) {
-  Sentry.init({
-    dsn: 'https://25edb17cc4c14c8cb726e7ac1ff74e3b@o110884.ingest.sentry.io/4505397810167808',
-    allowUrls: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
-    integrations: [
-      new Sentry.BrowserTracing({
-        // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-        tracePropagationTargets: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
-      }),
-      new Sentry.Replay({
-        networkDetailAllowUrls: [/^https:\/\/neodash\.graphapp\.io/, /^http:\/\/neodash\.graphapp\.io/],
-      }),
-    ],
-    // Performance Monitoring
-    tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
-    // Session Replay
-    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+(async () => {
+  const config = await (await fetch('config.json')).json();
+
+  datadogRum.init({
+    applicationId: '70d24417-1080-494c-b15a-a18ea479da7c',
+    clientToken: 'pub0b97bee959db42713ec1f74093f60876',
+    site: config.datadog.site || 'datadoghq.com',
+    service: config.standaloneDashboardName || 'default-service',
+    env: config.datadogenv || 'dev',
+    version: '1.0.0',
+    sessionSampleRate: config.sessionSampleRate || 100,
+    sessionReplaySampleRate: config.sessionReplaySampleRate || 100,
+    defaultPrivacyLevel: config.defaultPrivacyLevel || 'mask-user-input',
+    plugins: [reactPlugin()],
   });
-}
+
+  datadogRum.startSessionReplayRecording();
+})();
+
 /**
  * Set up the NeoDash application and wrap it in the needed providers.
  */
@@ -41,11 +41,21 @@ const persister = persistStore(store);
 
 await StyleConfig.getInstance();
 
+const ErrorFallback = ({ resetError, error }: { resetError: () => void; error: unknown }) => {
+  return (
+    <p>
+      Oops, something went wrong! <strong>{String(error)}</strong> <button onClick={resetError}>Retry</button>
+    </p>
+  );
+};
+
 /** Wrap the application in a redux provider / browser cache persistance gate **/
 const provider = (
   <ReduxProvider store={store}>
     <PersistGate persistor={persister} loading={<div>Loading NeoDash...</div>}>
-      <Application />
+      <ErrorBoundary fallback={ErrorFallback}>
+        <Application />
+      </ErrorBoundary>
     </PersistGate>
   </ReduxProvider>
 );

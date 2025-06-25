@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/neo4j-labs/neodash/"
+    "url": "git+https://github.com/neo4j-labs/neodash.git"
   },
   "license": "Apache-2.0",
   "icons": [
@@ -37,6 +37,8 @@
   "dependencies": {
     "@azure/openai": "^1.0.0-beta.2",
     "@codemirror/lang-markdown": "^6.1.1",
+    "@datadog/browser-rum": "^6.6.2",
+    "@datadog/browser-rum-react": "^6.6.2",
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",
     "@mui/icons-material": "^5.14.3",

@@ -1427,6 +1427,34 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@datadog/browser-core@6.12.3":
+  version "6.12.3"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-core/-/browser-core-6.12.3.tgz#8b56dd4a79e699c6e1979d5d9d72bab6ca2b0017"
+  integrity sha512-PXtLAszdaEMnGcIF2KT3cuLZJ32vmxfsRujvTaibOFPuTDO/1uItozDR9D1XbfknDGV3KaU2WY7fDExv4PABHQ==
+
+"@datadog/browser-rum-core@6.12.3":
+  version "6.12.3"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum-core/-/browser-rum-core-6.12.3.tgz#cbf37074c902c78296a91dca4e8c163a5d46791b"
+  integrity sha512-7JYjmgZb67HCBha/w689sekQsVIVAjYTUG6fDualOo9I80Wz+YjAD9pyrKDaRShIk6bupfnTYm5GSmh+iG8c5A==
+  dependencies:
+    "@datadog/browser-core" "6.12.3"
+
+"@datadog/browser-rum-react@^6.6.2":
+  version "6.12.3"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum-react/-/browser-rum-react-6.12.3.tgz#a02e96d40d9374f78a86cb0c31b8dc95f385e004"
+  integrity sha512-LZTHUWX7Ddqwru+1iS7JqiuwCCrfHh8zQIqvZqvfDlithriFsvn1K6d4FC2QFfEoIN3UJY7C4vuDi6nyCVTXTQ==
+  dependencies:
+    "@datadog/browser-core" "6.12.3"
+    "@datadog/browser-rum-core" "6.12.3"
+
+"@datadog/browser-rum@^6.6.2":
+  version "6.12.3"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum/-/browser-rum-6.12.3.tgz#afa26c8de202377b7a6973169523299ceb20ce3a"
+  integrity sha512-cr0ddLvXXobY/dR63oYlTgA9MKFw7fQwYWe1IRa51jw1u4jULLVibW1TtiWVCt5sM+VYoYbs28tLB5ySrCUOUg==
+  dependencies:
+    "@datadog/browser-core" "6.12.3"
+    "@datadog/browser-rum-core" "6.12.3"
+
 "@date-io/core@^2.15.0", "@date-io/core@^2.17.0":
   version "2.17.0"
   resolved "https://registry.yarnpkg.com/@date-io/core/-/core-2.17.0.tgz#360a4d0641f069776ed22e457876e8a8a58c205e"
