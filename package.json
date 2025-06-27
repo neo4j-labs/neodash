@@ -102,7 +102,7 @@
     "remark-gfm": "^3.0.1",
     "reselect": "^4.1.8",
     "tailwindcss": "^3.3.2",
-    "three": "^0.159.0",
+    "three": "^0.168.0",
     "three-spritetext": "^1.8.1",
     "use-neo4j": "^0.3.13",
     "yaml": "^2.2.1"

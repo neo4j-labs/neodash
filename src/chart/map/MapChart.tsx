@@ -175,8 +175,22 @@ const NeoMapChart = (props: ChartPropsWithAdditionalElement) => {
     });
 
     const kept = possiblePointsToInclude.filter((_, index) => withinIndices.has(index));
-    console.log('Kept nodes: ', kept.map((node) => node.pos));
-    // index doesm'y slihn.
+    const selectedIds = kept.map(node => {
+      if (typeof node.id === 'object' && node.id !== null) {
+        // Handle Neo4j Integer objects with high/low properties
+        console.log("THis node is: ", node)
+        return JSON.stringify(node.id.low);
+      }
+      return String(node.id.low);
+    }).join(',');
+
+    // Update dashboard parameter
+    if (props.setGlobalParameter) {
+      props.setGlobalParameter('IDS_SELECTED', selectedIds);
+      console.log('Updated IDS_SELECTED parameter:', selectedIds);
+    }
+
+
     return kept;
   }
 
