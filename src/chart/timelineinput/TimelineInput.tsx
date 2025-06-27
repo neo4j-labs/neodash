@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChartProps } from '../Chart';
 
-const NeoTimelineChart = (props: ChartProps) => {
+const TimelineInput = (props: ChartProps) => {
     const { settings } = props;
 
     // Settings with defaults
@@ -281,4 +281,4 @@ const NeoTimelineChart = (props: ChartProps) => {
     );
 };
 
-export default NeoTimelineChart;
+export default TimelineInput;

@@ -16,7 +16,7 @@ import NeoLineChart from '../chart/line/LineChart';
 import NeoScatterPlot from '../chart/scatter/ScatterPlotChart';
 import { objMerge, objectMap } from '../utils/ObjectManipulation';
 import EasydbDetailView from '../chart/easydb/EasydbDetailView';
-import NeoTimelineChart from "../chart/timelineinput/TimelineInput";
+import TimelineInput from "../chart/timelineinput/TimelineInput";
 
 // TODO: make the reportConfig a interface with not self-documented code
 // Use Neo4j 4.0 subqueries to limit the number of rows returned by overriding the query.
@@ -1283,7 +1283,7 @@ const _REPORT_TYPES = {
   timeline: {
     label: 'Timeline',
     helperText: 'A draggable timeline component for selecting years. The selected year will be saved as a dashboard parameter.',
-    component: NeoTimelineChart,
+    component: TimelineInput,
     textOnly: true, // No query execution needed
     disableDatabaseSelector: true,
     maxRecords: 1,
