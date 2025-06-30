@@ -104,11 +104,9 @@ const Feedback = () => {
       let totalSize = 0;
       for (let i = 0; i < attachments.length; i++) {
         totalSize += attachments[i].size;
+        const currentSize = (totalSize / (1024 * 1024)).toFixed(2);
         if (totalSize > MAX_FILE_SIZE) {
-          newErrors.files = `Total attachments files size must be less than 2 MB! Currently files size is ${(
-            totalSize /
-            (1024 * 1024)
-          ).toFixed(2)} MB`;
+          newErrors.files = `Total attachments files size must be less than 2 MB! Currently files size is ${currentSize} MB`;
           break;
         }
       }
