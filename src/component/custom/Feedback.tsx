@@ -7,8 +7,6 @@ import Alert from '@mui/material/Alert';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { filesToBase64 } from '../../utils/shareUtils';
-const closeIcon = '/x-button.png';
-const supportIcon = '/support.png';
 
 interface FeedbackErrors {
   name?: string;
@@ -161,7 +159,7 @@ const Feedback = () => {
           aria-label={'Report a bug/share feedback'}
           style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}
         >
-          <img src={supportIcon} alt='Report button' style={{ width: 20, height: 20 }} />
+          <img src='support.png' alt='Report button' style={{ width: 20, height: 20 }} />
         </IconButton>
       </Tooltip>
 
@@ -195,7 +193,7 @@ const Feedback = () => {
       >
         <Box sx={modalStyle}>
           <div className='modal-close-wrapper' onClick={closeModal} style={{ cursor: 'pointer', float: 'right' }}>
-            <img className='modal-closed' src={closeIcon} alt='close icon' />
+            <img className='modal-closed' src='x-button.png' alt='close icon' />
           </div>
           <h4 id='feedback-modal-title' className='modal-title'>
             Report a Bug / Share Feedback

@@ -157,7 +157,7 @@ export const NeoDashboardTitle = ({
       )}
       {/* If the app is not running in standalone mode (i.e. in edit mode) always show dashboard settings. */}
       {!standaloneSettings.standalone ? (
-        <div className='flex flex-row flex-wrap items-center gap-2'>
+        <div className='flex flex-row flex-wrap items-end gap-2'>
           {editable ? renderExtensionsButtons() : <></>}
           <NeoSettingsModal dashboardSettings={dashboardSettings} updateDashboardSetting={updateDashboardSetting} />
           <ShareableButton exportPageParameters={false}/>
@@ -166,10 +166,10 @@ export const NeoDashboardTitle = ({
           <Feedback />
         </div>
       ) : (
-        <>
+        <div className='flex flex-row flex-wrap items-end gap-2 n-mr-6'>
           <ShareableButton exportPageParameters={false}/>
           <Feedback />
-        </>
+        </div>
       )}
     </div>
   );
