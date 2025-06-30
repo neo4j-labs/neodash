@@ -119,14 +119,9 @@ const Feedback = () => {
           email: reporterEmail,
           name: reporterName,
         };
-        const emailRecipient = {
-          email: '',
-          name: '',
-        };
         const base64EncodedFiles = attachments ? await filesToBase64(attachments) : null;
         const requestBody = {
           contact: reporterContact,
-          emailRecipient: emailRecipient,
           description: description,
           attachments: base64EncodedFiles,
           source: window.location.href
