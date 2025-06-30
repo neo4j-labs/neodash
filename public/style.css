@@ -256,3 +256,85 @@
 .markdown-widget a {
   text-decoration: underline;
 }
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.75);
+  justify-content: center;
+  align-items: center;
+}
+.modal.is-active {
+  display: flex;
+}
+.modal-content {
+  background-color: #000;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  color: white;
+  position: relative;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+.modal-close-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+.modal-closed {
+  width: 20px;
+  height: 20px;
+}
+.modal-title {
+  margin-bottom: 0.5rem;
+}
+label {
+  display: block;
+  margin-bottom: 1em;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.input-style {
+  margin-top: 0.3em;
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 6px;
+  border: 2px solid #ccc;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #fff;
+  color: #000;
+}
+input[type='file'] {
+  padding: 0;
+  border: none;
+  background: none;
+}
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  color: #000 !important;
+}
+
+button.cancel {
+  background-color: #1a2036;
+}
+button.cancel:hover {
+  background-color: #070707 !important;
+}
+button:hover {
+  background-color: #4c9269;
+}
+input,
+textarea,
+select {
+  color: #000;
+}

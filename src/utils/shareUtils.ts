@@ -90,4 +90,31 @@ const handleArrayOfValues = (val: string): string => {
   return res;
 };
 
-export { buildURL, extractQueryParams, getPath };
+const filesToBase64 = (files) => {
+  const promises: Promise<any>[] = [];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const promise = new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        if (reader.result) {
+          const [, base64String] = (reader.result as string).split(',');
+          resolve({ filename: file.name, content: base64String });
+        } else {
+          reject(new Error('FileReader result is null'));
+        }
+      };
+      reader.onerror = (error) => {
+        console.error('Error occurred: ', error);
+        reject(error);
+      };
+    });
+    promises.push(promise);
+  }
+  return Promise.all(promises);
+};
+
+
+export { buildURL, extractQueryParams, getPath, filesToBase64 };

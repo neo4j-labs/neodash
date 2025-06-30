@@ -21,6 +21,7 @@ import NeoExportModal from '../../modal/ExportModal';
 import { setDraft } from '../../application/ApplicationActions';
 import NeoDashboardHeaderLogo from './DashboardHeaderLogo';
 import { ShareableButton } from '../../component/custom/ShareableButton'
+import Feedback from '../../component/custom/Feedback';
 
 type SettingsMenuOpenEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
@@ -162,9 +163,13 @@ export const NeoDashboardTitle = ({
           <ShareableButton exportPageParameters={false}/>
           {editable ? <NeoExportModal /> : <></>}
           {editable ? <NeoExtensionsModal closeMenu={handleSettingsMenuClose} /> : <></>}
+          <Feedback />
         </div>
       ) : (
-        <><ShareableButton exportPageParameters={false}/></>
+        <>
+          <ShareableButton exportPageParameters={false}/>
+          <Feedback />
+        </>
       )}
     </div>
   );
