@@ -256,33 +256,6 @@
 .markdown-widget a {
   text-decoration: underline;
 }
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.75);
-  justify-content: center;
-  align-items: center;
-}
-.modal.is-active {
-  display: flex;
-}
-.modal-content {
-  background-color: #000;
-  padding: 2rem 2.5rem;
-  border-radius: 10px;
-  max-width: 600px;
-  width: 90%;
-  color: white;
-  position: relative;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
-}
 .modal-close-wrapper {
   position: absolute;
   top: 20px;
@@ -322,13 +295,6 @@ textarea {
   resize: vertical;
   min-height: 120px;
   color: #000 !important;
-}
-
-button.cancel {
-  background-color: #1a2036;
-}
-button.cancel:hover {
-  background-color: #070707 !important;
 }
 button:hover {
   background-color: #4c9269;

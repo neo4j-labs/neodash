@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-const closeIcon = '/x-button.png';
-const supportIcon = '/support.png';
 import { Button, IconButton } from '@neo4j-ndl/react';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 import Snackbar from '@mui/material/Snackbar';
@@ -9,6 +7,15 @@ import Alert from '@mui/material/Alert';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { filesToBase64 } from '../../utils/shareUtils';
+const closeIcon = '/x-button.png';
+const supportIcon = '/support.png';
+
+interface FeedbackErrors {
+  name?: string;
+  email?: string;
+  description?: string;
+  files?: string;
+}
 
 const Feedback = () => {
   const [showModal, setShowModal] = useState(false);
@@ -17,9 +24,9 @@ const Feedback = () => {
   const [emailStatus, setEmailStatus] = useState('');
   const [description, setDescription] = useState('');
   const [attachments, setAttachments] = useState<FileList | null>(null);
-  const [isSuccess, setIsSuccess] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
-  const [errors, setErrors] = useState<{ name?: string; email?: string; description?: string; files?: string }>({
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errors, setErrors] = useState<FeedbackErrors>({
     name: undefined,
     email: undefined,
     description: undefined,
@@ -28,6 +35,7 @@ const Feedback = () => {
   const TIMEOUT_DURATION = 1000;
   const MAX_DESCRIPTION_LENGTH = 500;
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+  const dbQueryUrl = `${window.location.origin}/oupt/api`;
   const modalStyle = {
     position: 'absolute' as const,
     top: '50%',
@@ -41,8 +49,6 @@ const Feedback = () => {
     maxHeight: '90vh',
     overflowY: 'auto',
   };
-
-  const dbQueryUrl = `${window.location.origin}/oupt/api`;
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -157,7 +163,7 @@ const Feedback = () => {
           aria-label={'Report a bug/share feedback'}
           style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}
         >
-          <img src={supportIcon} alt='close icon' style={{ width: 20, height: 20 }} />
+          <img src={supportIcon} alt='Report button' style={{ width: 20, height: 20 }} />
         </IconButton>
       </Tooltip>
 
