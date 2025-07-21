@@ -1287,8 +1287,9 @@ const _REPORT_TYPES = {
     helperText: (
       <div>
         An Itinerary Map displays travel routes and waypoints from GeoJSON FeatureCollections. 
-        Expects records containing an <code>itinerary</code> field with GeoJSON structure including 
-        Point features (waypoints) and LineString features (routes).
+        Each person's journey is automatically colored uniquely. Expects records containing an 
+        <code>itinerary</code> field with GeoJSON structure including Point features (waypoints) 
+        and LineString features (routes).
       </div>
     ),
     maxRecords: 100,
@@ -1305,16 +1306,6 @@ const _REPORT_TYPES = {
         label: 'Map Attribution',
         type: SELECTION_TYPES.TEXT,
         default: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      },
-      routeColor: {
-        label: 'Route Line Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#FF6B35',
-      },
-      waypointColor: {
-        label: 'Waypoint Color',
-        type: SELECTION_TYPES.COLOR,
-        default: '#004E89',
       },
       routeWeight: {
         label: 'Route Line Width',

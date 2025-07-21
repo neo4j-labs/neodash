@@ -18,15 +18,27 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
     const [geoJsonData, setGeoJsonData] = useState(null);
     const [mapCenter, setMapCenter] = useState([41.9028, 12.4964]); // Default center (Mediterranean - Rome)
     const [mapZoom, setMapZoom] = useState(6);
+    const [personColors, setPersonColors] = useState({});
 
     // Settings from props
     const mapProviderURL = props.settings?.providerUrl || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const attribution = props.settings?.attribution || '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-    const routeColor = props.settings?.routeColor || '#FF6B35';
-    const waypointColor = props.settings?.waypointColor || '#004E89';
     const routeWeight = props.settings?.routeWeight || 3;
     const showWaypoints = props.settings?.showWaypoints !== false;
     const showRoutes = props.settings?.showRoutes !== false;
+
+    // Dynamic color generation function - creates unlimited unique colors
+    const generateColor = (index) => {
+        const hue = (index * 137.508) % 360; // Golden angle for good distribution
+        const saturation = 60 + (index % 3) * 15; // Vary saturation: 60%, 75%, 90%
+        const lightness = 45 + (index % 2) * 10;  // Vary lightness: 45%, 55%
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    };
+
+    // Safe function to get person color (no setState during render)
+    const getPersonColor = (personName) => {
+        return personColors[personName] || '#666666'; // Fallback color
+    };
 
     const styleRules = useStyleRules(
         extensionEnabled(props.extensions, 'styling'),
@@ -35,33 +47,58 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
     );
 
     useEffect(() => {
-        console.log('ItineraryMap - props.records:', props.records);
         if (props.records && props.records.length > 0) {
             processItineraryData();
         }
     }, [props.records]);
 
     const processItineraryData = () => {
-        console.log('ItineraryMap - Processing data, records:', props.records);
         try {
             const allFeatures = [];
             const validCoordinates = [];
+            const uniquePersons = new Set();
 
-            props.records.forEach((record, recordIndex) => {
-                console.log(`ItineraryMap - Processing record ${recordIndex}:`, record);
+            // First pass: collect all unique person names
+            props.records.forEach((record) => {
                 const keys = record.keys || [];
                 const values = record._fields || [];
-                console.log(`ItineraryMap - Record keys:`, keys);
-                console.log(`ItineraryMap - Record values:`, values);
+
+                keys.forEach((key, index) => {
+                    const value = values[index];
+                    if (value && value.itinerary && value.itinerary.type === 'FeatureCollection') {
+                        const personName = value.name || value.id || 'Unknown Person';
+                        uniquePersons.add(personName);
+                    } else if (value && value.type === 'FeatureCollection') {
+                        let personName = 'Unknown Person';
+                        if (record.get) {
+                            try { personName = record.get('name') || record.get('id') || personName; } catch(e) {}
+                        }
+                        if (keys.length > 1) {
+                            const nameIndex = keys.findIndex(k => k.includes('name') || k.includes('id'));
+                            if (nameIndex >= 0) {
+                                personName = values[nameIndex] || personName;
+                            }
+                        }
+                        uniquePersons.add(personName);
+                    }
+                });
+            });
+
+            // Generate colors for all unique persons
+            const newPersonColors = {};
+            Array.from(uniquePersons).forEach((personName, index) => {
+                newPersonColors[personName] = generateColor(index);
+            });
+            setPersonColors(newPersonColors);
+
+            props.records.forEach((record, recordIndex) => {
+                const keys = record.keys || [];
+                const values = record._fields || [];
 
                 // Helper function to process itinerary data
                 const processItinerary = (itinerary, personName) => {
-                    console.log('ItineraryMap - Processing itinerary for:', personName);
                     itinerary.features.forEach((feature, featureIndex) => {
-                        console.log(`ItineraryMap - Processing feature ${featureIndex}:`, feature);
                         if (feature.type === 'Feature') {
-                            console.log(`ItineraryMap - Feature geometry:`, feature.geometry);
-                            console.log(`ItineraryMap - Feature properties:`, feature.properties);
 
                             // Add person name to properties for identification
                             feature.properties = {
@@ -120,17 +157,14 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
 
                 keys.forEach((key, index) => {
                     const value = values[index];
-                    console.log(`ItineraryMap - Processing field ${key}:`, value);
 
                     // Check if this field contains an itinerary with GeoJSON structure
                     if (value && value.itinerary && value.itinerary.type === 'FeatureCollection') {
-                        console.log('ItineraryMap - Found nested itinerary data:', value.itinerary);
                         const personName = value.name || value.id || 'Unknown Person';
                         processItinerary(value.itinerary, personName);
                     }
                     // Also check if the value itself is a GeoJSON FeatureCollection (direct query result)
                     else if (value && value.type === 'FeatureCollection') {
-                        console.log('ItineraryMap - Found direct GeoJSON data:', value);
                         // Try to get person name from different sources
                         let personName = 'Unknown Person';
                         if (record.get) {
@@ -179,10 +213,6 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
                 features: allFeatures
             };
 
-            console.log('ItineraryMap - Final GeoJSON collection:', geoJsonCollection);
-            console.log('ItineraryMap - Valid coordinates found:', validCoordinates.length);
-            console.log('ItineraryMap - Map center will be:', mapCenter);
-            console.log('ItineraryMap - Map zoom will be:', mapZoom);
 
             setGeoJsonData(geoJsonCollection);
         } catch (error) {
@@ -192,29 +222,40 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
 
     const getFeatureStyle = (feature) => {
         const { geometry, properties } = feature;
+        
+        // Get person-specific color
+        const personName = properties.person || 'Unknown';
+        const personColor = getPersonColor(personName);
 
         if (geometry.type === 'LineString' && showRoutes) {
             return {
-                color: routeColor,
+                color: personColor,
                 weight: routeWeight,
                 opacity: 0.8
             };
         }
 
         if (geometry.type === 'Point' && showWaypoints) {
-            // Different colors based on type of stop
-            let color = waypointColor;
+            // Use person color but with slight variations for different stop types
+            let color = personColor;
+            let fillOpacity = 0.8;
+            let radius = 6;
+            
             if (properties.type_of_stop === 'origin') {
-                color = '#2E8B57'; // Sea green for origins
-            } else if (properties.type_of_stop === 'place') {
-                color = '#FF6347'; // Tomato for regular places
+                // Origin points are larger and more opaque
+                radius = 8;
+                fillOpacity = 1.0;
+            } else if (properties.type_of_stop === 'residence') {
+                // Residence points are square-ish (simulated with higher weight border)
+                radius = 7;
+                fillOpacity = 0.9;
             }
 
             return {
                 color: color,
                 fillColor: color,
-                fillOpacity: 0.7,
-                radius: 6,
+                fillOpacity: fillOpacity,
+                radius: radius,
                 weight: 2
             };
         }
