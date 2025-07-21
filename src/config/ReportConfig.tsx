@@ -6,6 +6,7 @@ import NeoIFrameChart from '../chart/iframe/IFrameChart';
 import NeoJSONChart from '../chart/json/JSONChart';
 import NeoMapChart from '../chart/map/MapChart';
 import NeoMapChartPolygonDrawable from '../chart/map/MapChartPolygonDrawable';
+import NeoItineraryMapChart from '../chart/map/MapChartItinerary';
 import NeoPieChart from '../chart/pie/PieChart';
 import NeoTableChart from '../chart/table/TableChart';
 import NeoSingleValueChart from '../chart/single/SingleValueChart';
@@ -1277,6 +1278,60 @@ const _REPORT_TYPES = {
         type: SELECTION_TYPES.LIST,
         values: [true, false],
         default: false,
+      },
+    },
+  },
+  itinerary: {
+    label: 'Itinerary Map',
+    component: NeoItineraryMapChart,
+    helperText: (
+      <div>
+        An Itinerary Map displays travel routes and waypoints from GeoJSON FeatureCollections. 
+        Expects records containing an <code>itinerary</code> field with GeoJSON structure including 
+        Point features (waypoints) and LineString features (routes).
+      </div>
+    ),
+    maxRecords: 100,
+    selection: {
+      // No specific field selection needed - processes entire records
+    },
+    settings: {
+      providerUrl: {
+        label: 'Map Provider URL',
+        type: SELECTION_TYPES.TEXT,
+        default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      },
+      attribution: {
+        label: 'Map Attribution',
+        type: SELECTION_TYPES.TEXT,
+        default: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      },
+      routeColor: {
+        label: 'Route Line Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#FF6B35',
+      },
+      waypointColor: {
+        label: 'Waypoint Color',
+        type: SELECTION_TYPES.COLOR,
+        default: '#004E89',
+      },
+      routeWeight: {
+        label: 'Route Line Width',
+        type: SELECTION_TYPES.NUMBER,
+        default: 3,
+      },
+      showWaypoints: {
+        label: 'Show Waypoints',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
+      },
+      showRoutes: {
+        label: 'Show Route Lines',
+        type: SELECTION_TYPES.LIST,
+        values: [true, false],
+        default: true,
       },
     },
   },
