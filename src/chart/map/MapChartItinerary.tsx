@@ -19,6 +19,7 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
     const [mapCenter, setMapCenter] = useState([41.9028, 12.4964]); // Default center (Mediterranean - Rome)
     const [mapZoom, setMapZoom] = useState(6);
     const [personColors, setPersonColors] = useState({});
+    const [selectedPerson, setSelectedPerson] = useState(null);
 
     // Settings from props
     const mapProviderURL = props.settings?.providerUrl || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -51,6 +52,7 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
             processItineraryData();
         }
     }, [props.records]);
+
 
     const processItineraryData = () => {
         try {
@@ -226,12 +228,16 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
         // Get person-specific color
         const personName = properties.person || 'Unknown';
         const personColor = getPersonColor(personName);
+        
+        // Determine if this person is selected or should be faded
+        const isSelected = !selectedPerson || selectedPerson === personName;
+        const baseOpacity = isSelected ? 1.0 : 0.1;
 
         if (geometry.type === 'LineString' && showRoutes) {
             return {
                 color: personColor,
                 weight: routeWeight,
-                opacity: 0.8
+                opacity: 0.8 * baseOpacity
             };
         }
 
@@ -252,9 +258,10 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
             }
 
             return {
-                color: color,
-                fillColor: color,
-                fillOpacity: fillOpacity,
+                color: personColor,
+                fillColor: personColor,
+                fillOpacity: fillOpacity * baseOpacity,
+                opacity: baseOpacity,
                 radius: radius,
                 weight: 2
             };
@@ -262,6 +269,8 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
 
         return {};
     };
+
+
 
     const onEachFeature = (feature, layer) => {
         if (feature.properties && (feature.properties.label || feature.properties.person)) {
@@ -274,6 +283,19 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
         </div>
       `;
             layer.bindPopup(popupContent);
+            
+            // Add click handler for person selection
+            layer.on('click', (e) => {
+                const personName = feature.properties.person || 'Unknown';
+                // Toggle selection: if clicking on already selected person, deselect
+                if (selectedPerson === personName) {
+                    setSelectedPerson(null);
+                } else {
+                    setSelectedPerson(personName);
+                }
+                // Stop event propagation to prevent map click
+                e.originalEvent.stopPropagation();
+            });
         }
     };
 
@@ -338,6 +360,12 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
                 zoom={mapZoom}
                 style={{ height: '100%', width: '100%' }}
                 key={`${mapCenter[0]}-${mapCenter[1]}-${mapZoom}`}
+                eventHandlers={{
+                    click: () => {
+                        // Clicking on empty map space deselects all
+                        setSelectedPerson(null);
+                    }
+                }}
             >
                 <TileLayer
                     attribution={attribution}
@@ -350,7 +378,7 @@ const NeoItineraryMapChart: React.FC<ChartProps> = (props) => {
                         style={getFeatureStyle}
                         onEachFeature={onEachFeature}
                         pointToLayer={pointToLayer}
-                        key={JSON.stringify(geoJsonData)}
+                        key={`${JSON.stringify(geoJsonData)}-${selectedPerson}`}
                     />
                 )}
             </MapContainer>
