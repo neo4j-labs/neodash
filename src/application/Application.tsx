@@ -45,6 +45,7 @@ import { downloadComponentAsImage } from '../chart/ChartUtils';
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css';
 import { resetSessionStorage } from '../sessionStorage/SessionStorageActions';
 import { getDashboardTheme } from '../dashboard/DashboardSelectors';
+import { Banner } from '@neo4j-ndl/react';
 
 const NeoUpgradeOldDashboardModal = React.lazy(() => import('../modal/UpgradeOldDashboardModal'));
 const NeoLoadSharedDashboardModal = React.lazy(() => import('../modal/LoadSharedDashboardModal'));
@@ -110,7 +111,7 @@ const Application = ({
   }, []);
 
   const ref = React.useRef();
-
+  const [bannerOpen, setBannerOpen] = React.useState(true);
   useEffect(() => {
     if (themeMode === 'dark') {
       document.body.classList.add('ndl-theme-dark');
@@ -125,6 +126,35 @@ const Application = ({
       ref={ref}
       className={`n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
     >
+      {bannerOpen && connected ? (
+        <Banner
+          title='Deprecation notice'
+          type='warning'
+          closeable={true}
+          icon={true}
+          onClose={() => setBannerOpen(false)}
+        >
+          This demo environment will no longer be available after August 31st. &nbsp;
+          <u>
+            <b>
+              <a target='_blank' href='https://console-preview.neo4j.io/tools/dashboards'>
+                Migrate
+              </a>
+            </b>
+          </u>
+          &nbsp;your dashboards to the Neo4j Console, or{' '}
+          <u>
+            <b>
+              <a target='_blank' href='https://github.com/neo4j-labs/neodash'>
+                visit
+              </a>
+            </b>
+          </u>{' '}
+          the NeoDash repository to learn more.
+        </Banner>
+      ) : (
+        <></>
+      )}
       {connected ? (
         <Suspense fallback=''>
           <Dashboard

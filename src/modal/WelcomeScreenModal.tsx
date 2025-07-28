@@ -153,16 +153,16 @@ export const NeoWelcomeScreenModal = ({
           }}
         >
           <div style={{ color: 'white' }}>
-            NeoDash is a tool for building standalone Neo4j dashboards. Need advice on building an integrated solution?{' '}
+            This version of NeoDash is not actively maintained. Visit the&nbsp;
             <TextLink
-              href='https://neo4j.com/professional-services/'
+              href='https://github.com/neo4j-labs/neodash'
               className='n-text-neutral-text-inverse'
               target='_blank'
               style={{ color: 'white' }}
             >
-              Get in touch
+              repository
             </TextLink>
-            !
+            &nbsp; to learn more.
           </div>
         </Dialog.Actions>
       </Dialog>

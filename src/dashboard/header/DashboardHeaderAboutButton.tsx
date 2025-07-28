@@ -69,8 +69,16 @@ export const NeoAboutButton = ({ connection, onAboutModalOpen, extensions }) => 
             database={connection.database}
           ></NeoReportExamplesModal>
           <MenuItem
-            onKeyDown={(e) => enterHandler(e, () => openTab('https://neo4j.com/labs/neodash/2.4/user-guide/'))}
-            onClick={() => openTab('https://neo4j.com/labs/neodash/2.4/user-guide/')}
+            onKeyDown={(e) =>
+              enterHandler(e, () =>
+                openTab(
+                  'https://github.com/neo4j-labs/neodash/tree/master/docs/modules/ROOT/pages/user-guide/index.adoc'
+                )
+              )
+            }
+            onClick={() =>
+              openTab('https://github.com/neo4j-labs/neodash/tree/master/docs/modules/ROOT/pages/user-guide/index.adoc')
+            }
             title={'Documentation'}
             icon={<BookOpenIconOutline />}
           />
