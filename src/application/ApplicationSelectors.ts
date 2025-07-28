@@ -106,6 +106,10 @@ export const applicationHasWelcomeScreenOpen = (state: any) => {
   return state.application.welcomeScreenOpen;
 };
 
+export const applicationIsDeprecated = (state: any) => {
+  return state.application.deprecated;
+};
+
 export const applicationHasCachedDashboard = (state: any) => {
   // Avoid this expensive check when the application is connected, as it's only for the welcome screen.
   if (state.application.connected) {

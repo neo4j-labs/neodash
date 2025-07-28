@@ -16,6 +16,7 @@ import {
   applicationGetSsoSettings,
   applicationHasReportHelpModalOpen,
   applicationIsStandalone,
+  applicationIsDeprecated,
 } from '../application/ApplicationSelectors';
 import {
   createConnectionThunk,
@@ -77,6 +78,7 @@ const Application = ({
   aboutModalOpen,
   loadDashboard,
   hasNeo4jDesktopConnection,
+  deprecated,
   shareDetails,
   createConnection,
   createConnectionFromDesktopIntegration,
@@ -126,7 +128,7 @@ const Application = ({
       ref={ref}
       className={`n-bg-palette-neutral-bg-default n-h-screen n-w-screen n-flex n-flex-col n-overflow-hidden`}
     >
-      {bannerOpen && connected ? (
+      {deprecated && bannerOpen && connected ? (
         <Banner
           title='Deprecation notice'
           type='warning'
@@ -134,7 +136,7 @@ const Application = ({
           icon={true}
           onClose={() => setBannerOpen(false)}
         >
-          This demo environment will no longer be available after August 31st. &nbsp;
+          This app will no longer be available after August 31st. &nbsp;
           <u>
             <b>
               <a target='_blank' href='https://console-preview.neo4j.io/tools/dashboards'>
@@ -150,7 +152,7 @@ const Application = ({
               </a>
             </b>
           </u>{' '}
-          the NeoDash repository to learn more.
+          the NeoDash repository to run NeoDash yourself.
         </Banner>
       ) : (
         <></>
@@ -232,6 +234,7 @@ const mapStateToProps = (state) => ({
   reportHelpModalOpen: applicationHasReportHelpModalOpen(state),
   welcomeScreenOpen: applicationHasWelcomeScreenOpen(state),
   hasCachedDashboard: applicationHasCachedDashboard(state),
+  deprecated: applicationIsDeprecated(state),
   getDebugState: () => {
     return applicationGetDebugState(state);
   }, // TODO - change this to be variable instead of a function?
