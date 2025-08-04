@@ -3,7 +3,7 @@ import { updateDashboardSetting } from '../settings/SettingsActions';
 import { addPage, movePage, removePage, resetDashboardState, setDashboard, setDashboardUuid } from './DashboardActions';
 import { QueryStatus, runCypherQuery } from '../report/ReportQueryRunner';
 import { setDraft, setParametersToLoadAfterConnecting, setWelcomeScreenOpen } from '../application/ApplicationActions';
-import { updateGlobalParametersThunk } from '../settings/SettingsThunks';
+import { updateGlobalParametersThunk,setPageNumberThunk } from '../settings/SettingsThunks';
 import { createUUID } from '../utils/uuid';
 import { createLogThunk } from '../application/logging/LoggingThunk';
 import { applicationGetConnectionUser, applicationIsStandalone } from '../application/ApplicationSelectors';
@@ -125,6 +125,17 @@ export const loadDashboardThunk = (uuid, text) => (dispatch: any, getState: any)
     });
 
     dispatch(setDashboard(dashboard));
+    
+    // Check if we have to navigate to a page
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const pageToSet = urlParams.get('page');
+    if (pageToSet !== '' && pageToSet !== null) {
+      if (!isNaN(pageToSet)) {
+        dispatch(setPageNumberThunk(pageToSet));
+      }
+    }
+
 
     const { application } = getState();
 
