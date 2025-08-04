@@ -1,3 +1,4 @@
+
 = Reports
 
 include::../../banner.adoc[]

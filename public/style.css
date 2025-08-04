@@ -65,13 +65,6 @@
   margin-left: 0px;
 }
 
-.leaflet-control-attribution {
-  display: none;
-}
-
-.leaflet-custom-tooltip {
-}
-
 .leaflet-marker-icon {
   width: 50px !important;
   margin-left: -25px !important;
@@ -115,6 +108,10 @@
 .react-grid-item > .react-resizable-handle::after {
   border-right: 2px solid rgba(0, 0, 0, 0.4) !important;
   border-bottom: 2px solid rgba(0, 0, 0, 0.4) !important;
+}
+
+div:has(> .table-small-header) {
+  background: unset !important;
 }
 
 .MuiDataGrid-footerContainer {

@@ -1,3 +1,4 @@
+
 = Report Actions 
 
 include::../../banner.adoc[]

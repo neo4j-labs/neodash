@@ -1,3 +1,4 @@
+
 = Circle Packing
 
 include::../../banner.adoc[]

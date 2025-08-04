@@ -1,3 +1,4 @@
+
 = Line Chart
 
 include::../../banner.adoc[]

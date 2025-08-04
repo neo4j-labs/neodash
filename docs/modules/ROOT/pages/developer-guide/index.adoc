@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Developer Guide
 
 include::../banner.adoc[]

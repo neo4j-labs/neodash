@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = Configuration
 
 include::../banner.adoc[]
@@ -21,7 +23,7 @@ will look like this:
     "ssoProviders": [],
     "ssoDiscoveryUrl": "https://example.com",
     "standalone": false,
-    "standaloneProtocol": "neo4j",
+    "standaloneProtocol": "neo4j+s",
     "standaloneHost": "localhost",
     "standalonePort": "7687",
     "standaloneDatabase": "neo4j",
@@ -57,7 +59,7 @@ mode (false), or reader mode (true). The terms ``Reader mode'' and
 ``Standalone mode'' are used interchangibly.
 
 |standaloneProtocol |string |neo4j |When running in standalone mode, the
-protocol to used for the Neo4j driver. This shoudl be set to one of
+protocol to used for the Neo4j driver. This should be set to one of
 `neo4j`, `neo4j+s`, `neo4j+ssc`, `bolt`, `bolt+s`, or `bolt+ssc`.
 
 |standaloneHost |string |localhost |When running in standalone mode, the

@@ -40,6 +40,7 @@ import {
   setReportHelpModalOpen,
   setDraft,
   setCustomHeader,
+  setDeprecationNotice,
 } from './ApplicationActions';
 import { setLoggingMode, setLoggingDatabase, setLogErrorNotification } from './logging/LoggingActions';
 import { version } from '../modal/AboutModal';
@@ -291,7 +292,6 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
         if (skipConfirmation === true) {
           dispatch(onConfirmLoadSharedDashboardThunk());
         }
-
         window.history.pushState({}, document.title, window.location.pathname);
       } else {
         dispatch(setConnectionModalOpen(false));
@@ -358,7 +358,6 @@ export const onConfirmLoadSharedDashboardThunk = () => (dispatch: any, getState:
     }
     if (shareDetails.standalone == true) {
       dispatch(setStandaloneMode(true));
-      localStorage.setItem('standaloneShared', 'true'); // EDGE CASE: redirect SSO removes the shareDetails when redirecting
     }
     dispatch(resetShareDetails());
   } catch (e) {
@@ -384,7 +383,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     ssoProviders: [],
     ssoDiscoveryUrl: 'http://example.com',
     standalone: false,
-    standaloneProtocol: 'neo4j',
+    standaloneProtocol: 'neo4j+s',
     standaloneHost: 'localhost',
     standalonePort: '7687',
     standaloneDatabase: 'neo4j',
@@ -399,6 +398,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneMultiDatabase: false,
     standaloneDatabaseList: 'neo4j',
     customHeader: '',
+    deprecationNotice: false,
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -410,29 +410,33 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
 
   try {
     // Parse the URL parameters to see if there's any deep linking of parameters.
+    const state = getState();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+    if (state.application.waitForSSO) {
+      const paramsBeforeSSO = JSON.parse(sessionStorage.getItem('SSO_PARAMS_BEFORE_REDIRECT') || '{}');
+      Object.entries(paramsBeforeSSO).forEach(([key, value]) => {
+        urlParams.set(key, value);
+      });
+    }
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
         paramsToSetAfterConnecting[key] = value;
       }
     });
-
+    sessionStorage.getItem('SSO_PARAMS_BEFORE_REDIRECT');
     const page = urlParams.get('page');
     if (page !== '' && page !== null) {
       if (!isNaN(page)) {
         dispatch(setPageNumberThunk(parseInt(page)));
       }
     }
-    const state = getState();
     dispatch(setSSOEnabled(config.ssoEnabled, state.application.cachedSSODiscoveryUrl));
     dispatch(setSSOProviders(config.ssoProviders));
 
     // Check if we are in standalone mode
-    // const standaloneShared = localStorage.getItem('standaloneShared') == 'true'; // EDGE case: from url param it could happen that we lose the value due to SSO redirect
-    const { standalone } = config;
-    // || standaloneShared;
+    const standalone = config.standalone || urlParams.get('standalone') == 'Yes';
 
     // if a dashboard database was previously set, remember to use it.
     const dashboardDatabase = state.application.standaloneDashboardDatabase;
@@ -455,14 +459,13 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         config.standaloneDatabaseList
       )
     );
-    localStorage.removeItem('standaloneShared');
 
     dispatch(setLoggingMode(config.loggingMode));
     dispatch(setLoggingDatabase(config.loggingDatabase));
     dispatch(setLogErrorNotification('3'));
 
     dispatch(setConnectionModalOpen(false));
-
+    dispatch(setDeprecationNotice(config.deprecationNotice));
     dispatch(setCustomHeader(config.customHeader));
 
     // Auto-upgrade the dashboard version if an old version is cached.
@@ -530,14 +533,18 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
         }
 
         if (standalone) {
-          if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
+          if (urlParams.get('id')) {
+            dispatch(setDashboardToLoadAfterConnecting(urlParams.get('id')));
+          } else if (config.standaloneDashboardURL !== undefined && config.standaloneDashboardURL.length > 0) {
             dispatch(setDashboardToLoadAfterConnecting(config.standaloneDashboardURL));
           } else {
             dispatch(setDashboardToLoadAfterConnecting(`name:${config.standaloneDashboardName}`));
           }
           dispatch(setParametersToLoadAfterConnecting(paramsToSetAfterConnecting));
         }
+        sessionStorage.removeItem('SSO_PARAMS_BEFORE_REDIRECT');
       });
+
       dispatch(setWaitForSSO(false));
       if (!success) {
         alert('Unable to connect using SSO. See the browser console for more details.');
@@ -550,6 +557,12 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
       } else {
         return;
       }
+    } else if (state.application.ssoEnabled && !state.application.waitForSSO && urlParams) {
+      let paramsToStore = {};
+      urlParams.forEach((value, key) => {
+        paramsToStore[key] = value;
+      });
+      sessionStorage.setItem('SSO_PARAMS_BEFORE_REDIRECT', JSON.stringify(paramsToStore));
     }
 
     if (standalone) {

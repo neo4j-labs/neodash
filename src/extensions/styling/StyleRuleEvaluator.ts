@@ -63,7 +63,10 @@ export const evaluateRulesOnDict = (dict, rules, customizations) => {
   }
   for (const [index, rule] of rules.entries()) {
     // Only check customizations that are specified
-    return evaluateSingleRuleOnDict (dict, rule, index, customizations)
+    const evaluationResult = evaluateSingleRuleOnDict(dict, rule, index, customizations);
+    if (evaluationResult !== -1) {
+      return evaluationResult;
+    }
   }
   // If no rules are met, return not found (index=-1)
   return -1;
@@ -81,8 +84,7 @@ export const evaluateSingleRuleOnDict = (dict, rule, ruleIndex, customizations) 
     }
   }
   return -1;
-}
-
+};
 
 /**
  *  Evaluates the specified rule set on a node object returned by the Neo4j driver.
@@ -129,6 +131,20 @@ export const evaluateRules = (entity, customization, defaultValue, rules, entity
 
 /**
  * @param realValue the value found in the real data returned by the query
+ * @param ruleValue the value specified in the rule.
+ * @returns whether the condition is met.
+ */
+const isLooselyEqual = (realValue, ruleValue) => {
+  // In order to avoid having '5' <> {low: 5, high: 0} OR '5' <> 5
+  const sensitiveTypes = ['string', 'number', 'object'];
+  if (sensitiveTypes.includes(typeof realValue) && sensitiveTypes.includes(typeof ruleValue)) {
+    return realValue == ruleValue;
+  }
+  return realValue === ruleValue;
+};
+
+/**
+ * @param realValue the value found in the real data returned by the query
  * @param condition the condition, one of [=,!=,<,<=,>,>=,contains].
  * @param ruleValue the value specified in the rule.
  * @return whether the condition is met.
@@ -139,10 +155,10 @@ const evaluateCondition = (realValue, condition, ruleValue) => {
     return false;
   }
   if (condition == '=') {
-    return realValue === ruleValue;
+    return isLooselyEqual(realValue, ruleValue);
   }
   if (condition == '!=') {
-    return realValue !== ruleValue;
+    return !isLooselyEqual(realValue, ruleValue);
   }
   if (!isNaN(Number(ruleValue))) {
     ruleValue = Number(ruleValue);

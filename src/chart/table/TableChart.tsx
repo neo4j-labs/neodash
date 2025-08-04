@@ -214,9 +214,17 @@ export const NeoTableChart = (props: ChartProps) => {
     key: 'tableKey',
     columnHeaderHeight: 32,
     rowHeight: tableRowHeight,
-    autoPageSize: true,
     rows: rows,
     columns: columns,
+    pageSizeOptions: [5, 10, 25, 50, 100],
+    initialState: {
+      pagination: {
+        paginationModel: {
+          pageSize: 5,
+          pageIndex: 0,
+        },
+      },
+    },
     columnVisibilityModel: columnVisibilityModel,
     onColumnVisibilityModelChange: (newModel) => setColumnVisibilityModel(newModel),
     onCellClick: (e) => performActionOnElement(e, actionsRules, { ...props, pageNames: pageNames }, 'Click', 'Table'),
@@ -237,7 +245,6 @@ export const NeoTableChart = (props: ChartProps) => {
       ColumnSortedDescendingIcon: () => <></>,
       ColumnSortedAscendingIcon: () => <></>,
     },
-    // TODO: if mixing and matching row and cell styling, row rules MUST be set first or will not populate correctly
     getRowClassName: (params) => {
       return ['row color', 'row text color']
         .map((e) => {
@@ -248,19 +255,28 @@ export const NeoTableChart = (props: ChartProps) => {
     getCellClassName: (params) => {
       return ['cell color', 'cell text color']
         .map((e) => {
-          let trueRulesList = [''];
-          let trueRule;
+          let validRuleClass = '';
           for (const [index, rule] of styleRules.entries()) {
+            let ruleClass = '';
+            // If the rule target is not the current cell
             if (rule.targetField) {
               if (rule.targetField === params.field) {
-                trueRule = `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [e])}`;
+                ruleClass = `rule${evaluateSingleRuleOnDict({ [rule.field]: params.row[rule.field] }, rule, index, [
+                  e,
+                ])}`;
               }
-            } else {
-              trueRule = `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
             }
-            trueRulesList.push(trueRule);
+            // If the rule target is the current cell
+            else {
+              ruleClass = `rule${evaluateSingleRuleOnDict({ [params.field]: params.value }, rule, index, [e])}`;
+            }
+            // If rule class is valid (rule-1 means rule check has failed)
+            if (ruleClass && ruleClass !== 'rule-1') {
+              validRuleClass = ruleClass;
+              break;
+            }
           }
-          return trueRulesList.join(' ');
+          return validRuleClass;
         })
         .join(' ');
     },

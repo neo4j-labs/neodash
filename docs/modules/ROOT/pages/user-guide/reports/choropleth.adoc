@@ -1,3 +1,4 @@
+
 = Choropleth
 
 include::../../banner.adoc[]

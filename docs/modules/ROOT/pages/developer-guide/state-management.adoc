@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = State Management
 
 include::../banner.adoc[]
@@ -131,7 +133,7 @@ standalone mode.
     "ssoEnabled": false,
     "ssoProviders": [],
     "ssoDiscoveryUrl": "https://example.com",
-    "standaloneProtocol": "neo4j",
+    "standaloneProtocol": "neo4j+s",
     "standaloneHost": "localhost",
     "standalonePort": "7687",
     "standaloneDatabase": "neo4j",

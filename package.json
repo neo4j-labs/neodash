@@ -1,6 +1,6 @@
 {
   "name": "neodash",
-  "version": "2.4.9",
+  "version": "2.4.11",
   "description": "NeoDash - Neo4j Dashboard Builder",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
@@ -30,8 +30,7 @@
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-staged": "lint-staged --config .lintstagedrc.json",
     "test": "yarn cypress open",
-    "test-headless": "yarn cypress run",
-    "prepare": "husky install"
+    "test-headless": "yarn cypress run"
   },
   "keywords": [],
   "author": "Neo4j Labs",

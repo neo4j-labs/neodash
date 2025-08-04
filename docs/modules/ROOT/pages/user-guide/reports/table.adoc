@@ -1,3 +1,4 @@
+
 = Table
 
 include::../../banner.adoc[]

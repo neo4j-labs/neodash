@@ -1,3 +1,4 @@
+
 = Text2Cypher - Natural Language Queries
 
 include::../../banner.adoc[]

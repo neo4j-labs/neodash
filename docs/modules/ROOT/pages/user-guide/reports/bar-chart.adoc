@@ -1,3 +1,4 @@
+
 = Bar Chart
 
 include::../../banner.adoc[]

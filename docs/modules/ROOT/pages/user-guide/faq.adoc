@@ -1,3 +1,5 @@
+include::../banner.adoc[]
+
 = FAQ
 
 include::../banner.adoc[]
@@ -48,17 +50,8 @@ If you need help setting this up, please contact the NeoDash team.
 
 == 4. Is NeoDash Production Ready?
 
-NeoDash is safe to be used in a production environment. As it is a
-reporting tool, keep the following things in mind: 
-
-- Always use *read-only* Neo4j accounts when connecting to a dashboard. 
-- Always deploy NeoDash with SSL, so that an encrypted Neo4j connection must be
-used. 
-- As NeoDash accesses Neo4j directly, make sure you only give
-access to the right people. As a rule of thumb, you should give NeoDash
-access to the people that can also see Bloom.
-
-For other questions regarding setting up your own production deployment, contact the NeoDash team.
+NeoDash Labs is an experimental tool without official support.
+For production-grade usage with Neo4j Enterprise Edition, we recommend a `NeoDash commercial` license.
 
 == 5. Can I use NeoDash with Neo4j Community Edition?
 
