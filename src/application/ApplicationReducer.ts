@@ -39,6 +39,7 @@ import {
   SET_WAIT_FOR_SSO,
   SET_WELCOME_SCREEN_OPEN,
   SET_CUSTOM_HEADER,
+  SET_DEPRECATION_NOTICE,
 } from './ApplicationActions';
 import {
   SET_LOGGING_MODE,
@@ -320,6 +321,11 @@ export const applicationReducer = (state = initialState, action: { type: any; pa
     case SET_CUSTOM_HEADER: {
       const { customHeader } = payload;
       state = update(state, { customHeader: customHeader });
+      return state;
+    }
+    case SET_DEPRECATION_NOTICE: {
+      const { deprecated } = payload;
+      state = update(state, { deprecated: deprecated });
       return state;
     }
     default: {

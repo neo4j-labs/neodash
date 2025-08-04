@@ -235,3 +235,9 @@ export const setCustomHeader = (customHeader: any) => ({
   type: SET_CUSTOM_HEADER,
   payload: { customHeader },
 });
+
+export const SET_DEPRECATION_NOTICE = 'APPLICATION/SET_DEPRECATION_NOTICE';
+export const setDeprecationNotice = (deprecated: boolean) => ({
+  type: SET_DEPRECATION_NOTICE,
+  payload: { deprecated },
+});

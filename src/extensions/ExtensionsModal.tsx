@@ -49,7 +49,7 @@ const NeoExtensionsModal = ({
                   <TextLink
                     externalLink
                     target='_blank'
-                    href='https://neo4j.com/labs/neodash/2.4/user-guide/extensions/'
+                    href='https://github.com/neo4j-labs/neodash/tree/master/docs/modules/ROOT/pages/user-guide/extensions.adoc'
                   >
                     Extensions
                   </TextLink>
