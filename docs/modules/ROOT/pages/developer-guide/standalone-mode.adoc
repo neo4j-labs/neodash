@@ -73,6 +73,7 @@ To dynamically view a deployed NeoDash dashboard, you can deep-link into a deplo
  the following deeplinking options are available via URL parameters:
 - Appending `?page=1` to the URL will open up a dashboard at a given page. (Starting at zero).
 - Appending `?neodash_person_name=Tom` to the URL will set a dashboard parameter as a default for the entire dashboard.
+- Appending `?neodash_list_person_name=Tom&neodash_list_person_name=Peter` to the URL will pass one parameter person_name as an array you can use in WHERE IN clauses
 
 Multiple parameters can be used in a deep-link by concatinating them:
 ....
