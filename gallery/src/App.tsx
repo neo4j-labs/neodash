@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Button, TextInput, HeroIcon, Tag } from '@neo4j-ndl/react';
+import { Button, TextInput, HeroIcon, Tag, Alert } from '@neo4j-ndl/react';
 
 // These are the read-only credentials of the public database where the gallery exists.
 const uri = 'neo4j+s://acb5b6ae.databases.neo4j.io';
@@ -44,6 +44,32 @@ function App() {
 
   return (
     <div className='n-bg-neutral-20 h-100'>
+      <Alert
+        title='Deprecation notice'
+        type='warning'
+        // closeable={true}
+        icon={true}
+        // onClose={() => setBannerOpen(false)}
+      >
+        This app will no longer be available after August 31st. &nbsp;
+        <u>
+          <b>
+            <a target='_blank' href='https://console-preview.neo4j.io/tools/dashboards'>
+              Migrate
+            </a>
+          </b>
+        </u>
+        &nbsp;your dashboards to the Neo4j Console, or{' '}
+        <u>
+          <b>
+            <a target='_blank' href='https://github.com/neo4j-labs/neodash'>
+              visit
+            </a>
+          </b>
+        </u>{' '}
+        the NeoDash repository to run NeoDash yourself.
+      </Alert>
+
       {/* Header */}
       <div className='n-bg-neutral-10'>
         <div className='md:container md:mx-auto m-5 p-8 '>

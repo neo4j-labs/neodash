@@ -149,7 +149,7 @@ export const RBACManagementModal = ({ open, handleClose, currentRole, createNoti
         <br />
         For more information, please refer to the{' '}
         <a
-          href='https://neo4j.com/labs/neodash/2.4/user-guide/extensions/access-control-management/'
+          href='https://github.com/neo4j-labs/neodash/tree/master/docs/modules/ROOT/pages/user-guide/extensions/access-control-management.adoc'
           target='_blank'
           rel='noopener noreferrer'
           style={{ color: 'blue', textDecoration: 'underline' }}

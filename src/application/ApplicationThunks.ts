@@ -40,6 +40,7 @@ import {
   setReportHelpModalOpen,
   setDraft,
   setCustomHeader,
+  setDeprecationNotice,
 } from './ApplicationActions';
 import { setLoggingMode, setLoggingDatabase, setLogErrorNotification } from './logging/LoggingActions';
 import { version } from '../modal/AboutModal';
@@ -404,6 +405,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     standaloneMultiDatabase: false,
     standaloneDatabaseList: 'neo4j',
     customHeader: '',
+    deprecationNotice: false,
   };
   try {
     config = await (await fetch('config.json')).json();
@@ -470,7 +472,7 @@ export const loadApplicationConfigThunk = () => async (dispatch: any, getState: 
     dispatch(setLogErrorNotification('3'));
 
     dispatch(setConnectionModalOpen(false));
-
+    dispatch(setDeprecationNotice(config.deprecationNotice));
     dispatch(setCustomHeader(config.customHeader));
 
     // Auto-upgrade the dashboard version if an old version is cached.

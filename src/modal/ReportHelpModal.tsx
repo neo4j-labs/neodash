@@ -13,7 +13,11 @@ export const NeoReportHelpModal = ({ open, handleClose }) => {
         A report is the smallest building block of your dashboard. Each report runs a single Cypher query that loads
         data from your database. By changing the report type, different visualizations can be created for the data. See
         the{' '}
-        <TextLink externalLink href='https://neo4j.com/labs/neodash/2.4/user-guide/reports/' target='_blank'>
+        <TextLink
+          externalLink
+          href='https://github.com/neo4j-labs/neodash/tree/master/docs/modules/ROOT/pages/user-guide/reports/index.adoc'
+          target='_blank'
+        >
           Documentation
         </TextLink>
         for more on reports.
