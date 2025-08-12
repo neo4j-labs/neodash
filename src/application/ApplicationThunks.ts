@@ -246,10 +246,7 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
         if (key.startsWith('neodash_list_')) {
-          if (paramsToSetAfterConnecting[key] ==null){
-            paramsToSetAfterConnecting[key]=[];
-          }
-          paramsToSetAfterConnecting[key].push(value);
+          (paramsToSetAfterConnecting[key]??=[]).push(value);
         } else {
           paramsToSetAfterConnecting[key] = value;
         }  
