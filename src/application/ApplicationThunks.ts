@@ -245,7 +245,11 @@ export const handleSharedDashboardsThunk = () => (dispatch: any) => {
     const paramsToSetAfterConnecting = {};
     Array.from(urlParams.entries()).forEach(([key, value]) => {
       if (key.startsWith('neodash_')) {
-        paramsToSetAfterConnecting[key] = value;
+        if (key.startsWith('neodash_list_')) {
+          (paramsToSetAfterConnecting[key]??=[]).push(value);
+        } else {
+          paramsToSetAfterConnecting[key] = value;
+        }  
       }
     });
     if (Object.keys(paramsToSetAfterConnecting).length > 0) {
