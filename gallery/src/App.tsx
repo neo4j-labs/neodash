@@ -51,7 +51,7 @@ function App() {
         icon={true}
         // onClose={() => setBannerOpen(false)}
       >
-        This app will no longer be available after August 31st. &nbsp;
+        This app will no longer be available after October 15th. &nbsp;
         <u>
           <b>
             <a target='_blank' href='https://console-preview.neo4j.io/tools/dashboards'>

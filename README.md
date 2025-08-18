@@ -1,7 +1,7 @@
 ## NeoDash Labs
 NeoDash is a dashboard builder for Neo4j, letting you build a graph dashboard in minutes.
 
-**This project will be archived on August 31st, 2025.** If you'd like to continue building dashboards, you can:
+**This project is no longer maintained, and will become a read-only archive on October 15th, 2025.** If you'd like to continue building dashboards, you can:
 
 1. [Upgrade](https://console-preview.neo4j.io/tools/dashboards) to Dashboards in the Neo4j Console (free for everyone).
 2. If you'd like to keep using NeoDash for free, you can fork this repository and [run NeoDash yourself](https://github.com/neo4j-labs/neodash/blob/master/about.md).
