@@ -90,6 +90,9 @@ const NeoPieChart = (props: ChartProps) => {
   const arcLinkLabelsSkipAngle = settings.arcLinkLabelsSkipAngle ? settings.arcLinkLabelsSkipAngle : 1;
   const cornerRadius = settings.cornerRadius ? settings.cornerRadius : 1;
   const arcLabelsSkipAngle = settings.arcLabelsSkipAngle ? settings.arcLabelsSkipAngle : 10;
+  const legendWidth = settings.legendWidth ? settings.legendWidth : 128;
+  const legendPosition = settings.legendPosition ? settings.legendPosition : 'Horizontal';
+  const legendTranslate = settings.legendTranslate ? settings.legendTranslate : 0;
 
   const arcLabelsFontSize = settings.arcLabelsFontSize ? settings.arcLabelsFontSize : 13;
 
@@ -97,11 +100,78 @@ const NeoPieChart = (props: ChartProps) => {
   const colorScheme = settings.colors ? settings.colors : 'set2';
   const styleRules = useStyleRules(
     extensionEnabled(props.extensions, 'styling'),
-    props.settings.styleRules,
+    settings.styleRules,
     props.getGlobalParameter
   );
 
   const chartColorsByScheme = getD3ColorsByScheme(colorScheme);
+
+  const calculateMargin = () => {
+    return {
+      top: marginTop,
+      right: legend ? (legendPosition === 'horizontal' ? marginRight : marginRight + legendWidth) : marginRight,
+      bottom: legend ? (legendPosition === 'horizontal' ? legendHeight + marginBottom : marginBottom) : marginBottom,
+      left: marginLeft,
+    };
+  };
+
+  const calculateLegendConfig = () => {
+    if (!legend) {
+      return []; // No legend required
+    }
+
+    if (legendPosition === 'Horizontal') {
+      return [
+        {
+          dataFrom: 'keys',
+          anchor: 'bottom',
+          direction: 'row',
+          justify: false,
+          translateX: legendTranslate,
+          translateY: legendWidth,
+          itemsSpacing: 2,
+          itemWidth: legendWidth,
+          itemHeight: 20,
+          itemDirection: 'left-to-right',
+          itemOpacity: 0.85,
+          symbolSize: 20,
+          effects: [
+            {
+              on: 'hover',
+              style: {
+                itemOpacity: 1,
+              },
+            },
+          ],
+        },
+      ];
+    }
+    // Vertical legend
+    return [
+      {
+        dataFrom: 'keys',
+        anchor: 'bottom-right',
+        direction: 'column',
+        justify: false,
+        translateX: legendWidth + 10 + legendTranslate,
+        translateY: 0,
+        itemsSpacing: 1,
+        itemWidth: legendWidth,
+        itemHeight: 20,
+        itemDirection: 'left-to-right',
+        itemOpacity: 0.85,
+        symbolSize: 15,
+        effects: [
+          {
+            on: 'hover',
+            style: {
+              itemOpacity: 1,
+            },
+          },
+        ],
+      },
+    ];
+  };
 
   // Compute chart colors, based on default scheme and on styling rules
   const computedChartColors = data.map((value, index) => {
@@ -155,41 +225,9 @@ const NeoPieChart = (props: ChartProps) => {
       arcLinkLabelsSkipAngle={arcLinkLabelsSkipAngle}
       arcLinkLabelsOffset={arcLinkLabelsOffset}
       arcLabelsSkipAngle={arcLabelsSkipAngle}
-      margin={{
-        top: marginTop,
-        right: marginRight,
-        bottom: legend ? legendHeight + marginBottom : marginBottom,
-        left: marginLeft,
-      }}
+      margin={calculateMargin()}
       colors={computedChartColors}
-      legends={
-        legend
-          ? [
-              {
-                anchor: 'bottom',
-                direction: 'row',
-                justify: false,
-                translateX: 0,
-                translateY: 50,
-                itemsSpacing: 0,
-                itemWidth: 100,
-                itemHeight: 18,
-                itemDirection: 'left-to-right',
-                itemOpacity: 1,
-                symbolSize: 18,
-                symbolShape: 'circle',
-                effects: [
-                  {
-                    on: 'hover',
-                    style: {
-                      itemTextColor: '#000',
-                    },
-                  },
-                ],
-              },
-            ]
-          : []
-      }
+      legends={calculateLegendConfig()}
       animate={true}
       // TODO : Needs to be set dynamic (default true on percentage)
       arcLabel={getArcLabel}
