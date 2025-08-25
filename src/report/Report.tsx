@@ -69,9 +69,9 @@ export const NeoReport = ({
   }
   const debouncedRunCypherQuery = useCallback(debounce(runCypherQuery, RUN_QUERY_DELAY_MS), []);
 
-  const setSchema = (id, schema) => {
+  const setSchema = (id, schema, additive = false) => {
     if (type === 'graph' || type === 'map' || type === 'gantt' || type === 'graph3d') {
-      setSchemaDispatch(id, schema);
+      setSchemaDispatch(id, schema, additive); // schema=true
     }
   };
   const populateReport = (debounced = true) => {
@@ -221,7 +221,7 @@ export const NeoReport = ({
         HARD_ROW_LIMITING,
         queryTimeLimit,
         (schema) => {
-          setSchema(id, schema);
+          setSchema(id, schema, true);
         }
       );
     },
@@ -357,8 +357,8 @@ const mapDispatchToProps = (dispatch) => ({
   getCustomDispatcher: () => {
     return dispatch;
   },
-  setSchemaDispatch: (id: any, schema: any) => {
-    dispatch(updateFieldsThunk(id, schema, true));
+  setSchemaDispatch: (id: any, schema: any, additive: boolean) => {
+    dispatch(updateFieldsThunk(id, schema, true, additive));
   },
 });
 
