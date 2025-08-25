@@ -1,0 +1,6 @@
+[NOTE]
+====
+This version of NeoDash Neo4j Labs is no longer maintained.
+
+Refer to link:https://neo4j.com/labs/neodash/2.4/[NeoDash Labs version 2.4] or link:https://neo4j.com/docs/neodash-commercial/[NeoDash commercial] for the fully supported NeoDash offering.
+====
