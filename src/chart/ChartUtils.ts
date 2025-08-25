@@ -167,7 +167,11 @@ export const downloadCSV = (rows) => {
       if (value?.low !== undefined) {
         value = value.low;
       }
-      csv += `${JSON.stringify(value)}`;
+      if(typeof value === 'string'){
+        csv += value;
+      }else{
+        csv += `${JSON.stringify(value)}`;
+      }
       csv += headers.indexOf(header) < headers.length - 1 ? ',' : '';
     });
     csv += '\n';
