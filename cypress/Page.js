@@ -80,6 +80,18 @@ export class Page {
     return this;
   }
 
+  selectReportDatabase(database) {
+    cy.get('main .react-grid-item')
+      .contains('Query returned no data.')
+      .parentsUntil('.react-grid-item')
+      .find('button[aria-label="settings"]', { timeout: 2000 })
+      .should('be.visible')
+      .click();
+    cy.get('[data-test="database-dropdown"]').should('be.visible').click();
+    cy.contains(database)
+    return this;
+  }
+
   createReportOfType(type, query, fast = false, run = true) {
     this.selectReportOfType(type);
     if (fast) {

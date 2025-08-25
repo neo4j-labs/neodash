@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setDashboardTitle } from '../DashboardActions';
 import { getDashboardSettings, getDashboardTheme, getDashboardTitle, getPages } from '../DashboardSelectors';
@@ -13,8 +13,28 @@ import { updateDashboardSetting } from '../../settings/SettingsActions';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { DASHBOARD_HEADER_BUTTON_COLOR } from '../../config/ApplicationConfig';
 import { Tooltip } from '@mui/material';
+import { Neo4jContext, Neo4jContextState } from 'use-neo4j/dist/neo4j.context';
+import { Button } from '@neo4j-ndl/react';
+import { CircleStackIconOutline } from '@neo4j-ndl/react/icons';
+import { loadDatabaseListFromNeo4jThunk } from '../DashboardThunks';
+import NeoDashboardSidebarDatabaseMenu from '../sidebar/menu/DashboardSidebarDatabaseMenu';
+import { hardResetAllCardsThunk, setPageNumberThunk } from '../../settings/SettingsThunks';
+import { updateAllReportsDatabaseThunk } from '../../page/PageThunks';
+import NeoDashboardChangeDatabaseConfirm from './DashboardChangeDatabaseConfirmDialog';
+
+// Which (small) pop-up menu is currently open for the sidebar.
+enum Menu {
+  DATABASE = 0,
+  NONE = 1,
+}
+
+enum Modal {
+  CHANGE = 0,
+  NONE = 1,
+}
 
 export const NeoDashboardHeader = ({
+  database,
   standaloneSettings,
   dashboardTitle,
   customHeader,
@@ -26,11 +46,20 @@ export const NeoDashboardHeader = ({
   resetApplication,
   themeMode,
   setTheme,
+  loadDatabaseListFromNeo4j,
+  readonly,
+  refreshPage
 }) => {
   const downloadImageEnabled = settings ? settings.downloadImageEnabled : false;
   const [dashboardTitleText, setDashboardTitleText] = React.useState(dashboardTitle);
-
+  const [databases, setDatabases] = useState([]);
+  const [newDataDatabase, setNewDataDatabase] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(Menu.NONE);
+  const [modalOpen, setModalOpen] = useState(Modal.NONE);
   const [isDarkMode, setDarkMode] = React.useState(themeMode !== 'light');
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const [dataDatabase, setDataDatabase] = React.useState(database ? database : 'neo4j');
+  const { driver } = useContext<Neo4jContextState>(Neo4jContext);
 
   const toggleDarkMode = (checked: boolean) => {
     setDarkMode(checked);
@@ -44,10 +73,30 @@ export const NeoDashboardHeader = ({
   }, [dashboardTitle]);
 
   useEffect(() => {
+    let ChangeDatabaseConfirmBoolean = sessionStorage.getItem("ChangeDatabaseConfirmBoolean") || "False"
+    if (ChangeDatabaseConfirmBoolean == 'True' && newDataDatabase) {
+      setDataDatabase(newDataDatabase);
+      refreshPage(newDataDatabase);
+    }
+    else if (ChangeDatabaseConfirmBoolean == 'False' && newDataDatabase){
+      setModalOpen(Modal.CHANGE);
+    }
+  }, [newDataDatabase]);
+
+  useEffect(() => {
     setTheme(isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
   const content = (
     <div className='n-relative n-bg-palette-neutral-bg-weak n-w-full'>
+            <NeoDashboardChangeDatabaseConfirm
+              open={modalOpen == Modal.CHANGE}
+              onConfirm={() => {
+                setModalOpen(Modal.NONE);
+                setDataDatabase(newDataDatabase);
+                refreshPage(newDataDatabase);
+              }}
+              handleClose={() => setModalOpen(Modal.NONE)}
+            />
       <div className='n-min-w-full'>
         <div className='n-flex n-justify-between n-h-16 n-items-center n-py-6 md:n-justify-start md:n-space-x-10 n-mx-4'>
           <NeoDashboardHeaderLogo resetApplication={resetApplication} />
@@ -71,6 +120,42 @@ export const NeoDashboardHeader = ({
                   />
                 </div>
               </Tooltip>
+              <Tooltip title='Database' aria-label='database' disableInteractive>
+                <Button
+                  aria-label='database'
+                  fill='text'
+                  size='large'
+                  color='neutral'
+                  style={{
+                    float: 'right',
+                    marginLeft: '0px',
+                    marginRight: '0px',
+                    paddingLeft: '12px',
+                    paddingRight: '12px',
+                  }}
+                  onClick={(event) => {
+                    setMenuOpen(Menu.DATABASE);
+                    // Only when not yet retrieved, and needed, get the list of databases from Neo4j.
+                    if (databases.length == 0) {
+                      loadDatabaseListFromNeo4j(driver, (result) => {
+                        if (
+                          readonly &&
+                          standaloneSettings.standaloneMultiDatabase &&
+                          standaloneSettings.standaloneDatabaseList
+                        ) {
+                          let tmp = standaloneSettings.standaloneDatabaseList.split(',').map((x) => x.trim());
+                          result = result.filter((value) => tmp.includes(value));
+                        }
+                        result = result.filter((value) => result.includes(value) && value !== 'system');
+                        setDatabases(result);
+                      });
+                    }
+                    setMenuAnchor(event.currentTarget);
+                  }}
+                >
+                  <CircleStackIconOutline className='btn-icon-base-r' />
+                </Button>
+              </Tooltip>
 
               {downloadImageEnabled && <NeoDashboardHeaderDownloadImageButton onDownloadImage={onDownloadImage} />}
               <NeoAboutButton connection={connection} onAboutModalOpen={onAboutModalOpen} />
@@ -79,6 +164,19 @@ export const NeoDashboardHeader = ({
           </div>
         </div>
       </div>
+      <NeoDashboardSidebarDatabaseMenu
+        databases={databases}
+        selected={dataDatabase}
+        setSelected={(newDatabase) => {
+          setNewDataDatabase(newDatabase);
+        }}
+        open={menuOpen == Menu.DATABASE}
+        anchorEl={menuAnchor}
+        handleClose={() => {
+          setMenuOpen(Menu.NONE);
+          setMenuAnchor(null);
+        }}
+      />
     </div>
   );
   return content;
@@ -106,6 +204,14 @@ const mapDispatchToProps = (dispatch) => ({
 
   onConnectionModalOpen: () => {
     dispatch(setConnectionModalOpen(true));
+  },
+
+  loadDatabaseListFromNeo4j: (driver, callback) => {
+    dispatch(loadDatabaseListFromNeo4jThunk(driver, callback))
+  },
+
+  refreshPage: (database: string) => {
+    dispatch(updateAllReportsDatabaseThunk(database));
   },
 });
 

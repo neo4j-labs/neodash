@@ -13,8 +13,8 @@ import {
   updateReportTypeThunk,
   updateReportDatabaseThunk,
 } from './CardThunks';
-import { toggleReportSettings } from './CardActions';
-import { getReportState } from './CardSelectors';
+import { forceRefreshCard, toggleReportSettings } from './CardActions';
+import { getCardForceRefreshQuery, getReportState } from './CardSelectors';
 import {
   getDashboardIsEditable,
   getDatabase,
@@ -40,6 +40,7 @@ const NeoCard = ({
   globalParameters, // Query parameters that are globally set for the entire dashboard.
   dashboardSettings, // Dictionary of settings for the entire dashboard.
   onRemovePressed, // action to take when the card is removed. (passed from parent)
+  forceRefresh, // parameter used to force a refresh of the card (incremental number).
   onClonePressed, // action to take when user presses the clone button
   onReportHelpButtonPressed, // action to take when someone clicks the 'help' button in the report settings.
   onTitleUpdate, // action to take when the card title is updated.
@@ -149,6 +150,7 @@ const NeoCard = ({
             title={report.title}
             expanded={expanded}
             onToggleCardExpand={onToggleCardExpand}
+            forceRefresh={forceRefresh}
             onGlobalParameterUpdate={onGlobalParameterUpdate}
             onSelectionUpdate={(selectable, field) => onSelectionUpdate(id, selectable, field)}
             onTitleUpdate={(title) => onTitleUpdate(id, title)}
@@ -225,6 +227,7 @@ const mapStateToProps = (state, ownProps) => ({
     ownProps && ownProps.dashboardSettings ? ownProps.dashboardSettings.pagenumber : undefined,
     ownProps.id
   ),
+  forceRefresh: getCardForceRefreshQuery(state, ownProps.id),
   globalParameters: { ...getGlobalParameters(state), ...getSessionParameters(state) },
 });
 

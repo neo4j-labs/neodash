@@ -4,3 +4,8 @@ export const getReportState = (state: any, id: any) => {
   const { pagenumber } = state.dashboard.settings;
   return state.dashboard.pages[pagenumber].reports.find((o) => o.id === id);
 };
+
+export const getCardForceRefreshQuery =(state: any, id: any) => {
+  const { pagenumber } = state.dashboard.settings;
+  return state.dashboard.pages[pagenumber].reports.find((o) => o.id === id)?.forceRefresh ;
+};
