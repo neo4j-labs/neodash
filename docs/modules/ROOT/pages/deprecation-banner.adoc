@@ -1,6 +1,6 @@
 [NOTE]
 ====
-This version of NeoDash Neo4j Labs is no longer maintained.
+This documentation pertains to the unsupported version of NeoDash, as part of Neo4j Labs. For users of the supported NeoDash offering, refer to [NeoDash commercial](https://neo4j.com/docs/neodash-commercial/).
 
-Refer to link:https://neo4j.com/labs/neodash/2.4/[NeoDash Labs version 2.4] or link:https://neo4j.com/docs/neodash-commercial/[NeoDash commercial] for the fully supported NeoDash offering.
+link:https://neo4j.com/docs/aura/dashboards/[Neo4j Aura dashboards] only support the import of dashboard JSON from link:https://neo4j.com/labs/neodash/2.4/[NeoDash Labs version 2.4].
 ====
