@@ -136,7 +136,7 @@ const Application = ({
           icon={true}
           onClose={() => setBannerOpen(false)}
         >
-          This app will no longer be available after October 15th. &nbsp;
+          This app will no longer be available in the near future. &nbsp;
           <u>
             <b>
               <a target='_blank' href='https://console-preview.neo4j.io/tools/dashboards'>

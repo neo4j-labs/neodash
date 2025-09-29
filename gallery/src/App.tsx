@@ -44,14 +44,14 @@ function App() {
 
   return (
     <div className='n-bg-neutral-20 h-100'>
-      <Alert
+      {/* <Alert
         title='Deprecation notice'
         type='warning'
         // closeable={true}
         icon={true}
         // onClose={() => setBannerOpen(false)}
       >
-        This app will no longer be available after October 15th. &nbsp;
+        This app will no longer be available in the near future. &nbsp;
         <u>
           <b>
             <a target='_blank' href='https://console-preview.neo4j.io/tools/dashboards'>
@@ -68,7 +68,7 @@ function App() {
           </b>
         </u>{' '}
         the NeoDash repository to run NeoDash yourself.
-      </Alert>
+      </Alert> */}
 
       {/* Header */}
       <div className='n-bg-neutral-10'>

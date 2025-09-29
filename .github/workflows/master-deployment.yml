@@ -55,7 +55,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
       - run: curl ${{ secrets.INDEX_HTML_DEPLOYMENT_URL }} > dist/index.html
-      - run: curl https://gist.githubusercontent.com/nielsdejong/944d8f8f30dd2719f9b275e31df22f92/raw/f363cf5280eb5095e12e56a278f6616b6220adcf/config.json > dist/config.json
+      # - run: curl https://gist.githubusercontent.com/nielsdejong/944d8f8f30dd2719f9b275e31df22f92/raw/f363cf5280eb5095e12e56a278f6616b6220adcf/config.json > dist/config.json
       - run: aws s3 rm s3://neodash.graphapp.io/ --recursive && aws s3 sync dist s3://neodash.graphapp.io/ --acl public-read
   build-docker:
     needs: build-test
